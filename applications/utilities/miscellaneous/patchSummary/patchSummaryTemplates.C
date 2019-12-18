@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,24 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "patchSummaryTemplates.H"
+#include "genericPatchField.H"
 #include "IOmanip.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class PatchField>
+Foam::word Foam::patchFieldType(const PatchField& pf)
+{
+    if (isA<genericPatchField>(pf))
+    {
+        return refCast<const genericPatchField>(pf).actualTypeName();
+    }
+    else
+    {
+        return pf.type();
+    }
+}
+
 
 template<class GeoField>
 void Foam::addToFieldList
@@ -63,7 +78,8 @@ void Foam::outputFieldList
             Info<< "    " << pTraits<typename GeoField::value_type>::typeName
                 << tab << tab
                 << fieldList[fieldi].name() << tab << tab
-                << fieldList[fieldi].boundaryField()[patchi].type() << nl;
+                << patchFieldType(fieldList[fieldi].boundaryField()[patchi])
+                << nl;
         }
     }
 }
@@ -84,7 +100,7 @@ void Foam::collectFieldList
             fieldToType.insert
             (
                 fieldList[fieldi].name(),
-                fieldList[fieldi].boundaryField()[patchi].type()
+                patchFieldType(fieldList[fieldi].boundaryField()[patchi])
             );
         }
     }

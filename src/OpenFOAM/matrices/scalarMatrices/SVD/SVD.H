@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ namespace Foam
 
 class SVD
 {
-    // Private data
+    // Private Data
 
         //- Rectangular matrix with the same dimensions as the input
         scalarRectangularMatrix U_;
@@ -71,12 +71,6 @@ class SVD
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        SVD(const SVD&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const SVD&);
-
         template<class T>
         inline const T sign(const T& a, const T& b);
 
@@ -87,6 +81,9 @@ public:
 
         //- Construct from a rectangular Matrix
         SVD(const scalarRectangularMatrix& A, const scalar minCondition = 0);
+
+        //- Disallow default bitwise copy construction
+        SVD(const SVD&) = delete;
 
 
     // Access functions
@@ -111,6 +108,12 @@ public:
 
         //- Return the matrix product V S^(-1) U^T (the pseudo inverse)
         scalarRectangularMatrix VSinvUt() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SVD&) = delete;
 };
 
 

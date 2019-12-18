@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ class edgeMesh
 :
     public fileFormats::edgeMeshFormatsCore
 {
-    // Private data
+    // Private Data
 
         //- Vertices of the edges
         pointField points_;
@@ -132,12 +132,15 @@ public:
         //- Construct by transferring components (points, edges).
         edgeMesh
         (
-            const Xfer<pointField>&,
-            const Xfer<edgeList>&
+            pointField&&,
+            edgeList&&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         edgeMesh(const edgeMesh&);
+
+        //- Move constructor
+        edgeMesh(edgeMesh&&);
 
         //- Construct from file name (uses extension to determine type)
         edgeMesh(const fileName&);
@@ -204,8 +207,6 @@ public:
         //- Transfer the contents of the argument and annul the argument
         void transfer(edgeMesh&);
 
-        //- Transfer contents to the Xfer container
-        Xfer<edgeMesh > xfer();
 
     // Read
 
@@ -238,11 +239,11 @@ public:
         virtual void clear();
 
         //- Reset primitive data (points, edges)
-        //  Note, optimized to avoid overwriting data (with Xfer::null)
+        //  Note, optimized to avoid overwriting data (with null)
         virtual void reset
         (
-            const Xfer<pointField>& points,
-            const Xfer<edgeList>& edges
+            pointField&& points,
+            edgeList&& edges
         );
 
         //- Scale points. A non-positive factor is ignored
@@ -270,6 +271,8 @@ public:
     // Member Operators
 
         inline void operator=(const edgeMesh&);
+        inline void operator=(edgeMesh&&);
+
 
         // Ostream Operator
 

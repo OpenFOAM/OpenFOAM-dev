@@ -1,0 +1,10 @@
+function sine;
+
+amplitude 2;
+frequency 0.5;
+phase -3.14;
+level 1;
+
+x0 0;
+x1 5;
+nX 51;

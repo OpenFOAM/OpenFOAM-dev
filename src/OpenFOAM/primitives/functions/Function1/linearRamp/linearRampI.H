@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,12 +27,27 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline Foam::scalar Foam::Function1Types::linearRamp::value
+inline Foam::scalar Foam::Function1s::linearRamp::value
 (
     const scalar t
 ) const
 {
-    return ramp::linearRamp(t);
+    return Ramp<linearRamp>::linearRamp(t);
+}
+
+
+inline Foam::scalar Foam::Function1s::linearRamp::integrate
+(
+    const scalar t1,
+    const scalar t2
+) const
+{
+    const scalar l1 = Ramp<linearRamp>::linearRamp(t1);
+    const scalar l2 = Ramp<linearRamp>::linearRamp(t2);
+
+    return
+        (sqr(l2) - sqr(l1))/2/dLinearRampDt()
+      + (t2 - min(t2, end()));
 }
 
 

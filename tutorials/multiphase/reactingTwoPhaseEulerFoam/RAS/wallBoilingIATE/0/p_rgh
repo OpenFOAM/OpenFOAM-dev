@@ -17,7 +17,7 @@ FoamFile
 
 dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform 100000;
+internalField   uniform 2.62e6;
 
 boundaryField
 {
@@ -28,20 +28,20 @@ boundaryField
     outlet
     {
         type            prghPressure;
-        p               uniform 100000;
-        value           uniform 100000;
+        p               $internalField;
+        value           $internalField;
     }
-    wall1
+    wall
     {
         type            fixedFluxPressure;
     }
-    wall2
+    front
     {
-        type            fixedFluxPressure;
+        type            wedge;
     }
-    defaultFaces
+    back
     {
-        type            empty;
+        type            wedge;
     }
 }
 

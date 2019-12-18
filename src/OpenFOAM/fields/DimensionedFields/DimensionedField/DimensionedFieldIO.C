@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,10 +107,10 @@ bool Foam::DimensionedField<Type, GeoMesh>::writeData
     const word& fieldDictEntry
 ) const
 {
-    os.writeKeyword("dimensions") << dimensions() << token::END_STATEMENT
-        << nl << nl;
+    writeEntry(os, "dimensions", dimensions());
+    os << nl;
 
-    Field<Type>::writeEntry(fieldDictEntry, os);
+    writeEntry(os, fieldDictEntry, static_cast<const Field<Type>&>(*this));
 
     // Check state of Ostream
     os.check

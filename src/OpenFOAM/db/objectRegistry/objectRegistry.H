@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,8 @@ SourceFiles
 #include "HashTable.H"
 #include "regIOobject.H"
 #include "wordReList.H"
+#include "HashSet.H"
+#include "Pair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,6 +69,17 @@ class objectRegistry
         //- Current event
         mutable label event_;
 
+        //- Table of temporary object names with current state
+        mutable HashTable<Pair<bool>> cacheTemporaryObjects_;
+
+        //- State of cacheTemporaryObjects_, set true after reading
+        mutable bool cacheTemporaryObjectsSet_;
+
+        //- Accumulated list of temporary objects available to cache
+        //  Used to provide diagnostics in case the requested object is not
+        //  available
+        mutable HashSet<word> temporaryObjects_;
+
 
     // Private Member Functions
 
@@ -74,11 +87,11 @@ class objectRegistry
         //  Used to terminate searching within the ancestors
         bool parentNotTime() const;
 
-        //- Disallow Copy constructor
-        objectRegistry(const objectRegistry&);
+        //- Read the cacheTemporaryObjects list from controlDict
+        void readCacheTemporaryObjects() const;
 
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const objectRegistry&);
+        //- Delete the current cached object before caching a new object
+        void deleteCachedObject(regIOobject& cachedOb) const;
 
 
 public:
@@ -105,12 +118,15 @@ public:
             const label nIoObjects = 128
         );
 
+        //- Disallow default bitwise copy construction
+        objectRegistry(const objectRegistry&);
+
 
     //- Destructor
     virtual ~objectRegistry();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -202,6 +218,24 @@ public:
             //- Remove all regIOobject owned by the registry
             void clear();
 
+            //- Add the given name to the set of temporary objects to cache
+            void addTemporaryObject(const word& name) const;
+
+            //- Return true if given name is in the cacheTemporaryObjects set
+            bool cacheTemporaryObject(const word& name) const;
+
+            //- Cache the given object
+            template<class Object>
+            bool cacheTemporaryObject(Object& ob) const;
+
+            //- Reset the cache state of the given object
+            //  in the cacheTemporaryObjects set
+            void resetCacheTemporaryObject(const regIOobject& ob) const;
+
+            //- Check that all objects in the cacheTemporaryObjects set
+            //  were cached
+            bool checkCacheTemporaryObjects() const;
+
 
         // Reading
 
@@ -232,8 +266,14 @@ public:
                 IOstream::streamFormat fmt,
                 IOstream::versionNumber ver,
                 IOstream::compressionType cmp,
-                const bool valid
+                const bool write
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const objectRegistry&) = delete;
 };
 
 

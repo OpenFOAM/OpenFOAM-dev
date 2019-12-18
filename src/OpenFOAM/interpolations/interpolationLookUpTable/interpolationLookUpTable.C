@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -158,9 +158,9 @@ void Foam::interpolationLookUpTable<Type>::dimensionTable()
 
     forAll(entries_,i)
     {
-        dim_[i] = readLabel(entries_[i].lookup("N"));
-        max_[i] = readScalar(entries_[i].lookup("max"));
-        min_[i] = readScalar(entries_[i].lookup("min"));
+        dim_[i] = entries_[i].template lookup<label>("N");
+        max_[i] = entries_[i].template lookup<scalar>("max");
+        min_[i] = entries_[i].template lookup<scalar>("min");
         delta_[i] = (max_[i] - min_[i])/dim_[i];
         tableDim *= dim_[i] + 1;
         fieldIndices_.insert(entries_[i].lookup("name"), index);
@@ -354,19 +354,16 @@ void Foam::interpolationLookUpTable<Type>::write
 
     control.writeHeader(os);
 
-    os.writeKeyword("fields")
-        << entries_ << token::END_STATEMENT << nl;
+    writeEntry(os, "fields", entries_);
 
-    os.writeKeyword("output")
-        << output_ << token::END_STATEMENT << nl;
+    writeEntry(os, "output", output_);
 
     if (this->size() == 0)
     {
         FatalErrorInFunction
             << "table is empty" << nl << exit(FatalError);
     }
-    os.writeKeyword("values")
-        << *this << token::END_STATEMENT << nl;
+    writeEntry(os, "values", *this);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ class solidification
 :
     public porosityModel
 {
-    // Private data
+    // Private Data
 
         //- Name of temperature field, default = "T"
         word TName_;
@@ -159,27 +159,26 @@ class solidification
             const volVectorField& U
         ) const;
 
-        //- Disallow default bitwise copy construct
-        solidification(const solidification&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const solidification&);
-
 
 public:
 
     //- Runtime type information
     TypeName("solidification");
 
-    //- Constructor
-    solidification
-    (
-        const word& name,
-        const word& modelType,
-        const fvMesh& mesh,
-        const dictionary& dict,
-        const word& cellZoneName
-    );
+    // Constructors
+
+        solidification
+        (
+            const word& name,
+            const word& modelType,
+            const fvMesh& mesh,
+            const dictionary& dict,
+            const word& cellZoneName
+        );
+
+        //- Disallow default bitwise copy construction
+        solidification(const solidification&) = delete;
+
 
     //- Destructor
     virtual ~solidification();
@@ -222,7 +221,14 @@ public:
 
         //- Write
         bool writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const solidification&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -517,7 +517,7 @@ int main(int argc, char *argv[])
         {
             Info<< "Could not insert mesh edge " << edgeI
                 << " for input point " << pts.first() << nl
-                << "Perhaps the edge is already marked for collaping?" << endl;
+                << "Perhaps the edge is already marked for collapsing?" << endl;
 
             validInputs = false;
         }

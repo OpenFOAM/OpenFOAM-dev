@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,10 +29,12 @@ Description
 
 Usage
     \table
-        Property     | Description              | Required | Default value
-        profile      | Profile Function1        | yes |
-        direction    | Profile direction        | yes |
-        origin       | Profile origin           | yes |
+        Property     | Description       | Required | Default value
+        profile      | Profile function  | yes      |
+        direction    | Direction of the line along which the profile is \\
+                               evaluated | yes      |
+        origin       | Origin of the line along which the profile is \\
+                               evaluated | yes      |
     \endtable
 
     Example of the boundary condition specification:
@@ -40,30 +42,29 @@ Usage
     <patchName>
     {
         type            fixedProfile;
-        profile         csvFile;
-
+        profile         tableFile;
         profileCoeffs
         {
-            nHeaderLine         0;          // Number of header lines
-            refColumn           0;          // Reference column index
-            componentColumns    (1 2 3);    // Component column indices
-            separator           ",";        // Optional (defaults to ",")
-            mergeSeparators     no;         // Merge multiple separators
-            file                "Uprofile.csv";  // name of csv data file
-            outOfBounds         clamp;      // Optional out-of-bounds handling
-            interpolationScheme linear;     // Optional interpolation scheme
+            file                "UProfile";
+            format              csv;
+            nHeaderLine         0;
+            refColumn           0;
+            componentColumns    (1 2 3);
+            separator           ",";
+            mergeSeparators     no;
+            outOfBounds         clamp;
+            interpolationScheme linear;
         }
         direction        (0 1 0);
         origin           0;
     }
     \endverbatim
 
-    Example setting a parabolic inlet profile for the PitzDaily case:
+    Example setting a parabolic inlet profile for the pitzDaily case:
     \verbatim
     inlet
     {
         type            fixedProfile;
-
         profile         polynomial
         (
             ((1 0 0)        (0 0 0))
@@ -74,14 +75,8 @@ Usage
     }
     \endverbatim
 
-Note
-    The profile entry is a Function1 type.  The example above gives the
-    usage for supplying csv file.
-
 See also
-    Foam::fixedValueFvPatchField
-    Foam::Function1Types
-    Foam::timeVaryingMappedFixedValueFvPatchField
+    Foam::Function1s
 
 SourceFiles
     fixedProfileFvPatchField.C
@@ -108,16 +103,16 @@ class fixedProfileFvPatchField
 :
     public fixedValueFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
-        //- Profile data
+        //- Profile function
         autoPtr<Function1<Type>> profile_;
 
-        //- Profile direction
-        vector dir_;
-
-        //- Profile origin
+        //- Origin of the line along which the profile is evaluated
         scalar origin_;
+
+        //- Direction of the line along which the profile is evaluated
+        vector direction_;
 
 
 public:
@@ -161,7 +156,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         fixedProfileFvPatchField
         (
             const fixedProfileFvPatchField<Type>&
@@ -176,7 +171,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         fixedProfileFvPatchField
         (
             const fixedProfileFvPatchField<Type>&,
@@ -196,7 +191,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

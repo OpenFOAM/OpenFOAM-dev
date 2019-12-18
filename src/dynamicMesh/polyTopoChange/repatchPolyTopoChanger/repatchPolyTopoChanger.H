@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ namespace Foam
 
 class repatchPolyTopoChanger
 {
-    // Private data
+    // Private Data
 
         //- The polyMesh to be repatched
         polyMesh& mesh_;
@@ -65,12 +65,6 @@ class repatchPolyTopoChanger
         //- Demand driven access to polyTopoChange
         polyTopoChange& meshMod();
 
-        //- Disallow default bitwise copy construct
-        repatchPolyTopoChanger(const repatchPolyTopoChanger&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const repatchPolyTopoChanger&);
-
 
 public:
 
@@ -78,6 +72,9 @@ public:
 
         //- Construct for given mesh
         explicit repatchPolyTopoChanger(polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        repatchPolyTopoChanger(const repatchPolyTopoChanger&) = delete;
 
 
     //- Destructor
@@ -113,9 +110,14 @@ public:
             const label fp
         );
 
-
         //- Re-patch the mesh
         void repatch();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const repatchPolyTopoChanger&) = delete;
 };
 
 

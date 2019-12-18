@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ class mapPolyMesh;
 
 class pointMeshMapper
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const pointMesh& mesh_;
@@ -64,15 +64,6 @@ class pointMeshMapper
 
         //- Boundary mapper
         pointBoundaryMeshMapper boundaryMap_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        pointMeshMapper(const pointMeshMapper&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointMeshMapper&);
 
 
 public:
@@ -86,6 +77,9 @@ public:
             pointMap_(mesh, mpm),
             boundaryMap_(mesh, pointMap_, mpm)
         {}
+
+        //- Disallow default bitwise copy construction
+        pointMeshMapper(const pointMeshMapper&) = delete;
 
 
     // Member Functions
@@ -115,6 +109,12 @@ public:
         {
             return boundaryMap_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointMeshMapper&) = delete;
 };
 
 

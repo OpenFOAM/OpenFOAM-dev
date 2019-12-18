@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,8 +41,8 @@ Foam::TimeScaleModel::TimeScaleModel
     const dictionary& dict
 )
 :
-    alphaPacked_(readScalar(dict.lookup("alphaPacked"))),
-    e_(readScalar(dict.lookup("e")))
+    alphaPacked_(dict.template lookup<scalar>("alphaPacked")),
+    e_(dict.template lookup<scalar>("e"))
 {
 }
 

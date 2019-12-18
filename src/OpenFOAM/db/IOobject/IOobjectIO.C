@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,6 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const InfoProxy<IOobject>& ip)
         << "local:" << token::SPACE << io.local() << token::SPACE
         << "readOpt:" << token::SPACE << io.readOpt() << token::SPACE
         << "writeOpt:" << token::SPACE << io.writeOpt() << token::SPACE
-        << "globalObject:" << token::SPACE << io.globalObject() << token::SPACE
         << io.path() << endl;
 
     return os;

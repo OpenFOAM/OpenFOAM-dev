@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
 
     \f[
         \left( \theta_{ij}^{T} + \theta_{ij}^{B} + \theta_{ij}^{LS} \right)
-        \lambda_{ij}
+        \lambda_{ij}\;,
     \f]
 
     with the coalescence efficiency
@@ -52,13 +52,20 @@ Description
             \sqrt{d_{i}^{2/3} + d_{j}^{2/3}}\;,
     \f]
 
-    and the buoyancy-driven collision rate
+    the buoyancy-driven collision rate
 
     \f[
         \theta_{ij}^{B} = S_{ij} \left| u_{ri} - u_{rj} \right|\;,
     \f]
 
-    where the rise velocity of bubble i is calculated by
+    and the laminar shear collision rate
+
+    \f[
+        \theta_{ij}^{LS} =
+            \frac{1}{6} \left(d_i + d_j\right)^{3} \gamma_c\;.
+    \f]
+
+    The rise velocity of bubble i is calculated by
 
     \f[
         u_{ri} = \sqrt{2.14 \sigma / \left(\rho_c d_i \right) + 0.505 g d_i}\;,
@@ -67,20 +74,24 @@ Description
     the equivalent radius by
 
     \f[
-        r_{ij} = \left( \frac{1}{d_i} + \frac{1}{d_j} \right)^{-1}
+        r_{ij} = \left( \frac{1}{d_i} + \frac{1}{d_j} \right)^{-1}\;,
     \f]
 
-    and the collision cross sectional area by
+    the collision cross sectional area by
 
     \f[
-        S_{ij} = \frac{\pi}{4} \left(d_i + d_j\right)^{2}\;.
+        S_{ij} = \frac{\pi}{4} \left(d_i + d_j\right)^{2}\;,
+    \f]
+
+    and the shear strain rate by
+
+    \f[
+        \dot{\gamma_{b}} = \mathrm{mag}(\mathrm{symm}(\mathrm{grad}(U_c)))\;.
     \f]
 
     Note that in equation 2, the bubble radius has been substituted by the
     bubble diameter. Also the expression for the equivalent radius r_ij
     (equation 19 in the paper of Prince and Blanch (1990)) was corrected.
-    The collision rate contribution due to laminar shear in the continuous phase
-    is currently neglected.
 
     \vartable
         \theta_{ij}^{T}   |  Turbulent collision rate [m3/s]
@@ -98,9 +109,11 @@ Description
         u_{ri}            |  Rise velocity of bubble i [m/s]
         S_{ij}            |  Collision cross sectional area [m2]
         g                 |  Gravitational constant [m/s2]
+        \gamma_c          |  Continuous phase shear strain rate [1/s]
+        U_c               |  Continuous phase velocity field [m/s]
     \endvartable
 
-    References:
+    Reference:
     \verbatim
         Prince, M. J., & Blanch, H. W. (1990).
         Bubble coalescence and break‐up in air‐sparged bubble columns.
@@ -145,7 +158,7 @@ class PrinceBlanch
 :
     public coalescenceModel
 {
-    // Private data
+    // Private Data
 
         //- Optional coefficient C1, defaults to 0.089
         dimensionedScalar C1_;
@@ -164,6 +177,9 @@ class PrinceBlanch
 
         //- Switch for considering buoyancy-induced collisions
         Switch laminarShear_;
+
+        //- Continuous phase shear strain rate
+        autoPtr<volScalarField> shearStrainRate_;
 
 
 public:
@@ -186,6 +202,9 @@ public:
 
 
     // Member Functions
+
+        //- Correct diameter independent expressions
+        virtual void correct();
 
         //- Add to coalescenceRate
         virtual void addToCoalescenceRate

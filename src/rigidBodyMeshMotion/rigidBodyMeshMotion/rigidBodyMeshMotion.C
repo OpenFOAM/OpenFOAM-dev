@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,8 +62,8 @@ Foam::rigidBodyMeshMotion::bodyMesh::bodyMesh
     bodyID_(bodyID),
     patches_(wordReList(dict.lookup("patches"))),
     patchSet_(mesh.boundaryMesh().patchSet(patches_)),
-    di_(readScalar(dict.lookup("innerDistance"))),
-    do_(readScalar(dict.lookup("outerDistance"))),
+    di_(dict.lookup<scalar>("innerDistance")),
+    do_(dict.lookup<scalar>("outerDistance")),
     weight_
     (
         IOobject
@@ -84,11 +84,11 @@ Foam::rigidBodyMeshMotion::bodyMesh::bodyMesh
 Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
 (
     const polyMesh& mesh,
-    const IOdictionary& dict
+    const dictionary& dict
 )
 :
     displacementMotionSolver(mesh, dict, typeName),
-    model_
+    RBD::rigidBodyMotion
     (
         coeffDict(),
         IOobject
@@ -121,7 +121,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
 {
     if (rhoName_ == "rhoInf")
     {
-        rhoInf_ = readScalar(coeffDict().lookup("rhoInf"));
+        rhoInf_ = coeffDict().lookup<scalar>("rhoInf");
     }
 
     if (coeffDict().found("ramp"))
@@ -130,7 +130,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
     }
     else
     {
-        ramp_ = new Function1Types::OneConstant<scalar>("ramp");
+        ramp_ = new Function1s::OneConstant<scalar>("ramp");
     }
 
     const dictionary& bodiesDict = coeffDict().subDict("bodies");
@@ -141,7 +141,7 @@ Foam::rigidBodyMeshMotion::rigidBodyMeshMotion
 
         if (bodyDict.found("patches"))
         {
-            const label bodyID = model_.bodyID(iter().keyword());
+            const label bodyID = this->bodyID(iter().keyword());
 
             if (bodyID == -1)
             {
@@ -237,38 +237,39 @@ void Foam::rigidBodyMeshMotion::solve()
     }
 
     // Store the motion state at the beginning of the time-step
-    if (curTimeIndex_ != this->db().time().timeIndex())
+    if (curTimeIndex_ != t.timeIndex())
     {
-        model_.newTime();
-        curTimeIndex_ = this->db().time().timeIndex();
+        newTime();
+        curTimeIndex_ = t.timeIndex();
     }
 
     const scalar ramp = ramp_->value(t.value());
 
-    if (db().foundObject<uniformDimensionedVectorField>("g"))
+    if (mesh().foundObject<uniformDimensionedVectorField>("g"))
     {
-        model_.g() =
-            ramp*db().lookupObject<uniformDimensionedVectorField>("g").value();
+        g() =
+            ramp
+           *mesh().lookupObject<uniformDimensionedVectorField>("g").value();
     }
 
     if (test_)
     {
-        label nIter(readLabel(coeffDict().lookup("nIter")));
+        label nIter(coeffDict().lookup<label>("nIter"));
 
         for (label i=0; i<nIter; i++)
         {
-            model_.solve
+            RBD::rigidBodyMotion::solve
             (
                 t.value(),
                 t.deltaTValue(),
-                scalarField(model_.nDoF(), Zero),
-                Field<spatialVector>(model_.nBodies(), Zero)
+                scalarField(nDoF(), Zero),
+                Field<spatialVector>(nBodies(), Zero)
             );
         }
     }
     else
     {
-        Field<spatialVector> fx(model_.nBodies(), Zero);
+        Field<spatialVector> fx(nBodies(), Zero);
 
         forAll(bodyMeshes_, bi)
         {
@@ -281,33 +282,33 @@ void Foam::rigidBodyMeshMotion::solve()
             forcesDict.add("rho", rhoName_);
             forcesDict.add("CofR", vector::zero);
 
-            functionObjects::forces f("forces", db(), forcesDict);
+            functionObjects::forces f("forces", t, forcesDict);
             f.calcForcesMoment();
 
             fx[bodyID] = ramp*spatialVector(f.momentEff(), f.forceEff());
         }
 
-        model_.solve
+        RBD::rigidBodyMotion::solve
         (
             t.value(),
             t.deltaTValue(),
-            scalarField(model_.nDoF(), Zero),
+            scalarField(nDoF(), Zero),
             fx
         );
     }
 
-    if (Pstream::master() && model_.report())
+    if (Pstream::master() && report())
     {
         forAll(bodyMeshes_, bi)
         {
-            model_.status(bodyMeshes_[bi].bodyID_);
+            status(bodyMeshes_[bi].bodyID_);
         }
     }
 
     // Update the displacements
     if (bodyMeshes_.size() == 1)
     {
-        pointDisplacement_.primitiveFieldRef() = model_.transformPoints
+        pointDisplacement_.primitiveFieldRef() = transformPoints
         (
             bodyMeshes_[0].bodyID_,
             bodyMeshes_[0].weight_,
@@ -325,7 +326,7 @@ void Foam::rigidBodyMeshMotion::solve()
         }
 
         pointDisplacement_.primitiveFieldRef() =
-            model_.transformPoints(bodyIDs, weights, points0()) - points0();
+            transformPoints(bodyIDs, weights, points0()) - points0();
     }
 
     // Displacement has changed. Update boundary conditions
@@ -336,13 +337,7 @@ void Foam::rigidBodyMeshMotion::solve()
 }
 
 
-bool Foam::rigidBodyMeshMotion::writeObject
-(
-    IOstream::streamFormat fmt,
-    IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
-    const bool valid
-) const
+bool Foam::rigidBodyMeshMotion::write() const
 {
     IOdictionary dict
     (
@@ -358,23 +353,17 @@ bool Foam::rigidBodyMeshMotion::writeObject
         )
     );
 
-    model_.state().write(dict);
-    return dict.regIOobject::write();
-}
+    state().write(dict);
 
-
-bool Foam::rigidBodyMeshMotion::read()
-{
-    if (displacementMotionSolver::read())
-    {
-        model_.read(coeffDict());
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return
+        dict.regIOobject::writeObject
+        (
+            IOstream::ASCII,
+            IOstream::currentVersion,
+            mesh().time().writeCompression(),
+            true
+        )
+     && displacementMotionSolver::write();
 }
 
 

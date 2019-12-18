@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
        //- last_ points to last element
        //  last_->next_ points to first element, i.e. circular storage
@@ -77,14 +77,6 @@ private:
 
        //- Number of elements in in list
        label nElmts_;
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        SLListBase(const SLListBase&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const SLListBase&);
 
 
 public:
@@ -105,6 +97,9 @@ public:
 
         //- Construct given initial entry
         inline SLListBase(link*);
+
+        //- Disallow default bitwise copy construction
+        SLListBase(const SLListBase&) = delete;
 
 
     //- Destructor
@@ -158,6 +153,13 @@ public:
             //  and annul the argument list.
             inline void transfer(SLListBase&);
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SLListBase&) = delete;
+
+
     // STL iterator
 
         //- An STL-conforming iterator
@@ -166,7 +168,7 @@ public:
             friend class SLListBase;
             friend class const_iterator;
 
-            // Private data
+            // Private Data
 
                 //- Reference to the list this is an iterator for
                 SLListBase& curList_;
@@ -188,7 +190,10 @@ public:
             //- Construct for a given SLListBase and link
             inline iterator(SLListBase&, link*);
 
-            // Member operators
+            //- Copy constructor
+            inline iterator(const iterator&) = default;
+
+            // Member Operators
 
                 inline void operator=(const iterator&);
 
@@ -210,7 +215,7 @@ public:
         //- An STL-conforming const_iterator
         class const_iterator
         {
-            // Private data
+            // Private Data
 
                 //- Reference to the list this is an iterator for
                 const SLListBase& curList_;
@@ -226,8 +231,10 @@ public:
             //- Construct from a non-const iterator
             inline const_iterator(const iterator&);
 
+            //- Copy constructor
+            inline const_iterator(const const_iterator&) = default;
 
-            // Member operators
+            // Member Operators
 
                 inline void operator=(const const_iterator&);
 

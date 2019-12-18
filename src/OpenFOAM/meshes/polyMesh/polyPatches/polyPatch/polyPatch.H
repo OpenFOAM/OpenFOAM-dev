@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ class polyPatch
     public patchIdentifier,
     public primitivePatch
 {
-    // Private data
+    // Private Data
 
         //- Start label of this patch in the polyMesh face list
         label start_;
@@ -189,7 +189,7 @@ public:
             const word& patchType
         );
 
-        //- Construct as copy, resetting the boundary mesh
+        //- Copy constructor, resetting the boundary mesh
         polyPatch(const polyPatch&, const polyBoundaryMesh&);
 
         //- Construct given the original patch and resetting the
@@ -213,8 +213,11 @@ public:
             const label newStart
         );
 
-        //- Construct as copy
+        //- Copy constructor
         polyPatch(const polyPatch&);
+
+        // To avoid irritating warnings from clang
+        using primitivePatch::clone;
 
         //- Construct and return a clone, resetting the boundary mesh
         virtual autoPtr<polyPatch> clone(const polyBoundaryMesh& bm) const
@@ -399,7 +402,7 @@ public:
         ) const;
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment
         void operator=(const polyPatch&);

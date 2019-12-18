@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,7 +95,7 @@ class undoableMeshCutter
 :
     public meshCutter
 {
-    // Private data
+    // Private Data
 
         //- Whether or not to store actions for unplaying.
         const bool undoable_;
@@ -128,13 +128,6 @@ class undoableMeshCutter
         static void updateLabels(const labelList& map, Map<splitCell*>&);
 
 
-        //- Disallow default bitwise copy construct
-        undoableMeshCutter(const undoableMeshCutter&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const undoableMeshCutter&);
-
-
 public:
 
     //- Runtime type information
@@ -147,6 +140,9 @@ public:
         //- Construct from mesh and flag whether refinement pattern needs
         //  to be stored.
         undoableMeshCutter(const polyMesh& mesh, const bool undoable = true);
+
+        //- Disallow default bitwise copy construction
+        undoableMeshCutter(const undoableMeshCutter&) = delete;
 
 
     //- Destructor
@@ -199,6 +195,12 @@ public:
                 const labelList& splitFaces,
                 polyTopoChange&
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const undoableMeshCutter&) = delete;
 };
 
 

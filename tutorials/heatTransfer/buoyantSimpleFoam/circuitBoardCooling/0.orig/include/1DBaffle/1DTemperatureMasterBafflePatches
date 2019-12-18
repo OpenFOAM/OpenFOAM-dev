@@ -11,7 +11,7 @@ T
     type   compressible::thermalBaffle1D<hConstSolidThermoPhysics>;
 
     thickness       uniform 0.005;  // thickness [m]
-    Qs              uniform 100;    // heat flux [W/m2]
+    Qs              uniform 100;    // heat flux [W/m^2]
 
     # include "1DbaffleSolidThermo"
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,8 +53,8 @@ Foam::laminarFlameSpeedModels::SCOPE::polynomial::polynomial
 )
 :
     FixedList<scalar, 7>(polyDict.lookup("coefficients")),
-    ll(readScalar(polyDict.lookup("lowerLimit"))),
-    ul(readScalar(polyDict.lookup("upperLimit"))),
+    ll(polyDict.lookup<scalar>("lowerLimit")),
+    ul(polyDict.lookup<scalar>("upperLimit")),
     llv(polyPhi(ll, *this)),
     ulv(polyPhi(ul, *this)),
     lu(0)
@@ -82,12 +82,12 @@ Foam::laminarFlameSpeedModels::SCOPE::SCOPE
           )()
         ).optionalSubDict(typeName + "Coeffs")
     ),
-    LFL_(readScalar(coeffsDict_.lookup("lowerFlamabilityLimit"))),
-    UFL_(readScalar(coeffsDict_.lookup("upperFlamabilityLimit"))),
+    LFL_(coeffsDict_.lookup<scalar>("lowerFlamabilityLimit")),
+    UFL_(coeffsDict_.lookup<scalar>("upperFlamabilityLimit")),
     SuPolyL_(coeffsDict_.subDict("lowerSuPolynomial")),
     SuPolyU_(coeffsDict_.subDict("upperSuPolynomial")),
-    Texp_(readScalar(coeffsDict_.lookup("Texp"))),
-    pexp_(readScalar(coeffsDict_.lookup("pexp"))),
+    Texp_(coeffsDict_.lookup<scalar>("Texp")),
+    pexp_(coeffsDict_.lookup<scalar>("pexp")),
     MaPolyL_(coeffsDict_.subDict("lowerMaPolynomial")),
     MaPolyU_(coeffsDict_.subDict("upperMaPolynomial"))
 {

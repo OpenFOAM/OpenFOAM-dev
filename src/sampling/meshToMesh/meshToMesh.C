@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -196,7 +196,7 @@ Foam::labelList Foam::meshToMesh::maskCells
         Pout<< "participating source mesh cells: " << cells.size() << endl;
     }
 
-    return cells;
+    return move(cells);
 }
 
 
@@ -310,10 +310,10 @@ void Foam::meshToMesh::calculate(const word& methodName)
                 tgtRegion_.time(),
                 IOobject::NO_READ
             ),
-            xferMove(newTgtPoints),
-            xferMove(newTgtFaces),
-            xferMove(newTgtFaceOwners),
-            xferMove(newTgtFaceNeighbours),
+            move(newTgtPoints),
+            move(newTgtFaces),
+            move(newTgtFaceOwners),
+            move(newTgtFaceNeighbours),
             false                                   // no parallel comms
         );
 

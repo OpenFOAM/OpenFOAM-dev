@@ -6,7 +6,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 cleanCase
 
-rm -rf graphs
 rm -f *.eps yPlus_vs_uPlus
 
 #------------------------------------------------------------------------------

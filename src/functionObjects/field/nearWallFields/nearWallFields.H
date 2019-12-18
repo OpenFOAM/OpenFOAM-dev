@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,14 +165,6 @@ protected:
         ) const;
 
 
-private:
-
-        //- Disallow default bitwise copy construct
-        nearWallFields(const nearWallFields&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const nearWallFields&);
-
 public:
 
     //- Runtime type information
@@ -190,6 +182,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        nearWallFields(const nearWallFields&) = delete;
+
 
     //- Destructor
     virtual ~nearWallFields();
@@ -205,6 +200,12 @@ public:
 
         //- Write the near-wall fields
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const nearWallFields&) = delete;
 };
 
 

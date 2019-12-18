@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ class Istream
 :
     public IOstream
 {
-    // Private data
+    // Private Data
 
         //- Has a token been put back on the stream?
         bool putBack_;
@@ -90,7 +90,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         // Read functions
 
@@ -148,7 +148,7 @@ public:
             char readEndList(const char* funcName);
 
 
-    // Member operators
+    // Member Operators
 
         //- Return a non-const reference to const Istream
         //  Needed for read-constructors where the stream argument is temporary:

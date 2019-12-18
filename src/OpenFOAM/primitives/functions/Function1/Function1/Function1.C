@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Function1.H"
-#include "Time.H"
 
 // * * * * * * * * * * * * * * * * Constructor * * * * * * * * * * * * * * * //
 
@@ -43,10 +42,46 @@ Foam::Function1<Type>::Function1(const Function1<Type>& de)
 {}
 
 
+template<class Type, class Function1Type>
+Foam::FieldFunction1<Type, Function1Type>::FieldFunction1
+(
+    const word& entryName
+)
+:
+    Function1<Type>(entryName)
+{}
+
+
+template<class Type, class Function1Type>
+Foam::FieldFunction1<Type, Function1Type>::FieldFunction1
+(
+    const FieldFunction1<Type, Function1Type>& ff1
+)
+:
+    Function1<Type>(ff1)
+{}
+
+
+template<class Type, class Function1Type>
+Foam::tmp<Foam::Function1<Type>>
+Foam::FieldFunction1<Type, Function1Type>::clone() const
+{
+    return tmp<Function1<Type>>
+    (
+        new Function1Type(refCast<const Function1Type>(*this))
+    );
+}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::Function1<Type>::~Function1()
+{}
+
+
+template<class Type, class Function1Type>
+Foam::FieldFunction1<Type, Function1Type>::~FieldFunction1()
 {}
 
 
@@ -60,31 +95,14 @@ const Foam::word& Foam::Function1<Type>::name() const
 
 
 template<class Type>
-void Foam::Function1<Type>::convertTimeBase(const Time&)
-{}
-
-
-template<class Type>
-Type Foam::Function1<Type>::value(const scalar x) const
+void Foam::Function1<Type>::writeData(Ostream& os) const
 {
-    NotImplemented;
-
-    return Zero;
+    writeKeyword(os, name_) << type();
 }
 
 
-template<class Type>
-Type Foam::Function1<Type>::integrate(const scalar x1, const scalar x2) const
-{
-    NotImplemented;
-
-    return Zero;
-}
-
-
-template<class Function1Type>
-Foam::tmp<Foam::Field<typename Function1Type::returnType>>
-Foam::FieldFunction1<Function1Type>::value
+template<class Type, class Function1Type>
+Foam::tmp<Foam::Field<Type>> Foam::FieldFunction1<Type, Function1Type>::value
 (
     const scalarField& x
 ) const
@@ -94,37 +112,16 @@ Foam::FieldFunction1<Function1Type>::value
 
     forAll(x, i)
     {
-        fld[i] = Function1Type::value(x[i]);
+        fld[i] = refCast<const Function1Type>(*this).value(x[i]);
     }
+
     return tfld;
 }
 
 
-template<class Function1Type>
-Foam::FieldFunction1<Function1Type>::FieldFunction1
-(
-    const word& entryName,
-    const dictionary& dict
-)
-:
-    Function1Type(entryName, dict)
-{}
-
-
-template<class Function1Type>
-Foam::tmp<Foam::Function1<typename Function1Type::returnType>>
-Foam::FieldFunction1<Function1Type>::clone() const
-{
-    return tmp<Function1<Type>>
-    (
-        new FieldFunction1<Function1Type>(*this)
-    );
-}
-
-
-template<class Function1Type>
-Foam::tmp<Foam::Field<typename Function1Type::returnType>>
-Foam::FieldFunction1<Function1Type>::integrate
+template<class Type, class Function1Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::FieldFunction1<Type, Function1Type>::integrate
 (
     const scalarField& x1,
     const scalarField& x2
@@ -135,17 +132,19 @@ Foam::FieldFunction1<Function1Type>::integrate
 
     forAll(x1, i)
     {
-        fld[i] = Function1Type::integrate(x1[i], x2[i]);
+        fld[i] = refCast<const Function1Type>(*this).integrate(x1[i], x2[i]);
     }
 
     return tfld;
 }
 
 
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
 template<class Type>
-void Foam::Function1<Type>::writeData(Ostream& os) const
+void  Foam::writeEntry(Ostream& os, const Function1<Type>& f1)
 {
-    os.writeKeyword(name_) << type();
+    f1.writeData(os);
 }
 
 
@@ -164,7 +163,6 @@ Foam::Ostream& Foam::operator<<
         "Ostream& operator<<(Ostream&, const Function1<Type>&)"
     );
 
-    os  << f1.name_;
     f1.writeData(os);
 
     return os;

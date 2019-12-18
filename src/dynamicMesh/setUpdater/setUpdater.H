@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,12 +58,6 @@ class setUpdater
         template<class Type>
         void updateSets(const mapPolyMesh& morphMap) const;
 
-        //- Disallow default bitwise copy construct
-        setUpdater(const setUpdater&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const setUpdater&);
-
 
 public:
 
@@ -81,6 +75,9 @@ public:
             const label index,
             const polyTopoChanger& mme
         );
+
+        //- Disallow default bitwise copy construction
+        setUpdater(const setUpdater&) = delete;
 
 
     //- Destructor
@@ -107,6 +104,12 @@ public:
 
         //- Write dictionary
         virtual void writeDict(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const setUpdater&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sampledThresholdCellFaces
+    Foam::sampledSurfaces::thresholdCellFaces
 
 Description
     A sampledSurface defined by the cell faces corresponding to a threshold
@@ -43,20 +43,24 @@ SourceFiles
 
 namespace Foam
 {
+namespace sampledSurfaces
+{
 
 /*---------------------------------------------------------------------------*\
-                    Class sampledThresholdCellFaces Declaration
+                    Class thresholdCellFaces Declaration
 \*---------------------------------------------------------------------------*/
 
-class sampledThresholdCellFaces
+class thresholdCellFaces
 :
     public sampledSurface,
     public MeshedSurface<face>
 {
-    //- Private typedefs for convenience
+    // Private Typedefs
+
         typedef MeshedSurface<face> MeshStorage;
 
-    // Private data
+
+    // Private Data
 
         //- Field to get isoSurface of
         const word fieldName_;
@@ -104,13 +108,13 @@ class sampledThresholdCellFaces
 public:
 
     //- Runtime type information
-    TypeName("sampledThresholdCellFaces");
+    TypeName("thresholdCellFaces");
 
 
     // Constructors
 
         //- Construct from dictionary
-        sampledThresholdCellFaces
+        thresholdCellFaces
         (
             const word& name,
             const polyMesh&,
@@ -119,7 +123,7 @@ public:
 
 
     //- Destructor
-    virtual ~sampledThresholdCellFaces();
+    virtual ~thresholdCellFaces();
 
 
     // Member Functions
@@ -206,6 +210,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSurfaces
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

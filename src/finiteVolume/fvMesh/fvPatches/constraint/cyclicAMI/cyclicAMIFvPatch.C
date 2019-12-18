@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "cyclicAMIFvPatch.H"
 #include "addToRunTimeSelectionTable.H"
 #include "fvMesh.H"
+#include "Time.H"
 #include "transform.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -103,7 +104,9 @@ void Foam::cyclicAMIFvPatch::makeWeights(scalarField& w) const
 
 bool Foam::cyclicAMIFvPatch::coupled() const
 {
-    return Pstream::parRun() || (this->size() && neighbFvPatch().size());
+    return
+        Pstream::parRun()
+     || !this->boundaryMesh().mesh().time().processorCase();
 }
 
 

@@ -21,20 +21,12 @@ thermoType
     mixture         pureMixture;
     transport       const;
     thermo          eConst;
-    equationOfState perfectFluid;
+    equationOfState rPolynomial;
     specie          specie;
     energy          sensibleInternalEnergy;
 }
 
-species
-(
-    AIR
-    H2O
-);
-
-inertSpecie H2O;
-
-"(mixture|H2O)"
+mixture
 {
     specie
     {
@@ -42,8 +34,7 @@ inertSpecie H2O;
     }
     equationOfState
     {
-        R           3000;
-        rho0        1027;
+        C (0.001278 -2.1055e-06 3.9689e-09 4.3772e-13 -2.0225e-16);
     }
     thermodynamics
     {
@@ -56,29 +47,5 @@ inertSpecie H2O;
         Pr          2.289;
     }
 }
-
-AIR
-{
-    specie
-    {
-        molWeight   28.9;
-    }
-    equationOfState
-    {
-        R           3000;
-        rho0        1027;
-    }
-    thermodynamics
-    {
-        Hf          0;
-        Cv          4195;
-    }
-    transport
-    {
-        mu          3.645e-4;
-        Pr          2.289;
-    }
-}
-
 
 // ************************************************************************* //

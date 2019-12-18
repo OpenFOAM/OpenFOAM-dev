@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,8 +100,11 @@ public:
         //  class
         HashPtrTable(const dictionary&);
 
-        //- Construct as copy
+        //- Copy constructor
         HashPtrTable(const HashPtrTable<T, Key, Hash>&);
+
+        //- Move constructor
+        HashPtrTable(HashPtrTable<T, Key, Hash>&&);
 
 
     //- Destructor
@@ -127,7 +130,11 @@ public:
 
     // Member Operators
 
+        //- Assignment operator
         void operator=(const HashPtrTable<T, Key, Hash>&);
+
+        //- Move assignment operator
+        void operator=(HashPtrTable<T, Key, Hash>&&);
 
 
     // IOstream Operators

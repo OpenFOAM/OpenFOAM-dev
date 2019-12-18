@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ class SolverPerformance
     // Label type corresponding to Type
     typedef typename pTraits<Type>::labelType labelType;
 
-    // Private data
+    // Private Data
 
         word        solverName_;
         word        fieldName_;
@@ -142,7 +142,7 @@ public:
         {}
 
 
-    // Member functions
+    // Member Functions
 
         //- Return solver name
         const word& solverName() const
@@ -242,7 +242,7 @@ public:
         bool operator!=(const SolverPerformance<Type>&) const;
 
 
-    // Friend functions
+    // Friend Functions
 
         //- Return the element-wise maximum of two SolverPerformance<Type>s
         friend SolverPerformance<Type> Foam::max <Type>

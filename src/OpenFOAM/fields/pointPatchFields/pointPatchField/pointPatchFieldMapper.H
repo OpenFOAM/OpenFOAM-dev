@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Description
 #define pointPatchFieldMapper_H
 
 #include "primitiveFields.H"
-#include "FieldMapper.H"
+#include "generalFieldMapper.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,7 +46,7 @@ namespace Foam
 
 class pointPatchFieldMapper
 :
-    public FieldMapper
+    virtual public fieldMapper
 {
 
 public:
@@ -55,6 +55,26 @@ public:
 
         //- Null constructor
         pointPatchFieldMapper()
+        {}
+};
+
+
+/*---------------------------------------------------------------------------*\
+                  Class generalPointPatchFieldMapper Declaration
+\*---------------------------------------------------------------------------*/
+
+class generalPointPatchFieldMapper
+:
+    public pointPatchFieldMapper,
+    public generalFieldMapper
+{
+
+public:
+
+    // Constructors
+
+        //- Null constructor
+        generalPointPatchFieldMapper()
         {}
 };
 

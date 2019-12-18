@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,17 +42,7 @@ Foam::pointBoundaryMesh::pointBoundaryMesh
     pointPatchList(basicBdry.size()),
     mesh_(m)
 {
-    // Set boundary patches
-    pointPatchList& Patches = *this;
-
-    forAll(Patches, patchi)
-    {
-        Patches.set
-        (
-            patchi,
-            facePointPatch::New(basicBdry[patchi], *this).ptr()
-        );
-    }
+    reset(basicBdry);
 }
 
 
@@ -208,6 +198,36 @@ void Foam::pointBoundaryMesh::updateMesh()
                 operator[](patchi).updateMesh(pBufs);
             }
         }
+    }
+}
+
+
+void Foam::pointBoundaryMesh::reset(const polyBoundaryMesh& basicBdry)
+{
+    // Set boundary patches
+    pointPatchList& Patches = *this;
+
+    forAll(Patches, patchi)
+    {
+        Patches.set
+        (
+            patchi,
+            facePointPatch::New(basicBdry[patchi], *this).ptr()
+        );
+    }
+}
+
+
+void Foam::pointBoundaryMesh::shuffle
+(
+    const labelUList& newToOld,
+    const bool validBoundary
+)
+{
+    pointPatchList::shuffle(newToOld);
+    if (validBoundary)
+    {
+        updateMesh();
     }
 }
 

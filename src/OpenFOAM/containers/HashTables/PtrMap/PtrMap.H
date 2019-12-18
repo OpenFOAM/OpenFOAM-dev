@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,11 +68,30 @@ public:
             HashPtrTable<T, label, Hash<label>>(is)
         {}
 
-        //- Construct as copy
+        //- Copy construct
         PtrMap(const PtrMap<T>& map)
         :
             HashPtrTable<T, label, Hash<label>>(map)
         {}
+
+        //- Move constructor
+        PtrMap(PtrMap<T>&& map)
+        :
+            HashPtrTable<T, label, Hash<label>>(move(map))
+        {}
+
+
+    // Member Operators
+
+        void operator=(const PtrMap<T>& map)
+        {
+            HashPtrTable<T, label, Hash<label>>::operator=(map);
+        }
+
+        void operator=(PtrMap<T>&& map)
+        {
+            HashPtrTable<T, label, Hash<label>>::operator=(move(map));
+        }
 };
 
 

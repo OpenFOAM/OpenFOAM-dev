@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,10 +65,7 @@ void Foam::regionModels::regionModel::constructMeshObjects()
 
 void Foam::regionModels::regionModel::initialise()
 {
-    if (debug)
-    {
-        Pout<< "regionModel::initialise()" << endl;
-    }
+    DebugInFunction << endl;
 
     label nBoundaryFaces = 0;
     DynamicList<label> primaryPatchIDs;
@@ -80,11 +77,9 @@ void Foam::regionModels::regionModel::initialise()
         const polyPatch& regionPatch = rbm[patchi];
         if (isA<mappedPatchBase>(regionPatch))
         {
-            if (debug)
-            {
-                Pout<< "found " << mappedWallPolyPatch::typeName
-                    <<  " " << regionPatch.name() << endl;
-            }
+            DebugInFunction
+                << "found " << mappedWallPolyPatch::typeName
+                <<  " " << regionPatch.name() << endl;
 
             intCoupledPatchIDs.append(patchi);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,60 @@ namespace functionEntries
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+Foam::string Foam::functionEntries::calcEntry::calc
+(
+    const dictionary& parentDict,
+    Istream& is
+)
+{
+    Info<< "Using #calcEntry at line " << is.lineNumber()
+        << " in file " <<  parentDict.name() << endl;
+
+    dynamicCode::checkSecurity
+    (
+        "functionEntries::calcEntry::execute(..)",
+        parentDict
+    );
+
+    // Read string
+    string s(is);
+    // Make sure we stop this entry
+    // is.putBack(token(token::END_STATEMENT, is.lineNumber()));
+
+    // Construct codeDict for codeStream
+    // must reference parent for stringOps::expand to work nicely.
+    dictionary codeSubDict;
+    codeSubDict.add("code", "os << (" + s + ");");
+    dictionary codeDict(parentDict, codeSubDict);
+
+    codeStream::streamingFunctionType function = codeStream::getFunction
+    (
+        parentDict,
+        codeDict
+    );
+
+    // Use function to write stream
+    OStringStream os(is.format());
+    (*function)(os, parentDict);
+
+    // Return the string containing the results of the calculation
+    return os.str();
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::functionEntries::calcEntry::execute
+(
+    dictionary& parentDict,
+    Istream& is
+)
+{
+    return insert(parentDict, calc(parentDict, is));
+}
+
 
 bool Foam::functionEntries::calcEntry::execute
 (
@@ -66,85 +119,7 @@ bool Foam::functionEntries::calcEntry::execute
     Istream& is
 )
 {
-    Info<< "Using #calcEntry at line " << is.lineNumber()
-        << " in file " <<  parentDict.name() << endl;
-
-    dynamicCode::checkSecurity
-    (
-        "functionEntries::calcEntry::execute(..)",
-        parentDict
-    );
-
-    // Read string
-    string s(is);
-    // Make sure we stop this entry
-    // is.putBack(token(token::END_STATEMENT, is.lineNumber()));
-
-    // Construct codeDict for codeStream
-    // must reference parent for stringOps::expand to work nicely.
-    dictionary codeSubDict;
-    codeSubDict.add("code", "os << (" + s + ");");
-    dictionary codeDict(parentDict, codeSubDict);
-
-    codeStream::streamingFunctionType function = codeStream::getFunction
-    (
-        parentDict,
-        codeDict
-    );
-
-    // use function to write stream
-    OStringStream os(is.format());
-    (*function)(os, parentDict);
-
-    // get the entry from this stream
-    IStringStream resultStream(os.str());
-    thisEntry.read(parentDict, resultStream);
-
-    return true;
-}
-
-
-bool Foam::functionEntries::calcEntry::execute
-(
-    dictionary& parentDict,
-    Istream& is
-)
-{
-    Info<< "Using #calcEntry at line " << is.lineNumber()
-        << " in file " <<  parentDict.name() << endl;
-
-    dynamicCode::checkSecurity
-    (
-        "functionEntries::calcEntry::execute(..)",
-        parentDict
-    );
-
-    // Read string
-    string s(is);
-    // Make sure we stop this entry
-    // is.putBack(token(token::END_STATEMENT, is.lineNumber()));
-
-    // Construct codeDict for codeStream
-    // must reference parent for stringOps::expand to work nicely.
-    dictionary codeSubDict;
-    codeSubDict.add("code", "os << (" + s + ");");
-    dictionary codeDict(parentDict, codeSubDict);
-
-    codeStream::streamingFunctionType function = codeStream::getFunction
-    (
-        parentDict,
-        codeDict
-    );
-
-    // use function to write stream
-    OStringStream os(is.format());
-    (*function)(os, parentDict);
-
-    // get the entry from this stream
-    IStringStream resultStream(os.str());
-    parentDict.read(resultStream);
-
-    return true;
+    return insert(parentDict, thisEntry, calc(parentDict, is));
 }
 
 

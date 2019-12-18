@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,13 +69,6 @@ class limiterBlended
         tmp<surfaceInterpolationScheme<Type>> tScheme2_;
 
 
-        //- Disallow default bitwise copy construct
-        limiterBlended(const limiterBlended&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const limiterBlended&);
-
-
 public:
 
     //- Runtime type information
@@ -130,6 +123,9 @@ public:
                 surfaceInterpolationScheme<Type>::New(mesh, faceFlux, is)
             )
         {}
+
+        //- Disallow default bitwise copy construction
+        limiterBlended(const limiterBlended&) = delete;
 
 
     // Member Functions
@@ -223,6 +219,12 @@ public:
                 );
             }
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const limiterBlended&) = delete;
 };
 
 

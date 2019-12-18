@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,12 +97,6 @@ protected:
             const dimensionSet& ds
         );
 
-        //- Disallow default bitwise copy construct
-        optionList(const optionList&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const optionList&);
-
 
 public:
 
@@ -117,6 +111,9 @@ public:
 
         //- Construct from mesh and dictionary
         optionList(const fvMesh& mesh, const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        optionList(const optionList&) = delete;
 
 
     //- Destructor
@@ -257,6 +254,12 @@ public:
                 Ostream& os,
                 const optionList& options
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const optionList&) = delete;
 };
 
 

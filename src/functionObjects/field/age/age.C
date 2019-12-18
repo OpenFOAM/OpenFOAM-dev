@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "age.H"
-#include "fvCFD.H"
+#include "fvmDiv.H"
+#include "fvmLaplacian.H"
+#include "turbulenceModel.H"
 #include "inletOutletFvPatchField.H"
 #include "wallFvPatch.H"
 #include "zeroGradientFvPatchField.H"
@@ -64,6 +66,26 @@ Foam::wordList Foam::functionObjects::age::patchTypes() const
 }
 
 
+bool Foam::functionObjects::age::converged
+(
+    const int nCorr,
+    const scalar initialResidual
+) const
+{
+    if (initialResidual < tolerance_)
+    {
+        Info<< "Field " << typeName
+            << " converged in " << nCorr << " correctors\n" << endl;
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::age::age
@@ -73,12 +95,7 @@ Foam::functionObjects::age::age
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict),
-    phiName_(),
-    rhoName_(),
-    nCorr_(0),
-    schemesField_()
-
+    fvMeshFunctionObject(name, runTime, dict)
 {
     read(dict);
 }
@@ -96,10 +113,10 @@ bool Foam::functionObjects::age::read(const dictionary& dict)
 {
     phiName_ = dict.lookupOrDefault<word>("phi", "phi");
     rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
-
-    dict.readIfPresent("nCorr", nCorr_);
-
+    nCorr_ = dict.lookupOrDefault<int>("nCorr", 5);
     schemesField_ = dict.lookupOrDefault<word>("schemesField", typeName);
+    diffusion_ = dict.lookupOrDefault<Switch>("diffusion", false);
+    tolerance_ = dict.lookupOrDefault<scalar>("tolerance", 1e-5);
 
     return true;
 }
@@ -107,22 +124,34 @@ bool Foam::functionObjects::age::read(const dictionary& dict)
 
 bool Foam::functionObjects::age::execute()
 {
-    volScalarField t
+    tmp<volScalarField> tage
     (
-        IOobject
+        new volScalarField
         (
-            typeName,
-            mesh_.time().timeName(),
+            IOobject
+            (
+                typeName,
+                mesh_.time().timeName(),
+                mesh_,
+                IOobject::READ_IF_PRESENT,
+                IOobject::AUTO_WRITE,
+                false
+            ),
             mesh_,
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        mesh_,
-        dimensionedScalar(dimTime, 0),
-        patchTypes()
+            dimensionedScalar(dimTime, 0),
+            patchTypes()
+        )
     );
+    volScalarField& age = tage.ref();
 
     const word divScheme("div(phi," + schemesField_ + ")");
+
+    // Set under-relaxation coeff
+    scalar relaxCoeff = 0.0;
+    if (mesh_.relaxEquation(schemesField_))
+    {
+        relaxCoeff = mesh_.equationRelaxationFactor(schemesField_);
+    }
 
     // This only works because the null constructed inletValue for an
     // inletOutletFvPatchField is zero. If we needed any other value we would
@@ -138,39 +167,89 @@ bool Foam::functionObjects::age::execute()
         const volScalarField& rho =
             mesh_.lookupObject<volScalarField>(rhoName_);
 
-        for (label i = 0; i <= nCorr_; ++ i)
+        tmp<volScalarField> tmuEff;
+        word laplacianScheme;
+
+        if (diffusion_)
         {
-            solve
+            tmuEff =
+                mesh_.lookupObject<turbulenceModel>
+                (
+                    turbulenceModel::propertiesName
+                ).muEff();
+
+            laplacianScheme =
+                "laplacian(" + tmuEff().name() + ',' + schemesField_ + ")";
+        }
+
+        for (int i=0; i<=nCorr_; i++)
+        {
+            fvScalarMatrix ageEqn
             (
-                fvm::div(phi, t, divScheme) == rho,
-                schemesField_
+                fvm::div(phi, age, divScheme) == rho
             );
+
+            if (diffusion_)
+            {
+                ageEqn -= fvm::laplacian(tmuEff(), age, laplacianScheme);
+            }
+
+            ageEqn.relax(relaxCoeff);
+
+            if (converged(i, ageEqn.solve(schemesField_).initialResidual()))
+            {
+                break;
+            };
         }
     }
     else
     {
-        for (label i = 0; i <= nCorr_; ++ i)
+        tmp<volScalarField> tnuEff;
+        word laplacianScheme;
+
+        if (diffusion_)
         {
-            solve
+            tnuEff =
+                mesh_.lookupObject<turbulenceModel>
+                (
+                    turbulenceModel::propertiesName
+                ).nuEff();
+
+            laplacianScheme =
+                "laplacian(" + tnuEff().name() + ',' + schemesField_ + ")";
+        }
+
+        for (int i=0; i<=nCorr_; i++)
+        {
+            fvScalarMatrix ageEqn
             (
-                fvm::div(phi, t, divScheme)
-             == dimensionedScalar(dimless, 1),
-                schemesField_
+                fvm::div(phi, age, divScheme) == dimensionedScalar(1)
             );
+
+            if (diffusion_)
+            {
+                ageEqn -= fvm::laplacian(tnuEff(), age, laplacianScheme);
+            }
+
+            ageEqn.relax(relaxCoeff);
+
+            if (converged(i, ageEqn.solve(schemesField_).initialResidual()))
+            {
+                break;
+            }
         }
     }
 
-    Info<< "Min/max age:" << min(t).value() << ' ' << max(t).value() << endl;
+    Info<< "Min/max age:" << min(age).value()
+        << ' ' << max(age).value() << endl;
 
-    t.write();
-
-    return true;
+    return store(tage);
 }
 
 
 bool Foam::functionObjects::age::write()
 {
-    return true;
+    return writeObject(typeName);
 }
 
 

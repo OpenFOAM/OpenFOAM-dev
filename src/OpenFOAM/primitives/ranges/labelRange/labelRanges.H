@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ class labelRanges
 :
     private DynamicList<labelRange>
 {
-    // Private typedefs for convenience
+    // Private Typedefs for convenience
 
         typedef DynamicList<labelRange> ParentType;
 
@@ -113,7 +113,7 @@ public:
         //- An STL const_iterator
         class const_iterator
         {
-            // Private data
+            // Private Data
 
                 //- Reference to the list for which this is an iterator
                 const labelRanges& list_;
@@ -135,7 +135,7 @@ public:
                 inline explicit const_iterator(const labelRanges&);
 
 
-            // Member operators
+            // Member Operators
 
                 inline bool operator==(const const_iterator&) const;
 

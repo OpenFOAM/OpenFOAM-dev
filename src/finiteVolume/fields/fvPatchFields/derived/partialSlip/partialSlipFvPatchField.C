@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ Foam::partialSlipFvPatchField<Type>::partialSlipFvPatchField
 )
 :
     transformFvPatchField<Type>(ptf, p, iF, mapper),
-    valueFraction_(ptf.valueFraction_, mapper)
+    valueFraction_(mapper(ptf.valueFraction_))
 {}
 
 
@@ -101,7 +101,7 @@ void Foam::partialSlipFvPatchField<Type>::autoMap
 )
 {
     transformFvPatchField<Type>::autoMap(m);
-    valueFraction_.autoMap(m);
+    m(valueFraction_, valueFraction_);
 }
 
 
@@ -180,7 +180,7 @@ template<class Type>
 void Foam::partialSlipFvPatchField<Type>::write(Ostream& os) const
 {
     transformFvPatchField<Type>::write(os);
-    valueFraction_.writeEntry("valueFraction", os);
+    writeEntry(os, "valueFraction", valueFraction_);
 }
 
 

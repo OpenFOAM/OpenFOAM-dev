@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ class word
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
         static int debug;
@@ -83,13 +83,13 @@ public:
         //- Construct null
         inline word();
 
-        //- Construct as copy
+        //- Copy constructor
         inline word(const word&);
 
-        //- Construct as copy of character array
+        //- Copy constructor of character array
         inline word(const char*, const bool doStripInvalid=true);
 
-        //- Construct as copy with a maximum number of characters
+        //- Copy constructor with a maximum number of characters
         inline word
         (
             const char*,
@@ -97,23 +97,26 @@ public:
             const bool doStripInvalid
         );
 
-        //- Construct as copy of string
+        //- Copy constructor of string
         inline word(const string&, const bool doStripInvalid=true);
 
-        //- Construct as copy of std::string
+        //- Copy constructor of std::string
         inline word(const std::string&, const bool doStripInvalid=true);
 
         //- Construct from Istream
         word(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         //- Is this character valid for a word
         inline static bool valid(char);
 
+        //- Return the word with the first letter capitalised
+        inline word capitalise() const;
 
-    // Member operators
+
+    // Member Operators
 
         // Assignment
 
@@ -128,11 +131,14 @@ public:
         friend word operator&(const word&, const word&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream&, word&);
         friend Ostream& operator<<(Ostream&, const word&);
 };
+
+
+void writeEntry(Ostream& os, const word& value);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

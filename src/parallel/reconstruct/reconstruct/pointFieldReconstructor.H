@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,8 @@ SourceFiles
 
 #include "pointMesh.H"
 #include "pointFields.H"
-#include "pointPatchFieldMapperPatchRef.H"
+#include "pointPatchFieldMapper.H"
+#include "setSizeFieldMapper.H"
 #include "IOobjectList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -51,7 +52,7 @@ namespace Foam
 
 class pointFieldReconstructor
 {
-    // Private data
+    // Private Data
 
         //- Reconstructed mesh reference
         const pointMesh& mesh_;
@@ -72,23 +73,14 @@ class pointFieldReconstructor
         label nReconstructed_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        pointFieldReconstructor(const pointFieldReconstructor&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointFieldReconstructor&);
-
-
 public:
 
+        //- Mapper for sizing only - does not do any actual mapping.
         class pointPatchFieldReconstructor
         :
-            public pointPatchFieldMapper
+            public pointPatchFieldMapper,
+            public setSizeFieldMapper
         {
-            label size_;
-
         public:
 
             // Constructors
@@ -96,31 +88,8 @@ public:
                 //- Construct given size
                 pointPatchFieldReconstructor(const label size)
                 :
-                    size_(size)
+                    setSizeFieldMapper(size)
                 {}
-
-
-            // Member functions
-
-                label size() const
-                {
-                    return size_;
-                }
-
-                bool direct() const
-                {
-                    return true;
-                }
-
-                bool hasUnmapped() const
-                {
-                    return false;
-                }
-
-                const labelUList& directAddressing() const
-                {
-                    return labelUList::null();
-                }
         };
 
 
@@ -134,6 +103,9 @@ public:
             const PtrList<labelIOList>& pointProcAddressing,
             const PtrList<labelIOList>& boundaryProcAddressing
         );
+
+        //- Disallow default bitwise copy construction
+        pointFieldReconstructor(const pointFieldReconstructor&) = delete;
 
 
     // Member Functions
@@ -156,6 +128,12 @@ public:
             const IOobjectList& objects,
             const HashSet<word>& selectedFields
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointFieldReconstructor&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ protected:
         speciesTable species_;
 
         //- List of specie active flags
-        List<bool> active_;
+        mutable List<bool> active_;
 
         //- Species mass fractions
         PtrList<volScalarField> Y_;
@@ -99,7 +99,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the table of species
         inline const speciesTable& species() const;
@@ -114,10 +114,10 @@ public:
         inline const List<bool>& active() const;
 
         //- Set speciei active
-        inline void setActive(label speciei);
+        inline void setActive(label speciei) const;
 
         //- Set speciei inactive
-        inline void setInactive(label speciei);
+        inline void setInactive(label speciei) const;
 
         //- Return the mass-fraction fields
         inline PtrList<volScalarField>& Y();

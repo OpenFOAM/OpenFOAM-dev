@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,6 @@ class surfaceSlipDisplacementPointPatchVectorField
 :
     public pointPatchVectorField
 {
-
 public:
 
     // Public data types
@@ -83,7 +82,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Project mode names
         static const NamedEnum<projectMode, 3> projectModeNames_;
@@ -111,9 +110,6 @@ private:
 
         //- Calculate displacement (w.r.t. points0()) to project onto surface
         void calcProjection(vectorField& displacement) const;
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfaceSlipDisplacementPointPatchVectorField&);
 
 
 public:
@@ -148,7 +144,7 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         surfaceSlipDisplacementPointPatchVectorField
         (
             const surfaceSlipDisplacementPointPatchVectorField&
@@ -166,7 +162,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         surfaceSlipDisplacementPointPatchVectorField
         (
             const surfaceSlipDisplacementPointPatchVectorField&,
@@ -202,6 +198,15 @@ public:
 
         //- Write
         virtual void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=
+        (
+            const surfaceSlipDisplacementPointPatchVectorField&
+        ) = delete;
 };
 
 

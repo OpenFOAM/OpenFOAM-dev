@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,6 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Null constructor
 inline Foam::pointData::pointData()
 :
     pointEdgePoint(),
@@ -37,7 +36,6 @@ inline Foam::pointData::pointData()
 {}
 
 
-// Construct from origin, distance
 inline Foam::pointData::pointData
 (
     const point& origin,
@@ -49,15 +47,6 @@ inline Foam::pointData::pointData
     pointEdgePoint(origin, distSqr),
     s_(s),
     v_(v)
-{}
-
-
-// Construct as copy
-inline Foam::pointData::pointData(const pointData& wpt)
-:
-    pointEdgePoint(wpt),
-    s_(wpt.s()),
-    v_(wpt.v())
 {}
 
 

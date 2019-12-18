@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,14 +51,6 @@ class PCG
 :
     public lduMatrix::solver
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        PCG(const PCG&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const PCG&);
-
 
 public:
 
@@ -79,6 +71,9 @@ public:
             const dictionary& solverControls
         );
 
+        //- Disallow default bitwise copy construction
+        PCG(const PCG&) = delete;
+
 
     //- Destructor
     virtual ~PCG()
@@ -94,6 +89,12 @@ public:
             const scalarField& source,
             const direction cmpt=0
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PCG&) = delete;
 };
 
 

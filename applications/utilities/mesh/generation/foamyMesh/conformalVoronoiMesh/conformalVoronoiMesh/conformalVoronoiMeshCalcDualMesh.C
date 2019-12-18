@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -739,10 +739,10 @@ Foam::conformalVoronoiMesh::createPolyMeshFromPoints
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
             ),
-            xferCopy(pts),
-            xferMove(faces),
-            xferMove(owner),
-            xferMove(neighbour)
+            clone(pts),
+            Foam::move(faces),
+            Foam::move(owner),
+            Foam::move(neighbour)
         )
     );
 
@@ -754,7 +754,7 @@ Foam::conformalVoronoiMesh::createPolyMeshFromPoints
 
     forAll(patches, p)
     {
-        label totalPatchSize = readLabel(patchDicts[p].lookup("nFaces"));
+        label totalPatchSize = patchDicts[p].lookup<label>("nFaces");
 
         if
         (
@@ -840,7 +840,7 @@ void Foam::conformalVoronoiMesh::checkCellSizing()
         = dict.subDict("meshQualityControls");
 
     const scalar maxNonOrtho =
-        readScalar(meshQualityDict.lookup("maxNonOrtho", true));
+        meshQualityDict.lookup<scalar>("maxNonOrtho", true);
 
     label nWrongFaces = 0;
 
@@ -991,7 +991,7 @@ Foam::labelHashSet Foam::conformalVoronoiMesh::findOffsetPatchFaces
         offsetBoundaryCells.write();
     }
 
-    return offsetBoundaryCells;
+    return Foam::move(offsetBoundaryCells);
 }
 
 
@@ -1741,7 +1741,7 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
             procNeighbours[patchi] =
             (
                 patchDicts[patchi].found("neighbProcNo")
-              ? readLabel(patchDicts[patchi].lookup("neighbProcNo"))
+              ? patchDicts[patchi].lookup<label>("neighbProcNo")
               : -1
             );
         }
@@ -2368,7 +2368,7 @@ void Foam::conformalVoronoiMesh::createFacesOwnerNeighbourAndPatches
                 const label neighbour =
                 (
                     patchDicts[nbI].found("neighbProcNo")
-                  ? readLabel(patchDicts[nbI].lookup("neighbProcNo"))
+                  ? patchDicts[nbI].lookup<label>("neighbProcNo")
                   : -1
                 );
 

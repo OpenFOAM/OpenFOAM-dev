@@ -19,29 +19,24 @@ solverFreq      1;
 
 radiationModel  P1;
 
-P1Coeffs
-{
-    C               C [0 0 0 0 0 0 0] 0;
-}
+absorptionEmissionModel binary;
 
-absorptionEmissionModel binaryAbsorptionEmission;
-
-binaryAbsorptionEmissionCoeffs
+binaryCoeffs
 {
     model1
     {
-        absorptionEmissionModel constantAbsorptionEmission;
-        constantAbsorptionEmissionCoeffs
+        absorptionEmissionModel constant;
+        constantCoeffs
         {
-            absorptivity    absorptivity    [0 -1 0 0 0 0 0] 0.5;
-            emissivity      emissivity      [0 -1 0 0 0 0 0] 0.5;
-            E               E   [1 -1 -3 0 0 0 0] 0;
+            absorptivity    0.5;
+            emissivity      0.5;
+            E               0;
         }
     }
     model2
     {
-        absorptionEmissionModel cloudAbsorptionEmission;
-        cloudAbsorptionEmissionCoeffs
+        absorptionEmissionModel cloud;
+        cloudCoeffs
         {
             cloudNames
             (
@@ -52,9 +47,9 @@ binaryAbsorptionEmissionCoeffs
     }
 }
 
-scatterModel    cloudScatter;
+scatterModel    cloud;
 
-cloudScatterCoeffs
+cloudCoeffs
 {
     cloudNames
     (

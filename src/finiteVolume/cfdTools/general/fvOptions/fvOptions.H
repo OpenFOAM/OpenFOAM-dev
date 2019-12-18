@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,12 +60,6 @@ class options
         //- Create IO object if dictionary is present
         IOobject createIOobject(const fvMesh& mesh) const;
 
-        //- Disallow default bitwise copy construct
-        options(const options&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const options&);
-
 
 public:
 
@@ -77,6 +71,9 @@ public:
 
         //- Construct from components with list of field names
         options(const fvMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        options(const options&) = delete;
 
         //- Construct fvOptions and register to datbase if not present
         //  otherwise lookup and return
@@ -95,6 +92,12 @@ public:
 
         //- Read dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const options&) = delete;
 };
 
 

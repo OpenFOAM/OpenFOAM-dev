@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -317,7 +317,7 @@ Foam::labelList Foam::polyDualMesh::collectPatchSideFace
         reverse(dualFace);
     }
 
-    return dualFace;
+    return move(dualFace);
 }
 
 
@@ -1340,10 +1340,10 @@ void Foam::polyDualMesh::calcDual
     // Assign to mesh.
     resetPrimitives
     (
-        xferMove(dualPoints),
-        xferMove(dualFaces),
-        xferMove(dualOwner),
-        xferMove(dualNeighbour),
+        move(dualPoints),
+        move(dualFaces),
+        move(dualOwner),
+        move(dualNeighbour),
         patchSizes,
         patchStarts
     );
@@ -1394,9 +1394,9 @@ Foam::polyDualMesh::polyDualMesh
     polyMesh
     (
         mesh,
-        xferCopy(pointField()),// to prevent any warnings "points not allocated"
-        xferCopy(faceList()),  // to prevent any warnings "faces  not allocated"
-        xferCopy(cellList())
+        pointField(),
+        faceList(),
+        cellList()
     ),
     cellPoint_
     (
@@ -1429,7 +1429,6 @@ Foam::polyDualMesh::polyDualMesh
 }
 
 
-// Construct from polyMesh and feature angle
 Foam::polyDualMesh::polyDualMesh
 (
     const polyMesh& mesh,
@@ -1439,9 +1438,9 @@ Foam::polyDualMesh::polyDualMesh
     polyMesh
     (
         mesh,
-        xferCopy(pointField()),// to prevent any warnings "points not allocated"
-        xferCopy(faceList()),  // to prevent any warnings "faces  not allocated"
-        xferCopy(cellList())
+        pointField(),
+        faceList(),
+        cellList()
     ),
     cellPoint_
     (

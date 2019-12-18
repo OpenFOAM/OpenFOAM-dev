@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,16 +63,9 @@ reconstruct
 
     tmp<GeometricField<GradType, fvPatchField, volMesh>> treconField
     (
-        new GeometricField<GradType, fvPatchField, volMesh>
+        GeometricField<GradType, fvPatchField, volMesh>::New
         (
-            IOobject
-            (
-                "volIntegrate("+ssf.name()+')',
-                ssf.instance(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "volIntegrate("+ssf.name()+')',
             mesh,
             dimensioned<GradType>("0", ssf.dimensions()/dimArea, Zero),
             extrapolatedCalculatedFvPatchField<GradType>::typeName

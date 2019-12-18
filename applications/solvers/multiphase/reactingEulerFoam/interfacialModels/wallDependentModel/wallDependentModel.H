@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,19 +50,10 @@ namespace Foam
 
 class wallDependentModel
 {
-    // Private data
+    // Private Data
 
         //- Reference to the mesh
         const fvMesh& mesh_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        wallDependentModel(const wallDependentModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const wallDependentModel&);
 
 
 public:
@@ -72,9 +63,13 @@ public:
         //- Construct from a mesh
         wallDependentModel(const fvMesh& mesh);
 
+        //- Disallow default bitwise copy construction
+        wallDependentModel(const wallDependentModel&) = delete;
+
 
     //- Destructor
     virtual ~wallDependentModel();
+
 
     // Member Functions
 
@@ -83,6 +78,12 @@ public:
 
         // Return the wall normal, creating and storing it if necessary
         const volVectorField& nWall() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const wallDependentModel&) = delete;
 };
 
 

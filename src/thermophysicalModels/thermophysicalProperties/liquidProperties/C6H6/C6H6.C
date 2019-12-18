@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,19 +95,19 @@ Foam::C6H6::C6H6()
 Foam::C6H6::C6H6
 (
     const liquidProperties& l,
-    const NSRDSfunc5& density,
-    const NSRDSfunc1& vapourPressure,
-    const NSRDSfunc6& heatOfVapourisation,
-    const NSRDSfunc0& heatCapacity,
-    const NSRDSfunc0& enthalpy,
-    const NSRDSfunc7& idealGasHeatCapacity,
-    const NSRDSfunc4& secondVirialCoeff,
-    const NSRDSfunc1& dynamicViscosity,
-    const NSRDSfunc2& vapourDynamicViscosity,
-    const NSRDSfunc0& thermalConductivity,
-    const NSRDSfunc2& vapourThermalConductivity,
-    const NSRDSfunc6& surfaceTension,
-    const APIdiffCoefFunc& vapourDiffussivity
+    const thermophysicalFunctions::NSRDS5& density,
+    const thermophysicalFunctions::NSRDS1& vapourPressure,
+    const thermophysicalFunctions::NSRDS6& heatOfVapourisation,
+    const thermophysicalFunctions::NSRDS0& heatCapacity,
+    const thermophysicalFunctions::NSRDS0& enthalpy,
+    const thermophysicalFunctions::NSRDS7& idealGasHeatCapacity,
+    const thermophysicalFunctions::NSRDS4& secondVirialCoeff,
+    const thermophysicalFunctions::NSRDS1& dynamicViscosity,
+    const thermophysicalFunctions::NSRDS2& vapourDynamicViscosity,
+    const thermophysicalFunctions::NSRDS0& thermalConductivity,
+    const thermophysicalFunctions::NSRDS2& vapourThermalConductivity,
+    const thermophysicalFunctions::NSRDS6& surfaceTension,
+    const thermophysicalFunctions::APIdiffCoef& vapourDiffusivity
 )
 :
     liquidProperties(l),
@@ -123,7 +123,7 @@ Foam::C6H6::C6H6
     kappa_(thermalConductivity),
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
-    D_(vapourDiffussivity)
+    D_(vapourDiffusivity)
 {}
 
 
@@ -137,18 +137,9 @@ Foam::C6H6::C6H6(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::C6H6::writeData(Ostream& os) const
+void Foam::C6H6::write(Ostream& os) const
 {
-    liquidProperties::writeData(*this, os);
-}
-
-
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const C6H6& l)
-{
-    l.writeData(os);
-    return os;
+    liquidProperties::write(*this, os);
 }
 
 

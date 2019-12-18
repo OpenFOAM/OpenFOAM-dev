@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ Foam::phaseProperties::phaseProperties(Istream& is)
         forAllConstIter(IDLList<entry>, phaseInfo, iter)
         {
             names_[cmptI] = iter().keyword();
-            Y_[cmptI] = readScalar(phaseInfo.lookup(names_[cmptI]));
+            Y_[cmptI] = phaseInfo.template lookup<scalar>(names_[cmptI]);
             cmptI++;
         }
 
@@ -89,7 +89,7 @@ Foam::Istream& Foam::operator>>(Istream& is, phaseProperties& pp)
         forAllConstIter(IDLList<entry>, phaseInfo, iter)
         {
             pp.names_[cmptI] = iter().keyword();
-            pp.Y_[cmptI] = readScalar(phaseInfo.lookup(pp.names_[cmptI]));
+            pp.Y_[cmptI] = phaseInfo.template lookup<scalar>(pp.names_[cmptI]);
             cmptI++;
         }
 
@@ -112,8 +112,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const phaseProperties& pp)
 
     forAll(pp.names_, cmptI)
     {
-        os.writeKeyword(pp.names_[cmptI]) << pp.Y_[cmptI]
-            << token::END_STATEMENT << nl;
+        writeEntry(os, pp.names_[cmptI], pp.Y_[cmptI]);
     }
 
     os  << decrIndent << token::END_BLOCK << nl;

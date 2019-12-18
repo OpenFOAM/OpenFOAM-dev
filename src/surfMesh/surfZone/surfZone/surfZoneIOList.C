@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,8 +66,8 @@ Foam::surfZoneIOList::surfZoneIOList
         {
             const dictionary& dict = dictEntries[zoneI].dict();
 
-            label zoneSize = readLabel(dict.lookup("nFaces"));
-            label startFacei = readLabel(dict.lookup("startFace"));
+            label zoneSize = dict.lookup<label>("nFaces");
+            label startFacei = dict.lookup<label>("startFace");
 
             zones[zoneI] = surfZone
             (
@@ -117,10 +117,10 @@ Foam::surfZoneIOList::surfZoneIOList
 Foam::surfZoneIOList::surfZoneIOList
 (
     const IOobject& io,
-    const Xfer<surfZoneList>& zones
+    surfZoneList&& zones
 )
 :
-    surfZoneList(zones),
+    surfZoneList(move(zones)),
     regIOobject(io)
 {}
 

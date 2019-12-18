@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,12 @@ inline Foam::label Foam::pimpleLoop::nCorrPimple() const
 }
 
 
+inline bool Foam::pimpleLoop::anyPimpleIter() const
+{
+    return corrPimple_ != 0;
+}
+
+
 inline bool Foam::pimpleLoop::firstPimpleIter() const
 {
     return corrPimple_ == 1;
@@ -39,19 +45,7 @@ inline bool Foam::pimpleLoop::firstPimpleIter() const
 
 inline bool Foam::pimpleLoop::finalPimpleIter() const
 {
-    return corrPimple_ >= nCorrPimple_;
-}
-
-
-inline bool Foam::pimpleLoop::firstIter() const
-{
-    return firstPimpleIter();
-}
-
-
-inline bool Foam::pimpleLoop::finalIter() const
-{
-    return converged_ || finalPimpleIter();
+    return converged_ || corrPimple_ >= nCorrPimple_;
 }
 
 

@@ -1,0 +1,11 @@
+function square;
+
+amplitude 2;
+frequency 0.6667;
+phase 0;
+level 1;
+markSpace 0.25;
+
+x0 0;
+x1 5;
+nX 101;

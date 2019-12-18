@@ -79,6 +79,9 @@ OptimisationSwitches
 
     // Force dumping (at next timestep) upon signal (-1 to disable) and exit
     stopAtWriteNowSignal        -1;
+
+    // Default dictionary scoping syntax
+    inputSyntax dot;
 }
 
 
@@ -284,7 +287,6 @@ DebugSwitches
     SpalartAllmarasIDDES    0;
     SphereDrag          0;
     StandardWallInteraction 0;
-    StaticHashTable     0;
     StochasticDispersionRAS 0;
     SuperBee            0;
     SuperBeeV           0;
@@ -345,6 +347,7 @@ DebugSwitches
     blended             0;
     blobsSheetAtomization   0;
     blobsSwirlInjector  0;
+    blockMesh           0;
     booleanSurface      0;
     boundaryCutter      0;
     boundaryMesh        0;
@@ -531,7 +534,6 @@ DebugSwitches
     hMixtureThermo<inhomogeneousMixture<constTransport<thermo<hConstThermo<perfectGas>>>>> 0;
     hMixtureThermo<inhomogeneousMixture<sutherlandTransport<thermo<janafThermo<perfectGas>>>>> 0;
     hMixtureThermo<multiComponentMixture<sutherlandTransport<thermo<janafThermo<perfectGas>>>>> 0;
-    hMixtureThermo<reactingMixture> 0;
     hMixtureThermo<veryInhomogeneousMixture<constTransport<thermo<hConstThermo<perfectGas>>>>> 0;
     hMixtureThermo<veryInhomogeneousMixture<sutherlandTransport<thermo<janafThermo<perfectGas>>>>> 0;
     hThermo<pureMixture<constTransport<thermo<hConstThermo<perfectGas>>>>> 0;
@@ -836,10 +838,7 @@ DebugSwitches
     thermophysicalFunction 0;
     time                0;
     timeVaryingAlphaContactAngle 0;
-    timeVaryingFlowRateInletVelocity 0;
     timeVaryingMappedFixedValue 0;
-    timeVaryingTotalPressure 0;
-    timeVaryingUniformFixedValue 0;
     timer               0;
     topoAction          0;
     topoCellLooper      0;
@@ -922,60 +921,71 @@ DimensionedConstants
     {
         universal
         {
-            c               c [0 1 -1 0 0 0 0] 2.99792e+08;
-            G               G [-1 3 -2 0 0 0 0] 6.67429e-11;
-            h               h [1 2 -1 0 0 0 0] 6.62607e-34;
+            c       [0 1 -1 0 0 0 0]    2.99792e+08;
+            G       [-1 3 -2 0 0 0 0]   6.67429e-11;
+            h       [1 2 -1 0 0 0 0]    6.62607e-34;
         }
+
         electromagnetic
         {
-            e               e [0 0 1 0 0 1 0] 1.60218e-19;
+            e       [0 0 1 0 0 1 0]     1.60218e-19;
         }
+
         atomic
         {
-            me              me [1 0 0 0 0 0 0] 9.10938e-31;
-            mp              mp [1 0 0 0 0 0 0] 1.67262e-27;
+            me      [1 0 0 0 0 0 0]     9.10938e-31;
+            mp      [1 0 0 0 0 0 0]     1.67262e-27;
         }
+
         physicoChemical
         {
-            mu              mu [1 0 0 0 0 0 0] 1.66054e-27;
-            k               k [1 2 -2 -1 0 0 0] 1.38065e-23;
+            mu      [1 0 0 0 0 0 0]     1.66054e-27;
+            k       [1 2 -2 -1 0 0 0]   1.38065e-23;
         }
+
         standard
         {
             //- Standard pressure [Pa]
-            Pstd            Pstd [1 -1 -2 0 0 0 0] 1e5;
-            //- Standard temperature [degK]
-            Tstd            Tstd [0 0 0 1 0 0 0] 298.15;
+            Pstd    [1 -1 -2 0 0 0 0]   1e5;
+
+            //- Standard temperature [K]
+            Tstd    [0 0 0 1 0 0 0]     298.15;
         }
     }
+
     USCSCoeffs
     {
         universal
         {
-            c               c [0 1 -1 0 0 0 0] 9.83558e+08;
-            G               G [-1 3 -2 0 0 0 0] 1.06909e-09;
-            h               h [1 2 -1 0 0 0 0] 1.57234e-32;
+            c       [0 1 -1 0 0 0 0]    9.83558e+08;
+            G       [-1 3 -2 0 0 0 0]   1.06909e-09;
+            h       [1 2 -1 0 0 0 0]    1.57234e-32;
         }
+
         electromagnetic
         {
-            e               e [0 0 1 0 0 1 0] 1.60218e-19;
+            e       [0 0 1 0 0 1 0]     1.60218e-19;
         }
+
         atomic
         {
-            me              me [1 0 0 0 0 0 0] 2.00825e-30;
-            mp              mp [1 0 0 0 0 0 0] 3.68746e-27;
+            me      [1 0 0 0 0 0 0]     2.00825e-30;
+            mp      [1 0 0 0 0 0 0]     3.68746e-27;
         }
+
         physicoChemical
         {
-            mu              mu [1 0 0 0 0 0 0] 3.66083e-27;
-            k               k [1 2 -2 -1 0 0 0] 1.82012e-22;
+            mu      [1 0 0 0 0 0 0]     3.66083e-27;
+            k       [1 2 -2 -1 0 0 0]   1.82012e-22;
         }
+
         standard
         {
             //- Standard pressure [lbm/ft^2]
-            Pstd            Pstd [1 -1 -2 0 0 0 0] 2088.6;
+            Pstd    [1 -1 -2 0 0 0 0]   2088.6;
+
             //- Standard temperature [degR]
-            Tstd            Tstd [0 0 0 1 0 0 0] 536.67;
+            Tstd    [0 0 0 1 0 0 0]     536.67;
         }
     }
 }
@@ -988,34 +998,34 @@ DimensionSets
     SICoeffs
     {
         // Basic units
-        kg  kg  [1 0 0 0 0 0 0] 1.0;
-        m   m   [0 1 0 0 0 0 0] 1.0;
-        s   s   [0 0 1 0 0 0 0] 1.0;
-        K   K   [0 0 0 1 0 0 0] 1.0;
-        mol mol [0 0 0 0 1 0 0] 1.0;
-        A   A   [0 0 0 0 0 1 0] 1.0;
-        Cd  Cd  [0 0 0 0 0 0 1] 1.0;
+        kg          [1 0 0 0 0 0 0]     1;
+        m           [0 1 0 0 0 0 0]     1;
+        s           [0 0 1 0 0 0 0]     1;
+        K           [0 0 0 1 0 0 0]     1;
+        mol         [0 0 0 0 1 0 0]     1;
+        A           [0 0 0 0 0 1 0]     1;
+        Cd          [0 0 0 0 0 0 1]     1;
 
         // Derived units
-        Hz  Hz  [s^-1] 1.0;
-        N   N   [kg m s^-2] 1.0;
-        Pa  Pa  [N m^-2] 1.0;
-        J   J   [N m] 1.0;
-        W   W   [J s^-1] 1.0;
+        Hz          [s^-1]              1;
+        N           [kg m s^-2]         1;
+        Pa          [N m^-2]            1;
+        J           [N m]               1;
+        W           [J s^-1]            1;
 
-        // Some non-symbolic ones
-        area area [m^2] 1.0;
-        volume volume [m^3] 1.0;
-        density density [kg m^-3] 1.0;
-        acceleration acceleration  [m s^-2] 1.0;
-        kinematicPressure kinematicPressure [Pa density^-1] 1.0;
+        // Some non-symbolic units
+        area        [m^2]               1;
+        volume      [m^3]               1;
+        density     [kg m^-3]           1;
+        acceleration [m s^-2]           1;
+        kinematicPressure [Pa density^-1] 1;
 
         // Scaled units. Only allowed in dimensionedType (dimensionedScalar,
         // dimensionedVector etc.) and UniformDimensionedField, not
         // in DimensionedField or GeometricField
-        cm  cm  [m] 1e-2;
-        mm  mm  [m] 1e-3;
-        km  km  [m] 1e3;
+        cm          [m]                 1e-2;
+        mm          [m]                 1e-3;
+        km          [m]                 1e3;
 
         // Set of units used for printing. Can be any basic or derived
         // but not scaled (only supported for dimensionedScalar, etc)
@@ -1025,20 +1035,19 @@ DimensionSets
     USCSCoeffs
     {
         // Basic units
-        lb  lb  [1 0 0 0 0 0 0] 1.0;
-        ft  ft  [0 1 0 0 0 0 0] 1.0;
-        s   s   [0 0 1 0 0 0 0] 1.0;
-        R   R   [0 0 0 1 0 0 0] 1.0;
-        mol mol [0 0 0 0 1 0 0] 1.0;
-        A   A   [0 0 0 0 0 1 0] 1.0;
-        Cd  Cd  [0 0 0 0 0 0 1] 1.0;
+        lb          [1 0 0 0 0 0 0]     1;
+        ft          [0 1 0 0 0 0 0]     1;
+        s           [0 0 1 0 0 0 0]     1;
+        R           [0 0 0 1 0 0 0]     1;
+        mol         [0 0 0 0 1 0 0]     1;
+        A           [0 0 0 0 0 1 0]     1;
+        Cd          [0 0 0 0 0 0 1]     1;
 
         // Set of units used for printing. Can be any basic or derived
         // but not scaled (only supported for dimensionedScalar, etc)
         // writeUnits (lb ft s R mol A Cd);
     }
 }
-
 
 
 // ************************************************************************* //

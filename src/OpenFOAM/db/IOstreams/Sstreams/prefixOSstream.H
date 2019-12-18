@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class prefixOSstream
 :
     public OSstream
 {
-    // Private data
+    // Private Data
 
         bool printPrefix_;
         string prefix_;
@@ -79,7 +79,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         // Enquiry
 
@@ -98,9 +98,6 @@ public:
 
         // Write functions
 
-            //- Write next token to stream
-            virtual Ostream& write(const token&);
-
             //- Write character
             virtual Ostream& write(const char);
 
@@ -112,6 +109,9 @@ public:
 
             //- Write string
             virtual Ostream& write(const string&);
+
+            //- Write verbatimString
+            virtual Ostream& write(const verbatimString&);
 
             //- Write std::string surrounded by quotes.
             //  Optional write without quotes.

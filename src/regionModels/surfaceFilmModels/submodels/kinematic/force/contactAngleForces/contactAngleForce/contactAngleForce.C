@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ void contactAngleForce::initialise()
     if (zeroForcePatches.size())
     {
         const polyBoundaryMesh& pbm = filmModel_.regionMesh().boundaryMesh();
-        scalar dLim = readScalar(coeffDict_.lookup("zeroForceDistance"));
+        scalar dLim = coeffDict_.lookup<scalar>("zeroForceDistance");
 
         Info<< "        Assigning zero contact force within " << dLim
             << " of patches:" << endl;
@@ -100,12 +100,12 @@ contactAngleForce::contactAngleForce
 )
 :
     force(typeName, film, dict),
-    Ccf_(readScalar(coeffDict_.lookup("Ccf"))),
+    Ccf_(coeffDict_.lookup<scalar>("Ccf")),
     mask_
     (
         IOobject
         (
-            typeName + ":contactForceMask",
+            IOobject::modelName("contactForceMask", typeName),
             filmModel_.time().timeName(),
             filmModel_.regionMesh(),
             IOobject::NO_READ,
@@ -133,9 +133,9 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
     (
         volVectorField::New
         (
-            typeName + ":contactForce",
+            IOobject::modelName("contactForce", typeName),
             filmModel_.regionMesh(),
-            dimensionedVector(dimForce/dimArea, Zero)
+            dimensionedVector(dimForce/dimVolume, Zero)
         )
     );
 
@@ -143,16 +143,15 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
 
     const labelUList& own = filmModel_.regionMesh().owner();
     const labelUList& nbr = filmModel_.regionMesh().neighbour();
+    const scalarField& V = filmModel_.regionMesh().V();
 
-    const scalarField& magSf = filmModel_.magSf();
-
-    const volScalarField& alpha = filmModel_.alpha();
+    const volScalarField& coverage = filmModel_.coverage();
     const volScalarField& sigma = filmModel_.sigma();
 
     const tmp<volScalarField> ttheta = theta();
     const volScalarField& theta = ttheta();
 
-    const volVectorField gradAlpha(fvc::grad(alpha));
+    const volVectorField gradCoverage(fvc::grad(coverage));
 
     forAll(nbr, facei)
     {
@@ -160,11 +159,11 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
         const label cellN = nbr[facei];
 
         label celli = -1;
-        if ((alpha[cellO] > 0.5) && (alpha[cellN] < 0.5))
+        if ((coverage[cellO] > 0.5) && (coverage[cellN] < 0.5))
         {
             celli = cellO;
         }
-        else if ((alpha[cellO] < 0.5) && (alpha[cellN] > 0.5))
+        else if ((coverage[cellO] < 0.5) && (coverage[cellN] > 0.5))
         {
             celli = cellN;
         }
@@ -173,34 +172,36 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
         {
             const scalar invDx = filmModel_.regionMesh().deltaCoeffs()[facei];
             const vector n =
-                gradAlpha[celli]/(mag(gradAlpha[celli]) + rootVSmall);
+                gradCoverage[celli]/(mag(gradCoverage[celli]) + rootVSmall);
             const scalar cosTheta = cos(degToRad(theta[celli]));
             force[celli] += Ccf_*n*sigma[celli]*(1 - cosTheta)/invDx;
         }
     }
 
-    forAll(alpha.boundaryField(), patchi)
+    forAll(coverage.boundaryField(), patchi)
     {
         if (!filmModel_.isCoupledPatch(patchi))
         {
-            const fvPatchField<scalar>& alphaPf = alpha.boundaryField()[patchi];
+            const fvPatchField<scalar>& coveragePf =
+                coverage.boundaryField()[patchi];
             const fvPatchField<scalar>& maskPf = mask_.boundaryField()[patchi];
             const fvPatchField<scalar>& sigmaPf = sigma.boundaryField()[patchi];
             const fvPatchField<scalar>& thetaPf = theta.boundaryField()[patchi];
-            const scalarField& invDx = alphaPf.patch().deltaCoeffs();
-            const labelUList& faceCells = alphaPf.patch().faceCells();
+            const scalarField& invDx = coveragePf.patch().deltaCoeffs();
+            const labelUList& faceCells = coveragePf.patch().faceCells();
 
-            forAll(alphaPf, facei)
+            forAll(coveragePf, facei)
             {
                 if (maskPf[facei] > 0.5)
                 {
-                    label cellO = faceCells[facei];
+                    const label cellO = faceCells[facei];
 
-                    if ((alpha[cellO] > 0.5) && (alphaPf[facei] < 0.5))
+                    if ((coverage[cellO] > 0.5) && (coveragePf[facei] < 0.5))
                     {
                         const vector n =
-                            gradAlpha[cellO]
-                           /(mag(gradAlpha[cellO]) + rootVSmall);
+                            gradCoverage[cellO]
+                           /(mag(gradCoverage[cellO]) + rootVSmall);
+
                         const scalar cosTheta = cos(degToRad(thetaPf[facei]));
                         force[cellO] +=
                             Ccf_*n*sigmaPf[facei]*(1 - cosTheta)/invDx[facei];
@@ -210,7 +211,7 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
         }
     }
 
-    force /= magSf;
+    force /= V;
 
     if (filmModel_.regionMesh().time().writeTime())
     {
@@ -219,7 +220,7 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
 
     tmp<fvVectorMatrix> tfvm
     (
-        new fvVectorMatrix(U, dimForce/dimArea*dimVolume)
+        new fvVectorMatrix(U, dimForce)
     );
 
     tfvm.ref() += tForce;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,8 +108,11 @@ public:
         //- Construct from Istream using default Istream constructor class
         LPtrList(Istream&);
 
-        //- Construct as copy
+        //- Copy constructor
         LPtrList(const LPtrList&);
+
+        //- Move constructor
+        LPtrList(LPtrList&&);
 
 
     //- Destructor
@@ -158,10 +161,13 @@ public:
             void transfer(LPtrList<LListBase, T>&);
 
 
-    // Member operators
+    // Member Operators
 
-        //- Assign copy
+        //- Assignment operator
         void operator=(const LPtrList<LListBase, T>&);
+
+        //- Move assignment operator
+        void operator=(LPtrList<LListBase, T>&&);
 
 
     // STL type definitions
@@ -194,7 +200,7 @@ public:
             {}
 
 
-            // Member operators
+            // Member Operators
 
                 T& operator*()
                 {
@@ -233,7 +239,7 @@ public:
             {}
 
 
-            // Member operators
+            // Member Operators
 
                 const T& operator*()
                 {
@@ -247,7 +253,7 @@ public:
         };
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>> <LListBase, T>
         (

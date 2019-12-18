@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "primaryRadiation.H"
-#include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -56,21 +55,22 @@ primaryRadiation::primaryRadiation
 )
 :
     filmRadiationModel(typeName, film, dict),
-    qinPrimary_
+    qinFilm_
     (
         IOobject
         (
-            "qin", // same name as qin on primary region to enable mapping
+            "qin",
             film.time().timeName(),
             film.regionMesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
         film.regionMesh(),
-        dimensionedScalar(dimMass/pow3(dimTime), 0),
-        film.mappedPushedFieldPatchTypes<scalar>()
+        dimensionedScalar(dimMass/pow3(dimTime), 0)
     )
-{}
+{
+    correct();
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -83,30 +83,23 @@ primaryRadiation::~primaryRadiation()
 
 void primaryRadiation::correct()
 {
-    // Transfer qin from primary region
-    qinPrimary_.correctBoundaryConditions();
+    const volScalarField& qinPrimary
+    (
+        film().primaryMesh().lookupObject<volScalarField>("qin")
+    );
+
+    // Map the primary-side radiative flux to the region internal field
+    film().toRegion(qinFilm_, qinPrimary.boundaryField());
 }
 
 
-tmp<volScalarField> primaryRadiation::Shs()
+tmp<volScalarField::Internal> primaryRadiation::Shs()
 {
-    tmp<volScalarField> tShs
+    return volScalarField::Internal::New
     (
-        volScalarField::New
-        (
-            typeName + ":Shs",
-            film().regionMesh(),
-            dimensionedScalar(dimMass/pow3(dimTime), 0)
-        )
+        IOobject::modelName("Shs", typeName),
+        qinFilm_*filmModel_.coverage()
     );
-
-    scalarField& Shs = tShs.ref();
-    const scalarField& qinP = qinPrimary_;
-    const scalarField& alpha = filmModel_.alpha();
-
-    Shs = qinP*alpha;
-
-    return tShs;
 }
 
 

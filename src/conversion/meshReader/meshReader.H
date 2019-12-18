@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,7 +140,7 @@ protected:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Point-cell addressing. Used for topological analysis
         // Warning. This point cell addressing list potentially contains
@@ -171,12 +171,6 @@ private:
 
 
     // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        meshReader(const meshReader&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshReader&);
 
         //- Calculate pointCells
         void calcPointCells() const;
@@ -304,6 +298,9 @@ public:
         //- Construct from fileName
         meshReader(const fileName&, const scalar scaleFactor = 1.0);
 
+        //- Disallow default bitwise copy construction
+        meshReader(const meshReader&) = delete;
+
 
     //- Destructor
     virtual ~meshReader();
@@ -323,6 +320,12 @@ public:
             const polyMesh&,
             IOstream::streamFormat fmt = IOstream::BINARY
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshReader&) = delete;
 };
 
 

@@ -18,8 +18,8 @@
         )
     );
 
-    scalar p0 = readScalar(initialConditions.lookup("p"));
-    scalar T0 = readScalar(initialConditions.lookup("T"));
+    scalar p0 = initialConditions.lookup<scalar>("p");
+    scalar T0 = initialConditions.lookup<scalar>("T");
 
     #include "createBaseFields.H"
 

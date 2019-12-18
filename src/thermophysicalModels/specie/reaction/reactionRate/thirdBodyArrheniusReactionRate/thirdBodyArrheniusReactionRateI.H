@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,12 +76,13 @@ inline Foam::scalar Foam::thirdBodyArrheniusReactionRate::operator()
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return
         thirdBodyEfficiencies_.M(c)
-       *ArrheniusReactionRate::operator()(p, T, c);
+       *ArrheniusReactionRate::operator()(p, T, c, li);
 }
 
 
@@ -89,12 +90,13 @@ inline Foam::scalar Foam::thirdBodyArrheniusReactionRate::ddT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return
         thirdBodyEfficiencies_.M(c)
-       *ArrheniusReactionRate::ddT(p, T, c);
+       *ArrheniusReactionRate::ddT(p, T, c, li);
 }
 
 
@@ -103,6 +105,7 @@ inline void Foam::thirdBodyArrheniusReactionRate::dcidc
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcidc
 ) const
 {
@@ -118,7 +121,8 @@ inline Foam::scalar Foam::thirdBodyArrheniusReactionRate::dcidT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return -1.0/T;

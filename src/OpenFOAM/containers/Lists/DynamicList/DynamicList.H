@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ class DynamicList
         "Invalid sizing parameters"
     );
 
-    // Private data
+    // Private Data
 
         //- The capacity (allocated size) of the underlying list.
         label capacity_;
@@ -104,14 +104,17 @@ public:
         //- Construct null
         inline DynamicList();
 
-        //- Construct given size.
+        //- Construct given size
         explicit inline DynamicList(const label);
 
         //- Construct with given size and value for all elements.
         inline DynamicList(const label, const T&);
 
-        //- Construct copy.
+        //- Copy constructor
         inline DynamicList(const DynamicList<T, SizeInc, SizeMult, SizeDiv>&);
+
+        //- Move constructor
+        inline DynamicList(DynamicList<T, SizeInc, SizeMult, SizeDiv>&&);
 
         //- Construct from UList. Size set to UList size.
         //  Also constructs from DynamicList with different sizing parameters.
@@ -120,8 +123,8 @@ public:
         //- Construct from UIndirectList. Size set to UIndirectList size.
         explicit inline DynamicList(const UIndirectList<T>&);
 
-        //- Construct by transferring the parameter contents
-        explicit inline DynamicList(const Xfer<List<T>>&);
+        //- Move constructor
+        explicit inline DynamicList(List<T>&&);
 
         //- Construct from Istream. Size set to size of list read.
         explicit DynamicList(Istream&);
@@ -133,6 +136,7 @@ public:
 
             //- Size of the underlying storage.
             inline label capacity() const;
+
 
         // Edit
 
@@ -183,9 +187,6 @@ public:
             //- Transfer contents of the argument DynamicList into this.
             inline void transfer(DynamicList<T, SizeInc, SizeMult, SizeDiv>&);
 
-            //- Transfer contents to the Xfer container as a plain List
-            inline Xfer<List<T>> xfer();
-
 
         // Member Operators
 
@@ -217,14 +218,23 @@ public:
             //- Assignment of all addressed entries to the given value
             inline void operator=(const T&);
 
-            //- Assignment to DynamicList
+            //- Assignment operator
             inline void operator=
             (
                 const DynamicList<T, SizeInc, SizeMult, SizeDiv>&
             );
 
+            //- Move assignment operator
+            inline void operator=
+            (
+                DynamicList<T, SizeInc, SizeMult, SizeDiv>&&
+            );
+
             //- Assignment to UList
             inline void operator=(const UList<T>&);
+
+            //- Move assignment to List
+            inline void operator=(List<T>&&);
 
             //- Assignment to UIndirectList
             inline void operator=(const UIndirectList<T>&);
@@ -237,7 +247,7 @@ public:
             typename UList<T>::iterator erase(typename UList<T>::iterator);
 
 
-        // IOstream operators
+        // IOstream Operators
 
             // Write DynamicList to Ostream.
             friend Ostream& operator<< <T, SizeInc, SizeMult, SizeDiv>

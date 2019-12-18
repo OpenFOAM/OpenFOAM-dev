@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ class SortableList
 :
     public List<T>
 {
-    // Private data
+    // Private Data
 
         //- Original indices
         labelList indices_;
@@ -70,8 +70,8 @@ public:
         //- Construct from UList, sorting immediately
         explicit SortableList(const UList<T>&);
 
-        //- Construct from transferred List, sorting immediately
-        explicit SortableList(const Xfer<List<T>>&);
+        //- Move constructor transferring List, sorting immediately
+        explicit SortableList(List<T>&&);
 
         //- Construct given size. Sort later on
         //  The indices remain empty until the list is sorted
@@ -81,8 +81,11 @@ public:
         //  The indices remain empty until the list is sorted
         SortableList(const label size, const T&);
 
-        //- Construct as copy
+        //- Copy constructor
         SortableList(const SortableList<T>&);
+
+        //- Move constructor
+        SortableList(SortableList<T>&&);
 
         //- Construct from an initializer list, sorting immediately
         SortableList(std::initializer_list<T>);
@@ -115,9 +118,6 @@ public:
         //- Reverse (stable) sort the list
         void reverseSort();
 
-        //- Transfer contents to the Xfer container as a plain List
-        inline Xfer<List<T>> xfer();
-
 
     // Member Operators
 
@@ -129,6 +129,9 @@ public:
 
         //- Assignment operator. Takes linear time
         inline void operator=(const SortableList<T>&);
+
+        //- Move assignment operator
+        inline void operator=(SortableList<T>&&);
 
         //- Assignment to an initializer list
         void operator=(std::initializer_list<T>);

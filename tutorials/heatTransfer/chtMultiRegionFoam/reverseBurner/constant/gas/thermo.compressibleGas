@@ -5,21 +5,25 @@
     \\  /    A nd           | Version:  dev
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
-FoamFile
-{
-    version     2.0;
-    format      ascii;
-    class       dictionary;
-    location    "constant";
-    object      thermo.compressibleGas;
-}
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+species
+(
+    O2
+    H2O
+    CH4
+    CO2
+    N2
+);
 
 O2
 {
     specie
     {
         molWeight       31.9988;
+    }
+    equationOfState
+    {
+        pRef            1e6;
     }
     thermodynamics
     {
@@ -42,6 +46,10 @@ H2O
     {
         molWeight       18.0153;
     }
+    equationOfState
+    {
+        pRef            1e6;
+    }
     thermodynamics
     {
         Tlow            200;
@@ -62,6 +70,10 @@ CH4
     specie
     {
         molWeight       16.0428;
+    }
+    equationOfState
+    {
+        pRef            1e6;
     }
     thermodynamics
     {
@@ -84,6 +96,10 @@ CO2
     {
         molWeight       44.01;
     }
+    equationOfState
+    {
+        pRef            1e6;
+    }
     thermodynamics
     {
         Tlow            200;
@@ -104,6 +120,10 @@ N2
     specie
     {
         molWeight       28.0134;
+    }
+    equationOfState
+    {
+        pRef            1e6;
     }
     thermodynamics
     {

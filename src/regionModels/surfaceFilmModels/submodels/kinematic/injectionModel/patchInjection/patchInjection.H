@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,15 +55,6 @@ class patchInjection
 :
     public injectionModel
 {
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        patchInjection(const patchInjection&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const patchInjection&);
-
-
 protected:
 
         //- Stable film thickness - mass only removed if thickness exceeds
@@ -88,6 +79,9 @@ public:
         //- Construct from surface film model
         patchInjection(surfaceFilmRegionModel& film, const dictionary& dict);
 
+        //- Disallow default bitwise copy construction
+        patchInjection(const patchInjection&) = delete;
+
 
     //- Destructor
     virtual ~patchInjection();
@@ -109,6 +103,12 @@ public:
         (
             scalarField& patchMasses
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const patchInjection&) = delete;
 };
 
 

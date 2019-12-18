@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ class sutherlandTransport
 :
     public Thermo
 {
-    // Private data
+    // Private Data
 
         // Sutherland's coefficients
         scalar As_, Ts_;
@@ -140,7 +140,7 @@ public:
         inline static autoPtr<sutherlandTransport> New(const dictionary& dict);
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()
@@ -148,13 +148,13 @@ public:
             return "sutherland<" + Thermo::typeName() + '>';
         }
 
-        //- Dynamic viscosity [kg/ms]
+        //- Dynamic viscosity [kg/m/s]
         inline scalar mu(const scalar p, const scalar T) const;
 
-        //- Thermal conductivity [W/mK]
+        //- Thermal conductivity [W/m/K]
         inline scalar kappa(const scalar p, const scalar T) const;
 
-        //- Thermal diffusivity of enthalpy [kg/ms]
+        //- Thermal diffusivity of enthalpy [kg/m/s]
         inline scalar alphah(const scalar p, const scalar T) const;
 
         // Species diffusivity
@@ -164,12 +164,9 @@ public:
         void write(Ostream& os) const;
 
 
-    // Member operators
-
-        inline void operator=(const sutherlandTransport&);
+    // Member Operators
 
         inline void operator+=(const sutherlandTransport&);
-
         inline void operator*=(const scalar);
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ class boundaryMesh
         static const scalar distanceTol_;
 
 
-    // Private data
+    // Private Data
 
         //- All boundary mesh data. Reconstructed every time faces are repatched
         bMesh* meshPtr_;
@@ -172,13 +172,6 @@ class boundaryMesh
         ) const;
 
 
-        //- Disallow default bitwise copy construct
-        boundaryMesh(const boundaryMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const boundaryMesh&);
-
-
 public:
 
     //- Runtime type information
@@ -189,6 +182,9 @@ public:
 
         //- Construct null
         boundaryMesh();
+
+        //- Disallow default bitwise copy construction
+        boundaryMesh(const boundaryMesh&) = delete;
 
 
     //- Destructor
@@ -381,6 +377,12 @@ public:
                 const label facei,
                 boolList& visited
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const boundaryMesh&) = delete;
 };
 
 

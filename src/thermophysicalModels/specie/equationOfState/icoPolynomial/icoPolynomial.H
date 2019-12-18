@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,9 @@ Description
     Incompressible, polynomial form of equation of state, using a polynomial
     function for density.
 
+    Coefficient mixing is very inaccurate and not supported,
+    so this equation of state is not applicable to mixtures.
+
 Usage
     \table
         Property     | Description
@@ -47,9 +50,6 @@ Usage
         \f[
             \rho = 1000 - 0.05 T + 0.003 T^2
         \f]
-
-Note
-    Input in [kg/m3], but internally uses [kg/m3/kmol].
 
 SourceFiles
     icoPolynomialI.H
@@ -114,9 +114,9 @@ class icoPolynomial
 :
     public Specie
 {
-    // Private data
+    // Private Data
 
-        //- Density polynomial coefficients
+        //- Density polynomial coefficients [kg/m^3/K^i]
         Polynomial<PolySize> rhoCoeffs_;
 
 
@@ -144,7 +144,7 @@ public:
         inline static autoPtr<icoPolynomial> New(const dictionary& dict);
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()
@@ -176,10 +176,10 @@ public:
             //- Return Cv departure [J/(kg K]
             inline scalar Cv(scalar p, scalar T) const;
 
-            //- Return entropy [J/(kg K)]
+            //- Return entropy [J/kg/K]
             inline scalar S(const scalar p, const scalar T) const;
 
-            //- Return compressibility rho/p [s^2/m^2]
+            //- Return compressibility [s^2/m^2]
             inline scalar psi(scalar p, scalar T) const;
 
             //- Return compression factor []
@@ -195,9 +195,8 @@ public:
             void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
-        inline void operator=(const icoPolynomial&);
         inline void operator+=(const icoPolynomial&);
         inline void operator*=(const scalar);
 

@@ -77,7 +77,7 @@ class waveInletOutletFvPatchField
 :
     public mixedFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Inlet value above the wave
         const autoPtr<Function1<Type>> inletValueAbove_;
@@ -121,7 +121,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         waveInletOutletFvPatchField
         (
             const waveInletOutletFvPatchField<Type>&
@@ -136,7 +136,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         waveInletOutletFvPatchField
         (
             const waveInletOutletFvPatchField<Type>&,
@@ -160,7 +160,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

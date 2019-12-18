@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ class PhaseLimitStabilization
 :
     public option
 {
-    // Private data
+    // Private Data
 
         //- Field name
         word fieldName_;
@@ -85,15 +85,6 @@ class PhaseLimitStabilization
 
         //- Residual alpha value below which stabilization is applied
         scalar residualAlpha_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        PhaseLimitStabilization(const PhaseLimitStabilization&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const PhaseLimitStabilization&);
 
 
 public:
@@ -112,6 +103,9 @@ public:
             const dictionary& dict,
             const fvMesh& mesh
         );
+
+        //- Disallow default bitwise copy construction
+        PhaseLimitStabilization(const PhaseLimitStabilization&) = delete;
 
 
     //- Destructor
@@ -132,6 +126,12 @@ public:
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PhaseLimitStabilization&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,7 @@ public:
         //- Construct from dictionary
         error(const dictionary&);
 
-        //- Construct as copy
+        //- Copy constructor
         error(const error&);
 
 
@@ -101,7 +101,7 @@ public:
     virtual ~error() throw();
 
 
-    // Member functions
+    // Member Functions
 
         string message() const;
 
@@ -198,7 +198,7 @@ class IOerror
 :
     public error
 {
-    // Private data
+    // Private Data
 
         string ioFileName_;
         label ioStartLineNumber_;
@@ -220,7 +220,7 @@ public:
     virtual ~IOerror() throw();
 
 
-    // Member functions
+    // Member Functions
 
         const string& ioFileName() const
         {

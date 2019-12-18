@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,27 +25,6 @@ License
 
 #include "PopulationBalancePhaseSystem.H"
 
-
-// * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
-
-template<class BasePhaseSystem>
-Foam::tmp<Foam::volScalarField>
-Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::pDmdt
-(
-    const phasePairKey& key
-) const
-{
-    if (!pDmdt_.found(key))
-    {
-        return phaseSystem::dmdt(key);
-    }
-
-    const scalar pDmdtSign(Pair<word>::compare(pDmdt_.find(key).key(), key));
-
-    return pDmdtSign**pDmdt_[key];
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
@@ -60,7 +39,7 @@ PopulationBalancePhaseSystem
     populationBalances_
     (
         this->lookup("populationBalances"),
-        diameterModels::populationBalanceModel::iNew(*this, pDmdt_)
+        diameterModels::populationBalanceModel::iNew(*this, dmdtfs_)
     )
 {
     forAll(populationBalances_, i)
@@ -87,41 +66,29 @@ PopulationBalancePhaseSystem
                     )
                 );
             }
-        }
-    }
 
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
-    {
-        const phasePair& pair(phasePairIter());
-
-        if (pair.ordered())
-        {
-            continue;
-        }
-
-        // Initially assume no mass transfer
-        pDmdt_.insert
-        (
-            pair,
-            new volScalarField
+            dmdtfs_.insert
             (
-                IOobject
+                key,
+                new volScalarField
                 (
-                    IOobject::groupName("pDmdt", pair.name()),
-                    this->mesh().time().timeName(),
+                    IOobject
+                    (
+                        IOobject::groupName
+                        (
+                            "populationBalance:dmdtf",
+                            this->phasePairs_[key]->name()
+                        ),
+                        this->mesh().time().timeName(),
+                        this->mesh(),
+                        IOobject::READ_IF_PRESENT,
+                        IOobject::AUTO_WRITE
+                    ),
                     this->mesh(),
-                    IOobject::READ_IF_PRESENT,
-                    IOobject::AUTO_WRITE
-                ),
-                this->mesh(),
-                dimensionedScalar(dimDensity/dimTime, 0)
-            )
-        );
+                    dimensionedScalar(dimDensity/dimTime, 0)
+                )
+            );
+        }
     }
 }
 
@@ -138,90 +105,98 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::
 
 template<class BasePhaseSystem>
 Foam::tmp<Foam::volScalarField>
-Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdt
+Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdtf
 (
     const phasePairKey& key
 ) const
 {
-    return BasePhaseSystem::dmdt(key) + this->pDmdt(key);
+    tmp<volScalarField> tDmdt = BasePhaseSystem::dmdtf(key);
+
+    if (!dmdtfs_.found(key))
+    {
+        const label dmdtSign(Pair<word>::compare(this->phasePairs_[key], key));
+
+        tDmdt.ref() += dmdtSign**dmdtfs_[key];
+    }
+
+    return tDmdt;
 }
 
 
 template<class BasePhaseSystem>
-Foam::Xfer<Foam::PtrList<Foam::volScalarField>>
+Foam::PtrList<Foam::volScalarField>
 Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdts() const
 {
     PtrList<volScalarField> dmdts(BasePhaseSystem::dmdts());
 
-    forAllConstIter(pDmdtTable, pDmdt_, pDmdtIter)
+    forAllConstIter(phaseSystem::dmdtfTable, dmdtfs_, dmdtfIter)
     {
-        const phasePair& pair = this->phasePairs_[pDmdtIter.key()];
-        const volScalarField& pDmdt = *pDmdtIter();
+        const phasePair& pair = this->phasePairs_[dmdtfIter.key()];
+        const volScalarField& pDmdt = *dmdtfIter();
 
-        this->addField(pair.phase1(), "dmdt", pDmdt, dmdts);
-        this->addField(pair.phase2(), "dmdt", - pDmdt, dmdts);
+        addField(pair.phase1(), "dmdt", pDmdt, dmdts);
+        addField(pair.phase2(), "dmdt", - pDmdt, dmdts);
     }
 
-    return dmdts.xfer();
+    return dmdts;
 }
 
 
 template<class BasePhaseSystem>
-Foam::autoPtr<Foam::phaseSystem::massTransferTable>
-Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::massTransfer() const
+Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
+Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::momentumTransfer()
 {
-    autoPtr<phaseSystem::massTransferTable> eqnsPtr =
-        BasePhaseSystem::massTransfer();
+    autoPtr<phaseSystem::momentumTransferTable> eqnsPtr =
+        BasePhaseSystem::momentumTransfer();
 
-    phaseSystem::massTransferTable& eqns = eqnsPtr();
+    phaseSystem::momentumTransferTable& eqns = eqnsPtr();
 
-    forAllConstIter
-    (
-        phaseSystem::phasePairTable,
-        this->phasePairs_,
-        phasePairIter
-    )
-    {
-        const phasePair& pair(phasePairIter());
+    this->addDmdtUfs(dmdtfs_, eqns);
 
-        if (pair.ordered())
-        {
-            continue;
-        }
+    return eqnsPtr;
+}
 
-        const phaseModel& phase = pair.phase1();
-        const phaseModel& otherPhase = pair.phase2();
 
-        // Note that the phase YiEqn does not contain a continuity error term,
-        // so these additions represent the entire mass transfer
+template<class BasePhaseSystem>
+Foam::autoPtr<Foam::phaseSystem::momentumTransferTable>
+Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::momentumTransferf()
+{
+    autoPtr<phaseSystem::momentumTransferTable> eqnsPtr =
+        BasePhaseSystem::momentumTransferf();
 
-        const volScalarField dmdt(this->pDmdt(pair));
-        const volScalarField dmdt12(negPart(dmdt));
-        const volScalarField dmdt21(posPart(dmdt));
+    phaseSystem::momentumTransferTable& eqns = eqnsPtr();
 
-        const PtrList<volScalarField>& Yi = phase.Y();
+    this->addDmdtUfs(dmdtfs_, eqns);
 
-        forAll(Yi, i)
-        {
-            const word name
-            (
-                IOobject::groupName(Yi[i].member(), phase.name())
-            );
+    return eqnsPtr;
+}
 
-            const word otherName
-            (
-                IOobject::groupName(Yi[i].member(), otherPhase.name())
-            );
 
-            *eqns[name] +=
-                dmdt21*eqns[otherName]->psi()
-              + fvm::Sp(dmdt12, eqns[name]->psi());
+template<class BasePhaseSystem>
+Foam::autoPtr<Foam::phaseSystem::heatTransferTable>
+Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::heatTransfer() const
+{
+    autoPtr<phaseSystem::heatTransferTable> eqnsPtr =
+        BasePhaseSystem::heatTransfer();
 
-            *eqns[otherName] -=
-                dmdt12*eqns[name]->psi()
-              + fvm::Sp(dmdt21, eqns[otherName]->psi());
-        }
-    }
+    phaseSystem::heatTransferTable& eqns = eqnsPtr();
+
+    this->addDmdtHefs(dmdtfs_, eqns);
+
+    return eqnsPtr;
+}
+
+
+template<class BasePhaseSystem>
+Foam::autoPtr<Foam::phaseSystem::specieTransferTable>
+Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::specieTransfer() const
+{
+    autoPtr<phaseSystem::specieTransferTable> eqnsPtr =
+        BasePhaseSystem::specieTransfer();
+
+    phaseSystem::specieTransferTable& eqns = eqnsPtr();
+
+    this->addDmdtYfs(dmdtfs_, eqns);
 
     return eqnsPtr;
 }
@@ -246,9 +221,13 @@ bool Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::read()
 
 
 template<class BasePhaseSystem>
-void Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::solve()
+void Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::solve
+(
+    const PtrList<volScalarField>& rAUs,
+    const PtrList<surfaceScalarField>& rAUfs
+)
 {
-    BasePhaseSystem::solve();
+    BasePhaseSystem::solve(rAUs, rAUfs);
 
     forAll(populationBalances_, i)
     {

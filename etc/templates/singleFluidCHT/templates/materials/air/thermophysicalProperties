@@ -34,12 +34,12 @@ mixture
     }
     thermodynamics
     {
-        Cp          1005;       // [J/(kg K)]
+        Cp          1005;       // [J/kg/K]
         Hf          0;
     }
     transport
     {
-        mu          1.8e-05;    // [kg/(m s)]
+        mu          1.8e-05;    // [kg/m/s]
         Pr          0.7;
     }
 }

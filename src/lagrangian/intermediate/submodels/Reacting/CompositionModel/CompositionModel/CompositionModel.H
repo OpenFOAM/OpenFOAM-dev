@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ class CompositionModel
 :
     public CloudSubModelBase<CloudType>
 {
-    // Private data
+    // Private Data
 
         //- Reference to the thermo database
         const SLGThermo& thermo_;
@@ -239,7 +239,7 @@ public:
                 const scalar T
             ) const;
 
-            //- Return specific heat caoacity for the phase phaseI
+            //- Return specific heat capacity for the phase phaseI
             virtual scalar Cp
             (
                 const label phaseI,

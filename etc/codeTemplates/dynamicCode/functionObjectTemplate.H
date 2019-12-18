@@ -55,7 +55,7 @@ class ${typeName}FunctionObject
 :
     public functionObjects::regionFunctionObject
 {
-    // Private data
+    // Private Data
 
 //{{{ begin codeData
         ${codeData}
@@ -65,12 +65,6 @@ class ${typeName}FunctionObject
     // Private Member Functions
 
         const fvMesh& mesh() const;
-
-        //- Disallow default bitwise copy construct
-        ${typeName}FunctionObject(const ${typeName}FunctionObject&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const ${typeName}FunctionObject&);
 
 
 public:
@@ -88,6 +82,9 @@ public:
             const Time& runTime,
             const dictionary&
         );
+
+        //- Disallow default bitwise copy construction
+        ${typeName}FunctionObject(const ${typeName}FunctionObject&) = delete;
 
 
     //- Destructor
@@ -107,6 +104,12 @@ public:
 
         //- Write, execute the "writeCalls"
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ${typeName}FunctionObject&) = delete;
 };
 
 

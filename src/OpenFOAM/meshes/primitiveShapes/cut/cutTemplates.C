@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,17 +27,20 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class AboveOp, class BelowOp>
+template<class Point, class AboveOp, class BelowOp>
 typename Foam::cut::opAddResult<AboveOp, BelowOp>::type Foam::triCut
 (
-    const FixedList<point, 3>& tri,
+    const FixedList<Point, 3>& tri,
     const FixedList<scalar, 3>& level,
     const AboveOp& aboveOp,
     const BelowOp& belowOp
 )
 {
-    // If everything is positive or negative, then process the triangle as a
-    // whole, and do a quick return
+    // Quick return if all levels are zero or have the same sign
+    if (level[0] == 0 && level[1] == 0 && level[2] == 0)
+    {
+        return aboveOp() + belowOp();
+    }
     if (level[0] >= 0 && level[1] >= 0 && level[2] >= 0)
     {
         return aboveOp(tri) + belowOp();
@@ -73,7 +76,7 @@ typename Foam::cut::opAddResult<AboveOp, BelowOp>::type Foam::triCut
     }
 
     // Permute the data
-    const FixedList<point, 3> p = triReorder(tri, indices);
+    const FixedList<Point, 3> p = triReorder(tri, indices);
     const FixedList<scalar, 3> l = triReorder(level, indices);
     AboveOp a = triReorder(aboveOp, indices);
     BelowOp b = triReorder(belowOp, indices);
@@ -116,22 +119,26 @@ typename Foam::cut::opAddResult<AboveOp, BelowOp>::type Foam::triCut
 }
 
 
-template<class AboveOp, class BelowOp>
+template<class Point, class AboveOp, class BelowOp>
 typename Foam::cut::opAddResult<AboveOp, BelowOp>::type Foam::tetCut
 (
-    const FixedList<point, 4>& tet,
+    const FixedList<Point, 4>& tet,
     const FixedList<scalar, 4>& level,
     const AboveOp& aboveOp,
     const BelowOp& belowOp
 )
 {
-    // Get the min and max over all four vertices and quick return if there is
-    // no change of sign
+    // Get the min and max over all four vertices and quick return if
+    // all levels are zero or have the same sign
     scalar levelMin = vGreat, levelMax = - vGreat;
     for (label i = 0; i < 4; ++ i)
     {
         levelMin = min(levelMin, level[i]);
         levelMax = max(levelMax, level[i]);
+    }
+    if (levelMin == 0 && levelMax == 0)
+    {
+        return aboveOp() + belowOp();
     }
     if (levelMin >= 0)
     {
@@ -188,7 +195,7 @@ typename Foam::cut::opAddResult<AboveOp, BelowOp>::type Foam::tetCut
     }
 
     // Permute the data
-    const FixedList<point, 4> p = tetReorder(tet, indices);
+    const FixedList<Point, 4> p = tetReorder(tet, indices);
     const FixedList<scalar, 4> l = tetReorder(level, indices);
     AboveOp a = tetReorder(aboveOp, indices);
     BelowOp b = tetReorder(belowOp, indices);

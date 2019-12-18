@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "liquidProperties.H"
-#include "HashTable.H"
-#include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -70,16 +68,16 @@ Foam::liquidProperties::liquidProperties
 Foam::liquidProperties::liquidProperties(const dictionary& dict)
 :
     thermophysicalProperties(dict),
-    Tc_(readScalar(dict.lookup("Tc"))),
-    Pc_(readScalar(dict.lookup("Pc"))),
-    Vc_(readScalar(dict.lookup("Vc"))),
-    Zc_(readScalar(dict.lookup("Zc"))),
-    Tt_(readScalar(dict.lookup("Tt"))),
-    Pt_(readScalar(dict.lookup("Pt"))),
-    Tb_(readScalar(dict.lookup("Tb"))),
-    dipm_(readScalar(dict.lookup("dipm"))),
-    omega_(readScalar(dict.lookup("omega"))),
-    delta_(readScalar(dict.lookup("delta")))
+    Tc_(dict.lookup<scalar>("Tc")),
+    Pc_(dict.lookup<scalar>("Pc")),
+    Vc_(dict.lookup<scalar>("Vc")),
+    Zc_(dict.lookup<scalar>("Zc")),
+    Tt_(dict.lookup<scalar>("Tt")),
+    Pt_(dict.lookup<scalar>("Pt")),
+    Tb_(dict.lookup<scalar>("Tb")),
+    dipm_(dict.lookup<scalar>("dipm")),
+    omega_(dict.lookup<scalar>("omega")),
+    delta_(dict.lookup<scalar>("delta"))
 {}
 
 
@@ -121,57 +119,24 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
         InfoInFunction << "Constructing liquidProperties" << endl;
     }
 
-    const word& liquidPropertiesTypeName = dict.dictName();
+    // If the type is not specified use the entry name as the liquid type name
+    const word& liquidPropertiesTypeName =
+        dict.found("type") ? dict.lookup("type") : dict.dictName();
 
-    if (dict.found("defaultCoeffs"))
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(liquidPropertiesTypeName);
+
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        // Backward-compatibility
-
-        if (Switch(dict.lookup("defaultCoeffs")))
-        {
-            return New(liquidPropertiesTypeName);
-        }
-        else
-        {
-            dictionaryConstructorTable::iterator cstrIter =
-                dictionaryConstructorTablePtr_->find(liquidPropertiesTypeName);
-
-            if (cstrIter == dictionaryConstructorTablePtr_->end())
-            {
-                FatalErrorInFunction
-                    << "Unknown liquidProperties type "
-                    << liquidPropertiesTypeName << nl << nl
-                    << "Valid liquidProperties types are:" << nl
-                    << dictionaryConstructorTablePtr_->sortedToc()
-                    << exit(FatalError);
-            }
-
-            return autoPtr<liquidProperties>
-            (
-                cstrIter()
-                (
-                    dict.optionalSubDict(liquidPropertiesTypeName + "Coeffs")
-                )
-            );
-        }
+        FatalErrorInFunction
+            << "Unknown liquidProperties type "
+            << liquidPropertiesTypeName << nl << nl
+            << "Valid liquidProperties types are:" << nl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
     }
-    else
-    {
-        dictionaryConstructorTable::iterator cstrIter =
-            dictionaryConstructorTablePtr_->find(liquidPropertiesTypeName);
 
-        if (cstrIter == dictionaryConstructorTablePtr_->end())
-        {
-            FatalErrorInFunction
-                << "Unknown liquidProperties type "
-                << liquidPropertiesTypeName << nl << nl
-                << "Valid liquidProperties types are:" << nl
-                << dictionaryConstructorTablePtr_->sortedToc()
-                << exit(FatalError);
-        }
-
-        return autoPtr<liquidProperties>(cstrIter()(dict));
-    }
+    return autoPtr<liquidProperties>(cstrIter()(dict));
 }
 
 
@@ -243,39 +208,19 @@ void Foam::liquidProperties::readIfPresent(const dictionary &dict)
 }
 
 
-void Foam::liquidProperties::writeData(Ostream& os) const
-{
-    thermophysicalProperties::writeData(os);
-    os  << token::SPACE
-        << Tc_ << token::SPACE
-        << Pc_ << token::SPACE
-        << Vc_ << token::SPACE
-        << Zc_ << token::SPACE
-        << Tt_ << token::SPACE
-        << Pt_ << token::SPACE
-        << Tb_ << token::SPACE
-        << dipm_ << token::SPACE
-        << omega_<< token::SPACE
-        << delta_;
-}
-
-
 void Foam::liquidProperties::write(Ostream& os) const
 {
     thermophysicalProperties::write(os);
-
-    dictionary dict("liquidProperties");
-    dict.add("Tc", Tc_);
-    dict.add("Pc", Pc_);
-    dict.add("Vc", Vc_);
-    dict.add("Zc", Zc_);
-    dict.add("Tt", Tt_);
-    dict.add("Pt", Pt_);
-    dict.add("Tb", Tb_);
-    dict.add("dipm", dipm_);
-    dict.add("omega", omega_);
-    dict.add("delta", delta_);
-    os  << indent << dict.dictName() << dict;
+    writeEntry(os, "Tc", Tc_);
+    writeEntry(os, "Pc", Pc_);
+    writeEntry(os, "Vc", Vc_);
+    writeEntry(os, "Zc", Zc_);
+    writeEntry(os, "Tt", Tt_);
+    writeEntry(os, "Pt", Pt_);
+    writeEntry(os, "Tb", Tb_);
+    writeEntry(os, "dipm", dipm_);
+    writeEntry(os, "omega", omega_);
+    writeEntry(os, "delta", delta_);
 }
 
 
@@ -283,7 +228,7 @@ void Foam::liquidProperties::write(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const liquidProperties& l)
 {
-    l.writeData(os);
+    l.write(os);
     return os;
 }
 

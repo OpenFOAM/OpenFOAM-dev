@@ -23,10 +23,25 @@ internalField   uniform 0;
 
 boundaryField
 {
-    inlet       { $:calculated.nut; }
-    outlet      { $:calculated.nut; }
-    movingWalls { $:wall.nut; }
-    staticWalls { $movingWalls; }
+    inlet
+    {
+        $!calculated/nut;
+    }
+
+    outlet
+    {
+        $!calculated/nut;
+    }
+
+    movingWalls
+    {
+        $!wall/nut;
+    }
+
+    staticWalls
+    {
+        $movingWalls;
+    }
 
     #includeEtc "caseDicts/setConstraintTypes"
 }

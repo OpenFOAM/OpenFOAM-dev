@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -187,18 +187,7 @@ inline void Foam::Boussinesq<Specie>::operator+=
     const Boussinesq<Specie>& b
 )
 {
-    scalar Y1 = this->Y();
-    Specie::operator+=(b);
-
-    if (mag(this->Y()) > small)
-    {
-        Y1 /= this->Y();
-        const scalar Y2 = b.Y()/this->Y();
-
-        rho0_ = Y1*rho0_ + Y2*b.rho0_;
-        T0_ = Y1*T0_ + Y2*b.T0_;
-        beta_ = Y1*beta_ + Y2*b.beta_;
-    }
+    NotImplemented;
 }
 
 
@@ -218,31 +207,8 @@ inline Foam::Boussinesq<Specie> Foam::operator+
     const Boussinesq<Specie>& b2
 )
 {
-    Specie sp(static_cast<const Specie&>(b1) + static_cast<const Specie&>(b2));
-
-    if (mag(sp.Y()) < small)
-    {
-        return Boussinesq<Specie>
-        (
-            sp,
-            b1.rho0_,
-            b1.T0_,
-            b1.beta_
-        );
-    }
-    else
-    {
-        const scalar Y1 = b1.Y()/sp.Y();
-        const scalar Y2 = b2.Y()/sp.Y();
-
-        return Boussinesq<Specie>
-        (
-            sp,
-            Y1*b1.rho0_ + Y2*b2.rho0_,
-            Y1*b1.T0_ + Y2*b2.T0_,
-            Y1*b1.beta_ + Y2*b2.beta_
-        );
-    }
+    NotImplemented;
+    return b1;
 }
 
 
@@ -270,18 +236,8 @@ inline Foam::Boussinesq<Specie> Foam::operator==
     const Boussinesq<Specie>& b2
 )
 {
-    Specie sp(static_cast<const Specie&>(b1) == static_cast<const Specie&>(b2));
-
-    const scalar Y1 = b1.Y()/sp.Y();
-    const scalar Y2 = b2.Y()/sp.Y();
-
-    return Boussinesq<Specie>
-    (
-        sp,
-        Y2*b2.rho0_ - Y1*b1.rho0_,
-        Y2*b2.T0_   - Y1*b1.T0_,
-        Y2*b2.beta_ - Y1*b1.beta_
-    );
+    NotImplemented;
+    return b1;
 }
 
 

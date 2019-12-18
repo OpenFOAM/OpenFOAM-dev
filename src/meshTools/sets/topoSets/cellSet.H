@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,12 +50,6 @@ class cellSet
 :
     public topoSet
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cellSet(const cellSet&);
-
-
 public:
 
     //- Runtime type information
@@ -133,12 +127,15 @@ public:
                 writeOption w=NO_WRITE
             );
 
+        //- Disallow default bitwise copy construction
+        cellSet(const cellSet&) = delete;
+
 
     //- Destructor
     virtual ~cellSet();
 
 
-    // Member functions
+    // Member Functions
 
         //- Sync cellSet across coupled patches.
         virtual void sync(const polyMesh& mesh)

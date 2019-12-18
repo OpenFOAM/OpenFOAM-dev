@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,13 +79,6 @@ class kEpsilonLopesdaCosta
 :
     public eddyViscosity<RASModel<BasicTurbulenceModel>>
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        kEpsilonLopesdaCosta(const kEpsilonLopesdaCosta&);
-        void operator=(const kEpsilonLopesdaCosta&);
-
-
 protected:
 
     // Protected data
@@ -170,6 +163,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        kEpsilonLopesdaCosta(const kEpsilonLopesdaCosta&) = delete;
+
 
     //- Destructor
     virtual ~kEpsilonLopesdaCosta()
@@ -215,6 +211,12 @@ public:
 
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const kEpsilonLopesdaCosta&) = delete;
 };
 
 

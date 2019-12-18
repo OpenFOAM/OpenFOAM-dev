@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::TableBase
+    Foam::Function1s::TableBase
 
 Description
     Base class for table with bounds handling, interpolation and integration
@@ -35,6 +35,7 @@ SourceFiles
 #ifndef TableBase_H
 #define TableBase_H
 
+#include "tableBase.H"
 #include "Function1.H"
 #include "Tuple2.H"
 
@@ -45,32 +46,19 @@ namespace Foam
 
 class interpolationWeights;
 
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
                         Class TableBase Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
+template<class Type, class Function1Type>
 class TableBase
 :
-    public Function1<Type>
+    public tableBase,
+    public FieldFunction1<Type, Function1Type>
 {
-public:
-
-    // Public data types
-
-        //- Enumeration for handling out-of-bound values
-        enum boundsHandling
-        {
-            ERROR,          //!< Exit with a FatalError
-            WARN,           //!< Issue warning and clamp value (default)
-            CLAMP,          //!< Clamp value to the start/end value
-            REPEAT          //!< Treat as a repeating list
-        };
-
-
 protected:
 
     // Protected data
@@ -79,7 +67,7 @@ protected:
         const word name_;
 
         //- Enumeration for handling out-of-bound values
-        const boundsHandling boundsHandling_;
+        const tableBase::boundsHandling boundsHandling_;
 
         //- Interpolation type
         const word interpolationScheme_;
@@ -93,10 +81,11 @@ protected:
         //- Interpolator method
         mutable autoPtr<interpolationWeights> interpolatorPtr_;
 
-        //- Cached indices and weights
-        mutable labelList currentIndices_;
+        //- Cached indices
+        mutable labelList indices_;
 
-        mutable scalarField currentWeights_;
+        //- Cached weights
+        mutable scalarField weights_;
 
 
     // Protected Member Functions
@@ -104,22 +93,33 @@ protected:
         //- Return (demand driven) interpolator
         const interpolationWeights& interpolator() const;
 
+        //- Check the table for size and consistency
+        void check() const;
 
-private:
-
-        //- Disallow default bitwise assignment
-        void operator=(const TableBase<Type>&);
+        //- Bound the argument to the table. Errors or warns, or shifts the
+        //  value if the table repeats. Does not clamp to the ends of the table
+        //  as the interpolator already performs that function.
+        scalar bound(const scalar x) const;
 
 
 public:
 
     // Constructors
 
-        //- Construct from dictionary - note table is not populated
+        //- Construct from dictionary. Table is not populated.
         TableBase(const word& name, const dictionary& dict);
 
-        //- Copy constructor. Note: steals interpolator, tableSamples
-        TableBase(const TableBase<Type>& tbl);
+        //- Construct from components
+        TableBase
+        (
+            const word& name,
+            const tableBase::boundsHandling boundsHandling,
+            const word& interpolationScheme,
+            const List<Tuple2<scalar, Type>>& table
+        );
+
+        //- Copy constructor. Note: Steals interpolator and tableSamples.
+        TableBase(const TableBase<Type, Function1Type>& tbl);
 
 
     //- Destructor
@@ -127,27 +127,6 @@ public:
 
 
     // Member Functions
-
-        //- Return the out-of-bounds handling as a word
-        word boundsHandlingToWord(const boundsHandling& bound) const;
-
-        //- Return the out-of-bounds handling as an enumeration
-        boundsHandling wordToBoundsHandling(const word& bound) const;
-
-        //- Set the out-of-bounds handling from enum, return previous setting
-        boundsHandling outOfBounds(const boundsHandling& bound);
-
-        //- Check the table for size and consistency
-        void check() const;
-
-        //- Check minimum table bounds
-        bool checkMinBounds(const scalar x, scalar& xDash) const;
-
-        //- Check maximum table bounds
-        bool checkMaxBounds(const scalar x, scalar& xDash) const;
-
-        //- Convert time
-        virtual void convertTimeBase(const Time& t);
 
         //- Return Table value
         virtual Type value(const scalar x) const;
@@ -161,18 +140,23 @@ public:
         //- Return the dependent values
         virtual tmp<Field<Type>> y() const;
 
+        //- Write entries only in dictionary format
+        virtual void writeEntries(Ostream& os) const;
+
         //- Write all table data in dictionary format
         virtual void writeData(Ostream& os) const;
 
-        //- Write keywords only in dictionary format. Used for non-inline
-        //  table types
-        virtual void writeEntries(Ostream& os) const;
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const TableBase<Type, Function1Type>&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

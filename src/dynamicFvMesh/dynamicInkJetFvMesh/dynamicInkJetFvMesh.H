@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class dynamicInkJetFvMesh
 :
     public dynamicFvMesh
 {
-    // Private data
+    // Private Data
 
         dictionary dynamicMeshCoeffs_;
 
@@ -67,14 +67,10 @@ class dynamicInkJetFvMesh
 
         pointIOField stationaryPoints_;
 
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        dynamicInkJetFvMesh(const dynamicInkJetFvMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const dynamicInkJetFvMesh&);
+        //- Optional list of vectorFields to update for mesh motion
+        //  For modern solvers using Uf and correctPhi to update the flux
+        //  after motion it is not necessary to specify a "velocityFields" list
+        velocityMotionCorrection velocityMotionCorrection_;
 
 
 public:
@@ -88,6 +84,9 @@ public:
         //- Construct from IOobject
         dynamicInkJetFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        dynamicInkJetFvMesh(const dynamicInkJetFvMesh&) = delete;
+
 
     //- Destructor
     ~dynamicInkJetFvMesh();
@@ -97,6 +96,12 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dynamicInkJetFvMesh&) = delete;
 };
 
 

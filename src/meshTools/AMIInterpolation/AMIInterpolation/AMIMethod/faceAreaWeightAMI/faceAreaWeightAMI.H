@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,9 +50,7 @@ class faceAreaWeightAMI
 :
     public AMIMethod
 {
-private:
-
-    // Private data
+    // Private Data
 
         //- Flag to restart uncovered source faces
         const bool restartUncoveredSourceFace_;
@@ -61,12 +59,6 @@ private:
 protected:
 
     // Protected Member Functions
-
-        //- Disallow default bitwise copy construct
-        faceAreaWeightAMI(const faceAreaWeightAMI&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const faceAreaWeightAMI&);
 
         // Marching front
 
@@ -150,6 +142,9 @@ public:
             const bool restartUncoveredSourceFace = true
         );
 
+        //- Disallow default bitwise copy construction
+        faceAreaWeightAMI(const faceAreaWeightAMI&) = delete;
+
 
     //- Destructor
     virtual ~faceAreaWeightAMI();
@@ -169,6 +164,12 @@ public:
                 label srcFacei = -1,
                 label tgtFacei = -1
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const faceAreaWeightAMI&) = delete;
 };
 
 

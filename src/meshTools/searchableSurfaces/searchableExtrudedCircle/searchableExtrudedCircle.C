@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ Foam::searchableExtrudedCircle::searchableExtrudedCircle
             ).objectPath()
         )
     ),
-    radius_(readScalar(dict.lookup("radius")))
+    radius_(dict.lookup<scalar>("radius"))
 {
     const edgeMesh& eMesh = eMeshPtr_();
 

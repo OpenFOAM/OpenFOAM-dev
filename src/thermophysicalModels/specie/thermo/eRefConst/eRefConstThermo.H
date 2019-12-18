@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ class eRefConstThermo
 :
     public EquationOfState
 {
-    // Private data
+    // Private Data
 
         scalar Cv_;
         scalar Hf_;
@@ -136,7 +136,7 @@ public:
 
         // Fundamental properties
 
-            //- Heat capacity at constant volume [J/(kg K)]
+            //- Heat capacity at constant volume [J/kg/K]
             inline scalar Cv(const scalar p, const scalar T) const;
 
             //- Sensible internal energy [J/kg]
@@ -148,8 +148,11 @@ public:
             //- Chemical enthalpy [J/kg]
             inline scalar Hc() const;
 
-            //- Entropy [J/(kg K)]
+            //- Entropy [J/kg/K]
             inline scalar S(const scalar p, const scalar T) const;
+
+            //- Gibbs free energy of the mixture in the standard state [J/kg]
+            inline scalar Gstd(const scalar T) const;
 
             #include "EtoHthermo.H"
 
@@ -169,7 +172,7 @@ public:
             void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const eRefConstThermo&);
 

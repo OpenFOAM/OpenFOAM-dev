@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,14 +43,22 @@ namespace Foam
 namespace diameterModels
 {
     defineTypeNameAndDebug(IATE, 0);
-
-    addToRunTimeSelectionTable
-    (
-        diameterModel,
-        IATE,
-        dictionary
-    );
+    addToRunTimeSelectionTable(diameterModel, IATE, dictionary);
 }
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::calcD() const
+{
+    return d_;
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::calcA() const
+{
+    return phase()*kappai_;
 }
 
 
@@ -68,39 +76,21 @@ Foam::diameterModels::IATE::IATE
         IOobject
         (
             IOobject::groupName("kappai", phase.name()),
-            phase_.time().timeName(),
-            phase_.mesh(),
+            phase.time().timeName(),
+            phase.mesh(),
             IOobject::MUST_READ,
             IOobject::AUTO_WRITE
         ),
-        phase_.mesh()
+        phase.mesh()
     ),
-    dMax_("dMax", dimLength, diameterProperties_),
-    dMin_("dMin", dimLength, diameterProperties_),
-    residualAlpha_
-    (
-        "residualAlpha",
-        dimless,
-        diameterProperties_
-    ),
-    d_
-    (
-        IOobject
-        (
-            IOobject::groupName("d", phase.name()),
-            phase_.time().timeName(),
-            phase_.mesh(),
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        dsm()
-    ),
-    sources_
-    (
-        diameterProperties_.lookup("sources"),
-        IATEsource::iNew(*this)
-    )
-{}
+    dMax_("dMax", dimLength, diameterProperties),
+    dMin_("dMin", dimLength, diameterProperties),
+    residualAlpha_("residualAlpha", dimless, diameterProperties),
+    d_(dRef()),
+    sources_(diameterProperties.lookup("sources"), IATEsource::iNew(*this))
+{
+    d_ = dsm();
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -116,13 +106,14 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::dsm() const
     return max(6/max(kappai_, 6/dMax_), dMin_);
 }
 
+
 void Foam::diameterModels::IATE::correct()
 {
     volScalarField alphaAv
     (
         max
         (
-            0.5*fvc::average(phase_ + phase_.oldTime()),
+            0.5*fvc::average(phase() + phase().oldTime()),
             residualAlpha_
         )
     );
@@ -134,8 +125,8 @@ void Foam::diameterModels::IATE::correct()
         (
             ((1.0/3.0)/alphaAv)
            *(
-                fvc::ddt(phase_) + fvc::div(phase_.alphaPhi())
-              - phase_.continuityError()/phase_.rho()
+                fvc::ddt(phase()) + fvc::div(phase().alphaPhi())
+              - phase().continuityError()/phase().rho()
             ),
             kappai_
         )
@@ -147,13 +138,13 @@ void Foam::diameterModels::IATE::correct()
         R += sources_[j].R(alphaAv, kappai_);
     }
 
-    fv::options& fvOptions(fv::options::New(phase_.mesh()));
+    fv::options& fvOptions(fv::options::New(phase().mesh()));
 
     // Construct the interfacial curvature equation
     fvScalarMatrix kappaiEqn
     (
-        fvm::ddt(kappai_) + fvm::div(phase_.phi(), kappai_)
-      - fvm::Sp(fvc::div(phase_.phi()), kappai_)
+        fvm::ddt(kappai_) + fvm::div(phase().phi(), kappai_)
+      - fvm::Sp(fvc::div(phase().phi()), kappai_)
      ==
         R
       + fvOptions(kappai_)
@@ -174,13 +165,13 @@ bool Foam::diameterModels::IATE::read(const dictionary& phaseProperties)
 {
     diameterModel::read(phaseProperties);
 
-    diameterProperties_.lookup("dMax") >> dMax_;
-    diameterProperties_.lookup("dMin") >> dMin_;
+    diameterProperties().lookup("dMax") >> dMax_;
+    diameterProperties().lookup("dMin") >> dMin_;
 
     // Re-create all the sources updating number, type and coefficients
     PtrList<IATEsource>
     (
-        diameterProperties_.lookup("sources"),
+        diameterProperties().lookup("sources"),
         IATEsource::iNew(*this)
     ).transfer(sources_);
 

@@ -61,7 +61,7 @@ uniformTotalPressureFvPatchScalarField
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     psiName_(dict.lookupOrDefault<word>("psi", "none")),
-    gamma_(psiName_ != "none" ? readScalar(dict.lookup("gamma")) : 1),
+    gamma_(psiName_ != "none" ? dict.lookup<scalar>("gamma") : 1),
     p0_(Function1<scalar>::New("p0", dict))
 {
     if (dict.found("value"))
@@ -229,11 +229,11 @@ void Foam::uniformTotalPressureFvPatchScalarField::write(Ostream& os) const
     fvPatchScalarField::write(os);
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
-    os.writeKeyword("rho") << rhoName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("psi") << psiName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("gamma") << gamma_ << token::END_STATEMENT << nl;
-    p0_->writeData(os);
-    writeEntry("value", os);
+    writeEntry(os, "rho", rhoName_);
+    writeEntry(os, "psi", psiName_);
+    writeEntry(os, "gamma", gamma_);
+    writeEntry(os, p0_());
+    writeEntry(os, "value", *this);
 }
 
 

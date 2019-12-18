@@ -14,8 +14,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-type            scalarTransport;
-libs            ("libsolverFunctionObjects.so");
+#includeEtc     "caseDicts/postProcessing/solvers/scalarTransport/scalarTransport.cfg"
 
 field           s;
 schemesField    s;

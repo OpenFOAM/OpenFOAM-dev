@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,26 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "ErgunWenYuDragForce.H"
-#include "volFields.H"
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class CloudType>
-Foam::scalar Foam::ErgunWenYuDragForce<CloudType>::CdRe
-(
-    const scalar Re
-) const
-{
-    if (Re > 1000.0)
-    {
-        return 0.44*Re;
-    }
-    else
-    {
-        return 24.0*(1.0 + 0.15*pow(Re, 0.687));
-    }
-}
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -55,14 +35,7 @@ Foam::ErgunWenYuDragForce<CloudType>::ErgunWenYuDragForce
     const dictionary& dict
 )
 :
-    ParticleForce<CloudType>(owner, mesh, dict, typeName, true),
-    alphac_
-    (
-        this->mesh().template lookupObject<volScalarField>
-        (
-            this->coeffs().lookup("alphac")
-        )
-    )
+    WenYuDragForce<CloudType>(owner, mesh, dict, typeName)
 {}
 
 
@@ -72,14 +45,7 @@ Foam::ErgunWenYuDragForce<CloudType>::ErgunWenYuDragForce
     const ErgunWenYuDragForce<CloudType>& df
 )
 :
-    ParticleForce<CloudType>(df),
-    alphac_
-    (
-        this->mesh().template lookupObject<volScalarField>
-        (
-            this->coeffs().lookup("alphac")
-        )
-    )
+    WenYuDragForce<CloudType>(df)
 {}
 
 
@@ -103,25 +69,25 @@ Foam::forceSuSp Foam::ErgunWenYuDragForce<CloudType>::calcCoupled
     const scalar muc
 ) const
 {
-    scalar alphac(alphac_[p.cell()]);
+    const scalar alphac =
+        this->alphacInterp().interpolate
+        (
+            p.coordinates(),
+            p.currentTetIndices()
+        );
 
     if (alphac < 0.8)
     {
         return forceSuSp
         (
             Zero,
-            (mass/p.rho())
-           *(150.0*(1.0 - alphac)/alphac + 1.75*Re)*muc/(alphac*sqr(p.d()))
+            mass/p.rho()*(150*(1 - alphac)/alphac + 1.75*Re)
+           *muc/(alphac*sqr(p.d()))
         );
     }
     else
     {
-        return forceSuSp
-        (
-            Zero,
-            (mass/p.rho())
-           *0.75*CdRe(alphac*Re)*muc*pow(alphac, -2.65)/(alphac*sqr(p.d()))
-        );
+        return WenYuDragForce<CloudType>::calcCoupled(p, td, dt, mass, Re, muc);
     }
 }
 

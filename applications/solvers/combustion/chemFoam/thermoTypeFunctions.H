@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ template<class ThermoType>
 scalarList W(const rhoReactionThermo& thermo)
 {
     const PtrList<ThermoType>& specieData =
-        dynamicCast<const reactingMixture<ThermoType>>(thermo)
+        dynamicCast<const multiComponentMixture<ThermoType>>(thermo)
        .speciesData();
 
     scalarList W(specieData.size());
@@ -51,7 +51,7 @@ scalar h0
 )
 {
     const PtrList<ThermoType>& specieData =
-        dynamic_cast<const reactingMixture<ThermoType>&>(thermo)
+        dynamic_cast<const multiComponentMixture<ThermoType>&>(thermo)
        .speciesData();
 
     scalar h0 = 0;
@@ -66,11 +66,11 @@ scalar h0
 
 scalarList W(const rhoReactionThermo& thermo)
 {
-    if (isA<reactingMixture<gasHThermoPhysics>>(thermo))
+    if (isA<multiComponentMixture<gasHThermoPhysics>>(thermo))
     {
         return W<gasHThermoPhysics>(thermo);
     }
-    else if (isA<reactingMixture<constFluidHThermoPhysics>>(thermo))
+    else if (isA<multiComponentMixture<constFluidHThermoPhysics>>(thermo))
     {
         return W<constFluidHThermoPhysics>(thermo);
     }
@@ -94,11 +94,11 @@ scalar h0
     const scalar T
 )
 {
-    if (isA<reactingMixture<gasHThermoPhysics>>(thermo))
+    if (isA<multiComponentMixture<gasHThermoPhysics>>(thermo))
     {
         return h0<gasHThermoPhysics>(thermo, Y, p, T);
     }
-    else if (isA<reactingMixture<constFluidHThermoPhysics>>(thermo))
+    else if (isA<multiComponentMixture<constFluidHThermoPhysics>>(thermo))
     {
         return h0<constFluidHThermoPhysics>(thermo, Y, p, T);
     }

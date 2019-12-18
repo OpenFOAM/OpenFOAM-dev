@@ -4,7 +4,7 @@ if (pimple.frozenFlow())
 }
 else
 {
-    if (!mesh.steady() && pimples.nCorrPimple() <= 1)
+    if (!mesh.steady() && pimples.firstPimpleIter())
     {
         #include "rhoEqn.H"
     }
@@ -24,7 +24,7 @@ else
         turbulence.correct();
     }
 
-    if (!mesh.steady() && pimples.finalIter())
+    if (!mesh.steady() && pimples.finalPimpleIter())
     {
         rho = thermo.rho();
     }

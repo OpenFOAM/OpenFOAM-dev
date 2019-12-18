@@ -27,14 +27,14 @@ cyclicSlip
     type  cyclicSlip;
 }
 
+conformalCoupled
+{
+    type  conformalCoupled;
+}
+
 empty
 {
     type  empty;
-}
-
-nonuniformTransformCyclic
-{
-    type  nonuniformTransformCyclic;
 }
 
 cyclicRepeatAMI

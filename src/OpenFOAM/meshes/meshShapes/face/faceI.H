@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,9 +63,9 @@ inline Foam::face::face(const labelList& lst)
 {}
 
 
-inline Foam::face::face(const Xfer<labelList>& lst)
+inline Foam::face::face(labelList&& lst)
 :
-    labelList(lst)
+    labelList(move(lst))
 {}
 
 
@@ -131,6 +131,15 @@ inline Foam::label Foam::face::nTriangles() const
 {
     return size() - 2;
 }
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+inline void Foam::face::operator=(labelList&& l)
+{
+    labelList::operator=(move(l));
+}
+
 
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 

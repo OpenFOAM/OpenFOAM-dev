@@ -80,15 +80,6 @@ Description
             #{
                 Pout<< "**codeSetValue**" << endl;
             #};
-
-            // Dummy entry. Make dependent on above to trigger recompilation
-            code
-            #{
-                $codeInclude
-                $codeCorrect
-                $codeAddSup
-                $codeSetValue
-            #};
         }
 
         sourceTimeCoeffs
@@ -147,7 +138,7 @@ public:
     virtual ~${typeName}FvOption${SourceType}();
 
 
-    // Member functions
+    // Member Functions
 
             //- Correct field
             virtual void correct

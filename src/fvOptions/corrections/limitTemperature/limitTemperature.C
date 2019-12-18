@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,8 +56,8 @@ Foam::fv::limitTemperature::limitTemperature
 )
 :
     cellSetOption(name, modelType, dict, mesh),
-    Tmin_(readScalar(coeffs_.lookup("min"))),
-    Tmax_(readScalar(coeffs_.lookup("max"))),
+    Tmin_(coeffs_.lookup<scalar>("min")),
+    Tmax_(coeffs_.lookup<scalar>("max")),
     phase_(coeffs_.lookupOrDefault<word>("phase", word::null))
 {
     // Set the field name to that of the energy field from which the temperature
@@ -103,8 +103,8 @@ void Foam::fv::limitTemperature::correct(volScalarField& he)
     scalarField Tmin(cells_.size(), Tmin_);
     scalarField Tmax(cells_.size(), Tmax_);
 
-    scalarField heMin(thermo.he(thermo.p(), Tmin, cells_));
-    scalarField heMax(thermo.he(thermo.p(), Tmax, cells_));
+    scalarField heMin(thermo.he(Tmin, cells_));
+    scalarField heMax(thermo.he(Tmax, cells_));
 
     scalarField& hec = he.primitiveFieldRef();
 
@@ -125,13 +125,11 @@ void Foam::fv::limitTemperature::correct(volScalarField& he)
 
             if (!hep.fixesValue())
             {
-                const scalarField& pp = thermo.p().boundaryField()[patchi];
+                scalarField Tminp(hep.size(), Tmin_);
+                scalarField Tmaxp(hep.size(), Tmax_);
 
-                scalarField Tminp(pp.size(), Tmin_);
-                scalarField Tmaxp(pp.size(), Tmax_);
-
-                scalarField heMinp(thermo.he(pp, Tminp, patchi));
-                scalarField heMaxp(thermo.he(pp, Tmaxp, patchi));
+                scalarField heMinp(thermo.he(Tminp, patchi));
+                scalarField heMaxp(thermo.he(Tmaxp, patchi));
 
                 forAll(hep, facei)
                 {

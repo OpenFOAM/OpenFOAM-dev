@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "uniformDiffusivity.H"
+#include "surfaceFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,20 +50,7 @@ Foam::uniformDiffusivity::uniformDiffusivity
     Istream&
 )
 :
-    motionDiffusivity(mesh),
-    faceDiffusivity_
-    (
-        IOobject
-        (
-            "faceDiffusivity",
-            mesh.time().timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        mesh,
-        dimensionedScalar(dimless, 1.0)
-    )
+    motionDiffusivity(mesh)
 {}
 
 
@@ -70,6 +58,30 @@ Foam::uniformDiffusivity::uniformDiffusivity
 
 Foam::uniformDiffusivity::~uniformDiffusivity()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::surfaceScalarField>
+Foam::uniformDiffusivity::operator()() const
+{
+    return tmp<surfaceScalarField>
+    (
+        new surfaceScalarField
+        (
+            IOobject
+            (
+                "faceDiffusivity",
+                mesh().time().timeName(),
+                mesh(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE
+            ),
+            mesh(),
+            dimensionedScalar(dimless, 1.0)
+        )
+    );
+}
 
 
 // ************************************************************************* //

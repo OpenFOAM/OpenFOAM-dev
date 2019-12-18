@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,10 @@ Description
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+class thermophysicalFunction;
+Ostream& operator<<(Ostream& os, const thermophysicalFunction& l);
+
 /*---------------------------------------------------------------------------*\
                     Class thermophysicalFunction Declaration
 \*---------------------------------------------------------------------------*/
@@ -76,7 +80,11 @@ public:
         {}
 
         //- Return pointer to new thermophysicalFunction created from dict
-        static autoPtr<thermophysicalFunction> New(const dictionary& dict);
+        static autoPtr<thermophysicalFunction> New
+        (
+            const dictionary& dict,
+            const word& name
+        );
 
 
     //- Destructor
@@ -90,16 +98,19 @@ public:
         virtual scalar f(scalar p, scalar T) const = 0;
 
         //- Write the function coefficients
-        virtual void writeData(Ostream& os) const = 0;
+        virtual void write(Ostream& os) const = 0;
+
+        //- Write the function coefficients within the property sub-dictionary
+        virtual void write(Ostream& os, const word& name) const;
 
 
     // Ostream Operator
 
-        friend Ostream& operator<<(Ostream& os, const thermophysicalFunction& f)
-        {
-            f.writeData(os);
-            return os;
-        }
+        friend Ostream& operator<<
+        (
+            Ostream& os,
+            const thermophysicalFunction& f
+        );
 };
 
 

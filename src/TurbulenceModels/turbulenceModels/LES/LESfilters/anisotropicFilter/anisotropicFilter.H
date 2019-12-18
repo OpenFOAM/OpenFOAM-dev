@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,17 +58,10 @@ class anisotropicFilter
 :
     public LESfilter
 {
-    // Private data
+    // Private Data
 
         scalar widthCoeff_;
         volVectorField coeff_;
-
-
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        anisotropicFilter(const anisotropicFilter&);
-        void operator=(const anisotropicFilter&);
 
 
 public:
@@ -84,6 +77,9 @@ public:
         //- Construct from IOdictionary
         anisotropicFilter(const fvMesh& mesh, const dictionary&);
 
+        //- Disallow default bitwise copy construction
+        anisotropicFilter(const anisotropicFilter&) = delete;
+
 
     //- Destructor
     virtual ~anisotropicFilter()
@@ -97,6 +93,8 @@ public:
 
 
     // Member Operators
+
+        void operator=(const anisotropicFilter&) = delete;
 
         virtual tmp<volScalarField> operator()
         (

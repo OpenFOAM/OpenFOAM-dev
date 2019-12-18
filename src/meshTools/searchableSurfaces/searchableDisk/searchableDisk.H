@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,8 +52,6 @@ class searchableDisk
 :
     public searchableSurface
 {
-private:
-
     // Private Member Data
 
         //- origin
@@ -89,11 +87,6 @@ private:
             pointIndexHit&
         ) const;
 
-        //- Disallow default bitwise copy construct
-        searchableDisk(const searchableDisk&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableDisk&);
 
 public:
 
@@ -118,6 +111,10 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        searchableDisk(const searchableDisk&) = delete;
+
 
     //- Destructor
     virtual ~searchableDisk();
@@ -232,6 +229,11 @@ public:
                 return false;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableDisk&) = delete;
 };
 
 

@@ -21,32 +21,25 @@ internalField   uniform 1;
 
 boundaryField
 {
-    front
-    {
-        type            kqRWallFunction;
-        value           uniform 1;
-    }
-    back
-    {
-        type            kqRWallFunction;
-        value           uniform 1;
-    }
     walls
     {
         type            kqRWallFunction;
         value           uniform 1;
     }
+
     porosityWall
     {
         type            kqRWallFunction;
         value           uniform 1;
     }
+
     inlet
     {
         type            turbulentIntensityKineticEnergyInlet;
         intensity       0.05;
         value           uniform 1;
     }
+
     outlet
     {
         type            inletOutlet;

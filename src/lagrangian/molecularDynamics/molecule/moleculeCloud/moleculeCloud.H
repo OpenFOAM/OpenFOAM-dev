@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,10 +58,7 @@ class moleculeCloud
 :
     public Cloud<molecule>
 {
-
-private:
-
-    // Private data
+    // Private Data
 
         const polyMesh& mesh_;
 
@@ -134,12 +131,6 @@ private:
             const molecule::constantProperties& cP
         );
 
-        //- Disallow default bitwise copy construct
-        moleculeCloud(const moleculeCloud&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const moleculeCloud&);
-
 
 public:
 
@@ -161,6 +152,9 @@ public:
             const IOdictionary& mdInitialiseDict,
             bool readFields = true
         );
+
+        //- Disallow default bitwise copy construction
+        moleculeCloud(const moleculeCloud&) = delete;
 
 
     // Member Functions
@@ -195,10 +189,16 @@ public:
             inline Random& rndGen();
 
 
-    // Member Operators
+    // Member Functions
 
         //- Write molecule sites in XYZ format
         void writeXYZ(const fileName& fName) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const moleculeCloud&) = delete;
 };
 
 

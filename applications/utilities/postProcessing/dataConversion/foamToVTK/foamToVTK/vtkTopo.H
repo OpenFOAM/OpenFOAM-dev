@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ class polyMesh;
 
 class vtkTopo
 {
-    // Private data
+    // Private Data
 
         const polyMesh& mesh_;
 
@@ -64,15 +64,6 @@ class vtkTopo
         labelList addPointCellLabels_;
 
         labelList superCells_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        vtkTopo(const vtkTopo&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const vtkTopo&);
 
 
 public:
@@ -102,6 +93,10 @@ public:
         //- Construct from components
         vtkTopo(const polyMesh&);
 
+        //- Disallow default bitwise copy construction
+        vtkTopo(const vtkTopo&) = delete;
+
+
     // Member Functions
 
         // Access
@@ -125,6 +120,12 @@ public:
             {
                 return superCells_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const vtkTopo&) = delete;
 };
 
 

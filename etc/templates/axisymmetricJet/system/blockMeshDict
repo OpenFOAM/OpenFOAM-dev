@@ -13,6 +13,7 @@ FoamFile
     object      blockMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#inputSyntax slash;
 
 backgroundMesh
 {
@@ -29,28 +30,28 @@ convertToMeters 1;
 vertices
 (
     (                      0                   0 -1)
-    ($:backgroundMesh.length                   0 -1)
-    (                      0 $:backgroundMesh.rA -1)
-    ($:backgroundMesh.length $:backgroundMesh.rA -1)
-    (                      0 $:backgroundMesh.rB -1)
-    ($:backgroundMesh.length $:backgroundMesh.rB -1)
+    ($!backgroundMesh/length                   0 -1)
+    (                      0 $!backgroundMesh/rA -1)
+    ($!backgroundMesh/length $!backgroundMesh/rA -1)
+    (                      0 $!backgroundMesh/rB -1)
+    ($!backgroundMesh/length $!backgroundMesh/rB -1)
 
     (                      0                   0  0)
-    ($:backgroundMesh.length                   0  0)
-    (                      0 $:backgroundMesh.rA  0)
-    ($:backgroundMesh.length $:backgroundMesh.rA  0)
-    (                      0 $:backgroundMesh.rB  0)
-    ($:backgroundMesh.length $:backgroundMesh.rB  0)
+    ($!backgroundMesh/length                   0  0)
+    (                      0 $!backgroundMesh/rA  0)
+    ($!backgroundMesh/length $!backgroundMesh/rA  0)
+    (                      0 $!backgroundMesh/rB  0)
+    ($!backgroundMesh/length $!backgroundMesh/rB  0)
 );
 
 blocks
 (
     hex (0 1 3 2 6 7 9 8)
-    ($:backgroundMesh.lengthCells $:backgroundMesh.rAcells 1)
+    ($!backgroundMesh/lengthCells $!backgroundMesh/rAcells 1)
     simpleGrading (1 1 1)
 
     hex (2 3 5 4 8 9 11 10)
-    ($:backgroundMesh.lengthCells $:backgroundMesh.rBcells 1)
+    ($!backgroundMesh/lengthCells $!backgroundMesh/rBcells 1)
     simpleGrading (1 1 1)
 );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ namespace Foam
 {
 
 class interfaceCompositionModel;
-class massTransferModel;
+class diffusiveMassTransferModel;
 
 /*---------------------------------------------------------------------------*\
                  Class InterfaceCompositionPhaseChangePhaseSystem Declaration
@@ -59,37 +59,24 @@ class InterfaceCompositionPhaseChangePhaseSystem
 :
     public BasePhaseSystem
 {
-protected:
-
-    // Protected typedefs
+    // Private typedefs
 
         typedef HashTable
         <
-            autoPtr<interfaceCompositionModel>,
+            Pair<autoPtr<interfaceCompositionModel>>,
             phasePairKey,
             phasePairKey::hash
         > interfaceCompositionModelTable;
 
         typedef HashTable
         <
-            Pair<autoPtr<BlendedInterfacialModel<massTransferModel>>>,
+            Pair<autoPtr<BlendedInterfacialModel<diffusiveMassTransferModel>>>,
             phasePairKey,
             phasePairKey::hash
-        > massTransferModelTable;
-
-        typedef HashPtrTable
-        <
-            HashPtrTable<volScalarField>,
-            phasePairKey,
-            phasePairKey::hash
-        >
-        iDmdtSuSpTable;
-
-        typedef HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
-            iDmdtTable;
+        > diffusiveMassTransferModelTable;
 
 
-    // Protected data
+    // Private data
 
         // Sub Models
 
@@ -97,22 +84,25 @@ protected:
             const label nInterfaceCorrectors_;
 
             //- Mass transfer models
-            massTransferModelTable massTransferModels_;
+            diffusiveMassTransferModelTable diffusiveMassTransferModels_;
 
             //- Interface composition models
             interfaceCompositionModelTable interfaceCompositionModels_;
 
             //- The explicit part of the interfacial mass transfer rates
-            iDmdtSuSpTable iDmdtSu_;
+            phaseSystem::dmidtfTable dmidtfSus_;
 
             //- The implicit part of the interfacial mass transfer rates
-            iDmdtSuSpTable iDmdtSp_;
+            phaseSystem::dmidtfTable dmidtfSps_;
 
 
-    // Protected member functions
+    // Private member functions
 
-        //- Return the interfacial mass transfer rate for a pair for a pair
-        virtual tmp<volScalarField> iDmdt(const phasePairKey& key) const;
+        //- Return mass transfers across each interface
+        autoPtr<phaseSystem::dmdtfTable> dmdtfs() const;
+
+        //- Return species mass transfers across each interface
+        autoPtr<phaseSystem::dmidtfTable> dmidtfs() const;
 
 
 public:
@@ -129,14 +119,27 @@ public:
 
     // Member Functions
 
-        //- Return the mass transfer rate for a pair
-        virtual tmp<volScalarField> dmdt(const phasePairKey& key) const;
+        //- Return the mass transfer rate for an interface
+        virtual tmp<volScalarField> dmdtf(const phasePairKey& key) const;
 
         //- Return the mass transfer rates for each phase
-        virtual Xfer<PtrList<volScalarField>> dmdts() const;
+        virtual PtrList<volScalarField> dmdts() const;
 
-        //- Return the mass transfer matrices
-        virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;
+        //- Return the momentum transfer matrices for the cell-based algorithm
+        virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransfer();
+
+        //- Return the momentum transfer matrices for the face-based algorithm
+        virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransferf();
+
+        //- Return the heat transfer matrices
+        virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;
+
+        //- Return the specie transfer matrices
+        virtual autoPtr<phaseSystem::specieTransferTable>
+            specieTransfer() const;
+
+        //- Correct the fluid properties other than those listed below
+        virtual void correct();
 
         //- Correct the interface temperatures
         virtual void correctInterfaceThermo();

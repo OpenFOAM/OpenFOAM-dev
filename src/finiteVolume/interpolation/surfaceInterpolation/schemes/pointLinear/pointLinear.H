@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,14 +54,6 @@ class pointLinear
 :
     public linear<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        pointLinear(const pointLinear&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointLinear&);
-
 
 public:
 
@@ -100,6 +92,9 @@ public:
             linear<Type>(mesh)
         {}
 
+        //- Disallow default bitwise copy construction
+        pointLinear(const pointLinear&) = delete;
+
 
     // Member Functions
 
@@ -115,6 +110,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>& vf
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointLinear&) = delete;
 };
 
 

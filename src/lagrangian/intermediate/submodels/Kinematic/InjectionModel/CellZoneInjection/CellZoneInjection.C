@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -170,7 +170,7 @@ Foam::CellZoneInjection<CloudType>::CellZoneInjection
 :
     InjectionModel<CloudType>(dict, owner, modelName, typeName),
     cellZoneName_(this->coeffDict().lookup("cellZone")),
-    numberDensity_(readScalar(this->coeffDict().lookup("numberDensity"))),
+    numberDensity_(this->coeffDict().template lookup<scalar>("numberDensity")),
     positions_(),
     injectorCells_(),
     injectorTetFaces_(),

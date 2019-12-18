@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,14 +50,6 @@ namespace Foam
 
 class CorrectionLimitingMethod
 {
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const CorrectionLimitingMethod&);
-
-
 public:
 
     //- Runtime type information
@@ -79,7 +71,7 @@ public:
         //- Construct from components
         CorrectionLimitingMethod(const dictionary& dict);
 
-        //- Construct as copy
+        //- Copy constructor
         CorrectionLimitingMethod(const CorrectionLimitingMethod& cl);
 
         //- Construct and return a clone
@@ -106,6 +98,12 @@ public:
             const vector dU,
             const vector uMean
         ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CorrectionLimitingMethod&) = delete;
 };
 
 

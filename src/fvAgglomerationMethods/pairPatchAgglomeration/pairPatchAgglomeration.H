@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ SourceFiles
 
 namespace Foam
 {
-    typedef PrimitivePatch<face, List, const pointField> bPatch;
+    typedef PrimitivePatch<faceList, const pointField> bPatch;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -127,12 +127,6 @@ private:
         //- Maps current level with base patch
         void mapBaseToTopAgglom(const label fineLevelIndex);
 
-        //- Disallow default bitwise copy construct
-        pairPatchAgglomeration(const pairPatchAgglomeration&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const pairPatchAgglomeration&);
-
 
 public:
 
@@ -145,6 +139,9 @@ public:
             const dictionary& controlDict,
             const bool additionalWeights = false
         );
+
+        //- Disallow default bitwise copy construction
+        pairPatchAgglomeration(const pairPatchAgglomeration&) = delete;
 
 
     // Destructor
@@ -200,6 +197,12 @@ public:
                 const Field<Type>& cf,
                 const label coarseLevelIndex
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pairPatchAgglomeration&) = delete;
 };
 
 

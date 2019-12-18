@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,17 +72,6 @@ protected:
         virtual void printCoeffs(const word& type);
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        laminarModel(const laminarModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const laminarModel&);
-
-
 public:
 
     typedef typename BasicTurbulenceModel::alphaField alphaField;
@@ -128,6 +117,9 @@ public:
             const transportModel& transport,
             const word& propertiesName
         );
+
+        //- Disallow default bitwise copy construction
+        laminarModel(const laminarModel&) = delete;
 
 
     // Selectors
@@ -188,6 +180,12 @@ public:
 
             //- Correct the laminar transport
             virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const laminarModel&) = delete;
 };
 
 

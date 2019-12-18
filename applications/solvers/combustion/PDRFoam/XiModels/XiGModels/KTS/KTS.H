@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::XiGModels::KTS
 
 Description
-    Simple Kolmogorov time-scale (KTS) model for the flame-wrinling generation
+    Simple Kolmogorov time-scale (KTS) model for the flame-wrinkling generation
     rate.
 
 SourceFiles
@@ -53,18 +53,9 @@ class KTS
 :
     public XiGModel
 {
-    // Private data
+    // Private Data
 
         scalar GEtaCoef_;
-
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        KTS(const KTS&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const KTS&);
 
 
 public:
@@ -84,6 +75,9 @@ public:
             const volScalarField& Su
         );
 
+        //- Disallow default bitwise copy construction
+        KTS(const KTS&);
+
 
     //- Destructor
     virtual ~KTS();
@@ -91,11 +85,17 @@ public:
 
     // Member Functions
 
-        //- Return the flame-wrinking generation rate
+        //- Return the flame-wrinkling generation rate
         virtual tmp<volScalarField> G() const;
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& XiGProperties);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const KTS&) = delete;
 };
 
 

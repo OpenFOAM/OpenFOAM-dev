@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ class PatchEdgeFaceWave
         static label dummyTrackData_;
 
 
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -151,12 +151,6 @@ class PatchEdgeFaceWave
         //- Update coupled edges
         void syncEdges();
 
-        //- Disallow default bitwise copy construct
-        PatchEdgeFaceWave(const PatchEdgeFaceWave&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const PatchEdgeFaceWave&);
-
 
 public:
 
@@ -204,6 +198,9 @@ public:
             UList<Type>& allFaceInfo,
             TrackingData& td = dummyTrackData_
         );
+
+        //- Disallow default bitwise copy construction
+        PatchEdgeFaceWave(const PatchEdgeFaceWave&) = delete;
 
 
     // Member Functions
@@ -253,6 +250,12 @@ public:
         //- Iterate until no changes or maxIter reached. Returns actual
         //  number of iterations.
         label iterate(const label maxIter);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PatchEdgeFaceWave&) = delete;
 };
 
 

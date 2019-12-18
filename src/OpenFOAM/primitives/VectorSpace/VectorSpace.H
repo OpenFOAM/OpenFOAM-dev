@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,6 +52,9 @@ namespace Foam
 // Forward declaration of friend functions and operators
 
 template<class Form, class Cmpt, direction Ncmpts> class VectorSpace;
+
+template<class Form, class Cmpt, direction Ncmpts>
+void writeEntry(Ostream& os, const VectorSpace<Form, Cmpt, Ncmpts>& value);
 
 template<class Form, class Cmpt, direction Ncmpts>
 Istream& operator>>
@@ -104,7 +107,7 @@ public:
         static const direction nCols = 1;
 
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
         static const char* const componentNames[];

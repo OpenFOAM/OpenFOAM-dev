@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,7 @@ Description
 #include "volFields.H"
 #include "fvMesh.H"
 #include "graph.H"
+#include "writeFile.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -62,7 +63,14 @@ void makeGraph
     const word& graphFormat
 )
 {
-    fileName path(vsf.rootPath()/vsf.caseName()/"graphs"/vsf.instance());
+    fileName path
+    (
+        vsf.rootPath()
+       /vsf.caseName()
+       /functionObjects::writeFile::outputPrefix
+       /"graphs"
+       /vsf.instance()
+    );
     mkDir(path);
 
     makeGraph

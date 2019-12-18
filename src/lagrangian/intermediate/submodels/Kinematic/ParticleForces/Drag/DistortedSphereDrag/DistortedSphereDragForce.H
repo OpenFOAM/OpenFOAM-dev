@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,14 +25,13 @@ Class
     Foam::DistortedSphereDragForce
 
 Description
-    Drag model based on assumption of distorted spheres according to:
+    Drag model for distorted spheres.
 
+    Reference:
     \verbatim
-        "Effects of Drop Drag and Breakup on Fuel Sprays"
-        Liu, A.B., Mather, D., Reitz, R.D.,
-        SAE Paper 930072,
-        SAE Transactions, Vol. 102, Section 3, Journal of Engines, 1993,
-        pp. 63-95
+        Liu, A. B., Mather, D., & Reitz, R. D. (1993).
+        Modeling the effects of drop drag and breakup on fuel sprays.
+        SAE Transactions, 83-95.
     \endverbatim
 
 \*---------------------------------------------------------------------------*/
@@ -46,6 +45,7 @@ Description
 
 namespace Foam
 {
+
 /*---------------------------------------------------------------------------*\
                        Class DistortedSphereDragForce Declaration
 \*---------------------------------------------------------------------------*/
@@ -55,12 +55,6 @@ class DistortedSphereDragForce
 :
     public ParticleForce<CloudType>
 {
-    // Private Member Functions
-
-        //- Drag coefficient multiplied by Reynolds number
-        scalar CdRe(const scalar Re) const;
-
-
 public:
 
     //- Runtime type information
@@ -109,7 +103,6 @@ public:
                 const scalar muc
             ) const;
 };
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

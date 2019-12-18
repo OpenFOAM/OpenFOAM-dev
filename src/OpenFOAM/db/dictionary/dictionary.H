@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,6 +59,8 @@ SourceFiles
 #include "wordList.H"
 #include "className.H"
 
+#include "VectorSpace.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -78,7 +80,7 @@ Ostream& operator<<(Ostream&, const dictionary&);
 
 class dictionaryName
 {
-    // Private data
+    // Private Data
 
         fileName name_;
 
@@ -97,8 +99,14 @@ public:
             name_(name)
         {}
 
+        //- Move constructor
+        dictionaryName(dictionaryName&& name)
+        :
+            name_(move(name.name_))
+        {}
 
-    // Member functions
+
+    // Member Functions
 
         //- Return the dictionary name
         const fileName& name() const
@@ -117,7 +125,7 @@ public:
         {
             const word scopedName = name_.name();
 
-            string::size_type i = scopedName.rfind('.');
+            string::size_type i = scopedName.rfind('/');
 
             if (i == scopedName.npos)
             {
@@ -127,6 +135,19 @@ public:
             {
                 return scopedName.substr(i + 1, scopedName.npos);
             }
+        }
+
+
+    // Member Operators
+
+        void operator=(const dictionaryName& name)
+        {
+            name_ = name.name_;
+        }
+
+        void operator=(dictionaryName&& name)
+        {
+            name_ = move(name.name_);
         }
 };
 
@@ -140,7 +161,7 @@ class dictionary
     public dictionaryName,
     public IDLList<entry>
 {
-    // Private data
+    // Private Data
 
         //- If true write optional keywords and values
         //  if not present in dictionary
@@ -162,7 +183,25 @@ class dictionary
    // Private Member Functions
 
         //- Find and return an entry data stream pointer if present
-        //  otherwise return nullptr. Allows scoping using '.'
+        //  otherwise return nullptr.  Supports scoping using '.'
+        const entry* lookupDotScopedSubEntryPtr
+        (
+            const word&,
+            bool recursive,
+            bool patternMatch
+        ) const;
+
+        //- Find and return an entry data stream pointer if present
+        //  otherwise return nullptr.  Supports scoping using '/'
+        const entry* lookupSlashScopedSubEntryPtr
+        (
+            const word&,
+            bool recursive,
+            bool patternMatch
+        ) const;
+
+        //- Find and return an entry data stream pointer if present
+        //  otherwise return nullptr.  Supports scoping using '/' or '.'
         const entry* lookupScopedSubEntryPtr
         (
             const word&,
@@ -221,12 +260,8 @@ public:
         );
 
         //- Construct top-level dictionary from Istream,
-        //  reading entries until EOF
-        dictionary(Istream&);
-
-        //- Construct top-level dictionary from Istream,
         //  reading entries until EOF, optionally keeping the header
-        dictionary(Istream&, const bool keepHeader);
+        dictionary(Istream&, const bool keepHeader=false);
 
         //- Construct as copy given the parent dictionary
         dictionary(const dictionary& parentDict, const dictionary&);
@@ -238,11 +273,12 @@ public:
         //  A null pointer is treated like an empty dictionary.
         dictionary(const dictionary*);
 
-        //- Construct by transferring parameter contents given parent dictionary
-        dictionary(const dictionary& parentDict, const Xfer<dictionary>&);
+        //- Move constructor transferring parameter contents
+        //  given parent dictionary
+        dictionary(const dictionary& parentDict, dictionary&&);
 
-        //- Construct top-level dictionary by transferring parameter contents
-        dictionary(const Xfer<dictionary>&);
+        //- Move constructor
+        dictionary(dictionary&&);
 
         //- Construct and return clone
         autoPtr<dictionary> clone() const;
@@ -255,7 +291,7 @@ public:
     virtual ~dictionary();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the parent dictionary
         const dictionary& parent() const
@@ -344,7 +380,7 @@ public:
             //  If recursive, search parent dictionaries.
             //  If patternMatch, use regular expressions.
             template<class T>
-            T lookupType
+            T lookup
             (
                 const word&,
                 bool recursive=false,
@@ -391,8 +427,8 @@ public:
             ) const;
 
             //- Find and return an entry data stream pointer if present
-            //  otherwise return nullptr. Allows scoping using '.'.
-            //  Special handling for ':' at start of keyword and '..'.
+            //  otherwise return nullptr. Allows scoping using '/' with
+            //  special handling for '!' and '..'.
             const entry* lookupScopedEntryPtr
             (
                 const word&,
@@ -524,17 +560,11 @@ public:
             //- Transfer the contents of the argument and annul the argument.
             void transfer(dictionary&);
 
-            //- Transfer contents to the Xfer container
-            Xfer<dictionary> xfer();
-
 
         // Read
 
-            //- Read dictionary from Istream
-            bool read(Istream&);
-
             //- Read dictionary from Istream, optionally keeping the header
-            bool read(Istream&, const bool keepHeader);
+            bool read(Istream&, const bool keepHeader=false);
 
 
         // Write
@@ -550,6 +580,8 @@ public:
 
         void operator=(const dictionary&);
 
+        void operator=(dictionary&&);
+
         //- Include entries from the given dictionary.
         //  Warn, but do not overwrite existing entries.
         void operator+=(const dictionary&);
@@ -563,7 +595,7 @@ public:
         void operator<<=(const dictionary&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         //- Read dictionary from Istream
         friend Istream& operator>>(Istream&, dictionary&);
@@ -584,6 +616,27 @@ dictionary operator+(const dictionary& dict1, const dictionary& dict2);
 //  Starting from the entries in dict1 and then including those from dict2.
 //  Do not overwrite the entries from dict1.
 dictionary operator|(const dictionary& dict1, const dictionary& dict2);
+
+
+// Global Functions
+
+//- Write a dictionary entry
+void writeEntry(Ostream& os, const dictionary& dict);
+
+//- Helper function to write the keyword and entry
+template<class EntryType>
+void writeEntry(Ostream& os, const word& entryName, const EntryType& value);
+
+//- Helper function to write the keyword and entry only if the
+//  values are not equal. The value is then output as value2
+template<class EntryType>
+void writeEntryIfDifferent
+(
+    Ostream& os,
+    const word& entryName,
+    const EntryType& value1,
+    const EntryType& value2
+);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

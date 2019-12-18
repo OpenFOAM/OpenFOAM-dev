@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ class fixedCoeff
 :
     public porosityModel
 {
-    // Private data
+    // Private Data
 
         //- Alpha coefficient XYZ components (user-supplied) [1/s]
         dimensionedVector alphaXYZ_;
@@ -95,27 +95,26 @@ class fixedCoeff
             const scalar rho
         ) const;
 
-        //- Disallow default bitwise copy construct
-        fixedCoeff(const fixedCoeff&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fixedCoeff&);
-
 
 public:
 
     //- Runtime type information
     TypeName("fixedCoeff");
 
-    //- Constructor
-    fixedCoeff
-    (
-        const word& name,
-        const word& modelType,
-        const fvMesh& mesh,
-        const dictionary& dict,
-        const word& cellZoneName
-    );
+    // Constructors
+
+        fixedCoeff
+        (
+            const word& name,
+            const word& modelType,
+            const fvMesh& mesh,
+            const dictionary& dict,
+            const word& cellZoneName
+        );
+
+        //- Disallow default bitwise copy construction
+        fixedCoeff(const fixedCoeff&) = delete;
+
 
     //- Destructor
     virtual ~fixedCoeff();
@@ -158,7 +157,14 @@ public:
 
         //- Write
         bool writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fixedCoeff&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

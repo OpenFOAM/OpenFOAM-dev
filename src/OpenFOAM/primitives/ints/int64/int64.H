@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,12 @@ bool read(const char*, int64_t&);
 Istream& operator>>(Istream&, int64_t&);
 Ostream& operator<<(Ostream&, const int64_t);
 
+inline void writeEntry(Ostream& os, const int64_t value)
+{
+    os << value;
+}
+
+
 //- Template specialization for pTraits<int64_t>
 template<>
 class pTraits<int64_t>
@@ -92,7 +98,7 @@ public:
         static const direction nComponents = 1;
 
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
         static const char* const componentNames[];

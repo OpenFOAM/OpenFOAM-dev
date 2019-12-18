@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ public:
     virtual ~TimeState();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -82,6 +82,9 @@ public:
 
             //- Convert the real-time (s) into user-time (e.g. CA deg)
             virtual scalar timeToUserTime(const scalar t) const;
+
+            //- Ratio between real-time and user-time
+            virtual scalar timeToUserTimeRatio() const;
 
             //- Return current time value
             inline scalar timeOutputValue() const;

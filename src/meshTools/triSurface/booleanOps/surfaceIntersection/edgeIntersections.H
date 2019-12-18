@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ class edgeIntersections
 :
     public List<List<pointIndexHit>>
 {
-    // Private data
+    // Private Data
 
         //- For every entry in *this gives the edge classification result.
         //  -1 : intersection not close to edge
@@ -136,7 +136,7 @@ public:
     ClassName("edgeIntersections");
 
 
-    // Static data members
+    // Static Data Members
 
         //- Cosine between edge and face normal when considered parallel
         //  (note: should be private and make access- and set- function)

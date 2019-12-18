@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -214,67 +214,67 @@ Foam::Istream& Foam::ISstream::read(token& t)
             else if (nextC == token::BEGIN_BLOCK)
             {
                 // Verbatim string
-                string* sPtr = new string;
+                verbatimString* vsPtr = new verbatimString;
 
-                if (readVerbatim(*sPtr).bad())
+                if (readVerbatim(*vsPtr).bad())
                 {
-                    delete sPtr;
+                    delete vsPtr;
                     t.setBad();
                 }
                 else
                 {
-                    t = sPtr;
-                    t.type() = token::VERBATIMSTRING;
+                    t = vsPtr;
                 }
-
                 return *this;
             }
             else
             {
-                // Word beginning with #
+                // Function name beginning with a #
                 putback(nextC);
                 putback(c);
 
-                readWordToken(t);
+                functionName* fnPtr = new functionName;
 
+                if (read(*fnPtr).bad())
+                {
+                    delete fnPtr;
+                    t.setBad();
+                }
+                else
+                {
+                    t = fnPtr;
+                }
                 return *this;
             }
         }
 
-        case '$':
+        case '$' :
         {
             // Look ahead
             char nextC;
             if (read(nextC).bad())
             {
-                // Return $ as word
+                // Return $ as a word
                 t = token(word(c));
-                return *this;
-            }
-            else if (nextC == token::BEGIN_BLOCK)
-            {
-                putback(nextC);
-                putback(c);
-
-                string* sPtr = new string;
-
-                if (readVariable(*sPtr).bad())
-                {
-                    delete sPtr;
-                    t.setBad();
-                }
-                else
-                {
-                    t = sPtr;
-                    t.type() = token::VARIABLE;
-                }
                 return *this;
             }
             else
             {
                 putback(nextC);
                 putback(c);
-                readWordToken(t);
+
+                variable* vPtr = new variable;
+
+                if (readVariable(*vPtr).bad())
+                {
+                    delete vPtr;
+                    t.setBad();
+                }
+                else
+                {
+                    t = vPtr;
+                }
+
                 return *this;
             }
         }
@@ -610,7 +610,7 @@ Foam::Istream& Foam::ISstream::readVariable(string& str)
          && (
                 c == token::BEGIN_BLOCK
              || c == token::END_BLOCK
-             || word::valid(c)
+             || variable::valid(c)
             )
         )
         {
@@ -620,7 +620,7 @@ Foam::Istream& Foam::ISstream::readVariable(string& str)
                 buf[errLen] = '\0';
 
                 FatalIOErrorInFunction(*this)
-                    << "word '" << buf << "...'\n"
+                    << "variable '" << buf << "...'\n"
                     << "    is too long (max. " << maxLen << " characters)"
                     << exit(FatalIOError);
 
@@ -647,16 +647,33 @@ Foam::Istream& Foam::ISstream::readVariable(string& str)
     else
     {
         buf[nChar++] = c;
+        int listDepth = 0;
 
-        while (get(c) && word::valid(c))
+        while (get(c) && variable::valid(c))
         {
+            if (c == token::BEGIN_LIST)
+            {
+                listDepth++;
+            }
+            else if (c == token::END_LIST)
+            {
+                if (listDepth)
+                {
+                    listDepth--;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
             buf[nChar++] = c;
             if (nChar == maxLen)
             {
                 buf[errLen] = '\0';
 
                 FatalIOErrorInFunction(*this)
-                    << "word '" << buf << "...'\n"
+                    << "variable '" << buf << "...'\n"
                     << "    is too long (max. " << maxLen << " characters)"
                     << exit(FatalIOError);
 
@@ -689,7 +706,7 @@ Foam::Istream& Foam::ISstream::readVariable(string& str)
     buf[nChar] = '\0';
     str = buf;
 
-    // Note: check if we exited due to '}' or just !word::valid.
+    // Note: check if we exited due to '}' or just !variable::valid.
     if (c != token::END_BLOCK)
     {
         putback(c);
@@ -699,7 +716,7 @@ Foam::Istream& Foam::ISstream::readVariable(string& str)
 }
 
 
-Foam::Istream& Foam::ISstream::readVerbatim(string& str)
+Foam::Istream& Foam::ISstream::readVerbatim(verbatimString& str)
 {
     static const int maxLen = 8000;
     static const int errLen = 80; // truncate error message for readability

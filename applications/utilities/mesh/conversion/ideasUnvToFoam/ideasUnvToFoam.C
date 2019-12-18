@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -667,6 +667,11 @@ int main(int argc, char *argv[])
         "dump",
         "dump boundary faces as boundaryFaces.obj (for debugging)"
     );
+    argList::addOption
+    (
+        "region",
+        "specify the mesh region"
+    );
 
     #include "setRootCase.H"
     #include "createTime.H"
@@ -680,7 +685,6 @@ int main(int argc, char *argv[])
             << "Cannot open file " << ideasName
             << exit(FatalError);
     }
-
 
     // Switch on additional debug info
     const bool verbose = false; // true;
@@ -1129,15 +1133,15 @@ int main(int argc, char *argv[])
         // Create globally numbered surface
         meshedSurface rawSurface
         (
-            xferCopy(polyPoints),
-            xferCopyTo<faceList>(boundaryFaces)
+            clone(polyPoints),
+            clone(boundaryFaces)
         );
 
         // Write locally numbered surface
         meshedSurface
         (
-            xferCopy(rawSurface.localPoints()),
-            xferCopy(rawSurface.localFaces())
+            clone(rawSurface.localPoints()),
+            clone(rawSurface.localFaces())
         ).write(runTime.path()/"boundaryFaces.obj");
     }
 
@@ -1161,18 +1165,24 @@ int main(int argc, char *argv[])
 
     Info<< endl;
 
+    // Set regions path if set
+    word regionName = polyMesh::defaultRegion;
 
+    if (args.optionFound("region"))
+    {
+        regionName = args.option("region");
+    }
 
     // Construct mesh
     polyMesh mesh
     (
         IOobject
         (
-            polyMesh::defaultRegion,
+            regionName,
             runTime.constant(),
             runTime
         ),
-        xferMove(polyPoints),
+        move(polyPoints),
         cellVerts,
         usedPatchFaceVerts,             // boundaryFaces,
         usedPatchNames,                 // boundaryPatchNames,

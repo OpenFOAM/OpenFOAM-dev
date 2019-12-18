@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,21 +55,10 @@ class constantHeatTransfer
 :
     public heatTransferModel
 {
-private:
+    // Private Data
 
-    // Private data
-
-        //- Constant heat transfer coefficient [W/m2/K]
+        //- Constant heat transfer coefficient [W/m^2/K]
         scalar c0_;
-
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        constantHeatTransfer(const constantHeatTransfer&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const constantHeatTransfer&);
 
 
 public:
@@ -87,6 +76,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        constantHeatTransfer(const constantHeatTransfer&) = delete;
+
 
     //- Destructor
     virtual ~constantHeatTransfer();
@@ -99,8 +91,14 @@ public:
             //- Correct
             virtual void correct();
 
-            //- Return the heat transfer coefficient [W/m2/K]
-            virtual tmp<volScalarField> h() const;
+            //- Return the heat transfer coefficient [W/m^2/K]
+            virtual tmp<volScalarField::Internal> h() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const constantHeatTransfer&) = delete;
 };
 
 

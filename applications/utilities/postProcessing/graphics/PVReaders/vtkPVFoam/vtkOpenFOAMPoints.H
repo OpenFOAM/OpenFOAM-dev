@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,34 +43,6 @@ inline void vtkInsertNextOpenFOAMPoint
     points->InsertNextPoint(p.x(), p.y(), p.z());
 }
 
-#if 0
-// this should be faster, but didn't get it working ...
-inline void vtkSetOpenFOAMPoint
-(
-    vtkPoints *points,
-    const Foam::label id,
-    const Foam::point& p
-)
-{
-    points->SetPoint(id, p.x(), p.y(), p.z());
-}
-
-
-// Convert OpenFOAM mesh vertices to VTK
-inline vtkPoints* vtkSetOpenFOAMPoints(const Foam::pointField& points)
-{
-    vtkPoints *vtkpoints = vtkPoints::New();
-    vtkpoints->SetNumberOfPoints(points.size());
-    forAll(points, i)
-    {
-        const Foam::point& p = points[i];
-        vtkpoints->SetPoint(i, p.x(), p.y(), p.z());
-    }
-
-    return vtkpoints;
-}
-
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

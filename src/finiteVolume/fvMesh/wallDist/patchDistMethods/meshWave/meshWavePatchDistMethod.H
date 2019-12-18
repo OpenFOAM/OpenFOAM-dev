@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,15 +84,6 @@ class meshWave
         mutable label nUnset_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        meshWave(const meshWave&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshWave&);
-
-
 public:
 
     //- Runtime type information
@@ -121,6 +112,9 @@ public:
             const bool correctWalls = true
         );
 
+        //- Disallow default bitwise copy construction
+        meshWave(const meshWave&) = delete;
+
 
     // Member Functions
 
@@ -134,6 +128,12 @@ public:
 
         //- Correct the given distance-to-patch and normal-to-patch fields
         virtual bool correct(volScalarField& y, volVectorField& n);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshWave&) = delete;
 };
 
 

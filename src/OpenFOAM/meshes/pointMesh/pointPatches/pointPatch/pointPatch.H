@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,19 +56,10 @@ class PstreamBuffers;
 
 class pointPatch
 {
-    // Private data
+    // Private Data
 
         //- Reference to boundary mesh
         const pointBoundaryMesh& boundaryMesh_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        pointPatch(const pointPatch&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointPatch&);
 
 
 protected:
@@ -118,6 +109,9 @@ public:
         :
             boundaryMesh_(bm)
         {}
+
+        //- Disallow default bitwise copy construction
+        pointPatch(const pointPatch&) = delete;
 
 
     //- Destructor
@@ -170,6 +164,12 @@ public:
             pointConstraint&
         ) const
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointPatch&) = delete;
 };
 
 

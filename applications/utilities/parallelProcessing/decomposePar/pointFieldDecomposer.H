@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ public:
         :
             public pointPatchFieldMapperPatchRef
         {
-            // Private data
+            // Private Data
 
                 labelList directAddressing_;
 
@@ -79,7 +79,7 @@ public:
                 );
 
 
-            // Member functions
+            // Member Functions
 
                 label size() const
                 {
@@ -105,7 +105,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to complete mesh
         const pointMesh& completeMesh_;
@@ -123,15 +123,6 @@ private:
         List<patchFieldDecomposer*> patchFieldDecomposerPtrs_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        pointFieldDecomposer(const pointFieldDecomposer&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointFieldDecomposer&);
-
-
 public:
 
     // Constructors
@@ -144,6 +135,9 @@ public:
             const labelList& pointAddressing,
             const labelList& boundaryAddressing
         );
+
+        //- Disallow default bitwise copy construction
+        pointFieldDecomposer(const pointFieldDecomposer&) = delete;
 
 
     //- Destructor
@@ -162,6 +156,12 @@ public:
 
         template<class GeoField>
         void decomposeFields(const PtrList<GeoField>& fields) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointFieldDecomposer&) = delete;
 };
 
 

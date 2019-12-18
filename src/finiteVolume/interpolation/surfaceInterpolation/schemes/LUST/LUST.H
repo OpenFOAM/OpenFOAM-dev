@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,14 +57,6 @@ class LUST
 :
     public linearUpwind<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        LUST(const LUST&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const LUST&);
-
 
 public:
 
@@ -95,6 +87,9 @@ public:
             linearUpwind<Type>(mesh, faceFlux, schemeData)
         {}
 
+        //- Disallow default bitwise copy construction
+        LUST(const LUST&) = delete;
+
 
     // Member Functions
 
@@ -124,6 +119,12 @@ public:
         {
             return 0.25*linearUpwind<Type>::correction(vf);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const LUST&) = delete;
 };
 
 

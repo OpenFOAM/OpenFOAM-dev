@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,8 +90,11 @@ public:
         //- Construct from Istream
         ILList(Istream&);
 
-        //- Construct as copy
+        //- Copy constructor
         ILList(const ILList<LListBase, T>&);
+
+        //- Move constructor
+        ILList(ILList<LListBase, T>&&);
 
         //- Copy constructor with additional argument for clone
         template<class CloneArg>
@@ -124,10 +127,13 @@ public:
             void transfer(ILList<LListBase, T>&);
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment operator
         void operator=(const ILList<LListBase, T>&);
+
+        //- Move assignment operator
+        void operator=(ILList<LListBase, T>&&);
 
 
     // Istream operator

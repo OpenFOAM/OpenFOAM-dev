@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,20 +56,11 @@ class surfaceFilmRegionModel
     public surfaceFilmModel,
     public singleLayerRegion
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        surfaceFilmRegionModel(const surfaceFilmRegionModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfaceFilmRegionModel&);
-
-
 protected:
 
     // Protected data
 
-        //- Acceleration due to gravity [m/s2]
+        //- Acceleration due to gravity [m/s^2]
         const dimensionedVector& g_;
 
 
@@ -95,6 +86,9 @@ public:
             const dimensionedVector& g,
             const word& regionType
         );
+
+        //- Disallow default bitwise copy construction
+        surfaceFilmRegionModel(const surfaceFilmRegionModel&) = delete;
 
 
     //- Destructor
@@ -126,7 +120,7 @@ public:
             virtual const volScalarField& delta() const = 0;
 
             //- Return the film coverage, 1 = covered, 0 = uncovered / []
-            virtual const volScalarField& alpha() const = 0;
+            virtual const volScalarField& coverage() const = 0;
 
             //- Return the film velocity [m/s]
             virtual const volVectorField& U() const = 0;
@@ -137,26 +131,8 @@ public:
             //- Return the film wall velocity [m/s]
             virtual const volVectorField& Uw() const = 0;
 
-            //- Return the film density [kg/m3]
+            //- Return the film density [kg/m^3]
             virtual const volScalarField& rho() const = 0;
-
-            //- Return the film mean temperature [K]
-            virtual const volScalarField& T() const = 0;
-
-            //- Return the film surface temperature [K]
-            virtual const volScalarField& Ts() const = 0;
-
-            //- Return the film wall temperature [K]
-            virtual const volScalarField& Tw() const = 0;
-
-            //- Return the film surface temperature [J/kg]
-            virtual const volScalarField& hs() const = 0;
-
-            //- Return the film specific heat capacity [J/kg/K]
-            virtual const volScalarField& Cp() const = 0;
-
-            //- Return the film thermal conductivity [W/m/K]
-            virtual const volScalarField& kappa() const = 0;
 
             //- Return the film surface tension [N/m]
             virtual const volScalarField& sigma() const = 0;
@@ -178,6 +154,12 @@ public:
 
             //- Main driver routing to evolve the region - calls other evolves
             virtual void evolve();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfaceFilmRegionModel&) = delete;
 };
 
 

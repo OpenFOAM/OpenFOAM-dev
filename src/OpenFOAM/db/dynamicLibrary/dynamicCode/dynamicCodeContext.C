@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,102 +27,7 @@ License
 #include "stringOps.H"
 #include "OSHA1stream.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::dynamicCodeContext::dynamicCodeContext(const dictionary& dict)
-:
-    dict_(dict),
-    code_(),
-    localCode_(),
-    include_(),
-    options_(),
-    libs_()
-{
-    // Expand dictionary entries
-
-    // Note: removes any leading/trailing whitespace
-    // - necessary for compilation options, convenient for includes
-    // and body.
-
-    const entry* codePtr = dict.lookupEntryPtr
-    (
-        "code",
-        false,
-        false
-    );
-    if (codePtr)
-    {
-        code_ = stringOps::trim(codePtr->stream());
-        stringOps::inplaceExpand(code_, dict);
-    }
-
-    const entry* includePtr = dict.lookupEntryPtr
-    (
-        "codeInclude",
-        false,
-        false
-    );
-    if (includePtr)
-    {
-        include_ = stringOps::trim(includePtr->stream());
-        stringOps::inplaceExpand(include_, dict);
-    }
-
-    const entry* optionsPtr = dict.lookupEntryPtr
-    (
-        "codeOptions",
-        false,
-        false
-    );
-    if (optionsPtr)
-    {
-        options_ = stringOps::trim(optionsPtr->stream());
-        stringOps::inplaceExpand(options_, dict);
-    }
-
-    const entry* libsPtr = dict.lookupEntryPtr("codeLibs", false, false);
-    if (libsPtr)
-    {
-        libs_ = stringOps::trim(libsPtr->stream());
-        stringOps::inplaceExpand(libs_, dict);
-    }
-
-    const entry* localPtr = dict.lookupEntryPtr("localCode", false, false);
-    if (localPtr)
-    {
-        localCode_ = stringOps::trim(localPtr->stream());
-        stringOps::inplaceExpand(localCode_, dict);
-    }
-
-    // Calculate SHA1 digest from include, options, localCode, code
-    OSHA1stream os;
-    os  << include_ << options_ << libs_ << localCode_ << code_;
-    sha1_ = os.digest();
-
-
-    // Add line number after calculating sha1 since includes processorDDD
-    // in path which differs between processors.
-
-    if (codePtr)
-    {
-        addLineDirective(code_, codePtr->startLineNumber(), dict.name());
-    }
-
-    if (includePtr)
-    {
-        addLineDirective(include_, includePtr->startLineNumber(), dict.name());
-    }
-
-    // Do not add line directive to options_ (Make/options) and libs since
-    // they are preprocessed as a single line at this point. Can be fixed.
-    if (localPtr)
-    {
-        addLineDirective(localCode_, localPtr->startLineNumber(), dict.name());
-    }
-}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::dynamicCodeContext::addLineDirective
 (
@@ -132,6 +37,96 @@ void Foam::dynamicCodeContext::addLineDirective
 )
 {
     code = "#line " + Foam::name(lineNum + 1) + " \"" + name + "\"\n" + code;
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::dynamicCodeContext::dynamicCodeContext
+(
+    const dictionary& dict,
+    const wordList& codeKeys
+)
+:
+    dict_(dict),
+    code_(),
+    options_(),
+    libs_()
+{
+    // Expand all dictionary entries. Note that this removes any leading or
+    // trailing whitespace, which is necessary for compilation options, and
+    // doesn't hurt for everything else
+    List<const entry*> codePtrs(codeKeys.size(), nullptr);
+    forAll(codeKeys, i)
+    {
+        const word& key = codeKeys[i];
+        codePtrs[i] = dict.lookupEntryPtr(key, false, false);
+        if (codePtrs[i])
+        {
+            code_.insert
+            (
+                key,
+                stringOps::expand
+                (
+                    stringOps::trim(verbatimString(codePtrs[i]->stream())),
+                    dict
+                )
+            );
+        }
+        else
+        {
+            code_.insert(key, "");
+        }
+    }
+
+    // Options
+    const entry* optionsPtr = dict.lookupEntryPtr("codeOptions", false, false);
+    if (optionsPtr)
+    {
+        options_ =
+            stringOps::expand
+            (
+                stringOps::trim(verbatimString(optionsPtr->stream())),
+                dict
+            );
+    }
+
+    // Libs
+    const entry* libsPtr = dict.lookupEntryPtr("codeLibs", false, false);
+    if (libsPtr)
+    {
+        libs_ =
+            stringOps::expand
+            (
+                stringOps::trim(verbatimString(libsPtr->stream())),
+                dict
+            );
+    }
+
+    // Calculate SHA1 digest from all entries
+    OSHA1stream os;
+    forAllConstIter(HashTable<string>, code_, iter)
+    {
+        os << iter();
+    }
+    os << options_ << libs_;
+    sha1_ = os.digest();
+
+    // Add line directive after calculating SHA1 since this includes
+    // "processor..." in the path which differs between cores
+    forAll(codeKeys, i)
+    {
+        if (codePtrs[i])
+        {
+            const word& key = codeKeys[i];
+            addLineDirective
+            (
+                code_[key],
+                codePtrs[i]->startLineNumber(),
+                dict.name()
+            );
+        }
+    }
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -535,7 +535,7 @@ void Foam::boundaryMesh::read(const polyMesh& mesh)
     //
 
     // Temporary primitivePatch to calculate compact points & faces.
-    PrimitivePatch<face, List, const pointField&> globalPatch
+    PrimitivePatch<faceList, const pointField&> globalPatch
     (
         bFaces,
         mesh.points()
@@ -848,7 +848,7 @@ void Foam::boundaryMesh::writeTriSurface(const fileName& fName) const
 
 // Get index in this (boundaryMesh) of face nearest to each boundary face in
 // pMesh.
-// Origininally all triangles/faces of boundaryMesh would be bunged into
+// Originally all triangles/faces of boundaryMesh would be bunged into
 // one big octree. Problem was that faces on top of each other, differing
 // only in sign of normal, could not be found separately. It would always
 // find only one. We could detect that it was probably finding the wrong one

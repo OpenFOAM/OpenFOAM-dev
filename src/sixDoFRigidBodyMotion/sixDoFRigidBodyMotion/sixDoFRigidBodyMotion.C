@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,13 @@ License
 #include "sixDoFRigidBodyMotion.H"
 #include "sixDoFSolver.H"
 #include "septernion.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+    defineTypeNameAndDebug(sixDoFRigidBodyMotion, 0);
+}
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -119,7 +126,7 @@ Foam::sixDoFRigidBodyMotion::sixDoFRigidBodyMotion
             dict.lookupOrDefault("orientation", tensor::I)
         )
     ),
-    mass_(readScalar(dict.lookup("mass"))),
+    mass_(dict.lookup<scalar>("mass")),
     momentOfInertia_(dict.lookup("momentOfInertia")),
     aRelax_(dict.lookupOrDefault<scalar>("accelerationRelaxation", 1.0)),
     aDamp_(dict.lookupOrDefault<scalar>("accelerationDamping", 1.0)),
@@ -350,7 +357,7 @@ Foam::tmp<Foam::pointField> Foam::sixDoFRigidBodyMotion::transform
     const scalarField& scale
 ) const
 {
-    // Calculate the transformation septerion from the initial state
+    // Calculate the transformation septernion from the initial state
     septernion s
     (
         centreOfRotation() - initialCentreOfRotation(),

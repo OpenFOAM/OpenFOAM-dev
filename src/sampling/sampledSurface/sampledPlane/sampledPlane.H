@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,11 +22,11 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sampledPlane
+    Foam::sampledSurfaces::plane
 
 Description
     A sampledSurface defined by a plane which 'cuts' the mesh using the
-    cuttingPlane alorithm.  The plane is triangulated by default.
+    cuttingPlane algorithm.  The plane is triangulated by default.
 
 Note
     Does not actually cut until update() called.
@@ -46,17 +46,19 @@ SourceFiles
 
 namespace Foam
 {
+namespace sampledSurfaces
+{
 
 /*---------------------------------------------------------------------------*\
-                        Class sampledPlane Declaration
+                        Class plane Declaration
 \*---------------------------------------------------------------------------*/
 
-class sampledPlane
+class plane
 :
     public sampledSurface,
     public cuttingPlane
 {
-    // Private data
+    // Private Data
 
         //- If restricted to zones, name of this zone or a regular expression
         keyType zoneKey_;
@@ -85,13 +87,13 @@ class sampledPlane
 public:
 
     //- Runtime type information
-    TypeName("sampledPlane");
+    TypeName("plane");
 
 
     // Constructors
 
         //- Construct from components
-        sampledPlane
+        plane
         (
             const word& name,
             const polyMesh& mesh,
@@ -101,7 +103,7 @@ public:
         );
 
         //- Construct from dictionary
-        sampledPlane
+        plane
         (
             const word& name,
             const polyMesh& mesh,
@@ -110,7 +112,7 @@ public:
 
 
     //- Destructor
-    virtual ~sampledPlane();
+    virtual ~plane();
 
 
     // Member Functions
@@ -216,6 +218,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSurfaces
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

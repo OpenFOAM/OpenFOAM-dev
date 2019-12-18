@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,15 +53,6 @@ class saturationModel
 :
     public IOdictionary
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        saturationModel(const saturationModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const saturationModel&);
-
-
 public:
 
     //- Runtime type information
@@ -86,6 +77,9 @@ public:
         //- Construct null
         saturationModel(const objectRegistry& db);
 
+        //- Disallow default bitwise copy construction
+        saturationModel(const saturationModel&) = delete;
+
 
     // Selectors
 
@@ -109,7 +103,7 @@ public:
             const volScalarField& T
         ) const = 0;
 
-        //- Saturation pressure derivetive w.r.t. temperature
+        //- Saturation pressure derivative w.r.t. temperature
         virtual tmp<volScalarField> pSatPrime
         (
             const volScalarField& T
@@ -126,6 +120,12 @@ public:
         (
             const volScalarField& p
         ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const saturationModel&) = delete;
 };
 
 

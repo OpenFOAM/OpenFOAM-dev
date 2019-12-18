@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,8 +64,8 @@ Foam::dragModels::TomiyamaCorrelated::~TomiyamaCorrelated()
 Foam::tmp<Foam::volScalarField>
 Foam::dragModels::TomiyamaCorrelated::CdRe() const
 {
-    volScalarField Re(pair_.Re());
-    volScalarField Eo(pair_.Eo());
+    const volScalarField Re(pair_.Re());
+    const volScalarField Eo(pair_.Eo());
 
     return
         max

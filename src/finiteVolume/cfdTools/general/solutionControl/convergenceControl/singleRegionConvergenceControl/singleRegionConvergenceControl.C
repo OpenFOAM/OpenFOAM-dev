@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,13 +85,13 @@ bool Foam::singleRegionConvergenceControl::readResidualControls()
         {
             residualData rd;
             rd.name = fName.c_str();
-            rd.absTol = readScalar(residualDict.lookup(fName));
+            rd.absTol = residualDict.lookup<scalar>(fName);
             data.append(rd);
         }
         else
         {
             residualData& rd = data[fieldi];
-            rd.absTol = readScalar(residualDict.lookup(fName));
+            rd.absTol = residualDict.lookup<scalar>(fName);
         }
     }
 
@@ -151,21 +151,21 @@ bool Foam::singleRegionConvergenceControl::criteriaSatisfied() const
         Info<< control_.algorithmName() << ": Residuals" << endl;
     }
 
-    const dictionary& solverDict = mesh_.solverPerformanceDict();
-    forAllConstIter(dictionary, solverDict, iter)
+    DynamicList<word> fieldNames(getFieldNames(mesh_));
+
+    forAll(fieldNames, i)
     {
-        const word& variableName = iter().keyword();
+        const word& fieldName = fieldNames[i];
         const label fieldi =
-            residualControlIndex(variableName, residualControl_);
+            residualControlIndex(fieldName, residualControl_);
         if (fieldi != -1)
         {
             scalar residual;
             getInitialResiduals
             (
                 mesh_,
-                variableName,
+                fieldName,
                 0,
-                iter().stream(),
                 residual,
                 residual
             );
@@ -178,7 +178,7 @@ bool Foam::singleRegionConvergenceControl::criteriaSatisfied() const
 
             if (control_.debug)
             {
-                Info<< control_.algorithmSpace() << "  " << variableName
+                Info<< control_.algorithmSpace() << "  " << fieldName
                     << ": tolerance " << residual << " ("
                     << residualControl_[fieldi].absTol << ")"
                     << (absCheck ? " CONVERGED" : "") << endl;

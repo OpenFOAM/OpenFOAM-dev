@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ private:
     // Private classes
 
         //- Combine operator class to combine normal with other normal.
-        class nomalsCombine
+        class normalsCombine
         {
         public:
 
@@ -96,7 +96,7 @@ private:
         };
 
 
-    // Private data
+    // Private Data
 
         //- Mesh+surface
         meshRefinement& meshRefiner_;
@@ -545,14 +545,6 @@ private:
                 ) const;
 
 
-
-        //- Disallow default bitwise copy construct
-        snappyLayerDriver(const snappyLayerDriver&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const snappyLayerDriver&);
-
-
 public:
 
     //- Runtime type information
@@ -567,6 +559,9 @@ public:
             const labelList& globalToMasterPatch,
             const labelList& globalToSlavePatch
         );
+
+        //- Disallow default bitwise copy construction
+        snappyLayerDriver(const snappyLayerDriver&) = delete;
 
 
     // Member Functions
@@ -600,6 +595,11 @@ public:
                 fvMeshDistribute& distributor
             );
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const snappyLayerDriver&) = delete;
 };
 
 

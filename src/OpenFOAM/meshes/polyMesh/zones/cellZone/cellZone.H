@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,17 +72,9 @@ protected:
         const cellZoneMesh& zoneMesh_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cellZone(const cellZone&);
-
-
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- The name associated with the zone-labels dictionary entry
         static const char * const labelsName;
@@ -124,7 +116,7 @@ public:
         cellZone
         (
             const word& name,
-            const Xfer<labelList>& addr,
+            labelList&& addr,
             const label index,
             const cellZoneMesh&
         );
@@ -153,10 +145,14 @@ public:
         cellZone
         (
             const cellZone&,
-            const Xfer<labelList>& addr,
+            labelList&& addr,
             const label index,
             const cellZoneMesh&
         );
+
+        //- Disallow default bitwise copy construction
+        cellZone(const cellZone&) = delete;
+
 
         //- Construct and return a clone, resetting the zone mesh
         virtual autoPtr<cellZone> clone(const cellZoneMesh& zm) const
@@ -224,14 +220,17 @@ public:
 
     // Member Operators
 
-        //- Assign to zone, clearing demand-driven data
+        //- Assignment to zone, clearing demand-driven data
         void operator=(const cellZone&);
+
+        //- Move assignment to zone, clearing demand-driven data
+        void operator=(cellZone&&);
 
         //- Assign addressing, clearing demand-driven data
         void operator=(const labelUList&);
 
-        //- Assign addressing, clearing demand-driven data
-        void operator=(const Xfer<labelList>&);
+        //- Move addressing, clearing demand-driven data
+        void operator=(labelList&&);
 
 
     // I-O

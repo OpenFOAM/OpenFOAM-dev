@@ -55,8 +55,8 @@ solvers
     p_rgh
     {
         solver          GAMG;
-        tolerance       1e-07;
-        relTol          0;
+        tolerance       1e-8;
+        relTol          0.01;
         smoother        DIC;
     }
 
@@ -66,13 +66,13 @@ solvers
         preconditioner
         {
             preconditioner  GAMG;
-            tolerance       1e-07;
+            tolerance       1e-8;
             relTol          0;
             nVcycles        2;
             smoother        DICGaussSeidel;
             nPreSweeps      2;
         }
-        tolerance       1e-07;
+        tolerance       1e-8;
         relTol          0;
         maxIter         20;
     }
@@ -99,7 +99,7 @@ PIMPLE
 {
     momentumPredictor no;
     transonic       no;
-    nOuterCorrectors 2;
+    nOuterCorrectors 3;
     nCorrectors     2;
     nNonOrthogonalCorrectors 0;
 }

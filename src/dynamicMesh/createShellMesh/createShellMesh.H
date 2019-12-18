@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ class globalMeshData;
 
 class createShellMesh
 {
-    // Private data
+    // Private Data
 
         //- Reference to patch to extrude
         const primitiveFacePatch& patch_;
@@ -96,13 +96,6 @@ class createShellMesh
         );
 
 
-        //- Disallow default bitwise copy construct
-        createShellMesh(const createShellMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const createShellMesh&);
-
-
 public:
 
     //- Runtime type information
@@ -118,6 +111,9 @@ public:
             const faceList& pointRegions,
             const labelList& regionPoints
         );
+
+        //- Disallow default bitwise copy construction
+        createShellMesh(const createShellMesh&) = delete;
 
 
     // Member Functions
@@ -148,6 +144,10 @@ public:
             {
                 return faceToEdgeMap_;
             }
+
+        //- Disallow default bitwise assignment
+        void operator=(const createShellMesh&) = delete;
+
 
             //- From region point to patch point.
             const labelList& pointToPointMap() const
@@ -190,6 +190,9 @@ public:
                 const labelListList& extrudeEdgePatches,
                 polyTopoChange& meshMod
             );
+
+
+    // Member Operators
 
             //- Update any locally stored mesh information.
             void updateMesh(const mapPolyMesh&);

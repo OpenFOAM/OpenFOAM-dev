@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,16 +32,8 @@ Description
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcEdgeLoops() const
+template<class FaceList, class PointField>
+void Foam::PrimitivePatch<FaceList, PointField>::calcEdgeLoops() const
 {
     if (debug)
     {
@@ -155,16 +147,9 @@ calcEdgeLoops() const
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 const Foam::labelListList&
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
-edgeLoops() const
+Foam::PrimitivePatch<FaceList, PointField>::edgeLoops() const
 {
     if (!edgeLoopsPtr_)
     {

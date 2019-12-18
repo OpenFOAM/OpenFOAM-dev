@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ class blockMesh
 :
     public blockList
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh dictionary
         const IOdictionary& meshDict_;
@@ -155,6 +155,38 @@ class blockMesh
 
         faceList createPatchFaces(const polyPatch& patchTopologyFaces) const;
 
+        Pair<scalar> xCellSizes
+        (
+            const block& b,
+            const pointField& blockPoints,
+            const label j,
+            const label k
+        ) const;
+
+        Pair<scalar> yCellSizes
+        (
+            const block& b,
+            const pointField& blockPoints,
+            const label i,
+            const label k
+        ) const;
+
+        Pair<scalar> zCellSizes
+        (
+            const block& b,
+            const pointField& blockPoints,
+            const label i,
+            const label j
+        ) const;
+
+        void printCellSizeRange(const Pair<scalar>& cellSizes) const;
+
+        void printCellSizeRanges
+        (
+            const direction d,
+            const FixedList<Pair<scalar>, 4>& cellSizes
+        ) const;
+
         void createPoints() const;
         void createCells() const;
         void createPatches() const;
@@ -165,9 +197,15 @@ class blockMesh
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         ClassName("blockMesh");
+
+        //- Switch checking block face orientation
+        //  to ensure that all faces are outward-pointing.
+        //  This check may fail if the block is intentionally very twisted
+        //  for curved edges to be applied and can be switched off.
+        static Switch checkBlockFaceOrientation;
 
 
     // Constructors

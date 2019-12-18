@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,15 +61,6 @@ protected:
         dictionary tetherPotentialProperties_;
 
 
-    // Private Member Functions
-
-        //- Disallow copy construct
-        tetherPotential(const tetherPotential&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const tetherPotential&);
-
-
 public:
 
     //- Runtime type information
@@ -91,20 +82,23 @@ public:
         );
 
 
-    // Selectors
+    // Constructors
 
-        //- Return a reference to the selected viscosity model
-        static autoPtr<tetherPotential> New
+        //- Construct from components
+        tetherPotential
         (
             const word& name,
             const dictionary& tetherPotentialProperties
         );
 
+        //- Disallow default bitwise copy construction
+        tetherPotential(const tetherPotential&);
 
-    // Constructors
 
-        //- Construct from components
-        tetherPotential
+    // Selectors
+
+        //- Return a reference to the selected viscosity model
+        static autoPtr<tetherPotential> New
         (
             const word& name,
             const dictionary& tetherPotentialProperties
@@ -129,6 +123,12 @@ public:
 
         //- Read tetherPotential dictionary
         virtual bool read(const dictionary& tetherPotentialProperties) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const tetherPotential&) = delete;
 };
 
 

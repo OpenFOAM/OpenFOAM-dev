@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,10 @@ SourceFiles
 namespace Foam
 {
 
+// Forward declaration of friend functions and operators
+class liquidProperties;
+Ostream& operator<<(Ostream& os, const liquidProperties& l);
+
 /*---------------------------------------------------------------------------*\
                     Class liquidProperties Declaration
 \*---------------------------------------------------------------------------*/
@@ -50,7 +54,7 @@ class liquidProperties
 :
     public thermophysicalProperties
 {
-    // Private data
+    // Private Data
 
         //- Critical temperature [K]
         scalar Tc_;
@@ -161,7 +165,7 @@ public:
 
         // Physical constants which define the specie
 
-            //- No of moles of this species in mixture
+            //- Mass fraction of this specie in mixture
             //  Note Mixing of liquidProperties is not currently supported
             //  so Y = 1
             inline scalar Y() const;
@@ -175,7 +179,7 @@ public:
             //- Critical volume [m^3/kmol]
             inline scalar Vc() const;
 
-            //- Critical compressibilty factor
+            //- Critical compressibility factor
             inline scalar Zc() const;
 
             //- Triple point temperature [K]
@@ -190,7 +194,7 @@ public:
             //- Dipole moment []
             inline scalar dipm() const;
 
-            //- Pitzer's ascentric factor []
+            //- Pitzer's acentric factor []
             inline scalar omega() const;
 
             //- Solubility parameter [(J/m^3)^(1/2)]
@@ -202,7 +206,7 @@ public:
 
         // Fundamental equation of state properties
 
-            //- Liquid compressibility rho/p [s^2/m^2]
+            //- Liquid compressibility [s^2/m^2]
             //  Note: currently it is assumed the liquid is incompressible
             inline scalar psi(scalar p, scalar T) const;
 
@@ -220,10 +224,10 @@ public:
             //- Chemical enthalpy [J/kg]
             inline scalar Hc() const;
 
-            //- Absolute Enthalpy [J/kg]
+            //- Absolute enthalpy [J/kg]
             inline scalar Ha(const scalar p, const scalar T) const;
 
-            // Entropy [J/(kg K)]
+            // Entropy [J/kg/K]
             scalar S(const scalar p, const scalar T) const;
 
 
@@ -238,7 +242,7 @@ public:
             //- Liquid enthalpy [J/kg] - reference to 298.15 K
             virtual scalar h(scalar p, scalar T) const = 0;
 
-            //- Vapour heat capacity [J/(kg K)]
+            //- Vapour heat capacity [J/kg/K]
             virtual scalar Cpg(scalar p, scalar T) const = 0;
 
             //- Liquid viscosity [Pa s]
@@ -247,26 +251,26 @@ public:
             //- Vapour viscosity [Pa s]
             virtual scalar mug(scalar p, scalar T) const = 0;
 
-            //- Liquid thermal conductivity  [W/(m K)]
+            //- Liquid thermal conductivity  [W/m/K]
             virtual scalar kappa(scalar p, scalar T) const = 0;
 
-            //- Liquid thermal diffusivity of enthalpy [kg/ms]
+            //- Liquid thermal diffusivity of enthalpy [kg/m/s]
             inline scalar alphah(const scalar p, const scalar T) const;
 
-            //- Vapour thermal conductivity  [W/(m K)]
+            //- Vapour thermal conductivity  [W/m/K]
             virtual scalar kappag(scalar p, scalar T) const = 0;
 
             //- Surface tension [N/m]
             virtual scalar sigma(scalar p, scalar T) const = 0;
 
-            //- Vapour diffussivity [m2/s]
+            //- Vapour diffusivity [m^2/s]
             virtual scalar D(scalar p, scalar T) const = 0;
 
-            //- Vapour diffussivity [m2/s] with specified binary pair
+            //- Vapour diffusivity [m^2/s] with specified binary pair
             virtual scalar D(scalar p, scalar T, scalar Wb) const = 0;
 
             //- Invert the vapour pressure relationship to retrieve the
-            //  boiling temperuture as a function of pressure
+            //  boiling temperature as a function of pressure
             virtual scalar pvInvert(scalar p) const;
 
 
@@ -291,21 +295,15 @@ public:
         inline void readIfPresent(Liquid& l, const dictionary& dict);
 
         //- Write the function coefficients
-        virtual void writeData(Ostream& os) const = 0;
-
-        //- Write dictionary to Ostream
-        void write(Ostream& os) const;
+        virtual void write(Ostream& os) const = 0;
 
         //- Write the data for each of the property functions
         template<class Liquid>
-        inline void writeData(const Liquid& l, Ostream& os) const;
+        inline void write(const Liquid& l, Ostream& os) const;
 
         //- Ostream Operator
         friend Ostream& operator<<(Ostream& os, const liquidProperties& l);
 };
-
-
-Ostream& operator<<(Ostream& os, const liquidProperties& l);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

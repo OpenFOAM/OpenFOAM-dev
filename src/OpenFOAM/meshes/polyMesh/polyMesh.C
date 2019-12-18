@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -289,8 +289,10 @@ Foam::polyMesh::polyMesh(const IOobject& io)
     globalMeshDataPtr_(nullptr),
     moving_(false),
     topoChanging_(false),
-    curMotionTimeIndex_(time().timeIndex()),
-    oldPointsPtr_(nullptr)
+    curMotionTimeIndex_(-1),
+    oldPointsPtr_(nullptr),
+    oldCellCentresPtr_(nullptr),
+    storeOldCellCentres_(false)
 {
     if (!owner_.headerClassName().empty())
     {
@@ -344,10 +346,10 @@ Foam::polyMesh::polyMesh(const IOobject& io)
 Foam::polyMesh::polyMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<labelList>& owner,
-    const Xfer<labelList>& neighbour,
+    pointField&& points,
+    faceList&& faces,
+    labelList&& owner,
+    labelList&& neighbour,
     const bool syncPar
 )
 :
@@ -364,7 +366,7 @@ Foam::polyMesh::polyMesh
             io.readOpt(),
             IOobject::AUTO_WRITE
         ),
-        points
+        move(points)
     ),
     faces_
     (
@@ -377,7 +379,7 @@ Foam::polyMesh::polyMesh
             io.readOpt(),
             IOobject::AUTO_WRITE
         ),
-        faces
+        move(faces)
     ),
     owner_
     (
@@ -390,7 +392,7 @@ Foam::polyMesh::polyMesh
             io.readOpt(),
             IOobject::AUTO_WRITE
         ),
-        owner
+        move(owner)
     ),
     neighbour_
     (
@@ -403,7 +405,7 @@ Foam::polyMesh::polyMesh
             io.readOpt(),
             IOobject::AUTO_WRITE
         ),
-        neighbour
+        move(neighbour)
     ),
     clearedPrimitives_(false),
     boundary_
@@ -471,8 +473,10 @@ Foam::polyMesh::polyMesh
     globalMeshDataPtr_(nullptr),
     moving_(false),
     topoChanging_(false),
-    curMotionTimeIndex_(time().timeIndex()),
-    oldPointsPtr_(nullptr)
+    curMotionTimeIndex_(-1),
+    oldPointsPtr_(nullptr),
+    oldCellCentresPtr_(nullptr),
+    storeOldCellCentres_(false)
 {
     // Check if the faces and cells are valid
     forAll(faces_, facei)
@@ -493,12 +497,13 @@ Foam::polyMesh::polyMesh
 }
 
 
+
 Foam::polyMesh::polyMesh
 (
     const IOobject& io,
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<cellList>& cells,
+    pointField&& points,
+    faceList&& faces,
+    cellList&& cells,
     const bool syncPar
 )
 :
@@ -515,7 +520,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        points
+        move(points)
     ),
     faces_
     (
@@ -528,7 +533,7 @@ Foam::polyMesh::polyMesh
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        faces
+        move(faces)
     ),
     owner_
     (
@@ -622,8 +627,10 @@ Foam::polyMesh::polyMesh
     globalMeshDataPtr_(nullptr),
     moving_(false),
     topoChanging_(false),
-    curMotionTimeIndex_(time().timeIndex()),
-    oldPointsPtr_(nullptr)
+    curMotionTimeIndex_(-1),
+    oldPointsPtr_(nullptr),
+    oldCellCentresPtr_(nullptr),
+    storeOldCellCentres_(false)
 {
     // Check if faces are valid
     forAll(faces_, facei)
@@ -640,7 +647,7 @@ Foam::polyMesh::polyMesh
     }
 
     // transfer in cell list
-    cellList cLst(cells);
+    cellList cLst(move(cells));
 
     // Check if cells are valid
     forAll(cLst, celli)
@@ -663,10 +670,10 @@ Foam::polyMesh::polyMesh
 
 void Foam::polyMesh::resetPrimitives
 (
-    const Xfer<pointField>& points,
-    const Xfer<faceList>& faces,
-    const Xfer<labelList>& owner,
-    const Xfer<labelList>& neighbour,
+    pointField&& points,
+    faceList&& faces,
+    labelList&& owner,
+    labelList&& neighbour,
     const labelList& patchSizes,
     const labelList& patchStarts,
     const bool validBoundary
@@ -679,23 +686,23 @@ void Foam::polyMesh::resetPrimitives
     // Optimized to avoid overwriting data at all
     if (notNull(points))
     {
-        points_.transfer(points());
+        points_ = move(points);
         bounds_ = boundBox(points_, validBoundary);
     }
 
     if (notNull(faces))
     {
-        faces_.transfer(faces());
+        faces_ = move(faces);
     }
 
     if (notNull(owner))
     {
-        owner_.transfer(owner());
+        owner_ = move(owner);
     }
 
     if (notNull(neighbour))
     {
-        neighbour_.transfer(neighbour());
+        neighbour_ = move(neighbour);
     }
 
 
@@ -1000,6 +1007,127 @@ void Foam::polyMesh::addZones
 }
 
 
+void Foam::polyMesh::reorderPatches
+(
+    const labelUList& newToOld,
+    const bool validBoundary
+)
+{
+    // Clear local fields and e.g. polyMesh parallelInfo. Do not clearGeom
+    // so we keep PatchMeshObjects intact.
+    boundary_.clearGeom();
+    clearAddressing(true);
+    // Clear all but PatchMeshObjects
+    meshObject::clearUpto
+    <
+        polyMesh,
+        TopologicalMeshObject,
+        PatchMeshObject
+    >
+    (
+        *this
+    );
+    meshObject::clearUpto
+    <
+        pointMesh,
+        TopologicalMeshObject,
+        PatchMeshObject
+    >
+    (
+        *this
+    );
+
+    boundary_.shuffle(newToOld, validBoundary);
+
+    // Warn mesh objects
+    meshObject::reorderPatches<polyMesh>(*this, newToOld, validBoundary);
+    meshObject::reorderPatches<pointMesh>(*this, newToOld, validBoundary);
+}
+
+
+void Foam::polyMesh::addPatch
+(
+    const label insertPatchi,
+    const polyPatch& patch,
+    const dictionary& patchFieldDict,
+    const word& defaultPatchFieldType,
+    const bool validBoundary
+)
+{
+    const label sz = boundary_.size();
+
+    label startFacei = nFaces();
+    if (insertPatchi < sz)
+    {
+        startFacei = boundary_[insertPatchi].start();
+    }
+
+    // Create reordering list
+    // patches before insert position stay as is
+    // patches after insert position move one up
+    labelList newToOld(boundary_.size()+1);
+    for (label i = 0; i < insertPatchi; i++)
+    {
+        newToOld[i] = i;
+    }
+    for (label i = insertPatchi; i < sz; i++)
+    {
+        newToOld[i+1] = i;
+    }
+    newToOld[insertPatchi] = -1;
+
+    reorderPatches(newToOld, false);
+
+    // Clear local fields and e.g. polyMesh parallelInfo.
+    //clearGeom();  // would clear out pointMesh as well
+    boundary_.clearGeom();
+    clearAddressing(true);
+
+    // Clear all but PatchMeshObjects
+    meshObject::clearUpto
+    <
+        polyMesh,
+        TopologicalMeshObject,
+        PatchMeshObject
+    >
+    (
+        *this
+    );
+    meshObject::clearUpto
+    <
+        pointMesh,
+        TopologicalMeshObject,
+        PatchMeshObject
+    >
+    (
+        *this
+    );
+
+
+    // Insert polyPatch
+    boundary_.set
+    (
+        insertPatchi,
+        patch.clone
+        (
+            boundary_,
+            insertPatchi,   // index
+            0,              // size
+            startFacei      // start
+        )
+    );
+
+    if (validBoundary)
+    {
+        boundary_.updateMesh();
+    }
+
+    // Warn mesh objects
+    meshObject::addPatch<polyMesh>(*this, insertPatchi);
+    meshObject::addPatch<pointMesh>(*this, insertPatchi);
+}
+
+
 const Foam::pointField& Foam::polyMesh::points() const
 {
     if (clearedPrimitives_)
@@ -1052,19 +1180,39 @@ const Foam::labelList& Foam::polyMesh::faceNeighbour() const
 
 const Foam::pointField& Foam::polyMesh::oldPoints() const
 {
+    if (!moving_)
+    {
+        return points_;
+    }
+
     if (oldPointsPtr_.empty())
     {
-        if (debug)
-        {
-            WarningInFunction
-                << endl;
-        }
-
-        oldPointsPtr_.reset(new pointField(points_));
-        curMotionTimeIndex_ = time().timeIndex();
+        FatalErrorInFunction
+            << "Old points have not been stored"
+            << exit(FatalError);
     }
 
     return oldPointsPtr_();
+}
+
+
+const Foam::pointField& Foam::polyMesh::oldCellCentres() const
+{
+    storeOldCellCentres_ = true;
+
+    if (!moving_)
+    {
+        return cellCentres();
+    }
+
+    if (oldCellCentresPtr_.empty())
+    {
+        FatalErrorInFunction
+            << "Old cell centres have not been stored"
+            << exit(FatalError);
+    }
+
+    return oldCellCentresPtr_();
 }
 
 
@@ -1149,12 +1297,16 @@ Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
 
     moving(true);
 
-    // Pick up old points
+    // Pick up old points and cell centres
     if (curMotionTimeIndex_ != time().timeIndex())
     {
-        // Mesh motion in the new time step
         oldPointsPtr_.clear();
         oldPointsPtr_.reset(new pointField(points_));
+        if (storeOldCellCentres_)
+        {
+            oldCellCentresPtr_.clear();
+            oldCellCentresPtr_.reset(new pointField(cellCentres()));
+        }
         curMotionTimeIndex_ = time().timeIndex();
     }
 
@@ -1233,8 +1385,9 @@ Foam::tmp<Foam::scalarField> Foam::polyMesh::movePoints
 
 void Foam::polyMesh::resetMotion() const
 {
-    curMotionTimeIndex_ = 0;
+    curMotionTimeIndex_ = -1;
     oldPointsPtr_.clear();
+    oldCellCentresPtr_.clear();
 }
 
 

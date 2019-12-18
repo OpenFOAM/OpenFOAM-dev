@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Ostream& operator<<(Ostream&, const reducedUnits&);
 
 class reducedUnits
 {
-    // Private data
+    // Private Data
 
         // Reduced units
 
@@ -92,16 +92,10 @@ class reducedUnits
 
         void calcRefValues();
 
-        //- Disallow default bitwise copy construct
-        reducedUnits(const reducedUnits&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const reducedUnits&);
-
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Static data someStaticData
         static const scalar kb;
@@ -125,6 +119,9 @@ public:
 
         //- Construct from dictionary
         reducedUnits(const IOdictionary& reducedUnitsDict);
+
+        //- Disallow default bitwise copy construction
+        reducedUnits(const reducedUnits&) = delete;
 
 
     //- Destructor
@@ -166,6 +163,12 @@ public:
             inline scalar refMassDensity() const;
 
             inline scalar refNumberDensity() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const reducedUnits&) = delete;
 
 
     // IOstream Operators

@@ -31,15 +31,22 @@ License
 #include "dynamicCodeContext.H"
 #include "stringOps.H"
 
+// * * * * * * * * * * * * Private Static Data Members * * * * * * * * * * * //
+
+template<class Type>
+const Foam::wordList Foam::codedFixedValuePointPatchField<Type>::codeKeys_ =
+    {"code", "codeInclude", "localCode"};
+
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<class Type>
-const Foam::word Foam::codedFixedValuePointPatchField<Type>::codeTemplateC
-    = "fixedValuePointPatchFieldTemplate.C";
+const Foam::word Foam::codedFixedValuePointPatchField<Type>::codeTemplateC =
+    "fixedValuePointPatchFieldTemplate.C";
 
 template<class Type>
-const Foam::word Foam::codedFixedValuePointPatchField<Type>::codeTemplateH
-    = "fixedValuePointPatchFieldTemplate.H";
+const Foam::word Foam::codedFixedValuePointPatchField<Type>::codeTemplateH =
+    "fixedValuePointPatchFieldTemplate.H";
 
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
@@ -141,8 +148,8 @@ void Foam::codedFixedValuePointPatchField<Type>::prepare
 
 
 template<class Type>
-const Foam::dictionary& Foam::codedFixedValuePointPatchField<Type>::codeDict()
-const
+const Foam::dictionary&
+Foam::codedFixedValuePointPatchField<Type>::codeDict() const
 {
     // Use system/codeDict or in-line
     return
@@ -151,6 +158,14 @@ const
       ? dict_
       : this->dict().subDict(name_)
     );
+}
+
+
+template<class Type>
+const Foam::wordList&
+Foam::codedFixedValuePointPatchField<Type>::codeKeys() const
+{
+    return codeKeys_;
 }
 
 
@@ -269,9 +284,8 @@ Foam::codedFixedValuePointPatchField<Type>::redirectPatchField() const
         // Make sure to construct the patchfield with up-to-date value
 
         OStringStream os;
-        os.writeKeyword("type") << name_ << token::END_STATEMENT
-            << nl;
-        static_cast<const Field<Type>&>(*this).writeEntry("value", os);
+        writeEntry(os, "type", name_);
+        writeEntry(os, "value", static_cast<const Field<Type>&>(*this));
         IStringStream is(os.str());
         dictionary dict(is);
 
@@ -332,56 +346,40 @@ template<class Type>
 void Foam::codedFixedValuePointPatchField<Type>::write(Ostream& os) const
 {
     fixedValuePointPatchField<Type>::write(os);
-    os.writeKeyword("name") << name_
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "name", name_);
 
     if (dict_.found("codeInclude"))
     {
-        os.writeKeyword("codeInclude")
-            << token::HASH << token::BEGIN_BLOCK;
-
-        os.writeQuoted(string(dict_["codeInclude"]), false)
-            << token::HASH << token::END_BLOCK
+        writeKeyword(os, "codeInclude");
+        os.write(verbatimString(dict_["codeInclude"]))
             << token::END_STATEMENT << nl;
     }
 
     if (dict_.found("localCode"))
     {
-        os.writeKeyword("localCode")
-            << token::HASH << token::BEGIN_BLOCK;
-
-        os.writeQuoted(string(dict_["localCode"]), false)
-            << token::HASH << token::END_BLOCK
+        writeKeyword(os, "localCode");
+        os.write(verbatimString(dict_["localCode"]))
             << token::END_STATEMENT << nl;
     }
 
     if (dict_.found("code"))
     {
-        os.writeKeyword("code")
-            << token::HASH << token::BEGIN_BLOCK;
-
-        os.writeQuoted(string(dict_["code"]), false)
-            << token::HASH << token::END_BLOCK
+        writeKeyword(os, "code");
+        os.write(verbatimString(dict_["code"]))
             << token::END_STATEMENT << nl;
     }
 
     if (dict_.found("codeOptions"))
     {
-        os.writeKeyword("codeOptions")
-            << token::HASH << token::BEGIN_BLOCK;
-
-        os.writeQuoted(string(dict_["codeOptions"]), false)
-            << token::HASH << token::END_BLOCK
+        writeKeyword(os, "codeOptions");
+        os.write(verbatimString(dict_["codeOptions"]))
             << token::END_STATEMENT << nl;
     }
 
     if (dict_.found("codeLibs"))
     {
-        os.writeKeyword("codeLibs")
-            << token::HASH << token::BEGIN_BLOCK;
-
-        os.writeQuoted(string(dict_["codeLibs"]), false)
-            << token::HASH << token::END_BLOCK
+        writeKeyword(os, "codeLibs");
+        os.write(verbatimString(dict_["codeLibs"]))
             << token::END_STATEMENT << nl;
     }
 }

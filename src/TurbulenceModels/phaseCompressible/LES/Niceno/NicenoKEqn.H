@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ class NicenoKEqn
 :
     public kEqn<BasicTurbulenceModel>
 {
-    // Private data
+    // Private Data
 
         mutable const PhaseCompressibleTurbulenceModel
         <
@@ -90,10 +90,6 @@ class NicenoKEqn
             typename BasicTurbulenceModel::transportModel
         >&
         gasTurbulence() const;
-
-        // Disallow default bitwise copy construct and assignment
-        NicenoKEqn(const NicenoKEqn&);
-        void operator=(const NicenoKEqn&);
 
 
 protected:
@@ -141,6 +137,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        NicenoKEqn(const NicenoKEqn&) = delete;
+
 
     //- Destructor
     virtual ~NicenoKEqn()
@@ -151,6 +150,12 @@ public:
 
         //- Read model coefficients if they have changed
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const NicenoKEqn&) = delete;
 };
 
 

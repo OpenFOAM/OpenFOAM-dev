@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,17 +55,6 @@ class noRadiation
 :
     public filmRadiationModel
 {
-private:
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        noRadiation(const noRadiation&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const noRadiation&);
-
-
 public:
 
     //- Runtime type information
@@ -81,6 +70,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        noRadiation(const noRadiation&) = delete;
+
 
     //- Destructor
     virtual ~noRadiation();
@@ -94,7 +86,13 @@ public:
             virtual void correct();
 
             //- Return the radiation sensible enthalpy source
-            virtual tmp<volScalarField> Shs();
+            virtual tmp<volScalarField::Internal> Shs();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const noRadiation&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
 
 SourceFiles
     nucleationSiteModel.C
-    newnucleationSiteModel.C
+    newNucleationSiteModel.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -55,15 +55,6 @@ namespace wallBoilingModels
 
 class nucleationSiteModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        nucleationSiteModel(const nucleationSiteModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const nucleationSiteModel&);
-
-
 public:
 
     //- Runtime type information
@@ -88,6 +79,9 @@ public:
         //- Construct null
         nucleationSiteModel();
 
+        //- Disallow default bitwise copy construction
+        nucleationSiteModel(const nucleationSiteModel&) = delete;
+
 
     // Selectors
 
@@ -109,10 +103,18 @@ public:
             const label patchi,
             const scalarField& Tl,
             const scalarField& Tsatw,
-            const scalarField& L
+            const scalarField& L,
+            const scalarField& dDep,
+            const scalarField& fDep
         ) const = 0;
 
         virtual void write(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const nucleationSiteModel&) = delete;
 };
 
 

@@ -1,0 +1,58 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      T.particles;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 0 0 1 0 0 0];
+
+internalField   uniform 296;
+
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    inlet
+    {
+        type                fixedValue;
+        value               uniform 296;
+    }
+
+    outlet
+    {
+        type            zeroGradient;
+    }
+
+    wall
+    {
+        type            fixedProfile;
+        profile         tableFile;
+
+        profileCoeffs
+        {
+            format              csv;        // Input format
+            nHeaderLine         0;          // Number of header lines
+            refColumn           0;          // Reference column index
+            componentColumns    (1);        // Component column indices
+            separator           " ";        // Optional (defaults to ",")
+            mergeSeparators     yes;        // Merge multiple separators
+            outOfBounds         clamp;      // Optional out-of-bounds handling
+            file                "validation/exptData/wallTemperature";
+            interpolationScheme linear;     // Optional interpolation scheme
+        }
+        direction        (1 0 0);
+        origin           0;
+    }
+}
+
+// ************************************************************************* //

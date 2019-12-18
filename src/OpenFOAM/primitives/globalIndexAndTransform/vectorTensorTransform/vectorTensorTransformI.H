@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -170,17 +170,6 @@ inline Foam::pointField Foam::vectorTensorTransform::invTransformPosition
 
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-inline void Foam::vectorTensorTransform::operator=
-(
-    const vectorTensorTransform& tr
-)
-{
-    t_ = tr.t_;
-    R_ = tr.R_;
-    hasR_ = tr.hasR_;
-}
-
 
 inline void Foam::vectorTensorTransform::operator&=
 (

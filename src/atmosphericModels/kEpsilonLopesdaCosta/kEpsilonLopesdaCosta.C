@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ void kEpsilonLopesdaCosta<BasicTurbulenceModel>::setPorosityCoefficient
     {
         const labelList& cellZoneIDs = pm.cellZoneIDs();
 
-        const scalar Cpm = readScalar(pm.dict().lookup(C.name()));
+        const scalar Cpm = pm.dict().lookup<scalar>(C.name());
 
         forAll(cellZoneIDs, zonei)
         {
@@ -77,7 +77,7 @@ void kEpsilonLopesdaCosta<BasicTurbulenceModel>::setCdSigma
         const labelList& cellZoneIDs = pm.cellZoneIDs();
         const scalarField& Sigma = pm.Sigma();
 
-        const scalar Cpm = readScalar(pm.dict().lookup(C.name()));
+        const scalar Cpm = pm.dict().lookup<scalar>(C.name());
 
         forAll(cellZoneIDs, zonei)
         {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,7 @@ Usage
     {
         type            nutTabulatedWallFunction;
         uPlusTable      myUPlusTable;
+        value           uniform 0;
     }
     \endverbatim
 
@@ -90,7 +91,7 @@ protected:
     // Protected Member Functions
 
         //- Calculate the turbulence viscosity
-        virtual tmp<scalarField> calcNut() const;
+        virtual tmp<scalarField> nut() const;
 
         //- Calculate wall u+ from table
         virtual tmp<scalarField> calcUPlus(const scalarField& Rey) const;
@@ -130,7 +131,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         nutUTabulatedWallFunctionFvPatchScalarField
         (
             const nutUTabulatedWallFunctionFvPatchScalarField&
@@ -145,7 +146,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         nutUTabulatedWallFunctionFvPatchScalarField
         (
             const nutUTabulatedWallFunctionFvPatchScalarField&,
@@ -165,7 +166,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

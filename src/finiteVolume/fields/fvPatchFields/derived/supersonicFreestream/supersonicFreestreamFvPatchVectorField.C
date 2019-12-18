@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,9 +65,9 @@ supersonicFreestreamFvPatchVectorField
     pName_(dict.lookupOrDefault<word>("p", "p")),
     psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
     UInf_(dict.lookup("UInf")),
-    pInf_(readScalar(dict.lookup("pInf"))),
-    TInf_(readScalar(dict.lookup("TInf"))),
-    gamma_(readScalar(dict.lookup("gamma")))
+    pInf_(dict.lookup<scalar>("pInf")),
+    TInf_(dict.lookup<scalar>("TInf")),
+    gamma_(dict.lookup<scalar>("gamma"))
 {
     if (dict.found("value"))
     {
@@ -298,11 +298,11 @@ void Foam::supersonicFreestreamFvPatchVectorField::write(Ostream& os) const
     writeEntryIfDifferent<word>(os, "T", "T", TName_);
     writeEntryIfDifferent<word>(os, "p", "p", pName_);
     writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
-    os.writeKeyword("UInf") << UInf_ << token::END_STATEMENT << nl;
-    os.writeKeyword("pInf") << pInf_ << token::END_STATEMENT << nl;
-    os.writeKeyword("TInf") << TInf_ << token::END_STATEMENT << nl;
-    os.writeKeyword("gamma") << gamma_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "UInf", UInf_);
+    writeEntry(os, "pInf", pInf_);
+    writeEntry(os, "TInf", TInf_);
+    writeEntry(os, "gamma", gamma_);
+    writeEntry(os, "value", *this);
 }
 
 

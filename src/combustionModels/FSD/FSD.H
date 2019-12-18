@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
 
-    Flame Surface Dennsity (FDS) combustion model.
+    Flame Surface Density (FDS) combustion model.
 
     The fuel source term is given by mgft*pc*omegaFuelBar.
 
@@ -38,7 +38,7 @@ Description
     pc is considered from the IFC solution.
     omegaFuelBar is calculated solving a relaxation equation which tends to
     omegaEq. This omegaEq is obtained from the flamelet solution for
-    different strain rates and fit using a expential distribution.
+    different strain rates and fit using a exponential distribution.
 
     The spacial distribution of the consumption speed (omega) is obtained also
     from a strained flamelet solution and it is assumed to have a gaussian
@@ -82,7 +82,7 @@ class FSD
 :
     public singleStepCombustion <ReactionThermo, ThermoType>
 {
-    // Private data
+    // Private Data
 
         //- Auto pointer to consumption speed per unit of flame area model
         autoPtr<reactionRateFlameArea> reactionRateFlameArea_;
@@ -93,7 +93,7 @@ class FSD
         //- Fuel mass concentration on the fuel stream
         dimensionedScalar YFuelFuelStream_;
 
-        //- Oxygen mass concentration on the oxydizer stream
+        //- Oxygen mass concentration on the oxidizer stream
         dimensionedScalar YO2OxiStream_;
 
         //- Similarity constant for the sub-grid ft fluctuations
@@ -120,12 +120,6 @@ class FSD
         //- Calculate the normalised fuel source term
         void calculateSourceNorm();
 
-        //- Disallow copy construct
-        FSD(const FSD&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const FSD&);
-
 
 public:
 
@@ -139,10 +133,13 @@ public:
         FSD
         (
             const word& modelType,
-            ReactionThermo& thermo,
+            const ReactionThermo& thermo,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );
+
+        //- Disallow default bitwise copy construction
+        FSD(const FSD&);
 
 
     //- Destructor
@@ -156,6 +153,12 @@ public:
 
         //- Update properties
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const FSD&) = delete;
 };
 
 

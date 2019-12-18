@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,12 +157,6 @@ class triSurfaceMesh
             const pointIndexHitList& hitInfo
         ) const;
 
-        //- Disallow default bitwise copy construct
-        triSurfaceMesh(const triSurfaceMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const triSurfaceMesh&);
-
 
 public:
 
@@ -199,15 +193,18 @@ public:
                 const bool isGlobal
             );
 
+        //- Disallow default bitwise copy construction
+        triSurfaceMesh(const triSurfaceMesh&) = delete;
+
 
     //- Destructor
     virtual ~triSurfaceMesh();
 
-        //- Clear storage
-        void clearOut();
-
 
     // Member Functions
+
+        //- Clear storage
+        void clearOut();
 
         //- Move points
         virtual void movePoints(const pointField&);
@@ -347,7 +344,7 @@ public:
                 IOstream::streamFormat fmt,
                 IOstream::versionNumber ver,
                 IOstream::compressionType cmp,
-                const bool valid
+                const bool write = true
             ) const;
 
             //- Is object global
@@ -362,6 +359,12 @@ public:
             {
                 return searchableSurface::globalFilePath(type());
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const triSurfaceMesh&) = delete;
 };
 
 

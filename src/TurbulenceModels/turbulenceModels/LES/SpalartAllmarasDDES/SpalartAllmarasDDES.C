@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,63 +35,69 @@ namespace LESModels
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasDDES<BasicTurbulenceModel>::rd
+tmp<volScalarField::Internal> SpalartAllmarasDDES<BasicTurbulenceModel>::rd
 (
-    const volScalarField& magGradU
+    const volScalarField::Internal& magGradU
 ) const
 {
-    tmp<volScalarField> tr
+    return volScalarField::Internal::New
     (
+        modelName("rd"),
         min
         (
-            this->nuEff()
+            this->nuEff()()
            /(
-               max
-               (
-                   magGradU,
-                   dimensionedScalar(magGradU.dimensions(), small)
-               )
-              *sqr(this->kappa_*this->y_)
+                max
+                (
+                    magGradU,
+                    dimensionedScalar(magGradU.dimensions(), small)
+                )
+               *sqr(this->kappa_*this->y_())
             ),
             scalar(10)
         )
     );
-    tr.ref().boundaryFieldRef() == 0.0;
-
-    return tr;
 }
 
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasDDES<BasicTurbulenceModel>::fd
+tmp<volScalarField::Internal> SpalartAllmarasDDES<BasicTurbulenceModel>::fd
 (
-    const volScalarField& magGradU
+    const volScalarField::Internal& magGradU
 ) const
 {
-    return 1 - tanh(pow3(8*rd(magGradU)));
+    return volScalarField::Internal::New
+    (
+        modelName("fd"),
+        1 - tanh(pow3(8*rd(magGradU)))
+    );
 }
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-tmp<volScalarField> SpalartAllmarasDDES<BasicTurbulenceModel>::dTilda
+tmp<volScalarField::Internal> SpalartAllmarasDDES<BasicTurbulenceModel>::dTilda
 (
-    const volScalarField& chi,
-    const volScalarField& fv1,
-    const volTensorField& gradU
+    const volScalarField::Internal& chi,
+    const volScalarField::Internal& fv1,
+    const volTensorField::Internal& gradU
 ) const
 {
-    return max
+    return volScalarField::Internal::New
     (
-        this->y_
-      - fd(mag(gradU))
-       *max
+        modelName("dTilda"),
+        max
         (
-            this->y_ - this->CDES_*this->delta(),
-            dimensionedScalar(dimLength, 0)
-        ),
-        dimensionedScalar(dimLength, small)
+            this->y_
+          - fd(mag(gradU))
+           *max
+            (
+                this->y_() - this->CDES_*this->delta()(),
+                dimensionedScalar(dimLength, 0)
+            ),
+            dimensionedScalar(dimLength, small)
+        )
     );
 }
 

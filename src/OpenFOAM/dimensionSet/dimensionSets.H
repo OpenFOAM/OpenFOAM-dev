@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ extern const dimensionSet dimDynamicViscosity;
 
 class dimensionSets
 {
-    // Private data
+    // Private Data
 
         //- Set of dimensions
         PtrList<dimensionedScalar> units_;
@@ -97,14 +97,14 @@ public:
     // Constructors
 
         //- Construct from all units and set of units to use for inversion
-        //  (writing)
         dimensionSets
         (
             const HashTable<dimensionedScalar>&,
             const wordList& unitNames
         );
 
-    // Member functions
+
+    // Member Functions
 
         //- Return the units
         const PtrList<dimensionedScalar>& units() const
@@ -120,7 +120,6 @@ public:
 
         //- (if valid) obtain set of coefficients of unitNames
         void coefficients(scalarField&) const;
-
 };
 
 

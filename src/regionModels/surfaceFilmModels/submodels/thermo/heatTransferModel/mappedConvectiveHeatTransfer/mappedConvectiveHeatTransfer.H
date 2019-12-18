@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,26 +56,13 @@ class mappedConvectiveHeatTransfer
 :
     public heatTransferModel
 {
-private:
+    // Private Data
 
-    // Private data
-
-        //- Heat transfer coefficient - primary region [W/m2/K]
+        //- Heat transfer coefficient - primary region [W/m^2/K]
         volScalarField htcConvPrimary_;
 
-        //- Heat transfer coefficient - film region [W/m2/K]
-        //  Assumes that the primary regtion to film region boundaries are
-        //  described as mappedPushed types
-        volScalarField htcConvFilm_;
-
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        mappedConvectiveHeatTransfer(const mappedConvectiveHeatTransfer&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const mappedConvectiveHeatTransfer&);
+        //- Heat transfer coefficient - film region [W/m^2/K]
+        volScalarField::Internal htcConvFilm_;
 
 
 public:
@@ -93,6 +80,12 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        mappedConvectiveHeatTransfer
+        (
+            const mappedConvectiveHeatTransfer&
+        ) = delete;
+
 
     //- Destructor
     virtual ~mappedConvectiveHeatTransfer();
@@ -105,8 +98,14 @@ public:
             //- Correct
             virtual void correct();
 
-            //- Return the heat transfer coefficient [W/m2/K]
-            virtual tmp<volScalarField> h() const;
+            //- Return the heat transfer coefficient [W/m^2/K]
+            virtual tmp<volScalarField::Internal> h() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const mappedConvectiveHeatTransfer&) = delete;
 };
 
 

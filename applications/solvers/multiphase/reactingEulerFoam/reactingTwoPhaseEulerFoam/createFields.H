@@ -46,3 +46,6 @@ setRefCell
     pRefValue
 );
 mesh.setFluxRequired(p_rgh.name());
+
+PtrList<volScalarField> rAUs;
+PtrList<surfaceScalarField> rAUfs;

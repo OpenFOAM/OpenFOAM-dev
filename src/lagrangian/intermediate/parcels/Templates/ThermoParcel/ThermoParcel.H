@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ class ThermoParcel
 :
     public ParcelType
 {
-    // Private data
+    // Private Data
 
         //- Size in bytes of the fields
         static const std::size_t sizeofFields_;
@@ -81,7 +81,7 @@ public:
         public ParcelType::constantProperties
     {
 
-        // Private data
+        // Private Data
 
             //- Particle initial temperature [K]
             demandDrivenEntry<scalar> T0_;
@@ -92,7 +92,7 @@ public:
             //- Maximum temperature [K]
             demandDrivenEntry<scalar> TMax_;
 
-            //- Particle specific heat capacity [J/(kg.K)]
+            //- Particle specific heat capacity [J/kg/K]
             demandDrivenEntry<scalar> Cp0_;
 
             //- Particle emissivity [] (radiation)
@@ -116,7 +116,7 @@ public:
             constantProperties(const dictionary& parentDict);
 
 
-        // Member functions
+        // Member Functions
 
             // Access
 
@@ -133,7 +133,7 @@ public:
                 inline void setTMax(const scalar TMax);
 
                 //- Return const access to the particle specific heat capacity
-                //  [J/(kg.K)]
+                //  [J/kg/K]
                 inline scalar Cp0() const;
 
                 //- Return const access to the particle emissivity []
@@ -152,7 +152,7 @@ public:
     {
     private:
 
-        // Private data
+        // Private Data
 
             //- Local copy of carrier specific heat field
             //  Cp not stored on carrier thermo, but returned as tmp<...>
@@ -183,7 +183,7 @@ public:
                 //- Temperature [K]
                 scalar Tc_;
 
-                //- Specific heat capacity [J/(kg.K)]
+                //- Specific heat capacity [J/kg/K]
                 scalar Cpc_;
 
 
@@ -202,7 +202,7 @@ public:
             );
 
 
-        // Member functions
+        // Member Functions
 
             //- Return access to the locally stored carrier Cp field
             inline const volScalarField& Cp() const;
@@ -249,7 +249,7 @@ protected:
             //- Temperature [K]
             scalar T_;
 
-            //- Specific heat capacity [J/(kg.K)]
+            //- Specific heat capacity [J/kg/K]
             scalar Cp_;
 
 
@@ -274,7 +274,7 @@ protected:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Runtime type information
         TypeName("ThermoParcel");

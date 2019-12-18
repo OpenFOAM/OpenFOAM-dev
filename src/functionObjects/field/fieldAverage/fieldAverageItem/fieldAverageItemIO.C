@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "fieldAverageItem.H"
 #include "IOstreams.H"
 #include "dictionaryEntry.H"
+#include "IOobject.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -54,8 +55,18 @@ Foam::functionObjects::fieldAverageItem::fieldAverageItem(Istream& is)
     window_ = entry.lookupOrDefault<scalar>("window", -1.0);
     windowName_ = entry.lookupOrDefault<word>("windowName", "");
 
-    meanFieldName_ = fieldName_ + EXT_MEAN;
-    prime2MeanFieldName_ = fieldName_ + EXT_PRIME2MEAN;
+    meanFieldName_ = IOobject::groupName
+    (
+        IOobject::member(fieldName_) + meanExt,
+        IOobject::group(fieldName_)
+    );
+
+    prime2MeanFieldName_ = IOobject::groupName
+    (
+        IOobject::member(fieldName_) + prime2MeanExt,
+        IOobject::group(fieldName_)
+    );
+
     if ((window_ > 0) && (windowName_ != ""))
     {
         meanFieldName_ = meanFieldName_ + "_" + windowName_;
@@ -87,9 +98,17 @@ Foam::Istream& Foam::functionObjects::operator>>
     faItem.window_ = entry.lookupOrDefault<scalar>("window", -1.0);
     faItem.windowName_ = entry.lookupOrDefault<word>("windowName", "");
 
-    faItem.meanFieldName_ = faItem.fieldName_ + fieldAverageItem::EXT_MEAN;
-    faItem.prime2MeanFieldName_ =
-        faItem.fieldName_ + fieldAverageItem::EXT_PRIME2MEAN;
+    faItem.meanFieldName_ = IOobject::groupName
+    (
+        IOobject::member(faItem.fieldName_) + fieldAverageItem::meanExt,
+        IOobject::group(faItem.fieldName_)
+    );
+
+    faItem.prime2MeanFieldName_ = IOobject::groupName
+    (
+        IOobject::member(faItem.fieldName_) + fieldAverageItem::prime2MeanExt,
+        IOobject::group(faItem.fieldName_)
+    );
 
     if ((faItem.window_ > 0) && (faItem.windowName_ != ""))
     {
@@ -117,24 +136,17 @@ Foam::Ostream& Foam::functionObjects::operator<<
 
     os  << faItem.fieldName_ << nl << token::BEGIN_BLOCK << nl;
 
-    os.writeKeyword("mean")
-        << faItem.mean_ << token::END_STATEMENT << nl;
-
-    os.writeKeyword("prime2Mean")
-        << faItem.prime2Mean_ << token::END_STATEMENT << nl;
-
-    os.writeKeyword("base")
-        << faItem.baseTypeNames_[faItem.base_] << token::END_STATEMENT << nl;
+    writeEntry(os, "mean", faItem.mean_);
+    writeEntry(os, "prime2Mean", faItem.prime2Mean_);
+    writeEntry(os, "base", faItem.baseTypeNames_[faItem.base_]);
 
     if (faItem.window_ > 0)
     {
-        os.writeKeyword("window")
-            << faItem.window_ << token::END_STATEMENT << nl;
+        writeEntry(os, "window", faItem.window_);
 
         if (faItem.windowName_ != "")
         {
-            os.writeKeyword("windowName")
-                << faItem.windowName_ << token::END_STATEMENT << nl;
+            writeEntry(os, "windowName", faItem.windowName_);
         }
     }
 

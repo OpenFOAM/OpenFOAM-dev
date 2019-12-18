@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,15 +57,6 @@ private:
         const extendedFeatureEdgeMesh::sideVolumeType mode_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        searchableBoxFeatures(const searchableBoxFeatures&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableBoxFeatures&);
-
-
 public:
 
     //- Runtime type information
@@ -80,6 +71,9 @@ public:
             const searchableSurface& surface,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        searchableBoxFeatures(const searchableBoxFeatures&) = delete;
 
 
     //- Destructor
@@ -96,6 +90,12 @@ public:
 
         //- Return an extendedFeatureEdgeMesh containing the features
         virtual autoPtr<extendedFeatureEdgeMesh> features() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableBoxFeatures&) = delete;
 };
 
 

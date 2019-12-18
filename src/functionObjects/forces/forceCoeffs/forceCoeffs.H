@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ Usage
         patches      | patches included in the forces calculation | yes |
         liftDir      | lift direction          | yes         |
         dragDir      | drag direction          | yes         |
-        pitchAxis    | picth axis              | yes         |
+        pitchAxis    | pitch axis              | yes         |
         magUInf      | free stream velocity magnitude | yes  |
         lRef         | reference length scale for moment calculations | yes |
         Aref         | reference area          | yes |
@@ -73,7 +73,7 @@ Usage
     \table
         nBin         | number of data bins     | yes         |
         direction    | direction along which bins are defined | yes |
-        cumulative   | bin data accumulated with incresing distance | yes |
+        cumulative   | bin data accumulated with increasing distance | yes |
     \endtable
 
 See also
@@ -106,7 +106,7 @@ class forceCoeffs
 :
     public forces
 {
-    // Private data
+    // Private Data
 
         // Force coefficient geometry
 
@@ -135,15 +135,6 @@ class forceCoeffs
             scalar Aref_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        forceCoeffs(const forceCoeffs&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const forceCoeffs&);
-
-
 protected:
 
     //- Output file header information
@@ -166,6 +157,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        forceCoeffs(const forceCoeffs&) = delete;
+
 
     //- Destructor
     virtual ~forceCoeffs();
@@ -181,6 +175,12 @@ public:
 
         //- Write the forces
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const forceCoeffs&) = delete;
 };
 
 

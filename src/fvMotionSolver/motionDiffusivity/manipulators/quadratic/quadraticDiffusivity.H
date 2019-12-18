@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,18 +51,9 @@ class quadraticDiffusivity
 :
     public motionDiffusivity
 {
-    // Private data
+    // Private Data
 
         autoPtr<motionDiffusivity> basicDiffusivityPtr_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        quadraticDiffusivity(const quadraticDiffusivity&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const quadraticDiffusivity&);
 
 
 public:
@@ -76,6 +67,9 @@ public:
         //- Construct for the given fvMesh and data Istream
         quadraticDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        quadraticDiffusivity(const quadraticDiffusivity&) = delete;
+
 
     //- Destructor
     virtual ~quadraticDiffusivity();
@@ -83,11 +77,17 @@ public:
 
     // Member Functions
 
-        //- Return diffusivity field
-        virtual tmp<surfaceScalarField> operator()() const;
-
         //- Correct the motion diffusivity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const quadraticDiffusivity&) = delete;
+
+        //- Return diffusivity field
+        virtual tmp<surfaceScalarField> operator()() const;
 };
 
 

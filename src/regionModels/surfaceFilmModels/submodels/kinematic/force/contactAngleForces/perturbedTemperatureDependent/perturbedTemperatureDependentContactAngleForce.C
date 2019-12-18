@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "perturbedTemperatureDependentContactAngleForce.H"
+#include "thermoSingleLayer.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -85,7 +86,7 @@ perturbedTemperatureDependentContactAngleForce::theta() const
     (
         volScalarField::New
         (
-            typeName + ":theta",
+            IOobject::modelName("theta", typeName),
             filmModel_.regionMesh(),
             dimensionedScalar(dimless, 0)
         )
@@ -94,7 +95,9 @@ perturbedTemperatureDependentContactAngleForce::theta() const
     volScalarField& theta = ttheta.ref();
     volScalarField::Internal& thetai = theta.ref();
 
-    const volScalarField& T = filmModel_.T();
+    const thermoSingleLayer& film = filmType<thermoSingleLayer>();
+
+    const volScalarField& T = film.T();
 
     // Initialize with the function of temperature
     thetai.field() = thetaPtr_->value(T());

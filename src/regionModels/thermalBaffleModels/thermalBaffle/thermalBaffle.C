@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,10 +66,7 @@ bool thermalBaffle::read(const dictionary& dict)
 
 void thermalBaffle::solveEnergy()
 {
-    if (debug)
-    {
-        InfoInFunction << endl;
-    }
+    DebugInFunction << endl;
 
     const polyBoundaryMesh& rbm = regionMesh().boundaryMesh();
 
@@ -156,7 +153,7 @@ thermalBaffle::thermalBaffle
 )
 :
     thermalBaffleModel(modelType, mesh, dict),
-    nNonOrthCorr_(readLabel(solution().lookup("nNonOrthCorr"))),
+    nNonOrthCorr_(solution().lookup<label>("nNonOrthCorr")),
     thermo_(solidThermo::New(regionMesh(), dict)),
     h_(thermo_->he()),
     Qs_
@@ -187,7 +184,7 @@ thermalBaffle::thermalBaffle
     ),
     radiation_
     (
-        radiation::radiationModel::New
+        radiationModel::New
         (
             dict.subDict("radiation"),
             thermo_->T()
@@ -206,7 +203,7 @@ thermalBaffle::thermalBaffle
 )
 :
     thermalBaffleModel(modelType, mesh),
-    nNonOrthCorr_(readLabel(solution().lookup("nNonOrthCorr"))),
+    nNonOrthCorr_(solution().lookup<label>("nNonOrthCorr")),
     thermo_(solidThermo::New(regionMesh())),
     h_(thermo_->he()),
     Qs_
@@ -237,7 +234,7 @@ thermalBaffle::thermalBaffle
     ),
     radiation_
     (
-        radiation::radiationModel::New
+        radiationModel::New
         (
             thermo_->T()
         )

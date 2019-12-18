@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ Foam::InflationInjection<CloudType>::InflationInjection
     inflationSetName_(this->coeffDict().lookup("inflationCellSet")),
     generationCells_(),
     inflationCells_(),
-    duration_(readScalar(this->coeffDict().lookup("duration"))),
+    duration_(this->coeffDict().template lookup<scalar>("duration")),
     flowRateProfile_
     (
         TimeFunction1<scalar>
@@ -83,7 +83,7 @@ Foam::InflationInjection<CloudType>::InflationInjection
 
     if (selfSeed_)
     {
-        dSeed_ = readScalar(this->coeffDict().lookup("dSeed"));
+        dSeed_ = this->coeffDict().template lookup<scalar>("dSeed");
     }
 
     cellSet generationCells(this->owner().mesh(), generationSetName_);

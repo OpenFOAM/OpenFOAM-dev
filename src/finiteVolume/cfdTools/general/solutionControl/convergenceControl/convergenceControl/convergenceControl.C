@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,29 +36,37 @@ namespace Foam
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
+Foam::DynamicList<Foam::word> Foam::convergenceControl::getFieldNames
+(
+    const fvMesh& mesh
+)
+{
+    DynamicList<word> fieldNames;
+
+    getFieldTypeNames<scalar>(mesh, fieldNames);
+    getFieldTypeNames<vector>(mesh, fieldNames);
+    getFieldTypeNames<sphericalTensor>(mesh, fieldNames);
+    getFieldTypeNames<symmTensor>(mesh, fieldNames);
+    getFieldTypeNames<tensor>(mesh, fieldNames);
+
+    return fieldNames;
+}
+
+
 void Foam::convergenceControl::getInitialResiduals
 (
     const fvMesh& mesh,
     const word& fieldName,
     const label solvei,
-    ITstream& data,
     scalar& r0,
     scalar& r
 )
 {
-    getInitialTypeResiduals<scalar>(mesh, fieldName, solvei, data, r0, r);
-    getInitialTypeResiduals<vector>(mesh, fieldName, solvei, data, r0, r);
-    getInitialTypeResiduals<sphericalTensor>
-    (
-        mesh,
-        fieldName,
-        solvei,
-        data,
-        r0,
-        r
-    );
-    getInitialTypeResiduals<symmTensor>(mesh, fieldName, solvei, data, r0, r);
-    getInitialTypeResiduals<tensor>(mesh, fieldName, solvei, data, r0, r);
+    getInitialTypeResiduals<scalar>(mesh, fieldName, solvei, r0, r);
+    getInitialTypeResiduals<vector>(mesh, fieldName, solvei, r0, r);
+    getInitialTypeResiduals<sphericalTensor>(mesh, fieldName, solvei, r0, r);
+    getInitialTypeResiduals<symmTensor>(mesh, fieldName, solvei, r0, r);
+    getInitialTypeResiduals<tensor>(mesh, fieldName, solvei, r0, r);
 }
 
 

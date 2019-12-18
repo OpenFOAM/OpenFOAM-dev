@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,16 +33,8 @@ Description
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcPointEdges() const
+template<class FaceList, class PointField>
+void Foam::PrimitivePatch<FaceList, PointField>::calcPointEdges() const
 {
     if (debug)
     {
@@ -71,16 +63,8 @@ calcPointEdges() const
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcPointFaces() const
+template<class FaceList, class PointField>
+void Foam::PrimitivePatch<FaceList, PointField>::calcPointFaces() const
 {
     if (debug)
     {
@@ -96,14 +80,14 @@ calcPointFaces() const
             << abort(FatalError);
     }
 
-    const List<Face>& f = localFaces();
+    const List<FaceType>& f = localFaces();
 
     // set up storage for pointFaces
     List<SLList<label>> pointFcs(meshPoints().size());
 
     forAll(f, facei)
     {
-        const Face& curPoints = f[facei];
+        const FaceType& curPoints = f[facei];
 
         forAll(curPoints, pointi)
         {

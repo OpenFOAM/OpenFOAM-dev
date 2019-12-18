@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ bool Foam::IOobject::readHeader(Istream& is)
     (
         is.good()
      && firstToken.isWord()
-     && firstToken.wordToken() == "FoamFile"
+     && firstToken.wordToken() == foamFile
     )
     {
         dictionary headerDict(is);
@@ -85,11 +85,15 @@ bool Foam::IOobject::readHeader(Istream& is)
     }
     else
     {
-        IOWarningInFunction(is)
-            << "First token could not be read or is not the keyword 'FoamFile'"
-            << nl << nl << "Check header is of the form:" << nl << endl;
+        if (IOobject::debug)
+        {
+            IOWarningInFunction(is)
+                << "First token could not be read "
+                   "or is not the keyword 'FoamFile'"
+                << nl << nl << "Check header is of the form:" << nl << endl;
 
-        writeHeader(Info);
+            writeHeader(Info);
+        }
 
         return false;
     }

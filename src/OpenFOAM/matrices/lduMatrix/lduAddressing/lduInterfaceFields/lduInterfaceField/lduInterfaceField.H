@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class lduMatrix;
 
 class lduInterfaceField
 {
-    // Private data
+    // Private Data
 
         //- Reference to the coupled patch this field is defined for
         const lduInterface& interface_;
@@ -63,15 +63,6 @@ class lduInterfaceField
         //- Update index used so that updateInterfaceMatrix is called only once
         //  during the construction of the matrix
         bool updatedMatrix_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        lduInterfaceField(const lduInterfaceField&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const lduInterfaceField&);
 
 
 public:
@@ -88,6 +79,9 @@ public:
             interface_(patch),
             updatedMatrix_(false)
         {}
+
+        //- Disallow default bitwise copy construction
+        lduInterfaceField(const lduInterfaceField&) = delete;
 
 
     //- Destructor
@@ -151,6 +145,12 @@ public:
                 const direction,
                 const Pstream::commsTypes commsType
             ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const lduInterfaceField&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,23 +66,17 @@ Ostream& operator<<(Ostream&, const triSurface&);
 
 class triSurface
 :
-    public PrimitivePatch<labelledTri, ::Foam::List, pointField, point>
+    public PrimitivePatch<::Foam::List<labelledTri>, pointField>
 {
-    // Private typedefs
+    // Private Typedefs
 
     //- Typedefs for convenience
         typedef labelledTri Face;
-        typedef PrimitivePatch
-        <
-            labelledTri,
-            ::Foam::List,
-            pointField,
-            point
-        >
-        ParentType;
+        typedef PrimitivePatch<::Foam::List<labelledTri>, pointField>
+            ParentType;
 
 
-    // Private data
+    // Private Data
 
         //- The number of bytes in the STL header
         static const int STLheaderSize = 80;
@@ -243,7 +237,7 @@ protected:
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         //- Placeholder only, but do not remove - it is needed for GeoMesh
         typedef bool BoundaryMesh;
@@ -284,9 +278,9 @@ public:
         //- Construct from triangles, patches, points.
         triSurface
         (
-            const Xfer<List<labelledTri>>&,
+            List<labelledTri>&&,
             const geometricSurfacePatchList&,
-            const Xfer<List<point>>&
+            List<point>&&
         );
 
         //- Construct from triangles, points. Set patchnames to default.
@@ -305,8 +299,11 @@ public:
         //- Construct from objectRegistry
         triSurface(const Time& d);
 
-        //- Construct as copy
+        //- Copy constructor
         triSurface(const triSurface&);
+
+        //- Move constructor
+        triSurface(triSurface&&);
 
 
     //- Destructor
@@ -431,9 +428,10 @@ public:
             void writeStats(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const triSurface&);
+        void operator=(triSurface&&);
 
 
     // Ostream Operator

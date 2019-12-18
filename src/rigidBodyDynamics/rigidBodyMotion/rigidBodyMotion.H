@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ class rigidBodyMotion
 {
     friend class rigidBodySolver;
 
-    // Private data
+    // Private Data
 
         //- Motion state data object
         rigidBodyModelState motionState_;
@@ -100,12 +100,6 @@ class rigidBodyMotion
         //- Initialize the body-state
         void initialize();
 
-        //- Disallow copy construct
-        rigidBodyMotion(const rigidBodyMotion&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const rigidBodyMotion&);
-
 
 public:
 
@@ -126,6 +120,9 @@ public:
             const dictionary& dict,
             const dictionary& stateDict
         );
+
+        //- Disallow default bitwise copy construction
+        rigidBodyMotion(const rigidBodyMotion&);
 
 
     //- Destructor
@@ -214,11 +211,17 @@ public:
 
 
         //- Write
-        void write(Ostream&) const;
+        virtual void write(Ostream&) const;
 
         //- Read coefficients dictionary and update system parameters,
         //  constraints and restraints but not the current state
         bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const rigidBodyMotion&) = delete;
 };
 
 

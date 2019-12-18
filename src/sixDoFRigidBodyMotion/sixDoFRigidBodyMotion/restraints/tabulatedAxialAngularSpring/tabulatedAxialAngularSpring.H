@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ SourceFiles
 #include "sixDoFRigidBodyMotionRestraint.H"
 #include "point.H"
 #include "tensor.H"
-#include "interpolationTable.H"
+#include "TableFile.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,7 +57,7 @@ class tabulatedAxialAngularSpring
 :
     public sixDoFRigidBodyMotionRestraint
 {
-    // Private data
+    // Private Data
 
         //- Reference orientation where there is no moment
         tensor refQ_;
@@ -65,12 +65,11 @@ class tabulatedAxialAngularSpring
         //- Global unit axis around which the motion is sprung
         vector axis_;
 
-        //- Spring moment interpolation table, depending on angleFormat
-        interpolationTable<scalar> moment_;
+        //- Spring moment as a function of angle
+        autoPtr<Function1s::TableFile<scalar>> moment_;
 
         //- Boolean stating whether the angle around the axis needs to
-        //  be converted to degrees before asking the
-        //  interpolationTable for a moment value
+        //  be converted to degrees before evaluating the moment function
         bool convertToDegrees_;
 
         //- Damping coefficient (Nms/rad)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -808,18 +808,15 @@ void Foam::externalCoupledMixedFvPatchField<Type>::write(Ostream& os) const
 {
     mixedFvPatchField<Type>::write(os);
 
-    os.writeKeyword("commsDir") << commsDir_ << token::END_STATEMENT << nl;
-    os.writeKeyword("file") << fName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("waitInterval") << waitInterval_ << token::END_STATEMENT
-        << nl;
-    os.writeKeyword("timeOut") << timeOut_ << token::END_STATEMENT << nl;
-    os.writeKeyword("calcFrequency") << calcFrequency_ << token::END_STATEMENT
-        << nl;
-    os.writeKeyword("initByExternal") << initByExternal_ << token::END_STATEMENT
-        << nl;
-    os.writeKeyword("log") << log_ << token::END_STATEMENT << nl;
+    writeEntry(os, "commsDir", commsDir_);
+    writeEntry(os, "file", fName_);
+    writeEntry(os, "waitInterval", waitInterval_);
+    writeEntry(os, "timeOut", timeOut_);
+    writeEntry(os, "calcFrequency", calcFrequency_);
+    writeEntry(os, "initByExternal", initByExternal_);
+    writeEntry(os, "log", log_);
 
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

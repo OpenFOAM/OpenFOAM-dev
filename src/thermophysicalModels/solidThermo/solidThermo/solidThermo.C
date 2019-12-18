@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ Foam::solidThermo::solidThermo
     (
         IOobject
         (
-            phasePropertyName("thermo:rho"),
+            phasePropertyName("rho"),
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
@@ -74,7 +74,7 @@ Foam::solidThermo::solidThermo
     (
         IOobject
         (
-            phasePropertyName("thermo:rho"),
+            phasePropertyName("rho"),
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,

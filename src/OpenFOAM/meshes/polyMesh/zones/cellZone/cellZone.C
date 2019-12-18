@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,12 +60,12 @@ Foam::cellZone::cellZone
 Foam::cellZone::cellZone
 (
     const word& name,
-    const Xfer<labelList>& addr,
+    labelList&& addr,
     const label index,
     const cellZoneMesh& zm
 )
 :
-    zone(name, addr, index),
+    zone(name, move(addr), index),
     zoneMesh_(zm)
 {}
 
@@ -95,15 +95,16 @@ Foam::cellZone::cellZone
     zoneMesh_(zm)
 {}
 
+
 Foam::cellZone::cellZone
 (
     const cellZone& cz,
-    const Xfer<labelList>& addr,
+    labelList&& addr,
     const label index,
     const cellZoneMesh& zm
 )
 :
-    zone(cz, addr, index),
+    zone(cz, move(addr), index),
     zoneMesh_(zm)
 {}
 
@@ -139,7 +140,7 @@ void Foam::cellZone::writeDict(Ostream& os) const
     os  << nl << name() << nl << token::BEGIN_BLOCK << nl
         << "    type " << type() << token::END_STATEMENT << nl;
 
-    writeEntry(this->labelsName, os);
+    writeEntry(os, this->labelsName, *this);
 
     os  << token::END_BLOCK << endl;
 }
@@ -150,31 +151,28 @@ void Foam::cellZone::writeDict(Ostream& os) const
 void Foam::cellZone::operator=(const cellZone& zn)
 {
     clearAddressing();
-    labelList::operator=(zn);
+    zone::operator=(zn);
+}
+
+
+void Foam::cellZone::operator=(cellZone&& zn)
+{
+    clearAddressing();
+    zone::operator=(move(zn));
 }
 
 
 void Foam::cellZone::operator=(const labelUList& addr)
 {
     clearAddressing();
-    labelList::operator=(addr);
+    zone::operator=(addr);
 }
 
 
-void Foam::cellZone::operator=(const Xfer<labelList>& addr)
+void Foam::cellZone::operator=(labelList&& addr)
 {
     clearAddressing();
-    labelList::operator=(addr);
-}
-
-
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const cellZone& zn)
-{
-    zn.write(os);
-    os.check("Ostream& operator<<(Ostream&, const cellZone&");
-    return os;
+    zone::operator=(move(addr));
 }
 
 

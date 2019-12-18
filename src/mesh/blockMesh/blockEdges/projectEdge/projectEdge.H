@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class projectEdge
 :
     public blockEdge
 {
-    // Private data
+    // Private Data
 
         const searchableSurfaces& geometry_;
 
@@ -65,12 +65,6 @@ class projectEdge
 
         //- Single point find nearest
         void findNearest(const point&, point& near, pointConstraint&) const;
-
-        //- Disallow default bitwise copy construct
-        projectEdge(const projectEdge&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const projectEdge&);
 
 
 public:
@@ -90,6 +84,9 @@ public:
             const pointField& points,
             Istream&
         );
+
+        //- Disallow default bitwise copy construction
+        projectEdge(const projectEdge&) = delete;
 
 
     //- Destructor
@@ -113,6 +110,12 @@ public:
             NotImplemented;
             return 1;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const projectEdge&) = delete;
 };
 
 

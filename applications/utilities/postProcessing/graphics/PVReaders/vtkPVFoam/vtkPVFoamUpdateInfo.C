@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "vtkPVFoam.H"
 
 // OpenFOAM includes
+#include "vtkPVFoamReader.h"
 #include "cellSet.H"
 #include "faceSet.H"
 #include "pointSet.H"
@@ -34,11 +35,10 @@ License
 #include "polyBoundaryMeshEntries.H"
 #include "entry.H"
 #include "Cloud.H"
-#include "vtkPVFoamReader.h"
+#include "surfaceFields.H"
 
-// local headers
+// Local includes
 #include "vtkPVFoamAddToSelection.H"
-#include "vtkPVFoamUpdateInfoFields.H"
 
 // VTK includes
 #include "vtkDataArraySelection.h"
@@ -107,7 +107,7 @@ Foam::wordList Foam::vtkPVFoam::getZoneNames(const word& zoneType) const
 {
     wordList names;
 
-    // mesh not loaded - read from file
+    // Mesh not loaded - read from file
     IOobject ioObj
     (
         zoneType,
@@ -146,7 +146,7 @@ void Foam::vtkPVFoam::updateInfoInternalMesh
 {
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::updateInfoInternalMesh" << endl;
+        InfoInFunction << endl;
     }
 
     // Determine mesh parts (internalMesh, patches...)
@@ -160,10 +160,8 @@ void Foam::vtkPVFoam::updateInfoInternalMesh
 
     if (debug)
     {
-        // just for debug info
+        // Just for debug info
         getSelectedArrayEntries(arraySelection);
-
-        Info<< "<end> Foam::vtkPVFoam::updateInfoInternalMesh" << endl;
     }
 }
 
@@ -175,12 +173,12 @@ void Foam::vtkPVFoam::updateInfoLagrangian
 {
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::updateInfoLagrangian" << nl
+        InfoInFunction << nl
             << "    " << dbPtr_->timePath()/cloud::prefix << endl;
     }
 
 
-    // use the db directly since this might be called without a mesh,
+    // Use the db directly since this might be called without a mesh,
     // but the region must get added back in
     fileName lagrangianPrefix(cloud::prefix);
     if (meshRegion_ != polyMesh::defaultRegion)
@@ -218,10 +216,8 @@ void Foam::vtkPVFoam::updateInfoLagrangian
 
     if (debug)
     {
-        // just for debug info
+        // Just for debug info
         getSelectedArrayEntries(arraySelection);
-
-        Info<< "<end> Foam::vtkPVFoam::updateInfoLagrangian" << endl;
     }
 }
 
@@ -235,7 +231,7 @@ void Foam::vtkPVFoam::updateInfoPatches
 {
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::updateInfoPatches"
+        InfoInFunction
             << " [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "]" << endl;
     }
 
@@ -252,7 +248,6 @@ void Foam::vtkPVFoam::updateInfoPatches
         const wordList allPatchNames = patches.names();
 
         // Add patch groups
-        // ~~~~~~~~~~~~~~~~
 
         for
         (
@@ -303,7 +298,6 @@ void Foam::vtkPVFoam::updateInfoPatches
 
 
         // Add patches
-        // ~~~~~~~~~~~
 
         if (!reader_->GetShowGroupsOnly())
         {
@@ -325,7 +319,7 @@ void Foam::vtkPVFoam::updateInfoPatches
     }
     else
     {
-        // mesh not loaded - read from file
+        // Mesh not loaded - read from file
         // but this could fail if we've supplied a bad region name
         IOobject ioObj
         (
@@ -343,14 +337,13 @@ void Foam::vtkPVFoam::updateInfoPatches
             false
         );
 
-        // this should only ever fail if the mesh region doesn't exist
+        // This should only ever fail if the mesh region doesn't exist
         if (ioObj.typeHeaderOk<polyBoundaryMesh>(true))
         {
             polyBoundaryMeshEntries patchEntries(ioObj);
 
 
             // Read patches and determine sizes
-            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
             wordList names(patchEntries.size());
             labelList sizes(patchEntries.size());
@@ -359,13 +352,12 @@ void Foam::vtkPVFoam::updateInfoPatches
             {
                 const dictionary& patchDict = patchEntries[patchi].dict();
 
-                sizes[patchi] = readLabel(patchDict.lookup("nFaces"));
+                sizes[patchi] = patchDict.lookup<label>("nFaces");
                 names[patchi] = patchEntries[patchi].keyword();
             }
 
 
             // Add (non-zero) patch groups to the list of mesh parts
-            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
             HashTable<labelList, word> groups(patchEntries.size());
 
@@ -450,7 +442,6 @@ void Foam::vtkPVFoam::updateInfoPatches
 
 
             // Add (non-zero) patches to the list of mesh parts
-            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
             if (!reader_->GetShowGroupsOnly())
             {
@@ -501,10 +492,8 @@ void Foam::vtkPVFoam::updateInfoPatches
 
     if (debug)
     {
-        // just for debug info
+        // Just for debug info
         getSelectedArrayEntries(arraySelection);
-
-        Info<< "<end> Foam::vtkPVFoam::updateInfoPatches" << endl;
     }
 }
 
@@ -521,15 +510,13 @@ void Foam::vtkPVFoam::updateInfoZones
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::updateInfoZones"
+        InfoInFunction
             << " [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "]" << endl;
     }
 
     wordList namesLst;
 
-    //
     // cellZones information
-    // ~~~~~~~~~~~~~~~~~~~~~
     if (meshPtr_)
     {
         namesLst = getZoneNames(meshPtr_->cellZones());
@@ -550,9 +537,7 @@ void Foam::vtkPVFoam::updateInfoZones
     arrayRangeCellZones_ += namesLst.size();
 
 
-    //
     // faceZones information
-    // ~~~~~~~~~~~~~~~~~~~~~
     if (meshPtr_)
     {
         namesLst = getZoneNames(meshPtr_->faceZones());
@@ -573,9 +558,7 @@ void Foam::vtkPVFoam::updateInfoZones
     arrayRangeFaceZones_ += namesLst.size();
 
 
-    //
     // pointZones information
-    // ~~~~~~~~~~~~~~~~~~~~~~
     if (meshPtr_)
     {
         namesLst = getZoneNames(meshPtr_->pointZones());
@@ -597,10 +580,8 @@ void Foam::vtkPVFoam::updateInfoZones
 
     if (debug)
     {
-        // just for debug info
+        // Just for debug info
         getSelectedArrayEntries(arraySelection);
-
-        Info<< "<end> Foam::vtkPVFoam::updateInfoZones" << endl;
     }
 }
 
@@ -617,7 +598,7 @@ void Foam::vtkPVFoam::updateInfoSets
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::updateInfoSets" << endl;
+        InfoInFunction << endl;
     }
 
     // Add names of sets. Search for last time directory with a sets
@@ -673,11 +654,111 @@ void Foam::vtkPVFoam::updateInfoSets
 
     if (debug)
     {
-        // just for debug info
+        // Just for debug info
         getSelectedArrayEntries(arraySelection);
-
-        Info<< "<end> Foam::vtkPVFoam::updateInfoSets" << endl;
     }
+}
+
+
+void Foam::vtkPVFoam::updateInfoFields()
+{
+    if (debug)
+    {
+        InfoInFunction
+            << " [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "]"
+            << endl;
+    }
+
+    vtkDataArraySelection* fieldSelection = reader_->GetFieldSelection();
+
+    // Use the db directly since this might be called without a mesh,
+    // but the region must get added back in
+    word regionPrefix;
+    if (meshRegion_ != polyMesh::defaultRegion)
+    {
+        regionPrefix = meshRegion_;
+    }
+
+    const Time& runTime = dbPtr_();
+    const instantList times = runTime.times();
+
+    stringList enabledEntries;
+
+    if (fieldSelection->GetNumberOfArrays() == 0 && !meshPtr_)
+    {
+        const wordReList defaultFieldRes
+        (
+            configDict_.lookupOrDefault
+            (
+                "defaultFields",
+                wordReList(wordList{"p", "U"})
+            )
+        );
+
+        wordHashSet objectNameSet;
+        forAll(times, timei)
+        {
+            // Search for list of objects for this time and mesh region
+            IOobjectList objects(runTime, times[timei].name(), regionPrefix);
+
+            forAllConstIter(IOobjectList, objects, iter)
+            {
+                objectNameSet.insert(iter.key());
+            }
+        }
+
+        const wordList objectNames(objectNameSet.toc());
+        const labelList defaultFields
+        (
+            findStrings(defaultFieldRes, objectNames)
+        );
+
+        enabledEntries.setSize(defaultFields.size());
+        forAll(defaultFields, i)
+        {
+            enabledEntries[i] = objectNames[defaultFields[i]];
+        }
+    }
+    else
+    {
+        // Preserve the enabled selections
+        enabledEntries = getSelectedArrayEntries(fieldSelection);
+    }
+
+    fieldSelection->RemoveAllArrays();
+
+    forAll(times, timei)
+    {
+        // Search for list of objects for this time and mesh region
+        IOobjectList objects(runTime, times[timei].name(), regionPrefix);
+
+        addFieldsToSelection<fvPatchField, volMesh>
+        (
+            fieldSelection,
+            objects
+        );
+
+        addInternalFieldsToSelection<fvPatchField, volMesh>
+        (
+            fieldSelection,
+            objects
+        );
+
+        addFieldsToSelection<fvsPatchField, surfaceMesh>
+        (
+            fieldSelection,
+            objects
+        );
+
+        addFieldsToSelection<pointPatchField, pointMesh>
+        (
+            fieldSelection,
+            objects
+        );
+    }
+
+    // Restore the enabled selections
+    setSelectedArrayEntries(fieldSelection, enabledEntries);
 }
 
 
@@ -685,18 +766,17 @@ void Foam::vtkPVFoam::updateInfoLagrangianFields()
 {
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::updateInfoLagrangianFields"
-            << endl;
+        InfoInFunction << endl;
     }
 
     vtkDataArraySelection* fieldSelection =
         reader_->GetLagrangianFieldSelection();
 
-    // preserve the enabled selections
+    // Preserve the enabled selections
     stringList enabledEntries = getSelectedArrayEntries(fieldSelection);
     fieldSelection->RemoveAllArrays();
 
-    // use the db directly since this might be called without a mesh,
+    // Use the db directly since this might be called without a mesh,
     // but the region must get added back in
     fileName lagrangianPrefix(cloud::prefix);
     if (meshRegion_ != polyMesh::defaultRegion)
@@ -732,13 +812,8 @@ void Foam::vtkPVFoam::updateInfoLagrangianFields()
         }
     }
 
-    // restore the enabled selections
+    // Restore the enabled selections
     setSelectedArrayEntries(fieldSelection, enabledEntries);
-
-    if (debug)
-    {
-        Info<< "<end> Foam::vtkPVFoam::updateInfoLagrangianFields" << endl;
-    }
 }
 
 

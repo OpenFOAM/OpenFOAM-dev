@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -250,10 +250,6 @@ class scotchDecomp
             List<label>& finalDecomp
         );
 
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const scotchDecomp&);
-        scotchDecomp(const scotchDecomp&);
-
 
 public:
 
@@ -265,6 +261,9 @@ public:
 
         //- Construct given the decomposition dictionary and mesh
         scotchDecomp(const dictionary& decompositionDict);
+
+        //- Disallow default bitwise copy construction
+        scotchDecomp(const scotchDecomp&) = delete;
 
 
     //- Destructor
@@ -322,6 +321,12 @@ public:
             const pointField& cc,
             const scalarField& cWeights
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const scotchDecomp&) = delete;
 };
 
 

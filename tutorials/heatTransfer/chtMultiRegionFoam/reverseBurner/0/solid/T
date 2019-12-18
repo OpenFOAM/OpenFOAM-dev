@@ -26,7 +26,6 @@ boundaryField
     external
     {
         type            externalWallHeatFluxTemperature;
-        kappaMethod     solidThermo;
         mode            coefficient;
         h               uniform 1e3;
         Ta              $internalField;
@@ -34,10 +33,11 @@ boundaryField
     }
     solid_to_gas
     {
-        type            compressible::turbulentTemperatureCoupledBaffleMixed;
+        type            compressible::turbulentTemperatureRadCoupledMixed;
         value           $internalField;
         Tnbr            T;
-        kappaMethod     solidThermo;
+        qrNbr           qr;
+        qr              none;
     }
 }
 

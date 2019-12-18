@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ class patchProbes
 :
     public probes
 {
-    // Private data
+    // Private Data
 
         //- Patch name
         word patchName_;
@@ -113,13 +113,6 @@ class patchProbes
         tmp<Field<Type>> sample(const word& fieldName) const;
 
 
-        //- Disallow default bitwise copy construct
-        patchProbes(const patchProbes&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const patchProbes&);
-
-
 public:
 
     //- Runtime type information
@@ -146,12 +139,15 @@ public:
             const bool loadFromFiles = false
         );
 
+        //- Disallow default bitwise copy construction
+        patchProbes(const patchProbes&) = delete;
+
 
     //- Destructor
     virtual ~patchProbes();
 
 
-    //- Public members
+    // Member Functions
 
         //- Sample and write
         virtual bool write();
@@ -161,6 +157,12 @@ public:
 
         //- Find elements containing patchProbes
         virtual void findElements(const fvMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const patchProbes&) = delete;
 };
 
 

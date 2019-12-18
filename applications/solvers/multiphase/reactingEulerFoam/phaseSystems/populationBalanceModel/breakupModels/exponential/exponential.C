@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,8 +50,8 @@ Foam::diameterModels::breakupModels::exponential::exponential
 )
 :
     breakupModel(popBal, dict),
-    exponent_(readScalar(dict.lookup("exponent"))),
-    C_(readScalar(dict.lookup("C")))
+    exponent_(dict.lookup<scalar>("exponent")),
+    C_(dict.lookup<scalar>("C"))
 {}
 
 

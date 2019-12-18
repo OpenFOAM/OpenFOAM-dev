@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,9 @@ Foam::tmp<Foam::scalarField> Foam::waveModels::Stokes2::elevation
     const scalarField& x
 ) const
 {
-    const scalar kd = k()*depth(), ka = k()*amplitude(t);
+    static const scalar kdGreat = log(great);
+    const scalar kd = min(max(k()*depth(), - kdGreat), kdGreat);
+    const scalar ka = k()*amplitude(t);
 
     const scalar T = deep() ? 1 : tanh(kd);
 
@@ -87,7 +89,9 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Stokes2::velocity
     const vector2DField& xz
 ) const
 {
-    const scalar kd = k()*depth(), ka = k()*amplitude(t);
+    static const scalar kdGreat = log(great);
+    const scalar kd = min(max(k()*depth(), - kdGreat), kdGreat);
+    const scalar ka = k()*amplitude(t);
 
     const scalar A22ByA11 = deep() ? 0 : 0.375/pow3(sinh(kd));
 

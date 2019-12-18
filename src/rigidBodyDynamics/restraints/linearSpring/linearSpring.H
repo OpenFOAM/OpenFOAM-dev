@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,7 @@ SourceFiles
 #define RBD_restraints_linearSpring_H
 
 #include "rigidBodyRestraint.H"
+#include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,7 +55,7 @@ class linearSpring
 :
     public restraint
 {
-    // Private data
+    // Private Data
 
         //- Anchor point, where the spring is attached to an immovable
         //  object
@@ -71,6 +72,9 @@ class linearSpring
 
         //- Rest length - length of spring when no forces are applied to it
         scalar restLength_;
+
+        //- Switch to allow no restraint when line is shorter than restLength
+        Switch allowSlack_;
 
 
 public:
@@ -110,7 +114,8 @@ public:
         virtual void restrain
         (
             scalarField& tau,
-            Field<spatialVector>& fx
+            Field<spatialVector>& fx,
+            const rigidBodyModelState& state
         ) const;
 
         //- Update properties from given dictionary

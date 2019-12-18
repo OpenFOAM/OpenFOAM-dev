@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sampledSurface.H"
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
 bool Foam::sampledSurface::checkFieldSize(const Field<Type>& field) const
@@ -162,17 +164,9 @@ Foam::sampledSurface::pointAverage
 
     tmp<GeometricField<Type, fvPatchField, volMesh>> tcellAvg
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        GeometricField<Type, fvPatchField, volMesh>::New
         (
-            IOobject
-            (
-                "cellAvg",
-                mesh.time().timeName(),
-                pfld.db(),
-                IOobject::NO_READ,
-                IOobject::NO_WRITE,
-                false
-            ),
+            "cellAvg",
             mesh,
             dimensioned<Type>("zero", dimless, Zero)
         )

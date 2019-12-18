@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,13 +31,14 @@ License
 
 #include "specie.H"
 #include "perfectGas.H"
-#include "perfectFluid.H"
+#include "rPolynomial.H"
 #include "rhoConst.H"
 
 #include "sensibleEnthalpy.H"
 
 #include "hRefConstThermo.H"
 #include "eRefConstThermo.H"
+#include "janafThermo.H"
 
 #include "constTransport.H"
 
@@ -76,7 +77,7 @@ constTransport
     <
         hRefConstThermo
         <
-            perfectFluid<specie>
+            rPolynomial<specie>
         >,
         sensibleEnthalpy
     >
@@ -102,7 +103,7 @@ constTransport
     <
         eRefConstThermo
         <
-            perfectFluid<specie>
+            rPolynomial<specie>
         >,
         sensibleInternalEnergy
     >
@@ -134,6 +135,19 @@ constTransport
     >
 > constRefRhoConstHThermoPhysics;
 
+typedef
+constTransport
+<
+    species::thermo
+    <
+        janafThermo
+        <
+            rhoConst<specie>
+        >,
+        sensibleInternalEnergy
+    >
+> constJanafRhoConstEThermoPhysics;
+
 
 // pureMixture, sensibleEnthalpy:
 
@@ -157,7 +171,7 @@ makeThermos
     constTransport,
     sensibleEnthalpy,
     hRefConstThermo,
-    perfectFluid,
+    rPolynomial,
     specie
 );
 
@@ -196,7 +210,7 @@ makeThermos
     constTransport,
     sensibleInternalEnergy,
     eRefConstThermo,
-    perfectFluid,
+    rPolynomial,
     specie
 );
 
@@ -240,6 +254,15 @@ makeThermoPhysicsReactionThermos
     heRhoThermo,
     multiComponentMixture,
     constRefRhoConstEThermoPhysics
+);
+
+makeThermoPhysicsReactionThermos
+(
+    rhoThermo,
+    rhoReactionThermo,
+    heRhoThermo,
+    multiComponentMixture,
+    constJanafRhoConstEThermoPhysics
 );
 
 

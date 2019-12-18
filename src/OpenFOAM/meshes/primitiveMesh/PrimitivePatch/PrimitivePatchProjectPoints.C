@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,17 +34,10 @@ Description
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 template<class ToPatch>
 Foam::List<Foam::objectHit>
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
-projectPoints
+Foam::PrimitivePatch<FaceList, PointField>::projectPoints
 (
     const ToPatch& targetPatch,
     const Field<PointType>& projectionDirection,
@@ -277,17 +270,10 @@ projectPoints
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 template<class ToPatch>
 Foam::List<Foam::objectHit>
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
-projectFaceCentres
+Foam::PrimitivePatch<FaceList, PointField>::projectFaceCentres
 (
     const ToPatch& targetPatch,
     const Field<PointType>& projectionDirection,
@@ -326,8 +312,7 @@ projectFaceCentres
     // Result
     List<objectHit> result(this->size());
 
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& slaveFaces =
-        *this;
+    const PrimitivePatch<FaceList, PointField>& slaveFaces = *this;
 
     const PointField& slaveGlobalPoints = points();
 

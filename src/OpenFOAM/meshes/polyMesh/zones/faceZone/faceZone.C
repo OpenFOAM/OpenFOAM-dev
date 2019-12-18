@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -207,14 +207,14 @@ Foam::faceZone::faceZone
 Foam::faceZone::faceZone
 (
     const word& name,
-    const Xfer<labelList>& addr,
-    const Xfer<boolList>& fm,
+    labelList&& addr,
+    boolList&& fm,
     const label index,
     const faceZoneMesh& zm
 )
 :
-    zone(name, addr, index),
-    flipMap_(fm),
+    zone(name, move(addr), index),
+    flipMap_(move(fm)),
     zoneMesh_(zm),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
@@ -269,14 +269,14 @@ Foam::faceZone::faceZone
 Foam::faceZone::faceZone
 (
     const faceZone& fz,
-    const Xfer<labelList>& addr,
-    const Xfer<boolList>& fm,
+    labelList&& addr,
+    boolList&& fm,
     const label index,
     const faceZoneMesh& zm
 )
 :
-    zone(fz, addr, index),
-    flipMap_(fm),
+    zone(fz, move(addr), index),
+    flipMap_(move(fm)),
     zoneMesh_(zm),
     patchPtr_(nullptr),
     masterCellsPtr_(nullptr),
@@ -532,10 +532,28 @@ void Foam::faceZone::writeDict(Ostream& os) const
     os  << nl << name() << nl << token::BEGIN_BLOCK << nl
         << "    type " << type() << token::END_STATEMENT << nl;
 
-    writeEntry(this->labelsName, os);
-    flipMap().writeEntry("flipMap", os);
+    writeEntry(os, this->labelsName, *this);
+    writeEntry(os, "flipMap", flipMap());
 
     os  << token::END_BLOCK << endl;
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+void Foam::faceZone::operator=(const faceZone& zn)
+{
+    clearAddressing();
+    zone::operator=(zn);
+    flipMap_ = zn.flipMap_;
+}
+
+
+void Foam::faceZone::operator=(faceZone&& zn)
+{
+    clearAddressing();
+    zone::operator=(move(zn));
+    flipMap_ = move(zn.flipMap_);
 }
 
 

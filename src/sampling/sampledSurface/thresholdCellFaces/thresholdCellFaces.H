@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,8 @@ class thresholdCellFaces
 :
     public MeshedSurface<face>
 {
-    //- Private typedefs for convenience
+    // Private Typedefs
+
         typedef MeshedSurface<face> MeshStorage;
 
         //- Reference to mesh
@@ -61,6 +62,7 @@ class thresholdCellFaces
 
         //- For every face the original cell in mesh
         labelList meshCells_;
+
 
     // Private Member Functions
 
@@ -104,7 +106,6 @@ public:
         {
             return meshCells_;
         }
-
 };
 
 

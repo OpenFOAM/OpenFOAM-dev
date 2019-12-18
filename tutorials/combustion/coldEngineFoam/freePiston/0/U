@@ -14,12 +14,11 @@ FoamFile
     object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "include/caseSettings"
+#inputSyntax slash;
 
 dimensions      [0 1 -1 0 0 0 0];
 
-internalField   uniform $:internalField.U;
+internalField   uniform $include/caseSettings!internalField/U;
 
 boundaryField
 {
@@ -35,7 +34,7 @@ boundaryField
 
     liner
     {
-        $:wall.U;
+        $include/caseSettings!wall/U;
     }
 
     cylinderHead
@@ -45,7 +44,7 @@ boundaryField
 
     piston
     {
-        $:piston.U;
+        $include/caseSettings!piston/U;
     }
 }
 

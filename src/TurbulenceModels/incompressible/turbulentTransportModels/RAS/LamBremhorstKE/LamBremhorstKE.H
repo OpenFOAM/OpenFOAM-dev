@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,10 +65,6 @@ class LamBremhorstKE
 {
     // Private Member Functions
 
-        // Disallow default bitwise copy construct and assignment
-        LamBremhorstKE(const LamBremhorstKE&);
-        void operator=(const LamBremhorstKE&);
-
         tmp<volScalarField> Rt() const;
         tmp<volScalarField> fMu(const volScalarField& Rt) const;
         tmp<volScalarField> f1(const volScalarField& fMu) const;
@@ -120,6 +116,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        LamBremhorstKE(const LamBremhorstKE&) = delete;
+
 
     //- Destructor
     virtual ~LamBremhorstKE()
@@ -165,6 +164,12 @@ public:
 
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const LamBremhorstKE&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ protected:
             wordReList fieldSelection_;
 
             //- Fixed locations, default = yes
-            //  Note: set to false for moving mesh calations where locations
+            //  Note: set to false for moving mesh calculations where locations
             //        should move with the mesh
             bool fixedLocations_;
 
@@ -181,12 +181,6 @@ private:
         template<class Type>
         void sampleAndWriteSurfaceFields(const fieldGroup<Type>&);
 
-        //- Disallow default bitwise copy construct
-        probes(const probes&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const probes&);
-
 
 public:
 
@@ -213,6 +207,9 @@ public:
             const dictionary& dict,
             const bool loadFromFiles = false
         );
+
+        //- Disallow default bitwise copy construction
+        probes(const probes&) = delete;
 
 
     //- Destructor
@@ -285,6 +282,12 @@ public:
         (
             const GeometricField<Type, fvsPatchField, surfaceMesh>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const probes&) = delete;
 };
 
 

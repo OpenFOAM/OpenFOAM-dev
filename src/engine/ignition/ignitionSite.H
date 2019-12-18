@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ class fvMesh;
 
 class ignitionSite
 {
-    // Private data
+    // Private Data
 
         const Time& db_;
         const fvMesh& mesh_;
@@ -117,6 +117,9 @@ public:
 
         //- Construct from Istream and engineTime
         ignitionSite(Istream&, const engineTime&, const fvMesh&);
+
+        //- Copy constructor
+        ignitionSite(const ignitionSite&) = default;
 
         //- Clone
         autoPtr<ignitionSite> clone() const

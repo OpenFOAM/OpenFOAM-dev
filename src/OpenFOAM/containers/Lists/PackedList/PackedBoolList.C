@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -261,7 +261,7 @@ Foam::label Foam::PackedBoolList::subset(const UIndirectList<label>& indices)
 }
 
 
-Foam::Xfer<Foam::labelList> Foam::PackedBoolList::used() const
+Foam::labelList Foam::PackedBoolList::used() const
 {
     labelList lst(this->count());
 
@@ -280,7 +280,7 @@ Foam::Xfer<Foam::labelList> Foam::PackedBoolList::used() const
         lst.setSize(nElem);
     }
 
-    return lst.xfer();
+    return lst;
 }
 
 

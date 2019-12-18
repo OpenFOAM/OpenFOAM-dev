@@ -20,29 +20,24 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
-    front
-    {
-        type            noSlip;
-    }
-    back
-    {
-        type            noSlip;
-    }
     walls
     {
         type            noSlip;
     }
+
     porosityWall
     {
         type            slip;
         value           uniform (0 0 0);
     }
+
     inlet
     {
         type            flowRateInletVelocity;
         massFlowRate    constant 0.1;
         value           uniform (0 0 0);
     }
+
     outlet
     {
         type            pressureInletOutletVelocity;

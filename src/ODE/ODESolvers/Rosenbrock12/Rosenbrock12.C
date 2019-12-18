@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,12 +94,13 @@ Foam::scalar Foam::Rosenbrock12::solve
 (
     const scalar x0,
     const scalarField& y0,
+    const label li,
     const scalarField& dydx0,
     const scalar dx,
     scalarField& y
 ) const
 {
-    odes_.jacobian(x0, y0, dfdx_, dfdy_);
+    odes_.jacobian(x0, y0, li, dfdx_, dfdy_);
 
     for (label i=0; i<n_; i++)
     {
@@ -127,7 +128,7 @@ Foam::scalar Foam::Rosenbrock12::solve
         y[i] = y0[i] + a21*k1_[i];
     }
 
-    odes_.derivatives(x0 + c2*dx, y, dydx_);
+    odes_.derivatives(x0 + c2*dx, y, li, dydx_);
 
     forAll(k2_, i)
     {
@@ -151,10 +152,11 @@ void Foam::Rosenbrock12::solve
 (
     scalar& x,
     scalarField& y,
+    const label li,
     scalar& dxTry
 ) const
 {
-    adaptiveSolver::solve(odes_, x, y, dxTry);
+    adaptiveSolver::solve(odes_, x, y, li, dxTry);
 }
 
 

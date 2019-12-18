@@ -14,9 +14,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-region          wallFilmRegion;
+region          wallFilm;
 
-faceZones       (wallFilmFaces);
+faceZones       (walls);
 
 oneD            false;
 

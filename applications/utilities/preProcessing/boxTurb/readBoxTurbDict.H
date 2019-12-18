@@ -12,6 +12,6 @@
         )
     );
 
-    scalar Ea(readScalar(boxTurbDict.lookup("Ea")));
+    scalar Ea(boxTurbDict.lookup<scalar>("Ea"));
 
-    scalar k0(readScalar(boxTurbDict.lookup("k0")));
+    scalar k0(boxTurbDict.lookup<scalar>("k0"));

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ class functionObjectList
 :
     private PtrList<functionObject>
 {
-    // Private data
+    // Private Data
 
         //- A list of SHA1 digests for the function object dictionaries
         List<SHA1Digest> digests_;
@@ -95,16 +95,18 @@ class functionObjectList
         //  configuration files, add to the given map and recurse
         static void listDir(const fileName& dir, HashSet<word>& foMap);
 
-        //- Disallow default bitwise copy construct
-        functionObjectList(const functionObjectList&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const functionObjectList&);
+        static void checkUnsetEntries
+        (
+            const string& funcNameArgs,
+            const dictionary& funcArgsDict,
+            const dictionary& funcDict,
+            const string& context
+        );
 
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Default relative path to the directory structure
         //  containing the functionObject dictionary files
@@ -135,6 +137,9 @@ public:
             const dictionary& parentDict,
             const bool execution=true
         );
+
+        //- Disallow default bitwise copy construction
+        functionObjectList(const functionObjectList&) = delete;
 
         //- Construct and return a functionObjectList for an application.
         //  If the "dict" argument is specified the functionObjectList is
@@ -190,31 +195,6 @@ public:
         static void list();
 
         //- Search for functionObject dictionary file for given region
-        //  and the user/group/shipped directories.
-        //  The search scheme allows for version-specific and
-        //  version-independent files using the following hierarchy:
-        //  - \b user settings:
-        //    - ~/.OpenFOAM/\<VERSION\>/caseDicts/postProcessing
-        //    - ~/.OpenFOAM/caseDicts/postProcessing
-        //  - \b group (site) settings (when $WM_PROJECT_SITE is set):
-        //    - $WM_PROJECT_SITE/\<VERSION\>/etc/caseDicts/postProcessing
-        //    - $WM_PROJECT_SITE/etc/caseDicts/postProcessing
-        //  - \b group (site) settings (when $WM_PROJECT_SITE is not set):
-        //    - $WM_PROJECT_INST_DIR/site/\<VERSION\>/etc/
-        //          caseDicts/postProcessing
-        //    - $WM_PROJECT_INST_DIR/site/etc/caseDicts/postProcessing
-        //  - \b other (shipped) settings:
-        //    - $WM_PROJECT_DIR/etc/caseDicts/postProcessing
-        //
-        //  \return The path of the functionObject dictionary file if found
-        //  otherwise null
-        static fileName findRegionDict
-        (
-            const word& funcPath,
-            const word& region = word::null
-        );
-
-        //- Search for functionObject dictionary file for given region
         //  and if not present also search the case directory as well as the
         //  user/group/shipped directories.
         //  The search scheme allows for version-specific and
@@ -240,16 +220,30 @@ public:
             const word& region = word::null
         );
 
-        //- Read the specified functionObject configuration dictionary parsing
-        //  the optional arguments included in the name 'funcNameArgs0',
+        //- Read the specified functionObject configuration dictionary
+        //  parsing the optional arguments included in the string 'funcCall',
         //  inserting 'field' or 'fields' entries as required and merging the
-        //  resulting functionObject dictionary into 'functionsDict'.  Any
-        //  fields required to execute the functionObject are added to
+        //  resulting functionObject dictionary into 'functionsDict'.
+        //  Any fields required to execute the functionObject are added to
         //  'requiredFields'
+        //
+        //  Parses the optional functionObject arguments:
+        //      'Q(U)' -> funcName = Q; args = (U)
+        //             -> field U;
+        //
+        //  Supports named arguments:
+        //      'patchAverage(patch=inlet, p,U)'
+        //  or
+        //      'patchAverage(patch=inlet, field=(p U))'
+        //       -> funcName = patchAverage;
+        //          args = (patch=inlet, p,U)
+        //       -> patch inlet;
+        //          fields (p U);
         static bool readFunctionObject
         (
-            const string& funcNameArgs0,
+            const string& funcCall,
             dictionary& functionsDict,
+            const string& context,
             HashSet<word>& requiredFields,
             const word& region = word::null
         );
@@ -288,6 +282,12 @@ public:
 
         //- Update for changes of mesh
         void movePoints(const polyMesh& mesh);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const functionObjectList&) = delete;
 };
 
 

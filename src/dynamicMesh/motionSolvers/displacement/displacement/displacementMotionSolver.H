@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,16 +61,6 @@ protected:
         mutable pointVectorField pointDisplacement_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        displacementMotionSolver(const displacementMotionSolver&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const displacementMotionSolver&);
-
 public:
 
     //- Runtime type information
@@ -83,9 +73,12 @@ public:
         displacementMotionSolver
         (
             const polyMesh&,
-            const IOdictionary&,
+            const dictionary&,
             const word& type
         );
+
+        //- Disallow default bitwise copy construction
+        displacementMotionSolver(const displacementMotionSolver&) = delete;
 
 
     //- Destructor
@@ -105,6 +98,12 @@ public:
         {
             return pointDisplacement_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const displacementMotionSolver&) = delete;
 };
 
 

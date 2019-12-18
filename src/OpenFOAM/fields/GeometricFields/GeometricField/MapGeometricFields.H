@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,6 +151,83 @@ void MapGeometricFields
                 << " since originating mesh differs from that of mapper."
                 << endl;
         }
+    }
+}
+
+
+template<class GeoField>
+void AddPatchFields
+(
+    objectRegistry& obr,
+    const label insertPatchi,
+    const dictionary& patchFieldDict,
+    const word& defaultPatchFieldType,
+    const typename GeoField::value_type& defaultPatchValue
+)
+{
+    HashTable<GeoField*> flds(obr.lookupClass<GeoField>());
+
+    const wordList fldNames(flds.sortedToc());
+
+    forAll(fldNames, i)
+    {
+        GeoField& fld = *flds[fldNames[i]];
+
+        typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
+
+        if (bfld.size() != fld.mesh().boundary().size())
+        {
+            FatalErrorInFunction << "bfld size:" << bfld.size()
+                << " mesh size:" << fld.mesh().boundary().size()
+                << exit(FatalError);
+        }
+
+        if (patchFieldDict.found(fld.name()))
+        {
+            bfld.set
+            (
+                insertPatchi,
+                GeoField::Patch::New
+                (
+                    fld.mesh().boundary()[insertPatchi],
+                    fld(),
+                    patchFieldDict.subDict(fld.name())
+                )
+            );
+        }
+        else
+        {
+            bfld.set
+            (
+                insertPatchi,
+                GeoField::Patch::New
+                (
+                    defaultPatchFieldType,
+                    fld.mesh().boundary()[insertPatchi],
+                    fld()
+                )
+            );
+            bfld[insertPatchi] == defaultPatchValue;
+        }
+    }
+}
+
+
+template<class GeoField>
+void ReorderPatchFields
+(
+    objectRegistry& obr,
+    const labelUList& newToOld
+)
+{
+    HashTable<GeoField*> flds(obr.lookupClass<GeoField>());
+    const wordList fldNames(flds.sortedToc());
+    forAll(fldNames, i)
+    {
+        GeoField& fld = *flds[fldNames[i]];
+        typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
+
+        bfld.shuffle(newToOld);
     }
 }
 

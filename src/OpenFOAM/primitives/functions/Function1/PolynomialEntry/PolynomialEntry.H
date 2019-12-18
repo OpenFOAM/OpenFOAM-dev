@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::Polynomial
+    Foam::Function1s::Polynomial
 
 Description
     PolynomialEntry container data entry for scalars. Items are stored in a
@@ -53,7 +53,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -63,21 +63,15 @@ namespace Function1Types
 template<class Type>
 class Polynomial
 :
-    public Function1<Type>
+    public FieldFunction1<Type, Polynomial<Type>>
 {
-    // Private data
+    // Private Data
 
         //- Polynomial coefficients - list of prefactor, exponent
         List<Tuple2<Type, Type>> coeffs_;
 
         //- Flag to indicate whether poly can be integrated
         bool canIntegrate_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const Polynomial<Type>&);
 
 
 public:
@@ -107,12 +101,6 @@ public:
 
     // Member Functions
 
-        // Manipulation
-
-            //- Convert time
-            virtual void convertTimeBase(const Time& t);
-
-
         // Evaluation
 
             //- Return Polynomial value
@@ -124,12 +112,18 @@ public:
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Polynomial<Type>&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

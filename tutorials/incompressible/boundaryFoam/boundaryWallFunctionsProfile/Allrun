@@ -61,6 +61,8 @@ gnuplot<<EOF
     k=0.41
     E=9.8
     f(t) = t + 1/E*(exp(k*t) - 1 - k*t*(1 + 0.5*k*t) - 1/6*k*t**3)
+    set trange [0.1:2000]
+    set samples 10000
     set logscale x
     set format x "10^{%T}"
     plot f(t),t title "Spalding" with lines linetype -1, \

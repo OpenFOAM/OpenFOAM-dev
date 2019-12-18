@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,12 +46,6 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::MultiComponentPhaseModel
 )
 :
     BasePhaseModel(fluid, phaseName, index),
-    Sct_
-    (
-        "Sct",
-        dimless,
-        fluid.subDict(phaseName)
-    ),
     residualAlpha_
     (
         "residualAlpha",
@@ -159,7 +153,7 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::YiEqn(volScalarField& Yi)
       - fvm::laplacian
         (
             fvc::interpolate(alpha)
-           *fvc::interpolate(this->muEff()/Sct_),
+           *fvc::interpolate(this->alphaEff()),
             Yi
         )
      ==

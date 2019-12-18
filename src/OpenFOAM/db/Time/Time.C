@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -356,14 +356,15 @@ Foam::Time::Time
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
-    sigWriteNow_(true, *this),
-    sigStopAtWriteNow_(true, *this),
+    sigWriteNow_(writeInfoHeader, *this),
+    sigStopAtWriteNow_(writeInfoHeader, *this),
 
     writeFormat_(IOstream::ASCII),
     writeVersion_(IOstream::currentVersion),
     writeCompression_(IOstream::UNCOMPRESSED),
     graphFormat_("raw"),
     runTimeModifiable_(false),
+    cacheTemporaryObjects_(true),
 
     functionObjects_(*this, enableFunctionObjects)
 {
@@ -432,14 +433,15 @@ Foam::Time::Time
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
-    sigWriteNow_(true, *this),
-    sigStopAtWriteNow_(true, *this),
+    sigWriteNow_(writeInfoHeader, *this),
+    sigStopAtWriteNow_(writeInfoHeader, *this),
 
     writeFormat_(IOstream::ASCII),
     writeVersion_(IOstream::currentVersion),
     writeCompression_(IOstream::UNCOMPRESSED),
     graphFormat_("raw"),
     runTimeModifiable_(false),
+    cacheTemporaryObjects_(true),
 
     functionObjects_
     (
@@ -515,14 +517,15 @@ Foam::Time::Time
     purgeWrite_(0),
     writeOnce_(false),
     subCycling_(false),
-    sigWriteNow_(true, *this),
-    sigStopAtWriteNow_(true, *this),
+    sigWriteNow_(writeInfoHeader, *this),
+    sigStopAtWriteNow_(writeInfoHeader, *this),
 
     writeFormat_(IOstream::ASCII),
     writeVersion_(IOstream::currentVersion),
     writeCompression_(IOstream::UNCOMPRESSED),
     graphFormat_("raw"),
     runTimeModifiable_(false),
+    cacheTemporaryObjects_(true),
 
     functionObjects_(*this, enableFunctionObjects)
 {
@@ -600,6 +603,7 @@ Foam::Time::Time
     writeCompression_(IOstream::UNCOMPRESSED),
     graphFormat_("raw"),
     runTimeModifiable_(false),
+    cacheTemporaryObjects_(true),
 
     functionObjects_(*this, enableFunctionObjects)
 {
@@ -806,6 +810,11 @@ bool Foam::Time::run() const
         {
             functionObjects_.execute();
             functionObjects_.end();
+
+            if (cacheTemporaryObjects_)
+            {
+                cacheTemporaryObjects_ = checkCacheTemporaryObjects();
+            }
         }
     }
 
@@ -822,6 +831,11 @@ bool Foam::Time::run() const
             else
             {
                 functionObjects_.execute();
+
+                if (cacheTemporaryObjects_)
+                {
+                    cacheTemporaryObjects_ = checkCacheTemporaryObjects();
+                }
             }
         }
 

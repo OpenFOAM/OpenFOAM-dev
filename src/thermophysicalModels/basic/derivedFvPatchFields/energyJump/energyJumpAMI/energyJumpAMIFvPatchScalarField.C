@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,7 +108,6 @@ void Foam::energyJumpAMIFvPatchScalarField::updateCoeffs()
         const basicThermo& thermo = basicThermo::lookupThermo(*this);
         label patchID = patch().index();
 
-        const scalarField& pp = thermo.p().boundaryField()[patchID];
         const fixedJumpAMIFvPatchScalarField& TbPatch =
             refCast<const fixedJumpAMIFvPatchScalarField>
             (
@@ -123,7 +122,7 @@ void Foam::energyJumpAMIFvPatchScalarField::updateCoeffs()
 
         const labelUList& faceCells = this->patch().faceCells();
 
-        jump_ = thermo.he(pp, Tbp.jump(), faceCells);
+        jump_ = thermo.he(Tbp.jump(), faceCells);
     }
 
     fixedJumpAMIFvPatchField<scalar>::updateCoeffs();
@@ -133,7 +132,7 @@ void Foam::energyJumpAMIFvPatchScalarField::updateCoeffs()
 void Foam::energyJumpAMIFvPatchScalarField::write(Ostream& os) const
 {
     fixedJumpAMIFvPatchField<scalar>::write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ class string
 {
 public:
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
         static int debug;
@@ -105,6 +105,12 @@ public:
 
         //- Construct from std::string
         inline string(const std::string&);
+
+        //- Copy constructor
+        inline string(const string&);
+
+        //- Move constructor
+        inline string(string&&);
 
         //- Construct as copy of character array
         inline string(const char*);
@@ -200,6 +206,12 @@ public:
         //- Return string with trailing character removed
         string removeTrailing(const char) const;
 
+        //- Remove trailing string returning true if string changed
+        bool removeTrailing(const string&);
+
+        //- Return string with trailing string removed
+        string removeTrailing(const string&) const;
+
 
     // Member Operators
 
@@ -216,12 +228,19 @@ public:
             const size_type n
         ) const;
 
+        inline void operator=(const string&);
+        inline void operator=(string&&);
+
 
     // IOstream Operators
 
         friend Istream& operator>>(Istream&, string&);
         friend Ostream& operator<<(Ostream&, const string&);
 };
+
+
+void writeEntry(Ostream& os, const char* value);
+void writeEntry(Ostream& os, const string& value);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

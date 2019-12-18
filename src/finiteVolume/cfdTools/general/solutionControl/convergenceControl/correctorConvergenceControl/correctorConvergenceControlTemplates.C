@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,6 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "Residuals.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -30,7 +32,6 @@ void Foam::correctorConvergenceControl::getNTypeSolves
 (
     const fvMesh& mesh,
     const word& fieldName,
-    ITstream& data,
     label& n
 )
 {
@@ -38,7 +39,11 @@ void Foam::correctorConvergenceControl::getNTypeSolves
 
     if (mesh.foundObject<fieldType>(fieldName))
     {
-        const List<SolverPerformance<Type>> sp(data);
+        const DynamicList<SolverPerformance<Type>>& sp
+        (
+            Residuals<Type>::field(mesh, fieldName)
+        );
+
         n = sp.size();
     }
 }

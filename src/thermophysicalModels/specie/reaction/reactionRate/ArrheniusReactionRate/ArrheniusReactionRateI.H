@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,9 +44,9 @@ inline Foam::ArrheniusReactionRate::ArrheniusReactionRate
     const dictionary& dict
 )
 :
-    A_(readScalar(dict.lookup("A"))),
-    beta_(readScalar(dict.lookup("beta"))),
-    Ta_(readScalar(dict.lookup("Ta")))
+    A_(dict.lookup<scalar>("A")),
+    beta_(dict.lookup<scalar>("beta")),
+    Ta_(dict.lookup<scalar>("Ta"))
 {}
 
 
@@ -56,7 +56,8 @@ inline Foam::scalar Foam::ArrheniusReactionRate::operator()
 (
     const scalar p,
     const scalar T,
-    const scalarField&
+    const scalarField&,
+    const label
 ) const
 {
     scalar ak = A_;
@@ -79,7 +80,8 @@ inline Foam::scalar Foam::ArrheniusReactionRate::ddT
 (
     const scalar p,
     const scalar T,
-    const scalarField&
+    const scalarField&,
+    const label
 ) const
 {
     scalar ak = A_;
@@ -110,6 +112,7 @@ inline void Foam::ArrheniusReactionRate::dcidc
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcidc
 ) const
 {}
@@ -119,7 +122,8 @@ inline Foam::scalar Foam::ArrheniusReactionRate::dcidT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return 0;
@@ -128,9 +132,9 @@ inline Foam::scalar Foam::ArrheniusReactionRate::dcidT
 
 inline void Foam::ArrheniusReactionRate::write(Ostream& os) const
 {
-    os.writeKeyword("A") << A_ << token::END_STATEMENT << nl;
-    os.writeKeyword("beta") << beta_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Ta") << Ta_ << token::END_STATEMENT << nl;
+    writeEntry(os, "A", A_);
+    writeEntry(os, "beta", beta_);
+    writeEntry(os, "Ta", Ta_);
 }
 
 

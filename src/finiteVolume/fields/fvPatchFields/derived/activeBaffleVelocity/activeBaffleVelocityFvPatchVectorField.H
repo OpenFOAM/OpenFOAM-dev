@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         p            | pressure field name     | no          | p
-        cyclicPatch  | cylclic patch name      | yes         |
+        cyclicPatch  | cyclic patch name      | yes         |
         orientation  | 1 or -1 used to switch flow direction | yes|
         openFraction | current opatch open fraction [0-1]| yes |
         openingTime  | time taken to open the baffle | yes |
@@ -104,7 +104,7 @@ class activeBaffleVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Name of the pressure field used to calculate the force
         //  on the active baffle
@@ -176,7 +176,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         activeBaffleVelocityFvPatchVectorField
         (
             const activeBaffleVelocityFvPatchVectorField&
@@ -191,7 +191,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         activeBaffleVelocityFvPatchVectorField
         (
             const activeBaffleVelocityFvPatchVectorField&,
@@ -211,7 +211,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Mapping functions
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,19 +71,19 @@ dynamicAlphaContactAngleFvPatchScalarField
 )
 :
     alphaContactAngleFvPatchScalarField(p, iF, dict),
-    theta0_(readScalar(dict.lookup("theta0"))),
-    uTheta_(readScalar(dict.lookup("uTheta"))),
+    theta0_(dict.lookup<scalar>("theta0")),
+    uTheta_(dict.lookup<scalar>("uTheta")),
     thetaA_
     (
         dict.found("thetaA")
-      ? readScalar(dict.lookup("thetaA"))
-      : readScalar(dict.lookup("thetaRec"))
+      ? dict.lookup<scalar>("thetaA")
+      : dict.lookup<scalar>("thetaRec")
     ),
     thetaR_
     (
         dict.found("thetaR")
-      ? readScalar(dict.lookup("thetaR"))
-      : readScalar(dict.lookup("thetaAdv"))
+      ? dict.lookup<scalar>("thetaR")
+      : dict.lookup<scalar>("thetaAdv")
     )
 {
     evaluate();
@@ -156,11 +156,11 @@ Foam::dynamicAlphaContactAngleFvPatchScalarField::theta
 void Foam::dynamicAlphaContactAngleFvPatchScalarField::write(Ostream& os) const
 {
     alphaContactAngleFvPatchScalarField::write(os);
-    os.writeKeyword("theta0") << theta0_ << token::END_STATEMENT << nl;
-    os.writeKeyword("uTheta") << uTheta_ << token::END_STATEMENT << nl;
-    os.writeKeyword("thetaA") << thetaA_ << token::END_STATEMENT << nl;
-    os.writeKeyword("thetaR") << thetaR_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "theta0", theta0_);
+    writeEntry(os, "uTheta", uTheta_);
+    writeEntry(os, "thetaA", thetaA_);
+    writeEntry(os, "thetaR", thetaR_);
+    writeEntry(os, "value", *this);
 }
 
 

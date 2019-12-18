@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,6 +63,7 @@ Foam::phaseChangeTwoPhaseMixture::vDotAlphal() const
     );
 }
 
+
 Foam::Pair<Foam::tmp<Foam::volScalarField>>
 Foam::phaseChangeTwoPhaseMixture::vDotP() const
 {
@@ -70,6 +71,12 @@ Foam::phaseChangeTwoPhaseMixture::vDotP() const
     Pair<tmp<volScalarField>> mDotP = this->mDotP();
 
     return Pair<tmp<volScalarField>>(pCoeff*mDotP[0], pCoeff*mDotP[1]);
+}
+
+
+void Foam::phaseChangeTwoPhaseMixture::correct()
+{
+    immiscibleIncompressibleTwoPhaseMixture::correct();
 }
 
 

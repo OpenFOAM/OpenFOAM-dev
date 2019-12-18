@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,7 +103,7 @@ class systemCall
 {
 protected:
 
-    // Private data
+    // Private Data
 
         //- List of calls to execute - every step
         stringList executeCalls_;
@@ -113,17 +113,6 @@ protected:
 
         //- List of calls to execute - write steps
         stringList writeCalls_;
-
-
-private:
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        systemCall(const systemCall&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const systemCall&);
 
 
 public:
@@ -141,6 +130,9 @@ public:
             const Time& runTime,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        systemCall(const systemCall&) = delete;
 
 
     //- Destructor
@@ -160,6 +152,12 @@ public:
 
         //- Write, execute the "writeCalls"
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const systemCall&) = delete;
 };
 
 

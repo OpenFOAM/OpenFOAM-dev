@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,14 +64,6 @@ class removeEntry
 :
     public functionEntry
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        removeEntry(const removeEntry&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const removeEntry&);
-
 
 public:
 
@@ -79,10 +71,22 @@ public:
     ClassName("remove");
 
 
+    // Constructors
+
+        //- Disallow default bitwise copy construction
+        removeEntry(const removeEntry&) = delete;
+
+
     // Member Functions
 
         //- Execute the functionEntry in a sub-dict context
         static bool execute(dictionary& parentDict, Istream&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const removeEntry&) = delete;
 };
 
 

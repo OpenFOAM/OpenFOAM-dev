@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "Time.H"
 #include "transformField.H"
-#include "fvMesh.H"
+#include "dynamicMotionSolverFvMesh.H"
 #include "displacementMotionSolver.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -94,12 +94,13 @@ void surfaceDisplacementPointPatchVectorField::calcProjection
             << endl;
     }
 
-    // Get the starting locations from the motionSolver
-    const pointField& points0 = mesh.lookupObject<displacementMotionSolver>
-    (
-        "dynamicMeshDict"
-    ).points0();
+    // Get the motionSolver from the dynamic mesh
+    const motionSolver& motion =
+        refCast<const dynamicMotionSolverFvMesh>(mesh).motion();
 
+    // Get the starting locations from the motionSolver
+    const pointField& points0 =
+        refCast<const displacementMotionSolver>(motion).points0();
 
     pointField start(meshPoints.size());
     forAll(start, i)
@@ -472,20 +473,14 @@ void surfaceDisplacementPointPatchVectorField::updateCoeffs()
 void surfaceDisplacementPointPatchVectorField::write(Ostream& os) const
 {
     fixedValuePointPatchVectorField::write(os);
-    os.writeKeyword("velocity") << velocity_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("geometry") << surfacesDict_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("projectMode") << projectModeNames_[projectMode_]
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("projectDirection") << projectDir_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("wedgePlane") << wedgePlane_
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "velocity", velocity_);
+    writeEntry(os, "geometry", surfacesDict_);
+    writeEntry(os, "projectMode", projectModeNames_[projectMode_]);
+    writeEntry(os, "projectDirection", projectDir_);
+    writeEntry(os, "wedgePlane", wedgePlane_);
     if (frozenPointsZone_ != word::null)
     {
-        os.writeKeyword("frozenPointsZone") << frozenPointsZone_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "frozenPointsZone", frozenPointsZone_);
     }
 }
 

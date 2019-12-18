@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     Selector class for finite volume differencing schemes.
-    fvMesh is derived from fvShemes so that all fields have access to the
+    fvMesh is derived from fvSchemes so that all fields have access to the
     fvSchemes from the mesh reference they hold.
 
 SourceFiles
@@ -52,7 +52,7 @@ class fvSchemes
 :
     public IOdictionary
 {
-    // Private data
+    // Private Data
 
         dictionary ddtSchemes_;
         ITstream defaultDdtScheme_;
@@ -91,12 +91,6 @@ class fvSchemes
         //- Read settings from the dictionary
         void read(const dictionary&);
 
-        //- Disallow default bitwise copy construct
-        fvSchemes(const fvSchemes&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvSchemes&);
-
 
 public:
 
@@ -108,6 +102,9 @@ public:
 
         //- Construct for objectRegistry
         fvSchemes(const objectRegistry& obr);
+
+        //- Disallow default bitwise copy construction
+        fvSchemes(const fvSchemes&) = delete;
 
 
     // Member Functions
@@ -151,6 +148,12 @@ public:
 
             //- Read the fvSchemes
             bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvSchemes&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,17 +24,30 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Henry.H"
+#include "phasePair.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace interfaceCompositionModels
+{
+    defineTypeNameAndDebug(Henry, 0);
+    addToRunTimeSelectionTable(interfaceCompositionModel, Henry, dictionary);
+}
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Thermo, class OtherThermo>
-Foam::interfaceCompositionModels::Henry<Thermo, OtherThermo>::Henry
+Foam::interfaceCompositionModels::Henry::Henry
 (
     const dictionary& dict,
     const phasePair& pair
 )
 :
-    InterfaceCompositionModel<Thermo, OtherThermo>(dict, pair),
+    interfaceCompositionModel(dict, pair),
     k_(dict.lookup("k")),
     YSolvent_
     (
@@ -48,7 +61,7 @@ Foam::interfaceCompositionModels::Henry<Thermo, OtherThermo>::Henry
         dimensionedScalar(dimless, 1)
     )
 {
-    if (k_.size() != this->speciesNames_.size())
+    if (k_.size() != species().size())
     {
         FatalErrorInFunction
             << "Differing number of species and solubilities"
@@ -59,58 +72,47 @@ Foam::interfaceCompositionModels::Henry<Thermo, OtherThermo>::Henry
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Thermo, class OtherThermo>
-Foam::interfaceCompositionModels::Henry<Thermo, OtherThermo>::~Henry()
+Foam::interfaceCompositionModels::Henry::~Henry()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class Thermo, class OtherThermo>
-void Foam::interfaceCompositionModels::Henry<Thermo, OtherThermo>::update
-(
-    const volScalarField& Tf
-)
+void Foam::interfaceCompositionModels::Henry::update(const volScalarField& Tf)
 {
     YSolvent_ = scalar(1);
 
-    forAllConstIter(hashedWordList, this->speciesNames_, iter)
+    forAllConstIter(hashedWordList, species(), iter)
     {
         YSolvent_ -= Yf(*iter, Tf);
     }
 }
 
 
-template<class Thermo, class OtherThermo>
-Foam::tmp<Foam::volScalarField>
-Foam::interfaceCompositionModels::Henry<Thermo, OtherThermo>::Yf
+Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModels::Henry::Yf
 (
     const word& speciesName,
     const volScalarField& Tf
 ) const
 {
-    if (this->speciesNames_.contains(speciesName))
+    if (species().contains(speciesName))
     {
-        const label index = this->speciesNames_[speciesName];
+        const label index = species()[speciesName];
 
         return
             k_[index]
-           *this->otherThermo_.composition().Y(speciesName)
-           *this->otherThermo_.rhoThermo::rho()
-           /this->thermo_.rhoThermo::rho();
+           *otherComposition().Y(speciesName)
+           *otherThermo().rho()
+           /thermo().rho();
     }
     else
     {
-        return
-            YSolvent_
-           *this->thermo_.composition().Y(speciesName);
+        return YSolvent_*composition().Y(speciesName);
     }
 }
 
 
-template<class Thermo, class OtherThermo>
-Foam::tmp<Foam::volScalarField>
-Foam::interfaceCompositionModels::Henry<Thermo, OtherThermo>::YfPrime
+Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModels::Henry::YfPrime
 (
     const word& speciesName,
     const volScalarField& Tf
@@ -118,8 +120,8 @@ Foam::interfaceCompositionModels::Henry<Thermo, OtherThermo>::YfPrime
 {
     return volScalarField::New
     (
-        IOobject::groupName("YfPrime", this->pair_.name()),
-        this->pair_.phase1().mesh(),
+        IOobject::groupName("YfPrime", pair().name()),
+        pair().phase1().mesh(),
         dimensionedScalar(dimless/dimTemperature, 0)
     );
 }

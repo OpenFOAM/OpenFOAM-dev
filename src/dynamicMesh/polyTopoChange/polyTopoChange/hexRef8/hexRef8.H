@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ class mapDistributePolyMesh;
 
 class hexRef8
 {
-    // Private data
+    // Private Data
 
         //- Reference to underlying mesh.
         const polyMesh& mesh_;
@@ -336,13 +336,6 @@ class hexRef8
             ) const;
 
 
-        //- Disallow default bitwise copy construct
-        hexRef8(const hexRef8&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const hexRef8&);
-
-
 public:
 
     //- Runtime type information
@@ -376,6 +369,9 @@ public:
             const labelList& pointLevel,
             const scalar level0Edge = -great
         );
+
+        //- Disallow default bitwise copy construction
+        hexRef8(const hexRef8&) = delete;
 
 
     // Member Functions
@@ -566,8 +562,13 @@ public:
             void setInstance(const fileName& inst);
 
             //- Force writing refinement+history to polyMesh directory.
-            bool write(const bool valid = true) const;
+            bool write(const bool write = true) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const hexRef8&) = delete;
 };
 
 

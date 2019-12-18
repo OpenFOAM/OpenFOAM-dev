@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ class fileControl
 :
     public cellSizeAndAlignmentControl
 {
-    // Private data
+    // Private Data
 
         const fileName pointsFile_;
 
@@ -59,15 +59,6 @@ class fileControl
         const fileName alignmentsFile_;
 
         label maxPriority_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        fileControl(const fileControl&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fileControl&);
 
 
 public:
@@ -89,6 +80,10 @@ public:
             const scalar& defaultCellSize
         );
 
+        //- Disallow default bitwise copy construction
+        fileControl(const fileControl&) = delete;
+
+
     //- Destructor
     ~fileControl();
 
@@ -97,27 +92,11 @@ public:
 
         // Access
 
-
-        // Query
-
-//            //- Return the cell size at the given location
-//            virtual scalar cellSize(const point& pt) const;
-//
-//            //- Return the cell alignment at the given location
-//            virtual tensor cellAlignment(const point& pt) const;
-//
-//            virtual void cellSizeAndAlignment
-//            (
-//                const point& pt,
-//                scalar& size,
-//                tensor& alignment
-//            ) const;
-
-
             virtual label maxPriority() const
             {
                 return maxPriority_;
             }
+
 
         // Edit
 
@@ -133,6 +112,12 @@ public:
                 scalarField& sizes,
                 triadField& alignments
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fileControl&) = delete;
 };
 
 

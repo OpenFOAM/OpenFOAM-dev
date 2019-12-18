@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,22 +51,9 @@ bool Foam::entry::getKeyword(keyType& keyword, token& keywordToken, Istream& is)
     }
     while (keywordToken == token::END_STATEMENT);
 
-    // If the token is a valid keyword set 'keyword' return true...
-    if (keywordToken.isWord())
-    {
-        keyword = keywordToken.wordToken();
-        return true;
-    }
-    else if (keywordToken.isString())
-    {
-        // Enable wildcards
-        keyword = keywordToken.stringToken();
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    keyword = keywordToken;
+
+    return !keyword.isUndefined();
 }
 
 
@@ -151,9 +138,8 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
     }
     else  // Keyword starts entry ...
     {
-        if (keyword[0] == '#')      // ... Function entry
+        if (keyword.isFunctionName())      // ... Function entry
         {
-            word functionName = keyword(1, keyword.size()-1);
             if (disableFunctionEntries)
             {
                 return parentDict.add
@@ -169,13 +155,14 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
             }
             else
             {
+                const word functionName = keyword(1, keyword.size() - 1);
                 return functionEntry::execute(functionName, parentDict, is);
             }
         }
         else if
         (
            !disableFunctionEntries
-         && keyword[0] == '$'
+         && keyword.isVariable()
         )                           // ... Substitution entry
         {
             token nextToken(is);
@@ -186,18 +173,19 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
                 // Recursive substitution mode. Replace between {} with
                 // expansion and then let standard variable expansion deal
                 // with rest.
-                string s(keyword(2, keyword.size()-3));
+                string s(keyword(2, keyword.size() - 3));
+
                 // Substitute dictionary and environment variables. Do not allow
                 // empty substitutions.
                 stringOps::inplaceExpand(s, parentDict, true, false);
-                keyword.std::string::replace(1, keyword.size()-1, s);
+                keyword.std::string::replace(1, keyword.size() - 1, s);
             }
 
             if (nextToken == token::BEGIN_BLOCK)
             {
-                word varName = keyword(1, keyword.size()-1);
+                word varName = keyword(1, keyword.size() - 1);
 
-                // lookup the variable name in the given dictionary
+                // Lookup the variable name in the given dictionary
                 const entry* ePtr = parentDict.lookupScopedEntryPtr
                 (
                     varName,
@@ -232,14 +220,6 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
 
             return true;
         }
-        else if
-        (
-           !disableFunctionEntries
-         && keyword == "include"
-        )                           // ... For backward compatibility
-        {
-            return functionEntries::includeEntry::execute(parentDict, is);
-        }
         else                        // ... Data entries
         {
             token nextToken(is);
@@ -248,49 +228,56 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
             // Deal with duplicate entries
             bool mergeEntry = false;
 
-            // See (using exact match) if entry already present
-            entry* existingPtr = parentDict.lookupEntryPtr
-            (
-                keyword,
-                false,
-                false
-            );
-
-            if (existingPtr)
+            // If function entries are disabled allow duplicate entries
+            if (disableFunctionEntries)
             {
-                if (functionEntries::inputModeEntry::merge())
-                {
-                    mergeEntry = true;
-                }
-                else if (functionEntries::inputModeEntry::overwrite())
-                {
-                    // clear dictionary so merge acts like overwrite
-                    if (existingPtr->isDict())
-                    {
-                        existingPtr->dict().clear();
-                    }
-                    mergeEntry = true;
-                }
-                else if (functionEntries::inputModeEntry::protect())
-                {
-                    // read and discard the entry
-                    if (nextToken == token::BEGIN_BLOCK)
-                    {
-                        dictionaryEntry dummy(keyword, parentDict, is);
-                    }
-                    else
-                    {
-                        primitiveEntry  dummy(keyword, parentDict, is);
-                    }
-                    return true;
-                }
-                else if (functionEntries::inputModeEntry::error())
-                {
-                    FatalIOErrorInFunction(is)
-                        << "ERROR! duplicate entry: " << keyword
-                        << exit(FatalIOError);
+                mergeEntry = false;
+            }
+            else
+            {
+                // See (using exact match) if entry already present
+                entry* existingPtr = parentDict.lookupEntryPtr
+                (
+                    keyword,
+                    false,
+                    false
+                );
 
-                    return false;
+                if (existingPtr)
+                {
+                    if (functionEntries::inputModeEntry::merge())
+                    {
+                        mergeEntry = true;
+                    }
+                    else if (functionEntries::inputModeEntry::overwrite())
+                    {
+                        // Clear dictionary so merge acts like overwrite
+                        if (existingPtr->isDict())
+                        {
+                            existingPtr->dict().clear();
+                        }
+                        mergeEntry = true;
+                    }
+                    else if (functionEntries::inputModeEntry::protect())
+                    {
+                        // Read and discard the entry
+                        if (nextToken == token::BEGIN_BLOCK)
+                        {
+                            dictionaryEntry dummy(keyword, parentDict, is);
+                        }
+                        else
+                        {
+                            primitiveEntry  dummy(keyword, parentDict, is);
+                        }
+                        return true;
+                    }
+                    else if (functionEntries::inputModeEntry::error())
+                    {
+                        FatalIOErrorInFunction(is)
+                            << "ERROR! duplicate entry: " << keyword
+                            << exit(FatalIOError);
+                        return false;
+                    }
                 }
             }
 

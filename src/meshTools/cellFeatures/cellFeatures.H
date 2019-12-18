@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ class primitiveMesh;
 
 class cellFeatures
 {
-    // Private data
+    // Private Data
 
         const primitiveMesh& mesh_;
 
@@ -105,12 +105,6 @@ class cellFeatures
         void calcSuperFaces() const;
 
 
-        //- Disallow default bitwise copy construct
-        cellFeatures(const cellFeatures&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellFeatures&);
-
 public:
 
     // Constructors
@@ -122,6 +116,9 @@ public:
             const scalar minCos,    // angle to use for feature recognition.
             const label celli
         );
+
+        //- Disallow default bitwise copy construction
+        cellFeatures(const cellFeatures&) = delete;
 
 
     //- Destructor
@@ -175,6 +172,11 @@ public:
             //  point
             bool isFeatureVertex(const label facei, const label vertI) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellFeatures&) = delete;
 };
 
 

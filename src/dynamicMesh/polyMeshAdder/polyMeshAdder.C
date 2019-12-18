@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,9 @@ License
 #include "polyModifyFace.H"
 #include "polyRemovePoint.H"
 #include "polyTopoChange.H"
+
+#include "pointMesh.H"
+#include "facePointPatch.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -303,7 +306,7 @@ Foam::List<Foam::polyPatch*> Foam::polyMeshAdder::combinePatches
 
     allPatches.shrink();
 
-    return allPatches;
+    return move(allPatches);
 }
 
 
@@ -1650,10 +1653,10 @@ Foam::autoPtr<Foam::polyMesh> Foam::polyMeshAdder::add
         new polyMesh
         (
             io,
-            xferMove(allPoints),
-            xferMove(allFaces),
-            xferMove(allOwner),
-            xferMove(allNeighbour)
+            move(allPoints),
+            move(allFaces),
+            move(allOwner),
+            move(allNeighbour)
         )
     );
     polyMesh& mesh = tmesh();
@@ -1813,11 +1816,8 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::polyMeshAdder::add
 
     // Inplace extend mesh0 patches (note that patches0.size() now also
     // has changed)
-    polyBoundaryMesh& allPatches =
-        const_cast<polyBoundaryMesh&>(mesh0.boundaryMesh());
-    allPatches.setSize(allPatchNames.size());
-    labelList patchSizes(allPatches.size());
-    labelList patchStarts(allPatches.size());
+    labelList patchSizes(allPatchNames.size());
+    labelList patchStarts(allPatchNames.size());
 
     label startFacei = nInternalFaces;
 
@@ -1830,7 +1830,7 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::polyMeshAdder::add
         // Originates from mesh0. Clone with new size & filter out empty
         // patch.
 
-        if (nFaces[patch0] == 0 && isA<processorPolyPatch>(allPatches[patch0]))
+        if (nFaces[patch0] == 0 && isA<processorPolyPatch>(patches0[patch0]))
         {
             // Pout<< "Removing zero sized mesh0 patch "
             //     << allPatchNames[patch0]
@@ -1845,20 +1845,6 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::polyMeshAdder::add
         }
         else
         {
-            // Clone. Note dummy size and start. Gets overwritten later in
-            // resetPrimitives. This avoids getting temporarily illegal
-            // SubList construction in polyPatch.
-            allPatches.set
-            (
-                allPatchi,
-                allPatches[patch0].clone
-                (
-                    allPatches,
-                    allPatchi,
-                    0,          // dummy size
-                    0           // dummy start
-                )
-            );
             patchSizes[allPatchi] = nFaces[patch0];
             patchStarts[allPatchi] = startFacei;
 
@@ -1875,6 +1861,22 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::polyMeshAdder::add
 
             allPatchi++;
         }
+    }
+
+    // Trim the existing patches
+    {
+        const label sz0 = from0ToAllPatches.size();
+        labelList newToOld(sz0, sz0-1);
+        label nNew = 0;
+        forAll(from0ToAllPatches, patchi)
+        {
+            if (from0ToAllPatches[patchi] != -1)
+            {
+                newToOld[nNew++] = patchi;
+            }
+        }
+        newToOld.setSize(nNew);
+        mesh0.reorderPatches(newToOld, false);
     }
 
     // Copy unique patches of mesh1.
@@ -1898,20 +1900,20 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::polyMeshAdder::add
             }
             else
             {
-                // Clone.
-                allPatches.set
-                (
-                    allPatchi,
-                    patches1[patch1].clone
-                    (
-                        allPatches,
-                        allPatchi,
-                        0,          // dummy size
-                        0           // dummy start
-                    )
-                );
                 patchSizes[allPatchi] = nFaces[uncompactAllPatchi];
                 patchStarts[allPatchi] = startFacei;
+
+                // Clone. Note dummy size and start. Gets overwritten later in
+                // resetPrimitives. This avoids getting temporarily illegal
+                // SubList construction in polyPatch.
+                mesh0.addPatch
+                (
+                    allPatchi,
+                    patches1[patch1],
+                    dictionary(),
+                    "calculated",
+                    false
+                );
 
                 // Record new index in allPatches
                 from1ToAllPatches[patch1] = allPatchi;
@@ -1922,8 +1924,6 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::polyMeshAdder::add
             }
         }
     }
-
-    allPatches.setSize(allPatchi);
     patchSizes.setSize(allPatchi);
     patchStarts.setSize(allPatchi);
 
@@ -1967,10 +1967,10 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::polyMeshAdder::add
     mesh0.resetMotion();    // delete any oldPoints.
     mesh0.resetPrimitives
     (
-        xferMove(allPoints),
-        xferMove(allFaces),
-        xferMove(allOwner),
-        xferMove(allNeighbour),
+        move(allPoints),
+        move(allFaces),
+        move(allOwner),
+        move(allNeighbour),
         patchSizes,     // size
         patchStarts,    // patchstarts
         validBoundary   // boundary valid?

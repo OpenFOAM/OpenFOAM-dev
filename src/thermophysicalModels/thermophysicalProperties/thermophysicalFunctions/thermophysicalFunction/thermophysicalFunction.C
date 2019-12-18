@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "thermophysicalFunction.H"
-#include "HashTable.H"
+#include "noneThermophysicalFunction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -39,7 +39,8 @@ namespace Foam
 
 Foam::autoPtr<Foam::thermophysicalFunction> Foam::thermophysicalFunction::New
 (
-    const dictionary& dict
+    const dictionary& dict,
+    const word& name
 )
 {
     if (debug)
@@ -49,23 +50,56 @@ Foam::autoPtr<Foam::thermophysicalFunction> Foam::thermophysicalFunction::New
             << endl;
     }
 
-    const word thermophysicalFunctionType(dict.lookup("functionType"));
+    if (dict.isDict(name))
+    {
+        const dictionary& funcDict(dict.subDict(name));
+        const word thermophysicalFunctionType(funcDict.lookup("type"));
 
-    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(thermophysicalFunctionType);
 
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
-    {
-        FatalErrorInFunction
-            << "Unknown thermophysicalFunction type "
-            << thermophysicalFunctionType
-            << nl << nl
-            << "Valid thermophysicalFunction types are :" << endl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << abort(FatalError);
-    }
+        if (cstrIter == dictionaryConstructorTablePtr_->end())
+        {
+            FatalErrorInFunction
+                << "Unknown thermophysicalFunction type "
+                << thermophysicalFunctionType
+                << nl << nl
+                << "Valid thermophysicalFunction types are :" << endl
+                << dictionaryConstructorTablePtr_->sortedToc()
+                << abort(FatalError);
+        }
 
-    return autoPtr<thermophysicalFunction>(cstrIter()(dict));
+        return autoPtr<thermophysicalFunction>(cstrIter()(funcDict));
+    }
+    else
+    {
+        return autoPtr<thermophysicalFunction>
+        (
+            new thermophysicalFunctions::none(dict.name()/name)
+        );
+    }
+}
+
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::thermophysicalFunction::write(Ostream& os, const word& name) const
+{
+    os << nl;
+    writeKeyword(os, name)
+        << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
+    write(os);
+    os << decrIndent << indent << token::END_BLOCK << endl;
+}
+
+
+// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
+
+Foam::Ostream& Foam::operator<<(Ostream& os, const thermophysicalFunction& f)
+{
+    f.write(os);
+    return os;
 }
 
 

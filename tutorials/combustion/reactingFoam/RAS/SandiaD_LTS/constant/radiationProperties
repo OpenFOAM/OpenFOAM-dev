@@ -20,17 +20,12 @@ radiation on;
 
 radiationModel  P1;
 
-P1Coeffs
-{
-    C               C [0 0 0 0 0 0 0] 0;
-}
-
 // Number of flow iterations per radiation iteration
 solverFreq 1;
 
-absorptionEmissionModel greyMeanAbsorptionEmission;
+absorptionEmissionModel greyMeanCombustion;
 
-greyMeanAbsorptionEmissionCoeffs
+greyMeanCombustionCoeffs
 {
     lookUpTableFileName      none;
 
@@ -39,7 +34,7 @@ greyMeanAbsorptionEmissionCoeffs
     CO2
     {
         Tcommon         200;   // Common Temp
-        invTemp         true;   // Is the polynomio using inverse temperature.
+        invTemp         true;   // Is the polynomial using inverse temperature.
         Tlow            200;   // Low Temp
         Thigh           2500;  // High Temp
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,18 +51,9 @@ class layeredEngineMesh
 :
     public engineMesh
 {
-    // Private data
+    // Private Data
 
         dimensionedScalar pistonLayers_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        layeredEngineMesh(const layeredEngineMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const layeredEngineMesh&);
 
 
 public:
@@ -76,6 +67,9 @@ public:
         //- Construct from IOobject
         layeredEngineMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        layeredEngineMesh(const layeredEngineMesh&) = delete;
+
 
     //- Destructor
     ~layeredEngineMesh();
@@ -86,6 +80,12 @@ public:
         // Edit
 
             void move();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const layeredEngineMesh&) = delete;
 };
 
 

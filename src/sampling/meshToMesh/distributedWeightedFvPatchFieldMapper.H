@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,15 +48,39 @@ class distributedWeightedFvPatchFieldMapper
 :
     public fvPatchFieldMapper
 {
-    const label singlePatchProc_;
+    // Private Data
 
-    const mapDistributeBase* distMapPtr_;
+        const label singlePatchProc_;
 
-    const labelListList& addressing_;
+        const mapDistributeBase* distMapPtr_;
 
-    const scalarListList& weights_;
+        const labelListList& addressing_;
 
-    bool hasUnmapped_;
+        const scalarListList& weights_;
+
+        bool hasUnmapped_;
+
+
+    // Private Member Functions
+
+        label size() const
+        {
+            if (singlePatchProc_ == -1)
+            {
+                return distMapPtr_->constructSize();
+            }
+            else
+            {
+                return addressing().size();
+            }
+        }
+
+        template<class Type>
+        void map(Field<Type>& f, const Field<Type>& mapF) const;
+
+        template<class Type>
+        tmp<Field<Type>> map(const Field<Type>& f) const;
+
 
 public:
 
@@ -99,6 +123,7 @@ public:
             }
         }
 
+
     //- Destructor
     virtual ~distributedWeightedFvPatchFieldMapper()
     {}
@@ -106,62 +131,91 @@ public:
 
     // Member Functions
 
-        virtual label size() const
-        {
-            if (distributed())
-            {
-                return distributeMap().constructSize();
-            }
-            else
-            {
-                return addressing().size();
-            }
-        }
-
-        virtual bool direct() const
-        {
-            return false;
-        }
-
-        virtual bool distributed() const
-        {
-            return singlePatchProc_ == -1;
-        }
-
-        virtual const mapDistributeBase& distributeMap() const
-        {
-            if (!distMapPtr_)
-            {
-                FatalErrorIn
-                (
-                    "distributedWeightedFvPatchFieldMapper::"
-                    "distributeMap()"
-                )   << "Cannot ask for distributeMap on a non-distributed"
-                    << " mapper" << exit(FatalError);
-            }
-            return *distMapPtr_;
-        }
-
         virtual bool hasUnmapped() const
         {
             return hasUnmapped_;
         }
 
-        virtual const labelListList& addressing() const
-        {
-            return addressing_;
-        }
+        virtual const labelListList& addressing() const;
 
-        virtual const scalarListList& weights() const
-        {
-            return weights_;
-        }
+        virtual const scalarListList& weights() const;
 
+
+    // Member Operators
+
+        virtual void operator()
+        (
+            Field<scalar>& f,
+            const Field<scalar>& mapF
+        ) const;
+
+        virtual void operator()
+        (
+            Field<vector>& f,
+            const Field<vector>& mapF
+        ) const;
+
+        virtual void operator()
+        (
+            Field<sphericalTensor>& f,
+            const Field<sphericalTensor>& mapF
+        ) const;
+
+        virtual void operator()
+        (
+            Field<symmTensor>& f,
+            const Field<symmTensor>& mapF
+        ) const;
+
+        virtual void operator()
+        (
+            Field<tensor>& f,
+            const Field<tensor>& mapF
+        ) const;
+
+        template<class Type>
+        void operator()(Field<Type>& f, const tmp<Field<Type>>& tmapF) const;
+
+
+        virtual tmp<Field<scalar>> operator()
+        (
+            const Field<scalar>& mapF
+        ) const;
+
+        virtual tmp<Field<vector>> operator()
+        (
+            const Field<vector>& mapF
+        ) const;
+
+        virtual tmp<Field<sphericalTensor>> operator()
+        (
+            const Field<sphericalTensor>& mapF
+        ) const;
+
+        virtual tmp<Field<symmTensor>> operator()
+        (
+            const Field<symmTensor>& mapF
+        ) const;
+
+        virtual tmp<Field<tensor>> operator()
+        (
+            const Field<tensor>& mapF
+        ) const;
+
+        template<class Type>
+        tmp<Field<Type>> operator()(const tmp<Field<Type>>& tmapF) const;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "distributedWeightedFvPatchFieldMapperTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

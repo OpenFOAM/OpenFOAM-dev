@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -3214,10 +3214,10 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::changeMesh
 
         mesh.resetPrimitives
         (
-            xferMove(renumberedMeshPoints),
-            faces_.xfer(),
-            faceOwner_.xfer(),
-            faceNeighbour_.xfer(),
+            move(renumberedMeshPoints),
+            move(faces_),
+            move(faceOwner_),
+            move(faceNeighbour_),
             patchSizes,
             patchStarts,
             syncParallel
@@ -3232,10 +3232,10 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::changeMesh
         // Set new points.
         mesh.resetPrimitives
         (
-            xferMove(newPoints),
-            faces_.xfer(),
-            faceOwner_.xfer(),
-            faceNeighbour_.xfer(),
+            move(newPoints),
+            move(faces_),
+            move(faceOwner_),
+            move(faceNeighbour_),
             patchSizes,
             patchStarts,
             syncParallel
@@ -3467,10 +3467,10 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::polyTopoChange::makeMesh
         new fvMesh
         (
             noReadIO,
-            xferMove(newPoints),
-            faces_.xfer(),
-            faceOwner_.xfer(),
-            faceNeighbour_.xfer()
+            move(newPoints),
+            move(faces_),
+            move(faceOwner_),
+            move(faceNeighbour_)
         )
     );
     fvMesh& newMesh = newMeshPtr();

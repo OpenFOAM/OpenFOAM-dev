@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::ParticleTrap<CloudType>::ParticleTrap
     ),
     alphaPtr_(nullptr),
     gradAlphaPtr_(nullptr),
-    threshold_(readScalar(this->coeffDict().lookup("threshold")))
+    threshold_(this->coeffDict().template lookup<scalar>("threshold"))
 {}
 
 

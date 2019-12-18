@@ -21,12 +21,14 @@ internalField   uniform (0 0 0);
 
 boundaryField
 {
-    sides
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    top
     {
         type            pressureInletOutletVelocity;
-        value           uniform (0 0 0);
+        value           $internalField;
     }
-    region0_to_wallFilmRegion_wallFilmFaces
+    region0_to_wallFilm_walls
     {
         type            noSlip;
     }

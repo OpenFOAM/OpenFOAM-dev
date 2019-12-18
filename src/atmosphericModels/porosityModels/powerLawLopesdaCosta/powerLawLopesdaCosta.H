@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,7 @@ class powerLawLopesdaCosta
     public powerLawLopesdaCostaZone,
     public porosityModel
 {
-    // Private data
+    // Private Data
 
         //- Cd coefficient
         scalar Cd_;
@@ -146,27 +146,26 @@ class powerLawLopesdaCosta
             const vectorField& U
         ) const;
 
-        //- Disallow default bitwise copy construct
-        powerLawLopesdaCosta(const powerLawLopesdaCosta&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const powerLawLopesdaCosta&);
-
 
 public:
 
     //- Runtime type information
     TypeName("powerLawLopesdaCosta");
 
-    //- Constructor
-    powerLawLopesdaCosta
-    (
-        const word& name,
-        const word& modelType,
-        const fvMesh& mesh,
-        const dictionary& dict,
-        const word& cellZoneName
-    );
+    // Constructors
+
+        powerLawLopesdaCosta
+        (
+            const word& name,
+            const word& modelType,
+            const fvMesh& mesh,
+            const dictionary& dict,
+            const word& cellZoneName
+        );
+
+        //- Disallow default bitwise copy construction
+        powerLawLopesdaCosta(const powerLawLopesdaCosta&) = delete;
+
 
     //- Destructor
     virtual ~powerLawLopesdaCosta();
@@ -209,7 +208,14 @@ public:
 
         //- Write
         bool writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const powerLawLopesdaCosta&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

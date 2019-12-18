@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -384,7 +384,7 @@ void Foam::slidingInterface::coupleInterface(polyTopoChange& ref) const
     // cutPointEdgePairMap
 
     // Note.  "Processing slave edges" code is repeated twice in the
-    // sliding intergace coupling in order to allow the point
+    // sliding interface coupling in order to allow the point
     // projection to be done separately from the actual cutting.
     // Please change consistently with slidingInterfaceProjectPoints.C
     //

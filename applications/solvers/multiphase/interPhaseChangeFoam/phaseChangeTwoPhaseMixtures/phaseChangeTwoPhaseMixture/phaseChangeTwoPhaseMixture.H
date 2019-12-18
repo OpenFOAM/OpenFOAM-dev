@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,6 @@ class phaseChangeTwoPhaseMixture
 :
     public immiscibleIncompressibleTwoPhaseMixture
 {
-
 protected:
 
     // Protected data
@@ -65,15 +64,6 @@ protected:
 
         //- Saturation vapour pressure
         dimensionedScalar pSat_;
-
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        phaseChangeTwoPhaseMixture(const phaseChangeTwoPhaseMixture&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const phaseChangeTwoPhaseMixture&);
 
 
 public:
@@ -97,22 +87,25 @@ public:
         );
 
 
-    // Selectors
-
-        //- Return a reference to the selected phaseChange model
-        static autoPtr<phaseChangeTwoPhaseMixture> New
-        (
-            const volVectorField& U,
-            const surfaceScalarField& phi
-        );
-
-
     // Constructors
 
         //- Construct from components
         phaseChangeTwoPhaseMixture
         (
             const word& type,
+            const volVectorField& U,
+            const surfaceScalarField& phi
+        );
+
+        //- Disallow default bitwise copy construction
+        phaseChangeTwoPhaseMixture(const phaseChangeTwoPhaseMixture&);
+
+
+    // Selectors
+
+        //- Return a reference to the selected phaseChange model
+        static autoPtr<phaseChangeTwoPhaseMixture> New
+        (
             const volVectorField& U,
             const surfaceScalarField& phi
         );
@@ -154,6 +147,12 @@ public:
 
         //- Read the transportProperties dictionary and update
         virtual bool read() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const phaseChangeTwoPhaseMixture&) = delete;
 };
 
 

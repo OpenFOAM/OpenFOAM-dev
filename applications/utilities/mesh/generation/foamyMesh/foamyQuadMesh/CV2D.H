@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ Description
     randomiseInitialGrid yes;
 
     // Perturbation fraction, 1 = cell-size.
-    randomPurturbation   0.1;
+    randomPerturbation   0.1;
 
     // Number of relaxation iterations.
     nIterations      5;
@@ -149,7 +149,7 @@ class CV2D
     //- Use the Foam::point in preference to the CGAL point
     typedef Foam::point point;
 
-    // Private data
+    // Private Data
 
         //- The time registry of the application
         const Time& runTime_;
@@ -198,13 +198,6 @@ class CV2D
 
 
     // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        CV2D(const CV2D&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const CV2D&);
-
 
         //- Insert point and return it's index
         inline label insertPoint
@@ -333,6 +326,9 @@ public:
         //- Construct for given surface
         CV2D(const Time& runTime, const dictionary& controlDict);
 
+        //- Disallow default bitwise copy construction
+        CV2D(const CV2D&) = delete;
+
 
     //- Destructor
     ~CV2D();
@@ -451,6 +447,12 @@ public:
             void writePatch(const fileName& fName) const;
 
             void write() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CV2D&) = delete;
 };
 
 

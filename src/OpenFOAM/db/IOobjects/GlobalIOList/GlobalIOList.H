@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,15 +70,18 @@ public:
         //- Construct from IOobject and a List
         GlobalIOList(const IOobject&, const List<Type>&);
 
-        //- Construct by transferring the List contents
-        GlobalIOList(const IOobject&, const Xfer<List<Type>>&);
+        //- Move construct by transferring the List contents
+        GlobalIOList(const IOobject&, List<Type>&&);
+
+        //- Move constructor
+        GlobalIOList(GlobalIOList<Type>&&);
 
 
     //- Destructor
     virtual ~GlobalIOList();
 
 
-    // Member functions
+    // Member Functions
 
         //- Is object global
         virtual bool global() const
@@ -100,11 +103,13 @@ public:
         bool writeData(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const GlobalIOList<Type>&);
+        void operator=(GlobalIOList<Type>&&);
 
         void operator=(const List<Type>&);
+        void operator=(List<Type>&&);
 };
 
 

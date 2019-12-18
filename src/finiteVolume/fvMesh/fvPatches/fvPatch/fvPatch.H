@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,22 +61,13 @@ class surfaceInterpolation;
 
 class fvPatch
 {
-    // Private data
+    // Private Data
 
         //- Reference to the underlying polyPatch
         const polyPatch& polyPatch_;
 
         //- Reference to boundary mesh
         const fvBoundaryMesh& boundaryMesh_;
-
-
-    // Private Member Functions
-
-        //- Disallow construct as copy
-        fvPatch(const fvPatch&);
-
-        //- Disallow assignment
-        void operator=(const fvPatch&);
 
 
 protected:
@@ -120,6 +111,9 @@ public:
 
         //- Construct from polyPatch and fvBoundaryMesh
         fvPatch(const polyPatch&, const fvBoundaryMesh&);
+
+        //- Disallow default bitwise copy construction
+        fvPatch(const fvPatch&);
 
 
     // Selectors
@@ -269,6 +263,12 @@ public:
                 const GeometricField* = nullptr,
                 const Type* = nullptr
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvPatch&);
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,8 +36,8 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "solidDisplacementThermo.H"
 #include "fvOptions.H"
-#include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
     #include "createMesh.H"
     #include "createControls.H"
     #include "createFields.H"
+    #include "createFieldRefs.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,12 +67,14 @@ int main(int argc, char *argv[])
 
         do
         {
-            if (thermalStress)
+            if (thermo.thermalStress())
             {
-                volScalarField& T = Tptr();
+                volScalarField& T = thermo.T();
                 fvScalarMatrix TEqn
                 (
-                    fvm::ddt(T) == fvm::laplacian(DT, T) + fvOptions(T)
+                    fvm::ddt(rho, Cp, T)
+                 == fvm::laplacian(kappa, T)
+                  + fvOptions(rho*Cp, T)
                 );
 
                 fvOptions.constrain(TEqn);
@@ -84,17 +87,16 @@ int main(int argc, char *argv[])
             {
                 fvVectorMatrix DEqn
                 (
-                    fvm::d2dt2(D)
+                    fvm::d2dt2(rho, D)
                  ==
                     fvm::laplacian(2*mu + lambda, D, "laplacian(DD,D)")
                   + divSigmaExp
-                  + fvOptions.d2dt2(D)
+                  + rho*fvOptions.d2dt2(D)
                 );
 
-                if (thermalStress)
+                if (thermo.thermalStress())
                 {
-                    const volScalarField& T = Tptr();
-                    DEqn += fvc::grad(threeKalpha*T);
+                    DEqn += fvc::grad(threeKalpha*thermo.T());
                 }
 
                 fvOptions.constrain(DEqn);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,7 @@ Class
     Foam::diameterModels::coalescenceModels::constantCoalescence
 
 Description
-    Constant coalescence kernel. Used for verification and validation of the
-    coalescence formulation implemented in the populationBalanceModel class.
+    Constant coalescence kernel.
 
 SourceFiles
     constantCoalescence.C
@@ -55,7 +54,7 @@ class constantCoalescence
 :
     public coalescenceModel
 {
-    // Private data
+    // Private Data
 
         //- constant coalescenceRate
         const dimensionedScalar rate_;

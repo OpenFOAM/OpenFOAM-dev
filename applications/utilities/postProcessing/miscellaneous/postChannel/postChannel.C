@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,12 +34,14 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
+#include "argList.H"
+#include "timeSelector.H"
+#include "volFields.H"
 #include "channelIndex.H"
 #include "makeGraph.H"
+#include "writeFile.H"
 
-#include "OSspecific.H"
-
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,7 +68,7 @@ int main(int argc, char *argv[])
         IOobject
         (
             "postChannelDict",
-            mesh.time().constant(),
+            mesh.time().system(),
             mesh,
             IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,21 +35,15 @@ Description
     where
 
     \vartable
-        epsilon | turblence dissipation field
-        G       | turblence generation field
+        epsilon | turbulence dissipation field
+        G       | turbulence generation field
     \endvartable
 
     The model switches between laminar and turbulent functions based on the
-    laminar-to-turbulent y+ value derived from kappa and E.
+    laminar-to-turbulent y+ value derived from the kappa and E specified in the
+    corresponding nutWallFunction.
 
 Usage
-    \table
-        Property     | Description             | Required    | Default value
-        Cmu          | model coefficient       | no          | 0.09
-        kappa        | Von Karman constant     | no          | 0.41
-        E            | model coefficient       | no          | 9.8
-    \endtable
-
     Example of the boundary condition specification:
     \verbatim
     <patchName>
@@ -94,18 +88,6 @@ protected:
         //- Tolerance used in weighted calculations
         static scalar tolerance_;
 
-        //- Cmu coefficient
-        scalar Cmu_;
-
-        //- Von Karman constant
-        scalar kappa_;
-
-        //- E coefficient
-        scalar E_;
-
-        //- y+ at the edge of the laminar sublayer
-        scalar yPlusLam_;
-
         //- Local copy of turbulence G field
         scalarField G_;
 
@@ -123,12 +105,6 @@ protected:
 
 
     // Protected Member Functions
-
-        //- Check the type of the patch
-        virtual void checkType();
-
-        //- Write local wall function variables
-        virtual void writeLocalEntries(Ostream&) const;
 
         //- Set the master patch - master is responsible for updating all
         //  wall function patches
@@ -203,7 +179,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         epsilonWallFunctionFvPatchScalarField
         (
             const epsilonWallFunctionFvPatchScalarField&
@@ -218,7 +194,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         epsilonWallFunctionFvPatchScalarField
         (
             const epsilonWallFunctionFvPatchScalarField&,
@@ -242,7 +218,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -270,12 +246,6 @@ public:
                 fvMatrix<scalar>& matrix,
                 const scalarField& weights
             );
-
-
-        // I-O
-
-            //- Write
-            virtual void write(Ostream&) const;
 };
 
 

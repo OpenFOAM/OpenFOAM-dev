@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ Class
 Description
     Rotor disk source
 
-    Cell based momemtum source which approximates the mean effects of
+    Cell based momentum source which approximates the mean effects of
     rotor forces on a cylindrical region within the domain.
 
 Usage
@@ -75,7 +75,7 @@ Usage
 
     Where:
     Valid options for the \c geometryMode entry include:
-    - auto          : determine rototor co-ord system from cells
+    - auto          : determine rotor co-ord system from cells
     - specified     : specified co-ord system
 
     Valid options for the \c inletFlowType entry include:
@@ -170,7 +170,7 @@ protected:
         //- Inlet flow type
         inletFlowType inletFlow_;
 
-        //- Inlet velocity for specified iinflow
+        //- Inlet velocity for specified inflow
         vector inletVelocity_;
 
         //- Tip effect [0-1]
@@ -190,7 +190,7 @@ protected:
         //- Inverse rotation tensor for flap angle
         List<tensor> invR_;
 
-        //- Area [m2]
+        //- Area [m^2]
         List<scalar> area_;
 
         //- Rotor local cylindrical co-ordinate system (r, theta, z)

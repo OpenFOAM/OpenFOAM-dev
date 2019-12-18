@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,19 +54,13 @@ class fvBoundaryMesh
 :
     public fvPatchList
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const fvMesh& mesh_;
 
 
     // Private Member Functions
-
-        //- Disallow default copy construct
-        fvBoundaryMesh(const fvBoundaryMesh&);
-
-        //- Disallow assignment
-        void operator=(const fvBoundaryMesh&);
 
         //- Add fvPatches corresponding to the given polyBoundaryMesh
         void addPatches(const polyBoundaryMesh&);
@@ -90,6 +84,9 @@ public:
 
         //- Construct from polyBoundaryMesh
         fvBoundaryMesh(const fvMesh&, const polyBoundaryMesh&);
+
+        //- Disallow default bitwise copy construction
+        fvBoundaryMesh(const fvBoundaryMesh&);
 
 
     // Member Functions
@@ -116,6 +113,12 @@ public:
         //- Correct patches after moving points
         void movePoints();
 
+        //- Reorders patches. Ordering does not have to be done in
+        //  ascending or descending order. Reordering has to be unique.
+        //  (is shuffle). If validBoundary call needs to be parallel
+        //  sync
+        void shuffle(const labelUList& newToOld, const bool validBoundary);
+
 
     // Member Operators
 
@@ -127,6 +130,12 @@ public:
 
         //- Return reference to fvPatch by name.
         fvPatch& operator[](const word&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvBoundaryMesh&);
 };
 
 

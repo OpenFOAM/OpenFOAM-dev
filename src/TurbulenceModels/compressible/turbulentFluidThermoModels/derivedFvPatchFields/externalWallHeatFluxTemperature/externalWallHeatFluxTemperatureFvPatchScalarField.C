@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ externalWallHeatFluxTemperatureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(p, iF),
-    temperatureCoupledBase(patch(), "undefined", "undefined", "undefined-K"),
+    temperatureCoupledBase(patch()),
     mode_(fixedHeatFlux),
     Q_(0),
     Ta_(),
@@ -192,24 +192,19 @@ externalWallHeatFluxTemperatureFvPatchScalarField
         }
         case fixedHeatFlux:
         {
-            q_.setSize(mapper.size());
-            q_.map(ptf.q_, mapper);
-
+            mapper(q_, ptf.q_);
             break;
         }
         case fixedHeatTransferCoeff:
         {
-            h_.setSize(mapper.size());
-            h_.map(ptf.h_, mapper);
-
+            mapper(h_, ptf.h_);
             break;
         }
     }
 
     if (qrName_ != "none")
     {
-        qrPrevious_.setSize(mapper.size());
-        qrPrevious_.map(ptf.qrPrevious_, mapper);
+        mapper(qrPrevious_, ptf.qrPrevious_);
     }
 }
 
@@ -278,13 +273,13 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::autoMap
         }
         case fixedHeatFlux:
         {
-            q_.autoMap(m);
+            m(q_, q_);
 
             break;
         }
         case fixedHeatTransferCoeff:
         {
-            h_.autoMap(m);
+            m(h_, h_);
 
             break;
         }
@@ -292,7 +287,7 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::autoMap
 
     if (qrName_ != "none")
     {
-        qrPrevious_.autoMap(m);
+        m(qrPrevious_, qrPrevious_);
     }
 }
 
@@ -343,6 +338,10 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
     }
 
     const scalarField& Tp(*this);
+
+    // Store current valueFraction and refValue for relaxation
+    const scalarField valueFraction0(valueFraction());
+    const scalarField refValue0(refValue());
 
     scalarField qr(Tp.size(), 0);
     if (qrName_ != "none")
@@ -443,8 +442,11 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
         }
     }
 
-    valueFraction() = relaxation_*valueFraction() + (1 - relaxation_);
-    refValue() = relaxation_*refValue() + (1 - relaxation_)*Tp;
+    valueFraction() =
+        relaxation_*valueFraction()
+      + (1 - relaxation_)*valueFraction0;
+
+    refValue() = relaxation_*refValue() + (1 - relaxation_)*refValue0;
 
     mixedFvPatchScalarField::updateCoeffs();
 
@@ -472,66 +474,61 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::write
 {
     fvPatchScalarField::write(os);
 
-    os.writeKeyword("mode")
-        << operationModeNames[mode_] << token::END_STATEMENT << nl;
+    writeEntry(os, "mode", operationModeNames[mode_]);
     temperatureCoupledBase::write(os);
 
     switch (mode_)
     {
         case fixedPower:
         {
-            os.writeKeyword("Q")
-                << Q_ << token::END_STATEMENT << nl;
+            writeEntry(os, "Q", Q_);
 
             break;
         }
         case fixedHeatFlux:
         {
-            q_.writeEntry("q", os);
+            writeEntry(os, "q", q_);
 
             break;
         }
         case fixedHeatTransferCoeff:
         {
-            h_.writeEntry("h", os);
-            Ta_->writeData(os);
+            writeEntry(os, "h", h_);
+            writeEntry(os, Ta_());
 
             if (relaxation_ < 1)
             {
-                os.writeKeyword("relaxation")
-                    << relaxation_ << token::END_STATEMENT << nl;
+                writeEntry(os, "relaxation", relaxation_);
             }
 
             if (emissivity_ > 0)
             {
-                os.writeKeyword("emissivity")
-                    << emissivity_ << token::END_STATEMENT << nl;
+                writeEntry(os, "emissivity", emissivity_);
             }
 
             if (thicknessLayers_.size())
             {
-                thicknessLayers_.writeEntry("thicknessLayers", os);
-                kappaLayers_.writeEntry("kappaLayers", os);
+                writeEntry(os, "thicknessLayers", thicknessLayers_);
+                writeEntry(os, "kappaLayers", kappaLayers_);
             }
 
             break;
         }
     }
 
-    os.writeKeyword("qr")<< qrName_ << token::END_STATEMENT << nl;
+    writeEntry(os, "qr", qrName_);
 
     if (qrName_ != "none")
     {
-        os.writeKeyword("qrRelaxation")
-            << qrRelaxation_ << token::END_STATEMENT << nl;
+        writeEntry(os, "qrRelaxation", qrRelaxation_);
 
-        qrPrevious_.writeEntry("qrPrevious", os);
+        writeEntry(os, "qrPrevious", qrPrevious_);
     }
 
-    refValue().writeEntry("refValue", os);
-    refGrad().writeEntry("refGradient", os);
-    valueFraction().writeEntry("valueFraction", os);
-    writeEntry("value", os);
+    writeEntry(os, "refValue", refValue());
+    writeEntry(os, "refGradient", refGrad());
+    writeEntry(os, "valueFraction", valueFraction());
+    writeEntry(os, "value", *this);
 }
 
 

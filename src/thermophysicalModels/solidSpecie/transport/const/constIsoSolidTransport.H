@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ class constIsoSolidTransport
 :
     public Thermo
 {
-    // Private data
+    // Private Data
 
         //- Constant isotropic thermal conductivity
         scalar kappa_;
@@ -97,6 +97,9 @@ public:
         //- Construct from dictionary
         constIsoSolidTransport(const dictionary& dict);
 
+        //- Construct and return a clone
+        inline autoPtr<constIsoSolidTransport> clone() const;
+
         // Selector from dictionary
         inline static autoPtr<constIsoSolidTransport> New
         (
@@ -104,7 +107,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()
@@ -115,16 +118,16 @@ public:
         //- Is the thermal conductivity isotropic
         static const bool isotropic = true;
 
-        //- Isotropic thermal conductivity [W/mK]
+        //- Isotropic thermal conductivity [W/m/K]
         inline scalar kappa(const scalar p, const scalar T) const;
 
-        //- Un-isotropic thermal conductivity [W/mK]
+        //- Un-isotropic thermal conductivity [W/m/K]
         inline vector Kappa(const scalar p, const scalar T) const;
 
-         //- Dynamic viscosity [kg/ms]
+         //- Dynamic viscosity [kg/m/s]
         inline scalar mu(const scalar p, const scalar T) const;
 
-        //- Thermal diffusivity of enthalpy [kg/ms]
+        //- Thermal diffusivity of enthalpy [kg/m/s]
         inline scalar alphah(const scalar p, const scalar T) const;
 
 
@@ -132,9 +135,8 @@ public:
         void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
-        inline void operator=(const constIsoSolidTransport&);
         inline void operator+=(const constIsoSolidTransport&);
 
 

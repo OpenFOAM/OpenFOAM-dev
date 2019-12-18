@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,10 +82,8 @@ Foam::functionObjects::MachNo::MachNo
     const dictionary& dict
 )
 :
-    fieldExpression(name, runTime, dict, "U")
-{
-    setResultName("Ma", "U");
-}
+    fieldExpression(name, runTime, dict, "Ma", "U")
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

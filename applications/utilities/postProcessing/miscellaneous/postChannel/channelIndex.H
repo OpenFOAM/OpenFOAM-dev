@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,6 @@ SourceFiles
 namespace Foam
 {
 
-
 /*---------------------------------------------------------------------------*\
                            Class channelIndex Declaration
 \*---------------------------------------------------------------------------*/
@@ -53,7 +52,7 @@ namespace Foam
 class channelIndex
 {
 
-    // Private data
+    // Private Data
 
         static const NamedEnum<vector::components, 3> vectorComponentsNames_;
 
@@ -93,10 +92,6 @@ class channelIndex
             const labelList& startFaces
         );
 
-        //- Disallow default bitwise copy construct and assignment
-        channelIndex(const channelIndex&);
-        void operator=(const channelIndex&);
-
 
 public:
 
@@ -113,6 +108,9 @@ public:
             const bool symmetric,
             const direction dir
         );
+
+        //- Disallow default bitwise copy construction
+        channelIndex(const channelIndex&) = delete;
 
 
     // Member Functions
@@ -137,6 +135,11 @@ public:
                 return y_;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const channelIndex&);
 };
 
 

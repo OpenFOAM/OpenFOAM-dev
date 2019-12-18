@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ class sampledSurfaces
         };
 
 
-    // Static data members
+    // Static Data Members
 
         //- Output verbosity
         static bool verbose_;
@@ -93,7 +93,7 @@ class sampledSurfaces
         static scalar mergeTol_;
 
 
-    // Private data
+    // Private Data
 
         //- Const reference to fvMesh
         const fvMesh& mesh_;
@@ -162,10 +162,6 @@ class sampledSurfaces
         //- Sample and write all sampled fields
         template<class Type> void sampleAndWrite(const IOobjectList& objects);
 
-        //- Disallow default bitwise copy construct and assignment
-        sampledSurfaces(const sampledSurfaces&);
-        void operator=(const sampledSurfaces&);
-
 
 public:
 
@@ -192,6 +188,9 @@ public:
             const dictionary&,
             const bool loadFromFiles = false
         );
+
+        //- Disallow default bitwise copy construction
+        sampledSurfaces(const sampledSurfaces&) = delete;
 
 
     //- Destructor
@@ -232,6 +231,12 @@ public:
 
         //- Update for changes of mesh due to readUpdate - expires the surfaces
         virtual void readUpdate(const polyMesh::readUpdateState state);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const sampledSurfaces&) = delete;
 };
 
 

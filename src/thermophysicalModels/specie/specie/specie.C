@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ Foam::specie::specie(const dictionary& dict)
 :
     name_(dict.dictName()),
     Y_(dict.subDict("specie").lookupOrDefault("massFraction", 1.0)),
-    molWeight_(readScalar(dict.subDict("specie").lookup("molWeight")))
+    molWeight_(dict.subDict("specie").lookup<scalar>("molWeight"))
 {}
 
 

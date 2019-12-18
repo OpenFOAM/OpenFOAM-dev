@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,14 +59,14 @@ class processorCyclicPointPatch
 :
     public processorPointPatch
 {
-    // Private data
+    // Private Data
 
         const processorCyclicPolyPatch& procCycPolyPatch_;
 
-        //- Disallow default construct as copy
+        //- Disallow default bitwise copy construction
         processorCyclicPointPatch(const processorCyclicPointPatch&);
 
-        //- Disallow default assignment
+        //- Disallow default bitwise assignment
         void operator=(const processorCyclicPointPatch&);
 
 public:
@@ -90,7 +90,7 @@ public:
         virtual ~processorCyclicPointPatch();
 
 
-    // Member functions
+    // Member Functions
 
 
         //- Return message tag to use for communication

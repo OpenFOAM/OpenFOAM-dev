@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,14 +69,6 @@ class CallbackRegistry
     public CallbackRegistryName,
     public UIDLList<CallbackType>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        CallbackRegistry(const CallbackRegistry&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const CallbackRegistry&);
-
 
 public:
 
@@ -85,9 +77,18 @@ public:
         //- Construct null
         CallbackRegistry();
 
+        //- Disallow default bitwise copy construction
+        CallbackRegistry(const CallbackRegistry&) = delete;
+
 
     //- Destructor
     virtual ~CallbackRegistry();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CallbackRegistry&) = delete;
 };
 
 

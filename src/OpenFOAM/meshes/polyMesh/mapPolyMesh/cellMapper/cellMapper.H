@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ class cellMapper
 :
     public morphFieldMapper
 {
-    // Private data
+    // Private Data
 
         //- Reference to polyMesh
         const polyMesh& mesh_;
@@ -88,13 +88,6 @@ class cellMapper
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        cellMapper(const cellMapper&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellMapper&);
-
-
         //- Calculate addressing for mapping with inserted cells
         void calcAddressing() const;
 
@@ -104,12 +97,15 @@ class cellMapper
 
 public:
 
-    // Static data members
+    // Static Data Members
 
     // Constructors
 
         //- Construct from mapPolyMesh
         cellMapper(const mapPolyMesh& mpm);
+
+        //- Disallow default bitwise copy construction
+        cellMapper(const cellMapper&) = delete;
 
 
     //- Destructor
@@ -117,9 +113,6 @@ public:
 
 
     // Member Functions
-
-        //- Return size
-        virtual label size() const;
 
         //- Return size before mapping
         virtual label sizeBeforeMapping() const;
@@ -141,7 +134,7 @@ public:
         //- Return interpolated addressing
         virtual const labelListList& addressing() const;
 
-        //- Return interpolaion weights
+        //- Return interpolation weights
         virtual const scalarListList& weights() const;
 
         //- Are there any inserted cells
@@ -152,6 +145,12 @@ public:
 
         //- Return list of inserted cells
         const virtual labelList& insertedObjectLabels() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellMapper&) = delete;
 };
 
 

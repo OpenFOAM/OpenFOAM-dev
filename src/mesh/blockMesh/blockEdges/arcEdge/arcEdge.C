@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,86 +41,65 @@ namespace blockEdges
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::cylindricalCS Foam::blockEdges::arcEdge::calcAngle()
+void Foam::blockEdges::arcEdge::calc(const point& pA)
 {
-    vector a = p2_ - p1_;
-    vector b = p3_ - p1_;
+    const tensor dps(pA - p0_, pA - p1_, (pA - p0_)^(pA - p1_));
+    const tensor pMs((p0_ + pA)/2, (p1_ + pA)/2, pA);
 
-    // find centre of arcEdge
-    scalar asqr = a & a;
-    scalar bsqr = b & b;
-    scalar adotb = a & b;
-
-    scalar denom = asqr*bsqr - adotb*adotb;
-
-    if (mag(denom) < vSmall)
+    if (det(dps) < vSmall)
     {
         FatalErrorInFunction
-            << denom
+            << "Arc point " << pA << " lies on the line of edge "
+            << edge(start_, end_) << abort(FatalError);
+    }
+
+    const point c =
+        inv(dps)
+      & vector(dps.x() & pMs.x(), dps.y() & pMs.y(), dps.z() & pMs.z());
+
+    const vector r0 = p0_ - c, r1 = p1_ - c;
+    const scalar cosT = (r0 & r1)/(mag(r0)*mag(r1));
+    scalar t = acos(max(-1, min(cosT, 1)));
+    if (((r0 ^ r1) & dps.z()) > 0)
+    {
+        t = 2*constant::mathematical::pi - t;
+    }
+
+    centre_ = c;
+    axis_ = - normalised(dps.z());
+    theta_ = t;
+    length_ = 0;
+}
+
+
+void Foam::blockEdges::arcEdge::calc(const scalar theta, const vector& axis)
+{
+    if (0 >= theta || theta >= 360)
+    {
+        FatalErrorInFunction
+            << "Arc angle for edge " << edge(start_, end_)
+            << " must take a value between 0 and 360 degrees"
             << abort(FatalError);
     }
 
-    scalar fact = 0.5*(bsqr - adotb)/denom;
+    const vector dp = p1_ - p0_;
 
-    point centre = 0.5*a + fact*((a ^ b) ^ a);
+    const vector pM = (p0_ + p1_)/2;
+    const vector rM = normalised(dp ^ axis);
 
-    centre += p1_;
+    const scalar l = dp & axis;
 
-    // find position vectors w.r.t. the arcEdge centre
-    vector r1(p1_ - centre);
-    vector r2(p2_ - centre);
-    vector r3(p3_ - centre);
+    const vector chord = dp - l*axis;
+    const scalar magChord = mag(chord);
 
-    // find angles
-    const scalar cosAngle = (r3 & r1)/(mag(r3) * mag(r1));
-    angle_ = radToDeg(acos(max(-1, min(cosAngle, 1))));
-
-    // check if the vectors define an exterior or an interior arcEdge
-    if (((r1 ^ r2) & (r1 ^ r3)) < 0.0)
-    {
-        angle_ = 360.0 - angle_;
-    }
-
-    vector tempAxis;
-
-    if (angle_ <= 180.0)
-    {
-        tempAxis = r1 ^ r3;
-
-        if (mag(tempAxis)/(mag(r1)*mag(r3)) < 0.001)
-        {
-            tempAxis = r1 ^ r2;
-        }
-    }
-    else
-    {
-        tempAxis = r3 ^ r1;
-    }
-
-    radius_ = mag(r3);
-
-    // set up and return the local coordinate system
-    return cylindricalCS("arcEdgeCS", centre, tempAxis, r1);
+    centre_ = pM - l*axis/2 - rM*magChord/2/tan(degToRad(theta)/2);
+    axis_ = axis;
+    theta_ = degToRad(theta);
+    length_ = l;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::blockEdges::arcEdge::arcEdge
-(
-    const pointField& points,
-    const label start,
-    const label end,
-    const point& pMid
-)
-:
-    blockEdge(points, start, end),
-    p1_(points_[start_]),
-    p2_(pMid),
-    p3_(points_[end_]),
-    cs_(calcAngle())
-{}
-
 
 Foam::blockEdges::arcEdge::arcEdge
 (
@@ -132,42 +111,54 @@ Foam::blockEdges::arcEdge::arcEdge
 )
 :
     blockEdge(dict, index, points, is),
-    p1_(points_[start_]),
-    p2_(is),
-    p3_(points_[end_]),
-    cs_(calcAngle())
-{}
+    p0_(points_[start_]),
+    p1_(points_[end_]),
+    centre_(),
+    axis_(),
+    theta_(),
+    length_()
+{
+    token firstToken(is);
+    is.putBack(firstToken);
+
+    if (firstToken == token::BEGIN_LIST)
+    {
+        const point pA(is);
+        calc(pA);
+    }
+    else
+    {
+        const scalar theta = readScalar(is);
+        const vector axis(is);
+        calc(theta, normalised(axis));
+    }
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::point Foam::blockEdges::arcEdge::position(const scalar lambda) const
 {
-    if (lambda < -small || lambda > 1 + small)
+    if (lambda < - small || lambda > 1 + small)
     {
         FatalErrorInFunction
             << "Parameter out of range, lambda = " << lambda
             << abort(FatalError);
     }
 
-    if (lambda < small)
-    {
-        return p1_;
-    }
-    else if (lambda > 1 - small)
-    {
-        return p3_;
-    }
-    else
-    {
-        return cs_.globalPosition(vector(radius_, lambda*angle_, 0.0));
-    }
+    const scalar t = theta_*lambda;
+    const vector r1 = p0_ - centre_, r2 = axis_ ^ r1;
+
+    return centre_ + r1*cos(t) + r2*sin(t) + axis_*length_*lambda;
 }
 
 
 Foam::scalar Foam::blockEdges::arcEdge::length() const
 {
-    return degToRad(angle_*radius_);
+    const vector r1 = p0_ - centre_;
+
+    // Length of a helical segment
+    return degToRad(theta_*sqrt(magSqr(r1) + sqr(length_)));
 }
 
 

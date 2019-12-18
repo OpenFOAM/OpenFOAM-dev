@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "constantRadiation.H"
-#include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -60,7 +59,7 @@ constantRadiation::constantRadiation
     (
         IOobject
         (
-            typeName + ":qrConst",
+            IOobject::modelName("qrConst", typeName),
             film.time().timeName(),
             film.regionMesh(),
             IOobject::MUST_READ,
@@ -72,7 +71,7 @@ constantRadiation::constantRadiation
     (
         IOobject
         (
-            typeName + ":mask",
+            IOobject::modelName("mask", typeName),
             film.time().timeName(),
             film.regionMesh(),
             IOobject::READ_IF_PRESENT,
@@ -81,9 +80,9 @@ constantRadiation::constantRadiation
         film.regionMesh(),
         dimensionedScalar(dimless, 1.0)
     ),
-    absorptivity_(readScalar(coeffDict_.lookup("absorptivity"))),
-    timeStart_(readScalar(coeffDict_.lookup("timeStart"))),
-    duration_(readScalar(coeffDict_.lookup("duration")))
+    absorptivity_(coeffDict_.lookup<scalar>("absorptivity")),
+    timeStart_(coeffDict_.lookup<scalar>("timeStart")),
+    duration_(coeffDict_.lookup<scalar>("duration"))
 {
     mask_ = pos0(mask_);
 }
@@ -101,30 +100,27 @@ void constantRadiation::correct()
 {}
 
 
-tmp<volScalarField> constantRadiation::Shs()
+tmp<volScalarField::Internal> constantRadiation::Shs()
 {
-    tmp<volScalarField> tShs
-    (
-        volScalarField::New
-        (
-            typeName + ":Shs",
-            film().regionMesh(),
-            dimensionedScalar(dimMass/pow3(dimTime), 0)
-        )
-    );
-
     const scalar time = film().time().value();
 
     if ((time >= timeStart_) && (time <= timeStart_ + duration_))
     {
-        scalarField& Shs = tShs.ref();
-        const scalarField& qr = qrConst_;
-        const scalarField& alpha = filmModel_.alpha();
-
-        Shs = mask_*qr*alpha*absorptivity_;
+        return volScalarField::Internal::New
+        (
+            IOobject::modelName("Shs", typeName),
+            mask_*qrConst_*filmModel_.coverage()*absorptivity_
+        );
     }
-
-    return tShs;
+    else
+    {
+        return volScalarField::Internal::New
+        (
+            IOobject::modelName("Shs", typeName),
+            film().regionMesh(),
+            dimensionedScalar(dimMass/pow3(dimTime), 0)
+        );
+    }
 }
 
 

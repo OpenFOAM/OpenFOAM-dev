@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::phaseForces
 
 Description
-    This function object calculates and outputs the blended interfacial forces
+    This functionObject calculates and outputs the blended interfacial forces
     acting on a given phase, i.e. drag, virtual mass, lift, wall-lubrication and
     turbulent dispersion. Note that it works only in run-time processing mode
     and in combination with the reactingEulerFoam solvers.
@@ -40,13 +40,10 @@ Description
     phaseForces.water
     {
         type            phaseForces;
+
         libs ("libreactingEulerFoamFunctionObjects.so");
-        writeControl    writeTime;
-        writeInterval   1;
 
-        ...
-
-        phaseName       water;
+        phase           water;
     }
     \endverbatim
 
@@ -54,7 +51,7 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         type         | type name: phaseForces  | yes         |
-        phaseName    | Name of evaluated phase | yes         |
+        phase        | Name of evaluated phase | yes         |
     \endtable
 
 See also
@@ -88,15 +85,6 @@ class phaseForces
 :
     public fvMeshFunctionObject
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        phaseForces(const phaseForces&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const phaseForces&);
-
-
 protected:
 
     // Protected data
@@ -133,6 +121,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        phaseForces(const phaseForces&) = delete;
+
 
     //- Destructor
     virtual ~phaseForces();
@@ -148,6 +139,12 @@ public:
 
         //- Write the force fields
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const phaseForces&) = delete;
 };
 
 

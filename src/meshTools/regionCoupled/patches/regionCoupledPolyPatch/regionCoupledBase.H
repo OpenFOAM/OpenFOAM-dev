@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::regionCoupledBase
 
 Description
-    Base class with common functinality for regionCoupled polyPatch.
+    Base class with common functionality for regionCoupled polyPatch.
     It includes AMI.
 
 
@@ -51,9 +51,7 @@ namespace Foam
 
 class regionCoupledBase
 {
-private:
-
-    // Private data
+    // Private Data
 
         //- Patch to sample
         const polyPatch& patch_;

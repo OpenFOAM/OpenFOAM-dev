@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,8 @@ template<class Specie>
 Foam::perfectFluid<Specie>::perfectFluid(const dictionary& dict)
 :
     Specie(dict),
-    R_(readScalar(dict.subDict("equationOfState").lookup("R"))),
-    rho0_(readScalar(dict.subDict("equationOfState").lookup("rho0")))
+    R_(dict.subDict("equationOfState").lookup<scalar>("R")),
+    rho0_(dict.subDict("equationOfState").lookup<scalar>("rho0"))
 {}
 
 

@@ -7,6 +7,10 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Set application name
 application=$(getApplication)
 
+runApplication chemkinToFoam \
+               chemkin/chem.inp chemkin/therm.dat chemkin/transportProperties \
+               constant/reactions constant/speciesThermo
+
 runApplication $application
 
 (cd validation && ./Allrun $*)

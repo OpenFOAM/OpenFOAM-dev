@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,18 +60,9 @@ Foam::CaCO3::CaCO3(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::CaCO3::writeData(Ostream& os) const
+void Foam::CaCO3::write(Ostream& os) const
 {
-    solidProperties::writeData(os);
-}
-
-
-// * * * * * * * * * * * * * * IOStream operators  * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::operator<<(Ostream& os, const CaCO3& s)
-{
-    s.writeData(os);
-    return os;
+    solidProperties::write(os);
 }
 
 

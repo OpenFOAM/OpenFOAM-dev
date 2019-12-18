@@ -1,0 +1,15 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+
+reaction
+{
+    type         irreversibleInfinite;
+    reaction      "CH4 + 2O2 + 7.5N2 = CO2 + 2H2O + 7.5N2";
+}
+
+// ************************************************************************* //

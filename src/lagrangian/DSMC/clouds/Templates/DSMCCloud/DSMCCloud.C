@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ void Foam::DSMCCloud<ParcelType>::initialise
 
     const scalar temperature
     (
-        readScalar(dsmcInitialiseDict.lookup("temperature"))
+        dsmcInitialiseDict.template lookup<scalar>("temperature")
     );
 
     const vector velocity(dsmcInitialiseDict.lookup("velocity"));
@@ -101,10 +101,8 @@ void Foam::DSMCCloud<ParcelType>::initialise
 
     forAll(molecules, i)
     {
-        numberDensities[i] = readScalar
-        (
-            numberDensitiesDict.lookup(molecules[i])
-        );
+        numberDensities[i] =
+            numberDensitiesDict.lookup<scalar>(molecules[i]);
     }
 
     numberDensities /= nParticle_;
@@ -491,7 +489,10 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         )
     ),
     typeIdList_(particleProperties_.lookup("typeIdList")),
-    nParticle_(readScalar(particleProperties_.lookup("nEquivalentParticles"))),
+    nParticle_
+    (
+        particleProperties_.template lookup<scalar>("nEquivalentParticles")
+    ),
     cellOccupancy_(mesh_.nCells()),
     sigmaTcRMax_
     (
@@ -722,7 +723,10 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
         )
     ),
     typeIdList_(particleProperties_.lookup("typeIdList")),
-    nParticle_(readScalar(particleProperties_.lookup("nEquivalentParticles"))),
+    nParticle_
+    (
+        particleProperties_.template lookup<scalar>("nEquivalentParticles")
+    ),
     cellOccupancy_(),
     sigmaTcRMax_
     (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ class processorGAMGInterface
     public GAMGInterface,
     public processorLduInterface
 {
-    // Private data
+    // Private Data
 
         //- Communicator to use for parallel communication
         const label comm_;
@@ -68,15 +68,6 @@ class processorGAMGInterface
 
         //- Message tag used for sending
         int tag_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        processorGAMGInterface(const processorGAMGInterface&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const processorGAMGInterface&);
 
 
 public:
@@ -120,6 +111,9 @@ public:
             const lduInterfacePtrsList& coarseInterfaces,
             Istream& is
         );
+
+        //- Disallow default bitwise copy construction
+        processorGAMGInterface(const processorGAMGInterface&) = delete;
 
 
     //- Destructor
@@ -182,6 +176,12 @@ public:
 
             //- Write to stream
             virtual void write(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const processorGAMGInterface&) = delete;
 };
 
 

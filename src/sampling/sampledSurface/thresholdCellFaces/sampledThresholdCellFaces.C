@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,30 +24,24 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sampledThresholdCellFaces.H"
-#include "dictionary.H"
-#include "volFields.H"
-#include "volPointInterpolation.H"
-#include "addToRunTimeSelectionTable.H"
-#include "fvMesh.H"
 #include "thresholdCellFaces.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(sampledThresholdCellFaces, 0);
-    addNamedToRunTimeSelectionTable
-    (
-        sampledSurface,
-        sampledThresholdCellFaces,
-        word,
-        thresholdCellFaces
-    );
+namespace sampledSurfaces
+{
+    defineTypeNameAndDebug(thresholdCellFaces, 0);
+    addToRunTimeSelectionTable(sampledSurface, thresholdCellFaces, word);
 }
+}
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-bool Foam::sampledThresholdCellFaces::updateGeometry() const
+bool Foam::sampledSurfaces::thresholdCellFaces::updateGeometry() const
 {
     const fvMesh& fvm = static_cast<const fvMesh&>(mesh());
 
@@ -108,7 +102,7 @@ bool Foam::sampledThresholdCellFaces::updateGeometry() const
     const volScalarField& cellFld = *cellFldPtr;
 
 
-    thresholdCellFaces surf
+    Foam::thresholdCellFaces surf
     (
         fvm,
         cellFld.primitiveField(),
@@ -117,7 +111,7 @@ bool Foam::sampledThresholdCellFaces::updateGeometry() const
         triangulate_
     );
 
-    const_cast<sampledThresholdCellFaces&>
+    const_cast<thresholdCellFaces&>
     (
         *this
     ).MeshedSurface<face>::transfer(surf);
@@ -128,7 +122,7 @@ bool Foam::sampledThresholdCellFaces::updateGeometry() const
 
     if (debug)
     {
-        Pout<< "sampledThresholdCellFaces::updateGeometry() : constructed"
+        Pout<< "thresholdCellFaces::updateGeometry() : constructed"
             << nl
             << "    field         : " << fieldName_ << nl
             << "    lowerLimit    : " << lowerThreshold_ << nl
@@ -144,7 +138,7 @@ bool Foam::sampledThresholdCellFaces::updateGeometry() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::sampledThresholdCellFaces::sampledThresholdCellFaces
+Foam::sampledSurfaces::thresholdCellFaces::thresholdCellFaces
 (
     const word& name,
     const polyMesh& mesh,
@@ -171,13 +165,13 @@ Foam::sampledThresholdCellFaces::sampledThresholdCellFaces
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::sampledThresholdCellFaces::~sampledThresholdCellFaces()
+Foam::sampledSurfaces::thresholdCellFaces::~thresholdCellFaces()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::sampledThresholdCellFaces::needsUpdate() const
+bool Foam::sampledSurfaces::thresholdCellFaces::needsUpdate() const
 {
     const fvMesh& fvm = static_cast<const fvMesh&>(mesh());
 
@@ -185,7 +179,7 @@ bool Foam::sampledThresholdCellFaces::needsUpdate() const
 }
 
 
-bool Foam::sampledThresholdCellFaces::expire()
+bool Foam::sampledSurfaces::thresholdCellFaces::expire()
 {
     // already marked as expired
     if (prevTimeIndex_ == -1)
@@ -199,13 +193,14 @@ bool Foam::sampledThresholdCellFaces::expire()
 }
 
 
-bool Foam::sampledThresholdCellFaces::update()
+bool Foam::sampledSurfaces::thresholdCellFaces::update()
 {
     return updateGeometry();
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::sampledThresholdCellFaces::sample
+Foam::tmp<Foam::scalarField>
+Foam::sampledSurfaces::thresholdCellFaces::sample
 (
     const volScalarField& vField
 ) const
@@ -214,7 +209,8 @@ Foam::tmp<Foam::scalarField> Foam::sampledThresholdCellFaces::sample
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::sampledThresholdCellFaces::sample
+Foam::tmp<Foam::vectorField>
+Foam::sampledSurfaces::thresholdCellFaces::sample
 (
     const volVectorField& vField
 ) const
@@ -223,7 +219,8 @@ Foam::tmp<Foam::vectorField> Foam::sampledThresholdCellFaces::sample
 }
 
 
-Foam::tmp<Foam::sphericalTensorField> Foam::sampledThresholdCellFaces::sample
+Foam::tmp<Foam::sphericalTensorField>
+Foam::sampledSurfaces::thresholdCellFaces::sample
 (
     const volSphericalTensorField& vField
 ) const
@@ -232,7 +229,8 @@ Foam::tmp<Foam::sphericalTensorField> Foam::sampledThresholdCellFaces::sample
 }
 
 
-Foam::tmp<Foam::symmTensorField> Foam::sampledThresholdCellFaces::sample
+Foam::tmp<Foam::symmTensorField>
+Foam::sampledSurfaces::thresholdCellFaces::sample
 (
     const volSymmTensorField& vField
 ) const
@@ -241,7 +239,8 @@ Foam::tmp<Foam::symmTensorField> Foam::sampledThresholdCellFaces::sample
 }
 
 
-Foam::tmp<Foam::tensorField> Foam::sampledThresholdCellFaces::sample
+Foam::tmp<Foam::tensorField>
+Foam::sampledSurfaces::thresholdCellFaces::sample
 (
     const volTensorField& vField
 ) const
@@ -250,7 +249,8 @@ Foam::tmp<Foam::tensorField> Foam::sampledThresholdCellFaces::sample
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::sampledThresholdCellFaces::interpolate
+Foam::tmp<Foam::scalarField>
+Foam::sampledSurfaces::thresholdCellFaces::interpolate
 (
     const interpolation<scalar>& interpolator
 ) const
@@ -259,7 +259,8 @@ Foam::tmp<Foam::scalarField> Foam::sampledThresholdCellFaces::interpolate
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::sampledThresholdCellFaces::interpolate
+Foam::tmp<Foam::vectorField>
+Foam::sampledSurfaces::thresholdCellFaces::interpolate
 (
     const interpolation<vector>& interpolator
 ) const
@@ -268,7 +269,7 @@ Foam::tmp<Foam::vectorField> Foam::sampledThresholdCellFaces::interpolate
 }
 
 Foam::tmp<Foam::sphericalTensorField>
-Foam::sampledThresholdCellFaces::interpolate
+Foam::sampledSurfaces::thresholdCellFaces::interpolate
 (
     const interpolation<sphericalTensor>& interpolator
 ) const
@@ -277,7 +278,8 @@ Foam::sampledThresholdCellFaces::interpolate
 }
 
 
-Foam::tmp<Foam::symmTensorField> Foam::sampledThresholdCellFaces::interpolate
+Foam::tmp<Foam::symmTensorField>
+Foam::sampledSurfaces::thresholdCellFaces::interpolate
 (
     const interpolation<symmTensor>& interpolator
 ) const
@@ -286,7 +288,8 @@ Foam::tmp<Foam::symmTensorField> Foam::sampledThresholdCellFaces::interpolate
 }
 
 
-Foam::tmp<Foam::tensorField> Foam::sampledThresholdCellFaces::interpolate
+Foam::tmp<Foam::tensorField>
+Foam::sampledSurfaces::thresholdCellFaces::interpolate
 (
     const interpolation<tensor>& interpolator
 ) const
@@ -295,9 +298,9 @@ Foam::tmp<Foam::tensorField> Foam::sampledThresholdCellFaces::interpolate
 }
 
 
-void Foam::sampledThresholdCellFaces::print(Ostream& os) const
+void Foam::sampledSurfaces::thresholdCellFaces::print(Ostream& os) const
 {
-    os  << "sampledThresholdCellFaces: " << name() << " :"
+    os  << "thresholdCellFaces: " << name() << " :"
         << "  field:" << fieldName_
         << "  lowerLimit:" << lowerThreshold_
         << "  upperLimit:" << upperThreshold_;

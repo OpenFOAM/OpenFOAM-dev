@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class singleProcessorFaceSetsConstraint
 :
     public decompositionConstraint
 {
-    // Private data
+    // Private Data
 
         //- List of faceSet+processor
         List<Tuple2<word, label>> setNameAndProcs_;

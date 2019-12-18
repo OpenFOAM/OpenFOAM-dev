@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ class movingConeTopoFvMesh
 :
     public topoChangerFvMesh
 {
-    // Private data
+    // Private Data
 
         //- Motion dictionary
         dictionary motionDict_;
@@ -83,13 +83,6 @@ class movingConeTopoFvMesh
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        movingConeTopoFvMesh(const movingConeTopoFvMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const movingConeTopoFvMesh&);
-
-
         //- Add mixer zones and modifiers
         void addZonesAndModifiers();
 
@@ -113,6 +106,9 @@ public:
         //- Construct from database
         explicit movingConeTopoFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        movingConeTopoFvMesh(const movingConeTopoFvMesh&) = delete;
+
 
     //- Destructor
     virtual ~movingConeTopoFvMesh();
@@ -122,6 +118,12 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const movingConeTopoFvMesh&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,15 +63,6 @@ class ArrheniusViscosity
 :
     public filmViscosityModel
 {
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        ArrheniusViscosity(const ArrheniusViscosity&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const ArrheniusViscosity&);
-
-
 protected:
 
     // Protected data
@@ -105,6 +96,9 @@ public:
             volScalarField& mu
         );
 
+        //- Disallow default bitwise copy construction
+        ArrheniusViscosity(const ArrheniusViscosity&) = delete;
+
 
     //- Destructor
     virtual ~ArrheniusViscosity();
@@ -118,6 +112,12 @@ public:
             const volScalarField& p,
             const volScalarField& T
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ArrheniusViscosity&) = delete;
 };
 
 

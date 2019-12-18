@@ -81,7 +81,7 @@ public:
         //- Correct the thermodynamics
         virtual void correctThermo();
 
-        //- Return the species fraction equation
+        //- Return the fuel consumption rate matrix
         virtual tmp<fvScalarMatrix> R(volScalarField& Yi) const;
 
         //- Return heat release rate

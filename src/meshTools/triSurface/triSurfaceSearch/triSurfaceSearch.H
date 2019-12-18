@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class triSurface;
 
 class triSurfaceSearch
 {
-    // Private data
+    // Private Data
 
         //- Reference to surface to work on
         const triSurface& surface_;
@@ -84,12 +84,6 @@ class triSurfaceSearch
             const vector& lineVec
         ) const;
 
-        //- Disallow default bitwise copy construct
-        triSurfaceSearch(const triSurfaceSearch&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const triSurfaceSearch&);
-
 
 public:
 
@@ -109,15 +103,18 @@ public:
             const label maxTreeDepth
         );
 
+        //- Disallow default bitwise copy construction
+        triSurfaceSearch(const triSurfaceSearch&) = delete;
+
 
     //- Destructor
     ~triSurfaceSearch();
 
-        //- Clear storage
-        void clearOut();
-
 
     // Member Functions
+
+        //- Clear storage
+        void clearOut();
 
         //- Demand driven construction of the octree
         const indexedOctree<treeDataTriSurface>& tree() const;
@@ -178,6 +175,12 @@ public:
             const pointField& end,
             List<List<pointIndexHit>>& info
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const triSurfaceSearch&) = delete;
 };
 
 

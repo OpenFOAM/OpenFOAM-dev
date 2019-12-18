@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,6 @@ Ostream& operator<<
 template<class Type>
 class TimeFunction1
 {
-
 protected:
 
     // Protected data
@@ -71,26 +70,26 @@ protected:
         //- Name of the data entry
         const word name_;
 
-        //- The underlying Function1
-        autoPtr<Function1<Type>> entry_;
+        //- The function
+        autoPtr<Function1<Type>> function_;
 
 
 public:
 
     // Constructor
 
-        //- Construct from entry name
+        //- Construct from time, entry name and dictionary
         TimeFunction1
         (
-            const Time& t,
-            const word& name,
+            const Time& time,
+            const word& entryName,
             const dictionary& dict
         );
 
-        //- Construct null from entry name
+        //- Construct null from time and entry name
         TimeFunction1
         (
-            const Time& t,
+            const Time& time,
             const word& entryName
         );
 
@@ -108,9 +107,6 @@ public:
 
             //- Reset entry by re-reading from dictionary
             void reset(const dictionary& dict);
-
-            //- Return the name of the entry
-            const word& name() const;
 
 
         // Evaluation

@@ -26,7 +26,7 @@ boundaryField
         gradient        uniform 0;
         value           uniform 125000;
     }
-    gasInlet
+    oilInlet
     {
         type            fixedFluxPressure;
         gradient        uniform 0;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ class PairCollision
         static scalar flatWallDuplicateExclusion;
 
 
-    // Private data
+    // Private Data
 
         //- PairModel to calculate the interaction between two parcels
         autoPtr<PairModel<CloudType>> pairModel_;
@@ -87,7 +87,7 @@ class PairCollision
         InteractionLists<typename CloudType::parcelType> il_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Pre collision tasks
         void preInteraction();

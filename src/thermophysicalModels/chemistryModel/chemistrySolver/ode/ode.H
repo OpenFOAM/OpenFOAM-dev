@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ class ode
 :
     public chemistrySolver<ChemistryModel>
 {
-    // Private data
+    // Private Data
 
         dictionary coeffsDict_;
 
@@ -71,7 +71,7 @@ public:
     // Constructors
 
         //- Construct from thermo
-        ode(typename ChemistryModel::reactionThermo& thermo);
+        ode(const typename ChemistryModel::reactionThermo& thermo);
 
 
     //- Destructor
@@ -83,9 +83,10 @@ public:
         //- Update the concentrations and return the chemical time
         virtual void solve
         (
-            scalarField& c,
-            scalar& T,
             scalar& p,
+            scalar& T,
+            scalarField& c,
+            const label li,
             scalar& deltaT,
             scalar& subDeltaT
         ) const;

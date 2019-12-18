@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,7 +152,7 @@ public:
             dimensionedScalar pistonSpeed() const;
 
 
-        // Member functions overriding the virtual functions in time
+        // Member Functions overriding the virtual functions in time
 
             //- Read the control dictionary and set the write controls etc.
             virtual void readDict();

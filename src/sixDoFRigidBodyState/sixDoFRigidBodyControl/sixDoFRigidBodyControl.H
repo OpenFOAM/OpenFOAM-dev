@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,7 @@ class sixDoFRigidBodyControl
 :
     public sixDoFRigidBodyState
 {
-    // Private data
+    // Private Data
 
         //- Reference to the Time
         const Time& time_;
@@ -102,14 +102,6 @@ class sixDoFRigidBodyControl
 
         vector meanAngularVelocity_;
 
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        sixDoFRigidBodyControl(const sixDoFRigidBodyControl&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const sixDoFRigidBodyControl&);
 
 
 public:
@@ -128,6 +120,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        sixDoFRigidBodyControl(const sixDoFRigidBodyControl&) = delete;
+
 
     //- Destructor
     virtual ~sixDoFRigidBodyControl();
@@ -140,6 +135,12 @@ public:
 
         //- Execute, currently does nothing
         virtual bool execute();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const sixDoFRigidBodyControl&) = delete;
 };
 
 

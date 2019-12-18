@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "singleLayerRegion.H"
 #include "fvMesh.H"
+#include "surfaceFields.H"
 #include "Time.H"
 #include "zeroGradientFvPatchFields.H"
 
@@ -38,61 +39,57 @@ namespace regionModels
 }
 }
 
-// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-void Foam::regionModels::singleLayerRegion::constructMeshObjects()
-{
-    // construct patch normal vectors
-    nHatPtr_.reset
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::regionModels::singleLayerRegion::singleLayerRegion
+(
+    const fvMesh& mesh,
+    const word& regionType,
+    const word& modelName,
+    bool readFields
+)
+:
+    regionModel(mesh, regionType, modelName, false),
+    nHat_
     (
-        new volVectorField
+        IOobject
         (
-            IOobject
-            (
-                "nHat",
-                time_.timeName(),
-                regionMesh(),
-                IOobject::READ_IF_PRESENT,
-                NO_WRITE
-            ),
-            regionMesh(),
-            dimensionedVector(dimless, Zero),
-            zeroGradientFvPatchField<vector>::typeName
-        )
-    );
-
-    // construct patch areas
-    magSfPtr_.reset
+            "nHat",
+            time_.timeName(),
+            regionMesh()
+        ),
+        regionMesh(),
+        dimensionedVector(dimless, Zero),
+        zeroGradientFvPatchField<vector>::typeName
+    ),
+    magSf_
     (
-        new volScalarField
+        IOobject
         (
-            IOobject
-            (
-                "magSf",
-                time_.timeName(),
-                regionMesh(),
-                IOobject::READ_IF_PRESENT,
-                NO_WRITE
-            ),
-            regionMesh(),
-            dimensionedScalar(dimArea, 0),
-            zeroGradientFvPatchField<scalar>::typeName
-        )
-    );
-}
-
-
-void Foam::regionModels::singleLayerRegion::initialise()
+            "magSf",
+            time_.timeName(),
+            regionMesh()
+        ),
+        regionMesh(),
+        dimensionedScalar(dimArea, 0)
+    ),
+    VbyA_
+    (
+        IOobject
+        (
+            "VbyA",
+            time_.timeName(),
+            regionMesh()
+        ),
+        regionMesh(),
+        dimensionedScalar(dimLength, 0),
+        zeroGradientFvPatchField<vector>::typeName
+    ),
+    passivePatchIDs_()
 {
-    if (debug)
-    {
-        Pout<< "singleLayerRegion::initialise()" << endl;
-    }
-
     label nBoundaryFaces = 0;
     const polyBoundaryMesh& rbm = regionMesh().boundaryMesh();
-    volVectorField& nHat = nHatPtr_();
-    volScalarField& magSf = magSfPtr_();
     forAll(intCoupledPatchIDs_, i)
     {
         const label patchi = intCoupledPatchIDs_[i];
@@ -101,11 +98,10 @@ void Foam::regionModels::singleLayerRegion::initialise()
 
         nBoundaryFaces += fCells.size();
 
-        UIndirectList<vector>(nHat, fCells) = pp.faceNormals();
-        UIndirectList<scalar>(magSf, fCells) = mag(pp.faceAreas());
+        UIndirectList<vector>(nHat_, fCells) = pp.faceNormals();
+        UIndirectList<scalar>(magSf_, fCells) = mag(pp.faceAreas());
     }
-    nHat.correctBoundaryConditions();
-    magSf.correctBoundaryConditions();
+    nHat_.correctBoundaryConditions();
 
     if (nBoundaryFaces != regionMesh().nCells())
     {
@@ -117,7 +113,6 @@ void Foam::regionModels::singleLayerRegion::initialise()
             << abort(FatalError);
     }
 
-    scalarField passiveMagSf(magSf.size(), 0.0);
     passivePatchIDs_.setSize(intCoupledPatchIDs_.size(), -1);
     forAll(intCoupledPatchIDs_, i)
     {
@@ -125,74 +120,24 @@ void Foam::regionModels::singleLayerRegion::initialise()
         const polyPatch& ppIntCoupled = rbm[patchi];
         if (ppIntCoupled.size() > 0)
         {
-            label cellId = rbm[patchi].faceCells()[0];
+            const label cellId = rbm[patchi].faceCells()[0];
             const cell& cFaces = regionMesh().cells()[cellId];
-
-            label facei = ppIntCoupled.start();
-            label faceO = cFaces.opposingFaceLabel(facei, regionMesh().faces());
-
-            label passivePatchi = rbm.whichPatch(faceO);
-            passivePatchIDs_[i] = passivePatchi;
-            const polyPatch& ppPassive = rbm[passivePatchi];
-            UIndirectList<scalar>(passiveMagSf, ppPassive.faceCells()) =
-                mag(ppPassive.faceAreas());
+            const label faceO
+            (
+                cFaces.opposingFaceLabel
+                (
+                    ppIntCoupled.start(), regionMesh().faces()
+                )
+            );
+            passivePatchIDs_[i] = rbm.whichPatch(faceO);
         }
     }
 
     Pstream::listCombineGather(passivePatchIDs_, maxEqOp<label>());
     Pstream::listCombineScatter(passivePatchIDs_);
 
-    magSf.field() = 0.5*(magSf + passiveMagSf);
-    magSf.correctBoundaryConditions();
-}
-
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-bool Foam::regionModels::singleLayerRegion::read()
-{
-    return regionModel::read();
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::regionModels::singleLayerRegion::singleLayerRegion
-(
-    const fvMesh& mesh,
-    const word& regionType
-)
-:
-    regionModel(mesh, regionType),
-    nHatPtr_(nullptr),
-    magSfPtr_(nullptr),
-    passivePatchIDs_()
-{}
-
-
-Foam::regionModels::singleLayerRegion::singleLayerRegion
-(
-    const fvMesh& mesh,
-    const word& regionType,
-    const word& modelName,
-    bool readFields
-)
-:
-    regionModel(mesh, regionType, modelName, false),
-    nHatPtr_(nullptr),
-    magSfPtr_(nullptr),
-    passivePatchIDs_()
-{
-    if (active_)
-    {
-        constructMeshObjects();
-        initialise();
-
-        if (readFields)
-        {
-            read();
-        }
-    }
+    VbyA_.primitiveFieldRef() = regionMesh().V()/magSf_;
+    VbyA_.correctBoundaryConditions();
 }
 
 
@@ -206,27 +151,20 @@ Foam::regionModels::singleLayerRegion::~singleLayerRegion()
 
 const Foam::volVectorField& Foam::regionModels::singleLayerRegion::nHat() const
 {
-    if (!nHatPtr_.valid())
-    {
-        FatalErrorInFunction
-            << "Region patch normal vectors not available"
-            << abort(FatalError);
-    }
-
-    return nHatPtr_();
+    return nHat_;
 }
 
 
-const Foam::volScalarField& Foam::regionModels::singleLayerRegion::magSf() const
+const Foam::volScalarField::Internal&
+Foam::regionModels::singleLayerRegion::magSf() const
 {
-    if (!magSfPtr_.valid())
-    {
-        FatalErrorInFunction
-            << "Region patch areas not available"
-            << abort(FatalError);
-    }
+    return magSf_;
+}
 
-    return magSfPtr_();
+
+const Foam::volScalarField& Foam::regionModels::singleLayerRegion::VbyA() const
+{
+    return VbyA_;
 }
 
 

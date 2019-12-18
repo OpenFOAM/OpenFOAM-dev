@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ class PatchFlowRateInjection
     public InjectionModel<CloudType>,
     public patchInjectionBase
 {
-    // Private data
+    // Private Data
 
         //- Name of carrier (mass or volume) flux field
         const word phiName_;
@@ -82,7 +82,7 @@ class PatchFlowRateInjection
         //- Concentration profile of particle volume to carrier volume [-]
         const TimeFunction1<scalar> concentration_;
 
-        //- Parcels to introduce per unit volume flow rate m3 [n/m3]
+        //- Parcels to introduce per unit volume flow rate m3 [n/m^3]
         const scalar parcelConcentration_;
 
         //- Parcel size distribution model
@@ -133,7 +133,7 @@ public:
         //- Return the end-of-injection time
         scalar timeEnd() const;
 
-        //- Return the total volumetric flow rate across the patch [m3/s]
+        //- Return the total volumetric flow rate across the patch [m^3/s]
         virtual scalar flowRate() const;
 
         //- Number of parcels to introduce relative to SOI

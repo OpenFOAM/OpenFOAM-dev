@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::sampledPatch::sampleField
+Foam::sampledSurfaces::patch::sampleField
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
 ) const
@@ -50,7 +50,7 @@ Foam::sampledPatch::sampleField
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::sampledPatch::sampleField
+Foam::sampledSurfaces::patch::sampleField
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& sField
 ) const
@@ -71,7 +71,7 @@ Foam::sampledPatch::sampleField
 
 template<class Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::sampledPatch::interpolateField
+Foam::sampledSurfaces::patch::interpolateField
 (
     const interpolation<Type>& interpolator
 ) const

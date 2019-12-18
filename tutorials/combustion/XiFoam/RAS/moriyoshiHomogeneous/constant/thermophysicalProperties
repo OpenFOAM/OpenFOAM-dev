@@ -26,8 +26,7 @@ thermoType
     energy          absoluteEnthalpy;
 }
 
-stoichiometricAirFuelMassRatio
-    stoichiometricAirFuelMassRatio [0 0 0 0 0 0 0] 15.675;
+stoichiometricAirFuelMassRatio stoichiometricAirFuelMassRatio [0 0 0 0 0 0 0] 15.675;
 
 reactants
 {
@@ -40,24 +39,13 @@ reactants
         Tlow            200;
         Thigh           6000;
         Tcommon         1000;
-        highCpCoeffs
-        (
-            3.24515 0.00202212 -6.98806e-07 1.11477e-10
-            -6.60444e-15 -1601.58 4.60831
-        );
-        lowCpCoeffs
-        (
-            3.60909 -0.000628822 4.45105e-06 -3.81328e-09
-            1.0553e-12 -1587.86 3.21309
-        );
+        highCpCoeffs    (3.24515 0.00202212 -6.98806e-07 1.11477e-10 -6.60444e-15 -1601.58 4.60831);
+        lowCpCoeffs     (3.60909 -0.000628822 4.45105e-06 -3.81328e-09 1.0553e-12 -1587.86 3.21309);
     }
     transport
     {
         mu              1e-5;
         Pr              1;
-
-        As              1.67212e-06;
-        Ts              170.672;
     }
 }
 
@@ -72,24 +60,13 @@ products
         Tlow            200;
         Thigh           6000;
         Tcommon         1000;
-        highCpCoeffs
-        (
-            3.10561 0.00179748 -5.94701e-07 9.05612e-11
-            -5.08447e-15 -11003.6 5.12109
-        );
-        lowCpCoeffs
-        (
-            3.498 0.000638554 -1.83885e-07 1.20991e-09
-            -7.68702e-13 -11080.6 3.1819
-        );
+        highCpCoeffs    (3.10561 0.00179748 -5.94701e-07 9.05612e-11 -5.08447e-15 -11003.6 5.12109);
+        lowCpCoeffs     (3.498 0.000638554 -1.83885e-07 1.20991e-09 -7.68702e-13 -11080.6 3.1819);
     }
     transport
     {
         mu              1e-5;
         Pr              1;
-
-        As              1.67212e-06;
-        Ts              170.672;
     }
 }
 

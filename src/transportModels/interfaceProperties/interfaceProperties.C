@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -162,10 +162,7 @@ Foam::interfaceProperties::interfaceProperties
     transportPropertiesDict_(dict),
     cAlpha_
     (
-        readScalar
-        (
-            alpha1.mesh().solverDict(alpha1.name()).lookup("cAlpha")
-        )
+        alpha1.mesh().solverDict(alpha1.name()).lookup<scalar>("cAlpha")
     ),
 
     sigmaPtr_(surfaceTensionModel::New(dict, alpha1.mesh())),

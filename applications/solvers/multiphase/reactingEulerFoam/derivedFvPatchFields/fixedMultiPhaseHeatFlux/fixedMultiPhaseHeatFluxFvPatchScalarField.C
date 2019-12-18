@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ fixedMultiPhaseHeatFluxFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(psf, p, iF, mapper),
-    q_(psf.q_, mapper),
+    q_(mapper(psf.q_)),
     relax_(psf.relax_),
     Tmin_(psf.Tmin_)
 {}
@@ -170,9 +170,9 @@ void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::updateCoeffs()
 void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
-    os.writeKeyword("relax") << relax_ << token::END_STATEMENT << nl;
-    q_.writeEntry("q", os);
-    writeEntry("value", os);
+    writeEntry(os, "relax", relax_);
+    writeEntry(os, "q", q_);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -384,6 +384,25 @@ Foam::spatialTransform Foam::RBD::rigidBodyModel::X0
 }
 
 
+Foam::wordList Foam::RBD::rigidBodyModel::movingBodyNames() const
+{
+    wordList names(nBodies());
+
+    label j = 0;
+    for (label i=1; i<nBodies(); i++)
+    {
+        if (!isType<jointBody>(bodies_[i]))
+        {
+            names[j++] = bodies_[i].name();
+        }
+    }
+
+    names.setSize(j);
+
+    return names;
+}
+
+
 void Foam::RBD::rigidBodyModel::write(Ostream& os) const
 {
     os  << indent << "bodies" << nl
@@ -401,14 +420,10 @@ void Foam::RBD::rigidBodyModel::write(Ostream& os) const
 
             bodies_[i].write(os);
 
-            os.writeKeyword("parent")
-                << bodies_[lambda_[i]].name() << token::END_STATEMENT << nl;
-
-            os.writeKeyword("transform")
-                << XT_[i] << token::END_STATEMENT << nl;
+            writeEntry(os, "parent", bodies_[lambda_[i]].name());
+            writeEntry(os, "transform", XT_[i]);
 
             os  << indent << "joint" << nl << joints_[i] << endl;
-
             os  << decrIndent << indent << token::END_BLOCK << endl;
         }
     }
@@ -421,11 +436,9 @@ void Foam::RBD::rigidBodyModel::write(Ostream& os) const
 
         mergedBodies_[i].body().write(os);
 
-        os.writeKeyword("transform")
-            << mergedBodies_[i].masterXT() << token::END_STATEMENT << nl;
+        writeEntry(os, "transform", mergedBodies_[i].masterXT());
 
-        os.writeKeyword("mergeWith")
-            << mergedBodies_[i].masterName() << token::END_STATEMENT << nl;
+        writeEntry(os, "mergeWith", mergedBodies_[i].masterName());
 
         os  << decrIndent << indent << token::END_BLOCK << endl;
     }

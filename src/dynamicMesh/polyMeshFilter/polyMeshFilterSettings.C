@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,14 +38,14 @@ Foam::polyMeshFilterSettings::polyMeshFilterSettings(const dictionary& dict)
     collapseEdgesCoeffDict_(dict_.subDict("collapseEdgesCoeffs")),
     collapseFacesCoeffDict_(dict_.subOrEmptyDict("collapseFacesCoeffs")),
     meshQualityCoeffDict_(dict_.subOrEmptyDict("controlMeshQualityCoeffs")),
-    minLen_(readScalar(collapseEdgesCoeffDict_.lookup("minimumEdgeLength"))),
+    minLen_(collapseEdgesCoeffDict_.lookup<scalar>("minimumEdgeLength")),
     maxCos_
     (
         ::cos
         (
             degToRad
             (
-                readScalar(collapseEdgesCoeffDict_.lookup("maximumMergeAngle"))
+                collapseEdgesCoeffDict_.lookup<scalar>("maximumMergeAngle")
             )
         )
     ),

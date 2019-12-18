@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,19 +49,10 @@ namespace Foam
 
 class cellQuality
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cellQuality(const cellQuality&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellQuality&);
 
 
 public:
@@ -71,8 +62,8 @@ public:
         //- Construct from mesh
         cellQuality(const polyMesh& mesh);
 
-
-    // Destructor - default
+        //- Disallow default bitwise copy construction
+        cellQuality(const cellQuality&) = delete;
 
 
     // Member Functions
@@ -88,6 +79,12 @@ public:
 
         //- Return face skewness
         tmp<scalarField> faceSkewness() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellQuality&) = delete;
 };
 
 

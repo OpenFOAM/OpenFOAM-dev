@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,17 +85,6 @@ protected:
         virtual void updateMesh(PstreamBuffers&);
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        facePointPatch(const facePointPatch&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const facePointPatch&);
-
-
 public:
 
     // Declare friendship with the coupledPointPatches to allow them to extend
@@ -128,6 +117,9 @@ public:
             const polyPatch&,
             const pointBoundaryMesh&
         );
+
+        //- Disallow default bitwise copy construction
+        facePointPatch(const facePointPatch&) = delete;
 
 
     // Selectors
@@ -196,6 +188,12 @@ public:
         {
             return polyPatch_.pointNormals();
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const facePointPatch&) = delete;
 };
 
 

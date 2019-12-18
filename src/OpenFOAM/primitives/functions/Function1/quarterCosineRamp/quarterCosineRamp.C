@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
     makeScalarFunction1(quarterCosineRamp);
 }
@@ -38,19 +38,19 @@ namespace Function1Types
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::Function1Types::quarterCosineRamp::quarterCosineRamp
+Foam::Function1s::quarterCosineRamp::quarterCosineRamp
 (
     const word& entryName,
     const dictionary& dict
 )
 :
-    ramp(entryName, dict)
+    Ramp<quarterCosineRamp>(entryName, dict)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::Function1Types::quarterCosineRamp::~quarterCosineRamp()
+Foam::Function1s::quarterCosineRamp::~quarterCosineRamp()
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,18 +60,9 @@ class buoyancyForce
 :
     public option
 {
-    // Private data
+    // Private Data
 
         uniformDimensionedVectorField g_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        buoyancyForce(const buoyancyForce&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const buoyancyForce&);
 
 
 public:
@@ -90,6 +81,9 @@ public:
             const dictionary& dict,
             const fvMesh& mesh
         );
+
+        //- Disallow default bitwise copy construction
+        buoyancyForce(const buoyancyForce&) = delete;
 
 
     // Member Functions
@@ -116,6 +110,12 @@ public:
 
             //- Read source dictionary
             virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const buoyancyForce&) = delete;
 };
 
 

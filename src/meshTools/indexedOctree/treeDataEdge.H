@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ class treeDataEdge
         static scalar tol;
 
 
-    // Private data
+    // Private Data
 
         //- Reference to edgeList
         const edgeList& edges_;
@@ -159,7 +159,7 @@ public:
             const bool cacheBb,
             const edgeList& edges,
             const pointField& points,
-            const Xfer<labelList>& edgeLabels
+            labelList&& edgeLabels
         );
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,7 @@ void Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::updateCoeffs()
 
     const label patchi = patch().index();
 
-    // retrieve the film region from the database
+    // Retrieve the film region from the database
 
     const regionModels::regionModel& region =
         db().time().lookupObject<regionModels::regionModel>
@@ -127,12 +127,18 @@ void Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::updateCoeffs()
             const regionModels::surfaceFilmModels::kinematicSingleLayer&
         >(region);
 
-    // calculate the vector tangential to the patch
+    // Calculate the vector tangential to the patch
     // note: normal pointing into the domain
     const vectorField n(-patch().nf());
 
-    // TODO: currently re-evaluating the entire gTan field to return this patch
-    const scalarField gTan(film.gTan()().boundaryField()[patchi] & n);
+    const scalarField gTan
+    (
+        (
+            film.g().value()
+          - film.nHat().boundaryField()[patchi]
+           *(film.g().value() & film.nHat().boundaryField()[patchi])
+        ) & n
+    );
 
     if (patch().size() && (max(mag(gTan)) < small))
     {
@@ -184,10 +190,10 @@ void Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::write
 ) const
 {
     fvPatchVectorField::write(os);
-    GammaMean_->writeData(os);
-    a_->writeData(os);
-    omega_->writeData(os);
-    writeEntry("value", os);
+    writeEntry(os, GammaMean_());
+    writeEntry(os, a_());
+    writeEntry(os, omega_());
+    writeEntry(os, "value", *this);
 }
 
 

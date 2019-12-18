@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,15 +67,6 @@ protected:
         //- Set of patch IDs
         const labelHashSet patchIDs_;
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        patchDistMethod(const patchDistMethod&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const patchDistMethod&);
 
 public:
 
@@ -107,6 +98,9 @@ public:
             const fvMesh& mesh,
             const labelHashSet& patchIDs
         );
+
+        //- Disallow default bitwise copy construction
+        patchDistMethod(const patchDistMethod&) = delete;
 
 
     // Selectors
@@ -158,6 +152,12 @@ public:
 
         //- Correct the given distance-to-patch and normal-to-patch fields
         virtual bool correct(volScalarField& y, volVectorField& n) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const patchDistMethod&) = delete;
 };
 
 

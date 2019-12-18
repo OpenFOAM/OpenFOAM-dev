@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,9 +65,9 @@ ensightGeoFile& operator<<(ensightGeoFile&, const ensightPart&);
 
 class ensightPart
 {
-    // Private data
+    // Private Data
 
-        // Static data members
+        // Static Data Members
         static const List<word> elemTypes_;
 
 
@@ -189,7 +189,7 @@ public:
             const pointField& points
         );
 
-        //- Construct as copy
+        //- Copy constructor
         ensightPart(const ensightPart&);
 
 
@@ -346,10 +346,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const ensightPart&)
-        {
-            NotImplemented;
-        }
+        void operator=(const ensightPart&) = delete;
 
 
     // IOstream Operators
@@ -359,7 +356,6 @@ public:
 
         //- Write geometry
         friend ensightGeoFile& operator<<(ensightGeoFile&, const ensightPart&);
-
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ class ensightFile
 :
     public OFstream
 {
-    // Private data
+    // Private Data
 
         //- Allow undef in results
         static bool allowUndef_;
@@ -64,15 +64,6 @@ class ensightFile
         static string dirFmt_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const ensightFile&);
-
-        //- Disallow default copy constructor
-        ensightFile(const ensightFile&);
-
-
 public:
 
     // Constructors
@@ -83,6 +74,9 @@ public:
             const fileName& pathname,
             IOstream::streamFormat format=IOstream::BINARY
         );
+
+        //- Disallow default bitwise copy construction
+        ensightFile(const ensightFile&);
 
 
     //- Destructor
@@ -152,6 +146,12 @@ public:
 
         //- Add carriage return to ascii stream
         void newline();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ensightFile&) = delete;
 };
 
 

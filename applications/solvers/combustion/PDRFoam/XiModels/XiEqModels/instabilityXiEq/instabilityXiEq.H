@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,22 +54,13 @@ class instability
 :
     public XiEqModel
 {
-    // Private data
+    // Private Data
 
         //- Equilibrium Xi due to instability only
         scalar XiEqIn;
 
         //- Equilibrium Xi model due to all other effects
         autoPtr<XiEqModel> XiEqModel_;
-
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        instability(const instability&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const instability&);
 
 
 public:
@@ -89,6 +80,9 @@ public:
             const volScalarField& Su
         );
 
+        //- Disallow default bitwise copy construction
+        instability(const instability&);
+
 
     //- Destructor
     virtual ~instability();
@@ -96,12 +90,17 @@ public:
 
     // Member Functions
 
-        //- Return the flame-wrinking XiEq
+        //- Return the flame-wrinkling XiEq
         virtual tmp<volScalarField> XiEq() const;
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& XiEqProperties);
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const instability&) = delete;
 };
 
 

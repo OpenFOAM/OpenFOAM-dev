@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,7 +116,11 @@ Foam::twoPhaseSystem::Vm() const
 }
 
 
-void Foam::twoPhaseSystem::solve()
+void Foam::twoPhaseSystem::solve
+(
+    const PtrList<volScalarField>& rAUs,
+    const PtrList<surfaceScalarField>& rAUfs
+)
 {
     const Time& runTime = mesh_.time();
 
@@ -125,8 +129,8 @@ void Foam::twoPhaseSystem::solve()
 
     const dictionary& alphaControls = mesh_.solverDict(alpha1.name());
 
-    label nAlphaSubCycles(readLabel(alphaControls.lookup("nAlphaSubCycles")));
-    label nAlphaCorr(readLabel(alphaControls.lookup("nAlphaCorr")));
+    label nAlphaSubCycles(alphaControls.lookup<label>("nAlphaSubCycles"));
+    label nAlphaCorr(alphaControls.lookup<label>("nAlphaCorr"));
 
     bool LTS = fv::localEulerDdt::enabled(mesh_);
 
@@ -170,20 +174,12 @@ void Foam::twoPhaseSystem::solve()
 
     surfaceScalarField phir("phir", phi1 - phi2);
 
-    tmp<surfaceScalarField> alphaDbyA;
-    if (DByAfs().found(phase1_.name()) && DByAfs().found(phase2_.name()))
+    tmp<surfaceScalarField> alphaPhiDbyA0;
+    if (implicitPhasePressure() && (rAUs.size() || rAUfs.size()))
     {
-        surfaceScalarField DbyA
-        (
-            *DByAfs()[phase1_.name()] + *DByAfs()[phase2_.name()]
-        );
-
-        alphaDbyA =
-            fvc::interpolate(max(alpha1, scalar(0)))
-           *fvc::interpolate(max(alpha2, scalar(0)))
-           *DbyA;
-
-        phir += DbyA*fvc::snGrad(alpha1, "bounded")*mesh_.magSf();
+        alphaPhiDbyA0 =
+            this->DByAfs(rAUs, rAUfs)[phase1_.index()]
+           *fvc::snGrad(alpha1, "bounded")*mesh_.magSf();
     }
 
     for (int acorr=0; acorr<nAlphaCorr; acorr++)
@@ -231,68 +227,46 @@ void Foam::twoPhaseSystem::solve()
             }
         }
 
-        surfaceScalarField alphaPhi1
-        (
-            fvc::flux
-            (
-                phi_,
-                alpha1,
-                alphaScheme
-            )
-          + fvc::flux
-            (
-               -fvc::flux(-phir, scalar(1) - alpha1, alpharScheme),
-                alpha1,
-                alpharScheme
-            )
-        );
+        tmp<volScalarField> trSubDeltaT;
 
-        phase1_.correctInflowOutflow(alphaPhi1);
-
-        if (nAlphaSubCycles > 1)
+        if (LTS && nAlphaSubCycles > 1)
         {
-            tmp<volScalarField> trSubDeltaT;
-
-            if (LTS)
-            {
-                trSubDeltaT =
-                    fv::localEulerDdt::localRSubDeltaT(mesh_, nAlphaSubCycles);
-            }
-
-            for
-            (
-                subCycle<volScalarField> alphaSubCycle(alpha1, nAlphaSubCycles);
-                !(++alphaSubCycle).end();
-            )
-            {
-                surfaceScalarField alphaPhi10(alphaPhi1);
-
-                MULES::explicitSolve
-                (
-                    geometricOneField(),
-                    alpha1,
-                    phi_,
-                    alphaPhi10,
-                    (alphaSubCycle.index()*Sp)(),
-                    (Su - (alphaSubCycle.index() - 1)*Sp*alpha1)(),
-                    UniformField<scalar>(phase1_.alphaMax()),
-                    zeroField()
-                );
-
-                if (alphaSubCycle.index() == 1)
-                {
-                    phase1_.alphaPhiRef() = alphaPhi10;
-                }
-                else
-                {
-                    phase1_.alphaPhiRef() += alphaPhi10;
-                }
-            }
-
-            phase1_.alphaPhiRef() /= nAlphaSubCycles;
+            trSubDeltaT =
+                fv::localEulerDdt::localRSubDeltaT(mesh_, nAlphaSubCycles);
         }
-        else
+
+        for
+        (
+            subCycle<volScalarField> alphaSubCycle(alpha1, nAlphaSubCycles);
+            !(++alphaSubCycle).end();
+        )
         {
+            surfaceScalarField alphaPhi1
+            (
+                fvc::flux
+                (
+                    phi_,
+                    alpha1,
+                    alphaScheme
+                )
+              + fvc::flux
+                (
+                    -fvc::flux(-phir, scalar(1) - alpha1, alpharScheme),
+                    alpha1,
+                    alpharScheme
+                )
+            );
+
+            phase1_.correctInflowOutflow(alphaPhi1);
+
+            if (alphaPhiDbyA0.valid())
+            {
+                alphaPhi1 +=
+                    fvc::interpolate(max(alpha1, scalar(0)))
+                   *fvc::interpolate(max(scalar(1) - alpha1, scalar(0)))
+                   *alphaPhiDbyA0();
+            }
+
             MULES::explicitSolve
             (
                 geometricOneField(),
@@ -305,21 +279,39 @@ void Foam::twoPhaseSystem::solve()
                 zeroField()
             );
 
-            phase1_.alphaPhiRef() = alphaPhi1;
+            if (alphaSubCycle.index() == 1)
+            {
+                phase1_.alphaPhiRef() = alphaPhi1;
+            }
+            else
+            {
+                phase1_.alphaPhiRef() += alphaPhi1;
+            }
+
+            if (alphaPhiDbyA0.valid())
+            {
+                const surfaceScalarField alphaDbyA
+                (
+                    fvc::interpolate(max(alpha1, scalar(0)))
+                   *fvc::interpolate(max(scalar(1) - alpha1, scalar(0)))
+                   *this->DByAfs(rAUs, rAUfs)[phase1_.index()]
+                );
+
+                fvScalarMatrix alpha1Eqn
+                (
+                    fvm::ddt(alpha1) - fvc::ddt(alpha1)
+                  - fvm::laplacian(alphaDbyA, alpha1, "bounded")
+                );
+
+                alpha1Eqn.solve();
+
+                phase1_.alphaPhiRef() += alpha1Eqn.flux();
+            }
         }
 
-        if (alphaDbyA.valid())
+        if (nAlphaSubCycles > 1)
         {
-            fvScalarMatrix alpha1Eqn
-            (
-                fvm::ddt(alpha1) - fvc::ddt(alpha1)
-              - fvm::laplacian(alphaDbyA(), alpha1, "bounded")
-            );
-
-            alpha1Eqn.relax();
-            alpha1Eqn.solve();
-
-            phase1_.alphaPhiRef() += alpha1Eqn.flux();
+            phase1_.alphaPhiRef() /= nAlphaSubCycles;
         }
 
         phase1_.alphaRhoPhiRef() =

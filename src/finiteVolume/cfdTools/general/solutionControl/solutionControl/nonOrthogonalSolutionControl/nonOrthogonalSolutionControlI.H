@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,21 +25,27 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline Foam::label Foam::nonOrthogonalSolutionControl::nNonOrthCorr() const
+inline Foam::label Foam::nonOrthogonalSolutionControl::nCorrNonOrth() const
 {
-    return nNonOrthCorr_;
+    return nCorrNonOrth_;
+}
+
+
+inline bool Foam::nonOrthogonalSolutionControl::anyNonOrthogonalIter() const
+{
+    return corrNonOrth_ != 0;
 }
 
 
 inline bool Foam::nonOrthogonalSolutionControl::firstNonOrthogonalIter() const
 {
-    return nonOrthCorr_ == 1;
+    return corrNonOrth_ == 1;
 }
 
 
 inline bool Foam::nonOrthogonalSolutionControl::finalNonOrthogonalIter() const
 {
-    return nonOrthCorr_ > nNonOrthCorr_;
+    return corrNonOrth_ > nCorrNonOrth_;
 }
 
 

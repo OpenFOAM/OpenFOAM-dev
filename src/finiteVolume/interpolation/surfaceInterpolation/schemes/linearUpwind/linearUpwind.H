@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,15 +59,6 @@ class linearUpwind
         word gradSchemeName_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        linearUpwind(const linearUpwind&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const linearUpwind&);
-
-
 public:
 
     //- Runtime type information
@@ -112,6 +103,9 @@ public:
             gradSchemeName_(schemeData)
         {}
 
+        //- Disallow default bitwise copy construction
+        linearUpwind(const linearUpwind&) = delete;
+
 
     // Member Functions
 
@@ -127,6 +121,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const linearUpwind&) = delete;
 };
 
 

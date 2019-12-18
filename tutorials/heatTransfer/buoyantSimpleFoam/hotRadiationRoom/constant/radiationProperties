@@ -22,13 +22,13 @@ radiationModel  P1;
 // Number of flow iterations per radiation iteration
 solverFreq 1;
 
-absorptionEmissionModel constantAbsorptionEmission;
+absorptionEmissionModel constant;
 
-constantAbsorptionEmissionCoeffs
+constantCoeffs
 {
-    absorptivity    absorptivity    [0 -1 0 0 0 0 0] 0.5;
-    emissivity      emissivity      [0 -1 0 0 0 0 0] 0.5;
-    E               E               [1 -1 -3 0 0 0 0] 0;
+    absorptivity    0.5;
+    emissivity      0.5;
+    E               0;
 }
 
 scatterModel    none;

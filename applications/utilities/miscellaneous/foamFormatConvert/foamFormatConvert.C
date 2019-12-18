@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,7 +183,7 @@ bool writeOptionalMeshObject
     const word& name,
     const fileName& meshDir,
     Time& runTime,
-    const bool valid
+    const bool write
 )
 {
     IOobject io
@@ -210,10 +210,10 @@ bool writeOptionalMeshObject
     {
         Info<< "        Reading " << classNames[0]
             << " : " << name << endl;
-        T meshObject(io, valid && haveFile);
+        T meshObject(io, write && haveFile);
 
         Info<< "        Writing " << name << endl;
-        writeOk = meshObject.regIOobject::write(valid && haveFile);
+        writeOk = meshObject.regIOobject::write(write && haveFile);
     }
 
     return writeOk;
@@ -364,15 +364,19 @@ int main(int argc, char *argv[])
 
 
         // Check for lagrangian
-        stringList lagrangianDirs
+        const fileName lagrangianDir
         (
-            1,
             fileHandler().filePath
             (
                 runTime.timePath()
               / regionPrefix
               / cloud::prefix
             )
+        );
+        stringList lagrangianDirs
+        (
+            lagrangianDir == fileName::null ? 0 : 1,
+            lagrangianDir
         );
 
         combineReduce(lagrangianDirs, uniqueEqOp());
@@ -394,7 +398,7 @@ int main(int argc, char *argv[])
                     (
                         IOobject
                         (
-                            polyMesh::defaultRegion,
+                            regionName,
                             runTime.timeName(),
                             runTime,
                             Foam::IOobject::MUST_READ

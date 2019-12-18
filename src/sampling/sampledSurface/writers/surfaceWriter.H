@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,8 +123,7 @@ public:
             const pointField& points,
             const faceList& faces,
             const bool verbose = false
-        ) const
-        {}
+        ) const = 0;
 
         //- Write scalarField for a single surface to file.
         //  One value per face or vertex (isNodeValues = true)
@@ -138,8 +137,7 @@ public:
             const Field<scalar>& values,
             const bool isNodeValues,
             const bool verbose = false
-        ) const
-        {}
+        ) const = 0;
 
         //- Write vectorField for a single surface to file.
         //  One value per face or vertex (isNodeValues = true)
@@ -153,8 +151,7 @@ public:
             const Field<vector>& values,
             const bool isNodeValues,
             const bool verbose = false
-        ) const
-        {}
+        ) const = 0;
 
         //- Write sphericalTensorField for a single surface to file.
         //  One value per face or vertex (isNodeValues = true)
@@ -168,8 +165,7 @@ public:
             const Field<sphericalTensor>& values,
             const bool isNodeValues,
             const bool verbose = false
-        ) const
-        {}
+        ) const = 0;
 
         //- Write symmTensorField for a single surface to file.
         //  One value per face or vertex (isNodeValues = true)
@@ -183,8 +179,7 @@ public:
             const Field<symmTensor>& values,
             const bool isNodeValues,
             const bool verbose = false
-        ) const
-        {}
+        ) const = 0;
 
         //- Write tensorField for a single surface to file.
         //  One value per face or vertex (isNodeValues = true)
@@ -198,8 +193,7 @@ public:
             const Field<tensor>& values,
             const bool isNodeValues,
             const bool verbose = false
-        ) const
-        {}
+        ) const = 0;
 };
 
 

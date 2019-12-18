@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,7 +144,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -192,7 +192,7 @@ private:
 
 public:
 
-    // Static data members
+    // Static Data Members
     ClassName("cellClassification");
 
     // Constructors
@@ -210,7 +210,7 @@ public:
         //  Used to be able to reuse filling routines below.
         cellClassification(const polyMesh& mesh, const labelList& cellType);
 
-        //- Construct as copy
+        //- Copy constructor
         cellClassification(const cellClassification&);
 
 

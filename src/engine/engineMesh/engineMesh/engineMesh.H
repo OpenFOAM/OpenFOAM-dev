@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,15 +53,6 @@ class engineMesh
 :
     public fvMesh
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        engineMesh(const engineMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const engineMesh&);
-
-
 protected:
 
     // Protected data
@@ -99,6 +90,9 @@ public:
         //- Construct from objectRegistry, and read/write options
         explicit engineMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        engineMesh(const engineMesh&) = delete;
+
 
     // Selectors
 
@@ -115,6 +109,12 @@ public:
         // Edit
 
             virtual void move() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const engineMesh&) = delete;
 };
 
 

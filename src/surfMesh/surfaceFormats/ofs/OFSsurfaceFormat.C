@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,9 +72,9 @@ bool Foam::fileFormats::OFSsurfaceFormat<Face>::read
 
         MeshedSurface<face> surf
         (
-            xferMove(this->storedPoints()),
-            xferMove(faceLst),
-            xferMove(this->storedZones())
+            move(this->storedPoints()),
+            move(faceLst),
+            move(this->storedZones())
         );
 
         this->transcribe(surf);
@@ -119,9 +119,9 @@ bool Foam::fileFormats::OFSsurfaceFormat<Face>::read
 
         MeshedSurface<face> origSurf
         (
-            xferMove(pointLst),
-            xferMove(origFaces),
-            xferMove(zoneLst)
+            move(pointLst),
+            move(origFaces),
+            move(zoneLst)
         );
 
         MeshedSurface<Face> surf;
@@ -161,9 +161,9 @@ bool Foam::fileFormats::OFSsurfaceFormat<Face>::read
 
     surf.reset
     (
-        xferMove(pointLst),
-        xferMove(faceLst),
-        xferMove(zoneLst)
+        move(pointLst),
+        move(faceLst),
+        move(zoneLst)
     );
 
     return true;

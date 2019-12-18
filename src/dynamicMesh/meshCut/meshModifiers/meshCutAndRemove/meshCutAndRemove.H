@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ class meshCutAndRemove
 :
     public edgeVertex
 {
-    // Private data
+    // Private Data
 
         //- Faces added in last setRefinement. Per split cell label of added
         //  face
@@ -174,13 +174,6 @@ class meshCutAndRemove
         ) const;
 
 
-
-        //- Disallow default bitwise copy construct
-        meshCutAndRemove(const meshCutAndRemove&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshCutAndRemove&);
-
 public:
 
     //- Runtime type information
@@ -191,6 +184,9 @@ public:
 
         //- Construct from mesh
         meshCutAndRemove(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        meshCutAndRemove(const meshCutAndRemove&) = delete;
 
 
     // Member Functions
@@ -229,6 +225,12 @@ public:
             {
                 return addedPoints_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshCutAndRemove&) = delete;
 };
 
 

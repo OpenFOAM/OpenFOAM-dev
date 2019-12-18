@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,10 +55,10 @@ maitlandSmith::maitlandSmith
 :
     pairPotential(name, maitlandSmith),
     maitlandSmithCoeffs_(maitlandSmith.subDict(typeName + "Coeffs")),
-    m_(readScalar(maitlandSmithCoeffs_.lookup("m"))),
-    gamma_(readScalar(maitlandSmithCoeffs_.lookup("gamma"))),
-    rm_(readScalar(maitlandSmithCoeffs_.lookup("rm"))),
-    epsilon_(readScalar(maitlandSmithCoeffs_.lookup("epsilon")))
+    m_(maitlandSmithCoeffs_.template lookup<scalar>("m")),
+    gamma_(maitlandSmithCoeffs_.template lookup<scalar>("gamma")),
+    rm_(maitlandSmithCoeffs_.template lookup<scalar>("rm")),
+    epsilon_(maitlandSmithCoeffs_.template lookup<scalar>("epsilon"))
 {
     setLookupTables();
 }

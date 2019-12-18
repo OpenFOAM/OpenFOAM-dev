@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "dynamicMotionSolverFvMesh.H"
 #include "addToRunTimeSelectionTable.H"
 #include "motionSolver.H"
-#include "volFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -47,7 +46,8 @@ namespace Foam
 Foam::dynamicMotionSolverFvMesh::dynamicMotionSolverFvMesh(const IOobject& io)
 :
     dynamicFvMesh(io),
-    motionPtr_(motionSolver::New(*this))
+    motionPtr_(motionSolver::New(*this, dynamicMeshDict())),
+    velocityMotionCorrection_(*this, dynamicMeshDict())
 {}
 
 
@@ -68,13 +68,22 @@ const Foam::motionSolver& Foam::dynamicMotionSolverFvMesh::motion() const
 bool Foam::dynamicMotionSolverFvMesh::update()
 {
     fvMesh::movePoints(motionPtr_->newPoints());
-
-    if (foundObject<volVectorField>("U"))
-    {
-        lookupObjectRef<volVectorField>("U").correctBoundaryConditions();
-    }
+    velocityMotionCorrection_.update();
 
     return true;
+}
+
+
+bool Foam::dynamicMotionSolverFvMesh::writeObject
+(
+    IOstream::streamFormat fmt,
+    IOstream::versionNumber ver,
+    IOstream::compressionType cmp,
+    const bool write
+) const
+{
+    motionPtr_->write();
+    return fvMesh::writeObject(fmt, ver, cmp, write);
 }
 
 

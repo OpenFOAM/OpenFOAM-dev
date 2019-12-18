@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ class SCOPEXiEq
 :
     public XiEqModel
 {
-    // Private data
+    // Private Data
 
         // Model constant
         scalar XiEqCoef_;
@@ -82,15 +82,6 @@ class SCOPEXiEq
         laminarFlameSpeedModels::SCOPE MaModel;
 
 
-    // Private Member Functions
-
-        //- Disallow copy construct
-        SCOPEXiEq(const SCOPEXiEq&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const SCOPEXiEq&);
-
-
 public:
 
     //- Runtime type information
@@ -108,6 +99,9 @@ public:
             const volScalarField& Su
         );
 
+        //- Disallow default bitwise copy construction
+        SCOPEXiEq(const SCOPEXiEq&);
+
 
     //- Destructor
     virtual ~SCOPEXiEq();
@@ -115,11 +109,17 @@ public:
 
     // Member Functions
 
-        //- Return the flame-wrinking XiEq
+        //- Return the flame-wrinkling XiEq
         virtual tmp<volScalarField> XiEq() const;
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& XiEqProperties);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SCOPEXiEq&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ SourceFiles
 #ifndef linearTsubDiameter_H
 #define linearTsubDiameter_H
 
-#include "diameterModel.H"
+#include "sphericalDiameter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -60,9 +60,9 @@ namespace diameterModels
 
 class linearTsub
 :
-    public diameterModel
+    public spherical
 {
-    // Private data
+    // Private Data
 
         //- Name of the liquid phase that is used to determine subcooling
         //  temperature
@@ -71,17 +71,25 @@ class linearTsub
         //- Reference diameter for low subcooling temperature
         dimensionedScalar d2_;
 
-        //- Subcooling temperature where low subcooling diamter is reached
+        //- Subcooling temperature where low subcooling diameter is reached
         dimensionedScalar Tsub2_;
 
         //- Reference diameter for high subcooling temperature
         dimensionedScalar d1_;
 
-        //- Subcooling temperature where high subcooling diamter is reached
+        //- Subcooling temperature where high subcooling diameter is reached
         dimensionedScalar Tsub1_;
 
-        //- Actual diameter field
-        mutable volScalarField d_;
+        //- Diameter field
+        volScalarField& d_;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Get the diameter field
+        virtual tmp<volScalarField> calcD() const;
 
 
 public:
@@ -106,8 +114,8 @@ public:
 
     // Member Functions
 
-        //- Return the diameter field
-        virtual tmp<volScalarField> d() const;
+        //- Correct the diameter field
+        virtual void correct();
 
         //- Read phaseProperties dictionary
         virtual bool read(const dictionary& phaseProperties);

@@ -185,14 +185,9 @@ Foam::levelSetAverage
 
     tmp<GeometricField<Type, fvPatchField, volMesh>> tResult
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        GeometricField<Type, fvPatchField, volMesh>::New
         (
-            IOobject
-            (
-                positiveC.name() + ":levelSetAverage",
-                mesh.time().timeName(),
-                mesh
-            ),
+            positiveC.name() + ":levelSetAverage",
             mesh,
             dimensioned<Type>("0", positiveC.dimensions(), Zero)
         )

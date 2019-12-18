@@ -21,7 +21,7 @@ if (pimple.consistent())
     HbyA -= (rAUrel - rAtUrel())*fvc::grad(p);
 }
 
-if (pimple.nCorrPISO() <= 1)
+if (pimple.nCorrPiso() <= 1)
 {
     tUrelEqn.clear();
 }

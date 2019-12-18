@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
     The inter-particle stress is calculated using current particle locations.
     This force is then applied only to the particles that are moving towards
     regions of close pack. The resulting velocity change is limited using an
-    abtracted correction velocity limiter.
+    abstracted correction velocity limiter.
 
     Reference:
     \verbatim
@@ -67,9 +67,7 @@ class Explicit
 :
     public PackingModel<CloudType>
 {
-private:
-
-    //- Private data
+    // Private Data
 
         //- Volume fraction average
         const AveragingMethod<scalar>* volumeAverage_;

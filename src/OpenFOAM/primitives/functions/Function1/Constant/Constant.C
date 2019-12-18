@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,49 +28,63 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::Constant<Type>::Constant
+Foam::Function1s::Constant<Type>::Constant
 (
     const word& entryName,
     const Type& val
 )
 :
-    Function1<Type>(entryName),
+    FieldFunction1<Type, Constant<Type>>(entryName),
     value_(val)
 {}
 
 
 template<class Type>
-Foam::Function1Types::Constant<Type>::Constant
+Foam::Function1s::Constant<Type>::Constant
 (
     const word& entryName,
     const dictionary& dict
 )
 :
-    Function1<Type>(entryName),
+    FieldFunction1<Type, Constant<Type>>(entryName),
     value_(Zero)
 {
-    Istream& is(dict.lookup(entryName));
-    word entryType(is);
-    is  >> value_;
+    if (!dict.found(entryName))
+    {
+        dict.lookup("value") >> value_;
+    }
+    else
+    {
+        Istream& is(dict.lookup(entryName));
+        word entryType(is);
+        if (is.eof())
+        {
+            dict.lookup("value") >> value_;
+        }
+        else
+        {
+            is  >> value_;
+        }
+    }
 }
 
 
 template<class Type>
-Foam::Function1Types::Constant<Type>::Constant
+Foam::Function1s::Constant<Type>::Constant
 (
     const word& entryName,
     Istream& is
 )
 :
-    Function1<Type>(entryName),
+    FieldFunction1<Type, Constant<Type>>(entryName),
     value_(pTraits<Type>(is))
 {}
 
 
 template<class Type>
-Foam::Function1Types::Constant<Type>::Constant(const Constant<Type>& cnst)
+Foam::Function1s::Constant<Type>::Constant(const Constant<Type>& cnst)
 :
-    Function1<Type>(cnst),
+    FieldFunction1<Type, Constant<Type>>(cnst),
     value_(cnst.value_)
 {}
 
@@ -78,35 +92,14 @@ Foam::Function1Types::Constant<Type>::Constant(const Constant<Type>& cnst)
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::Constant<Type>::~Constant()
+Foam::Function1s::Constant<Type>::~Constant()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::Function1Types::Constant<Type>::value
-(
-    const scalarField& x
-) const
-{
-    return tmp<Field<Type>>(new Field<Type>(x.size(), value_));
-}
-
-
-template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::Function1Types::Constant<Type>::integrate
-(
-    const scalarField& x1,
-    const scalarField& x2
-) const
-{
-    return (x2 - x1)*value_;
-}
-
-
-template<class Type>
-void Foam::Function1Types::Constant<Type>::writeData(Ostream& os) const
+void Foam::Function1s::Constant<Type>::writeData(Ostream& os) const
 {
     Function1<Type>::writeData(os);
 
@@ -114,4 +107,4 @@ void Foam::Function1Types::Constant<Type>::writeData(Ostream& os) const
 }
 
 
-// ************************************************************************* //
+// ************************************************************************* i/

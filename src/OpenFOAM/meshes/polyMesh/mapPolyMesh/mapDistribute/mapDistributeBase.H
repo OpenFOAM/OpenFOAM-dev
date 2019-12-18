@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,12 +198,12 @@ public:
         //- Construct null
         mapDistributeBase();
 
-        //- Construct from components
+        //- Move construct from components
         mapDistributeBase
         (
             const label constructSize,
-            const Xfer<labelListList>& subMap,
-            const Xfer<labelListList>& constructMap,
+            const labelListList&& subMap,
+            const labelListList&& constructMap,
             const bool subHasFlip = false,
             const bool constructHasFlip = false
         );
@@ -240,11 +240,11 @@ public:
             const int tag = Pstream::msgType()
         );
 
-        //- Construct by transferring parameter content
-        mapDistributeBase(const Xfer<mapDistributeBase>&);
-
         //- Construct copy
         mapDistributeBase(const mapDistributeBase&);
+
+        //- Move constructor
+        mapDistributeBase(mapDistributeBase&&);
 
         //- Construct from Istream
         mapDistributeBase(Istream&);
@@ -330,9 +330,6 @@ public:
 
             //- Transfer the contents of the argument and annul the argument.
             void transfer(mapDistributeBase&);
-
-            //- Transfer contents to the Xfer container
-            Xfer<mapDistributeBase> xfer();
 
             //- Helper for construct from globalIndex. Renumbers element
             //  (in globalIndex numbering) into compact indices.
@@ -464,18 +461,20 @@ public:
                 NotImplemented;
             }
 
+
     // Member Operators
 
         void operator=(const mapDistributeBase&);
+        void operator=(mapDistributeBase&&);
 
-    // IOstream operators
+
+    // IOstream Operators
 
         //- Read dictionary from Istream
         friend Istream& operator>>(Istream&, mapDistributeBase&);
 
         //- Write dictionary to Ostream
         friend Ostream& operator<<(Ostream&, const mapDistributeBase&);
-
 };
 
 

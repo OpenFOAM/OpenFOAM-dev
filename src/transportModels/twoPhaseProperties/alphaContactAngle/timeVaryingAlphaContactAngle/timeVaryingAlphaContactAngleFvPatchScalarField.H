@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ class timeVaryingAlphaContactAngleFvPatchScalarField
 :
     public alphaContactAngleFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         // Equilibrium contact angle control parameters
         scalar t0_;
@@ -122,7 +122,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Evaluate and return the time-varying equilibrium contact-angle
         virtual tmp<scalarField> theta

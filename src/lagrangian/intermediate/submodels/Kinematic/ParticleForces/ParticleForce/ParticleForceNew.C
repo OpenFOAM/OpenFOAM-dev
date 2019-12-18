@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::ParticleForce<CloudType>::New
 
     if (cstrIter == dictionaryConstructorTablePtr_->end() && dict.found("type"))
     {
-        forceType = dict.lookupType<word>("type");
+        forceType = dict.lookup<word>("type");
         cstrIter = dictionaryConstructorTablePtr_->find(forceType);
     }
 

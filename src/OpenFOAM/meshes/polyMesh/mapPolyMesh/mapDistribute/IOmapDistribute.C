@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,10 +104,11 @@ Foam::IOmapDistribute::IOmapDistribute
 Foam::IOmapDistribute::IOmapDistribute
 (
     const IOobject& io,
-    const Xfer<mapDistribute>& map
+    mapDistribute&& map
 )
 :
-    regIOobject(io)
+    regIOobject(io),
+    mapDistribute(move(map))
 {
     // Temporary warning
     if (io.readOpt() == IOobject::MUST_READ_IF_MODIFIED)
@@ -118,8 +119,6 @@ Foam::IOmapDistribute::IOmapDistribute
             " but IOmapDistribute does not support automatic rereading."
             << endl;
     }
-
-    mapDistribute::transfer(map());
 
     if
     (

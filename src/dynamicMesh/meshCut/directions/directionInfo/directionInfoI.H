@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,6 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Null constructor
 inline Foam::directionInfo::directionInfo()
 :
     index_(-3),
@@ -37,7 +36,6 @@ inline Foam::directionInfo::directionInfo()
 {}
 
 
-// Construct from components
 inline Foam::directionInfo::directionInfo
 (
     const label index,
@@ -46,14 +44,6 @@ inline Foam::directionInfo::directionInfo
 :
     index_(index),
     n_(n)
-{}
-
-
-// Construct as copy
-inline Foam::directionInfo::directionInfo(const directionInfo& w2)
-:
-    index_(w2.index()),
-    n_(w2.n())
 {}
 
 
@@ -66,7 +56,6 @@ inline bool Foam::directionInfo::valid(TrackingData& td) const
 }
 
 
-// No geometric data so never any problem on cyclics
 template<class TrackingData>
 inline bool Foam::directionInfo::sameGeometry
 (
@@ -81,7 +70,6 @@ inline bool Foam::directionInfo::sameGeometry
 }
 
 
-// index_ is already offset in face
 template<class TrackingData>
 inline void Foam::directionInfo::leaveDomain
 (
@@ -94,10 +82,6 @@ inline void Foam::directionInfo::leaveDomain
 {}
 
 
-// index_ is offset in face on other side. So reverse it here.
-// (Note: f[0] on other domain is connected to f[0] in this domain,
-//        f[1]      ,,                         f[size-1]   ,,
-// etc.)
 template<class TrackingData>
 inline void Foam::directionInfo::enterDomain
 (
@@ -117,7 +101,6 @@ inline void Foam::directionInfo::enterDomain
 }
 
 
-// No geometric data.
 template<class TrackingData>
 inline void Foam::directionInfo::transform
 (
@@ -128,7 +111,6 @@ inline void Foam::directionInfo::transform
 {}
 
 
-// Update this cell with neighbouring face information
 template<class TrackingData>
 inline bool Foam::directionInfo::updateCell
 (
@@ -209,7 +191,6 @@ inline bool Foam::directionInfo::updateCell
 }
 
 
-// Update this face with neighbouring cell information
 template<class TrackingData>
 inline bool Foam::directionInfo::updateFace
 (
@@ -258,7 +239,6 @@ inline bool Foam::directionInfo::updateFace
 }
 
 
-// Merge this with information on same face
 template<class TrackingData>
 inline bool Foam::directionInfo::updateFace
 (
@@ -298,15 +278,19 @@ inline bool Foam::directionInfo::equal
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline bool Foam::directionInfo::operator==(const Foam::directionInfo& rhs)
- const
+inline bool Foam::directionInfo::operator==
+(
+    const Foam::directionInfo& rhs
+) const
 {
     return  index() == rhs.index() && n() == rhs.n();
 }
 
 
-inline bool Foam::directionInfo::operator!=(const Foam::directionInfo& rhs)
- const
+inline bool Foam::directionInfo::operator!=
+(
+    const Foam::directionInfo& rhs
+) const
 {
     return !(*this == rhs);
 }

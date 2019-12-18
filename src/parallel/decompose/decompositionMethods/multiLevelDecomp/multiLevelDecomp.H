@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ class multiLevelDecomp
 :
     public decompositionMethod
 {
-    // Private data
+    // Private Data
 
         dictionary methodsDict_;
 
@@ -83,10 +83,6 @@ class multiLevelDecomp
             labelField& finalDecomp
         );
 
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const multiLevelDecomp&);
-        multiLevelDecomp(const multiLevelDecomp&);
-
 
 public:
 
@@ -98,6 +94,9 @@ public:
 
         //- Construct given the decomposition dictionary
         multiLevelDecomp(const dictionary& decompositionDict);
+
+        //- Disallow default bitwise copy construction
+        multiLevelDecomp(const multiLevelDecomp&) = delete;
 
 
     //- Destructor
@@ -131,6 +130,12 @@ public:
             const pointField& cc,
             const scalarField& cWeights
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multiLevelDecomp&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,6 @@ class Cole
 :
     public departureFrequencyModel
 {
-
 public:
 
     //- Runtime type information
@@ -87,6 +86,9 @@ public:
             const phaseModel& liquid,
             const phaseModel& vapor,
             const label patchi,
+            const scalarField& Tl,
+            const scalarField& Tsatw,
+            const scalarField& L,
             const scalarField& dDep
         ) const;
 };

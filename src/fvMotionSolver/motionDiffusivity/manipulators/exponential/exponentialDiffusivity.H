@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,19 +51,10 @@ class exponentialDiffusivity
 :
     public motionDiffusivity
 {
-    // Private data
+    // Private Data
 
         scalar alpha_;
         autoPtr<motionDiffusivity> basicDiffusivityPtr_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        exponentialDiffusivity(const exponentialDiffusivity&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const exponentialDiffusivity&);
 
 
 public:
@@ -77,6 +68,9 @@ public:
         //- Construct for the given fvMesh and data Istream
         exponentialDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        exponentialDiffusivity(const exponentialDiffusivity&) = delete;
+
 
     //- Destructor
     virtual ~exponentialDiffusivity();
@@ -84,11 +78,17 @@ public:
 
     // Member Functions
 
-        //- Return diffusivity field
-        virtual tmp<surfaceScalarField> operator()() const;
-
         //- Correct the motion diffusivity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const exponentialDiffusivity&) = delete;
+
+        //- Return diffusivity field
+        virtual tmp<surfaceScalarField> operator()() const;
 };
 
 

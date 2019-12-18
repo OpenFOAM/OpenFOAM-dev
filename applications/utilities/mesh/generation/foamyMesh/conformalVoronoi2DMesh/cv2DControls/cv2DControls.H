@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,31 +58,19 @@ Ostream& operator<<(Ostream&, const cv2DControls&);
 
 class cv2DControls
 {
-    // Private data
-
-        //- Description of data_
-        const dictionary& dict_;
+    // Private Data
 
         const dictionary& motionControl_;
 
         const dictionary& conformationControl_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cv2DControls(const cv2DControls&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cv2DControls&);
-
-
 public:
 
         // Controls
 
-            //- Minimum cell size below which protusions through the surface are
-            //  not split
+            //- Minimum cell size below which protrusions through the surface
+            //  are not split
             scalar minCellSize_;
 
             //- Square of minCellSize
@@ -126,14 +114,14 @@ public:
             //- Square of span
             scalar span2_;
 
-            //- Minimum edge-length of the cell size below which protusions
+            //- Minimum edge-length of the cell size below which protrusions
             //  through the surface are not split
             scalar minEdgeLen_;
 
             //- Square of minEdgeLen
             scalar minEdgeLen2_;
 
-            //- Maximum notch size below which protusions into the surface are
+            //- Maximum notch size below which protrusions into the surface are
             //  not filled
             scalar maxNotchLen_;
 
@@ -161,6 +149,9 @@ public:
             const dictionary& controlDict,
             const boundBox& bb
         );
+
+        //- Disallow default bitwise copy construction
+        cv2DControls(const cv2DControls&) = delete;
 
 
     //- Destructor
@@ -249,6 +240,12 @@ public:
                 Ostream& os,
                 const cv2DControls& s
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cv2DControls&) = delete;
 };
 
 

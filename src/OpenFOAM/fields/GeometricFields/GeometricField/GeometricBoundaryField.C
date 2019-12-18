@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -381,6 +381,24 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 Foam::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 Boundary
 (
+    typename GeometricField<Type, PatchField, GeoMesh>::
+    Boundary&& btf
+)
+:
+    FieldField<PatchField, Type>(move(btf)),
+    bmesh_(btf.bmesh_)
+{
+    if (debug)
+    {
+        InfoInFunction << endl;
+    }
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+Foam::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+Boundary
+(
     const BoundaryMesh& bmesh,
     const DimensionedField<Type, GeoMesh>& field,
     const dictionary& dict
@@ -601,6 +619,18 @@ operator=
 )
 {
     FieldField<PatchField, Type>::operator=(bf);
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+void Foam::GeometricField<Type, PatchField, GeoMesh>::Boundary::
+operator=
+(
+    typename GeometricField<Type, PatchField, GeoMesh>::
+    Boundary&& bf
+)
+{
+    FieldField<PatchField, Type>::operator=(move(bf));
 }
 
 

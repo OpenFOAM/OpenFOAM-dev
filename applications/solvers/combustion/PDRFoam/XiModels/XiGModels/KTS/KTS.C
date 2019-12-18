@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::XiGModels::KTS::KTS
 )
 :
     XiGModel(XiGProperties, thermo, turbulence, Su),
-    GEtaCoef_(readScalar(XiGModelCoeffs_.lookup("GEtaCoef")))
+    GEtaCoef_(XiGModelCoeffs_.lookup<scalar>("GEtaCoef"))
 {}
 
 

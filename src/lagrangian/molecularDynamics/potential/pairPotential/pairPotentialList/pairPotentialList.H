@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class pairPotentialList
 :
     public PtrList<pairPotential>
 {
-    // Private data
+    // Private Data
 
         label nIds_;
 
@@ -79,12 +79,6 @@ class pairPotentialList
             const polyMesh& mesh
         );
 
-        //- Disallow default bitwise assignment
-        void operator=(const pairPotentialList&);
-
-        //- Disallow default bitwise copy construct
-        pairPotentialList(const pairPotentialList&);
-
 
 public:
 
@@ -99,6 +93,9 @@ public:
             const dictionary& pairPotentialDict,
             const polyMesh& mesh
         );
+
+        //- Disallow default bitwise assignment
+        void operator=(const pairPotentialList&) = delete;
 
 
     //- Destructor
@@ -160,6 +157,12 @@ public:
             ) const;
 
             inline const pairPotential& electrostatic() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise copy construction
+        pairPotentialList(const pairPotentialList&) = delete;
 };
 
 

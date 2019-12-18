@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,15 +61,6 @@ class surfZoneIOList
     public surfZoneList,
     public regIOobject
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        surfZoneIOList(const surfZoneIOList&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfZoneIOList&);
-
-
 public:
 
     //- Runtime type information
@@ -85,7 +76,10 @@ public:
         surfZoneIOList(const IOobject&, const surfZoneList&);
 
         //- Construct from IOobject and surfZoneList
-        surfZoneIOList(const IOobject&, const Xfer<surfZoneList>&);
+        surfZoneIOList(const IOobject&, surfZoneList&&);
+
+        //- Disallow default bitwise copy construction
+        surfZoneIOList(const surfZoneIOList&) = delete;
 
 
     //- Destructor
@@ -96,6 +90,12 @@ public:
 
         //- writeData member function required by regIOobject
         bool writeData(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfZoneIOList&) = delete;
 
 
     // IOstream Operators

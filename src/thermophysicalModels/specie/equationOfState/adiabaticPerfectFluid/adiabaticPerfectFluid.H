@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,9 @@ Class
 
 Description
     Adiabatic perfect fluid equation of state.
+
+    Coefficient mixing is very inaccurate and not supported,
+    so this equation of state is not applicable to mixtures.
 
 SourceFiles
     adiabaticPerfectFluidI.H
@@ -85,7 +88,7 @@ class adiabaticPerfectFluid
 :
     public Specie
 {
-    // Private data
+    // Private Data
 
         //- Reference pressure
         scalar p0_;
@@ -134,7 +137,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()
@@ -166,10 +169,10 @@ public:
             //- Return Cv departure [J/(kg K]
             inline scalar Cv(scalar p, scalar T) const;
 
-            //- Return entropy [J/(kg K)]
+            //- Return entropy [J/kg/K]
             inline scalar S(const scalar p, const scalar T) const;
 
-            //- Return compressibility rho/p [s^2/m^2]
+            //- Return compressibility [s^2/m^2]
             inline scalar psi(scalar p, scalar T) const;
 
             //- Return compression factor []
@@ -185,7 +188,7 @@ public:
             void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator+=(const adiabaticPerfectFluid&);
         inline void operator*=(const scalar);

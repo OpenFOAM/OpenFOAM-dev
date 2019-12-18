@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,15 +72,6 @@ class processorField
 :
     public fvMeshFunctionObject
 {
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        processorField(const processorField&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const processorField&);
-
-
 public:
 
     //- Runtime type information
@@ -97,6 +88,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        processorField(const processorField&) = delete;
+
 
     //- Destructor
     virtual ~processorField();
@@ -112,6 +106,12 @@ public:
 
         //- Write the processorID field
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const processorField&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,9 +51,9 @@ Foam::waveAtmBoundaryLayerSuperposition::waveAtmBoundaryLayerSuperposition
 :
     waveSuperposition(db),
     UGasRef_(lookup("UGasRef")),
-    hRef_(readScalar(lookup("hRef"))),
-    hWaveMin_(readScalar(lookup("hWaveMin"))),
-    hWaveMax_(readScalar(lookup("hWaveMax")))
+    hRef_(lookup<scalar>("hRef")),
+    hWaveMin_(lookup<scalar>("hWaveMin")),
+    hWaveMax_(lookup<scalar>("hWaveMax"))
 {}
 
 
@@ -108,10 +108,10 @@ void Foam::waveAtmBoundaryLayerSuperposition::write(Ostream& os) const
 {
     waveSuperposition::write(os);
 
-    os.writeKeyword("UGasRef") << UGasRef_ << token::END_STATEMENT << nl;
-    os.writeKeyword("hRef") << hRef_ << token::END_STATEMENT << nl;
-    os.writeKeyword("hWaveMin") << hWaveMin_ << token::END_STATEMENT << nl;
-    os.writeKeyword("hWaveMax") << hWaveMax_ << token::END_STATEMENT << nl;
+    writeEntry(os, "UGasRef", UGasRef_);
+    writeEntry(os, "hRef", hRef_);
+    writeEntry(os, "hWaveMin", hWaveMin_);
+    writeEntry(os, "hWaveMax", hWaveMax_);
 }
 
 

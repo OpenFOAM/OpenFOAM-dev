@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,17 +53,6 @@ class noneGAMGProcAgglomeration
 :
     public GAMGProcAgglomeration
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        noneGAMGProcAgglomeration
-        (
-            const noneGAMGProcAgglomeration&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const noneGAMGProcAgglomeration&);
-
 
 public:
 
@@ -80,6 +69,12 @@ public:
             const dictionary& controlDict
         );
 
+        //- Disallow default bitwise copy construction
+        noneGAMGProcAgglomeration
+        (
+            const noneGAMGProcAgglomeration&
+        );
+
 
     //- Destructor
     virtual ~noneGAMGProcAgglomeration();
@@ -93,6 +88,11 @@ public:
             return false;
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const noneGAMGProcAgglomeration&) = delete;
 };
 
 

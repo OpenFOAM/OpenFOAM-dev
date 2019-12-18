@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ Ostream& operator<<(Ostream&, const patchEdgeFaceInfo&);
 
 class patchEdgeFaceInfo
 {
-    // Private data
+    // Private Data
 
         //- Position of nearest wall center
         point origin_;
@@ -110,9 +110,6 @@ public:
 
         //- Construct from origin, distance
         inline patchEdgeFaceInfo(const point&, const scalar);
-
-        //- Construct as copy
-        inline patchEdgeFaceInfo(const patchEdgeFaceInfo&);
 
 
     // Member Functions

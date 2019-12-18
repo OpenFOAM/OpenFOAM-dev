@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,21 +57,15 @@ class GTSsurfaceFormat
 :
     public UnsortedMeshedSurface<Face>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        GTSsurfaceFormat(const GTSsurfaceFormat<Face>&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const GTSsurfaceFormat<Face>&);
-
-
 public:
 
     // Constructors
 
         //- Construct from file name
         GTSsurfaceFormat(const fileName&);
+
+        //- Disallow default bitwise copy construction
+        GTSsurfaceFormat(const GTSsurfaceFormat<Face>&) = delete;
 
 
     // Selectors
@@ -107,6 +101,12 @@ public:
         {
             write(name, *this);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const GTSsurfaceFormat<Face>&) = delete;
 };
 
 

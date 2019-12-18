@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,22 +97,13 @@ class basic
 :
     public PDRDragModel
 {
-    // Private data
+    // Private Data
 
         dimensionedScalar Csu;
         dimensionedScalar Csk;
 
         volScalarField Aw_;
         volSymmTensorField CR_;
-
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        basic(const basic&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const basic&);
 
 
 public:
@@ -133,6 +124,9 @@ public:
             const surfaceScalarField& phi
         );
 
+        //- Disallow default bitwise copy construction
+        basic(const basic&);
+
 
     //- Destructor
     virtual ~basic();
@@ -151,6 +145,12 @@ public:
 
         //- Write fields
         void writeFields() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const basic&) = delete;
 };
 
 

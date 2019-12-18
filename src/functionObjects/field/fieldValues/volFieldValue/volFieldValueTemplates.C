@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ Type Foam::functionObjects::fieldValues::volFieldValue::processValues
         }
         case operationType::weightedAverage:
         {
-            result = gSum(weightField*values)/gSum(weightField);
+            result = gSum(weightField*values)/max(gSum(weightField), vSmall);
             break;
         }
         case operationType::volAverage:
@@ -114,7 +114,8 @@ Type Foam::functionObjects::fieldValues::volFieldValue::processValues
         }
         case operationType::weightedVolAverage:
         {
-            result = gSum(weightField*V*values)/gSum(weightField*V);
+            result =
+                gSum(weightField*V*values)/max(gSum(weightField*V), vSmall);
             break;
         }
         case operationType::volIntegrate:
@@ -203,7 +204,7 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
                         IOobject::NO_READ,
                         IOobject::NO_WRITE
                     ),
-                    weightField*values
+                    (weightField*values).ref()
                 ).write();
             }
 

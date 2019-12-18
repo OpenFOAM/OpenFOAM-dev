@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sampledPatchInternalField
+    Foam::sampledSurfaces::patchInternalField
 
 Description
     Variation of sampledPatch that samples the internalField (at a given
@@ -47,16 +47,18 @@ SourceFiles
 
 namespace Foam
 {
+namespace sampledSurfaces
+{
 
 /*---------------------------------------------------------------------------*\
-                  Class sampledPatchInternalField Declaration
+                  Class patchInternalField Declaration
 \*---------------------------------------------------------------------------*/
 
-class sampledPatchInternalField
+class patchInternalField
 :
-    public sampledPatch
+    public patch
 {
-    // Private data
+    // Private Data
 
         //- Mapping engines
         PtrList<mappedPatchBase> mappers_;
@@ -78,13 +80,13 @@ class sampledPatchInternalField
 public:
 
     //- Runtime type information
-    TypeName("sampledPatchInternalField");
+    TypeName("patchInternalField");
 
 
     // Constructors
 
         //- Construct from dictionary
-        sampledPatchInternalField
+        patchInternalField
         (
             const word& name,
             const polyMesh& mesh,
@@ -93,7 +95,7 @@ public:
 
 
     //- Destructor
-    virtual ~sampledPatchInternalField();
+    virtual ~patchInternalField();
 
 
     // Member Functions
@@ -171,6 +173,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSurfaces
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

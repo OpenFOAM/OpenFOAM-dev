@@ -18,37 +18,34 @@ thermoType
 {
     type            heRhoThermo;
     mixture         pureMixture;
-    transport       polynomial;
-    thermo          hPolynomial;
-    equationOfState icoPolynomial;
+    transport       const;
+    thermo          eConst;
+    equationOfState rPolynomial;
     specie          specie;
     energy          sensibleInternalEnergy;
 }
 
-
 mixture
 {
-    // coefficients for water
-
     specie
     {
-        molWeight       18;
+        molWeight   18;
     }
     equationOfState
     {
-        rhoCoeffs<8>    ( 1000 0 0 0 0 0 0 0 );
+        C (0.001278 -2.1055e-06 3.9689e-09 4.3772e-13 -2.0225e-16);
     }
     thermodynamics
     {
-        Hf              0;
-        Sf              0;
-        CpCoeffs<8>     ( 4183 0 0 0 0 0 0 0 );
+        Cv          4195;
+        Hf          0;
     }
     transport
     {
-        muCoeffs<8>     ( 0.001 0 0 0 0 0 0 0 );
-        kappaCoeffs<8>  ( 0.58  0 0 0 0 0 0 0 );
+        mu          1e-3;
+        Pr          2.289;
     }
 }
+
 
 // ************************************************************************* //

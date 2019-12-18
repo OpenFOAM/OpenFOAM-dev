@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,17 +94,6 @@ protected:
         virtual void printCoeffs(const word& type);
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        LESModel(const LESModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const LESModel&);
-
-
 public:
 
     typedef typename BasicTurbulenceModel::alphaField alphaField;
@@ -150,6 +139,9 @@ public:
             const transportModel& transport,
             const word& propertiesName
         );
+
+        //- Disallow default bitwise copy construction
+        LESModel(const LESModel&) = delete;
 
 
     // Selectors
@@ -223,6 +215,12 @@ public:
 
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const LESModel&) = delete;
 };
 
 

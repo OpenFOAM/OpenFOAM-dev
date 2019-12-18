@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,28 +49,17 @@ class linearInterpolationWeights
 :
     public interpolationWeights
 {
-
-private:
-
-    // Private data
+    // Private Data
 
         //- Cached index in samples from previous invocation
         mutable label index_;
 
-    // Private Member Functions
-
-        //- Get weights of i and i+1 to calculate integration from t to
-        //  samples_[i+1]
-        Pair<scalar> integrationWeights
-        (
-            const label i,
-            const scalar t
-        ) const;
 
 public:
 
     //- Runtime type information
     TypeName("linear");
+
 
     // Constructors
 
@@ -101,8 +90,8 @@ public:
         //  from samples. Returns true if indices changed.
         virtual bool integrationWeights
         (
-            const scalar t1,
-            const scalar t2,
+            scalar t1,
+            scalar t2,
             labelList& indices,
             scalarField& weights
         ) const;

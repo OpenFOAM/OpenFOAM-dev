@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ Description
     conductivity sigma and permeability mu are read in as uniform
     constants.
 
-    A fictitous magnetic flux pressure pH is introduced in order to
+    A fictitious magnetic flux pressure pB is introduced in order to
     compensate for discretisation errors and create a magnetic face flux
     field which is divergence free as required by Maxwell's equations.
 

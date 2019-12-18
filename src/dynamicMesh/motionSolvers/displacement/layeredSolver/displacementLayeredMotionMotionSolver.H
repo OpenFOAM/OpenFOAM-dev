@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,16 +111,6 @@ class displacementLayeredMotionMotionSolver
         );
 
 
-        //- Disallow default bitwise copy construct
-        displacementLayeredMotionMotionSolver
-        (
-            const displacementLayeredMotionMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const displacementLayeredMotionMotionSolver&);
-
-
 public:
 
     //- Runtime type information
@@ -129,11 +119,17 @@ public:
 
     // Constructors
 
-        //- Construct from polyMesh and IOdictionary
+        //- Construct from polyMesh and dictionary
         displacementLayeredMotionMotionSolver
         (
             const polyMesh&,
-            const IOdictionary&
+            const dictionary&
+        );
+
+        //- Disallow default bitwise copy construction
+        displacementLayeredMotionMotionSolver
+        (
+            const displacementLayeredMotionMotionSolver&
         );
 
 
@@ -151,6 +147,12 @@ public:
 
         //- Update topology
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const displacementLayeredMotionMotionSolver&) = delete;
 };
 
 

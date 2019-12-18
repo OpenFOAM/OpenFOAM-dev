@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,15 +40,14 @@ void Foam::correctorConvergenceControl::getNSolves
 (
     const fvMesh& mesh,
     const word& fieldName,
-    ITstream& data,
     label& n
 )
 {
-    getNTypeSolves<scalar>(mesh, fieldName, data, n);
-    getNTypeSolves<vector>(mesh, fieldName, data, n);
-    getNTypeSolves<sphericalTensor>(mesh, fieldName, data, n);
-    getNTypeSolves<symmTensor>(mesh, fieldName, data, n);
-    getNTypeSolves<tensor>(mesh, fieldName, data, n);
+    getNTypeSolves<scalar>(mesh, fieldName, n);
+    getNTypeSolves<vector>(mesh, fieldName, n);
+    getNTypeSolves<sphericalTensor>(mesh, fieldName, n);
+    getNTypeSolves<symmTensor>(mesh, fieldName, n);
+    getNTypeSolves<tensor>(mesh, fieldName, n);
 }
 
 

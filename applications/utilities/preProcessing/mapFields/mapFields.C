@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -332,7 +332,7 @@ int main(int argc, char *argv[])
             )
         );
 
-        int nProcs(readInt(decompositionDict.lookup("numberOfSubdomains")));
+        const int nProcs(decompositionDict.lookup<int>("numberOfSubdomains"));
 
         Info<< "Create target mesh\n" << endl;
 
@@ -411,7 +411,7 @@ int main(int argc, char *argv[])
             )
         );
 
-        int nProcs(readInt(decompositionDict.lookup("numberOfSubdomains")));
+        const int nProcs(decompositionDict.lookup<int>("numberOfSubdomains"));
 
         Info<< "Create source mesh\n" << endl;
 
@@ -490,9 +490,9 @@ int main(int argc, char *argv[])
             )
         );
 
-        int nProcsSource
+        const int nProcsSource
         (
-            readInt(decompositionDictSource.lookup("numberOfSubdomains"))
+            decompositionDictSource.lookup<int>("numberOfSubdomains")
         );
 
 
@@ -508,9 +508,9 @@ int main(int argc, char *argv[])
             )
         );
 
-        int nProcsTarget
+        const int nProcsTarget
         (
-            readInt(decompositionDictTarget.lookup("numberOfSubdomains"))
+            decompositionDictTarget.lookup<int>("numberOfSubdomains")
         );
 
         List<boundBox> bbsTarget(nProcsTarget);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,17 +57,6 @@ class porosityModelList
 :
     public PtrList<porosityModel>
 {
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        porosityModelList(const porosityModelList&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const porosityModelList&);
-
-
 protected:
 
     // Protected data
@@ -78,8 +67,13 @@ protected:
 
 public:
 
-    //- Constructor
-    porosityModelList(const fvMesh& mesh, const dictionary& dict);
+    // Constructors
+
+        porosityModelList(const fvMesh& mesh, const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        porosityModelList(const porosityModelList&) = delete;
+
 
     //- Destructor
     ~porosityModelList();
@@ -127,7 +121,14 @@ public:
                 Ostream& os,
                 const porosityModelList& models
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const porosityModelList&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

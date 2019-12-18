@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ class SIBS
 :
     public ODESolver
 {
-    // Private data
+    // Private Data
 
         static const label kMaxX_ = 7, iMaxX_ = kMaxX_ + 1;
         static const label nSeq_[iMaxX_];
@@ -90,6 +90,7 @@ class SIBS
         (
             const scalar xStart,
             const scalarField& y,
+            const label li,
             const scalarField& dydx,
             const scalarField& dfdx,
             const scalarSquareMatrix& dfdy,
@@ -136,6 +137,7 @@ public:
         (
             scalar& x,
             scalarField& y,
+            const label li,
             scalar& dxTry
         ) const;
 };

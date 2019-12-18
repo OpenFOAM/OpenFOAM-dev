@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,8 +114,8 @@ Foam::atmBoundaryLayer::atmBoundaryLayer
     zDir_(dict.lookup("zDir")),
     kappa_(dict.lookupOrDefault<scalar>("kappa", kappaDefault_)),
     Cmu_(dict.lookupOrDefault<scalar>("Cmu", CmuDefault_)),
-    Uref_(readScalar(dict.lookup("Uref"))),
-    Zref_(readScalar(dict.lookup("Zref"))),
+    Uref_(dict.lookup<scalar>("Uref")),
+    Zref_(dict.lookup<scalar>("Zref")),
     z0_("z0", dict, p.size()),
     zGround_("zGround", dict, p.size()),
     Ustar_(p.size()),
@@ -140,9 +140,9 @@ Foam::atmBoundaryLayer::atmBoundaryLayer
     Cmu_(abl.Cmu_),
     Uref_(abl.Uref_),
     Zref_(abl.Zref_),
-    z0_(abl.z0_, mapper),
-    zGround_(abl.zGround_, mapper),
-    Ustar_(abl.Ustar_, mapper),
+    z0_(mapper(abl.z0_)),
+    zGround_(mapper(abl.zGround_)),
+    Ustar_(mapper(abl.Ustar_)),
     offset_(abl.offset_),
     Ulower_(abl.Ulower_),
     kLower_(abl.kLower_),
@@ -172,9 +172,9 @@ Foam::atmBoundaryLayer::atmBoundaryLayer(const atmBoundaryLayer& abl)
 
 void Foam::atmBoundaryLayer::autoMap(const fvPatchFieldMapper& m)
 {
-    z0_.autoMap(m);
-    zGround_.autoMap(m);
-    Ustar_.autoMap(m);
+    m(z0_, z0_);
+    m(zGround_, zGround_);
+    m(Ustar_, Ustar_);
 }
 
 
@@ -254,31 +254,22 @@ Foam::tmp<Foam::scalarField> Foam::atmBoundaryLayer::epsilon
 
 void Foam::atmBoundaryLayer::write(Ostream& os) const
 {
-    z0_.writeEntry("z0", os) ;
-    os.writeKeyword("flowDir")
-        << flowDir_ << token::END_STATEMENT << nl;
-    os.writeKeyword("zDir")
-        << zDir_ << token::END_STATEMENT << nl;
-    os.writeKeyword("kappa")
-        << kappa_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Cmu")
-        << Cmu_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Uref")
-        << Uref_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Zref")
-        << Zref_ << token::END_STATEMENT << nl;
+    writeEntry(os, "z0", z0_) ;
+    writeEntry(os, "flowDir", flowDir_);
+    writeEntry(os, "zDir", zDir_);
+    writeEntry(os, "kappa", kappa_);
+    writeEntry(os, "Cmu", Cmu_);
+    writeEntry(os, "Uref", Uref_);
+    writeEntry(os, "Zref", Zref_);
 
     if (offset_)
     {
-        os.writeKeyword("Ulower")
-            << Ulower_ << token::END_STATEMENT << nl;
-        os.writeKeyword("kLower")
-            << kLower_ << token::END_STATEMENT << nl;
-        os.writeKeyword("epsilonLower")
-            << epsilonLower_ << token::END_STATEMENT << nl;
+        writeEntry(os, "Ulower", Ulower_);
+        writeEntry(os, "kLower", kLower_);
+        writeEntry(os, "epsilonLower", epsilonLower_);
     }
 
-    zGround_.writeEntry("zGround", os) ;
+    writeEntry(os, "zGround", zGround_);
 }
 
 

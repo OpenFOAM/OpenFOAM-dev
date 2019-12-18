@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,20 +58,15 @@ class WRLsurfaceFormat
     public WRLsurfaceFormatCore
 
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        WRLsurfaceFormat(const WRLsurfaceFormat<Face>&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const WRLsurfaceFormat<Face>&);
-
 public:
 
     // Constructors
 
         //- Construct null
         WRLsurfaceFormat();
+
+        //- Disallow default bitwise copy construction
+        WRLsurfaceFormat(const WRLsurfaceFormat<Face>&) = delete;
 
 
     //- Destructor
@@ -90,6 +85,11 @@ public:
             write(name, MeshedSurfaceProxy<Face>(*this));
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const WRLsurfaceFormat<Face>&) = delete;
 };
 
 

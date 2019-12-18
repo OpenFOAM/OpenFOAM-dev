@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ class supersonicFreestreamFvPatchVectorField
 :
     public mixedFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Name of temperature field, default = "T"
         word TName_;
@@ -142,7 +142,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         supersonicFreestreamFvPatchVectorField
         (
             const supersonicFreestreamFvPatchVectorField&
@@ -157,7 +157,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         supersonicFreestreamFvPatchVectorField
         (
             const supersonicFreestreamFvPatchVectorField&,
@@ -177,7 +177,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -163,10 +163,10 @@ Foam::plane::plane(const dictionary& dict)
         const dictionary& subDict = dict.subDict("planeEquationDict");
         scalarList C(4);
 
-        C[0] = readScalar(subDict.lookup("a"));
-        C[1] = readScalar(subDict.lookup("b"));
-        C[2] = readScalar(subDict.lookup("c"));
-        C[3] = readScalar(subDict.lookup("d"));
+        C[0] = subDict.lookup<scalar>("a");
+        C[1] = subDict.lookup<scalar>("b");
+        C[2] = subDict.lookup<scalar>("c");
+        C[3] = subDict.lookup<scalar>("d");
 
         calcPntAndVec(C);
 
@@ -496,13 +496,11 @@ Foam::point Foam::plane::mirror(const point& p) const
 
 void Foam::plane::writeDict(Ostream& os) const
 {
-    os.writeKeyword("planeType") << "pointAndNormal"
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "planeType", "pointAndNormal");
     os  << indent << "pointAndNormalDict" << nl
         << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    os.writeKeyword("point") << point_ << token::END_STATEMENT << nl;
-    os.writeKeyword("normal") << normal_ << token::END_STATEMENT
-        << nl;
+    writeEntry(os, "point", point_);
+    writeEntry(os, "normal", normal_);
     os << decrIndent << indent << token::END_BLOCK << endl;
 }
 

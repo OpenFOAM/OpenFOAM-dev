@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,15 +74,6 @@ protected:
         const fvMesh& mesh_;
 
 
-    // Private Member Functions
-
-        //- Disallow copy construct
-        ddtScheme(const ddtScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const ddtScheme&);
-
-
 public:
 
     //- Runtime type information
@@ -114,6 +105,9 @@ public:
         :
             mesh_(mesh)
         {}
+
+        //- Disallow default bitwise copy construction
+        ddtScheme(const ddtScheme&);
 
 
     // Selectors
@@ -261,6 +255,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ddtScheme&) = delete;
 };
 
 

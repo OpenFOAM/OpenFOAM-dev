@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ class pointZoneSet
 :
     public pointSet
 {
-    // Private data
+    // Private Data
 
         const polyMesh& mesh_;
 
@@ -102,7 +102,7 @@ public:
     virtual ~pointZoneSet();
 
 
-    // Member functions
+    // Member Functions
 
         const labelList& addressing() const
         {
@@ -147,7 +147,7 @@ public:
             IOstream::streamFormat,
             IOstream::versionNumber,
             IOstream::compressionType,
-            const bool valid
+            const bool write = true
         ) const;
 
         //- Update any stored data for new labels

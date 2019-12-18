@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,7 +137,7 @@ class atmBoundaryLayer
         static const scalar CmuDefault_;
 
 
-    // Private data
+    // Private Data
 
         //- Flow direction
         vector flowDir_;
@@ -180,7 +180,7 @@ class atmBoundaryLayer
         const scalar epsilonLower_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Initialisation shared by multiple constructors
         void init();
@@ -220,11 +220,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         atmBoundaryLayer(const atmBoundaryLayer&);
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

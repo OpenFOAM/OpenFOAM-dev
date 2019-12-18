@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ class seulex
 :
     public ODESolver
 {
-    // Private data
+    // Private Data
 
         // Static constants
 
@@ -108,13 +108,14 @@ class seulex
         (
             const scalar x0,
             const scalarField& y0,
+            const label li,
             const scalar dxTot,
             const label k,
             scalarField& y,
             const scalarField& scale
         ) const;
 
-        //- Polynomial extrpolation
+        //- Polynomial extrapolation
         void extrapolate
         (
             const label k,
@@ -150,6 +151,7 @@ public:
         (
             scalar& x,
             scalarField& y,
+            const label li,
             stepState& step
         ) const;
 };

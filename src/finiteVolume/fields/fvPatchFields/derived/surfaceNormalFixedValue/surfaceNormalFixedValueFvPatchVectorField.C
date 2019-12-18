@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,17 +67,13 @@ surfaceNormalFixedValueFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(p, iF),
-    refValue_(ptf.refValue_, mapper)
+    refValue_(mapper(ptf.refValue_))
 {
     // Note: calculate product only on ptf to avoid multiplication on
     // unset values in reconstructPar.
     fvPatchVectorField::operator=
     (
-        vectorField
-        (
-            ptf.refValue_*ptf.patch().nf(),
-            mapper
-        )
+        mapper(ptf.refValue_*ptf.patch().nf())
     );
 }
 
@@ -113,7 +109,7 @@ void Foam::surfaceNormalFixedValueFvPatchVectorField::autoMap
 )
 {
     fixedValueFvPatchVectorField::autoMap(m);
-    refValue_.autoMap(m);
+    m(refValue_, refValue_);
 }
 
 
@@ -147,7 +143,7 @@ void Foam::surfaceNormalFixedValueFvPatchVectorField::updateCoeffs()
 void Foam::surfaceNormalFixedValueFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    refValue_.writeEntry("refValue", os);
+    writeEntry(os, "refValue", refValue_);
 }
 
 

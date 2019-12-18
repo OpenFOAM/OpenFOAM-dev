@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,21 +64,15 @@ class AC3DsurfaceFormat
     public MeshedSurface<Face>,
     public AC3DsurfaceFormatCore
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        AC3DsurfaceFormat(const AC3DsurfaceFormat<Face>&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const AC3DsurfaceFormat<Face>&);
-
-
 public:
 
     // Constructors
 
         //- Construct from file name
         AC3DsurfaceFormat(const fileName&);
+
+        //- Disallow default bitwise copy construction
+        AC3DsurfaceFormat(const AC3DsurfaceFormat<Face>&) = delete;
 
 
     // Selectors
@@ -114,6 +108,12 @@ public:
         {
             write(name, MeshedSurfaceProxy<Face>(*this));
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const AC3DsurfaceFormat<Face>&) = delete;
 };
 
 

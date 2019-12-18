@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,16 +55,16 @@ class NamedEnum
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        NamedEnum(const NamedEnum&);
+        //- Disallow default bitwise copy construction
+        NamedEnum(const NamedEnum&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const NamedEnum&);
+        void operator=(const NamedEnum&) = delete;
 
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- The set of names corresponding to the enumeration Enum
         static const char* names[nEnum];

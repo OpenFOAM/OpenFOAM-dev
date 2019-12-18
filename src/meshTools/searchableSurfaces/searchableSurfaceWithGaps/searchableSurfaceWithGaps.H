@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,8 +61,6 @@ class searchableSurfaceWithGaps
 :
     public searchableSurface
 {
-private:
-
     // Private Member Data
 
         //- Gap size in metre
@@ -98,13 +96,6 @@ private:
         );
 
 
-        //- Disallow default bitwise copy construct
-        searchableSurfaceWithGaps(const searchableSurfaceWithGaps&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableSurfaceWithGaps&);
-
-
 public:
 
     //- Runtime type information
@@ -119,6 +110,10 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        searchableSurfaceWithGaps(const searchableSurfaceWithGaps&) = delete;
+
 
     //- Destructor
     virtual ~searchableSurfaceWithGaps();
@@ -297,6 +292,11 @@ public:
                 return surface().writeData(os);
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableSurfaceWithGaps&) = delete;
 };
 
 

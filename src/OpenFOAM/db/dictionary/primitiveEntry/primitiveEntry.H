@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,23 +71,13 @@ class primitiveEntry
         void append(const UList<token>&);
 
         //- Append the given token to this entry
-        void append
-        (
-            const token& currToken,
-            const dictionary&,
-            Istream&
-        );
+        void append(const token& currToken, const dictionary&, Istream&);
 
-        //- Expand the given variable (keyword starts with $)
-        bool expandVariable(const string&, const dictionary&);
+        //- Expand the given variable
+        bool expandVariable(const variable&, const dictionary&);
 
         //- Expand the given function (keyword starts with #)
-        bool expandFunction
-        (
-            const word&,
-            const dictionary&,
-            Istream&
-        );
+        bool expandFunction(const functionName&, const dictionary&, Istream&);
 
         //- Read the complete entry from the given stream
         void readEntry(const dictionary&, Istream&);
@@ -112,8 +102,8 @@ public:
         //- Construct from keyword and a list of tokens
         primitiveEntry(const keyType&, const UList<token>&);
 
-        //- Construct from keyword and by transferring a list of tokens
-        primitiveEntry(const keyType&, const Xfer<List<token>>&);
+        //- Move construct from keyword and by transferring a list of tokens
+        primitiveEntry(const keyType&, List<token>&&);
 
         //- Construct from keyword and a T
         template<class T>
@@ -125,7 +115,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Inherit read from ITstream
         using ITstream::read;

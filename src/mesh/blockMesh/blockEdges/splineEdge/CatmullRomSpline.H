@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,15 +77,6 @@ class CatmullRomSpline
 :
     public polyLine
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        CatmullRomSpline(const CatmullRomSpline&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const CatmullRomSpline&);
-
-
 public:
 
     // Constructors
@@ -96,6 +87,9 @@ public:
             const pointField& knots,
             const bool notImplementedClosed = false
         );
+
+        //- Disallow default bitwise copy construction
+        CatmullRomSpline(const CatmullRomSpline&) = delete;
 
 
     // Member Functions
@@ -110,6 +104,12 @@ public:
 
         //- Return the length of the curve
         scalar length() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CatmullRomSpline&) = delete;
 };
 
 

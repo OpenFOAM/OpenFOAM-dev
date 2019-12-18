@@ -20,28 +20,22 @@ internalField   uniform 0;
 
 boundaryField
 {
-
-    front
-    {
-        type            zeroGradient;
-    }
-    back
-    {
-        type            zeroGradient;
-    }
     walls
     {
         type            zeroGradient;
     }
+
     porosityWall
     {
         type            zeroGradient;
     }
+
     inlet
     {
         type            fixedValue;
         value           uniform 1;
     }
+
     outlet
     {
         type            inletOutlet;

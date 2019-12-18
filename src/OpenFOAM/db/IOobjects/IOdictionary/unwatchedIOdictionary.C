@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,6 +79,16 @@ Foam::unwatchedIOdictionary::unwatchedIOdictionary
 }
 
 
+Foam::unwatchedIOdictionary::unwatchedIOdictionary
+(
+    unwatchedIOdictionary&& dict
+)
+:
+    baseIOdictionary(move(dict)),
+    files_(move(dict.files_))
+{}
+
+
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
 
 Foam::unwatchedIOdictionary::~unwatchedIOdictionary()
@@ -140,6 +150,15 @@ void Foam::unwatchedIOdictionary::addWatch()
 
         addWatch(f);
     }
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+void Foam::unwatchedIOdictionary::operator=(unwatchedIOdictionary&& rhs)
+{
+    baseIOdictionary::operator=(move(rhs));
+    files_ = move(rhs.files_);
 }
 
 

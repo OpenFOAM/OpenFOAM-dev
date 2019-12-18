@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ Foam::aspectRatioModels::Wellek::~Wellek()
 Foam::tmp<Foam::volScalarField>
 Foam::aspectRatioModels::Wellek::E() const
 {
-    return scalar(1)/(scalar(1) + 0.163*pow(pair_.Eo(), 0.757));
+    return scalar(1)/(1 + 0.163*pow(pair_.Eo(), 0.757));
 }
 
 

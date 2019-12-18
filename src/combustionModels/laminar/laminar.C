@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ template<class ReactionThermo>
 Foam::combustionModels::laminar<ReactionThermo>::laminar
 (
     const word& modelType,
-    ReactionThermo& thermo,
+    const ReactionThermo& thermo,
     const compressibleTurbulenceModel& turb,
     const word& combustionProperties
 )
@@ -92,7 +92,7 @@ void Foam::combustionModels::laminar<ReactionThermo>::correct()
             {
                 const scalar maxIntegrationTime
                 (
-                    readScalar(this->coeffs().lookup("maxIntegrationTime"))
+                    this->coeffs().template lookup<scalar>("maxIntegrationTime")
                 );
 
                 this->chemistryPtr_->solve
@@ -109,6 +109,10 @@ void Foam::combustionModels::laminar<ReactionThermo>::correct()
         {
             this->chemistryPtr_->solve(this->mesh().time().deltaTValue());
         }
+    }
+    else
+    {
+        this->chemistryPtr_->calculate();
     }
 }
 

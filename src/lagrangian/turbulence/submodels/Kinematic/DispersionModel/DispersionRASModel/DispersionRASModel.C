@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,10 +183,8 @@ template<class CloudType>
 void Foam::DispersionRASModel<CloudType>::write(Ostream& os) const
 {
     DispersionModel<CloudType>::write(os);
-
-    os.writeKeyword("ownK") << ownK_ << token::END_STATEMENT << endl;
-    os.writeKeyword("ownEpsilon") << ownEpsilon_ << token::END_STATEMENT
-        << endl;
+    writeEntry(os, "ownK", ownK_);
+    writeEntry(os, "ownEpsilon", ownEpsilon_);
 }
 
 

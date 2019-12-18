@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,15 +70,21 @@ public:
         //- Construct from components
         GlobalIOField(const IOobject&, const Field<Type>&);
 
-        //- Construct by transferring the Field contents
-        GlobalIOField(const IOobject&, const Xfer<Field<Type>>&);
+        //- Move construct by transferring the Field contents
+        GlobalIOField(const IOobject&, Field<Type>&&);
+
+        //- Copy constructor
+        GlobalIOField(const GlobalIOField<Type>&);
+
+        //- Move constructor
+        GlobalIOField(GlobalIOField<Type>&&);
 
 
     //- Destructor
     virtual ~GlobalIOField();
 
 
-    // Member functions
+    // Member Functions
 
         //- Is object global
         virtual bool global() const
@@ -100,11 +106,13 @@ public:
         bool writeData(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const GlobalIOField<Type>&);
+        void operator=(GlobalIOField<Type>&&);
 
         void operator=(const Field<Type>&);
+        void operator=(Field<Type>&&);
 };
 
 

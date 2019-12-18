@@ -42,7 +42,7 @@ laplacianSchemes
 {
     default         none;
     laplacian(DD,D) Gauss linear corrected;
-    laplacian(DT,T) Gauss linear corrected;
+    laplacian(kappa,T) Gauss linear corrected;
 }
 
 interpolationSchemes

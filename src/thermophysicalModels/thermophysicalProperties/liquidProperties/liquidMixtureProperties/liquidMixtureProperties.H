@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ namespace Foam
 
 class liquidMixtureProperties
 {
-    // Private data
+    // Private Data
 
         //- Maximum reduced temperature
         static const scalar TrMax;
@@ -192,7 +192,7 @@ public:
             const scalarField& X
         ) const;
 
-        //- Calculate the mixture heat capacity [J/(kg K)]
+        //- Calculate the mixture heat capacity [J/kg/K]
         scalar Cp
         (
             const scalar p,
@@ -216,7 +216,7 @@ public:
             const scalarField& X
         ) const;
 
-        //- Estimate thermal conductivity  [W/(m K)]
+        //- Estimate thermal conductivity  [W/m/K]
         //  Li's method, Eq. 10-12.27 - 10.12-19
         scalar kappa
         (
@@ -225,7 +225,7 @@ public:
             const scalarField& X
         ) const;
 
-        //- Vapour diffussivity [m2/s]
+        //- Vapour diffusivity [m^2/s]
         scalar D
         (
             const scalar p,

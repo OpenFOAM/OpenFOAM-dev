@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,21 +54,10 @@ class laminar
 :
     public filmTurbulenceModel
 {
-private:
-
     // Private Data
 
         //- Surface roughness coefficient
         scalar Cf_;
-
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        laminar(const laminar&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const laminar&);
 
 
 public:
@@ -81,6 +70,9 @@ public:
 
         //- Construct from surface film model
         laminar(surfaceFilmRegionModel& film, const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        laminar(const laminar&) = delete;
 
 
     //- Destructor
@@ -102,6 +94,12 @@ public:
 
             //- Return the source for the film momentum equation
             virtual tmp<fvVectorMatrix> Su(volVectorField& U) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const laminar&) = delete;
 };
 
 

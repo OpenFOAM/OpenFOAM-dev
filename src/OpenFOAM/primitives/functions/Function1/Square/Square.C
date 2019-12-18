@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,68 +25,72 @@ License
 
 #include "Square.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1Types::Square<Type>::read(const dictionary& coeffs)
+void Foam::Function1s::Square<Type>::read(const dictionary& coeffs)
 {
-    t0_ = coeffs.lookupOrDefault<scalar>("t0", 0);
-    markSpace_ = coeffs.lookupOrDefault<scalar>("markSpace", 1);
-    amplitude_ = Function1<scalar>::New("amplitude", coeffs);
-    frequency_ = Function1<scalar>::New("frequency", coeffs);
-    scale_ = Function1<Type>::New("scale", coeffs);
+    amplitude_ = Function1<Type>::New("amplitude", coeffs);
+    frequency_ = coeffs.lookup<scalar>("frequency");
+    start_ = coeffs.lookupOrDefault<scalar>("start", 0);
     level_ = Function1<Type>::New("level", coeffs);
+    markSpace_ = coeffs.lookupOrDefault<scalar>("markSpace", 1);
+
+    integrable_ =
+        isA<Constant<Type>>(amplitude_())
+     && isA<Constant<Type>>(level_());
 }
 
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
 template<class Type>
-Foam::Function1Types::Square<Type>::Square
+Foam::Function1s::Square<Type>::Square
 (
     const word& entryName,
     const dictionary& dict
 )
 :
-    Function1<Type>(entryName)
+    FieldFunction1<Type, Square<Type>>(entryName)
 {
     read(dict);
 }
 
 
 template<class Type>
-Foam::Function1Types::Square<Type>::Square(const Square<Type>& se)
+Foam::Function1s::Square<Type>::Square(const Square<Type>& se)
 :
-    Function1<Type>(se),
-    t0_(se.t0_),
-    markSpace_(se.markSpace_),
+    FieldFunction1<Type, Square<Type>>(se),
     amplitude_(se.amplitude_, false),
-    frequency_(se.frequency_, false),
-    scale_(se.scale_, false),
-    level_(se.level_, false)
+    frequency_(se.frequency_),
+    start_(se.start_),
+    level_(se.level_, false),
+    markSpace_(se.markSpace_),
+    integrable_(se.integrable_)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::Square<Type>::~Square()
+Foam::Function1s::Square<Type>::~Square()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1Types::Square<Type>::writeData(Ostream& os) const
+void Foam::Function1s::Square<Type>::writeData(Ostream& os) const
 {
     Function1<Type>::writeData(os);
     os  << token::END_STATEMENT << nl;
     os  << indent << word(this->name() + "Coeffs") << nl;
     os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    os.writeKeyword("t0") << t0_ << token::END_STATEMENT << nl;
-    os.writeKeyword("markSpace") << markSpace_ << token::END_STATEMENT << nl;
     amplitude_->writeData(os);
-    frequency_->writeData(os);
-    scale_->writeData(os);
+    writeEntry(os, "frequency", frequency_);
+    writeEntry(os, "start", start_);
     level_->writeData(os);
+    writeEntry(os, "markSpace", markSpace_);
     os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 

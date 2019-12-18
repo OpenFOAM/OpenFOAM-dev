@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ class SprayCloud
 {
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         //- Type of cloud this cloud was instantiated for
         typedef CloudType cloudType;
@@ -76,22 +76,13 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Cloud copy pointer
         autoPtr<SprayCloud<CloudType>> cloudCopyPtr_;
 
         //- Average parcel mass
         scalar averageParcelMass_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        SprayCloud(const SprayCloud&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const SprayCloud&);
 
 
 protected:
@@ -148,6 +139,8 @@ public:
             const SprayCloud<CloudType>& c
         );
 
+        //- Disallow default bitwise copy construction
+        SprayCloud(const SprayCloud&) = delete;
 
         //- Construct and return clone based on (this) with new name
         virtual autoPtr<Cloud<parcelType>> clone(const word& name)
@@ -237,6 +230,12 @@ public:
 
             //- Print cloud information
             void info();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SprayCloud&) = delete;
 };
 
 

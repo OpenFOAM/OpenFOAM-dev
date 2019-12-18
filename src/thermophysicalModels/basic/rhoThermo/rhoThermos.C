@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 #include "incompressiblePerfectGas.H"
 #include "Boussinesq.H"
 #include "rhoConst.H"
-#include "perfectFluid.H"
+#include "rPolynomial.H"
 #include "PengRobinsonGas.H"
 #include "adiabaticPerfectFluid.H"
 
@@ -116,7 +116,7 @@ makeThermos
     constTransport,
     sensibleEnthalpy,
     hConstThermo,
-    perfectFluid,
+    rPolynomial,
     specie
 );
 
@@ -322,7 +322,7 @@ makeThermos
     constTransport,
     sensibleInternalEnergy,
     hConstThermo,
-    perfectFluid,
+    rPolynomial,
     specie
 );
 
@@ -334,7 +334,7 @@ makeThermos
     constTransport,
     sensibleInternalEnergy,
     eConstThermo,
-    perfectFluid,
+    rPolynomial,
     specie
 );
 
@@ -407,6 +407,18 @@ makeThermos
     sensibleInternalEnergy,
     janafThermo,
     incompressiblePerfectGas,
+    specie
+);
+
+makeThermos
+(
+    rhoThermo,
+    heRhoThermo,
+    pureMixture,
+    constTransport,
+    sensibleInternalEnergy,
+    eConstThermo,
+    Boussinesq,
     specie
 );
 

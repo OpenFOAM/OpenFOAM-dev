@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
     L.primitiveFieldRef() = cbrt(mesh.V());
     L.correctBoundaryConditions();
 
-    volScalarField I
+    const volScalarField I
     (
         alpha1
        /max
@@ -116,7 +116,8 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
             pair_.phase1().residualAlpha() + pair_.phase2().residualAlpha()
         )
     );
-    volScalarField magGradI
+
+    const volScalarField magGradI
     (
         max
         (
@@ -125,25 +126,35 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
         )
     );
 
-    volScalarField muI
+    const volScalarField muI
     (
         rho1*nu1*rho2*nu2
        /(rho1*nu1 + rho2*nu2)
     );
-    volScalarField muAlphaI
+
+    const volScalarField limitedAlpha1
+    (
+        max(alpha1, pair_.phase1().residualAlpha())
+    );
+
+    const volScalarField limitedAlpha2
+    (
+        max(alpha2, pair_.phase2().residualAlpha())
+    );
+
+    const volScalarField muAlphaI
     (
         alpha1*rho1*nu1*alpha2*rho2*nu2
-       /(alpha1*rho1*nu1 + alpha2*rho2*nu2)
+       /(limitedAlpha1*rho1*nu1 + limitedAlpha2*rho2*nu2)
     );
 
-    volScalarField ReI
+    const volScalarField ReI
     (
-        pair_.rho()
-       *pair_.magUr()
-       /(magGradI*muI)
+        pair_.rho()*pair_.magUr()
+       /(magGradI*limitedAlpha1*limitedAlpha2*muI)
     );
 
-    volScalarField lambda(m_*ReI + n_*muAlphaI/muI);
+    const volScalarField lambda(m_*ReI + n_*muAlphaI/muI);
 
     return lambda*sqr(magGradI)*muI;
 }

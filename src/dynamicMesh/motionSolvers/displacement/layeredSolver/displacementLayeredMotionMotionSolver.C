@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 #include "pointFields.H"
 #include "PointEdgeWave.H"
 #include "syncTools.H"
-#include "interpolationTable.H"
+#include "TableFile.H"
 #include "pointConstraints.H"
 #include "mapPolyMesh.H"
 
@@ -233,17 +233,17 @@ Foam::displacementLayeredMotionMotionSolver::faceZoneEvaluate
     }
     else if (type == "timeVaryingUniformFixedValue")
     {
-        interpolationTable<vector> timeSeries(dict);
+        Function1s::TableFile<vector> timeSeries(word::null, dict);
 
-        fld = timeSeries(mesh().time().timeOutputValue());
+        fld = timeSeries.value(mesh().time().timeOutputValue());
     }
     else if (type == "slip")
     {
         if ((patchi % 2) != 1)
         {
-            FatalIOErrorInFunction(*this)
+            FatalErrorInFunction
                 << "FaceZone:" << fz.name()
-                << exit(FatalIOError);
+                << exit(FatalError);
         }
         // Use field set by previous bc
         fld = vectorField(patchDisp[patchi - 1], meshPoints);
@@ -255,7 +255,7 @@ Foam::displacementLayeredMotionMotionSolver::faceZoneEvaluate
     }
     else if (type == "uniformFollow")
     {
-        // Reads name of name of patch. Then get average point dislacement on
+        // Reads name of name of patch. Then get average point displacement on
         // patch. That becomes the value of fld.
         const word patchName(dict.lookup("patch"));
         label patchID = mesh().boundaryMesh().findPatchID(patchName);
@@ -267,9 +267,9 @@ Foam::displacementLayeredMotionMotionSolver::faceZoneEvaluate
     }
     else
     {
-        FatalIOErrorInFunction(*this)
+        FatalErrorInFunction
             << "Unknown faceZonePatch type " << type << " for faceZone "
-            << fz.name() << exit(FatalIOError);
+            << fz.name() << exit(FatalError);
     }
     return tfld;
 }
@@ -289,11 +289,11 @@ void Foam::displacementLayeredMotionMotionSolver::cellZoneSolve
 
     if (patchesDict.size() != 2)
     {
-        FatalIOErrorInFunction(*this)
+        FatalErrorInFunction
             << "Two faceZones (patches) must be specified per cellZone. "
             << " cellZone:" << cellZoneI
             << " patches:" << patchesDict.toc()
-            << exit(FatalIOError);
+            << exit(FatalError);
     }
 
     PtrList<scalarField> patchDist(patchesDict.size());
@@ -307,10 +307,10 @@ void Foam::displacementLayeredMotionMotionSolver::cellZoneSolve
         label zoneI = mesh().faceZones().findZoneID(faceZoneName);
         if (zoneI == -1)
         {
-            FatalIOErrorInFunction(*this)
+            FatalErrorInFunction
                 << "Cannot find faceZone " << faceZoneName
                 << endl << "Valid zones are " << mesh().faceZones().names()
-                << exit(FatalIOError);
+                << exit(FatalError);
         }
 
         // Determine the points of the faceZone within the cellZone
@@ -491,7 +491,7 @@ Foam::displacementLayeredMotionMotionSolver::
 displacementLayeredMotionMotionSolver
 (
     const polyMesh& mesh,
-    const IOdictionary& dict
+    const dictionary& dict
 )
 :
     displacementMotionSolver(mesh, dict, typeName)
@@ -540,10 +540,10 @@ void Foam::displacementLayeredMotionMotionSolver::solve()
 
         if (zoneI == -1)
         {
-            FatalIOErrorInFunction(*this)
+            FatalErrorInFunction
                 << "Cannot find cellZone " << cellZoneName
                 << endl << "Valid zones are " << mesh().cellZones().names()
-                << exit(FatalIOError);
+                << exit(FatalError);
         }
 
         cellZoneSolve(zoneI, regionDict);

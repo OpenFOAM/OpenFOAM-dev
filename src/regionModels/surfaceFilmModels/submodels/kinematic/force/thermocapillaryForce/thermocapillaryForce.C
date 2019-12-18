@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,9 +66,9 @@ tmp<fvVectorMatrix> thermocapillaryForce::correct(volVectorField& U)
     const volScalarField& sigma = filmModel_.sigma();
 
     tmp<fvVectorMatrix>
-        tfvm(new fvVectorMatrix(U, dimForce/dimArea*dimVolume));
+        tfvm(new fvVectorMatrix(U, dimForce));
 
-    tfvm.ref() += fvc::grad(sigma);
+    tfvm.ref() += fvc::grad(sigma)/filmModel_.VbyA();
 
     return tfvm;
 }

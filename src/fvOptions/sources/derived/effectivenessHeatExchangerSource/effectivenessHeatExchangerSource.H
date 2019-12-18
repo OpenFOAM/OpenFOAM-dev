@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Description
     where:
     \vartable
         Q_t       | total heat source
-        e(\phi,\dot{m}_2) | effectivenes table
+        e(\phi,\dot{m}_2) | effectiveness table
         \phi      | net mass flux entering heat exchanger [kg/s]
         \dot{m}_2 | secondary mass flow rate [kg/s]
         T_1       | primary inlet temperature [K]
@@ -53,7 +53,7 @@ Description
     where:
     \vartable
         Q_c     | source for cell
-        V_c     | volume of the cell [m3]
+        V_c     | volume of the cell [m^3]
         U_c     | local cell velocity [m/s]
         T_c     | local call temperature [K]
         T_{ref} | min or max(T) in cell zone depending on the sign of Q_t [K]
@@ -113,14 +113,12 @@ Usage
             )
         );
 
-
 Note
-- the table with name "file" should have the same units as the
-  secondary mass flow rate and kg/s for phi
-- faceZone is the faces at the inlet of the cellzone, it needs to be
-  created with flip map flags. It is used to integrate the net mass flow
-  rate into the heat exchanger
-
+    - the table with name "file" should have the same units as the
+      secondary mass flow rate and kg/s for phi
+    - faceZone is the faces at the inlet of the cellzone, it needs to be
+      created with flip map flags. It is used to integrate the net mass flow
+      rate into the heat exchanger
 
 SourceFiles
     effectivenessHeatExchangerSource.C
@@ -199,15 +197,6 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        effectivenessHeatExchangerSource
-        (
-            const effectivenessHeatExchangerSource&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const effectivenessHeatExchangerSource&);
-
         //- Initialise heat exchanger source model
         void initialise();
 
@@ -230,6 +219,12 @@ public:
             const word& modelType,
             const dictionary& dict,
             const fvMesh& mesh
+        );
+
+        //- Disallow default bitwise copy construction
+        effectivenessHeatExchangerSource
+        (
+            const effectivenessHeatExchangerSource&
         );
 
 
@@ -268,6 +263,12 @@ public:
 
             //- Read dictionary
             virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const effectivenessHeatExchangerSource&) = delete;
 };
 
 

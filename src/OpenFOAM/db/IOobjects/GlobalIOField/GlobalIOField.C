@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,18 +77,40 @@ template<class Type>
 Foam::GlobalIOField<Type>::GlobalIOField
 (
     const IOobject& io,
-    const Xfer<Field<Type>>& f
+    Field<Type>&& f
 )
 :
-    regIOobject(io)
+    regIOobject(io),
+    Field<Type>(move(f))
+
 {
     // Check for MUST_READ_IF_MODIFIED
     warnNoRereading<GlobalIOField<Type>>();
 
-    Field<Type>::transfer(f());
-
     readHeaderOk(IOstream::BINARY, typeName);
 }
+
+
+template<class Type>
+Foam::GlobalIOField<Type>::GlobalIOField
+(
+    const GlobalIOField<Type>& field
+)
+:
+    regIOobject(field),
+    Field<Type>(field)
+{}
+
+
+template<class Type>
+Foam::GlobalIOField<Type>::GlobalIOField
+(
+    GlobalIOField<Type>&& field
+)
+:
+    regIOobject(move(field)),
+    Field<Type>(move(field))
+{}
 
 
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
@@ -125,9 +147,23 @@ void Foam::GlobalIOField<Type>::operator=(const GlobalIOField<Type>& rhs)
 
 
 template<class Type>
+void Foam::GlobalIOField<Type>::operator=(GlobalIOField<Type>&& rhs)
+{
+    Field<Type>::operator=(move(rhs));
+}
+
+
+template<class Type>
 void Foam::GlobalIOField<Type>::operator=(const Field<Type>& rhs)
 {
     Field<Type>::operator=(rhs);
+}
+
+
+template<class Type>
+void Foam::GlobalIOField<Type>::operator=(Field<Type>&& rhs)
+{
+    Field<Type>::operator=(move(rhs));
 }
 
 

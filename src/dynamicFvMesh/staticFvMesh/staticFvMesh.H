@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,15 +50,6 @@ class staticFvMesh
 :
     public dynamicFvMesh
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        staticFvMesh(const staticFvMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const staticFvMesh&);
-
-
 public:
 
     //- Runtime type information
@@ -69,6 +60,9 @@ public:
 
         //- Construct from IOobject
         staticFvMesh(const IOobject& io);
+
+        //- Disallow default bitwise copy construction
+        staticFvMesh(const staticFvMesh&) = delete;
 
 
     //- Destructor
@@ -85,6 +79,12 @@ public:
 
         //- Dummy update function which does not change the mesh
         virtual bool update();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const staticFvMesh&) = delete;
 };
 
 

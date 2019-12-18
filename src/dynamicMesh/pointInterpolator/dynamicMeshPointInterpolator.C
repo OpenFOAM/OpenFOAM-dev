@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -186,10 +186,8 @@ Foam::dynamicMeshPointInterpolator::curPointField() const
 
 void Foam::dynamicMeshPointInterpolator::write(Ostream& os) const
 {
-    os.writeKeyword("field")
-        << fieldName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("interpolationScheme")
-        << interpolationScheme_ << token::END_STATEMENT << nl;
+    writeEntry(os, "field", fieldName_);
+    writeEntry(os, "interpolationScheme", interpolationScheme_);
 }
 
 

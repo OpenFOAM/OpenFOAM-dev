@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,17 +117,6 @@ protected:
         virtual void writeObject(const regIOobject& obj);
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        writeObjectsBase(const writeObjectsBase&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const writeObjectsBase&);
-
-
 public:
 
     // Constructors
@@ -138,6 +127,9 @@ public:
             const objectRegistry& obr,
             const Switch& logRef
         );
+
+        //- Disallow default bitwise copy construction
+        writeObjectsBase(const writeObjectsBase&) = delete;
 
 
     //- Destructor
@@ -154,6 +146,12 @@ public:
 
         //- Write function
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const writeObjectsBase&) = delete;
 };
 
 

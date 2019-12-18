@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,15 +75,6 @@ protected:
         tmp<surfaceInterpolationScheme<Type>> tinterpScheme_;
 
 
-    // Private Member Functions
-
-        //- Disallow copy construct
-        divScheme(const divScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const divScheme&);
-
-
 public:
 
     //- Runtime type information
@@ -118,6 +109,9 @@ public:
             tinterpScheme_(surfaceInterpolationScheme<Type>::New(mesh, is))
         {}
 
+        //- Disallow default bitwise copy construction
+        divScheme(const divScheme&) = delete;
+
 
     // Selectors
 
@@ -149,6 +143,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const divScheme&) = delete;
 };
 
 

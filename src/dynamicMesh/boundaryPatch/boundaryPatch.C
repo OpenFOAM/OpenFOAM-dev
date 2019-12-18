@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,16 +52,8 @@ Foam::boundaryPatch::boundaryPatch
 )
 :
     patchIdentifier(name, dict, index),
-    size_(readLabel(dict.lookup("nFaces"))),
-    start_(readLabel(dict.lookup("startFace")))
-{}
-
-
-Foam::boundaryPatch::boundaryPatch(const boundaryPatch& p)
-:
-    patchIdentifier(p.name(), p.index(), p.physicalType()),
-    size_(p.size()),
-    start_(p.start())
+    size_(dict.lookup<label>("nFaces")),
+    start_(dict.lookup<label>("startFace"))
 {}
 
 
@@ -90,8 +82,8 @@ Foam::boundaryPatch::~boundaryPatch()
 void Foam::boundaryPatch::write(Ostream& os) const
 {
     patchIdentifier::write(os);
-    os.writeKeyword("nFaces") << size_ << token::END_STATEMENT << nl;
-    os.writeKeyword("startFace") << start_ << token::END_STATEMENT << nl;
+    writeEntry(os, "nFaces", size_);
+    writeEntry(os, "startFace", start_);
 }
 
 

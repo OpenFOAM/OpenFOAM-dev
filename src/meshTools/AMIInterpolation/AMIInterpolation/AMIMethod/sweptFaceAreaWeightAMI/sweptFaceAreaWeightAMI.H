@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,8 +107,6 @@ class sweptFaceAreaWeightAMI
 :
     public faceAreaWeightAMI
 {
-private:
-
     // Private static data
 
         //- Minimum length of a cut as a ratio of the overall projected edge
@@ -165,7 +163,7 @@ private:
         };
 
 
-    // Private member functions
+    // Private Member Functions
 
         // Debugging
 

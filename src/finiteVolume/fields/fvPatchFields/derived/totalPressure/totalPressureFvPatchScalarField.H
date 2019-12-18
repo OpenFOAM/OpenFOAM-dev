@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,8 +34,8 @@ Description
         \f]
         where
         \vartable
-            p_p     | incompressible pressure at patch [m2/s2]
-            p_0     | incompressible total pressure [m2/s2]
+            p_p     | incompressible pressure at patch [m^2/s^2]
+            p_0     | incompressible total pressure [m^2/s^2]
             U       | velocity
         \endvartable
 
@@ -47,7 +47,7 @@ Description
         \vartable
             p_p     | pressure at patch [Pa]
             p_0     | total pressure [Pa]
-            \rho    | density [kg/m3]
+            \rho    | density [kg/m^3]
             U       | velocity
         \endvartable
 
@@ -71,7 +71,7 @@ Description
             p_p     | pressure at patch [Pa]
             p_0     | total pressure [Pa]
             \gamma  | ratio of specific heats (Cp/Cv)
-            \psi    | compressibility [m2/s2]
+            \psi    | compressibility [m^2/s^2]
             G       | coefficient given by \f$\frac{\gamma}{1-\gamma}\f$
         \endvartable
 
@@ -133,7 +133,7 @@ class totalPressureFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Name of the velocity field
         word UName_;
@@ -188,7 +188,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         totalPressureFvPatchScalarField
         (
             const totalPressureFvPatchScalarField&
@@ -203,7 +203,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         totalPressureFvPatchScalarField
         (
             const totalPressureFvPatchScalarField&,
@@ -223,7 +223,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -307,17 +307,12 @@ public:
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchScalarField&,
-                const labelList&
-            );
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchScalarField&, const labelList&);
 
 
         // Evaluation functions

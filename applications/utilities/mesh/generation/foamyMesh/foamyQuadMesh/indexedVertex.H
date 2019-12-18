@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ class indexedVertex
 :
     public Vb
 {
-    // Private data
+    // Private Data
 
         //- The index for this triangle vertex
         int index_;
@@ -169,14 +169,14 @@ public:
 
     // Friend Functions
 
-        //- Do the two given vertices consitute a boundary point-pair
+        //- Do the two given vertices constitute a boundary point-pair
         friend bool pointPair <Gt, Vb>
         (
             const indexedVertex<Gt, Vb>& v0,
             const indexedVertex<Gt, Vb>& v1
         );
 
-        //- Do the three given vertices consitute a boundary triangle
+        //- Do the three given vertices constitute a boundary triangle
         friend bool boundaryTriangle <Gt, Vb>
         (
             const indexedVertex<Gt, Vb>& v0,
@@ -184,7 +184,7 @@ public:
             const indexedVertex<Gt, Vb>& v2
         );
 
-        //- Do the three given vertices consitute an outside triangle
+        //- Do the three given vertices constitute an outside triangle
         friend bool outsideTriangle <Gt, Vb>
         (
             const indexedVertex<Gt, Vb>& v0,

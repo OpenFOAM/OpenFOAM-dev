@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,15 +68,6 @@ class outletStabilised
         tmp<surfaceInterpolationScheme<Type>> tScheme_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        outletStabilised(const outletStabilised&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const outletStabilised&);
-
-
 public:
 
     //- Runtime type information
@@ -122,6 +113,9 @@ public:
                 surfaceInterpolationScheme<Type>::New(mesh, faceFlux, is)
             )
         {}
+
+        //- Disallow default bitwise copy construction
+        outletStabilised(const outletStabilised&) = delete;
 
 
     // Member Functions
@@ -239,6 +233,12 @@ public:
                 );
             }
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const outletStabilised&) = delete;
 };
 
 

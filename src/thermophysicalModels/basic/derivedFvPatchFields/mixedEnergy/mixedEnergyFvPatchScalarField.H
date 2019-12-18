@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,10 +25,21 @@ Class
     Foam::mixedEnergyFvPatchScalarField
 
 Description
-    This boundary condition provides a mixed condition for internal energy
+    This boundary condition provides a mixed condition for energy. This is
+    selected when the corresponding temperature condition is mixed, or
+    mixedEnergyCalculatedTemperature.
+
+    If the temperature condition is mixed, the parameters of the energy
+    condition are obtained from a linearisation of the corresponding parameters
+    of the temperature condition.
+
+    If the temperature condition is mixedEnergyCalculatedTemperature, then the
+    temperature condition explicitly provides energy
+    refValue/refGrad/valueFraction fields, so no linearisation is needed.
 
 See also
     Foam::mixedFvPatchField
+    Foam::mixedEnergyCalculatedTemperatureFvPatchField
 
 SourceFiles
     mixedEnergyFvPatchScalarField.C
@@ -87,7 +98,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         mixedEnergyFvPatchScalarField
         (
             const mixedEnergyFvPatchScalarField&
@@ -102,7 +113,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         mixedEnergyFvPatchScalarField
         (
             const mixedEnergyFvPatchScalarField&,
@@ -122,7 +133,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

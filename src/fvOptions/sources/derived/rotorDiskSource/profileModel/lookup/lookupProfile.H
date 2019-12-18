@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::lookupProfile
 
 Description
-    Look-up based profile data - drag and lift coefficients are lineraly
+    Look-up based profile data - drag and lift coefficients are linearly
     interpolated based on the supplied angle of attack
 
     Input in list format:
@@ -104,7 +104,7 @@ public:
     lookupProfile(const dictionary& dict, const word& modelName);
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation
 

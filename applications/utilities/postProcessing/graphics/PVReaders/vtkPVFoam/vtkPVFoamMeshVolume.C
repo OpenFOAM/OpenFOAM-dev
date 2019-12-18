@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ vtkUnstructuredGrid* Foam::vtkPVFoam::volumeVTKMesh
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVFoam::volumeVTKMesh" << endl;
+        InfoInFunction << endl;
         printMemory();
     }
 
@@ -80,7 +80,8 @@ vtkUnstructuredGrid* Foam::vtkPVFoam::volumeVTKMesh
     {
         if (debug)
         {
-            Info<< "... scanning for polyhedra" << endl;
+            InfoInFunction
+                << "... scanning for polyhedra" << endl;
         }
 
         forAll(cellShapes, celli)
@@ -125,17 +126,17 @@ vtkUnstructuredGrid* Foam::vtkPVFoam::volumeVTKMesh
 
     if (debug)
     {
-        Info<<" mesh nCells     = " << mesh.nCells() << nl
-            <<"      nPoints    = " << mesh.nPoints() << nl
-            <<"      nAddCells  = " << nAddCells << nl
-            <<"      nAddPoints = " << nAddPoints << endl;
+        Info<< "    mesh nCells     = " << mesh.nCells() << nl
+            << "         nPoints    = " << mesh.nPoints() << nl
+            << "         nAddCells  = " << nAddCells << nl
+            << "         nAddPoints = " << nAddPoints << endl;
     }
 
     superCells.setSize(mesh.nCells() + nAddCells);
 
     if (debug)
     {
-        Info<< "... converting points" << endl;
+        Info<< "    ... converting points" << endl;
     }
 
     // Convert OpenFOAM mesh vertices to VTK
@@ -152,7 +153,7 @@ vtkUnstructuredGrid* Foam::vtkPVFoam::volumeVTKMesh
 
     if (debug)
     {
-        Info<< "... converting cells" << endl;
+        Info<< "    ... converting cells" << endl;
     }
 
     vtkmesh->Allocate(mesh.nCells() + nAddCells);
@@ -310,7 +311,7 @@ vtkUnstructuredGrid* Foam::vtkPVFoam::volumeVTKMesh
                 }
                 else
                 {
-                    // fairly immaterial if we reverse the list
+                    // Fairly immaterial if we reverse the list
                     // or use face::reverseFace()
                     forAllReverse(f, fp)
                     {
@@ -321,10 +322,10 @@ vtkUnstructuredGrid* Foam::vtkPVFoam::volumeVTKMesh
 
             vtkmesh->InsertNextCell(VTK_POLYHEDRON, nFaces, faceStream.data());
 #else
-            // this is a horrible substitute
+            // This is a horrible substitute
             // but avoids crashes when there is no vtkPolyhedron support
 
-            // establish unique node ids used
+            // Establish unique node ids used
             HashSet<vtkIdType, Hash<label>> hashUniqId(2*256);
 
             forAll(cFaces, cFacei)
@@ -337,7 +338,7 @@ vtkUnstructuredGrid* Foam::vtkPVFoam::volumeVTKMesh
                 }
             }
 
-            // use face stream to store unique node ids:
+            // Use face stream to store unique node ids:
             faceStream = hashUniqId.sortedToc();
 
             vtkmesh->InsertNextCell
@@ -469,7 +470,6 @@ vtkUnstructuredGrid* Foam::vtkPVFoam::volumeVTKMesh
 
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVFoam::volumeVTKMesh" << endl;
         printMemory();
     }
 

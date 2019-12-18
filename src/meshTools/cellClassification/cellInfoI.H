@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,24 +92,15 @@ inline bool Foam::cellInfo::update
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Null constructor
 inline Foam::cellInfo::cellInfo()
 :
     type_(cellClassification::NOTSET)
 {}
 
 
-// Construct from components
 inline Foam::cellInfo::cellInfo(const label type)
 :
     type_(type)
-{}
-
-
-// Construct as copy
-inline Foam::cellInfo::cellInfo(const cellInfo& w2)
-:
-    type_(w2.type())
 {}
 
 
@@ -122,7 +113,6 @@ inline bool Foam::cellInfo::valid(TrackingData& td) const
 }
 
 
-// No geometric data so never any problem on cyclics
 template<class TrackingData>
 inline bool Foam::cellInfo::sameGeometry
 (
@@ -137,7 +127,6 @@ inline bool Foam::cellInfo::sameGeometry
 }
 
 
-// No geometric data.
 template<class TrackingData>
 inline void Foam::cellInfo::leaveDomain
 (
@@ -150,7 +139,6 @@ inline void Foam::cellInfo::leaveDomain
 {}
 
 
-// No geometric data.
 template<class TrackingData>
 inline void Foam::cellInfo::transform
 (
@@ -161,7 +149,6 @@ inline void Foam::cellInfo::transform
 {}
 
 
-// No geometric data.
 template<class TrackingData>
 inline void Foam::cellInfo::enterDomain
 (
@@ -174,7 +161,6 @@ inline void Foam::cellInfo::enterDomain
 {}
 
 
-// Update this with neighbour information
 template<class TrackingData>
 inline bool Foam::cellInfo::updateCell
 (
@@ -198,7 +184,6 @@ inline bool Foam::cellInfo::updateCell
 }
 
 
-// Update this with neighbour information
 template<class TrackingData>
 inline bool Foam::cellInfo::updateFace
 (
@@ -221,7 +206,7 @@ inline bool Foam::cellInfo::updateFace
     );
 }
 
-// Update this with neighbour information
+
 template<class TrackingData>
 inline bool Foam::cellInfo::updateFace
 (

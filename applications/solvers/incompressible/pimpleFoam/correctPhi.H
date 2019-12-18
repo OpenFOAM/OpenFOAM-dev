@@ -1,5 +1,3 @@
-nonOrthogonalSolutionControl pcorrControl(mesh, pimple.algorithmName());
-
 CorrectPhi
 (
     U,
@@ -7,7 +5,8 @@ CorrectPhi
     p,
     dimensionedScalar("rAUf", dimTime, 1),
     geometricZeroField(),
-    pcorrControl
+    pimple,
+    true
 );
 
 #include "continuityErrs.H"

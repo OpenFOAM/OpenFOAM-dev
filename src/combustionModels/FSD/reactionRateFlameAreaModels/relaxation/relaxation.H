@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,15 +65,6 @@ class relaxation
         scalar alpha_;
 
 
-     // Private Member Functions
-
-        //- Disallow copy construct
-        relaxation(const relaxation&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const relaxation&);
-
-
 public:
 
     //- Runtime type information
@@ -91,13 +82,16 @@ public:
             const combustionModel& combModel
         );
 
+        //- Disallow default bitwise copy construction
+        relaxation(const relaxation&);
+
 
     // Destructor
 
         virtual ~relaxation();
 
 
-    // Member functions
+    // Member Functions
 
         //- Correct omega
         virtual void correct(const volScalarField& sigma);
@@ -107,6 +101,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& dictProperties);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const relaxation&) = delete;
 };
 
 

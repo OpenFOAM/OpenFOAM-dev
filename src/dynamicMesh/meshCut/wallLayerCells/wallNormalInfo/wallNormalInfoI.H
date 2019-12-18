@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,6 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Update this with w2 if not yet set.
 template<class TrackingData>
 inline bool Foam::wallNormalInfo::update
 (
@@ -58,24 +57,15 @@ inline bool Foam::wallNormalInfo::update
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Null constructor
 inline Foam::wallNormalInfo::wallNormalInfo()
 :
     normal_(point::max)
 {}
 
 
-// Construct from normal
 inline Foam::wallNormalInfo::wallNormalInfo(const vector& normal)
 :
     normal_(normal)
-{}
-
-
-// Construct as copy
-inline Foam::wallNormalInfo::wallNormalInfo(const wallNormalInfo& wpt)
-:
-    normal_(wpt.normal())
 {}
 
 
@@ -94,7 +84,6 @@ inline bool Foam::wallNormalInfo::valid(TrackingData& td) const
 }
 
 
-// No geometric data so never any problem on cyclics
 template<class TrackingData>
 inline bool Foam::wallNormalInfo::sameGeometry
 (
@@ -108,7 +97,6 @@ inline bool Foam::wallNormalInfo::sameGeometry
 }
 
 
-// No geometric data.
 template<class TrackingData>
 inline void Foam::wallNormalInfo::leaveDomain
 (
@@ -121,7 +109,6 @@ inline void Foam::wallNormalInfo::leaveDomain
 {}
 
 
-// No geometric data.
 template<class TrackingData>
 inline void Foam::wallNormalInfo::transform
 (
@@ -132,7 +119,6 @@ inline void Foam::wallNormalInfo::transform
 {}
 
 
-// No geometric data.
 template<class TrackingData>
 inline void Foam::wallNormalInfo::enterDomain
 (
@@ -145,7 +131,6 @@ inline void Foam::wallNormalInfo::enterDomain
 {}
 
 
-// Update this with w2 if w2 nearer to pt.
 template<class TrackingData>
 inline bool Foam::wallNormalInfo::updateCell
 (
@@ -161,7 +146,6 @@ inline bool Foam::wallNormalInfo::updateCell
 }
 
 
-// Update this with w2 if w2 nearer to pt.
 template<class TrackingData>
 inline bool Foam::wallNormalInfo::updateFace
 (
@@ -177,7 +161,6 @@ inline bool Foam::wallNormalInfo::updateFace
 }
 
 
-// Update this with w2 if w2 nearer to pt.
 template<class TrackingData>
 inline bool Foam::wallNormalInfo::updateFace
 (
@@ -205,15 +188,19 @@ inline bool Foam::wallNormalInfo::equal
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline bool Foam::wallNormalInfo::operator==(const Foam::wallNormalInfo& rhs)
- const
+inline bool Foam::wallNormalInfo::operator==
+(
+    const Foam::wallNormalInfo& rhs
+) const
 {
     return normal() == rhs.normal();
 }
 
 
-inline bool Foam::wallNormalInfo::operator!=(const Foam::wallNormalInfo& rhs)
- const
+inline bool Foam::wallNormalInfo::operator!=
+(
+    const Foam::wallNormalInfo& rhs
+) const
 {
     return !(*this == rhs);
 }

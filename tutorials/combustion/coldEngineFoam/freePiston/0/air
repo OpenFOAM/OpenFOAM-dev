@@ -14,8 +14,7 @@ FoamFile
     object      air;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "include/caseSettings"
+#inputSyntax slash;
 
 dimensions      [0 0 0 0 0 0 0];
 
@@ -35,7 +34,7 @@ boundaryField
 
     liner
     {
-        $:wall.p;
+        $include/caseSettings!wall/p;
     }
 
     cylinderHead

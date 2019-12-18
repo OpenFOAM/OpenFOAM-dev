@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ oscillatingDisplacementPointPatchVectorField
 :
     fixedValuePointPatchField<vector>(p, iF, dict),
     amplitude_(dict.lookup("amplitude")),
-    omega_(readScalar(dict.lookup("omega")))
+    omega_(dict.lookup<scalar>("omega"))
 {
     if (!dict.found("value"))
     {
@@ -117,11 +117,9 @@ void oscillatingDisplacementPointPatchVectorField::updateCoeffs()
 void oscillatingDisplacementPointPatchVectorField::write(Ostream& os) const
 {
     pointPatchField<vector>::write(os);
-    os.writeKeyword("amplitude")
-        << amplitude_ << token::END_STATEMENT << nl;
-    os.writeKeyword("omega")
-        << omega_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "amplitude", amplitude_);
+    writeEntry(os, "omega", omega_);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,9 +132,9 @@ Foam::sampledSets::circleRandom::circleRandom
 :
     sampledSet(name, mesh, searchEngine, dict),
     centre_(dict.lookup("centre")),
-    normal_(normalised(dict.lookupType<vector>("normal"))),
-    radius_(readScalar(dict.lookup("radius"))),
-    nPoints_(readLabel(dict.lookup("nPoints")))
+    normal_(normalised(dict.lookup<vector>("normal"))),
+    radius_(dict.lookup<scalar>("radius")),
+    nPoints_(dict.lookup<label>("nPoints"))
 {
     genSamples();
 

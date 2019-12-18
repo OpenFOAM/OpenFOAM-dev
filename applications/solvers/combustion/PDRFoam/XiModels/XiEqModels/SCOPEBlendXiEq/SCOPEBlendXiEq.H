@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,22 +55,13 @@ class SCOPEBlend
 :
     public XiEqModel
 {
-    // Private data
+    // Private Data
 
         //- Low turbulence intensity equilibrium Xi model
         autoPtr<XiEqModel> XiEqModelL_;
 
         //- High turbulence intensity equilibrium Xi model
         autoPtr<XiEqModel> XiEqModelH_;
-
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        SCOPEBlend(const SCOPEBlend&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const SCOPEBlend&);
 
 
 public:
@@ -90,6 +81,9 @@ public:
             const volScalarField& Su
         );
 
+        //- Disallow default bitwise copy construction
+        SCOPEBlend(const SCOPEBlend&);
+
 
     //- Destructor
     virtual ~SCOPEBlend();
@@ -97,7 +91,7 @@ public:
 
     // Member Functions
 
-        //- Return the flame-wrinking XiEq
+        //- Return the flame-wrinkling XiEq
         virtual tmp<volScalarField> XiEq() const;
 
         //- Update properties from given dictionary
@@ -106,6 +100,11 @@ public:
             return true;
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SCOPEBlend&) = delete;
 };
 
 

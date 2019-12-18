@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,7 @@ Foam::extendedFeatureEdgeMesh::extendedFeatureEdgeMesh
 Foam::extendedFeatureEdgeMesh::extendedFeatureEdgeMesh
 (
     const IOobject& io,
-    const PrimitivePatch<face, List, pointField, point>& surf,
+    const PrimitivePatch<faceList, pointField>& surf,
     const labelList& featureEdges,
     const labelList& regionFeatureEdges,
     const labelList& featurePoints

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ Foam::fixedFluxPressureFvPatchScalarField::fixedFluxPressureFvPatchScalarField
 
     // Map gradient. Set unmapped values and overwrite with mapped ptf
     gradient() = 0.0;
-    gradient().map(ptf.gradient(), mapper);
+    mapper(gradient(), ptf.gradient());
 
     // Evaluate the value field from the gradient if the internal field is valid
     if (notNull(iF) && iF.size())
@@ -100,7 +100,7 @@ Foam::fixedFluxPressureFvPatchScalarField::fixedFluxPressureFvPatchScalarField
     {
         // Enforce mapping of values so we have a valid starting value. This
         // constructor is used when reconstructing fields
-        this->map(ptf, mapper);
+        mapper(*this, ptf);
     }
 }
 
@@ -165,7 +165,7 @@ void Foam::fixedFluxPressureFvPatchScalarField::updateCoeffs()
 void Foam::fixedFluxPressureFvPatchScalarField::write(Ostream& os) const
 {
     fixedGradientFvPatchScalarField::write(os);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,27 +55,13 @@ class PopulationBalancePhaseSystem
 :
     public BasePhaseSystem
 {
-protected:
+    // Private data
 
-    // Protected typedefs
-
-        typedef HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
-            pDmdtTable;
-
-
-    // Protected data
-
-        //- populationBalanceModels
+        //- Population balances
         PtrList<diameterModels::populationBalanceModel> populationBalances_;
 
-        //- Interfacial Mass transfer rate
-        pDmdtTable pDmdt_;
-
-
-    // Protected member functions
-
-        //- Return the population balance mass transfer rate
-        virtual tmp<volScalarField> pDmdt(const phasePairKey& key) const;
+        //- Mass transfer rates
+        phaseSystem::dmdtfTable dmdtfs_;
 
 
 public:
@@ -92,20 +78,34 @@ public:
 
     // Member Functions
 
-        //- Return the mass transfer rate for a pair
-        virtual tmp<volScalarField> dmdt(const phasePairKey& key) const;
+        //- Return the mass transfer rate for an interface
+        virtual tmp<volScalarField> dmdtf(const phasePairKey& key) const;
 
         //- Return the mass transfer rates for each phase
-        virtual Xfer<PtrList<volScalarField>> dmdts() const;
+        virtual PtrList<volScalarField> dmdts() const;
 
-        //- Return the mass transfer matrices
-        virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;
+        //- Return the momentum transfer matrices for the cell-based algorithm
+        virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransfer();
+
+        //- Return the momentum transfer matrices for the face-based algorithm
+        virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransferf();
+
+        //- Return the heat transfer matrices
+        virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;
+
+        //- Return the specie transfer matrices
+        virtual autoPtr<phaseSystem::specieTransferTable>
+            specieTransfer() const;
 
         //- Read base phaseProperties dictionary
         virtual bool read();
 
         //- Solve all population balance equations
-        virtual void solve();
+        virtual void solve
+        (
+            const PtrList<volScalarField>& rAUs,
+            const PtrList<surfaceScalarField>& rAUfs
+        );
 };
 
 

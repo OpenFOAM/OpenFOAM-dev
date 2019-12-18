@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,35 +25,22 @@ Class
     Foam::gradientEnergyFvPatchScalarField
 
 Description
-    This boundary condition provides a gradient condition for internal energy,
-    where the gradient is calculated using:
+    This boundary condition provides a gradient condition for energy. This is
+    selected when the corresponding temperature condition is zeroGradient,
+    fixedGradient or gradientEnergyCalculatedTemperature.
 
-        \f[
-            \nabla(e_p) = \nabla_\perp C_p(p, T) + \frac{e_p - e_c}{\Delta}
-        \f]
+    If the temperature condition is fixedGradient or zeroGradient, the
+    parameters of the energy condition are obtained from a linearisation of the
+    corresponding parameters of the temperature condition.
 
-    where
-    \vartable
-        e_p     | energy at patch faces [J]
-        e_c     | energy at patch internal cells [J]
-        p       | pressure [bar]
-        T       | temperature [K]
-        C_p     | specific heat [J/kg/K]
-        \Delta  | distance between patch face and internal cell centres [m]
-    \endvartable
-
-Usage
-    Example of the boundary condition specification:
-    \verbatim
-    <patchName>
-    {
-        type            gradientEnergy;
-        gradient        uniform 10;
-    }
-    \endverbatim
+    If the temperature condition is gradientEnergyCalculatedTemperature, then
+    the temperature condition explicitly provides an energy gradient field, so
+    no linearisation is needed.
 
 See also
-    Foam::fixedGradientFvPatchField
+    Foam::zeroGradientFvPatchScalarField
+    Foam::fixedGradientFvPatchScalarField
+    Foam::gradientEnergyCalculatedTemperatureFvPatchScalarField
 
 SourceFiles
     gradientEnergyFvPatchScalarField.C
@@ -112,7 +99,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         gradientEnergyFvPatchScalarField
         (
             const gradientEnergyFvPatchScalarField&
@@ -127,7 +114,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         gradientEnergyFvPatchScalarField
         (
             const gradientEnergyFvPatchScalarField&,
@@ -147,12 +134,16 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();
+
+
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 

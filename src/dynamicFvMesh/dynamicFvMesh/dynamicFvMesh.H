@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,13 +51,16 @@ class dynamicFvMesh
 :
     public fvMesh
 {
+    // Private Data
+
+        //- The dynamicMeshDict
+        dictionary dynamicMeshDict_;
+
+
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        dynamicFvMesh(const dynamicFvMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const dynamicFvMesh&);
+        //- Return the dynamicMeshDict IOobject
+        static IOobject dynamicMeshDictIOobject(const IOobject& io);
 
 
 public:
@@ -78,6 +81,33 @@ public:
         );
 
 
+    //- Helper class to update the velocity boundary conditions
+    //  following mesh motion
+    class velocityMotionCorrection
+    {
+        // Private Data
+
+            const dynamicFvMesh& mesh_;
+
+            wordList velocityFields_;
+
+    public:
+
+        // Constructors
+
+            velocityMotionCorrection
+            (
+                const dynamicFvMesh& mesh,
+                const dictionary& dict
+            );
+
+
+        // Member Functions
+
+            void update() const;
+    };
+
+
     // Constructors
 
         //- Construct from objectRegistry, and read/write options
@@ -88,10 +118,10 @@ public:
         dynamicFvMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
-            const Xfer<faceList>& faces,
-            const Xfer<labelList>& allOwner,
-            const Xfer<labelList>& allNeighbour,
+            pointField&& points,
+            faceList&& faces,
+            labelList&& allOwner,
+            labelList&& allNeighbour,
             const bool syncPar = true
         );
 
@@ -100,11 +130,14 @@ public:
         dynamicFvMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
-            const Xfer<faceList>& faces,
-            const Xfer<cellList>& cells,
+            pointField&& points,
+            faceList&& faces,
+            cellList&& cells,
             const bool syncPar = true
         );
+
+        //- Disallow default bitwise copy construction
+        dynamicFvMesh(const dynamicFvMesh&) = delete;
 
 
     // Selectors
@@ -121,6 +154,12 @@ public:
 
     // Member Functions
 
+        //- Return the dynamicMeshDict
+        const dictionary& dynamicMeshDict() const
+        {
+            return dynamicMeshDict_;
+        }
+
         //- Is mesh dynamic
         virtual bool dynamic() const
         {
@@ -129,7 +168,14 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dynamicFvMesh&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

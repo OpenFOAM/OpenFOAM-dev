@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ Ostream& operator<<(Ostream&, const refinementDistanceData&);
 class refinementDistanceData
 {
 
-    // Private data
+    // Private Data
 
         //- Unrefined (level0) buffer size (nBufferLayers*level0Size)
         scalar level0Size_;

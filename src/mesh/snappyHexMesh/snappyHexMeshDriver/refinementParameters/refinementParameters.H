@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class polyMesh;
 
 class refinementParameters
 {
-    // Private data
+    // Private Data
 
         //- Total number of cells
         const label maxGlobalCells_;
@@ -89,14 +89,6 @@ class refinementParameters
 
         Switch handleSnapProblems_;
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        refinementParameters(const refinementParameters&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const refinementParameters&);
-
 
 public:
 
@@ -104,6 +96,9 @@ public:
 
         //- Construct from dictionary - new syntax
         refinementParameters(const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        refinementParameters(const refinementParameters&) = delete;
 
 
     // Member Functions
@@ -183,6 +178,11 @@ public:
             //- Checks that cells are in mesh. Returns cells they are in.
             labelList findCells(const polyMesh&) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const refinementParameters&) = delete;
 };
 
 

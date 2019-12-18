@@ -31,16 +31,16 @@ fvDOMCoeffs
 // Number of flow iterations per radiation iteration
 solverFreq 10;
 
-absorptionEmissionModel greyMeanAbsorptionEmission;
+absorptionEmissionModel greyMeanCombustion;
 
-constantAbsorptionEmissionCoeffs
+constantCoeffs
 {
-    absorptivity    absorptivity    [ m^-1 ]       0.01;
-    emissivity      emissivity      [ m^-1 ]       0.01;
-    E               E               [ kg m^-1 s^-3 ]  0;
+    absorptivity    0.01;
+    emissivity      0.01;
+    E               0;
 }
 
-greyMeanAbsorptionEmissionCoeffs
+greyMeanCombustionCoeffs
 {
     lookUpTableFileName      none;
 
@@ -49,7 +49,7 @@ greyMeanAbsorptionEmissionCoeffs
     CO2
     {
         Tcommon         200;   // Common Temp
-        invTemp         true;   // Is the polynomio using inverse temperature.
+        invTemp         true;   // Is the polynomial using inverse temperature.
         Tlow            200;   // Low Temp
         Thigh           2500;  // High Temp
 

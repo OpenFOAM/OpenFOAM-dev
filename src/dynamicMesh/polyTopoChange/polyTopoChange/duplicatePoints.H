@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class localPointRegion;
 
 class duplicatePoints
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -67,14 +67,6 @@ class duplicatePoints
         //  Can have empty entries if a point only has one region.
         labelListList duplicates_;
 
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        duplicatePoints(const duplicatePoints&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const duplicatePoints&);
 
 public:
 
@@ -86,6 +78,9 @@ public:
 
         //- Construct from mesh
         duplicatePoints(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        duplicatePoints(const duplicatePoints&) = delete;
 
 
     // Member Functions
@@ -112,6 +107,12 @@ public:
 
             //- Force recalculation of locally stored data on topological change
             void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const duplicatePoints&) = delete;
 };
 
 

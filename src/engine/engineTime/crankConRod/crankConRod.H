@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ class crankConRod
 :
     public engineTime
 {
-    // Private data
+    // Private Data
 
         //- RPM is required
         dimensionedScalar rpm_;
@@ -81,14 +81,9 @@ class crankConRod
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        crankConRod(const crankConRod&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const crankConRod&);
-
         //- Adjust read time values
         void timeAdjustment();
+
 
 public:
 
@@ -108,6 +103,10 @@ public:
             const fileName& constantName = "constant",
             const fileName& dictName = "engineGeometry"
         );
+
+        //- Disallow default bitwise copy construction
+        crankConRod(const crankConRod&) = delete;
+
 
     //- Destructor
     virtual ~crankConRod()
@@ -176,13 +175,16 @@ public:
             virtual scalar deltaTheta() const;
 
 
-        // Member functions overriding the virtual functions in time
+        // Member Functions overriding the virtual functions in time
 
             //- Convert the user-time (CA deg) to real-time (s).
             virtual scalar userTimeToTime(const scalar theta) const;
 
             //- Convert the real-time (s) into user-time (CA deg)
             virtual scalar timeToUserTime(const scalar t) const;
+
+            //- Ratio between real-time and user-time
+            virtual scalar timeToUserTimeRatio() const;
 
             //- Read the control dictionary and set the write controls etc.
             virtual void readDict();
@@ -192,6 +194,12 @@ public:
 
             //- Read the controlDict and set all the parameters
             virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const crankConRod&) = delete;
 };
 
 

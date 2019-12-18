@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,14 +165,6 @@ inline Foam::label Foam::CompactListList<T, Container>::whichColumn
 
 
 template<class T, class Container>
-inline Foam::Xfer<Foam::CompactListList<T, Container>>
-Foam::CompactListList<T, Container>::xfer()
-{
-    return xferMove(*this);
-}
-
-
-template<class T, class Container>
 inline void Foam::CompactListList<T, Container>::resize(const label mRows)
 {
     this->setSize(mRows);
@@ -260,6 +252,16 @@ inline const T& Foam::CompactListList<T, Container>::operator()
 ) const
 {
     return m_[index(i, j)];
+}
+
+
+template<class T, class Container>
+inline void Foam::CompactListList<T, Container>::operator=
+(
+    CompactListList<T, Container>&& cll
+)
+{
+    transfer(cll);
 }
 
 

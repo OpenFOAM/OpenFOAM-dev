@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ class dynamicInterpolatedFvMesh
 :
     public dynamicFvMesh
 {
-    // Private data
+    // Private Data
 
         dictionary dynamicMeshCoeffs_;
 
@@ -85,14 +85,10 @@ class dynamicInterpolatedFvMesh
         //- Starting points
         autoPtr<pointIOField> points0_;
 
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        dynamicInterpolatedFvMesh(const dynamicInterpolatedFvMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const dynamicInterpolatedFvMesh&);
+        //- Optional list of vectorFields to update for mesh motion
+        //  For modern solvers using Uf and correctPhi to update the flux
+        //  after motion it is not necessary to specify a "velocityFields" list
+        velocityMotionCorrection velocityMotionCorrection_;
 
 
 public:
@@ -106,6 +102,9 @@ public:
         //- Construct from IOobject
         dynamicInterpolatedFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        dynamicInterpolatedFvMesh(const dynamicInterpolatedFvMesh&) = delete;
+
 
     //- Destructor
     ~dynamicInterpolatedFvMesh();
@@ -115,6 +114,12 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dynamicInterpolatedFvMesh&) = delete;
 };
 
 

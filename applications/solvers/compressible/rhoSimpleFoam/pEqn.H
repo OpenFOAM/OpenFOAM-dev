@@ -87,7 +87,7 @@ U = HbyA - rAU*fvc::grad(p);
 U.correctBoundaryConditions();
 fvOptions.correct(U);
 
-bool pLimited = pressureControl.limit(p);
+pressureControl.limit(p);
 
 // For closed-volume cases adjust the pressure and density levels
 // to obey overall mass continuity
@@ -95,10 +95,6 @@ if (closedVolume)
 {
     p += (initialMass - fvc::domainIntegrate(psi*p))
         /fvc::domainIntegrate(psi);
-}
-
-if (pLimited || closedVolume)
-{
     p.correctBoundaryConditions();
 }
 

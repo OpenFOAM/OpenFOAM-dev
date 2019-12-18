@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -167,14 +167,9 @@ Foam::surfaceInterpolationScheme<Type>::interpolate
 
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsf
     (
-        new GeometricField<Type, fvsPatchField, surfaceMesh>
+        GeometricField<Type, fvsPatchField, surfaceMesh>::New
         (
-            IOobject
-            (
-                "interpolate("+vf.name()+')',
-                vf.instance(),
-                vf.db()
-            ),
+            "interpolate("+vf.name()+')',
             mesh,
             vf.dimensions()
         )
@@ -260,14 +255,9 @@ Foam::surfaceInterpolationScheme<Type>::dotInterpolate
 
     tmp<GeometricField<RetType, fvsPatchField, surfaceMesh>> tsf
     (
-        new GeometricField<RetType, fvsPatchField, surfaceMesh>
+        GeometricField<RetType, fvsPatchField, surfaceMesh>::New
         (
-            IOobject
-            (
-                "interpolate("+vf.name()+')',
-                vf.instance(),
-                vf.db()
-            ),
+            "interpolate("+vf.name()+')',
             mesh,
             Sf.dimensions()*vf.dimensions()
         )

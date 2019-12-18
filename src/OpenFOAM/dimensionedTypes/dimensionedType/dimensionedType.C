@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -591,6 +591,15 @@ Foam::dimensioned<Type> Foam::min
         dt1.dimensions(),
         min(dt1.value(), dt2.value())
     );
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::writeEntry(Ostream& os, const dimensioned<Type>& dt)
+{
+    os << dt;
 }
 
 

@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "$FOAM_CASE/constant/initialConditions";
+#include "$FOAM_CASE/constant/initialConditions"
 
 dimensions      [0 0 0 1 0 0 0];
 
@@ -39,8 +39,6 @@ boundaryField
     {
         type            compressible::turbulentTemperatureCoupledBaffleMixed;
         neighbourFieldName T;
-        kappaMethod     fluidThermo;
-        kappa           kappa;
         Tnbr            T;
         value           uniform $Tinitial;
     }

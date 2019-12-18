@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,8 +63,11 @@ public:
         //- Construct given initial list size
         PtrListDictionary(const label size);
 
-        //- Copy construct
+        //- Copy constructor
         PtrListDictionary(const PtrListDictionary&);
+
+        //- Move constructor
+        PtrListDictionary(PtrListDictionary&&);
 
         //- Construct from Istream using given Istream constructor class
         template<class INew>
@@ -74,7 +77,7 @@ public:
         PtrListDictionary(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         //- Set element to pointer provided and return old element
         autoPtr<T> set(const label, const word& key, T*);
@@ -86,7 +89,7 @@ public:
         autoPtr<T> set(const label, const word& key, tmp<T>&);
 
 
-    // Member operators
+    // Member Operators
 
         using PtrList<T>::operator[];
 

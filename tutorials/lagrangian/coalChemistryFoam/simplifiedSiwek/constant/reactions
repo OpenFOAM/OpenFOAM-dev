@@ -1,0 +1,23 @@
+reactions
+{
+    methaneReaction
+    {
+        type     irreversibleArrhenius;
+        reaction "CH4 + 2O2^1.0 = CO2 + 2H2O^1.0";
+        A        7e+06;
+        beta     0;
+        Ta       10063.8;
+        Thigh    2500;
+        Tlow     300;
+    }
+    hydrogenReaction
+    {
+        type     irreversibleArrhenius;
+        reaction "H2 + 0.5O2^1.0 = H2O";
+        A        4.74342e+12;
+        beta     0;
+        Ta       10063.8;
+        Thigh    2500;
+        Tlow     300;
+    }
+}

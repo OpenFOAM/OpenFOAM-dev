@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,13 +29,37 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-inline Type Foam::Function1Types::Sine<Type>::value(const scalar t) const
+inline Type Foam::Function1s::Sine<Type>::value(const scalar x) const
 {
+    const scalar phi = constant::mathematical::twoPi*frequency_*(x - start_);
+
+    return amplitude_->value(x)*sin(phi) + level_->value(x);
+}
+
+
+template<class Type>
+inline Type Foam::Function1s::Sine<Type>::integrate
+(
+    const scalar x1,
+    const scalar x2
+) const
+{
+    using namespace constant::mathematical;
+
+    if (!integrable_)
+    {
+        FatalErrorInFunction
+            << "Integration is not defined for " << type() << " functions "
+            << "unless the amplitude is constant"
+            << exit(FatalError);
+    }
+
+    const scalar phi1 = constant::mathematical::twoPi*frequency_*(x1 - start_);
+    const scalar phi2 = constant::mathematical::twoPi*frequency_*(x2 - start_);
+
     return
-        amplitude_->value(t)
-       *sin(constant::mathematical::twoPi*frequency_->value(t)*(t - t0_))
-       *scale_->value(t)
-      + level_->value(t);
+      - amplitude_->value(NaN)*(cos(phi2) - cos(phi1))/(twoPi*frequency_)
+      + level_->integrate(x1, x2);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "zeroGradientFvPatchFields.H"
 #include "gradientEnergyFvPatchScalarField.H"
+#include "gradientEnergyCalculatedTemperatureFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
@@ -100,20 +102,52 @@ void Foam::gradientEnergyFvPatchScalarField::updateCoeffs()
     const basicThermo& thermo = basicThermo::lookupThermo(*this);
     const label patchi = patch().index();
 
-    const scalarField& pw = thermo.p().boundaryField()[patchi];
-    fvPatchScalarField& Tw =
+    fvPatchScalarField& Tp =
         const_cast<fvPatchScalarField&>(thermo.T().boundaryField()[patchi]);
 
-    Tw.evaluate();
+    Tp.evaluate();
 
-    gradient() = thermo.Cpv(pw, Tw, patchi)*Tw.snGrad()
-      + patch().deltaCoeffs()*
-        (
-            thermo.he(pw, Tw, patchi)
-          - thermo.he(pw, Tw, patch().faceCells())
-        );
+    if
+    (
+        isA<zeroGradientFvPatchScalarField>(Tp)
+     || isA<fixedGradientFvPatchScalarField>(Tp)
+    )
+    {
+        gradient() =
+            thermo.Cpv(Tp, patchi)*Tp.snGrad()
+          + patch().deltaCoeffs()*
+            (
+                thermo.he(Tp, patchi)
+              - thermo.he(Tp, patch().faceCells())
+            );
+    }
+    else if (isA<gradientEnergyCalculatedTemperatureFvPatchScalarField>(Tp))
+    {
+        gradientEnergyCalculatedTemperatureFvPatchScalarField& Tg =
+            refCast<gradientEnergyCalculatedTemperatureFvPatchScalarField>(Tp);
+
+        gradient() = Tg.heGradient();
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Temperature boundary condition not recognised."
+            << "A " << typeName << " condition for energy must be used with a "
+            << zeroGradientFvPatchScalarField::typeName << ", "
+            << fixedGradientFvPatchScalarField::typeName << " or "
+            << gradientEnergyCalculatedTemperatureFvPatchScalarField::typeName
+            << " condition for temperature."
+            << exit(FatalError);
+    }
 
     fixedGradientFvPatchScalarField::updateCoeffs();
+}
+
+
+void Foam::gradientEnergyFvPatchScalarField::write(Ostream& os) const
+{
+    fixedGradientFvPatchScalarField::write(os);
+    writeEntry(os, "value", *this);
 }
 
 

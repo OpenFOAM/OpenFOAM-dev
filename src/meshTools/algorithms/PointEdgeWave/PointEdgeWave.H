@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ class PointEdgeWave
         static int dummyTrackData_;
 
 
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -209,13 +209,6 @@ class PointEdgeWave
             label handleCollocatedPoints();
 
 
-        //- Disallow default bitwise copy construct
-        PointEdgeWave(const PointEdgeWave&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const PointEdgeWave&);
-
-
 public:
 
     // Static Functions
@@ -260,6 +253,9 @@ public:
             UList<Type>& allEdgeInfo,
             TrackingData& td = dummyTrackData_
         );
+
+        //- Disallow default bitwise copy construction
+        PointEdgeWave(const PointEdgeWave&) = delete;
 
 
     //- Destructor
@@ -313,6 +309,12 @@ public:
         //- Iterate until no changes or maxIter reached. Returns actual
         //  number of iterations.
         label iterate(const label maxIter);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PointEdgeWave&) = delete;
 };
 
 

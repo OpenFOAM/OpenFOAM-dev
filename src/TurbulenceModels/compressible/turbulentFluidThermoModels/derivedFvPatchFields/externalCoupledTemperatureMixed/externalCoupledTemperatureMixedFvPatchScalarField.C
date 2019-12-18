@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,7 +123,7 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::transferData
 
     const label patchi = patch().index();
 
-    // heat flux [W/m2]
+    // heat flux [W/m^2]
     scalarField qDot(this->patch().size(), 0.0);
 
     typedef compressible::turbulenceModel cmpTurbModelType;
@@ -171,7 +171,7 @@ void Foam::externalCoupledTemperatureMixedFvPatchScalarField::transferData
     // near wall cell temperature [K]
     const scalarField Tc(patchInternalField());
 
-    // heat transfer coefficient [W/m2/K]
+    // heat transfer coefficient [W/m^2/K]
     const scalarField htc(qDot/(Tp - Tc + rootVSmall));
 
     if (Pstream::parRun())

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,13 +62,6 @@ class SpalartAllmarasDES
 :
     public LESeddyViscosity<BasicTurbulenceModel>
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        SpalartAllmarasDES(const SpalartAllmarasDES&);
-        void operator=(const SpalartAllmarasDES&);
-
-
 protected:
 
     // Protected data
@@ -100,47 +93,56 @@ protected:
 
     // Protected Member Functions
 
+        using IOobject::modelName;
+
         tmp<volScalarField> chi() const;
 
         tmp<volScalarField> fv1(const volScalarField& chi) const;
 
-        tmp<volScalarField> fv2
+        tmp<volScalarField::Internal> fv2
         (
-            const volScalarField& chi,
-            const volScalarField& fv1
+            const volScalarField::Internal& chi,
+            const volScalarField::Internal& fv1
         ) const;
 
-        tmp<volScalarField> S(const volTensorField& gradU) const;
-
-        tmp<volScalarField> Omega(const volTensorField& gradU) const;
-
-        tmp<volScalarField> Stilda
+        tmp<volScalarField::Internal> Omega
         (
-            const volScalarField& chi,
-            const volScalarField& fv1,
-            const volScalarField& Omega,
-            const volScalarField& dTilda
+            const volTensorField::Internal& gradU
         ) const;
 
-        tmp<volScalarField> r
+        tmp<volScalarField::Internal> Stilda
         (
-            const volScalarField& nur,
-            const volScalarField& Omega,
-            const volScalarField& dTilda
+            const volScalarField::Internal& chi,
+            const volScalarField::Internal& fv1,
+            const volScalarField::Internal& Omega,
+            const volScalarField::Internal& dTilda
         ) const;
 
-        tmp<volScalarField> fw
+        tmp<volScalarField::Internal> r
         (
-            const volScalarField& Omega,
-            const volScalarField& dTilda
+            const volScalarField::Internal& nur,
+            const volScalarField::Internal& Omega,
+            const volScalarField::Internal& dTilda
+        ) const;
+
+        tmp<volScalarField::Internal> fw
+        (
+            const volScalarField::Internal& Omega,
+            const volScalarField::Internal& dTilda
         ) const;
 
         //- Length scale
-        virtual tmp<volScalarField> dTilda
+        virtual tmp<volScalarField::Internal> dTilda
         (
-            const volScalarField& chi,
-            const volScalarField& fv1,
-            const volTensorField& gradU
+            const volScalarField::Internal& chi,
+            const volScalarField::Internal& fv1,
+            const volTensorField::Internal& gradU
+        ) const;
+
+        //- Cache the LES region indicator field
+        virtual void cacheLESRegion
+        (
+            const volScalarField::Internal& dTilda
         ) const;
 
         void correctNut(const volScalarField& fv1);
@@ -173,6 +175,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        SpalartAllmarasDES(const SpalartAllmarasDES&) = delete;
+
 
     //- Destructor
     virtual ~SpalartAllmarasDES()
@@ -195,11 +200,14 @@ public:
             return nuTilda_;
         }
 
-        //- Return the LES field indicator
-        virtual tmp<volScalarField> LESRegion() const;
-
         //- Correct nuTilda and related properties
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SpalartAllmarasDES&) = delete;
 };
 
 

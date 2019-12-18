@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,10 +92,11 @@ void Foam::SIBS::solve
 (
     scalar& x,
     scalarField& y,
+    const label li,
     scalar& dxTry
 ) const
 {
-    odes_.derivatives(x, y, dydx0_);
+    odes_.derivatives(x, y, li, dydx0_);
 
     scalar h = dxTry;
     bool exitflag = false;
@@ -143,7 +144,7 @@ void Foam::SIBS::solve
     label k = 0;
     yTemp_ = y;
 
-    odes_.jacobian(x, y, dfdx_, dfdy_);
+    odes_.jacobian(x, y, li, dfdx_, dfdy_);
 
     if (x != xNew_ || h != dxTry)
     {
@@ -170,7 +171,7 @@ void Foam::SIBS::solve
                     << exit(FatalError);
             }
 
-            SIMPR(x, yTemp_, dydx0_, dfdx_, dfdy_, h, nSeq_[k], ySeq_);
+            SIMPR(x, yTemp_, li, dydx0_, dfdx_, dfdy_, h, nSeq_[k], ySeq_);
             scalar xest = sqr(h/nSeq_[k]);
 
             polyExtrapolate(k, xest, ySeq_, y, yErr_, x_p_, d_p_);

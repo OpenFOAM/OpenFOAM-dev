@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ class mapDistribute;
 template<class ParticleType>
 class InteractionLists
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -198,12 +198,6 @@ class InteractionLists
         //- Write the referred wall faces out for debug
         void writeReferredWallFaces() const;
 
-        //- Disallow default bitwise copy construct
-        InteractionLists(const InteractionLists&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const InteractionLists&);
-
 
 public:
 
@@ -221,6 +215,10 @@ public:
             Switch writeCloud = false,
             const word& UName = "U"
         );
+
+        //- Disallow default bitwise copy construction
+        InteractionLists(const InteractionLists&) = delete;
+
 
     // Destructor
 
@@ -298,6 +296,12 @@ public:
 
             //- Return non-const access to the referred particle container
             inline List<IDLList<ParticleType>>& referredParticles();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const InteractionLists&) = delete;
 };
 
 

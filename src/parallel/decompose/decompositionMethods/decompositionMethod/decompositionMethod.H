@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,6 @@ namespace Foam
 
 class decompositionMethod
 {
-
 protected:
 
     // Protected data
@@ -58,14 +57,6 @@ protected:
 
         //- Optional constraints
         PtrList<decompositionConstraint> constraints_;
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        decompositionMethod(const decompositionMethod&);
-        void operator=(const decompositionMethod&);
 
 
 public:
@@ -88,6 +79,15 @@ public:
         );
 
 
+    // Constructors
+
+        //- Construct given the decomposition dictionary
+        decompositionMethod(const dictionary& decompositionDict);
+
+        //- Disallow default bitwise copy construction
+        decompositionMethod(const decompositionMethod&) = delete;
+
+
     // Selectors
 
         //- Return a reference to the selected decomposition method
@@ -95,12 +95,6 @@ public:
         (
             const dictionary& decompositionDict
         );
-
-
-    // Constructors
-
-        //- Construct given the decomposition dictionary
-        decompositionMethod(const dictionary& decompositionDict);
 
 
     //- Destructor
@@ -297,6 +291,11 @@ public:
                 const scalarField& cWeights
             );
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const decompositionMethod&) = delete;
 };
 
 

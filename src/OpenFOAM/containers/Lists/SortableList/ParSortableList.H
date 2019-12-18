@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ class ParSortableList
     public ParSortableListName,
     public List<Type>
 {
-    // Private data
+    // Private Data
 
         //- Original indices
         labelList indices_;
@@ -86,7 +86,7 @@ class ParSortableList
         //- Private class for sorting. Sorts on value_.
         class taggedValue
         {
-            // Private data
+            // Private Data
 
                 //- Value
                 Type value_;

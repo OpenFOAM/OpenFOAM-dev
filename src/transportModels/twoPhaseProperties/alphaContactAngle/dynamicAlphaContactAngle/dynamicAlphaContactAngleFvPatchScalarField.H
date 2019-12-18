@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,7 @@ class dynamicAlphaContactAngleFvPatchScalarField
 :
     public alphaContactAngleFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Equilibrium contact angle
         scalar theta0_;
@@ -156,7 +156,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         dynamicAlphaContactAngleFvPatchScalarField
         (
             const dynamicAlphaContactAngleFvPatchScalarField&
@@ -171,7 +171,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         dynamicAlphaContactAngleFvPatchScalarField
         (
             const dynamicAlphaContactAngleFvPatchScalarField&,
@@ -191,7 +191,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Evaluate and return dynamic contact-angle
         virtual tmp<scalarField> theta

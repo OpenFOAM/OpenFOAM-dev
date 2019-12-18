@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class vanDriestDelta
 :
     public LESdelta
 {
-    // Private data
+    // Private Data
 
         autoPtr<LESdelta> geometricDelta_;
         scalar kappa_;
@@ -63,10 +63,6 @@ class vanDriestDelta
 
 
     // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        vanDriestDelta(const vanDriestDelta&);
-        void operator=(const vanDriestDelta&);
 
         // Calculate the delta values
         void calcDelta();
@@ -88,6 +84,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        vanDriestDelta(const vanDriestDelta&) = delete;
+
 
     //- Destructor
     virtual ~vanDriestDelta()
@@ -101,6 +100,12 @@ public:
 
         // Correct values
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const vanDriestDelta&) = delete;
 };
 
 

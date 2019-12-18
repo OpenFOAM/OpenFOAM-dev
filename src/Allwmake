@@ -56,6 +56,7 @@ wmake $targetType randomProcesses
 transportModels/Allwmake $targetType $*
 thermophysicalModels/Allwmake $targetType $*
 TurbulenceModels/Allwmake $targetType $*
+wmake $targetType radiationModels
 wmake $targetType combustionModels
 regionModels/Allwmake $targetType $*
 lagrangian/Allwmake $targetType $*
@@ -66,7 +67,6 @@ fvAgglomerationMethods/Allwmake $targetType $*
 wmake $targetType fvMotionSolver
 wmake $targetType engine
 wmake $targetType fvOptions
-wmake $targetType regionCoupled
 
 functionObjects/Allwmake $targetType $*
 
@@ -74,7 +74,8 @@ wmake $targetType sixDoFRigidBodyMotion
 wmake $targetType sixDoFRigidBodyState
 wmake $targetType rigidBodyDynamics
 wmake $targetType rigidBodyMeshMotion
-wmake $targetType semiPermeableBaffle
+wmake $targetType rigidBodyState
+wmake $targetType specieTransfer
 wmake $targetType atmosphericModels
 wmake $targetType waves
 

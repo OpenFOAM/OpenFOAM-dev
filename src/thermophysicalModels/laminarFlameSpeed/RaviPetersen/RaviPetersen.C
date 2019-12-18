@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ Foam::laminarFlameSpeedModels::RaviPetersen::RaviPetersen
     EqRPoints_(coeffsDict_.lookup("EqRPoints")),
     alpha_(coeffsDict_.lookup("alpha")),
     beta_(coeffsDict_.lookup("beta")),
-    TRef_(readScalar(coeffsDict_.lookup("TRef")))
+    TRef_(coeffsDict_.lookup<scalar>("TRef"))
 {
     checkPointsMonotonicity("equivalenceRatio", EqRPoints_);
     checkPointsMonotonicity("pressure", pPoints_);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,23 +51,11 @@ class fileDiffusivity
 :
     public motionDiffusivity
 {
-
 protected:
 
     // Protected data
 
         surfaceScalarField faceDiffusivity_;
-
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        fileDiffusivity(const fileDiffusivity&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fileDiffusivity&);
 
 
 public:
@@ -81,6 +69,9 @@ public:
         //- Construct for the given fvMesh and data Istream
         fileDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        fileDiffusivity(const fileDiffusivity&) = delete;
+
 
     //- Destructor
     virtual ~fileDiffusivity();
@@ -88,15 +79,21 @@ public:
 
     // Member Functions
 
+        //- Do not correct the motion diffusivity
+        virtual void correct()
+        {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fileDiffusivity&) = delete;
+
         //- Return diffusivity field
         virtual tmp<surfaceScalarField> operator()() const
         {
             return faceDiffusivity_;
         }
-
-        //- Do not correct the motion diffusivity
-        virtual void correct()
-        {}
 };
 
 

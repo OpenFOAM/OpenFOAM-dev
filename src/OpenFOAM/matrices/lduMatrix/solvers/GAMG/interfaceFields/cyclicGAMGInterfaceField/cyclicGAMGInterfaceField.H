@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class cyclicGAMGInterfaceField
     public GAMGInterfaceField,
     public cyclicLduInterfaceField
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the cyclic interface
         const cyclicGAMGInterface& cyclicInterface_;
@@ -63,15 +63,6 @@ class cyclicGAMGInterfaceField
 
         //- Rank of component for transformation
         int rank_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cyclicGAMGInterfaceField(const cyclicGAMGInterfaceField&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cyclicGAMGInterfaceField&);
 
 
 public:
@@ -96,6 +87,9 @@ public:
             const bool doTransform,
             const int rank
         );
+
+        //- Disallow default bitwise copy construction
+        cyclicGAMGInterfaceField(const cyclicGAMGInterfaceField&) = delete;
 
 
     //- Destructor
@@ -151,6 +145,12 @@ public:
                 const direction cmpt,
                 const Pstream::commsTypes commsType
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cyclicGAMGInterfaceField&) = delete;
 };
 
 

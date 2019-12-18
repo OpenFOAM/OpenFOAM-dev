@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ class featurePointConformer
         static const scalar tolParallel;
 
 
-    // Private data
+    // Private Data
 
         //- Reference to the mesher.
         const conformalVoronoiMesh& foamyHexMesh_;
@@ -133,12 +133,6 @@ class featurePointConformer
         //- Create the points that will conform to the feature
         void createFeaturePoints(DynamicList<Vb>& pts);
 
-        //- Disallow default bitwise copy construct
-        featurePointConformer(const featurePointConformer&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const featurePointConformer&);
-
 
 public:
 
@@ -153,6 +147,9 @@ public:
         (
             const conformalVoronoiMesh& foamyHexMesh
         );
+
+        //- Disallow default bitwise copy construction
+        featurePointConformer(const featurePointConformer&) = delete;
 
 
     //- Destructor
@@ -179,6 +176,12 @@ public:
 
             //- Reindex the feature point pairs using the map.
             void reIndexPointPairs(const Map<label>& oldToNewIndices);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const featurePointConformer&) = delete;
 };
 
 

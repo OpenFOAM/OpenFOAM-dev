@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class faceMapper
 :
     public morphFieldMapper
 {
-    // Private data
+    // Private Data
 
         //- Reference to polyMesh
         const polyMesh& mesh_;
@@ -89,13 +89,6 @@ class faceMapper
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        faceMapper(const faceMapper&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const faceMapper&);
-
-
         //- Calculate addressing for mapping with inserted faces
         void calcAddressing() const;
 
@@ -105,12 +98,15 @@ class faceMapper
 
 public:
 
-    // Static data members
+    // Static Data Members
 
     // Constructors
 
         //- Construct from mapPolyMesh
         faceMapper(const mapPolyMesh& mpm);
+
+        //- Disallow default bitwise copy construction
+        faceMapper(const faceMapper&) = delete;
 
 
     //- Destructor
@@ -118,9 +114,6 @@ public:
 
 
     // Member Functions
-
-        //- Return size
-        virtual label size() const;
 
         //- Return size of field before mapping
         virtual label sizeBeforeMapping() const;
@@ -145,7 +138,7 @@ public:
         //- Return interpolated addressing
         virtual const labelListList& addressing() const;
 
-        //- Return interpolaion weights
+        //- Return interpolation weights
         virtual const scalarListList& weights() const;
 
         //- Return flux flip map
@@ -168,6 +161,12 @@ public:
 
         //- Return list of inserted faces
         virtual const labelList& insertedObjectLabels() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const faceMapper&) = delete;
 };
 
 

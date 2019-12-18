@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,10 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "motionSolver.H"
-#include "Time.H"
-#include "polyMesh.H"
-#include "dlLibraryTable.H"
+#include "motionSolverList.H"
 #include "twoDPointCorrector.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -37,53 +34,16 @@ namespace Foam
     defineRunTimeSelectionTable(motionSolver, dictionary);
 }
 
-// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
-
-Foam::IOobject Foam::motionSolver::stealRegistration
-(
-    const IOdictionary& dict
-)
-{
-    IOobject io(dict);
-    if (dict.registerObject())
-    {
-        // De-register if necessary
-        const_cast<IOdictionary&>(dict).checkOut();
-
-        io.registerObject() = true;
-    }
-
-    return io;
-}
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::motionSolver::motionSolver(const polyMesh& mesh)
-:
-    IOdictionary
-    (
-        IOobject
-        (
-            "dynamicMeshDict",
-            mesh.time().constant(),
-            mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::AUTO_WRITE
-        )
-    ),
-    mesh_(mesh)
-{}
-
 
 Foam::motionSolver::motionSolver
 (
     const polyMesh& mesh,
-    const IOdictionary& dict,
+    const dictionary& dict,
     const word& type
 )
 :
-    IOdictionary(stealRegistration(dict), dict),
     mesh_(mesh),
     coeffDict_(dict.optionalSubDict(type + "Coeffs"))
 {}
@@ -101,64 +61,53 @@ Foam::autoPtr<Foam::motionSolver> Foam::motionSolver::clone() const
 Foam::autoPtr<Foam::motionSolver> Foam::motionSolver::New
 (
     const polyMesh& mesh,
-    const IOdictionary& solverDict
+    const dictionary& solverDict
 )
 {
-    const word solverTypeName
-    (
-        solverDict.found("motionSolver")
-      ? solverDict.lookup("motionSolver")
-      : solverDict.lookup("solver")
-    );
-
-    Info<< "Selecting motion solver: " << solverTypeName << endl;
-
-    const_cast<Time&>(mesh.time()).libs().open
-    (
-        solverDict,
-        "motionSolverLibs",
-        dictionaryConstructorTablePtr_
-    );
-
-    if (!dictionaryConstructorTablePtr_)
+    if (solverDict.found("solvers"))
     {
-        FatalErrorInFunction
-            << "solver table is empty"
-            << exit(FatalError);
+        return autoPtr<motionSolver>(new motionSolverList(mesh, solverDict));
     }
-
-    dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(solverTypeName);
-
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    else
     {
-        FatalErrorInFunction
-            << "Unknown solver type "
-            << solverTypeName << nl << nl
-            << "Valid solver types are:" << endl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalError);
-    }
-
-    return autoPtr<motionSolver>(cstrIter()(mesh, solverDict));
-}
-
-
-Foam::autoPtr<Foam::motionSolver> Foam::motionSolver::New(const polyMesh& mesh)
-{
-    IOdictionary solverDict
-    (
-        IOobject
+        const word solverTypeName
         (
-            "dynamicMeshDict",
-            mesh.time().constant(),
-            mesh,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::AUTO_WRITE
-        )
-    );
+            solverDict.found("motionSolver")
+          ? solverDict.lookup("motionSolver")
+          : solverDict.lookup("solver")
+        );
 
-    return New(mesh, solverDict);
+        Info<< "Selecting motion solver: " << solverTypeName << endl;
+
+        const_cast<Time&>(mesh.time()).libs().open
+        (
+            solverDict,
+            "motionSolverLibs",
+            dictionaryConstructorTablePtr_
+        );
+
+        if (!dictionaryConstructorTablePtr_)
+        {
+            FatalErrorInFunction
+                << "solver table is empty"
+                << exit(FatalError);
+        }
+
+        dictionaryConstructorTable::iterator cstrIter =
+            dictionaryConstructorTablePtr_->find(solverTypeName);
+
+        if (cstrIter == dictionaryConstructorTablePtr_->end())
+        {
+            FatalErrorInFunction
+                << "Unknown solver type "
+                << solverTypeName << nl << nl
+                << "Valid solver types are:" << endl
+                << dictionaryConstructorTablePtr_->sortedToc()
+                << exit(FatalError);
+        }
+
+        return autoPtr<motionSolver>(cstrIter()(mesh, solverDict));
+    }
 }
 
 
@@ -175,20 +124,7 @@ Foam::autoPtr<Foam::motionSolver> Foam::motionSolver::iNew::operator()
 {
     dictionaryEntry dict(dictionary::null, is);
 
-    return motionSolver::New
-    (
-        mesh_,
-        IOdictionary
-        (
-            IOobject
-            (
-                dict.name() + ":meshSolver",
-                mesh_.time().constant(),
-                mesh_
-            ),
-            dict
-        )
-    );
+    return motionSolver::New(mesh_, dict);
 }
 
 
@@ -217,30 +153,9 @@ void Foam::motionSolver::updateMesh(const mapPolyMesh& mpm)
 {}
 
 
-bool Foam::motionSolver::writeObject
-(
-    IOstream::streamFormat fmt,
-    IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
-    const bool valid
-) const
+bool Foam::motionSolver::write() const
 {
     return true;
-}
-
-
-bool Foam::motionSolver::read()
-{
-    if (regIOobject::read())
-    {
-        coeffDict_ = optionalSubDict(type() + "Coeffs");
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
 }
 
 

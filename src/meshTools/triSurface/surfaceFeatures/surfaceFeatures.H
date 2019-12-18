@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,7 +101,7 @@ private:
         static const scalar parallelTolerance;
 
 
-    // Private data
+    // Private Data
 
         //- Reference to surface
         const triSurface& surf_;
@@ -217,7 +217,7 @@ public:
             const bool geometricTestOnly = false
         );
 
-        //- Construct as copy
+        //- Copy constructor
         surfaceFeatures(const surfaceFeatures&);
 
 

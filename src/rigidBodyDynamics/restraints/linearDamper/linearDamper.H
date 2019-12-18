@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ class linearDamper
 :
     public restraint
 {
-    // Private data
+    // Private Data
 
         //- Damping coefficient [Ns/m]
         scalar coeff_;
@@ -97,7 +97,8 @@ public:
         virtual void restrain
         (
             scalarField& tau,
-            Field<spatialVector>& fx
+            Field<spatialVector>& fx,
+            const rigidBodyModelState& state
         ) const;
 
         //- Update properties from given dictionary

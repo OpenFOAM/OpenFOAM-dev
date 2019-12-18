@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,15 +54,6 @@ class constantViscosity
 :
     public filmViscosityModel
 {
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        constantViscosity(const constantViscosity&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const constantViscosity&);
-
-
 protected:
 
     // Protected data
@@ -88,6 +79,9 @@ public:
             volScalarField& mu
         );
 
+        //- Disallow default bitwise copy construction
+        constantViscosity(const constantViscosity&) = delete;
+
 
     //- Destructor
     virtual ~constantViscosity();
@@ -103,6 +97,12 @@ public:
                 const volScalarField& p,
                 const volScalarField& T
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const constantViscosity&) = delete;
 };
 
 

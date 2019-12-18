@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,12 +122,12 @@ Foam::polyPatch::polyPatch
         faceSubList
         (
             bm.mesh().faces(),
-            readLabel(dict.lookup("nFaces")),
-            readLabel(dict.lookup("startFace"))
+            dict.lookup<label>("nFaces"),
+            dict.lookup<label>("startFace")
         ),
         bm.mesh().points()
     ),
-    start_(readLabel(dict.lookup("startFace"))),
+    start_(dict.lookup<label>("startFace")),
     boundaryMesh_(bm),
     faceCellsPtr_(nullptr),
     mePtr_(nullptr)
@@ -356,10 +356,10 @@ void Foam::polyPatch::clearAddressing()
 
 void Foam::polyPatch::write(Ostream& os) const
 {
-    os.writeKeyword("type") << type() << token::END_STATEMENT << nl;
+    writeEntry(os, "type", type());
     patchIdentifier::write(os);
-    os.writeKeyword("nFaces") << size() << token::END_STATEMENT << nl;
-    os.writeKeyword("startFace") << start() << token::END_STATEMENT << nl;
+    writeEntry(os, "nFaces", size());
+    writeEntry(os, "startFace", start());
 }
 
 

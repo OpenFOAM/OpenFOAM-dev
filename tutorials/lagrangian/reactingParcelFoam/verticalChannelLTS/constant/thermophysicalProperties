@@ -18,19 +18,15 @@ FoamFile
 thermoType
 {
     type            heRhoThermo;
-    mixture         reactingMixture;
-    transport       polynomial;
-    thermo          hPolynomial;
-    energy          sensibleInternalEnergy;
-    equationOfState icoPolynomial;
+    mixture         multiComponentMixture;
+    transport       sutherland;
+    thermo          janaf;
+    energy          sensibleEnthalpy;
+    equationOfState perfectGas;
     specie          specie;
 }
 
-chemistryReader foamChemistryReader;
-
-foamChemistryFile "$FOAM_CASE/constant/reactions";
-
-foamChemistryThermoFile "$FOAM_CASE/constant/thermo.incompressiblePoly";
+#include "speciesThermo"
 
 inertSpecie     air;
 

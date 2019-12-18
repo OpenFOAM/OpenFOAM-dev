@@ -115,20 +115,6 @@ forAll(Y, i)
 }
 fields.add(thermo.he());
 
-volScalarField Qdot
-(
-    IOobject
-    (
-        "Qdot",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::AUTO_WRITE
-    ),
-    mesh,
-    dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
-);
-
 #include "createMRF.H"
 #include "createClouds.H"
 #include "createRadiationModel.H"

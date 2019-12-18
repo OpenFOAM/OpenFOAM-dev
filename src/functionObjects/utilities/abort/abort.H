@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to the Time
         const Time& time_;
@@ -93,12 +93,6 @@ private:
         //- Remove abort file.
         void removeFile() const;
 
-        //- Disallow default bitwise copy construct
-        abort(const abort&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const abort&);
-
 
 public:
 
@@ -115,6 +109,9 @@ public:
             const Time& runTime,
             const dictionary&
         );
+
+        //- Disallow default bitwise copy construction
+        abort(const abort&) = delete;
 
 
     //- Destructor
@@ -134,6 +131,12 @@ public:
 
         //- Execute at the final time-loop, used for cleanup
         virtual bool end();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const abort&) = delete;
 };
 
 

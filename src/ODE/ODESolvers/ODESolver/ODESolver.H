@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,19 +76,13 @@ protected:
 
     // Protected Member Functions
 
-        //- Return the nomalized scalar error
+        //- Return the normalized scalar error
         scalar normalizeError
         (
             const scalarField& y0,
             const scalarField& y,
             const scalarField& err
         ) const;
-
-        //- Disallow default bitwise copy construct
-        ODESolver(const ODESolver&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const ODESolver&);
 
 
 public:
@@ -148,6 +142,9 @@ public:
             const scalarField& relTol
         );
 
+        //- Disallow default bitwise copy construction
+        ODESolver(const ODESolver&) = delete;
+
 
     // Selectors
 
@@ -186,37 +183,50 @@ public:
 
         inline void resizeMatrix(scalarSquareMatrix& m) const;
 
-        //- Solve the ODE system as far as possible up to dxTry
-        //  adjusting the step as necessary to provide a solution within
-        //  the specified tolerance.
+        //- Solve the ODE system from the current state xStart, y
+        //  and the optional index into the list of systems to solve li
+        //  as far as possible up to dxTry adjusting the step as necessary
+        //  to provide a solution within the specified tolerance.
         //  Update the state and return an estimate for the next step in dxTry
         virtual void solve
         (
             scalar& x,
             scalarField& y,
+            const label li,
             scalar& dxTry
         ) const;
 
-        //- Solve the ODE system as far as possible up to dxTry
-        //  adjusting the step as necessary to provide a solution within
-        //  the specified tolerance.
-        //  Update the state and return an estimate for the next step in dxTry
+        //- Solve the ODE system from the current state xStart, y
+        //  and the optional index into the list of systems to solve li
+        //  as far as possible up to step.dxTry adjusting the step as necessary
+        //  to provide a solution within the specified tolerance.
+        //  Update the state and return the step actually taken in step.dxDid
+        //  and an estimate for the next step in step.dxTry
         virtual void solve
         (
             scalar& x,
             scalarField& y,
+            const label li,
             stepState& step
         ) const;
 
-        //- Solve the ODE system from xStart to xEnd, update the state
-        //  and return an estimate for the next step in dxTry
+        //- Solve the ODE system from the current state xStart, y
+        //  and the optional index into the list of systems to solve li
+        //  to xEnd and return an estimate for the next step in dxTry
         virtual void solve
         (
             const scalar xStart,
             const scalar xEnd,
             scalarField& y,
+            const label li,
             scalar& dxEst
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ODESolver&) = delete;
 };
 
 

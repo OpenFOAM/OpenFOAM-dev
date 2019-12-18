@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -339,16 +339,16 @@ void Foam::advectiveFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
 
-    this->template writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
-    this->template writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
+    writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
+    writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
 
     if (lInf_ > 0)
     {
-        os.writeKeyword("fieldInf") << fieldInf_ << token::END_STATEMENT << nl;
-        os.writeKeyword("lInf") << lInf_ << token::END_STATEMENT << nl;
+        writeEntry(os, "fieldInf", fieldInf_);
+        writeEntry(os, "lInf", lInf_);
     }
 
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

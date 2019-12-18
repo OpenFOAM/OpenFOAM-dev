@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,16 +36,16 @@ SourceFiles
 #define MB_H
 
 #include "liquidProperties.H"
-#include "NSRDSfunc0.H"
-#include "NSRDSfunc1.H"
-#include "NSRDSfunc2.H"
-#include "NSRDSfunc3.H"
-#include "NSRDSfunc4.H"
-#include "NSRDSfunc5.H"
-#include "NSRDSfunc6.H"
-#include "NSRDSfunc7.H"
-#include "NSRDSfunc14.H"
-#include "APIdiffCoefFunc.H"
+#include "NSRDS0ThermophysicalFunction.H"
+#include "NSRDS1ThermophysicalFunction.H"
+#include "NSRDS2ThermophysicalFunction.H"
+#include "NSRDS3ThermophysicalFunction.H"
+#include "NSRDS4ThermophysicalFunction.H"
+#include "NSRDS5ThermophysicalFunction.H"
+#include "NSRDS6ThermophysicalFunction.H"
+#include "NSRDS7ThermophysicalFunction.H"
+#include "NSRDS14ThermophysicalFunction.H"
+#include "APIdiffCoefThermophysicalFunction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -60,21 +60,21 @@ class MB
 :
     public liquidProperties
 {
-    // Private data
+    // Private Data
 
-        NSRDSfunc5 rho_;
-        NSRDSfunc1 pv_;
-        NSRDSfunc6 hl_;
-        NSRDSfunc0 Cp_;
-        NSRDSfunc0 h_;
-        NSRDSfunc7 Cpg_;
-        NSRDSfunc4 B_;
-        NSRDSfunc1 mu_;
-        NSRDSfunc2 mug_;
-        NSRDSfunc0 kappa_;
-        NSRDSfunc2 kappag_;
-        NSRDSfunc6 sigma_;
-        APIdiffCoefFunc D_;
+        thermophysicalFunctions::NSRDS5 rho_;
+        thermophysicalFunctions::NSRDS1 pv_;
+        thermophysicalFunctions::NSRDS6 hl_;
+        thermophysicalFunctions::NSRDS0 Cp_;
+        thermophysicalFunctions::NSRDS0 h_;
+        thermophysicalFunctions::NSRDS7 Cpg_;
+        thermophysicalFunctions::NSRDS4 B_;
+        thermophysicalFunctions::NSRDS1 mu_;
+        thermophysicalFunctions::NSRDS2 mug_;
+        thermophysicalFunctions::NSRDS0 kappa_;
+        thermophysicalFunctions::NSRDS2 kappag_;
+        thermophysicalFunctions::NSRDS6 sigma_;
+        thermophysicalFunctions::APIdiffCoef D_;
 
 
 public:
@@ -94,19 +94,19 @@ public:
         MB
         (
             const liquidProperties& l,
-            const NSRDSfunc5& density,
-            const NSRDSfunc1& vapourPressure,
-            const NSRDSfunc6& heatOfVapourisation,
-            const NSRDSfunc0& heatCapacity,
-            const NSRDSfunc0& enthalpy,
-            const NSRDSfunc7& idealGasHeatCapacity,
-            const NSRDSfunc4& secondVirialCoeff,
-            const NSRDSfunc1& dynamicViscosity,
-            const NSRDSfunc2& vapourDynamicViscosity,
-            const NSRDSfunc0& thermalConductivity,
-            const NSRDSfunc2& vapourThermalConductivity,
-            const NSRDSfunc6& surfaceTension,
-            const APIdiffCoefFunc& vapourDiffussivity
+            const thermophysicalFunctions::NSRDS5& density,
+            const thermophysicalFunctions::NSRDS1& vapourPressure,
+            const thermophysicalFunctions::NSRDS6& heatOfVapourisation,
+            const thermophysicalFunctions::NSRDS0& heatCapacity,
+            const thermophysicalFunctions::NSRDS0& enthalpy,
+            const thermophysicalFunctions::NSRDS7& idealGasHeatCapacity,
+            const thermophysicalFunctions::NSRDS4& secondVirialCoeff,
+            const thermophysicalFunctions::NSRDS1& dynamicViscosity,
+            const thermophysicalFunctions::NSRDS2& vapourDynamicViscosity,
+            const thermophysicalFunctions::NSRDS0& thermalConductivity,
+            const thermophysicalFunctions::NSRDS2& vapourThermalConductivity,
+            const thermophysicalFunctions::NSRDS6& surfaceTension,
+            const thermophysicalFunctions::APIdiffCoef& vapourDiffusivity
         );
 
         //- Construct from dictionary
@@ -130,13 +130,13 @@ public:
         //- Heat of vapourisation [J/kg]
         inline scalar hl(scalar p, scalar T) const;
 
-        //- Liquid heat capacity [J/(kg K)]
+        //- Liquid heat capacity [J/kg/K]
         inline scalar Cp(scalar p, scalar T) const;
 
-        //- Liquid Enthalpy [J/(kg)]
+        //- Liquid enthalpy [J/kg]
         inline scalar h(scalar p, scalar T) const;
 
-        //- Ideal gas heat capacity [J/(kg K)]
+        //- Ideal gas heat capacity [J/kg/K]
         inline scalar Cpg(scalar p, scalar T) const;
 
         //- Second Virial Coefficient [m^3/kg]
@@ -148,33 +148,27 @@ public:
         //- Vapour viscosity [Pa s]
         inline scalar mug(scalar p, scalar T) const;
 
-        //- Liquid thermal conductivity  [W/(m K)]
+        //- Liquid thermal conductivity  [W/m/K]
         inline scalar kappa(scalar p, scalar T) const;
 
-        //- Vapour thermal conductivity  [W/(m K)]
+        //- Vapour thermal conductivity  [W/m/K]
         inline scalar kappag(scalar p, scalar T) const;
 
         //- Surface tension [N/m]
         inline scalar sigma(scalar p, scalar T) const;
 
-        //- Vapour diffussivity [m2/s]
+        //- Vapour diffusivity [m^2/s]
         inline scalar D(scalar p, scalar T) const;
 
-        //- Vapour diffussivity [m2/s] with specified binary pair
+        //- Vapour diffusivity [m^2/s] with specified binary pair
         inline scalar D(scalar p, scalar T, scalar Wb) const;
 
 
     // I-O
 
         //- Write the function coefficients
-        void writeData(Ostream& os) const;
-
-        //- Ostream Operator
-        friend Ostream& operator<<(Ostream& os, const MB& l);
+        void write(Ostream& os) const;
 };
-
-
-Ostream& operator<<(Ostream& os, const MB& l);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

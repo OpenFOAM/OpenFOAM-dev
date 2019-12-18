@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,17 +51,6 @@ class limitedSurfaceInterpolationScheme
 :
     public surfaceInterpolationScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow copy construct
-        limitedSurfaceInterpolationScheme
-        (
-            const limitedSurfaceInterpolationScheme&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const limitedSurfaceInterpolationScheme&);
-
 
 protected:
 
@@ -117,7 +106,6 @@ public:
             faceFlux_(faceFlux)
         {}
 
-
         //- Construct from mesh and Istream.
         //  The name of the flux field is read from the Istream and looked-up
         //  from the mesh objectRegistry
@@ -136,6 +124,12 @@ public:
                 )
             )
         {}
+
+        //- Disallow default bitwise copy construction
+        limitedSurfaceInterpolationScheme
+        (
+            const limitedSurfaceInterpolationScheme&
+        );
 
 
     // Selectors
@@ -189,6 +183,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const limitedSurfaceInterpolationScheme&) = delete;
 };
 
 

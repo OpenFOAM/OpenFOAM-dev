@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ class symmetryPlaneFvPatchField
 :
     public basicSymmetryFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the symmetryPlane patch
         const symmetryPlaneFvPatch& symmetryPlanePatch_;
@@ -103,7 +103,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         symmetryPlaneFvPatchField
         (
             const symmetryPlaneFvPatchField<Type>&
@@ -118,7 +118,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         symmetryPlaneFvPatchField
         (
             const symmetryPlaneFvPatchField<Type>&,
@@ -138,7 +138,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Return gradient at boundary
         virtual tmp<Field<Type>> snGrad() const;

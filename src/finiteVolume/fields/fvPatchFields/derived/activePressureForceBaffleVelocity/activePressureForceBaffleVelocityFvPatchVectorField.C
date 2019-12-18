@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,15 +95,15 @@ activePressureForceBaffleVelocityFvPatchVectorField
     pName_(dict.lookupOrDefault<word>("p", "p")),
     cyclicPatchName_(dict.lookup("cyclicPatch")),
     cyclicPatchLabel_(p.patch().boundaryMesh().findPatchID(cyclicPatchName_)),
-    orientation_(readLabel(dict.lookup("orientation"))),
+    orientation_(dict.lookup<label>("orientation")),
     initWallSf_(0),
     initCyclicSf_(0),
     nbrCyclicSf_(0),
-    openFraction_(readScalar(dict.lookup("openFraction"))),
-    openingTime_(readScalar(dict.lookup("openingTime"))),
-    maxOpenFractionDelta_(readScalar(dict.lookup("maxOpenFractionDelta"))),
+    openFraction_(dict.lookup<scalar>("openFraction")),
+    openingTime_(dict.lookup<scalar>("openingTime")),
+    maxOpenFractionDelta_(dict.lookup<scalar>("maxOpenFractionDelta")),
     curTimeIndex_(-1),
-    minThresholdValue_(readScalar(dict.lookup("minThresholdValue"))),
+    minThresholdValue_(dict.lookup<scalar>("minThresholdValue")),
     fBased_(readBool(dict.lookup("forceBased"))),
     baffleActivated_(0)
 {
@@ -355,21 +355,14 @@ write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
     writeEntryIfDifferent<word>(os, "p", "p", pName_);
-    os.writeKeyword("cyclicPatch")
-        << cyclicPatchName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("orientation")
-        << orientation_ << token::END_STATEMENT << nl;
-    os.writeKeyword("openingTime")
-        << openingTime_ << token::END_STATEMENT << nl;
-    os.writeKeyword("maxOpenFractionDelta")
-        << maxOpenFractionDelta_ << token::END_STATEMENT << nl;
-    os.writeKeyword("openFraction")
-        << openFraction_ << token::END_STATEMENT << nl;
-    os.writeKeyword("minThresholdValue")
-        << minThresholdValue_ << token::END_STATEMENT << nl;
-    os.writeKeyword("forceBased")
-        << fBased_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "cyclicPatch", cyclicPatchName_);
+    writeEntry(os, "orientation", orientation_);
+    writeEntry(os, "openingTime", openingTime_);
+    writeEntry(os, "maxOpenFractionDelta", maxOpenFractionDelta_);
+    writeEntry(os, "openFraction", openFraction_);
+    writeEntry(os, "minThresholdValue", minThresholdValue_);
+    writeEntry(os, "forceBased", fBased_);
+    writeEntry(os, "value", *this);
 }
 
 

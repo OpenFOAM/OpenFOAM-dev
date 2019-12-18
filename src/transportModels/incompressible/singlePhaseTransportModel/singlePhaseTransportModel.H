@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,15 +63,6 @@ class singlePhaseTransportModel
         autoPtr<viscosityModel> viscosityModelPtr_;
 
 
-    // Private Member Functions
-
-        //- Disallow copy construct
-        singlePhaseTransportModel(const singlePhaseTransportModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const singlePhaseTransportModel&);
-
-
 public:
 
     //- Runtime type information
@@ -86,6 +77,9 @@ public:
             const volVectorField& U,
             const surfaceScalarField& phi
         );
+
+        //- Disallow default bitwise copy construction
+        singlePhaseTransportModel(const singlePhaseTransportModel&);
 
 
     //- Destructor
@@ -105,6 +99,12 @@ public:
 
         //- Read transportProperties dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const singlePhaseTransportModel&) = delete;
 };
 
 

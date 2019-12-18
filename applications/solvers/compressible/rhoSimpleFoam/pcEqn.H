@@ -89,7 +89,7 @@ else
     }
 }
 
-// The incompressibe form of the continuity error check is appropriate for
+// The incompressible form of the continuity error check is appropriate for
 // steady-state compressible also.
 #include "incompressible/continuityErrs.H"
 
@@ -100,7 +100,7 @@ U = HbyA - rAtU*fvc::grad(p);
 U.correctBoundaryConditions();
 fvOptions.correct(U);
 
-bool pLimited = pressureControl.limit(p);
+pressureControl.limit(p);
 
 // For closed-volume cases adjust the pressure and density levels
 // to obey overall mass continuity
@@ -108,10 +108,6 @@ if (closedVolume)
 {
     p += (initialMass - fvc::domainIntegrate(psi*p))
         /fvc::domainIntegrate(psi);
-}
-
-if (pLimited || closedVolume)
-{
     p.correctBoundaryConditions();
 }
 

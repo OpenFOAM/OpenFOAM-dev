@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,16 +81,8 @@ Foam::surfZone::surfZone
 )
 :
     surfZoneIdentifier(name, dict, index),
-    size_(readLabel(dict.lookup("nFaces"))),
-    start_(readLabel(dict.lookup("startFace")))
-{}
-
-
-Foam::surfZone::surfZone(const surfZone& zone)
-:
-    surfZoneIdentifier(zone, zone.index()),
-    size_(zone.size()),
-    start_(zone.start())
+    size_(dict.lookup<label>("nFaces")),
+    start_(dict.lookup<label>("startFace"))
 {}
 
 
@@ -116,8 +108,8 @@ void Foam::surfZone::writeDict(Ostream& os) const
         << indent << token::BEGIN_BLOCK << incrIndent << nl;
 
     surfZoneIdentifier::write(os);
-    os.writeKeyword("nFaces") << size() << token::END_STATEMENT << nl;
-    os.writeKeyword("startFace") << start() << token::END_STATEMENT << nl;
+    writeEntry(os, "nFaces", size());
+    writeEntry(os, "startFace", start());
 
     os  << decrIndent << indent << token::END_BLOCK << endl;
 }

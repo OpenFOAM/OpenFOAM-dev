@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,6 +114,7 @@ protected:
         //- Step along face either in righthand or lefthand direction
         inline static label nextVert(const label, const label, const bool);
 
+
     // Protected data
 
         // Map from mesh to local vertex numbering
@@ -173,15 +174,6 @@ protected:
         ) const;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        cellMatcher(const cellMatcher&);
-        void operator=(const cellMatcher&);
-
-
 public:
 
     // Constructors
@@ -194,6 +186,9 @@ public:
             const label maxVertPerFace,
             const word& cellModelName
         );
+
+        //- Disallow default bitwise copy construction
+        cellMatcher(const cellMatcher&) = delete;
 
 
     //- Destructor
@@ -269,6 +264,10 @@ public:
                 cellShape& shape
             ) = 0;
 
+
+    // Member Operators
+
+        void operator=(const cellMatcher&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ class cell
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 
@@ -78,7 +78,7 @@ public:
         explicit inline cell(const labelUList&);
 
         //- Construct by transferring the parameter contents
-        explicit inline cell(const Xfer<labelList>&);
+        explicit inline cell(labelList&&);
 
         //- Construct from Istream
         inline cell(Istream&);
@@ -126,6 +126,12 @@ public:
 
         //- Returns cell volume
         scalar mag(const pointField&, const faceUList&) const;
+
+
+    // Member Operators
+
+        //- Move assignment labelList
+        inline void operator=(labelList&&);
 
 
     // Friend Operators

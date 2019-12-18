@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,20 +54,15 @@ class NASedgeFormat
     public edgeMesh,
     public NASCore
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        NASedgeFormat(const NASedgeFormat&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const NASedgeFormat&);
-
 public:
 
     // Constructors
 
         //- Construct from file name
         NASedgeFormat(const fileName&);
+
+        //- Disallow default bitwise copy construction
+        NASedgeFormat(const NASedgeFormat&) = delete;
 
 
     // Selectors
@@ -91,6 +86,12 @@ public:
 
         //- Read from a file
         virtual bool read(const fileName&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const NASedgeFormat&) = delete;
 };
 
 

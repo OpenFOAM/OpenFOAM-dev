@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class treeBoundBox;
 
 class meshSearch
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -136,20 +136,13 @@ class meshSearch
             ) const;
 
 
-        //- Disallow default bitwise copy construct
-        meshSearch(const meshSearch&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshSearch&);
-
-
 public:
 
     // Declare name of the class and its debug switch
     ClassName("meshSearch");
 
 
-    // Static data members
+    // Static Data Members
 
         //- Tolerance on linear dimensions
         static scalar tol_;
@@ -174,6 +167,10 @@ public:
             const treeBoundBox& bb,
             const polyMesh::cellDecomposition = polyMesh::CELL_TETS
         );
+
+        //- Disallow default bitwise copy construction
+        meshSearch(const meshSearch&) = delete;
+
 
     //- Destructor
     ~meshSearch();
@@ -267,6 +264,12 @@ public:
 
         //- Correct for mesh geom/topo changes
         void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshSearch&) = delete;
 };
 
 

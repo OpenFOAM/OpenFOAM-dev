@@ -46,6 +46,7 @@
                + rAUc
                 *fvc::reconstruct((phicForces - pEqn.flux()/alphacf)/rAUcf);
             Uc.correctBoundaryConditions();
+            fvOptions.correct(Uc);
 
             // Correct Ucf if the mesh is moving
             fvc::correctUf(Ucf, Uc, phic);

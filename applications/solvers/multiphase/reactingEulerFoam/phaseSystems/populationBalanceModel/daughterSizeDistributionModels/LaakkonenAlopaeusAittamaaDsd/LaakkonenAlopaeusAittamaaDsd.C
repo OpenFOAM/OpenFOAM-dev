@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,8 @@ LaakkonenAlopaeusAittamaaDsd::LaakkonenAlopaeusAittamaaDsd
     const dictionary& dict
 )
 :
-    daughterSizeDistributionModel(breakup, dict)
+    daughterSizeDistributionModel(breakup, dict),
+    C4_(dimensionedScalar::lookupOrDefault("C4", dict, dimless, 4.3))
 {}
 
 
@@ -71,58 +72,68 @@ LaakkonenAlopaeusAittamaaDsd::~LaakkonenAlopaeusAittamaaDsd()
 
 Foam::dimensionedScalar
 Foam::diameterModels::daughterSizeDistributionModels::
+LaakkonenAlopaeusAittamaaDsd::antiderivative
+(
+    const dimensionedScalar& xk,
+    const dimensionedScalar& v,
+    const dimensionedScalar& bndr,
+    const dimensionedScalar range
+) const
+{
+    return
+        (
+            pow(xk, -C4_ - 3)*pow(xk - v, C4_)*(v - xk)*((C4_ + 1)*(C4_ + 2)
+           *(C4_ + 3)*pow3(v) - (C4_ + 1)*(C4_ + 2)*(bndr*(C4_ + 4) - 3.0*xk)
+           *sqr(v) - 2.0*xk*(C4_ + 1)*(bndr*(C4_ + 4) - 3.0*xk)*v - 2.0*bndr
+           *sqr(xk)*C4_ + 6.0*pow3(xk) - 8.0*bndr*sqr(xk))
+        )/(2.0*(range)*(C4_ + 4));
+}
+
+
+Foam::dimensionedScalar
+Foam::diameterModels::daughterSizeDistributionModels::
 LaakkonenAlopaeusAittamaaDsd::calcNik
 (
     const label i,
     const label k
 ) const
 {
-    const dimensionedScalar& xi = breakup_.popBal().sizeGroups()[i].x();
-    const dimensionedScalar& xk = breakup_.popBal().sizeGroups()[k].x();
+    const dimensionedScalar& x0 = breakup_.popBal().sizeGroups()[0].x();
+    dimensionedScalar xi = breakup_.popBal().sizeGroups()[i].x() - x0;
+    dimensionedScalar xk = breakup_.popBal().sizeGroups()[k].x() - x0;
     const UPtrList<sizeGroup>& sizeGroups = breakup_.popBal().sizeGroups();
 
     if (i == 0)
     {
-        const dimensionedScalar& xii = sizeGroups[i+1].x();
+        dimensionedScalar xii = sizeGroups[i+1].x() - x0;
+
+        if (k == 0)
+        {
+            return 1.0;
+        }
 
         return
-            (
-                5.0*pow4(xii)*sqr(xk) - 12.0*pow5(xi)*xii + 10.0*pow6(xi)
-              - (20.0*pow3(xi)*xii - 15.0*pow4(xi))*sqr(xk) - 6.0*pow5(xii)*xk
-              - (24*pow5(xi) - 30*pow4(xi)*xii)*xk + 2*pow6(xii)
-            )
-           /((xii - xi)*pow5(xk));
+            antiderivative(xk, xi, xii, (xii-xi))
+          - antiderivative(xk, xii, xii, (xii-xi));
     }
     else if (i == k)
     {
-        const dimensionedScalar& x = sizeGroups[i-1].x();
+        dimensionedScalar x = sizeGroups[i-1].x() - x0;
 
         return
-            (
-                (15.0*pow4(xi) - 20.0*x*pow3(xi))*sqr(xk)
-              + 5.0*pow4(x)*sqr(xk) + (30.0*x*pow4(xi) - 24.0*pow5(xi))*xk
-              - 6.0*pow5(x)*xk + 10.0*pow6(xi) - 12.0*x*pow5(xi) + 2.0*pow6(x)
-            )
-           /((xi - x)*pow5(xk));
+            antiderivative(xk, xi, x, (xi-x))
+          - antiderivative(xk, x, x, (xi-x));
     }
     else
     {
-        const dimensionedScalar& x = sizeGroups[i-1].x();
-        const dimensionedScalar& xii = sizeGroups[i+1].x();
+        dimensionedScalar x = sizeGroups[i-1].x() - x0;
+        dimensionedScalar xii = sizeGroups[i+1].x() - x0;
 
         return
-            (
-                5.0*pow4(xii)*sqr(xk) - 12.0*pow5(xi)*xii + 10.0*pow6(xi)
-              - (20.0*pow3(xi)*xii - 15.0*pow4(xi))*sqr(xk) - 6.0*pow5(xii)*xk
-              - (24*pow5(xi) - 30*pow4(xi)*xii)*xk + 2*pow6(xii)
-            )
-           /((xii - xi)*pow5(xk))
-          + (
-                (15.0*pow4(xi) - 20.0*x*pow3(xi))*sqr(xk)
-              + 5.0*pow4(x)*sqr(xk) + (30.0*x*pow4(xi) - 24.0*pow5(xi))*xk
-              - 6.0*pow5(x)*xk + 10.0*pow6(xi) - 12.0*x*pow5(xi) + 2.0*pow6(x)
-            )
-           /((xi - x)*pow5(xk));
+            antiderivative(xk, xi, xii, (xii-xi))
+          - antiderivative(xk, xii, xii, (xii-xi))
+          + antiderivative(xk, xi, x, (xi-x))
+          - antiderivative(xk, x, x, (xi-x));
     }
 }
 

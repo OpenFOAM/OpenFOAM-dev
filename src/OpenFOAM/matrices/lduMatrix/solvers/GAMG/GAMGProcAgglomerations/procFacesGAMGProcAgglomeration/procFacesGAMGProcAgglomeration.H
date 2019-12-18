@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ class procFacesGAMGProcAgglomeration
 :
     public GAMGProcAgglomeration
 {
-    // Private data
+    // Private Data
 
         //- When to processor agglomerate
         const label nAgglomeratingCells_;
@@ -87,15 +87,6 @@ class procFacesGAMGProcAgglomeration
         //- Do we need to agglomerate across processors?
         bool doProcessorAgglomeration(const lduMesh&) const;
 
-        //- Disallow default bitwise copy construct
-        procFacesGAMGProcAgglomeration
-        (
-            const procFacesGAMGProcAgglomeration&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const procFacesGAMGProcAgglomeration&);
-
 
 public:
 
@@ -112,6 +103,12 @@ public:
             const dictionary& controlDict
         );
 
+        //- Disallow default bitwise copy construction
+        procFacesGAMGProcAgglomeration
+        (
+            const procFacesGAMGProcAgglomeration&
+        );
+
 
     //- Destructor
     virtual ~procFacesGAMGProcAgglomeration();
@@ -122,6 +119,11 @@ public:
        //- Modify agglomeration. Return true if modified
         virtual bool agglomerate();
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const procFacesGAMGProcAgglomeration&) = delete;
 };
 
 

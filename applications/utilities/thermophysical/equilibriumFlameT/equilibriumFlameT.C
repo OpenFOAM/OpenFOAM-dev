@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,10 +74,10 @@ int main(int argc, char *argv[])
     dictionary control(propertiesDict);
 
 
-    scalar P(readScalar(control.lookup("P")));
+    scalar P(control.lookup<scalar>("P"));
     const word fuelName(control.lookup("fuel"));
-    scalar n(readScalar(control.lookup("n")));
-    scalar m(readScalar(control.lookup("m")));
+    scalar n(control.lookup<scalar>("n"));
+    scalar m(control.lookup<scalar>("m"));
 
 
     Info<< nl << "Reading thermodynamic data dictionary" << endl;
@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
     );
 
 
-    // Stoiciometric number of moles of species for one mole of fuel
+    // Stoichiometric number of moles of species for one mole of fuel
     scalar stoicO2 = n + m/4.0;
     scalar stoicN2 = (0.79/0.21)*(n + m/4.0);
     scalar stoicCO2 = n;

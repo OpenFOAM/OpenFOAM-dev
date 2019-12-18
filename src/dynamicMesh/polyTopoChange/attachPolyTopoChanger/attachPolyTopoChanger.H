@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,17 +61,6 @@ class attachPolyTopoChanger
 :
     public polyTopoChanger
 {
-    // Private data
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        attachPolyTopoChanger(const attachPolyTopoChanger&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const attachPolyTopoChanger&);
-
-
 public:
 
     // Constructors
@@ -81,6 +70,9 @@ public:
 
         //- Read constructor for given polyMesh
         explicit attachPolyTopoChanger(polyMesh&);
+
+        //- Disallow default bitwise copy construction
+        attachPolyTopoChanger(const attachPolyTopoChanger&) = delete;
 
 
     //- Destructor
@@ -92,6 +84,12 @@ public:
 
         //- Attach mesh. By default filter out empty patches.
         void attach(const bool removeEmptyPatches = true);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const attachPolyTopoChanger&) = delete;
 };
 
 

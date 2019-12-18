@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class conformalVoronoiMesh;
 
 class cvControls
 {
-    // Private data
+    // Private Data
 
         //- Reference to the foamyHexMeshDict
         const dictionary& foamyHexMeshDict_;
@@ -207,15 +207,6 @@ class cvControls
         Switch writeBackgroundMeshDecomposition_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cvControls(const cvControls&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cvControls&);
-
-
 public:
 
    // Constructors
@@ -225,6 +216,9 @@ public:
         (
             const dictionary& foamyHexMeshDict
         );
+
+        //- Disallow default bitwise copy construction
+        cvControls(const cvControls&) = delete;
 
 
     //- Destructor
@@ -345,6 +339,12 @@ public:
 
             //- Write backgroundMeshDecomposition at output time
             inline Switch writeBackgroundMeshDecomposition() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cvControls&) = delete;
 };
 
 

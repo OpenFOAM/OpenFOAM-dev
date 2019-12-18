@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ class mapPolyMesh;
 
 class faceCollapser
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -112,13 +112,6 @@ class faceCollapser
         ) const;
 
 
-        //- Disallow default bitwise copy construct
-        faceCollapser(const faceCollapser&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const faceCollapser&);
-
-
 public:
 
     //- Runtime type information
@@ -129,6 +122,9 @@ public:
 
         //- Construct from mesh.
         faceCollapser(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        faceCollapser(const faceCollapser&) = delete;
 
 
     // Member Functions
@@ -148,6 +144,12 @@ public:
             //- Update stored quantities for new mesh labels.
             void updateMesh(const mapPolyMesh&)
             {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const faceCollapser&) = delete;
 };
 
 

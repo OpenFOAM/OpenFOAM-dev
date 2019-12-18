@@ -1,0 +1,52 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      testSlashDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#inputSyntax dot;
+
+internalField 3.4;
+
+active
+{
+    type            fixedValue;
+    value.air       $internalField;
+}
+
+inactive
+{
+    type            anotherFixedValue;
+
+    value           $..active.value.air;
+    anotherValue    $:active.value.air;
+
+    sub
+    {
+        value           $...active.value.air;
+        anotherValue    $:active.value.air;
+    }
+}
+
+"U.*"
+{
+    solver GAMG;
+}
+
+e.air
+{
+    // This doesn't expand
+    $U.air;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

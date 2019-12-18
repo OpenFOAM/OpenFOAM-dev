@@ -1,0 +1,165 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeEtc "caseDicts/mesh/generation/snappyHexMeshDict.cfg"
+
+castellatedMesh on;
+snap            on;
+addLayers       off;
+
+geometry
+{
+    shell
+    {
+        type            triSurfaceMesh;
+        file            "shell.stl";
+        regions
+        {
+            lower           { name lower; }
+            upper           { name upper; }
+            walls           { name walls; }
+        }
+    }
+    tube
+    {
+        type            triSurfaceMesh;
+        file            "tube.stl";
+        regions
+        {
+            lower           { name lower; }
+            upper           { name upper; }
+            walls           { name walls; }
+        }
+    }
+    solid
+    {
+        type            triSurfaceMesh;
+        file            "solid.stl";
+        regions
+        {
+            external        { name external; }
+        }
+    }
+    shell_to_solid
+    {
+        type            triSurfaceMesh;
+        file            "shell_to_solid.stl";
+    }
+    tube_to_solid
+    {
+        type            triSurfaceMesh;
+        file            "tube_to_solid.stl";
+    }
+};
+
+castellatedMeshControls
+{
+    features
+    (
+    );
+
+    refinementSurfaces
+    {
+        shell
+        {
+            level           (1 1);
+            regions
+            {
+                lower           { level (1 1); patchInfo { type patch; } }
+                upper           { level (1 1); patchInfo { type patch; } }
+                walls           { level (1 1); patchInfo { type wall; } }
+            }
+        }
+        tube
+        {
+            level           (1 1);
+            regions
+            {
+                lower           { level (1 1); patchInfo { type patch; } }
+                upper           { level (1 1); patchInfo { type patch; } }
+                walls           { level (1 1); patchInfo { type wall;  } }
+            }
+        }
+        solid
+        {
+            level           (1 1);
+            regions
+            {
+                external        { level (1 1); patchInfo { type wall; } }
+            }
+        }
+        shell_to_solid
+        {
+            level           (1 1);
+            faceZone        shell_to_solid;
+            cellZone        shell;
+            cellZoneInside  inside;
+        }
+        tube_to_solid
+        {
+            level           (1 1);
+            faceZone        tube_to_solid;
+            cellZone        tube;
+            cellZoneInside  inside;
+        }
+    }
+
+    refinementRegions
+    {
+    }
+
+    locationInMesh (0 0.008 0.015);
+
+    nCellsBetweenLevels 2;
+
+    resolveFeatureAngle 15;
+}
+
+snapControls
+{
+    implicitFeatureSnap    true;
+}
+
+addLayersControls
+{
+    layers
+    {
+        walls
+        {
+            nSurfaceLayers 2;
+            mergeFaces true;
+        }
+        shell_to_solid
+        {
+            nSurfaceLayers 2;
+            mergeFaces false;
+        }
+        tube_to_solid
+        {
+            nSurfaceLayers 2;
+            mergeFaces false;
+        }
+    }
+
+    relativeSizes       true;
+    expansionRatio      1.2;
+    finalLayerThickness 0.5;
+    minThickness        1e-3;
+}
+
+mergeTolerance 1e-6;
+
+// ************************************************************************* //

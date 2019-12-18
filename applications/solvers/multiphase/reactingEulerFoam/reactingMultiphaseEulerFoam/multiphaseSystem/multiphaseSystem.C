@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,11 @@ void Foam::multiphaseSystem::calcAlphas()
 }
 
 
-void Foam::multiphaseSystem::solveAlphas()
+void Foam::multiphaseSystem::solveAlphas
+(
+    const PtrList<volScalarField>& rAUs,
+    const PtrList<surfaceScalarField>& rAUfs
+)
 {
     forAll(phases(), phasei)
     {
@@ -124,6 +128,15 @@ void Foam::multiphaseSystem::solveAlphas()
             )
         );
     }
+
+    PtrList<surfaceScalarField> DbyAs;
+    if (implicitPhasePressure() && (rAUs.size() || rAUfs.size()))
+    {
+        DbyAs = this->DByAfs(rAUs, rAUfs);
+    }
+
+    PtrList<surfaceScalarField> alphaDbyAs(phases().size());
+
     forAll(movingPhases(), movingPhasei)
     {
         phaseModel& phase = movingPhases()[movingPhasei];
@@ -135,7 +148,7 @@ void Foam::multiphaseSystem::solveAlphas()
             new surfaceScalarField
             (
                 IOobject::groupName("alphaPhiCorr", phase.name()),
-                fvc::flux(phi_, phase, "div(phi," + alpha.name() + ')')
+                fvc::flux(phi_, alpha, "div(phi," + alpha.name() + ')')
             )
         );
 
@@ -162,7 +175,7 @@ void Foam::multiphaseSystem::solveAlphas()
                     (mag(phi_) + mag(phir))/mesh_.magSf()
                 );
 
-                phir += min(cAlpha()*phic, max(phic))*nHatf(phase, phase2);
+                phir += min(cAlpha()*phic, max(phic))*nHatf(alpha, alpha2);
             }
 
             word phirScheme
@@ -172,10 +185,25 @@ void Foam::multiphaseSystem::solveAlphas()
 
             alphaPhiCorr += fvc::flux
             (
-                -fvc::flux(-phir, phase2, phirScheme),
-                phase,
+                -fvc::flux(-phir, alpha2, phirScheme),
+                alpha,
                 phirScheme
             );
+        }
+
+        if (implicitPhasePressure() && (rAUs.size() || rAUfs.size()))
+        {
+            alphaDbyAs.set
+            (
+                phase.index(),
+                fvc::interpolate(max(alpha, scalar(0)))
+               *fvc::interpolate(max(1 - alpha, scalar(0)))
+               *DbyAs[phase.index()]
+            );
+
+            alphaPhiCorr +=
+                alphaDbyAs[phase.index()]
+               *fvc::snGrad(alpha, "bounded")*mesh_.magSf();
         }
 
         phase.correctInflowOutflow(alphaPhiCorr);
@@ -183,7 +211,7 @@ void Foam::multiphaseSystem::solveAlphas()
         MULES::limit
         (
             geometricOneField(),
-            phase,
+            alpha,
             phi_,
             alphaPhiCorr,
             zeroField(),
@@ -291,6 +319,19 @@ void Foam::multiphaseSystem::solveAlphas()
         );
 
         phase.alphaPhiRef() = alphaPhi;
+
+        if (alphaDbyAs.set(phase.index()))
+        {
+            fvScalarMatrix alphaEqn
+            (
+                fvm::ddt(alpha) - fvc::ddt(alpha)
+              - fvm::laplacian(alphaDbyAs[phase.index()], alpha, "bounded")
+            );
+
+            alphaEqn.solve();
+
+            phase.alphaPhiRef() += alphaEqn.flux();
+        }
     }
 
     // Report the phase fractions and the phase fraction sum
@@ -613,12 +654,16 @@ Foam::multiphaseSystem::nearInterface() const
 }
 
 
-void Foam::multiphaseSystem::solve()
+void Foam::multiphaseSystem::solve
+(
+    const PtrList<volScalarField>& rAUs,
+    const PtrList<surfaceScalarField>& rAUfs
+)
 {
     const Time& runTime = mesh_.time();
 
     const dictionary& alphaControls = mesh_.solverDict("alpha");
-    label nAlphaSubCycles(readLabel(alphaControls.lookup("nAlphaSubCycles")));
+    label nAlphaSubCycles(alphaControls.lookup<label>("nAlphaSubCycles"));
 
     bool LTS = fv::localEulerDdt::enabled(mesh_);
 
@@ -632,7 +677,7 @@ void Foam::multiphaseSystem::solve()
                 fv::localEulerDdt::localRSubDeltaT(mesh_, nAlphaSubCycles);
         }
 
-        PtrList<volScalarField> alpha0s(phases().size());
+        List<volScalarField*> alphaPtrs(phases().size());
         PtrList<surfaceScalarField> alphaPhiSums(phases().size());
 
         forAll(phases(), phasei)
@@ -640,11 +685,7 @@ void Foam::multiphaseSystem::solve()
             phaseModel& phase = phases()[phasei];
             volScalarField& alpha = phase;
 
-            alpha0s.set
-            (
-                phasei,
-                new volScalarField(alpha.oldTime())
-            );
+            alphaPtrs[phasei] = &alpha;
 
             alphaPhiSums.set
             (
@@ -665,15 +706,15 @@ void Foam::multiphaseSystem::solve()
 
         for
         (
-            subCycleTime alphaSubCycle
+            subCycle<volScalarField, subCycleFields> alphaSubCycle
             (
-                const_cast<Time&>(runTime),
+                alphaPtrs,
                 nAlphaSubCycles
             );
             !(++alphaSubCycle).end();
         )
         {
-            solveAlphas();
+            solveAlphas(rAUs, rAUfs);
 
             forAll(phases(), phasei)
             {
@@ -686,22 +727,12 @@ void Foam::multiphaseSystem::solve()
             phaseModel& phase = phases()[phasei];
             if (phase.stationary()) continue;
 
-            volScalarField& alpha = phase;
-
             phase.alphaPhiRef() = alphaPhiSums[phasei]/nAlphaSubCycles;
-
-            // Correct the time index of the field
-            // to correspond to the global time
-            alpha.timeIndex() = runTime.timeIndex();
-
-            // Reset the old-time field value
-            alpha.oldTime() = alpha0s[phasei];
-            alpha.oldTime().timeIndex() = runTime.timeIndex();
         }
     }
     else
     {
-        solveAlphas();
+        solveAlphas(rAUs, rAUfs);
     }
 
     forAll(phases(), phasei)

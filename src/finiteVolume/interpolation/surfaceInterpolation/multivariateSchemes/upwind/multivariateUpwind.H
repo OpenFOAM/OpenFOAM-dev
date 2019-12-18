@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,18 +52,9 @@ class multivariateUpwind
 :
     public multivariateSurfaceInterpolationScheme<Type>
 {
-    // Private data
+    // Private Data
 
         const surfaceScalarField& faceFlux_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        multivariateUpwind(const multivariateUpwind&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const multivariateUpwind&);
 
 
 public:
@@ -94,8 +85,14 @@ public:
             faceFlux_(faceFlux)
         {}
 
+        //- Disallow default bitwise copy construction
+        multivariateUpwind(const multivariateUpwind&) = delete;
+
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multivariateUpwind&) = delete;
 
         //- surfaceInterpolationScheme sub-class returned by operator(field)
         //  which is used as the interpolation scheme for the field
@@ -103,7 +100,7 @@ public:
         :
             public multivariateSurfaceInterpolationScheme<Type>::fieldScheme
         {
-            // Private data
+            // Private Data
 
                 const surfaceScalarField& faceFlux_;
 

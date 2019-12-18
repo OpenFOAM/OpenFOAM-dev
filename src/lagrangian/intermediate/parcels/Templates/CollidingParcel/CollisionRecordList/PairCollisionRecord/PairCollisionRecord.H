@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ Ostream& operator<<(Ostream&, const PairCollisionRecord<Type>&);
 template<class Type>
 class PairCollisionRecord
 {
-    // Private data
+    // Private Data
 
         //- Originating processor id of other collision partner
         label origProcOfOther_;
@@ -117,7 +117,7 @@ public:
         //- Construct from Istream
         PairCollisionRecord(Istream&);
 
-        //- Construct as copy
+        //- Copy constructor
         PairCollisionRecord(const PairCollisionRecord&);
 
 

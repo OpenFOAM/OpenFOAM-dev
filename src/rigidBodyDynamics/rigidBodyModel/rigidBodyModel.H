@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ class restraint;
 
 class rigidBodyModel
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Initialize the model with the root-body
         //  which is a fixed massless bodyat the origin.
@@ -252,6 +252,9 @@ public:
         //- Return the name of body with the given ID
         inline const word& name(const label bodyID) const;
 
+        //- Return the names of the moving bodies
+        wordList movingBodyNames() const;
+
         //- Return the inertia of body i
         inline const rigidBodyInertia& I(const label i) const;
 
@@ -324,7 +327,12 @@ public:
 
         //- Apply the restraints and accumulate the internal joint forces
         //  into the tau field and external forces into the fx field
-        void applyRestraints(scalarField& tau, Field<spatialVector>& fx) const;
+        void applyRestraints
+        (
+            scalarField& tau,
+            Field<spatialVector>& fx,
+            const rigidBodyModelState& state
+        ) const;
 
         //- Calculate the joint acceleration qDdot from the joint state q,
         //  velocity qDot, internal force tau (in the joint frame) and

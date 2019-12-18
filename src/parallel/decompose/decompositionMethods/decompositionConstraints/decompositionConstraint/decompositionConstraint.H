@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,16 +61,6 @@ protected:
         //- Model coefficients dictionary
         dictionary coeffDict_;
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        decompositionConstraint(const decompositionConstraint&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const decompositionConstraint&);
-
 
 public:
 
@@ -101,6 +91,10 @@ public:
             const dictionary& constraintsDict,
             const word& type
         );
+
+        //- Disallow default bitwise copy construction
+        decompositionConstraint(const decompositionConstraint&) = delete;
+
 
     // Selectors
 
@@ -141,6 +135,12 @@ public:
             labelList& decomposition
         ) const
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const decompositionConstraint&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,19 +113,6 @@ inline Foam::scalar Foam::constTransport<Thermo>::alphah
 
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-template<class Thermo>
-inline void Foam::constTransport<Thermo>::operator=
-(
-    const constTransport<Thermo>& ct
-)
-{
-    Thermo::operator=(ct);
-
-    mu_ = ct.mu_;
-    rPr_ = ct.rPr_;
-}
-
 
 template<class Thermo>
 inline void Foam::constTransport<Thermo>::operator+=

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ class wallDist
 :
     public MeshObject<fvMesh, UpdateableMeshObject, wallDist>
 {
-    // Private data
+    // Private Data
 
         //- Set of patch IDs
         const labelHashSet patchIDs_;
@@ -96,12 +96,6 @@ class wallDist
         //- Construct the normal-to-wall field as required
         void constructn() const;
 
-        //- Disallow default bitwise copy construct
-        wallDist(const wallDist&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const wallDist&);
-
 
 public:
 
@@ -125,6 +119,9 @@ public:
             const labelHashSet& patchIDs,
             const word& patchTypeName = "patch"
         );
+
+        //- Disallow default bitwise copy construction
+        wallDist(const wallDist&) = delete;
 
 
     //- Destructor
@@ -153,6 +150,12 @@ public:
 
         //- Update the y-field when the mesh changes
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const wallDist&) = delete;
 };
 
 

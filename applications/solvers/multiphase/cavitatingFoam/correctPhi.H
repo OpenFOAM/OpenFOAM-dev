@@ -1,4 +1,4 @@
-correctUphiBCs(U, phi);
+correctUphiBCs(U, phi, true);
 
 {
     volScalarField pcorr

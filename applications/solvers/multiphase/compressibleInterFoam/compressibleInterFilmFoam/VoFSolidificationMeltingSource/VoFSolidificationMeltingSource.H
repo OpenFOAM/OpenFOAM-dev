@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ class VoFSolidificationMeltingSource
 :
     public cellSetOption
 {
-    // Private data
+    // Private Data
 
         //- Solid fraction as a function of temperature
         autoPtr<Function1<scalar>> alphaSolidT_;
@@ -135,12 +135,6 @@ class VoFSolidificationMeltingSource
         template<class RhoFieldType>
         void apply(const RhoFieldType& rho, fvMatrix<scalar>& eqn);
 
-        //- Disallow default bitwise copy construct
-        VoFSolidificationMeltingSource(const VoFSolidificationMeltingSource&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const VoFSolidificationMeltingSource&);
-
 
 public:
 
@@ -158,6 +152,12 @@ public:
             const dictionary& dict,
             const fvMesh& mesh
         );
+
+        //- Disallow default bitwise copy construction
+        VoFSolidificationMeltingSource
+        (
+            const VoFSolidificationMeltingSource&
+        ) = delete;
 
 
     // Member Functions
@@ -194,6 +194,12 @@ public:
 
             //- Read source dictionary
             virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const VoFSolidificationMeltingSource&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ class radialActuationDiskSource
 :
     public actuationDiskSource
 {
-    // Private data
+    // Private Data
 
         //- Coefficients for the radial distribution
         FixedList<scalar, 3> radialCoeffs_;
@@ -109,12 +109,6 @@ class radialActuationDiskSource
             const vectorField& U
         ) const;
 
-        //- Disallow default bitwise copy construct
-        radialActuationDiskSource(const radialActuationDiskSource&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const radialActuationDiskSource&);
-
 
 public:
 
@@ -132,6 +126,9 @@ public:
             const dictionary& dict,
             const fvMesh& mesh
         );
+
+        //- Disallow default bitwise copy construction
+        radialActuationDiskSource(const radialActuationDiskSource&) = delete;
 
 
     //- Destructor
@@ -161,6 +158,12 @@ public:
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const radialActuationDiskSource&) = delete;
 };
 
 

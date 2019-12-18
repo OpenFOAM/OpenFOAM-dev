@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ class solution
 :
     public IOdictionary
 {
-    // Private data
+    // Private Data
 
         //- Dictionary of temporary fields to cache
         dictionary cache_;
@@ -79,10 +79,6 @@ class solution
         //- Read settings from the dictionary
         void read(const dictionary&);
 
-        //- Disallow default bitwise copy construct and assignment
-        solution(const solution&);
-        void operator=(const solution&);
-
 
 public:
 
@@ -103,6 +99,9 @@ public:
             const objectRegistry& obr,
             const fileName& dictName
         );
+
+        //- Disallow default bitwise copy construction
+        solution(const solution&) = delete;
 
 
     // Member Functions
@@ -145,6 +144,11 @@ public:
 
             //- Read the solution dictionary
             bool read();
+
+
+    // Member Operators
+
+        void operator=(const solution&) = delete;
 };
 
 

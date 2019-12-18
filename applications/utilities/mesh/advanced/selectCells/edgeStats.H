@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ class twoDPointCorrector;
 
 class edgeStats
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh.
         const polyMesh& mesh_;
@@ -68,16 +68,9 @@ class edgeStats
         direction getNormalDir(const twoDPointCorrector*) const;
 
 
-        //- Disallow default bitwise copy construct
-        edgeStats(const edgeStats&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const edgeStats&);
-
-
 public:
 
-    // Static data members
+    // Static Data Members
 
         // Max (cos of) angle for edges to be considered aligned with axis.
         static const scalar edgeTol_;
@@ -91,11 +84,20 @@ public:
         //- Construct from mesh and corrector
         edgeStats(const polyMesh& mesh, const twoDPointCorrector* );
 
+        //- Disallow default bitwise copy construction
+        edgeStats(const edgeStats&) = delete;
+
 
     // Member Functions
 
         //- Calculate minimum edge length and print
         scalar minLen(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const edgeStats&) = delete;
 };
 
 

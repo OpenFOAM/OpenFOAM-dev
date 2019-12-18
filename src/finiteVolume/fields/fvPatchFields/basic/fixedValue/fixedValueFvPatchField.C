@@ -43,18 +43,6 @@ Foam::fixedValueFvPatchField<Type>::fixedValueFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const Type& value
-)
-:
-    fvPatchField<Type>(p, iF, value)
-{}
-
-
-template<class Type>
-Foam::fixedValueFvPatchField<Type>::fixedValueFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict,
     const bool valueRequired
 )
@@ -155,7 +143,7 @@ template<class Type>
 void Foam::fixedValueFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

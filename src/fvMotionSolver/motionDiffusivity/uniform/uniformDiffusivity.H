@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,6 @@ SourceFiles
 #define uniformDiffusivity_H
 
 #include "motionDiffusivity.H"
-#include "surfaceFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,25 +50,6 @@ class uniformDiffusivity
 :
     public motionDiffusivity
 {
-
-protected:
-
-    // Protected data
-
-        surfaceScalarField faceDiffusivity_;
-
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        uniformDiffusivity(const uniformDiffusivity&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const uniformDiffusivity&);
-
-
 public:
 
     //- Runtime type information
@@ -81,22 +61,21 @@ public:
         //- Construct for the given fvMesh and data Istream
         uniformDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        uniformDiffusivity(const uniformDiffusivity&) = delete;
+
 
     //- Destructor
     virtual ~uniformDiffusivity();
 
 
-    // Member Functions
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const uniformDiffusivity&) = delete;
 
         //- Return diffusivity field
-        virtual tmp<surfaceScalarField> operator()() const
-        {
-            return faceDiffusivity_;
-        }
-
-        //- Do not correct the motion diffusivity
-        virtual void correct()
-        {}
+        virtual tmp<surfaceScalarField> operator()() const;
 };
 
 

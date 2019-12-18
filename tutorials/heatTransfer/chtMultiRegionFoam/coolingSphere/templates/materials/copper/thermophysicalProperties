@@ -35,18 +35,18 @@ mixture
 
     transport
     {
-        kappa   380;        // [W/(m K)]
+        kappa   380;        // [W/m/K]
     }
 
     thermodynamics
     {
         Hf      0;
-        Cp      385;        // [J/(kg K)]
+        Cp      385;        // [J/kg/K]
     }
 
     equationOfState
     {
-        rho     8940;       // [kg/m3]
+        rho     8940;       // [kg/m^3]
     }
 }
 

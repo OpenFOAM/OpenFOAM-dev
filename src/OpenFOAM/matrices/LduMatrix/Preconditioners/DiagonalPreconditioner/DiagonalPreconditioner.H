@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,19 +54,10 @@ class DiagonalPreconditioner
 :
     public LduMatrix<Type, DType, LUType>::preconditioner
 {
-    // Private data
+    // Private Data
 
         //- The inverse (reciprocal for scalar) diagonal
         Field<DType> rD;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        DiagonalPreconditioner(const DiagonalPreconditioner&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const DiagonalPreconditioner&);
 
 
 public:
@@ -83,6 +74,9 @@ public:
             const typename LduMatrix<Type, DType, LUType>::solver& sol,
             const dictionary& preconditionerDict
         );
+
+        //- Disallow default bitwise copy construction
+        DiagonalPreconditioner(const DiagonalPreconditioner&) = delete;
 
 
     // Destructor
@@ -114,6 +108,12 @@ public:
         {
             return(precondition(wT, rT));
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const DiagonalPreconditioner&) = delete;
 };
 
 

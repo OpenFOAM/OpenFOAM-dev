@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,16 +73,6 @@ class coordinateSystems
 :
     public IOPtrList<coordinateSystem>
 {
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        coordinateSystems(const coordinateSystems&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const coordinateSystems&);
-
-
 public:
 
     //- Runtime type information
@@ -104,8 +94,11 @@ public:
         coordinateSystems
         (
             const IOobject&,
-            const Xfer<PtrList<coordinateSystem>>&
+            PtrList<coordinateSystem>&&
         );
+
+        //- Disallow default bitwise copy construction
+        coordinateSystems(const coordinateSystems&) = delete;
 
 
     // Selectors
@@ -130,6 +123,12 @@ public:
 
         //- Write data
         bool writeData(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const coordinateSystems&) = delete;
 };
 
 

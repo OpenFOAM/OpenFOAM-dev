@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ public:
         IOField(const IOobject&);
 
         //- Construct from IOobject; does local processor require reading?
-        IOField(const IOobject&, const bool valid);
+        IOField(const IOobject&, const bool read);
 
         //- Construct from IOobject and size (does not set values)
         IOField(const IOobject&, const label size);
@@ -73,24 +73,33 @@ public:
         //- Construct from components
         IOField(const IOobject&, const Field<Type>&);
 
-        //- Construct by transferring the Field contents
-        IOField(const IOobject&, const Xfer<Field<Type>>&);
+        //- Move construct by transferring the Field contents
+        IOField(const IOobject&, Field<Type>&&);
+
+        //- Move construct by transferring the Field contents
+        IOField(const IOobject&, const tmp<Field<Type>>&);
+
+        //- Move constructor
+        IOField(IOField<Type>&&);
 
 
     //- Destructor
     virtual ~IOField();
 
 
-    // Member functions
+    // Member Functions
 
         bool writeData(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const IOField<Type>&);
+        void operator=(IOField<Type>&&);
 
         void operator=(const Field<Type>&);
+        void operator=(Field<Type>&&);
+        void operator=(const tmp<Field<Type>>&);
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ namespace Foam
 
 class smoothAlignmentSolver
 {
-    // Private data
+    // Private Data
 
         cellShapeControlMesh& mesh_;
 
@@ -91,12 +91,6 @@ class smoothAlignmentSolver
             triad& t
         ) const;
 
-        //- Disallow default bitwise copy construct
-        smoothAlignmentSolver(const smoothAlignmentSolver&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const smoothAlignmentSolver&);
-
 
 public:
 
@@ -104,6 +98,9 @@ public:
 
         //- Construct null
         smoothAlignmentSolver(cellShapeControlMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        smoothAlignmentSolver(const smoothAlignmentSolver&) = delete;
 
 
     //- Destructor
@@ -116,6 +113,12 @@ public:
 
             //- Smooth the alignments on the mesh
             void smoothAlignments(const label maxSmoothingIterations);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const smoothAlignmentSolver&) = delete;
 };
 
 

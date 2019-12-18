@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,14 @@ class fluidThermo
     public compressibleTransportModel
 {
 
+protected:
+
+        // Fields
+
+            //- Pressure [Pa]
+            volScalarField& p_;
+
+
 public:
 
     //- Runtime type information
@@ -99,9 +107,16 @@ public:
     virtual ~fluidThermo();
 
 
-    // Member functions
+    // Member Functions
 
         // Access to thermodynamic state variables
+
+            //- Pressure [Pa]
+            //  Non-const access allowed for transport equations
+            virtual volScalarField& p();
+
+            //- Pressure [Pa]
+            virtual const volScalarField& p() const;
 
             //- Add the given density correction to the density field.
             //  Used to update the density field following pressure solution
@@ -109,6 +124,25 @@ public:
 
             //- Compressibility [s^2/m^2]
             virtual const volScalarField& psi() const = 0;
+
+
+        // Fields derived from thermodynamic state variables
+
+            //- Gamma = Cp/Cv []
+            virtual tmp<volScalarField> gamma() const = 0;
+
+            //- Gamma = Cp/Cv for patch []
+            virtual tmp<scalarField> gamma
+            (
+                const scalarField& T,
+                const label patchi
+            ) const = 0;
+
+            //- Molecular weight [kg/kmol]
+            virtual tmp<volScalarField> W() const = 0;
+
+            //- Molecular weight for patch [kg/kmol]
+            virtual tmp<scalarField> W(const label patchi) const = 0;
 
 
         // Access to transport state variables
@@ -124,6 +158,38 @@ public:
 
             //- Kinematic viscosity of mixture for patch [m^2/s]
             virtual tmp<scalarField> nu(const label patchi) const;
+
+
+        // Fields derived from transport state variables
+
+            //- Effective thermal turbulent diffusivity for temperature
+            //  of mixture [W/m/K]
+            virtual tmp<volScalarField> kappaEff
+            (
+                const volScalarField&
+            ) const = 0;
+
+            //- Effective thermal turbulent diffusivity for temperature
+            //  of mixture for patch [W/m/K]
+            virtual tmp<scalarField> kappaEff
+            (
+                const scalarField& alphat,
+                const label patchi
+            ) const = 0;
+
+            //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
+            virtual tmp<volScalarField> alphaEff
+            (
+                const volScalarField& alphat
+            ) const = 0;
+
+            //- Effective thermal turbulent diffusivity of mixture
+            //  for patch [kg/m/s]
+            virtual tmp<scalarField> alphaEff
+            (
+                const scalarField& alphat,
+                const label patchi
+            ) const = 0;
 };
 
 

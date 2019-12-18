@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,19 +50,10 @@ class ensightAsciiStream
 :
     public ensightStream
 {
-    // Private data
+    // Private Data
 
         //- Description of data_
         OFstream str_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        ensightAsciiStream(const ensightAsciiStream&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const ensightAsciiStream&);
 
 
 public:
@@ -85,6 +76,9 @@ public:
             str_.setf(ios_base::scientific, ios_base::floatfield);
             str_.precision(5);
         }
+
+        //- Disallow default bitwise copy construction
+        ensightAsciiStream(const ensightAsciiStream&) = delete;
 
 
     //- Destructor
@@ -139,14 +133,11 @@ public:
                 << setw(10) << partI << nl;
         }
 
+
     // Member Operators
 
-    // Friend Functions
-
-    // Friend Operators
-
-    // IOstream Operators
-
+        //- Disallow default bitwise assignment
+        void operator=(const ensightAsciiStream&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ void Foam::TGaussSeidelSmoother<Type, DType, LUType>::smooth
     // Parallel boundary initialisation.  The parallel boundary is treated
     // as an effective jacobi interface in the boundary.
     // Note: there is a change of sign in the coupled
-    // interface update to add the contibution to the r.h.s.
+    // interface update to add the contribution to the r.h.s.
 
     FieldField<Field, LUType> mBouCoeffs(matrix_.interfacesUpper().size());
 

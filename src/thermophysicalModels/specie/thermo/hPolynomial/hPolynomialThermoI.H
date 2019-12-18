@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,8 @@ inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::limit
 template<class EquationOfState, int PolySize>
 inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::Cp
 (
-    const scalar p, const scalar T
+    const scalar p,
+    const scalar T
 ) const
 {
     return CpCoeffs_.value(T) + EquationOfState::Cp(p, T);
@@ -90,7 +91,8 @@ inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::Cp
 template<class EquationOfState, int PolySize>
 inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::Ha
 (
-    const scalar p, const scalar T
+    const scalar p,
+    const scalar T
 ) const
 {
     return hCoeffs_.value(T) + EquationOfState::H(p, T);
@@ -100,7 +102,8 @@ inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::Ha
 template<class EquationOfState, int PolySize>
 inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::Hs
 (
-    const scalar p, const scalar T
+    const scalar p,
+    const scalar T
 ) const
 {
     return Ha(p, T) - Hc();
@@ -123,6 +126,16 @@ inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::S
 ) const
 {
     return sCoeffs_.value(T) + EquationOfState::S(p, T);
+}
+
+
+template<class EquationOfState, int PolySize>
+inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::Gstd
+(
+    const scalar T
+) const
+{
+    return hCoeffs_.value(T) - sCoeffs_.value(T)*T;
 }
 
 
@@ -157,22 +170,6 @@ inline Foam::scalar Foam::hPolynomialThermo<EquationOfState, PolySize>::dCpdT
 
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-template<class EquationOfState, int PolySize>
-inline void Foam::hPolynomialThermo<EquationOfState, PolySize>::operator=
-(
-    const hPolynomialThermo<EquationOfState, PolySize>& pt
-)
-{
-    EquationOfState::operator=(pt);
-
-    Hf_ = pt.Hf_;
-    Sf_ = pt.Sf_;
-    CpCoeffs_ = pt.CpCoeffs_;
-    hCoeffs_ = pt.hCoeffs_;
-    sCoeffs_ = pt.sCoeffs_;
-}
-
 
 template<class EquationOfState, int PolySize>
 inline void Foam::hPolynomialThermo<EquationOfState, PolySize>::operator+=

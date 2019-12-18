@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,14 +66,6 @@ class PBiCGStab
 :
     public lduMatrix::solver
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        PBiCGStab(const PBiCGStab&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const PBiCGStab&);
-
 
 public:
 
@@ -94,6 +86,9 @@ public:
             const dictionary& solverControls
         );
 
+        //- Disallow default bitwise copy construction
+        PBiCGStab(const PBiCGStab&) = delete;
+
 
     //- Destructor
     virtual ~PBiCGStab()
@@ -109,6 +104,12 @@ public:
             const scalarField& source,
             const direction cmpt=0
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PBiCGStab&) = delete;
 };
 
 

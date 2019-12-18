@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class mergePolyMesh
 :
     public polyMesh
 {
-    // Private data
+    // Private Data
 
         //- Topological change to accumulated all mesh changes
         polyTopoChange meshMod_;
@@ -76,13 +76,6 @@ class mergePolyMesh
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        mergePolyMesh(const mergePolyMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const mergePolyMesh&);
-
-
         //- Return patch index given a name and type
         label patchIndex(const polyPatch&);
 
@@ -101,6 +94,9 @@ public:
         //- Construct from IOobject
         mergePolyMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        mergePolyMesh(const mergePolyMesh&) = delete;
+
 
     //- Destructor
     virtual ~mergePolyMesh()
@@ -114,6 +110,12 @@ public:
 
         //- Merge meshes
         void merge();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const mergePolyMesh&) = delete;
 };
 
 

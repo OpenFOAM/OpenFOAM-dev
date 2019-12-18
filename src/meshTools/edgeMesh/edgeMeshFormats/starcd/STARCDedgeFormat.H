@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,12 +81,6 @@ class STARCDedgeFormat
             const edgeList&
         );
 
-        //- Disallow default bitwise copy construct
-        STARCDedgeFormat(const STARCDedgeFormat&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const STARCDedgeFormat&);
-
 
 protected:
 
@@ -106,6 +100,9 @@ public:
 
         //- Construct from file name
         STARCDedgeFormat(const fileName&);
+
+        //- Disallow default bitwise copy construction
+        STARCDedgeFormat(const STARCDedgeFormat&) = delete;
 
 
     // Selectors
@@ -138,6 +135,12 @@ public:
         {
             write(name, *this);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const STARCDedgeFormat&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,8 @@ Foam::RBD::restraints::linearDamper::~linearDamper()
 void Foam::RBD::restraints::linearDamper::restrain
 (
     scalarField& tau,
-    Field<spatialVector>& fx
+    Field<spatialVector>& fx,
+    const rigidBodyModelState& state
 ) const
 {
     vector force = -coeff_*model_.v(model_.master(bodyID_)).l();
@@ -109,8 +110,7 @@ void Foam::RBD::restraints::linearDamper::write
 {
     restraint::write(os);
 
-    os.writeKeyword("coeff")
-        << coeff_ << token::END_STATEMENT << nl;
+    writeEntry(os, "coeff", coeff_);
 }
 
 

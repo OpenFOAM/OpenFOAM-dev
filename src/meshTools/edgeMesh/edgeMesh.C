@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,18 +144,15 @@ Foam::edgeMesh::edgeMesh
 
 Foam::edgeMesh::edgeMesh
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<edgeList>& edgeLst
+    pointField&& pointLst,
+    edgeList&& edgeLst
 )
 :
     fileFormats::edgeMeshFormatsCore(),
-    points_(0),
-    edges_(0),
+    points_(move(pointLst)),
+    edges_(move(edgeLst)),
     pointEdgesPtr_(nullptr)
-{
-    points_.transfer(pointLst());
-    edges_.transfer(edgeLst());
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -176,20 +173,20 @@ void Foam::edgeMesh::clear()
 
 void Foam::edgeMesh::reset
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<edgeList>& edgeLst
+    pointField&& pointLst,
+    edgeList&& edgeLst
 )
 {
     // Take over new primitive data.
     // Optimized to avoid overwriting data at all
     if (notNull(pointLst))
     {
-        points_.transfer(pointLst());
+        points_.transfer(pointLst);
     }
 
     if (notNull(edgeLst))
     {
-        edges_.transfer(edgeLst());
+        edges_.transfer(edgeLst);
 
         // connectivity likely changed
         pointEdgesPtr_.clear();
@@ -202,12 +199,6 @@ void Foam::edgeMesh::transfer(edgeMesh& mesh)
     points_.transfer(mesh.points_);
     edges_.transfer(mesh.edges_);
     pointEdgesPtr_ = mesh.pointEdgesPtr_;
-}
-
-
-Foam::Xfer<Foam::edgeMesh> Foam::edgeMesh::xfer()
-{
-    return xferMove(*this);
 }
 
 

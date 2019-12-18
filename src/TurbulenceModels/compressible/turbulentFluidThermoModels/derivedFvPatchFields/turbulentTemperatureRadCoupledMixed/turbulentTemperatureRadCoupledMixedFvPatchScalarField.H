@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,8 +42,6 @@ Usage
         qr         | name of the radiative flux in this region | no | none
         thicknessLayers | list of thicknesses per layer [m] | no |
         kappaLayers  | list of thermal conductivites per layer [W/m/K] | no |
-        kappaMethod  | inherited from temperatureCoupledBase | inherited |
-        kappa        | inherited from temperatureCoupledBase | inherited |
     \endtable
 
     Example of the boundary condition specification:
@@ -56,8 +54,6 @@ Usage
         qr              qr; // or none. Name of qr field on local region
         thicknessLayers (0.1 0.2 0.3 0.4);
         kappaLayers     (1 2 3 4);
-        kappaMethod     lookup;
-        kappa           kappa;
         value           uniform 300;
     }
     \endverbatim
@@ -95,7 +91,7 @@ class turbulentTemperatureRadCoupledMixedFvPatchScalarField
     public mixedFvPatchScalarField,
     public temperatureCoupledBase
 {
-    // Private data
+    // Private Data
 
         //- Name of field on the neighbour region
         const word TnbrName_;
@@ -187,7 +183,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

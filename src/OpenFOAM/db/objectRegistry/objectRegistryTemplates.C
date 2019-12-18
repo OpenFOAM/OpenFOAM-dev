@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -196,7 +196,19 @@ const Type& Foam::objectRegistry::lookupObject(const word& name) const
             << " " << name << " from objectRegistry " << this->name()
             << " failed\n    available objects of type " << Type::typeName
             << " are" << nl
-            << names<Type>()
+            << names<Type>();
+
+        if (cacheTemporaryObject(name))
+        {
+            FatalErrorInFunction
+                << nl
+                << "    request for " << name << " from objectRegistry "
+                << this->name() << " to be cached failed" << nl
+                << "    available temporary objects are" << nl
+                << temporaryObjects_;
+        }
+
+        FatalErrorInFunction
             << abort(FatalError);
     }
 
@@ -208,6 +220,63 @@ template<class Type>
 Type& Foam::objectRegistry::lookupObjectRef(const word& name) const
 {
     return const_cast<Type&>(lookupObject<Type>(name));
+}
+
+
+template<class Object>
+bool Foam::objectRegistry::cacheTemporaryObject(Object& ob) const
+{
+    readCacheTemporaryObjects();
+
+    if (cacheTemporaryObjects_.size())
+    {
+        temporaryObjects_.insert(ob.name());
+
+        HashTable<Pair<bool>>::iterator iter
+        (
+            cacheTemporaryObjects_.find(ob.name())
+        );
+
+        // Cache object ob if is in the cacheTemporaryObjects list
+        // and hasn't been cached yet
+        if (iter != cacheTemporaryObjects_.end() && iter().first() == false)
+        {
+            iter().first() = true;
+            iter().second() = true;
+
+            if (ob.db().template foundObject<Object>(ob.name()))
+            {
+                Object& cachedOb =
+                    ob.db().template lookupObjectRef<Object>(ob.name());
+
+                // If the object is already cached in the database delete it
+                if (&cachedOb != &ob && cachedOb.ownedByRegistry())
+                {
+                    deleteCachedObject(cachedOb);
+                }
+            }
+
+            if (debug)
+            {
+                Info<< "Caching " << ob.name()
+                    << " of type " << ob.type() << endl;
+            }
+
+            ob.release();
+            ob.checkOut();
+            store(new Object(move(ob)));
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

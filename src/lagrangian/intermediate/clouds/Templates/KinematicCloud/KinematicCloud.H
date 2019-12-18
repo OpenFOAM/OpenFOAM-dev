@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,7 +102,7 @@ class KinematicCloud
 {
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         //- Type of cloud this cloud was instantiated for
         typedef CloudType cloudType;
@@ -123,19 +123,10 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Cloud copy pointer
         autoPtr<KinematicCloud<CloudType>> cloudCopyPtr_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        KinematicCloud(const KinematicCloud&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const KinematicCloud&);
 
 
 protected:
@@ -172,7 +163,7 @@ protected:
 
         // References to the carrier gas fields
 
-            //- Density [kg/m3]
+            //- Density [kg/m^3]
             const volScalarField& rho_;
 
             //- Velocity [m/s]
@@ -302,6 +293,9 @@ public:
             const word& name,
             const KinematicCloud<CloudType>& c
         );
+
+        //- Disallow default bitwise copy construction
+        KinematicCloud(const KinematicCloud&) = delete;
 
         //- Construct and return clone based on (this) with new name
         virtual autoPtr<Cloud<parcelType>> clone(const word& name)
@@ -616,6 +610,12 @@ public:
 
             //- Print cloud information
             void info();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const KinematicCloud&) = delete;
 };
 
 

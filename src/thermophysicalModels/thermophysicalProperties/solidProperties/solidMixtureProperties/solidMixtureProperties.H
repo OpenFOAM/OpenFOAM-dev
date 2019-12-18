@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ namespace Foam
 
 class solidMixtureProperties
 {
-    // Private data
+    // Private Data
 
         //- The names of the solids
         List<word> components_;
@@ -131,7 +131,7 @@ public:
         //  mass fractions
         scalar rho(const scalarField& Y) const;
 
-        //- Calculate the mixture heat capacity [J/(kg K)] as a function of
+        //- Calculate the mixture heat capacity [J/kg/K] as a function of
         //  mass fractions
         scalar Cp(const scalarField& Y) const;
 };

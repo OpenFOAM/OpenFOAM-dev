@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,11 +56,15 @@ class SHA1Digest;
 
 class dynamicCode
 {
+
 public:
+
     typedef Tuple2<fileName, string> fileAndContent;
 
+
 private:
-    // Private data
+
+    // Private Data
 
         //- Root for dynamic code compilation
         fileName codeRoot_;
@@ -90,18 +94,9 @@ private:
         std::string makeOptions_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        dynamicCode(const dynamicCode&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const dynamicCode&);
-
-
 protected:
 
-    // Static data members
+    // Static Data Members
 
         //- Root of the LIB target for Make/files
         static const char* const libTargetRoot;
@@ -148,7 +143,7 @@ protected:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Name of the code template environment variable
         //  Used to located the codeTemplateName
@@ -181,8 +176,11 @@ public:
             const word& codeDirName = ""
         );
 
+        //- Disallow default bitwise copy construction
+        dynamicCode(const dynamicCode&) = delete;
 
-    // Member functions
+
+    // Member Functions
 
         //- Return the code-name
         const word& codeName() const
@@ -259,9 +257,6 @@ public:
         //- Add a file to create with its contents. Will not be filtered
         void addCreateFile(const fileName& name, const string& contents);
 
-        //- Define filter variables for code, codeInclude, SHA1sum
-        void setFilterContext(const dynamicCodeContext&);
-
         //- Define a filter variable
         void setFilterVariable(const word& key, const std::string& value);
 
@@ -281,6 +276,11 @@ public:
         //- Compile a libso
         bool wmakeLibso() const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dynamicCode&) = delete;
 };
 
 

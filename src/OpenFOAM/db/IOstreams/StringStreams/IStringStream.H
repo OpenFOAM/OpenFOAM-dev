@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,7 @@ public:
     }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -138,7 +138,7 @@ public:
             void print(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         //- Return a non-const reference to const Istream
         //  Needed for read-constructors where the stream argument is temporary:

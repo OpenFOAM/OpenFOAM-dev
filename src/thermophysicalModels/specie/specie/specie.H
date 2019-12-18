@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,12 +65,12 @@ Ostream& operator<<(Ostream&, const specie&);
 
 class specie
 {
-    // Private data
+    // Private Data
 
         //- Name of specie
         word name_;
 
-        //- Number of moles of this component in the mixture
+        //- Mass fraction of this specie in mixture
         scalar Y_;
 
         //- Molecular weight of specie [kg/kmol]
@@ -102,6 +102,9 @@ public:
         //- Construct from dictionary
         specie(const dictionary& dict);
 
+        //- Copy constructor
+        specie(const specie&) = default;
+
 
     // Member Functions
 
@@ -113,10 +116,10 @@ public:
             //- Molecular weight [kg/kmol]
             inline scalar W() const;
 
-            //- No of moles of this species in mixture
+            //- Mass fraction of this specie in mixture
             inline scalar Y() const;
 
-            //- Gas constant [J/(kg K)]
+            //- Gas constant [J/kg/K]
             inline scalar R() const;
 
 
@@ -126,7 +129,7 @@ public:
             void write(Ostream& os) const;
 
 
-    // Member operators
+    // Member Operators
 
         inline void operator=(const specie&);
         inline void operator+=(const specie&);

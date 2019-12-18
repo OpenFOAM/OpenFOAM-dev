@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ typedef List<point> pointList;
 
 class refinementSurfaces
 {
-    // Private data
+    // Private Data
 
         //- Reference to all geometry.
         const searchableSurfaces& allGeometry_;
@@ -93,15 +93,6 @@ class refinementSurfaces
         PtrList<dictionary> patchInfo_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        refinementSurfaces(const refinementSurfaces&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const refinementSurfaces&);
-
-
 public:
 
     // Constructors
@@ -128,6 +119,9 @@ public:
             const scalarField& perpendicularAngle,
             PtrList<dictionary>& patchInfo
         );
+
+        //- Disallow default bitwise copy construction
+        refinementSurfaces(const refinementSurfaces&) = delete;
 
 
     // Member Functions
@@ -354,6 +348,12 @@ public:
                 const pointField& pt,
                 labelList& insideSurfaces
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const refinementSurfaces&) = delete;
 };
 
 

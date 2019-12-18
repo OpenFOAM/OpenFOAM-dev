@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,8 +61,8 @@ phaseHydrostaticPressureFvPatchScalarField
 :
     mixedFvPatchScalarField(p, iF),
     phaseFraction_(dict.lookupOrDefault<word>("phaseFraction", "alpha")),
-    rho_(readScalar(dict.lookup("rho"))),
-    pRefValue_(readScalar(dict.lookup("pRefValue"))),
+    rho_(dict.lookup<scalar>("rho")),
+    pRefValue_(dict.lookup<scalar>("pRefValue")),
     pRefPoint_(dict.lookup("pRefPoint"))
 {
     this->refValue() = pRefValue_;
@@ -163,13 +163,12 @@ void Foam::phaseHydrostaticPressureFvPatchScalarField::write(Ostream& os) const
     fvPatchScalarField::write(os);
     if (phaseFraction_ != "alpha")
     {
-        os.writeKeyword("phaseFraction")
-            << phaseFraction_ << token::END_STATEMENT << nl;
+        writeEntry(os, "phaseFraction", phaseFraction_);
     }
-    os.writeKeyword("rho") << rho_ << token::END_STATEMENT << nl;
-    os.writeKeyword("pRefValue") << pRefValue_ << token::END_STATEMENT << nl;
-    os.writeKeyword("pRefPoint") << pRefPoint_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "rho", rho_);
+    writeEntry(os, "pRefValue", pRefValue_);
+    writeEntry(os, "pRefPoint", pRefPoint_);
+    writeEntry(os, "value", *this);
 }
 
 

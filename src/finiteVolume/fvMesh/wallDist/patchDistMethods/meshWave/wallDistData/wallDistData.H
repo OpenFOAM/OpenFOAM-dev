@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,9 +60,6 @@ class wallDistData
     public volScalarField,
     public cellDistFuncs
 {
-
-private:
-
     typedef typename TransferType::dataType Type;
 
 
@@ -79,15 +76,6 @@ private:
         label nUnset_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        wallDistData(const wallDistData&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const wallDistData&);
-
-
 public:
 
     // Constructors
@@ -101,6 +89,9 @@ public:
             GeometricField<Type, fvPatchField, volMesh>&,
             bool correctWalls = true
         );
+
+        //- Disallow default bitwise copy construction
+        wallDistData(const wallDistData&) = delete;
 
 
     //- Destructor
@@ -127,6 +118,12 @@ public:
 
         //- Correct for mesh geom/topo changes
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const wallDistData&) = delete;
 };
 
 

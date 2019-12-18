@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,15 +61,6 @@ class CentredFitScheme
         const scalar centralWeight_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        CentredFitScheme(const CentredFitScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const CentredFitScheme&);
-
-
 public:
 
     //- Runtime type information
@@ -99,6 +90,9 @@ public:
             linearLimitFactor_(readScalar(is)),
             centralWeight_(1000)
         {}
+
+        //- Disallow default bitwise copy construction
+        CentredFitScheme(const CentredFitScheme&) = delete;
 
 
     // Member Functions
@@ -136,6 +130,12 @@ public:
 
             return stencil.weightedSum(vf, f);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CentredFitScheme&) = delete;
 };
 
 

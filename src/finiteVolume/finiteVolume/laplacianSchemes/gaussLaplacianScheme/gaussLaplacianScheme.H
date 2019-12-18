@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,11 +64,11 @@ class gaussLaplacianScheme
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 
-        //- Disallow default bitwise copy construct
-        gaussLaplacianScheme(const gaussLaplacianScheme&);
+        //- Disallow default bitwise copy construction
+        gaussLaplacianScheme(const gaussLaplacianScheme&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const gaussLaplacianScheme&);
+        void operator=(const gaussLaplacianScheme&) = delete;
 
 
 public:

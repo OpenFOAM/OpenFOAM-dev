@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,6 +65,10 @@ public:
 
     // Static Functions
 
+        //- Get the list of names of the fields
+        //  for which residual data is available
+        static DynamicList<word> getFieldNames(const fvMesh& mesh);
+
         //- Get the initial residuals for the first and the i-th solves in this
         //  time-step
         static void getInitialResiduals
@@ -72,7 +76,6 @@ public:
             const fvMesh& mesh,
             const word& fieldName,
             const label solvei,
-            ITstream& data,
             scalar& r0,
             scalar& r
         );
@@ -90,6 +93,14 @@ public:
             const bool useRegEx=true
         );
 
+        //- Append the of names of the fields of this Type to the given list
+        template<class Type>
+        static void getFieldTypeNames
+        (
+            const fvMesh& mesh,
+            DynamicList<word>& fieldNames
+        );
+
         //- Get the initial residuals for the first and the i-th solves in this
         //  time-step
         template<class Type>
@@ -98,22 +109,9 @@ public:
             const fvMesh& mesh,
             const word& fieldName,
             const label solvei,
-            ITstream& data,
             scalar& r0,
             scalar& r
         );
-
-
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        convergenceControl(const convergenceControl&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const convergenceControl&);
 
 
 protected:
@@ -137,6 +135,9 @@ public:
         //- Construct from a solution control
         convergenceControl(const solutionControl& control);
 
+        //- Disallow default bitwise copy construction
+        convergenceControl(const convergenceControl&) = delete;
+
 
     //- Destructor
     virtual ~convergenceControl();
@@ -152,11 +153,17 @@ public:
             //- Return true if all convergence checks are satisfied
             virtual bool criteriaSatisfied() const = 0;
 
-            //- Flag to indicate whether convergance has been reached
+            //- Flag to indicate whether convergence has been reached
             bool converged();
 
-            //- End the run if convergance has been reached
+            //- End the run if convergence has been reached
             bool endIfConverged(Time& time);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const convergenceControl&) = delete;
 };
 
 

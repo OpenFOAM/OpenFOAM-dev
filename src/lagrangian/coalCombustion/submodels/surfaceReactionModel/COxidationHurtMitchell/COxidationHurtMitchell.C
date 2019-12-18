@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Foam::COxidationHurtMitchell<CloudType>::COxidationHurtMitchell
 )
 :
     SurfaceReactionModel<CloudType>(dict, owner, typeName),
-    Sb_(readScalar(this->coeffDict().lookup("Sb"))),
+    Sb_(this->coeffDict().template lookup<scalar>("Sb")),
     CsLocalId_(-1),
     ashLocalId_(-1),
     O2GlobalId_(owner.composition().carrierId("O2")),
@@ -174,7 +174,7 @@ Foam::scalar Foam::COxidationHurtMitchell<CloudType>::calculate
     // Kinetic rate of char oxidation [g/(cm^2.s.atm^0.5)]
     const scalar Rk = A*exp(-E/(RRcal*T));
 
-    // Molar reaction rate per unit surface area [kmol/(m^2.s)]
+    // Molar reaction rate per unit surface area [kmol/m^2/s]
     const scalar qCsLim = mass*Ychar/(WC_*Ap*dt);
     const scalar qCs = min(convSI*Rk*Foam::sqrt(ppO2/101325.0), qCsLim);
 

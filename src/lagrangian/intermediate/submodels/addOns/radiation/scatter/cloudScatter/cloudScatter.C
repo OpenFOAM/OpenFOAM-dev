@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,23 +31,26 @@ License
 
 namespace Foam
 {
-    namespace radiation
-    {
-        defineTypeNameAndDebug(cloudScatter, 0);
+namespace radiationModels
+{
+namespace scatterModels
+{
+    defineTypeNameAndDebug(cloud, 0);
 
-        addToRunTimeSelectionTable
-        (
-            scatterModel,
-            cloudScatter,
-            dictionary
-        );
-    }
+    addToRunTimeSelectionTable
+    (
+        scatterModel,
+        cloud,
+        dictionary
+    );
+}
+}
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::radiation::cloudScatter::cloudScatter
+Foam::radiationModels::scatterModels::cloud::cloud
 (
     const dictionary& dict,
     const fvMesh& mesh
@@ -61,14 +64,14 @@ Foam::radiation::cloudScatter::cloudScatter
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::radiation::cloudScatter::~cloudScatter()
+Foam::radiationModels::scatterModels::cloud::~cloud()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::radiation::cloudScatter::sigmaEff() const
+Foam::radiationModels::scatterModels::cloud::sigmaEff() const
 {
     tmp<volScalarField> tsigma
     (

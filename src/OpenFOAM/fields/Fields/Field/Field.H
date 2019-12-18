@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,6 @@ Description
 SourceFiles
     FieldFunctions.H
     FieldFunctionsM.H
-    FieldMapper.H
     FieldM.H
     Field.C
     FieldFunctions.C
@@ -62,12 +61,14 @@ template<class Type>
 class SubField;
 
 template<class Type>
+void writeEntry(Ostream& os, const Field<Type>&);
+
+template<class Type>
 Ostream& operator<<(Ostream&, const Field<Type>&);
 
 template<class Type>
 Ostream& operator<<(Ostream&, const tmp<Field<Type>>&);
 
-class FieldMapper;
 class dictionary;
 
 /*---------------------------------------------------------------------------*\
@@ -80,6 +81,16 @@ class Field
     public tmp<Field<Type>>::refCount,
     public List<Type>
 {
+    // Private Member Functions
+
+        //- Return reference to copy of this field if mapF is the same field
+        //  otherwise return mapF
+        const UList<Type>& copySelf
+        (
+            const UList<Type>& mapF,
+            tmp<Field<Type>>& tmapFcpy
+        ) const;
+
 
 public:
 
@@ -90,7 +101,7 @@ public:
     typedef SubField<Type> subField;
 
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 
@@ -120,14 +131,26 @@ public:
         //- Construct given size and initialed to zero
         Field(const label, const zero);
 
-        //- Construct as copy of a UList\<Type\>
+        //- Copy constructor of a UList\<Type\>
         explicit Field(const UList<Type>&);
 
-        //- Construct as copy of a UIndirectList\<Type\>
+        //- Mover constructor transferring the List contents
+        explicit Field(List<Type>&&);
+
+        //- Copy constructor of a UIndirectList\<Type\>
         explicit Field(const UIndirectList<Type>&);
 
-        //- Construct by transferring the List contents
-        explicit Field(const Xfer<List<Type>>&);
+        //- Copy constructor
+        Field(const Field<Type>&);
+
+        //- Copy constructor or re-use as specified.
+        Field(Field<Type>&, bool reuse);
+
+        //- Move constructor transferring the Field contents
+        Field(Field<Type>&&);
+
+        //- Copy constructor of tmp<Field>
+        Field(const tmp<Field<Type>>&);
 
         //- Construct by 1 to 1 mapping from the given field
         Field
@@ -158,72 +181,6 @@ public:
             const labelListList& mapAddressing,
             const scalarListList& weights
         );
-
-        //- Construct by mapping from the given field
-        Field
-        (
-            const UList<Type>& mapF,
-            const FieldMapper& map,
-            const bool applyFlip = true
-        );
-
-        //- Construct by mapping from the given field
-        Field
-        (
-            const UList<Type>& mapF,
-            const FieldMapper& map,
-            const Type& defaultValue,
-            const bool applyFlip = true
-        );
-
-        //- Construct by mapping from the given field
-        Field
-        (
-            const UList<Type>& mapF,
-            const FieldMapper& map,
-            const UList<Type>& defaultValues,
-            const bool applyFlip = true
-        );
-
-        //- Construct by mapping from the given tmp field
-        Field
-        (
-            const tmp<Field<Type>>& tmapF,
-            const FieldMapper& map,
-            const bool applyFlip = true
-        );
-
-        //- Construct by mapping from the given tmp field. Supplied uniform
-        //  value for unmapped items
-        Field
-        (
-            const tmp<Field<Type>>& tmapF,
-            const FieldMapper& map,
-            const Type& defaultValue,
-            const bool applyFlip = true
-        );
-
-        //- Construct by mapping from the given tmp field. Supplied values
-        //  for unmapped items
-        Field
-        (
-            const tmp<Field<Type>>& tmapF,
-            const FieldMapper& map,
-            const UList<Type>& defaultValues,
-            const bool applyFlip = true
-        );
-
-        //- Construct as copy
-        Field(const Field<Type>&);
-
-        //- Construct as copy or re-use as specified.
-        Field(Field<Type>&, bool reuse);
-
-        //- Construct by transferring the Field contents
-        Field(const Xfer<Field<Type>>&);
-
-        //- Construct as copy of tmp<Field>
-        Field(const tmp<Field<Type>>&);
 
         //- Construct from Istream
         Field(Istream&);
@@ -273,29 +230,6 @@ public:
             const tmp<Field<Type>>& tmapF,
             const labelListList& mapAddressing,
             const scalarListList& weights
-        );
-
-        //- Map from the given field
-        void map
-        (
-            const UList<Type>& mapF,
-            const FieldMapper& map,
-            const bool applyFlip = true
-        );
-
-        //- Map from the given tmp field
-        void map
-        (
-            const tmp<Field<Type>>& tmapF,
-            const FieldMapper& map,
-            const bool applyFlip = true
-        );
-
-        //- Map from self
-        void autoMap
-        (
-            const FieldMapper& map,
-            const bool applyFlip = true
         );
 
         //- 1 to 1 reverse-map from the given field
@@ -349,14 +283,13 @@ public:
         //- Return the field transpose (only defined for second rank tensors)
         tmp<Field<Type>> T() const;
 
-        //- Write the field as a dictionary entry
-        void writeEntry(const word& keyword, Ostream& os) const;
 
-
-    // Member operators
+    // Member Operators
 
         void operator=(const Field<Type>&);
+        void operator=(Field<Type>&&);
         void operator=(const UList<Type>&);
+        void operator=(List<Type>&&);
         void operator=(const SubField<Type>&);
         void operator=(const tmp<Field<Type>>&);
         void operator=(const Type&);
@@ -384,7 +317,7 @@ public:
         void operator/=(const scalar&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Ostream& operator<< <Type>
         (Ostream&, const Field<Type>&);

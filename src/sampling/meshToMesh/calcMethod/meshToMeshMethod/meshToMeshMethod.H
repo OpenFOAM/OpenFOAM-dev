@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ protected:
         //- Reference to the target mesh
         const polyMesh& tgt_;
 
-        //- Cell total volume in overlap region [m3]
+        //- Cell total volume in overlap region [m^3]
         scalar V_;
 
         //- Tolerance used in volume overlap calculations
@@ -85,7 +85,7 @@ protected:
             const label tgtCelli
         ) const;
 
-        //- Append target cell neihgbour cells to cellIDs list
+        //- Append target cell neighbour cells to cellIDs list
         virtual void appendNbrCells
         (
             const label tgtCelli,
@@ -101,17 +101,6 @@ protected:
             labelListList& tgtToTgtAddr,
             scalarListList& tgtToTgtWght
         ) const;
-
-
-private:
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        meshToMeshMethod(const meshToMeshMethod&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshToMeshMethod&);
 
 
 public:
@@ -132,8 +121,14 @@ public:
         (src, tgt)
     );
 
-    //- Construct from source and target meshes
-    meshToMeshMethod(const polyMesh& src, const polyMesh& tgt);
+    // Constructors
+
+        //- Construct from source and target meshes
+        meshToMeshMethod(const polyMesh& src, const polyMesh& tgt);
+
+        //- Disallow default bitwise copy construction
+        meshToMeshMethod(const meshToMeshMethod&) = delete;
+
 
     //- Selector
     static autoPtr<meshToMeshMethod> New
@@ -183,6 +178,12 @@ public:
                 const polyMesh& mesh2,
                 const labelListList& mesh1ToMesh2Addr
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshToMeshMethod&) = delete;
 };
 
 

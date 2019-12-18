@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ filmHeightInletVelocityFvPatchVectorField
     fixedValueFvPatchVectorField(p, iF),
     phiName_("phi"),
     rhoName_("rho"),
-    deltafName_("deltaf")
+    deltafName_("delta")
 {}
 
 
@@ -71,7 +71,7 @@ filmHeightInletVelocityFvPatchVectorField
     fixedValueFvPatchVectorField(p, iF, dict),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    deltafName_(dict.lookupOrDefault<word>("deltaf", "deltaf"))
+    deltafName_(dict.lookupOrDefault<word>("delta", "delta"))
 {}
 
 
@@ -134,8 +134,8 @@ void Foam::filmHeightInletVelocityFvPatchVectorField::write(Ostream& os) const
     fvPatchVectorField::write(os);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    writeEntryIfDifferent<word>(os, "deltaf", "deltaf", deltafName_);
-    writeEntry("value", os);
+    writeEntryIfDifferent<word>(os, "delta", "delta", deltafName_);
+    writeEntry(os, "value", *this);
 }
 
 

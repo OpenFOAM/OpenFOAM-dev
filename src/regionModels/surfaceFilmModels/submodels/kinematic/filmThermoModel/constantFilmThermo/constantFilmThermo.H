@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,18 +81,18 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Specie name
         word name_;
 
-        //- Density [kg/m3]
+        //- Density [kg/m^3]
         mutable thermoData rho0_;
 
         //- Dynamic viscosity [Pa.s]
         mutable thermoData mu0_;
 
-        //- Surface tension [kg/s2]
+        //- Surface tension [kg/s^2]
         mutable thermoData sigma0_;
 
         //- Specific heat capacity [J/kg/K]
@@ -101,7 +101,7 @@ private:
         //- Thermal conductivity [W/m/K]
         mutable thermoData kappa0_;
 
-        //- Diffusivity [m2/s]
+        //- Diffusivity [m^2/s]
         mutable thermoData D0_;
 
         //- Latent heat [J/kg]
@@ -117,16 +117,10 @@ private:
         mutable thermoData Tb0_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Initialise thermoData object
         void init(thermoData& td);
-
-        //- Disallow default bitwise copy construct
-        constantFilmThermo(const constantFilmThermo&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const constantFilmThermo&);
 
 
 public:
@@ -144,6 +138,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        constantFilmThermo(const constantFilmThermo&) = delete;
+
 
     //- Destructor
     virtual ~constantFilmThermo();
@@ -157,13 +154,13 @@ public:
 
         // Elemental access
 
-            //- Return density [kg/m3]
+            //- Return density [kg/m^3]
             virtual scalar rho(const scalar p, const scalar T) const;
 
             //- Return dynamic viscosity [Pa.s]
             virtual scalar mu(const scalar p, const scalar T) const;
 
-            //- Return surface tension [kg/s2]
+            //- Return surface tension [kg/s^2]
             virtual scalar sigma(const scalar p, const scalar T) const;
 
             //- Return specific heat capacity [J/kg/K]
@@ -172,7 +169,7 @@ public:
             //- Return thermal conductivity [W/m/K]
             virtual scalar kappa(const scalar p, const scalar T) const;
 
-            //- Return diffusivity [m2/s]
+            //- Return diffusivity [m^2/s]
             virtual scalar D(const scalar p, const scalar T) const;
 
             //- Return latent heat [J/kg]
@@ -190,13 +187,13 @@ public:
 
         // Field access
 
-            //- Return density [kg/m3]
+            //- Return density [kg/m^3]
             virtual tmp<volScalarField> rho() const;
 
             //- Return dynamic viscosity [Pa.s]
             virtual tmp<volScalarField> mu() const;
 
-            //- Return surface tension [kg/s2]
+            //- Return surface tension [kg/s^2]
             virtual tmp<volScalarField> sigma() const;
 
             //- Return specific heat capacity [J/kg/K]
@@ -204,6 +201,12 @@ public:
 
             //- Return thermal conductivity [W/m/K]
             virtual tmp<volScalarField> kappa() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const constantFilmThermo&) = delete;
 };
 
 

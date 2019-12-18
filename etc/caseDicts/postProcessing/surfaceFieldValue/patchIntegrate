@@ -11,7 +11,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 name   <patchName>;
-fields (<field names>);
+fields (<field_names>);
 
 operation areaIntegrate;
 #includeEtc "caseDicts/postProcessing/surfaceFieldValue/patch.cfg"

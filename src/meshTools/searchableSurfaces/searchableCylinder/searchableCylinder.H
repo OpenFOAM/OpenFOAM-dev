@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,8 +53,6 @@ class searchableCylinder
 :
     public searchableSurface
 {
-private:
-
     // Private Member Data
 
         //- 'left' point
@@ -102,12 +100,6 @@ private:
         //- Return the boundBox of the cylinder
         boundBox calcBounds() const;
 
-        //- Disallow default bitwise copy construct
-        searchableCylinder(const searchableCylinder&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableCylinder&);
-
 
 public:
 
@@ -132,6 +124,10 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        searchableCylinder(const searchableCylinder&) = delete;
+
 
     //- Destructor
     virtual ~searchableCylinder();
@@ -239,6 +235,11 @@ public:
                 return false;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableCylinder&) = delete;
 };
 
 

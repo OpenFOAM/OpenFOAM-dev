@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,12 +69,6 @@ class polyTopoChanger
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        polyTopoChanger(const polyTopoChanger&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const polyTopoChanger&);
-
         void readModifiers();
 
 
@@ -99,13 +93,16 @@ public:
         //- Read constructor for given polyMesh
         explicit polyTopoChanger(polyMesh&);
 
+        //- Disallow default bitwise copy construction
+        polyTopoChanger(const polyTopoChanger&) = delete;
+
 
     //- Destructor
     virtual ~polyTopoChanger()
     {}
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the mesh reference
         const polyMesh& mesh() const
@@ -151,6 +148,9 @@ public:
 
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const polyTopoChanger&) = delete;
 
         bool operator!=(const polyTopoChanger&) const;
         bool operator==(const polyTopoChanger&) const;

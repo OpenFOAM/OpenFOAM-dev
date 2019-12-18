@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ class MeshWave
 :
     public MeshWaveName
 {
-    // Private data
+    // Private Data
 
         //- Wall information for all faces
         List<Type> allFaceInfo_;
@@ -69,19 +69,13 @@ class MeshWave
         //- Wave calculation engine.
         FaceCellWave<Type, TrackingData> calc_;
 
-    // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        MeshWave(const MeshWave&);
+    // Private static data
 
-        //- Disallow default bitwise assignment
-        void operator=(const MeshWave&);
+        //- Used as default trackdata value to satisfy default template
+        //  argument.
+        static int dummyTrackData_;
 
-      // Private static data
-
-            //- Used as default trackdata value to satisfy default template
-            //  argument.
-            static int dummyTrackData_;
 
 public:
 
@@ -112,6 +106,9 @@ public:
             const label maxIter,
             TrackingData& td = dummyTrackData_
         );
+
+        //- Disallow default bitwise copy construction
+        MeshWave(const MeshWave&) = delete;
 
 
     // Member Functions
@@ -156,6 +153,12 @@ public:
         {
             return calc_.getUnsetFaces();
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const MeshWave&) = delete;
 };
 
 

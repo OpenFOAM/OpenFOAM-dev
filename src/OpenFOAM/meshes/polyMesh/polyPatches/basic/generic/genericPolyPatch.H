@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class genericPolyPatch
 :
     public polyPatch
 {
-    // Private data
+    // Private Data
 
         word actualTypeName_;
         dictionary dict_;
@@ -160,7 +160,7 @@ public:
     ~genericPolyPatch();
 
 
-    // Member functions
+    // Member Functions
 
         //- Write the polyPatch data as a dictionary
         virtual void write(Ostream&) const;

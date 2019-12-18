@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,59 @@ const Foam::scalar Foam::polyMeshTetDecomposition::minTetQuality = sqr(small);
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
+Foam::scalar Foam::polyMeshTetDecomposition::minQuality
+(
+    const polyMesh& mesh,
+    const point& cC,
+    const label fI,
+    const bool isOwner,
+    const label faceBasePtI
+)
+{
+    // Does fan decomposition of face (starting at faceBasePti) and determines
+    // min quality over all resulting tets.
+
+    const pointField& pPts = mesh.points();
+    const face& f = mesh.faces()[fI];
+    const point& tetBasePt = pPts[f[faceBasePtI]];
+
+    scalar thisBaseMinTetQuality = vGreat;
+
+    for (label tetPtI = 1; tetPtI < f.size() - 1; tetPtI++)
+    {
+        label facePtI = (tetPtI + faceBasePtI) % f.size();
+        label otherFacePtI = f.fcIndex(facePtI);
+
+        label ptAI = -1;
+        label ptBI = -1;
+
+        if (isOwner)
+        {
+            ptAI = f[facePtI];
+            ptBI = f[otherFacePtI];
+        }
+        else
+        {
+            ptAI = f[otherFacePtI];
+            ptBI = f[facePtI];
+        }
+
+        const point& pA = pPts[ptAI];
+        const point& pB = pPts[ptBI];
+
+        tetPointRef tet(cC, tetBasePt, pA, pB);
+
+        scalar tetQuality = tet.quality();
+
+        if (tetQuality < thisBaseMinTetQuality)
+        {
+            thisBaseMinTetQuality = tetQuality;
+        }
+    }
+    return thisBaseMinTetQuality;
+}
+
+
 Foam::label Foam::polyMeshTetDecomposition::findSharedBasePoint
 (
     const polyMesh& mesh,
@@ -45,7 +98,6 @@ Foam::label Foam::polyMeshTetDecomposition::findSharedBasePoint
 )
 {
     const faceList& pFaces = mesh.faces();
-    const pointField& pPts = mesh.points();
     const vectorField& pC = mesh.cellCentres();
     const labelList& pOwner = mesh.faceOwner();
 
@@ -55,52 +107,12 @@ Foam::label Foam::polyMeshTetDecomposition::findSharedBasePoint
 
     const point& oCc = pC[oCI];
 
-    List<scalar> tetQualities(2, 0.0);
-
     forAll(f, faceBasePtI)
     {
-        scalar thisBaseMinTetQuality = vGreat;
+        scalar minQ = minQuality(mesh, oCc, fI, true, faceBasePtI);
+        minQ = min(minQ, minQuality(mesh, nCc, fI, false, faceBasePtI));
 
-        const point& tetBasePt = pPts[f[faceBasePtI]];
-
-        for (label tetPtI = 1; tetPtI < f.size() - 1; tetPtI++)
-        {
-            label facePtI = (tetPtI + faceBasePtI) % f.size();
-            label otherFacePtI = f.fcIndex(facePtI);
-
-            {
-                // owner cell tet
-                label ptAI = f[facePtI];
-                label ptBI = f[otherFacePtI];
-
-                const point& pA = pPts[ptAI];
-                const point& pB = pPts[ptBI];
-
-                tetPointRef tet(oCc, tetBasePt, pA, pB);
-
-                tetQualities[0] = tet.quality();
-            }
-
-            {
-                // neighbour cell tet
-                label ptAI = f[otherFacePtI];
-                label ptBI = f[facePtI];
-
-                const point& pA = pPts[ptAI];
-                const point& pB = pPts[ptBI];
-
-                tetPointRef tet(nCc, tetBasePt, pA, pB);
-
-                tetQualities[1] = tet.quality();
-            }
-
-            if (min(tetQualities) < thisBaseMinTetQuality)
-            {
-                thisBaseMinTetQuality = min(tetQualities);
-            }
-        }
-
-        if (thisBaseMinTetQuality > tol)
+        if (minQ > tol)
         {
             return faceBasePtI;
         }
@@ -140,7 +152,6 @@ Foam::label Foam::polyMeshTetDecomposition::findBasePoint
 )
 {
     const faceList& pFaces = mesh.faces();
-    const pointField& pPts = mesh.points();
     const vectorField& pC = mesh.cellCentres();
     const labelList& pOwner = mesh.faceOwner();
 
@@ -154,43 +165,9 @@ Foam::label Foam::polyMeshTetDecomposition::findBasePoint
 
     forAll(f, faceBasePtI)
     {
-        scalar thisBaseMinTetQuality = vGreat;
+        scalar quality = minQuality(mesh, cC, fI, own, faceBasePtI);
 
-        const point& tetBasePt = pPts[f[faceBasePtI]];
-
-        for (label tetPtI = 1; tetPtI < f.size() - 1; tetPtI++)
-        {
-            label facePtI = (tetPtI + faceBasePtI) % f.size();
-            label otherFacePtI = f.fcIndex(facePtI);
-
-            label ptAI = -1;
-            label ptBI = -1;
-
-            if (own)
-            {
-                ptAI = f[facePtI];
-                ptBI = f[otherFacePtI];
-            }
-            else
-            {
-                ptAI = f[otherFacePtI];
-                ptBI = f[facePtI];
-            }
-
-            const point& pA = pPts[ptAI];
-            const point& pB = pPts[ptBI];
-
-            tetPointRef tet(cC, tetBasePt, pA, pB);
-
-            scalar tetQuality = tet.quality();
-
-            if (tetQuality < thisBaseMinTetQuality)
-            {
-                thisBaseMinTetQuality = tetQuality;
-            }
-        }
-
-        if (thisBaseMinTetQuality > tol)
+        if (quality > tol)
         {
             return faceBasePtI;
         }
@@ -574,7 +551,7 @@ Foam::List<Foam::tetIndices> Foam::polyMeshTetDecomposition::cellTetIndices
         cellTets.append(faceTetIndices(mesh, fI, cI));
     }
 
-    return cellTets;
+    return move(cellTets);
 }
 
 

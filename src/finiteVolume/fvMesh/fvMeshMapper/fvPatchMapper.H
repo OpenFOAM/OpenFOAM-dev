@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,9 +55,9 @@ class mapPolyMesh;
 
 class fvPatchMapper
 :
-    public fvPatchFieldMapper
+    public generalFvPatchFieldMapper
 {
-    // Private data
+    // Private Data
 
         //- Reference to patch
         const fvPatch& patch_;
@@ -85,16 +85,6 @@ class fvPatchMapper
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        fvPatchMapper
-        (
-            const fvPatchMapper&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvPatchMapper&);
-
-
         //- Calculate addressing for mapping with inserted cells
         void calcAddressing() const;
 
@@ -104,7 +94,7 @@ class fvPatchMapper
 
 public:
 
-    // Static data members
+    // Static Data Members
 
     // Constructors
 
@@ -115,18 +105,18 @@ public:
             const faceMapper& faceMap
         );
 
+        //- Disallow default bitwise copy construction
+        fvPatchMapper
+        (
+            const fvPatchMapper&
+        );
+
 
     //- Destructor
     virtual ~fvPatchMapper();
 
 
     // Member Functions
-
-        //- Return size
-        virtual label size() const
-        {
-            return patch_.size();
-        }
 
         //- Return size of field before mapping
         virtual label sizeBeforeMapping() const
@@ -151,9 +141,14 @@ public:
         //- Return interpolated addressing
         virtual const labelListList& addressing() const;
 
-        //- Return interpolaion weights
+        //- Return interpolation weights
         virtual const scalarListList& weights() const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvPatchMapper&) = delete;
 };
 
 

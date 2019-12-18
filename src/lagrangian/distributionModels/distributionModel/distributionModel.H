@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,11 +38,6 @@ Description
     - Rosin-Rammler
     - Mass-based Rosin-Rammler
     - uniform
-
-    The distributionModel is tabulated in equidistant nPoints, in an interval.
-    These values are integrated to obtain the cumulated distribution model,
-    which is then used to change the distribution from unifrom to
-    the actual distributionModel.
 
 SourceFiles
     distributionModel.C
@@ -84,6 +79,9 @@ protected:
 
         //- Check that the distribution model is valid
         virtual void check() const;
+
+        //- Print information about the distribution
+        void info() const;
 
 
 public:
@@ -146,7 +144,7 @@ public:
         //- Return the maximum value
         virtual scalar maxValue() const = 0;
 
-        //- Return the maximum value
+        //- Return the mean value
         virtual scalar meanValue() const = 0;
 };
 

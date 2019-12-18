@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "waveSuperposition.H"
+#include "Time.H"
 #include "uniformDimensionedFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -233,7 +234,7 @@ Foam::waveSuperposition::waveSuperposition(const objectRegistry& db)
             wavei,
             waveModel::New(waveDict.dictName(), db, waveDict)
         );
-        waveAngles_[wavei] = readScalar(waveDict.lookup("angle"));
+        waveAngles_[wavei] = waveDict.lookup<scalar>("angle");
     }
 }
 
@@ -348,31 +349,30 @@ Foam::tmp<Foam::scalarField> Foam::waveSuperposition::pGas
 
 void Foam::waveSuperposition::write(Ostream& os) const
 {
-    os.writeKeyword("origin") << origin_ << token::END_STATEMENT << nl;
-    os.writeKeyword("direction") << direction_ << token::END_STATEMENT << nl;
-    os.writeKeyword("waves") << nl << token::BEGIN_LIST << nl << incrIndent;
+    writeEntry(os, "origin", origin_);
+    writeEntry(os, "direction", direction_);
+    writeKeyword(os, "waves") << nl << token::BEGIN_LIST << nl << incrIndent;
     forAll(waveModels_, wavei)
     {
-        os.writeKeyword(waveModels_[wavei].type()) << nl << indent
+        writeKeyword(os, waveModels_[wavei].type()) << nl << indent
             << token::BEGIN_BLOCK << nl << incrIndent;
         waveModels_[wavei].write(os);
-        os.writeKeyword("angle") << waveAngles_[wavei] << token::END_STATEMENT
+        writeKeyword(os, "angle") << waveAngles_[wavei] << token::END_STATEMENT
             << nl << decrIndent << indent << token::END_BLOCK << nl;
     }
     os  << decrIndent << token::END_LIST << token::END_STATEMENT << nl;
-    UMean_->writeData(os);
+    writeEntry(os, UMean_());
     if (scale_.valid())
     {
-        scale_->writeData(os);
+        writeEntry(os, scale_());
     }
     if (crossScale_.valid())
     {
-        crossScale_->writeData(os);
+        writeEntry(os, crossScale_());
     }
     if (heightAboveWave_)
     {
-        os.writeKeyword("heightAboveWave") << heightAboveWave_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "heightAboveWave", heightAboveWave_);
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,18 +93,14 @@ tmp<volScalarField> kkLOmega::fTaul
         scalar(1)
       - exp
         (
-            -CtauL_*ktL
-          /
-            (
-                sqr
+           -CtauL_*ktL
+           /(
+                sqr(lambdaEff*Omega)
+              + dimensionedScalar
                 (
-                    lambdaEff*Omega
-                  + dimensionedScalar
-                    (
-                        "rootVSmall",
-                        dimLength*inv(dimTime),
-                        rootVSmall
-                    )
+                    "rootVSmall",
+                    sqr(dimLength/dimTime),
+                    rootVSmall
                 )
             )
         )
@@ -635,7 +631,7 @@ void kkLOmega::correct()
        *fINT()
        *Cmu(sqrt(S2))*sqrt(ktS)*lambdaEff
     );
-    const volScalarField Pkt(nuts*S2);
+    const volScalarField Pkt(this->GName(), nuts*S2);
 
     const volScalarField ktL(kt_ - ktS);
     const volScalarField ReOmega(sqr(y_)*Omega/nu());

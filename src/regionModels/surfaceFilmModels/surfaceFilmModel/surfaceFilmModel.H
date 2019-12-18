@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,15 +53,6 @@ namespace regionModels
 
 class surfaceFilmModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        surfaceFilmModel(const surfaceFilmModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfaceFilmModel&);
-
-
 public:
 
     //- Runtime type information
@@ -88,8 +79,12 @@ public:
          );
 
 
-    //- Constructor
-    surfaceFilmModel();
+    // Constructors
+
+        surfaceFilmModel();
+
+        //- Disallow default bitwise copy construction
+        surfaceFilmModel(const surfaceFilmModel&) = delete;
 
 
     // Selectors
@@ -134,6 +129,12 @@ public:
 
             //- Main driver routing to evolve the region - calls other evolves
             virtual void evolve() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfaceFilmModel&) = delete;
 };
 
 

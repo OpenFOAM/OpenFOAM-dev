@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef inverseDistanceDiffusivity_H
 #define inverseDistanceDiffusivity_H
 
-#include "uniformDiffusivity.H"
+#include "motionDiffusivity.H"
 #include "wordReList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -49,9 +49,9 @@ namespace Foam
 
 class inverseDistanceDiffusivity
 :
-    public uniformDiffusivity
+    public motionDiffusivity
 {
-    // Private data
+    // Private Data
 
         //- Patches selected to base the distance on
         //  These can contain patch names or regular expressions to search for.
@@ -62,12 +62,6 @@ class inverseDistanceDiffusivity
 
         //- Return patch-cell-centre distance field
         tmp<scalarField> y() const;
-
-        //- Disallow default bitwise copy construct
-        inverseDistanceDiffusivity(const inverseDistanceDiffusivity&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const inverseDistanceDiffusivity&);
 
 
 public:
@@ -81,15 +75,21 @@ public:
         //- Construct for the given fvMesh and data Istream
         inverseDistanceDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        inverseDistanceDiffusivity(const inverseDistanceDiffusivity&) = delete;
+
 
     //- Destructor
     virtual ~inverseDistanceDiffusivity();
 
 
-    // Member Functions
+    // Member Operators
 
-        //- Correct the motion diffusivity
-        virtual void correct();
+        //- Disallow default bitwise assignment
+        void operator=(const inverseDistanceDiffusivity&) = delete;
+
+        //- Return diffusivity field
+        virtual tmp<surfaceScalarField> operator()() const;
 };
 
 

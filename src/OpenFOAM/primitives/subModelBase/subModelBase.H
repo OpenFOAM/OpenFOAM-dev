@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,11 +51,6 @@ namespace Foam
 
 class subModelBase
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const subModelBase&);
-
 
 protected:
 
@@ -113,7 +108,7 @@ public:
             const word& modelType
         );
 
-        //- Construct as copy
+        //- Copy constructor
         subModelBase(const subModelBase& smb);
 
 
@@ -200,6 +195,12 @@ public:
 
             //- Write
             virtual void write(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const subModelBase&) = delete;
 };
 
 

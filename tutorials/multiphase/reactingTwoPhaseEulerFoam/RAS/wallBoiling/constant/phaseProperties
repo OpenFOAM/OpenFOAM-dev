@@ -24,20 +24,14 @@ phaseChange on;
 gas
 {
     type            purePhaseModel;
-    diameterModel   isothermal;
+    diameterModel   constant;
+
     constantCoeffs
     {
         d               0.00045;
     }
 
-    isothermalCoeffs
-    {
-        d0               0.00045;
-        p0              1e5;
-    }
-    Sct             0.7;
-
-    residualAlpha   1e-4;
+    residualAlpha   1e-6;
 }
 
 liquid
@@ -48,50 +42,17 @@ liquid
     {
         d               0.00045;
     }
-    Sct             0.7;
+    Sc              0.7;
 
-    residualAlpha   1e-4;
+    residualAlpha   1e-6;
 }
-
-blending
-{
-    default
-    {
-        type            none;
-        continuousPhase liquid;
-    }
-}
-
-surfaceTension
-();
-
-saturationModel
-{
-    type function1;
-
-    function csvFile;
-    functionCoeffs
-    {
-        nHeaderLine         1;
-        refColumn           0;
-        componentColumns    (1);
-        separator           ",";
-        mergeSeparators     no;
-        file                "Tsat_water_1_2bar.csv";
-        outOfBounds         clamp;
-        interpolationScheme linear;
-    };
-};
-
-aspectRatio
-();
 
 drag
 (
     (gas in liquid)
     {
-        type            SchillerNaumann;
-        residualRe      1e-3;
+        type            IshiiZuber;
+
         swarmCorrection
         {
             type        none;
@@ -112,8 +73,9 @@ heatTransfer.gas
 (
     (gas in liquid)
     {
-        type spherical;
-        residualAlpha 1e-3;
+        type constantNu;
+        Nu  1e1;
+        residualAlpha 1e-4;
     }
 );
 
@@ -122,29 +84,99 @@ heatTransfer.liquid
     (gas in liquid)
     {
         type RanzMarshall;
-        residualAlpha 1e-3;
+        residualAlpha 1e-4;
     }
 );
 
-phaseTransfer
-();
-
 lift
-();
+(
+    (gas in liquid)
+    {
+        type wallDamped;
+
+        lift
+        {
+            type Tomiyama;
+            Cl 0.288;
+        }
+
+        wallDamping
+        {
+            type    cosine;
+            Cd      1.0;
+            zeroWallDist 0.0002;
+        }
+    }
+);
 
 wallLubrication
-();
+(
+   (gas in liquid)
+    {
+        type            Antal;
+        Cw1             -0.01;
+        Cw2             0.05;
+    }
+);
 
 turbulentDispersion
 (
     (gas in liquid)
     {
-        type                Burns;
-        sigma               0.7;
+        type                LopezDeBertodano;
         Ctd                 1.0;
         residualAlpha       1e-3;
     }
 );
+
+blending
+{
+    default
+    {
+        type            none;
+        continuousPhase liquid;
+    }
+}
+
+aspectRatio
+();
+
+saturationModel
+{
+    type function1;
+
+    function scale;
+    functionCoeffs
+    {
+        xScale 1e-6;
+        scale   1;
+        value
+        {
+            type                tableFile;
+            format              csv;
+            nHeaderLine         1;
+            refColumn           1;
+            componentColumns    (0);
+            separator           ";";
+            mergeSeparators     no;
+            file                "R12.csv";
+            outOfBounds         clamp;
+            interpolationScheme linear;
+        }
+    };
+};
+
+surfaceTension
+(
+    (gas and liquid)
+    {
+        type            constant;
+        sigma           0.00176574;
+    }
+);
+
+phaseTransfer
+();
 
 // Minimum allowable pressure
 pMin            10000;

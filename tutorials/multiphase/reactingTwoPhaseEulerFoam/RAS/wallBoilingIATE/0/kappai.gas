@@ -35,14 +35,17 @@ boundaryField
         value              $internalField;
     }
 
-    "wall.*"
+    wall
     {
-        type               zeroGradient;
+        type            zeroGradient;
     }
-
-    defaultFaces
+    front
     {
-        type               empty;
+        type            wedge;
+    }
+    back
+    {
+        type            wedge;
     }
 }
 

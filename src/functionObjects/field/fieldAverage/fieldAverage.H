@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -257,13 +257,6 @@ protected:
             void readAveragingProperties();
 
 
-        //- Disallow default bitwise copy construct
-        fieldAverage(const fieldAverage&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fieldAverage&);
-
-
 public:
 
     //- Runtime type information
@@ -280,6 +273,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        fieldAverage(const fieldAverage&) = delete;
+
 
     //- Destructor
     virtual ~fieldAverage();
@@ -290,11 +286,23 @@ public:
         //- Read the field average data
         virtual bool read(const dictionary&);
 
+        //- Do not average at the start of the run
+        virtual bool executeAtStart() const
+        {
+            return false;
+        }
+
         //- Calculate the field averages
         virtual bool execute();
 
         //- Write the field averages
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fieldAverage&) = delete;
 };
 
 

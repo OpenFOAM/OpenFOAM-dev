@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef inversePointDistanceDiffusivity_H
 #define inversePointDistanceDiffusivity_H
 
-#include "uniformDiffusivity.H"
+#include "motionDiffusivity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,21 +48,12 @@ namespace Foam
 
 class inversePointDistanceDiffusivity
 :
-    public uniformDiffusivity
+    public motionDiffusivity
 {
-    // Private data
+    // Private Data
 
         //- Patches selected to base the distance on
         wordReList patchNames_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        inversePointDistanceDiffusivity(const inversePointDistanceDiffusivity&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const inversePointDistanceDiffusivity&);
 
 
 public:
@@ -76,15 +67,24 @@ public:
         //- Construct for the given fvMesh and data Istream
         inversePointDistanceDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        inversePointDistanceDiffusivity
+        (
+            const inversePointDistanceDiffusivity&
+        ) = delete;
+
 
     //- Destructor
     virtual ~inversePointDistanceDiffusivity();
 
 
-    // Member Functions
+    // Member Operators
 
-        //- Correct the motion diffusivity
-        virtual void correct();
+        //- Disallow default bitwise assignment
+        void operator=(const inversePointDistanceDiffusivity&) = delete;
+
+        //- Return diffusivity field
+        virtual tmp<surfaceScalarField> operator()() const;
 };
 
 

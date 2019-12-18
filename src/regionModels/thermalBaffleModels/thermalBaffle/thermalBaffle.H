@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,15 +58,7 @@ class thermalBaffle
 :
     public thermalBaffleModel
 {
-private:
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        thermalBaffle(const thermalBaffle&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const thermalBaffle&);
+    // Private Member Functions
 
         //- Initialize thermalBaffle
         void init();
@@ -103,7 +95,7 @@ protected:
         // Sub models
 
             //- Pointer to radiation model
-            autoPtr<radiation::radiationModel> radiation_;
+            autoPtr<radiationModel> radiation_;
 
 
     // Protected member functions
@@ -140,6 +132,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        thermalBaffle(const thermalBaffle&) = delete;
+
 
     //- Destructor
     virtual ~thermalBaffle();
@@ -158,13 +153,13 @@ public:
                 //- Return the film specific heat capacity [J/kg/K]
                 virtual const tmp<volScalarField> Cp() const;
 
-                //- Return solid absortivity [1/m]
+                //- Return solid absorptivity [1/m]
                 virtual const volScalarField& kappaRad() const;
 
                 //- Return temperature [K]
                 virtual const volScalarField& T() const;
 
-                //- Return density [Kg/m3]
+                //- Return density [Kg/m^3]
                 virtual const volScalarField& rho() const;
 
                 //- Return thermal conductivity [W/m/K]
@@ -200,6 +195,12 @@ public:
 
             //- Provide some feedback
             virtual void info();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const thermalBaffle&) = delete;
 };
 
 

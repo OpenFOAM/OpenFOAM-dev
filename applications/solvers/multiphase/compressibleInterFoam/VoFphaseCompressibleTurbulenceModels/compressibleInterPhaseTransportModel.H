@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ namespace Foam
 
 class compressibleInterPhaseTransportModel
 {
-    // Private data
+    // Private Data
 
         //- Switch to select two-phase or mixture transport modelling
         Switch twoPhaseTransport_;
@@ -96,18 +96,6 @@ class compressibleInterPhaseTransportModel
         > turbulence2_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        compressibleInterPhaseTransportModel
-        (
-            const compressibleInterPhaseTransportModel&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const compressibleInterPhaseTransportModel&);
-
-
 public:
 
     // Constructors
@@ -121,6 +109,12 @@ public:
             const surfaceScalarField& rhoPhi,
             const surfaceScalarField& alphaPhi10,
             const twoPhaseMixtureThermo& mixture
+        );
+
+        //- Disallow default bitwise copy construction
+        compressibleInterPhaseTransportModel
+        (
+            const compressibleInterPhaseTransportModel&
         );
 
 
@@ -138,6 +132,12 @@ public:
 
         //- Correct the phase or mixture transport models
         void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const compressibleInterPhaseTransportModel&) = delete;
 };
 
 

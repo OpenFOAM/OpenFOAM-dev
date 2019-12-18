@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "IOobject.H"
 #include "Time.H"
 #include "IFstream.H"
+#include "registerNamedEnum.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -34,11 +35,7 @@ namespace Foam
     defineTypeNameAndDebug(IOobject, 0);
 
     template<>
-    const char* NamedEnum
-    <
-        IOobject::fileCheckTypes,
-        4
-    >::names[] =
+    const char* NamedEnum<IOobject::fileCheckTypes, 4>::names[] =
     {
         "timeStamp",
         "timeStampMaster",
@@ -46,7 +43,6 @@ namespace Foam
         "inotifyMaster"
     };
 }
-
 
 const Foam::NamedEnum<Foam::IOobject::fileCheckTypes, 4>
     Foam::IOobject::fileCheckTypesNames;
@@ -63,41 +59,13 @@ Foam::IOobject::fileCheckTypes Foam::IOobject::fileModificationChecking
     )
 );
 
-namespace Foam
-{
-    // Register re-reader
-    class addfileModificationCheckingToOpt
-    :
-        public ::Foam::simpleRegIOobject
-    {
-    public:
-
-        addfileModificationCheckingToOpt(const char* name)
-        :
-            ::Foam::simpleRegIOobject(Foam::debug::addOptimisationObject, name)
-        {}
-
-        virtual ~addfileModificationCheckingToOpt()
-        {}
-
-        virtual void readData(Foam::Istream& is)
-        {
-            IOobject::fileModificationChecking =
-                IOobject::fileCheckTypesNames.read(is);
-        }
-
-        virtual void writeData(Foam::Ostream& os) const
-        {
-            os <<  IOobject::fileCheckTypesNames
-                [IOobject::fileModificationChecking];
-        }
-    };
-
-    addfileModificationCheckingToOpt addfileModificationCheckingToOpt_
-    (
-        "fileModificationChecking"
-    );
-}
+// Register re-reader
+registerOptNamedEnum
+(
+    "fileModificationChecking",
+    Foam::IOobject::fileCheckTypesNames,
+    Foam::IOobject::fileModificationChecking
+);
 
 
 // * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * * //
@@ -224,7 +192,6 @@ Foam::IOobject::IOobject
     rOpt_(ro),
     wOpt_(wo),
     registerObject_(registerObject),
-    globalObject_(false),
     objState_(GOOD)
 {
     if (objectRegistry::debug)
@@ -245,8 +212,7 @@ Foam::IOobject::IOobject
     const objectRegistry& registry,
     readOption ro,
     writeOption wo,
-    bool registerObject,
-    bool globalObject
+    bool registerObject
 )
 :
     name_(name),
@@ -258,7 +224,6 @@ Foam::IOobject::IOobject
     rOpt_(ro),
     wOpt_(wo),
     registerObject_(registerObject),
-    globalObject_(globalObject),
     objState_(GOOD)
 {
     if (objectRegistry::debug)
@@ -277,8 +242,7 @@ Foam::IOobject::IOobject
     const objectRegistry& registry,
     readOption ro,
     writeOption wo,
-    bool registerObject,
-    bool globalObject
+    bool registerObject
 )
 :
     name_(),
@@ -290,7 +254,6 @@ Foam::IOobject::IOobject
     rOpt_(ro),
     wOpt_(wo),
     registerObject_(registerObject),
-    globalObject_(globalObject),
     objState_(GOOD)
 {
     if (!fileNameComponents(path, instance_, local_, name_))
@@ -325,7 +288,6 @@ Foam::IOobject::IOobject
     rOpt_(io.rOpt_),
     wOpt_(io.wOpt_),
     registerObject_(io.registerObject_),
-    globalObject_(io.globalObject_),
     objState_(io.objState_)
 {}
 
@@ -345,7 +307,6 @@ Foam::IOobject::IOobject
     rOpt_(io.rOpt_),
     wOpt_(io.wOpt_),
     registerObject_(io.registerObject_),
-    globalObject_(io.globalObject_),
     objState_(io.objState_)
 {}
 
@@ -460,7 +421,6 @@ void Foam::IOobject::operator=(const IOobject& io)
     local_ = io.local_;
     rOpt_ = io.rOpt_;
     wOpt_ = io.wOpt_;
-    globalObject_ = io.globalObject_;
     objState_ = io.objState_;
 }
 

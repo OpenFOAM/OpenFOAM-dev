@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,20 +96,6 @@ private:
             const bool preserveCouples
         );
 
-        ////- Disallow default bitwise copy construct
-        // SlicedGeometricField(const SlicedGeometricField&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const SlicedGeometricField&);
-
-        //- Disallow standard assignment to GeometricField,
-        //  == assignment is allowed.
-        void operator=(const GeometricField<Type, PatchField, GeoMesh>&);
-
-        //- Disallow standard assignment to tmp<GeometricField>,
-        //  == assignment is allowed.
-        void operator=(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
-
 
 public:
 
@@ -147,7 +133,7 @@ public:
             const bool preserveCouples=true
         );
 
-        //- Construct as copy
+        //- Copy constructor
         SlicedGeometricField
         (
             const SlicedGeometricField
@@ -168,10 +154,30 @@ public:
     ~SlicedGeometricField();
 
 
-    // Member functions
+    // Member Functions
 
         //- Correct boundary field
         void correctBoundaryConditions();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SlicedGeometricField&) = delete;
+
+        //- Disallow standard assignment to GeometricField,
+        //  == assignment is allowed.
+        void operator=
+        (
+            const GeometricField<Type, PatchField, GeoMesh>&
+        ) = delete;
+
+        //- Disallow standard assignment to tmp<GeometricField>,
+        //  == assignment is allowed.
+        void operator=
+        (
+            const tmp<GeometricField<Type, PatchField, GeoMesh>>&
+        ) = delete;
 };
 
 

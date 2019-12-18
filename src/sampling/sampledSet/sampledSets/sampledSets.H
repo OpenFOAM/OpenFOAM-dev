@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,13 +149,13 @@ class sampledSets
         };
 
 
-    // Static data members
+    // Static Data Members
 
         //- Output verbosity
         static bool verbose_;
 
 
-    // Private data
+    // Private Data
 
         //- Const reference to fvMesh
         const fvMesh& mesh_;
@@ -243,11 +243,6 @@ class sampledSets
         void sampleAndWrite(fieldGroup<Type>& fields);
 
 
-        //- Disallow default bitwise copy construct and assignment
-        sampledSets(const sampledSets&);
-        void operator=(const sampledSets&);
-
-
 public:
 
     //- Runtime type information
@@ -273,6 +268,9 @@ public:
             const dictionary&,
             const bool loadFromFiles = false
         );
+
+        //- Disallow default bitwise copy construction
+        sampledSets(const sampledSets&) = delete;
 
 
     //- Destructor
@@ -304,6 +302,12 @@ public:
 
         //- Update for changes of mesh due to readUpdate
         virtual void readUpdate(const polyMesh::readUpdateState state);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const sampledSets&) = delete;
 };
 
 

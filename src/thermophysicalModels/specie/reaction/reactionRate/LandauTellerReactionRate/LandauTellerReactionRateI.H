@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,11 +48,11 @@ inline Foam::LandauTellerReactionRate::LandauTellerReactionRate
     const dictionary& dict
 )
 :
-    A_(readScalar(dict.lookup("A"))),
-    beta_(readScalar(dict.lookup("beta"))),
-    Ta_(readScalar(dict.lookup("Ta"))),
-    B_(readScalar(dict.lookup("B"))),
-    C_(readScalar(dict.lookup("C")))
+    A_(dict.lookup<scalar>("A")),
+    beta_(dict.lookup<scalar>("beta")),
+    Ta_(dict.lookup<scalar>("Ta")),
+    B_(dict.lookup<scalar>("B")),
+    C_(dict.lookup<scalar>("C"))
 {}
 
 
@@ -62,7 +62,8 @@ inline Foam::scalar Foam::LandauTellerReactionRate::operator()
 (
     const scalar p,
     const scalar T,
-    const scalarField&
+    const scalarField&,
+    const label
 ) const
 {
     scalar lta = A_;
@@ -102,7 +103,8 @@ inline Foam::scalar Foam::LandauTellerReactionRate::ddT
 (
     const scalar p,
     const scalar T,
-    const scalarField&
+    const scalarField&,
+    const label
 ) const
 {
     scalar lta = A_;
@@ -157,6 +159,7 @@ inline void Foam::LandauTellerReactionRate::dcidc
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcidc
 ) const
 {}
@@ -166,7 +169,8 @@ inline Foam::scalar Foam::LandauTellerReactionRate::dcidT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return 0;
@@ -175,11 +179,11 @@ inline Foam::scalar Foam::LandauTellerReactionRate::dcidT
 
 inline void Foam::LandauTellerReactionRate::write(Ostream& os) const
 {
-    os.writeKeyword("A") << A_ << token::END_STATEMENT << nl;
-    os.writeKeyword("beta") << beta_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Ta") << Ta_ << token::END_STATEMENT << nl;
-    os.writeKeyword("B") << B_ << token::END_STATEMENT << nl;
-    os.writeKeyword("C") << C_ << token::END_STATEMENT << nl;
+    writeEntry(os, "A", A_);
+    writeEntry(os, "beta", beta_);
+    writeEntry(os, "Ta", Ta_);
+    writeEntry(os, "B", B_);
+    writeEntry(os, "C", C_);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,6 +72,19 @@ inline Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
 (
+    DynamicList<T, SizeInc, SizeMult, SizeDiv>&& lst
+)
+:
+    List<T>(move(lst)),
+    capacity_(lst.capacity_)
+{
+    lst.capacity_ = 0;
+}
+
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
+(
     const UList<T>& lst
 )
 :
@@ -94,13 +107,12 @@ inline Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::DynamicList
 (
-    const Xfer<List<T>>& lst
+    List<T>&& lst
 )
 :
-    List<T>(lst),
+    List<T>(move(lst)),
     capacity_(List<T>::size())
 {}
-
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -256,16 +268,6 @@ Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::shrink()
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
 inline void
-Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::transfer(List<T>& lst)
-{
-    // Take over storage, clear addressing for lst.
-    capacity_ = lst.size();
-    List<T>::transfer(lst);
-}
-
-
-template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-inline void
 Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::transfer
 (
     DynamicList<T, SizeInc, SizeMult, SizeDiv>& lst
@@ -279,10 +281,12 @@ Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::transfer
 
 
 template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-inline Foam::Xfer<Foam::List<T>>
-Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::xfer()
+inline void
+Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::transfer(List<T>& lst)
 {
-    return xferMoveTo<List<T>>(*this);
+    // Take over storage, clear addressing for lst.
+    capacity_ = lst.size();
+    List<T>::transfer(lst);
 }
 
 
@@ -415,6 +419,41 @@ inline void Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::operator=
         List<T>::operator=(lst);
         capacity_ = List<T>::size();
     }
+}
+
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline void Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::operator=
+(
+    DynamicList<T, SizeInc, SizeMult, SizeDiv>&& lst
+)
+{
+    if (this == &lst)
+    {
+        FatalErrorInFunction
+            << "Attempted assignment to self" << abort(FatalError);
+    }
+
+    List<T>::operator=(move(lst));
+    capacity_ = lst.capacity_;
+    lst.capacity_ = 0;
+}
+
+
+template<class T, unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
+inline void Foam::DynamicList<T, SizeInc, SizeMult, SizeDiv>::operator=
+(
+    List<T>&& lst
+)
+{
+    if (this == &lst)
+    {
+        FatalErrorInFunction
+            << "Attempted assignment to self" << abort(FatalError);
+    }
+
+    List<T>::operator=(move(lst));
+    capacity_ = List<T>::size();
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,16 +50,7 @@ class partialFaceAreaWeightAMI
 :
     public faceAreaWeightAMI
 {
-
-private:
-
     // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        partialFaceAreaWeightAMI(const partialFaceAreaWeightAMI&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const partialFaceAreaWeightAMI&);
 
         // Marching front
 
@@ -96,6 +87,9 @@ public:
             const bool requireMatch = true
         );
 
+        //- Disallow default bitwise copy construction
+        partialFaceAreaWeightAMI(const partialFaceAreaWeightAMI&) = delete;
+
 
     //- Destructor
     virtual ~partialFaceAreaWeightAMI();
@@ -121,6 +115,12 @@ public:
                 label srcFacei = -1,
                 label tgtFacei = -1
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const partialFaceAreaWeightAMI&) = delete;
 };
 
 

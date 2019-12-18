@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,6 +78,20 @@ Foam::surfaceTensionModels::constantSurfaceTensionCoefficient::sigma() const
         "sigma",
         mesh,
         sigma_
+    );
+}
+
+Foam::tmp<Foam::scalarField>
+Foam::surfaceTensionModels::constantSurfaceTensionCoefficient::sigma
+(
+    label patchi
+) const
+{
+    const fvMesh& mesh(this->pair_.phase1().mesh());
+
+    return tmp<scalarField>
+    (
+        new scalarField(mesh.boundary()[patchi].size(), sigma_.value())
     );
 }
 

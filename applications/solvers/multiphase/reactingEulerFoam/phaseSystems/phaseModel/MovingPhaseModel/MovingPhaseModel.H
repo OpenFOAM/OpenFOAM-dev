@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
     quite restrictive as it also has to support an equivalent stationary model,
     which does not store motion fields or a turbulence model.
 
-    Possible future extensions include separating the turbulent fuctionality
+    Possible future extensions include separating the turbulent functionality
     into another layer.
 
 See also
@@ -106,6 +106,9 @@ private:
         //- Calculate and return the flux field
         tmp<surfaceScalarField> phi(const volVectorField& U) const;
 
+        //- Correct the continuity errors
+        void correctContinuityErrors();
+
 
 public:
 
@@ -130,6 +133,9 @@ public:
 
         //- Correct the kinematics
         virtual void correctKinematics();
+
+        //- Correct the thermodynamics
+        virtual void correctThermo();
 
         //- Correct the turbulence
         virtual void correctTurbulence();
@@ -216,7 +222,7 @@ public:
             virtual tmp<volScalarField> nuEff() const;
 
             //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture for patch [J/m/s/K]
+            //  of mixture for patch [W/m/K]
             using BasePhaseModel::kappaEff;
 
             //- Return the effective thermal conductivity

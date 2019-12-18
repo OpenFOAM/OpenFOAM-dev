@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,17 +101,6 @@ protected:
         void writeResidual(const word& fieldName);
 
 
-private:
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        residuals(const residuals&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const residuals&);
-
-
 public:
 
     //- Runtime type information
@@ -128,6 +117,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        residuals(const residuals&) = delete;
+
 
     //- Destructor
     virtual ~residuals();
@@ -143,6 +135,12 @@ public:
 
         //- Write the residuals
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const residuals&) = delete;
 };
 
 

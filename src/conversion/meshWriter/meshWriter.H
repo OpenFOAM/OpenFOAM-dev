@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,15 +89,6 @@ namespace Foam
 
 class meshWriter
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        meshWriter(const meshWriter&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshWriter&);
-
-
 protected:
 
     // Protected data
@@ -130,7 +121,7 @@ protected:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Specify a default mesh name
         static string defaultMeshName;
@@ -143,6 +134,9 @@ public:
             const polyMesh&,
             const scalar scaleFactor = 1.0
         );
+
+        //- Disallow default bitwise copy construction
+        meshWriter(const meshWriter&) = delete;
 
 
     //- Destructor
@@ -173,6 +167,11 @@ public:
                 const fileName& timeName = fileName::null
             ) const = 0;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshWriter&) = delete;
 };
 
 

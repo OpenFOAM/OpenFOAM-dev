@@ -17,7 +17,7 @@ FoamFile
 
 option1
 {
-    type            verticalDamping;
+    type            isotropicDamping;
 
     selectionMode   all;
 
@@ -30,6 +30,7 @@ option1
         duration    600;
     }
 
+    value           (2 0 0);
     lambda          0.5;
 
     timeStart       0;

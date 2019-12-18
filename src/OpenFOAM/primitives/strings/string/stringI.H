@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,21 +37,30 @@ inline Foam::string::string(const std::string& str)
 {}
 
 
-// Copy character array
+inline Foam::string::string(const string& str)
+:
+    std::string(str)
+{}
+
+
+inline Foam::string::string(string&& str)
+:
+    std::string(move(str))
+{}
+
+
 inline Foam::string::string(const char* str)
 :
     std::string(str)
 {}
 
 
-// Construct from a given number of characters in a character array
 inline Foam::string::string(const char* str, const size_type len)
 :
     std::string(str, len)
 {}
 
 
-// Construct from a single character
 inline Foam::string::string(const char c)
 :
     std::string(1, c)
@@ -215,5 +224,18 @@ inline unsigned Foam::string::hash::operator()
 {
     return Hasher(key.data(), key.size(), seed);
 }
+
+
+void Foam::string::operator=(const string& str)
+{
+    std::string::operator=(str);
+}
+
+
+void Foam::string::operator=(string&& str)
+{
+    std::string::operator=(move(str));
+}
+
 
 // ************************************************************************* //

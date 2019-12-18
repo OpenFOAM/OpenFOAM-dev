@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,17 +75,17 @@ class negEntry
             Istream& is
         );
 
-        //- Disallow default bitwise copy construct
-        negEntry(const negEntry&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const negEntry&);
-
 
 public:
 
     //- Runtime type information
     ClassName("neg");
+
+
+    // Constructors
+
+        //- Disallow default bitwise copy construction
+        negEntry(const negEntry&) = delete;
 
 
     // Member Functions
@@ -100,6 +100,12 @@ public:
             primitiveEntry&,
             Istream&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const negEntry&) = delete;
 };
 
 

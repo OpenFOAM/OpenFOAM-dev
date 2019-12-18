@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,13 +83,6 @@ private:
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        tabulatedAccelerationSource(const tabulatedAccelerationSource&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const tabulatedAccelerationSource&);
-
-
         //- Source term to momentum equation
         template<class RhoFieldType>
         void addSup
@@ -117,6 +110,12 @@ public:
             const fvMesh& mesh
         );
 
+        //- Disallow default bitwise copy construction
+        tabulatedAccelerationSource
+        (
+            const tabulatedAccelerationSource&
+        ) = delete;
+
 
     //- Destructor
     virtual ~tabulatedAccelerationSource()
@@ -142,6 +141,12 @@ public:
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const tabulatedAccelerationSource&) = delete;
 };
 
 

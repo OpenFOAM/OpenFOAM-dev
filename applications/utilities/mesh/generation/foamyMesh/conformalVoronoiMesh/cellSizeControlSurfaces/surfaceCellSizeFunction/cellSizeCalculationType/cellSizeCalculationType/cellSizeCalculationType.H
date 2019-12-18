@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,17 +63,6 @@ protected:
         const scalar& defaultCellSize_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cellSizeCalculationType(const cellSizeCalculationType&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellSizeCalculationType&);
-
-
 public:
 
     //- Runtime type information
@@ -107,6 +96,9 @@ public:
             const scalar& defaultCellSize
         );
 
+        //- Disallow default bitwise copy construction
+        cellSizeCalculationType(const cellSizeCalculationType&) = delete;
+
 
     // Selectors
 
@@ -127,6 +119,12 @@ public:
 
         //- Load the cell size
         virtual tmp<triSurfacePointScalarField> load() = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellSizeCalculationType&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 #include "IFstream.H"
 #include "addToMemberFunctionSelectionTable.H"
 #include "stringOps.H"
-#include "IOstreams.H"
+#include "IOobject.H"
 #include "fileOperation.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -130,7 +130,6 @@ bool Foam::functionEntries::includeEntry::execute
         includeFileName(is.name().path(), rawFName, parentDict)
     );
 
-    // IFstream ifs(fName);
     autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
     ISstream& ifs = ifsPtr();
 
@@ -143,20 +142,20 @@ bool Foam::functionEntries::includeEntry::execute
 
         // Cache the FoamFile entry if present
         dictionary foamFileDict;
-        if (parentDict.found("FoamFile"))
+        if (parentDict.found(IOobject::foamFile))
         {
-            foamFileDict = parentDict.subDict("FoamFile");
+            foamFileDict = parentDict.subDict(IOobject::foamFile);
         }
 
         // Read and clear the FoamFile entry
         parentDict.read(ifs);
 
         // Reinstate original FoamFile entry
-        if (!foamFileDict.isNull())
+        if (foamFileDict.size() != 0)
         {
             dictionary parentDictTmp(parentDict);
             parentDict.clear();
-            parentDict.add("FoamFile", foamFileDict);
+            parentDict.add(IOobject::foamFile, foamFileDict);
             parentDict += parentDictTmp;
         }
 
@@ -190,7 +189,6 @@ bool Foam::functionEntries::includeEntry::execute
         includeFileName(is.name().path(), rawFName, parentDict)
     );
 
-    // IFstream ifs(fName);
     autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
     ISstream& ifs = ifsPtr();
 
@@ -216,5 +214,6 @@ bool Foam::functionEntries::includeEntry::execute
         return false;
     }
 }
+
 
 // ************************************************************************* //

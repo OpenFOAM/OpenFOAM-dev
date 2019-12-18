@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,20 +51,11 @@ namespace Foam
 
 class searchableSurfaceFeatures
 {
-    // Private data
+    // Private Data
 
         const searchableSurface& surface_;
 
         const dictionary& dict_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        searchableSurfaceFeatures(const searchableSurfaceFeatures&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableSurfaceFeatures&);
 
 
 public:
@@ -96,6 +87,9 @@ public:
             const searchableSurface& surface,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        searchableSurfaceFeatures(const searchableSurfaceFeatures&) = delete;
 
         //- Clone
         virtual autoPtr<searchableSurfaceFeatures> clone() const
@@ -141,6 +135,12 @@ public:
         {
             return autoPtr<extendedFeatureEdgeMesh>();
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableSurfaceFeatures&) = delete;
 };
 
 

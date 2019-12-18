@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,16 +28,8 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-Foam::labelList
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
-meshEdges
+template<class FaceList, class PointField>
+Foam::labelList Foam::PrimitivePatch<FaceList, PointField>::meshEdges
 (
     const edgeList& allEdges,
     const labelListList& cellEdges,
@@ -46,10 +38,8 @@ meshEdges
 {
     if (debug)
     {
-        Info<< "labelList PrimitivePatch<Face, FaceList, PointField, PointType>"
-            << "::meshEdges() : "
-            << "calculating labels of patch edges in mesh edge list"
-            << endl;
+        InfoInFunction
+            << "Calculating labels of patch edges in mesh edge list" << endl;
     }
 
     // get reference to the list of edges on the patch
@@ -105,16 +95,8 @@ meshEdges
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-Foam::labelList
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
-meshEdges
+template<class FaceList, class PointField>
+Foam::labelList Foam::PrimitivePatch<FaceList, PointField>::meshEdges
 (
     const edgeList& allEdges,
     const labelListList& pointEdges
@@ -122,10 +104,8 @@ meshEdges
 {
     if (debug)
     {
-        Info<< "labelList PrimitivePatch<Face, FaceList, PointField, PointType>"
-            << "::meshEdges() : "
-            << "calculating labels of patch edges in mesh edge list"
-            << endl;
+        InfoInFunction
+            << "Calculating labels of patch edges in mesh edge list" << endl;
     }
 
     // get reference to the list of edges on the patch
@@ -162,16 +142,8 @@ meshEdges
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-Foam::label
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
-whichEdge
+template<class FaceList, class PointField>
+Foam::label Foam::PrimitivePatch<FaceList, PointField>::whichEdge
 (
     const edge& e
 ) const

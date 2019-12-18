@@ -1,0 +1,40 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+option1
+{
+    type            verticalDamping;
+
+    selectionMode   all;
+
+    origin          (1200 0 0);
+    direction       (1 0 0);
+    scale
+    {
+        type        halfCosineRamp;
+        start       0;
+        duration    600;
+    }
+
+    lambda          0.5;
+
+    timeStart       0;
+    duration        1e6;
+}
+
+
+//************************************************************************* //

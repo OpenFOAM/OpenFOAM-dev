@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ void Foam::RBD::rigidBodySolvers::symplectic::solve
     const Field<spatialVector>& fx
 )
 {
-    // First simplectic step:
+    // First symplectic step:
     //     Half-step for linear and angular velocities
     //     Update position and orientation
     qDot() = qDot0() + 0.5*deltaT0()*qDdot();
@@ -81,13 +81,13 @@ void Foam::RBD::rigidBodySolvers::symplectic::solve
     // Accumulate the restraint forces
     scalarField rtau(tau);
     Field<spatialVector> rfx(fx);
-    model_.applyRestraints(rtau, rfx);
+    model_.applyRestraints(rtau, rfx, state());
 
     // Calculate the body acceleration for the given state
     // and restraint forces
     model_.forwardDynamics(state(), rtau, rfx);
 
-    // Second simplectic step:
+    // Second symplectic step:
     //     Complete update of linear and angular velocities
     qDot() += 0.5*deltaT()*qDdot();
 }

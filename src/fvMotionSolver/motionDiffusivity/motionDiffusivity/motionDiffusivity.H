@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ namespace Foam
 
 class motionDiffusivity
 {
-    // Private data
+    // Private Data
 
         //- Mesh reference
         const fvMesh& mesh_;
@@ -103,11 +103,15 @@ public:
             return mesh_;
         }
 
+        //- Correct the motion diffusivity
+        virtual void correct()
+        {}
+
+
+    // Member Operators
+
         //- Return diffusivity field
         virtual tmp<surfaceScalarField> operator()() const = 0;
-
-        //- Correct the motion diffusivity
-        virtual void correct() = 0;
 };
 
 

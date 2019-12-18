@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,16 +76,26 @@ public:
             TOTAL_AND_EXPANSION
         };
 
+        //- Enumeration defining whether to merge faces on a given patch. Read
+        //  as a boolean (no/yes). Defaults to merging only on patches which
+        //  were meshed/snapped to (ifOnMeshedPatch).
+        enum class mergeFace
+        {
+            no,
+            ifOnMeshedPatch,
+            yes
+        };
+
 
 private:
 
-    // Static data members
+    // Static Data Members
 
         //- Default angle for faces to be convcave
         static const scalar defaultConcaveAngle;
 
 
-    // Private data
+    // Private Data
 
         const dictionary dict_;
 
@@ -111,6 +121,9 @@ private:
 
             //- Minimum total thickness
             scalarField minThickness_;
+
+            //- Whether to merge boundary faces of the same layer cell
+            List<mergeFace> mergeFaces_;
 
 
         scalar featureAngle_;
@@ -142,12 +155,6 @@ private:
             const scalar totalOverFirst
         ) const;
 
-        //- Disallow default bitwise copy construct
-        layerParameters(const layerParameters&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const layerParameters&);
-
 
 public:
 
@@ -155,6 +162,9 @@ public:
 
         //- Construct from dictionary
         layerParameters(const dictionary& dict, const polyBoundaryMesh&);
+
+        //- Disallow default bitwise copy construction
+        layerParameters(const layerParameters&) = delete;
 
 
     // Member Functions
@@ -223,6 +233,12 @@ public:
             const scalarField& minThickness() const
             {
                 return minThickness_;
+            }
+
+            //- Whether to merge boundary faces of the same layer cell
+            const List<mergeFace>& mergeFaces() const
+            {
+                return mergeFaces_;
             }
 
 
@@ -328,6 +344,12 @@ public:
                 const label nLayers,
                 const scalar expansionRatio
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const layerParameters&) = delete;
 };
 
 

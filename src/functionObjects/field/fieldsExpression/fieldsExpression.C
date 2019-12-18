@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,20 +41,20 @@ namespace functionObjects
 
 void Foam::functionObjects::fieldsExpression::setResultName
 (
-    const word& typeName,
-    const wordList& defaultArgs
+    const word& functionName,
+    const wordList& defaultFieldNames
 )
 {
     if (fieldNames_.empty())
     {
-        fieldNames_ = defaultArgs;
+        fieldNames_ = defaultFieldNames;
     }
 
     if (resultName_.empty())
     {
         if (!fieldNames_.empty())
         {
-            resultName_ = typeName + '(' + fieldNames_[0];
+            resultName_ = functionName + '(' + fieldNames_[0];
             for (label i=1; i<fieldNames_.size(); i++)
             {
                 resultName_ += ',' + fieldNames_[i];
@@ -63,7 +63,7 @@ void Foam::functionObjects::fieldsExpression::setResultName
         }
         else
         {
-            resultName_ = typeName;
+            resultName_ = functionName;
         }
     }
 }

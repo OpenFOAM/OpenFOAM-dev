@@ -13,6 +13,7 @@ FoamFile
     location        "system";
     object          controlDict;
 }
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 application     reactingFoam;
 

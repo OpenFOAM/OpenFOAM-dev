@@ -13,7 +13,7 @@ Description
 type            subtract;
 libs            ("libfieldFunctionObjects.so");
 
-fields          (<field names>);
+fields          (<field_names>);
 
 executeControl  writeTime;
 writeControl    writeTime;

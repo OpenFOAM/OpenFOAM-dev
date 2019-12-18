@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,9 +57,7 @@ class interpolationCellPointWallModified
 :
     public interpolationCellPoint<Type>
 {
-private:
-
-    // Private member functions
+    // Private Member Functions
 
         //- Compute the point field for a type. This just throws an error. This
         //  interpolation method is only defined for vector fields.

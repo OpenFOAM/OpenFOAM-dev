@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ class cellShape
 :
     public labelList
 {
-    // Private data
+    // Private Data
 
         //- Access to the cellShape's model
         const cellModel *m;
@@ -165,7 +165,7 @@ public:
         friend bool operator==(const cellShape&, const cellShape&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream&, cellShape&);
         friend Ostream& operator<<(Ostream&, const cellShape&);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef isothermalDiameter_H
 #define isothermalDiameter_H
 
-#include "diameterModel.H"
+#include "sphericalDiameter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,9 +50,9 @@ namespace diameterModels
 
 class isothermal
 :
-    public diameterModel
+    public spherical
 {
-    // Private data
+    // Private Data
 
         //- Reference diameter for the isothermal expansion
         dimensionedScalar d0_;
@@ -60,8 +60,16 @@ class isothermal
         //- Reference pressure for the isothermal expansion
         dimensionedScalar p0_;
 
-        //- Actual diameter field
-        mutable volScalarField d_;
+        //- Diameter field
+        volScalarField& d_;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Get the diameter field
+        virtual tmp<volScalarField> calcD() const;
 
 
 public:
@@ -86,8 +94,8 @@ public:
 
     // Member Functions
 
-        //- Return the diameter field
-        virtual tmp<volScalarField> d() const;
+        //- Correct the diameter field
+        virtual void correct();
 
         //- Read phaseProperties dictionary
         virtual bool read(const dictionary& phaseProperties);

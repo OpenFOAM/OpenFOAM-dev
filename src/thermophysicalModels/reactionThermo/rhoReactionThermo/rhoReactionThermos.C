@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ License
 #include "sensibleEnthalpy.H"
 #include "thermo.H"
 #include "rhoConst.H"
-#include "perfectFluid.H"
+#include "rPolynomial.H"
 #include "adiabaticPerfectFluid.H"
 #include "Boussinesq.H"
 
@@ -48,8 +48,6 @@ License
 #include "inhomogeneousMixture.H"
 #include "veryInhomogeneousMixture.H"
 #include "multiComponentMixture.H"
-#include "reactingMixture.H"
-#include "singleStepReactingMixture.H"
 #include "singleComponentMixture.H"
 
 #include "thermoPhysicsTypes.H"
@@ -295,93 +293,6 @@ makeThermoPhysicsReactionThermos
 );
 
 
-// Reaction thermo for internal energy
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constGasEThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    gasEThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constIncompressibleGasEThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    incompressibleGasEThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    icoPoly8EThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constFluidEThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constAdiabaticFluidEThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constEThermoPhysics
-);
-
-
-// Single-step reaction thermo for internal energy
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    singleStepReactingMixture,
-    gasEThermoPhysics
-);
-
-
 // Single-component thermo for internal energy
 
 makeThermoPhysicsReactionThermo
@@ -558,93 +469,6 @@ makeThermoPhysicsReactionThermos
     heRhoThermo,
     multiComponentMixture,
     constHThermoPhysics
-);
-
-
-// Reaction thermo for sensible enthalpy
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constGasHThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    gasHThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constIncompressibleGasHThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    incompressibleGasHThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    icoPoly8HThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constFluidHThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constAdiabaticFluidHThermoPhysics
-);
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    reactingMixture,
-    constHThermoPhysics
-);
-
-
-// Single-step reaction thermo for sensible enthalpy
-
-makeThermoPhysicsReactionThermos
-(
-    rhoThermo,
-    rhoReactionThermo,
-    heRhoThermo,
-    singleStepReactingMixture,
-    gasHThermoPhysics
 );
 
 

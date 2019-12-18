@@ -71,36 +71,14 @@ edges
    arc 15 19  ( 53.033  -53.033 -25)
 );
 
+defaultPatch
+{
+    name walls;
+    type wall;
+}
+
 boundary
 (
-        // is there no way of defining all my 'defaultFaces' to be 'wall'?
-    Default_Boundary_Region
-    {
-        type wall;
-        faces
-        (
-            // block0
-            ( 0 1 3 2 )
-            ( 11 10 12 13 )
-            ( 0 10 11 1 )
-            ( 2 3 13 12 )
-            // block1
-            ( 4 5 7 6 )
-            ( 15 14 16 17 )
-            ( 4 14 15 5 )
-            ( 6 7 17 16 )
-            // block2
-            ( 1 8 9 3 )
-            ( 18 11 13 19 )
-            ( 3 9 19 13 )
-            ( 1 11 18 8 )
-            // block3
-            ( 5 9 8 7 )
-            ( 19 15 17 18 )
-            ( 5 15 19 9 )
-            ( 7 8 18 17 )
-        );
-    }
     inlet
     {
         type patch;
@@ -118,10 +96,6 @@ boundary
             (4 6 16 14)
         );
     }
-);
-
-mergePatchPairs
-(
 );
 
 // ************************************************************************* //

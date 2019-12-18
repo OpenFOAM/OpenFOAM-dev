@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,13 @@ License
 #include "dynamicCode.H"
 #include "dynamicCodeContext.H"
 
+// * * * * * * * * * * * Protected Static Data Members * * * * * * * * * * * //
+
+template<class Type>
+const Foam::wordList Foam::fv::CodedSource<Type>::codeKeys_ =
+    {"codeAddSup", "codeCorrect", "codeInclude", "codeSetValue", "localCode"};
+
+
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
@@ -44,11 +51,6 @@ void Foam::fv::CodedSource<Type>::prepare
     dynCode.setFilterVariable("typeName", name_);
     dynCode.setFilterVariable("TemplateType", sourceType);
     dynCode.setFilterVariable("SourceType", sourceType + "Source");
-
-    // dynCode.removeFilterVariable("code");
-    dynCode.setFilterVariable("codeCorrect", codeCorrect_);
-    dynCode.setFilterVariable("codeAddSup", codeAddSup_);
-    dynCode.setFilterVariable("codeSetValue", codeSetValue_);
 
     // compile filtered C template
     dynCode.addCompileFile("codedFvOptionTemplate.C");
@@ -105,6 +107,13 @@ template<class Type>
 const Foam::dictionary& Foam::fv::CodedSource<Type>::codeDict() const
 {
     return coeffs_;
+}
+
+
+template<class Type>
+const Foam::wordList& Foam::fv::CodedSource<Type>::codeKeys() const
+{
+    return codeKeys_;
 }
 
 

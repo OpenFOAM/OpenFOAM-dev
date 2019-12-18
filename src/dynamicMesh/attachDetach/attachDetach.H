@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ class attachDetach
         };
 
 
-    // Private data
+    // Private Data
 
         //- Master face zone ID
         faceZoneID faceZoneID_;
@@ -107,12 +107,6 @@ class attachDetach
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        attachDetach(const attachDetach&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const attachDetach&);
-
         //- Check validity of construction data
         void checkDefinition();
 
@@ -134,7 +128,7 @@ class attachDetach
             void clearAddressing() const;
 
 
-    // Static data members
+    // Static Data Members
 
         //- Relative vertex position tolerance
         static const scalar positionDifference_;
@@ -169,6 +163,9 @@ public:
             const label index,
             const polyTopoChanger& mesh
         );
+
+        //- Disallow default bitwise copy construction
+        attachDetach(const attachDetach&) = delete;
 
 
     //- Destructor
@@ -225,12 +222,17 @@ public:
             return triggerTimes_;
         }
 
-
         //- Write
         virtual void write(Ostream&) const;
 
         //- Write dictionary
         virtual void writeDict(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const attachDetach&) = delete;
 };
 
 

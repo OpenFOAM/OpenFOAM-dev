@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ Istream& operator>>(Istream&, wallPoint&);
 
 class wallPoint
 {
-    // Private data
+    // Private Data
 
         //- Position of nearest wall center
         point origin_;
@@ -96,9 +96,6 @@ public:
 
         //- Construct from origin, distance
         inline wallPoint(const point& origin, const scalar distSqr);
-
-        //- Construct as copy
-        inline wallPoint(const wallPoint&);
 
 
     // Member Functions

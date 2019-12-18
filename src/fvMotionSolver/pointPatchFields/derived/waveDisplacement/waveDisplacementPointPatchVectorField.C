@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "Time.H"
 #include "polyMesh.H"
+#include "OneConstant.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -55,8 +56,35 @@ waveDisplacementPointPatchVectorField
 :
     fixedValuePointPatchField<vector>(p, iF, dict),
     amplitude_(dict.lookup("amplitude")),
-    omega_(readScalar(dict.lookup("omega"))),
-    waveNumber_(dict.lookupOrDefault<vector>("waveNumber", Zero))
+    omega_(dict.lookup<scalar>("omega")),
+    waveNumber_(dict.lookupOrDefault<vector>("waveNumber", Zero)),
+    startRamp_
+    (
+        dict.found("startRamp")
+      ? Function1<scalar>::New("startRamp", dict)
+      : autoPtr<Function1<scalar>>
+        (
+            new Function1s::OneConstant<scalar>("startRamp")
+        )
+    ),
+    endRamp_
+    (
+        dict.found("endRamp")
+      ? Function1<scalar>::New("endRamp", dict)
+      : autoPtr<Function1<scalar>>
+        (
+            new Function1s::OneConstant<scalar>("endRamp")
+        )
+    ),
+    timeRamp_
+    (
+        dict.found("timeRamp")
+      ? Function1<scalar>::New("timeRamp", dict)
+      : autoPtr<Function1<scalar>>
+        (
+            new Function1s::OneConstant<scalar>("timeRamp")
+        )
+    )
 {
     if (!dict.found("value"))
     {
@@ -107,11 +135,20 @@ void Foam::waveDisplacementPointPatchVectorField::updateCoeffs()
     const polyMesh& mesh = this->internalField().mesh()();
     const Time& t = mesh.time();
 
-    const scalarField points( waveNumber_ & patch().localPoints());
+    const scalarField points(waveNumber_ & patch().localPoints());
+
+    const scalar timeRamp = timeRamp_->value(t.value());
+
+    const scalarField startRamp(startRamp_->value(points));
+
+    const scalarField endRamp
+    (
+        endRamp_->value(points[points.size() - 1] - points)
+    );
 
     Field<vector>::operator=
     (
-        amplitude_*cos(omega_*t.value() - points)
+        timeRamp*startRamp*endRamp*amplitude_*cos(omega_*t.value() - points)
     );
 
     fixedValuePointPatchField<vector>::updateCoeffs();
@@ -121,13 +158,26 @@ void Foam::waveDisplacementPointPatchVectorField::updateCoeffs()
 void Foam::waveDisplacementPointPatchVectorField::write(Ostream& os) const
 {
     pointPatchField<vector>::write(os);
-    os.writeKeyword("amplitude")
-        << amplitude_ << token::END_STATEMENT << nl;
-    os.writeKeyword("omega")
-        << omega_ << token::END_STATEMENT << nl;
-    os.writeKeyword("waveNumber")
-        << waveNumber_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "amplitude", amplitude_);
+    writeEntry(os, "omega", omega_);
+    writeEntry(os, "waveNumber", waveNumber_);
+
+    if (!isType<Function1s::OneConstant<scalar>>(startRamp_()))
+    {
+        writeEntry(os, startRamp_());
+    }
+
+    if (!isType<Function1s::OneConstant<scalar>>(endRamp_()))
+    {
+        writeEntry(os, endRamp_());
+    }
+
+    if (!isType<Function1s::OneConstant<scalar>>(timeRamp_()))
+    {
+        writeEntry(os, timeRamp_());
+    }
+
+    writeEntry(os, "value", *this);
 }
 
 

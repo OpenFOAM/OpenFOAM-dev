@@ -18,19 +18,17 @@ FoamFile
 thermoType
 {
     type            heRhoThermo;
-    mixture         reactingMixture;
-    transport       polynomial;
-    thermo          hPolynomial;
-    energy          sensibleInternalEnergy;
-    equationOfState icoPolynomial;
+    mixture         multiComponentMixture;
+    transport       sutherland;
+    thermo          janaf;
+    energy          sensibleEnthalpy;
+    equationOfState perfectGas;
     specie          specie;
 }
 
-chemistryReader foamChemistryReader;
+#include "speciesThermo"
 
-foamChemistryFile "$FOAM_CASE/constant/reactions";
-
-foamChemistryThermoFile "$FOAM_CASE/constant/thermo.incompressiblePoly";
+inertSpecie     N2;
 
 liquids
 {
@@ -39,8 +37,6 @@ liquids
 
 solids
 {}
-
-inertSpecie     N2;
 
 
 // ************************************************************************* //

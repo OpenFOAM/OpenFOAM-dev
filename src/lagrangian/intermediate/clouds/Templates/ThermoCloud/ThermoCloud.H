@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ class ThermoCloud
 {
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         //- Type of cloud this cloud was instantiated for
         typedef CloudType cloudType;
@@ -79,19 +79,10 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Cloud copy pointer
         autoPtr<ThermoCloud<CloudType>> cloudCopyPtr_;
-
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        ThermoCloud(const ThermoCloud&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const ThermoCloud&);
 
 
 protected:
@@ -191,6 +182,9 @@ public:
             const ThermoCloud<CloudType>& c
         );
 
+        //- Disallow default bitwise copy construction
+        ThermoCloud(const ThermoCloud&) = delete;
+
         //- Construct and return clone based on (this) with new name
         virtual autoPtr<Cloud<parcelType>> clone(const word& name)
         {
@@ -234,7 +228,7 @@ public:
             //- Return const access to the carrier temperature field
             inline const volScalarField& T() const;
 
-            //- Return const access to the carrier prressure field
+            //- Return const access to the carrier pressure field
             inline const volScalarField& p() const;
 
 
@@ -256,10 +250,10 @@ public:
                  //- Radiation flag
                 inline bool radiation() const;
 
-                //- Radiation sum of parcel projected areas [m2]
+                //- Radiation sum of parcel projected areas [m^2]
                 inline volScalarField::Internal& radAreaP();
 
-                //- Radiation sum of parcel projected areas [m2]
+                //- Radiation sum of parcel projected areas [m^2]
                 inline const volScalarField::Internal&
                     radAreaP() const;
 
@@ -295,7 +289,7 @@ public:
                     inline const volScalarField::Internal&
                         hsCoeff() const;
 
-                    //- Return sensible enthalpy source term [J/kg/m3/s]
+                    //- Return sensible enthalpy source term [J/kg/m^3/s]
                     inline tmp<fvScalarMatrix> Sh(volScalarField& hs) const;
 
 
@@ -370,6 +364,12 @@ public:
 
             //- Print cloud information
             void info();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ThermoCloud&) = delete;
 };
 
 

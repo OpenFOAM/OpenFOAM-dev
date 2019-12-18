@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,15 +50,6 @@ namespace kineticTheoryModels
 
 class granularPressureModel
 {
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        granularPressureModel(const granularPressureModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const granularPressureModel&);
-
-
 protected:
 
     // Protected data
@@ -88,6 +79,9 @@ public:
 
         //- Construct from components
         granularPressureModel(const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        granularPressureModel(const granularPressureModel&) = delete;
 
 
     // Selectors
@@ -127,6 +121,12 @@ public:
         {
             return true;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const granularPressureModel&) = delete;
 };
 
 

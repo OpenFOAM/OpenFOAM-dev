@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,17 +104,6 @@ protected:
         label getMisAlignedEdge(const vector& refDir, const label celli) const;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cellLooper(const cellLooper&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellLooper&);
-
-
 public:
 
     //- Runtime type information
@@ -140,6 +129,9 @@ public:
 
         //- Construct from components
         cellLooper(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        cellLooper(const cellLooper&) = delete;
 
         //- Clone
         autoPtr<cellLooper> clone() const
@@ -197,6 +189,11 @@ public:
             scalarField& loopWeights
         ) const = 0;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellLooper&) = delete;
 };
 
 

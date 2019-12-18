@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,7 +82,7 @@ class pressureInletOutletParSlipVelocityFvPatchVectorField
 :
     public mixedFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Flux field name
         word phiName_;
@@ -125,7 +125,7 @@ public:
             const dictionary&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         pressureInletOutletParSlipVelocityFvPatchVectorField
         (
             const pressureInletOutletParSlipVelocityFvPatchVectorField&
@@ -143,7 +143,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         pressureInletOutletParSlipVelocityFvPatchVectorField
         (
             const pressureInletOutletParSlipVelocityFvPatchVectorField&,
@@ -167,7 +167,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Attributes
 
@@ -212,7 +212,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const fvPatchField<vector>& pvf);
 };

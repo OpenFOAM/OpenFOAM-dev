@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,10 +22,13 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::TableFile
+    Foam::Function1s::TableFile
 
 Description
-    Templated table container function where data is read from file.
+    Templated table container function where data is read from file. Data is
+    stored as a list of Tuple2's. The first column is scalar. Data is read in
+    the form specified by the format entry, which defaults to the native
+    OpenFOAM format.
 
     Usage:
     \verbatim
@@ -33,37 +36,32 @@ Description
         <entryName>Coeffs
         {
             file                dataFile;    // name of data file
+            format              foam;        // data format (optional)
             outOfBounds         clamp;       // optional out-of-bounds handling
             interpolationScheme linear;      // optional interpolation method
         }
     \endverbatim
 
-    Data is stored as a list of Tuple2's. First column is always stored as
-    scalar entries.  Data is read in the form, e.g. for an entry \<entryName\>
-    that is (scalar, vector):
-    \verbatim
-        (
-            (0.0 (1 2 3))
-            (1.0 (4 5 6))
-        );
-    \endverbatim
-
 SourceFiles
     TableFile.C
+
+See also
+    FoamTableReader.C
+    CsvTableReader.C
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef TableFile_H
 #define TableFile_H
 
-#include "Function1.H"
-#include "Tuple2.H"
+#include "TableBase.H"
+#include "TableReader.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -73,18 +71,15 @@ namespace Function1Types
 template<class Type>
 class TableFile
 :
-    public TableBase<Type>
+    public TableBase<Type, TableFile<Type>>
 {
-    // Private data
+    // Private Data
 
-        //- File name for csv table (optional)
-        fileName fName_;
+        //- File name for table
+        const fileName fName_;
 
-
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const TableFile<Type>&);
+        //- Table reader
+        const autoPtr<TableReader<Type>> reader_;
 
 
 public:
@@ -95,7 +90,7 @@ public:
 
     // Constructors
 
-        //- Construct from entry name and Istream
+        //- Construct from entry name and dictionary
         TableFile(const word& entryName, const dictionary& dict);
 
         //- Copy constructor
@@ -106,16 +101,31 @@ public:
     virtual ~TableFile();
 
 
+    // Access
+
+        //- Return the file name
+        inline const fileName& fName() const
+        {
+            return fName_;
+        }
+
+
     // I/O
 
-        //- Write in dictionary format
-        virtual void writeData(Ostream& os) const;
+        //- Write entries only in dictionary format
+        virtual void writeEntries(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const TableFile<Type>&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

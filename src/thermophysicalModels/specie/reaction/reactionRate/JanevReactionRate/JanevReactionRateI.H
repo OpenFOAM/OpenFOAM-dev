@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,9 +46,9 @@ inline Foam::JanevReactionRate::JanevReactionRate
     const dictionary& dict
 )
 :
-    A_(readScalar(dict.lookup("A"))),
-    beta_(readScalar(dict.lookup("beta"))),
-    Ta_(readScalar(dict.lookup("Ta"))),
+    A_(dict.lookup<scalar>("A")),
+    beta_(dict.lookup<scalar>("beta")),
+    Ta_(dict.lookup<scalar>("Ta")),
     b_(dict.lookup("b"))
 {}
 
@@ -59,7 +59,8 @@ inline Foam::scalar Foam::JanevReactionRate::operator()
 (
     const scalar p,
     const scalar T,
-    const scalarField&
+    const scalarField&,
+    const label
 ) const
 {
     scalar lta = A_;
@@ -93,7 +94,8 @@ inline Foam::scalar Foam::JanevReactionRate::ddT
 (
     const scalar p,
     const scalar T,
-    const scalarField&
+    const scalarField&,
+    const label
 ) const
 {
     scalar lta = A_;
@@ -142,6 +144,7 @@ inline void Foam::JanevReactionRate::dcidc
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcidc
 ) const
 {}
@@ -151,7 +154,8 @@ inline Foam::scalar Foam::JanevReactionRate::dcidT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return 0;
@@ -160,10 +164,10 @@ inline Foam::scalar Foam::JanevReactionRate::dcidT
 
 inline void Foam::JanevReactionRate::write(Ostream& os) const
 {
-    os.writeKeyword("A") << A_ << nl;
-    os.writeKeyword("beta") << beta_ << nl;
-    os.writeKeyword("Ta") << Ta_ << nl;
-    os.writeKeyword("b") << b_ << nl;
+    writeKeyword(os, "A") << A_ << nl;
+    writeKeyword(os, "beta") << beta_ << nl;
+    writeKeyword(os, "Ta") << Ta_ << nl;
+    writeKeyword(os, "b") << b_ << nl;
 }
 
 

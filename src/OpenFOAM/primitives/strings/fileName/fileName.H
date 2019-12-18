@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ class fileName
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
         static int debug;
@@ -103,19 +103,22 @@ public:
         //- Construct null
         inline fileName();
 
-        //- Construct as copy
+        //- Copy constructor
         inline fileName(const fileName&);
 
-        //- Construct as copy of word
+        //- Move constructor
+        inline fileName(fileName&&);
+
+        //- Copy constructor of word
         inline fileName(const word&);
 
-        //- Construct as copy of string
+        //- Copy constructor of string
         inline fileName(const string&);
 
-        //- Construct as copy of std::string
+        //- Copy constructor of std::string
         inline fileName(const std::string&);
 
-        //- Construct as copy of character array
+        //- Copy constructor of character array
         inline fileName(const char*);
 
         //- Construct by concatenating elements of wordList separated by '/'
@@ -125,7 +128,7 @@ public:
         fileName(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         //- Is this character valid for a fileName?
         inline static bool valid(char);
@@ -225,18 +228,19 @@ public:
             word component(const size_type, const char delimiter='/') const;
 
 
-    // Member operators
+    // Member Operators
 
         // Assignment
 
             void operator=(const fileName&);
+            void operator=(fileName&&);
             void operator=(const word&);
             void operator=(const string&);
             void operator=(const std::string&);
             void operator=(const char*);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream&, fileName&);
         friend Ostream& operator<<(Ostream&, const fileName&);

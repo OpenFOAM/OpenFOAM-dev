@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ class primitiveMesh;
 
 class edgeFaceCirculator
 {
-    // Static data members
+    // Static Data Members
 
         //- End iterator primitiveMesh nullptr
         static const primitiveMesh* const endConstIterMeshPtr;
@@ -95,7 +95,7 @@ class edgeFaceCirculator
         static const edgeFaceCirculator endConstIter;
 
 
-    // Private data
+    // Private Data
 
         //- Mesh
         const primitiveMesh& mesh_;
@@ -144,7 +144,7 @@ public:
             const bool isBoundaryEdge
         );
 
-        //- Construct as copy
+        //- Copy constructor
         inline edgeFaceCirculator(const edgeFaceCirculator&);
 
 

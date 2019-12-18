@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,24 +28,6 @@ License
 #include "token.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-Foam::Ostream& Foam::OSstream::write(const token& t)
-{
-    if (t.type() == token::VERBATIMSTRING)
-    {
-        write(char(token::HASH));
-        write(char(token::BEGIN_BLOCK));
-        writeQuoted(t.stringToken(), false);
-        write(char(token::HASH));
-        write(char(token::END_BLOCK));
-    }
-    else if (t.type() == token::VARIABLE)
-    {
-        writeQuoted( t.stringToken(), false);
-    }
-    return *this;
-}
-
 
 Foam::Ostream& Foam::OSstream::write(const char c)
 {
@@ -78,44 +60,15 @@ Foam::Ostream& Foam::OSstream::write(const word& str)
 
 Foam::Ostream& Foam::OSstream::write(const string& str)
 {
-    os_ << token::BEGIN_STRING;
+    return writeQuoted(str);
+}
 
-    int backslash = 0;
-    for (string::const_iterator iter = str.begin(); iter != str.end(); ++iter)
-    {
-        char c = *iter;
 
-        if (c == '\\')
-        {
-            backslash++;
-            // suppress output until we know if other characters follow
-            continue;
-        }
-        else if (c == token::NL)
-        {
-            lineNumber_++;
-            backslash++;    // backslash escape for newline
-        }
-        else if (c == token::END_STRING)
-        {
-            backslash++;    // backslash escape for quote
-        }
-
-        // output pending backslashes
-        while (backslash)
-        {
-            os_ << '\\';
-            backslash--;
-        }
-
-        os_ << c;
-    }
-
-    // silently drop any trailing backslashes
-    // they would otherwise appear like an escaped end-quote
-
-    os_ << token::END_STRING;
-
+Foam::Ostream& Foam::OSstream::write(const verbatimString& vs)
+{
+    os_ << token::HASH << token::BEGIN_BLOCK;
+    writeQuoted(vs, false);
+    os_ << token::HASH << token::END_BLOCK;
     setState(os_.rdstate());
     return *this;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,12 +49,36 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::token Foam::functionEntry::readLine(const word& key, Istream& is)
+Foam::word Foam::functionEntry::readLine(Istream& is)
 {
-    string s;
+    word s;
     dynamic_cast<ISstream&>(is).getLine(s);
+    return s;
+}
 
-    return token(string(key+s), is.lineNumber());
+
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+bool Foam::functionEntry::insert
+(
+    dictionary& parentDict,
+    const string& str
+)
+{
+    parentDict.read(IStringStream(str)());
+    return true;
+}
+
+
+bool Foam::functionEntry::insert
+(
+    const dictionary& parentDict,
+    primitiveEntry& thisEntry,
+    const string& str
+)
+{
+    thisEntry.read(parentDict, IStringStream(str)());
+    return true;
 }
 
 
@@ -69,8 +93,8 @@ Foam::functionEntry::functionEntry
 :
     primitiveEntry
     (
-        word(key+dict.name()+Foam::name(is.lineNumber())),
-        readLine(key, is)
+        key,
+        token(readLine(is), is.lineNumber())
     )
 {}
 
@@ -164,16 +188,21 @@ bool Foam::functionEntry::execute
 
 void Foam::functionEntry::write(Ostream& os) const
 {
-    // Contents should be single string token
-    const token& t = operator[](0);
-    const string& s = t.stringToken();
+    os.indent();
 
-    for (size_t i = 0; i < s.size(); i++)
+    writeKeyword(os, keyword());
+
+    for (label i=0; i<size(); ++i)
     {
-        os.write(s[i]);
+        os << operator[](i);
+
+        if (i < size()-1)
+        {
+            os  << token::SPACE;
+        }
     }
 
-    os << endl;
+    os  << endl;
 }
 
 

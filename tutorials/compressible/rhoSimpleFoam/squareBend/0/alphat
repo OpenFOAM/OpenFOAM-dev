@@ -21,7 +21,7 @@ internalField   uniform 0;
 
 boundaryField
 {
-    Default_Boundary_Region
+    walls
     {
         type            compressible::alphatWallFunction;
         Prt             0.85;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class fvMeshDistribute;
 
 class snappyRefineDriver
 {
-    // Private data
+    // Private Data
 
         //- Mesh+surface
         meshRefinement& meshRefiner_;
@@ -147,13 +147,6 @@ class snappyRefineDriver
         );
 
 
-        //- Disallow default bitwise copy construct
-        snappyRefineDriver(const snappyRefineDriver&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const snappyRefineDriver&);
-
-
 public:
 
     //- Runtime type information
@@ -172,6 +165,9 @@ public:
             const labelList& globalToSlavePatch
         );
 
+        //- Disallow default bitwise copy construction
+        snappyRefineDriver(const snappyRefineDriver&) = delete;
+
 
     // Member Functions
 
@@ -184,6 +180,12 @@ public:
             const bool prepareForSnapping,
             const dictionary& motionDict
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const snappyRefineDriver&) = delete;
 };
 
 

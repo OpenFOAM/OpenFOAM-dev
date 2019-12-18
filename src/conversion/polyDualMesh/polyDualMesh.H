@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class polyDualMesh
 :
     public polyMesh
 {
-    // Private data
+    // Private Data
 
         //- From polyMesh cell to my point
         labelIOList cellPoint_;
@@ -147,13 +147,6 @@ class polyDualMesh
         );
 
 
-        //- Disallow default bitwise copy construct
-        polyDualMesh(const polyDualMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const polyDualMesh&);
-
-
 public:
 
     //- Runtime type information
@@ -182,6 +175,9 @@ public:
             const polyMesh&,
             const scalar featureCos
         );
+
+        //- Disallow default bitwise copy construction
+        polyDualMesh(const polyDualMesh&) = delete;
 
         //- Helper function to create feature edges and points based on
         //  feature angle and patches.
@@ -213,6 +209,12 @@ public:
             {
                 return boundaryFacePoint_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const polyDualMesh&) = delete;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

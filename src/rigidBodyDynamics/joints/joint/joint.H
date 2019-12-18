@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ protected:
 
 private:
 
-    // Private member functions to be used by rigidBodyModel
+    // Private Member Functions to be used by rigidBodyModel
 
         //- Allow the rigidBodyModel to set the index for this joint
         label& index()
@@ -174,6 +174,9 @@ public:
         //- Construct joint setting the size of the motion sub-space
         //  to the given degrees of freedom of the joint
         inline joint(const rigidBodyModel& model, const label nDoF);
+
+        //- Copy constructor
+        joint(const joint&) = default;
 
         //- Clone this joint (needed by PtrList)
         virtual autoPtr<joint> clone() const = 0;

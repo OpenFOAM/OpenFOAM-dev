@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,15 +51,17 @@ inline const Foam::List<bool>& Foam::basicMultiComponentMixture::active() const
 }
 
 
-inline void Foam::basicMultiComponentMixture::setActive(label speciei)
+inline void Foam::basicMultiComponentMixture::setActive(label speciei) const
 {
     active_[speciei] = true;
+    const_cast<volScalarField&>(Y_[speciei]).writeOpt() = IOobject::AUTO_WRITE;
 }
 
 
-inline void Foam::basicMultiComponentMixture::setInactive(label speciei)
+inline void Foam::basicMultiComponentMixture::setInactive(label speciei) const
 {
     active_[speciei] = false;
+    const_cast<volScalarField&>(Y_[speciei]).writeOpt() = IOobject::NO_WRITE;
 }
 
 

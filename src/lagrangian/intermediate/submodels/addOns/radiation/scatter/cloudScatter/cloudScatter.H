@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::radiation::cloudScatter
+    Foam::radiationModels::scatterModels::cloud
 
 Description
     Cloud radiation scatter model
@@ -41,18 +41,20 @@ SourceFiles
 
 namespace Foam
 {
-namespace radiation
+namespace radiationModels
+{
+namespace scatterModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class cloudScatter Declaration
+                            Class cloud Declaration
 \*---------------------------------------------------------------------------*/
 
-class cloudScatter
+class cloud
 :
     public scatterModel
 {
-    // Private data
+    // Private Data
 
         //- Absorption model dictionary
         dictionary coeffsDict_;
@@ -64,35 +66,30 @@ class cloudScatter
 public:
 
     //- Runtime type information
-    TypeName("cloudScatter");
+    TypeName("cloud");
 
 
     // Constructors
 
         //- Construct from components
-        cloudScatter
-        (
-            const dictionary& dict,
-            const fvMesh& mesh
-        );
+        cloud(const dictionary& dict, const fvMesh& mesh);
 
 
     //- Destructor
-    virtual ~cloudScatter();
+    virtual ~cloud();
 
 
-    // Member Operators
+    // Member Functions
 
-        // Access
-
-            //- Return scatter coefficient
-            tmp<volScalarField> sigmaEff() const;
+        //- Return scatter coefficient
+        tmp<volScalarField> sigmaEff() const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace radiation
+} // End namespace scatterModels
+} // End namespace radiationModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

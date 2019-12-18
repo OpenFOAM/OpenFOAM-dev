@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,11 +25,11 @@ License
 
 Info << nl << "Creating autocorrelation functions." << endl;
 
-IOdictionary mdTransportProperitesDict
+IOdictionary mdTransportPropertiesDict
 (
     IOobject
     (
-        "mdTransportProperitesDict",
+        "mdTransportPropertiesDict",
         mesh.time().system(),
         mesh,
         IOobject::MUST_READ_IF_MODIFIED,
@@ -40,12 +40,12 @@ IOdictionary mdTransportProperitesDict
 
 const dictionary& autocorrelationFunctionDict
 (
-    mdTransportProperitesDict.subDict("autocorrelationFunctions")
+    mdTransportPropertiesDict.subDict("autocorrelationFunctions")
 );
 
 //- Velocity autocorrelation function
 
-Info << tab << "velocty" << endl;
+Info << tab << "velocity" << endl;
 
 const dictionary& velocityACFDict
 (

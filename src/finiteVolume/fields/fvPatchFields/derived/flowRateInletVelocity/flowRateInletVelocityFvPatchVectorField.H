@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         massFlowRate | mass flow rate [kg/s]   | no          |
-        volumetricFlowRate | volumetric flow rate [m3/s]| no |
+        volumetricFlowRate | volumetric flow rate [m^3/s]| no |
         rho          | density field name      | no          | rho
         rhoInlet     | inlet density           | no          |
         extrapolateProfile | Extrapolate velocity profile | no | false
@@ -73,7 +73,7 @@ Usage
     }
     \endverbatim
 
-    The \c flowRate entry is a \c Function1 of time, see Foam::Function1Types.
+    The \c flowRate entry is a \c Function1 of time, see Foam::Function1s.
 
 Note
     - \c rhoInlet is required for the case of a mass flow rate, where the
@@ -84,7 +84,7 @@ Note
 
 See also
     Foam::fixedValueFvPatchField
-    Foam::Function1Types
+    Foam::Function1s
     Foam::flowRateOutletVelocityFvPatchVectorField
 
 SourceFiles
@@ -111,7 +111,7 @@ class flowRateInletVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Inlet integral flow rate
         autoPtr<Function1<scalar>> flowRate_;
@@ -129,7 +129,7 @@ class flowRateInletVelocityFvPatchVectorField
         Switch extrapolateProfile_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Update the patch values given the appropriate density type and value
         template<class RhoType>
@@ -170,7 +170,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         flowRateInletVelocityFvPatchVectorField
         (
             const flowRateInletVelocityFvPatchVectorField&
@@ -185,7 +185,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         flowRateInletVelocityFvPatchVectorField
         (
             const flowRateInletVelocityFvPatchVectorField&,
@@ -205,7 +205,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

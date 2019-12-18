@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,17 +55,13 @@ class maxDeltaxyz
 :
     public LESdelta
 {
-    // Private data
+    // Private Data
 
         //- Model coefficient
         scalar deltaCoeff_;
 
 
     // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        maxDeltaxyz(const maxDeltaxyz&);
-        void operator=(const maxDeltaxyz&);
 
         // Calculate the delta values
         void calcDelta();
@@ -87,6 +83,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        maxDeltaxyz(const maxDeltaxyz&) = delete;
+
 
     //- Destructor
     virtual ~maxDeltaxyz()
@@ -100,6 +99,12 @@ public:
 
         // Correct values
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const maxDeltaxyz&) = delete;
 };
 
 

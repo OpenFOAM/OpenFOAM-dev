@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ Foam::chemistryReductionMethods::EFA<CompType, ThermoType>::EFA
     }
     if (this->coeffsDict_.found("sortPart"))
     {
-        sortPart_ = readScalar(this->coeffsDict_.lookup("sortPart"));
+        sortPart_ = this->coeffsDict_.template lookup<scalar>("sortPart");
     }
 }
 
@@ -94,9 +94,10 @@ Foam::chemistryReductionMethods::EFA<CompType, ThermoType>::~EFA()
 template<class CompType, class ThermoType>
 void Foam::chemistryReductionMethods::EFA<CompType, ThermoType>::reduceMechanism
 (
-    const scalarField &c,
+    const scalar p,
     const scalar T,
-    const scalar p
+    const scalarField& c,
+    const label li
 )
 {
     scalarField& completeC(this->chemistry_.completeC());
@@ -132,10 +133,11 @@ void Foam::chemistryReductionMethods::EFA<CompType, ThermoType>::reduceMechanism
     forAll(this->chemistry_.reactions(), i)
     {
         const Reaction<ThermoType>& R = this->chemistry_.reactions()[i];
+
         // for each reaction compute omegai
         this->chemistry_.omega
         (
-            R, c1, T, p, pf, cf, lRef, pr, cr, rRef
+            R, p, T, c1, li, pf, cf, lRef, pr, cr, rRef
         );
         scalar fr = mag(pf*cf)+mag(pr*cr);
         scalar NCi(0.0),NHi(0.0),NOi(0.0),NNi(0.0);

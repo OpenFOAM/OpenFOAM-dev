@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -205,15 +205,6 @@ class advectionDiffusion
         bool predicted_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        advectionDiffusion(const advectionDiffusion&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const advectionDiffusion&);
-
-
 public:
 
     //- Runtime type information
@@ -231,6 +222,9 @@ public:
             const labelHashSet& patchIDs
         );
 
+        //- Disallow default bitwise copy construction
+        advectionDiffusion(const advectionDiffusion&) = delete;
+
 
     // Member Functions
 
@@ -239,6 +233,12 @@ public:
 
         //- Correct the given distance-to-patch and normal-to-patch fields
         virtual bool correct(volScalarField& y, volVectorField& n);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const advectionDiffusion&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,6 +115,7 @@ Foam::scalar Foam::RKF45::solve
 (
     const scalar x0,
     const scalarField& y0,
+    const label li,
     const scalarField& dydx0,
     const scalar dx,
     scalarField& y
@@ -125,21 +126,21 @@ Foam::scalar Foam::RKF45::solve
         yTemp_[i] = y0[i] + a21*dx*dydx0[i];
     }
 
-    odes_.derivatives(x0 + c2*dx, yTemp_, k2_);
+    odes_.derivatives(x0 + c2*dx, yTemp_, li, k2_);
 
     forAll(yTemp_, i)
     {
         yTemp_[i] = y0[i] + dx*(a31*dydx0[i] + a32*k2_[i]);
     }
 
-    odes_.derivatives(x0 + c3*dx, yTemp_, k3_);
+    odes_.derivatives(x0 + c3*dx, yTemp_, li, k3_);
 
     forAll(yTemp_, i)
     {
         yTemp_[i] = y0[i] + dx*(a41*dydx0[i] + a42*k2_[i] + a43*k3_[i]);
     }
 
-    odes_.derivatives(x0 + c4*dx, yTemp_, k4_);
+    odes_.derivatives(x0 + c4*dx, yTemp_, li, k4_);
 
     forAll(yTemp_, i)
     {
@@ -147,7 +148,7 @@ Foam::scalar Foam::RKF45::solve
           + dx*(a51*dydx0[i] + a52*k2_[i] + a53*k3_[i] + a54*k4_[i]);
     }
 
-    odes_.derivatives(x0 + c5*dx, yTemp_, k5_);
+    odes_.derivatives(x0 + c5*dx, yTemp_, li, k5_);
 
     forAll(yTemp_, i)
     {
@@ -156,7 +157,7 @@ Foam::scalar Foam::RKF45::solve
            *(a61*dydx0[i] + a62*k2_[i] + a63*k3_[i] + a64*k4_[i] + a65*k5_[i]);
     }
 
-    odes_.derivatives(x0 + c6*dx, yTemp_, k6_);
+    odes_.derivatives(x0 + c6*dx, yTemp_, li, k6_);
 
     // Calculate the 5th-order solution
     forAll(y, i)
@@ -183,10 +184,11 @@ void Foam::RKF45::solve
 (
     scalar& x,
     scalarField& y,
+    const label li,
     scalar& dxTry
 ) const
 {
-    adaptiveSolver::solve(odes_, x, y, dxTry);
+    adaptiveSolver::solve(odes_, x, y, li, dxTry);
 }
 
 

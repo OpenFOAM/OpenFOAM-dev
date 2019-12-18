@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ Foam::phaseTransferModels::deposition::deposition
     phaseTransferModel(dict, pair),
     dropletName_(dict.lookup("droplet")),
     surfaceName_(dict.lookup("surface")),
-    efficiency_(readScalar(dict.lookup("efficiency")))
+    efficiency_(dict.lookup<scalar>("efficiency"))
 {}
 
 
@@ -63,8 +63,14 @@ Foam::phaseTransferModels::deposition::~deposition()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+bool Foam::phaseTransferModels::deposition::mixture() const
+{
+    return true;
+}
+
+
 Foam::tmp<Foam::volScalarField>
-Foam::phaseTransferModels::deposition::dmdt() const
+Foam::phaseTransferModels::deposition::dmdtf() const
 {
     const phaseModel* dropletPtr = nullptr;
     scalar sign = 1;

@@ -21,12 +21,14 @@ internalField   uniform 100000;
 
 boundaryField
 {
-    sides
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    top
     {
         type            calculated;
         value           $internalField;
     }
-    region0_to_wallFilmRegion_wallFilmFaces
+    region0_to_wallFilm_walls
     {
         type            calculated;
         value           $internalField;

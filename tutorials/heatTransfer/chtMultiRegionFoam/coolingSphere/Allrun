@@ -8,8 +8,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 runApplication foamSetupCHT
 
-foamDictionary -disableFunctionEntries \
-    -entry internalField -set "uniform 348" 0/solid/T
+foamDictionary -entry internalField -set "uniform 348" 0/solid/T
 
 runApplication decomposePar -allRegions -dict system/decomposeParDict
 

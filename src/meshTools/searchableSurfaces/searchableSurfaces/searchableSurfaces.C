@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -675,7 +675,7 @@ bool Foam::searchableSurfaces::checkIntersection
                             (
                                 names()[i] + '_' + names()[j],
                                 "xyz",
-                                intersections.xfer(),
+                                move(intersections),
                                 dist
                             );
                             wordList valueSetNames(1, "edgeIndex");

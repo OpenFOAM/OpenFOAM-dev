@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ class twoDPointCorrector
 :
     public MeshObject<polyMesh, UpdateableMeshObject, twoDPointCorrector>
 {
-    // Private data
+    // Private Data
 
         //- Is 2D correction required, i.e. is the mesh
         bool required_;
@@ -86,13 +86,6 @@ class twoDPointCorrector
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        twoDPointCorrector(const twoDPointCorrector&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const twoDPointCorrector&);
-
-
         //- Calculate addressing
         void calcAddressing() const;
 
@@ -103,7 +96,7 @@ class twoDPointCorrector
         void snapToWedge(const vector& n, const point& A, point& p) const;
 
 
-    // Static data members
+    // Static Data Members
 
         //- Edge orthogonality tolerance
         static const scalar edgeOrthogonalityTol;
@@ -119,6 +112,9 @@ public:
 
         //- Construct from components
         twoDPointCorrector(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        twoDPointCorrector(const twoDPointCorrector&) = delete;
 
 
     //- Destructor
@@ -153,6 +149,12 @@ public:
 
         //- Correct weighting factors for moving mesh.
         bool movePoints();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const twoDPointCorrector&) = delete;
 };
 
 

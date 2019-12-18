@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -186,13 +186,6 @@ protected:
                 label& nProtected
             ) const;
 
-private:
-
-        //- Disallow default bitwise copy construct
-        dynamicRefineFvMesh(const dynamicRefineFvMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const dynamicRefineFvMesh&);
 
 public:
 
@@ -204,6 +197,9 @@ public:
 
         //- Construct from IOobject
         explicit dynamicRefineFvMesh(const IOobject& io);
+
+        //- Disallow default bitwise copy construction
+        dynamicRefineFvMesh(const dynamicRefineFvMesh&) = delete;
 
 
     //- Destructor
@@ -242,9 +238,14 @@ public:
             IOstream::streamFormat fmt,
             IOstream::versionNumber ver,
             IOstream::compressionType cmp,
-            const bool valid
+            const bool write = true
         ) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dynamicRefineFvMesh&) = delete;
 };
 
 

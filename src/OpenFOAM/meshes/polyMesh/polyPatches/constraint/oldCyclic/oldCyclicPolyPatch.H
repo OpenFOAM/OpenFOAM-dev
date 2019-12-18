@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ class oldCyclicPolyPatch
 :
     public coupledPolyPatch
 {
-    // Private data
+    // Private Data
 
         //- Morph:angle between normals of neighbouring faces.
         //  Used to split cyclic into halves.
@@ -75,7 +75,7 @@ class oldCyclicPolyPatch
             vector separationVector_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Find amongst selected faces the one with the largest area
         static label findMaxArea(const pointField&, const faceList&);

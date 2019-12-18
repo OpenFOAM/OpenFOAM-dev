@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ public:
     virtual void readData(Foam::Istream& is)
     {
         sigWriteNow::signal_ = readLabel(is);
-        sigWriteNow::set(true);
+        sigWriteNow::set(writeInfoHeader);
     }
 
     virtual void writeData(Foam::Ostream& os) const
@@ -70,12 +70,10 @@ public:
 
 addwriteNowSignalToOpt addwriteNowSignalToOpt_("writeNowSignal");
 
-}
+} // End namespace Foam
 
 
 Foam::Time* Foam::sigWriteNow::runTimePtr_ = nullptr;
-
-
 struct sigaction Foam::sigWriteNow::oldAction_;
 
 

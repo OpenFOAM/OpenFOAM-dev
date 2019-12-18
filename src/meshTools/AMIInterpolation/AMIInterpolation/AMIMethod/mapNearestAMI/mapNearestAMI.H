@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,16 +50,7 @@ class mapNearestAMI
 :
     public AMIMethod
 {
-
-private:
-
     // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        mapNearestAMI(const mapNearestAMI&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const mapNearestAMI&);
 
         // Marching front
 
@@ -119,6 +110,9 @@ public:
             const bool requireMatch = true
         );
 
+        //- Disallow default bitwise copy construction
+        mapNearestAMI(const mapNearestAMI&) = delete;
+
 
     //- Destructor
     virtual ~mapNearestAMI();
@@ -138,6 +132,12 @@ public:
                 label srcFacei = -1,
                 label tgtFacei = -1
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const mapNearestAMI&) = delete;
 };
 
 

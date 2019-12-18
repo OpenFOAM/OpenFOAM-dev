@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,13 +28,13 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::Polynomial<Type>::Polynomial
+Foam::Function1s::Polynomial<Type>::Polynomial
 (
     const word& entryName,
     const dictionary& dict
 )
 :
-    Function1<Type>(entryName),
+    FieldFunction1<Type, Polynomial<Type>>(entryName),
     coeffs_(),
     canIntegrate_(true)
 {
@@ -72,13 +72,13 @@ Foam::Function1Types::Polynomial<Type>::Polynomial
 
 
 template<class Type>
-Foam::Function1Types::Polynomial<Type>::Polynomial
+Foam::Function1s::Polynomial<Type>::Polynomial
 (
     const word& entryName,
     const List<Tuple2<Type, Type>>& coeffs
 )
 :
-    Function1<Type>(entryName),
+    FieldFunction1<Type, Polynomial<Type>>(entryName),
     coeffs_(coeffs),
     canIntegrate_(true)
 {
@@ -111,9 +111,9 @@ Foam::Function1Types::Polynomial<Type>::Polynomial
 
 
 template<class Type>
-Foam::Function1Types::Polynomial<Type>::Polynomial(const Polynomial& poly)
+Foam::Function1s::Polynomial<Type>::Polynomial(const Polynomial& poly)
 :
-    Function1<Type>(poly),
+    FieldFunction1<Type, Polynomial<Type>>(poly),
     coeffs_(poly.coeffs_),
     canIntegrate_(poly.canIntegrate_)
 {}
@@ -122,29 +122,14 @@ Foam::Function1Types::Polynomial<Type>::Polynomial(const Polynomial& poly)
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::Polynomial<Type>::~Polynomial()
+Foam::Function1s::Polynomial<Type>::~Polynomial()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1Types::Polynomial<Type>::convertTimeBase(const Time& t)
-{
-    forAll(coeffs_, i)
-    {
-        Type value = coeffs_[i].first();
-        for (direction cmpt = 0; cmpt < pTraits<Type>::nComponents; cmpt++)
-        {
-            setComponent(coeffs_[i].first(), cmpt) =
-                t.userTimeToTime(component(value, cmpt));
-        }
-    }
-}
-
-
-template<class Type>
-Type Foam::Function1Types::Polynomial<Type>::value(const scalar x) const
+Type Foam::Function1s::Polynomial<Type>::value(const scalar x) const
 {
     Type y(Zero);
     forAll(coeffs_, i)
@@ -161,7 +146,7 @@ Type Foam::Function1Types::Polynomial<Type>::value(const scalar x) const
 
 
 template<class Type>
-Type Foam::Function1Types::Polynomial<Type>::integrate
+Type Foam::Function1s::Polynomial<Type>::integrate
 (
     const scalar x1,
     const scalar x2
@@ -199,7 +184,7 @@ Type Foam::Function1Types::Polynomial<Type>::integrate
 
 
 template<class Type>
-void Foam::Function1Types::Polynomial<Type>::writeData(Ostream& os) const
+void Foam::Function1s::Polynomial<Type>::writeData(Ostream& os) const
 {
     Function1<Type>::writeData(os);
 

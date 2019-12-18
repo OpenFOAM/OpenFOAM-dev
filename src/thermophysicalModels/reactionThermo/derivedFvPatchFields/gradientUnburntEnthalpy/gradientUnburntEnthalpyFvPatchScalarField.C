@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,17 +104,16 @@ void Foam::gradientUnburntEnthalpyFvPatchScalarField::updateCoeffs()
 
     const label patchi = patch().index();
 
-    const scalarField& pw = thermo.p().boundaryField()[patchi];
     fvPatchScalarField& Tw =
         const_cast<fvPatchScalarField&>(thermo.Tu().boundaryField()[patchi]);
 
     Tw.evaluate();
 
-    gradient() = thermo.Cp(pw, Tw, patchi)*Tw.snGrad()
+    gradient() = thermo.Cp(Tw, patchi)*Tw.snGrad()
       + patch().deltaCoeffs()*
         (
-            thermo.heu(pw, Tw, patchi)
-          - thermo.heu(pw, Tw, patch().faceCells())
+            thermo.heu(Tw, patchi)
+          - thermo.heu(Tw, patch().faceCells())
         );
 
     fixedGradientFvPatchScalarField::updateCoeffs();

@@ -10,11 +10,27 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "constant";
+    location    "constant/solid";
     object      radiationProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-radiationModel  none;
+radiation       on;
+
+radiationModel  opaqueSolid;
+
+absorptionEmissionModel constant;
+
+constantCoeffs
+{
+    absorptivity    0; // opaque
+    emissivity      0.1;
+    E               0;
+}
+
+scatterModel    none;
+
+sootModel       none;
+
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,7 @@ class turbulentIntensityKineticEnergyInletFvPatchScalarField
 :
     public inletOutletFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Turbulent intensity as fraction of mean velocity
         scalar intensity_;
@@ -130,7 +130,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         turbulentIntensityKineticEnergyInletFvPatchScalarField
         (
             const turbulentIntensityKineticEnergyInletFvPatchScalarField&
@@ -148,7 +148,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         turbulentIntensityKineticEnergyInletFvPatchScalarField
         (
             const turbulentIntensityKineticEnergyInletFvPatchScalarField&,
@@ -172,7 +172,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

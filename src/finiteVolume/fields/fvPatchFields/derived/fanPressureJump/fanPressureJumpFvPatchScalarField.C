@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,8 +204,8 @@ void Foam::fanPressureJumpFvPatchScalarField::write(Ostream& os) const
 {
     fixedJumpFvPatchScalarField::write(os);
 
-    if (jumpTable_.valid()) jumpTable_->writeData(os);
-    if (fanCurve_.valid()) fanCurve_->writeData(os);
+    if (jumpTable_.valid()) writeEntry(os, jumpTable_());
+    if (fanCurve_.valid()) writeEntry(os, fanCurve_());
 
     writeEntryIfDifferent<Switch>(os, "reverse", false, reverse_);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);

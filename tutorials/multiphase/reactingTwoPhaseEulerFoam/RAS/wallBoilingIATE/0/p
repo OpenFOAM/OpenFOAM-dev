@@ -15,35 +15,34 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [1 -1 -2 0 0 0 0];
+dimensions      [ 1 -1 -2 0 0 0 0 ];
 
-internalField   uniform 100000;
+internalField   uniform 2.62e+06;
 
 boundaryField
 {
     inlet
     {
         type            calculated;
-        value           uniform 100000;
+        value           $internalField;
     }
     outlet
     {
         type            calculated;
-        value           uniform 100000;
+        value           $internalField;
     }
-    wall1
+    wall
     {
         type            calculated;
-        value           uniform 100000;
+        value           $internalField;
     }
-    wall2
+    front
     {
-        type            calculated;
-        value           uniform 100000;
+        type            wedge;
     }
-    defaultFaces
+    back
     {
-        type            empty;
+        type            wedge;
     }
 }
 

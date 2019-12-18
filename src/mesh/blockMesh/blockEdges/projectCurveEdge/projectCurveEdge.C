@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,11 +147,12 @@ Foam::projectCurveEdge::position(const scalarList& lambdas) const
 
     // Upper limit for number of iterations
     const label maxIter = 10;
+
     // Residual tolerance
     const scalar relTol = 0.1;
     const scalar absTol = 1e-4;
 
-    scalar initialResidual = 0.0;
+    scalar initialResidual = 0;
 
     for (label iter = 0; iter < maxIter; iter++)
     {
@@ -174,7 +175,7 @@ Foam::projectCurveEdge::position(const scalarList& lambdas) const
             {
                 points[0] = startPt;
             }
-            if (lambdas.last() > 1.0-small)
+            if (lambdas.last() > 1 - small)
             {
                 points.last() = endPt;
             }
@@ -191,10 +192,11 @@ Foam::projectCurveEdge::position(const scalarList& lambdas) const
         // Calculate lambdas (normalised coordinate along edge)
         scalarField projLambdas(points.size());
         {
-            projLambdas[0] = 0.0;
+            projLambdas[0] = 0;
             for (label i = 1; i < points.size(); i++)
             {
-                projLambdas[i] = projLambdas[i-1] + mag(points[i]-points[i-1]);
+                projLambdas[i] =
+                    projLambdas[i-1] + mag(points[i] - points[i-1]);
             }
             projLambdas /= projLambdas.last();
         }
@@ -214,10 +216,10 @@ Foam::projectCurveEdge::position(const scalarList& lambdas) const
             {
                 predicted += weights[indexi]*points[indices[indexi]];
             }
-            residual[i] = predicted-points[i];
+            residual[i] = predicted - points[i];
         }
 
-        scalar scalarResidual = sum(mag(residual));
+        const scalar scalarResidual = sum(mag(residual));
 
         if (debug)
         {

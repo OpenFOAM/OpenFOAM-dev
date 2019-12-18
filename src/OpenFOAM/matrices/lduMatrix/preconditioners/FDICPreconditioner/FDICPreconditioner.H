@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,21 +54,12 @@ class FDICPreconditioner
 :
     public lduMatrix::preconditioner
 {
-    // Private data
+    // Private Data
 
         //- The reciprocal preconditioned diagonal
         scalarField rD_;
         scalarField rDuUpper_;
         scalarField rDlUpper_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        FDICPreconditioner(const FDICPreconditioner&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const FDICPreconditioner&);
 
 
 public:
@@ -86,6 +77,9 @@ public:
             const dictionary& solverControlsUnused
         );
 
+        //- Disallow default bitwise copy construction
+        FDICPreconditioner(const FDICPreconditioner&) = delete;
+
 
     //- Destructor
     virtual ~FDICPreconditioner()
@@ -101,6 +95,12 @@ public:
             const scalarField& rA,
             const direction cmpt=0
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const FDICPreconditioner&) = delete;
 };
 
 

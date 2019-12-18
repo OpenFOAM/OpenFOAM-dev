@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Usage
     time varying functions.
 
 See also
-    Foam::Function1Types
+    Foam::Function1s
     Foam::uniformFixedValueFvPatchField
     Foam::totalPressureFvPatchField
 
@@ -80,7 +80,7 @@ class uniformTotalPressureFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Name of the velocity field
         word UName_;
@@ -134,7 +134,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         uniformTotalPressureFvPatchScalarField
         (
             const uniformTotalPressureFvPatchScalarField&
@@ -149,7 +149,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         uniformTotalPressureFvPatchScalarField
         (
             const uniformTotalPressureFvPatchScalarField&,
@@ -169,7 +169,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

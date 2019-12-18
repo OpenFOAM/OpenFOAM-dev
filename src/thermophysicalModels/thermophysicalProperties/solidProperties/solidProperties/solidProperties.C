@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,16 +55,16 @@ Foam::solidProperties::solidProperties
 
 Foam::solidProperties::solidProperties(const dictionary& dict)
 :
-    rho_(readScalar(dict.lookup("rho"))),
-    Cp_(readScalar(dict.lookup("Cp"))),
+    rho_(dict.lookup<scalar>("rho")),
+    Cp_(dict.lookup<scalar>("Cp")),
     kappa_
     (
         dict.found("K")
-      ? readScalar(dict.lookup("K"))
-      : readScalar(dict.lookup("kappa"))
+      ? dict.lookup<scalar>("K")
+      : dict.lookup<scalar>("kappa")
     ),
-    Hf_(readScalar(dict.lookup("Hf"))),
-    emissivity_(readScalar(dict.lookup("emissivity")))
+    Hf_(dict.lookup<scalar>("Hf")),
+    emissivity_(dict.lookup<scalar>("emissivity"))
 {}
 
 
@@ -81,7 +81,7 @@ void Foam::solidProperties::readIfPresent(const dictionary& dict)
 }
 
 
-void Foam::solidProperties::writeData(Ostream& os) const
+void Foam::solidProperties::write(Ostream& os) const
 {
     os  << rho_ << token::SPACE
         << Cp_ << token::SPACE
@@ -95,7 +95,7 @@ void Foam::solidProperties::writeData(Ostream& os) const
 
 Foam::Ostream& Foam::operator<<(Ostream& os, const solidProperties& s)
 {
-    s.writeData(os);
+    s.write(os);
     return os;
 }
 

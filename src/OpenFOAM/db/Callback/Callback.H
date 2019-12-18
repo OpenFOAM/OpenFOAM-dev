@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,16 +53,10 @@ class Callback
 :
     public CallbackRegistry<CallbackType>::link
 {
-    // Private data
+    // Private Data
 
         //- CallbackRegistry reference
         CallbackRegistry<CallbackType>& cbr_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const Callback<CallbackType>&);
 
 
 public:
@@ -72,7 +66,7 @@ public:
         //- Construct and register with CallbackRegistry
         Callback(CallbackRegistry<CallbackType>&);
 
-        //- Construct as copy
+        //- Copy constructor
         Callback(const Callback<CallbackType>&);
 
 
@@ -80,7 +74,7 @@ public:
     virtual ~Callback();
 
 
-    // Member functions
+    // Member Functions
 
         // Registration
 
@@ -89,6 +83,12 @@ public:
 
             //- Check-out Callback from CallbackRegistry
             bool checkOut();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Callback<CallbackType>&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ protected:
     // Protected data
 
         //- Density field [kg/m^3]
-        //  Named 'rhoThermo' to avoid (potential) conflict with solver density
+        //  Named 'thermo:rho' to avoid (potential) conflict with solver density
         volScalarField rho_;
 
         //- Compressibility [s^2/m^2]
@@ -120,7 +120,7 @@ public:
     virtual ~rhoThermo();
 
 
-    // Member functions
+    // Member Functions
 
         // Fields derived from thermodynamic state variables
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::blockVertices::projectVertex
 
 Description
-    Projects the vertex onto the selected surfacees of the
+    Projects the vertex onto the selected surfaces of the
     geometry provided as a searchableSurfaces object.
 
 SourceFiles
@@ -53,21 +53,12 @@ class projectVertex
 :
     public pointVertex
 {
-    // Private data
+    // Private Data
 
         const searchableSurfaces& geometry_;
 
         //- The indices of surfaces onto which the points are projected
         labelList surfaces_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        projectVertex(const projectVertex&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const projectVertex&);
 
 
 public:
@@ -87,6 +78,9 @@ public:
             Istream&
         );
 
+        //- Disallow default bitwise copy construction
+        projectVertex(const projectVertex&) = delete;
+
 
     //- Destructor
     virtual ~projectVertex()
@@ -97,6 +91,12 @@ public:
 
         //- Project the given points onto the surface
         virtual operator point() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const projectVertex&) = delete;
 };
 
 

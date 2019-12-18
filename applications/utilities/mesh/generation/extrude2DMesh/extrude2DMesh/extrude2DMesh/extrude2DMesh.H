@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ class polyBoundaryMesh;
 
 class extrude2DMesh
 {
-    // Private data
+    // Private Data
 
         //- Reference to 2D mesh
         polyMesh& mesh_;
@@ -87,11 +87,6 @@ class extrude2DMesh
         //- Find extrusion direction
         // void findExtrudeDirection();
 
-        //- Disallow default bitwise copy construct
-        extrude2DMesh(const extrude2DMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const extrude2DMesh&);
 
 public:
 
@@ -106,6 +101,9 @@ public:
             const dictionary& dict,
             const extrudeModel& model
         );
+
+        //- Disallow default bitwise copy construction
+        extrude2DMesh(const extrude2DMesh&) = delete;
 
 
     //- Destructor
@@ -138,6 +136,11 @@ public:
             return backPatchi_;
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const extrude2DMesh&) = delete;
 };
 
 

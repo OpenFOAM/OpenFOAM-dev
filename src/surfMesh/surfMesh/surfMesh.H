@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class surfMesh
 :
     public  surfaceRegistry,
     private MeshedSurfaceIOAllocator,
-    public  PrimitivePatch<face, ::Foam::UList, ::Foam::SubField<point>, point>
+    public  PrimitivePatch<::Foam::UList<face>, ::Foam::SubField<point>>
 {
     // friends
     template<class Face> friend class MeshedSurface;
@@ -81,27 +81,12 @@ public:
 
 private:
 
-    // Private typedefs
+    // Private Typedefs
 
         typedef MeshedSurfaceIOAllocator Allocator;
 
-        typedef PrimitivePatch
-        <
-            face,
-            ::Foam::UList,
-            ::Foam::SubField<point>,
-            point
-        >
-        MeshReference;
-
-
-    // Private Member Functions
-
-        //- Disallow construct as copy
-        surfMesh(const surfMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfMesh&);
+        typedef PrimitivePatch<::Foam::UList<face>, ::Foam::SubField<point>>
+            MeshReference;
 
 
 protected:
@@ -138,7 +123,7 @@ protected:
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
     typedef surfMesh Mesh;
 
@@ -162,8 +147,8 @@ public:
         surfMesh
         (
             const IOobject&,
-            const Xfer<pointField>&,
-            const Xfer<faceList>&,
+            pointField&&,
+            faceList&&,
             const word& surfName=""
         );
 
@@ -171,9 +156,12 @@ public:
         surfMesh
         (
             const IOobject&,
-            const Xfer<MeshedSurface<face>>& surf,
+            MeshedSurface<face>&& surf,
             const word& surfName=""
         );
+
+        //- Disallow default bitwise copy construction
+        surfMesh(const surfMesh&);
 
 
     //- Destructor
@@ -248,9 +236,9 @@ public:
             //- Reset mesh primitive data.
             void resetPrimitives
             (
-                const Xfer<pointField>& points,
-                const Xfer<faceList>& faces,
-                const Xfer<surfZoneList>& zones,
+                pointField&& points,
+                faceList&& faces,
+                surfZoneList&& zones,
                 const bool validate = true
             );
 
@@ -270,9 +258,6 @@ public:
 
         //  Storage management
 
-            //- Transfer contents to the Xfer container as a MeshedSurface
-            Xfer<MeshedSurface<face>> xfer();
-
             //- Clear geometry
             void clearGeom();
 
@@ -290,7 +275,14 @@ public:
 
             //- Remove all files from mesh instance()
             void removeFiles() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfMesh&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

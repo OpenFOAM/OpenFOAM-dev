@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ Foam::valuePointPatchField<Type>::valuePointPatchField
 )
 :
     pointPatchField<Type>(ptf, p, iF, mapper),
-    Field<Type>(ptf, mapper)
+    Field<Type>(mapper(ptf))
 {}
 
 
@@ -124,7 +124,7 @@ void Foam::valuePointPatchField<Type>::autoMap
     const pointPatchFieldMapper& m
 )
 {
-    Field<Type>::autoMap(m);
+    m(*this, *this);
 }
 
 
@@ -179,7 +179,7 @@ template<class Type>
 void Foam::valuePointPatchField<Type>::write(Ostream& os) const
 {
     pointPatchField<Type>::write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", static_cast<const Field<Type>&>(*this));
 }
 
 

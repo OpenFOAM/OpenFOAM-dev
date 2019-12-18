@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ class twoPhaseSystem
 :
     public IOdictionary
 {
-    // Private data
+    // Private Data
 
         //- Reference to the mesh
         const fvMesh& mesh_;
@@ -117,7 +117,7 @@ class twoPhaseSystem
             turbulentDispersion_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Return the mixture flux
         tmp<surfaceScalarField> calcPhi() const;

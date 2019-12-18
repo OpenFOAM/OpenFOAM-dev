@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,22 +73,17 @@ mappedConvectiveHeatTransfer::mappedConvectiveHeatTransfer
     (
         IOobject
         (
-            htcConvPrimary_.name(), // must have same name as above for mapping
+            htcConvPrimary_.name(),
             film.time().timeName(),
             film.regionMesh(),
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
         film.regionMesh(),
-        dimensionedScalar(dimMass/pow3(dimTime)/dimTemperature, 0),
-        film.mappedPushedFieldPatchTypes<scalar>()
+        dimensionedScalar(dimMass/pow3(dimTime)/dimTemperature, 0)
     )
 {
-    // Update the primary-side convective heat transfer coefficient
-    htcConvPrimary_.correctBoundaryConditions();
-
-    // Pull the data from the primary region via direct mapped BCs
-    htcConvFilm_.correctBoundaryConditions();
+    correct();
 }
 
 
@@ -105,12 +100,13 @@ void mappedConvectiveHeatTransfer::correct()
     // Update the primary-side convective heat transfer coefficient
     htcConvPrimary_.correctBoundaryConditions();
 
-    // Pull the data from the primary region via direct mapped BCs
-    htcConvFilm_.correctBoundaryConditions();
+    // Map the primary-side convective heat transfer coefficient
+    // to the region internal field
+    film().toRegion(htcConvFilm_, htcConvPrimary_.boundaryField());
 }
 
 
-tmp<volScalarField> mappedConvectiveHeatTransfer::h() const
+tmp<volScalarField::Internal> mappedConvectiveHeatTransfer::h() const
 {
     return htcConvFilm_;
 }

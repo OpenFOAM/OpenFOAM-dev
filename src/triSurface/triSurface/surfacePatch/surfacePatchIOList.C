@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,8 +78,8 @@ Foam::surfacePatchIOList::surfacePatchIOList
         {
             const dictionary& dict = patchEntries[patchi].dict();
 
-            label patchSize = readLabel(dict.lookup("nFaces"));
-            label startFacei = readLabel(dict.lookup("startFace"));
+            label patchSize = dict.lookup<label>("nFaces");
+            label startFacei = dict.lookup<label>("startFace");
 
             patches[patchi] =
                 surfacePatch

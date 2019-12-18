@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,18 +60,13 @@ localEulerDdtScheme<Type>::fvcDdt
     const dimensioned<Type>& dt
 )
 {
-    IOobject ddtIOobject
-    (
-        "ddt(" + dt.name() + ')',
-        mesh().time().timeName(),
-        mesh()
-    );
+    const word ddtName("ddt(" + dt.name() + ')');
 
     return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        GeometricField<Type, fvPatchField, volMesh>::New
         (
-            ddtIOobject,
+            ddtName,
             mesh(),
             dimensioned<Type>
             (
@@ -94,18 +89,13 @@ localEulerDdtScheme<Type>::fvcDdt
 {
     const volScalarField& rDeltaT = localRDeltaT();
 
-    IOobject ddtIOobject
-    (
-        "ddt(" + vf.name() + ')',
-        mesh().time().timeName(),
-        mesh()
-    );
+    const word ddtName("ddt(" + vf.name() + ')');
 
     return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        GeometricField<Type, fvPatchField, volMesh>::New
         (
-            ddtIOobject,
+            ddtName,
             rDeltaT*(vf - vf.oldTime())
         )
     );
@@ -122,18 +112,13 @@ localEulerDdtScheme<Type>::fvcDdt
 {
     const volScalarField& rDeltaT = localRDeltaT();
 
-    IOobject ddtIOobject
-    (
-        "ddt(" + rho.name() + ',' + vf.name() + ')',
-        mesh().time().timeName(),
-        mesh()
-    );
+    const word ddtName("ddt(" + rho.name() + ',' + vf.name() + ')');
 
     return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        GeometricField<Type, fvPatchField, volMesh>::New
         (
-            ddtIOobject,
+            ddtName,
             rDeltaT*rho*(vf - vf.oldTime())
         )
     );
@@ -150,18 +135,13 @@ localEulerDdtScheme<Type>::fvcDdt
 {
     const volScalarField& rDeltaT = localRDeltaT();
 
-    IOobject ddtIOobject
-    (
-        "ddt(" + rho.name() + ',' + vf.name() + ')',
-        mesh().time().timeName(),
-        mesh()
-    );
+    const word ddtName("ddt(" + rho.name() + ',' + vf.name() + ')');
 
     return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        GeometricField<Type, fvPatchField, volMesh>::New
         (
-            ddtIOobject,
+            ddtName,
             rDeltaT*(rho*vf - rho.oldTime()*vf.oldTime())
         )
     );
@@ -179,18 +159,13 @@ localEulerDdtScheme<Type>::fvcDdt
 {
     const volScalarField& rDeltaT = localRDeltaT();
 
-    IOobject ddtIOobject
-    (
-        "ddt("+alpha.name()+','+rho.name()+','+vf.name()+')',
-        mesh().time().timeName(),
-        mesh()
-    );
+    const word ddtName("ddt("+alpha.name()+','+rho.name()+','+vf.name()+')');
 
     return tmp<GeometricField<Type, fvPatchField, volMesh>>
     (
-        new GeometricField<Type, fvPatchField, volMesh>
+        GeometricField<Type, fvPatchField, volMesh>::New
         (
-            ddtIOobject,
+            ddtName,
             rDeltaT
            *(
                alpha*rho*vf
@@ -210,20 +185,12 @@ localEulerDdtScheme<Type>::fvcDdt
 {
     const surfaceScalarField& rDeltaT = localRDeltaTf();
 
-    IOobject ddtIOobject
-    (
-        "ddt("+sf.name()+')',
-        mesh().time().timeName(),
-        mesh()
-    );
+    const word ddtName("ddt("+sf.name()+')');
 
-    return tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+    return GeometricField<Type, fvsPatchField, surfaceMesh>::New
     (
-        new GeometricField<Type, fvsPatchField, surfaceMesh>
-        (
-            ddtIOobject,
-            rDeltaT*(sf - sf.oldTime())
-        )
+        ddtName,
+        rDeltaT*(sf - sf.oldTime())
     );
 }
 
@@ -347,6 +314,8 @@ localEulerDdtScheme<Type>::fvmDdt
 }
 
 
+/*
+// Courant number limited formulation
 template<class Type>
 tmp<surfaceScalarField> localEulerDdtScheme<Type>::fvcDdtPhiCoeff
 (
@@ -355,6 +324,7 @@ tmp<surfaceScalarField> localEulerDdtScheme<Type>::fvcDdtPhiCoeff
     const fluxFieldType& phiCorr
 )
 {
+    // Courant number limited formulation
     tmp<surfaceScalarField> tddtCouplingCoeff = scalar(1)
       - min
         (
@@ -391,6 +361,7 @@ tmp<surfaceScalarField> localEulerDdtScheme<Type>::fvcDdtPhiCoeff
 
     return tddtCouplingCoeff;
 }
+*/
 
 
 template<class Type>

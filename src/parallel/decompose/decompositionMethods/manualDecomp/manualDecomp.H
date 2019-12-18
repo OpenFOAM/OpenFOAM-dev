@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,16 +48,9 @@ class manualDecomp
 :
     public decompositionMethod
 {
-    // Private data
+    // Private Data
 
         fileName decompDataFile_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const manualDecomp&);
-        manualDecomp(const manualDecomp&);
 
 
 public:
@@ -70,6 +63,10 @@ public:
 
         //- Construct given the decomposition dictionary
         manualDecomp(const dictionary& decompositionDict);
+
+        //- Disallow default bitwise copy construction
+        manualDecomp(const manualDecomp&) = delete;
+
 
     //- Destructor
     virtual ~manualDecomp()
@@ -112,6 +109,11 @@ public:
             return labelList(0);
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const manualDecomp&) = delete;
 };
 
 

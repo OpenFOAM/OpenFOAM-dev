@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class cyclicAMIPointPatchField
 :
     public coupledPointPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the cyclicAMI patch
         const cyclicAMIPointPatch& cyclicAMIPatch_;
@@ -170,7 +170,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Constraint handling
 
@@ -207,6 +207,10 @@ public:
 
 
         // Evaluation functions
+
+            //- Return true if coupled. Note that the underlying patch
+            //  is not coupled() - the points don't align.
+            virtual bool coupled() const;
 
             //- Evaluate the patch field
             virtual void evaluate

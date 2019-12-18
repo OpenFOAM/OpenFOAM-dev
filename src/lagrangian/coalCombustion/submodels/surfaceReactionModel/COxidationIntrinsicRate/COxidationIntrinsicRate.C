@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,13 +38,13 @@ Foam::COxidationIntrinsicRate<CloudType>::COxidationIntrinsicRate
 )
 :
     SurfaceReactionModel<CloudType>(dict, owner, typeName),
-    Sb_(readScalar(this->coeffDict().lookup("Sb"))),
-    C1_(readScalar(this->coeffDict().lookup("C1"))),
-    rMean_(readScalar(this->coeffDict().lookup("rMean"))),
-    theta_(readScalar(this->coeffDict().lookup("theta"))),
-    Ai_(readScalar(this->coeffDict().lookup("Ai"))),
-    Ei_(readScalar(this->coeffDict().lookup("Ei"))),
-    Ag_(readScalar(this->coeffDict().lookup("Ag"))),
+    Sb_(this->coeffDict().template lookup<scalar>("Sb")),
+    C1_(this->coeffDict().template lookup<scalar>("C1")),
+    rMean_(this->coeffDict().template lookup<scalar>("rMean")),
+    theta_(this->coeffDict().template lookup<scalar>("theta")),
+    Ai_(this->coeffDict().template lookup<scalar>("Ai")),
+    Ei_(this->coeffDict().template lookup<scalar>("Ei")),
+    Ag_(this->coeffDict().template lookup<scalar>("Ag")),
     tau_(this->coeffDict().lookupOrDefault("tau", sqrt(2.0))),
     CsLocalId_(-1),
     O2GlobalId_(owner.composition().carrierId("O2")),
@@ -154,16 +154,16 @@ Foam::scalar Foam::COxidationIntrinsicRate<CloudType>::calculate
         return 0.0;
     }
 
-    // Diffusion rate coefficient [m2/s]
+    // Diffusion rate coefficient [m^2/s]
     const scalar D0 = C1_/d*pow(0.5*(T + Tc), 0.75);
 
-    // Apparent density of pyrolysis char [kg/m3]
+    // Apparent density of pyrolysis char [kg/m^3]
     const scalar rhop = 6.0*mass/(constant::mathematical::pi*pow3(d));
 
-    // Knusden diffusion coefficient [m2/s]
+    // Knusden diffusion coefficient [m^2/s]
     const scalar Dkn = 97.0*rMean_*sqrt(T/WO2_);
 
-    // Effective diffusion [m2/s]
+    // Effective diffusion [m^2/s]
     const scalar De = theta_/sqr(tau_)/(1.0/Dkn + 1/D0);
 
     // Cell carrier phase O2 species density [kg/m^3]
@@ -185,7 +185,7 @@ Foam::scalar Foam::COxidationIntrinsicRate<CloudType>::calculate
     // Chemical rate [kmol/m2/s]
     const scalar R = eta*d/6.0*rhop*Ag_*ki;
 
-    // Particle surface area [m2]
+    // Particle surface area [m^2]
     const scalar Ap = constant::mathematical::pi*sqr(d);
 
     // Change in C mass [kg]

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,8 +76,10 @@ public:
 
         static const NamedEnum<fileState, 3> fileStateNames_;
 
+
 private:
-    // Private data
+
+    // Private Data
 
         //- Whether to use inotify (requires -DFOAM_USE_INOTIFY, see above)
         const bool useInotify_;
@@ -103,12 +105,6 @@ private:
         //- Update localState_ from any events.
         void checkFiles() const;
 
-        //- Disallow default bitwise copy construct
-        fileMonitor(const fileMonitor&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fileMonitor&);
-
 
 public:
 
@@ -119,6 +115,9 @@ public:
 
         //- Construct null
         fileMonitor(const bool useInotify);
+
+        //- Disallow default bitwise copy construction
+        fileMonitor(const fileMonitor&) = delete;
 
 
     //- Destructor
@@ -148,6 +147,12 @@ public:
 
         //- Reset state (e.g. after having read it) using handle
         void setUnmodified(const label watchFd);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fileMonitor&) = delete;
 };
 
 

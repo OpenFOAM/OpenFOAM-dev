@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,11 +64,7 @@ class cellShapeControl
 :
     public dictionary
 {
-    // Private data
-
-        const Time& runTime_;
-
-        const searchableSurfaces& allGeometry_;
+    // Private Data
 
         const conformationSurfaces& geometryToConformTo_;
 
@@ -81,15 +77,6 @@ class cellShapeControl
         cellAspectRatioControl aspectRatio_;
 
         cellSizeAndAlignmentControls sizeAndAlignment_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cellShapeControl(const cellShapeControl&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellShapeControl&);
 
 
 public:
@@ -109,6 +96,9 @@ public:
             const searchableSurfaces& allGeometry,
             const conformationSurfaces& geometryToConformTo
         );
+
+        //- Disallow default bitwise copy construction
+        cellShapeControl(const cellShapeControl&) = delete;
 
 
     //- Destructor
@@ -148,6 +138,12 @@ public:
                 scalar& size,
                 tensor& alignment
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellShapeControl&) = delete;
 };
 
 

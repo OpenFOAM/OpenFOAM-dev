@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,25 +22,23 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::Sine
+    Foam::Function1s::Sine
 
 Description
     Templated sine function with support for an offset level.
 
         \f[
-            a sin(2 \pi f (t - t_0)) s + l
+            a sin(2 \pi f (x - x_0)) + l
         \f]
 
     where
 
     \vartable
-        symbol  | Description       | Data type
-        a       | Amplitude         | Function1<scalar>
-        f       | Frequency [1/s]   | Function1<scalar>
-        s       | Type scale factor | Function1<Type>
-        l       | Type offset level | Function1<Type>
-        t_0     | Start time [s]    | scalar
-        t       | Time [s]          | scalar
+        Symbol  | Description  | Data type       | Default
+        a       | Amplitude    | Function1<Type> |
+        f       | Frequency    | scalar          |
+        x_0     | Start        | scalar          | 0
+        l       | Offset level | Function1<Type> |
     \endvartable
 
     Example for a scalar:
@@ -48,9 +46,9 @@ Description
         <entryName> sine;
         <entryName>Coeffs
         {
+            amplitude 2e-7;
             frequency 10;
-            amplitude 0.1;
-            scale     2e-6;
+            start     0;
             level     2e-6;
         }
     \endverbatim
@@ -60,9 +58,9 @@ Description
         <entryName> sine;
         <entryName>Coeffs
         {
+            amplitude (1 0.1 0);
             frequency 10;
-            amplitude 1;
-            scale     (1 0.1 0);
+            start     0;
             level     (10 1 0);
         }
     \endverbatim
@@ -81,7 +79,7 @@ SourceFiles
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -91,33 +89,30 @@ namespace Function1Types
 template<class Type>
 class Sine
 :
-    public Function1<Type>
+    public FieldFunction1<Type, Sine<Type>>
 {
-    // Private data
+    // Private Data
 
-        //- Start-time for the sin function
-        scalar t0_;
+        //- Amplitude of the sine function
+        autoPtr<Function1<Type>> amplitude_;
 
-        //- Scalar amplitude of the sin function
-        autoPtr<Function1<scalar>> amplitude_;
+        //- Frequency of the sine function
+        scalar frequency_;
 
-        //- Frequency of the sin function
-        autoPtr<Function1<scalar>> frequency_;
+        //- Argument offset
+        scalar start_;
 
-        //- Scaling factor of the sin function
-        autoPtr<Function1<Type>> scale_;
-
-        //- Level to which the sin function is added
+        //- Level to which the sine function is added
         autoPtr<Function1<Type>> level_;
+
+        //- Is this function integrable?
+        bool integrable_;
 
 
     // Private Member Functions
 
         //- Read the coefficients from the given dictionary
         void read(const dictionary& coeffs);
-
-        //- Disallow default bitwise assignment
-        void operator=(const Sine<Type>&);
 
 
 public:
@@ -145,17 +140,26 @@ public:
 
     // Member Functions
 
-        //- Return value for time t
-        virtual inline Type value(const scalar t) const;
+        //- Return value
+        virtual inline Type value(const scalar x) const;
+
+        //- Integrate between two values
+        virtual inline Type integrate(const scalar x1, const scalar x2) const;
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Sine<Type>&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

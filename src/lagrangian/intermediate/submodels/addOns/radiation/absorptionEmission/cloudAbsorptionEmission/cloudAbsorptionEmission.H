@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::radiation::cloudAbsorptionEmission
+    Foam::radiationModels::absorptionEmissionModels::cloud
 
 Description
     Retrieves absorption/emission data from a cloud object
@@ -41,18 +41,20 @@ SourceFiles
 
 namespace Foam
 {
-namespace radiation
+namespace radiationModels
+{
+namespace absorptionEmissionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class cloudAbsorptionEmission Declaration
+                            Class cloud Declaration
 \*---------------------------------------------------------------------------*/
 
-class cloudAbsorptionEmission
+class cloud
 :
     public absorptionEmissionModel
 {
-    // Private data
+    // Private Data
 
         //- Coefficients dictionary
         dictionary coeffsDict_;
@@ -64,45 +66,36 @@ class cloudAbsorptionEmission
 public:
 
     //- Runtime type information
-    TypeName("cloudAbsorptionEmission");
+    TypeName("cloud");
 
 
     // Constructors
 
         //- Construct from components
-        cloudAbsorptionEmission(const dictionary& dict, const fvMesh& mesh);
+        cloud(const dictionary& dict, const fvMesh& mesh);
 
 
     //- Destructor
-    virtual ~cloudAbsorptionEmission();
+    virtual ~cloud();
 
 
-    // Member Operators
+    // Member Functions
 
-        // Access
+        //- Absorption coefficient for dispersed phase
+        virtual tmp<volScalarField> aDisp(const label bandI = 0) const;
 
-            // Absorption coefficient
+        //- Emission coefficient for dispersed phase
+        virtual tmp<volScalarField> eDisp(const label bandI = 0) const;
 
-                //- Absorption coefficient for dispersed phase
-                virtual tmp<volScalarField> aDisp(const label bandI = 0) const;
-
-
-            // Emission coefficient
-
-                //- Emission coefficient for dispersed phase
-                virtual tmp<volScalarField> eDisp(const label bandI = 0) const;
-
-
-            // Emission contribution
-
-                //- Return emission contribution for dispersed phase
-                virtual tmp<volScalarField> EDisp(const label bandI = 0) const;
+        //- Return emission contribution for dispersed phase
+        virtual tmp<volScalarField> EDisp(const label bandI = 0) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace radiation
+} // End namespace absorptionEmissionModels
+} // End namespace radiationModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

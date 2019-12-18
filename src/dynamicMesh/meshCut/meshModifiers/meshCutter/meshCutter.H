@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -136,7 +136,7 @@ class meshCutter
 :
     public edgeVertex
 {
-    // Private data
+    // Private Data
 
         //- Cells added in last setRefinement. Per splitcell label of added
         //  cell
@@ -256,14 +256,6 @@ class meshCutter
         ) const;
 
 
-
-        //- Disallow default bitwise copy construct
-        meshCutter(const meshCutter&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshCutter&);
-
-
 public:
 
     //- Runtime type information
@@ -274,6 +266,9 @@ public:
 
         //- Construct from mesh
         meshCutter(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        meshCutter(const meshCutter&) = delete;
 
 
     //- Destructor
@@ -311,6 +306,12 @@ public:
             {
                 return addedPoints_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshCutter&) = delete;
 };
 
 

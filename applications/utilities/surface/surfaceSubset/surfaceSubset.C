@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -284,8 +284,8 @@ int main(int argc, char *argv[])
         const dictionary& planeDict = meshSubsetDict.subDict("plane");
 
         const plane pl(planeDict);
-        const scalar distance(readScalar(planeDict.lookup("distance")));
-        const scalar cosAngle(readScalar(planeDict.lookup("cosAngle")));
+        const scalar distance(planeDict.lookup<scalar>("distance"));
+        const scalar cosAngle(planeDict.lookup<scalar>("cosAngle"));
 
         // Select all triangles that are close to the plane and
         // whose normal aligns with the plane as well.

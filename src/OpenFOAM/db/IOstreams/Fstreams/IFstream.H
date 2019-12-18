@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ class IFstreamAllocator
 {
     friend class IFstream;
 
-    // Private data
+    // Private Data
 
         istream* ifPtr_;
         IOstream::compressionType compression_;
@@ -84,7 +84,7 @@ class IFstream
     public IFstreamAllocator,
     public ISstream
 {
-    // Private data
+    // Private Data
 
         fileName pathname_;
 
@@ -109,7 +109,7 @@ public:
     ~IFstream();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -141,7 +141,7 @@ public:
             virtual void print(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         //- Return a non-const reference to const IFstream
         //  Needed for read-constructors where the stream argument is temporary:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,11 +52,6 @@ class IOobjectList
 :
     public HashPtrTable<IOobject>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const IOobjectList&);
-
 
 public:
 
@@ -76,7 +71,7 @@ public:
             bool registerObject = true
         );
 
-        //- Construct as copy
+        //- Copy constructor
         IOobjectList(const IOobjectList&);
 
 
@@ -84,7 +79,7 @@ public:
     ~IOobjectList();
 
 
-    // Member functions
+    // Member Functions
 
         //- Add an IOobject to the list
         bool add(IOobject&);
@@ -115,6 +110,12 @@ public:
 
         //- Return the sorted list of names of the IOobjects of given class
         wordList sortedNames(const word& className) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const IOobjectList&) = delete;
 };
 
 

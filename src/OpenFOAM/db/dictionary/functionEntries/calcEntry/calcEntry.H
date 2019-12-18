@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,6 +57,7 @@ SourceFiles
 
 namespace Foam
 {
+
 class dlLibraryTable;
 
 namespace functionEntries
@@ -70,20 +71,26 @@ class calcEntry
 :
     public functionEntry
 {
-
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        calcEntry(const calcEntry&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const calcEntry&);
+        //- Perform the calculation and return the resulting string
+        static string calc
+        (
+            const dictionary& parentDict,
+            Istream& is
+        );
 
 
 public:
 
     //- Runtime type information
     ClassName("calc");
+
+
+    // Constructors
+
+        //- Disallow default bitwise copy construction
+        calcEntry(const calcEntry&) = delete;
 
 
     // Member Functions
@@ -99,6 +106,11 @@ public:
             Istream&
         );
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const calcEntry&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,17 +71,6 @@ protected:
         scalar refinementFactor_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        surfaceCellSizeFunction(const surfaceCellSizeFunction&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfaceCellSizeFunction&);
-
-
 public:
 
     //- Runtime type information
@@ -115,6 +104,9 @@ public:
             const scalar& defaultCellSize
         );
 
+        //- Disallow default bitwise copy construction
+        surfaceCellSizeFunction(const surfaceCellSizeFunction&) = delete;
+
 
     // Selectors
 
@@ -144,6 +136,12 @@ public:
             const point& pt,
             const label index
         ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfaceCellSizeFunction&) = delete;
 };
 
 

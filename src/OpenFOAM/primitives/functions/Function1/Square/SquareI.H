@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,29 +24,56 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Square.H"
+#include "mathematicalConstants.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-inline Type Foam::Function1Types::Square<Type>::value(const scalar t) const
+inline Type Foam::Function1s::Square<Type>::value(const scalar x) const
 {
-    // Number of waves including fractions
-    scalar waves = frequency_->value(t)*(t - t0_);
+    const scalar markFraction = markSpace_/(1 + markSpace_);
 
-    // Number of complete waves
-    scalar nWaves;
-
-    // Fraction of last incomplete wave
-    scalar waveFrac = std::modf(waves, &nWaves);
-
-    // Mark fraction of a wave
-    scalar markFrac = markSpace_/(1.0 + markSpace_);
+    const scalar phi = frequency_*(x - start_);
+    const scalar fraction = phi - floor(phi);
 
     return
-        amplitude_->value(t)
-       *(waveFrac < markFrac ? 1 : -1)
-       *scale_->value(t)
-      + level_->value(t);
+        amplitude_->value(x)*(fraction < markFraction ? 1 : -1)
+      + level_->value(x);
+}
+
+
+template<class Type>
+inline Type Foam::Function1s::Square<Type>::integrate
+(
+    const scalar x1,
+    const scalar x2
+) const
+{
+    if (!integrable_)
+    {
+        FatalErrorInFunction
+            << "Integration is not defined for " << type() << " functions "
+            << "unless the amplitude is constant"
+            << exit(FatalError);
+    }
+
+    auto integrate0 = [&](const scalar x)
+    {
+        const scalar markFraction = markSpace_/(1 + markSpace_);
+
+        const scalar phi = frequency_*(x - start_);
+        const scalar fraction = phi - floor(phi);
+
+        return
+            (2*amplitude_->value(x)/frequency_)
+           *(
+               markFraction*floor(phi + 1 - markFraction)
+             + fraction*(fraction < markFraction ? 1 : 0)
+             - frequency_/2*x
+            );
+    };
+
+    return integrate0(x2) - integrate0(x1) + level_->integrate(x1, x2);
 }
 
 

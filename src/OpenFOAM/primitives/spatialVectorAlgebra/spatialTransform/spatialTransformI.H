@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -279,6 +279,15 @@ inline spatialTransform Xr(const vector& a, const scalar omega)
 inline spatialTransform Xt(const vector& r)
 {
     return spatialTransform(tensor::I, r);
+}
+
+
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
+
+//- Write the spatial transformation as an entry
+inline void writeEntry(Ostream& os, const spatialTransform& st)
+{
+    os << st;
 }
 
 

@@ -18,7 +18,7 @@ FoamFile
 thermoType
 {
     type            hePsiThermo;
-    mixture         reactingMixture;
+    mixture         multiComponentMixture;
     transport       sutherland;
     thermo          janaf;
     energy          sensibleEnthalpy;
@@ -28,11 +28,6 @@ thermoType
 
 inertSpecie N2;
 
-chemistryReader foamChemistryReader;
-
-foamChemistryFile "$FOAM_CASE/constant/reactions";
-
-foamChemistryThermoFile "$FOAM_CASE/constant/thermo.compressibleGas";
-
+#include "thermo.compressibleGas"
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ Class
 Description
     A messy mesh class which supports the possibility of creating a shapeMesh
     for regular Star meshes (no arbitrary interfaces or collapsed SAMM cells).
-    If any of these special feateres exist, the mesh is created as polyMesh
+    If any of these special features exist, the mesh is created as polyMesh
 
 SourceFiles
     calcPointCells.C
@@ -67,7 +67,7 @@ namespace Foam
 
 class starMesh
 {
-    // Private data
+    // Private Data
 
         //- Name of the case
         fileName casePrefix_;
@@ -185,13 +185,6 @@ class starMesh
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        starMesh(const starMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const starMesh&);
-
-
         //- Read fixed format vertex label
         static label readVtxLabel(IFstream&);
 
@@ -295,6 +288,9 @@ public:
             const scalar scaleFactor
         );
 
+        //- Disallow default bitwise copy construction
+        starMesh(const starMesh&) = delete;
+
 
     //- Destructor
     ~starMesh();
@@ -304,6 +300,12 @@ public:
 
         //- Write mesh
         void writeMesh();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const starMesh&) = delete;
 };
 
 

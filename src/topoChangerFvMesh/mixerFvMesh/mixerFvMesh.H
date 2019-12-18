@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class mixerFvMesh
 :
     public topoChangerFvMesh
 {
-    // Private data
+    // Private Data
 
         //- Motion dictionary
         dictionary motionDict_;
@@ -69,13 +69,6 @@ class mixerFvMesh
 
 
     // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        mixerFvMesh(const mixerFvMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const mixerFvMesh&);
-
 
         //- Add mixer zones and modifiers
         void addZonesAndModifiers();
@@ -98,6 +91,9 @@ public:
         //- Construct from IOobject
         explicit mixerFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        mixerFvMesh(const mixerFvMesh&) = delete;
+
 
     //- Destructor
     virtual ~mixerFvMesh();
@@ -113,6 +109,12 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const mixerFvMesh&) = delete;
 };
 
 

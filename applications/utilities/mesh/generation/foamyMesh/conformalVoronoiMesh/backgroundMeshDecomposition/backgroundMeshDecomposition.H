@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ SourceFiles
 namespace Foam
 {
 
-typedef PrimitivePatch<face, List, const pointField, point> bPatch;
+typedef PrimitivePatch<faceList, const pointField> bPatch;
 typedef treeDataPrimitivePatch<bPatch> treeDataBPatch;
 
 class Time;
@@ -92,7 +92,7 @@ class conformationSurfaces;
 
 class backgroundMeshDecomposition
 {
-    // Private data
+    // Private Data
 
         //- Method details dictionary
         // dictionary coeffsDict_;
@@ -102,9 +102,6 @@ class backgroundMeshDecomposition
 
         //- Reference to surface
         const conformationSurfaces& geometryToConformTo_;
-
-        //- Random number generator
-        Random& rndGen_;
 
         //- Mesh stored on for this processor, specifying the domain that it
         //  is responsible for.
@@ -183,12 +180,6 @@ class backgroundMeshDecomposition
         //- Build the surface patch and search tree
         void buildPatchAndTree();
 
-        //- Disallow default bitwise copy construct
-        backgroundMeshDecomposition(const backgroundMeshDecomposition&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const backgroundMeshDecomposition&);
-
 
 public:
 
@@ -206,6 +197,12 @@ public:
             const conformationSurfaces& geometryToConformTo,
             const dictionary& coeffsDict
         );
+
+        //- Disallow default bitwise copy construction
+        backgroundMeshDecomposition
+        (
+            const backgroundMeshDecomposition&
+        ) = delete;
 
 
     //- Destructor
@@ -294,18 +291,6 @@ public:
             const scalar radiusSqr
         ) const;
 
-//        //- Which processors overlap the given sphere, returns all processors
-//        //  whose boundary patch is touched by the sphere or whom the sphere
-//        //  is inside.  By default this does not return the processor that the
-//        //  query is launched from, it is assumed that the point is on that
-//        //  processor.
-//        labelListList overlapsProcessors
-//        (
-//            const List<point>& centres,
-//            const List<scalar>& radiusSqrs,
-//            const Delaunay& T,
-//            bool includeOwnProcessor
-//        ) const;
 
         // Access
 
@@ -326,6 +311,12 @@ public:
 
             //- Return the current decomposition method
             inline const decompositionMethod& decomposer() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const backgroundMeshDecomposition&) = delete;
 };
 
 

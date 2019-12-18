@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,15 +37,15 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        Ap           | syringe piston area [m2] | yes        |
+        Ap           | syringe piston area [m^2] | yes        |
         Sp           | syringe piston speed [m/s] | yes      |
-        VsI          | initial syringe volume [m3] | yes     |
+        VsI          | initial syringe volume [m^3] | yes     |
         tas          | start of piston acceleration [s] | yes |
         tae          | end of piston acceleration [s] | yes  |
         tds          | start of piston deceleration [s] | yes |
         tde          | end of piston deceleration [s] | yes  |
         psI          | initial syringe pressure [Pa] | yes   |
-        psi          | gas compressibility [m2/s2] | yes     |
+        psi          | gas compressibility [m^2/s^2] | yes     |
         ams          | added (or removed) gas mass [kg] | yes |
     \endtable
 
@@ -94,7 +94,7 @@ class syringePressureFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Syringe piston area
         scalar Ap_;
@@ -184,13 +184,13 @@ public:
             );
         }
 
-        //- Construct as copy
+        //- Copy constructor
         syringePressureFvPatchScalarField
         (
             const syringePressureFvPatchScalarField&
         );
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         syringePressureFvPatchScalarField
         (
             const syringePressureFvPatchScalarField&,
@@ -210,7 +210,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

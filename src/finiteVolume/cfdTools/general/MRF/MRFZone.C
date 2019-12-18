@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -573,16 +573,15 @@ void Foam::MRFZone::writeData(Ostream& os) const
     os  << nl;
     os.write(name_) << nl;
     os  << token::BEGIN_BLOCK << incrIndent << nl;
-    os.writeKeyword("active") << active_ << token::END_STATEMENT << nl;
-    os.writeKeyword("cellZone") << cellZoneName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("origin") << origin_ << token::END_STATEMENT << nl;
-    os.writeKeyword("axis") << axis_ << token::END_STATEMENT << nl;
+    writeEntry(os, "active", active_);
+    writeEntry(os, "cellZone", cellZoneName_);
+    writeEntry(os, "origin", origin_);
+    writeEntry(os, "axis", axis_);
     omega_->writeData(os);
 
     if (excludedPatchNames_.size())
     {
-        os.writeKeyword("nonRotatingPatches") << excludedPatchNames_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "nonRotatingPatches", excludedPatchNames_);
     }
 
     os  << decrIndent << token::END_BLOCK << nl;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ class fvMesh
     public fvSolution,
     public data
 {
-    // Private data
+    // Private Data
 
         //- Boundary mesh
         fvBoundaryMesh boundary_;
@@ -156,16 +156,9 @@ class fvMesh
             void makeCf() const;
 
 
-        //- Disallow construct as copy
-        fvMesh(const fvMesh&);
-
-        //- Disallow assignment
-        void operator=(const fvMesh&);
-
-
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         typedef fvMesh Mesh;
         typedef fvBoundaryMesh BoundaryMesh;
@@ -184,7 +177,7 @@ public:
         fvMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
+            pointField&& points,
             const cellShapeList& shapes,
             const faceListList& boundaryFaces,
             const wordList& boundaryPatchNames,
@@ -199,10 +192,10 @@ public:
         fvMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
-            const Xfer<faceList>& faces,
-            const Xfer<labelList>& allOwner,
-            const Xfer<labelList>& allNeighbour,
+            pointField&& points,
+            faceList&& faces,
+            labelList&& allOwner,
+            labelList&& allNeighbour,
             const bool syncPar = true
         );
 
@@ -211,11 +204,14 @@ public:
         fvMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
-            const Xfer<faceList>& faces,
-            const Xfer<cellList>& cells,
+            pointField&& points,
+            faceList&& faces,
+            cellList&& cells,
             const bool syncPar = true
         );
+
+        //- Disallow default bitwise copy construction
+        fvMesh(const fvMesh&);
 
 
     //- Destructor
@@ -345,6 +341,25 @@ public:
             //- Map all fields in time using given map.
             virtual void mapFields(const mapPolyMesh& mpm);
 
+            //- Add/insert single patch. If validBoundary the new situation
+            //  is consistent across processors.
+            virtual void addPatch
+            (
+                const label insertPatchi,
+                const polyPatch& patch,
+                const dictionary& patchFieldDict,
+                const word& defaultPatchFieldType,
+                const bool validBoundary
+            );
+
+            //- Reorder and trim existing patches. If validBoundary the new
+            //  situation is consistent across processors
+            virtual void reorderPatches
+            (
+                const labelUList& newToOld,
+                const bool validBoundary
+            );
+
             //- Remove boundary patches. Warning: fvPatchFields hold ref to
             //  these fvPatches.
             void removeFvBoundary();
@@ -364,14 +379,17 @@ public:
                 IOstream::streamFormat fmt,
                 IOstream::versionNumber ver,
                 IOstream::compressionType cmp,
-                const bool valid
+                const bool write = true
             ) const;
 
             //- Write mesh using IO settings from time
-            virtual bool write(const bool valid = true) const;
+            virtual bool write(const bool write = true) const;
 
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvMesh&);
 
         bool operator!=(const fvMesh&) const;
         bool operator==(const fvMesh&) const;

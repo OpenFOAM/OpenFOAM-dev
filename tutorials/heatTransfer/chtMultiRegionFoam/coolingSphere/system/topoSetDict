@@ -14,6 +14,7 @@ FoamFile
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#inputSyntax slash;
 
 #include "$FOAM_CASE/system/blockMeshDict"
 
@@ -27,7 +28,7 @@ actions
         sourceInfo
         {
             centre (0 0 0);
-            radius $:geometry.sphere.radius;
+            radius $!geometry/sphere/radius;
         }
     }
     {

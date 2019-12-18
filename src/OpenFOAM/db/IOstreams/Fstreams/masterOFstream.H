@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ class masterOFstream
 :
     public OStringStream
 {
-    // Private data
+    // Private Data
 
         const fileName pathName_;
 
@@ -59,7 +59,7 @@ class masterOFstream
         const bool append_;
 
         //- Should file be written
-        const bool valid_;
+        const bool write_;
 
 
     // Private Member Functions
@@ -80,7 +80,7 @@ public:
             versionNumber version=currentVersion,
             compressionType compression=UNCOMPRESSED,
             const bool append = false,
-            const bool valid = true
+            const bool write = true
         );
 
 

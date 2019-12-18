@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,30 +24,23 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sampledIsoSurface.H"
-#include "dictionary.H"
-#include "volFields.H"
-#include "volPointInterpolation.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvMesh.H"
-#include "isoSurface.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(sampledIsoSurface, 0);
-    addNamedToRunTimeSelectionTable
-    (
-        sampledSurface,
-        sampledIsoSurface,
-        word,
-        isoSurface
-    );
+namespace sampledSurfaces
+{
+    defineTypeNameAndDebug(isoSurface, 0);
+    addToRunTimeSelectionTable(sampledSurface, isoSurface, word);
 }
+}
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-bool Foam::sampledIsoSurface::updateGeometry() const
+bool Foam::sampledSurfaces::isoSurface::updateGeometry() const
 {
     const fvMesh& fvm = static_cast<const fvMesh&>(mesh());
 
@@ -115,19 +108,19 @@ bool Foam::sampledIsoSurface::updateGeometry() const
         volPointInterpolation::New(fvm).interpolate(cellFld)
     );
 
-    PtrList<isoSurface> isos(isoVals_.size());
+    PtrList<Foam::isoSurface> isos(isoVals_.size());
     forAll(isos, isoi)
     {
         isos.set
         (
             isoi,
-            new isoSurface
+            new Foam::isoSurface
             (
                 fvm,
                 cellFld.primitiveField(),
                 pointFld().primitiveField(),
                 isoVals_[isoi],
-                regularise_ ? isoSurface::DIAGCELL : isoSurface::NONE
+                filter_
             )
         );
     }
@@ -135,7 +128,7 @@ bool Foam::sampledIsoSurface::updateGeometry() const
     if (isos.size() == 1)
     {
         // Straight transfer
-        const_cast<sampledIsoSurface&>
+        const_cast<isoSurface&>
         (
             *this
         ).MeshedSurface<face>::transfer(isos[0]);
@@ -159,7 +152,7 @@ bool Foam::sampledIsoSurface::updateGeometry() const
         nPoints = 0;
         forAll(isos, isoi)
         {
-            isoSurface& iso = isos[isoi];
+            Foam::isoSurface& iso = isos[isoi];
 
             SubList<face> subAll(allFaces, iso.size(), nFaces);
             subAll = iso;
@@ -203,22 +196,24 @@ bool Foam::sampledIsoSurface::updateGeometry() const
         );
 
         // Transfer
-        const_cast<sampledIsoSurface&>
+        const_cast<isoSurface&>
         (
             *this
         ).MeshedSurface<face>::reset
         (
-            allPoints.xfer(),
-            allFaces.xfer(),
-            allZones.xfer()
+            move(allPoints),
+            move(allFaces),
+            move(allZones)
         );
         meshCells_.transfer(allMeshCells);
     }
     if (debug)
     {
-        Pout<< "sampledIsoSurface::updateGeometry() : constructed iso:"
+        Pout<< "sampledSurfaces::isoSurface::updateGeometry() : "
+               "constructed iso:"
             << nl
-            << "    regularise     : " << regularise_ << nl
+            << "    filtering      : "
+            << Foam::isoSurface::filterTypeNames_[filter_] << nl
             << "    isoField       : " << isoField_ << nl;
         if (isoVals_.size() == 1)
         {
@@ -239,7 +234,7 @@ bool Foam::sampledIsoSurface::updateGeometry() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::sampledIsoSurface::sampledIsoSurface
+Foam::sampledSurfaces::isoSurface::isoSurface
 (
     const word& name,
     const polyMesh& mesh,
@@ -252,9 +247,14 @@ Foam::sampledIsoSurface::sampledIsoSurface
     (
         dict.found("isoValues")
       ? scalarField(dict.lookup("isoValues"))
-      : scalarField(1, readScalar(dict.lookup("isoValue")))
+      : scalarField(1, dict.lookup<scalar>("isoValue"))
     ),
-    regularise_(dict.lookupOrDefault("regularise", true)),
+    filter_
+    (
+        dict.found("filtering")
+      ? Foam::isoSurface::filterTypeNames_.read(dict.lookup("filtering"))
+      : Foam::isoSurface::filterType::full
+    ),
     zoneKey_(keyType::null),
     prevTimeIndex_(-1),
     meshCells_(0)
@@ -263,13 +263,13 @@ Foam::sampledIsoSurface::sampledIsoSurface
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::sampledIsoSurface::~sampledIsoSurface()
+Foam::sampledSurfaces::isoSurface::~isoSurface()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::sampledIsoSurface::needsUpdate() const
+bool Foam::sampledSurfaces::isoSurface::needsUpdate() const
 {
     const fvMesh& fvm = static_cast<const fvMesh&>(mesh());
 
@@ -277,7 +277,7 @@ bool Foam::sampledIsoSurface::needsUpdate() const
 }
 
 
-bool Foam::sampledIsoSurface::expire()
+bool Foam::sampledSurfaces::isoSurface::expire()
 {
     // Clear derived data
     sampledSurface::clearGeom();
@@ -295,14 +295,14 @@ bool Foam::sampledIsoSurface::expire()
 }
 
 
-bool Foam::sampledIsoSurface::update()
+bool Foam::sampledSurfaces::isoSurface::update()
 {
     return updateGeometry();
 }
 
 
 Foam::tmp<Foam::scalarField>
-Foam::sampledIsoSurface::sample
+Foam::sampledSurfaces::isoSurface::sample
 (
     const volScalarField& vField
 ) const
@@ -312,7 +312,7 @@ Foam::sampledIsoSurface::sample
 
 
 Foam::tmp<Foam::vectorField>
-Foam::sampledIsoSurface::sample
+Foam::sampledSurfaces::isoSurface::sample
 (
     const volVectorField& vField
 ) const
@@ -322,7 +322,7 @@ Foam::sampledIsoSurface::sample
 
 
 Foam::tmp<Foam::sphericalTensorField>
-Foam::sampledIsoSurface::sample
+Foam::sampledSurfaces::isoSurface::sample
 (
     const volSphericalTensorField& vField
 ) const
@@ -332,7 +332,7 @@ Foam::sampledIsoSurface::sample
 
 
 Foam::tmp<Foam::symmTensorField>
-Foam::sampledIsoSurface::sample
+Foam::sampledSurfaces::isoSurface::sample
 (
     const volSymmTensorField& vField
 ) const
@@ -342,7 +342,7 @@ Foam::sampledIsoSurface::sample
 
 
 Foam::tmp<Foam::tensorField>
-Foam::sampledIsoSurface::sample
+Foam::sampledSurfaces::isoSurface::sample
 (
     const volTensorField& vField
 ) const
@@ -352,7 +352,7 @@ Foam::sampledIsoSurface::sample
 
 
 Foam::tmp<Foam::scalarField>
-Foam::sampledIsoSurface::interpolate
+Foam::sampledSurfaces::isoSurface::interpolate
 (
     const interpolation<scalar>& interpolator
 ) const
@@ -362,7 +362,7 @@ Foam::sampledIsoSurface::interpolate
 
 
 Foam::tmp<Foam::vectorField>
-Foam::sampledIsoSurface::interpolate
+Foam::sampledSurfaces::isoSurface::interpolate
 (
     const interpolation<vector>& interpolator
 ) const
@@ -371,7 +371,7 @@ Foam::sampledIsoSurface::interpolate
 }
 
 Foam::tmp<Foam::sphericalTensorField>
-Foam::sampledIsoSurface::interpolate
+Foam::sampledSurfaces::isoSurface::interpolate
 (
     const interpolation<sphericalTensor>& interpolator
 ) const
@@ -381,7 +381,7 @@ Foam::sampledIsoSurface::interpolate
 
 
 Foam::tmp<Foam::symmTensorField>
-Foam::sampledIsoSurface::interpolate
+Foam::sampledSurfaces::isoSurface::interpolate
 (
     const interpolation<symmTensor>& interpolator
 ) const
@@ -391,7 +391,7 @@ Foam::sampledIsoSurface::interpolate
 
 
 Foam::tmp<Foam::tensorField>
-Foam::sampledIsoSurface::interpolate
+Foam::sampledSurfaces::isoSurface::interpolate
 (
     const interpolation<tensor>& interpolator
 ) const
@@ -400,9 +400,9 @@ Foam::sampledIsoSurface::interpolate
 }
 
 
-void Foam::sampledIsoSurface::print(Ostream& os) const
+void Foam::sampledSurfaces::isoSurface::print(Ostream& os) const
 {
-    os  << "sampledIsoSurface: " << name() << " :"
+    os  << "isoSurface: " << name() << " :"
         << "  field:" << isoField_;
     if (isoVals_.size() == 1)
     {

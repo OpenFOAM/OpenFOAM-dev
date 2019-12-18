@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef directionalDiffusivity_H
 #define directionalDiffusivity_H
 
-#include "uniformDiffusivity.H"
+#include "motionDiffusivity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,20 +48,11 @@ namespace Foam
 
 class directionalDiffusivity
 :
-    public uniformDiffusivity
+    public motionDiffusivity
 {
-    // Private data
+    // Private Data
 
         vector diffusivityVector_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        directionalDiffusivity(const directionalDiffusivity&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const directionalDiffusivity&);
 
 
 public:
@@ -75,15 +66,21 @@ public:
         //- Construct for the given fvMesh and data Istream
         directionalDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        directionalDiffusivity(const directionalDiffusivity&) = delete;
+
 
     //- Destructor
     virtual ~directionalDiffusivity();
 
 
-    // Member Functions
+    // Member Operators
 
-        //- Correct the motion diffusivity
-        virtual void correct();
+        //- Disallow default bitwise assignment
+        void operator=(const directionalDiffusivity&) = delete;
+
+        //- Return diffusivity field
+        virtual tmp<surfaceScalarField> operator()() const;
 };
 
 

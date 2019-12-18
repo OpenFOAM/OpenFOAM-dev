@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,35 +29,67 @@ License
 #include "SLList.H"
 #include "contiguous.H"
 
-// * * * * * * * * * * * * * * * Ostream Operator *  * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
 
-template<class T>
-void Foam::UList<T>::writeEntry(Ostream& os) const
+template<class ListType>
+void Foam::writeListEntry(Ostream& os, const ListType& l)
 {
     if
     (
-        size()
+        l.size()
      && token::compound::isCompound
         (
-            "List<" + word(pTraits<T>::typeName) + '>'
+            "List<"
+          + word(pTraits<typename ListType::value_type>::typeName) + '>'
         )
     )
     {
-        os  << word("List<" + word(pTraits<T>::typeName) + '>') << " ";
+        os << word
+        (
+            "List<"
+          + word(pTraits<typename ListType::value_type>::typeName) + '>'
+        ) << " ";
     }
 
-    os << *this;
+    os << l;
+}
+
+
+template<class ListType>
+void Foam::writeListEntries(Ostream& os, const ListType& l)
+{
+    // Write size and start delimiter
+    os << nl << l.size() << nl << token::BEGIN_LIST;
+
+    // Write contents
+    forAll(l, i)
+    {
+        writeEntry(os, l[i]);
+        os << nl;
+    }
+
+    // Write end delimiter
+    os << nl << token::END_LIST << nl;
+}
+
+
+template<class ListType>
+void Foam::writeListEntries(Ostream& os, const word& keyword, const ListType& l)
+{
+    writeKeyword(os, keyword);
+    writeListEntries(os, l);
+    os << token::END_STATEMENT << endl;
 }
 
 
 template<class T>
-void Foam::UList<T>::writeEntry(const word& keyword, Ostream& os) const
+void Foam::writeEntry(Ostream& os, const UList<T>& l)
 {
-    os.writeKeyword(keyword);
-    writeEntry(os);
-    os << token::END_STATEMENT << endl;
+    writeListEntry(os, l);
 }
 
+
+// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
 
 template<class T>
 Foam::Ostream& Foam::operator<<(Foam::Ostream& os, const Foam::UList<T>& L)

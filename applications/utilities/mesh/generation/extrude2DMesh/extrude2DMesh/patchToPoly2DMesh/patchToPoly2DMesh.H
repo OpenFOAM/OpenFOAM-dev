@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ namespace Foam
 
 class patchToPoly2DMesh
 {
-    // Private data
+    // Private Data
 
         // Reference to the meshed surface
         const MeshedSurface<face>& patch_;
@@ -85,12 +85,6 @@ class patchToPoly2DMesh
 
         void createPolyMeshComponents();
 
-        //- Disallow default bitwise copy construct
-        patchToPoly2DMesh(const patchToPoly2DMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const patchToPoly2DMesh&);
-
 
 public:
 
@@ -104,6 +98,9 @@ public:
             const labelList& patchSizes,
             const EdgeMap<label>& mapEdgesRegion
         );
+
+        //- Disallow default bitwise copy construction
+        patchToPoly2DMesh(const patchToPoly2DMesh&) = delete;
 
 
     //- Destructor
@@ -154,6 +151,12 @@ public:
 
             //- Create the mesh
             void createMesh();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const patchToPoly2DMesh&) = delete;
 };
 
 

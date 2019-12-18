@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,15 +48,6 @@ class fvBoundaryMeshMapper
 :
     public PtrList<fvPatchMapper>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        fvBoundaryMeshMapper(const fvBoundaryMeshMapper&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvBoundaryMeshMapper&);
-
-
 public:
 
     // Constructors
@@ -85,6 +76,15 @@ public:
                 );
             }
         }
+
+        //- Disallow default bitwise copy construction
+        fvBoundaryMeshMapper(const fvBoundaryMeshMapper&) = delete;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvBoundaryMeshMapper&) = delete;
 };
 
 

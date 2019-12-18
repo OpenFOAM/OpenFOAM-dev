@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ class FitData
 :
     public MeshObject<fvMesh, MoveableMeshObject, FitDataType>
 {
-    // Private data
+    // Private Data
 
         //- The stencil the fit is based on
         const ExtendedStencil& stencil_;
@@ -111,7 +111,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         //- Return reference to the stencil
         const ExtendedStencil& stencil() const

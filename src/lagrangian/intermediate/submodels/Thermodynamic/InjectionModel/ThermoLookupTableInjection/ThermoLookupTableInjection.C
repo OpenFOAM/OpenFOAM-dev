@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,10 +38,10 @@ Foam::ThermoLookupTableInjection<CloudType>::ThermoLookupTableInjection
 :
     InjectionModel<CloudType>(dict, owner, modelName, typeName),
     inputFileName_(this->coeffDict().lookup("inputFile")),
-    duration_(readScalar(this->coeffDict().lookup("duration"))),
+    duration_(this->coeffDict().template lookup<scalar>("duration")),
     parcelsPerSecond_
     (
-        readScalar(this->coeffDict().lookup("parcelsPerSecond"))
+        this->coeffDict().template lookup<scalar>("parcelsPerSecond")
     ),
     randomise_(readBool(this->coeffDict().lookup("randomise"))),
     injectors_

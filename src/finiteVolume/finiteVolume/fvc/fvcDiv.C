@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,13 +48,10 @@ div
     const GeometricField<Type, fvsPatchField, surfaceMesh>& ssf
 )
 {
-    return tmp<GeometricField<Type, fvPatchField, volMesh>>
+    return GeometricField<Type, fvPatchField, volMesh>::New
     (
-        new GeometricField<Type, fvPatchField, volMesh>
-        (
-            "div("+ssf.name()+')',
-            fvc::surfaceIntegrate(ssf)
-        )
+        "div("+ssf.name()+')',
+        fvc::surfaceIntegrate(ssf)
     );
 }
 

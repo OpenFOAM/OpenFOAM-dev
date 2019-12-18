@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ class fvSurfaceMapper
 :
     public morphFieldMapper
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const fvMesh& mesh_;
@@ -83,13 +83,6 @@ class fvSurfaceMapper
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        fvSurfaceMapper(const fvSurfaceMapper&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvSurfaceMapper&);
-
-
         //- Calculate addressing
         void calcAddressing() const;
 
@@ -108,18 +101,15 @@ public:
             const faceMapper& fMapper
         );
 
+        //- Disallow default bitwise copy construction
+        fvSurfaceMapper(const fvSurfaceMapper&) = delete;
+
 
     //- Destructor
     virtual ~fvSurfaceMapper();
 
 
     // Member Functions
-
-        //- Return size
-        virtual label size() const
-        {
-            return mesh_.nInternalFaces();
-        }
 
         //- Return size of field before mapping
         virtual label sizeBeforeMapping() const
@@ -145,7 +135,7 @@ public:
         //- Return interpolated addressing
         virtual const labelListList& addressing() const;
 
-        //- Return interpolaion weights
+        //- Return interpolation weights
         virtual const scalarListList& weights() const;
 
         //- Are there any inserted faces
@@ -162,6 +152,12 @@ public:
         {
             return faceMap_.flipFaceFlux();
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvSurfaceMapper&) = delete;
 };
 
 

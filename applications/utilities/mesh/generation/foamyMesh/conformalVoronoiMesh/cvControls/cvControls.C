@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,43 +42,30 @@ Foam::cvControls::cvControls
         foamyHexMeshDict_.subDict("surfaceConformation")
     );
 
-    pointPairDistanceCoeff_ = readScalar
-    (
-        surfDict.lookup("pointPairDistanceCoeff")
-    );
+    pointPairDistanceCoeff_ =
+        surfDict.lookup<scalar>("pointPairDistanceCoeff");
 
-    mixedFeaturePointPPDistanceCoeff_ = readScalar
-    (
-        surfDict.lookup("mixedFeaturePointPPDistanceCoeff")
-    );
+    mixedFeaturePointPPDistanceCoeff_ =
+        surfDict.lookup<scalar>("mixedFeaturePointPPDistanceCoeff");
 
-    featurePointExclusionDistanceCoeff_ = readScalar
-    (
-        surfDict.lookup("featurePointExclusionDistanceCoeff")
-    );
+    featurePointExclusionDistanceCoeff_ =
+        surfDict.lookup<scalar>("featurePointExclusionDistanceCoeff");
 
-    featureEdgeExclusionDistanceCoeff_ = readScalar
-    (
-        surfDict.lookup("featureEdgeExclusionDistanceCoeff")
-    );
+    featureEdgeExclusionDistanceCoeff_ =
+        surfDict.lookup<scalar>("featureEdgeExclusionDistanceCoeff");
 
+    surfaceSearchDistanceCoeff_ =
+        surfDict.lookup<scalar>("surfaceSearchDistanceCoeff");
 
-    surfaceSearchDistanceCoeff_ = readScalar
-    (
-        surfDict.lookup("surfaceSearchDistanceCoeff")
-    );
+    maxSurfaceProtrusionCoeff_ =
+        surfDict.lookup<scalar>("maxSurfaceProtrusionCoeff");
 
-    maxSurfaceProtrusionCoeff_ = readScalar
-    (
-        surfDict.lookup("maxSurfaceProtrusionCoeff")
-    );
-
-    maxQuadAngle_ = readScalar(surfDict.lookup("maxQuadAngle"));
+    maxQuadAngle_ = surfDict.lookup<scalar>("maxQuadAngle");
 
     surfaceConformationRebuildFrequency_ = max
     (
         1,
-        readLabel(surfDict.lookup("surfaceConformationRebuildFrequency"))
+        surfDict.lookup<label>("surfaceConformationRebuildFrequency")
     );
 
 
@@ -122,46 +109,40 @@ Foam::cvControls::cvControls
         surfDict.subDict("conformationControls")
     );
 
-    surfacePtExclusionDistanceCoeff_ = readScalar
-    (
-        conformationControlsDict.lookup("surfacePtExclusionDistanceCoeff")
-    );
+    surfacePtExclusionDistanceCoeff_ =
+        conformationControlsDict.lookup<scalar>
+        (
+            "surfacePtExclusionDistanceCoeff"
+        );
 
     edgeSearchDistCoeffSqr_ = sqr
     (
-        readScalar
-        (
-            conformationControlsDict.lookup("edgeSearchDistCoeff")
-        )
+        conformationControlsDict.lookup<scalar>("edgeSearchDistCoeff")
     );
 
     surfacePtReplaceDistCoeffSqr_ = sqr
     (
-        readScalar
+        conformationControlsDict.lookup<scalar>("surfacePtReplaceDistCoeff")
+    );
+
+    maxConformationIterations_ =
+        conformationControlsDict.lookup<label>("maxIterations");
+
+    iterationToInitialHitRatioLimit_ =
+        conformationControlsDict.lookup<scalar>
         (
-            conformationControlsDict.lookup("surfacePtReplaceDistCoeff")
-        )
-    );
-
-    maxConformationIterations_ = readLabel
-    (
-        conformationControlsDict.lookup("maxIterations")
-    );
-
-    iterationToInitialHitRatioLimit_ = readScalar
-    (
-        conformationControlsDict.lookup("iterationToInitialHitRatioLimit")
-    );
+            "iterationToInitialHitRatioLimit"
+        );
 
 
     // Motion control controls
 
     const dictionary& motionDict(foamyHexMeshDict_.subDict("motionControl"));
 
-    defaultCellSize_ = readScalar(motionDict.lookup("defaultCellSize"));
+    defaultCellSize_ = motionDict.lookup<scalar>("defaultCellSize");
 
     minimumCellSize_ =
-        readScalar(motionDict.lookup("minimumCellSizeCoeff"))*defaultCellSize_;
+        motionDict.lookup<scalar>("minimumCellSizeCoeff")*defaultCellSize_;
 
     objOutput_ = Switch(motionDict.lookupOrDefault<Switch>("objOutput", false));
 
@@ -177,7 +158,7 @@ Foam::cvControls::cvControls
 
     if (Pstream::parRun())
     {
-        maxLoadUnbalance_ = readScalar(motionDict.lookup("maxLoadUnbalance"));
+        maxLoadUnbalance_ = motionDict.lookup<scalar>("maxLoadUnbalance");
     }
     else
     {
@@ -186,7 +167,7 @@ Foam::cvControls::cvControls
 
     cosAlignmentAcceptanceAngle_ = cos
     (
-        degToRad(readScalar(motionDict.lookup("alignmentAcceptanceAngle")))
+        degToRad(motionDict.lookup<scalar>("alignmentAcceptanceAngle"))
     );
 
 
@@ -197,19 +178,15 @@ Foam::cvControls::cvControls
         motionDict.subDict("pointInsertionCriteria")
     );
 
-    insertionDistCoeff_ = readScalar
-    (
-        insertionDict.lookup("cellCentreDistCoeff")
-    );
+    insertionDistCoeff_ =
+        insertionDict.lookup<scalar>("cellCentreDistCoeff");
 
-    faceAreaRatioCoeff_ = readScalar
-    (
-        insertionDict.lookup("faceAreaRatioCoeff")
-    );
+    faceAreaRatioCoeff_ =
+        insertionDict.lookup<scalar>("faceAreaRatioCoeff");
 
     cosInsertionAcceptanceAngle_ = cos
     (
-        degToRad(readScalar(insertionDict.lookup("acceptanceAngle")))
+        degToRad(insertionDict.lookup<scalar>("acceptanceAngle"))
     );
 
     // Point removal criteria
@@ -219,10 +196,8 @@ Foam::cvControls::cvControls
         motionDict.subDict("pointRemovalCriteria")
     );
 
-    removalDistCoeff_ = readScalar
-    (
-        removalDict.lookup("cellCentreDistCoeff")
-    );
+    removalDistCoeff_ =
+        removalDict.lookup<scalar>("cellCentreDistCoeff");
 
     // polyMesh filtering controls
 
@@ -260,7 +235,6 @@ Foam::cvControls::cvControls
     {
         writeBackgroundMeshDecomposition_ = Switch(false);
     }
-
 }
 
 

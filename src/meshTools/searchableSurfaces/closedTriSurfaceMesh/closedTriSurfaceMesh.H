@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,15 +52,6 @@ class closedTriSurfaceMesh
 :
     public triSurfaceMesh
 {
-private:
-
-        //- Disallow default bitwise copy construct
-        closedTriSurfaceMesh(const closedTriSurfaceMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const closedTriSurfaceMesh&);
-
-
 public:
 
     //- Runtime type information
@@ -83,10 +74,14 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        closedTriSurfaceMesh(const closedTriSurfaceMesh&) = delete;
+
 
     // Destructor
 
         virtual ~closedTriSurfaceMesh();
+
 
     // Member Functions
 
@@ -97,6 +92,11 @@ public:
             return true;
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const closedTriSurfaceMesh&) = delete;
 };
 
 

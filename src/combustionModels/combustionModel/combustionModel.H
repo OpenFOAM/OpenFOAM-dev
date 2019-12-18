@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,16 +53,10 @@ class combustionModel
 {
     // Private Member Functions
 
-        //- Disallow copy construct
-        combustionModel(const combustionModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const combustionModel&);
-
         //- Construct the base IO object
         IOobject createIOobject
         (
-            basicThermo& thermo,
+            const basicThermo& thermo,
             const word& combustionProperties
         ) const;
 
@@ -99,10 +93,13 @@ public:
         combustionModel
         (
             const word& modelType,
-            basicThermo& thermo,
+            const basicThermo& thermo,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties=combustionPropertiesName
         );
+
+        //- Disallow default bitwise copy construction
+        combustionModel(const combustionModel&);
 
 
     // Selectors
@@ -111,7 +108,7 @@ public:
         template<class CombustionModel>
         static autoPtr<CombustionModel> New
         (
-            typename CombustionModel::reactionThermo& thermo,
+            const typename CombustionModel::reactionThermo& thermo,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );
@@ -144,11 +141,17 @@ public:
         //- Fuel consumption rate matrix, i.e. source term for fuel equation
         virtual tmp<fvScalarMatrix> R(volScalarField& Y) const = 0;
 
-        //- Heat release rate [kg/m/s3]
+        //- Heat release rate [kg/m/s^3]
         virtual tmp<volScalarField> Qdot() const = 0;
 
         //- Update properties from given dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const combustionModel&) = delete;
 };
 
 

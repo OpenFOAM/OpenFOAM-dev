@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,13 +88,13 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         jumpCyclicFvPatchField
         (
             const jumpCyclicFvPatchField<Type>&
         );
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         jumpCyclicFvPatchField
         (
             const jumpCyclicFvPatchField<Type>&,
@@ -102,7 +102,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

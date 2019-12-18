@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -349,7 +349,7 @@ Foam::binaryTree<CompType, ThermoType>::binaryTree
 :
     chemistry_(chemistry),
     root_(nullptr),
-    maxNLeafs_(readLabel(coeffsDict.lookup("maxNLeafs"))),
+    maxNLeafs_(coeffsDict.lookup<label>("maxNLeafs")),
     size_(0),
     n2ndSearch_(0),
     max2ndSearch_(coeffsDict.lookupOrDefault("max2ndSearch",0)),

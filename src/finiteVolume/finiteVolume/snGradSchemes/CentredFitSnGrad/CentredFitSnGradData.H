@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ class CentredFitSnGradData
         Polynomial
     >
 {
-    // Private data
+    // Private Data
 
         //- For each cell in the mesh store the values which multiply the
         //  values of the stencil to obtain the gradient for each direction
@@ -87,7 +87,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         //- Return reference to fit coefficients
         const List<scalarList>& coeffs() const

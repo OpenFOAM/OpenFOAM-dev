@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class face;
 
 class combineFaces
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -101,6 +101,7 @@ class combineFaces
         void regioniseFaces
         (
             const scalar minCos,
+            const labelHashSet& patchIDs,
             const label celli,
             const labelList& cEdges,
             Map<label>& faceRegion
@@ -114,13 +115,6 @@ class combineFaces
         ) const;
 
 
-
-        //- Disallow default bitwise copy construct
-        combineFaces(const combineFaces&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const combineFaces&);
-
 public:
 
     //- Runtime type information
@@ -131,6 +125,9 @@ public:
 
         //- Construct from mesh
         combineFaces(const polyMesh& mesh, const bool undoable = false);
+
+        //- Disallow default bitwise copy construction
+        combineFaces(const combineFaces&) = delete;
 
 
     // Member Functions
@@ -153,12 +150,22 @@ public:
         // Helper functions
 
             //- Extract lists of all (non-coupled) boundary faces on selected
-            //  cells that can be merged. Uses getFaceRegions.
+            //  patches and cells that can be merged. Uses getFaceRegions.
             labelListList getMergeSets
             (
                 const scalar featureCos,
                 const scalar minConcaveCos,
+                const labelHashSet& patchIDs,
                 const labelHashSet& boundaryCells
+            ) const;
+
+            //- Extract lists of all (non-coupled) boundary faces on selected
+            //  patches that can be merged. Uses getFaceRegions.
+            labelListList getMergeSets
+            (
+                const scalar featureCos,
+                const scalar minConcaveCos,
+                const labelHashSet& patchIDs
             ) const;
 
             //- Extract lists of all (non-coupled) boundary faces that can
@@ -204,6 +211,12 @@ public:
                 Map<label>& restoredFaces,
                 Map<label>& restoredCells
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const combineFaces&) = delete;
 };
 
 

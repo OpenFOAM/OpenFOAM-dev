@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,14 +50,6 @@ class noPreconditioner
 :
     public lduMatrix::preconditioner
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        noPreconditioner(const noPreconditioner&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const noPreconditioner&);
-
 
 public:
 
@@ -73,6 +65,9 @@ public:
             const lduMatrix::solver&,
             const dictionary& solverControlsUnused
         );
+
+        //- Disallow default bitwise copy construction
+        noPreconditioner(const noPreconditioner&) = delete;
 
 
     //- Destructor
@@ -100,6 +95,12 @@ public:
         {
             return precondition(wT, rT, cmpt);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const noPreconditioner&) = delete;
 };
 
 

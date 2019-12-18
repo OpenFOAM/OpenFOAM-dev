@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,24 +94,19 @@ protected:
         ) const;
 
 
-private:
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        cellVolumeWeightMethod(const cellVolumeWeightMethod&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellVolumeWeightMethod&);
-
-
 public:
 
     //- Run-time type information
     TypeName("cellVolumeWeight");
 
-    //- Construct from source and target meshes
-    cellVolumeWeightMethod(const polyMesh& src, const polyMesh& tgt);
+    // Constructors
+
+        //- Construct from source and target meshes
+        cellVolumeWeightMethod(const polyMesh& src, const polyMesh& tgt);
+
+        //- Disallow default bitwise copy construction
+        cellVolumeWeightMethod(const cellVolumeWeightMethod&) = delete;
+
 
     //- Destructor
     virtual ~cellVolumeWeightMethod();
@@ -129,6 +124,12 @@ public:
                 labelListList& tgtToTgtAddr,
                 scalarListList& tgtToTgtWght
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellVolumeWeightMethod&) = delete;
 };
 
 

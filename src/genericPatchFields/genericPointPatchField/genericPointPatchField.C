@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,8 +49,8 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
     const dictionary& dict
 )
 :
+    genericPatchField(dict.lookup("type")),
     calculatedPointPatchField<Type>(p, iF, dict),
-    actualTypeName_(dict.lookup("type")),
     dict_(dict)
 {
     forAllConstIter(dictionary, dict_, iter)
@@ -311,8 +311,8 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
     const pointPatchFieldMapper& mapper
 )
 :
+    genericPatchField(ptf),
     calculatedPointPatchField<Type>(ptf, p, iF, mapper),
-    actualTypeName_(ptf.actualTypeName_),
     dict_(ptf.dict_)
 {
     forAllConstIter
@@ -325,7 +325,7 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
         scalarFields_.insert
         (
             iter.key(),
-            new scalarField(*iter(), mapper)
+            mapper(*iter()).ptr()
         );
     }
 
@@ -339,7 +339,7 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
         vectorFields_.insert
         (
             iter.key(),
-            new vectorField(*iter(), mapper)
+            mapper(*iter()).ptr()
         );
     }
 
@@ -353,7 +353,7 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
         sphericalTensorFields_.insert
         (
             iter.key(),
-            new sphericalTensorField(*iter(), mapper)
+            mapper(*iter()).ptr()
         );
     }
 
@@ -367,7 +367,7 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
         symmTensorFields_.insert
         (
             iter.key(),
-            new symmTensorField(*iter(), mapper)
+            mapper(*iter()).ptr()
         );
     }
 
@@ -381,7 +381,7 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
         tensorFields_.insert
         (
             iter.key(),
-            new tensorField(*iter(), mapper)
+            mapper(*iter()).ptr()
         );
     }
 }
@@ -394,8 +394,8 @@ Foam::genericPointPatchField<Type>::genericPointPatchField
     const DimensionedField<Type, pointMesh>& iF
 )
 :
+    genericPatchField(ptf),
     calculatedPointPatchField<Type>(ptf, iF),
-    actualTypeName_(ptf.actualTypeName_),
     dict_(ptf.dict_),
     scalarFields_(ptf.scalarFields_),
     vectorFields_(ptf.vectorFields_),
@@ -420,7 +420,7 @@ void Foam::genericPointPatchField<Type>::autoMap
         iter
     )
     {
-        iter()->autoMap(m);
+        m(*iter(), *iter());
     }
 
     forAllIter
@@ -430,7 +430,7 @@ void Foam::genericPointPatchField<Type>::autoMap
         iter
     )
     {
-        iter()->autoMap(m);
+        m(*iter(), *iter());
     }
 
     forAllIter
@@ -440,7 +440,7 @@ void Foam::genericPointPatchField<Type>::autoMap
         iter
     )
     {
-        iter()->autoMap(m);
+        m(*iter(), *iter());
     }
 
     forAllIter
@@ -450,7 +450,7 @@ void Foam::genericPointPatchField<Type>::autoMap
         iter
     )
     {
-        iter()->autoMap(m);
+        m(*iter(), *iter());
     }
 
     forAllIter
@@ -460,7 +460,7 @@ void Foam::genericPointPatchField<Type>::autoMap
         iter
     )
     {
-        iter()->autoMap(m);
+        m(*iter(), *iter());
     }
 }
 
@@ -560,7 +560,7 @@ void Foam::genericPointPatchField<Type>::rmap
 template<class Type>
 void Foam::genericPointPatchField<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("type") << actualTypeName_ << token::END_STATEMENT << nl;
+    writeEntry(os, "type", actualTypeName());
 
     forAllConstIter(dictionary, dict_, iter)
     {
@@ -576,28 +576,48 @@ void Foam::genericPointPatchField<Type>::write(Ostream& os) const
             {
                 if (scalarFields_.found(iter().keyword()))
                 {
-                    scalarFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *scalarFields_.find(iter().keyword())()
+                    );
                 }
                 else if (vectorFields_.found(iter().keyword()))
                 {
-                    vectorFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *vectorFields_.find(iter().keyword())()
+                    );
                 }
                 else if (sphericalTensorFields_.found(iter().keyword()))
                 {
-                    sphericalTensorFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *sphericalTensorFields_.find(iter().keyword())()
+                    );
                 }
                 else if (symmTensorFields_.found(iter().keyword()))
                 {
-                    symmTensorFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *symmTensorFields_.find(iter().keyword())()
+                    );
                 }
                 else if (tensorFields_.found(iter().keyword()))
                 {
-                    tensorFields_.find(iter().keyword())()
-                        ->writeEntry(iter().keyword(), os);
+                    writeEntry
+                    (
+                        os,
+                        iter().keyword(),
+                        *tensorFields_.find(iter().keyword())()
+                    );
                 }
             }
             else

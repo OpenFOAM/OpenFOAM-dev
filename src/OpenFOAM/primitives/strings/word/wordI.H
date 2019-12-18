@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,10 +120,19 @@ inline bool Foam::word::valid(char c)
      && c != '"'   // string quote
      && c != '\''  // string quote
      && c != '/'   // path separator
+     && c != '$'   // variable indicator
      && c != ';'   // end statement
      && c != '{'   // beg subdict
      && c != '}'   // end subdict
     );
+}
+
+
+inline Foam::word Foam::word::capitalise() const
+{
+    word w(*this);
+    w[0] = toupper(w[0]);
+    return w;
 }
 
 

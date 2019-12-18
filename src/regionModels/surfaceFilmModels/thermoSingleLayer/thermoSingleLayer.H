@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,16 +67,10 @@ class thermoSingleLayer
 :
     public kinematicSingleLayer
 {
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        thermoSingleLayer(const thermoSingleLayer&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const thermoSingleLayer&);
+    // Private Member Functions
 
         //- Return boundary types for sensible enthalpy field
-        wordList hsBoundaryTypes();
+        wordList hBoundaryTypes();
 
 
 protected:
@@ -107,7 +101,7 @@ protected:
                 volScalarField Tw_;
 
                 //- Sensible enthalpy [J/kg]
-                volScalarField hs_;
+                volScalarField h_;
 
 
             // Transfer fields - to the primary region
@@ -120,7 +114,7 @@ protected:
         scalar deltaWet_;
 
 
-        // Hyprophilic/phobic properties
+        // Hydrophilic/phobic properties
 
             //- Activation flag
             bool hydrophilic_;
@@ -141,14 +135,14 @@ protected:
             // pushed into the patch internal field
 
                 //- Energy [J/m2/s]
-                volScalarField hsSp_;
+                volScalarField::Internal hSp_;
 
 
             // Primary region - registered to the primary region mesh
             // Internal use only - not read-in
 
                 //- Energy [J/m2/s]
-                volScalarField hsSpPrimary_;
+                volScalarField hSpPrimary_;
 
 
         // Fields mapped from primary region - registered to the film region
@@ -167,10 +161,10 @@ protected:
             autoPtr<filmViscosityModel> viscosity_;
 
             //- Heat transfer coefficient between film surface and primary
-            //  region [W/m2/K]
+            //  region [W/m^2/K]
             autoPtr<heatTransferModel> htcs_;
 
-            //- Heat transfer coefficient between wall and film [W/m2/K]
+            //- Heat transfer coefficient between wall and film [W/m^2/K]
             autoPtr<heatTransferModel> htcw_;
 
             //- Phase change
@@ -198,7 +192,7 @@ protected:
         virtual void correctThermoFields();
 
         //- Correct sensible enthalpy for mapped temperature fields
-        virtual void correctHsForMappedT();
+        virtual void correctHforMappedT();
 
         //- Correct the film surface and wall temperatures
         virtual void updateSurfaceTemperatures();
@@ -213,13 +207,13 @@ protected:
         virtual void transferPrimaryRegionSourceFields();
 
         //- Correct film coverage field
-        virtual void correctAlpha();
+        virtual void correctCoverage();
 
         //- Update the film sub-models
         virtual void updateSubmodels();
 
         //- Return the wall/surface heat transfer term for the enthalpy equation
-        virtual tmp<fvScalarMatrix> q(volScalarField& hs) const;
+        virtual tmp<fvScalarMatrix> q(volScalarField& h) const;
 
 
         // Equations
@@ -245,6 +239,9 @@ public:
             const word& regionType,
             const bool readFields = true
         );
+
+        //- Disallow default bitwise copy construction
+        thermoSingleLayer(const thermoSingleLayer&) = delete;
 
 
     //- Destructor
@@ -277,21 +274,21 @@ public:
                 virtual const volScalarField& Tw() const;
 
                 //- Return the film sensible enthalpy [J/kg]
-                virtual const volScalarField& hs() const;
+                virtual const volScalarField& h() const;
 
 
             // Helper functions
 
                 //- Return sensible enthalpy as a function of temperature
                 //  for a patch
-                inline tmp<scalarField> hs
+                inline tmp<scalarField> h
                 (
                     const scalarField& T,
                     const label patchi
                 ) const;
 
                 //- Return sensible enthalpy as a function of temperature
-                inline tmp<volScalarField> hs
+                inline tmp<volScalarField> h
                 (
                     const volScalarField& T
                 ) const;
@@ -299,7 +296,7 @@ public:
                 //- Return temperature as a function of sensible enthalpy
                 inline tmp<volScalarField> T
                 (
-                    const volScalarField& hs
+                    const volScalarField& h
                 ) const;
 
 
@@ -311,8 +308,8 @@ public:
                 const label patchi,            // patchi on primary region
                 const label facei,             // facei of patchi
                 const scalar massSource,       // [kg]
-                const vector& momentumSource,  // [kg.m/s] (tangential momentum)
-                const scalar pressureSource,   // [kg.m/s] (normal momentum)
+                const vector& momentumSource,  // [kg m/s] (tangential momentum)
+                const scalar pressureSource,   // [kg m/s] (normal momentum)
                 const scalar energySource      // [J]
             );
 
@@ -322,13 +319,13 @@ public:
             // Film region
 
                 //- Energy [J/m2/s]
-                inline const volScalarField& hsSp() const;
+                inline const volScalarField::Internal& hSp() const;
 
 
             // Primary region
 
                 //- Energy [J/m2/s]
-                inline const volScalarField& hsSpPrimary() const;
+                inline const volScalarField& hSpPrimary() const;
 
 
         // Fields mapped from the primary region
@@ -354,15 +351,6 @@ public:
 
             //- Return const access to the radiation model
             inline const filmRadiationModel& radiation() const;
-
-
-        // Derived fields (calculated on-the-fly)
-
-            //- Return the convective heat energy from film to wall
-            inline tmp<scalarField> Qconvw(const label patchi) const;
-
-            //- Return the convective heat energy from primary region to film
-            inline tmp<scalarField> Qconvp(const label patchi) const;
 
 
         // Evolution
@@ -395,6 +383,12 @@ public:
 
             //- Provide some feedback
             virtual void info();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const thermoSingleLayer&) = delete;
 };
 
 

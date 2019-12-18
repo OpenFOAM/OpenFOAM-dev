@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,15 +43,30 @@ void Foam::cyclicFvPatch::makeWeights(scalarField& w) const
 {
     const cyclicFvPatch& nbrPatch = neighbFvPatch();
 
-    const scalarField deltas(nf()&coupledFvPatch::delta());
-    const scalarField nbrDeltas(nbrPatch.nf()&nbrPatch.coupledFvPatch::delta());
+    const vectorField delta(coupledFvPatch::delta());
+    const vectorField nbrDelta(nbrPatch.coupledFvPatch::delta());
 
-    forAll(deltas, facei)
+    const scalarField nfDelta(nf() & delta);
+    const scalarField nbrNfDelta(nbrPatch.nf() & nbrDelta);
+
+    forAll(delta, facei)
     {
-        scalar di = deltas[facei];
-        scalar dni = nbrDeltas[facei];
+        const scalar ndoi = nfDelta[facei];
+        const scalar ndni = nbrNfDelta[facei];
+        const scalar ndi = ndoi + ndni;
 
-        w[facei] = dni/(di + dni);
+        if (ndni/vGreat < ndi)
+        {
+            w[facei] = ndni/ndi;
+        }
+        else
+        {
+            const scalar doi = mag(delta[facei]);
+            const scalar dni = mag(nbrDelta[facei]);
+            const scalar di = doi + dni;
+
+            w[facei] = dni/di;
+        }
     }
 }
 

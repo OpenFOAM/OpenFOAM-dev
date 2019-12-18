@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,15 +25,6 @@ License
 
 #include "NonSphereDragForce.H"
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-template<class CloudType>
-Foam::scalar Foam::NonSphereDragForce<CloudType>::CdRe(const scalar Re) const
-{
-    return 24.0*(1.0 + a_*pow(Re, b_)) + Re*c_/(1 + d_/(Re + rootVSmall));
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class CloudType>
@@ -45,7 +36,7 @@ Foam::NonSphereDragForce<CloudType>::NonSphereDragForce
 )
 :
     ParticleForce<CloudType>(owner, mesh, dict, typeName, true),
-    phi_(readScalar(this->coeffs().lookup("phi"))),
+    phi_(this->coeffs().template lookup<scalar>("phi")),
     a_(exp(2.3288 - 6.4581*phi_ + 2.4486*sqr(phi_))),
     b_(0.0964 + 0.5565*phi_),
     c_(exp(4.9050 - 13.8944*phi_ + 18.4222*sqr(phi_) - 10.2599*pow3(phi_))),
@@ -96,11 +87,10 @@ Foam::forceSuSp Foam::NonSphereDragForce<CloudType>::calcCoupled
     const scalar muc
 ) const
 {
-    forceSuSp value(Zero, 0.0);
+    const scalar CdRe =
+        24*(1 + a_*pow(Re, b_)) + Re*c_/(1 + d_/(Re + rootVSmall));
 
-    value.Sp() = mass*0.75*muc*CdRe(Re)/(p.rho()*sqr(p.d()));
-
-    return value;
+    return forceSuSp(Zero, mass*0.75*muc*CdRe/(p.rho()*sqr(p.d())));
 }
 
 

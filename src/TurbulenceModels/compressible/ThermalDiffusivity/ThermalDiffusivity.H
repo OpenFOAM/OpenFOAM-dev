@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
-            const transportModel& trasport,
+            const transportModel& transport,
             const word& propertiesName
         );
 
@@ -84,7 +84,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
-            const transportModel& trasportModel,
+            const transportModel& transportModel,
             const word& propertiesName = turbulenceModel::propertiesName
         );
 
@@ -95,7 +95,7 @@ public:
             const volScalarField& rho,
             const volVectorField& U,
             const surfaceScalarField& phi,
-            const transportModel& trasportModel,
+            const transportModel& transportModel,
             const word& propertiesName = turbulenceModel::propertiesName
         );
 
@@ -119,14 +119,14 @@ public:
             return this->transport_.alpha(patchi);
         }
 
-        //- Thermal diffusivity for temperature of mixture [J/m/s/K]
+        //- Thermal diffusivity for temperature of mixture [W/m/K]
         virtual tmp<volScalarField> kappa() const
         {
             return this->transport_.kappa();
         }
 
         //- Thermal diffusivity for temperature of mixture
-        //  for patch [J/m/s/K]
+        //  for patch [W/m/K]
         virtual tmp<scalarField> kappa(const label patchi) const
         {
             return this->transport_.kappa(patchi);
@@ -139,14 +139,18 @@ public:
         virtual tmp<scalarField> alphat(const label patchi) const;
 
         //- Effective thermal turbulent diffusivity for temperature
-        //  of mixture [J/m/s/K]
+        //  of mixture [W/m/K]
         virtual tmp<volScalarField> kappaEff() const
         {
-            return kappa();
+            return volScalarField::New
+            (
+                "kappaEff",
+                this->transport_.kappa()
+            );
         }
 
         //- Effective thermal turbulent diffusivity for temperature
-        //  of mixture for patch [J/m/s/K]
+        //  of mixture for patch [W/m/K]
         virtual tmp<scalarField> kappaEff(const label patchi) const
         {
             return kappa(patchi);
@@ -155,7 +159,11 @@ public:
         //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
         virtual tmp<volScalarField> alphaEff() const
         {
-            return this->transport_.alphahe();
+            return volScalarField::New
+            (
+                "alphaEff",
+                this->transport_.alphahe()
+            );
         }
 
         //- Effective thermal turbulent diffusivity of mixture

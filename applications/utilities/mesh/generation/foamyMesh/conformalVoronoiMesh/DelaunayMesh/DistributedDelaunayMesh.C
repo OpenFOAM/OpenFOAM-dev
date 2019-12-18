@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,8 +113,8 @@ Foam::DistributedDelaunayMesh<Triangulation>::buildMap
         new mapDistribute
         (
             constructSize,
-            sendMap.xfer(),
-            constructMap.xfer()
+            move(sendMap),
+            move(constructMap)
         )
     );
 }
@@ -214,7 +214,7 @@ Foam::labelList Foam::DistributedDelaunayMesh<Triangulation>::overlapProcessors
         }
     }
 
-    return toProc;
+    return move(toProc);
 }
 
 

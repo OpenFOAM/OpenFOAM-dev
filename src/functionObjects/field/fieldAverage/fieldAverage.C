@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,7 +151,7 @@ void Foam::functionObjects::fieldAverage::calcAverages()
         periodIndex_++;
     }
 
-    Log << type() << " " << name() << " write:" << nl
+    Log << type() << " " << name() << nl
         << "    Calculating averages" << nl;
 
     addMeanSqrToPrime2Mean<scalar, scalar>();
@@ -265,8 +265,8 @@ void Foam::functionObjects::fieldAverage::readAveragingProperties()
             {
                 dictionary fieldDict(propsDict.subDict(fieldName));
 
-                totalIter_[fieldi] = readLabel(fieldDict.lookup("totalIter"));
-                totalTime_[fieldi] = readScalar(fieldDict.lookup("totalTime"));
+                totalIter_[fieldi] = fieldDict.lookup<label>("totalIter");
+                totalTime_[fieldi] = fieldDict.lookup<scalar>("totalTime");
 
                 Log << "        " << fieldName
                     << " iters = " << totalIter_[fieldi]

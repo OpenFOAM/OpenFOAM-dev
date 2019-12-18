@@ -18,7 +18,7 @@ FoamFile
 thermoType
 {
     type            hePsiThermo;
-    mixture         reactingMixture;
+    mixture         multiComponentMixture;
     transport       sutherland;
     thermo          janaf;
     energy          sensibleEnthalpy;
@@ -26,9 +26,7 @@ thermoType
     specie          specie;
 }
 
-CHEMKINFile     "$FOAM_CASE/chemkin/chem.inp";
-CHEMKINThermoFile "$FOAM_CASE/chemkin/therm.dat";
-CHEMKINTransportFile "$FOAM_CASE/chemkin/transportProperties";
+#include "speciesThermo"
 
 newFormat       yes;
 
@@ -41,6 +39,5 @@ liquids
 
 solids
 {}
-
 
 // ************************************************************************* //

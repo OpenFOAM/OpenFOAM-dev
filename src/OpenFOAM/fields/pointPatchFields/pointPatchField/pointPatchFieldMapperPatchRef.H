@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,21 +45,12 @@ namespace Foam
 
 class pointPatchFieldMapperPatchRef
 :
-    public pointPatchFieldMapper
+    public generalPointPatchFieldMapper
 {
-    // Private data
+    // Private Data
 
         const pointPatch& sourcePatch_;
         const pointPatch& targetPatch_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        pointPatchFieldMapperPatchRef(const pointPatchFieldMapperPatchRef&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointPatchFieldMapperPatchRef&);
 
 
 public:
@@ -77,8 +68,14 @@ public:
             targetPatch_(target)
         {}
 
+        //- Disallow default bitwise copy construction
+        pointPatchFieldMapperPatchRef
+        (
+            const pointPatchFieldMapperPatchRef&
+        ) = delete;
 
-    // Member functions
+
+    // Member Functions
 
         const pointPatch& sourcePatch() const
         {
@@ -89,6 +86,12 @@ public:
         {
             return targetPatch_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointPatchFieldMapperPatchRef&) = delete;
 };
 
 

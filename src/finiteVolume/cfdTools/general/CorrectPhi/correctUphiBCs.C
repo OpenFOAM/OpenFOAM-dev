@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,8 @@ License
 void Foam::correctUphiBCs
 (
     volVectorField& U,
-    surfaceScalarField& phi
+    surfaceScalarField& phi,
+    const bool evaluateUBCs
 )
 {
     const fvMesh& mesh = U.mesh();
@@ -38,14 +39,16 @@ void Foam::correctUphiBCs
     if (mesh.changing())
     {
         volVectorField::Boundary& Ubf = U.boundaryFieldRef();
-        surfaceScalarField::Boundary& phibf =
-            phi.boundaryFieldRef();
+        surfaceScalarField::Boundary& phibf = phi.boundaryFieldRef();
 
-        forAll(Ubf, patchi)
+        if (evaluateUBCs)
         {
-            if (Ubf[patchi].fixesValue())
+            forAll(Ubf, patchi)
             {
-                Ubf[patchi].initEvaluate();
+                if (Ubf[patchi].fixesValue())
+                {
+                    Ubf[patchi].initEvaluate();
+                }
             }
         }
 
@@ -53,7 +56,10 @@ void Foam::correctUphiBCs
         {
             if (Ubf[patchi].fixesValue())
             {
-                Ubf[patchi].evaluate();
+                if (evaluateUBCs)
+                {
+                    Ubf[patchi].evaluate();
+                }
 
                 phibf[patchi] = Ubf[patchi] & mesh.Sf().boundaryField()[patchi];
             }
@@ -66,7 +72,8 @@ void Foam::correctUphiBCs
 (
     const volScalarField& rho,
     volVectorField& U,
-    surfaceScalarField& phi
+    surfaceScalarField& phi,
+    const bool evaluateUBCs
 )
 {
     const fvMesh& mesh = U.mesh();
@@ -74,14 +81,16 @@ void Foam::correctUphiBCs
     if (mesh.changing())
     {
         volVectorField::Boundary& Ubf = U.boundaryFieldRef();
-        surfaceScalarField::Boundary& phibf =
-            phi.boundaryFieldRef();
+        surfaceScalarField::Boundary& phibf = phi.boundaryFieldRef();
 
-        forAll(Ubf, patchi)
+        if (evaluateUBCs)
         {
-            if (Ubf[patchi].fixesValue())
+            forAll(Ubf, patchi)
             {
-                Ubf[patchi].initEvaluate();
+                if (Ubf[patchi].fixesValue())
+                {
+                    Ubf[patchi].initEvaluate();
+                }
             }
         }
 
@@ -89,7 +98,10 @@ void Foam::correctUphiBCs
         {
             if (Ubf[patchi].fixesValue())
             {
-                Ubf[patchi].evaluate();
+                if (evaluateUBCs)
+                {
+                    Ubf[patchi].evaluate();
+                }
 
                 phibf[patchi] =
                     rho.boundaryField()[patchi]

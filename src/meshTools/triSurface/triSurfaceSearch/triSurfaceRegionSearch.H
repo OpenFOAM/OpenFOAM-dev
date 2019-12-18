@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,14 +57,10 @@ class triSurfaceRegionSearch
 :
     public triSurfaceSearch
 {
-    // Private typedefs
+    // Private Typedefs
 
-        typedef PrimitivePatch
-        <
-            labelledTri,
-            IndirectList,
-            const pointField&
-        > indirectTriSurface;
+        typedef PrimitivePatch<IndirectList<labelledTri>, const pointField&>
+            indirectTriSurface;
 
         typedef treeDataPrimitivePatch<indirectTriSurface>
             treeDataIndirectTriSurface;
@@ -72,22 +68,13 @@ class triSurfaceRegionSearch
         typedef indexedOctree<treeDataIndirectTriSurface> treeType;
 
 
-    // Private data
+    // Private Data
 
         //- Surface is split into patches by region
         mutable PtrList<indirectTriSurface> indirectRegionPatches_;
 
         //- Search tree for each region
         mutable PtrList<treeType> treeByRegion_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        triSurfaceRegionSearch(const triSurfaceRegionSearch&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const triSurfaceRegionSearch&);
 
 
 public:
@@ -99,6 +86,9 @@ public:
 
         //- Construct from surface and dictionary. Holds reference to surface!
         triSurfaceRegionSearch(const triSurface&, const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        triSurfaceRegionSearch(const triSurfaceRegionSearch&) = delete;
 
 
     //- Destructor
@@ -129,6 +119,12 @@ public:
                 const labelList& regionIndices,
                 List<pointIndexHit>& info
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const triSurfaceRegionSearch&) = delete;
 };
 
 

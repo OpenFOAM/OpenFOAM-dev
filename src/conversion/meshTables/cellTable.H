@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ class cellTable
 :
     public Map<dictionary>
 {
-    // Private data
+    // Private Data
 
        static const char* const defaultMaterial_;
 
@@ -97,9 +97,6 @@ class cellTable
 
         void setEntry(const label id, const word& keyWord, const word& value);
 
-        //- Disallow default bitwise copy construct
-        cellTable(const cellTable&);
-
 
 public:
 
@@ -115,6 +112,9 @@ public:
             const word& name = "cellTable",
             const fileName& instance = "constant"
         );
+
+        //- Disallow default bitwise copy construction
+        cellTable(const cellTable&) = delete;
 
 
     //- Destructor

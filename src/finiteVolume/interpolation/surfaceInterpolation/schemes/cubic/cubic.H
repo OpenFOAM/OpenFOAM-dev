@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,14 +53,6 @@ class cubic
 :
     public linear<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cubic(const cubic&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cubic&);
-
 
 public:
 
@@ -97,6 +89,9 @@ public:
             linear<Type>(mesh)
         {}
 
+        //- Disallow default bitwise copy construction
+        cubic(const cubic&) = delete;
+
 
     // Member Functions
 
@@ -128,17 +123,9 @@ public:
 
             tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
             (
-                new GeometricField<Type, fvsPatchField, surfaceMesh>
+                GeometricField<Type, fvsPatchField, surfaceMesh>::New
                 (
-                    IOobject
-                    (
-                        "cubic::correction(" + vf.name() +')',
-                        mesh.time().timeName(),
-                        mesh,
-                        IOobject::NO_READ,
-                        IOobject::NO_WRITE,
-                        false
-                    ),
+                    "cubic::correction(" + vf.name() +')',
                     surfaceInterpolationScheme<Type>::interpolate(vf, kSc, -kSc)
                 )
             );
@@ -184,6 +171,12 @@ public:
 
             return tsfCorr;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cubic&) = delete;
 };
 
 

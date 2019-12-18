@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,16 +54,10 @@ class waxSolventViscosity
 :
     public filmViscosityModel
 {
-    // Private member functions
+    // Private Member Functions
 
         //- Correct the mixture viscosity
         void correctMu();
-
-        //- Disallow default bitwise copy construct
-        waxSolventViscosity(const waxSolventViscosity&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const waxSolventViscosity&);
 
 
 protected:
@@ -99,6 +93,9 @@ public:
             volScalarField& mu
         );
 
+        //- Disallow default bitwise copy construction
+        waxSolventViscosity(const waxSolventViscosity&) = delete;
+
 
     //- Destructor
     virtual ~waxSolventViscosity();
@@ -112,6 +109,12 @@ public:
             const volScalarField& p,
             const volScalarField& T
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const waxSolventViscosity&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ Foam::chemistryReductionMethods::DRGEP<CompType, ThermoType>::DRGEP
 
     if (this->coeffsDict_.found("NGroupBased"))
     {
-        NGroupBased_ = readLabel(this->coeffsDict_.lookup("NGroupBased"));
+        NGroupBased_ = this->coeffsDict_.template lookup<label>("NGroupBased");
     }
 
     const List<List<specieElement>>& specieComposition =
@@ -115,9 +115,10 @@ template<class CompType, class ThermoType>
 void Foam::chemistryReductionMethods::DRGEP<CompType, ThermoType>::
 reduceMechanism
 (
-    const scalarField &c,
+    const scalar p,
     const scalar T,
-    const scalar p
+    const scalarField& c,
+    const label li
 )
 {
     scalarField& completeC(this->chemistry_.completeC());
@@ -153,8 +154,8 @@ reduceMechanism
         // for each reaction compute omegai
         scalar omegai = this->chemistry_.omega
         (
-         R, c1, T, p, pf, cf, lRef, pr, cr, rRef
-         );
+            R, p,T, c1, li, pf, cf, lRef, pr, cr, rRef
+        );
         omegaV[i] = omegai;
 
         // then for each pair of species composing this reaction,

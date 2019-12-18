@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,11 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "projectFace.H"
-#include "unitConversion.H"
-#include "addToRunTimeSelectionTable.H"
 #include "blockDescriptor.H"
-#include "OBJstream.H"
 #include "linearInterpolationWeights.H"
+#include "OBJstream.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -50,7 +49,7 @@ const Foam::searchableSurface& Foam::blockFaces::projectFace::lookupSurface
     Istream& is
 ) const
 {
-    word name(is);
+    const word name(is);
 
     forAll(geometry, i)
     {
@@ -87,26 +86,26 @@ void Foam::blockFaces::projectFace::calcLambdas
 ) const
 {
     lambdaI.setSize(points.size());
-    lambdaI = 0.0;
+    lambdaI = 0;
     lambdaJ.setSize(points.size());
-    lambdaJ = 0.0;
+    lambdaJ = 0;
 
     for (label i = 1; i < n.first(); i++)
     {
         for (label j = 1; j < n.second(); j++)
         {
-            label ij = index(n, labelPair(i, j));
-            label iMin1j = index(n, labelPair(i-1, j));
-            lambdaI[ij] = lambdaI[iMin1j] + mag(points[ij]-points[iMin1j]);
+            const label ij = index(n, labelPair(i, j));
+            const label iMin1j = index(n, labelPair(i-1, j));
+            lambdaI[ij] = lambdaI[iMin1j] + mag(points[ij] - points[iMin1j]);
 
-            label ijMin1 = index(n, labelPair(i, j-1));
-            lambdaJ[ij] = lambdaJ[ijMin1] + mag(points[ij]-points[ijMin1]);
+            const label ijMin1 = index(n, labelPair(i, j-1));
+            lambdaJ[ij] = lambdaJ[ijMin1] + mag(points[ij] - points[ijMin1]);
         }
     }
 
     for (label i = 1; i < n.first(); i++)
     {
-        label ijLast = index(n, labelPair(i, n.second()-1));
+        const label ijLast = index(n, labelPair(i, n.second()-1));
         for (label j = 1; j < n.second(); j++)
         {
             label ij = index(n, labelPair(i, j));
@@ -115,7 +114,7 @@ void Foam::blockFaces::projectFace::calcLambdas
     }
     for (label j = 1; j < n.second(); j++)
     {
-        label iLastj = index(n, labelPair(n.first()-1, j));
+        const label iLastj = index(n, labelPair(n.first()-1, j));
         for (label i = 1; i < n.first(); i++)
         {
             label ij = index(n, labelPair(i, j));
@@ -197,26 +196,26 @@ void Foam::blockFaces::projectFace::project
 
 
     // Calculate initial normalised edge lengths (= u,v coordinates)
-    scalarField lambdaI(points.size(), 0.0);
-    scalarField lambdaJ(points.size(), 0.0);
+    scalarField lambdaI(points.size(), 0);
+    scalarField lambdaJ(points.size(), 0);
     calcLambdas(n, points, lambdaI, lambdaJ);
 
 
     // Upper limit for number of iterations
     const label maxIter = 10;
+
     // Residual tolerance
     const scalar relTol = 0.1;
+    const scalar absTol = 1e-4;
 
-    scalar initialResidual = 0.0;
-    scalar iResidual = 0.0;
-    scalar jResidual = 0.0;
+    scalar initialResidual = 0;
 
     for (label iter = 0; iter < maxIter;  iter++)
     {
         // Do projection
         {
             List<pointIndexHit> hits;
-            scalarField nearestDistSqr
+            const scalarField nearestDistSqr
             (
                 points.size(),
                 magSqr(points[0] - points[points.size()-1])
@@ -237,19 +236,6 @@ void Foam::blockFaces::projectFace::project
             }
         }
 
-        if (debug)
-        {
-            Pout<< "Iter:" << iter << " initialResidual:" << initialResidual
-                << " iResidual+jResidual:" << iResidual+jResidual << endl;
-        }
-
-
-        if (iter > 0 && (iResidual+jResidual)/initialResidual < relTol)
-        {
-            break;
-        }
-
-
         // Predict along i
         vectorField residual(points.size(), vector::zero);
 
@@ -260,14 +246,14 @@ void Foam::blockFaces::projectFace::project
         {
             // Calculate actual lamdba along constant j line
             scalarField projLambdas(n.first());
-            projLambdas[0] = 0.0;
+            projLambdas[0] = 0;
             for (label i = 1; i < n.first(); i++)
             {
-                label ij = index(n, labelPair(i, j));
-                label iMin1j = index(n, labelPair(i-1, j));
+                const label ij = index(n, labelPair(i, j));
+                const label iMin1j = index(n, labelPair(i-1, j));
                 projLambdas[i] =
                     projLambdas[i-1]
-                   +mag(points[ij]-points[iMin1j]);
+                  + mag(points[ij] - points[iMin1j]);
             }
             projLambdas /= projLambdas.last();
 
@@ -275,17 +261,18 @@ void Foam::blockFaces::projectFace::project
 
             for (label i = 1; i < n.first()-1; i++)
             {
-                label ij = index(n, labelPair(i, j));
+                const label ij = index(n, labelPair(i, j));
 
                 interpolator.valueWeights(lambdaI[ij], indices, weights);
 
                 point predicted = vector::zero;
                 forAll(indices, indexi)
                 {
-                    label ptIndex = index(n, labelPair(indices[indexi], j));
+                    const label ptIndex =
+                        index(n, labelPair(indices[indexi], j));
                     predicted += weights[indexi]*points[ptIndex];
                 }
-                residual[ij] = predicted-points[ij];
+                residual[ij] = predicted - points[ij];
             }
         }
 
@@ -298,7 +285,7 @@ void Foam::blockFaces::projectFace::project
             }
         }
 
-        iResidual = sum(mag(residual));
+        scalar scalarResidual = sum(mag(residual));
 
         // Update points before doing j. Note: is this needed? Complicates
         // residual checking.
@@ -311,14 +298,14 @@ void Foam::blockFaces::projectFace::project
         {
             // Calculate actual lamdba along constant i line
             scalarField projLambdas(n.second());
-            projLambdas[0] = 0.0;
+            projLambdas[0] = 0;
             for (label j = 1; j < n.second(); j++)
             {
-                label ij = index(n, labelPair(i, j));
-                label ijMin1 = index(n, labelPair(i, j-1));
+                const label ij = index(n, labelPair(i, j));
+                const label ijMin1 = index(n, labelPair(i, j-1));
                 projLambdas[j] =
                     projLambdas[j-1]
-                   +mag(points[ij]-points[ijMin1]);
+                  + mag(points[ij] - points[ijMin1]);
             }
 
             projLambdas /= projLambdas.last();
@@ -327,17 +314,18 @@ void Foam::blockFaces::projectFace::project
 
             for (label j = 1; j < n.second()-1; j++)
             {
-                label ij = index(n, labelPair(i, j));
+                const label ij = index(n, labelPair(i, j));
 
                 interpolator.valueWeights(lambdaJ[ij], indices, weights);
 
                 point predicted = vector::zero;
                 forAll(indices, indexi)
                 {
-                    label ptIndex = index(n, labelPair(i, indices[indexi]));
+                    const label ptIndex =
+                        index(n, labelPair(i, indices[indexi]));
                     predicted += weights[indexi]*points[ptIndex];
                 }
-                residual[ij] = predicted-points[ij];
+                residual[ij] = predicted - points[ij];
             }
         }
 
@@ -350,11 +338,25 @@ void Foam::blockFaces::projectFace::project
             }
         }
 
-        jResidual = sum(mag(residual));
+        scalarResidual += sum(mag(residual));
 
-        if (iter == 0)
+        if (debug)
         {
-            initialResidual = iResidual + jResidual;
+            Pout<< "Iter:" << iter << " initialResidual:" << initialResidual
+                << " scalarResidual:" << scalarResidual << endl;
+        }
+
+        if (scalarResidual < absTol*lambdaI.size())
+        {
+            break;
+        }
+        else if (iter == 0)
+        {
+            initialResidual = scalarResidual;
+        }
+        else if (scalarResidual/initialResidual < relTol)
+        {
+            break;
         }
 
         points += residual;

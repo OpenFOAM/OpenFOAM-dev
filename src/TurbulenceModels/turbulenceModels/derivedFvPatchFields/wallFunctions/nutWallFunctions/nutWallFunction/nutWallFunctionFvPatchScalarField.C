@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nutWallFunctionFvPatchScalarField.H"
+#include "turbulenceModel.H"
 #include "fvPatchFieldMapper.H"
-#include "volFields.H"
 #include "wallFvPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -57,9 +57,9 @@ void Foam::nutWallFunctionFvPatchScalarField::writeLocalEntries
     Ostream& os
 ) const
 {
-    os.writeKeyword("Cmu") << Cmu_ << token::END_STATEMENT << nl;
-    os.writeKeyword("kappa") << kappa_ << token::END_STATEMENT << nl;
-    os.writeKeyword("E") << E_ << token::END_STATEMENT << nl;
+    writeEntry(os, "Cmu", Cmu_);
+    writeEntry(os, "kappa", kappa_);
+    writeEntry(os, "E", E_);
 }
 
 
@@ -149,6 +149,21 @@ Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+const Foam::nutWallFunctionFvPatchScalarField&
+Foam::nutWallFunctionFvPatchScalarField::nutw
+(
+    const turbulenceModel& turbModel,
+    const label patchi
+)
+{
+    return
+        refCast<const nutWallFunctionFvPatchScalarField>
+        (
+            turbModel.nut()().boundaryField()[patchi]
+        );
+}
+
+
 Foam::scalar Foam::nutWallFunctionFvPatchScalarField::yPlusLam
 (
     const scalar kappa,
@@ -179,7 +194,7 @@ void Foam::nutWallFunctionFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    operator==(calcNut());
+    operator==(nut());
 
     fixedValueFvPatchScalarField::updateCoeffs();
 }
@@ -189,7 +204,7 @@ void Foam::nutWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,7 +92,7 @@ void Foam::starMesh::fixCollapsedEdges()
                 forAll(vertexLabels, vI)
                 {
                     // In order for a face to be a valid entity, duplicate
-                    // vertices can only be consecutive (othervise, the
+                    // vertices can only be consecutive (otherwise, the
                     // collapse creates an invalid face). We shall use this
                     // property in the creation of the collapsed face
 
@@ -129,7 +129,7 @@ void Foam::starMesh::fixCollapsedEdges()
                 {
                     FatalErrorInFunction
                         << "Face " << facei << " of cell " << celli
-                        << " is colapsed down to a point or edge, which is "
+                        << " is collapsed down to a point or edge, which is "
                         << "not permitted" << endl
                         << "original face: " << vertexLabels << endl
                         << "purged face: " << newFace << endl

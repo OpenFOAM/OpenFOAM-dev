@@ -17,7 +17,7 @@ surfaceScalarField phiHbyA
 (
     "phiHbyA",
     (
-        fvc::flux(rho*HbyA)
+        fvc::interpolate(rho)*fvc::flux(HbyA)
       + MRF.zeroFilter(rhorAUf*fvc::ddtCorr(rho, U, phi))
     )
   + phig
@@ -64,19 +64,18 @@ while (pimple.correctNonOrthogonal())
 
 p = p_rgh + rho*gh;
 
+if (pressureControl.limit(p))
+{
+    p_rgh = p - rho*gh;
+}
+
 // Thermodynamic density update
 thermo.correctRho(psi*p - psip0);
 
 #include "rhoEqn.H"
 #include "compressibleContinuityErrs.H"
 
-if (pressureControl.limit(p))
-{
-    p.correctBoundaryConditions();
-    rho = thermo.rho();
-    p_rgh = p - rho*gh;
-}
-else if (pimple.simpleRho())
+if (pimple.simpleRho())
 {
     rho = thermo.rho();
 }

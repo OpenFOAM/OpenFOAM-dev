@@ -14,8 +14,7 @@ FoamFile
     object      alphat;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "include/caseSettings"
+#inputSyntax slash;
 
 dimensions      [1 -1 -1 0 0 0 0];
 
@@ -27,11 +26,26 @@ boundaryField
     {
         type            wedge;
     }
-    front { $back; }
-    liner { $:wall.alphat; }
-    cylinderHead { $liner; }
-    piston { $liner; }
-}
+
+    front
+    {
+        $back;
+    }
+
+    liner
+    {
+        $include/caseSettings!wall/alphat;
+    }
+
+    cylinderHead
+    {
+        $liner;
+    }
+
+    piston
+    {
+        $liner;
+    }
 }
 
 

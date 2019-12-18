@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,9 @@ Foam::tmp<Foam::vector2DField> Foam::waveModels::Airy::vi
     const scalarField z(xz.component(1));
 
     const scalarField phi(angle(t, x));
-    const scalarField kz(k()*z);
+
+    const scalar kzGreat = log(i*great);
+    const scalarField kz(min(max(k()*z, - kzGreat), kzGreat));
 
     if (deep())
     {
@@ -113,8 +115,8 @@ Foam::waveModels::Airy::Airy
 )
 :
     waveModel(db, dict),
-    length_(readScalar(dict.lookup("length"))),
-    phase_(readScalar(dict.lookup("phase"))),
+    length_(dict.lookup<scalar>("length")),
+    phase_(dict.lookup<scalar>("phase")),
     depth_(dict.lookupOrDefault<scalar>("depth", log(2*great)/k()))
 {}
 
@@ -166,11 +168,11 @@ void Foam::waveModels::Airy::write(Ostream& os) const
 {
     waveModel::write(os);
 
-    os.writeKeyword("length") << length_ << token::END_STATEMENT << nl;
-    os.writeKeyword("phase") << phase_ << token::END_STATEMENT << nl;
+    writeEntry(os, "length", length_);
+    writeEntry(os, "phase", phase_);
     if (!deep())
     {
-        os.writeKeyword("depth") << depth_ << token::END_STATEMENT << nl;
+        writeEntry(os, "depth", depth_);
     }
 }
 

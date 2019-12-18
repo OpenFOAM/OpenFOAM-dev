@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ void Foam::vtkPVblockMesh::updateInfoBlocks
 {
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVblockMesh::updateInfoBlocks"
+        InfoInFunction << nl
             << " [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "]" << endl;
     }
 
@@ -98,10 +98,8 @@ void Foam::vtkPVblockMesh::updateInfoBlocks
 
     if (debug)
     {
-        // just for debug info
+        // Just for debug info
         getSelectedArrayEntries(arraySelection);
-
-        Info<< "<end> Foam::vtkPVblockMesh::updateInfoBlocks" << endl;
     }
 }
 
@@ -113,7 +111,7 @@ void Foam::vtkPVblockMesh::updateInfoEdges
 {
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVblockMesh::updateInfoEdges"
+        InfoInFunction
             << " [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "]" << endl;
     }
 
@@ -139,10 +137,8 @@ void Foam::vtkPVblockMesh::updateInfoEdges
 
     if (debug)
     {
-        // just for debug info
+        // Just for debug info
         getSelectedArrayEntries(arraySelection);
-
-        Info<< "<end> Foam::vtkPVblockMesh::updateInfoEdges" << endl;
     }
 }
 
@@ -166,11 +162,10 @@ Foam::vtkPVblockMesh::vtkPVblockMesh
 {
     if (debug)
     {
-        Info<< "Foam::vtkPVblockMesh::vtkPVblockMesh - "
-            << FileName << endl;
+        InfoInFunction<< " - " << FileName << endl;
     }
 
-    // avoid argList and get rootPath/caseName directly from the file
+    // Avoid argList and get rootPath/caseName directly from the file
     fileName fullCasePath(fileName(FileName).path());
 
     if (!isDir(fullCasePath))
@@ -196,7 +191,7 @@ Foam::vtkPVblockMesh::vtkPVblockMesh
         setEnv("FOAM_CASENAME", fullCasePath.name(), true);
     }
 
-    // look for 'case{region}.OpenFOAM'
+    // Look for 'case{region}.OpenFOAM'
     // could be stringent and insist the prefix match the directory name...
     // Note: cannot use fileName::name() due to the embedded '{}'
     string caseName(fileName(FileName).lessExt());
@@ -211,7 +206,7 @@ Foam::vtkPVblockMesh::vtkPVblockMesh
     {
         meshRegion_ = caseName.substr(beg+1, end-beg-1);
 
-        // some safety
+        // Some safety
         if (meshRegion_.empty())
         {
             meshRegion_ = polyMesh::defaultRegion;
@@ -225,9 +220,9 @@ Foam::vtkPVblockMesh::vtkPVblockMesh
 
     if (debug)
     {
-        Info<< "fullCasePath=" << fullCasePath << nl
-            << "FOAM_CASE=" << getEnv("FOAM_CASE") << nl
-            << "FOAM_CASENAME=" << getEnv("FOAM_CASENAME") << endl;
+        Info<< "    fullCasePath=" << fullCasePath << nl
+            << "    FOAM_CASE=" << getEnv("FOAM_CASE") << nl
+            << "    FOAM_CASENAME=" << getEnv("FOAM_CASENAME") << endl;
     }
 
     // Create time object
@@ -253,7 +248,7 @@ Foam::vtkPVblockMesh::~vtkPVblockMesh()
 {
     if (debug)
     {
-        Info<< "<end> Foam::vtkPVblockMesh::~vtkPVblockMesh" << endl;
+        InfoInFunction << endl;
     }
 
     // Hmm. pointNumberTextActors are not getting removed
@@ -274,7 +269,7 @@ void Foam::vtkPVblockMesh::updateInfo()
 {
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVblockMesh::updateInfo"
+        InfoInFunction
             << " [meshPtr=" << (meshPtr_ ? "set" : "nullptr") << "] " << endl;
     }
 
@@ -283,7 +278,7 @@ void Foam::vtkPVblockMesh::updateInfo()
     vtkDataArraySelection* blockSelection = reader_->GetBlockSelection();
     vtkDataArraySelection* edgeSelection = reader_->GetCurvedEdgesSelection();
 
-    // enable 'internalMesh' on the first call
+    // Enable 'internalMesh' on the first call
     // or preserve the enabled selections
     stringList enabledParts;
     stringList enabledEdges;
@@ -302,7 +297,7 @@ void Foam::vtkPVblockMesh::updateInfo()
     blockSelection->RemoveAllArrays();
     edgeSelection->RemoveAllArrays();
 
-    // need a blockMesh
+    // Need a blockMesh
     updateFoamMesh();
 
     // Update mesh parts list
@@ -311,16 +306,11 @@ void Foam::vtkPVblockMesh::updateInfo()
     // Update curved edges list
     updateInfoEdges( edgeSelection );
 
-    // restore the enabled selections
+    // Restore the enabled selections
     if (!firstTime)
     {
         setSelectedArrayEntries(blockSelection, enabledParts);
         setSelectedArrayEntries(edgeSelection, enabledEdges);
-    }
-
-    if (debug)
-    {
-        Info<< "<end> Foam::vtkPVblockMesh::updateInfo" << endl;
     }
 }
 
@@ -329,7 +319,7 @@ void Foam::vtkPVblockMesh::updateFoamMesh()
 {
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVblockMesh::updateFoamMesh" << endl;
+        InfoInFunction << endl;
     }
 
     // Check to see if the OpenFOAM mesh has been created
@@ -337,8 +327,8 @@ void Foam::vtkPVblockMesh::updateFoamMesh()
     {
         if (debug)
         {
-            Info<< "Creating blockMesh at time=" << dbPtr_().timeName()
-                << endl;
+            InfoInFunction
+                << "Creating blockMesh at time=" << dbPtr_().timeName() << endl;
         }
 
         // Set path for the blockMeshDict
@@ -374,12 +364,6 @@ void Foam::vtkPVblockMesh::updateFoamMesh()
         meshDictPtr->store();
 
         meshPtr_ = new blockMesh(*meshDictPtr, meshRegion_);
-    }
-
-
-    if (debug)
-    {
-        Info<< "<end> Foam::vtkPVblockMesh::updateFoamMesh" << endl;
     }
 }
 
@@ -427,7 +411,7 @@ void Foam::vtkPVblockMesh::renderPointNumbers
     const bool show
 )
 {
-    // always remove old actors first
+    // Always remove old actors first
 
     forAll(pointNumberTextActorsPtrs_, pointi)
     {

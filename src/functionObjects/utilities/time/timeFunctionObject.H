@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,15 +87,6 @@ class time
         scalar clockTime0_;
 
 
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        time(const time&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const time&);
-
-
 protected:
 
     // Protected Member Functions
@@ -120,6 +111,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        time(const time&) = delete;
+
 
     //- Destructor
     virtual ~time();
@@ -135,6 +129,12 @@ public:
 
         //- Write the time
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const time&) = delete;
 };
 
 

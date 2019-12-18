@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,9 +86,7 @@ class RNGkEpsilon
 {
     // Private Member Functions
 
-        // Disallow default bitwise copy construct and assignment
-        RNGkEpsilon(const RNGkEpsilon&);
-        void operator=(const RNGkEpsilon&);
+        using IOobject::modelName;
 
 
 protected:
@@ -146,6 +144,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        RNGkEpsilon(const RNGkEpsilon&) = delete;
+
 
     //- Destructor
     virtual ~RNGkEpsilon()
@@ -191,6 +192,12 @@ public:
 
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const RNGkEpsilon&) = delete;
 };
 
 

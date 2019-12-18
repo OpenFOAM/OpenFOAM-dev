@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,6 +52,12 @@ Foam::compressibilityModels::Chung::Chung
 )
 :
     barotropicCompressibilityModel(compressibilityProperties, gamma, psiName),
+    pSat_
+    (
+        "pSat",
+        dimPressure,
+        compressibilityProperties_.lookup("pSat")
+    ),
     psiv_
     (
         "psiv",
@@ -63,12 +69,6 @@ Foam::compressibilityModels::Chung::Chung
         "psil",
         dimCompressibility,
         compressibilityProperties_.lookup("psil")
-    ),
-    rhovSat_
-    (
-        "rhovSat",
-        dimDensity,
-        compressibilityProperties_.lookup("rhovSat")
     ),
     rholSat_
     (
@@ -89,8 +89,8 @@ void Foam::compressibilityModels::Chung::correct()
     (
         sqrt
         (
-            (rhovSat_/psiv_)
-           /((scalar(1) - gamma_)*rhovSat_/psiv_ + gamma_*rholSat_/psil_)
+            pSat_
+           /((scalar(1) - gamma_)*pSat_ + gamma_*rholSat_/psil_)
         )
     );
 
@@ -109,9 +109,9 @@ bool Foam::compressibilityModels::Chung::read
 {
     barotropicCompressibilityModel::read(compressibilityProperties);
 
+    compressibilityProperties_.lookup("pSat") >> pSat_;
     compressibilityProperties_.lookup("psiv") >> psiv_;
     compressibilityProperties_.lookup("psil") >> psil_;
-    compressibilityProperties_.lookup("rhovSat") >> rhovSat_;
     compressibilityProperties_.lookup("rholSat") >> rholSat_;
 
     return true;

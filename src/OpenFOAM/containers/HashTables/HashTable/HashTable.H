@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,6 @@ SourceFiles
 #include "label.H"
 #include "uLabel.H"
 #include "word.H"
-#include "Xfer.H"
 #include "className.H"
 #include <initializer_list>
 
@@ -65,6 +64,9 @@ template<class T, class Key, class Hash> class HashPtrTable;
 
 template<class Type1, class Type2>
 class Tuple2;
+
+template<class T, class Key, class Hash>
+void writeEntry(Ostream& os, const HashTable<T, Key, Hash>& ht);
 
 template<class T, class Key, class Hash>
 Istream& operator>>(Istream&, HashTable<T, Key, Hash>&);
@@ -124,7 +126,7 @@ class HashTable
 :
     public HashTableCore
 {
-    // Private data type for table entries
+    // Private Data type for table entries
 
         //- Structure to hold a hashed entry with SLList for collisions
         struct hashedEntry
@@ -141,17 +143,15 @@ class HashTable
             //- Construct from key, next pointer and object
             inline hashedEntry(const Key&, hashedEntry* next, const T&);
 
-
-        private:
-            //- Disallow default bitwise copy construct
-            hashedEntry(const hashedEntry&);
+            //- Disallow default bitwise copy construction
+            hashedEntry(const hashedEntry&) = delete;
 
             //- Disallow default bitwise assignment
-            void operator=(const hashedEntry&);
+            void operator=(const hashedEntry&) = delete;
         };
 
 
-    // Private data: size of table, the table and current number of elements
+    // Private Data: size of table, the table and current number of elements
 
         //- The current number of elements in table
         label nElmts_;
@@ -206,11 +206,11 @@ public:
         //- Construct from Istream
         HashTable(Istream&, const label size = 128);
 
-        //- Construct as copy
+        //- Copy constructor
         HashTable(const HashTable<T, Key, Hash>&);
 
-        //- Construct by transferring the parameter contents
-        HashTable(const Xfer<HashTable<T, Key, Hash>>&);
+        //- Move constructor
+        HashTable(HashTable<T, Key, Hash>&&);
 
         //- Construct from an initializer list
         HashTable(std::initializer_list<Tuple2<Key, T>>);
@@ -297,9 +297,6 @@ public:
             //  and annul the argument table.
             void transfer(HashTable<T, Key, Hash>&);
 
-            //- Transfer contents to the Xfer container
-            inline Xfer<HashTable<T, Key, Hash>> xfer();
-
 
     // Member Operators
 
@@ -312,8 +309,11 @@ public:
         //- Find and return a hashedEntry, create it null if not present
         inline T& operator()(const Key&);
 
-        //- Assignment
+        //- Assignment operator
         void operator=(const HashTable<T, Key, Hash>&);
+
+        //- Move assignment operator
+        void operator=(HashTable<T, Key, Hash>&&);
 
         //- Assignment to an initializer list
         void operator=(std::initializer_list<Tuple2<Key, T>>);
@@ -406,7 +406,7 @@ public:
 
         public:
 
-            // Member operators
+            // Member Operators
 
                 // Access
 
@@ -458,7 +458,7 @@ public:
                 inline iterator(const iteratorEnd& unused);
 
 
-            // Member operators
+            // Member Operators
 
                 //- Return referenced hash value
                 inline T& operator*();
@@ -516,7 +516,7 @@ public:
                 inline const_iterator(const iteratorEnd& unused);
 
 
-            // Member operators
+            // Member Operators
 
                 //- Return referenced hash value
                 inline const T& operator*() const;

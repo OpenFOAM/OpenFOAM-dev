@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ class DSMCCloud
     public Cloud<ParcelType>,
     public DSMCBaseCloud
 {
-    // Private data
+    // Private Data
 
         //- Cloud type - used to set the name of the parcel properties
         //  dictionary by appending "Properties"
@@ -182,12 +182,6 @@ class DSMCCloud
         //- Calculate the volume field data
         void calculateFields();
 
-        //- Disallow default bitwise copy construct
-        DSMCCloud(const DSMCCloud&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const DSMCCloud&);
-
 
 public:
 
@@ -209,6 +203,9 @@ public:
             const fvMesh& mesh,
             const IOdictionary& dsmcInitialiseDict
         );
+
+        //- Disallow default bitwise copy construction
+        DSMCCloud(const DSMCCloud&) = delete;
 
 
     //- Destructor
@@ -469,6 +466,12 @@ public:
 
             //- Remap the particles to the correct cells following mesh change
             virtual void autoMap(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const DSMCCloud&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,19 +62,19 @@ Foam::dragModels::SyamlalOBrien::~SyamlalOBrien()
 
 Foam::tmp<Foam::volScalarField> Foam::dragModels::SyamlalOBrien::CdRe() const
 {
-    volScalarField alpha2
+    const volScalarField alpha2
     (
-        max(scalar(1) - pair_.dispersed(), pair_.continuous().residualAlpha())
+        max(1 - pair_.dispersed(), pair_.continuous().residualAlpha())
     );
 
-    volScalarField A(pow(alpha2, 4.14));
-    volScalarField B
+    const volScalarField A(pow(alpha2, 4.14));
+    const volScalarField B
     (
         neg(alpha2 - 0.85)*(0.8*pow(alpha2, 1.28))
       + pos0(alpha2 - 0.85)*(pow(alpha2, 2.65))
     );
-    volScalarField Re(pair_.Re());
-    volScalarField Vr
+    const volScalarField Re(pair_.Re());
+    const volScalarField Vr
     (
         0.5
        *(

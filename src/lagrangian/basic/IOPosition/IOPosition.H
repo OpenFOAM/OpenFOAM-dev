@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ class IOPosition
     public regIOobject
 {
 
-    // Private data
+    // Private Data
 
         //- Reference to the cloud
         const CloudType& cloud_;
@@ -75,14 +75,14 @@ public:
         IOPosition(const CloudType&);
 
 
-    // Member functions
+    // Member Functions
 
         //- Inherit readData from regIOobject
         using regIOobject::readData;
 
         virtual void readData(Istream&, CloudType&);
 
-        virtual bool write(const bool valid = true) const;
+        virtual bool write(const bool write = true) const;
 
         virtual bool writeData(Ostream& os) const;
 };

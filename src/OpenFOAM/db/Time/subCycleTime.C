@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,10 @@ Foam::subCycleTime::subCycleTime(Time& t, const label nSubCycles)
     nSubCycles_(nSubCycles),
     subCycleIndex_(0)
 {
-    time_.subCycle(nSubCycles_);
+    if (nSubCycles_ > 1)
+    {
+        time_.subCycle(nSubCycles_);
+    }
 }
 
 
@@ -55,7 +58,10 @@ bool Foam::subCycleTime::end() const
 
 void Foam::subCycleTime::endSubCycle()
 {
-    time_.endSubCycle();
+    if (nSubCycles_ > 1)
+    {
+        time_.endSubCycle();
+    }
 }
 
 
@@ -63,8 +69,13 @@ void Foam::subCycleTime::endSubCycle()
 
 Foam::subCycleTime& Foam::subCycleTime::operator++()
 {
-    time_++;
+    if (nSubCycles_ > 1)
+    {
+        time_++;
+    }
+
     subCycleIndex_++;
+
     return *this;
 }
 

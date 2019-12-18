@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,13 +45,16 @@ namespace Foam
 
 class weightedFvPatchFieldMapper
 :
-    public fvPatchFieldMapper
+    public generalFvPatchFieldMapper
 {
-    const labelListList& addressing_;
+    // Private Data
 
-    const scalarListList& weights_;
+        const labelListList& addressing_;
 
-    bool hasUnmapped_;
+        const scalarListList& weights_;
+
+        bool hasUnmapped_;
+
 
 public:
 
@@ -77,17 +80,13 @@ public:
             }
         }
 
+
     //- Destructor
     virtual ~weightedFvPatchFieldMapper()
     {}
 
 
     // Member Functions
-
-        virtual label size() const
-        {
-            return addressing().size();
-        }
 
         virtual bool direct() const
         {
@@ -108,8 +107,8 @@ public:
         {
             return weights_;
         }
-
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "constantNucleation.H"
 #include "phaseSystem.H"
 #include "addToRunTimeSelectionTable.H"
+#include "mathematicalConstants.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -46,6 +47,8 @@ namespace nucleationModels
 }
 }
 
+using Foam::constant::mathematical::pi;
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -57,7 +60,7 @@ constantNucleation
 )
 :
     nucleationModel(popBal, dict),
-    d_("departureDiameter", dimLength, dict),
+    dNuc_("nucleationDiameter", dimLength, dict),
     velGroup_
     (
         refCast<const velocityGroup>
@@ -72,30 +75,23 @@ constantNucleation
             ).dPtr()()
         )
     )
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::diameterModels::nucleationModels::constantNucleation::correct()
 {
     if
     (
-        d_.value() < velGroup_.sizeGroups().first().d().value()
-     || d_.value() > velGroup_.sizeGroups().last().d().value()
+        dNuc_.value() < velGroup_.sizeGroups().first().dSph().value()
+     || dNuc_.value() > velGroup_.sizeGroups().last().dSph().value()
     )
     {
-        WarningInFunction
-            << "Departure diameter " << d_.value() << " m outside of range ["
-            << velGroup_.sizeGroups().first().d().value() << ", "
-            << velGroup_.sizeGroups().last().d().value() << "] m" << endl
-            << "    The nucleation rate is set to zero." << endl
-            << "    Adjust discretization over property space to suppress this"
-            << " warning."
-            << endl;
+        FatalIOErrorInFunction(dict)
+            << "Nucleation diameter " << dNuc_.value() << "m outside of range ["
+            << velGroup_.sizeGroups().first().dSph().value() << ", "
+            << velGroup_.sizeGroups().last().dSph().value() << "]." << nl
+            << exit(FatalIOError);
     }
 }
 
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void
 Foam::diameterModels::nucleationModels::constantNucleation::addToNucleationRate
@@ -109,7 +105,7 @@ Foam::diameterModels::nucleationModels::constantNucleation::addToNucleationRate
     volScalarField& rho = phase.thermoRef().rho();
 
     nucleationRate +=
-        popBal_.gamma(i, velGroup_.formFactor()*pow3(d_))
+        popBal_.eta(i, pi/6.0*pow3(dNuc_))
        *(popBal_.fluid().fvOptions()(phase, rho)&rho)/rho/fi.x();
 }
 

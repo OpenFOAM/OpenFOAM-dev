@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,15 +175,6 @@ class primitiveMesh
             mutable vectorField* faceAreasPtr_;
 
 
-    // Private Member Functions
-
-        //- Disallow construct as copy
-        primitiveMesh(const primitiveMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const primitiveMesh&);
-
-
         // Topological calculations
 
             //- Calculate cell shapes
@@ -226,7 +217,7 @@ class primitiveMesh
 
 protected:
 
-    // Static data members
+    // Static Data Members
 
         //- Static data to control mesh checking
 
@@ -446,6 +437,9 @@ public:
             const label nCells
         );
 
+        //- Disallow default bitwise copy construction
+        primitiveMesh(const primitiveMesh&);
+
 
     //- Destructor
     virtual ~primitiveMesh();
@@ -472,7 +466,6 @@ public:
             cellList& cells
         );
 
-
         //- Reset this primitiveMesh given the primitive array sizes and cells
         void reset
         (
@@ -480,7 +473,7 @@ public:
             const label nInternalFaces,
             const label nFaces,
             const label nCells,
-            const Xfer<cellList>& cells
+            cellList&& cells
         );
 
 
@@ -890,6 +883,12 @@ public:
 
             //- Clear all geometry and addressing unnecessary for CFD
             void clearOut();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const primitiveMesh&) = delete;
 };
 
 

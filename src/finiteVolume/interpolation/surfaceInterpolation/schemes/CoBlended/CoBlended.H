@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ class CoBlended
     public surfaceInterpolationScheme<Type>,
     public blendedSchemeBase<Type>
 {
-    // Private data
+    // Private Data
 
         //- Courant number below which scheme1 is used
         const scalar Co1_;
@@ -97,15 +97,6 @@ class CoBlended
 
         //- The face-flux used to compute the face Courant number
         const surfaceScalarField& faceFlux_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        CoBlended(const CoBlended&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const CoBlended&);
 
 
 public:
@@ -180,6 +171,9 @@ public:
                     << exit(FatalIOError);
             }
         }
+
+        //- Disallow default bitwise copy construction
+        CoBlended(const CoBlended&) = delete;
 
 
     // Member Functions
@@ -316,6 +310,12 @@ public:
                 );
             }
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CoBlended&) = delete;
 };
 
 

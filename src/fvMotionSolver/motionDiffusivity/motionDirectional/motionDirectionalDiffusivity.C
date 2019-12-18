@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,6 @@ License
 #include "surfaceInterpolate.H"
 #include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
-#include "velocityMotionSolver.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -52,7 +51,7 @@ Foam::motionDirectionalDiffusivity::motionDirectionalDiffusivity
     Istream& mdData
 )
 :
-    uniformDiffusivity(mesh, mdData),
+    motionDiffusivity(mesh),
     diffusivityVector_(mdData)
 {}
 
@@ -65,11 +64,10 @@ Foam::motionDirectionalDiffusivity::~motionDirectionalDiffusivity()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::motionDirectionalDiffusivity::correct()
+Foam::tmp<Foam::surfaceScalarField>
+Foam::motionDirectionalDiffusivity::operator()() const
 {
-    static bool first = true;
-
-    if (!first)
+    if (mesh().foundObject<volVectorField>("cellMotionU"))
     {
         const volVectorField& cellMotionU =
             mesh().lookupObject<volVectorField>("cellMotionU");
@@ -90,17 +88,31 @@ void Foam::motionDirectionalDiffusivity::correct()
         D.correctBoundaryConditions();
 
         const surfaceVectorField n(mesh().Sf()/mesh().magSf());
-        faceDiffusivity_ == (n & cmptMultiply(fvc::interpolate(D), n));
+
+        return surfaceScalarField::New
+        (
+            "faceDiffusivity",
+            (n & cmptMultiply(fvc::interpolate(D), n))
+        );
     }
     else
     {
-        first = false;
-
-        const velocityMotionSolver& mSolver =
-            mesh().lookupObject<velocityMotionSolver>("dynamicMeshDict");
-
-        const_cast<velocityMotionSolver&>(mSolver).solve();
-        correct();
+        return tmp<surfaceScalarField>
+        (
+            new surfaceScalarField
+            (
+                IOobject
+                (
+                    "faceDiffusivity",
+                    mesh().time().timeName(),
+                    mesh(),
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE
+                ),
+                mesh(),
+                dimensionedScalar(dimless, 1.0)
+            )
+        );
     }
 }
 

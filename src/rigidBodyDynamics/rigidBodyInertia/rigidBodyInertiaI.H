@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ inline Foam::RBD::rigidBodyInertia::rigidBodyInertia
 
 inline Foam::RBD::rigidBodyInertia::rigidBodyInertia(const dictionary& dict)
 :
-    m_(readScalar(dict.lookup("mass"))),
+    m_(dict.lookup<scalar>("mass")),
     c_(dict.lookup("centreOfMass")),
     Ic_(dict.lookup("inertia"))
 {}

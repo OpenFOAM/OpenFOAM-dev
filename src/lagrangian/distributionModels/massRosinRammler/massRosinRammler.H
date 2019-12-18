@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ Description
     Mass-based Rosin-Rammler distributionModel.
 
     Corrected form of the Rosin-Rammler distribution taking into account the
-    varying number of particels per parces for for fixed-mass parcels.  This
+    varying number of particles per parcel for for fixed-mass parcels.  This
     distribution should be used when
     \verbatim
         parcelBasisType mass;
@@ -68,7 +68,7 @@ class massRosinRammler
 :
     public distributionModel
 {
-    // Private data
+    // Private Data
 
         //- Distribution minimum
         scalar minValue_;

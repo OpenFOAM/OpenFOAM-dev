@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,15 +51,15 @@ void Foam::vtkPVblockMesh::convertMeshBlocks
 {
     vtkDataArraySelection* selection = reader_->GetBlockSelection();
     arrayRange& range = arrayRangeBlocks_;
-    range.block(blockNo);   // set output block
-    label datasetNo = 0;       // restart at dataset 0
+    range.block(blockNo);   // Set output block
+    label datasetNo = 0;    // Restart at dataset 0
 
     const blockMesh& blkMesh = *meshPtr_;
     const Foam::pointField& blockPoints = blkMesh.vertices();
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVblockMesh::convertMeshBlocks" << endl;
+        InfoInFunction << endl;
     }
 
     int blockI = 0;
@@ -122,15 +122,10 @@ void Foam::vtkPVblockMesh::convertMeshBlocks
     }
 
 
-    // anything added?
+    // Anything added?
     if (datasetNo)
     {
         ++blockNo;
-    }
-
-    if (debug)
-    {
-        Info<< "<end> Foam::vtkPVblockMesh::convertMeshBlocks" << endl;
     }
 }
 
@@ -144,8 +139,8 @@ void Foam::vtkPVblockMesh::convertMeshEdges
     vtkDataArraySelection* selection = reader_->GetCurvedEdgesSelection();
     arrayRange& range = arrayRangeEdges_;
 
-    range.block(blockNo);      // set output block
-    label datasetNo = 0;       // restart at dataset 0
+    range.block(blockNo);      // Set output block
+    label datasetNo = 0;       // Restart at dataset 0
 
     const blockMesh& blkMesh = *meshPtr_;
     const blockEdgeList& edges = blkMesh.edges();
@@ -165,7 +160,7 @@ void Foam::vtkPVblockMesh::convertMeshEdges
             continue;
         }
 
-        // search each block
+        // Search each block
         forAll(blkMesh, blockI)
         {
             const blockDescriptor& blockDef = blkMesh[blockI];
@@ -177,7 +172,7 @@ void Foam::vtkPVblockMesh::convertMeshEdges
             scalarList edgesWeights[12];
             blockDef.edgesPointsWeights(edgesPoints, edgesWeights);
 
-            // find the corresponding edge within the block
+            // Find the corresponding edge within the block
             label foundEdgeI = -1;
             forAll(blkEdges, blkEdgeI)
             {
@@ -235,17 +230,11 @@ void Foam::vtkPVblockMesh::convertMeshEdges
     }
 
 
-    // anything added?
+    // Anything added?
     if (datasetNo)
     {
         ++blockNo;
     }
-
-    if (debug)
-    {
-        Info<< "<end> Foam::vtkPVblockMesh::convertMeshEdges" << endl;
-    }
-
 }
 
 
@@ -256,18 +245,18 @@ void Foam::vtkPVblockMesh::convertMeshCorners
 )
 {
     arrayRange& range = arrayRangeCorners_;
-    range.block(blockNo);      // set output block
-    label datasetNo = 0;       // restart at dataset 0
+    range.block(blockNo);      // Set output block
+    label datasetNo = 0;       // Restart at dataset 0
 
     const pointField& blockPoints = meshPtr_->vertices();
     const scalar& scaleFactor = meshPtr_->scaleFactor();
 
     if (debug)
     {
-        Info<< "<beg> Foam::vtkPVblockMesh::convertMeshCorners" << endl;
+        InfoInFunction << endl;
     }
 
-    if (true)  // or some flag or other condition
+    if (true)  // Or some flag or other condition
     {
         vtkPolyData* vtkmesh = vtkPolyData::New();
         vtkPoints* vtkpoints = vtkPoints::New();
@@ -306,15 +295,10 @@ void Foam::vtkPVblockMesh::convertMeshCorners
         datasetNo++;
     }
 
-    // anything added?
+    // Anything added?
     if (datasetNo)
     {
         ++blockNo;
-    }
-
-    if (debug)
-    {
-        Info<< "<end> Foam::vtkPVblockMesh::convertMeshCorners" << endl;
     }
 }
 

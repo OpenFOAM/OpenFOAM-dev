@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,15 +47,6 @@ class ensightGeoFile
 :
     public ensightFile
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const ensightGeoFile&);
-
-        //- Disallow default copy constructor
-        ensightGeoFile(const ensightGeoFile&);
-
-
 public:
 
     // Constructors
@@ -67,6 +58,10 @@ public:
             IOstream::streamFormat format=IOstream::BINARY
         );
 
+        //- Disallow default bitwise copy construction
+        ensightGeoFile(const ensightGeoFile&);
+
+
 
     //- Destructor
     ~ensightGeoFile();
@@ -76,6 +71,12 @@ public:
 
         //- Write keyword with trailing newline
         virtual Ostream& writeKeyword(const string& key);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ensightGeoFile&) = delete;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

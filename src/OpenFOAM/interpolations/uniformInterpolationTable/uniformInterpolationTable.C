@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,14 +93,14 @@ Foam::uniformInterpolationTable<Type>::uniformInterpolationTable
         false // if used in BCs, could be used by multiple patches
     ),
     List<scalar>(2, 0.0),
-    x0_(readScalar(dict.lookup("x0"))),
-    dx_(readScalar(dict.lookup("dx"))),
+    x0_(dict.lookup<scalar>("x0")),
+    dx_(dict.lookup<scalar>("dx")),
     log10_(dict.lookupOrDefault<Switch>("log10", false)),
     bound_(dict.lookupOrDefault<Switch>("bound", false))
 {
     if (initialiseOnly)
     {
-        const scalar xMax = readScalar(dict.lookup("xMax"));
+        const scalar xMax = dict.lookup<scalar>("xMax");
         const label nIntervals = static_cast<label>(xMax - x0_)/dx_ + 1;
         this->setSize(nIntervals);
     }

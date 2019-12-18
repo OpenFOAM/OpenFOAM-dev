@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ Ostream& operator<<(Ostream&, const WallCollisionRecord<Type>&);
 template<class Type>
 class WallCollisionRecord
 {
-    // Private data
+    // Private Data
 
         // //- Recording whether or not this record has been accessed
         bool accessed_;
@@ -92,7 +92,7 @@ class WallCollisionRecord
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Tolerance for detecting seriously erroneous wall matches
         static const scalar errorCosAngle;
@@ -114,7 +114,7 @@ public:
         //- Construct from Istream
         WallCollisionRecord(Istream&);
 
-        //- Construct as copy
+        //- Copy constructor
         WallCollisionRecord(const WallCollisionRecord&);
 
 

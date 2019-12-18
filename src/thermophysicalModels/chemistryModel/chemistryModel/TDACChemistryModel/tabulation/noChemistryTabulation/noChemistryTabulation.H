@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,12 +49,6 @@ class none
 :
     public chemistryTabulationMethod<CompType, ThermoType>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        none(const none&);
-
-
 public:
 
     //- Runtime type information
@@ -68,6 +62,9 @@ public:
             const dictionary& chemistryProperties,
             TDACChemistryModel<CompType, ThermoType>& chemistry
         );
+
+        //- Disallow default bitwise copy construction
+        none(const none&) = delete;
 
 
     // Destructor
@@ -108,6 +105,7 @@ public:
         (
             const scalarField& phiq,
             const scalarField& Rphiq,
+            const label li,
             const scalar rho,
             const scalar deltaT
         )

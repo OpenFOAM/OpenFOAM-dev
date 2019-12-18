@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Usage
     \table
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
-        tangentialVelocity | tangential velocity field | no  |
+        tangentialVelocity | tangential velocity | no  |
     \endtable
 
     Example of the boundary condition specification:
@@ -45,10 +45,13 @@ Usage
     {
         type            pressureInletOutletVelocity;
         phi             phi;
-        tangentialVelocity uniform (0 0 0);
+        tangentialVelocity (0 0 0);
         value           uniform 0;
     }
     \endverbatim
+
+    The \c tangentialVelocity entry is a Function1 of time, see
+    Foam::Function1s.
 
 Note
     Sign conventions:
@@ -66,6 +69,7 @@ SourceFiles
 
 #include "fvPatchFields.H"
 #include "directionMixedFvPatchFields.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -80,13 +84,13 @@ class pressureInletOutletVelocityFvPatchVectorField
 :
     public directionMixedFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Flux field name
         word phiName_;
 
         //- Optional tangential velocity component
-        vectorField tangentialVelocity_;
+        autoPtr<Function1<vector>> tangentialVelocity_;
 
 
 public:
@@ -122,7 +126,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         pressureInletOutletVelocityFvPatchVectorField
         (
             const pressureInletOutletVelocityFvPatchVectorField&
@@ -137,7 +141,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         pressureInletOutletVelocityFvPatchVectorField
         (
             const pressureInletOutletVelocityFvPatchVectorField&,
@@ -157,7 +161,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Attributes
 
@@ -182,31 +186,6 @@ public:
                 return phiName_;
             }
 
-            //- Return the tangential velocity
-            const vectorField& tangentialVelocity() const
-            {
-                return tangentialVelocity_;
-            }
-
-            //- Reset the tangential velocity
-            void setTangentialVelocity(const vectorField& tangentialVelocity);
-
-
-        // Mapping functions
-
-            //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
-
-            //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchVectorField&,
-                const labelList&
-            );
-
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();
@@ -215,7 +194,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const fvPatchField<vector>& pvf);
 };

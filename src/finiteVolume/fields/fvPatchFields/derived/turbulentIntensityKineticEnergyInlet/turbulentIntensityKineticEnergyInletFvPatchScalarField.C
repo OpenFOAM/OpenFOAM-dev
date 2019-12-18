@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ turbulentIntensityKineticEnergyInletFvPatchScalarField
 )
 :
     inletOutletFvPatchScalarField(p, iF),
-    intensity_(readScalar(dict.lookup("intensity"))),
+    intensity_(dict.lookup<scalar>("intensity")),
     UName_(dict.lookupOrDefault<word>("U", "U"))
 {
     this->phiName_ = dict.lookupOrDefault<word>("phi", "phi");
@@ -148,10 +148,10 @@ void Foam::turbulentIntensityKineticEnergyInletFvPatchScalarField::write
 ) const
 {
     fvPatchScalarField::write(os);
-    os.writeKeyword("intensity") << intensity_ << token::END_STATEMENT << nl;
+    writeEntry(os, "intensity", intensity_);
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
     writeEntryIfDifferent<word>(os, "phi", "phi", this->phiName_);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

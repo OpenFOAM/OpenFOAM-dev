@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Interpolation method
         const word methodName_;
@@ -164,15 +164,6 @@ private:
 
         //- Target map pointer - parallel running only
         autoPtr<mapDistribute> tgtMapPtr_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        AMIInterpolation(const AMIInterpolation&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const AMIInterpolation&);
 
 
         // Parallel functionality
@@ -372,6 +363,9 @@ public:
             const labelList& neighbourRestrictAddressing,
             const bool report = false
         );
+
+        //- Disallow default bitwise copy construction
+        AMIInterpolation(const AMIInterpolation&) = delete;
 
 
     //- Destructor
@@ -607,6 +601,12 @@ public:
                 const primitivePatch& tgtPatch,
                 const labelListList& srcAddress
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const AMIInterpolation&) = delete;
 };
 
 

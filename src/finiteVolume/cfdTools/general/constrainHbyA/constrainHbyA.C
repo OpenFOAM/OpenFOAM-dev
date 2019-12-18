@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "constrainHbyA.H"
 #include "volFields.H"
+#include "surfaceFields.H"
 #include "fixedFluxExtrapolatedPressureFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -45,7 +46,7 @@ Foam::tmp<Foam::volVectorField> Foam::constrainHbyA
     }
     else
     {
-        tHbyANew = new volVectorField("HbyA", tHbyA);
+        tHbyANew = volVectorField::New("HbyA", tHbyA);
     }
 
     volVectorField& HbyA = tHbyANew.ref();
@@ -67,6 +68,49 @@ Foam::tmp<Foam::volVectorField> Foam::constrainHbyA
     }
 
     return tHbyANew;
+}
+
+
+Foam::tmp<Foam::surfaceScalarField> Foam::constrainPhiHbyA
+(
+    const tmp<surfaceScalarField>& tphiHbyA,
+    const volVectorField& U,
+    const volScalarField& p
+)
+{
+    tmp<surfaceScalarField> tphiHbyANew;
+
+    if (tphiHbyA.isTmp())
+    {
+        tphiHbyANew = tphiHbyA;
+        tphiHbyANew.ref().rename("phiHbyA");
+    }
+    else
+    {
+        tphiHbyANew = surfaceScalarField::New("phiHbyA", tphiHbyA);
+    }
+
+    surfaceScalarField& phiHbyA = tphiHbyANew.ref();
+    surfaceScalarField::Boundary& phiHbyAbf = phiHbyA.boundaryFieldRef();
+
+    forAll(U.boundaryField(), patchi)
+    {
+        if
+        (
+           !U.boundaryField()[patchi].assignable()
+        && !isA<fixedFluxExtrapolatedPressureFvPatchScalarField>
+            (
+                p.boundaryField()[patchi]
+            )
+        )
+        {
+            phiHbyAbf[patchi] =
+                U.mesh().Sf().boundaryField()[patchi]
+              & U.boundaryField()[patchi];
+        }
+    }
+
+    return tphiHbyANew;
 }
 
 

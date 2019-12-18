@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,32 +27,28 @@ Description
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct null
 inline Foam::cell::cell()
 {}
 
 
-// Construct given size
 inline Foam::cell::cell(label s)
 :
     labelList(s, -1)
 {}
 
 
-// Construct from components
 inline Foam::cell::cell(const labelUList& lst)
 :
     labelList(lst)
 {}
 
 
-inline Foam::cell::cell(const Xfer<labelList>& lst)
+inline Foam::cell::cell(labelList&& lst)
 :
-    labelList(lst)
+    labelList(move(lst))
 {}
 
 
-// Construct from Istream
 inline Foam::cell::cell(Istream& is)
 :
     labelList(is)
@@ -61,7 +57,6 @@ inline Foam::cell::cell(Istream& is)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Number of faces
 inline Foam::label Foam::cell::nFaces() const
 {
     return size();
@@ -72,5 +67,14 @@ inline bool Foam::operator!=(const cell& a, const cell& b)
 {
     return (!(a == b));
 }
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+inline void Foam::cell::operator=(labelList&& l)
+{
+    labelList::operator=(move(l));
+}
+
 
 // ************************************************************************* //

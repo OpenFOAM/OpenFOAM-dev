@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,9 +35,7 @@ License
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(backgroundMeshDecomposition, 0);
-
+    defineTypeNameAndDebug(backgroundMeshDecomposition, 0);
 }
 
 
@@ -118,8 +116,8 @@ Foam::autoPtr<Foam::mapDistribute> Foam::backgroundMeshDecomposition::buildMap
         new mapDistribute
         (
             constructSize,
-            sendMap.xfer(),
-            constructMap.xfer()
+            move(sendMap),
+            move(constructMap)
         )
     );
 }
@@ -781,7 +779,6 @@ Foam::backgroundMeshDecomposition::backgroundMeshDecomposition
 :
     runTime_(runTime),
     geometryToConformTo_(geometryToConformTo),
-    rndGen_(rndGen),
     mesh_
     (
         IOobject
@@ -817,14 +814,14 @@ Foam::backgroundMeshDecomposition::backgroundMeshDecomposition
     ),
     decomposerPtr_(decompositionMethod::New(decomposeDict_)),
     mergeDist_(1e-6*mesh_.bounds().mag()),
-    spanScale_(readScalar(coeffsDict.lookup("spanScale"))),
+    spanScale_(coeffsDict.lookup<scalar>("spanScale")),
     minCellSizeLimit_
     (
         coeffsDict.lookupOrDefault<scalar>("minCellSizeLimit", 0.0)
     ),
-    minLevels_(readLabel(coeffsDict.lookup("minLevels"))),
-    volRes_(readLabel(coeffsDict.lookup("sampleResolution"))),
-    maxCellWeightCoeff_(readScalar(coeffsDict.lookup("maxCellWeightCoeff")))
+    minLevels_(coeffsDict.lookup<label>("minLevels")),
+    volRes_(coeffsDict.lookup<label>("sampleResolution")),
+    maxCellWeightCoeff_(coeffsDict.lookup<scalar>("maxCellWeightCoeff"))
 {
     if (!Pstream::parRun())
     {
@@ -1370,7 +1367,7 @@ Foam::labelList Foam::backgroundMeshDecomposition::overlapProcessors
         }
     }
 
-    return toProc;
+    return Foam::move(toProc);
 }
 
 

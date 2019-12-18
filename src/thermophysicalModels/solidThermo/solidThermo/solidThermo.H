@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,6 @@ protected:
     // Protected data
 
         //- Density field [kg/m^3]
-        //  Named 'rhoThermo' to avoid (potential) conflict with solver density
         volScalarField rho_;
 
 
@@ -108,7 +107,7 @@ public:
         static autoPtr<solidThermo> New
         (
             const fvMesh&,
-            const word& phaseName=word::null
+            const word& phaseName = word::null
         );
 
         //- Return a pointer to a new solidThermo created from
@@ -117,7 +116,7 @@ public:
         (
             const fvMesh&,
             const dictionary&,
-            const word& phaseName=word::null
+            const word& phaseName = word::null
         );
 
 
@@ -125,7 +124,7 @@ public:
     virtual ~solidThermo();
 
 
-    // Member functions
+    // Member Functions
 
         // Fields derived from thermodynamic state variables
 

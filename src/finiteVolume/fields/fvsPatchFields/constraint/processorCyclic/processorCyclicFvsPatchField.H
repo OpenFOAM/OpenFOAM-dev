@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ class processorCyclicFvsPatchField
 :
     public coupledFvsPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the processor patch
         const processorCyclicFvPatch& procPatch_;
@@ -99,7 +99,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         processorCyclicFvsPatchField(const processorCyclicFvsPatchField<Type>&);
 
         //- Construct and return a clone
@@ -111,7 +111,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         processorCyclicFvsPatchField
         (
             const processorCyclicFvsPatchField<Type>&,
@@ -135,7 +135,7 @@ public:
     virtual ~processorCyclicFvsPatchField();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

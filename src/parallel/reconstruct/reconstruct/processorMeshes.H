@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ namespace Foam
 
 class processorMeshes
 {
-    // Private data
+    // Private Data
 
         const word meshName_;
 
@@ -80,12 +80,6 @@ class processorMeshes
         //- Read all meshes
         void read();
 
-        //- Disallow default bitwise copy construct
-        processorMeshes(const processorMeshes&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const processorMeshes&);
-
 
 public:
 
@@ -93,6 +87,9 @@ public:
 
         //- Construct from components
         processorMeshes(PtrList<Time>& databases, const word& meshName);
+
+        //- Disallow default bitwise copy construction
+        processorMeshes(const processorMeshes&) = delete;
 
 
     // Member Functions
@@ -129,6 +126,10 @@ public:
         }
 
 
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const processorMeshes&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,17 +110,6 @@ protected:
         virtual wordList objectNames();
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        writeLocalObjects(const writeLocalObjects&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const writeLocalObjects&);
-
-
 public:
 
     // Constructors
@@ -131,6 +120,9 @@ public:
             const objectRegistry& obr,
             const Switch& logRef
         );
+
+        //- Disallow default bitwise copy construction
+        writeLocalObjects(const writeLocalObjects&) = delete;
 
 
     //- Destructor
@@ -144,6 +136,12 @@ public:
 
         //- Read the list of objects to be written
         virtual bool read(const dictionary&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const writeLocalObjects&) = delete;
 };
 
 

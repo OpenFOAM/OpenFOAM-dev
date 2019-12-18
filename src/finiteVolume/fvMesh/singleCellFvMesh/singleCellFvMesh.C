@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -276,10 +276,10 @@ void Foam::singleCellFvMesh::agglomerateMesh
     // actually change the mesh
     resetPrimitives
     (
-        xferMove(boundaryPoints),
-        xferMove(patchFaces),
-        xferMove(owner),
-        xferMove(neighbour),
+        move(boundaryPoints),
+        move(patchFaces),
+        move(owner),
+        move(neighbour),
         patchSizes,
         patchStarts,
         true                // syncPar
@@ -397,11 +397,11 @@ Foam::singleCellFvMesh::singleCellFvMesh
     fvMesh
     (
         io,
-        xferCopy(pointField()), // points
-        xferCopy(faceList()),   // faces
-        xferCopy(labelList()),  // allOwner
-        xferCopy(labelList()),  // allNeighbour
-        false                   // syncPar
+        pointField(), // points
+        faceList(),   // faces
+        labelList(),  // allOwner
+        labelList(),  // allNeighbour
+        false         // syncPar
     ),
     patchFaceAgglomeration_
     (
@@ -492,11 +492,11 @@ Foam::singleCellFvMesh::singleCellFvMesh
     fvMesh
     (
         io,
-        xferCopy(pointField()), // points
-        xferCopy(faceList()),   // faces
-        xferCopy(labelList()),  // allOwner
-        xferCopy(labelList()),  // allNeighbour
-        false                   // syncPar
+        pointField(), // points
+        faceList(),   // faces
+        labelList(),  // allOwner
+        labelList(),  // allNeighbour
+        false         // syncPar
     ),
     patchFaceAgglomeration_
     (

@@ -1,8 +1,8 @@
-/*---------------------------------------------------------------------------*\
+ /*---------------------------------------------------------------------------*\
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ class RKF45
     public ODESolver,
     public adaptiveSolver
 {
-    // Private data
+    // Private Data
 
         //- RKF45 Constants
         static const scalar
@@ -122,6 +122,7 @@ public:
         (
             const scalar x0,
             const scalarField& y0,
+            const label li,
             const scalarField& dydx0,
             const scalar dx,
             scalarField& y
@@ -132,6 +133,7 @@ public:
         (
             scalar& x,
             scalarField& y,
+            const label li,
             scalar& dxTry
         ) const;
 };

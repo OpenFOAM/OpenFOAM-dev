@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class clippedLinear
 :
     public surfaceInterpolationScheme<Type>
 {
-    // Private data
+    // Private Data
 
         const scalar cellSizeRatio_;
         scalar wfLimit_;
@@ -73,10 +73,6 @@ class clippedLinear
 
             wfLimit_ = cellSizeRatio_/(1.0 + cellSizeRatio_);
         }
-
-
-        //- Disallow default bitwise assignment
-        void operator=(const clippedLinear&);
 
 
 public:
@@ -177,6 +173,12 @@ public:
 
             return tclippedLinearWeights;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const clippedLinear&) = delete;
 };
 
 

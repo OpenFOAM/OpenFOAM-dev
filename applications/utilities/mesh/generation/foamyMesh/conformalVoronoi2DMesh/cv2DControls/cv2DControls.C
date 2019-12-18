@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,19 +34,17 @@ Foam::cv2DControls::cv2DControls
     const boundBox& bb
 )
 :
-    dict_(controlDict),
-
     motionControl_(controlDict.subDict("motionControl")),
     conformationControl_(controlDict.subDict("surfaceConformation")),
 
-    minCellSize_(readScalar(motionControl_.lookup("minCellSize"))),
+    minCellSize_(motionControl_.lookup<scalar>("minCellSize")),
     minCellSize2_(Foam::sqr(minCellSize_)),
 
-    maxQuadAngle_(readScalar(conformationControl_.lookup("maxQuadAngle"))),
+    maxQuadAngle_(conformationControl_.lookup<scalar>("maxQuadAngle")),
 
     nearWallAlignedDist_
     (
-        readScalar(motionControl_.lookup("nearWallAlignedDist"))*minCellSize_
+        motionControl_.lookup<scalar>("nearWallAlignedDist")*minCellSize_
     ),
     nearWallAlignedDist2_(Foam::sqr(nearWallAlignedDist_)),
 
@@ -70,12 +68,12 @@ Foam::cv2DControls::cv2DControls
     randomiseInitialGrid_(conformationControl_.lookup("randomiseInitialGrid")),
     randomPerturbation_
     (
-        readScalar(conformationControl_.lookup("randomPerturbation"))
+        conformationControl_.lookup<scalar>("randomPerturbation")
     ),
 
     maxBoundaryConformingIter_
     (
-        readLabel(conformationControl_.lookup("maxBoundaryConformingIter"))
+        conformationControl_.lookup<label>("maxBoundaryConformingIter")
     ),
 
     span_
@@ -87,28 +85,28 @@ Foam::cv2DControls::cv2DControls
 
     minEdgeLen_
     (
-        readScalar(conformationControl_.lookup("minEdgeLenCoeff"))
+        conformationControl_.lookup<scalar>("minEdgeLenCoeff")
        *minCellSize_
     ),
     minEdgeLen2_(Foam::sqr(minEdgeLen_)),
 
     maxNotchLen_
     (
-        readScalar(conformationControl_.lookup("maxNotchLenCoeff"))
+        conformationControl_.lookup<scalar>("maxNotchLenCoeff")
        *minCellSize_
     ),
     maxNotchLen2_(Foam::sqr(maxNotchLen_)),
 
     minNearPointDist_
     (
-        readScalar(conformationControl_.lookup("minNearPointDistCoeff"))
+        conformationControl_.lookup<scalar>("minNearPointDistCoeff")
        *minCellSize_
     ),
     minNearPointDist2_(Foam::sqr(minNearPointDist_)),
 
     ppDist_
     (
-        readScalar(conformationControl_.lookup("pointPairDistanceCoeff"))
+        conformationControl_.lookup<scalar>("pointPairDistanceCoeff")
        *minCellSize_
     )
 {}

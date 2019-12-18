@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,15 +56,6 @@ class fourthGrad
 :
     public fv::gradScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        fourthGrad(const fourthGrad&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fourthGrad&);
-
-
 public:
 
     //- Runtime type information
@@ -78,6 +69,9 @@ public:
         :
             gradScheme<Type>(mesh)
         {}
+
+        //- Disallow default bitwise copy construction
+        fourthGrad(const fourthGrad&) = delete;
 
 
     // Member Functions
@@ -93,6 +87,12 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>& vsf,
             const word& name
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fourthGrad&) = delete;
 };
 
 

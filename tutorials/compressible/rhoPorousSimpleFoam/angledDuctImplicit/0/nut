@@ -21,18 +21,6 @@ internalField   uniform 0;
 
 boundaryField
 {
-    front
-    {
-        type            nutkWallFunction;
-        value           uniform 0;
-    }
-
-    back
-    {
-        type            nutkWallFunction;
-        value           uniform 0;
-    }
-
     walls
     {
         type            nutkWallFunction;

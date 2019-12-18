@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,77 +98,77 @@ template<class ParcelType>
 template<class CloudType>
 void Foam::KinematicParcel<ParcelType>::readFields(CloudType& c)
 {
-    bool valid = c.size();
+    bool write = c.size();
 
     ParcelType::readFields(c);
 
     IOField<label> active
     (
         c.fieldIOobject("active", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, active);
 
     IOField<label> typeId
     (
         c.fieldIOobject("typeId", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, typeId);
 
     IOField<scalar> nParticle
     (
         c.fieldIOobject("nParticle", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, nParticle);
 
     IOField<scalar> d
     (
         c.fieldIOobject("d", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, d);
 
     IOField<scalar> dTarget
     (
         c.fieldIOobject("dTarget", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, dTarget);
 
     IOField<vector> U
     (
         c.fieldIOobject("U", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, U);
 
     IOField<scalar> rho
     (
         c.fieldIOobject("rho", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, rho);
 
     IOField<scalar> age
     (
         c.fieldIOobject("age", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, age);
 
     IOField<scalar> tTurb
     (
         c.fieldIOobject("tTurb", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, tTurb);
 
     IOField<vector> UTurb
     (
         c.fieldIOobject("UTurb", IOobject::MUST_READ),
-        valid
+        write
     );
     c.checkFieldIOobject(c, UTurb);
 
@@ -237,18 +237,18 @@ void Foam::KinematicParcel<ParcelType>::writeFields(const CloudType& c)
         i++;
     }
 
-    const bool valid = np > 0;
+    const bool write = np > 0;
 
-    active.write(valid);
-    typeId.write(valid);
-    nParticle.write(valid);
-    d.write(valid);
-    dTarget.write(valid);
-    U.write(valid);
-    rho.write(valid);
-    age.write(valid);
-    tTurb.write(valid);
-    UTurb.write(valid);
+    active.write(write);
+    typeId.write(write);
+    nParticle.write(write);
+    d.write(write);
+    dTarget.write(write);
+    U.write(write);
+    rho.write(write);
+    age.write(write);
+    tTurb.write(write);
+    UTurb.write(write);
 }
 
 

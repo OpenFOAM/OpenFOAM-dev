@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,11 +82,12 @@ Foam::FallOffReactionRate<ReactionRate, FallOffFunction>::operator()
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
-    const scalar k0 = k0_(p, T, c);
-    const scalar kInf = kInf_(p, T, c);
+    const scalar k0 = k0_(p, T, c, li);
+    const scalar kInf = kInf_(p, T, c, li);
     const scalar Pr = k0*thirdBodyEfficiencies_.M(c)/kInf;
 
     return kInf*(Pr/(1 + Pr))*F_(T, Pr);
@@ -99,14 +100,15 @@ Foam::FallOffReactionRate<ReactionRate, FallOffFunction>::ddT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
-    const scalar k0 = k0_(p, T, c);
-    const scalar kInf = kInf_(p, T, c);
+    const scalar k0 = k0_(p, T, c, li);
+    const scalar kInf = kInf_(p, T, c, li);
     const scalar Pr = k0*thirdBodyEfficiencies_.M(c)/kInf;
 
-    return (Pr/(1 + Pr))*F_(T, Pr)*kInf_.ddT(p, T, c);
+    return (Pr/(1 + Pr))*F_(T, Pr)*kInf_.ddT(p, T, c, li);
 }
 
 
@@ -116,6 +118,7 @@ inline void Foam::FallOffReactionRate<ReactionRate, FallOffFunction>::dcidc
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcidc
 ) const
 {
@@ -123,8 +126,8 @@ inline void Foam::FallOffReactionRate<ReactionRate, FallOffFunction>::dcidc
 
     if (M > small)
     {
-        const scalar k0 = k0_(p, T, c);
-        const scalar kInf = kInf_(p, T, c);
+        const scalar k0 = k0_(p, T, c, li);
+        const scalar kInf = kInf_(p, T, c, li);
         const scalar Pr = k0*M/kInf;
         const scalar F = F_(T, Pr);
 
@@ -151,20 +154,21 @@ Foam::FallOffReactionRate<ReactionRate, FallOffFunction>::dcidT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     const scalar M = thirdBodyEfficiencies_.M(c);
 
     if (M > small)
     {
-        const scalar k0 = k0_(p, T, c);
-        const scalar kInf = kInf_(p, T, c);
+        const scalar k0 = k0_(p, T, c, li);
+        const scalar kInf = kInf_(p, T, c, li);
 
         const scalar Pr = k0*thirdBodyEfficiencies_.M(c)/kInf;
         const scalar F = F_(T, Pr);
         const scalar dPrdT =
-            Pr*(k0_.ddT(p, T, c)/k0 - kInf_.ddT(p, T, c)/kInf - 1/T);
+            Pr*(k0_.ddT(p, T, c, li)/k0 - kInf_.ddT(p, T, c, li)/kInf - 1/T);
         const scalar dFdT = F_.ddT(Pr, F, dPrdT, T);
 
         return (dPrdT/(Pr*(1 + Pr)) + dFdT/F);

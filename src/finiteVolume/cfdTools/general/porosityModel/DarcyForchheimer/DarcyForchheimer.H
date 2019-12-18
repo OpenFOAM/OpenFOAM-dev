@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Description
 
     where
     \vartable
-        d        | Darcy coefficient [1/m2]
+        d        | Darcy coefficient [1/m^2]
         f        | Forchheimer coefficient [1/m]
     \endvartable
 
@@ -70,15 +70,15 @@ class DarcyForchheimer
 :
     public porosityModel
 {
-    // Private data
+    // Private Data
 
-        //- Darcy coeffient XYZ components (user-supplied) [1/m2]
+        //- Darcy coeffient XYZ components (user-supplied) [1/m^2]
         dimensionedVector dXYZ_;
 
         //- Forchheimer coeffient XYZ components (user-supplied) [1/m]
         dimensionedVector fXYZ_;
 
-        //- Darcy coefficient - converted from dXYZ [1/m2]
+        //- Darcy coefficient - converted from dXYZ [1/m^2]
         List<tensorField> D_;
 
         //- Forchheimer coefficient - converted from fXYZ [1/m]
@@ -118,27 +118,26 @@ class DarcyForchheimer
             const vectorField& U
         ) const;
 
-        //- Disallow default bitwise copy construct
-        DarcyForchheimer(const DarcyForchheimer&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const DarcyForchheimer&);
-
 
 public:
 
     //- Runtime type information
     TypeName("DarcyForchheimer");
 
-    //- Constructor
-    DarcyForchheimer
-    (
-        const word& name,
-        const word& modelType,
-        const fvMesh& mesh,
-        const dictionary& dict,
-        const word& cellZoneName
-    );
+    // Constructors
+
+        DarcyForchheimer
+        (
+            const word& name,
+            const word& modelType,
+            const fvMesh& mesh,
+            const dictionary& dict,
+            const word& cellZoneName
+        );
+
+        //- Disallow default bitwise copy construction
+        DarcyForchheimer(const DarcyForchheimer&) = delete;
+
 
     //- Destructor
     virtual ~DarcyForchheimer();
@@ -181,7 +180,14 @@ public:
 
         //- Write
         bool writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const DarcyForchheimer&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

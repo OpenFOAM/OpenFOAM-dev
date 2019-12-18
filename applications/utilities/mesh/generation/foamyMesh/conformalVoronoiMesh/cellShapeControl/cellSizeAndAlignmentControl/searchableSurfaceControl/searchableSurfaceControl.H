@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ class searchableSurfaceControl
 :
     public cellSizeAndAlignmentControl
 {
-    // Private data
+    // Private Data
 
         //- Name of the surface
         const word surfaceName_;
@@ -66,33 +66,6 @@ class searchableSurfaceControl
         labelList regionToCellSizeFunctions_;
 
         label maxPriority_;
-
-
-//        const conformationSurfaces& geometryToConformTo_;
-//
-//        //- Indices of surfaces in allGeometry that are to be conformed to
-//        labelList surfaces_;
-//
-//        //- A list of all of the cellSizeFunction objects
-//        PtrList<cellSizeFunction> cellSizeFunctions_;
-//
-//        autoPtr<triangulatedMesh> triangulatedMesh_;
-//
-//
-//    // Private Member Functions
-//
-//        //-
-//        tensor requiredAlignment
-//        (
-//            const point& pt,
-//            const vectorField& ptNormals
-//        ) const;
-
-        //- Disallow default bitwise copy construct
-        searchableSurfaceControl(const searchableSurfaceControl&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableSurfaceControl&);
 
 
 public:
@@ -114,36 +87,15 @@ public:
             const scalar& defaultCellSize
         );
 
+        //- Disallow default bitwise copy construction
+        searchableSurfaceControl(const searchableSurfaceControl&) = delete;
+
+
     //- Destructor
     ~searchableSurfaceControl();
 
 
     // Member Functions
-
-        // Access
-
-//            //- Return reference to the searchableSurfaces object containing
-//            //  all of the geometry
-//            inline const searchableSurfaces& geometry() const;
-//
-//            //- Return the surface indices
-//            inline const labelList& surfaces() const;
-//
-//
-//        // Query
-//
-//            //- Return the cell size at the given location
-//            virtual scalar cellSize(const point& pt) const;
-//
-//            //- Return the cell alignment at the given location
-//            virtual tensor cellAlignment(const point& pt) const;
-//
-//            virtual void cellSizeAndAlignment
-//            (
-//                const point& pt,
-//                scalar& size,
-//                tensor& alignment
-//            ) const;
 
         virtual void cellSizeFunctionVertices
         (
@@ -175,8 +127,11 @@ public:
             label& priority
         ) const;
 
-        // Edit
 
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableSurfaceControl&) = delete;
 };
 
 

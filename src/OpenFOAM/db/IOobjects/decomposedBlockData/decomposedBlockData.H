@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,12 +110,12 @@ public:
             const UPstream::commsTypes = UPstream::commsTypes::scheduled
         );
 
-        //- Construct by transferring the IOList contents
+        //- Move construct by transferring the IOList contents
         decomposedBlockData
         (
             const label comm,
             const IOobject&,
-            const Xfer<List<char>>&,
+            List<char>&&,
             const UPstream::commsTypes = UPstream::commsTypes::scheduled
         );
 
@@ -124,7 +124,7 @@ public:
     virtual ~decomposedBlockData();
 
 
-    // Member functions
+    // Member Functions
 
         //- Read object
         virtual bool read();
@@ -139,7 +139,7 @@ public:
             IOstream::streamFormat,
             IOstream::versionNumber,
             IOstream::compressionType,
-            const bool valid
+            const bool write
         ) const;
 
 

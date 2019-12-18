@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ Class
 Description
     Class which represents a stationary (and therefore probably solid) phase.
     Generates, but does not store, zero velocity and flux field and turbulent
-    qauantities. Throws an error when non-const access is requested to the
+    quantities. Throws an error when non-const access is requested to the
     motion fields or when the momentum equation is requested. Usage must
     must protect against such calls.
 
@@ -58,38 +58,6 @@ class StationaryPhaseModel
 :
     public BasePhaseModel
 {
-private:
-
-    // Private member functions
-
-        //- Create a zero geometric field
-        template<class Type, template<class> class PatchField, class GeoMesh>
-        tmp<GeometricField<Type, PatchField, GeoMesh>> zeroField
-        (
-            const word& name,
-            const dimensionSet& dims,
-            const bool cache = false
-        ) const;
-
-        //- Create a zero vol field
-        template<class Type>
-        tmp<GeometricField<Type, fvPatchField, volMesh>> zeroVolField
-        (
-            const word& name,
-            const dimensionSet& dims,
-            const bool cache = false
-        ) const;
-
-        //- Create a zero surface field
-        template<class Type>
-        tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> zeroSurfaceField
-        (
-            const word& name,
-            const dimensionSet& dims,
-            const bool cache = false
-        ) const;
-
-
 public:
 
     // Constructors
@@ -186,7 +154,7 @@ public:
             virtual tmp<volScalarField> nuEff() const;
 
             //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture for patch [J/m/s/K]
+            //  of mixture for patch [W/m/K]
             using BasePhaseModel::kappaEff;
 
             //- Return the effective thermal conductivity

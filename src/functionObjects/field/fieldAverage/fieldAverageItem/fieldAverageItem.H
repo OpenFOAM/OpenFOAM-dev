@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,16 +78,6 @@ class fieldAverageItem
 {
 public:
 
-    // Public data
-
-        // File and field name extensions
-
-            //- Mean average
-            static const word EXT_MEAN;
-
-            //- Prime-squared average
-            static const word EXT_PRIME2MEAN;
-
         //- Enumeration defining the averaging base type
         enum class baseType
         {
@@ -98,7 +88,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Field name
         word fieldName_;
@@ -130,6 +120,17 @@ private:
 
 public:
 
+    // Static data
+
+        // File and field name extensions
+
+            //- Mean average
+            static const word meanExt;
+
+            //- Prime-squared average
+            static const word prime2MeanExt;
+
+
     // Constructors
 
         //- Construct null
@@ -138,7 +139,7 @@ public:
         //- Construct from Istream
         fieldAverageItem(Istream&);
 
-        //- Construct as copy
+        //- Copy constructor
         fieldAverageItem(const fieldAverageItem&);
 
 

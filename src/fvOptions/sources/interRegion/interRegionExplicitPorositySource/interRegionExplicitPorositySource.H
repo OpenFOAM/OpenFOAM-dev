@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,20 +104,6 @@ protected:
         void initialise();
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        interRegionExplicitPorositySource
-        (
-            const interRegionExplicitPorositySource&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const interRegionExplicitPorositySource&);
-
-
 public:
 
     //- Runtime type information
@@ -133,6 +119,12 @@ public:
             const word& modelType,
             const dictionary& dict,
             const fvMesh& mesh
+        );
+
+        //- Disallow default bitwise copy construction
+        interRegionExplicitPorositySource
+        (
+            const interRegionExplicitPorositySource&
         );
 
 
@@ -168,6 +160,12 @@ public:
 
             //- Read dictionary
             virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const interRegionExplicitPorositySource&) = delete;
 };
 
 

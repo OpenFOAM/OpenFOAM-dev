@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ class cellCuts
 :
     public edgeVertex
 {
-    // Private data
+    // Private Data
 
         // Per point/edge status
 
@@ -450,13 +450,6 @@ class cellCuts
             void check() const;
 
 
-        //- Disallow default bitwise copy construct
-        cellCuts(const cellCuts&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellCuts&);
-
-
 public:
 
     //- Runtime type information
@@ -526,6 +519,9 @@ public:
             const label nLoops,
             const labelListList& cellAnchorPoints
         );
+
+        //- Disallow default bitwise copy construction
+        cellCuts(const cellCuts&) = delete;
 
 
     //- Destructor
@@ -631,6 +627,11 @@ public:
             //- debugging:Write edges of cell and loop
             void writeCellOBJ(const fileName& dir, const label celli) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellCuts&) = delete;
 };
 
 

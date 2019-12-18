@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ void BrunDrippingInjection::correct
         refCast<const kinematicSingleLayer>(this->film());
 
     // Calculate available dripping mass
-    tmp<volScalarField> tsinAlpha(film.gNorm()/mag(film.g()));
+    tmp<volScalarField> tsinAlpha((film.g()/mag(film.g())) & film.nHat());
     const scalarField& sinAlpha = tsinAlpha();
     const scalarField& magSf = film.magSf();
 

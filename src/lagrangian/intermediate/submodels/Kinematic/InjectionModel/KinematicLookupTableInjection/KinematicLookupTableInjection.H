@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ Description
         x, y, z | global cartesian co-ordinates [m]
         u, v, w | global cartesian velocity components [m/s]
         d       | diameter [m]
-        rho     | density [kg/m3]
+        rho     | density [kg/m^3]
         mDot    | mass flow rate [kg/s]
     \endplaintable
 
@@ -71,7 +71,7 @@ class KinematicLookupTableInjection
 :
     public InjectionModel<CloudType>
 {
-    // Private data
+    // Private Data
 
         //- Name of file containing injector/parcel data
         const word inputFileName_;

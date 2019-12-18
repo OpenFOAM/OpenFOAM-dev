@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -210,16 +210,16 @@ void rewriteBoundary
                 Info<< "Replaced with patches" << nl
                     << patches[patchi].keyword() << " with" << nl
                     << "    nFaces    : "
-                    << readLabel(thisPatchDict.lookup("nFaces"))
+                    << thisPatchDict.lookup<label>("nFaces")
                     << nl
                     << "    startFace : "
-                    << readLabel(thisPatchDict.lookup("startFace")) << nl
+                    << thisPatchDict.lookup<label>("startFace") << nl
                     << patches[addedPatchi].keyword() << " with" << nl
                     << "    nFaces    : "
-                    << readLabel(nbrPatchDict.lookup("nFaces"))
+                    << nbrPatchDict.lookup<label>("nFaces")
                     << nl
                     << "    startFace : "
-                    << readLabel(nbrPatchDict.lookup("startFace"))
+                    << nbrPatchDict.lookup<label>("startFace")
                     << nl << endl;
 
                 addedPatchi++;

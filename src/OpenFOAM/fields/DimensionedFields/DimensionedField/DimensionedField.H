@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ class DimensionedField
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         //- Type of mesh on which this DimensionedField is instantiated
         typedef typename GeoMesh::Mesh Mesh;
@@ -91,7 +91,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const Mesh& mesh_;
@@ -164,39 +164,39 @@ public:
             const word& fieldDictEntry="value"
         );
 
-        //- Construct as copy
+        //- Copy constructor
         DimensionedField
         (
             const DimensionedField<Type, GeoMesh>&
         );
 
-        //- Construct as copy or re-use as specified.
+        //- Copy constructor or re-use as specified.
         DimensionedField
         (
             DimensionedField<Type, GeoMesh>&,
             bool reuse
         );
 
-        //- Construct by transferring the DimensionedField
+        //- Move constructor
         DimensionedField
         (
-            const Xfer<DimensionedField<Type, GeoMesh>>&
+            DimensionedField<Type, GeoMesh>&&
         );
 
-        //- Construct as copy of tmp<DimensionedField> deleting argument
+        //- Copy constructor of tmp<DimensionedField> deleting argument
         DimensionedField
         (
             const tmp<DimensionedField<Type, GeoMesh>>&
         );
 
-        //- Construct as copy resetting IO parameters
+        //- Copy constructor resetting IO parameters
         DimensionedField
         (
             const IOobject&,
             const DimensionedField<Type, GeoMesh>&
         );
 
-        //- Construct as copy resetting IO parameters and re-use as specified.
+        //- Copy constructor resetting IO parameters and re-use as specified.
         DimensionedField
         (
             const IOobject&,
@@ -204,14 +204,14 @@ public:
             bool reuse
         );
 
-        //- Construct as copy resetting name
+        //- Copy constructor resetting name
         DimensionedField
         (
             const word& newName,
             const DimensionedField<Type, GeoMesh>&
         );
 
-        //- Construct as copy resetting name and re-use as specified.
+        //- Copy constructor resetting name and re-use as specified.
         DimensionedField
         (
             const word& newName,
@@ -219,14 +219,7 @@ public:
             bool reuse
         );
 
-        //- Construct by transferring the DimensionedField with a new name
-        DimensionedField
-        (
-            const word& newName,
-            const Xfer<DimensionedField<Type, GeoMesh>>&
-        );
-
-        //- Construct as copy resetting name
+        //- Copy constructor resetting name
         DimensionedField
         (
             const word& newName,
@@ -343,6 +336,7 @@ public:
     // Member Operators
 
         void operator=(const DimensionedField<Type, GeoMesh>&);
+        void operator=(DimensionedField<Type, GeoMesh>&&);
         void operator=(const tmp<DimensionedField<Type, GeoMesh>>&);
         void operator=(const dimensioned<Type>&);
         void operator=(const zero&);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,12 +46,13 @@ Foam::distributionModels::massRosinRammler::massRosinRammler
 )
 :
     distributionModel(typeName, dict, rndGen),
-    minValue_(readScalar(distributionModelDict_.lookup("minValue"))),
-    maxValue_(readScalar(distributionModelDict_.lookup("maxValue"))),
-    d_(readScalar(distributionModelDict_.lookup("d"))),
-    n_(readScalar(distributionModelDict_.lookup("n")))
+    minValue_(distributionModelDict_.template lookup<scalar>("minValue")),
+    maxValue_(distributionModelDict_.template lookup<scalar>("maxValue")),
+    d_(distributionModelDict_.template lookup<scalar>("d")),
+    n_(distributionModelDict_.template lookup<scalar>("n"))
 {
     check();
+    info();
 }
 
 

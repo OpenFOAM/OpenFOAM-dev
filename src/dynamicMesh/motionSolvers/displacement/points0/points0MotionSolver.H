@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,16 +62,6 @@ protected:
         pointIOField points0_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        points0MotionSolver(const points0MotionSolver&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const points0MotionSolver&);
-
 public:
 
     //- Runtime type information
@@ -84,9 +74,12 @@ public:
         points0MotionSolver
         (
             const polyMesh&,
-            const IOdictionary&,
+            const dictionary&,
             const word& type
         );
+
+        //- Disallow default bitwise copy construction
+        points0MotionSolver(const points0MotionSolver&) = delete;
 
 
     //- Destructor
@@ -112,6 +105,12 @@ public:
 
         //-  Update local data for topology changes
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const points0MotionSolver&) = delete;
 };
 
 

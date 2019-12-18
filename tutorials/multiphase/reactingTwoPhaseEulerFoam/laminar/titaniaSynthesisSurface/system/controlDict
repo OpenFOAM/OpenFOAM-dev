@@ -1,0 +1,88 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     reactingTwoPhaseEulerFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         10;
+
+deltaT          1e-4;
+
+writeControl    adjustableRunTime;
+
+writeInterval   1;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  9;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   8;
+
+runTimeModifiable yes;
+
+adjustTimeStep  yes;
+
+maxCo           0.8;
+
+maxDeltaT       1e-3;
+
+functions
+{
+    #includeFunc        singleGraph
+
+    numberConcentration
+    {
+        type                sizeDistribution;
+        functionObjectLibs  ("libreactingEulerFoamFunctionObjects.so");
+
+        writeControl        outputTime;
+        writeInterval       1;
+        log                 yes;
+
+        regionType          cellZone;
+        name                outlet;
+
+        populationBalance   aggregates;
+        functionType        number;
+        coordinateType      projectedAreaDiameter;
+        densityFunction     yes;
+        normalize           yes;
+        geometric           yes;
+    }
+
+    #includeFunc writeObjects                         \
+    (                                                 \
+        d.particles,                                  \
+        a.particles,                                  \
+        phaseTransfer:dmidtf.TiO2.particlesAndVapor,  \
+        phaseTransfer:dmidtf.TiO2_s.particlesAndVapor \
+    )
+}
+
+
+// ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,7 +134,7 @@ private:
         static const scalar searchAngleOppositeSurface;
 
 
-    // Private data
+    // Private Data
 
         //- The time registry of the application
         const Time& runTime_;
@@ -441,7 +441,7 @@ private:
         ) const;
 
         //- Check to see if dual cell specified by given vertex iterator
-        //  intersects the boundary and hence reqires a point-pair
+        //  intersects the boundary and hence requires a point-pair
         bool dualCellSurfaceAnyIntersection
         (
             const Delaunay::Finite_vertices_iterator& vit
@@ -456,7 +456,7 @@ private:
 
         //- Return false if the line is entirely outside the current processor
         //  domain, true is either point is inside, or the processor domain
-        //  bounadry is intersected (i.e. the points are box outside but the
+        //  boundary is intersected (i.e. the points are box outside but the
         //  line cuts.  The points will be moved onto the box where they
         //  intersect.
         bool clipLineToProc
@@ -855,12 +855,6 @@ private:
 
         void writePointPairs(const fileName& fName) const;
 
-        //- Disallow default bitwise copy construct
-        conformalVoronoiMesh(const conformalVoronoiMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const conformalVoronoiMesh&);
-
 
 public:
 
@@ -876,6 +870,9 @@ public:
             const Time& runTime,
             const dictionary& foamyHexMeshDict
         );
+
+        //- Disallow default bitwise copy construction
+        conformalVoronoiMesh(const conformalVoronoiMesh&) = delete;
 
 
     //- Destructor
@@ -1017,6 +1014,12 @@ public:
             //- Find the cellSet of the boundary cells which have points that
             //  protrude out of the surface beyond a tolerance.
             labelHashSet findRemainingProtrusionSet(const polyMesh& mesh) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const conformalVoronoiMesh&) = delete;
 };
 
 

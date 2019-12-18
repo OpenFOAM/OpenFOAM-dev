@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,6 +101,36 @@ template<class Key, class Hash>
 inline bool Foam::HashSet<Key, Hash>::operator[](const Key& key) const
 {
     return this->found(key);
+}
+
+
+template<class Key, class Hash>
+void Foam::HashSet<Key, Hash>::operator=(const HashSet<Key, Hash>& rhs)
+{
+    // Check for assignment to self
+    if (this == &rhs)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    HashTable<nil, Key, Hash>::operator=(rhs);
+}
+
+
+template<class Key, class Hash>
+void Foam::HashSet<Key, Hash>::operator=(HashSet<Key, Hash>&& rhs)
+{
+    // Check for assignment to self
+    if (this == &rhs)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    HashTable<nil, Key, Hash>::operator=(move(rhs));
 }
 
 

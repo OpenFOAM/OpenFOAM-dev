@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,19 +44,8 @@ Foam::data::data(const objectRegistry& obr)
             IOobject::NO_READ,
             IOobject::NO_WRITE
         )
-    ),
-    prevTimeIndex_(0)
-{
-    set("solverPerformance", dictionary());
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::dictionary& Foam::data::solverPerformanceDict() const
-{
-    return subDict("solverPerformance");
-}
+    )
+{}
 
 
 // ************************************************************************* //

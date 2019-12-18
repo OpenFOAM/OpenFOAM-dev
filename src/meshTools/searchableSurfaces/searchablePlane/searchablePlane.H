@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,8 +54,6 @@ class searchablePlane
     public searchableSurface,
     public plane
 {
-private:
-
     // Private Member Data
 
         mutable wordList regions_;
@@ -71,12 +69,6 @@ private:
 
         //- Return the boundBox of the plane
         boundBox calcBounds() const;
-
-        //- Disallow default bitwise copy construct
-        searchablePlane(const searchablePlane&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchablePlane&);
 
 
 public:
@@ -101,6 +93,10 @@ public:
             const IOobject& io,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        searchablePlane(const searchablePlane&) = delete;
+
 
     //- Destructor
     virtual ~searchablePlane();
@@ -216,6 +212,11 @@ public:
                 return false;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchablePlane&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,17 +55,6 @@ namespace Foam
 
 class AMIMethod
 {
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        AMIMethod(const AMIMethod&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const AMIMethod&);
-
-
 protected:
 
     //- Local typedef to octree tree-type
@@ -202,6 +191,9 @@ public:
             const bool requireMatch
         );
 
+        //- Disallow default bitwise copy construction
+        AMIMethod(const AMIMethod&) = delete;
+
 
     //- Selector
     static autoPtr<AMIMethod> New
@@ -245,6 +237,12 @@ public:
                 label srcFacei = -1,
                 label tgtFacei = -1
             ) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const AMIMethod&) = delete;
 };
 
 

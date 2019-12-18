@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -182,14 +182,9 @@ Foam::LimitedScheme<Type, Limiter, LimitFunc>::limiter
     {
         tmp<surfaceScalarField> tlimiterField
         (
-            new surfaceScalarField
+            surfaceScalarField::New
             (
-                IOobject
-                (
-                    limiterFieldName,
-                    mesh.time().timeName(),
-                    mesh
-                ),
+                limiterFieldName,
                 mesh,
                 dimless
             )

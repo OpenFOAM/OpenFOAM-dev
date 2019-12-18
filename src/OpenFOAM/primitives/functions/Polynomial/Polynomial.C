@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,18 +39,6 @@ Foam::Polynomial<PolySize>::Polynomial()
         this->v_[i] = 0.0;
     }
 }
-
-
-template<int PolySize>
-Foam::Polynomial<PolySize>::Polynomial
-(
-    const Polynomial<PolySize>& poly
-)
-:
-    VectorSpace<Polynomial<PolySize>, scalar, PolySize>(poly),
-    logActive_(poly.logActive_),
-    logCoeff_(poly.logCoeff_)
-{}
 
 
 template<int PolySize>

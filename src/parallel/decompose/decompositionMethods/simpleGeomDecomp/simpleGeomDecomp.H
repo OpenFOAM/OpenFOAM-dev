@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,10 +68,6 @@ class simpleGeomDecomp
             const scalarField& weights
         ) const;
 
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const simpleGeomDecomp&);
-        simpleGeomDecomp(const simpleGeomDecomp&);
-
 
 public:
 
@@ -83,6 +79,9 @@ public:
 
         //- Construct given the decomposition dictionary
         simpleGeomDecomp(const dictionary& decompositionDict);
+
+        //- Disallow default bitwise copy construction
+        simpleGeomDecomp(const simpleGeomDecomp&) = delete;
 
 
     //- Destructor
@@ -128,6 +127,12 @@ public:
         {
             return decompose(cc, cWeights);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const simpleGeomDecomp&) = delete;
 };
 
 

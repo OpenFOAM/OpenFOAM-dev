@@ -1,0 +1,92 @@
+#!/bin/bash
+#---------------------------------*- sh -*-------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     interactive-hook
+#
+# Description
+#     Script to interactively run the checks performed by the pre-commit and
+#     pre-recieve hooks.
+#
+#------------------------------------------------------------------------------
+
+. $WM_PROJECT_DIR/bin/tools/HookFunctions || exit 1
+
+usage() {
+    cat << EOF
+  Usage: ${0##*/} [OPTION] <path-0> <path-1> ...
+Options:
+  -h, -help      print this usage
+  -s, -scope     which commit to check, or "--cached" for staged changes
+  -f, -fix       additionally fix files where possible
+  -c, -copyright also check that the copyright date is up to date
+EOF
+}
+
+error() {
+    usage 1>&2
+    exit 1
+}
+
+scope=HEAD
+fix=false
+copyright=false
+paths=()
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+        (-h | -help)
+            usage && exit 0
+            ;;
+        (-s | -scope)
+            scope="$2"
+            shift 2
+            ;;
+        (-f | -fix)
+            fix=true
+            shift
+            ;;
+        (-c | -copyright)
+            copyright=true
+            shift
+            ;;
+        -*)
+            error
+            ;;
+        (*)
+            paths+=("$1")
+            shift
+            ;;
+    esac
+done
+
+[ "${#paths[@]}" -gt 0 ] || paths=(".")
+
+readarray -t files < <(git ls-files -- "${paths[@]}")
+
+$copyright && check=checkAll || check=checkAllNoCopyright
+
+$check "$scope" $fix "${files[@]}" && exit 0 || exit 1
+
+#------------------------------------------------------------------------------

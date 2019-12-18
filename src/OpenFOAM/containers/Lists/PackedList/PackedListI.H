@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -221,9 +221,9 @@ inline Foam::PackedList<nBits>::PackedList(const PackedList<nBits>& lst)
 
 
 template<unsigned nBits>
-inline Foam::PackedList<nBits>::PackedList(const Xfer<PackedList<nBits>>& lst)
+inline Foam::PackedList<nBits>::PackedList(PackedList<nBits>&& lst)
 {
-    transfer(lst());
+    transfer(lst);
 }
 
 
@@ -947,13 +947,6 @@ inline void Foam::PackedList<nBits>::transfer(PackedList<nBits>& lst)
     lst.size_ = 0;
 
     StorageList::transfer(lst);
-}
-
-
-template<unsigned nBits>
-inline Foam::Xfer<Foam::PackedList<nBits>> Foam::PackedList<nBits>::xfer()
-{
-    return xferMove(*this);
 }
 
 

@@ -1,0 +1,14 @@
+#------------------------------------------------------------------------------
+set grid
+set title "Comparison at x =1.13 m, y = 1.8 m"
+set xlabel "Dimensionless Age Quantity [-]"
+set ylabel "z-coordinate [m]"
+set xrange [0:2]
+set yrange [0:3]
+#------------------------------------------------------------------------------
+set terminal postscript eps color enhanced "Helveicta,20"
+set output 'Pos1_Comparison.eps'
+plot \
+'measurement_Pos1' using 1:2 w p pt 7 t 'Measurement', \
+'Pos1_OF' using 2:1 w l t 'OpenFOAM'
+#------------------------------------------------------------------------------

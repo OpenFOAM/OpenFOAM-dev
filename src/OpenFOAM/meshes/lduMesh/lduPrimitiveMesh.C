@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -384,7 +384,7 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
         const lduInterfacePtrsList interfaces =
             mesh(myMesh, otherMeshes, procMeshI).interfaces();
 
-        // Inialise all boundaries as merged
+        // Initialise all boundaries as merged
         boundaryMap[procMeshI].setSize(interfaces.size(), -1);
         boundaryFaceMap[procMeshI].setSize(interfaces.size());
 

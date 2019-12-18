@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::subCycle
 
 Description
-    Perform a subCycleTime on a field
+    Perform a subCycleTime on a field or list of fields.
 
 \*---------------------------------------------------------------------------*/
 
@@ -46,7 +46,7 @@ namespace Foam
 template<class GeometricField>
 class subCycleField
 {
-    // Private data
+    // Private Data
 
         //- Reference to the field being sub-cycled
         GeometricField& gf_;
@@ -57,33 +57,53 @@ class subCycleField
         GeometricField& gf0_;
 
         //- Copy of the "real" old-time value of the field
-        GeometricField gf_0_;
+        tmp<GeometricField> gf_0_;
 
 
 public:
 
+    //- Type of the field
+    typedef GeometricField FieldsType;
+
     // Constructors
 
-        //- Construct field and number of sub-cycles
-        subCycleField(GeometricField& gf)
+        //- Construct from field and number of sub-cycles
+        subCycleField
+        (
+            GeometricField& gf,
+            const label nSubCycles
+        )
         :
             gf_(gf),
-            gf0_(gf.oldTime()),
-            gf_0_(gf0_.name() + "_", gf0_)
-        {}
+            gf0_(gf.oldTime())
+        {
+            if (nSubCycles > 1)
+            {
+                gf_0_ = GeometricField::New(gf0_.name() + "_", gf0_);
+            }
+        }
 
 
     //- Destructor
     ~subCycleField()
     {
-        // Reset the old-time field
-        gf0_ = gf_0_;
+        if (gf_0_.valid())
+        {
+            // Reset the old-time field
+            gf0_ = gf_0_;
 
-        // Correct the time index of the field to correspond to the global time
-        gf_.timeIndex() = gf_.time().timeIndex();
-        gf0_.timeIndex() = gf_.time().timeIndex();
+            // Correct the time index of the field
+            // to correspond to the global time
+            gf_.timeIndex() = time().timeIndex();
+            gf0_.timeIndex() = time().timeIndex();
+        }
     }
 
+    //- Access to time
+    const Time& time() const
+    {
+        return gf_.time();
+    }
 
     //- Correct the time index of the field to correspond to
     //  the sub-cycling time.
@@ -93,8 +113,109 @@ public:
     //  outer iteration
     void updateTimeIndex()
     {
-        gf_.timeIndex() = gf_.time().timeIndex() + 1;
-        gf0_.timeIndex() = gf_.time().timeIndex() + 1;
+        gf_.timeIndex() = time().timeIndex() + 1;
+        gf0_.timeIndex() = time().timeIndex() + 1;
+    }
+};
+
+
+/*---------------------------------------------------------------------------*\
+                         Class subCycleFields Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class GeometricField>
+class subCycleFields
+{
+    // Private Data
+
+        //- List of pointers to the fields being sub-cycled
+        List<GeometricField*> gfPtrs_;
+
+        //- List of pointers to the fields old-time field being sub-cycled
+        //  Needed to avoid calls to oldTime() which may cause
+        //  unexpected updates of the old-time field
+        List<GeometricField*> gf0Ptrs_;
+
+        //- Copy of the "real" old-time value of the fields
+        PtrList<GeometricField> gf_0Ptrs_;
+
+
+public:
+
+    //- Type of the list of fields
+    typedef List<GeometricField*> FieldsType;
+
+    // Constructors
+
+        //- Construct from field list and number of sub-cycles
+        subCycleFields
+        (
+            List<GeometricField*>& gfPtrs,
+            const label nSubCycles
+        )
+        :
+            gfPtrs_(gfPtrs),
+            gf0Ptrs_(gfPtrs.size())
+        {
+            if (nSubCycles > 1)
+            {
+                gf_0Ptrs_.setSize(gfPtrs.size());
+
+                forAll(gfPtrs_, i)
+                {
+                    gf0Ptrs_[i] = &gfPtrs_[i]->oldTime();
+
+                    gf_0Ptrs_.set
+                    (
+                        i,
+                        new volScalarField
+                        (
+                            gf0Ptrs_[i]->name() + "_",
+                            *gf0Ptrs_[i]
+                        )
+                    );
+                }
+            }
+        }
+
+
+    //- Destructor
+    ~subCycleFields()
+    {
+        if (gf_0Ptrs_.size())
+        {
+            forAll(gfPtrs_, i)
+            {
+                // Reset the old-time fields
+                *gf0Ptrs_[i] = gf_0Ptrs_[i];
+
+                // Correct the time index of the fields
+                // to correspond to the global time
+                gfPtrs_[i]->timeIndex() = time().timeIndex();
+                gf0Ptrs_[i]->timeIndex() = time().timeIndex();
+            }
+        }
+    }
+
+    //- Access to time
+    const Time& time() const
+    {
+        return gfPtrs_[0]->time();
+    }
+
+    //- Correct the time index of the fields to correspond to
+    //  the sub-cycling time.
+    //
+    //  The time index is incremented to protect the old-time value from
+    //  being updated at the beginning of the time-loop in the case of
+    //  outer iteration
+    void updateTimeIndex()
+    {
+        forAll(gfPtrs_, i)
+        {
+            gfPtrs_[i]->timeIndex() = time().timeIndex() + 1;
+            gf0Ptrs_[i]->timeIndex() = time().timeIndex() + 1;
+        }
     }
 };
 
@@ -103,34 +224,41 @@ public:
                           Class subCycle Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class GeometricField>
+template
+<
+    class GeometricField,
+    template<class> class SubCycleField = subCycleField
+>
 class subCycle
 :
-    public subCycleField<GeometricField>,
+    public SubCycleField<GeometricField>,
     public subCycleTime
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        subCycle(const subCycle<GeometricField>&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const subCycle<GeometricField>&);
-
 
 public:
 
     // Constructors
 
         //- Construct field and number of sub-cycles
-        subCycle(GeometricField& gf, const label nSubCycles)
+        subCycle
+        (
+            typename SubCycleField<GeometricField>::FieldsType& gf,
+            const label nSubCycles
+        )
         :
-            subCycleField<GeometricField>(gf),
-            subCycleTime(const_cast<Time&>(gf.time()), nSubCycles)
+            SubCycleField<GeometricField>(gf, nSubCycles),
+            subCycleTime(const_cast<Time&>(this->time()), nSubCycles)
         {
-            // Update the field time index to correspond to the sub-cycle time
-            this->updateTimeIndex();
+            if (nSubCycles > 1)
+            {
+                // Update the field time index to correspond
+                // to the sub-cycle time
+                this->updateTimeIndex();
+            }
         }
+
+        //- Disallow default bitwise copy construction
+        subCycle(const subCycle<GeometricField>&) = delete;
 
 
     //- Destructor
@@ -139,6 +267,12 @@ public:
     {
         endSubCycle();
     }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const subCycle<GeometricField>&) = delete;
 };
 
 

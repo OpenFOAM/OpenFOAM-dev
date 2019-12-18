@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,16 +100,6 @@ inline Foam::FixedList<T, Size>::FixedList(const SLList<T>& lst)
     for (unsigned i=0; i<Size; i++)
     {
         v_[i] = *iter++;
-    }
-}
-
-
-template<class T, unsigned Size>
-inline Foam::FixedList<T, Size>::FixedList(const FixedList<T, Size>& lst)
-{
-    for (unsigned i=0; i<Size; i++)
-    {
-        v_[i] = lst[i];
     }
 }
 

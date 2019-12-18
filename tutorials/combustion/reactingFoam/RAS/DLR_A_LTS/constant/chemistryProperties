@@ -140,5 +140,6 @@ tabulation
     variableTimeStep true;
 }
 
+#include "reactionsGRI"
 
 // ************************************************************************* //

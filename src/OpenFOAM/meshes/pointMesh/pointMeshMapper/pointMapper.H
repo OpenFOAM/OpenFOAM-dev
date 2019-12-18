@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class pointMapper
 :
     public morphFieldMapper
 {
-    // Private data
+    // Private Data
 
         //- Reference to pointMesh
         const pointMesh& pMesh_;
@@ -89,13 +89,6 @@ class pointMapper
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        pointMapper(const pointMapper&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointMapper&);
-
-
         //- Calculate addressing for mapping with inserted points
         void calcAddressing() const;
 
@@ -110,15 +103,15 @@ public:
         //- Construct from mapPolyMesh
         pointMapper(const pointMesh&, const mapPolyMesh& mpm);
 
+        //- Disallow default bitwise copy construction
+        pointMapper(const pointMapper&) = delete;
+
 
     //- Destructor
     virtual ~pointMapper();
 
 
     // Member Functions
-
-        //- Return size
-        virtual label size() const;
 
         //- Return size before mapping
         virtual label sizeBeforeMapping() const;
@@ -142,7 +135,7 @@ public:
         //- Return interpolated addressing
         virtual const labelListList& addressing() const;
 
-        //- Return interpolaion weights
+        //- Return interpolation weights
         virtual const scalarListList& weights() const;
 
         //- Are there any inserted points
@@ -153,6 +146,12 @@ public:
 
         //- Return list of inserted points
         const labelList& insertedObjectLabels() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointMapper&) = delete;
 };
 
 

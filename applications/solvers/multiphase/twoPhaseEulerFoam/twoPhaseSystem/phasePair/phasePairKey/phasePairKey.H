@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ public:
                 hash();
 
 
-            // Member operators
+            // Member Operators
 
                 // Generate a hash from a phase pair key
                 label operator()(const phasePairKey& key) const;
@@ -82,7 +82,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Flag to indicate whether ordering is important
         bool ordered_;

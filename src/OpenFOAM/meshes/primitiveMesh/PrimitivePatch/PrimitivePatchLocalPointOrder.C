@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,16 +31,8 @@ Description
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-void
-Foam::PrimitivePatch<Face, FaceList, PointField, PointType>::
-calcLocalPointOrder() const
+template<class FaceList, class PointField>
+void Foam::PrimitivePatch<FaceList, PointField>::calcLocalPointOrder() const
 {
     // Note: Cannot use bandCompressing as point-point addressing does
     // not exist and is not considered generally useful.
@@ -48,7 +40,7 @@ calcLocalPointOrder() const
 
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
+        Pout<< "PrimitivePatch<FaceList, PointField>::"
             << "calcLocalPointOrder() : "
             << "calculating local point order"
             << endl;
@@ -63,7 +55,7 @@ calcLocalPointOrder() const
             << abort(FatalError);
     }
 
-    const List<Face>& lf = localFaces();
+    const List<FaceType>& lf = localFaces();
 
     const labelListList& ff = faceFaces();
 
@@ -125,7 +117,7 @@ calcLocalPointOrder() const
 
     if (debug)
     {
-        Pout<< "PrimitivePatch<Face, FaceList, PointField, PointType>::"
+        Pout<< "PrimitivePatch<FaceList, PointField>::"
             << "calcLocalPointOrder() "
             << "finished calculating local point order"
             << endl;

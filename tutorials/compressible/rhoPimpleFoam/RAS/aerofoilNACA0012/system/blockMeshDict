@@ -13,6 +13,7 @@ FoamFile
     object      blockMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#inputSyntax slash
 
 domain
 {
@@ -56,82 +57,82 @@ geometry
     cylinder
     {
         type   searchableCylinder;
-        point1 ($:aerofoil.xUpper -1e3 0);
-        point2 ($:aerofoil.xUpper  1e3 0);
-        radius $:domain.zMax;
+        point1 ($!aerofoil/xUpper -1e3 0);
+        point2 ($!aerofoil/xUpper  1e3 0);
+        radius $!domain/zMax;
     }
 }
 
 vertices
 (
-    project ($aerofoil.xLower -0.1 $domain.zMin) (cylinder)
-    ($aerofoil.xTrail -0.1 $domain.zMin)
-    ($domain.xMax -0.1 $domain.zMin)
+    project ($aerofoil/xLower -0.1 $domain/zMin) (cylinder)
+    ($aerofoil/xTrail -0.1 $domain/zMin)
+    ($domain/xMax -0.1 $domain/zMin)
 
-    project ($domain.xMin     -0.1 $aerofoil.zLead) (cylinder)
-    project ($aerofoil.xLead  -0.1 $aerofoil.zLead) (aerofoil)
-    project ($aerofoil.xTrail -0.1 $aerofoil.zTrail) (aerofoil)
-    ($domain.xMax -0.1 $aerofoil.zTrail)
+    project ($domain/xMin     -0.1 $aerofoil/zLead) (cylinder)
+    project ($aerofoil/xLead  -0.1 $aerofoil/zLead) (aerofoil)
+    project ($aerofoil/xTrail -0.1 $aerofoil/zTrail) (aerofoil)
+    ($domain/xMax -0.1 $aerofoil/zTrail)
 
-    project ($aerofoil.xLower -0.1 $aerofoil.zLower) (aerofoil)
-    project ($aerofoil.xUpper -0.1 $aerofoil.zUpper) (aerofoil)
+    project ($aerofoil/xLower -0.1 $aerofoil/zLower) (aerofoil)
+    project ($aerofoil/xUpper -0.1 $aerofoil/zUpper) (aerofoil)
 
-    project ($aerofoil.xUpper -0.1 $domain.zMax) (aerofoil)
-    project ($aerofoil.xTrail -0.1 $domain.zMax) (aerofoil)
-    ($domain.xMax -0.1 $domain.zMax)
+    project ($aerofoil/xUpper -0.1 $domain/zMax) (aerofoil)
+    project ($aerofoil/xTrail -0.1 $domain/zMax) (aerofoil)
+    ($domain/xMax -0.1 $domain/zMax)
 
-    project ($aerofoil.xLower  0.1 $domain.zMin) (cylinder)
-    ($aerofoil.xTrail  0.1 $domain.zMin)
-    ($domain.xMax 0.1 $domain.zMin)
+    project ($aerofoil/xLower  0.1 $domain/zMin) (cylinder)
+    ($aerofoil/xTrail  0.1 $domain/zMin)
+    ($domain/xMax 0.1 $domain/zMin)
 
-    project ($domain.xMin      0.1 $aerofoil.zLead) (cylinder)
-    project ($aerofoil.xLead   0.1 $aerofoil.zLead) (aerofoil)
-    project ($aerofoil.xTrail  0.1 $aerofoil.zTrail) (aerofoil)
-    ($domain.xMax 0.1 $aerofoil.zTrail)
+    project ($domain/xMin      0.1 $aerofoil/zLead) (cylinder)
+    project ($aerofoil/xLead   0.1 $aerofoil/zLead) (aerofoil)
+    project ($aerofoil/xTrail  0.1 $aerofoil/zTrail) (aerofoil)
+    ($domain/xMax 0.1 $aerofoil/zTrail)
 
-    project ($aerofoil.xLower  0.1 $aerofoil.zLower) (aerofoil)
-    project ($aerofoil.xUpper  0.1 $aerofoil.zUpper) (aerofoil)
+    project ($aerofoil/xLower  0.1 $aerofoil/zLower) (aerofoil)
+    project ($aerofoil/xUpper  0.1 $aerofoil/zUpper) (aerofoil)
 
-    project ($aerofoil.xUpper  0.1 $domain.zMax) (aerofoil)
-    project ($aerofoil.xTrail  0.1 $domain.zMax) (aerofoil)
-    ($domain.xMax 0.1 $domain.zMax)
+    project ($aerofoil/xUpper  0.1 $domain/zMax) (aerofoil)
+    project ($aerofoil/xTrail  0.1 $domain/zMax) (aerofoil)
+    ($domain/xMax 0.1 $domain/zMax)
 );
 
 blocks
 (
     hex ( 7 4 16 19 0 3 15 12)
-    ($:domain.xUCells 1 $:domain.zCells)
+    ($!domain/xUCells 1 $!domain/zCells)
     edgeGrading
     (
-        $:domain.leadGrading $:domain.leadGrading $:domain.xUGrading $:domain.xUGrading
+        $!domain/leadGrading $!domain/leadGrading $!domain/xUGrading $!domain/xUGrading
         1 1 1 1
-        $:domain.zGrading $:domain.zGrading $:domain.zGrading $:domain.zGrading
+        $!domain/zGrading $!domain/zGrading $!domain/zGrading $!domain/zGrading
     )
 
     hex ( 5 7 19 17 1 0 12 13)
-    ($:domain.xMCells 1 $:domain.zCells)
-    simpleGrading (1 1 $:domain.zGrading)
+    ($!domain/xMCells 1 $!domain/zCells)
+    simpleGrading (1 1 $!domain/zGrading)
 
     hex ( 17 18 6 5 13 14 2 1)
-    ($:domain.xDCells 1 $:domain.zCells)
-    simpleGrading ($:domain.xDGrading 1 $:domain.zGrading)
+    ($!domain/xDCells 1 $!domain/zCells)
+    simpleGrading ($!domain/xDGrading 1 $!domain/zGrading)
 
     hex ( 20 16 4 8 21 15 3 9)
-    ($:domain.xUCells 1 $:domain.zCells)
+    ($!domain/xUCells 1 $!domain/zCells)
     edgeGrading
     (
-        $:domain.leadGrading $:domain.leadGrading $:domain.xUGrading $:domain.xUGrading
+        $!domain/leadGrading $!domain/leadGrading $!domain/xUGrading $!domain/xUGrading
         1 1 1 1
-        $:domain.zGrading $:domain.zGrading $:domain.zGrading $:domain.zGrading
+        $!domain/zGrading $!domain/zGrading $!domain/zGrading $!domain/zGrading
     )
 
     hex ( 17 20 8 5 22 21 9 10)
-    ($:domain.xMCells 1 $:domain.zCells)
-    simpleGrading (1 1 $:domain.zGrading)
+    ($!domain/xMCells 1 $!domain/zCells)
+    simpleGrading (1 1 $!domain/zGrading)
 
     hex ( 5 6 18 17 10 11 23 22)
-    ($:domain.xDCells 1 $:domain.zCells)
-    simpleGrading ($:domain.xDGrading 1 $:domain.zGrading)
+    ($!domain/xDCells 1 $!domain/zCells)
+    simpleGrading ($!domain/xDGrading 1 $!domain/zGrading)
 );
 
 edges

@@ -66,13 +66,13 @@ solvers
         relTol          0;
     }
 
-    e
+    h
     {
         $Yi;
         relTol          0.1;
     }
 
-    eFinal
+    hFinal
     {
         $Yi;
     }

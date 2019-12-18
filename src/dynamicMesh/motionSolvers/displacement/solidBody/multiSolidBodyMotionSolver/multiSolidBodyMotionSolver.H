@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ class multiSolidBodyMotionSolver
 :
     public points0MotionSolver
 {
-    // Private data
+    // Private Data
 
         //- The motion control function
         PtrList<solidBodyMotionFunction> SBMFs_;
@@ -62,15 +62,6 @@ class multiSolidBodyMotionSolver
 
         //- Points to move per cellZone
         labelListList pointIDs_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        multiSolidBodyMotionSolver(const multiSolidBodyMotionSolver&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const multiSolidBodyMotionSolver&);
 
 
 public:
@@ -85,8 +76,11 @@ public:
         multiSolidBodyMotionSolver
         (
             const polyMesh&,
-            const IOdictionary&
+            const dictionary&
         );
+
+        //- Disallow default bitwise copy construction
+        multiSolidBodyMotionSolver(const multiSolidBodyMotionSolver&) = delete;
 
 
     //- Destructor
@@ -101,6 +95,12 @@ public:
         //- Solve for motion
         virtual void solve()
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multiSolidBodyMotionSolver&) = delete;
 };
 
 

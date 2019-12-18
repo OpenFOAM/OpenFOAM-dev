@@ -37,6 +37,7 @@ sampledSurface/thresholdCellFaces/sampledThresholdCellFaces.C
 surfWriters = sampledSurface/writers
 
 $(surfWriters)/surfaceWriter.C
+$(surfWriters)/none/noSurfaceWriter.C
 $(surfWriters)/ensight/ensightSurfaceWriter.C
 $(surfWriters)/ensight/ensightPTraits.C
 $(surfWriters)/foam/foamSurfaceWriter.C
@@ -52,6 +53,7 @@ graphField/makeGraph.C
 
 meshToMesh/meshToMesh.C
 meshToMesh/meshToMeshParallelOps.C
+meshToMesh/distributedWeightedFvPatchFieldMapper.C
 meshToMeshMethods = meshToMesh/calcMethod
 $(meshToMeshMethods)/meshToMeshMethod/meshToMeshMethod.C
 $(meshToMeshMethods)/meshToMeshMethod/meshToMeshMethodNew.C

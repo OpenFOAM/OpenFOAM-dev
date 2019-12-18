@@ -16,7 +16,11 @@
 
     bool closedVolume = false;
 
-    surfaceScalarField phiHbyA("phiHbyA", fvc::flux(rho*HbyA));
+    surfaceScalarField phiHbyA
+    (
+        "phiHbyA",
+        fvc::interpolate(rho)*fvc::flux(HbyA)
+    );
     MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
     closedVolume = adjustPhi(phiHbyA, U, p);
@@ -87,6 +91,7 @@
     {
         p += (initialMass - fvc::domainIntegrate(psi*p))
             /fvc::domainIntegrate(psi);
+        p.correctBoundaryConditions();
     }
 
     rho = thermo.rho();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,22 +55,13 @@ class axisRotationMotion
 :
     public solidBodyMotionFunction
 {
-    // Private data
+    // Private Data
 
         //- Origin
         point origin_;
 
         //- Rotational velocity (deg/s)
         vector radialVelocity_;
-
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        axisRotationMotion(const axisRotationMotion&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const axisRotationMotion&);
 
 
 public:
@@ -87,6 +78,9 @@ public:
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
+
+        //- Disallow default bitwise copy construction
+        axisRotationMotion(const axisRotationMotion&);
 
         //- Construct and return a clone
         virtual autoPtr<solidBodyMotionFunction> clone() const
@@ -113,6 +107,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& SBMFCoeffs);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const axisRotationMotion&) = delete;
 };
 
 

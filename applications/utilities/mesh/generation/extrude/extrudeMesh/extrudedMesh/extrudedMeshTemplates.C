@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,15 +28,10 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField
->
-Foam::Xfer<Foam::pointField> Foam::extrudedMesh::extrudedPoints
+template<class FaceList, class PointField>
+Foam::pointField Foam::extrudedMesh::extrudedPoints
 (
-    const PrimitivePatch<Face, FaceList, PointField>& extrudePatch,
+    const PrimitivePatch<FaceList, PointField>& extrudePatch,
     const extrudeModel& model
 )
 {
@@ -62,15 +57,14 @@ Foam::Xfer<Foam::pointField> Foam::extrudedMesh::extrudedPoints
         }
     }
 
-    // return points for transferring
-    return xferMove(ePoints);
+    return ePoints;
 }
 
 
-template<class Face, template<class> class FaceList, class PointField>
-Foam::Xfer<Foam::faceList> Foam::extrudedMesh::extrudedFaces
+template<class FaceList, class PointField>
+Foam::faceList Foam::extrudedMesh::extrudedFaces
 (
-    const PrimitivePatch<Face, FaceList, PointField>& extrudePatch,
+    const PrimitivePatch<FaceList, PointField>& extrudePatch,
     const extrudeModel& model
 )
 {
@@ -188,15 +182,14 @@ Foam::Xfer<Foam::faceList> Foam::extrudedMesh::extrudedFaces
             );
     }
 
-    // return points for transferring
-    return xferMove(eFaces);
+    return eFaces;
 }
 
 
-template<class Face, template<class> class FaceList, class PointField>
-Foam::Xfer<Foam::cellList> Foam::extrudedMesh::extrudedCells
+template<class FaceList, class PointField>
+Foam::cellList Foam::extrudedMesh::extrudedCells
 (
-    const PrimitivePatch<Face, FaceList, PointField>& extrudePatch,
+    const PrimitivePatch<FaceList, PointField>& extrudePatch,
     const extrudeModel& model
 )
 {
@@ -295,23 +288,17 @@ Foam::Xfer<Foam::cellList> Foam::extrudedMesh::extrudedCells
         facei++;
     }
 
-    // return points for transferring
-    return xferMove(eCells);
+    return eCells;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField
->
+template<class FaceList, class PointField>
 Foam::extrudedMesh::extrudedMesh
 (
     const IOobject& io,
-    const PrimitivePatch<Face, FaceList, PointField>& extrudePatch,
+    const PrimitivePatch<FaceList, PointField>& extrudePatch,
     const extrudeModel& model
 )
 :

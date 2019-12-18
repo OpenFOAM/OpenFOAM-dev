@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -260,10 +260,11 @@ unset targetType
 if [ -d "$MakeDir" ]
 then
     objectsDir=$MakeDir/$WM_OPTIONS
-    if [[ "$PWD" = *"$WM_PROJECT_DIR"* ]]
+    expandPath "$PWD"
+    if [[ "$exPath" = *"$WM_PROJECT_DIR"* ]]
     then
         platformPath=$WM_PROJECT_DIR/platforms/${WM_OPTIONS}
-        objectsDir=$platformPath${PWD//$WM_PROJECT_DIR/}
+        objectsDir=$platformPath${exPath//$WM_PROJECT_DIR/}
     fi
     rm -rf "$objectsDir" 2>/dev/null
 fi

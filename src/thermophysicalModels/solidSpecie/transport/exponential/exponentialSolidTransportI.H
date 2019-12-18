@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,17 @@ inline Foam::exponentialSolidTransport<Thermo>::exponentialSolidTransport
     n0_(ct.n0_),
     Tref_(ct.Tref_)
 {}
+
+
+template<class Thermo>
+inline Foam::autoPtr<Foam::exponentialSolidTransport<Thermo>>
+Foam::exponentialSolidTransport<Thermo>::clone() const
+{
+    return autoPtr<exponentialSolidTransport<Thermo>>
+    (
+        new exponentialSolidTransport<Thermo>(*this)
+    );
+}
 
 
 template<class Thermo>
@@ -108,19 +119,6 @@ alphah(const scalar p, const scalar T) const
 }
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-
-template<class Thermo>
-inline void Foam::exponentialSolidTransport<Thermo>::operator=
-(
-    const exponentialSolidTransport<Thermo>& ct
-)
-{
-    kappa0_ = ct.kappa0_;
-    n0_ = ct.n0_;
-    Tref_ = ct.Tref_;
-}
-
 
 template<class Thermo>
 inline void Foam::exponentialSolidTransport<Thermo>::operator+=

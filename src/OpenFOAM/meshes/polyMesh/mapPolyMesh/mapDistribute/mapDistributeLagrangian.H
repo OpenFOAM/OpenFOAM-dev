@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ class mapPolyMesh;
 
 class mapDistributeLagrangian
 {
-    // Private data
+    // Private Data
 
         //- Map to distribute particles
         const mapDistribute particleMap_;
@@ -67,9 +67,9 @@ public:
         mapDistributeLagrangian
         (
             const label nNewParticles,
-            const Xfer<labelListList>& subParticleMap,
-            const Xfer<labelListList>& constructParticleMap,
-            const Xfer<labelListList>& constructCellLabels
+            labelListList&& subParticleMap,
+            labelListList&& constructParticleMap,
+            labelListList&& constructCellLabels
         )
         :
             particleMap_(nNewParticles, subParticleMap, constructParticleMap),

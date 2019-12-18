@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -191,10 +191,7 @@ Foam::refinementSurfaces::refinementSurfaces
                             regionAngle[surfI].insert
                             (
                                 regionI,
-                                readScalar
-                                (
-                                    regionDict.lookup("perpendicularAngle")
-                                )
+                                regionDict.lookup<scalar>("perpendicularAngle")
                             );
                         }
 
@@ -439,6 +436,15 @@ void Foam::refinementSurfaces::setMinLevelFields
 
             // Find out if triangle inside shell with higher level
             // What level does shell want to refine fc to?
+            //
+            // Note: it is not clear for what cases this additional requirement
+            // is beneficial but for triangulated surfaces with triangles that
+            // span refinement regions it introduces unnecessary refinement so
+            // it has been removed.
+            //
+            // This option can be reinstated under a switch if cases are
+            // provided which demonstrate the benefit.
+            /*
             labelList shellLevel;
             shells.findHigherLevel(ctrs, minLevelField, shellLevel);
 
@@ -446,6 +452,7 @@ void Foam::refinementSurfaces::setMinLevelFields
             {
                 minLevelField[i] = max(minLevelField[i], shellLevel[i]);
             }
+            */
 
             // Store minLevelField on surface
             const_cast<searchableSurface&>(geom).setField(minLevelField);

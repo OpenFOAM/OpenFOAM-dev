@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ class WallSpringSliderDashpot
 :
     public WallModel<CloudType>
 {
-    // Private data
+    // Private Data
 
         //- Effective Young's modulus value
         scalar Estar_;
@@ -83,7 +83,7 @@ class WallSpringSliderDashpot
         //      parcelEquivD = cbrt(volumeFactor*nParticles)*p.d()
         //  + When volumeFactor = 1, the particles are compressed
         //    together so that the equivalent volume of the parcel is
-        //    the sum of the constituent particles
+        //    the sum of the constitutent particles
         //  + When volumeFactor = 3*sqrt(2)/pi, the particles are
         //    close packed, but uncompressed.
         //  + When volumeFactor > 3*sqrt(2)/pi, the particles loosely

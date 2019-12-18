@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::regionModels::thermalBaffleModels::noThermo
 
 Description
-    Dummy surface pyrolysis model for 'none'
+    Dummy surface model for 'none'
 
 SourceFiles
     noThermo.C
@@ -55,17 +55,6 @@ class noThermo
 :
     public thermalBaffleModel
 {
-private:
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        noThermo(const noThermo&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const noThermo&);
-
-
 protected:
 
     // Protected member functions
@@ -91,8 +80,10 @@ public:
             const word& modelType,
             const fvMesh& mesh,
             const dictionary& dict
-
         );
+
+        //- Disallow default bitwise copy construction
+        noThermo(const noThermo&) = delete;
 
 
     //- Destructor
@@ -113,13 +104,13 @@ public:
             //- Return the film specific heat capacity [J/kg/K]
             virtual const tmp<volScalarField> Cp() const;
 
-            //- Return solid absortivity [1/m]
+            //- Return solid absorptivity [1/m]
             virtual const volScalarField& kappaRad() const;
 
             //- Return the film mean temperature [K]
             virtual const volScalarField& T() const;
 
-            //- Return density [Kg/m3]
+            //- Return density [Kg/m^3]
             virtual const volScalarField& rho() const;
 
             //- Return thermal conductivity [W/m/K]
@@ -133,6 +124,12 @@ public:
 
             //- Evolve the film equations
             virtual void evolveRegion();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const noThermo&) = delete;
 
 };
 

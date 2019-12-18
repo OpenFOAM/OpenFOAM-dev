@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ class Time;
 
 class vtkMesh
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         fvMesh& baseMesh_;
@@ -63,18 +63,6 @@ class vtkMesh
         //- Current cellSet (or empty)
         const word setName_;
 
-//        //- Current decomposition of topology
-//        mutable autoPtr<vtkTopo> topoPtr_;
-
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        vtkMesh(const vtkMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const vtkMesh&);
 
 
 public:
@@ -83,6 +71,9 @@ public:
 
         //- Construct from components
         vtkMesh(fvMesh& baseMesh, const word& setName = "");
+
+        //- Disallow default bitwise copy construction
+        vtkMesh(const vtkMesh&) = delete;
 
 
     // Member Functions
@@ -106,16 +97,6 @@ public:
                 return setName_.size();
             }
 
-//            //- topology
-//            const vtkTopo& topo() const
-//            {
-//                if (topoPtr_.empty())
-//                {
-//                    topoPtr_.reset(new vtkTopo(mesh()));
-//                }
-//                return topoPtr_();
-//            }
-
             //- Access either mesh or submesh
             const fvMesh& mesh() const
             {
@@ -128,18 +109,6 @@ public:
                     return baseMesh_;
                 }
             }
-
-//            //- Number of field cells
-//            label nFieldCells() const
-//            {
-//                return topo().vertLabels().size();
-//            }
-//
-//            //- Number of field points
-//            label nFieldPoints() const
-//            {
-//                return mesh().nPoints() + topo().addPointCellLabels().size();
-//            }
 
 
         // Edit
@@ -164,6 +133,12 @@ public:
                     return fld;
                 }
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const vtkMesh&) = delete;
 };
 
 

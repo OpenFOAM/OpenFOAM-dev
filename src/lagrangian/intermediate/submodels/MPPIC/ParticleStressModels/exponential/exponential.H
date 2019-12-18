@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class exponential
 :
     public ParticleStressModel
 {
-    // Private data
+    // Private Data
 
         //- Pre-exponential factor
         scalar preExp_;
@@ -103,7 +103,7 @@ public:
             const Field<scalar>& uRms
         ) const;
 
-        //- Collision stress derivaive w.r.t. the volume fraction
+        //- Collision stress derivative w.r.t. the volume fraction
         tmp<Field<scalar>> dTaudTheta
         (
             const Field<scalar>& alpha,

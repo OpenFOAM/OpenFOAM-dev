@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,7 @@ SourceFiles
 #ifndef genericPointPatchField_H
 #define genericPointPatchField_H
 
+#include "genericPatchField.H"
 #include "calculatedPointPatchField.H"
 #include "HashPtrTable.H"
 
@@ -51,11 +52,11 @@ namespace Foam
 template<class Type>
 class genericPointPatchField
 :
+    public genericPatchField,
     public calculatedPointPatchField<Type>
 {
-    // Private data
+    // Private Data
 
-        word actualTypeName_;
         dictionary dict_;
 
         HashPtrTable<scalarField> scalarFields_;
@@ -133,22 +134,17 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const pointPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const pointPatchFieldMapper&);
 
             //- Reverse map the given pointPatchField onto this pointPatchField
-            virtual void rmap
-            (
-                const pointPatchField<Type>&,
-                const labelList&
-            );
+            //  Used to reconstruct fields
+            virtual void rmap(const pointPatchField<Type>&, const labelList&);
 
 
         //- Write

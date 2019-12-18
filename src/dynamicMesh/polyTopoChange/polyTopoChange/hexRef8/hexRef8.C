@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -5092,7 +5092,7 @@ const Foam::cellShapeList& Foam::hexRef8::cellShapes() const
 
                 if (haveQuads)
                 {
-                    faceList faces(quads.xfer());
+                    faceList faces(move(quads));
                     cellShapesPtr_()[celli] = degenerateMatcher::match(faces);
                     nSplitHex++;
                 }
@@ -5642,7 +5642,7 @@ void Foam::hexRef8::setUnrefinement
         if (facesToRemove.size() != splitFaces.size())
         {
             FatalErrorInFunction
-                << "Ininitial set of split points to unrefine does not"
+                << "Initial set of split points to unrefine does not"
                 << " seem to be consistent or not mid points of refined cells"
                 << abort(FatalError);
         }
@@ -5685,7 +5685,7 @@ void Foam::hexRef8::setUnrefinement
                 if (region == -1)
                 {
                     FatalErrorInFunction
-                        << "Ininitial set of split points to unrefine does not"
+                        << "Initial set of split points to unrefine does not"
                         << " seem to be consistent or not mid points"
                         << " of refined cells" << nl
                         << "cell:" << celli << " on splitPoint " << pointi
@@ -5743,17 +5743,16 @@ void Foam::hexRef8::setUnrefinement
 }
 
 
-// Write refinement to polyMesh directory.
-bool Foam::hexRef8::write(const bool valid) const
+bool Foam::hexRef8::write(const bool write) const
 {
     bool writeOk =
-        cellLevel_.write(valid)
-     && pointLevel_.write(valid)
-     && level0Edge_.write(valid);
+        cellLevel_.write(write)
+     && pointLevel_.write(write)
+     && level0Edge_.write(write);
 
     if (history_.active())
     {
-        writeOk = writeOk && history_.write(valid);
+        writeOk = writeOk && history_.write(write);
     }
 
     return writeOk;

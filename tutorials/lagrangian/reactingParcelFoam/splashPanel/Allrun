@@ -3,10 +3,12 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-./Allmesh
+runApplication blockMesh
+runApplication topoSet
+runApplication extrudeToRegionMesh -overwrite
 
-application=$(getApplication)
+paraFoam -touchAll
 
-runApplication $application
+runApplication $(getApplication)
 
 #------------------------------------------------------------------------------

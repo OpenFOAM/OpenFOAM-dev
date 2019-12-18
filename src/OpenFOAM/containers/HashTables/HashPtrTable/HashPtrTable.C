@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,6 +48,16 @@ Foam::HashPtrTable<T, Key, Hash>::HashPtrTable
         this->insert(iter.key(), new T(**iter));
     }
 }
+
+
+template<class T, class Key, class Hash>
+Foam::HashPtrTable<T, Key, Hash>::HashPtrTable
+(
+    HashPtrTable<T, Key, Hash>&& ht
+)
+:
+    HashTable<T*, Key, Hash>(move(ht))
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -131,6 +141,25 @@ void Foam::HashPtrTable<T, Key, Hash>::operator=
         this->insert(iter.key(), new T(**iter));
     }
 }
+
+
+template<class T, class Key, class Hash>
+void Foam::HashPtrTable<T, Key, Hash>::operator=
+(
+    HashPtrTable<T, Key, Hash>&& rhs
+)
+{
+    // Check for assignment to self
+    if (this == &rhs)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    HashTable<T*, Key, Hash>::operator=(move(rhs));
+}
+
 
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 

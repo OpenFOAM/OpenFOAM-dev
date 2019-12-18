@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ class topoSet;
 
 class multiDirRefinement
 {
-    // Private data
+    // Private Data
 
         //- Current set of cells to refine. Extended with added cells.
         labelList cellLabels_;
@@ -138,13 +138,6 @@ class multiDirRefinement
         );
 
 
-        //- Disallow default bitwise copy construct
-        multiDirRefinement(const multiDirRefinement&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const multiDirRefinement&);
-
-
 public:
 
     //- Runtime type information
@@ -184,6 +177,9 @@ public:
             const bool writeMesh = false    // write intermediate meshes
         );
 
+        //- Disallow default bitwise copy construction
+        multiDirRefinement(const multiDirRefinement&) = delete;
+
 
     // Member Functions
 
@@ -192,6 +188,12 @@ public:
         {
             return addedCells_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multiDirRefinement&) = delete;
 };
 
 

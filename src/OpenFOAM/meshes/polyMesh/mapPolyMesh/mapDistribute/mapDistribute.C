@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(mapDistribute, 0);
+    defineTypeNameAndDebug(mapDistribute, 0);
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -156,8 +156,8 @@ Foam::mapDistribute::mapDistribute()
 Foam::mapDistribute::mapDistribute
 (
     const label constructSize,
-    const Xfer<labelListList>& subMap,
-    const Xfer<labelListList>& constructMap,
+    labelListList&& subMap,
+    labelListList&& constructMap,
     const bool subHasFlip,
     const bool constructHasFlip
 )
@@ -165,8 +165,8 @@ Foam::mapDistribute::mapDistribute
     mapDistributeBase
     (
         constructSize,
-        subMap,
-        constructMap,
+        move(subMap),
+        move(constructMap),
         subHasFlip,
         constructHasFlip
     )
@@ -176,10 +176,10 @@ Foam::mapDistribute::mapDistribute
 Foam::mapDistribute::mapDistribute
 (
     const label constructSize,
-    const Xfer<labelListList>& subMap,
-    const Xfer<labelListList>& constructMap,
-    const Xfer<labelListList>& transformElements,
-    const Xfer<labelList>& transformStart,
+    labelListList&& subMap,
+    labelListList&& constructMap,
+    labelListList&& transformElements,
+    labelList&& transformStart,
     const bool subHasFlip,
     const bool constructHasFlip
 )
@@ -187,13 +187,13 @@ Foam::mapDistribute::mapDistribute
     mapDistributeBase
     (
         constructSize,
-        subMap,
-        constructMap,
+        move(subMap),
+        move(constructMap),
         subHasFlip,
         constructHasFlip
     ),
-    transformElements_(transformElements),
-    transformStart_(transformStart)
+    transformElements_(move(transformElements)),
+    transformStart_(move(transformStart))
 {}
 
 
@@ -474,18 +474,11 @@ Foam::mapDistribute::mapDistribute(const mapDistribute& map)
 {}
 
 
-Foam::mapDistribute::mapDistribute(const Xfer<mapDistribute>& map)
+Foam::mapDistribute::mapDistribute(mapDistribute&& map)
 :
-    mapDistributeBase
-    (
-        map().constructSize_,
-        map().subMap_.xfer(),
-        map().constructMap_.xfer(),
-        map().subHasFlip(),
-        map().constructHasFlip()
-    ),
-    transformElements_(map().transformElements_.xfer()),
-    transformStart_(map().transformStart_.xfer())
+    mapDistributeBase(move(map)),
+    transformElements_(move(map.transformElements_)),
+    transformStart_(move(map.transformStart_))
 {}
 
 
@@ -515,12 +508,6 @@ void Foam::mapDistribute::transfer(mapDistribute& rhs)
     mapDistributeBase::transfer(rhs);
     transformElements_.transfer(rhs.transformElements_);
     transformStart_.transfer(rhs.transformStart_);
-}
-
-
-Foam::Xfer<Foam::mapDistribute> Foam::mapDistribute::xfer()
-{
-    return xferMove(*this);
 }
 
 

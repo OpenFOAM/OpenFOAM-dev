@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,22 +52,13 @@ class fvMesh;
 
 class ignition
 {
-    // Private data
+    // Private Data
 
         const fvMesh& mesh_;
 
         Switch ignite_;
 
         PtrList<ignitionSite> ignSites_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        ignition(const ignition&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const ignition&);
 
 
 public:
@@ -79,6 +70,9 @@ public:
 
         //- Construct from Istream and engineTime
         ignition(const dictionary&, const engineTime&, const fvMesh&);
+
+        //- Disallow default bitwise copy construction
+        ignition(const ignition&) = delete;
 
 
     // Member Functions
@@ -102,6 +96,12 @@ public:
 
             //- Has the mixture been ignited?
             bool ignited() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ignition&) = delete;
 };
 
 

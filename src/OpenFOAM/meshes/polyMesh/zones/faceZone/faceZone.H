@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,19 +66,10 @@ class faceZone
 :
     public zone
 {
-    // Private data
+    // Private Data
 
         //- The name associated with the zone-labels dictionary entry
         static const word labelsName_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        faceZone(const faceZone&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const faceZone&);
 
 
 protected:
@@ -125,7 +116,7 @@ protected:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- The name associated with the zone-labels dictionary entry
         static const char * const labelsName;
@@ -164,12 +155,12 @@ public:
             const faceZoneMesh& zm
         );
 
-        //- Construct from components, transferring contents
+        //- Construct from components, moving contents
         faceZone
         (
             const word& name,
-            const Xfer<labelList>& addr,
-            const Xfer<boolList>& fm,
+            labelList&& addr,
+            boolList&& fm,
             const label index,
             const faceZoneMesh&
         );
@@ -199,11 +190,15 @@ public:
         faceZone
         (
             const faceZone&,
-            const Xfer<labelList>& addr,
-            const Xfer<boolList>& fm,
+            labelList&& addr,
+            boolList&& fm,
             const label index,
             const faceZoneMesh&
         );
+
+        //- Disallow default bitwise copy construction
+        faceZone(const faceZone&) = delete;
+
 
         //- Construct and return a clone, resetting the zone mesh
         virtual autoPtr<faceZone> clone(const faceZoneMesh& zm) const
@@ -303,6 +298,16 @@ public:
 
         //- Write dictionary
         virtual void writeDict(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Assignment to zone, clearing demand-driven data
+        void operator=(const faceZone&);
+
+        //- Move assignment to zone, clearing demand-driven data
+        void operator=(faceZone&&);
+
 
     // I-O
 

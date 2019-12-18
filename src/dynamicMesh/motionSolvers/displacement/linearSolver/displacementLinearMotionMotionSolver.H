@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ class displacementLinearMotionMotionSolver
 :
     public points0MotionSolver
 {
-    // Private data
+    // Private Data
 
         //- Axis of the linear motion
         vector axis_;
@@ -88,16 +88,6 @@ class displacementLinearMotionMotionSolver
         autoPtr<Function1<scalar>> displacement_;
 
 
-        //- Disallow default bitwise copy construct
-        displacementLinearMotionMotionSolver
-        (
-            const displacementLinearMotionMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const displacementLinearMotionMotionSolver&);
-
-
 public:
 
     //- Runtime type information
@@ -106,11 +96,17 @@ public:
 
     // Constructors
 
-        //- Construct from polyMesh and IOdictionary
+        //- Construct from polyMesh and dictionary
         displacementLinearMotionMotionSolver
         (
             const polyMesh&,
-            const IOdictionary&
+            const dictionary&
+        );
+
+        //- Disallow default bitwise copy construction
+        displacementLinearMotionMotionSolver
+        (
+            const displacementLinearMotionMotionSolver&
         );
 
 
@@ -126,6 +122,12 @@ public:
         //- Solve for motion
         virtual void solve()
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const displacementLinearMotionMotionSolver&) = delete;
 };
 
 

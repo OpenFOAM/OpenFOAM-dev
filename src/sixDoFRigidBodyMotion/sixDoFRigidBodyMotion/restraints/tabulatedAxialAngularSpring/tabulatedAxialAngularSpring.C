@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,11 +117,11 @@ Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::restrain
 
     if (convertToDegrees_)
     {
-        moment = moment_(radToDeg(theta));
+        moment = moment_->value(radToDeg(theta));
     }
     else
     {
-        moment = moment_(theta);
+        moment = moment_->value(theta);
     }
 
     // Damping of along axis angular velocity only
@@ -175,7 +175,10 @@ bool Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::read
             << abort(FatalError);
     }
 
-    moment_ = interpolationTable<scalar>(sDoFRBMRCoeffs_);
+    moment_.reset
+    (
+        new Function1s::TableFile<scalar>("moment", sDoFRBMRCoeffs_)
+    );
 
     const word angleFormat = sDoFRBMRCoeffs_.lookup("angleFormat");
 
@@ -205,15 +208,13 @@ void Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::write
     Ostream& os
 ) const
 {
-    os.writeKeyword("referenceOrientation")
-        << refQ_ << token::END_STATEMENT << nl;
+    writeEntry(os, "referenceOrientation", refQ_);
 
-    os.writeKeyword("axis")
-        << axis_ << token::END_STATEMENT << nl;
+    writeEntry(os, "axis", axis_);
 
-    moment_.write(os);
+    moment_->writeEntries(os);
 
-    os.writeKeyword("angleFormat");
+    writeKeyword(os, "angleFormat");
 
     if (convertToDegrees_)
     {
@@ -224,8 +225,7 @@ void Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::write
         os  << "radians" << token::END_STATEMENT << nl;
     }
 
-    os.writeKeyword("damping")
-        << damping_ << token::END_STATEMENT << nl;
+    writeEntry(os, "damping", damping_);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,8 +59,10 @@ class binaryTree
 {
 
 public:
+
     typedef binaryNode<CompType, ThermoType> bn;
     typedef chemPointISAT<CompType, ThermoType> chP;
+
 
 private:
 
@@ -90,7 +92,7 @@ private:
     );
 
     //- Perform a search in the subtree starting from the subtree node y
-    //  This search continue to use the hyperplan to walk the tree
+    //  This search continues to use the hyperplane to walk the tree
     //  If covering EOA is found return true and x points to the chemPoint
     bool inSubTree
     (

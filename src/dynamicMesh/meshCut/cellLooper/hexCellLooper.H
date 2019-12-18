@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,13 +97,6 @@ private:
         ) const;
 
 
-        //- Disallow default bitwise copy construct
-        hexCellLooper(const hexCellLooper&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const hexCellLooper&);
-
-
 public:
 
     //- Runtime type information
@@ -114,6 +107,9 @@ public:
 
         //- Construct from components
         hexCellLooper(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        hexCellLooper(const hexCellLooper&) = delete;
 
 
     //- Destructor
@@ -152,6 +148,12 @@ public:
             labelList& loop,
             scalarField& loopWeights
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const hexCellLooper&) = delete;
 };
 
 

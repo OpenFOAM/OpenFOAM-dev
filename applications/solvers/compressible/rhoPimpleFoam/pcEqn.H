@@ -11,7 +11,7 @@ volScalarField rAU(1.0/UEqn.A());
 volScalarField rAtU(1.0/(1.0/rAU - UEqn.H1()));
 volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
 
-if (pimple.nCorrPISO() <= 1)
+if (pimple.nCorrPiso() <= 1)
 {
     tUEqn.clear();
 }
@@ -99,8 +99,15 @@ else
     }
 }
 
+bool limitedp = pressureControl.limit(p);
+
 // Thermodynamic density update
 thermo.correctRho(psi*p - psip0);
+
+if (limitedp)
+{
+    rho = thermo.rho();
+}
 
 #include "rhoEqn.H"
 #include "compressibleContinuityErrs.H"
@@ -113,12 +120,7 @@ U.correctBoundaryConditions();
 fvOptions.correct(U);
 K = 0.5*magSqr(U);
 
-if (pressureControl.limit(p))
-{
-    p.correctBoundaryConditions();
-    rho = thermo.rho();
-}
-else if (pimple.simpleRho())
+if (pimple.simpleRho())
 {
     rho = thermo.rho();
 }

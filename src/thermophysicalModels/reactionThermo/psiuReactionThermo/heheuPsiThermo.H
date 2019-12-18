@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,21 +51,19 @@ class heheuPsiThermo
 :
     public heThermo<BasicPsiThermo, MixtureType>
 {
-    // Private Member Functions
+    // Private Data
 
+        //- Unburnt temperature
         volScalarField Tu_;
+
+        //- Unburnt energy
         volScalarField heu_;
 
 
     // Private Member Functions
 
+        //- Calculate the thermo variables
         void calculate();
-
-        //- Construct as copy (not implemented)
-        heheuPsiThermo
-        (
-            const heheuPsiThermo<BasicPsiThermo, MixtureType>&
-        );
 
 
 public:
@@ -83,15 +81,22 @@ public:
             const word& phaseName
         );
 
+        //- Disallow default bitwise copy construction
+        heheuPsiThermo
+        (
+            const heheuPsiThermo<BasicPsiThermo, MixtureType>&
+        ) = delete;
+
 
     //- Destructor
     virtual ~heheuPsiThermo();
 
 
-    // Member functions
+    // Member Functions
 
         //- Update properties
         virtual void correct();
+
 
         // Access to thermodynamic state variables.
 
@@ -120,7 +125,6 @@ public:
             //- Unburnt gas enthalpy for cell-set [J/kg]
             virtual tmp<scalarField> heu
             (
-                const scalarField& p,
                 const scalarField& T,
                 const labelList& cells
             ) const;
@@ -128,7 +132,6 @@ public:
             //- Unburnt gas enthalpy for patch [J/kg]
             virtual tmp<scalarField> heu
             (
-                const scalarField& p,
                 const scalarField& T,
                 const label patchi
             ) const;
@@ -146,10 +149,10 @@ public:
 
         // Access to transport variables
 
-            //- Dynamic viscosity of unburnt gas [kg/ms]
+            //- Dynamic viscosity of unburnt gas [kg/m/s]
             virtual tmp<volScalarField> muu() const;
 
-            //- Dynamic viscosity of burnt gas [kg/ms]
+            //- Dynamic viscosity of burnt gas [kg/m/s]
             virtual tmp<volScalarField> mub() const;
 };
 

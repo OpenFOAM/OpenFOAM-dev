@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ class fvMesh;
 
 class MRFZone
 {
-    // Private data
+    // Private Data
 
         //- Reference to the mesh database
         const fvMesh& mesh_;
@@ -104,7 +104,7 @@ class MRFZone
         //- Axis vector
         vector axis_;
 
-        //- Angular velocty (rad/sec)
+        //- Angular velocity (rad/sec)
         autoPtr<Function1<scalar>> omega_;
 
 
@@ -146,12 +146,6 @@ class MRFZone
             surfaceScalarField& phi
         ) const;
 
-        //- Disallow default bitwise copy construct
-        MRFZone(const MRFZone&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const MRFZone&);
-
 
 public:
 
@@ -169,6 +163,9 @@ public:
             const dictionary& dict,
             const word& cellZoneName = word::null
         );
+
+        //- Disallow default bitwise copy construction
+        MRFZone(const MRFZone&) = delete;
 
         //- Return clone
         autoPtr<MRFZone> clone() const
@@ -272,6 +269,12 @@ public:
 
         //- Read MRF dictionary
         bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const MRFZone&) = delete;
 };
 
 

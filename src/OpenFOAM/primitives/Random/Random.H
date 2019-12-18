@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ namespace Foam
 
 class Random
 {
-    // Private typedefs
+    // Private Typedefs
 
         //- Working type
         typedef uint64_t type;
@@ -69,7 +69,7 @@ class Random
         static const type A = 0x5DEECE66D, C = 0xB, M = type(1) << 48;
 
 
-    // Private data
+    // Private Data
 
         //- The stored integer
         type x_;

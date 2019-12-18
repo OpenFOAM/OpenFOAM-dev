@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,7 @@ SourceFiles
 #define solidNoLoopControl_H
 
 #include "nonOrthogonalSolutionControl.H"
+#include "pimpleLoop.H"
 #include "singleRegionConvergenceControl.H"
 #include "singleRegionCorrectorConvergenceControl.H"
 
@@ -56,9 +57,17 @@ class solidNoLoopControl
     public singleRegionConvergenceControl,
     public singleRegionCorrectorConvergenceControl
 {
+protected:
+
+    // Protected data
+
+        //- The pimple loop
+        const pimpleLoop& loop_;
+
+
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Run-time type information
         TypeName("solidNoLoopControl");
@@ -66,8 +75,14 @@ public:
 
     // Constructors
 
-        //- Construct from a mesh and the name of the algorithm
-        solidNoLoopControl(fvMesh& mesh, const word& algorithmName);
+        //- Construct from a mesh, the name of the algorithm, and a reference
+        //  to the pimple loop
+        solidNoLoopControl
+        (
+            fvMesh& mesh,
+            const word& algorithmName,
+            const pimpleLoop& loop
+        );
 
 
     //- Destructor
@@ -80,6 +95,11 @@ public:
 
             //- Read controls
             virtual bool read();
+
+        // Access
+
+            //- Flag to indicate whether in final state
+            virtual bool isFinal() const;
 };
 
 

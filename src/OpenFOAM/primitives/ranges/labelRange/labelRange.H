@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Ostream& operator<<(Ostream&, const labelRange&);
 
 class labelRange
 {
-    // Private data
+    // Private Data
 
         label start_;
         label size_;
@@ -144,7 +144,7 @@ public:
         //- An STL const_iterator
         class const_iterator
         {
-            // Private data
+            // Private Data
 
                 //- Reference to the range for which this is an iterator
                 const labelRange& range_;
@@ -163,7 +163,7 @@ public:
                 inline explicit const_iterator(const labelRange&);
 
 
-            // Member operators
+            // Member Operators
 
                 inline bool operator==(const const_iterator&) const;
 

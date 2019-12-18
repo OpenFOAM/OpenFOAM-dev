@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,15 +56,6 @@ class waxSolventEvaporation
 :
     public phaseChangeModel
 {
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        waxSolventEvaporation(const waxSolventEvaporation&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const waxSolventEvaporation&);
-
-
 protected:
 
     // Protected data
@@ -129,6 +120,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        waxSolventEvaporation(const waxSolventEvaporation&) = delete;
+
 
     //- Destructor
     virtual ~waxSolventEvaporation();
@@ -144,6 +138,12 @@ public:
             scalarField& dMass,
             scalarField& dEnergy
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const waxSolventEvaporation&) = delete;
 };
 
 

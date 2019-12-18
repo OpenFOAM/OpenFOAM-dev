@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ class phaseModel
     public volScalarField,
     public transportModel
 {
-    // Private data
+    // Private Data
 
         //- Reference to the twoPhaseSystem to which this phase belongs
         const twoPhaseSystem& fluid_;
@@ -208,14 +208,14 @@ public:
             return thermo_->alpha(patchi);
         }
 
-        //- Thermal diffusivity for temperature of mixture [J/m/s/K]
+        //- Thermal diffusivity for temperature of mixture
+        //  for patch [W/m/K]
         tmp<scalarField> kappa(const label patchi) const
         {
             return thermo_->kappa(patchi);
         }
 
-        //- Thermal diffusivity for temperature of mixture
-        //  for patch [J/m/s/K]
+        //- Thermal diffusivity for temperature of mixture [W/m/K]
         tmp<volScalarField> kappa() const
         {
             return thermo_->kappa();
@@ -234,7 +234,7 @@ public:
         }
 
         //- Effective thermal turbulent diffusivity for temperature
-        //  of mixture [J/m/s/K]
+        //  of mixture [W/m/K]
         tmp<volScalarField> kappaEff
         (
             const volScalarField& alphat
@@ -244,7 +244,7 @@ public:
         }
 
         //- Effective thermal turbulent diffusivity for temperature
-        //  of mixture for patch [J/m/s/K]
+        //  of mixture for patch [W/m/K]
         tmp<scalarField> kappaEff
         (
             const scalarField& alphat,

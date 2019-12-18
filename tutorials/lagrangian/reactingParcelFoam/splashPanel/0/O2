@@ -13,7 +13,6 @@ FoamFile
     location    "0";
     object      O2;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 0 0 0 0 0 0];
@@ -22,13 +21,15 @@ internalField   uniform 0.21;
 
 boundaryField
 {
-    sides
+    #includeEtc "caseDicts/setConstraintTypes"
+
+    top
     {
         type            inletOutlet;
         inletValue      $internalField;
         value           $internalField;
     }
-    region0_to_wallFilmRegion_wallFilmFaces
+    region0_to_wallFilm_walls
     {
         type            zeroGradient;
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,10 +25,10 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::word&
-Foam::diameterModels::sizeGroup::keyword() const
+inline const Foam::dictionary&
+Foam::diameterModels::sizeGroup::dict() const
 {
-    return name();
+    return dict_;
 }
 
 
@@ -47,9 +47,9 @@ Foam::diameterModels::sizeGroup::VelocityGroup() const
 
 
 inline const Foam::dimensionedScalar&
-Foam::diameterModels::sizeGroup::d() const
+Foam::diameterModels::sizeGroup::dSph() const
 {
-    return d_;
+    return dSph_;
 }
 
 
@@ -59,5 +59,18 @@ Foam::diameterModels::sizeGroup::x() const
     return x_;
 }
 
+
+inline Foam::autoPtr<Foam::diameterModels::shapeModel>&
+Foam::diameterModels::sizeGroup::shapeModelPtr()
+{
+    return shapeModel_;
+}
+
+
+inline const Foam::autoPtr<Foam::diameterModels::shapeModel>&
+Foam::diameterModels::sizeGroup::shapeModelPtr() const
+{
+    return shapeModel_;
+}
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,15 +56,6 @@ class steadyStateDdtScheme
 :
     public fv::ddtScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        steadyStateDdtScheme(const steadyStateDdtScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const steadyStateDdtScheme&);
-
-
 public:
 
     //- Runtime type information
@@ -84,6 +75,9 @@ public:
         :
             ddtScheme<Type>(mesh, is)
         {}
+
+        //- Disallow default bitwise copy construction
+        steadyStateDdtScheme(const steadyStateDdtScheme&) = delete;
 
 
     // Member Functions
@@ -179,6 +173,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const steadyStateDdtScheme&) = delete;
 };
 
 

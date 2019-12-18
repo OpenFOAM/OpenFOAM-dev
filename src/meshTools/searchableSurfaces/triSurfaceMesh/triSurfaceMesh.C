@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -475,7 +475,7 @@ Foam::tmp<Foam::pointField> Foam::triSurfaceMesh::coordinates() const
     pointField& pt = tPts.ref();
 
     // Use copy to calculate face centres so they don't get stored
-    pt = PrimitivePatch<triSurface::FaceType, SubList, const pointField&>
+    pt = PrimitivePatch<SubList<triSurface::FaceType>, const pointField&>
     (
         SubList<triSurface::FaceType>(*this, triSurface::size()),
         triSurface::points()
@@ -876,7 +876,7 @@ bool Foam::triSurfaceMesh::writeObject
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp,
-    const bool valid
+    const bool write
 ) const
 {
     fileName fullPath;

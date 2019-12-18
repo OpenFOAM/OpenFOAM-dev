@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,19 +55,10 @@ class infinitelyFastChemistry
 :
     public singleStepCombustion<ReactionThermo, ThermoType>
 {
-    // Private data
+    // Private Data
 
         //- Model constant
         scalar C_;
-
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        infinitelyFastChemistry(const infinitelyFastChemistry&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const infinitelyFastChemistry&);
 
 
 public:
@@ -82,10 +73,13 @@ public:
         infinitelyFastChemistry
         (
             const word& modelType,
-            ReactionThermo& thermo,
+            const ReactionThermo& thermo,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );
+
+        //- Disallow default bitwise copy construction
+        infinitelyFastChemistry(const infinitelyFastChemistry&);
 
 
     //- Destructor
@@ -99,6 +93,12 @@ public:
 
         //- Update properties
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const infinitelyFastChemistry&) = delete;
 };
 
 

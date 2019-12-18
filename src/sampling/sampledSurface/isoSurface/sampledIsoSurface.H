@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sampledIsoSurface
+    Foam::sampledSurfaces::isoSurface
 
 Description
     A sampledSurface defined by a surface of iso value.
@@ -38,23 +38,26 @@ SourceFiles
 #define sampledIsoSurface_H
 
 #include "sampledSurface.H"
+#include "isoSurface.H"
 #include "MeshedSurface.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace sampledSurfaces
+{
 
 /*---------------------------------------------------------------------------*\
-                    Class sampledIsoSurface Declaration
+                          Class isoSurface Declaration
 \*---------------------------------------------------------------------------*/
 
-class sampledIsoSurface
+class isoSurface
 :
     public sampledSurface,
     public MeshedSurface<face>
 {
-    // Private data
+    // Private Data
 
         //- Field to get isoSurface of
         const word isoField_;
@@ -63,7 +66,7 @@ class sampledIsoSurface
         const scalarField isoVals_;
 
         //- Whether to coarsen
-        const Switch regularise_;
+        const Foam::isoSurface::filterType filter_;
 
         //- If restricted to zones, name of this zone or a regular expression
         keyType zoneKey_;
@@ -99,13 +102,13 @@ class sampledIsoSurface
 public:
 
     //- Runtime type information
-    TypeName("sampledIsoSurface");
+    TypeName("isoSurface");
 
 
     // Constructors
 
         //- Construct from dictionary
-        sampledIsoSurface
+        isoSurface
         (
             const word& name,
             const polyMesh& mesh,
@@ -114,7 +117,7 @@ public:
 
 
     //- Destructor
-    virtual ~sampledIsoSurface();
+    virtual ~isoSurface();
 
 
     // Member Functions
@@ -210,6 +213,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSurfaces
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ class mapDistributePolyMesh;
 
 class removeFaces
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -155,14 +155,6 @@ class removeFaces
             ) const;
 
 
-
-        //- Disallow default bitwise copy construct
-        removeFaces(const removeFaces&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const removeFaces&);
-
-
 public:
 
     //- Runtime type information
@@ -175,6 +167,10 @@ public:
         //  to be considered aligned. Set to >= 1 to disable checking
         //  and always merge (if on same patch)
         removeFaces(const polyMesh&, const scalar minCos);
+
+        //- Disallow default bitwise copy construction
+        removeFaces(const removeFaces&) = delete;
+
 
     // Member Functions
 
@@ -211,6 +207,12 @@ public:
         //- Force recalculation of locally stored data for mesh distribution
         void distribute(const mapDistributePolyMesh&)
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const removeFaces&) = delete;
 };
 
 

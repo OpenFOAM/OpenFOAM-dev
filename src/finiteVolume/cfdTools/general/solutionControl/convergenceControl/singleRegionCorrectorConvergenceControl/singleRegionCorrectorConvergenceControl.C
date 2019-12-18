@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,17 +94,16 @@ bool Foam::singleRegionCorrectorConvergenceControl::readCorrResidualControls()
             corrResidualData rd;
             const dictionary& fieldDict(iter().dict());
             rd.name = fName.c_str();
-            rd.absTol = readScalar(fieldDict.lookup("tolerance"));
-            rd.relTol = readScalar(fieldDict.lookup("relTol"));
-            rd.solveIndex = 0;
+            rd.absTol = fieldDict.lookup<scalar>("tolerance");
+            rd.relTol = fieldDict.lookup<scalar>("relTol");
             data.append(rd);
         }
         else
         {
             corrResidualData& rd = data[fieldi];
             const dictionary& fieldDict(iter().dict());
-            rd.absTol = readScalar(fieldDict.lookup("tolerance"));
-            rd.relTol = readScalar(fieldDict.lookup("relTol"));
+            rd.absTol = fieldDict.lookup<scalar>("tolerance");
+            rd.relTol = fieldDict.lookup<scalar>("relTol");
         }
     }
 
@@ -174,14 +173,15 @@ corrCriteriaSatisfied() const
         Info<< control_.algorithmName() << ": Correction residuals" << endl;
     }
 
-    const dictionary& solverDict = mesh_.solverPerformanceDict();
-    forAllConstIter(dictionary, solverDict, iter)
+    DynamicList<word> fieldNames(convergenceControl::getFieldNames(mesh_));
+
+    forAll(fieldNames, i)
     {
-        const word& variableName = iter().keyword();
+        const word& fieldName = fieldNames[i];
         const label fieldi =
             convergenceControl::residualControlIndex
             (
-                variableName,
+                fieldName,
                 corrResidualControl_
             );
         if (fieldi != -1)
@@ -190,9 +190,8 @@ corrCriteriaSatisfied() const
             convergenceControl::getInitialResiduals
             (
                 mesh_,
-                variableName,
-                corrResidualControl_[fieldi].solveIndex,
-                iter().stream(),
+                fieldName,
+                solveIndex_.found(fieldName) ? solveIndex_[fieldName] : 0,
                 firstResidual,
                 residual
             );
@@ -209,7 +208,7 @@ corrCriteriaSatisfied() const
 
             if (control_.debug)
             {
-                Info<< control_.algorithmSpace() << "  " << variableName
+                Info<< control_.algorithmSpace() << "  " << fieldName
                     << ": tolerance " << residual << " ("
                     << corrResidualControl_[fieldi].absTol << ")"
                     << ", relTol " << relativeResidual << " ("
@@ -225,35 +224,24 @@ corrCriteriaSatisfied() const
 
 void Foam::singleRegionCorrectorConvergenceControl::resetCorrSolveIndex()
 {
-    forAll(corrResidualControl_, i)
-    {
-        corrResidualControl_[i].solveIndex = 0;
-    }
+    solveIndex_.clear();
 }
 
 
 void Foam::singleRegionCorrectorConvergenceControl::updateCorrSolveIndex()
 {
-    const dictionary& solverDict = mesh_.solverPerformanceDict();
-    forAllConstIter(dictionary, solverDict, iter)
+    DynamicList<word> fieldNames(convergenceControl::getFieldNames(mesh_));
+
+    forAll(fieldNames, i)
     {
-        const word& variableName = iter().keyword();
-        const label fieldi =
-            convergenceControl::residualControlIndex
-            (
-                variableName,
-                corrResidualControl_
-            );
-        if (fieldi != -1)
-        {
-            getNSolves
-            (
-                mesh_,
-                variableName,
-                iter().stream(),
-                corrResidualControl_[fieldi].solveIndex
-            );
-        }
+        const word& fieldName = fieldNames[i];
+
+        getNSolves
+        (
+            mesh_,
+            fieldName,
+            solveIndex_(fieldName)
+        );
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,8 +76,8 @@ standardPhaseChange::standardPhaseChange
 )
 :
     phaseChangeModel(typeName, film, dict),
-    deltaMin_(readScalar(coeffDict_.lookup("deltaMin"))),
-    L_(readScalar(coeffDict_.lookup("L"))),
+    deltaMin_(coeffDict_.lookup<scalar>("deltaMin")),
+    L_(coeffDict_.lookup<scalar>("L")),
     TbFactor_(coeffDict_.lookupOrDefault<scalar>("TbFactor", 1.1)),
     YInfZero_(coeffDict_.lookupOrDefault<Switch>("YInfZero", false))
 {}
@@ -112,7 +112,7 @@ void standardPhaseChange::correctModel
     const scalarField& delta = film.delta();
     const scalarField& pInf = film.pPrimary();
     const scalarField& T = film.T();
-    const scalarField& hs = film.hs();
+    const scalarField& h = film.h();
     const scalarField& rho = film.rho();
     const scalarField& rhoInf = film.rhoPrimary();
     const scalarField& muInf = film.muPrimary();
@@ -161,7 +161,7 @@ void standardPhaseChange::correctModel
             }
             else
             {
-                // Primary region density [kg/m3]
+                // Primary region density [kg/m^3]
                 const scalar rhoInfc = rhoInf[celli];
 
                 // Primary region viscosity [Pa.s]
@@ -173,7 +173,7 @@ void standardPhaseChange::correctModel
                 // Vapour mass fraction at interface
                 const scalar Ys = Wliq*pSat/(Wliq*pSat + Wvap*(pc - pSat));
 
-                // Vapour diffusivity [m2/s]
+                // Vapour diffusivity [m^2/s]
                 const scalar Dab = filmThermo.D(pc, Tloc);
 
                 // Schmidt number
@@ -193,8 +193,8 @@ void standardPhaseChange::correctModel
 
             // Heat is assumed to be removed by heat-transfer to the wall
             // so the energy remains unchanged by the phase-change.
-            dEnergy[celli] += dm*hs[celli];
-            // dEnergy[celli] += dm*(hs[celli] + hVap);
+            dEnergy[celli] += dm*h[celli];
+            // dEnergy[celli] += dm*(h[celli] + hVap);
         }
     }
 }

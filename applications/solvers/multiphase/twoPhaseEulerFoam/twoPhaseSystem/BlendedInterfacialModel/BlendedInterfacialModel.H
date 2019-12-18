@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ namespace Foam
 template<class modelType>
 class BlendedInterfacialModel
 {
-    // Private data
+    // Private Data
 
         //- Unordered phase pair
         const phasePair& pair_;
@@ -81,12 +81,6 @@ class BlendedInterfacialModel
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        BlendedInterfacialModel(const BlendedInterfacialModel<modelType>&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const BlendedInterfacialModel<modelType>&);
-
         //- Correct coeff/value on fixed flux boundary conditions
         template<class GeometricField>
         void correctFixedFluxBCs(GeometricField& field) const;
@@ -106,6 +100,12 @@ public:
             const orderedPhasePair& pair2In1,
             const bool correctFixedFluxBCs = true
         );
+
+        //- Disallow default bitwise copy construction
+        BlendedInterfacialModel
+        (
+            const BlendedInterfacialModel<modelType>&
+        ) = delete;
 
 
     //- Destructor
@@ -135,6 +135,12 @@ public:
 
         //- Return the blended diffusivity
         tmp<volScalarField> D() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const BlendedInterfacialModel<modelType>&) = delete;
 };
 
 

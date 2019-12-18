@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ class treeDataCell;
 
 class meshToMesh0
 {
-    // Private data
+    // Private Data
 
         // mesh references
 
@@ -178,7 +178,7 @@ public:
     //- Patch-field interpolation class
     class patchFieldInterpolator
     :
-        public fvPatchFieldMapper
+        public generalFvPatchFieldMapper
     {
         const labelList& directAddressing_;
 

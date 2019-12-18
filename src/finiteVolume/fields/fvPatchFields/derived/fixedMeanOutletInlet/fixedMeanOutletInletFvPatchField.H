@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ Usage
 See also
     Foam::fixedMeanFvPatchField
     Foam::outletInletFvPatchField
-    Foam::Function1Types
+    Foam::Function1s
 
 SourceFiles
     fixedMeanOutletInletFvPatchField.C
@@ -81,7 +81,7 @@ class fixedMeanOutletInletFvPatchField
 :
     public outletInletFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- MeanValue value the field is adjusted to maintain
         autoPtr<Function1<Type>> meanValue_;
@@ -120,7 +120,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         fixedMeanOutletInletFvPatchField
         (
             const fixedMeanOutletInletFvPatchField<Type>&
@@ -135,7 +135,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         fixedMeanOutletInletFvPatchField
         (
             const fixedMeanOutletInletFvPatchField<Type>&,
@@ -155,7 +155,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ class lduPrimitiveMesh
     public lduMesh,
     public lduAddressing
 {
-    // Private data
+    // Private Data
 
         //- Lower addressing
         labelList lowerAddr_;
@@ -73,6 +73,7 @@ class lduPrimitiveMesh
         //- Communicator to use for any parallel communication
         const label comm_;
 
+
     // Private Member Functions
 
         //- Get size of all meshes
@@ -92,12 +93,6 @@ class lduPrimitiveMesh
             const labelUList& l,
             const labelUList& u
         );
-
-        //- Disallow default bitwise copy construct
-        lduPrimitiveMesh(const lduPrimitiveMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const lduPrimitiveMesh&);
 
 
 public:
@@ -174,6 +169,9 @@ public:
             labelListList& boundaryMap,
             labelListListList& boundaryFaceMap
         );
+
+        //- Disallow default bitwise copy construction
+        lduPrimitiveMesh(const lduPrimitiveMesh&) = delete;
 
 
     //- Destructor
@@ -261,6 +259,11 @@ public:
             template<class ProcPatch>
             static lduSchedule nonBlockingSchedule(const lduInterfacePtrsList&);
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const lduPrimitiveMesh&) = delete;
 };
 
 

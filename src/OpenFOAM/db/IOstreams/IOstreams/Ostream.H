@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,6 +37,7 @@ SourceFiles
 #define Ostream_H
 
 #include "IOstream.H"
+#include "verbatimString.H"
 #include "keyType.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -62,9 +63,6 @@ protected:
 
         //- Number of spaces per indent level
         static const unsigned short indentSize_ = 4;
-
-        //- Indentation of the entry from the start of the keyword
-        static const unsigned short entryIndentation_ = 16;
 
         //- Current indent level
         unsigned short indentLevel_;
@@ -92,12 +90,9 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         // Write functions
-
-            //- Write next token to stream
-            virtual Ostream& write(const token&) = 0;
 
             //- Write character
             virtual Ostream& write(const char) = 0;
@@ -108,13 +103,11 @@ public:
             //- Write word
             virtual Ostream& write(const word&) = 0;
 
-            //- Write keyType
-            //  write regular expression as quoted string
-            //  write plain word as word (unquoted)
-            virtual Ostream& write(const keyType&);
-
             //- Write string
             virtual Ostream& write(const string&) = 0;
+
+            //- Write verbatimString
+            virtual Ostream& write(const verbatimString&) = 0;
 
             //- Write std::string surrounded by quotes.
             //  Optional write without quotes.
@@ -166,7 +159,9 @@ public:
             //- Decrememt the indent level
             void decrIndent();
 
-            //- Write the keyword followed by an appropriate indentation
+            //- Write the keyword followed by an appropriate indentation.
+            //  Here for backward compatibility, replaced by
+            //  writeKeyword(Foam::Ostream& os, const keyType& kw);
             Ostream& writeKeyword(const keyType&);
 
 
@@ -191,7 +186,7 @@ public:
             virtual int precision(const int p) = 0;
 
 
-    // Member operators
+    // Member Operators
 
         //- Return a non-const reference to const Ostream
         //  Needed for write functions where the stream argument is temporary:

@@ -59,8 +59,9 @@ end
 #setenv ParaView_VERSION 4.4.0
 #setenv ParaView_VERSION 5.0.0
 #setenv ParaView_VERSION 5.0.1
-setenv ParaView_VERSION 5.4.0
+#setenv ParaView_VERSION 5.4.0
 #setenv ParaView_VERSION 5.5.0
+setenv ParaView_VERSION 5.6.0
 setenv ParaView_MAJOR detect
 
 #setenv ParaView_GL=system

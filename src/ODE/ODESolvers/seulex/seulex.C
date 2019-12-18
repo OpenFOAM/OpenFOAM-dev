@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,6 +104,7 @@ bool Foam::seulex::seul
 (
     const scalar x0,
     const scalarField& y0,
+    const label li,
     const scalar dxTot,
     const label k,
     scalarField& y,
@@ -126,7 +127,7 @@ bool Foam::seulex::seul
     LUDecompose(a_, pivotIndices_);
 
     scalar xnew = x0 + dx;
-    odes_.derivatives(xnew, y0, dy_);
+    odes_.derivatives(xnew, y0, li, dy_);
     LUBacksubstitute(a_, pivotIndices_, dy_);
 
     yTemp_ = y0;
@@ -145,7 +146,7 @@ bool Foam::seulex::seul
             }
             dy1 = sqrt(dy1);
 
-            odes_.derivatives(x0 + dx, yTemp_, dydx_);
+            odes_.derivatives(x0 + dx, yTemp_, li, dydx_);
             for (label i=0; i<n_; i++)
             {
                 dy_[i] = dydx_[i] - dy_[i]/dx;
@@ -181,7 +182,7 @@ bool Foam::seulex::seul
             }
         }
 
-        odes_.derivatives(xnew, yTemp_, dy_);
+        odes_.derivatives(xnew, yTemp_, li, dy_);
         LUBacksubstitute(a_, pivotIndices_, dy_);
     }
 
@@ -246,6 +247,7 @@ void Foam::seulex::solve
 (
     scalar& x,
     scalarField& y,
+    const label li,
     stepState& step
 ) const
 {
@@ -275,7 +277,7 @@ void Foam::seulex::solve
 
     if (theta_ > jacRedo_)
     {
-        odes_.jacobian(x, y, dfdx_, dfdy_);
+        odes_.jacobian(x, y, li, dfdx_, dfdy_);
         jacUpdated = true;
     }
 
@@ -299,7 +301,7 @@ void Foam::seulex::solve
 
         for (k=0; k<=kTarg_+1; k++)
         {
-            bool success = seul(x, y0_, dx, k, ySequence_, scale_);
+            bool success = seul(x, y0_, li, dx, k, ySequence_, scale_);
 
             if (!success)
             {
@@ -427,7 +429,7 @@ void Foam::seulex::solve
 
                 if (theta_ > jacRedo_ && !jacUpdated)
                 {
-                    odes_.jacobian(x, y, dfdx_, dfdy_);
+                    odes_.jacobian(x, y, li, dfdx_, dfdy_);
                     jacUpdated = true;
                 }
             }

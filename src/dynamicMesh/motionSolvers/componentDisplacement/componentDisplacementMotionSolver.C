@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ Foam::direction Foam::componentDisplacementMotionSolver::cmpt
 Foam::componentDisplacementMotionSolver::componentDisplacementMotionSolver
 (
     const polyMesh& mesh,
-    const IOdictionary& dict,
+    const dictionary& dict,
     const word& type
 )
 :
@@ -83,7 +83,7 @@ Foam::componentDisplacementMotionSolver::componentDisplacementMotionSolver
             IOobject
             (
                 "points",
-                time().constant(),
+                mesh.time().constant(),
                 polyMesh::meshSubDir,
                 mesh,
                 IOobject::MUST_READ,

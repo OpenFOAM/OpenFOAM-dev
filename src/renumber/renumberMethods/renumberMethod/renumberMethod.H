@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,14 +55,6 @@ protected:
 
         const dictionary& renumberDict_;
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        renumberMethod(const renumberMethod&);
-        void operator=(const renumberMethod&);
-
 
 public:
 
@@ -84,15 +76,6 @@ public:
         );
 
 
-    // Selectors
-
-        //- Return a reference to the selected renumbering method
-        static autoPtr<renumberMethod> New
-        (
-            const dictionary& renumberDict
-        );
-
-
     // Constructors
 
         //- Construct given the renumber dictionary
@@ -100,6 +83,18 @@ public:
         :
             renumberDict_(renumberDict)
         {}
+
+        //- Disallow default bitwise copy construction
+        renumberMethod(const renumberMethod&) = delete;
+
+
+    // Selectors
+
+        //- Return a reference to the selected renumbering method
+        static autoPtr<renumberMethod> New
+        (
+            const dictionary& renumberDict
+        );
 
 
     //- Destructor
@@ -159,6 +154,11 @@ public:
             const pointField& cc
         ) const = 0;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const renumberMethod&) = delete;
 };
 
 

@@ -17,23 +17,23 @@ FoamFile
 
 application     chtMultiRegionFoam;
 
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 
 stopAt          endTime;
 
-endTime         1;
+endTime         6;
 
 deltaT          1e-5;
 
 writeControl    adjustableRunTime;
 
-writeInterval   1e-2;
+writeInterval   0.1;
 
 purgeWrite      0;
 
-writeFormat     ascii;
+writeFormat     binary;
 
 writePrecision  8;
 
@@ -50,5 +50,11 @@ maxCo           0.2;
 maxDi           5.0;
 
 adjustTimeStep  yes;
+
+functions
+{
+    #includeFunc Qdot
+}
+
 
 // ************************************************************************* //

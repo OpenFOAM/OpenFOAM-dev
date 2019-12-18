@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class Time;
 
 class vtkMesh
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         fvMesh& baseMesh_;
@@ -68,22 +68,15 @@ class vtkMesh
         mutable autoPtr<vtkTopo> topoPtr_;
 
 
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        vtkMesh(const vtkMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const vtkMesh&);
-
-
 public:
 
     // Constructors
 
         //- Construct from components
         vtkMesh(fvMesh& baseMesh, const word& setName = "");
+
+        //- Disallow default bitwise copy construction
+        vtkMesh(const vtkMesh&) = delete;
 
 
     // Member Functions
@@ -165,6 +158,12 @@ public:
                     return fld;
                 }
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const vtkMesh&) = delete;
 };
 
 

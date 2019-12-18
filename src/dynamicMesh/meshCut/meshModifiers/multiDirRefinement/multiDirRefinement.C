@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -520,7 +520,7 @@ Foam::multiDirRefinement::multiDirRefinement
 }
 
 
-// Construct from directionary and directions to refine.
+// Construct from dictionary and directions to refine.
 Foam::multiDirRefinement::multiDirRefinement
 (
     polyMesh& mesh,

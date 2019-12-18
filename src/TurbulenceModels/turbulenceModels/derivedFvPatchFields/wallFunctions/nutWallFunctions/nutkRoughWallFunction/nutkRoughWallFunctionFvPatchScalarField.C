@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,32 +34,39 @@ License
 namespace Foam
 {
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-scalar nutkRoughWallFunctionFvPatchScalarField::fnRough
+scalar nutkRoughWallFunctionFvPatchScalarField::E
 (
     const scalar KsPlus,
     const scalar Cs
 ) const
 {
     // Return fn based on non-dimensional roughness height
-
-    if (KsPlus < 90.0)
+    if (KsPlus < 2.25)
     {
-        return pow
-        (
-            (KsPlus - 2.25)/87.75 + Cs*KsPlus,
-            sin(0.4258*(log(KsPlus) - 0.811))
-        );
+        return E_;
+    }
+    else if (KsPlus < 90)
+    {
+        return
+            E_
+           /pow
+            (
+                (KsPlus - 2.25)/87.75 + Cs*KsPlus,
+                sin(0.4258*(log(KsPlus) - 0.811))
+            );
     }
     else
     {
-        return (1.0 + Cs*KsPlus);
+        return E_/(1 + Cs*KsPlus);
     }
 }
 
 
-tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::calcNut() const
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::nut() const
 {
     const label patchi = patch().index();
 
@@ -71,9 +78,12 @@ tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::calcNut() const
             internalField().group()
         )
     );
+
     const scalarField& y = turbModel.y()[patchi];
+
     const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();
+
     const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();
 
@@ -84,38 +94,33 @@ tmp<scalarField> nutkRoughWallFunctionFvPatchScalarField::calcNut() const
 
     forAll(nutw, facei)
     {
-        label celli = patch().faceCells()[facei];
+        const label celli = patch().faceCells()[facei];
 
-        scalar uStar = Cmu25*sqrt(k[celli]);
-        scalar yPlus = uStar*y[facei]/nuw[facei];
-        scalar KsPlus = uStar*Ks_[facei]/nuw[facei];
-
-        scalar Edash = E_;
-        if (KsPlus > 2.25)
-        {
-            Edash /= fnRough(KsPlus, Cs_[facei]);
-        }
-
-        scalar limitingNutw = max(nutw[facei], nuw[facei]);
+        const scalar uStar = Cmu25*sqrt(k[celli]);
+        const scalar KsPlus = uStar*Ks_[facei]/nuw[facei];
+        const scalar E = this->E(KsPlus, Cs_[facei]);
+        const scalar yPlusMin = constant::mathematical::e/E;
+        const scalar yPlus = max(uStar*y[facei]/nuw[facei], yPlusMin);
 
         // To avoid oscillations limit the change in the wall viscosity
-        // which is particularly important if it temporarily becomes zero
         nutw[facei] =
             max
             (
                 min
                 (
-                    nuw[facei]
-                   *(yPlus*kappa_/log(max(Edash*yPlus, 1+1e-4)) - 1),
-                    2*limitingNutw
-                ), 0.5*limitingNutw
+                    nuw[facei]*max(yPlus*kappa_/log(E*yPlus) - 1, 0),
+                    max(2*nutw[facei], nuw[facei])
+                ),
+                0.5*nutw[facei]
             );
 
         if (debug)
         {
             Info<< "yPlus = " << yPlus
                 << ", KsPlus = " << KsPlus
-                << ", Edash = " << Edash
+                << ", E = " << E
+                << ", yPlusMin " << yPlusMin
+                << ", yPlusLam " << yPlusLam(kappa_, E)
                 << ", nutw = " << nutw[facei]
                 << endl;
         }
@@ -141,20 +146,6 @@ nutkRoughWallFunctionFvPatchScalarField::nutkRoughWallFunctionFvPatchScalarField
 
 nutkRoughWallFunctionFvPatchScalarField::nutkRoughWallFunctionFvPatchScalarField
 (
-    const nutkRoughWallFunctionFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    nutkWallFunctionFvPatchScalarField(ptf, p, iF, mapper),
-    Ks_(ptf.Ks_, mapper),
-    Cs_(ptf.Cs_, mapper)
-{}
-
-
-nutkRoughWallFunctionFvPatchScalarField::nutkRoughWallFunctionFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -163,6 +154,20 @@ nutkRoughWallFunctionFvPatchScalarField::nutkRoughWallFunctionFvPatchScalarField
     nutkWallFunctionFvPatchScalarField(p, iF, dict),
     Ks_("Ks", dict, p.size()),
     Cs_("Cs", dict, p.size())
+{}
+
+
+nutkRoughWallFunctionFvPatchScalarField::nutkRoughWallFunctionFvPatchScalarField
+(
+    const nutkRoughWallFunctionFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    nutkWallFunctionFvPatchScalarField(ptf, p, iF, mapper),
+    Ks_(mapper(ptf.Ks_)),
+    Cs_(mapper(ptf.Cs_))
 {}
 
 
@@ -197,8 +202,8 @@ void nutkRoughWallFunctionFvPatchScalarField::autoMap
 )
 {
     nutkWallFunctionFvPatchScalarField::autoMap(m);
-    Ks_.autoMap(m);
-    Cs_.autoMap(m);
+    m(Ks_, Ks_);
+    m(Cs_, Cs_);
 }
 
 
@@ -222,9 +227,9 @@ void nutkRoughWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    Cs_.writeEntry("Cs", os);
-    Ks_.writeEntry("Ks", os);
-    writeEntry("value", os);
+    writeEntry(os, "Cs", Cs_);
+    writeEntry(os, "Ks", Ks_);
+    writeEntry(os, "value", *this);
 }
 
 

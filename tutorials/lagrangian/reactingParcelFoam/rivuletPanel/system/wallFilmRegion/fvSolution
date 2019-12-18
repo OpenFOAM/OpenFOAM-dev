@@ -17,14 +17,15 @@ FoamFile
 
 solvers
 {
-    "(Uf|hf|deltaf\*rhof)"
+    "alpha.*"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
         tolerance       1e-10;
         relTol          0;
     }
-    deltaf
+
+    "(U|h).*"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
@@ -33,20 +34,21 @@ solvers
     }
 }
 
-
-PISO
+PIMPLE
 {
-    momentumPredictor  yes;
-    nCorr           1;
-    nNonOrthCorr    0;
+    momentumPredictor yes;
+    nOuterCorrectors  2;
+    nCorrectors       1;
+    nNonOrthogonalCorrectors 0;
 }
-
 
 relaxationFactors
 {
     equations
     {
+        ".*"        1;
     }
 }
+
 
 // ************************************************************************* //

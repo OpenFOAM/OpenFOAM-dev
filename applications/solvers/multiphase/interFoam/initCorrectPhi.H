@@ -16,12 +16,21 @@ if (correctPhi)
         dimensionedScalar(dimTime/dimDensity, 1)
     );
 
-    #include "correctPhi.H"
+    CorrectPhi
+    (
+        U,
+        phi,
+        p_rgh,
+        surfaceScalarField("rAUf", fvc::interpolate(rAU())),
+        geometricZeroField(),
+        pimple,
+        false
+    );
+
+    #include "continuityErrs.H"
 }
 else
 {
-    nonOrthogonalSolutionControl pcorrControl(mesh, pimple.algorithmName());
-
     CorrectPhi
     (
         U,
@@ -29,7 +38,8 @@ else
         p_rgh,
         dimensionedScalar(dimTime/rho.dimensions(), 1),
         geometricZeroField(),
-        pcorrControl
+        pimple,
+        false
     );
 
     #include "continuityErrs.H"

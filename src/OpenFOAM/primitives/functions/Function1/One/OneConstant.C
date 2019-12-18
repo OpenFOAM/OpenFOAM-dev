@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,55 +28,34 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::OneConstant<Type>::OneConstant(const word& entryName)
+Foam::Function1s::OneConstant<Type>::OneConstant(const word& entryName)
 :
-    Function1<Type>(entryName)
+    FieldFunction1<Type, OneConstant<Type>>(entryName)
 {}
 
 
 template<class Type>
-Foam::Function1Types::OneConstant<Type>::OneConstant
+Foam::Function1s::OneConstant<Type>::OneConstant
 (
     const word& entryName,
     const dictionary& dict
 )
 :
-    Function1<Type>(entryName)
+    FieldFunction1<Type, OneConstant<Type>>(entryName)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::OneConstant<Type>::~OneConstant()
+Foam::Function1s::OneConstant<Type>::~OneConstant()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::Function1Types::OneConstant<Type>::value
-(
-    const scalarField& x
-) const
-{
-    return tmp<Field<Type>>(new Field<Type>(x.size(), pTraits<Type>::one));
-}
-
-
-template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::Function1Types::OneConstant<Type>::integrate
-(
-    const scalarField& x1,
-    const scalarField& x2
-) const
-{
-    return (x2 - x1)*pTraits<Type>::one;
-}
-
-
-template<class Type>
-void Foam::Function1Types::OneConstant<Type>::writeData(Ostream& os) const
+void Foam::Function1s::OneConstant<Type>::writeData(Ostream& os) const
 {
     Function1<Type>::writeData(os);
 

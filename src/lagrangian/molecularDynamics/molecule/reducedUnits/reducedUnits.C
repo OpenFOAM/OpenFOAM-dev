@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ void Foam::reducedUnits::calcRefValues()
     )
     {
         FatalErrorInFunction
-            << "One of more referencence values too small for floating point "
+            << "One of more reference values too small for floating point "
             << "calculation: "
             << "refTime_ = " << refTime_
             << ", refLength = " << refTemp_
@@ -135,27 +135,13 @@ void Foam::reducedUnits::setRefValues
     const IOdictionary& reducedUnitsDict
 )
 {
-    refLength_ = readScalar(reducedUnitsDict.lookup("refLength"));
+    refLength_ = reducedUnitsDict.template lookup<scalar>("refLength");
 
-    refTime_ = readScalar(reducedUnitsDict.lookup("refTime"));
+    refTime_ = reducedUnitsDict.template lookup<scalar>("refTime");
 
-    refMass_  = readScalar(reducedUnitsDict.lookup("refMass"));
+    refMass_  = reducedUnitsDict.template lookup<scalar>("refMass");
 
     calcRefValues();
-}
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-void Foam::reducedUnits::operator=(const reducedUnits& rhs)
-{
-    // Check for assignment to self
-    if (this == &rhs)
-    {
-        FatalErrorInFunction
-            << "Attempted assignment to self"
-            << abort(FatalError);
-    }
 }
 
 

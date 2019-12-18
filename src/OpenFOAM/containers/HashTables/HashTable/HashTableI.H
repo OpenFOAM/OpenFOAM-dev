@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,14 +94,6 @@ inline bool Foam::HashTable<T, Key, Hash>::set
 )
 {
     return this->set(key, newEntry, false);
-}
-
-
-template<class T, class Key, class Hash>
-inline Foam::Xfer<Foam::HashTable<T, Key, Hash>>
-Foam::HashTable<T, Key, Hash>::xfer()
-{
-    return xferMove(*this);
 }
 
 

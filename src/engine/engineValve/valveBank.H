@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,17 +48,6 @@ class valveBank
 :
     public PtrList<engineValve>
 {
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        valveBank(const valveBank&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const valveBank&);
-
-
 public:
 
     // Constructors
@@ -89,11 +78,14 @@ public:
             }
         }
 
+        //- Disallow default bitwise copy construction
+        valveBank(const valveBank&) = delete;
 
-    // Destructor - default
 
+    // Member Operators
 
-    // Member Functions
+        //- Disallow default bitwise assignment
+        void operator=(const valveBank&) = delete;
 };
 
 

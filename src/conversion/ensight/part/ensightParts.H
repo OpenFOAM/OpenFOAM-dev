@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,14 +64,6 @@ class ensightParts
         //- List of parts
         PtrList<ensightPart> partsList_;
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        ensightParts(const ensightParts&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const ensightParts&);
-
 
 public:
 
@@ -83,12 +75,15 @@ public:
         //- Construct from IOobject
         ensightParts(const IOobject&);
 
+        //- Disallow default bitwise copy construction
+        ensightParts(const ensightParts&) = delete;
+
 
     //- Destructor
     ~ensightParts();
 
 
-    // Member functions
+    // Member Functions
 
         //- Clear old information and construct anew from polyMesh
         void recalculate(const polyMesh&);
@@ -147,6 +142,13 @@ public:
             ensightFile&,
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
+
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ensightParts&) = delete;
 
 
     // Friend Operators

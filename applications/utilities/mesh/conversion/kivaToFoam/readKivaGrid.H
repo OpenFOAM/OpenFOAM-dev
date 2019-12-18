@@ -565,7 +565,7 @@ polyMesh pShapeMesh
         runTime.constant(),
         runTime
     ),
-    xferMove(points),
+    move(points),
     cellShapes,
     boundary,
     patchNames,

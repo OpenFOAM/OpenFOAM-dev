@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,17 +58,10 @@ class laplaceFilter
 :
     public LESfilter
 {
-    // Private data
+    // Private Data
 
         scalar widthCoeff_;
         volScalarField coeff_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        laplaceFilter(const laplaceFilter&);
-        void operator=(const laplaceFilter&);
 
 
 public:
@@ -84,6 +77,9 @@ public:
 
         //- Construct from IOdictionary
         laplaceFilter(const fvMesh& mesh, const dictionary&);
+
+        //- Disallow default bitwise copy construction
+        laplaceFilter(const laplaceFilter&) = delete;
 
 
     //- Destructor
@@ -118,6 +114,12 @@ public:
         (
             const tmp<volTensorField>&
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const laplaceFilter&) = delete;
 };
 
 

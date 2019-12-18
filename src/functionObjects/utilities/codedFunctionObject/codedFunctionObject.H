@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,6 +90,12 @@ class codedFunctionObject
 {
 protected:
 
+    // Protected static data
+
+        //- The keywords associated with source code
+        static const wordList codeKeys_;
+
+
     // Protected data
 
         //- Reference to the time database
@@ -98,13 +104,8 @@ protected:
         //- Input dictionary
         dictionary dict_;
 
+        //- The name
         word name_;
-
-        string codeData_;
-        string codeRead_;
-        string codeExecute_;
-        string codeWrite_;
-        string codeEnd_;
 
         //- Underlying functionObject
         mutable autoPtr<functionObject> redirectFunctionObjectPtr_;
@@ -118,23 +119,17 @@ protected:
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
 
-        // Return a description (type + name) for the output
+        //- Return a description (type + name) for the output
         virtual string description() const;
 
-        // Clear any redirected objects
+        //- Clear any redirected objects
         virtual void clearRedirect() const;
 
-        // Get the dictionary to initialize the codeContext
+        //- Get the dictionary to initialize the codeContext
         virtual const dictionary& codeDict() const;
 
-
-private:
-
-        //- Disallow default bitwise copy construct
-        codedFunctionObject(const codedFunctionObject&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const codedFunctionObject&);
+        //- Get the keywords associated with source code
+        virtual const wordList& codeKeys() const;
 
 
 public:
@@ -152,6 +147,9 @@ public:
             const Time& time,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        codedFunctionObject(const codedFunctionObject&) = delete;
 
 
     //- Destructor
@@ -179,6 +177,12 @@ public:
 
         //- Read and set the function object if its data have changed
         virtual bool read(const dictionary&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const codedFunctionObject&) = delete;
 };
 
 

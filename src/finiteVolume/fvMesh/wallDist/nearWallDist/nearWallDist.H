@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class nearWallDist
 :
     public volScalarField::Boundary
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const fvMesh& mesh_;
@@ -64,12 +64,6 @@ class nearWallDist
         //- Do all calculations
         void calculate();
 
-        //- Disallow default bitwise copy construct
-        nearWallDist(const nearWallDist&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const nearWallDist&);
-
 
 public:
 
@@ -77,6 +71,9 @@ public:
 
         //- Construct from components
         nearWallDist(const fvMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        nearWallDist(const nearWallDist&) = delete;
 
 
     //- Destructor
@@ -92,6 +89,12 @@ public:
 
         //- Correct for mesh geom/topo changes
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const nearWallDist&) = delete;
 };
 
 

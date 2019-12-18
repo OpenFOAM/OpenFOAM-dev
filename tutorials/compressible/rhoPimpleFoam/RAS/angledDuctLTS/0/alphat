@@ -21,31 +21,24 @@ internalField   uniform 0;
 
 boundaryField
 {
-    front
-    {
-        type            compressible::alphatWallFunction;
-        value           uniform 0;
-    }
-    back
-    {
-        type            compressible::alphatWallFunction;
-        value           uniform 0;
-    }
     walls
     {
         type            compressible::alphatWallFunction;
         value           uniform 0;
     }
+
     porosityWall
     {
         type            compressible::alphatWallFunction;
         value           uniform 0;
     }
+
     inlet
     {
         type            calculated;
         value           uniform 0;
     }
+
     outlet
     {
         type            calculated;

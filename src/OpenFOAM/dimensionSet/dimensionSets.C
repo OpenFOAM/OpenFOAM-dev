@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,13 +47,16 @@ dimensionSets* writeUnitSetPtr_(nullptr);
 //   deallocate demand-driven data
 class addDimensionSetsToDebug
 :
-    public ::Foam::simpleRegIOobject
+    public simpleRegIOobject
 {
+
 public:
+
     addDimensionSetsToDebug(const char* name)
     :
-        ::Foam::simpleRegIOobject(Foam::debug::addDimensionSetObject, name)
+        simpleRegIOobject(debug::addDimensionSetObject, name)
     {}
+
     virtual ~addDimensionSetsToDebug()
     {
         deleteDemandDrivenData(dimensionSystemsPtr_);
@@ -61,18 +64,21 @@ public:
         deleteDemandDrivenData(writeUnitSetPtr_);
 
     }
-    virtual void readData(Foam::Istream& is)
+
+    virtual void readData(Istream& is)
     {
         deleteDemandDrivenData(dimensionSystemsPtr_);
         deleteDemandDrivenData(unitSetPtr_);
         deleteDemandDrivenData(writeUnitSetPtr_);
         dimensionSystemsPtr_ = new dictionary(is);
     }
-    virtual void writeData(Foam::Ostream& os) const
+
+    virtual void writeData(Ostream& os) const
     {
         os << dimensionSystems();
     }
 };
+
 addDimensionSetsToDebug addDimensionSetsToDebug_("DimensionSets");
 
 
@@ -124,9 +130,8 @@ const HashTable<dimensionedScalar>& unitSet()
         {
             if (iter().keyword() != "writeUnits")
             {
-                dimensionedScalar dt;
-                dt.read(iter().stream(), unitDict);
-                bool ok = unitSetPtr_->insert(iter().keyword(), dt);
+                dimensionedScalar dt(iter().keyword(), iter().stream());
+                const bool ok = unitSetPtr_->insert(iter().keyword(), dt);
                 if (!ok)
                 {
                     FatalIOErrorInFunction(dict)
@@ -137,7 +142,7 @@ const HashTable<dimensionedScalar>& unitSet()
             }
         }
 
-        wordList writeUnitNames
+        const wordList writeUnitNames
         (
             unitDict.lookupOrDefault<wordList>
             (
@@ -156,6 +161,7 @@ const HashTable<dimensionedScalar>& unitSet()
                 << exit(FatalIOError);
         }
     }
+
     return *unitSetPtr_;
 }
 
@@ -244,6 +250,7 @@ Foam::dimensionSets::dimensionSets
                 row[columnI] = dSet.dimensions()[rowI];
             }
         }
+
         conversionPivots_.setSize(conversion_.m());
         LUDecompose(conversion_, conversionPivots_);
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,8 +98,8 @@ Foam::waveModels::solitary::solitary
 )
 :
     waveModel(db, dict),
-    offset_(readScalar(dict.lookup("offset"))),
-    depth_(readScalar(dict.lookup("depth")))
+    offset_(dict.lookup<scalar>("offset")),
+    depth_(dict.lookup<scalar>("depth"))
 {}
 
 
@@ -164,8 +164,8 @@ void Foam::waveModels::solitary::write(Ostream& os) const
 {
     waveModel::write(os);
 
-    os.writeKeyword("offset") << offset_ << token::END_STATEMENT << nl;
-    os.writeKeyword("depth") << depth_ << token::END_STATEMENT << nl;
+    writeEntry(os, "offset", offset_);
+    writeEntry(os, "depth", depth_);
 }
 
 

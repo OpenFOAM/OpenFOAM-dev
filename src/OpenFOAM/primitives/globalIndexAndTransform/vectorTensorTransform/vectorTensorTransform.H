@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ class vectorTensorTransform
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 
@@ -113,7 +113,7 @@ public:
         vectorTensorTransform(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -162,9 +162,8 @@ public:
             tmp<Field<Type>> invTransform(const Field<Type>&) const;
 
 
-    // Member operators
+    // Member Operators
 
-        inline void operator=(const vectorTensorTransform&);
         inline void operator&=(const vectorTensorTransform&);
 
         inline void operator=(const vector&);
@@ -175,7 +174,7 @@ public:
         inline void operator&=(const tensor&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream& is, vectorTensorTransform&);
 

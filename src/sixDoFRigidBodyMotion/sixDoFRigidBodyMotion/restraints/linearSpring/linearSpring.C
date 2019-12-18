@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,20 +125,15 @@ void Foam::sixDoFRigidBodyMotionRestraints::linearSpring::write
     Ostream& os
 ) const
 {
-    os.writeKeyword("anchor")
-        << anchor_ << token::END_STATEMENT << nl;
+    writeEntry(os, "anchor", anchor_);
 
-    os.writeKeyword("refAttachmentPt")
-        << refAttachmentPt_ << token::END_STATEMENT << nl;
+    writeEntry(os, "refAttachmentPt", refAttachmentPt_);
 
-    os.writeKeyword("stiffness")
-        << stiffness_ << token::END_STATEMENT << nl;
+    writeEntry(os, "stiffness", stiffness_);
 
-    os.writeKeyword("damping")
-        << damping_ << token::END_STATEMENT << nl;
+    writeEntry(os, "damping", damping_);
 
-    os.writeKeyword("restLength")
-        << restLength_ << token::END_STATEMENT << nl;
+    writeEntry(os, "restLength", restLength_);
 }
 
 // ************************************************************************* //

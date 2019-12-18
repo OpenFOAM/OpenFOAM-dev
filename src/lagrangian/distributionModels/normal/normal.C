@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,27 +47,14 @@ Foam::distributionModels::normal::normal
 )
 :
     distributionModel(typeName, dict, rndGen),
-    minValue_(readScalar(distributionModelDict_.lookup("minValue"))),
-    maxValue_(readScalar(distributionModelDict_.lookup("maxValue"))),
-    expectation_(readScalar(distributionModelDict_.lookup("expectation"))),
-    variance_(readScalar(distributionModelDict_.lookup("variance"))),
+    minValue_(distributionModelDict_.template lookup<scalar>("minValue")),
+    maxValue_(distributionModelDict_.template lookup<scalar>("maxValue")),
+    expectation_(distributionModelDict_.template lookup<scalar>("expectation")),
+    variance_(distributionModelDict_.template lookup<scalar>("variance")),
     a_(0.147)
 {
-    if (minValue_ < 0)
-    {
-        FatalErrorInFunction
-            << "Minimum value must be greater than zero. "
-            << "Supplied minValue = " << minValue_
-            << abort(FatalError);
-    }
-
-    if (maxValue_ < minValue_)
-    {
-        FatalErrorInFunction
-            << "Maximum value is smaller than the minimum value:"
-            << "    maxValue = " << maxValue_ << ", minValue = " << minValue_
-            << abort(FatalError);
-    }
+    check();
+    info();
 }
 
 

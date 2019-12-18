@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,12 +60,12 @@ Foam::pointZone::pointZone
 Foam::pointZone::pointZone
 (
     const word& name,
-    const Xfer<labelList>& addr,
+    labelList&& addr,
     const label index,
     const pointZoneMesh& zm
 )
 :
-    zone(name, addr, index),
+    zone(name, move(addr), index),
     zoneMesh_(zm)
 {}
 
@@ -99,12 +99,12 @@ Foam::pointZone::pointZone
 Foam::pointZone::pointZone
 (
     const pointZone& pz,
-    const Xfer<labelList>& addr,
+    labelList&& addr,
     const label index,
     const pointZoneMesh& zm
 )
 :
-    zone(pz, addr, index),
+    zone(pz, move(addr), index),
     zoneMesh_(zm)
 {}
 
@@ -191,7 +191,7 @@ void Foam::pointZone::writeDict(Ostream& os) const
     os  << nl << name_ << nl << token::BEGIN_BLOCK << nl
         << "    type " << type() << token::END_STATEMENT << nl;
 
-    writeEntry(this->labelsName, os);
+    writeEntry(os, this->labelsName, *this);
 
     os  << token::END_BLOCK << endl;
 }
@@ -202,21 +202,28 @@ void Foam::pointZone::writeDict(Ostream& os) const
 void Foam::pointZone::operator=(const pointZone& zn)
 {
     clearAddressing();
-    labelList::operator=(zn);
+    zone::operator=(zn);
+}
+
+
+void Foam::pointZone::operator=(pointZone&& zn)
+{
+    clearAddressing();
+    zone::operator=(move(zn));
 }
 
 
 void Foam::pointZone::operator=(const labelUList& addr)
 {
     clearAddressing();
-    labelList::operator=(addr);
+    zone::operator=(addr);
 }
 
 
-void Foam::pointZone::operator=(const Xfer<labelList>& addr)
+void Foam::pointZone::operator=(labelList&& addr)
 {
     clearAddressing();
-    labelList::operator=(addr);
+    zone::operator=(move(addr));
 }
 
 

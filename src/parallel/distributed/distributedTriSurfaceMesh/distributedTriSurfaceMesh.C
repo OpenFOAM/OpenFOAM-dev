@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ bool Foam::distributedTriSurfaceMesh::read()
     distType_ = distributionTypeNames_.read(dict_.lookup("distributionType"));
 
     // Merge distance
-    mergeDist_ = readScalar(dict_.lookup("mergeDistance"));
+    mergeDist_ = dict_.lookup<scalar>("mergeDistance");
 
     return true;
 }
@@ -347,8 +347,8 @@ Foam::distributedTriSurfaceMesh::distributeSegments
         new mapDistribute
         (
             segmentI,       // size after construction
-            sendMap.xfer(),
-            constructMap.xfer()
+            move(sendMap),
+            move(constructMap)
         )
     );
 }
@@ -640,8 +640,8 @@ Foam::distributedTriSurfaceMesh::calcLocalQueries
         new mapDistribute
         (
             segmentI,       // size after construction
-            sendMap.xfer(),
-            constructMap.xfer()
+            move(sendMap),
+            move(constructMap)
         )
     );
     const mapDistribute& map = mapPtr();
@@ -793,8 +793,8 @@ Foam::distributedTriSurfaceMesh::calcLocalQueries
         new mapDistribute
         (
             segmentI,       // size after construction
-            sendMap.xfer(),
-            constructMap.xfer()
+            move(sendMap),
+            move(constructMap)
         )
     );
     return mapPtr;
@@ -2318,8 +2318,8 @@ void Foam::distributedTriSurfaceMesh::distribute
         new mapDistribute
         (
             allTris.size(),
-            faceSendMap.xfer(),
-            faceConstructMap.xfer()
+            move(faceSendMap),
+            move(faceConstructMap)
         )
     );
     pointMap.reset
@@ -2327,8 +2327,8 @@ void Foam::distributedTriSurfaceMesh::distribute
         new mapDistribute
         (
             allPoints.size(),
-            pointSendMap.xfer(),
-            pointConstructMap.xfer()
+            move(pointSendMap),
+            move(pointConstructMap)
         )
     );
 
@@ -2377,7 +2377,7 @@ bool Foam::distributedTriSurfaceMesh::writeObject
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp,
-    const bool valid
+    const bool write
 ) const
 {
     // Make sure dictionary goes to same directory as surface

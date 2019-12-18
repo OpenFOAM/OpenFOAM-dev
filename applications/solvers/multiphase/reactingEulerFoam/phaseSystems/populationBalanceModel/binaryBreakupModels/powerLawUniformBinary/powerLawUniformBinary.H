@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,7 @@ Class
     Foam::diameterModels::binaryBreakupModels::powerLawUniformBinary
 
 Description
-    Powerlaw kernel with a uniform daughter size distribution. Used for
-    verification and validation of the binary breakup formulation implemented
-    in the populationBalanceModel class.
+    Powerlaw kernel with a uniform daughter size distribution.
 
 SourceFiles
     powerLawUniformBinary.C
@@ -56,7 +54,7 @@ class powerLawUniformBinary
 :
     public binaryBreakupModel
 {
-    // Private data
+    // Private Data
 
         //- Power
         scalar power_;

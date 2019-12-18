@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,14 +66,20 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const token& t)
             os << *t.wordTokenPtr_;
         break;
 
-        case token::STRING:
-        case token::VERBATIMSTRING:
-            os << *t.stringTokenPtr_;
+        case token::FUNCTIONNAME:
+            os << *t.functionNameTokenPtr_;
         break;
 
         case token::VARIABLE:
-            // Behaviour differs according to stream type
-            os.write(t);
+            os << *t.variableTokenPtr_;
+        break;
+
+        case token::STRING:
+            os << *t.stringTokenPtr_;
+        break;
+
+        case token::VERBATIMSTRING:
+            os << *t.verbatimStringTokenPtr_;
         break;
 
         case token::LABEL:
@@ -163,12 +169,16 @@ ostream& Foam::operator<<(ostream& os, const InfoProxy<token>& ip)
             os  << " the string " << t.stringToken();
         break;
 
-        case token::VARIABLE:
-            os  << " the variable " << t.stringToken();
+        case token::VERBATIMSTRING:
+            os  << " the verbatim string " << t.verbatimStringToken();
         break;
 
-        case token::VERBATIMSTRING:
-            os  << " the verbatim string " << t.stringToken();
+        case token::FUNCTIONNAME:
+            os  << " the functionName " << t.functionNameToken();
+        break;
+
+        case token::VARIABLE:
+            os  << " the variable " << t.variableToken();
         break;
 
         case token::LABEL:
@@ -239,12 +249,16 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const InfoProxy<token>& ip)
             os  << " the string " << t.stringToken();
         break;
 
-        case token::VARIABLE:
-            os  << " the variable " << t.stringToken();
+        case token::VERBATIMSTRING:
+            os  << " the verbatim string " << t.verbatimStringToken();
         break;
 
-        case token::VERBATIMSTRING:
-            os  << " the verbatim string " << t.stringToken();
+        case token::FUNCTIONNAME:
+            os  << " the functionName " << t.functionNameToken();
+        break;
+
+        case token::VARIABLE:
+            os  << " the variable " << t.variableToken();
         break;
 
         case token::LABEL:

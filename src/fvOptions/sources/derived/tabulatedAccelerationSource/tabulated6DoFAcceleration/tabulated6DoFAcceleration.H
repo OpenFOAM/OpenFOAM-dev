@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ namespace Foam
 
 class tabulated6DoFAcceleration
 {
-    // Private data
+    // Private Data
 
         const Time& time_;
 
@@ -72,15 +72,6 @@ class tabulated6DoFAcceleration
         Field<accelerationVectors> values_;
 
 
-    // Private Member Functions
-
-        //- Disallow copy construct
-        tabulated6DoFAcceleration(const tabulated6DoFAcceleration&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const tabulated6DoFAcceleration&);
-
-
 public:
 
     //- Runtime type information
@@ -96,6 +87,9 @@ public:
             const Time& runTime
         );
 
+        //- Disallow default bitwise copy construction
+        tabulated6DoFAcceleration(const tabulated6DoFAcceleration&);
+
 
     //- Destructor
     virtual ~tabulated6DoFAcceleration();
@@ -108,6 +102,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& accelerationCoeffs);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const tabulated6DoFAcceleration&) = delete;
 };
 
 

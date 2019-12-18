@@ -35,7 +35,7 @@ boundaryField
 
     plate
     {
-        type            fixedValue;
+        type            nutkWallFunction;
         value           uniform 0;
     }
 

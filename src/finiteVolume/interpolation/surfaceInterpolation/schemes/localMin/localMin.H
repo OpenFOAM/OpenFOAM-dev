@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,11 +56,6 @@ class localMin
 :
     public surfaceInterpolationScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const localMin&);
-
 
 public:
 
@@ -124,14 +119,9 @@ public:
 
             tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tvff
             (
-                new GeometricField<Type, fvsPatchField, surfaceMesh>
+                GeometricField<Type, fvsPatchField, surfaceMesh>::New
                 (
-                    IOobject
-                    (
-                        "localMin::interpolate(" + vf.name() + ')',
-                        mesh.time().timeName(),
-                        mesh
-                    ),
+                    "localMin::interpolate(" + vf.name() + ')',
                     mesh,
                     vf.dimensions()
                 )
@@ -175,6 +165,12 @@ public:
 
             return tvff;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const localMin&) = delete;
 };
 
 

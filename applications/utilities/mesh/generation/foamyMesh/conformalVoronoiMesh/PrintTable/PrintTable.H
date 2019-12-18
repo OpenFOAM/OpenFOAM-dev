@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,19 +71,13 @@ class PrintTable
     typedef HashTable<DataType, KeyType> HashTableData;
 
 
-    // Private data
+    // Private Data
 
         //- Hash table holding the data
         HashTableData table_;
 
         //- Title of the table
         string title_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const PrintTable<KeyType, DataType>&);
 
 
 public:
@@ -116,6 +110,12 @@ public:
             const bool printSum = false,
             const bool printAverage = false
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PrintTable<KeyType, DataType>&) = delete;
 };
 
 

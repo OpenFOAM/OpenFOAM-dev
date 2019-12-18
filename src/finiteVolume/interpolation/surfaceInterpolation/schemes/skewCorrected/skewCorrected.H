@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,15 +60,6 @@ class skewCorrected
         tmp<surfaceInterpolationScheme<Type>> tScheme_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        skewCorrected(const skewCorrected&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const skewCorrected&);
-
-
 public:
 
     //- Runtime type information
@@ -107,6 +98,9 @@ public:
             )
         {}
 
+        //- Disallow default bitwise copy construction
+        skewCorrected(const skewCorrected&) = delete;
+
 
     // Member Functions
 
@@ -139,14 +133,9 @@ public:
 
             tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tsfCorr
             (
-                new GeometricField<Type, fvsPatchField, surfaceMesh>
+                GeometricField<Type, fvsPatchField, surfaceMesh>::New
                 (
-                    IOobject
-                    (
-                        "skewCorrected::skewCorrection(" + vf.name() + ')',
-                        mesh.time().timeName(),
-                        mesh
-                    ),
+                    "skewCorrected::skewCorrection(" + vf.name() + ')',
                     mesh,
                     dimensioned<Type>
                     (
@@ -213,6 +202,12 @@ public:
                     );
             }
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const skewCorrected&) = delete;
 };
 
 

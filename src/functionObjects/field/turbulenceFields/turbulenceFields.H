@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ Description
     Stores turbulence fields on the mesh database for further manipulation.
 
     Fields are stored as copies of the original, with the prefix
-    "tubulenceModel:", e.g.:
+    "turbulenceModel:", e.g.:
 
     \verbatim
     turbulenceModel:R
@@ -163,17 +163,6 @@ protected:
         tmp<volScalarField> omega(const Model& model) const;
 
 
-private:
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        turbulenceFields(const turbulenceFields&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const turbulenceFields&);
-
-
 public:
 
     //- Runtime type information
@@ -189,6 +178,9 @@ public:
             const Time& runTime,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        turbulenceFields(const turbulenceFields&) = delete;
 
 
     //- Destructor
@@ -206,6 +198,12 @@ public:
         //- Do nothing.
         //  The turbulence fields are registered and written automatically
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const turbulenceFields&) = delete;
 };
 
 

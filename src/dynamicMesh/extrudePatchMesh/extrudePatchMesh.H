@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,8 +71,6 @@ Description
 #define extrudePatchMesh_H
 
 #include "extrudeModel.H"
-#include "autoPtr.H"
-
 #include "fvMesh.H"
 #include "Time.H"
 
@@ -92,10 +90,7 @@ class extrudePatchMesh
 :
     public fvMesh
 {
-
-private:
-
-    // Private data
+    // Private Data
 
         //- Enumeration of patch IDs
         enum patchID
@@ -112,7 +107,7 @@ private:
         dictionary dict_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Extrude mesh using polyPatches
         void extrudeMesh(const List<polyPatch*>& regionPatches);
@@ -151,7 +146,7 @@ public:
     virtual ~extrudePatchMesh();
 
 
-    // Member functions
+    // Member Functions
 
 
         // Access functions

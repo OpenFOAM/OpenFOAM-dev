@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,17 +56,6 @@ class filmThermoModel
 :
     public filmSubModelBase
 {
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        filmThermoModel(const filmThermoModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const filmThermoModel&);
-
-
 public:
 
     //- Runtime type information
@@ -100,6 +89,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        filmThermoModel(const filmThermoModel&) = delete;
+
 
     // Selectors
 
@@ -123,13 +115,13 @@ public:
 
         // Elemental access
 
-            //- Return density [kg/m3]
+            //- Return density [kg/m^3]
             virtual scalar rho(const scalar p, const scalar T) const = 0;
 
             //- Return dynamic viscosity [Pa.s]
             virtual scalar mu(const scalar p, const scalar T) const = 0;
 
-            //- Return surface tension [kg/s2]
+            //- Return surface tension [kg/s^2]
             virtual scalar sigma(const scalar p, const scalar T) const = 0;
 
             //- Return specific heat capacity [J/kg/K]
@@ -138,7 +130,7 @@ public:
             //- Return thermal conductivity [W/m/K]
             virtual scalar kappa(const scalar p, const scalar T) const = 0;
 
-            //- Return diffusivity [m2/s]
+            //- Return diffusivity [m^2/s]
             virtual scalar D(const scalar p, const scalar T) const = 0;
 
             //- Return latent heat [J/kg]
@@ -156,13 +148,13 @@ public:
 
         // Field access
 
-            //- Return density [kg/m3]
+            //- Return density [kg/m^3]
             virtual tmp<volScalarField> rho() const = 0;
 
             //- Return dynamic viscosity [Pa.s]
             virtual tmp<volScalarField> mu() const = 0;
 
-            //- Return surface tension [kg/s2]
+            //- Return surface tension [kg/s^2]
             virtual tmp<volScalarField> sigma() const = 0;
 
             //- Return specific heat capacity [J/kg/K]
@@ -170,6 +162,12 @@ public:
 
             //- Return thermal conductivity [W/m/K]
             virtual tmp<volScalarField> kappa() const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const filmThermoModel&) = delete;
 };
 
 

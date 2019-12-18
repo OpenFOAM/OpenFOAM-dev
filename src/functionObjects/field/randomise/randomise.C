@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ Foam::functionObjects::randomise::randomise
     const dictionary& dict
 )
 :
-    fieldExpression(name, runTime, dict)
+    fieldExpression(name, runTime, dict, fieldName_ + "Random", fieldName_)
 {
     read(dict);
 }
@@ -79,8 +79,6 @@ Foam::functionObjects::randomise::~randomise()
 
 bool Foam::functionObjects::randomise::read(const dictionary& dict)
 {
-    fieldExpression::read(dict);
-
     dict.lookup("magPerturbation") >> magPerturbation_;
 
     return true;

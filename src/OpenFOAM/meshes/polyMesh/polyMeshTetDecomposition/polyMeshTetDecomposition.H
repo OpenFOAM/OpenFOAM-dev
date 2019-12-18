@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,13 +59,24 @@ class polyMeshTetDecomposition
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Minimum tetrahedron quality
         static const scalar minTetQuality;
 
 
     // Member Functions
+
+        //- Given a face and cc and starting index for triangulation determine
+        //  the worst tet quality.
+        static scalar minQuality
+        (
+            const polyMesh& mesh,
+            const point& cC,
+            const label fI,
+            const bool isOwner,
+            const label faceBasePtI
+        );
 
         //- Find the first suitable base point to use for a minimum
         //  triangle decomposition of the face, suiting owner and

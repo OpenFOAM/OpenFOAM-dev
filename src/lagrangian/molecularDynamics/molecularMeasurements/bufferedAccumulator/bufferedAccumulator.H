@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ class bufferedAccumulator
 :
     public List<Field<Type>>
 {
-    // Private data
+    // Private Data
 
         label averagesTaken_;
 
@@ -84,7 +84,7 @@ public:
     typedef typename pTraits<Type>::cmptType cmptType;
 
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 
@@ -102,7 +102,7 @@ public:
             const label bufferingInterval
         );
 
-        //- Construct as copy
+        //- Copy constructor
         bufferedAccumulator(const bufferedAccumulator<Type>&);
 
 

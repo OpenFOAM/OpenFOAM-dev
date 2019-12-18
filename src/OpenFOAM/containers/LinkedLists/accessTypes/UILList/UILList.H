@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,8 +95,11 @@ public:
             LListBase(a)
         {}
 
-        //- Construct as copy
+        //- Copy constructor
         UILList(const UILList<LListBase, T>&);
+
+        //- Move constructor
+        UILList(UILList<LListBase, T>&&);
 
 
     // Member Functions
@@ -149,9 +152,13 @@ public:
             }
 
 
-    // Member operators
+    // Member Operators
 
+        //- Assignment operator
         void operator=(const UILList<LListBase, T>&);
+
+        //- Move assignment operator
+        void operator=(UILList<LListBase, T> &&);
 
 
     // STL type definitions
@@ -190,7 +197,7 @@ public:
             {}
 
 
-            // Member operators
+            // Member Operators
 
                 T& operator*()
                 {
@@ -245,7 +252,7 @@ public:
             {}
 
 
-            // Member operators
+            // Member Operators
 
                 const T& operator*()
                 {
@@ -307,7 +314,7 @@ public:
             {}
 
 
-            // Member operators
+            // Member Operators
 
                 const T& operator*()
                 {

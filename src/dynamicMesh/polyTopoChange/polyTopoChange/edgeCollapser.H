@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -235,12 +235,6 @@ private:
             face& f
         ) const;
 
-        //- Disallow default bitwise copy construct
-        edgeCollapser(const edgeCollapser&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const edgeCollapser&);
-
 
 public:
 
@@ -255,6 +249,9 @@ public:
 
         //- Construct from mesh and dict
         edgeCollapser(const polyMesh& mesh, const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        edgeCollapser(const edgeCollapser&) = delete;
 
 
     // Member Functions
@@ -343,6 +340,12 @@ public:
                 PackedBoolList& collapseEdge,
                 Map<point>& collapsePointToLocation
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const edgeCollapser&) = delete;
 };
 
 

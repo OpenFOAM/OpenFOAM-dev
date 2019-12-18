@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -314,11 +314,10 @@ tmp<Field<Type>> mappedPatchFieldBase<Type>::mappedField() const
 template<class Type>
 void mappedPatchFieldBase<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("field") << fieldName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("setAverage") << setAverage_ << token::END_STATEMENT << nl;
-    os.writeKeyword("average") << average_ << token::END_STATEMENT << nl;
-    os.writeKeyword("interpolationScheme") << interpolationScheme_
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "field", fieldName_);
+    writeEntry(os, "setAverage", setAverage_);
+    writeEntry(os, "average", average_);
+    writeEntry(os, "interpolationScheme", interpolationScheme_);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,10 +102,10 @@ Foam::CompactListList<T, Container>::CompactListList
 template<class T, class Container>
 Foam::CompactListList<T, Container>::CompactListList
 (
-    const Xfer<CompactListList<T, Container>>& lst
+    CompactListList<T, Container>&& lst
 )
 {
-    transfer(lst());
+    transfer(lst);
 }
 
 
@@ -227,6 +227,8 @@ void Foam::CompactListList<T, Container>::transfer
     size_ = a.size_;
     offsets_.transfer(a.offsets_);
     m_.transfer(a.m_);
+
+    a.size_ = 0;
 }
 
 

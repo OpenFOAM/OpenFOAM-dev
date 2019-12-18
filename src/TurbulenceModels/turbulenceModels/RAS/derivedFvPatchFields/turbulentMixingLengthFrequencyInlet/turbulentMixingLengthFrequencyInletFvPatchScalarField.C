@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ turbulentMixingLengthFrequencyInletFvPatchScalarField
 )
 :
     inletOutletFvPatchScalarField(p, iF),
-    mixingLength_(readScalar(dict.lookup("mixingLength"))),
+    mixingLength_(dict.lookup<scalar>("mixingLength")),
     kName_(dict.lookupOrDefault<word>("k", "k"))
 {
     this->phiName_ = dict.lookupOrDefault<word>("phi", "phi");
@@ -155,11 +155,10 @@ void turbulentMixingLengthFrequencyInletFvPatchScalarField::write
 ) const
 {
     fvPatchScalarField::write(os);
-    os.writeKeyword("mixingLength")
-        << mixingLength_ << token::END_STATEMENT << nl;
-    os.writeKeyword("phi") << this->phiName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("k") << kName_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "mixingLength", mixingLength_);
+    writeEntry(os, "phi", this->phiName_);
+    writeEntry(os, "k", kName_);
+    writeEntry(os, "value", *this);
 }
 
 

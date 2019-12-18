@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,17 +69,6 @@ protected:
 
         //- Face restrict addressing
         labelList faceRestrictAddressing_;
-
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        GAMGInterface(const GAMGInterface&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const GAMGInterface&);
 
 
 public:
@@ -197,6 +186,9 @@ public:
             Istream& is
         );
 
+        //- Disallow default bitwise copy construction
+        GAMGInterface(const GAMGInterface&) = delete;
+
 
     // Member Functions
 
@@ -277,6 +269,12 @@ public:
 
             //- Write to stream
             virtual void write(Ostream&) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const GAMGInterface&) = delete;
 };
 
 

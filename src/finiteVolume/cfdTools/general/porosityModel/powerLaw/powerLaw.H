@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ class powerLaw
 :
     public porosityModel
 {
-    // Private data
+    // Private Data
 
         //- C0 coefficient
         scalar C0_;
@@ -96,27 +96,26 @@ class powerLaw
             const vectorField& U
         ) const;
 
-        //- Disallow default bitwise copy construct
-        powerLaw(const powerLaw&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const powerLaw&);
-
 
 public:
 
     //- Runtime type information
     TypeName("powerLaw");
 
-    //- Constructor
-    powerLaw
-    (
-        const word& name,
-        const word& modelType,
-        const fvMesh& mesh,
-        const dictionary& dict,
-        const word& cellZoneName
-    );
+    // Constructors
+
+        powerLaw
+        (
+            const word& name,
+            const word& modelType,
+            const fvMesh& mesh,
+            const dictionary& dict,
+            const word& cellZoneName
+        );
+
+        //- Disallow default bitwise copy construction
+        powerLaw(const powerLaw&) = delete;
+
 
     //- Destructor
     virtual ~powerLaw();
@@ -159,7 +158,14 @@ public:
 
         //- Write
         bool writeData(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const powerLaw&) = delete;
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

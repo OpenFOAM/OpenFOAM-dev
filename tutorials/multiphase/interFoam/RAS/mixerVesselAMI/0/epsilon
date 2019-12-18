@@ -25,7 +25,7 @@ boundaryField
         type            epsilonWallFunction;
         value           uniform 0.007;
     }
-    gasInlet
+    oilInlet
     {
         type            fixedValue;
         value           uniform 0.007;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -162,7 +162,7 @@ class mapDistribute
 :
     public mapDistributeBase
 {
-    // Private data
+    // Private Data
 
         //- For every globalIndexAndTransform::transformPermutations
         //  gives the elements that need to be transformed
@@ -170,6 +170,7 @@ class mapDistribute
 
         //- Destination in constructMap for transformed elements
         labelList transformStart_;
+
 
     // Private Member Functions
 
@@ -196,6 +197,7 @@ class mapDistribute
             List<T>& field,
             const TransformOp& top
         ) const;
+
 
 public:
 
@@ -266,7 +268,7 @@ public:
                 List<point>& fld
             ) const
             {
-                pointField pfld(fld.xfer());
+                pointField pfld(move(fld));
                 if (forward)
                 {
                     fld = vt.transformPosition(pfld);
@@ -326,8 +328,8 @@ public:
         mapDistribute
         (
             const label constructSize,
-            const Xfer<labelListList>& subMap,
-            const Xfer<labelListList>& constructMap,
+            labelListList&& subMap,
+            labelListList&& constructMap,
             const bool subHasFlip = false,
             const bool constructHasFlip = false
         );
@@ -336,10 +338,10 @@ public:
         mapDistribute
         (
             const label constructSize,
-            const Xfer<labelListList>& subMap,
-            const Xfer<labelListList>& constructMap,
-            const Xfer<labelListList>& transformElements,
-            const Xfer<labelList>& transformStart,
+            labelListList&& subMap,
+            labelListList&& constructMap,
+            labelListList&& transformElements,
+            labelList&& transformStart,
             const bool subHasFlip = false,
             const bool constructHasFlip = false
         );
@@ -405,11 +407,11 @@ public:
             const int tag = Pstream::msgType()
         );
 
-        //- Construct by transferring parameter content
-        mapDistribute(const Xfer<mapDistribute>&);
-
-        //- Construct copy
+        //- Copy constructor
         mapDistribute(const mapDistribute&);
+
+        //- Move constructor
+        mapDistribute(mapDistribute&&);
 
         //- Construct from Istream
         mapDistribute(Istream&);
@@ -448,10 +450,6 @@ public:
 
             //- Transfer the contents of the argument and annul the argument.
             void transfer(mapDistribute&);
-
-            //- Transfer contents to the Xfer container
-            Xfer<mapDistribute> xfer();
-
 
             //- Distribute data using default commsType.
             template<class T>
@@ -554,7 +552,7 @@ public:
 
         void operator=(const mapDistribute&);
 
-    // IOstream operators
+    // IOstream Operators
 
         //- Read dictionary from Istream
         friend Istream& operator>>(Istream&, mapDistribute&);

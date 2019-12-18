@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ Foam::pimpleMultiRegionControl::solid(const label i)
 
 inline bool Foam::pimpleMultiRegionControl::pimpleTurbCorr(const label i) const
 {
-    return !pimpleControls_[i].turbOnFinalIterOnly() || finalIter();
+    return !pimpleControls_[i].turbOnFinalIterOnly() || finalPimpleIter();
 }
 
 

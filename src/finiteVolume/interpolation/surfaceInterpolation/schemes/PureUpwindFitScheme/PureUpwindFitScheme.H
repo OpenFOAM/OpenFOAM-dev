@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,15 +62,6 @@ class PureUpwindFitScheme
         const scalar centralWeight_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        PureUpwindFitScheme(const PureUpwindFitScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const PureUpwindFitScheme&);
-
-
 public:
 
     //- Runtime type information
@@ -106,6 +97,9 @@ public:
             linearLimitFactor_(readScalar(is)),
             centralWeight_(1000)
         {}
+
+        //- Disallow default bitwise copy construction
+        PureUpwindFitScheme(const PureUpwindFitScheme&) = delete;
 
 
     // Member Functions
@@ -143,6 +137,12 @@ public:
 
             return stencil.weightedSum(this->faceFlux_, vf, fo, fn);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const PureUpwindFitScheme&) = delete;
 };
 
 

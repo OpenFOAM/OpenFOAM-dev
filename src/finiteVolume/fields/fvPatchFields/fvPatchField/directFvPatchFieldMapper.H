@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,7 @@ Description
 #define directFvPatchFieldMapper_H
 
 #include "fvPatchFieldMapper.H"
+#include "directFieldMapper.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,14 +46,16 @@ namespace Foam
 
 class directFvPatchFieldMapper
 :
-    public fvPatchFieldMapper
+    public fvPatchFieldMapper,
+    public directFieldMapper
 {
+    // Private Data
 
-    //- Addressing from new back to old
-    const labelUList& directAddressing_;
+        //- Addressing from new back to old
+        const labelUList& addressing_;
 
-    //- Does map contain any unmapped values
-    bool hasUnmapped_;
+        //- Does map contain any unmapped values
+        bool hasUnmapped_;
 
 
 public:
@@ -60,16 +63,17 @@ public:
     // Constructors
 
         //- Construct given addressing
-        directFvPatchFieldMapper(const labelUList& directAddressing)
+        directFvPatchFieldMapper(const labelUList& addressing)
         :
-            directAddressing_(directAddressing),
+            addressing_(addressing),
             hasUnmapped_(false)
         {
-            if (directAddressing_.size() && min(directAddressing_) < 0)
+            if (addressing_.size() && min(addressing_) < 0)
             {
                 hasUnmapped_ = true;
             }
         }
+
 
     //- Destructor
     virtual ~directFvPatchFieldMapper()
@@ -78,24 +82,14 @@ public:
 
     // Member Functions
 
-        label size() const
-        {
-            return directAddressing_.size();
-        }
-
-        bool direct() const
-        {
-            return true;
-        }
-
-        bool hasUnmapped() const
+        virtual bool hasUnmapped() const
         {
             return hasUnmapped_;
         }
 
-        const labelUList& directAddressing() const
+        virtual const labelUList& addressing() const
         {
-            return directAddressing_;
+            return addressing_;
         }
 };
 

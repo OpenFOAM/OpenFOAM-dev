@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,7 @@ class waveTransmissiveFvPatchField
     public advectiveFvPatchField<Type>
 {
 
-    // Private data
+    // Private Data
 
         //- Name of the compressibility field used to calculate the wave speed
         word psiName_;
@@ -135,7 +135,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         waveTransmissiveFvPatchField
         (
             const waveTransmissiveFvPatchField&
@@ -150,7 +150,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         waveTransmissiveFvPatchField
         (
             const waveTransmissiveFvPatchField&,
@@ -170,7 +170,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

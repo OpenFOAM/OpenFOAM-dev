@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,15 +72,18 @@ public:
         //- Construct from IOobject and a Map
         IOMap(const IOobject&, const Map<T>&);
 
-        //- Construct by transferring the Map contents
-        IOMap(const IOobject&, const Xfer<Map<T>>&);
+        //- Move construct by transferring the Map contents
+        IOMap(const IOobject&, Map<T>&&);
+
+        //- Move constructor
+        IOMap(IOMap<T>&&);
 
 
     //- Destructor
     virtual ~IOMap();
 
 
-    // Member functions
+    // Member Functions
 
         bool writeData(Ostream&) const;
 
@@ -97,13 +100,20 @@ public:
             return globalFilePath(type());
         }
 
-    // Member operators
+
+    // Member Operators
 
         //- Assignment of other IOMap's entries to this IOMap
         void operator=(const IOMap<T>&);
 
+        //- Move assignment of other IOMap's entries to this IOMap
+        void operator=(IOMap<T>&&);
+
         //- Assignment of other Map's entries to this IOMap
         void operator=(const Map<T>&);
+
+        //- Move assignment of other Map's entries to this IOMap
+        void operator=(Map<T>&&);
 };
 
 

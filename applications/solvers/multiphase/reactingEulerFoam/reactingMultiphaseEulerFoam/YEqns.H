@@ -1,9 +1,9 @@
 {
-    autoPtr<phaseSystem::massTransferTable>
-        massTransferPtr(fluid.massTransfer());
+    autoPtr<phaseSystem::specieTransferTable>
+        specieTransferPtr(fluid.specieTransfer());
 
-    phaseSystem::massTransferTable&
-        massTransfer(massTransferPtr());
+    phaseSystem::specieTransferTable&
+        specieTransfer(specieTransferPtr());
 
     forAll(fluid.multiComponentPhases(), multiComponentPhasei)
     {
@@ -19,7 +19,7 @@
             (
                 phase.YiEqn(Y[i])
              ==
-               *massTransfer[Y[i].name()]
+               *specieTransfer[Y[i].name()]
               + fvOptions(alpha, rho, Y[i])
             );
 

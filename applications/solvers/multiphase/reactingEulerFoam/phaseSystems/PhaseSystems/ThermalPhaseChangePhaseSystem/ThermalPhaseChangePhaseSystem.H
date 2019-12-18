@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,22 +55,7 @@ class ThermalPhaseChangePhaseSystem
 :
     public BasePhaseSystem
 {
-
-protected:
-
-    // Protected typedefs
-
-        typedef HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
-            iDmdtTable;
-
-        typedef HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
-            wDmdtTable;
-
-        typedef HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash>
-            wMDotLTable;
-
-
-    // Protected data
+    // Private data
 
         //- Name of the volatile specie
         word volatile_;
@@ -81,23 +66,20 @@ protected:
         // Phase change enabled
         Switch phaseChange_;
 
-        //- Interfacial Mass transfer rate
-        iDmdtTable iDmdt_;
+        //- Mass transfer rates
+        phaseSystem::dmdtfTable dmdtfs_;
 
-        //- Boundary Mass transfer rate
-        wDmdtTable wDmdt_;
+        //- Nucleate Mass transfer rates
+        phaseSystem::dmdtfTable nDmdtfs_;
 
-        //- Boundary thermal energy transfer rate
-        wMDotLTable wMDotL_;
+        //- Nucleate thermal energy transfer rates
+        phaseSystem::dmdtfTable nDmdtLfs_;
 
 
-    // Protected member functions
+    // Private member functions
 
-        //- Return the interfacial mass transfer rate for a pair
-        tmp<volScalarField> iDmdt(const phasePairKey& key) const;
-
-        //- Return the boundary mass transfer rate for a pair
-        tmp<volScalarField> wDmdt(const phasePairKey& key) const;
+        //- Return the total mass transfer rate for a pair
+        tmp<volScalarField> totalDmdtf(const phasePairKey& key) const;
 
 
 public:
@@ -117,17 +99,24 @@ public:
         //- Return the saturationModel
         const saturationModel& saturation() const;
 
-        //- Return the mass transfer rate for a pair
-        virtual tmp<volScalarField> dmdt(const phasePairKey& key) const;
+        //- Return the mass transfer rate for an interface
+        virtual tmp<volScalarField> dmdtf(const phasePairKey& key) const;
 
         //- Return the mass transfer rates for each phase
-        virtual Xfer<PtrList<volScalarField>> dmdts() const;
+        virtual PtrList<volScalarField> dmdts() const;
+
+        //- Return the momentum transfer matrices for the cell-based algorithm
+        virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransfer();
+
+        //- Return the momentum transfer matrices for the face-based algorithm
+        virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransferf();
 
         //- Return the heat transfer matrices
         virtual autoPtr<phaseSystem::heatTransferTable> heatTransfer() const;
 
-        //- Return the mass transfer matrices
-        virtual autoPtr<phaseSystem::massTransferTable> massTransfer() const;
+        //- Return the specie transfer matrices
+        virtual autoPtr<phaseSystem::specieTransferTable>
+            specieTransfer() const;
 
         //- Correct the interface thermodynamics
         virtual void correctInterfaceThermo();

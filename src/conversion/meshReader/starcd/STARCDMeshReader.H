@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,17 +114,6 @@ protected:
         static bool readHeader(IFstream&, word fileSignature);
 
 
-private:
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        STARCD(const STARCD&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const STARCD&);
-
-
 protected:
 
         enum cellType
@@ -168,9 +157,18 @@ public:
             const scalar scaleFactor = 1.0
         );
 
+        //- Disallow default bitwise copy construction
+        STARCD(const STARCD&) = delete;
+
 
     //- Destructor
     virtual ~STARCD();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const STARCD&) = delete;
 };
 
 

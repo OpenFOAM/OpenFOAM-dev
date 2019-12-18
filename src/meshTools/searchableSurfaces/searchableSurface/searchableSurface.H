@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,19 +68,11 @@ class searchableSurface
 :
     public regIOobject
 {
-    // Private data
+    // Private Data
 
         const word name_;
 
         boundBox bounds_;
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        searchableSurface(const searchableSurface&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const searchableSurface&);
 
 
 public:
@@ -133,6 +125,9 @@ public:
     // Constructors
 
         searchableSurface(const IOobject& io);
+
+        //- Disallow default bitwise copy construction
+        searchableSurface(const searchableSurface&) = delete;
 
         //- Clone
         virtual autoPtr<searchableSurface> clone() const
@@ -368,6 +363,12 @@ public:
             {
                 values.clear();
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const searchableSurface&) = delete;
 };
 
 

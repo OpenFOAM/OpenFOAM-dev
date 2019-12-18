@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,19 +67,6 @@ protected:
         pointVectorField& pointDisplacement_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        externalDisplacementMeshMover
-        (
-            const externalDisplacementMeshMover&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const externalDisplacementMeshMover&);
-
 public:
 
     //- Runtime type information
@@ -111,6 +98,12 @@ public:
             const dictionary& dict,
             const List<labelPair>& baffles,
             pointVectorField& pointDisplacement
+        );
+
+        //- Disallow default bitwise copy construction
+        externalDisplacementMeshMover
+        (
+            const externalDisplacementMeshMover&
         );
 
 
@@ -175,6 +168,12 @@ public:
 
             //-  Update local data for topology changes
             virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const externalDisplacementMeshMover&) = delete;
 };
 
 

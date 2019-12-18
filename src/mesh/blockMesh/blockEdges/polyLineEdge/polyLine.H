@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,15 +53,6 @@ namespace Foam
 
 class polyLine
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        polyLine(const polyLine&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const polyLine&);
-
-
 protected:
 
     // Protected data
@@ -98,6 +89,9 @@ public:
             const bool notImplementedClosed = false
         );
 
+        //- Disallow default bitwise copy construction
+        polyLine(const polyLine&) = delete;
+
 
     // Member Functions
 
@@ -117,6 +111,12 @@ public:
 
         //- Return the length of the curve
         scalar length() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const polyLine&) = delete;
 };
 
 

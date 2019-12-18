@@ -1,18 +1,20 @@
 thermophysicalFunctions/thermophysicalFunction/thermophysicalFunction.C
 
-NSRDSfunctions = thermophysicalFunctions/NSRDSfunctions
-$(NSRDSfunctions)/NSRDSfunc0/NSRDSfunc0.C
-$(NSRDSfunctions)/NSRDSfunc1/NSRDSfunc1.C
-$(NSRDSfunctions)/NSRDSfunc2/NSRDSfunc2.C
-$(NSRDSfunctions)/NSRDSfunc3/NSRDSfunc3.C
-$(NSRDSfunctions)/NSRDSfunc4/NSRDSfunc4.C
-$(NSRDSfunctions)/NSRDSfunc5/NSRDSfunc5.C
-$(NSRDSfunctions)/NSRDSfunc6/NSRDSfunc6.C
-$(NSRDSfunctions)/NSRDSfunc7/NSRDSfunc7.C
-$(NSRDSfunctions)/NSRDSfunc14/NSRDSfunc14.C
+thermophysicalFunctions/none/noneThermophysicalFunction.C
+thermophysicalFunctions/constant/constantThermophysicalFunction.C
+thermophysicalFunctions/table/tableThermophysicalFunction.C
+thermophysicalFunctions/APIfunctions/APIdiffCoef/APIdiffCoefThermophysicalFunction.C
 
-APIfunctions           = thermophysicalFunctions/APIfunctions
-$(APIfunctions)/APIdiffCoefFunc/APIdiffCoefFunc.C
+NSRDS = thermophysicalFunctions/NSRDS
+$(NSRDS)/NSRDS0/NSRDS0ThermophysicalFunction.C
+$(NSRDS)/NSRDS1/NSRDS1ThermophysicalFunction.C
+$(NSRDS)/NSRDS2/NSRDS2ThermophysicalFunction.C
+$(NSRDS)/NSRDS3/NSRDS3ThermophysicalFunction.C
+$(NSRDS)/NSRDS4/NSRDS4ThermophysicalFunction.C
+$(NSRDS)/NSRDS5/NSRDS5ThermophysicalFunction.C
+$(NSRDS)/NSRDS6/NSRDS6ThermophysicalFunction.C
+$(NSRDS)/NSRDS7/NSRDS7ThermophysicalFunction.C
+$(NSRDS)/NSRDS14/NSRDS14ThermophysicalFunction.C
 
 thermophysicalProperties/thermophysicalProperties.C
 
@@ -20,6 +22,7 @@ thermophysicalProperties/thermophysicalProperties.C
 liquidProperties/liquidProperties/liquidProperties.C
 liquidProperties/liquidMixtureProperties/liquidMixtureProperties.C
 
+liquidProperties/liquid/liquid.C
 liquidProperties/H2O/H2O.C
 liquidProperties/C7H16/C7H16.C
 liquidProperties/C12H26/C12H26.C

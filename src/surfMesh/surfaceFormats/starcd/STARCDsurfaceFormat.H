@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,12 +82,6 @@ class STARCDsurfaceFormat
             const label cellTableId
         );
 
-        //- Disallow default bitwise copy construct
-        STARCDsurfaceFormat(const STARCDsurfaceFormat<Face>&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const STARCDsurfaceFormat<Face>&);
-
 
 public:
 
@@ -95,6 +89,9 @@ public:
 
         //- Construct from file name
         STARCDsurfaceFormat(const fileName&);
+
+        //- Disallow default bitwise copy construction
+        STARCDsurfaceFormat(const STARCDsurfaceFormat<Face>&) = delete;
 
 
     // Selectors
@@ -127,6 +124,12 @@ public:
         {
             write(name, MeshedSurfaceProxy<Face>(*this));
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const STARCDsurfaceFormat<Face>&) = delete;
 };
 
 

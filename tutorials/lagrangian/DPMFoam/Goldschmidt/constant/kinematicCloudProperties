@@ -27,6 +27,7 @@ solution
         rho.air         cell;
         U.air           cellPoint;
         mu.air          cell;
+        alpha.air       cell;
     }
 
     integrationSchemes

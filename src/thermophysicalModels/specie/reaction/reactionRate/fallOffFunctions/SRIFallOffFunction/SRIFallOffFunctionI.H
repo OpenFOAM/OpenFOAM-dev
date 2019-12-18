@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,11 +44,11 @@ inline Foam::SRIFallOffFunction::SRIFallOffFunction
 
 inline Foam::SRIFallOffFunction::SRIFallOffFunction(const dictionary& dict)
 :
-    a_(readScalar(dict.lookup("a"))),
-    b_(readScalar(dict.lookup("b"))),
-    c_(readScalar(dict.lookup("c"))),
-    d_(readScalar(dict.lookup("d"))),
-    e_(readScalar(dict.lookup("e")))
+    a_(dict.lookup<scalar>("a")),
+    b_(dict.lookup<scalar>("b")),
+    c_(dict.lookup<scalar>("c")),
+    d_(dict.lookup<scalar>("d")),
+    e_(dict.lookup<scalar>("e"))
 {}
 
 
@@ -104,11 +104,11 @@ inline Foam::scalar Foam::SRIFallOffFunction::ddc
 
 inline void Foam::SRIFallOffFunction::write(Ostream& os) const
 {
-    os.writeKeyword("a") << a_ << token::END_STATEMENT << nl;
-    os.writeKeyword("b") << b_ << token::END_STATEMENT << nl;
-    os.writeKeyword("c") << c_ << token::END_STATEMENT << nl;
-    os.writeKeyword("d") << d_ << token::END_STATEMENT << nl;
-    os.writeKeyword("e") << e_ << token::END_STATEMENT << nl;
+    writeEntry(os, "a", a_);
+    writeEntry(os, "b", b_);
+    writeEntry(os, "c", c_);
+    writeEntry(os, "d", d_);
+    writeEntry(os, "e", e_);
 }
 
 

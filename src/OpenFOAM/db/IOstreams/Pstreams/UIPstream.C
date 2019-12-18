@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,31 +165,47 @@ Foam::Istream& Foam::UIPstream::read(token& t)
             return *this;
         }
 
-        // String
-        case token::VERBATIMSTRING :
+        // FunctionName
+        case token::FUNCTIONNAME :
         {
-            // Recurse to read actual string
-            read(t);
-            t.type() = token::VERBATIMSTRING;
+            FatalErrorInFunction
+                << "Binary IO of function names not supported"
+                << Foam::abort(FatalError);
             return *this;
         }
+
+        // Variable
         case token::VARIABLE :
         {
-            // Recurse to read actual string
-            read(t);
-            t.type() = token::VARIABLE;
+            FatalErrorInFunction
+                << "Binary IO of variables not supported"
+                << Foam::abort(FatalError);
             return *this;
         }
+
+        // String
         case token::STRING :
         {
             string* pval = new string;
             if (read(*pval))
             {
                 t = pval;
-                if (c == token::VERBATIMSTRING)
-                {
-                    t.type() = token::VERBATIMSTRING;
-                }
+            }
+            else
+            {
+                delete pval;
+                t.setBad();
+            }
+            return *this;
+        }
+
+        // Verbatim string
+        case token::VERBATIMSTRING :
+        {
+            verbatimString* pval = new verbatimString;
+            if (read(*pval))
+            {
+                t = pval;
             }
             else
             {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,19 +52,11 @@ class refineCell;
 
 class edgeVertex
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh. (could be primitive mesh but keeping polyMesh
         //  here saves storing reference at higher levels where we do need it)
         const polyMesh& mesh_;
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        edgeVertex(const edgeVertex&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const edgeVertex&);
 
 
 public:
@@ -92,6 +84,9 @@ public:
         :
             mesh_(mesh)
         {}
+
+        //- Disallow default bitwise copy construction
+        edgeVertex(const edgeVertex&) = delete;
 
 
     // Member Functions
@@ -215,8 +210,18 @@ public:
         Ostream& writeCut(Ostream& os, const label cut, const scalar) const;
 
         //- Write cut descriptions to Ostream
-        Ostream& writeCuts(Ostream& os, const labelList&, const scalarField&)
-         const;
+        Ostream& writeCuts
+        (
+            Ostream& os,
+            const labelList&,
+            const scalarField&
+        ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const edgeVertex&) = delete;
 };
 
 

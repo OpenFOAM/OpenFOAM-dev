@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ SourceFiles
 #define fvFieldDecomposer_H
 
 #include "fvMesh.H"
-#include "fvPatchFieldMapper.H"
+#include "directFvPatchFieldMapper.H"
 #include "surfaceFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -53,16 +53,23 @@ class IOobjectList;
 
 class fvFieldDecomposer
 {
+
 public:
 
         //- Patch field decomposer class
         class patchFieldDecomposer
         :
-            public fvPatchFieldMapper
+            public labelList,
+            public directFvPatchFieldMapper
         {
-            // Private data
+            // Private Member Functions
 
-                labelList directAddressing_;
+                labelList alignAddressing
+                (
+                    const labelUList& addressingSlice,
+                    const label addressingOffset
+                ) const;
+
 
         public:
 
@@ -74,30 +81,6 @@ public:
                     const labelUList& addressingSlice,
                     const label addressingOffset
                 );
-
-
-            // Member functions
-
-                label size() const
-                {
-                    return directAddressing_.size();
-                }
-
-                bool direct() const
-                {
-                    return true;
-                }
-
-                //- Are there unmapped values
-                bool hasUnmapped() const
-                {
-                    return false;
-                }
-
-                const labelUList& directAddressing() const
-                {
-                    return directAddressing_;
-                }
         };
 
 
@@ -106,11 +89,17 @@ public:
         //  holds neighbour data)
         class processorVolPatchFieldDecomposer
         :
-            public fvPatchFieldMapper
+            public labelList,
+            public directFvPatchFieldMapper
         {
-            // Private data
+            // Private Member Functions
 
-                labelList directAddressing_;
+                labelList alignAddressing
+                (
+                    const fvMesh& mesh,
+                    const labelUList& addressingSlice
+                ) const;
+
 
         public:
 
@@ -120,84 +109,12 @@ public:
                 const fvMesh& mesh,
                 const labelUList& addressingSlice
             );
-
-
-            // Member functions
-
-                label size() const
-                {
-                    return directAddressing_.size();
-                }
-
-                bool direct() const
-                {
-                    return true;
-                }
-
-                //- Are there unmapped values
-                bool hasUnmapped() const
-                {
-                    return false;
-                }
-
-                const labelUList& directAddressing() const
-                {
-                    return directAddressing_;
-                }
-        };
-
-
-        //- Processor patch field decomposer class. Surface field is assumed
-        //  to have direction (so manipulates sign when mapping)
-        class processorSurfacePatchFieldDecomposer
-        :
-            public fvPatchFieldMapper
-        {
-            labelListList addressing_;
-            scalarListList weights_;
-
-        public:
-
-            //- Construct given addressing
-            processorSurfacePatchFieldDecomposer
-            (
-                const labelUList& addressingSlice
-            );
-
-
-            // Member functions
-
-                label size() const
-                {
-                    return addressing_.size();
-                }
-
-                bool direct() const
-                {
-                    return false;
-                }
-
-                //- Are there unmapped values
-                bool hasUnmapped() const
-                {
-                    return false;
-                }
-
-                const labelListList& addressing() const
-                {
-                    return addressing_;
-                }
-
-                const scalarListList& weights() const
-                {
-                    return weights_;
-                }
         };
 
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to complete mesh
         const fvMesh& completeMesh_;
@@ -220,17 +137,17 @@ private:
         List<processorVolPatchFieldDecomposer*>
             processorVolPatchFieldDecomposerPtrs_;
 
-        List<processorSurfacePatchFieldDecomposer*>
-            processorSurfacePatchFieldDecomposerPtrs_;
-
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        fvFieldDecomposer(const fvFieldDecomposer&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvFieldDecomposer&);
+        //- Helper: map & optionally flip a (face) field
+        template<class Type>
+        static tmp<Field<Type>> mapField
+        (
+            const Field<Type>& field,
+            const labelUList& mapAndSign,
+            const bool applyFlip
+        );
 
 
 public:
@@ -246,6 +163,9 @@ public:
             const labelList& cellAddressing,
             const labelList& boundaryAddressing
         );
+
+        //- Disallow default bitwise copy construction
+        fvFieldDecomposer(const fvFieldDecomposer&) = delete;
 
 
     //- Destructor
@@ -273,6 +193,12 @@ public:
 
         template<class GeoField>
         void decomposeFields(const PtrList<GeoField>& fields) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvFieldDecomposer&) = delete;
 };
 
 

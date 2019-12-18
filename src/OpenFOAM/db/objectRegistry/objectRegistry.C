@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,55 @@ bool Foam::objectRegistry::parentNotTime() const
 }
 
 
+void Foam::objectRegistry::readCacheTemporaryObjects() const
+{
+    if
+    (
+        !cacheTemporaryObjectsSet_
+     && time_.controlDict().found("cacheTemporaryObjects")
+    )
+    {
+        cacheTemporaryObjectsSet_ = true;
+
+        const dictionary& controlDict = time_.controlDict();
+
+        wordList cacheTemporaryObjects;
+
+        if (controlDict.isDict("cacheTemporaryObjects"))
+        {
+            if(controlDict.subDict("cacheTemporaryObjects").found(name()))
+            {
+                controlDict.subDict("cacheTemporaryObjects").lookup(name())
+                    >> cacheTemporaryObjects;
+            }
+        }
+        else
+        {
+            controlDict.lookup("cacheTemporaryObjects")
+                >> cacheTemporaryObjects;
+        }
+
+        forAll(cacheTemporaryObjects, i)
+        {
+            cacheTemporaryObjects_.insert
+            (
+                cacheTemporaryObjects[i],
+                {false, false}
+            );
+        }
+    }
+}
+
+
+void Foam::objectRegistry::deleteCachedObject(regIOobject& cachedOb) const
+{
+    cachedOb.release();
+    cachedOb.checkOut();
+    cachedOb.rename(cachedOb.name() + "Cached");
+    delete &cachedOb;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors *  * * * * * * * * * * * * * //
 
 Foam::objectRegistry::objectRegistry
@@ -67,7 +116,8 @@ Foam::objectRegistry::objectRegistry
     time_(t),
     parent_(t),
     dbDir_(name()),
-    event_(1)
+    event_(1),
+    cacheTemporaryObjectsSet_(false)
 {}
 
 
@@ -82,7 +132,8 @@ Foam::objectRegistry::objectRegistry
     time_(io.time()),
     parent_(io.db()),
     dbDir_(parent_.dbDir()/local()/name()),
-    event_(1)
+    event_(1),
+    cacheTemporaryObjectsSet_(false)
 {
     writeOpt() = IOobject::AUTO_WRITE;
 }
@@ -92,6 +143,7 @@ Foam::objectRegistry::objectRegistry
 
 Foam::objectRegistry::~objectRegistry()
 {
+    cacheTemporaryObjects_.clear();
     clear();
 }
 
@@ -212,6 +264,34 @@ bool Foam::objectRegistry::checkIn(regIOobject& io) const
             << endl;
     }
 
+    // Delete cached object with the same name as io and if it is in the
+    // cacheTemporaryObjects list
+    if (cacheTemporaryObjects_.size())
+    {
+        HashTable<Pair<bool>>::iterator cacheIter
+        (
+            cacheTemporaryObjects_.find(io.name())
+        );
+
+        if (cacheIter != cacheTemporaryObjects_.end())
+        {
+            iterator iter = const_cast<objectRegistry&>(*this).find(io.name());
+
+            if (iter != end() && iter() != &io && iter()->ownedByRegistry())
+            {
+                if (objectRegistry::debug)
+                {
+                    Pout<< "objectRegistry::checkIn(regIOobject&) : "
+                        << name() << " : deleting cached object " << iter.key()
+                        << endl;
+                }
+
+                cacheIter().first() = false;
+                deleteCachedObject(*iter());
+            }
+        }
+    }
+
     return const_cast<objectRegistry&>(*this).insert(io.name(), &io);
 }
 
@@ -290,6 +370,96 @@ void Foam::objectRegistry::clear()
 }
 
 
+void Foam::objectRegistry::addTemporaryObject
+(
+    const word& name
+) const
+{
+    if (!cacheTemporaryObjects_.found(name))
+    {
+        cacheTemporaryObjects_.insert(name, {false, false});
+    }
+}
+
+
+bool Foam::objectRegistry::cacheTemporaryObject
+(
+    const word& name
+) const
+{
+    return cacheTemporaryObjects_.found(name);
+}
+
+
+void Foam::objectRegistry::resetCacheTemporaryObject
+(
+    const regIOobject& ob
+) const
+{
+    if (cacheTemporaryObjects_.size())
+    {
+        HashTable<Pair<bool>>::iterator iter
+        (
+            cacheTemporaryObjects_.find(ob.name())
+        );
+
+        // If object ob if is in the cacheTemporaryObjects list
+        // and has been cached reset the cached flag
+        if (iter != cacheTemporaryObjects_.end())
+        {
+            iter().first() = false;
+        }
+    }
+}
+
+
+bool Foam::objectRegistry::checkCacheTemporaryObjects() const
+{
+    bool enabled = cacheTemporaryObjects_.size();
+
+    forAllConstIter(HashTable<regIOobject*>, *this, iter)
+    {
+        const objectRegistry* orPtr_ =
+            dynamic_cast<const objectRegistry*>(iter());
+
+        // Protect against re-searching the top-level registry
+        if (orPtr_ && orPtr_ != this)
+        {
+            enabled = orPtr_->checkCacheTemporaryObjects() || enabled;
+        }
+    }
+
+    if (enabled)
+    {
+        forAllIter
+        (
+            typename HashTable<Pair<bool>>,
+            cacheTemporaryObjects_,
+            iter
+        )
+        {
+            if (!iter().second())
+            {
+                Warning
+                    << "Could not find temporary object " << iter.key()
+                    << " in registry " << name() << nl
+                    << "Available temporary objects "
+                    << temporaryObjects_
+                    << endl;
+            }
+            else
+            {
+                iter().second() = false;
+            }
+        }
+
+        temporaryObjects_.clear();
+    }
+
+    return enabled;
+}
+
+
 void Foam::objectRegistry::rename(const word& newName)
 {
     regIOobject::rename(newName);
@@ -350,7 +520,7 @@ bool Foam::objectRegistry::writeObject
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp,
-    const bool valid
+    const bool write
 ) const
 {
     bool ok = true;
@@ -370,7 +540,7 @@ bool Foam::objectRegistry::writeObject
 
         if (iter()->writeOpt() != NO_WRITE)
         {
-            ok = iter()->writeObject(fmt, ver, cmp, valid) && ok;
+            ok = iter()->writeObject(fmt, ver, cmp, write) && ok;
         }
     }
 

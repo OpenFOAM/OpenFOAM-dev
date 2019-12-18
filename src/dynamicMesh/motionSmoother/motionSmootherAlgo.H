@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,7 +129,7 @@ class motionSmootherAlgo
         };
 
 
-    // Private data
+    // Private Data
 
         //- Reference to polyMesh. Non-const since we move mesh.
         polyMesh& mesh_;
@@ -283,12 +283,6 @@ class motionSmootherAlgo
             PackedBoolList& isAffectedPoint
         ) const;
 
-        //- Disallow default bitwise copy construct
-        motionSmootherAlgo(const motionSmootherAlgo&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const motionSmootherAlgo&);
-
 
 public:
 
@@ -308,6 +302,9 @@ public:
             const labelList& adaptPatchIDs,     // patches forming 'outside'
             const dictionary& paramDict
         );
+
+        //- Disallow default bitwise copy construction
+        motionSmootherAlgo(const motionSmootherAlgo&) = delete;
 
 
     //- Destructor
@@ -499,6 +496,12 @@ public:
                     const scalarField& edgeWeight,
                     GeometricField<Type, pointPatchField, pointMesh>& newFld
                 ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const motionSmootherAlgo&) = delete;
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

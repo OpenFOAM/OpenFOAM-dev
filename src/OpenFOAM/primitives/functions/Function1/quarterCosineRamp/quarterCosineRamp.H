@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,14 +22,14 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1Types::quarterCosineRamp
+    Foam::Function1s::quarterCosineRamp
 
 Description
     Quarter-cosine ramp function starting from 0 and increasing to 1 from \c
     start over the \c duration and remaining at 1 thereafter.
 
 See also
-    Foam::Function1Types::ramp
+    Foam::Function1s::Ramp
 
 SourceFiles
     quarterCosineRamp.C
@@ -39,13 +39,13 @@ SourceFiles
 #ifndef quarterCosineRamp_H
 #define quarterCosineRamp_H
 
-#include "ramp.H"
+#include "Ramp.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace Function1Types
+namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -54,13 +54,8 @@ namespace Function1Types
 
 class quarterCosineRamp
 :
-    public ramp
+    public Ramp<quarterCosineRamp>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const quarterCosineRamp&);
-
 
 public:
 
@@ -86,12 +81,25 @@ public:
 
         //- Return value for time t
         virtual inline scalar value(const scalar t) const;
+
+        //- Return the integral between times t1 and t2
+        virtual inline scalar integrate
+        (
+            const scalar t1,
+            const scalar t2
+        ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const quarterCosineRamp&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1Types
+} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

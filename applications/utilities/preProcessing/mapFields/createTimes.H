@@ -1,9 +1,9 @@
     Info<< "\nCreate databases as time" << endl;
 
-    const auto caseDirOrig = getEnv("FOAM_CASE");
-    const auto caseNameOrig = getEnv("FOAM_CASE_NAME");
+    const string caseDirOrig = getEnv("FOAM_CASE");
+    const string caseNameOrig = getEnv("FOAM_CASENAME");
     setEnv("FOAM_CASE", rootDirSource/caseDirSource, true);
-    setEnv("FOAM_CASE_NAME", caseDirSource, true);
+    setEnv("FOAM_CASENAME", caseDirSource, true);
     Time runTimeSource
     (
         Time::controlDictName,
@@ -11,7 +11,7 @@
         caseDirSource
     );
     setEnv("FOAM_CASE", caseDirOrig, true);
-    setEnv("FOAM_CASE_NAME", caseNameOrig, true);
+    setEnv("FOAM_CASENAME", caseNameOrig, true);
 
     Time runTimeTarget
     (

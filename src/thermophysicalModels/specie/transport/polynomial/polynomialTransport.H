@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,12 +53,6 @@ Usage
         \f[
             \kappa = 2000 - 0.15 T + 0.023 T^2
         \f]
-
-Note
-    - Dynamic viscosity polynomial coefficients evaluate to an expression in
-      [Pa.s], but internally uses [Pa.s/kmol].
-    - Thermal conductivity polynomial coefficients evaluate to an expression in
-      [W/m/K], but internally uses [W/m/K/kmol].
 
 SourceFiles
     polynomialTransportI.H
@@ -114,12 +108,12 @@ class polynomialTransport
 :
     public Thermo
 {
-    // Private data
+    // Private Data
 
-        //- Dynamic viscosity polynomial coefficients
+        //- Dynamic viscosity polynomial coefficients [Pa.s/K^i]
         Polynomial<PolySize> muCoeffs_;
 
-        //- Thermal conductivity polynomial coefficients
+        //- Thermal conductivity polynomial coefficients [W/m/K/K^i]
         Polynomial<PolySize> kappaCoeffs_;
 
 
@@ -151,7 +145,7 @@ public:
         inline static autoPtr<polynomialTransport> New(const dictionary& dict);
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the instantiated type name
         static word typeName()
@@ -159,13 +153,13 @@ public:
             return "polynomial<" + Thermo::typeName() + '>';
         }
 
-        //- Dynamic viscosity [kg/ms]
+        //- Dynamic viscosity [kg/m/s]
         inline scalar mu(const scalar p, const scalar T) const;
 
-        //- Thermal conductivity [W/mK]
+        //- Thermal conductivity [W/m/K]
         inline scalar kappa(const scalar p, const scalar T) const;
 
-        //- Thermal diffusivity of enthalpy [kg/ms]
+        //- Thermal diffusivity of enthalpy [kg/m/s]
         inline scalar alphah(const scalar p, const scalar T) const;
 
         // Species diffusivity
@@ -175,12 +169,9 @@ public:
         void write(Ostream& os) const;
 
 
-    // Member operators
-
-        inline void operator=(const polynomialTransport&);
+    // Member Operators
 
         inline void operator+=(const polynomialTransport&);
-
         inline void operator*=(const scalar);
 
 

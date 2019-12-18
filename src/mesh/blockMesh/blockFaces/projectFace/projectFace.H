@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class projectFace
 :
     public blockFace
 {
-    // Private data
+    // Private Data
 
         //- The surface onto which the points are projected
         const searchableSurface& surface_;
@@ -83,12 +83,6 @@ class projectFace
             scalarField& lambdaJ
         ) const;
 
-        //- Disallow default bitwise copy construct
-        projectFace(const projectFace&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const projectFace&);
-
 
 public:
 
@@ -107,6 +101,9 @@ public:
             Istream&
         );
 
+        //- Disallow default bitwise copy construction
+        projectFace(const projectFace&) = delete;
+
 
     //- Destructor
     virtual ~projectFace()
@@ -122,6 +119,12 @@ public:
             const label blockFacei,
             pointField& points
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const projectFace&) = delete;
 };
 
 

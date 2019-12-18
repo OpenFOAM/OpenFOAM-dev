@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ Ostream& operator<<(Ostream&, const wallNormalInfo&);
 
 class wallNormalInfo
 {
-    // Private data
+    // Private Data
 
         //- Normal at nearest wall point
         vector normal_;
@@ -87,8 +87,6 @@ public:
         //- Construct from normal
         inline wallNormalInfo(const vector& normal);
 
-        //- Construct as copy
-        inline wallNormalInfo(const wallNormalInfo&);
 
     // Member Functions
 

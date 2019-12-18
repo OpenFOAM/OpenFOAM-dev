@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,15 +54,6 @@ class BSplineEdge
     public blockEdge,
     public BSpline
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        BSplineEdge(const BSplineEdge&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const BSplineEdge&);
-
-
 public:
 
     //- Runtime type information
@@ -90,6 +81,9 @@ public:
             Istream&
         );
 
+        //- Disallow default bitwise copy construction
+        BSplineEdge(const BSplineEdge&) = delete;
+
 
     //- Destructor
     virtual ~BSplineEdge();
@@ -103,6 +97,12 @@ public:
 
         //- Return the length of the spline curve (not implemented)
         virtual scalar length() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const BSplineEdge&) = delete;
 };
 
 

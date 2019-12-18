@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ void Foam::basicChemistryModel::correct()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::basicChemistryModel::basicChemistryModel(basicThermo& thermo)
+Foam::basicChemistryModel::basicChemistryModel(const basicThermo& thermo)
 :
     IOdictionary
     (
@@ -55,9 +55,9 @@ Foam::basicChemistryModel::basicChemistryModel(basicThermo& thermo)
             IOobject::NO_WRITE
         )
     ),
-    mesh_(thermo.p().mesh()),
+    mesh_(thermo.T().mesh()),
     chemistry_(lookup("chemistry")),
-    deltaTChemIni_(readScalar(lookup("initialChemicalTimeStep"))),
+    deltaTChemIni_(lookup<scalar>("initialChemicalTimeStep")),
     deltaTChemMax_(lookupOrDefault("maxChemicalTimeStep", great)),
     deltaTChem_
     (

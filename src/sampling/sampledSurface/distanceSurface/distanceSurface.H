@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::distanceSurface
+     Foam::sampledSurfaces::distanceSurface
 
 Description
     A sampledSurface defined by a distance to a surface.
@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef distanceSurface_H
-#define distanceSurface_H
+#ifndef sampledSurfaces_distanceSurface_H
+#define sampledSurfaces_distanceSurface_H
 
 #include "sampledSurface.H"
 #include "searchableSurface.H"
@@ -42,6 +42,8 @@ SourceFiles
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
+{
+namespace sampledSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
@@ -52,7 +54,7 @@ class distanceSurface
 :
     public sampledSurface
 {
-    // Private data
+    // Private Data
 
         //- Surface
         const autoPtr<searchableSurface> surfPtr_;
@@ -64,7 +66,7 @@ class distanceSurface
         const bool signed_;
 
         //- Whether to coarsen
-        const Switch regularise_;
+        const isoSurface::filterType filter_;
 
         //- Whether to recalculate cell values as average of point values
         const Switch average_;
@@ -130,7 +132,7 @@ public:
             const word& surfaceName,
             const scalar distance,
             const bool signedDistance,
-            const Switch regularise,
+            const isoSurface::filterType filter,
             const Switch average
         );
 
@@ -238,6 +240,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace sampledSurfaces
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,12 +64,6 @@ class STARCD
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        STARCD(const STARCD&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const STARCD&);
-
         //- Pro-STAR 4+ header format
         static void writeHeader(Ostream&, const char* filetype);
 
@@ -89,7 +83,7 @@ class STARCD
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Face addressing from OpenFOAM faces -> pro-STAR faces
         static const label foamToStarFaceAddr[4][6];
@@ -103,6 +97,9 @@ public:
             const polyMesh&,
             const scalar scaleFactor = 1.0
         );
+
+        //- Disallow default bitwise copy construction
+        STARCD(const STARCD&) = delete;
 
 
     //- Destructor
@@ -125,6 +122,11 @@ public:
                 const fileName& meshName = fileName::null
             ) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const STARCD&) = delete;
 };
 
 

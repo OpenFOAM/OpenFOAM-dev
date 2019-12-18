@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,8 @@ Foam::labelList Foam::medialAxisMeshMover::getFixedValueBCs
             }
         }
     }
-    return adaptPatchIDs;
+
+    return Foam::move(adaptPatchIDs);
 }
 
 
@@ -357,10 +358,8 @@ void Foam::medialAxisMeshMover::update(const dictionary& coeffDict)
     // ~~~~~~~~~~~~~~~~~~~~~
 
     //- Smooth surface normals
-    const label nSmoothSurfaceNormals = readLabel
-    (
-        coeffDict.lookup("nSmoothSurfaceNormals")
-    );
+    const label nSmoothSurfaceNormals =
+        coeffDict.lookup<label>("nSmoothSurfaceNormals");
 
     //- When is medial axis
     word angleKey = "minMedialAxisAngle";
@@ -371,25 +370,23 @@ void Foam::medialAxisMeshMover::update(const dictionary& coeffDict)
     }
     scalar minMedialAxisAngleCos = Foam::cos
     (
-        degToRad(readScalar(coeffDict.lookup(angleKey)))
+        degToRad(coeffDict.lookup<scalar>(angleKey))
     );
 
     //- Feature angle when to stop adding layers
-    const scalar featureAngle = readScalar(coeffDict.lookup("featureAngle"));
+    const scalar featureAngle = coeffDict.lookup<scalar>("featureAngle");
 
     //- When to slip along wall
     const scalar slipFeatureAngle =
     (
         coeffDict.found("slipFeatureAngle")
-      ? readScalar(coeffDict.lookup("slipFeatureAngle"))
+      ? coeffDict.lookup<scalar>("slipFeatureAngle")
       : 0.5*featureAngle
     );
 
     //- Smooth internal normals
-    const label nSmoothNormals = readLabel
-    (
-        coeffDict.lookup("nSmoothNormals")
-    );
+    const label nSmoothNormals =
+        coeffDict.lookup<label>("nSmoothNormals");
 
     //- Number of edges walking out
     const label nMedialAxisIter = coeffDict.lookupOrDefault<label>
@@ -402,7 +399,8 @@ void Foam::medialAxisMeshMover::update(const dictionary& coeffDict)
     // Predetermine mesh edges
     // ~~~~~~~~~~~~~~~~~~~~~~~
 
-    // Precalulate (mesh) master point/edge (only relevant for shared pts/edges)
+    // Precalculate (mesh) master point/edge
+    // (only relevant for shared pts/edges)
     const PackedBoolList isMeshMasterPoint(syncTools::getMasterPoints(mesh()));
     const PackedBoolList isMeshMasterEdge(syncTools::getMasterEdges(mesh()));
     // Precalculate meshEdge per pp edge
@@ -415,7 +413,7 @@ void Foam::medialAxisMeshMover::update(const dictionary& coeffDict)
         )
     );
 
-    // Precalulate (patch) master point/edge
+    // Precalculate (patch) master point/edge
     const PackedBoolList isPatchMasterPoint
     (
         meshRefinement::getMasterPoints
@@ -1721,13 +1719,11 @@ void Foam::medialAxisMeshMover::calculateDisplacement
     );
 
     //- Layer thickness too big
-    const scalar maxThicknessToMedialRatio  = readScalar
-    (
-        coeffDict.lookup("maxThicknessToMedialRatio")
-    );
+    const scalar maxThicknessToMedialRatio  =
+        coeffDict.lookup<scalar>("maxThicknessToMedialRatio");
 
     //- Feature angle when to stop adding layers
-    const scalar featureAngle = readScalar(coeffDict.lookup("featureAngle"));
+    const scalar featureAngle = coeffDict.lookup<scalar>("featureAngle");
 
     //- Stop layer growth where mesh wraps around sharp edge
     const scalar minCosLayerTermination = Foam::cos
@@ -1736,10 +1732,8 @@ void Foam::medialAxisMeshMover::calculateDisplacement
     );
 
     //- Smoothing wanted patch thickness
-    const label nSmoothPatchThickness = readLabel
-    (
-        coeffDict.lookup("nSmoothThickness")
-    );
+    const label nSmoothPatchThickness =
+        coeffDict.lookup<label>("nSmoothThickness");
 
     //- Number of edges walking out
     const label nMedialAxisIter = coeffDict.lookupOrDefault<label>
@@ -1756,7 +1750,7 @@ void Foam::medialAxisMeshMover::calculateDisplacement
     );
 
 
-    // Precalulate master points/edge (only relevant for shared points/edges)
+    // Precalculate master points/edge (only relevant for shared points/edges)
     const PackedBoolList isMeshMasterPoint(syncTools::getMasterPoints(mesh()));
     const PackedBoolList isMeshMasterEdge(syncTools::getMasterEdges(mesh()));
     // Precalculate meshEdge per pp edge
@@ -1769,7 +1763,7 @@ void Foam::medialAxisMeshMover::calculateDisplacement
         )
     );
 
-    // Precalulate (patch) master point/edge
+    // Precalculate (patch) master point/edge
     const PackedBoolList isPatchMasterPoint
     (
         meshRefinement::getMasterPoints
@@ -1934,7 +1928,7 @@ void Foam::medialAxisMeshMover::calculateDisplacement
         patchDisp
     );
 
-    // Update thickess for changed extrusion
+    // Update thickness for changed extrusion
     forAll(thickness, patchPointi)
     {
         if (extrudeStatus[patchPointi] == snappyLayerDriver::NOEXTRUDE)
@@ -2046,7 +2040,7 @@ bool Foam::medialAxisMeshMover::shrinkMesh
 )
 {
     //- Number of attempts shrinking the mesh
-    const label nSnap  = readLabel(meshQualityDict.lookup("nRelaxIter"));
+    const label nSnap  = meshQualityDict.lookup<label>("nRelaxIter");
 
 
 

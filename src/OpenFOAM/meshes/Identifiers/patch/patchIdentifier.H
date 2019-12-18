@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Ostream& operator<<(Ostream&, const patchIdentifier&);
 
 class patchIdentifier
 {
-    // Private data
+    // Private Data
 
         //- Name of patch
         word name_;
@@ -70,6 +70,7 @@ class patchIdentifier
 
         //- Optional groups patch belongs to
         wordList inGroups_;
+
 
 public:
 

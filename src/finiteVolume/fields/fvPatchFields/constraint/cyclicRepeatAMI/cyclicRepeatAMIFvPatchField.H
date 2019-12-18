@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ Usage
 
 Note
     The outer boundary of the patch pairs must be similar, i.e. if the owner
-    patch is transformed to the neighbour patch, the outer perimiter of each
+    patch is transformed to the neighbour patch, the outer perimeter of each
     patch should be identical (or very similar).
 
 See also

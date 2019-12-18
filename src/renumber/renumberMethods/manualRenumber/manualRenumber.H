@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,16 +48,9 @@ class manualRenumber
 :
     public renumberMethod
 {
-    // Private data
+    // Private Data
 
         const fileName dataFile_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const manualRenumber&);
-        manualRenumber(const manualRenumber&);
 
 
 public:
@@ -70,6 +63,9 @@ public:
 
         //- Construct given the renumber dictionary
         manualRenumber(const dictionary& renumberDict);
+
+        //- Disallow default bitwise copy construction
+        manualRenumber(const manualRenumber&) = delete;
 
 
     //- Destructor
@@ -110,6 +106,12 @@ public:
             NotImplemented;
             return labelList(0);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const manualRenumber&) = delete;
 };
 
 

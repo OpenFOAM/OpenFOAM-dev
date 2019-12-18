@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ Foam::totalPressureFvPatchScalarField::totalPressureFvPatchScalarField
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     psiName_(dict.lookupOrDefault<word>("psi", "none")),
-    gamma_(psiName_ != "none" ? readScalar(dict.lookup("gamma")) : 1),
+    gamma_(psiName_ != "none" ? dict.lookup<scalar>("gamma") : 1),
     p0_("p0", dict, p.size())
 {
     if (dict.found("value"))
@@ -91,7 +91,7 @@ Foam::totalPressureFvPatchScalarField::totalPressureFvPatchScalarField
     rhoName_(ptf.rhoName_),
     psiName_(ptf.psiName_),
     gamma_(ptf.gamma_),
-    p0_(ptf.p0_, mapper)
+    p0_(mapper(ptf.p0_))
 {}
 
 
@@ -134,7 +134,7 @@ void Foam::totalPressureFvPatchScalarField::autoMap
 )
 {
     fixedValueFvPatchScalarField::autoMap(m);
-    p0_.autoMap(m);
+    m(p0_, p0_);
 }
 
 
@@ -245,11 +245,11 @@ void Foam::totalPressureFvPatchScalarField::write(Ostream& os) const
     fvPatchScalarField::write(os);
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
-    os.writeKeyword("rho") << rhoName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("psi") << psiName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("gamma") << gamma_ << token::END_STATEMENT << nl;
-    p0_.writeEntry("p0", os);
-    writeEntry("value", os);
+    writeEntry(os, "rho", rhoName_);
+    writeEntry(os, "psi", psiName_);
+    writeEntry(os, "gamma", gamma_);
+    writeEntry(os, "p0", p0_);
+    writeEntry(os, "value", *this);
 }
 
 

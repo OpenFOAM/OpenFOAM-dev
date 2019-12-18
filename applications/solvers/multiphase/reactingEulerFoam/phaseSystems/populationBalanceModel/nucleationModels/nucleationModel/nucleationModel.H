@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,10 +52,13 @@ class nucleationModel
 {
 protected:
 
-    // Protected data
+    // Protected Data
 
         //- Reference to the populationBalanceModel
         const populationBalanceModel& popBal_;
+
+        //- Model dictionary
+        const dictionary dict_;
 
 
 public:
@@ -138,6 +141,13 @@ public:
         {
             return popBal_;
         }
+
+        //- Return reference to model dictionary
+        const dictionary& dict() const
+        {
+            return dict_;
+        }
+
 
         //- Correct diameter independent expressions
         virtual void correct();

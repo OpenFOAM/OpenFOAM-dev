@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ namespace Foam
 template<class T>
 class BiIndirectList
 {
-    // Private data
+    // Private Data
 
         UList<T>& posList_;
         UList<T>& negList_;
@@ -68,12 +68,12 @@ public:
             const labelUList&
         );
 
-        //- Construct given the complete list and by transferring addressing
+        //- Move constructor given the complete list and by moving addressing
         inline BiIndirectList
         (
             const UList<T>& posList,
             const UList<T>& negList,
-            const Xfer<List<label>>&
+            List<label>&&
         );
 
 
@@ -97,11 +97,11 @@ public:
             inline static label posIndex(const label);
             inline static label negIndex(const label);
 
+
         // Edit
 
             //- Reset addressing
             inline void resetAddressing(const labelUList&);
-            inline void resetAddressing(const Xfer<List<label>>&);
 
 
         // Member Operators
@@ -114,6 +114,9 @@ public:
 
             //- Return const access to an element
             inline const T& operator[](const label) const;
+
+            //- Move assignment to List of addressed elements
+            inline void operator=(List<T>&&);
 
             //- Assignment to UList of addressed elements
             inline void operator=(const UList<T>&);

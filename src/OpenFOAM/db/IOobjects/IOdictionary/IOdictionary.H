@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,12 +68,18 @@ public:
         //- Construct given an IOobject and Istream
         IOdictionary(const IOobject&, Istream&);
 
+        //- Copy constructor
+        IOdictionary(const IOdictionary&);
+
+        //- Move constructor
+        IOdictionary(IOdictionary&&);
+
 
     //- Destructor
     virtual ~IOdictionary();
 
 
-    // Member functions
+    // Member Functions
 
         //- Is object global
         virtual bool global() const
@@ -87,6 +93,12 @@ public:
         {
             return globalFilePath(type());
         }
+
+
+    // Member Operators
+
+        //- Move assignment
+        void operator=(IOdictionary&&);
 };
 
 

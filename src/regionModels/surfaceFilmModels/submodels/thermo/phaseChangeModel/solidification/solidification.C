@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ solidification::solidification
 )
 :
     phaseChangeModel(typeName, film, dict),
-    T0_(readScalar(coeffDict_.lookup("T0"))),
+    T0_(coeffDict_.lookup<scalar>("T0")),
     maxSolidificationFrac_
     (
         coeffDict_.lookupOrDefault("maxSolidificationFrac", 0.2)
@@ -75,29 +75,27 @@ solidification::solidification
     (
         IOobject
         (
-            typeName + ":mass",
+            IOobject::modelName("mass", typeName),
             film.regionMesh().time().timeName(),
             film.regionMesh(),
             IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
         film.regionMesh(),
-        dimensionedScalar(dimMass, 0),
-        zeroGradientFvPatchScalarField::typeName
+        dimensionedScalar(dimMass, 0)
     ),
     thickness_
     (
         IOobject
         (
-            typeName + ":thickness",
+            IOobject::modelName("thickness", typeName),
             film.regionMesh().time().timeName(),
             film.regionMesh(),
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
         film.regionMesh(),
-        dimensionedScalar(dimLength, 0),
-        zeroGradientFvPatchScalarField::typeName
+        dimensionedScalar(dimLength, 0)
     )
 {}
 
@@ -121,8 +119,8 @@ void solidification::correctModel
     const thermoSingleLayer& film = filmType<thermoSingleLayer>();
 
     const scalarField& T = film.T();
-    const scalarField& hs = film.hs();
-    const scalarField& alpha = film.alpha();
+    const scalarField& h = film.h();
+    const scalarField& coverage = film.coverage();
 
     const scalar rateLimiter = min
     (
@@ -133,9 +131,9 @@ void solidification::correctModel
         ).value()
     );
 
-    forAll(alpha, celli)
+    forAll(coverage, celli)
     {
-        if (alpha[celli] > 0.5)
+        if (coverage[celli] > 0.5)
         {
             if (T[celli] < T0_)
             {
@@ -146,7 +144,7 @@ void solidification::correctModel
 
                 // Heat is assumed to be removed by heat-transfer to the wall
                 // so the energy remains unchanged by the phase-change.
-                dEnergy[celli] += dm*hs[celli];
+                dEnergy[celli] += dm*h[celli];
             }
         }
     }

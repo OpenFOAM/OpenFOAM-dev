@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ namespace Foam
 
 class threePhaseInterfaceProperties
 {
-    // Private data
+    // Private Data
 
         const incompressibleThreePhaseMixture& mixture_;
 
@@ -72,10 +72,6 @@ class threePhaseInterfaceProperties
 
 
     // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        threePhaseInterfaceProperties(const threePhaseInterfaceProperties&);
-        void operator=(const threePhaseInterfaceProperties&);
 
         //- Correction for the boundary condition on the unit normal nHat on
         //  walls to produce the correct contact dynamic angle.
@@ -102,6 +98,12 @@ public:
         (
             const incompressibleThreePhaseMixture& mixture
         );
+
+        //- Disallow default bitwise copy construction
+        threePhaseInterfaceProperties
+        (
+            const threePhaseInterfaceProperties&
+        ) = delete;
 
 
     // Member Functions
@@ -151,6 +153,12 @@ public:
         {
             calculateK();
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const threePhaseInterfaceProperties&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,17 +61,6 @@ class drippingInjection
 :
     public injectionModel
 {
-private:
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        drippingInjection(const drippingInjection&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const drippingInjection&);
-
-
 protected:
 
     // Protected data
@@ -109,6 +98,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        drippingInjection(const drippingInjection&) = delete;
+
 
     //- Destructor
     virtual ~drippingInjection();
@@ -125,6 +117,12 @@ public:
                 scalarField& massToInject,
                 scalarField& diameterToInject
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const drippingInjection&) = delete;
 };
 
 

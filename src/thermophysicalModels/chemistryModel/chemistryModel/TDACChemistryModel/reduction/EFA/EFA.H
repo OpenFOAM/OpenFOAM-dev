@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ class EFA
 :
     public chemistryReductionMethod<CompType, ThermoType>
 {
-    // Private data
+    // Private Data
 
         List<label> sC_,sH_,sO_,sN_;
         scalar  sortPart_;
@@ -80,9 +80,10 @@ public:
         //- Reduce the mechanism
         virtual void reduceMechanism
         (
-            const scalarField &c,
+            const scalar p,
             const scalar T,
-            const scalar p
+            const scalarField& c,
+            const label li
         );
 };
 

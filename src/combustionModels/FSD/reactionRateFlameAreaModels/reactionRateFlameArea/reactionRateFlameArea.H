@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ protected:
         //- Mesh reference
         const fvMesh& mesh_;
 
-        //- Combstion model owner
+        //- Combustion model owner
         const combustionModel& combModel_;
 
         //- Fuel name
@@ -73,17 +73,6 @@ protected:
 
         //- Fuel consumption rate per unit of flame area
         volScalarField omega_;
-
-
-private:
-
-    // Private member functions
-
-         //- Disallow copy construct
-        reactionRateFlameArea(const reactionRateFlameArea&);
-
-         //- Disallow default bitwise assignment
-        void operator=(const reactionRateFlameArea&);
 
 
 public:
@@ -120,6 +109,9 @@ public:
             const combustionModel& combModel
         );
 
+         //- Disallow default bitwise copy construction
+        reactionRateFlameArea(const reactionRateFlameArea&);
+
 
     // Selector
 
@@ -136,7 +128,7 @@ public:
         virtual ~reactionRateFlameArea();
 
 
-    // Member functions
+    // Member Functions
 
         //- Access functions
 
@@ -152,6 +144,12 @@ public:
 
         //- Update from dictionary
         virtual bool read(const dictionary& dictProperties);
+
+
+    // Member Operators
+
+         //- Disallow default bitwise assignment
+        void operator=(const reactionRateFlameArea&) = delete;
 };
 
 

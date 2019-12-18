@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,8 +49,10 @@ class unwatchedIOdictionary
 :
     public baseIOdictionary
 {
+    // Private member data
 
-    fileNameList files_;
+        fileNameList files_;
+
 
 public:
 
@@ -69,13 +71,17 @@ public:
         //- Construct given an IOobject and Istream
         unwatchedIOdictionary(const IOobject& io, Istream& is);
 
+        //- Move constructor
+        unwatchedIOdictionary(unwatchedIOdictionary&&);
+
+
     //- Destructor
     virtual ~unwatchedIOdictionary();
 
 
-    // Member functions
+    // Member Functions
 
-        //- Is object global
+        //- This object is global
         virtual bool global() const
         {
             return true;
@@ -105,6 +111,11 @@ public:
             return files_;
         }
 
+
+    // Member Operators
+
+        //- Move assignment
+        void operator=(unwatchedIOdictionary&&);
 };
 
 

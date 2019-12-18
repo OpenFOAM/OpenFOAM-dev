@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,17 +32,10 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template
-<
-    class BoolListType,
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class BoolListType, class FaceList, class PointField>
 void Foam::PatchTools::markZone
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
+    const PrimitivePatch<FaceList, PointField>& p,
     const BoolListType& borderEdge,
     const label facei,
     const label currentZone,
@@ -108,19 +101,10 @@ void Foam::PatchTools::markZone
 }
 
 
-template
-<
-    class BoolListType,
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-
-Foam::label
-Foam::PatchTools::markZones
+template<class BoolListType, class FaceList, class PointField>
+Foam::label Foam::PatchTools::markZones
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
+    const PrimitivePatch<FaceList, PointField>& p,
     const BoolListType& borderEdge,
     labelList& faceZone
 )
@@ -148,28 +132,21 @@ Foam::PatchTools::markZones
 }
 
 
-template
-<
-    class BoolListType,
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
-
-void
-Foam::PatchTools::subsetMap
+template<class BoolListType, class FaceList, class PointField>
+void Foam::PatchTools::subsetMap
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
+    const PrimitivePatch<FaceList, PointField>& p,
     const BoolListType& includeFaces,
     labelList& pointMap,
     labelList& faceMap
 )
 {
+    typedef typename PrimitivePatch<FaceList, PointField>::FaceType FaceType;
+
     label facei  = 0;
     label pointi = 0;
 
-    const List<Face>& localFaces = p.localFaces();
+    const List<FaceType>& localFaces = p.localFaces();
 
     faceMap.setSize(localFaces.size());
     pointMap.setSize(p.nPoints());
@@ -184,7 +161,7 @@ Foam::PatchTools::subsetMap
             faceMap[facei++] = oldFacei;
 
             // Renumber labels for face
-            const Face& f = localFaces[oldFacei];
+            const FaceType& f = localFaces[oldFacei];
 
             forAll(f, fp)
             {
@@ -204,20 +181,16 @@ Foam::PatchTools::subsetMap
 }
 
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType
->
+template<class FaceList, class PointField>
 void Foam::PatchTools::calcBounds
 (
-    const PrimitivePatch<Face, FaceList, PointField, PointType>& p,
+    const PrimitivePatch<FaceList, PointField>& p,
     boundBox& bb,
     label& nPoints
 )
 {
+    typedef typename PrimitivePatch<FaceList, PointField>::FaceType FaceType;
+
     // Unfortunately nPoints constructs meshPoints() so do compact version
     // ourselves
     const PointField& points = p.points();
@@ -229,7 +202,7 @@ void Foam::PatchTools::calcBounds
 
     forAll(p, facei)
     {
-        const Face& f = p[facei];
+        const FaceType& f = p[facei];
 
         forAll(f, fp)
         {

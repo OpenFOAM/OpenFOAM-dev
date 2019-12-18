@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ class face;
 
 class boundaryCutter
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -111,12 +111,6 @@ class boundaryCutter
         ) const;
 
 
-        //- Disallow default bitwise copy construct
-        boundaryCutter(const boundaryCutter&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const boundaryCutter&);
-
 public:
 
     //- Runtime type information
@@ -126,6 +120,9 @@ public:
 
         //- Construct from mesh
         boundaryCutter(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        boundaryCutter(const boundaryCutter&) = delete;
 
 
     //- Destructor
@@ -171,6 +168,11 @@ public:
                 return faceAddedPoint_;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const boundaryCutter&) = delete;
 };
 
 

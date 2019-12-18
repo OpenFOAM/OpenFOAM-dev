@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ Description
     Thermo parcel surface film model.
 
     Responsible for:
-    - injecting parcelss from the film model into the cloud, e.g. for dripping
+    - injecting parcels from the film model into the cloud, e.g. for dripping
     - parcel interaction with the film, e.g absorb, bounce, splash
 
     Splash model references:
@@ -150,9 +150,6 @@ protected:
 
 
     // Protected Member Functions
-
-        //- Return a vector tangential to input vector, v
-        vector tangentVector(const vector& v) const;
 
         //- Return splashed parcel direction
         vector splashDirection

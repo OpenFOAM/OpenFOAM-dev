@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,9 +122,9 @@ bool Foam::IOOutputFilter<OutputFilter>::read()
 
 
 template<class OutputFilter>
-bool Foam::IOOutputFilter<OutputFilter>::write(const bool valid)
+bool Foam::IOOutputFilter<OutputFilter>::write(const bool write)
 {
-    return OutputFilter::write(valid);
+    return OutputFilter::write(write);
 }
 
 

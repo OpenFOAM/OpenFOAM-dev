@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ SourceFiles
 
 #include "List.H"
 #include "Tuple2.H"
-#include "tableReader.H"
+#include "TableReader.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -72,7 +72,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Enumeration for handling out-of-bound values
         boundsHandling boundsHandling_;
@@ -80,14 +80,11 @@ private:
         //- File name
         fileName fileName_;
 
-        //- The actual reader
-        autoPtr<tableReader<Type>> reader_;
+        //- The reader
+        autoPtr<TableReader<Type>> reader_;
 
 
     // Private Member Functions
-
-        //- Read the table of data from file
-        void readTable();
 
         //- Return interpolated value in List
         Type interpolateValue

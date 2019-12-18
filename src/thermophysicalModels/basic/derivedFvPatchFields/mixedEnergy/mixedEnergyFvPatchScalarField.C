@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,7 @@ License
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
 #include "basicThermo.H"
-
+#include "mixedEnergyCalculatedTemperatureFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -105,23 +105,47 @@ void Foam::mixedEnergyFvPatchScalarField::updateCoeffs()
     const basicThermo& thermo = basicThermo::lookupThermo(*this);
     const label patchi = patch().index();
 
-    const scalarField& pw = thermo.p().boundaryField()[patchi];
-    mixedFvPatchScalarField& Tw = refCast<mixedFvPatchScalarField>
-    (
-        const_cast<fvPatchScalarField&>(thermo.T().boundaryField()[patchi])
-    );
+    fvPatchScalarField& Tp =
+        const_cast<fvPatchScalarField&>(thermo.T().boundaryField()[patchi]);
 
-    Tw.evaluate();
+    if (isA<mixedFvPatchScalarField>(Tp))
+    {
+        mixedFvPatchScalarField& Tm =
+            refCast<mixedFvPatchScalarField>(Tp);
 
-    valueFraction() = Tw.valueFraction();
-    refValue() = thermo.he(pw, Tw.refValue(), patchi);
-    refGrad() =
-        thermo.Cpv(pw, Tw, patchi)*Tw.refGrad()
-      + patch().deltaCoeffs()*
-        (
-            thermo.he(pw, Tw, patchi)
-          - thermo.he(pw, Tw, patch().faceCells())
-        );
+        Tm.evaluate();
+
+        valueFraction() = Tm.valueFraction();
+        refValue() = thermo.he(Tm.refValue(), patchi);
+        refGrad() =
+            thermo.Cpv(Tm, patchi)*Tm.refGrad()
+          + patch().deltaCoeffs()*
+            (
+                thermo.he(Tm, patchi)
+              - thermo.he(Tm, patch().faceCells())
+            );
+    }
+    else if (isA<mixedEnergyCalculatedTemperatureFvPatchScalarField>(Tp))
+    {
+        mixedEnergyCalculatedTemperatureFvPatchScalarField& Tm =
+            refCast<mixedEnergyCalculatedTemperatureFvPatchScalarField>(Tp);
+
+        Tm.evaluate();
+
+        valueFraction() = Tm.heValueFraction();
+        refValue() = Tm.heRefValue();
+        refGrad() = Tm.heRefGrad();
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Temperature boundary condition not recognised."
+            << "A " << typeName << " condition for energy must be used with a "
+            << mixedFvPatchScalarField::typeName << " or "
+            << mixedEnergyCalculatedTemperatureFvPatchScalarField::typeName
+            << " condition for temperature."
+            << exit(FatalError);
+    }
 
     mixedFvPatchScalarField::updateCoeffs();
 }

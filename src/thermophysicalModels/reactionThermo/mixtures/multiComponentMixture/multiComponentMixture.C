@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,21 +28,79 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class ThermoType>
-const ThermoType& Foam::multiComponentMixture<ThermoType>::constructSpeciesData
+Foam::PtrList<ThermoType>
+Foam::multiComponentMixture<ThermoType>::readSpeciesData
 (
     const dictionary& thermoDict
-)
+) const
 {
+    PtrList<ThermoType> speciesData(species_.size());
+
     forAll(species_, i)
     {
-        speciesData_.set
+        speciesData.set
         (
             i,
             new ThermoType(thermoDict.subDict(species_[i]))
         );
     }
 
-    return speciesData_[0];
+    return speciesData;
+}
+
+
+template<class ThermoType>
+typename Foam::multiComponentMixture<ThermoType>::speciesCompositionTable
+Foam::multiComponentMixture<ThermoType>::readSpeciesComposition
+(
+    const dictionary& thermoDict,
+    const speciesTable& species
+) const
+{
+    speciesCompositionTable speciesComposition_;
+
+    // Loop through all species in thermoDict to retrieve
+    // the species composition
+    forAll(species, si)
+    {
+        if (thermoDict.subDict(species[si]).isDict("elements"))
+        {
+            dictionary currentElements
+            (
+                thermoDict.subDict(species[si]).subDict("elements")
+            );
+
+            wordList currentElementsName(currentElements.toc());
+            List<specieElement> currentComposition(currentElementsName.size());
+
+            forAll(currentElementsName, eni)
+            {
+                currentComposition[eni].name() = currentElementsName[eni];
+
+                currentComposition[eni].nAtoms() =
+                    currentElements.lookupOrDefault
+                    (
+                        currentElementsName[eni],
+                        0
+                    );
+            }
+
+            // Add current specie composition to the hash table
+            speciesCompositionTable::iterator specieCompositionIter
+            (
+                speciesComposition_.find(species[si])
+            );
+
+            if (specieCompositionIter != speciesComposition_.end())
+            {
+                speciesComposition_.erase(specieCompositionIter);
+            }
+
+            speciesComposition_.insert(species[si], currentComposition);
+        }
+    }
+
+    return speciesComposition_;
 }
 
 
@@ -77,34 +135,6 @@ template<class ThermoType>
 Foam::multiComponentMixture<ThermoType>::multiComponentMixture
 (
     const dictionary& thermoDict,
-    const wordList& specieNames,
-    const HashPtrTable<ThermoType>& thermoData,
-    const fvMesh& mesh,
-    const word& phaseName
-)
-:
-    basicSpecieMixture(thermoDict, specieNames, mesh, phaseName),
-    speciesData_(species_.size()),
-    mixture_("mixture", *thermoData[specieNames[0]]),
-    mixtureVol_("volMixture", *thermoData[specieNames[0]])
-{
-    forAll(species_, i)
-    {
-        speciesData_.set
-        (
-            i,
-            new ThermoType(*thermoData[species_[i]])
-        );
-    }
-
-    correctMassFractions();
-}
-
-
-template<class ThermoType>
-Foam::multiComponentMixture<ThermoType>::multiComponentMixture
-(
-    const dictionary& thermoDict,
     const fvMesh& mesh,
     const word& phaseName
 )
@@ -116,8 +146,9 @@ Foam::multiComponentMixture<ThermoType>::multiComponentMixture
         mesh,
         phaseName
     ),
-    speciesData_(species_.size()),
-    mixture_("mixture", constructSpeciesData(thermoDict)),
+    speciesData_(readSpeciesData(thermoDict)),
+    speciesComposition_(readSpeciesComposition(thermoDict, species())),
+    mixture_("mixture", speciesData_[0]),
     mixtureVol_("volMixture", speciesData_[0])
 {
     correctMassFractions();

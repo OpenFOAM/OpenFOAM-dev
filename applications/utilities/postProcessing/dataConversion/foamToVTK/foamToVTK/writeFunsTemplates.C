@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,7 +28,6 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// Store List in dest
 template<class Type>
 void Foam::writeFuns::insert
 (
@@ -43,28 +42,12 @@ void Foam::writeFuns::insert
 }
 
 
-//// Store List (indexed through map) in dest
-//template<class Type>
-//void Foam::writeFuns::insert
-//(
-//    const labelList& map,
-//    const List<Type>& source,
-//    DynamicList<floatScalar>& dest
-//)
-//{
-//    forAll(map, i)
-//    {
-//        insert(source[map[i]], dest);
-//    }
-//}
-
-
 template<class Type>
 void Foam::writeFuns::write
 (
     std::ostream& os,
     const bool binary,
-    const GeometricField<Type, fvPatchField, volMesh>& vvf,
+    const DimensionedField<Type, volMesh>& df,
     const vtkMesh& vMesh
 )
 {
@@ -74,18 +57,18 @@ void Foam::writeFuns::write
 
     label nValues = mesh.nCells() + superCells.size();
 
-    os  << vvf.name() << ' ' << pTraits<Type>::nComponents << ' '
+    os  << df.name() << ' ' << pTraits<Type>::nComponents << ' '
         << nValues << " float" << std::endl;
 
     DynamicList<floatScalar> fField(pTraits<Type>::nComponents*nValues);
 
-    insert(vvf.primitiveField(), fField);
+    insert(df, fField);
 
     forAll(superCells, superCelli)
     {
         label origCelli = superCells[superCelli];
 
-        insert(vvf[origCelli], fField);
+        insert(df[origCelli], fField);
     }
     write(os, binary, fField);
 }

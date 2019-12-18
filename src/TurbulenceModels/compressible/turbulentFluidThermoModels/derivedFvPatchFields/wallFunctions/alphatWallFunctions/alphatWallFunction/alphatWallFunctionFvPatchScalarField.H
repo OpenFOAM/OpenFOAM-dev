@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,8 +38,8 @@ Description
     where
 
     \vartable
-        \alpha_t| turblence thermal diffusivity
-        \mu_t   | turblence viscosity
+        \alpha_t| turbulence thermal diffusivity
+        \mu_t   | turbulence viscosity
         Pr_t    | turblent Prandtl number
     \endvartable
 
@@ -89,7 +89,7 @@ class alphatWallFunctionFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Turbulent Prandtl number (default = 0.85)
         scalar Prt_;
@@ -129,7 +129,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         alphatWallFunctionFvPatchScalarField
         (
             const alphatWallFunctionFvPatchScalarField&
@@ -144,7 +144,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         alphatWallFunctionFvPatchScalarField
         (
             const alphatWallFunctionFvPatchScalarField&,
@@ -164,7 +164,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

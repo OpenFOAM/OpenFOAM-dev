@@ -30,13 +30,13 @@ fvDOMCoeffs
 // Number of flow iterations per radiation iteration
 solverFreq 10;
 
-absorptionEmissionModel constantAbsorptionEmission;
+absorptionEmissionModel constant;
 
-constantAbsorptionEmissionCoeffs
+constantCoeffs
 {
-   absorptivity    absorptivity    [ m^-1 ]         0.5;
-   emissivity      emissivity      [ m^-1 ]         0.5;
-   E               E               [ kg m^-1 s^-3 ] 0;
+   absorptivity    0.5;
+   emissivity      0.5;
+   E               0;
 }
 
 scatterModel    none;

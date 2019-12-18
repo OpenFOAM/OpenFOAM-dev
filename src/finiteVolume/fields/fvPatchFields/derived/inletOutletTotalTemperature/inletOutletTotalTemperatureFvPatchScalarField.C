@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ inletOutletTotalTemperatureFvPatchScalarField
     UName_(ptf.UName_),
     psiName_(ptf.psiName_),
     gamma_(ptf.gamma_),
-    T0_(ptf.T0_, mapper)
+    T0_(mapper(ptf.T0_))
 {}
 
 
@@ -78,7 +78,7 @@ inletOutletTotalTemperatureFvPatchScalarField
     inletOutletFvPatchScalarField(p, iF),
     UName_(dict.lookupOrDefault<word>("U", "U")),
     psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
-    gamma_(readScalar(dict.lookup("gamma"))),
+    gamma_(dict.lookup<scalar>("gamma")),
     T0_("T0", dict, p.size())
 {
     this->phiName_ = dict.lookupOrDefault<word>("phi", "phi");
@@ -138,7 +138,7 @@ void Foam::inletOutletTotalTemperatureFvPatchScalarField::autoMap
 )
 {
     inletOutletFvPatchScalarField::autoMap(m);
-    T0_.autoMap(m);
+    m(T0_, T0_);
 }
 
 
@@ -190,9 +190,9 @@ const
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
     writeEntryIfDifferent<word>(os, "phi", "phi", this->phiName_);
     writeEntryIfDifferent<word>(os, "psi", "psi", psiName_);
-    os.writeKeyword("gamma") << gamma_ << token::END_STATEMENT << nl;
-    T0_.writeEntry("T0", os);
-    writeEntry("value", os);
+    writeEntry(os, "gamma", gamma_);
+    writeEntry(os, "T0", T0_);
+    writeEntry(os, "value", *this);
 }
 
 

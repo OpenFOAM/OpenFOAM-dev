@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ Usage
     \endverbatim
 
 Note
-    The units of kinematic turbulent thermal conductivity are [m2/s]
+    The units of kinematic turbulent thermal conductivity are [m^2/s]
 
 See also
     Foam::fixedValueFvPatchField
@@ -60,6 +60,7 @@ SourceFiles
 #define alphatJayatillekeWallFunctionFvPatchScalarField_H
 
 #include "fixedValueFvPatchFields.H"
+#include "nutWallFunctionFvPatchScalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -101,15 +102,13 @@ protected:
 
     // Protected member functions
 
-        //- Check the type of the patch
-        virtual void checkType();
-
         //- `P' function
         scalar Psmooth(const scalar Prat) const;
 
         //- Calculate y+ at the edge of the thermal laminar sublayer
         scalar yPlusTherm
         (
+            const nutWallFunctionFvPatchScalarField& nutw,
             const scalar P,
             const scalar Prat
         ) const;
@@ -149,7 +148,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         alphatJayatillekeWallFunctionFvPatchScalarField
         (
             const alphatJayatillekeWallFunctionFvPatchScalarField&
@@ -164,7 +163,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         alphatJayatillekeWallFunctionFvPatchScalarField
         (
             const alphatJayatillekeWallFunctionFvPatchScalarField&,
@@ -184,7 +183,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

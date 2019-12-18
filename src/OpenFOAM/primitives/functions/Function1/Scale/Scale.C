@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,61 +25,73 @@ License
 
 #include "Scale.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1Types::Scale<Type>::read(const dictionary& coeffs)
+void Foam::Function1s::Scale<Type>::read(const dictionary& coeffs)
 {
-    xScale_ = coeffs.found("xScale")
-        ? Function1<scalar>::New("xScale", coeffs)
-        : autoPtr<Function1<scalar>>(new Constant<scalar>("xScale", 1));
-
     scale_ = Function1<scalar>::New("scale", coeffs);
+    xScale_ =
+        coeffs.found("xScale")
+      ? Function1<scalar>::New("xScale", coeffs)
+      : autoPtr<Function1<scalar>>(new Constant<scalar>("xScale", 1));
     value_ = Function1<Type>::New("value", coeffs);
+
+    integrableScale_ =
+        isA<Constant<scalar>>(xScale_())
+     && isA<Constant<scalar>>(scale_());
+
+    integrableValue_ =
+        isA<Constant<scalar>>(xScale_())
+     && isA<Constant<Type>>(value_());
 }
 
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
 template<class Type>
-Foam::Function1Types::Scale<Type>::Scale
+Foam::Function1s::Scale<Type>::Scale
 (
     const word& entryName,
     const dictionary& dict
 )
 :
-    Function1<Type>(entryName)
+    FieldFunction1<Type, Scale<Type>>(entryName)
 {
     read(dict);
 }
 
 
 template<class Type>
-Foam::Function1Types::Scale<Type>::Scale(const Scale<Type>& se)
+Foam::Function1s::Scale<Type>::Scale(const Scale<Type>& se)
 :
-    Function1<Type>(se),
-    xScale_(se.xScale_, false),
+    FieldFunction1<Type, Scale<Type>>(se),
     scale_(se.scale_, false),
-    value_(se.value_, false)
+    xScale_(se.xScale_, false),
+    value_(se.value_, false),
+    integrableScale_(se.integrableScale_),
+    integrableValue_(se.integrableValue_)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1Types::Scale<Type>::~Scale()
+Foam::Function1s::Scale<Type>::~Scale()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1Types::Scale<Type>::writeData(Ostream& os) const
+void Foam::Function1s::Scale<Type>::writeData(Ostream& os) const
 {
     Function1<Type>::writeData(os);
     os  << token::END_STATEMENT << nl;
     os  << indent << word(this->name() + "Coeffs") << nl;
     os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    xScale_->writeData(os);
     scale_->writeData(os);
+    xScale_->writeData(os);
     value_->writeData(os);
     os  << decrIndent << indent << token::END_BLOCK << endl;
 }

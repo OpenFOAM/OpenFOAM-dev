@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fixedValuePointPatchTemplate${FieldType}_H
-#define fixedValuePointPatchTemplate${FieldType}_H
+#ifndef fixedValuePointPatchFieldTemplate_H
+#define fixedValuePointPatchFieldTemplate_H
 
 #include "fixedValuePointPatchFields.H"
 
@@ -85,7 +85,7 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         ${typeName}FixedValuePointPatch${FieldType}
         (
             const ${typeName}FixedValuePointPatch${FieldType}&
@@ -100,7 +100,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         ${typeName}FixedValuePointPatch${FieldType}
         (
             const ${typeName}FixedValuePointPatch${FieldType}&,
@@ -124,7 +124,7 @@ public:
     virtual ~${typeName}FixedValuePointPatch${FieldType}();
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

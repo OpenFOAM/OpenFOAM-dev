@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
     const dictionary& pimpleDict = pimple.dict();
 
     // Maximum flow Courant number
-    scalar maxCo(readScalar(pimpleDict.lookup("maxCo")));
+    scalar maxCo(pimpleDict.lookup<scalar>("maxCo"));
 
     // Maximum time scale
     scalar maxDeltaT(pimpleDict.lookupOrDefault<scalar>("maxDeltaT", great));
@@ -80,7 +80,7 @@ License
             (
                (coalParcels.hsTrans() + limestoneParcels.hsTrans())
               /(mesh.V()*runTime.deltaT())
-             + Qdot
+             + combustion->Qdot()()
             )
            /(
                alphaTemp

@@ -85,7 +85,7 @@ class fvPatchField
 :
     public Field<Type>
 {
-    // Private data
+    // Private Data
 
         //- Reference to patch
         const fvPatch& patch_;
@@ -198,7 +198,7 @@ public:
             const bool mappingRequired=true
         );
 
-        //- Construct as copy
+        //- Copy constructor
         fvPatchField(const fvPatchField<Type>&);
 
         //- Construct and return a clone
@@ -207,7 +207,7 @@ public:
             return tmp<fvPatchField<Type>>(new fvPatchField<Type>(*this));
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         fvPatchField
         (
             const fvPatchField<Type>&,
@@ -288,7 +288,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         // Attributes
 
@@ -369,17 +369,12 @@ public:
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchField<Type>&,
-                const labelList&
-            );
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchField<Type>&, const labelList&);
 
 
         // Evaluation functions
@@ -516,17 +511,6 @@ public:
             //- Write
             virtual void write(Ostream&) const;
 
-            //- Helper function to write the keyword and entry only if the
-            //  values are not equal. The value is then output as value2
-            template<class EntryType>
-            void writeEntryIfDifferent
-            (
-                Ostream& os,
-                const word& entryName,
-                const EntryType& value1,
-                const EntryType& value2
-            ) const;
-
 
         // Check
 
@@ -534,7 +518,7 @@ public:
             void check(const fvPatchField<Type>&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const UList<Type>&);
 
@@ -682,6 +666,7 @@ defineTemplateRunTimeSelectionTable(fvPatchTypeField, dictionary);
 
 #define makePatchTypeFieldTypedefs(type)                                       \
     FOR_ALL_FIELD_TYPES(makePatchTypeFieldTypedef, type)
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

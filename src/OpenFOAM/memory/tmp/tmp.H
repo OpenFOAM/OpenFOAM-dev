@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ namespace Foam
 template<class T>
 class tmp
 {
-    // Private data
+    // Private Data
 
         //- Object types
         enum type
@@ -138,7 +138,7 @@ public:
             inline void clear() const;
 
 
-    // Member operators
+    // Member Operators
 
         #ifdef NON_CONST_TMP
         //- Deprecated non-const dereference operator.

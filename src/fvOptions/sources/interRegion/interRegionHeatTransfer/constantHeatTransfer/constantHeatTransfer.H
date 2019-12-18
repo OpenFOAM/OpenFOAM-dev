@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::fv::constantHeatTransfer
 
 Description
-    Constant heat transfer model. htcConst [W/m2/K] and area/volume [1/m]
+    Constant heat transfer model. htcConst [W/m^2/K] and area/volume [1/m]
     must be provided.
 
 \*---------------------------------------------------------------------------*/
@@ -51,11 +51,9 @@ class constantHeatTransfer
 :
     public interRegionHeatTransferModel
 {
-private:
+    // Private Data
 
-    // Private data
-
-        //- Constant heat transfer coefficient [W/m2/K]
+        //- Constant heat transfer coefficient [W/m^2/K]
         autoPtr<volScalarField> htcConst_;
 
         //- Area per unit volume of heat exchanger [1/m]

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ Description
         <magSfN> <valueN> <qDotN> <htcN>
     \endverbatim
 
-    and received as the constituent pieces of the `mixed' condition, i.e.
+    and received as the constitutent pieces of the `mixed' condition, i.e.
 
     \verbatim
         # Patch: <patch name>
@@ -173,7 +173,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         externalCoupledTemperatureMixedFvPatchScalarField
         (
             const externalCoupledTemperatureMixedFvPatchScalarField&
@@ -188,7 +188,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         externalCoupledTemperatureMixedFvPatchScalarField
         (
             const externalCoupledTemperatureMixedFvPatchScalarField&,
@@ -216,7 +216,7 @@ public:
     virtual ~externalCoupledTemperatureMixedFvPatchScalarField();
 
 
-    // Member functions
+    // Member Functions
 
         //- Evaluate the patch field
         virtual void evaluate

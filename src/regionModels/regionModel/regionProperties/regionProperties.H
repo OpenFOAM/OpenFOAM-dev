@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,13 +55,6 @@ class regionProperties
 :
     public HashTable<wordList>
 {
-
-        //- Disallow default bitwise copy construct
-        regionProperties(const regionProperties&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const regionProperties&);
-
 public:
 
     // Constructors
@@ -69,10 +62,18 @@ public:
         //- Construct from components
         regionProperties(const Time& runTime);
 
+        //- Disallow default bitwise copy construction
+        regionProperties(const regionProperties&) = delete;
+
 
     //- Destructor
     ~regionProperties();
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const regionProperties&) = delete;
 };
 
 

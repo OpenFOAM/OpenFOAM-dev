@@ -1,0 +1,190 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type populationBalanceMultiphaseSystem;
+
+phases (air1 air2 air3 water);
+
+populationBalances (bubbles);
+
+air1
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   velocityGroup;
+    velocityGroupCoeffs
+    {
+        populationBalance   bubbles;
+
+        shapeModel          spherical;
+
+        sizeGroups
+        (
+            f0 {dSph 2.8193481473E-02; value 0.0;}
+            f1 {dSph 3.2273479789E-02; value 0.0;}
+            f2 {dSph 3.6943911970E-02; value 0.0;}
+            f3 {dSph 4.2290222209E-02; value 0.0;}
+            f4 {dSph 4.8410219684E-02; value 0.0;}
+            f5 {dSph 5.5415867956E-02; value 0.0;}
+            f6 {dSph 6.3435333314E-02; value 0.0;}
+            f7 {dSph 7.2615329525E-02; value 0.0;}
+            f8 {dSph 8.3123801935E-02; value 0.0;}
+            f9 {dSph 9.5152999970E-02; value 0.0;}
+            f10{dSph 1.0892299429E-01; value 0.0;}
+            f11{dSph 1.2468570290E-01; value 0.0;}
+            f12{dSph 1.4272949995E-01; value 0.0;}
+            f13{dSph 1.6338449143E-01; value 0.0;}
+            f14{dSph 1.8702855435E-01; value 0.0;}
+            f15{dSph 2.1409424994E-01; value 0.0;}
+            f16{dSph 2.4507673715E-01; value 0.0;}
+            f17{dSph 2.8054283153E-01; value 0.0;}
+            f18{dSph 3.2114137490E-01; value 0.0;}
+            f19{dSph 3.6761510572E-01; value 1.0;}
+        );
+    }
+
+    residualAlpha   1e-6;
+}
+
+air2
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   velocityGroup;
+    velocityGroupCoeffs
+    {
+        populationBalance   bubbles;
+
+        shapeModel          spherical;
+
+        sizeGroups
+        (
+            f20{dSph 4.2081424730E-01; value 1.0;}
+            f21{dSph 4.8171206235E-01; value 0.0;}
+            f22{dSph 5.5142265857E-01; value 0.0;}
+            f23{dSph 6.3122137094E-01; value 0.0;}
+            f24{dSph 7.2256809352E-01; value 0.0;}
+        );
+    }
+
+    residualAlpha   1e-6;
+}
+
+air3
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   velocityGroup;
+    velocityGroupCoeffs
+    {
+        populationBalance   bubbles;
+
+        shapeModel          spherical;
+
+        sizeGroups
+        (
+            f25{dSph 8.2713398787E-01; value 0.0;}
+            f26{dSph 9.4683205641E-01; value 0.0;}
+            f27{dSph 1.0838521403E+00; value 0.0;}
+            f28{dSph 1.2407009818E+00; value 1.0;}
+        );
+    }
+
+    residualAlpha   1e-6;
+}
+
+water
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   constant;
+    constantCoeffs
+    {
+        d               1e-4;
+    }
+
+    residualAlpha   1e-6;
+}
+
+populationBalanceCoeffs
+{
+    bubbles
+    {
+        continuousPhase water;
+
+        coalescenceModels
+        ();
+
+        binaryBreakupModels
+        (
+            powerLawUniformBinary
+            {
+                power   2.0;
+            }
+        );
+
+        breakupModels
+        ();
+
+        driftModels
+        ();
+
+        nucleationModels
+        ();
+    }
+}
+
+blending
+{
+    default
+    {
+        type            none;
+        continuousPhase water;
+    }
+}
+
+surfaceTension
+();
+
+interfaceCompression
+();
+
+aspectRatio
+();
+
+drag
+();
+
+virtualMass
+();
+
+heatTransfer
+();
+
+phaseTransfer
+();
+
+lift
+();
+
+wallLubrication
+();
+
+turbulentDispersion
+();
+
+// Minimum allowable pressure
+pMin            10000;
+
+
+// ************************************************************************* //

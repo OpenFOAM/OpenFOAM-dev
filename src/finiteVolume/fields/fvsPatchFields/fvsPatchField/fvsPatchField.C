@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ Foam::fvsPatchField<Type>::fvsPatchField
     const fvPatchFieldMapper& mapper
 )
 :
-    Field<Type>(ptf, mapper),
+    Field<Type>(mapper(ptf)),
     patch_(p),
     internalField_(iF)
 {}
@@ -154,7 +154,7 @@ void Foam::fvsPatchField<Type>::autoMap
     const fvPatchFieldMapper& m
 )
 {
-    Field<Type>::autoMap(m);
+    m(*this, *this);
 }
 
 
@@ -172,8 +172,8 @@ void Foam::fvsPatchField<Type>::rmap
 template<class Type>
 void Foam::fvsPatchField<Type>::write(Ostream& os) const
 {
-    os.writeKeyword("type") << type() << token::END_STATEMENT << nl;
-    this->writeEntry("value", os);
+    writeEntry(os, "type", type());
+    writeEntry(os, "value", *this);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,10 +81,10 @@ class polyBoundaryMesh
         //- Calculate the geometry for the patches (transformation tensors etc.)
         void calcGeometry();
 
-        //- Disallow construct as copy
+        //- Disallow default bitwise copy construction
         polyBoundaryMesh(const polyBoundaryMesh&);
 
-        //- Disallow assignment
+        //- Disallow default bitwise assignment
         void operator=(const polyBoundaryMesh&);
 
 
@@ -226,7 +226,7 @@ public:
         //  (is shuffle) If validBoundary calls updateMesh()
         //  after reordering to recalculate data (so call needs to be parallel
         //  sync in that case)
-        void reorder(const labelUList&, const bool validBoundary);
+        void shuffle(const labelUList& newToOld, const bool validBoundary);
 
         //- writeData member function required by regIOobject
         bool writeData(Ostream&) const;
@@ -237,7 +237,7 @@ public:
             IOstream::streamFormat fmt,
             IOstream::versionNumber ver,
             IOstream::compressionType cmp,
-            const bool valid
+            const bool write = true
         ) const;
 
 

@@ -18,7 +18,7 @@ FoamFile
 thermoType
 {
     type            heRhoThermo;
-    mixture         reactingMixture;
+    mixture         multiComponentMixture;
     transport       sutherland;
     thermo          janaf;
     equationOfState perfectGas;
@@ -28,11 +28,6 @@ thermoType
 
 inertSpecie AIR;
 
-chemistryReader foamChemistryReader;
-
-foamChemistryFile "$FOAM_CASE/constant/reactions.gas";
-
-foamChemistryThermoFile "$FOAM_CASE/constant/thermo.gas";
-
+#include "thermo.gas"
 
 // ************************************************************************* //

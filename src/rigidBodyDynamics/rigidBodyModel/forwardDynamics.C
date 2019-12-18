@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,8 @@ License
 void Foam::RBD::rigidBodyModel::applyRestraints
 (
     scalarField& tau,
-    Field<spatialVector>& fx
+    Field<spatialVector>& fx,
+    const rigidBodyModelState& state
 ) const
 {
     if (restraints_.empty())
@@ -45,7 +46,7 @@ void Foam::RBD::rigidBodyModel::applyRestraints
         DebugInfo << "Restraint " << restraints_[ri].name();
 
         // Accumulate the restraint forces
-        restraints_[ri].restrain(tau, fx);
+        restraints_[ri].restrain(tau, fx, state);
     }
 }
 

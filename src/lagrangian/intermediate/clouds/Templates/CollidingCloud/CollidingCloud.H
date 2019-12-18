@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::CollidingCloud
 
 Description
-    Adds coolisions to kinematic clouds
+    Adds collisions to kinematic clouds
 
 SourceFiles
     CollidingCloudI.H
@@ -64,7 +64,7 @@ class CollidingCloud
 {
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         //- Type of cloud this cloud was instantiated for
         typedef CloudType cloudType;
@@ -78,19 +78,10 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Cloud copy pointer
         autoPtr<CollidingCloud<CloudType>> cloudCopyPtr_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        CollidingCloud(const CollidingCloud&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const CollidingCloud&);
 
 
 protected:
@@ -158,6 +149,9 @@ public:
             const word& name,
             const CollidingCloud<CloudType>& c
         );
+
+        //- Disallow default bitwise copy construction
+        CollidingCloud(const CollidingCloud&) = delete;
 
         //- Construct and return clone based on (this) with new name
         virtual autoPtr<Cloud<parcelType>> clone(const word& name)
@@ -234,6 +228,12 @@ public:
 
             //- Print cloud information
             void info();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const CollidingCloud&) = delete;
 };
 
 

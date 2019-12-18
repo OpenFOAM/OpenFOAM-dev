@@ -20,4 +20,10 @@ zoneCombustion/zoneCombustions.C
 
 noCombustion/noCombustions.C
 
+functionObjects/Qdot/Qdot.C
+
+radiationModels/absorptionEmissionModels/greyMeanCombustion/greyMeanCombustion.C
+radiationModels/absorptionEmissionModels/wideBandCombustion/wideBandCombustion.C
+radiationModels/sootModels/mixtureFraction/mixtureFractions.C
+
 LIB = $(FOAM_LIBBIN)/libcombustionModels

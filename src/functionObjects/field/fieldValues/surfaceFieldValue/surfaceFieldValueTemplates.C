@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -197,7 +197,9 @@ processSameTypeValues
         {
             if (weightField.size())
             {
-                result = sum(weightField*values)/sum(weightField);
+                result =
+                    sum(weightField*values)
+                   /stabilise(sum(weightField), vSmall);
             }
             else
             {
@@ -218,7 +220,9 @@ processSameTypeValues
 
             if (weightField.size())
             {
-                result = sum(weightField*magSf*values)/sum(magSf*weightField);
+                result =
+                    sum(weightField*magSf*values)
+                   /stabilise(sum(magSf*weightField), vSmall);
             }
             else
             {

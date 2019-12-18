@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -195,59 +195,6 @@ void Foam::meshRefinement::collectAndPrint
         label allPointi = visitOrder[i];
         Info<< allPoints[allPointi] << " : " << allData[allPointi]
             << endl;
-    }
-}
-
-
-template<class GeoField>
-void Foam::meshRefinement::addPatchFields
-(
-    fvMesh& mesh,
-    const word& patchFieldType
-)
-{
-    HashTable<GeoField*> flds
-    (
-        mesh.objectRegistry::lookupClass<GeoField>()
-    );
-
-    forAllIter(typename HashTable<GeoField*>, flds, iter)
-    {
-        GeoField& fld = *iter();
-        typename GeoField::Boundary& fldBf =
-            fld.boundaryFieldRef();
-
-        label sz = fldBf.size();
-        fldBf.setSize(sz+1);
-        fldBf.set
-        (
-            sz,
-            GeoField::Patch::New
-            (
-                patchFieldType,
-                mesh.boundary()[sz],
-                fld()
-            )
-        );
-    }
-}
-
-
-template<class GeoField>
-void Foam::meshRefinement::reorderPatchFields
-(
-    fvMesh& mesh,
-    const labelList& oldToNew
-)
-{
-    HashTable<GeoField*> flds
-    (
-        mesh.objectRegistry::lookupClass<GeoField>()
-    );
-
-    forAllIter(typename HashTable<GeoField*>, flds, iter)
-    {
-        iter()->boundaryFieldRef().reorder(oldToNew);
     }
 }
 

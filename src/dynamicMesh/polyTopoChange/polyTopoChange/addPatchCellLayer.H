@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -159,7 +159,7 @@ class addPatchCellLayer
 
 
 
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -243,12 +243,6 @@ class addPatchCellLayer
             bool&
         );
 
-        //- Disallow default bitwise copy construct
-        addPatchCellLayer(const addPatchCellLayer&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const addPatchCellLayer&);
-
 
 public:
 
@@ -260,6 +254,9 @@ public:
 
         //- Construct from mesh.
         addPatchCellLayer(const polyMesh&, const bool addToMesh = true);
+
+        //- Disallow default bitwise copy construction
+        addPatchCellLayer(const addPatchCellLayer&) = delete;
 
 
     // Member Functions
@@ -393,6 +390,12 @@ public:
                 const labelList& faceMap,   // new to old patch faces
                 const labelList& pointMap   // new to old patch points
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const addPatchCellLayer&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,10 +59,12 @@ template<class T> class SubList;
 
 // Forward declaration of friend functions and operators
 template<class T> class UList;
+template<class T> void writeEntry(Ostream& os, const UList<T>&);
 template<class T> Ostream& operator<<(Ostream&, const UList<T>&);
 template<class T> Istream& operator>>(Istream&, UList<T>&);
 
 typedef UList<label> labelUList;
+
 
 /*---------------------------------------------------------------------------*\
                            Class UList Declaration
@@ -71,7 +73,7 @@ typedef UList<label> labelUList;
 template<class T>
 class UList
 {
-    // Private data
+    // Private Data
 
         //- Number of elements in UList
         label size_;
@@ -160,7 +162,6 @@ public:
 
     // Member Functions
 
-
         // Access
 
             //- Return the forward circular index, i.e. the next index
@@ -213,20 +214,16 @@ public:
             inline void checkIndex(const label i) const;
 
 
-        //- Copy the pointer held by the given UList
-        inline void shallowCopy(const UList<T>&);
+        // Edit
 
-        //- Copy elements of the given UList
-        void deepCopy(const UList<T>&);
+            //- Copy the pointer held by the given UList
+            inline void shallowCopy(const UList<T>&);
 
-        //- Write the UList as a dictionary entry
-        void writeEntry(Ostream&) const;
-
-        //- Write the UList as a dictionary entry with keyword
-        void writeEntry(const word& keyword, Ostream&) const;
+            //- Copy elements of the given UList
+            void deepCopy(const UList<T>&);
 
 
-    // Member operators
+    // Member Operators
 
         //- Return element of UList
         inline T& operator[](const label);
@@ -405,6 +402,15 @@ inline void reverse(UList<T>&, const label n);
 // Reverse all the elements of the list
 template<class T>
 inline void reverse(UList<T>&);
+
+template<class ListType>
+void writeListEntry(Ostream& os, const ListType& l);
+
+template<class ListType>
+void writeListEntries(Ostream& os, const ListType& l);
+
+template<class ListType>
+void writeListEntries(Ostream& os, const word& keyword, const ListType& l);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

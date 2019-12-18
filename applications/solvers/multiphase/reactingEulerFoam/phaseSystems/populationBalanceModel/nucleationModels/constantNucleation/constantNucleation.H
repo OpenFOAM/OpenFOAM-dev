@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,8 @@ Class
     Foam::diameterModels::nucleationModels::constantNucleation
 
 Description
-    Constant nucleation rate within all classes. Used for verification and
-    validation of the nucleation formulation implemented in the
-    populationBalanceModel class. Rate is calculated from fvOptions mass source.
+    Constant nucleation rate within all classes computed from fvOptions mass
+    source.
 
 SourceFiles
     constant.C
@@ -56,10 +55,10 @@ class constantNucleation
 :
     public nucleationModel
 {
-    // Private data
+    // Private Data
 
-        //- Departure diameter
-        dimensionedScalar d_;
+        //- Nucleation diameter
+        dimensionedScalar dNuc_;
 
         //- Velocity group in which the nucleation occurs
         const velocityGroup& velGroup_;
@@ -85,9 +84,6 @@ public:
 
 
     // Member Functions
-
-        //- Correct diameter independent expressions
-        virtual void correct();
 
         //- Add to nucleationRate
         virtual void addToNucleationRate

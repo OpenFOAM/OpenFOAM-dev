@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,15 +51,6 @@ class indexedParticleCloud
 :
     public Cloud<indexedParticle>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        indexedParticleCloud(const indexedParticleCloud&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const indexedParticleCloud&);
-
-
 public:
 
     // Constructors
@@ -71,6 +62,15 @@ public:
             const word& cloudName = "defaultCloud",
             bool readFields = true
         );
+
+        //- Disallow default bitwise copy construction
+        indexedParticleCloud(const indexedParticleCloud&) = delete;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const indexedParticleCloud&) = delete;
 };
 
 

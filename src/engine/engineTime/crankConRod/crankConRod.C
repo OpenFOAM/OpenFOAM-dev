@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,6 +198,12 @@ Foam::scalar Foam::crankConRod::userTimeToTime(const scalar theta) const
 Foam::scalar Foam::crankConRod::timeToUserTime(const scalar t) const
 {
     return timeToDeg(t);
+}
+
+
+Foam::scalar Foam::crankConRod::timeToUserTimeRatio() const
+{
+    return timeToDeg(1);
 }
 
 

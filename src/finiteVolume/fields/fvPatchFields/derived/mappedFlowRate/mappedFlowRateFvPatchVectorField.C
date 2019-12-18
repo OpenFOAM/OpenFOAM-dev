@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -188,8 +188,8 @@ void Foam::mappedFlowRateFvPatchVectorField::write
     fvPatchField<vector>::write(os);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
-    os.writeKeyword("nbrPhi") << nbrPhiName_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "nbrPhi", nbrPhiName_);
+    writeEntry(os, "value", *this);
 }
 
 

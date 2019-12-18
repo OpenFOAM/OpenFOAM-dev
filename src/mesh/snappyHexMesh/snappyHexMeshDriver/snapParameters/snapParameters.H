@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ namespace Foam
 
 class snapParameters
 {
-    // Private data
+    // Private Data
 
         const label nSmoothPatch_;
 
@@ -73,21 +73,15 @@ class snapParameters
         const Switch detectNearSurfacesSnap_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        snapParameters(const snapParameters&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const snapParameters&);
-
-
 public:
 
     // Constructors
 
         //- Construct from dictionary
         snapParameters(const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        snapParameters(const snapParameters&) = delete;
 
 
     // Member Functions
@@ -148,6 +142,11 @@ public:
                 return detectNearSurfacesSnap_;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const snapParameters&) = delete;
 };
 
 

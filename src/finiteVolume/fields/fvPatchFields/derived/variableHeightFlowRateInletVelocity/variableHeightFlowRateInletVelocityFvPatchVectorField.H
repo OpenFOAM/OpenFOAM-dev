@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     This boundary condition provides a velocity boundary condition for
-    multphase flow based on a user-specified volumetric flow rate.
+    multiphase flow based on a user-specified volumetric flow rate.
 
     The flow rate is made proportional to the phase fraction alpha at each
     face of the patch and alpha is ensured to be bound between 0 and 1.
@@ -34,7 +34,7 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        flowRate     | volumetric flow rate [m3/s] | yes |
+        flowRate     | volumetric flow rate [m^3/s] | yes |
         alpha        | phase-fraction field    | yes |
     \endtable
 
@@ -49,7 +49,7 @@ Usage
     }
     \endverbatim
 
-    The \c flowRate entry is a \c Function1 of time, see Foam::Function1Types.
+    The \c flowRate entry is a \c Function1 of time, see Foam::Function1s.
 
 Note
     - the value is positive into the domain
@@ -59,7 +59,7 @@ Note
 
 See also
     Foam::fixedValueFvPatchField
-    Foam::Function1Types
+    Foam::Function1s
 
 SourceFiles
     variableHeightFlowRateInletVelocityFvPatchVectorField.C
@@ -84,7 +84,7 @@ class variableHeightFlowRateInletVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Inlet integral flow rate
         autoPtr<Function1<scalar>> flowRate_;
@@ -127,7 +127,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         variableHeightFlowRateInletVelocityFvPatchVectorField
         (
             const variableHeightFlowRateInletVelocityFvPatchVectorField&
@@ -142,7 +142,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         variableHeightFlowRateInletVelocityFvPatchVectorField
         (
             const variableHeightFlowRateInletVelocityFvPatchVectorField&,
@@ -166,7 +166,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

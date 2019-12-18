@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ Ostream& operator<<
 template<class Type>
 class pointPatchField
 {
-    // Private data
+    // Private Data
 
         //- Reference to patch
         const pointPatch& patch_;
@@ -101,6 +101,7 @@ class pointPatchField
 
 public:
 
+    typedef Type value_type;
     typedef pointPatch Patch;
     typedef calculatedPointPatchField<Type> Calculated;
 
@@ -180,7 +181,7 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         pointPatchField(const pointPatchField<Type>&);
 
         //- Construct and return a clone
@@ -258,7 +259,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -391,18 +392,13 @@ public:
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const pointPatchFieldMapper&
-            )
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const pointPatchFieldMapper&)
             {}
 
             //- Reverse map the given pointPatchField onto this pointPatchField
-            virtual void rmap
-            (
-                const pointPatchField<Type>&,
-                const labelList&
-            )
+            //  Used to reconstruct fields
+            virtual void rmap(const pointPatchField<Type>&, const labelList&)
             {}
 
 
@@ -436,21 +432,11 @@ public:
             //- Write
             virtual void write(Ostream&) const;
 
-            //- Helper function to write the keyword and entry only if the
-            //  values are not equal. The value is then output as value2
-            template<class EntryType>
-            void writeEntryIfDifferent
-            (
-                Ostream& os,
-                const word& entryName,
-                const EntryType& value1,
-                const EntryType& value2
-            ) const;
 
-
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const pointPatchField<Type>&){}
+        virtual void operator=(pointPatchField<Type>&&){}
         virtual void operator+=(const pointPatchField<Type>&){}
         virtual void operator-=(const pointPatchField<Type>&){}
         virtual void operator*=(const pointPatchField<scalar>&){}

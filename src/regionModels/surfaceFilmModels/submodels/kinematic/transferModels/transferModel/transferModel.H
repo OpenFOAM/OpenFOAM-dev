@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,19 +58,10 @@ class transferModel
 :
     public filmSubModelBase
 {
-    // Private data
+    // Private Data
 
         //- Transferred mass
         scalar transferredMass_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        transferModel(const transferModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const transferModel&);
 
 
 protected:
@@ -118,6 +109,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        transferModel(const transferModel&) = delete;
+
 
     // Selectors
 
@@ -158,6 +152,12 @@ public:
         //  scalarField provided
         virtual void patchTransferredMassTotals(scalarField& patchMasses) const
         {}
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const transferModel&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,13 +59,7 @@ initialPointsMethod::initialPointsMethod
     detailsDict_(optionalSubDict(type + "Coeffs")),
     minimumSurfaceDistanceCoeffSqr_
     (
-        sqr
-        (
-            readScalar
-            (
-                initialPointsDict.lookup("minimumSurfaceDistanceCoeff")
-            )
-        )
+        sqr( initialPointsDict.lookup<scalar>("minimumSurfaceDistanceCoeff"))
     ),
     fixInitialPoints_(Switch(initialPointsDict.lookup("fixInitialPoints")))
 {}

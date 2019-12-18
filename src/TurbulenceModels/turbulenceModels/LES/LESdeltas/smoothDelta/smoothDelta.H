@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,17 +212,13 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         autoPtr<LESdelta> geometricDelta_;
         scalar maxDeltaRatio_;
 
 
     // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        smoothDelta(const smoothDelta&);
-        void operator=(const smoothDelta&);
 
         // Calculate the delta values
         void calcDelta();
@@ -265,6 +261,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        smoothDelta(const smoothDelta&) = delete;
+
 
     //- Destructor
     virtual ~smoothDelta()
@@ -278,6 +277,12 @@ public:
 
         // Correct values
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const smoothDelta&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,11 @@ class Ostream;
 template<unsigned nBits> class PackedList;
 
 template<unsigned nBits>
+void writeEntry(Ostream& os, const PackedList<nBits>&);
+
+template<unsigned nBits>
 Istream& operator>>(Istream&, PackedList<nBits>&);
+
 template<unsigned nBits>
 Ostream& operator<<(Ostream&, const PackedList<nBits>&);
 
@@ -180,7 +184,7 @@ private:
         "nBits must be positive (non-zero) and fit within the storage"
     );
 
-    // Private data
+    // Private Data
 
         //- Number of nBits entries
         label size_;
@@ -229,8 +233,8 @@ public:
         //- Copy constructor
         inline PackedList(const PackedList<nBits>&);
 
-        //- Construct by transferring the parameter contents
-        inline PackedList(const Xfer<PackedList<nBits>>&);
+        //- Move constructor
+        inline PackedList(PackedList<nBits>&&);
 
         //- Construct from a list of labels
         explicit inline PackedList(const labelUList&);
@@ -288,7 +292,7 @@ public:
             unsigned int count() const;
 
             //- Return the values as a list of labels
-            Xfer<labelList> values() const;
+            labelList values() const;
 
             //- Print bit patterns, optionally output unused elements
             //
@@ -347,9 +351,6 @@ public:
             //  and annul the argument list.
             inline void transfer(PackedList<nBits>&);
 
-            //- Transfer contents to the Xfer container
-            inline Xfer<PackedList<nBits>> xfer();
-
 
         // IO
 
@@ -377,14 +378,7 @@ public:
             ) const;
 
 
-            //- Write as a dictionary entry
-            void writeEntry(Ostream&) const;
-
-            //- Write as a dictionary entry with keyword
-            void writeEntry(const word& keyword, Ostream&) const;
-
-
-    // Member operators
+    // Member Operators
 
             //- Append a value at the end of the list
             inline PackedList<nBits>& append(const unsigned int val);
@@ -404,13 +398,16 @@ public:
             //- Assignment of all entries to the given value. Takes linear time.
             inline void operator=(const unsigned int val);
 
-            //- Assignment operator.
+            //- Assignment operator
             void operator=(const PackedList<nBits>&);
 
-            //- Assignment operator.
+            //- Move assignment operator
+            void operator=(PackedList<nBits>&&);
+
+            //- Assignment operator
             void operator=(const labelUList&);
 
-            //- Assignment operator.
+            //- Assignment operator
             void operator=(const UIndirectList<label>&);
 
 
@@ -493,7 +490,7 @@ public:
             public iteratorBase
         {
 
-            //- Disallow copy constructor from const_iterator
+            //- Disallow default bitwise copy construction
             //  This would violate const-ness!
             iterator(const const_iterator&);
 
@@ -579,7 +576,7 @@ public:
                 inline const_iterator(const iterator&);
 
 
-            // Member operators
+            // Member Operators
 
                 //- Compare positions (not values)
                 inline bool operator==(const iteratorBase&) const;

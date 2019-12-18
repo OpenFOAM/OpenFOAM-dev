@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,14 +56,6 @@ class gaussDivScheme
 :
     public fv::divScheme<Type>
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        gaussDivScheme(const gaussDivScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const gaussDivScheme&);
-
 
 public:
 
@@ -85,6 +77,9 @@ public:
             divScheme<Type>(mesh, is)
         {}
 
+        //- Disallow default bitwise copy construction
+        gaussDivScheme(const gaussDivScheme&) = delete;
+
 
     // Member Functions
 
@@ -96,6 +91,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const gaussDivScheme&) = delete;
 };
 
 

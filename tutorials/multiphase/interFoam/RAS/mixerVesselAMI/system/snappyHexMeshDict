@@ -13,6 +13,7 @@ FoamFile
     object      snappyHexMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#inputSyntax slash;
 
 // Which of the steps to run
 castellatedMesh true;
@@ -24,7 +25,7 @@ geometry
     vessel
     {
         type triSurfaceMesh;
-        file "vessel.stl";
+        file "mixerVessel-vessel.stl";
 
         regions
         {
@@ -35,16 +36,16 @@ geometry
         }
     }
 
-    gasInlet
+    oilInlet
     {
         type triSurfaceMesh;
-        file "gasInlet.stl";
+        file "mixerVessel-oilInlet.stl";
 
         regions
         {
-            gasInlet
+            oilInlet
             {
-                name gasInlet;
+                name oilInlet;
             }
         }
     }
@@ -52,7 +53,7 @@ geometry
     outlet
     {
         type triSurfaceMesh;
-        file "outlet.stl";
+        file "mixerVessel-outlet.stl";
 
         regions
         {
@@ -66,7 +67,7 @@ geometry
     shaftRotating
     {
         type triSurfaceMesh;
-        file "shaftRotating.stl";
+        file "mixerVessel-shaftRotating.stl";
 
         regions
         {
@@ -80,7 +81,7 @@ geometry
     shaft
     {
         type triSurfaceMesh;
-        file "shaft.stl";
+        file "mixerVessel-shaft.stl";
 
         regions
         {
@@ -94,7 +95,7 @@ geometry
     sparger
     {
         type triSurfaceMesh;
-        file "sparger.stl";
+        file "mixerVessel-sparger.stl";
 
         regions
         {
@@ -108,7 +109,7 @@ geometry
     stirrer
     {
         type triSurfaceMesh;
-        file "stirrer.stl";
+        file "mixerVessel-stirrer.stl";
 
         regions
         {
@@ -122,7 +123,7 @@ geometry
     baffles
     {
         type triSurfaceMesh;
-        file "baffles.stl";
+        file "mixerVessel-baffles.stl";
 
         regions
         {
@@ -192,23 +193,23 @@ castellatedMeshControls
     features
     (
         {
-           file "shaftRotating.eMesh";
+           file "mixerVessel-shaftRotating.eMesh";
            levels ((1 1));
         }
         {
-           file "shaft.eMesh";
+           file "mixerVessel-shaft.eMesh";
            levels ((1 1));
         }
         {
-           file "sparger.eMesh";
+           file "mixerVessel-sparger.eMesh";
            levels ((1 1));
         }
         {
-           file "stirrer.eMesh";
+           file "mixerVessel-stirrer.eMesh";
            levels ((1 1));
         }
         {
-           file "baffles.eMesh";
+           file "mixerVessel-baffles.eMesh";
            levels ((1 1));
         }
         {
@@ -216,15 +217,15 @@ castellatedMeshControls
            levels ((1 1));
         }
         {
-           file "gasInlet.eMesh";
+           file "mixerVessel-oilInlet.eMesh";
            levels ((1 1));
         }
         {
-           file "vessel.eMesh";
+           file "mixerVessel-vessel.eMesh";
            levels ((1 1));
         }
         {
-           file "outlet.eMesh";
+           file "mixerVessel-outlet.eMesh";
            levels ((1 1));
         }
 
@@ -251,7 +252,7 @@ castellatedMeshControls
             }
         }
 
-        gasInlet
+        oilInlet
         {
             level (0 1);
             patchInfo
@@ -274,7 +275,7 @@ castellatedMeshControls
             level (1 1);
             patchInfo
             {
-                ${...vessel.patchInfo}
+                $../../vessel/patchInfo
             }
         }
 
@@ -283,7 +284,7 @@ castellatedMeshControls
             level (1 1);
             patchInfo
             {
-                ${...vessel.patchInfo}
+                $../../vessel/patchInfo
             }
         }
 
@@ -292,7 +293,7 @@ castellatedMeshControls
             level (1 1);
             patchInfo
             {
-                ${...vessel.patchInfo}
+                $../../vessel/patchInfo
             }
         }
 
@@ -301,7 +302,7 @@ castellatedMeshControls
             level (1 1);
             patchInfo
             {
-                ${...vessel.patchInfo}
+                $../../vessel/patchInfo
             }
         }
 
@@ -310,7 +311,7 @@ castellatedMeshControls
             level (1 1);
             patchInfo
             {
-                ${...vessel.patchInfo}
+                $../../vessel/patchInfo
             }
         }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Keep track of the number of vertices that have been added.
         //  This allows a unique index to be assigned to each vertex.
@@ -158,12 +158,6 @@ private:
             const List<DynamicList<label>>& patchOwners
         ) const;
 
-        //- Disallow default bitwise copy construct
-        DelaunayMesh(const DelaunayMesh<Triangulation>&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const DelaunayMesh<Triangulation>&);
-
 
 public:
 
@@ -177,6 +171,9 @@ public:
             const Time& runTime,
             const word& meshName
         );
+
+        //- Disallow default bitwise copy construction
+        DelaunayMesh(const DelaunayMesh<Triangulation>&) = delete;
 
 
     //- Destructor
@@ -267,6 +264,12 @@ public:
                 labelList& cellMap,
                 const bool writeDelaunayData = true
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const DelaunayMesh<Triangulation>&) = delete;
 };
 
 

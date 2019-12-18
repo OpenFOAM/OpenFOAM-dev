@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -178,7 +178,7 @@ Foam::labelList Foam::processorCyclicPolyPatch::patchIDs
 {
     return bm.findIndices
     (
-        string("procBoundary.*to.*through" + cyclicPolyPatchName)
+        keyType(string("procBoundary.*to.*through" + cyclicPolyPatchName))
     );
 }
 
@@ -337,12 +337,10 @@ bool Foam::processorCyclicPolyPatch::order
 void Foam::processorCyclicPolyPatch::write(Ostream& os) const
 {
     processorPolyPatch::write(os);
-    os.writeKeyword("referPatch") << referPatchName_
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "referPatch", referPatchName_);
     if (tag_ != -1)
     {
-        os.writeKeyword("tag") << tag_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "tag", tag_);
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ class limitedSnGrad
 :
     public snGradScheme<Type>
 {
-    // Private data
+    // Private Data
 
         tmp<snGradScheme<Type>> correctedScheme_;
 
@@ -77,9 +77,6 @@ class limitedSnGrad
 
 
     // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const limitedSnGrad&);
 
         //- Lookup function for the corrected to support backward compatibility
         //  of dictionary specification
@@ -170,6 +167,12 @@ public:
         //  for the given field
         virtual tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
         correction(const GeometricField<Type, fvPatchField, volMesh>&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const limitedSnGrad&) = delete;
 };
 
 

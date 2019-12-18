@@ -156,7 +156,7 @@
                 command="SetIncludeZones"
                 label="Include Zones"
                 number_of_elements="1"
-                default_values="0"
+                default_values="1"
                 animateable="0">
                 <Documentation>
                     Allow selection of zones
@@ -206,27 +206,27 @@
 
             <!-- Available Volume Fields array -->
             <StringVectorProperty
-                name="VolFieldArrayStatus"
+                name="FieldArrayStatus"
                 information_only="1">
-                <ArraySelectionInformationHelper attribute_name="VolField"/>
+                <ArraySelectionInformationHelper attribute_name="Field"/>
             </StringVectorProperty>
             <StringVectorProperty
-                name="VolFieldStatus"
-                label="Volume Fields"
-                command="SetVolFieldArrayStatus"
+                name="FieldStatus"
+                label="Fields"
+                command="SetFieldArrayStatus"
                 number_of_elements="0"
                 repeat_command="1"
                 number_of_elements_per_command="2"
                 element_types="2 0"
-                information_property="VolFieldArrayStatus"
+                information_property="FieldArrayStatus"
                 animateable="0">
                 <ArraySelectionDomain name="array_list">
                     <RequiredProperties>
-                        <Property name="VolFieldArrayStatus" function="ArrayList"/>
+                        <Property name="FieldArrayStatus" function="ArrayList"/>
                     </RequiredProperties>
                 </ArraySelectionDomain>
                 <Documentation>
-                    Select volume fields to load
+                    Select fields to load
                 </Documentation>
             </StringVectorProperty>
 
@@ -256,44 +256,16 @@
                 </Documentation>
             </StringVectorProperty>
 
-            <!-- Available pointFields array -->
-            <StringVectorProperty
-                name="PointFieldArrayStatus"
-                information_only="1">
-                <ArraySelectionInformationHelper attribute_name="PointField"/>
-            </StringVectorProperty>
-            <StringVectorProperty
-                name="PointFieldStatus"
-                label="Point Fields"
-                command="SetPointFieldArrayStatus"
-                number_of_elements="0"
-                repeat_command="1"
-                number_of_elements_per_command="2"
-                element_types="2 0"
-                information_property="PointFieldArrayStatus"
-                animateable="0">
-                <ArraySelectionDomain name="array_list">
-                    <RequiredProperties>
-                        <Property name="PointFieldArrayStatus" function="ArrayList"/>
-                    </RequiredProperties>
-                </ArraySelectionDomain>
-                <Documentation>
-                    Select point fields to load
-                </Documentation>
-            </StringVectorProperty>
-
             <PropertyGroup label="Selection">
                 <Property name="UiIncludeSets"/>
                 <Property name="UiIncludeZones"/>
                 <Property name="UiShowGroupsOnly"/>
                 <Property name="PartArrayStatus"/>
                 <Property name="PartStatus"/>
-                <Property name="VolFieldArrayStatus"/>
-                <Property name="VolFieldStatus"/>
+                <Property name="FieldArrayStatus"/>
+                <Property name="FieldStatus"/>
                 <Property name="LagrangianFieldArrayStatus"/>
                 <Property name="LagrangianFieldStatus"/>
-                <Property name="PointFieldArrayStatus"/>
-                <Property name="PointFieldStatus"/>
             </PropertyGroup>
 
             <Hints>

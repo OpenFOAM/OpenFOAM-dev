@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,43 +30,40 @@ License
 template<class Type>
 Foam::TimeFunction1<Type>::TimeFunction1
 (
-    const Time& t,
-    const word& name,
+    const Time& time,
+    const word& entryName,
     const dictionary& dict
 )
 :
-    time_(t),
-    name_(name),
-    entry_(Function1<Type>::New(name, dict))
-{
-    entry_->convertTimeBase(t);
-}
-
-
-template<class Type>
-Foam::TimeFunction1<Type>::TimeFunction1(const Time& t, const word& name)
-:
-    time_(t),
-    name_(name),
-    entry_(nullptr)
+    time_(time),
+    name_(entryName),
+    function_(Function1<Type>::New(entryName, dict))
 {}
 
 
 template<class Type>
 Foam::TimeFunction1<Type>::TimeFunction1
 (
-    const TimeFunction1<Type>& tde
+    const Time& time,
+    const word& entryName
 )
 :
-    time_(tde.time_),
-    name_(tde.name_),
-    entry_()
-{
-    if (tde.entry_.valid())
-    {
-        entry_.reset(tde.entry_->clone().ptr());
-    }
-}
+    time_(time),
+    name_(entryName),
+    function_(nullptr)
+{}
+
+
+template<class Type>
+Foam::TimeFunction1<Type>::TimeFunction1
+(
+    const TimeFunction1<Type>& tf
+)
+:
+    time_(tf.time_),
+    name_(tf.name_),
+    function_(tf.function_, false)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -81,30 +78,14 @@ Foam::TimeFunction1<Type>::~TimeFunction1()
 template<class Type>
 void Foam::TimeFunction1<Type>::reset(const dictionary& dict)
 {
-    entry_.reset
-    (
-        Function1<Type>::New
-        (
-            name_,
-            dict
-        ).ptr()
-    );
-
-    entry_->convertTimeBase(time_);
-}
-
-
-template<class Type>
-const Foam::word& Foam::TimeFunction1<Type>::name() const
-{
-    return entry_->name();
+    function_.reset(Function1<Type>::New(name_, dict).ptr());
 }
 
 
 template<class Type>
 Type Foam::TimeFunction1<Type>::value(const scalar x) const
 {
-    return entry_->value(x);
+    return function_->value(time_.userTimeToTime(x));
 }
 
 
@@ -115,7 +96,13 @@ Type Foam::TimeFunction1<Type>::integrate
     const scalar x2
 ) const
 {
-    return entry_->integrate(x1, x2);
+    return
+        time_.timeToUserTimeRatio()
+       *function_->integrate
+        (
+            time_.userTimeToTime(x1),
+            time_.userTimeToTime(x2)
+        );
 }
 
 
@@ -125,17 +112,17 @@ template<class Type>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const TimeFunction1<Type>& de
+    const TimeFunction1<Type>& tf
 )
 {
-    return de.entry_->operator<<(os, de);
+    return os << tf.function_();
 }
 
 
 template<class Type>
 void Foam::TimeFunction1<Type>::writeData(Ostream& os) const
 {
-    entry_->writeData(os);
+    function_->writeData(os);
 }
 
 

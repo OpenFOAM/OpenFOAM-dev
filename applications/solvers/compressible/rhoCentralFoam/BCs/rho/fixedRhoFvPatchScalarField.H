@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Description
     where
     \vartable
         p     | pressure [Pa]
-        \rho  | density [kg/m3]
+        \rho  | density [kg/m^3]
     \endvartable
 
 
@@ -79,10 +79,7 @@ class fixedRhoFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-
-private:
-
-    // Private data
+    // Private Data
 
         //- Pressure field name, default = "p"
         word pName_;
@@ -124,7 +121,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         fixedRhoFvPatchScalarField
         (
             const fixedRhoFvPatchScalarField&
@@ -139,7 +136,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         fixedRhoFvPatchScalarField
         (
             const fixedRhoFvPatchScalarField&,
@@ -159,7 +156,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

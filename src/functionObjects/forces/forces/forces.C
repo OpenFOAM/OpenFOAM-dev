@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ Foam::wordList Foam::functionObjects::forces::createFileNames
     if (dict.found("binData"))
     {
         const dictionary& binDict(dict.subDict("binData"));
-        label nb = readLabel(binDict.lookup("nBin"));
+        label nb = binDict.lookup<label>("nBin");
         if (nb > 0)
         {
             // Name for file(fileID::binsFile=1)
@@ -68,7 +68,7 @@ Foam::wordList Foam::functionObjects::forces::createFileNames
         }
     }
 
-    return names;
+    return move(names);
 }
 
 

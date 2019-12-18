@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,14 +64,14 @@ Foam::dragModels::GidaspowSchillerNaumann::~GidaspowSchillerNaumann()
 Foam::tmp<Foam::volScalarField>
 Foam::dragModels::GidaspowSchillerNaumann::CdRe() const
 {
-    volScalarField alpha2
+    const volScalarField alpha2
     (
-        max(scalar(1) - pair_.dispersed(), pair_.continuous().residualAlpha())
+        max(1 - pair_.dispersed(), pair_.continuous().residualAlpha())
     );
 
-    volScalarField Re(alpha2*pair_.Re());
+    const volScalarField Re(alpha2*pair_.Re());
 
-    volScalarField CdsRe
+    const volScalarField CdsRe
     (
         neg(Re - 1000)*24*(1.0 + 0.15*pow(Re, 0.687))/alpha2
       + pos0(Re - 1000)*0.44*max(Re, residualRe_)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,70 +46,57 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    dimensionedScalar rDeltaT2 =
-        4.0/sqr(mesh().time().deltaT() + mesh().time().deltaT0());
-
-    IOobject d2dt2IOobject
+    const dimensionedScalar rDeltaT2
     (
-        "d2dt2("+vf.name()+')',
-        mesh().time().timeName(),
-        mesh(),
-        IOobject::NO_READ,
-        IOobject::NO_WRITE
+        4.0/sqr(mesh().time().deltaT() + mesh().time().deltaT0())
     );
 
-    scalar deltaT = mesh().time().deltaTValue();
-    scalar deltaT0 = mesh().time().deltaT0Value();
+    const word d2dt2name("d2dt2("+vf.name()+')');
 
-    scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
-    scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
-    scalar coefft0  = coefft + coefft00;
+    const scalar deltaT = mesh().time().deltaTValue();
+    const scalar deltaT0 = mesh().time().deltaT0Value();
+
+    const scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
+    const scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
+    const scalar coefft0  = coefft + coefft00;
 
     if (mesh().moving())
     {
-        scalar halfRdeltaT2 = rDeltaT2.value()/2.0;
+        const dimensionedScalar halfRdeltaT2(rDeltaT2/2.0);
 
-        scalarField VV0 = mesh().V() + mesh().V0();
-        scalarField V0V00 = mesh().V0() + mesh().V00();
+        const volScalarField::Internal VV0(mesh().V() + mesh().V0());
+        const volScalarField::Internal V0V00(mesh().V0() + mesh().V00());
 
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+        return GeometricField<Type, fvPatchField, volMesh>::New
         (
-            new GeometricField<Type, fvPatchField, volMesh>
+            d2dt2name,
+            halfRdeltaT2*
             (
-                d2dt2IOobject,
-                mesh(),
-                rDeltaT2.dimensions()*vf.dimensions(),
-                halfRdeltaT2*
-                (
-                    coefft*VV0*vf.primitiveField()
+                coefft*VV0*vf()
 
-                  - (coefft*VV0 + coefft00*V0V00)
-                   *vf.oldTime().primitiveField()
+              - (coefft*VV0 + coefft00*V0V00)
+               *vf.oldTime()()
 
-                  + (coefft00*V0V00)*vf.oldTime().oldTime().primitiveField()
-                )/mesh().V(),
-                rDeltaT2.value()*
-                (
-                    coefft*vf.boundaryField()
-                  - coefft0*vf.oldTime().boundaryField()
-                  + coefft00*vf.oldTime().oldTime().boundaryField()
-                )
+              + (coefft00*V0V00)*vf.oldTime().oldTime()()
+            )/mesh().V(),
+            rDeltaT2.value()*
+            (
+                coefft*vf.boundaryField()
+              - coefft0*vf.oldTime().boundaryField()
+              + coefft00*vf.oldTime().oldTime().boundaryField()
             )
         );
     }
     else
     {
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+        return GeometricField<Type, fvPatchField, volMesh>::New
         (
-            new GeometricField<Type, fvPatchField, volMesh>
+            d2dt2name,
+            rDeltaT2*
             (
-                d2dt2IOobject,
-                rDeltaT2*
-                (
-                    coefft*vf
-                  - coefft0*vf.oldTime()
-                  + coefft00*vf.oldTime().oldTime()
-                )
+                coefft*vf
+              - coefft0*vf.oldTime()
+              + coefft00*vf.oldTime().oldTime()
             )
         );
     }
@@ -124,107 +111,93 @@ EulerD2dt2Scheme<Type>::fvcD2dt2
     const GeometricField<Type, fvPatchField, volMesh>& vf
 )
 {
-    dimensionedScalar rDeltaT2 =
-        4.0/sqr(mesh().time().deltaT() + mesh().time().deltaT0());
-
-    IOobject d2dt2IOobject
+    const dimensionedScalar rDeltaT2
     (
-        "d2dt2("+rho.name()+','+vf.name()+')',
-        mesh().time().timeName(),
-        mesh(),
-        IOobject::NO_READ,
-        IOobject::NO_WRITE
+        4.0/sqr(mesh().time().deltaT() + mesh().time().deltaT0())
     );
 
-    scalar deltaT = mesh().time().deltaTValue();
-    scalar deltaT0 = mesh().time().deltaT0Value();
+    const word d2dt2name("d2dt2("+rho.name()+','+vf.name()+')');
 
-    scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
-    scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
+    const scalar deltaT = mesh().time().deltaTValue();
+    const scalar deltaT0 = mesh().time().deltaT0Value();
+
+    const scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
+    const scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
 
     if (mesh().moving())
     {
-        scalar halfRdeltaT2 = 0.5*rDeltaT2.value();
-        scalar quarterRdeltaT2 = 0.25*rDeltaT2.value();
+        const dimensionedScalar halfRdeltaT2(0.5*rDeltaT2);
+        const dimensionedScalar quarterRdeltaT2(0.25*rDeltaT2);
 
-        const scalarField VV0rhoRho0
+        const volScalarField::Internal VV0rhoRho0
         (
-            (mesh().V() + mesh().V0())
-          * (rho.primitiveField() + rho.oldTime().primitiveField())
+            (mesh().V() + mesh().V0())*(rho() + rho.oldTime()())
         );
 
-        const scalarField V0V00rho0Rho00
+        const volScalarField::Internal V0V00rho0Rho00
         (
             (mesh().V0() + mesh().V00())
-          * (
-                rho.oldTime().primitiveField()
-              + rho.oldTime().oldTime().primitiveField()
+           *(
+                rho.oldTime()()
+              + rho.oldTime().oldTime()()
             )
         );
 
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+        return GeometricField<Type, fvPatchField, volMesh>::New
         (
-            new GeometricField<Type, fvPatchField, volMesh>
+            d2dt2name,
+            quarterRdeltaT2*
             (
-                d2dt2IOobject,
-                mesh(),
-                rDeltaT2.dimensions()*rho.dimensions()*vf.dimensions(),
-                quarterRdeltaT2*
-                (
-                    coefft*VV0rhoRho0*vf.primitiveField()
+                coefft*VV0rhoRho0*vf()
 
-                  - (coefft*VV0rhoRho0 + coefft00*V0V00rho0Rho00)
-                   *vf.oldTime().primitiveField()
+              - (coefft*VV0rhoRho0 + coefft00*V0V00rho0Rho00)
+               *vf.oldTime()()
 
-                  + (coefft00*V0V00rho0Rho00)
-                   *vf.oldTime().oldTime().primitiveField()
-                )/mesh().V(),
-                halfRdeltaT2*
-                (
+              + (coefft00*V0V00rho0Rho00)
+               *vf.oldTime().oldTime()()
+            )/mesh().V(),
+            halfRdeltaT2.value()*
+            (
+                coefft
+               *(rho.boundaryField() + rho.oldTime().boundaryField())
+               *vf.boundaryField()
+
+              - (
                     coefft
-                   *(rho.boundaryField() + rho.oldTime().boundaryField())
-                   *vf.boundaryField()
-
-                  - (
-                        coefft
-                       *(
-                           rho.boundaryField()
-                         + rho.oldTime().boundaryField()
-                        )
-                      + coefft00
-                       *(
-                           rho.oldTime().boundaryField()
-                         + rho.oldTime().oldTime().boundaryField()
-                        )
-                    )*vf.oldTime().boundaryField()
-
+                   *(
+                       rho.boundaryField()
+                     + rho.oldTime().boundaryField()
+                    )
                   + coefft00
                    *(
                        rho.oldTime().boundaryField()
                      + rho.oldTime().oldTime().boundaryField()
-                    )*vf.oldTime().oldTime().boundaryField()
-                )
+                    )
+                )*vf.oldTime().boundaryField()
+
+              + coefft00
+               *(
+                   rho.oldTime().boundaryField()
+                 + rho.oldTime().oldTime().boundaryField()
+                )*vf.oldTime().oldTime().boundaryField()
             )
         );
     }
     else
     {
-        dimensionedScalar halfRdeltaT2 = 0.5*rDeltaT2;
+        const dimensionedScalar halfRdeltaT2 = 0.5*rDeltaT2;
 
         const volScalarField rhoRho0(rho + rho.oldTime());
         const volScalarField rho0Rho00(rho.oldTime() +rho.oldTime().oldTime());
 
-        return tmp<GeometricField<Type, fvPatchField, volMesh>>
+        return GeometricField<Type, fvPatchField, volMesh>::New
         (
-            new GeometricField<Type, fvPatchField, volMesh>
+            d2dt2name,
+            halfRdeltaT2*
             (
-                d2dt2IOobject,
-                halfRdeltaT2*
-                (
-                    coefft*rhoRho0*vf
-                  - (coefft*rhoRho0 + coefft00*rho0Rho00)*vf.oldTime()
-                  + coefft00*rho0Rho00*vf.oldTime().oldTime()
-                )
+                coefft*rhoRho0*vf
+              - (coefft*rhoRho0 + coefft00*rho0Rho00)*vf.oldTime()
+              + coefft00*rho0Rho00*vf.oldTime().oldTime()
             )
         );
     }
@@ -249,18 +222,18 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
 
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    scalar deltaT = mesh().time().deltaTValue();
-    scalar deltaT0 = mesh().time().deltaT0Value();
+    const scalar deltaT = mesh().time().deltaTValue();
+    const scalar deltaT0 = mesh().time().deltaT0Value();
 
-    scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
-    scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
-    scalar coefft0  = coefft + coefft00;
+    const scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
+    const scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
+    const scalar coefft0  = coefft + coefft00;
 
-    scalar rDeltaT2 = 4.0/sqr(deltaT + deltaT0);
+    const scalar rDeltaT2 = 4.0/sqr(deltaT + deltaT0);
 
     if (mesh().moving())
     {
-        scalar halfRdeltaT2 = rDeltaT2/2.0;
+        const scalar halfRdeltaT2 = rDeltaT2/2.0;
 
         const scalarField VV0(mesh().V() + mesh().V0());
         const scalarField V0V00(mesh().V0() + mesh().V00());
@@ -310,17 +283,17 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
 
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    scalar deltaT = mesh().time().deltaTValue();
-    scalar deltaT0 = mesh().time().deltaT0Value();
+    const scalar deltaT = mesh().time().deltaTValue();
+    const scalar deltaT0 = mesh().time().deltaT0Value();
 
-    scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
-    scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
+    const scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
+    const scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
 
-    scalar rDeltaT2 = 4.0/sqr(deltaT + deltaT0);
+    const scalar rDeltaT2 = 4.0/sqr(deltaT + deltaT0);
 
     if (mesh().moving())
     {
-        scalar halfRdeltaT2 = 0.5*rDeltaT2;
+        const scalar halfRdeltaT2 = 0.5*rDeltaT2;
 
         const scalarField VV0(mesh().V() + mesh().V0());
         const scalarField V0V00(mesh().V0() + mesh().V00());
@@ -370,17 +343,17 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
 
     fvMatrix<Type>& fvm = tfvm.ref();
 
-    scalar deltaT = mesh().time().deltaTValue();
-    scalar deltaT0 = mesh().time().deltaT0Value();
+    const scalar deltaT = mesh().time().deltaTValue();
+    const scalar deltaT0 = mesh().time().deltaT0Value();
 
-    scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
-    scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
+    const scalar coefft   = (deltaT + deltaT0)/(2*deltaT);
+    const scalar coefft00 = (deltaT + deltaT0)/(2*deltaT0);
 
-    scalar rDeltaT2 = 4.0/sqr(deltaT + deltaT0);
+    const scalar rDeltaT2 = 4.0/sqr(deltaT + deltaT0);
 
     if (mesh().moving())
     {
-        scalar quarterRdeltaT2 = 0.25*rDeltaT2;
+        const scalar quarterRdeltaT2 = 0.25*rDeltaT2;
 
         const scalarField VV0rhoRho0
         (
@@ -410,7 +383,7 @@ EulerD2dt2Scheme<Type>::fvmD2dt2
     }
     else
     {
-        scalar halfRdeltaT2 = 0.5*rDeltaT2;
+        const scalar halfRdeltaT2 = 0.5*rDeltaT2;
 
         const scalarField rhoRho0
         (

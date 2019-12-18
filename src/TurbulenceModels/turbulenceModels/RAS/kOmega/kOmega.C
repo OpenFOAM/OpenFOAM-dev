@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,35 @@ void kOmega<BasicTurbulenceModel>::correctNut()
     fv::options::New(this->mesh_).correct(this->nut_);
 
     BasicTurbulenceModel::correctNut();
+}
+
+
+template<class BasicTurbulenceModel>
+tmp<fvScalarMatrix> kOmega<BasicTurbulenceModel>::kSource() const
+{
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix
+        (
+            k_,
+            dimVolume*this->rho_.dimensions()*k_.dimensions()
+            /dimTime
+        )
+    );
+}
+
+
+template<class BasicTurbulenceModel>
+tmp<fvScalarMatrix> kOmega<BasicTurbulenceModel>::omegaSource() const
+{
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix
+        (
+            omega_,
+            dimVolume*this->rho_.dimensions()*omega_.dimensions()/dimTime
+        )
+    );
 }
 
 
@@ -195,13 +224,16 @@ void kOmega<BasicTurbulenceModel>::correct()
 
     eddyViscosity<RASModel<BasicTurbulenceModel>>::correct();
 
-    volScalarField divU(fvc::div(fvc::absolute(this->phi(), U)));
+    volScalarField::Internal divU
+    (
+        fvc::div(fvc::absolute(this->phi(), U))().v()
+    );
 
     tmp<volTensorField> tgradU = fvc::grad(U);
-    volScalarField G
+    volScalarField::Internal G
     (
         this->GName(),
-        nut*(tgradU() && dev(twoSymm(tgradU())))
+        nut.v()*(dev(twoSymm(tgradU().v())) && tgradU().v())
     );
     tgradU.clear();
 
@@ -215,9 +247,10 @@ void kOmega<BasicTurbulenceModel>::correct()
       + fvm::div(alphaRhoPhi, omega_)
       - fvm::laplacian(alpha*rho*DomegaEff(), omega_)
      ==
-        gamma_*alpha*rho*G*omega_/k_
-      - fvm::SuSp(((2.0/3.0)*gamma_)*alpha*rho*divU, omega_)
-      - fvm::Sp(beta_*alpha*rho*omega_, omega_)
+        gamma_*alpha()*rho()*G*omega_()/k_()
+      - fvm::SuSp(((2.0/3.0)*gamma_)*alpha()*rho()*divU, omega_)
+      - fvm::Sp(beta_*alpha()*rho()*omega_(), omega_)
+      + omegaSource()
       + fvOptions(alpha, rho, omega_)
     );
 
@@ -236,9 +269,10 @@ void kOmega<BasicTurbulenceModel>::correct()
       + fvm::div(alphaRhoPhi, k_)
       - fvm::laplacian(alpha*rho*DkEff(), k_)
      ==
-        alpha*rho*G
-      - fvm::SuSp((2.0/3.0)*alpha*rho*divU, k_)
-      - fvm::Sp(Cmu_*alpha*rho*omega_, k_)
+        alpha()*rho()*G
+      - fvm::SuSp((2.0/3.0)*alpha()*rho()*divU, k_)
+      - fvm::Sp(Cmu_*alpha()*rho()*omega_(), k_)
+      + kSource()
       + fvOptions(alpha, rho, k_)
     );
 

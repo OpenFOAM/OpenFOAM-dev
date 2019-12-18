@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ class extendedCentredFaceToCellStencil
 :
     public extendedFaceToCellStencil
 {
-    // Private data
+    // Private Data
 
         //- Swap map for getting neighbouring data
         autoPtr<mapDistribute> mapPtr_;
@@ -60,24 +60,18 @@ class extendedCentredFaceToCellStencil
         labelListList stencil_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        extendedCentredFaceToCellStencil
-        (
-            const extendedCentredFaceToCellStencil&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const extendedCentredFaceToCellStencil&);
-
-
 public:
 
     // Constructors
 
         //- Construct from uncompacted face stencil
         explicit extendedCentredFaceToCellStencil(const faceToCellStencil&);
+
+        //- Disallow default bitwise copy construction
+        extendedCentredFaceToCellStencil
+        (
+            const extendedCentredFaceToCellStencil&
+        );
 
 
     // Member Functions
@@ -131,6 +125,11 @@ public:
             );
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const extendedCentredFaceToCellStencil&) = delete;
 };
 
 

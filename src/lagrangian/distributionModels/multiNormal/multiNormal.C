@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,8 +46,8 @@ Foam::distributionModels::multiNormal::multiNormal
 )
 :
     distributionModel(typeName, dict, rndGen),
-    minValue_(readScalar(distributionModelDict_.lookup("minValue"))),
-    maxValue_(readScalar(distributionModelDict_.lookup("maxValue"))),
+    minValue_(distributionModelDict_.template lookup<scalar>("minValue")),
+    maxValue_(distributionModelDict_.template lookup<scalar>("maxValue")),
     range_(maxValue_ - minValue_),
     expectation_(distributionModelDict_.lookup("expectation")),
     variance_(distributionModelDict_.lookup("variance")),
@@ -78,6 +78,8 @@ Foam::distributionModels::multiNormal::multiNormal
     {
         strength_[i] /= sMax;
     }
+
+    info();
 }
 
 

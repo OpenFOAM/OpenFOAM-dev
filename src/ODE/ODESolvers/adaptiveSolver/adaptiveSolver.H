@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ namespace Foam
 
 class adaptiveSolver
 {
-    // Private data
+    // Private Data
 
         //- Step-size adjustment controls
         scalar safeScale_, alphaInc_, alphaDec_, minScale_, maxScale_;
@@ -55,7 +55,7 @@ class adaptiveSolver
         //- Cache for dydx at the initial time
         mutable scalarField dydx0_;
 
-        //- Temprorary for the test-step solution
+        //- Temporary for the test-step solution
         mutable scalarField yTemp_;
 
 
@@ -82,6 +82,7 @@ public:
         (
             const scalar x0,
             const scalarField& y0,
+            const label li,
             const scalarField& dydx0,
             const scalar dx,
             scalarField& y
@@ -93,6 +94,7 @@ public:
             const ODESystem& ode,
             scalar& x,
             scalarField& y,
+            const label li,
             scalar& dxTry
         ) const;
 };

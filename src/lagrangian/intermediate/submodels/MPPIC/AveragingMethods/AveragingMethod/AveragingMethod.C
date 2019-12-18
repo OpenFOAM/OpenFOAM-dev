@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,7 +142,7 @@ bool Foam::AveragingMethod<Type>::writeData(Ostream& os) const
 
 
 template<class Type>
-bool Foam::AveragingMethod<Type>::write(const bool valid) const
+bool Foam::AveragingMethod<Type>::write(const bool write) const
 {
     const pointMesh pointMesh_(mesh_);
 
@@ -238,10 +238,10 @@ bool Foam::AveragingMethod<Type>::write(const bool valid) const
     pointGrad.primitiveFieldRef() /= pointVolume;
 
     // write
-    if (!cellValue.write(valid)) return false;
-    if (!cellGrad.write(valid)) return false;
-    if (!pointValue.write(valid)) return false;
-    if (!pointGrad.write(valid)) return false;
+    if (!cellValue.write(write)) return false;
+    if (!cellGrad.write(write)) return false;
+    if (!pointValue.write(write)) return false;
+    if (!pointGrad.write(write)) return false;
 
     return true;
 }

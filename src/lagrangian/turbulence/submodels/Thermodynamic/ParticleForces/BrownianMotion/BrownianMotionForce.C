@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,7 @@ Foam::BrownianMotionForce<CloudType>::BrownianMotionForce
 :
     ParticleForce<CloudType>(owner, mesh, dict, typeName, true),
     rndGen_(owner.rndGen()),
-    lambda_(readScalar(this->coeffs().lookup("lambda"))),
+    lambda_(this->coeffs().template lookup<scalar>("lambda")),
     turbulence_(readBool(this->coeffs().lookup("turbulence"))),
     kPtr_(nullptr),
     ownK_(false)

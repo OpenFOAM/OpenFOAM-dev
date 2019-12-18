@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Usage
         samplePatch     <slavePatchName>;
 
         thickness       uniform 0.005;  // thickness [m]
-        Qs              uniform 100;    // heat flux [W/m2]
+        Qs              uniform 100;    // heat flux [W/m^2]
 
         qr              none;
         qrRelaxation    1;
@@ -109,7 +109,7 @@ class thermalBaffle1DFvPatchScalarField
     public mappedPatchBase,
     public mixedFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Name of the temperature field
         word TName_;
@@ -120,7 +120,7 @@ class thermalBaffle1DFvPatchScalarField
         //- Baffle thickness [m]
         mutable scalarField thickness_;
 
-        //- Superficial heat source [W/m2]
+        //- Superficial heat source [W/m^2]
         mutable scalarField Qs_;
 
         //- Solid dictionary
@@ -187,7 +187,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         thermalBaffle1DFvPatchScalarField
         (
             const thermalBaffle1DFvPatchScalarField&
@@ -202,7 +202,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         thermalBaffle1DFvPatchScalarField
         (
             const thermalBaffle1DFvPatchScalarField&,
@@ -222,22 +222,17 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchScalarField&,
-                const labelList&
-            );
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchScalarField&, const labelList&);
 
 
         //- Update the coefficients associated with the patch field

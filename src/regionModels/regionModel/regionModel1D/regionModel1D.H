@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,11 +56,11 @@ class regionModel1D
 {
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        regionModel1D(const regionModel1D&);
+        //- Disallow default bitwise copy construction
+        regionModel1D(const regionModel1D&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const regionModel1D&);
+        void operator=(const regionModel1D&) = delete;
 
         //- Construct region mesh and fields
         void constructMeshObjects();
@@ -81,7 +81,7 @@ protected:
             //- Global cell IDs
             labelListList boundaryFaceCells_;
 
-            //- Global boundary face IDs oppossite coupled patch
+            //- Global boundary face IDs opposite coupled patch
             labelList boundaryFaceOppositeFace_;
 
             //- Number of layers in the region
@@ -166,13 +166,13 @@ public:
                 //- Return the global cell IDs
                 inline const labelListList& boundaryFaceCells() const;
 
-                //- Return the global boundary face IDs oppossite coupled patch
+                //- Return the global boundary face IDs opposite coupled patch
                 inline const labelList& boundaryFaceOppositeFace() const;
 
 
             // Geometry
 
-                //- Return the face area magnitudes / [m2]
+                //- Return the face area magnitudes / [m^2]
                 inline const surfaceScalarField& nMagSf() const;
 
                 //- Return the number of layers in the region

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,7 +117,7 @@ class fvMatrix
     public tmp<fvMatrix<Type>>::refCount,
     public lduMatrix
 {
-    // Private data
+    // Private Data
 
         //- Const reference to GeometricField<Type, fvPatchField, volMesh>
         //  Converted into a non-const reference at the point of solution.
@@ -235,7 +235,7 @@ public:
             {}
 
 
-        // Member functions
+        // Member Functions
 
             //- Solve returning the solution statistics.
             //  Use the given solver controls
@@ -259,10 +259,10 @@ public:
             const dimensionSet&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         fvMatrix(const fvMatrix<Type>&);
 
-        //- Construct as copy of tmp<fvMatrix<Type>> deleting argument
+        //- Copy constructor of tmp<fvMatrix<Type>> deleting argument
         fvMatrix(const tmp<fvMatrix<Type>>&);
 
         //- Construct from Istream given field to solve for
@@ -276,7 +276,7 @@ public:
     virtual ~fvMatrix();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -431,7 +431,7 @@ public:
                 flux() const;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const fvMatrix<Type>&);
         void operator=(const tmp<fvMatrix<Type>>&);

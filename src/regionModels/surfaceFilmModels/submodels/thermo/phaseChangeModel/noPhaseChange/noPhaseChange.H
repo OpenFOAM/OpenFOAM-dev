@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,17 +54,6 @@ class noPhaseChange
 :
     public phaseChangeModel
 {
-private:
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        noPhaseChange(const noPhaseChange&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const noPhaseChange&);
-
-
 public:
 
     //- Runtime type information
@@ -75,6 +64,9 @@ public:
 
         //- Construct from surface film model
         noPhaseChange(surfaceFilmRegionModel& film, const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        noPhaseChange(const noPhaseChange&) = delete;
 
 
     //- Destructor
@@ -96,6 +88,12 @@ public:
                 scalarField& dMass,
                 scalarField& dEnergy
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const noPhaseChange&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,6 +109,9 @@ public:
             const DimensionedField<Type, pointMesh>&
         );
 
+        //- Copy constructor
+        valuePointPatchField(const valuePointPatchField<Type>&) = default;
+
         //- Construct and return a clone setting internal field reference
         virtual autoPtr<pointPatchField<Type>> clone
         (
@@ -126,7 +129,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -140,18 +143,12 @@ public:
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const pointPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const pointPatchFieldMapper&);
 
-            //- Reverse map the given PointPatchField onto
-            //  this PointPatchField
-            virtual void rmap
-            (
-                const pointPatchField<Type>&,
-                const labelList&
-            );
+            //- Reverse map the given pointPatchField onto this pointPatchField
+            //  Used to reconstruct fields
+            virtual void rmap(const pointPatchField<Type>&, const labelList&);
 
 
         // Evaluation functions
@@ -171,7 +168,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         // Assignment operators
 

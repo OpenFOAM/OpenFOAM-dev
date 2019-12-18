@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -268,7 +268,7 @@ int main(int argc, char *argv[])
     if (nElemAttr != 0)
     {
         WarningInFunction
-            << "Element attributes (third elemenent in .ele header)"
+            << "Element attributes (third element in .ele header)"
             << " not used" << endl;
     }
 
@@ -326,7 +326,7 @@ int main(int argc, char *argv[])
                 runTime.constant(),
                 runTime
             ),
-            xferCopy(points),
+            clone(points),
             cells,
             faceListList(0),
             wordList(0),    // boundaryPatchNames
@@ -530,7 +530,7 @@ int main(int argc, char *argv[])
                     runTime.constant(),
                     runTime
                 ),
-                xferMove(points),
+                move(points),
                 cells,
                 patchFaces,
                 patchNames,

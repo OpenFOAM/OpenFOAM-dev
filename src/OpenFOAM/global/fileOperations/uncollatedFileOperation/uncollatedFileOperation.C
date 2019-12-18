@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,7 +108,7 @@ Foam::fileName Foam::fileOperations::uncollatedFileOperation::filePathInfo
                 }
             }
 
-            // Check if parallel "procesors" directory
+            // Check if parallel "processors" directory
             if (io.time().processorCase())
             {
                 tmpNrc<dirIndexList> pDirs
@@ -170,7 +170,7 @@ Foam::fileOperations::uncollatedFileOperation::uncollatedFileOperation
 {
     if (verbose)
     {
-        Info<< "I/O    : " << typeName << endl;
+        InfoHeader << "I/O    : " << typeName << endl;
     }
 }
 
@@ -522,12 +522,12 @@ Foam::fileOperations::uncollatedFileOperation::readStream
     regIOobject& io,
     const fileName& fName,
     const word& typeName,
-    const bool valid
+    const bool read
 ) const
 {
     autoPtr<ISstream> isPtr;
 
-    if (!valid)
+    if (!read)
     {
         isPtr = autoPtr<ISstream>(new dummyISstream());
         return isPtr;
@@ -624,21 +624,9 @@ bool Foam::fileOperations::uncollatedFileOperation::read
                 << " from file " << endl;
         }
 
-        // Set flag for e.g. codeStream
-        const bool oldGlobal = io.globalObject();
-        io.globalObject() = masterOnly;
-        // If codeStream originates from dictionary which is
-        // not IOdictionary we have a problem so use global
-        const bool oldFlag = regIOobject::masterOnlyReading;
-        regIOobject::masterOnlyReading = masterOnly;
-
         // Read file
         ok = io.readData(io.readStream(typeName));
         io.close();
-
-        // Restore flags
-        io.globalObject() = oldGlobal;
-        regIOobject::masterOnlyReading = oldFlag;
 
         if (debug)
         {
@@ -716,7 +704,7 @@ Foam::fileOperations::uncollatedFileOperation::NewOFstream
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp,
-    const bool valid
+    const bool write
 ) const
 {
     return autoPtr<Ostream>(new OFstream(pathName, fmt, ver, cmp));

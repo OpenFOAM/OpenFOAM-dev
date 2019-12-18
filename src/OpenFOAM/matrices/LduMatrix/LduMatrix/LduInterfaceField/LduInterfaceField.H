@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,14 +58,6 @@ class LduInterfaceField
 :
     public lduInterfaceField
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        LduInterfaceField(const LduInterfaceField&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const LduInterfaceField&);
-
 
 public:
 
@@ -80,6 +72,9 @@ public:
         :
             lduInterfaceField(patch)
         {}
+
+        //- Disallow default bitwise copy construction
+        LduInterfaceField(const LduInterfaceField&) = delete;
 
 
     //- Destructor
@@ -114,6 +109,12 @@ public:
                 const scalarField&,
                 const Pstream::commsTypes commsType
             ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const LduInterfaceField&) = delete;
 };
 
 

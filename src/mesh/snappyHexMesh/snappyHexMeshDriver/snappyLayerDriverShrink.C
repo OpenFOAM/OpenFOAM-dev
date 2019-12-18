@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -886,7 +886,7 @@ void Foam::snappyLayerDriver::medialAxisSmoothingInfo
     // Predetermine mesh edges
     // ~~~~~~~~~~~~~~~~~~~~~~~
 
-    // Precalulate master point/edge (only relevant for shared points/edges)
+    // Precalculate master point/edge (only relevant for shared points/edges)
     const PackedBoolList isMasterPoint(syncTools::getMasterPoints(mesh));
     const PackedBoolList isMasterEdge(syncTools::getMasterEdges(mesh));
     // Precalculate meshEdge per pp edge
@@ -1378,7 +1378,7 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
     const indirectPrimitivePatch& pp = meshMover.patch();
     const labelList& meshPoints = pp.meshPoints();
 
-    // Precalulate master points/edge (only relevant for shared points/edges)
+    // Precalculate master points/edge (only relevant for shared points/edges)
     const PackedBoolList isMasterPoint(syncTools::getMasterPoints(mesh));
     const PackedBoolList isMasterEdge(syncTools::getMasterEdges(mesh));
     // Precalculate meshEdge per pp edge
@@ -1536,7 +1536,7 @@ void Foam::snappyLayerDriver::shrinkMeshMedialDistance
         patchNLayers
     );
 
-    // Update thickess for changed extrusion
+    // Update thickness for changed extrusion
     forAll(thickness, patchPointi)
     {
         if (extrudeStatus[patchPointi] == NOEXTRUDE)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ class mapDistributePolyMesh;
 
 class fvMeshDistribute
 {
-    // Private data
+    // Private Data
 
         //- Underlying fvMesh
         fvMesh& mesh_;
@@ -323,16 +323,11 @@ class fvMeshDistribute
             (
                 const label domain,
                 const wordList& fieldNames,
-                fvMesh&,
+                typename GeoField::Mesh&,
                 PtrList<GeoField>&,
                 const dictionary& fieldDicts
             );
 
-            //- Disallow default bitwise copy construct
-            fvMeshDistribute(const fvMeshDistribute&);
-
-            //- Disallow default bitwise assignment
-            void operator=(const fvMeshDistribute&);
 
 public:
 
@@ -343,6 +338,9 @@ public:
 
         //- Construct from mesh and absolute merge tolerance
         fvMeshDistribute(fvMesh& mesh, const scalar mergeTol);
+
+        //- Disallow default bitwise copy construction
+        fvMeshDistribute(const fvMeshDistribute&) = delete;
 
 
     // Member Functions
@@ -372,6 +370,12 @@ public:
 
             //- Print some info on mesh.
             static void printMeshInfo(const fvMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvMeshDistribute&) = delete;
 };
 
 

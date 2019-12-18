@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ class extendedUpwindCellToFaceStencil
 :
     public extendedCellToFaceStencil
 {
-    // Private data
+    // Private Data
 
         //- Does stencil contain upwind points only
         const bool pureUpwind_;
@@ -113,13 +113,6 @@ class extendedUpwindCellToFaceStencil
         );
 
 
-        //- Disallow default bitwise copy construct
-        extendedUpwindCellToFaceStencil(const extendedUpwindCellToFaceStencil&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const extendedUpwindCellToFaceStencil&);
-
-
 public:
 
     // Constructors
@@ -140,6 +133,12 @@ public:
         (
             const cellToFaceStencil&
         );
+
+        //- Disallow default bitwise copy construction
+        extendedUpwindCellToFaceStencil
+        (
+            const extendedUpwindCellToFaceStencil&
+        ) = delete;
 
 
     // Member Functions
@@ -183,6 +182,11 @@ public:
             const List<List<scalar>>& neiWeights
         ) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const extendedUpwindCellToFaceStencil&) = delete;
 };
 
 

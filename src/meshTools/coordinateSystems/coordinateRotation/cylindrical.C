@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,6 +51,23 @@ namespace Foam
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
+Foam::tensor Foam::cylindrical::R(const vector& dir) const
+{
+    const vector e3 = e3_/mag(e3_);
+    const vector r = dir - (dir & e3)*e3;
+
+    if (mag(r) < small)
+    {
+        // If the cell centre is on the axis choose any radial direction
+        return axesRotation(e3, perpendicular(e3)).R();
+    }
+    else
+    {
+        return axesRotation(e3, dir).R();
+    }
+}
+
+
 void Foam::cylindrical::init
 (
     const objectRegistry& obr,
@@ -58,34 +75,28 @@ void Foam::cylindrical::init
 )
 {
     const polyMesh& mesh = refCast<const polyMesh>(obr);
+
+    Rptr_.reset(new tensorField(cells.size()));
+
+    updateCells(mesh, cells);
+}
+
+
+void Foam::cylindrical::init(const objectRegistry& obr)
+{
+    const polyMesh& mesh = refCast<const polyMesh>(obr);
+
+    Rptr_.reset(new tensorField(mesh.nCells()));
+
     const vectorField& cc = mesh.cellCentres();
 
-    if (cells.size())
+    tensorField& R = Rptr_();
+    forAll(cc, celli)
     {
-        Rptr_.reset(new tensorField(cells.size()));
+        vector dir = cc[celli] - origin_;
+        dir /= mag(dir) + vSmall;
 
-        tensorField& R = Rptr_();
-        forAll(cells, i)
-        {
-            label celli = cells[i];
-            vector dir = cc[celli] - origin_;
-            dir /= mag(dir) + vSmall;
-
-            R[i] = axesRotation(e3_, dir).R();
-        }
-    }
-    else
-    {
-        Rptr_.reset(new tensorField(mesh.nCells()));
-
-        tensorField& R = Rptr_();
-        forAll(cc, celli)
-        {
-            vector dir = cc[celli] - origin_;
-            dir /= mag(dir) + vSmall;
-
-            R[celli] = axesRotation(e3_, dir).R();
-        }
+        R[celli] = this->R(dir);
     }
 }
 
@@ -154,7 +165,7 @@ Foam::cylindrical::cylindrical(const dictionary& dict)
 {
     FatalErrorInFunction
         << " cylindrical can not be constructed from dictionary "
-        << " use the construtctor : "
+        << " use the constructor : "
            "("
            "    const dictionary&, const objectRegistry&"
            ")"
@@ -198,7 +209,7 @@ void Foam::cylindrical::updateCells
         vector dir = cc[celli] - origin_;
         dir /= mag(dir) + vSmall;
 
-        R[celli] = axesRotation(e3_, dir).R();
+        R[i] = this->R(dir);
     }
 }
 
@@ -307,8 +318,7 @@ Foam::tmp<Foam::tensorField> Foam::cylindrical::transformTensor
     tensorField& t = tt.ref();
     forAll(cellMap, i)
     {
-        const label celli = cellMap[i];
-        t[i] = R[celli] & tf[i] & Rtr[celli];
+        t[i] = R[i] & tf[i] & Rtr[i];
     }
 
     return tt;
@@ -351,7 +361,7 @@ Foam::symmTensor Foam::cylindrical::transformVector
 
 void Foam::cylindrical::write(Ostream& os) const
 {
-     os.writeKeyword("e3") << e3() << token::END_STATEMENT << nl;
+     writeEntry(os, "e3", e3());
 }
 
 

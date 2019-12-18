@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -186,14 +186,14 @@ private:
             //- Old points (for the last mesh motion)
             mutable autoPtr<pointField> oldPointsPtr_;
 
+            //- Old cell centres (for the last mesh motion)
+            mutable autoPtr<pointField> oldCellCentresPtr_;
+
+            //- Whether or not to store the old cell centres
+            mutable bool storeOldCellCentres_;
+
 
     // Private Member Functions
-
-        //- Disallow construct as copy
-        polyMesh(const polyMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const polyMesh&);
 
         //- Initialise the polyMesh from the primitive data
         void initMesh();
@@ -297,7 +297,7 @@ private:
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         typedef polyMesh Mesh;
         typedef polyBoundaryMesh BoundaryMesh;
@@ -318,34 +318,35 @@ public:
         //- Construct from IOobject
         explicit polyMesh(const IOobject& io);
 
-        //- Construct from IOobject or from components.
+        //- Move construct from IOobject or from components.
         //  Boundary is added using addPatches() member function
         polyMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
-            const Xfer<faceList>& faces,
-            const Xfer<labelList>& owner,
-            const Xfer<labelList>& neighbour,
+            pointField&& points,
+            faceList&& faces,
+            labelList&& owner,
+            labelList&& neighbour,
             const bool syncPar = true
         );
 
-        //- Construct without boundary with cells rather than owner/neighbour.
+        //- Move construct without boundary with cells rather than
+        //  owner/neighbour.
         //  Boundary is added using addPatches() member function
         polyMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
-            const Xfer<faceList>& faces,
-            const Xfer<cellList>& cells,
+            pointField&& points,
+            faceList&& faces,
+            cellList&& cells,
             const bool syncPar = true
         );
 
-        //- Construct from cell shapes
+        //- Move construct from cell shapes
         polyMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
+            pointField&& points,
             const cellShapeList& shapes,
             const faceListList& boundaryFaces,
             const wordList& boundaryPatchNames,
@@ -356,12 +357,12 @@ public:
             const bool syncPar = true
         );
 
-        //- Construct from cell shapes with patch information in dictionary
+        //- Move construct from cell shapes with patch information in dictionary
         //  format.
         polyMesh
         (
             const IOobject& io,
-            const Xfer<pointField>& points,
+            pointField&& points,
             const cellShapeList& shapes,
             const faceListList& boundaryFaces,
             const wordList& boundaryPatchNames,
@@ -370,6 +371,9 @@ public:
             const word& defaultBoundaryPatchType,
             const bool syncPar = true
         );
+
+        //- Disallow default bitwise copy construction
+        polyMesh(const polyMesh&);
 
 
     //- Destructor
@@ -420,6 +424,9 @@ public:
 
             //- Return old points for mesh motion
             virtual const pointField& oldPoints() const;
+
+            //- Return old points for mesh motion
+            virtual const pointField& oldCellCentres() const;
 
             //- Return IO object for points0
             static IOobject points0IO(const polyMesh& mesh);
@@ -578,6 +585,25 @@ public:
                 const List<cellZone*>& cz
             );
 
+            //- Add/insert single patch. If validBoundary the new situation
+            //  is consistent across processors.
+            virtual void addPatch
+            (
+                const label insertPatchi,
+                const polyPatch& patch,
+                const dictionary& patchFieldDict,
+                const word& defaultPatchFieldType,
+                const bool validBoundary
+            );
+
+            //- Reorder and trim existing patches. If validBoundary the new
+            //  situation is consistent across processors
+            virtual void reorderPatches
+            (
+                const labelUList& newToOld,
+                const bool validBoundary
+            );
+
             //- Update the mesh based on the mesh files saved in
             //  time directories
             virtual readUpdateState readUpdate();
@@ -593,10 +619,10 @@ public:
             //  validBoundary=false
             void resetPrimitives
             (
-                const Xfer<pointField>& points,
-                const Xfer<faceList>& faces,
-                const Xfer<labelList>& owner,
-                const Xfer<labelList>& neighbour,
+                pointField&& points,
+                faceList&& faces,
+                labelList&& owner,
+                labelList&& neighbour,
                 const labelList& patchSizes,
                 const labelList& patchStarts,
                 const bool validBoundary = true
@@ -721,6 +747,12 @@ public:
                 const point& p,
                 const cellDecomposition = CELL_TETS
             ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const polyMesh&) = delete;
 };
 
 

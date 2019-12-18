@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -681,19 +681,19 @@ int main(int argc, char *argv[])
 
     fileName surfName(refineDict.lookup("surface"));
     surfName.expand();
-    label nCutLayers(readLabel(refineDict.lookup("nCutLayers")));
-    label cellLimit(readLabel(refineDict.lookup("cellLimit")));
+    label nCutLayers(refineDict.lookup<label>("nCutLayers"));
+    label cellLimit(refineDict.lookup<label>("cellLimit"));
     bool selectCut(readBool(refineDict.lookup("selectCut")));
     bool selectInside(readBool(refineDict.lookup("selectInside")));
     bool selectOutside(readBool(refineDict.lookup("selectOutside")));
     bool selectHanging(readBool(refineDict.lookup("selectHanging")));
 
-    scalar minEdgeLen(readScalar(refineDict.lookup("minEdgeLen")));
-    scalar maxEdgeLen(readScalar(refineDict.lookup("maxEdgeLen")));
-    scalar curvature(readScalar(refineDict.lookup("curvature")));
-    scalar curvDist(readScalar(refineDict.lookup("curvatureDistance")));
+    scalar minEdgeLen(refineDict.lookup<scalar>("minEdgeLen"));
+    scalar maxEdgeLen(refineDict.lookup<scalar>("maxEdgeLen"));
+    scalar curvature(refineDict.lookup<scalar>("curvature"));
+    scalar curvDist(refineDict.lookup<scalar>("curvatureDistance"));
     pointField outsidePts(refineDict.lookup("outsidePoints"));
-    label refinementLimit(readLabel(refineDict.lookup("splitLevel")));
+    label refinementLimit(refineDict.lookup<label>("splitLevel"));
     bool writeMesh(readBool(refineDict.lookup("writeMesh")));
 
     Info<< "Cells to be used for meshing (0=false, 1=true):" << nl

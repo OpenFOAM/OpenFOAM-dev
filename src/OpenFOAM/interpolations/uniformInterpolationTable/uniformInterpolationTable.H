@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ class uniformInterpolationTable
     public IOobject,
     public List<Type>
 {
-    // Private data
+    // Private Data
 
         // Control parameters
 
@@ -95,9 +95,6 @@ class uniformInterpolationTable
         //- Check that the table is valid
         void checkTable() const;
 
-        //- Disallow default bitwise assignment
-        void operator=(const uniformInterpolationTable&);
-
 
 public:
 
@@ -118,7 +115,7 @@ public:
             const bool initialiseOnly = false
         );
 
-        //- Construct as copy
+        //- Copy constructor
         uniformInterpolationTable(const uniformInterpolationTable&);
 
 
@@ -186,6 +183,12 @@ public:
 
             //- Write
             void write() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const uniformInterpolationTable&) = delete;
 };
 
 

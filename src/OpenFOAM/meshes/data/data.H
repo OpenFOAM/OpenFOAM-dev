@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::data
 
 Description
-    Database for solution data, solver performance and other reduced data.
+    Database for solution and other reduced data.
 
     fvMesh is derived from data so that all fields have access to the data from
     the mesh reference they hold.
@@ -39,7 +39,6 @@ SourceFiles
 #define data_H
 
 #include "IOdictionary.H"
-#include "solverPerformance.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,19 +53,13 @@ class data
 :
     public IOdictionary
 {
-    // Private data
-
-        //- Previously used time-index, used for reset between iterations
-        mutable label prevTimeIndex_;
-
-
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        data(const data&);
+        //- Disallow default bitwise copy construction
+        data(const data&) = delete;
 
         //- Disallow default bitwise assignment
-        void operator=(const data&);
+        void operator=(const data&) = delete;
 
 
 public:
@@ -79,43 +72,12 @@ public:
 
         //- Construct for objectRegistry
         data(const objectRegistry& obr);
-
-
-    // Member Functions
-
-        // Access
-
-            //- Return the dictionary of solver performance data
-            //  which includes initial and final residuals for convergence
-            //  checking
-            const dictionary& solverPerformanceDict() const;
-
-            //- Add/set the solverPerformance entry for the named field
-            template<class Type>
-            void setSolverPerformance
-            (
-                const word& name,
-                const SolverPerformance<Type>&
-            ) const;
-
-            //- Add/set the solverPerformance entry, using its fieldName
-            template<class Type>
-            void setSolverPerformance
-            (
-                const SolverPerformance<Type>&
-            ) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "dataTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

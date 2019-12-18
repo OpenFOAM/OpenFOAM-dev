@@ -45,9 +45,15 @@ timePrecision   6;
 
 runTimeModifiable true;
 
+cacheTemporaryObjects
+(
+    kEpsilon:G
+);
+
 functions
 {
     #includeFunc streamlines
+    #includeFunc writeObjects(kEpsilon:G)
 }
 
 // ************************************************************************* //

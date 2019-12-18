@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ void Foam::sammMesh::calcPointCells() const
     // the supporting point labels, we need to work based on the cell faces.
     // This is because some of the faces for meshes with arbitrary interfaces
     // do not come from the cell shape, but from the slaves of the coupled
-    // match. It is also adventageous to remove the duplicates from the
+    // match. It is also advantageous to remove the duplicates from the
     // point-cell addressing, because this removes a lot of waste later.
     //
 

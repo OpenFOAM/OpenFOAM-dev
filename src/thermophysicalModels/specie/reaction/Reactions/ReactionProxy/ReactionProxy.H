@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,8 +63,8 @@ public:
         ReactionProxy
         (
             const speciesTable& species,
-            const List<typename Reaction<ReactionThermo>::specieCoeffs>& lhs,
-            const List<typename Reaction<ReactionThermo>::specieCoeffs>& rhs,
+            const List<specieCoeffs>& lhs,
+            const List<specieCoeffs>& rhs,
             const HashPtrTable<ReactionThermo>& thermoDatabase
         );
 
@@ -107,7 +107,8 @@ public:
             (
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const;
 
             //- Reverse rate constant from the given forward rate constant
@@ -116,7 +117,8 @@ public:
                 const scalar kfwd,
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const;
 
             //- Reverse rate constant
@@ -124,7 +126,8 @@ public:
             (
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const;
 
 
@@ -135,7 +138,8 @@ public:
             (
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const;
 
             //- Temperature derivative of reverse rate
@@ -144,6 +148,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 const scalar dkfdT,
                 const scalar kr
             ) const;
@@ -159,6 +164,7 @@ public:
                 const scalar p,
                 const scalar T,
                 const scalarField& c,
+                const label li,
                 scalarField& dcidc
             ) const;
 
@@ -167,7 +173,8 @@ public:
             (
                 const scalar p,
                 const scalar T,
-                const scalarField& c
+                const scalarField& c,
+                const label li
             ) const;
 };
 

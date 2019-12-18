@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,8 +65,8 @@ Foam::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
 )
 :
     transformFvPatchField<Type>(ptf, p, iF, mapper),
-    refValue_(ptf.refValue_, mapper),
-    valueFraction_(ptf.valueFraction_, mapper)
+    refValue_(mapper(ptf.refValue_)),
+    valueFraction_(mapper(ptf.valueFraction_))
 {}
 
 
@@ -103,9 +103,9 @@ void Foam::mixedFixedValueSlipFvPatchField<Type>::autoMap
     const fvPatchFieldMapper& m
 )
 {
-    Field<Type>::autoMap(m);
-    refValue_.autoMap(m);
-    valueFraction_.autoMap(m);
+    m(*this, *this);
+    m(refValue_, refValue_);
+    m(valueFraction_, valueFraction_);
 }
 
 
@@ -188,8 +188,8 @@ template<class Type>
 void Foam::mixedFixedValueSlipFvPatchField<Type>::write(Ostream& os) const
 {
     transformFvPatchField<Type>::write(os);
-    refValue_.writeEntry("refValue", os);
-    valueFraction_.writeEntry("valueFraction", os);
+    writeEntry(os, "refValue", refValue_);
+    writeEntry(os, "valueFraction", valueFraction_);
 }
 
 

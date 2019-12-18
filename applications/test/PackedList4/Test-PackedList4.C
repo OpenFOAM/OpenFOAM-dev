@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,7 @@ Description
 #include "IOstreams.H"
 #include "PackedBoolList.H"
 #include "IStringStream.H"
+#include "dictionary.H"
 
 using namespace Foam;
 
@@ -143,7 +144,7 @@ int main(int argc, char *argv[])
     Info<< "\ntest Istream constructor\n";
 
     list4.printInfo(Info, true);
-    Info<< list4 << " indices: " << list4.used()() <<endl;
+    Info<< list4 << " indices: " << list4.used() <<endl;
 
     Info<< "\nassign from labelList\n";
     list4 = labelList
@@ -155,7 +156,7 @@ int main(int argc, char *argv[])
     );
 
     list4.printInfo(Info, true);
-    Info<< list4 << " indices: " << list4.used()() <<endl;
+    Info<< list4 << " indices: " << list4.used() <<endl;
 
     Info<< "\nassign from indices\n";
     list4.read
@@ -168,7 +169,7 @@ int main(int argc, char *argv[])
 
 
     list4.printInfo(Info, true);
-    Info<< list4 << " indices: " << list4.used()() <<endl;
+    Info<< list4 << " indices: " << list4.used() <<endl;
 
     List<bool> boolLst(list4.size());
     forAll(list4, i)
@@ -198,7 +199,7 @@ int main(int argc, char *argv[])
 
     list4.write(Info, true) << endl;
 
-    list4.writeEntry("PackedBoolList", Info);
+    writeEntry(Info, "PackedBoolList", list4);
 
     return 0;
 }

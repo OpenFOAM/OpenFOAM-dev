@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::pressureControl
 
 Description
-    Provides controls for the pressure reference is closed-volume simulations
+    Provides controls for the pressure reference in closed-volume simulations
     and a general method for limiting the pressure during the startup of
     steady-state simulations.
 
@@ -52,7 +52,7 @@ namespace Foam
 
 class pressureControl
 {
-    // Private data
+    // Private Data
 
         //- Optional cell in which the reference pressure is set
         label refCell_;

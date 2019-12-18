@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,7 @@ SourceFiles
 #include "fvsPatchFieldsFwd.H"
 #include "fvPatchFieldMapper.H"
 #include "DimensionedField.H"
+#include "pointFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,9 +67,6 @@ class fvMeshAdder
 :
     public polyMeshAdder
 {
-
-private:
-
     // Private Member Functions
 
         //- Calculate map from new patch faces to old patch faces. -1 where
@@ -100,6 +98,18 @@ private:
 
             GeometricField<Type, fvsPatchField, surfaceMesh>& fld,
             const GeometricField<Type, fvsPatchField, surfaceMesh>& fldToAdd
+        );
+
+        //- Update single pointField.
+        template<class Type>
+        static void MapPointField
+        (
+            const pointMesh& mesh,
+            const mapAddedPolyMesh& meshMap,
+            const labelListList& oldMeshPoints,
+
+            GeometricField<Type, pointPatchField, pointMesh>& fld,
+            const GeometricField<Type, pointPatchField, pointMesh>& fldToAdd
         );
 
         //- Update single dimensionedField.
@@ -145,6 +155,16 @@ public:
             const mapAddedPolyMesh&,
             const fvMesh& mesh,
             const fvMesh& meshToAdd
+        );
+
+        //- Map all surfaceFields of Type
+        template<class Type>
+        static void MapPointFields
+        (
+            const mapAddedPolyMesh&,
+            const pointMesh& mesh,
+            const labelListList& oldMeshPoints,
+            const objectRegistry& meshToAdd
         );
 
         //- Map all DimensionedFields of Type

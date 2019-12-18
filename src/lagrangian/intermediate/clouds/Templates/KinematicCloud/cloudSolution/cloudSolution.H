@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,12 +103,6 @@ class cloudSolution
             List<Tuple2<word, Tuple2<bool, scalar>>> schemes_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const cloudSolution&);
-
-
 public:
 
     // Constructors
@@ -127,7 +121,7 @@ public:
     virtual ~cloudSolution();
 
 
-    // Member functions
+    // Member Functions
 
         //- Read properties from dictionary
         void read();
@@ -207,6 +201,12 @@ public:
 
         //- Returns true if writing this step
         bool output() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cloudSolution&) = delete;
 };
 
 

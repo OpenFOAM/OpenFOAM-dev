@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ class face;
 class removePoints
 {
 
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -90,12 +90,6 @@ class removePoints
         ) const;
 
 
-        //- Disallow default bitwise copy construct
-        removePoints(const removePoints&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const removePoints&);
-
 public:
 
     //- Runtime type information
@@ -106,6 +100,9 @@ public:
 
         //- Construct from mesh
         removePoints(const polyMesh& mesh, const bool undoable = false);
+
+        //- Disallow default bitwise copy construction
+        removePoints(const removePoints&) = delete;
 
 
     // Member Functions
@@ -166,6 +163,12 @@ public:
                 const labelList& localPoints,
                 polyTopoChange&
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const removePoints&) = delete;
 };
 
 

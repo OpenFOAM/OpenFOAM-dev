@@ -16,5 +16,5 @@
 
     scalar planeTolerance
     (
-        readScalar(mirrorMeshDict.lookup("planeTolerance"))
+        mirrorMeshDict.lookup<scalar>("planeTolerance")
     );

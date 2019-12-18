@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ Foam::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
     fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
     ranGen_(label(0)),
     fluctuationScale_(ptf.fluctuationScale_),
-    referenceField_(ptf.referenceField_, mapper),
+    referenceField_(mapper(ptf.referenceField_)),
     alpha_(ptf.alpha_),
     curTimeIndex_(-1)
 {}
@@ -130,7 +130,7 @@ void Foam::turbulentInletFvPatchField<Type>::autoMap
 )
 {
     fixedValueFvPatchField<Type>::autoMap(m);
-    referenceField_.autoMap(m);
+    m(referenceField_, referenceField_);
 }
 
 
@@ -196,11 +196,10 @@ template<class Type>
 void Foam::turbulentInletFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    os.writeKeyword("fluctuationScale")
-        << fluctuationScale_ << token::END_STATEMENT << nl;
-    referenceField_.writeEntry("referenceField", os);
-    os.writeKeyword("alpha") << alpha_ << token::END_STATEMENT << nl;
-    this->writeEntry("value", os);
+    writeEntry(os, "fluctuationScale", fluctuationScale_);
+    writeEntry(os, "referenceField", referenceField_);
+    writeEntry(os, "alpha", alpha_);
+    writeEntry(os, "value", *this);
 }
 
 

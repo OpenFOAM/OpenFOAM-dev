@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,7 +108,6 @@ void Foam::mixedUnburntEnthalpyFvPatchScalarField::updateCoeffs()
 
     const label patchi = patch().index();
 
-    const scalarField& pw = thermo.p().boundaryField()[patchi];
     mixedFvPatchScalarField& Tw = refCast<mixedFvPatchScalarField>
     (
         const_cast<fvPatchScalarField&>(thermo.Tu().boundaryField()[patchi])
@@ -117,12 +116,12 @@ void Foam::mixedUnburntEnthalpyFvPatchScalarField::updateCoeffs()
     Tw.evaluate();
 
     valueFraction() = Tw.valueFraction();
-    refValue() = thermo.heu(pw, Tw.refValue(), patchi);
-    refGrad() = thermo.Cp(pw, Tw, patchi)*Tw.refGrad()
+    refValue() = thermo.heu(Tw.refValue(), patchi);
+    refGrad() = thermo.Cp(Tw, patchi)*Tw.refGrad()
       + patch().deltaCoeffs()*
         (
-            thermo.heu(pw, Tw, patchi)
-          - thermo.heu(pw, Tw, patch().faceCells())
+            thermo.heu(Tw, patchi)
+          - thermo.heu(Tw, patch().faceCells())
         );
 
     mixedFvPatchScalarField::updateCoeffs();

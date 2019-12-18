@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,12 +70,6 @@ class backwardDdtScheme
         template<class GeoField>
         scalar deltaT0_(const GeoField&) const;
 
-        //- Disallow default bitwise copy construct
-        backwardDdtScheme(const backwardDdtScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const backwardDdtScheme&);
-
 
 public:
 
@@ -110,6 +104,9 @@ public:
                 mesh.V00();
             }
         }
+
+        //- Disallow default bitwise copy construction
+        backwardDdtScheme(const backwardDdtScheme&) = delete;
 
 
     // Member Functions
@@ -205,6 +202,12 @@ public:
         (
             const GeometricField<Type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const backwardDdtScheme&) = delete;
 };
 
 

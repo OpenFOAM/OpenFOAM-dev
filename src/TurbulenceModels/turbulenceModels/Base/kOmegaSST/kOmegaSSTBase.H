@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,13 +114,6 @@ class kOmegaSST
 :
     public TurbulenceModel
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        kOmegaSST(const kOmegaSST&);
-        void operator=(const kOmegaSST&);
-
-
 protected:
 
     // Protected data
@@ -267,6 +260,9 @@ public:
             const word& propertiesName = turbulenceModel::propertiesName
         );
 
+        //- Disallow default bitwise copy construction
+        kOmegaSST(const kOmegaSST&) = delete;
+
 
     //- Destructor
     virtual ~kOmegaSST()
@@ -323,6 +319,12 @@ public:
 
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const kOmegaSST&) = delete;
 };
 
 

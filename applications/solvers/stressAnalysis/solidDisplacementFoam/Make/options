@@ -1,10 +1,16 @@
 EXE_INC = \
     -I. \
+    -IsolidDisplacementThermo \
     -IderivedFvPatchFields/tractionDisplacement \
+    -IderivedFvPatchFields/hydrostaticDisplacement \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/solidThermo/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 EXE_LIBS = \
     -lfiniteVolume \
+    -lsolidThermo \
+    -lsolidDisplacementThermo \
     -lfvOptions \
     -lmeshTools

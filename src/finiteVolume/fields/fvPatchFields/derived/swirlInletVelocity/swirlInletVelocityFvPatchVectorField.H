@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,10 +31,10 @@ Description
 
 Usage
     \table
-        Property     | Description             | Required    | Default value
-        axis         | Axis of rotation        | yes         |
-        origin       |Origin of rotation      | yes         |
-        axialVelocity | Axial velocity profile [m/s] | yes    |
+        Property       | Description             | Required    | Default value
+        axis           | Axis of rotation        | yes         |
+        origin         | Origin of rotation      | yes         |
+        axialVelocity  | Axial velocity profile [m/s] | yes    |
         radialVelocity | Radial velocity profile [m/s] | yes  |
         tangentialVelocity | tangential velocity profile [m/s] | yes  |
     \endtable
@@ -59,7 +59,7 @@ Note
 
 See also
     Foam::fixedValueFvPatchField
-    Foam::Function1Types
+    Foam::Function1s
 
 SourceFiles
     swirlInletVelocityFvPatchVectorField.C
@@ -84,7 +84,7 @@ class swirlInletVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Origin of the rotation
         const vector origin_;
@@ -136,7 +136,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         swirlInletVelocityFvPatchVectorField
         (
             const swirlInletVelocityFvPatchVectorField&
@@ -151,7 +151,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         swirlInletVelocityFvPatchVectorField
         (
             const swirlInletVelocityFvPatchVectorField&,
@@ -171,7 +171,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

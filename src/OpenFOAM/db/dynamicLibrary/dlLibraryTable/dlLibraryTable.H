@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,13 +56,6 @@ class dlLibraryTable
         DynamicList<fileName> libNames_;
 
 
-        //- Disallow default bitwise copy construct
-        dlLibraryTable(const dlLibraryTable&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const dlLibraryTable&);
-
-
 public:
 
     // Declare name of the class and its debug switch
@@ -76,6 +69,9 @@ public:
         //- Construct from dictionary and name of 'libs' entry giving
         //  the libraries to load
         dlLibraryTable(const dictionary&, const word&);
+
+        //- Disallow default bitwise copy construction
+        dlLibraryTable(const dlLibraryTable&) = delete;
 
 
     //- Destructor
@@ -107,6 +103,12 @@ public:
             const word& libsEntry,
             const TablePtr& tablePtr
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dlLibraryTable&) = delete;
 };
 
 

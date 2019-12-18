@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,15 +54,6 @@ class VoFPatchTransfer
 :
     public transferModel
 {
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        VoFPatchTransfer(const VoFPatchTransfer&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const VoFPatchTransfer&);
-
-
 protected:
 
         //- Factor of the cell height above which the film is transferred
@@ -100,6 +91,9 @@ public:
         //- Construct from surface film model
         VoFPatchTransfer(surfaceFilmRegionModel& film, const dictionary& dict);
 
+        //- Disallow default bitwise copy construction
+        VoFPatchTransfer(const VoFPatchTransfer&) = delete;
+
 
     //- Destructor
     virtual ~VoFPatchTransfer();
@@ -128,6 +122,12 @@ public:
         (
             scalarField& patchMasses
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const VoFPatchTransfer&) = delete;
 };
 
 

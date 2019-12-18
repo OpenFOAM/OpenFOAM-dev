@@ -9,6 +9,8 @@ fvVectorMatrix UcEqn
 
 UcEqn.relax();
 
+fvOptions.constrain(UcEqn);
+
 volScalarField rAUc(1.0/UcEqn.A());
 surfaceScalarField rAUcf("Dp", fvc::interpolate(rAUc));
 
@@ -28,4 +30,6 @@ if (pimple.momentumPredictor())
             phicForces/rAUcf - fvc::snGrad(p)*mesh.magSf()
         )
     );
+
+    fvOptions.correct(Uc);
 }

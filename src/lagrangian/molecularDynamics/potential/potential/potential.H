@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ namespace Foam
 
 class potential
 {
-    // Private data
+    // Private Data
 
         const polyMesh& mesh_;
 
@@ -86,12 +86,6 @@ class potential
             IOdictionary& idListDict
         );
 
-        //- Disallow default bitwise copy construct
-        potential(const potential&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const potential&);
-
 
 public:
 
@@ -107,6 +101,9 @@ public:
             const IOdictionary& mdInitialiseDict,
             IOdictionary& idListDict
         );
+
+        //- Disallow default bitwise copy construction
+        potential(const potential&) = delete;
 
 
     //- Destructor
@@ -134,6 +131,12 @@ public:
             inline const tetherPotentialList& tetherPotentials() const;
 
             inline const vector& gravity() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const potential&) = delete;
 };
 
 

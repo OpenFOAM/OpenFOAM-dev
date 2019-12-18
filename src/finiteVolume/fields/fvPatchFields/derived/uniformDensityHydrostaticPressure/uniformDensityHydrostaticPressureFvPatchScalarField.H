@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,13 +38,13 @@ Description
         p_{ref}    | Reference pressure [Pa]
         x_{ref}    | Reference point in Cartesian co-ordinates
         \rho_{ref} | Density (assumed uniform)
-        g          | Acceleration due to gravity [m/s2]
+        g          | Acceleration due to gravity [m/s^2]
     \endtable
 
 Usage
     \table
         Property     | Description             | Required    | Default value
-        rhoRef       | Uniform density [kg/m3] | yes         |
+        rhoRef       | Uniform density [kg/m^3] | yes         |
         pRef         | Reference pressure [Pa] | yes         |
         pRefPoint    | Reference pressure location | no      | hRef
         value        | Initial value           | no          | pRef
@@ -84,7 +84,7 @@ class uniformDensityHydrostaticPressureFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
         //- Constant density in the far-field
         scalar rho_;
@@ -132,7 +132,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         uniformDensityHydrostaticPressureFvPatchScalarField
         (
             const uniformDensityHydrostaticPressureFvPatchScalarField&
@@ -147,7 +147,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         uniformDensityHydrostaticPressureFvPatchScalarField
         (
             const uniformDensityHydrostaticPressureFvPatchScalarField&,
@@ -171,7 +171,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

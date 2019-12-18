@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,18 +41,12 @@ void Foam::sixDoFRigidBodyMotionState::write(dictionary& dict) const
 
 void Foam::sixDoFRigidBodyMotionState::write(Ostream& os) const
 {
-    os.writeKeyword("centreOfRotation")
-        << centreOfRotation_ << token::END_STATEMENT << nl;
-    os.writeKeyword("orientation")
-        << Q_ << token::END_STATEMENT << nl;
-    os.writeKeyword("velocity")
-        << v_ << token::END_STATEMENT << nl;
-    os.writeKeyword("acceleration")
-        << a_ << token::END_STATEMENT << nl;
-    os.writeKeyword("angularMomentum")
-        << pi_ << token::END_STATEMENT << nl;
-    os.writeKeyword("torque")
-        << tau_ << token::END_STATEMENT << nl;
+    writeEntry(os, "centreOfRotation", centreOfRotation_);
+    writeEntry(os, "orientation", Q_);
+    writeEntry(os, "velocity", v_);
+    writeEntry(os, "acceleration", a_);
+    writeEntry(os, "angularMomentum", pi_);
+    writeEntry(os, "torque", tau_);
 }
 
 

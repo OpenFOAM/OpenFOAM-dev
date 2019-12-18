@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ class oscillatingRotatingMotion
 :
     public solidBodyMotionFunction
 {
-    // Private data
+    // Private Data
 
         //- Centre of gravity
         point origin_;
@@ -64,15 +64,6 @@ class oscillatingRotatingMotion
 
         //- Radial velocity
         scalar omega_;
-
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        oscillatingRotatingMotion(const oscillatingRotatingMotion&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const oscillatingRotatingMotion&);
 
 
 public:
@@ -89,6 +80,9 @@ public:
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
+
+        //- Disallow default bitwise copy construction
+        oscillatingRotatingMotion(const oscillatingRotatingMotion&);
 
         //- Construct and return a clone
         virtual autoPtr<solidBodyMotionFunction> clone() const
@@ -115,6 +109,12 @@ public:
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& SBMFCoeffs);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const oscillatingRotatingMotion&) = delete;
 };
 
 

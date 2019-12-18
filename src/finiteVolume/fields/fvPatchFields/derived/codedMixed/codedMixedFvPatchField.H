@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,13 @@ class codedMixedFvPatchField
     public mixedFvPatchField<Type>,
     public codedBase
 {
-    // Private data
+    // Private static data
+
+        //- The keywords associated with source code
+        static const wordList codeKeys_;
+
+
+    // Private Data
 
         //- Dictionary contents for the boundary condition
         mutable dictionary dict_;
@@ -136,19 +142,22 @@ class codedMixedFvPatchField
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
 
-        // Return a description (type + name) for the output
+        //- Return a description (type + name) for the output
         virtual string description() const;
 
-        // Clear the ptr to the redirected object
+        //- Clear the ptr to the redirected object
         virtual void clearRedirect() const;
 
-        // Get the dictionary to initialize the codeContext
+        //- Get the dictionary to initialize the codeContext
         virtual const dictionary& codeDict() const;
+
+        //- Get the keywords associated with source code
+        virtual const wordList& codeKeys() const;
 
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Name of the C code template to be used
         static const word codeTemplateC;
@@ -188,7 +197,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         codedMixedFvPatchField
         (
             const codedMixedFvPatchField<Type>&
@@ -203,7 +212,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         codedMixedFvPatchField
         (
             const codedMixedFvPatchField<Type>&,
@@ -223,7 +232,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Get reference to the underlying patchField
         const mixedFvPatchField<Type>& redirectPatchField() const;

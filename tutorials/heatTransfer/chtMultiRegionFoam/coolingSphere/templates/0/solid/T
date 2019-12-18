@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "$FOAM_CASE/constant/initialConditions";
+#include "$FOAM_CASE/constant/initialConditions"
 
 dimensions      [ 0 0 0 1 0 0 0 ];
 
@@ -26,7 +26,6 @@ boundaryField
     {
         type            compressible::turbulentTemperatureCoupledBaffleMixed;
         value           $internalField;
-        kappaMethod     solidThermo;
         kappa           kappa;
         Tnbr            T;
     }

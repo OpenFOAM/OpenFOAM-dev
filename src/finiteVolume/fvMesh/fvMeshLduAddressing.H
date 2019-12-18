@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ class fvMeshLduAddressing
 :
     public lduAddressing
 {
-    // Private data
+    // Private Data
 
         //- Lower as a subList of allOwner
         labelList::subList lowerAddr_;
@@ -64,15 +64,6 @@ class fvMeshLduAddressing
 
         //- Patch field evaluation schedule
         const lduSchedule& patchSchedule_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        fvMeshLduAddressing(const fvMeshLduAddressing&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const fvMeshLduAddressing&);
 
 
 public:
@@ -100,6 +91,9 @@ public:
                 patchAddr_[patchi] = &mesh.boundary()[patchi].faceCells();
             }
         }
+
+        //- Disallow default bitwise copy construction
+        fvMeshLduAddressing(const fvMeshLduAddressing&) = delete;
 
 
     //- Destructor
@@ -132,6 +126,12 @@ public:
         {
             return patchSchedule_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const fvMeshLduAddressing&) = delete;
 };
 
 

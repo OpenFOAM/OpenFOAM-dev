@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ SourceFiles
 
 // do not include legacy strstream headers
 #ifndef  VTK_EXCLUDE_STRSTREAM_HEADERS
-# define VTK_EXCLUDE_STRSTREAM_HEADERS
+    #define VTK_EXCLUDE_STRSTREAM_HEADERS
 #endif
 
 #include "className.H"
@@ -185,7 +185,7 @@ class vtkPVblockMesh
         //- Selected curved edges
         boolList edgeStatus_;
 
-        //- First instance and size of bleckMesh blocks
+        //- First instance and size of blockMesh blocks
         //  used to index into blockStatus_
         arrayRange arrayRangeBlocks_;
 
@@ -293,13 +293,6 @@ class vtkPVblockMesh
             );
 
 
-        //- Disallow default bitwise copy construct
-        vtkPVblockMesh(const vtkPVblockMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const vtkPVblockMesh&);
-
-
 public:
 
     //- Static data members
@@ -315,6 +308,9 @@ public:
             const char* const FileName,
             vtkPVblockMeshReader* reader
         );
+
+        //- Disallow default bitwise copy construction
+        vtkPVblockMesh(const vtkPVblockMesh&) = delete;
 
 
     //- Destructor
@@ -339,6 +335,11 @@ public:
         //- Debug information
         void PrintSelf(ostream&, vtkIndent) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const vtkPVblockMesh&) = delete;
 };
 
 

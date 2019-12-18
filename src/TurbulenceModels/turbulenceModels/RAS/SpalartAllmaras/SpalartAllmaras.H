@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,9 +89,7 @@ class SpalartAllmaras
 {
     // Private Member Functions
 
-        // Disallow default bitwise copy construct and assignment
-        SpalartAllmaras(const SpalartAllmaras&);
-        void operator=(const SpalartAllmaras&);
+        using IOobject::modelName;
 
 
 protected:
@@ -119,7 +117,7 @@ protected:
             //- Wall distance
             //  Note: different to wall distance in parent RASModel
             //  which is for near-wall cells only
-            const volScalarField& y_;
+            const volScalarField::Internal& y_;
 
 
     // Protected Member Functions
@@ -128,19 +126,22 @@ protected:
 
         tmp<volScalarField> fv1(const volScalarField& chi) const;
 
-        tmp<volScalarField> fv2
+        tmp<volScalarField::Internal> fv2
         (
-            const volScalarField& chi,
-            const volScalarField& fv1
+            const volScalarField::Internal& chi,
+            const volScalarField::Internal& fv1
         ) const;
 
-        tmp<volScalarField> Stilda
+        tmp<volScalarField::Internal> Stilda
         (
-            const volScalarField& chi,
-            const volScalarField& fv1
+            const volScalarField::Internal& chi,
+            const volScalarField::Internal& fv1
         ) const;
 
-        tmp<volScalarField> fw(const volScalarField& Stilda) const;
+        tmp<volScalarField::Internal> fw
+        (
+            const volScalarField::Internal& Stilda
+        ) const;
 
         void correctNut(const volScalarField& fv1);
         virtual void correctNut();
@@ -172,6 +173,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        SpalartAllmaras(const SpalartAllmaras&) = delete;
+
 
     //- Destructor
     virtual ~SpalartAllmaras()
@@ -194,6 +198,12 @@ public:
 
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SpalartAllmaras&) = delete;
 };
 
 

@@ -35,8 +35,6 @@ Description
     - if extruding boundary faces:
         - convert boundary faces to mappedWall patches
     - extrude edges of faceZone as a \<zone\>_sidePatch
-    - extrude edges in between different faceZones as a
-      (nonuniformTransform)cyclic \<zoneA\>_\<zoneB\>
     - extrudes into master direction (i.e. away from the owner cell
       if flipMap is false)
 
@@ -123,7 +121,6 @@ Notes:
 #include "syncTools.H"
 #include "cyclicPolyPatch.H"
 #include "wedgePolyPatch.H"
-#include "nonuniformTransformCyclicPolyPatch.H"
 #include "extrudeModel.H"
 #include "faceSet.H"
 #include "fvMeshTools.H"
@@ -709,7 +706,7 @@ void countExtrudePatches
             }
         }
     }
-    // Synchronise decistion. Actual numbers are not important, just make
+    // Synchronise decision. Actual numbers are not important, just make
     // sure that they're > 0 on all processors.
     Pstream::listCombineGather(zoneSidePatch, plusEqOp<label>());
     Pstream::listCombineScatter(zoneSidePatch);
@@ -1047,89 +1044,6 @@ void addZoneSidePatches
         }
     }
     Pout<< "Added " << newPatches.size()-nOldPatches << " zone-side patches."
-        << nl << endl;
-}
-
-
-void addInterZonePatches
-(
-    const fvMesh& mesh,
-    const wordList& zoneNames,
-    const bool oneD,
-
-    labelList& zoneZonePatch_min,
-    labelList& zoneZonePatch_max,
-    DynamicList<polyPatch*>& newPatches
-)
-{
-    Pout<< "Adding inter-zone patches:" << nl << nl
-        << "patchID\tpatch" << nl
-        << "-------\t-----"
-        << endl;
-
-    dictionary transformDict;
-    transformDict.add
-    (
-        "transform",
-        cyclicPolyPatch::transformTypeNames[cyclicPolyPatch::NOORDERING]
-    );
-
-    // Allow arbitrary matching for nonuniformTransformCyclicPolyPatch
-    transformDict.add("matchTolerance", 1e6);
-
-    label nOldPatches = newPatches.size();
-
-    if (!oneD)
-    {
-        forAll(zoneZonePatch_min, minZone)
-        {
-            for (label maxZone = minZone; maxZone < zoneNames.size(); maxZone++)
-            {
-                label index = minZone*zoneNames.size()+maxZone;
-
-                if (zoneZonePatch_min[index] > 0)
-                {
-                    word minToMax =
-                        zoneNames[minZone]
-                      + "_to_"
-                      + zoneNames[maxZone];
-                    word maxToMin =
-                        zoneNames[maxZone]
-                      + "_to_"
-                      + zoneNames[minZone];
-
-                    {
-                        transformDict.set("neighbourPatch", maxToMin);
-                        zoneZonePatch_min[index] =
-                        addPatch<nonuniformTransformCyclicPolyPatch>
-                        (
-                            mesh.boundaryMesh(),
-                            minToMax,
-                            transformDict,
-                            newPatches
-                        );
-                        Pout<< zoneZonePatch_min[index] << '\t' << minToMax
-                            << nl;
-                    }
-                    {
-                        transformDict.set("neighbourPatch", minToMax);
-                        zoneZonePatch_max[index] =
-                        addPatch<nonuniformTransformCyclicPolyPatch>
-                        (
-                            mesh.boundaryMesh(),
-                            maxToMin,
-                            transformDict,
-                            newPatches
-                        );
-                        Pout<< zoneZonePatch_max[index] << '\t' << maxToMin
-                            << nl;
-                    }
-
-                }
-            }
-        }
-    }
-    Pout<< "Added " << newPatches.size()-nOldPatches << " inter-zone patches."
         << nl << endl;
 }
 
@@ -1824,7 +1738,7 @@ int main(int argc, char *argv[])
             }
         }
     }
-    const primitiveFacePatch extrudePatch(zoneFaces.xfer(), mesh.points());
+    const primitiveFacePatch extrudePatch(move(zoneFaces), mesh.points());
 
 
     Pstream::listCombineGather(isInternal, orEqOp<bool>());
@@ -2039,19 +1953,6 @@ int main(int argc, char *argv[])
 
         regionPatches,
         zoneSidePatch
-    );
-
-
-    // Add the patches in between zones
-    addInterZonePatches
-    (
-        mesh,
-        zoneNames,
-        oneD,
-
-        zoneZonePatch_min,
-        zoneZonePatch_max,
-        regionPatches
     );
 
 
@@ -2349,10 +2250,10 @@ int main(int argc, char *argv[])
             IOobject::AUTO_WRITE,
             false
         ),
-        xferCopy(pointField()),
-        xferCopy(faceList()),
-        xferCopy(labelList()),
-        xferCopy(labelList()),
+        pointField(),
+        faceList(),
+        labelList(),
+        labelList(),
         false
     );
 
@@ -2381,7 +2282,7 @@ int main(int argc, char *argv[])
             meshMod
         );
 
-        // Enforce actual point posititions according to extrudeModel (model)
+        // Enforce actual point positions according to extrudeModel (model)
         // (extruder.setRefinement only does fixed expansionRatio)
         // The regionPoints and nLayers are looped in the same way as in
         // createShellMesh

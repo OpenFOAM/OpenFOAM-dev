@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ Usage
     }
     \endverbatim
 
-    The \c flowRate entry is a \c Function1 of time, see Foam::Function1Types.
+    The \c flowRate entry is a \c Function1 of time, see Foam::Function1s.
 
 Note
     - \c rhoOutlet is required for the case of a mass flow rate, where the
@@ -79,7 +79,7 @@ Note
 
 See also
     Foam::fixedValueFvPatchField
-    Foam::Function1Types
+    Foam::Function1s
     Foam::flowRateInletVelocityFvPatchVectorField
 
 SourceFiles
@@ -106,7 +106,7 @@ class flowRateOutletVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Outlet integral flow rate
         autoPtr<Function1<scalar>> flowRate_;
@@ -121,7 +121,7 @@ class flowRateOutletVelocityFvPatchVectorField
         scalar rhoOutlet_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Update the patch values given the appropriate density type and value
         template<class RhoType>
@@ -162,7 +162,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         flowRateOutletVelocityFvPatchVectorField
         (
             const flowRateOutletVelocityFvPatchVectorField&
@@ -177,7 +177,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         flowRateOutletVelocityFvPatchVectorField
         (
             const flowRateOutletVelocityFvPatchVectorField&,
@@ -197,7 +197,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

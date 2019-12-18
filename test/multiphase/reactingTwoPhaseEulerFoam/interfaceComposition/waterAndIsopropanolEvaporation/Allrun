@@ -33,7 +33,7 @@ set rmargin at screen 0.84
 gasSpecies = '$gasSpecies'
 liquidSpecies = '$liquidSpecies'
 
-set multiplot layout 4,1
+set multiplot layout 6,1
 
 set xlabel "Time (s)"
 
@@ -61,7 +61,10 @@ plot \
     'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/T.gas' w l lc 1 notitle, \
     'postProcessing_none.gas_none.liquid/plot/0/T.liquid' w l lc 2 t 'Liquid', \
     for [g in gasSpecies] for [l in liquidSpecies] \
-    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/T.liquid' w l lc 2 notitle
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/T.liquid' w l lc 2 notitle, \
+    'postProcessing_none.gas_none.liquid/plot/0/Tf.gasAndLiquid' w l lc 3 t 'Interface', \
+    for [g in gasSpecies] for [l in liquidSpecies] \
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/Tf.gasAndLiquid' w l lc 3 notitle
 
 set ytics nomirror
 set y2tics
@@ -91,6 +94,38 @@ plot \
     'postProcessing_none.gas_none.liquid/plot/0/C3H8O.liquid' w l lc 2 t 'C3H8O', \
     for [g in gasSpecies] for [l in liquidSpecies] \
     'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/C3H8O.liquid' w l lc 2 notitle
+
+set ytics nomirror
+set y2tics
+set ylabel "Mass (kg/m^3)"
+set y2label "Energy (J/m^3)"
+
+plot \
+    'postProcessing_none.gas_none.liquid/plot/0/dMass.gas' w l lc 1 t 'Gas Mass Change', \
+    for [g in gasSpecies] for [l in liquidSpecies] \
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/dMass.gas' w l lc 1 notitle, \
+    'postProcessing_none.gas_none.liquid/plot/0/dMass.liquid' w l lc 2 t 'Liquid Mass Change', \
+    for [g in gasSpecies] for [l in liquidSpecies] \
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/dMass.liquid' w l lc 2 notitle, \
+    'postProcessing_none.gas_none.liquid/plot/0/dEnergy.gas' w l axes x1y2 lc 3 t 'Gas Energy Change', \
+    for [g in gasSpecies] for [l in liquidSpecies] \
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/dEnergy.gas' w l axes x1y2 lc 3 notitle, \
+    'postProcessing_none.gas_none.liquid/plot/0/dEnergy.liquid' w l axes x1y2 lc 4 t 'Liquid Energy Change', \
+    for [g in gasSpecies] for [l in liquidSpecies] \
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/dEnergy.liquid' w l axes x1y2 lc 4 notitle
+
+set ytics nomirror
+set y2tics
+set ylabel "Mass (kg/m^3)"
+set y2label "Energy (J/m^3)"
+
+plot \
+    'postProcessing_none.gas_none.liquid/plot/0/dMass' w l lc 1 t 'Mass Error', \
+    for [g in gasSpecies] for [l in liquidSpecies] \
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/dMass' w l lc 1 notitle, \
+    'postProcessing_none.gas_none.liquid/plot/0/dEnergy' w l axes x1y2 lc 2 t 'Energy Error', \
+    for [g in gasSpecies] for [l in liquidSpecies] \
+    'postProcessing_'.g.'.gas_'.l.'.liquid/plot/0/dEnergy' w l axes x1y2 lc 2 notitle
 
 unset multiplot
 

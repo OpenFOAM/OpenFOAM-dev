@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ class IOobjectList;
 
 class lagrangianFieldDecomposer
 {
-    // Private data
+    // Private Data
 
         //- Reference to processor mesh
         const polyMesh& procMesh_;
@@ -64,15 +64,6 @@ class lagrangianFieldDecomposer
 
         //- The indices of the particles on this processor
         labelList particleIndices_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        lagrangianFieldDecomposer(const lagrangianFieldDecomposer&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const lagrangianFieldDecomposer&);
 
 
 public:
@@ -90,6 +81,9 @@ public:
             const Cloud<indexedParticle>& lagrangianPositions,
             const List<SLList<indexedParticle*>*>& cellParticles
         );
+
+        //- Disallow default bitwise copy construction
+        lagrangianFieldDecomposer(const lagrangianFieldDecomposer&) = delete;
 
 
     // Member Functions
@@ -144,6 +138,12 @@ public:
             const word& cloudName,
             const PtrList<GeoField>& fields
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const lagrangianFieldDecomposer&) = delete;
 };
 
 

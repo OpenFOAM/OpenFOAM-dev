@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ Description
         x, y, z = global cartesian co-ordinates [m]
         u, v, w = global cartesian velocity components [m/s]
         d       = diameter [m]
-        rho     = density [kg/m3]
+        rho     = density [kg/m^3]
         mDot    = mass flow rate [kg/s]
         T       = temperature [K]
         cp      = specific heat capacity [J/kg/K]
@@ -69,7 +69,7 @@ class ThermoLookupTableInjection
 :
     public InjectionModel<CloudType>
 {
-    // Private data
+    // Private Data
 
         //- Name of file containing injector/parcel data
         const word inputFileName_;
@@ -86,13 +86,13 @@ class ThermoLookupTableInjection
         //- List of injectors
         kinematicParcelInjectionDataIOList injectors_;
 
-        //- List of cell labels corresoponding to injector positions
+        //- List of cell labels corresponding to injector positions
         labelList injectorCells_;
 
-        //- List of tetFace labels corresoponding to injector positions
+        //- List of tetFace labels corresponding to injector positions
         labelList injectorTetFaces_;
 
-        //- List of tetPt labels corresoponding to injector positions
+        //- List of tetPt labels corresponding to injector positions
         labelList injectorTetPts_;
 
 

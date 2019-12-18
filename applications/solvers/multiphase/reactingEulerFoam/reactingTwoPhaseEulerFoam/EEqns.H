@@ -43,5 +43,4 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
     }
 
     fluid.correctThermo();
-    fluid.correct();
 }

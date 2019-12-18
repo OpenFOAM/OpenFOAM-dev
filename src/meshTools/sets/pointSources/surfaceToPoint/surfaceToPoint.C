@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,7 +147,7 @@ Foam::surfaceToPoint::surfaceToPoint
 :
     topoSetSource(mesh),
     surfName_(fileName(dict.lookup("file")).expand()),
-    nearDist_(readScalar(dict.lookup("nearDistance"))),
+    nearDist_(dict.lookup<scalar>("nearDistance")),
     includeInside_(readBool(dict.lookup("includeInside"))),
     includeOutside_(readBool(dict.lookup("includeOutside")))
 {

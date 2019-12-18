@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,12 +43,12 @@ Usage
     }
     \endverbatim
 
-    The \c U entry is a Function1 of time, see Foam::Function1Types.
+    The \c U entry is a Function1 of time, see Foam::Function1s.
 
 
 See also
     Foam::fixedValueFvPatchField
-    Foam::Function1Types
+    Foam::Function1s
 
 SourceFiles
     translatingWallVelocityFvPatchVectorField.C
@@ -74,7 +74,7 @@ class translatingWallVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Translational velocity
         autoPtr<Function1<vector>> U_;
@@ -113,7 +113,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         translatingWallVelocityFvPatchVectorField
         (
             const translatingWallVelocityFvPatchVectorField&
@@ -128,7 +128,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         translatingWallVelocityFvPatchVectorField
         (
             const translatingWallVelocityFvPatchVectorField&,
@@ -148,7 +148,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

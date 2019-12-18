@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,11 +59,11 @@ linearSpatial::linearSpatial
     referencePoint_(coeffsDict().lookup("referencePoint")),
     referenceCellSize_
     (
-        readScalar(coeffsDict().lookup("referenceCellSizeCoeff"))
+        coeffsDict().lookup<scalar>("referenceCellSizeCoeff")
        *defaultCellSize
     ),
     direction_(coeffsDict().lookup("direction")),
-    cellSizeGradient_(readScalar(coeffsDict().lookup("cellSizeGradient")))
+    cellSizeGradient_(coeffsDict().lookup<scalar>("cellSizeGradient"))
 {
     direction_ /= mag(direction_);
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,15 +48,6 @@ namespace Foam
 
 class reactingMultiphaseCloud
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        reactingMultiphaseCloud(const reactingMultiphaseCloud&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const reactingMultiphaseCloud&);
-
-
 public:
 
     //- Runtime type information
@@ -67,9 +58,18 @@ public:
         //- Null constructor
         reactingMultiphaseCloud();
 
+        //- Disallow default bitwise copy construction
+        reactingMultiphaseCloud(const reactingMultiphaseCloud&) = delete;
+
 
     //- Destructor
     virtual ~reactingMultiphaseCloud();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const reactingMultiphaseCloud&) = delete;
 };
 
 

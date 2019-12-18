@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,8 +80,8 @@ int main(int argc, char *argv[])
     list2.setSize(10, vector(1, 2, 3));
     Info<< "list2: " << list2 << endl;
 
-    List<vector> list3(list2.xfer());
-    Info<< "Transferred via the xfer() method" << endl;
+    List<vector> list3(move(list2));
+    Info<< "Transferred move" << endl;
     Info<< "list2: " << list2 << nl
         << "list3: " << list3 << endl;
 

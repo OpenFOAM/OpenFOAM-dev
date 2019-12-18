@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -215,7 +215,7 @@ bool Foam::fileOperations::collatedFileOperation::appendObject
     if (isMaster)
     {
         IOobject::writeBanner(os)
-            << "FoamFile\n{\n"
+            << IOobject::foamFile << "\n{\n"
             << "    version     " << os.version() << ";\n"
             << "    format      " << os.format() << ";\n"
             << "    class       " << decomposedBlockData::typeName
@@ -265,20 +265,23 @@ Foam::fileOperations::collatedFileOperation::collatedFileOperation
 {
     if (verbose)
     {
-        Info<< "I/O    : " << typeName
+        InfoHeader
+            << "I/O    : " << typeName
             << " (maxThreadFileBufferSize " << maxThreadFileBufferSize
             << ')' << endl;
 
         if (maxThreadFileBufferSize == 0)
         {
-            Info<< "         Threading not activated "
+            InfoHeader
+                << "         Threading not activated "
                    "since maxThreadFileBufferSize = 0." << nl
                 << "         Writing may run slowly for large file sizes."
                 << endl;
         }
         else
         {
-            Info<< "         Threading activated "
+            InfoHeader
+                << "         Threading activated "
                    "since maxThreadFileBufferSize > 0." << nl
                 << "         Requires large enough buffer to collect all data"
                     " or thread support " << nl
@@ -300,12 +303,12 @@ Foam::fileOperations::collatedFileOperation::collatedFileOperation
             }
             Pstream::gatherList(ioRanks);
 
-            Info<< "         IO nodes:" << endl;
+            InfoHeader << "         IO nodes:" << endl;
             forAll(ioRanks, proci)
             {
                 if (!ioRanks[proci].empty())
                 {
-                    Info<< "             " << ioRanks[proci] << endl;
+                    InfoHeader << "             " << ioRanks[proci] << endl;
                 }
             }
         }
@@ -350,20 +353,23 @@ Foam::fileOperations::collatedFileOperation::collatedFileOperation
 {
     if (verbose)
     {
-        Info<< "I/O    : " << typeName
+        InfoHeader
+            << "I/O    : " << typeName
             << " (maxThreadFileBufferSize " << maxThreadFileBufferSize
             << ')' << endl;
 
         if (maxThreadFileBufferSize == 0)
         {
-            Info<< "         Threading not activated "
+            InfoHeader
+                << "         Threading not activated "
                    "since maxThreadFileBufferSize = 0." << nl
                 << "         Writing may run slowly for large file sizes."
                 << endl;
         }
         else
         {
-            Info<< "         Threading activated "
+            InfoHeader
+                << "         Threading activated "
                    "since maxThreadFileBufferSize > 0." << nl
                 << "         Requires large enough buffer to collect all data"
                     " or thread support " << nl
@@ -447,7 +453,7 @@ bool Foam::fileOperations::collatedFileOperation::writeObject
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp,
-    const bool valid
+    const bool write
 ) const
 {
     const Time& tm = io.time();
@@ -473,7 +479,7 @@ bool Foam::fileOperations::collatedFileOperation::writeObject
             ver,
             cmp,
             false,
-            valid
+            write
         );
 
         // If any of these fail, return (leave error handling to Ostream class)
@@ -519,7 +525,7 @@ bool Foam::fileOperations::collatedFileOperation::writeObject
                 ver,
                 cmp,
                 false,
-                valid
+                write
             );
 
             // If any of these fail, return (leave error handling to Ostream

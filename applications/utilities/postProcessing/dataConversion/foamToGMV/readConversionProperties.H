@@ -13,7 +13,7 @@ IOdictionary conversionProperties
 
 scalar startTime
 (
-    readScalar(conversionProperties.lookup("startTime"))
+    conversionProperties.lookup<scalar>("startTime")
 );
 
 word vComp

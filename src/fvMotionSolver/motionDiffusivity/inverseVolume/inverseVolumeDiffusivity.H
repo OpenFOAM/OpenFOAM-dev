@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef inverseVolumeDiffusivity_H
 #define inverseVolumeDiffusivity_H
 
-#include "uniformDiffusivity.H"
+#include "motionDiffusivity.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,17 +48,8 @@ namespace Foam
 
 class inverseVolumeDiffusivity
 :
-    public uniformDiffusivity
+    public motionDiffusivity
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        inverseVolumeDiffusivity(const inverseVolumeDiffusivity&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const inverseVolumeDiffusivity&);
-
-
 public:
 
     //- Runtime type information
@@ -70,15 +61,21 @@ public:
         //- Construct for the given fvMesh and data Istream
         inverseVolumeDiffusivity(const fvMesh& mesh, Istream& mdData);
 
+        //- Disallow default bitwise copy construction
+        inverseVolumeDiffusivity(const inverseVolumeDiffusivity&) = delete;
+
 
     //- Destructor
     virtual ~inverseVolumeDiffusivity();
 
 
-    // Member Functions
+    // Member Operators
 
-        //- Correct the motion diffusivity
-        virtual void correct();
+        //- Disallow default bitwise assignment
+        void operator=(const inverseVolumeDiffusivity&) = delete;
+
+        //- Return diffusivity field
+        virtual tmp<surfaceScalarField> operator()() const;
 };
 
 

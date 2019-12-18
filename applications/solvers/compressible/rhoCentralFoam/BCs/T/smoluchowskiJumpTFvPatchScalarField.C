@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
     muName_(dict.lookupOrDefault<word>("mu", "thermo:mu")),
-    accommodationCoeff_(readScalar(dict.lookup("accommodationCoeff"))),
+    accommodationCoeff_(dict.lookup<scalar>("accommodationCoeff")),
     Twall_("Twall", dict, p.size()),
     gamma_(dict.lookupOrDefault<scalar>("gamma", 1.4))
 {
@@ -204,7 +204,6 @@ void Foam::smoluchowskiJumpTFvPatchScalarField::updateCoeffs()
 }
 
 
-// Write
 void Foam::smoluchowskiJumpTFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);
@@ -214,12 +213,10 @@ void Foam::smoluchowskiJumpTFvPatchScalarField::write(Ostream& os) const
     writeEntryIfDifferent<word>(os, "psi", "thermo:psi", psiName_);
     writeEntryIfDifferent<word>(os, "mu", "thermo:mu", muName_);
 
-    os.writeKeyword("accommodationCoeff")
-        << accommodationCoeff_ << token::END_STATEMENT << nl;
-    Twall_.writeEntry("Twall", os);
-    os.writeKeyword("gamma")
-        << gamma_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "accommodationCoeff", accommodationCoeff_);
+    writeEntry(os, "Twall", Twall_);
+    writeEntry(os, "gamma", gamma_);
+    writeEntry(os, "value", *this);
 }
 
 

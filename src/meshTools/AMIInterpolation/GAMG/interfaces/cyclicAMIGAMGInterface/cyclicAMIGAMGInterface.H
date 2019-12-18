@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ class cyclicAMIGAMGInterface
     public GAMGInterface,
     public cyclicAMILduInterface
 {
-    // Private data
+    // Private Data
 
         //- Reference for the cyclicLduInterface from which this is
         //  agglomerated
@@ -63,15 +63,6 @@ class cyclicAMIGAMGInterface
 
         //- AMI transformations
         List<vectorTensorTransform> AMITransforms_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cyclicAMIGAMGInterface(const cyclicAMIGAMGInterface&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cyclicAMIGAMGInterface&);
 
 
 public:
@@ -94,6 +85,9 @@ public:
             const label fineLevelIndex,
             const label coarseComm
         );
+
+        //- Disallow default bitwise copy construction
+        cyclicAMIGAMGInterface(const cyclicAMIGAMGInterface&) = delete;
 
 
     //- Destructor
@@ -169,6 +163,12 @@ public:
                 // cyclicAMIGAMGInterface.
                 NotImplemented;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cyclicAMIGAMGInterface&) = delete;
 };
 
 

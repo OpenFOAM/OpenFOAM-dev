@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,16 +50,6 @@ class regionCoupledGAMGInterface
 :
     public regionCoupledBaseGAMGInterface
 {
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        regionCoupledGAMGInterface(const regionCoupledGAMGInterface&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const regionCoupledGAMGInterface&);
-
-
 public:
 
     //- Runtime type information
@@ -80,10 +70,15 @@ public:
             const label coarseComm
         );
 
+        //- Disallow default bitwise copy construction
+        regionCoupledGAMGInterface(const regionCoupledGAMGInterface&) = delete;
+
 
     //- Destructor
     virtual ~regionCoupledGAMGInterface();
 
+
+    // Member Functions
 
         // I/O
 
@@ -94,6 +89,12 @@ public:
                 // regionCoupledGAMGInterface.
                 NotImplemented;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const regionCoupledGAMGInterface&) = delete;
 };
 
 

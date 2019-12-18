@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ namespace Foam
 class dimensionSet;
 class dimensionSets;
 
-// Friend functions
+// Friend Functions
 
 dimensionSet max(const dimensionSet&, const dimensionSet&);
 dimensionSet min(const dimensionSet&, const dimensionSet&);
@@ -108,7 +108,7 @@ dimensionSet operator&(const dimensionSet&, const dimensionSet&);
 dimensionSet operator^(const dimensionSet&, const dimensionSet&);
 dimensionSet operator&&(const dimensionSet&, const dimensionSet&);
 
-// IOstream operators
+// IOstream Operators
 
 Istream& operator>>(Istream&, dimensionSet&);
 Ostream& operator<<(Ostream&, const dimensionSet&);
@@ -143,7 +143,7 @@ public:
         };
 
 
-    // Static data members
+    // Static Data Members
 
         static const scalar smallExponent;
 
@@ -154,7 +154,7 @@ private:
 
         class tokeniser
         {
-            // Private data
+            // Private Data
 
                 Istream& is_;
 
@@ -264,7 +264,7 @@ public:
         dimensionSet(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
         //- Return true if it is dimensionless
         bool dimensionless() const;
@@ -313,7 +313,7 @@ public:
         ) const;
 
 
-    // Member operators
+    // Member Operators
 
         scalar operator[](const dimensionType) const;
         scalar& operator[](const dimensionType);
@@ -332,7 +332,7 @@ public:
         bool operator/=(const dimensionSet&);
 
 
-    // Friend functions
+    // Friend Functions
 
         friend dimensionSet max(const dimensionSet&, const dimensionSet&);
         friend dimensionSet min(const dimensionSet&, const dimensionSet&);
@@ -423,11 +423,14 @@ public:
         );
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream&, dimensionSet&);
         friend Ostream& operator<<(Ostream&, const dimensionSet&);
 };
+
+
+void writeEntry(Ostream& os, const dimensionSet& value);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

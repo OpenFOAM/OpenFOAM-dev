@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,6 @@ Usage
     \table
         Property          | Description
         populationBalance | Name of the corresponding populationBalance
-        formFactor        | Form factor for converting diameter into volume
         sizeGroups        | List of sizeGroups
     \endtable
 
@@ -47,16 +46,16 @@ Usage
     {
         populationBalance    bubbles;
 
-        formFactor      0.5235987756;
+        shapeModel           constant;
 
         sizeGroups
         (
-            f0{d  1.00e-3; value 0;}
-            f1{d  1.08e-3; value 0;}
-            f2{d  1.16e-3; value 0.25;}
-            f3{d  1.25e-3; value 0.5;}
-            f4{d  1.36e-3; value 0.25;}
-            f5{d  1.46e-3; value 0;}
+            f0{dSph  1.00e-3; value 0;}
+            f1{dSph  1.08e-3; value 0;}
+            f2{dSph  1.16e-3; value 0.25;}
+            f3{dSph  1.25e-3; value 0.5;}
+            f4{dSph  1.36e-3; value 0.25;}
+            f5{dSph  1.46e-3; value 0;}
             ...
         );
     }
@@ -85,6 +84,7 @@ namespace Foam
 namespace diameterModels
 {
 
+// Forward declaration of classes
 class sizeGroup;
 
 /*---------------------------------------------------------------------------*\
@@ -95,25 +95,20 @@ class velocityGroup
 :
     public diameterModel
 {
-    // Private data
+    // Private Data
 
         //- Name of the populationBalance this velocityGroup belongs to
         word popBalName_;
 
-        //- Reference field from which the sizeGroup fields are derived
+        //- Sum of the sizeGroup volume fractions and reference field from which
+        //  the sizeGroup fields are derived
         volScalarField f_;
-
-        //- Form factor relating diameter and volume
-        dimensionedScalar formFactor_;
 
         //- sizeGroups belonging to this velocityGroup
         PtrList<sizeGroup> sizeGroups_;
 
-        //- Sum of sizeGroup volume fractions
-        volScalarField fSum_;
-
-        //- Number-based Sauter-mean diameter of the phase
-        volScalarField d_;
+        //- Sauter-mean diameter of the phase
+        volScalarField& d_;
 
         //- Multivariate convection scheme
         tmp<fv::convectionScheme<scalar>> mvConvection_;
@@ -125,15 +120,28 @@ class velocityGroup
         volScalarField dmdt_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         tmp<volScalarField> dsm() const;
 
         tmp<volScalarField> fSum() const;
 
-        void renormalize();
+        tmp<volScalarField> N() const;
+
+        void scale();
 
         tmp<Foam::fv::convectionScheme<Foam::scalar>> mvconvection() const;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Get the diameter field
+        virtual tmp<volScalarField> calcD() const;
+
+        //- Get the surface area per unit volume field
+        virtual tmp<volScalarField> calcA() const;
 
 
 public:
@@ -164,20 +172,17 @@ public:
         //- Return reference field for sizeGroup's
         inline const volScalarField& f() const;
 
-        //- Return the form factor
-        inline const dimensionedScalar& formFactor() const;
-
         //- Return sizeGroups belonging to this velocityGroup
         inline const PtrList<sizeGroup>& sizeGroups() const;
 
         //- Return const-reference to multivariate convectionScheme
         inline const tmp<fv::convectionScheme<scalar>>& mvConvection() const;
 
-        //- Return const-reference to mass transfer rate
+        //- Return const-reference to the mass transfer rate
         inline const volScalarField& dmdt() const;
 
-        //- Return reference to mass transfer rate
-        inline volScalarField& dmdt();
+        //- Return reference to the mass transfer rate
+        inline volScalarField& dmdtRef();
 
         //- Corrections before populationBalanceModel::solve()
         void preSolve();
@@ -187,9 +192,6 @@ public:
 
         //- Read diameterProperties dictionary
         virtual bool read(const dictionary& diameterProperties);
-
-        //- Return the Sauter-mean diameter
-        virtual tmp<volScalarField> d() const;
 };
 
 

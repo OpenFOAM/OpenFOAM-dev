@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Reaction.H"
-#include "DynamicList.H"
 
 // * * * * * * * * * * * * * * * * Static Data * * * * * * * * * * * * * * * //
 
@@ -37,57 +36,6 @@ Foam::scalar Foam::Reaction<ReactionThermo>::TlowDefault(0);
 template<class ReactionThermo>
 Foam::scalar Foam::Reaction<ReactionThermo>::ThighDefault(great);
 
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
-
-template<class ReactionThermo>
-void Foam::Reaction<ReactionThermo>::reactionStrLeft
-(
-    OStringStream& reaction
-) const
-{
-    for (label i = 0; i < lhs_.size(); ++i)
-    {
-        if (i > 0)
-        {
-            reaction << " + ";
-        }
-        if (mag(lhs_[i].stoichCoeff - 1) > small)
-        {
-            reaction << lhs_[i].stoichCoeff;
-        }
-        reaction << species_[lhs_[i].index];
-        if (mag(lhs_[i].exponent - lhs_[i].stoichCoeff) > small)
-        {
-            reaction << "^" << lhs_[i].exponent;
-        }
-    }
-}
-
-
-template<class ReactionThermo>
-void Foam::Reaction<ReactionThermo>::reactionStrRight
-(
-    OStringStream& reaction
-) const
-{
-    for (label i = 0; i < rhs_.size(); ++i)
-    {
-        if (i > 0)
-        {
-            reaction << " + ";
-        }
-        if (mag(rhs_[i].stoichCoeff - 1) > small)
-        {
-            reaction << rhs_[i].stoichCoeff;
-        }
-        reaction << species_[rhs_[i].index];
-        if (mag(rhs_[i].exponent - rhs_[i].stoichCoeff) > small)
-        {
-            reaction << "^" << rhs_[i].exponent;
-        }
-    }
-}
-
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -95,19 +43,6 @@ template<class ReactionThermo>
 Foam::label Foam::Reaction<ReactionThermo>::getNewReactionID()
 {
     return nUnNamedReactions++;
-}
-
-
-template<class ReactionThermo>
-Foam::string Foam::Reaction<ReactionThermo>::reactionStr
-(
-    OStringStream& reaction
-) const
-{
-    reactionStrLeft(reaction);
-    reaction << " = ";
-    reactionStrRight(reaction);
-    return reaction.str();
 }
 
 
@@ -153,7 +88,6 @@ void Foam::Reaction<ReactionThermo>::setThermo
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-
 template<class ReactionThermo>
 Foam::Reaction<ReactionThermo>::Reaction
 (
@@ -193,144 +127,6 @@ Foam::Reaction<ReactionThermo>::Reaction
 
 
 template<class ReactionThermo>
-Foam::Reaction<ReactionThermo>::specieCoeffs::specieCoeffs
-(
-    const speciesTable& species,
-    Istream& is
-)
-{
-    token t(is);
-    if (t.isNumber())
-    {
-        stoichCoeff = t.number();
-        is >> t;
-    }
-    else
-    {
-        stoichCoeff = 1;
-    }
-
-    exponent = stoichCoeff;
-
-    if (t.isWord())
-    {
-        word specieName = t.wordToken();
-
-        size_t i = specieName.find('^');
-
-        if (i != word::npos)
-        {
-            string exponentStr = specieName
-            (
-                i + 1,
-                specieName.size() - i - 1
-            );
-            exponent = atof(exponentStr.c_str());
-            specieName = specieName(0, i);
-        }
-
-        if (species.contains(specieName))
-        {
-            index = species[specieName];
-        }
-        else
-        {
-            index = -1;
-        }
-    }
-    else
-    {
-        FatalIOErrorInFunction(is)
-            << "Expected a word but found " << t.info()
-            << exit(FatalIOError);
-    }
-}
-
-
-template<class ReactionThermo>
-void Foam::Reaction<ReactionThermo>::setLRhs
-(
-    Istream& is,
-    const speciesTable& species,
-    List<specieCoeffs>& lhs,
-    List<specieCoeffs>& rhs
-)
-{
-    DynamicList<specieCoeffs> dlrhs;
-
-    while (is.good())
-    {
-        dlrhs.append(specieCoeffs(species, is));
-
-        if (dlrhs.last().index != -1)
-        {
-            token t(is);
-            if (t.isPunctuation())
-            {
-                if (t == token::ADD)
-                {
-                }
-                else if (t == token::ASSIGN)
-                {
-                    lhs = dlrhs.shrink();
-                    dlrhs.clear();
-                }
-                else
-                {
-                    rhs = dlrhs.shrink();
-                    is.putBack(t);
-                    return;
-                }
-            }
-            else
-            {
-                rhs = dlrhs.shrink();
-                is.putBack(t);
-                return;
-            }
-        }
-        else
-        {
-            dlrhs.remove();
-            if (is.good())
-            {
-                token t(is);
-                if (t.isPunctuation())
-                {
-                    if (t == token::ADD)
-                    {
-                    }
-                    else if (t == token::ASSIGN)
-                    {
-                        lhs = dlrhs.shrink();
-                        dlrhs.clear();
-                    }
-                    else
-                    {
-                        rhs = dlrhs.shrink();
-                        is.putBack(t);
-                        return;
-                    }
-                }
-            }
-            else
-            {
-                if (!dlrhs.empty())
-                {
-                    rhs = dlrhs.shrink();
-                }
-                return;
-            }
-        }
-    }
-
-    FatalIOErrorInFunction(is)
-        << "Cannot continue reading reaction data from stream"
-        << exit(FatalIOError);
-}
-
-
-template<class ReactionThermo>
 Foam::Reaction<ReactionThermo>::Reaction
 (
     const speciesTable& species,
@@ -344,7 +140,7 @@ Foam::Reaction<ReactionThermo>::Reaction
     Tlow_(dict.lookupOrDefault<scalar>("Tlow", TlowDefault)),
     Thigh_(dict.lookupOrDefault<scalar>("Thigh", ThighDefault))
 {
-    setLRhs
+    specieCoeffs::setLRhs
     (
         IStringStream(dict.lookup("reaction"))(),
         species_,
@@ -368,8 +164,20 @@ Foam::Reaction<ReactionThermo>::New
 {
     const word& reactionTypeName = dict.lookup("type");
 
-    typename dictionaryConstructorTable::iterator cstrIter
-        = dictionaryConstructorTablePtr_->find(reactionTypeName);
+    typename dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(reactionTypeName);
+
+    // Backwards compatibility check. Reaction names used to have "Reaction"
+    // (Reaction<ReactionThermo>::typeName_()) appended. This was removed as it
+    // is unnecessary given the context in which the reaction is specified. If
+    // this reaction name was not found, search also for the old name.
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    {
+        cstrIter = dictionaryConstructorTablePtr_->find
+        (
+            reactionTypeName.removeTrailing(typeName_())
+        );
+    }
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
@@ -388,14 +196,110 @@ Foam::Reaction<ReactionThermo>::New
 }
 
 
+template<class ReactionThermo>
+Foam::autoPtr<Foam::Reaction<ReactionThermo>>
+Foam::Reaction<ReactionThermo>::New
+(
+    const speciesTable& species,
+    const HashPtrTable<ReactionThermo>& thermoDatabase,
+    const objectRegistry& ob,
+    const dictionary& dict
+)
+{
+    // If the objectRegistry constructor table is empty
+    // use the dictionary constructor table only
+    if (!objectRegistryConstructorTablePtr_)
+    {
+        return New(species, thermoDatabase, dict);
+    }
+
+    const word& reactionTypeName = dict.lookup("type");
+
+    typename objectRegistryConstructorTable::iterator cstrIter =
+        objectRegistryConstructorTablePtr_->find(reactionTypeName);
+
+    // Backwards compatibility check. See above.
+    if (cstrIter == objectRegistryConstructorTablePtr_->end())
+    {
+        cstrIter = objectRegistryConstructorTablePtr_->find
+        (
+            reactionTypeName.removeTrailing(typeName_())
+        );
+    }
+
+    if (cstrIter == objectRegistryConstructorTablePtr_->end())
+    {
+        typename dictionaryConstructorTable::iterator cstrIter =
+            dictionaryConstructorTablePtr_->find(reactionTypeName);
+
+        // Backwards compatibility check. See above.
+        if (cstrIter == dictionaryConstructorTablePtr_->end())
+        {
+            cstrIter = dictionaryConstructorTablePtr_->find
+            (
+                reactionTypeName.removeTrailing(typeName_())
+            );
+        }
+
+        if (cstrIter == dictionaryConstructorTablePtr_->end())
+        {
+            FatalErrorInFunction
+                << "Unknown reaction type "
+                << reactionTypeName << nl << nl
+                << "Valid reaction types are :" << nl
+                << dictionaryConstructorTablePtr_->sortedToc()
+                << objectRegistryConstructorTablePtr_->sortedToc()
+                << exit(FatalError);
+        }
+
+        return autoPtr<Reaction<ReactionThermo>>
+        (
+            cstrIter()(species, thermoDatabase, dict)
+        );
+    }
+
+    return autoPtr<Reaction<ReactionThermo>>
+    (
+        cstrIter()(species, thermoDatabase, ob, dict)
+    );
+}
+
+
+template<class ReactionThermo>
+Foam::autoPtr<Foam::Reaction<ReactionThermo>>
+Foam::Reaction<ReactionThermo>::New
+(
+    const speciesTable& species,
+    const PtrList<ReactionThermo>& speciesThermo,
+    const dictionary& dict
+)
+{
+    HashPtrTable<ReactionThermo> thermoDatabase;
+    forAll(speciesThermo, i)
+    {
+        thermoDatabase.insert
+        (
+            speciesThermo[i].name(),
+            speciesThermo[i].clone().ptr()
+        );
+    }
+
+    return New(species, thermoDatabase, dict);
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
 void Foam::Reaction<ReactionThermo>::write(Ostream& os) const
 {
     OStringStream reaction;
-    os.writeKeyword("reaction") << reactionStr(reaction)
-        << token::END_STATEMENT << nl;
+    writeEntry
+    (
+        os,
+        "reaction",
+        specieCoeffs::reactionStr(reaction, species_, lhs_, rhs_)
+    );
 }
 
 
@@ -405,6 +309,7 @@ void Foam::Reaction<ReactionThermo>::ddot
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& d
 ) const
 {
@@ -417,6 +322,7 @@ void Foam::Reaction<ReactionThermo>::fdot
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& f
 ) const
 {
@@ -429,6 +335,7 @@ void Foam::Reaction<ReactionThermo>::omega
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcdt
 ) const
 {
@@ -437,7 +344,7 @@ void Foam::Reaction<ReactionThermo>::omega
 
     scalar omegaI = omega
     (
-        p, T, c, pf, cf, lRef, pr, cr, rRef
+        p, T, c, li, pf, cf, lRef, pr, cr, rRef
     );
 
     forAll(lhs_, i)
@@ -461,6 +368,7 @@ Foam::scalar Foam::Reaction<ReactionThermo>::omega
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalar& pf,
     scalar& cf,
     label& lRef,
@@ -472,8 +380,8 @@ Foam::scalar Foam::Reaction<ReactionThermo>::omega
 
     scalar clippedT = min(max(T, this->Tlow()), this->Thigh());
 
-    const scalar kf = this->kf(p, clippedT, c);
-    const scalar kr = this->kr(kf, p, clippedT, c);
+    const scalar kf = this->kf(p, clippedT, c, li);
+    const scalar kr = this->kr(kf, p, clippedT, c, li);
 
     pf = 1;
     pr = 1;
@@ -575,6 +483,7 @@ void Foam::Reaction<ReactionThermo>::dwdc
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarSquareMatrix& J,
     scalarField& dcdt,
     scalar& omegaI,
@@ -587,7 +496,7 @@ void Foam::Reaction<ReactionThermo>::dwdc
     scalar pf, cf, pr, cr;
     label lRef, rRef;
 
-    omegaI = omega(p, T, c, pf, cf, lRef, pr, cr, rRef);
+    omegaI = omega(p, T, c, li, pf, cf, lRef, pr, cr, rRef);
 
     forAll(lhs_, i)
     {
@@ -602,8 +511,8 @@ void Foam::Reaction<ReactionThermo>::dwdc
         dcdt[si] += sr*omegaI;
     }
 
-    kfwd = this->kf(p, T, c);
-    kbwd = this->kr(kfwd, p, T, c);
+    kfwd = this->kf(p, T, c, li);
+    kbwd = this->kr(kfwd, p, T, c, li);
 
     forAll(lhs_, j)
     {
@@ -704,7 +613,7 @@ void Foam::Reaction<ReactionThermo>::dwdc
     {
         // This temporary array needs to be cached for efficiency
         scalarField dcidc(beta.size());
-        this->dcidc(p, T, c, dcidc);
+        this->dcidc(p, T, c, li, dcidc);
 
         forAll(beta, j)
         {
@@ -738,6 +647,7 @@ void Foam::Reaction<ReactionThermo>::dwdT
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     const scalar omegaI,
     const scalar kfwd,
     const scalar kbwd,
@@ -750,8 +660,8 @@ void Foam::Reaction<ReactionThermo>::dwdT
     scalar kf = kfwd;
     scalar kr = kbwd;
 
-    scalar dkfdT = this->dkfdT(p, T, c);
-    scalar dkrdT = this->dkrdT(p, T, c, dkfdT, kr);
+    scalar dkfdT = this->dkfdT(p, T, c, li);
+    scalar dkrdT = this->dkrdT(p, T, c, li, dkfdT, kr);
 
     scalar sumExp = 0.0;
     forAll(lhs_, i)
@@ -782,7 +692,7 @@ void Foam::Reaction<ReactionThermo>::dwdT
 
     // For reactions including third-body efficiencies or pressure dependent
     // reaction, an additional term is needed
-    scalar dcidT = this->dcidT(p, T, c);
+    scalar dcidT = this->dcidT(p, T, c, li);
     dcidT *= omegaI;
 
     // J(i, indexT) = sum_reactions nu_i dqdT

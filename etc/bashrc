@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -113,9 +113,29 @@ foamOldDirs="$WM_PROJECT_DIR $WM_THIRD_PARTY_DIR \
 export WM_PROJECT_INST_DIR=$FOAM_INST_DIR
 export WM_PROJECT_DIR=$WM_PROJECT_INST_DIR/$WM_PROJECT-$WM_PROJECT_VERSION
 
+if [ -d "$WM_PROJECT_DIR" ]
+then
+    WM_PROJECT_DIR_REAL=$(cd $WM_PROJECT_DIR && pwd -P)
+    if [ -d "$WM_PROJECT_DIR_REAL" -a -e "$WM_PROJECT_DIR_REAL/etc/bashrc" ]
+    then
+        export WM_PROJECT_DIR=$WM_PROJECT_DIR_REAL
+    fi
+    unset WM_PROJECT_DIR_REAL
+fi
+
 # Location of third-party software
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 export WM_THIRD_PARTY_DIR=$WM_PROJECT_INST_DIR/ThirdParty-$WM_PROJECT_VERSION
+
+if [ -d "$WM_THIRD_PARTY_DIR" ]
+then
+    WM_THIRD_PARTY_DIR_REAL=$(cd $WM_THIRD_PARTY_DIR && pwd -P)
+    if [ -d "$WM_THIRD_PARTY_DIR_REAL" -a -e "$WM_THIRD_PARTY_DIR_REAL/etc/tools" ]
+    then
+        export WM_THIRD_PARTY_DIR=$WM_THIRD_PARTY_DIR_REAL
+    fi
+    unset WM_THIRD_PARTY_DIR_REAL
+fi
 
 # Location of site-specific templates etc
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,17 +69,6 @@ protected:
         {}
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        compressibleTurbulenceModel(const compressibleTurbulenceModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const compressibleTurbulenceModel&);
-
-
 public:
 
     //- Runtime type information
@@ -98,13 +87,19 @@ public:
             const word& propertiesName
         );
 
+        //- Disallow default bitwise copy construction
+        compressibleTurbulenceModel
+        (
+            const compressibleTurbulenceModel&
+        ) = delete;
+
 
     //- Destructor
     virtual ~compressibleTurbulenceModel()
     {}
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the density field
         const volScalarField& rho() const
@@ -123,6 +118,12 @@ public:
 
         //- Correct the turbulence thermal diffusivity for energy transport
         virtual void correctEnergyTransport();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const compressibleTurbulenceModel&) = delete;
 };
 
 

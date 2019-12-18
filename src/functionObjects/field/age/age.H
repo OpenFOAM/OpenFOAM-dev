@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,12 +40,14 @@ Description
 
 Usage
     \table
-        Property | Description                   | Required | Default value
-        phi      | The name of the flux field    | no       | phi
-        rho      | The name of the density field | no       | rho
-        nCorr    | The number of correctors      | no       | 0
+        Property  | Description                   | Required | Default value
+        phi       | The name of the flux field    | no       | phi
+        rho       | The name of the density field | no       | rho
+        nCorr     | The maximum number of correctors | no       | 5
         schemesField | The name of the field from which schemes are taken | \\
         no | age
+        diffusion | Switch to turn on/off the diffusion term | no | off
+        tolerance  | Solver residual control       | no       | 1e-5
     \endtable
 
     \verbatim
@@ -54,12 +56,9 @@ Usage
         type            age;
         libs            ("libsolverFunctionObjects.so");
 
+        executeControl  writeTime;
         writeControl    writeTime;
-        writeInterval   1;
 
-        phi             phi;
-        rho             rho;
-        nCorr           10;
         schemesField    k;
     }
     \endverbatim
@@ -90,7 +89,7 @@ class age
 :
     public fvMeshFunctionObject
 {
-    // Private data
+    // Private Data
 
         //- The name of the flux field
         word phiName_;
@@ -99,16 +98,25 @@ class age
         word rhoName_;
 
         //- Number of corrections
-        label nCorr_;
+        int nCorr_;
 
         //- Name of field from which schemes are taken
         word schemesField_;
+
+        //- Switch to turn on/off the diffusion term
+        Switch diffusion_;
+
+        //- Convergence tolerance
+        scalar tolerance_;
 
 
     // Private Member Functions
 
         //- The list of patch types for the age field
         wordList patchTypes() const;
+
+        //- Check convergence
+        bool converged(const int nCorr, const scalar initialResidual) const;
 
 
 public:

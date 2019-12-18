@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ class ReactingCloud
 {
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
         //- Type of cloud this cloud was instantiated for
         typedef CloudType cloudType;
@@ -81,19 +81,11 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Cloud copy pointer
         autoPtr<ReactingCloud<CloudType>> cloudCopyPtr_;
 
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        ReactingCloud(const ReactingCloud&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const ReactingCloud&);
 
 
 protected:
@@ -171,6 +163,9 @@ public:
             const word& name,
             const ReactingCloud<CloudType>& c
         );
+
+        //- Disallow default bitwise copy construction
+        ReactingCloud(const ReactingCloud&) = delete;
 
         //- Construct and return clone based on (this) with new name
         virtual autoPtr<Cloud<parcelType>> clone(const word& name)
@@ -256,7 +251,7 @@ public:
                     //  - fully explicit
                     inline tmp<volScalarField::Internal> Srho() const;
 
-                    //- Return total mass source term [kg/m3/s]
+                    //- Return total mass source term [kg/m^3/s]
                     inline tmp<fvScalarMatrix> Srho(volScalarField& rho) const;
 
 
@@ -310,6 +305,12 @@ public:
 
             //- Write the field data for the cloud
             virtual void writeFields() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ReactingCloud&) = delete;
 };
 
 

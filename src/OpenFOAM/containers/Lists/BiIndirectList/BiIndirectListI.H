@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,12 +44,12 @@ inline Foam::BiIndirectList<T>::BiIndirectList
 (
     const UList<T>& posList,
     const UList<T>& negList,
-    const Xfer<List<label>>& addr
+    List<label>&& addr
 )
 :
     posList_(const_cast<UList<T>&>(posList)),
     negList_(const_cast<UList<T>&>(negList)),
-    addressing_(addr)
+    addressing_(move(addr))
 {}
 
 
@@ -98,16 +98,6 @@ inline void Foam::BiIndirectList<T>::resetAddressing
 )
 {
     addressing_ = addr;
-}
-
-
-template<class T>
-inline void Foam::BiIndirectList<T>::resetAddressing
-(
-    const Xfer<List<label>>& addr
-)
-{
-    addressing_.transfer(addr());
 }
 
 
@@ -170,6 +160,22 @@ inline const T& Foam::BiIndirectList<T>::operator[](const label i) const
     {
         return negList_[-index-1];
     }
+}
+
+
+template<class T>
+inline void Foam::BiIndirectList<T>::operator=(List<T>&& ae)
+{
+    if (addressing_.size() != ae.size())
+    {
+        FatalErrorInFunction
+            << "Addressing and list of addressed elements "
+               "have different sizes: "
+            << addressing_.size() << " " << ae.size()
+            << abort(FatalError);
+    }
+
+    addressing_ = move(ae);
 }
 
 

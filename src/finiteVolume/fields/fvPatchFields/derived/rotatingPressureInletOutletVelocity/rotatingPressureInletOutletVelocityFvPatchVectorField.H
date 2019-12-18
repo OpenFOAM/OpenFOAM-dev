@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Usage
         Property     | Description             | Required    | Default value
         phi          | flux field name         | no          | phi
         tangentialVelocity | tangential velocity field | no  |
-        omega        | angular velocty of the frame [rad/s] | yes    |
+        omega        | angular velocity of the frame [rad/s] | yes    |
     \endtable
 
     Example of the boundary condition specification:
@@ -60,7 +60,7 @@ Note
 
 See also
     Foam::pressureInletOutletVelocityFvPatchVectorField
-    Foam::Function1Types
+    Foam::Function1s
 
 SourceFiles
     rotatingPressureInletOutletVelocityFvPatchVectorField.C
@@ -87,7 +87,7 @@ class rotatingPressureInletOutletVelocityFvPatchVectorField
 :
     public pressureInletOutletVelocityFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Angular velocity of the frame
         autoPtr<Function1<vector>> omega_;
@@ -133,7 +133,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         rotatingPressureInletOutletVelocityFvPatchVectorField
         (
             const rotatingPressureInletOutletVelocityFvPatchVectorField&
@@ -148,7 +148,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         rotatingPressureInletOutletVelocityFvPatchVectorField
         (
             const rotatingPressureInletOutletVelocityFvPatchVectorField&,
@@ -172,7 +172,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Write
         virtual void write(Ostream&) const;

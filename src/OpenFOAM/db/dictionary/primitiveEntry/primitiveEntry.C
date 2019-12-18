@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,27 +41,28 @@ void Foam::primitiveEntry::append(const UList<token>& varTokens)
 
 bool Foam::primitiveEntry::expandVariable
 (
-    const string& w,
+    const variable& w,
     const dictionary& dict
 )
 {
     if (w.size() > 2 && w[0] == '$' && w[1] == token::BEGIN_BLOCK)
     {
         // Recursive substitution mode. Replace between {} with expansion.
-        string s(w(2, w.size()-3));
+        string s(w(2, w.size() - 3));
+
         // Substitute dictionary and environment variables. Do not allow
         // empty substitutions.
         stringOps::inplaceExpand(s, dict, true, false);
-        string newW(w);
-        newW.std::string::replace(1, newW.size()-1, s);
+        variable newW(w);
+        newW.std::string::replace(1, newW.size() - 1, s);
 
         return expandVariable(newW, dict);
     }
     else
     {
-        string varName = w(1, w.size()-1);
+        string varName = w(1, w.size() - 1);
 
-        // lookup the variable name in the given dictionary....
+        // Lookup the variable name in the given dictionary....
         // Note: allow wildcards to match? For now disabled since following
         // would expand internalField to wildcard match and not expected
         // internalField:
@@ -83,7 +84,7 @@ bool Foam::primitiveEntry::expandVariable
         }
         else
         {
-            // not in the dictionary - try an environment variable
+            // Not in the dictionary - try an environment variable
             string envStr = getEnv(varName);
 
             if (envStr.empty())
@@ -111,7 +112,7 @@ Foam::primitiveEntry::primitiveEntry(const keyType& key, const ITstream& is)
     entry(key),
     ITstream(is)
 {
-    name() += '.' + keyword();
+    name() += '/' + keyword();
 }
 
 
@@ -136,11 +137,11 @@ Foam::primitiveEntry::primitiveEntry
 Foam::primitiveEntry::primitiveEntry
 (
     const keyType& key,
-    const Xfer<List<token>>& tokens
+    List<token>&& tokens
 )
 :
     entry(key),
-    ITstream(key, tokens)
+    ITstream(key, move(tokens))
 {}
 
 

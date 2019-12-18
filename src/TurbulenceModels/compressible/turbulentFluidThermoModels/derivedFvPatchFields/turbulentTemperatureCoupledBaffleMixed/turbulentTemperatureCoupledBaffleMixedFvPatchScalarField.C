@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(p, iF),
-    temperatureCoupledBase(patch(), "undefined", "undefined", "undefined-K"),
+    temperatureCoupledBase(patch()),
     TnbrName_("undefined-Tnbr"),
     thicknessLayers_(0),
     kappaLayers_(0),
@@ -265,10 +265,9 @@ void turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::write
 ) const
 {
     mixedFvPatchScalarField::write(os);
-    os.writeKeyword("Tnbr")<< TnbrName_
-        << token::END_STATEMENT << nl;
-    thicknessLayers_.writeEntry("thicknessLayers", os);
-    kappaLayers_.writeEntry("kappaLayers", os);
+    writeEntry(os, "Tnbr", TnbrName_);
+    writeEntry(os, "thicknessLayers", thicknessLayers_);
+    writeEntry(os, "kappaLayers", kappaLayers_);
 
     temperatureCoupledBase::write(os);
 }

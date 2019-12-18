@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,17 +75,6 @@ protected:
         const transportModel& transport_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        TurbulenceModel(const TurbulenceModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const TurbulenceModel&);
-
-
 public:
 
     // Declare run-time constructor selection table
@@ -121,6 +110,9 @@ public:
             const transportModel& transport,
             const word& propertiesName
         );
+
+        //- Disallow default bitwise copy construction
+        TurbulenceModel(const TurbulenceModel&) = delete;
 
 
     // Selectors
@@ -168,6 +160,12 @@ public:
         {
             return transport_.nu(patchi);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const TurbulenceModel&) = delete;
 };
 
 

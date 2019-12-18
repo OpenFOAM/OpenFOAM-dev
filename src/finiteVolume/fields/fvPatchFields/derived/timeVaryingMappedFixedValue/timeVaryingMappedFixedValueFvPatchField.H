@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,8 @@ Usage
 
 See also
     Foam::fixedValueFvPatchField
-    Foam::Function1Types
+    Foam::timeVaryingMappedFvPatchField
+    Foam::Function1s
 
 SourceFiles
     timeVaryingMappedFixedValueFvPatchField.C
@@ -100,10 +101,7 @@ SourceFiles
 #define timeVaryingMappedFixedValueFvPatchField_H
 
 #include "fixedValueFvPatchFields.H"
-#include "FixedList.H"
-#include "instantList.H"
-#include "pointToPointPlanarInterpolation.H"
-#include "Function1.H"
+#include "timeVaryingMappedFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -119,63 +117,9 @@ class timeVaryingMappedFixedValueFvPatchField
 :
     public fixedValueFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
-        //- Name of the field data table, defaults to the name of the field
-        word fieldTableName_;
-
-        //- Optional name of the data directory,
-        //  defaults to "constant/boundaryData/<patch name>"
-        fileName dataDir_;
-
-        //- Optional name of the points file, defaults to "points"
-        fileName pointsName_;
-
-        //- Optional name of the sample sub-directory from which the field are
-        //  read, defaults to ""
-        fileName sampleName_;
-
-        //- If true adjust the mapped field to maintain average value
-        Switch setAverage_;
-
-        //- Fraction of perturbation (fraction of bounding box) to add
-        scalar perturb_;
-
-        //- Interpolation scheme to use
-        word mapMethod_;
-
-        //- 2D interpolation (for 'planarInterpolation' mapMethod)
-        autoPtr<pointToPointPlanarInterpolation> mapperPtr_;
-
-        //- List of boundaryData time directories
-        instantList sampleTimes_;
-
-        //- Current starting index in sampleTimes
-        label startSampleTime_;
-
-        //- Interpolated values from startSampleTime
-        Field<Type> startSampledValues_;
-
-        //- If setAverage: starting average value
-        Type startAverage_;
-
-        //- Current end index in sampleTimes
-        label endSampleTime_;
-
-        //- Interpolated values from endSampleTime
-        Field<Type> endSampledValues_;
-
-        //- If setAverage: end average value
-        Type endAverage_;
-
-        //- Time varying offset values to interpolated data
-        autoPtr<Function1<Type>> offset_;
-
-        //- Helper function to find the field files
-        fileName findFieldFile(const word& timeName) const;
-
-        //- Find boundary data in between current time and interpolate
-        void checkTable();
+        timeVaryingMappedFvPatchField<Type> fieldMapper_;
 
 
 public:
@@ -211,7 +155,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         timeVaryingMappedFixedValueFvPatchField
         (
             const timeVaryingMappedFixedValueFvPatchField<Type>&
@@ -226,7 +170,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         timeVaryingMappedFixedValueFvPatchField
         (
             const timeVaryingMappedFixedValueFvPatchField<Type>&,
@@ -246,31 +190,17 @@ public:
         }
 
 
-    // Member functions
-
-        // Access
-
-            //- Return startSampledValues
-            const Field<Type> startSampledValues()
-            {
-                 return startSampledValues_;
-            }
-
+    // Member Functions
 
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchField<Type>&,
-                const labelList&
-            );
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchField<Type>&, const labelList&);
 
 
         // Evaluation functions

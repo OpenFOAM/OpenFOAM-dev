@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-typedef PrimitivePatch<face, List, const pointField&> myPrimitivePatch;
+typedef PrimitivePatch<faceList, const pointField&> myPrimitivePatch;
 
 
 void writeObj(Ostream& os,const pointField& points)
@@ -247,15 +247,15 @@ int main(int argc, char *argv[])
         writeFaceFaces(localPoints, localFaces, faceFaces);
     }
 
-    // Test construction from Xfer
+    // Test move construction
     {
         faceList patchFaces = patch;
         pointField allPoints = patch.points();
 
-        PrimitivePatch<face, List, pointField, point> storedPatch
+        PrimitivePatch<faceList, pointField> storedPatch
         (
-            patchFaces.xfer(),
-            allPoints.xfer()
+            move(patchFaces),
+            move(allPoints)
         );
     }
 

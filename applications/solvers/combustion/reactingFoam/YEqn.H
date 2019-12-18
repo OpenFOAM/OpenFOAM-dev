@@ -11,7 +11,6 @@ tmp<fv::convectionScheme<scalar>> mvConvection
 
 {
     reaction->correct();
-    Qdot = reaction->Qdot();
     volScalarField Yt(0.0*Y[0]);
 
     forAll(Y, i)
@@ -24,7 +23,7 @@ tmp<fv::convectionScheme<scalar>> mvConvection
             (
                 fvm::ddt(rho, Yi)
               + mvConvection->fvmDiv(phi, Yi)
-              - fvm::laplacian(turbulence->muEff(), Yi)
+              - fvm::laplacian(turbulence->alphaEff(), Yi)
              ==
                 reaction->R(Yi)
               + fvOptions(rho, Yi)

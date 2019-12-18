@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,9 +49,7 @@ namespace Foam
 
 class shortEdgeFilter2D
 {
-    // Private data
-
-        const CV2D& cv2Dmesh_;
+    // Private Data
 
         MeshedSurface<face> ms_;
 
@@ -90,12 +88,6 @@ class shortEdgeFilter2D
             labelList& patchSizes
         ) const;
 
-        //- Disallow default bitwise copy construct
-        shortEdgeFilter2D(const shortEdgeFilter2D&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const shortEdgeFilter2D&);
-
 
 public:
 
@@ -105,6 +97,9 @@ public:
     // Constructors
 
         shortEdgeFilter2D(const CV2D& cv2Dmesh, const dictionary& dict);
+
+        //- Disallow default bitwise copy construction
+        shortEdgeFilter2D(const shortEdgeFilter2D&) = delete;
 
 
     //- Destructor
@@ -139,6 +134,12 @@ public:
         void filter();
 
         void writeInfo(Ostream& os);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const shortEdgeFilter2D&) = delete;
 };
 
 

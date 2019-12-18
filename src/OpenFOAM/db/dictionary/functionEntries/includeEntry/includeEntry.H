@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,13 +64,6 @@ class includeEntry
 :
     public functionEntry
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        includeEntry(const includeEntry&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const includeEntry&);
 
 protected:
 
@@ -87,9 +80,10 @@ protected:
             const dictionary&
         );
 
+
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Report which file is included to stdout
         static bool log;
@@ -97,6 +91,12 @@ public:
 
     //- Runtime type information
     ClassName("include");
+
+
+    // Constructors
+
+        //- Disallow default bitwise copy construction
+        includeEntry(const includeEntry&) = delete;
 
 
     // Member Functions
@@ -112,6 +112,11 @@ public:
             Istream&
         );
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const includeEntry&) = delete;
 };
 
 

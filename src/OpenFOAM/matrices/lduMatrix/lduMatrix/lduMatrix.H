@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -215,7 +215,7 @@ public:
         {}
 
 
-        // Member functions
+        // Member Functions
 
             // Access
 
@@ -366,7 +366,7 @@ public:
         {}
 
 
-        // Member functions
+        // Member Functions
 
             // Access
 
@@ -480,7 +480,7 @@ public:
         {}
 
 
-        // Member functions
+        // Member Functions
 
             //- Read and reset the preconditioner parameters
             //  from the given stream
@@ -522,10 +522,10 @@ public:
         //  The coefficients are initially empty for subsequent setting.
         lduMatrix(const lduMesh&);
 
-        //- Construct as copy
+        //- Copy constructor
         lduMatrix(const lduMatrix&);
 
-        //- Construct as copy or re-use as specified.
+        //- Copy constructor or re-use as specified.
         lduMatrix(lduMatrix&, bool reuse);
 
         //- Construct given an LDU addressed mesh and an Istream
@@ -537,7 +537,7 @@ public:
     ~lduMatrix();
 
 
-    // Member functions
+    // Member Functions
 
         // Access to addressing
 
@@ -713,7 +713,7 @@ public:
             }
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const lduMatrix&);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ Foam::SRFVelocityFvPatchVectorField::SRFVelocityFvPatchVectorField
 :
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
     relative_(ptf.relative_),
-    inletValue_(ptf.inletValue_, mapper)
+    inletValue_(mapper(ptf.inletValue_))
 {}
 
 
@@ -100,8 +100,8 @@ void Foam::SRFVelocityFvPatchVectorField::autoMap
     const fvPatchFieldMapper& m
 )
 {
-    vectorField::autoMap(m);
-    inletValue_.autoMap(m);
+    m(*this, *this);
+    m(inletValue_, inletValue_);
 }
 
 
@@ -153,9 +153,9 @@ void Foam::SRFVelocityFvPatchVectorField::updateCoeffs()
 void Foam::SRFVelocityFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    os.writeKeyword("relative") << relative_ << token::END_STATEMENT << nl;
-    inletValue_.writeEntry("inletValue", os);
-    writeEntry("value", os);
+    writeEntry(os, "relative", relative_);
+    writeEntry(os, "inletValue", inletValue_);
+    writeEntry(os, "value", *this);
 }
 
 

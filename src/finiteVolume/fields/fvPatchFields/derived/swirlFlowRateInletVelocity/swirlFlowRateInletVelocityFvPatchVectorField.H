@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ Note
 
 See also
     Foam::fixedValueFvPatchField
-    Foam::Function1Types
+    Foam::Function1s
 
 SourceFiles
     swirlFlowRateInletVelocityFvPatchVectorField.C
@@ -88,7 +88,7 @@ class swirlFlowRateInletVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Name of the flux transporting the field
         const word phiName_;
@@ -143,7 +143,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         swirlFlowRateInletVelocityFvPatchVectorField
         (
             const swirlFlowRateInletVelocityFvPatchVectorField&
@@ -158,7 +158,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         swirlFlowRateInletVelocityFvPatchVectorField
         (
             const swirlFlowRateInletVelocityFvPatchVectorField&,
@@ -178,7 +178,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

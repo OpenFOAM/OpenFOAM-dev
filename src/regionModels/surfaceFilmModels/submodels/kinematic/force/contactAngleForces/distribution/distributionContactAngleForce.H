@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,14 +68,11 @@ class distributionContactAngleForce
         //- Parcel size PDF model
         const autoPtr<distributionModel> distribution_;
 
+        //- Cached contact angle field
+        mutable volScalarField theta_;
 
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        distributionContactAngleForce(const distributionContactAngleForce&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const distributionContactAngleForce&);
+        //- Current time index (used for updating)
+        mutable label curTimeIndex_;
 
 
 protected:
@@ -99,9 +96,21 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        distributionContactAngleForce
+        (
+            const distributionContactAngleForce&
+        ) = delete;
+
 
     //- Destructor
     virtual ~distributionContactAngleForce();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const distributionContactAngleForce&) = delete;
 };
 
 

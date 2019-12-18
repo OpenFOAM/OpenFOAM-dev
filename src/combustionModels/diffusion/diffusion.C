@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ template<class ReactionThermo, class ThermoType>
 diffusion<ReactionThermo, ThermoType>::diffusion
 (
     const word& modelType,
-    ReactionThermo& thermo,
+    const ReactionThermo& thermo,
     const compressibleTurbulenceModel& turb,
     const word& combustionProperties
 )
@@ -49,7 +49,7 @@ diffusion<ReactionThermo, ThermoType>::diffusion
         turb,
         combustionProperties
     ),
-    C_(readScalar(this->coeffs().lookup("C"))),
+    C_(this->coeffs().template lookup<scalar>("C")),
     oxidantName_(this->coeffs().template lookupOrDefault<word>("oxidant", "O2"))
 {}
 
@@ -69,9 +69,9 @@ void diffusion<ReactionThermo, ThermoType>::correct()
     this->wFuel_ ==
         dimensionedScalar(dimMass/pow3(dimLength)/dimTime, 0);
 
-    this->singleMixturePtr_->fresCorrect();
+    this->fresCorrect();
 
-    const label fuelI = this->singleMixturePtr_->fuelIndex();
+    const label fuelI = this->fuelIndex();
 
     const volScalarField& YFuel = this->thermo().composition().Y()[fuelI];
 

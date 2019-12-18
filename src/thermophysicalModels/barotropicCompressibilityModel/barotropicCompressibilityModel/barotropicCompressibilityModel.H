@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,6 @@ namespace Foam
 
 class barotropicCompressibilityModel
 {
-
 protected:
 
     // Protected data
@@ -70,15 +69,6 @@ protected:
 
         volScalarField psi_;
         const volScalarField& gamma_;
-
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        barotropicCompressibilityModel(const barotropicCompressibilityModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const barotropicCompressibilityModel&);
 
 
 public:
@@ -103,21 +93,24 @@ public:
         );
 
 
-    // Selectors
+    // Constructors
 
-        //- Return a reference to the selected compressibility model
-        static autoPtr<barotropicCompressibilityModel> New
+        //- Construct from components
+        barotropicCompressibilityModel
         (
             const dictionary& compressibilityProperties,
             const volScalarField& gamma,
             const word& psiName = "psi"
         );
 
+        //- Disallow default bitwise copy construction
+        barotropicCompressibilityModel(const barotropicCompressibilityModel&);
 
-    // Constructors
 
-        //- Construct from components
-        barotropicCompressibilityModel
+    // Selectors
+
+        //- Return a reference to the selected compressibility model
+        static autoPtr<barotropicCompressibilityModel> New
         (
             const dictionary& compressibilityProperties,
             const volScalarField& gamma,
@@ -149,6 +142,12 @@ public:
 
         //- Read compressibilityProperties dictionary
         virtual bool read(const dictionary& compressibilityProperties) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const barotropicCompressibilityModel&) = delete;
 };
 
 

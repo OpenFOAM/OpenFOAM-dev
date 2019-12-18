@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,12 +59,16 @@ LaakkonenAlopaeusAittamaa
     breakupModel(popBal, dict),
     C1_
     (
-        "C1",
-        dimensionSet(0, -2.0/3.0, 0, 0, 0),
-        dict.lookupOrDefault<scalar>("C1", 6.0)
+        dimensionedScalar::lookupOrDefault
+        (
+            "C1",
+            dict,
+            dimensionSet(0, -2.0/3.0, 0, 0, 0),
+            6.0
+        )
     ),
-    C2_("C2", dimless, dict.lookupOrDefault<scalar>("C2", 0.04)),
-    C3_("C3", dimless, dict.lookupOrDefault<scalar>("C3", 0.01))
+    C2_(dimensionedScalar::lookupOrDefault("C2", dict, dimless, 0.04)),
+    C3_(dimensionedScalar::lookupOrDefault("C3", dict, dimless, 0.01))
 {}
 
 
@@ -88,14 +92,14 @@ Foam::diameterModels::breakupModels::LaakkonenAlopaeusAittamaa::setBreakupRate
             (
                 C2_*popBal_.sigmaWithContinuousPhase(fi.phase())
                /(
-                    continuousPhase.rho()*pow(fi.d(), 5.0/3.0)
+                    continuousPhase.rho()*pow(fi.dSph(), 5.0/3.0)
                    *pow(popBal_.continuousTurbulence().epsilon(), 2.0/3.0)
                 )
               + C3_*continuousPhase.mu()
                /(
                     sqrt(continuousPhase.rho()*fi.phase().rho())
                    *cbrt(popBal_.continuousTurbulence().epsilon())
-                   *pow(fi.d(), 4.0/3.0)
+                   *pow(fi.dSph(), 4.0/3.0)
                 )
             )
         );

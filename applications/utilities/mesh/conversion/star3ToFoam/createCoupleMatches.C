@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -993,7 +993,7 @@ void Foam::starMesh::createCoupleMatches()
                 // list of edges to consider.  Make sure all edges are
                 // added such that the current point is their start.
                 // Loop through all edges to consider and find the one
-                // which produces the buggest right-hand-turn.  This
+                // which produces the biggest right-hand-turn.  This
                 // is the next edge to be added to the face.  If its
                 // end is the same as the starting point, the face is
                 // complete; resize it to the number of active points

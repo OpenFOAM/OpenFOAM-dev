@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class solidParticleCloud
 :
     public Cloud<solidParticle>
 {
-    // Private data
+    // Private Data
 
         const fvMesh& mesh_;
 
@@ -66,15 +66,6 @@ class solidParticleCloud
         scalar rhop_;
         scalar e_;
         scalar mu_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        solidParticleCloud(const solidParticleCloud&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const solidParticleCloud&);
 
 
 public:
@@ -88,6 +79,9 @@ public:
             const word& cloudName = "defaultCloud",
             bool readFields = true
         );
+
+        //- Disallow default bitwise copy construction
+        solidParticleCloud(const solidParticleCloud&) = delete;
 
 
     // Member Functions
@@ -106,6 +100,12 @@ public:
             //- Move the particles under the influence of the given
             //  gravitational acceleration
             void move(const dimensionedVector& g);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const solidParticleCloud&) = delete;
 };
 
 

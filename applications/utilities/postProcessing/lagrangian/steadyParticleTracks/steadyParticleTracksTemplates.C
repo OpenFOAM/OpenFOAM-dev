@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Foam::tmp<Foam::Field<Type>> Foam::readParticleField
     if (obj != nullptr)
     {
         IOField<Type> newField(*obj);
-        return tmp<Field<Type>>(new Field<Type>(newField.xfer()));
+        return tmp<Field<Type>>(new Field<Type>(move(newField)));
     }
 
     FatalErrorInFunction
@@ -77,7 +77,7 @@ void Foam::readFields
         {
             Info<< "        reading field " << fieldNames[j] << endl;
             IOField<Type> newField(*obj);
-            values.set(j, new List<Type>(newField.xfer()));
+            values.set(j, new List<Type>(move(newField)));
         }
         else
         {

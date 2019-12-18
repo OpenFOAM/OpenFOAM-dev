@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,17 +84,6 @@ protected:
         virtual void printCoeffs(const word& type);
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        RASModel(const RASModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const RASModel&);
-
-
 public:
 
     typedef typename BasicTurbulenceModel::alphaField alphaField;
@@ -140,6 +129,9 @@ public:
             const transportModel& transport,
             const word& propertiesName
         );
+
+        //- Disallow default bitwise copy construction
+        RASModel(const RASModel&) = delete;
 
 
     // Selectors
@@ -231,6 +223,12 @@ public:
 
         //- Solve the turbulence equations and correct the turbulence viscosity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const RASModel&) = delete;
 };
 
 

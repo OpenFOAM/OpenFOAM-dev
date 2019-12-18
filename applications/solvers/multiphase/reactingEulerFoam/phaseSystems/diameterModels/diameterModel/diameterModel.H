@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::diameterModel
 
 Description
-    A2stract base-class for dispersed-phase particle diameter models.
+    Abstract base-class for dispersed-phase particle diameter models.
 
 SourceFiles
     diameterModel.C
@@ -51,13 +51,36 @@ namespace Foam
 
 class diameterModel
 {
+    // Private Data
+
+        //- The phase diameter properties dictionary
+        dictionary diameterProperties_;
+
+        //- The phase that this model applies
+        const phaseModel& phase_;
+
+        //- Optionally stored diameter field
+        autoPtr<volScalarField> dPtr_;
+
+        //- Optionally stored surface area per unit volume field
+        autoPtr<volScalarField> aPtr_;
+
 
 protected:
 
-    // Protected data
+    // Access
 
-        dictionary diameterProperties_;
-        const phaseModel& phase_;
+        //- Get a reference to the stored diameter field
+        volScalarField& dRef();
+
+        //- Get a reference to the stored surface area per unit volume field
+        volScalarField& aRef();
+
+        //- Get the diameter field
+        virtual tmp<volScalarField> calcD() const = 0;
+
+        //- Get the surface area per unit volume field
+        virtual tmp<volScalarField> calcA() const = 0;
 
 
 public:
@@ -117,11 +140,17 @@ public:
             return phase_;
         }
 
-        //- Return the phase mean diameter field
-        virtual tmp<volScalarField> d() const = 0;
+        //- Return the diameter
+        tmp<volScalarField> d() const;
+
+        //- Return the surface area per unit volume
+        tmp<volScalarField> a() const;
+
+        //- Correct the diameter field
+        virtual void correct();
 
         //- Read phaseProperties dictionary
-        virtual bool read(const dictionary& phaseProperties) = 0;
+        virtual bool read(const dictionary& phaseProperties);
 };
 
 

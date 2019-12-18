@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,6 @@ License
 #include "PolynomialEntry.H"
 #include "Sine.H"
 #include "Square.H"
-#include "CSV.H"
 #include "Table.H"
 #include "TableFile.H"
 #include "Scale.H"
@@ -48,7 +47,6 @@ License
     makeFunction1Type(Polynomial, Type);                                       \
     makeFunction1Type(Sine, Type);                                             \
     makeFunction1Type(Square, Type);                                           \
-    makeFunction1Type(CSV, Type);                                              \
     makeFunction1Type(Table, Type);                                            \
     makeFunction1Type(TableFile, Type);                                        \
     makeFunction1Type(Scale, Type);
@@ -63,19 +61,6 @@ namespace Foam
     makeFunction1s(sphericalTensor);
     makeFunction1s(symmTensor);
     makeFunction1s(tensor);
-}
-
-
-template<>
-Foam::tmp<Foam::Field<Foam::label>>
-Foam::Function1Types::Constant<Foam::label>::integrate
-(
-    const scalarField& x1,
-    const scalarField& x2
-) const
-{
-    NotImplemented;
-    return tmp<Field<label>>(new Field<label>(x1.size()));
 }
 
 

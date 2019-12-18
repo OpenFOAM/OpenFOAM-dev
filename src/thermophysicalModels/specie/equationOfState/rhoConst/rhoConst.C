@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ template<class Specie>
 Foam::rhoConst<Specie>::rhoConst(const dictionary& dict)
 :
     Specie(dict),
-    rho_(readScalar(dict.subDict("equationOfState").lookup("rho")))
+    rho_(dict.subDict("equationOfState").lookup<scalar>("rho"))
 {}
 
 
@@ -53,9 +53,9 @@ void Foam::rhoConst<Specie>::write(Ostream& os) const
 // * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
 
 template<class Specie>
-Foam::Ostream& Foam::operator<<(Ostream& os, const rhoConst<Specie>& ico)
+Foam::Ostream& Foam::operator<<(Ostream& os, const rhoConst<Specie>& rc)
 {
-    ico.write(os);
+    rc.write(os);
     return os;
 }
 

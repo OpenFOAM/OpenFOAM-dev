@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ Ostream& operator<<(Ostream&, const blockDescriptor&);
 
 class blockDescriptor
 {
-    // Private data
+    // Private Data
 
         //- Reference to point field defining the block mesh
         const pointField& vertices_;
@@ -128,12 +128,6 @@ class blockDescriptor
         ) const;
 
         void findCurvedFaces();
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const blockDescriptor&);
 
 
 public:
@@ -243,6 +237,12 @@ public:
 
         //- Write block index with dictionary lookup
         static void write(Ostream&, const label blocki, const dictionary&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const blockDescriptor&) = delete;
 
 
     // IOstream Operators

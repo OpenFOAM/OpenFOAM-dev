@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ class pointConstraint;
 
 class snappySnapDriver
 {
-    // Private data
+    // Private Data
 
         //- Mesh+surface
         meshRefinement& meshRefiner_;
@@ -496,13 +496,6 @@ class snappySnapDriver
                 ) const;
 
 
-        //- Disallow default bitwise copy construct
-        snappySnapDriver(const snappySnapDriver&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const snappySnapDriver&);
-
-
 public:
 
     //- Runtime type information
@@ -518,6 +511,9 @@ public:
             const labelList& globalToMasterPatch,
             const labelList& globalToSlavePatch
         );
+
+        //- Disallow default bitwise copy construction
+        snappySnapDriver(const snappySnapDriver&) = delete;
 
 
     // Member Functions
@@ -620,6 +616,12 @@ public:
                 const scalar planarAngle,
                 const snapParameters& snapParams
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const snappySnapDriver&) = delete;
 };
 
 

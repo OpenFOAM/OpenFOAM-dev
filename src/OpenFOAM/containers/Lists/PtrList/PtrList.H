@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,8 +101,8 @@ public:
         template<class CloneArg>
         PtrList(const PtrList<T>&, const CloneArg&);
 
-        //- Construct by transferring the parameter contents
-        PtrList(const Xfer<PtrList<T>>&);
+        //- Move constructor
+        PtrList(PtrList<T>&&);
 
         //- Construct as copy or re-use as specified
         PtrList(PtrList<T>&, bool reuse);
@@ -122,7 +122,7 @@ public:
     ~PtrList();
 
 
-    // Member functions
+    // Member Functions
 
         // Edit
 
@@ -147,9 +147,6 @@ public:
             //  and annul the argument list
             void transfer(PtrList<T>&);
 
-            //- Transfer contents to the Xfer container
-            inline Xfer<PtrList<T>> xfer();
-
             //- Is element set
             inline bool set(const label) const;
 
@@ -165,13 +162,21 @@ public:
             //- Reorders elements. Ordering does not have to be done in
             //  ascending or descending order. Reordering has to be unique.
             //  (is shuffle)
-            void reorder(const labelUList&);
+            void reorder(const labelUList& oldToNew);
+
+            //- Reorders elements. Ordering does not have to be done in
+            //  ascending or descending order. Reordering has to be unique.
+            //  Note: can create unset elements
+            void shuffle(const labelUList& newToOld);
 
 
-    // Member operators
+    // Member Operators
 
-        //- Assignment
+        //- Assignment operator
         void operator=(const PtrList<T>&);
+
+        //- Move assignment operator
+        void operator=(PtrList<T>&&);
 
 
     // IOstream operator

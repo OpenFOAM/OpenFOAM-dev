@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,7 +183,7 @@ bool Foam::triSurface::readOBJ(const fileName& OBJfileName)
 
 
     // Transfer DynamicLists to straight ones.
-    pointField allPoints(points.xfer());
+    pointField allPoints(move(points));
 
     // Create triSurface
     *this = triSurface(faces, patches, allPoints, true);

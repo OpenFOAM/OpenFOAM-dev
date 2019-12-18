@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,6 +55,9 @@ namespace Foam
 template<class T, unsigned Size> class FixedList;
 
 template<class T, unsigned Size>
+void writeEntry(Ostream& os, const FixedList<T, Size>&);
+
+template<class T, unsigned Size>
 Istream& operator>>(Istream&, FixedList<T, Size>&);
 
 template<class T, unsigned Size>
@@ -80,7 +83,7 @@ class FixedList
         "Size must be positive (non-zero) and also fit as a signed value"
     );
 
-    // Private data
+    // Private Data
 
         //- Vector of values of type T of size Size.
         T v_[Size];
@@ -134,9 +137,6 @@ public:
 
         //- Construct from SLList
         explicit inline FixedList(const SLList<T>&);
-
-        //- Copy constructor
-        inline FixedList(const FixedList<T, Size>&);
 
         //- Construct from Istream
         FixedList(Istream&);
@@ -207,14 +207,8 @@ public:
             //  needed to make FixedList consistent with List
             void transfer(const FixedList<T, Size>&);
 
-        //- Write the FixedList as a dictionary entry
-        void writeEntry(Ostream&) const;
 
-        //- Write the FixedList as a dictionary entry with keyword
-        void writeEntry(const word& keyword, Ostream&) const;
-
-
-    // Member operators
+    // Member Operators
 
         //- Return element of FixedList
         inline T& operator[](const label);
@@ -357,7 +351,7 @@ public:
         bool operator>=(const FixedList<T, Size>&) const;
 
 
-    // IOstream operators
+    // IOstream Operators
 
         //- Read List from Istream, discarding contents of existing List
         friend Istream& operator>> <T, Size>

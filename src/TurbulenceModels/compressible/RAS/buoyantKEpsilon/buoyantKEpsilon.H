@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,13 +79,6 @@ class buoyantKEpsilon
 :
     public kEpsilon<BasicTurbulenceModel>
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        buoyantKEpsilon(const buoyantKEpsilon&);
-        void operator=(const buoyantKEpsilon&);
-
-
 protected:
 
     // Protected data
@@ -93,6 +86,7 @@ protected:
         // Model coefficients
 
             dimensionedScalar Cg_;
+
 
     // Protected Member Functions
 
@@ -128,6 +122,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        buoyantKEpsilon(const buoyantKEpsilon&) = delete;
+
 
     //- Destructor
     virtual ~buoyantKEpsilon()
@@ -138,6 +135,12 @@ public:
 
         //- Re-read model coefficients if they have changed
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const buoyantKEpsilon&) = delete;
 };
 
 

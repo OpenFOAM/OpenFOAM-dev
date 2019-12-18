@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,12 +40,22 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
-
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
 
-    autoPtr<motionSolver> motionPtr = motionSolver::New(mesh);
+    IOdictionary dynamicMeshDict
+    (
+        IOobject
+        (
+            "dynamicMeshDict",
+            mesh.time().constant(),
+            mesh,
+            IOobject::MUST_READ
+        )
+    );
+
+    autoPtr<motionSolver> motionPtr = motionSolver::New(mesh, dynamicMeshDict);
 
     while (runTime.loop())
     {

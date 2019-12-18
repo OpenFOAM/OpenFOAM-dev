@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -364,8 +364,7 @@ Foam::cellShapeControlMesh::cellShapeControlMesh(const Time& runTime)
         runTime,
         meshSubDir
     ),
-    runTime_(runTime),
-    defaultCellSize_(0.0)
+    runTime_(runTime)
 {
     if (this->vertexCount())
     {

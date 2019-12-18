@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ Ostream& operator<<(Ostream&, const spatialTransform&);
 
 class spatialTransform
 {
-    // Private data
+    // Private Data
 
         //- Rotation tensor
         tensor E_;
@@ -77,7 +77,7 @@ class spatialTransform
         vector r_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Return E . *r
         inline tensor Erx() const;

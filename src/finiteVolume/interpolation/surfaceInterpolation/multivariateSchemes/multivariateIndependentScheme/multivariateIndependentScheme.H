@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,19 +58,10 @@ class multivariateIndependentScheme
 :
     public multivariateSurfaceInterpolationScheme<Type>
 {
-    // Private data
+    // Private Data
 
         dictionary schemes_;
         const surfaceScalarField& faceFlux_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        multivariateIndependentScheme(const multivariateIndependentScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const multivariateIndependentScheme&);
 
 
 public:
@@ -91,8 +82,17 @@ public:
             Istream& schemeData
         );
 
+        //- Disallow default bitwise copy construction
+        multivariateIndependentScheme
+        (
+            const multivariateIndependentScheme&
+        ) = delete;
+
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multivariateIndependentScheme&) = delete;
 
         tmp<surfaceInterpolationScheme<Type>> operator()
         (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,22 +66,22 @@ Foam::plenumPressureFvPatchScalarField::plenumPressureFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF, dict),
-    gamma_(readScalar(dict.lookup("gamma"))),
-    R_(readScalar(dict.lookup("R"))),
-    supplyMassFlowRate_(readScalar(dict.lookup("supplyMassFlowRate"))),
+    gamma_(dict.lookup<scalar>("gamma")),
+    R_(dict.lookup<scalar>("R")),
+    supplyMassFlowRate_(dict.lookup<scalar>("supplyMassFlowRate")),
     supplyTotalTemperature_
     (
-        readScalar(dict.lookup("supplyTotalTemperature"))
+        dict.lookup<scalar>("supplyTotalTemperature")
     ),
-    plenumVolume_(readScalar(dict.lookup("plenumVolume"))),
-    plenumDensity_(readScalar(dict.lookup("plenumDensity"))),
-    plenumTemperature_(readScalar(dict.lookup("plenumTemperature"))),
+    plenumVolume_(dict.lookup<scalar>("plenumVolume")),
+    plenumDensity_(dict.lookup<scalar>("plenumDensity")),
+    plenumTemperature_(dict.lookup<scalar>("plenumTemperature")),
     rho_(1.0),
     hasRho_(false),
-    inletAreaRatio_(readScalar(dict.lookup("inletAreaRatio"))),
+    inletAreaRatio_(dict.lookup<scalar>("inletAreaRatio")),
     inletDischargeCoefficient_
     (
-        readScalar(dict.lookup("inletDischargeCoefficient"))
+        dict.lookup<scalar>("inletDischargeCoefficient")
     ),
     timeScale_(dict.lookupOrDefault<scalar>("timeScale", 0.0)),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
@@ -89,7 +89,7 @@ Foam::plenumPressureFvPatchScalarField::plenumPressureFvPatchScalarField
 {
     if (dict.found("rho"))
     {
-        rho_ = readScalar(dict.lookup("rho"));
+        rho_ = dict.lookup<scalar>("rho");
         hasRho_ = true;
     }
 }
@@ -300,33 +300,28 @@ void Foam::plenumPressureFvPatchScalarField::updateCoeffs()
 void Foam::plenumPressureFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchScalarField::write(os);
-    os.writeKeyword("gamma") << gamma_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("R") << R_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("supplyMassFlowRate") << supplyMassFlowRate_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("supplyTotalTemperature") << supplyTotalTemperature_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("plenumVolume") << plenumVolume_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("plenumDensity") << plenumDensity_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("plenumTemperature") << plenumTemperature_
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "gamma", gamma_);
+    writeEntry(os, "R", R_);
+    writeEntry(os, "supplyMassFlowRate", supplyMassFlowRate_);
+    writeEntry(os, "supplyTotalTemperature", supplyTotalTemperature_);
+    writeEntry(os, "plenumVolume", plenumVolume_);
+    writeEntry(os, "plenumDensity", plenumDensity_);
+    writeEntry(os, "plenumTemperature", plenumTemperature_);
     if (hasRho_)
     {
-        os.writeKeyword("rho") << rho_
-            << token::END_STATEMENT << nl;
+        writeEntry(os, "rho", rho_);
     }
-    os.writeKeyword("inletAreaRatio") << inletAreaRatio_
-        << token::END_STATEMENT << nl;
-    os.writeKeyword("inletDischargeCoefficient") << inletDischargeCoefficient_
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "inletAreaRatio", inletAreaRatio_);
+    writeEntry
+    (
+        os,
+        "inletDischargeCoefficient",
+        inletDischargeCoefficient_
+    );
     writeEntryIfDifferent<scalar>(os, "timeScale", 0.0, timeScale_);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
     writeEntryIfDifferent<word>(os, "U", "U", UName_);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

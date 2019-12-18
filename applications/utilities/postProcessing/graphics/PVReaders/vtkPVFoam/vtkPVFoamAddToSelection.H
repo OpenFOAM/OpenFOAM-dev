@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,7 @@ License
 // OpenFOAM includes
 #include "IOobjectList.H"
 #include "SortableList.H"
+#include "surfaceFields.H"
 
 // VTK includes
 #include "vtkDataArraySelection.h"
@@ -64,6 +65,116 @@ Foam::label Foam::vtkPVFoam::addToSelection
     }
 
     return names.size();
+}
+
+
+template<template<class> class patchType, class meshType>
+void Foam::vtkPVFoam::addFieldsToSelection
+(
+    vtkDataArraySelection *select,
+    const IOobjectList& objects,
+    const string& suffix
+)
+{
+    addToSelection<GeometricField<scalar, patchType, meshType>>
+    (
+        select,
+        objects,
+        suffix
+    );
+
+    addToSelection<GeometricField<vector, patchType, meshType>>
+    (
+        select,
+        objects,
+        suffix
+    );
+
+    addToSelection<GeometricField<sphericalTensor, patchType, meshType>>
+    (
+        select,
+        objects,
+        suffix
+    );
+
+    addToSelection<GeometricField<symmTensor, patchType, meshType>>
+    (
+        select,
+        objects,
+        suffix
+    );
+
+    addToSelection<GeometricField<tensor, patchType, meshType>>
+    (
+        select,
+        objects,
+        suffix
+    );
+}
+
+
+template<template<class> class patchType, class meshType>
+void Foam::vtkPVFoam::addInternalFieldsToSelection
+(
+    vtkDataArraySelection *select,
+    const IOobjectList& objects,
+    const string& suffix
+)
+{
+    addToSelection
+    <
+        typename
+        GeometricField<scalar, patchType, meshType>::Internal
+    >
+    (
+        select,
+        objects,
+        suffix
+    );
+
+    addToSelection
+    <
+        typename
+        GeometricField<vector, patchType, meshType>::Internal
+    >
+    (
+        select,
+        objects,
+        suffix
+    );
+
+    addToSelection
+    <
+        typename
+        GeometricField<sphericalTensor, patchType, meshType>::Internal
+    >
+    (
+        select,
+        objects,
+        suffix
+    );
+
+    addToSelection
+    <
+        typename
+        GeometricField<symmTensor, patchType, meshType>::Internal
+    >
+    (
+        select,
+        objects,
+        suffix
+    );
+
+    addToSelection
+    <
+        typename
+        GeometricField<tensor, patchType, meshType>::Internal
+    >
+    (
+        select,
+        objects,
+        suffix
+    );
 }
 
 

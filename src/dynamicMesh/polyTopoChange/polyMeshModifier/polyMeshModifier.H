@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ Ostream& operator<<(Ostream&, const polyMeshModifier&);
 
 class polyMeshModifier
 {
-    // Private data
+    // Private Data
 
         //- Name of modifier
         word name_;
@@ -84,18 +84,9 @@ class polyMeshModifier
         mutable Switch active_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        polyMeshModifier(const polyMeshModifier&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const polyMeshModifier&);
-
-
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Runtime type information
         TypeName("meshModifier");
@@ -128,6 +119,9 @@ public:
             const polyTopoChanger& mme,
             const bool act
         );
+
+        //- Disallow default bitwise copy construction
+        polyMeshModifier(const polyMeshModifier&) = delete;
 
 
     // Selectors
@@ -201,6 +195,12 @@ public:
 
         //- Write dictionary
         virtual void writeDict(Ostream&) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const polyMeshModifier&) = delete;
 
 
     // Ostream Operator

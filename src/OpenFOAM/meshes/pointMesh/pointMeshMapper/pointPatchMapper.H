@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,9 +55,9 @@ class mapPolyMesh;
 
 class pointPatchMapper
 :
-    public pointPatchFieldMapper
+    public generalPointPatchFieldMapper
 {
-    // Private data
+    // Private Data
 
         //- Reference to patch
         const pointPatch& patch_;
@@ -88,16 +88,6 @@ class pointPatchMapper
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        pointPatchMapper
-        (
-            const pointPatchMapper&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointPatchMapper&);
-
-
         //- Calculate addressing for mapping with inserted cells
         void calcAddressing() const;
 
@@ -106,8 +96,6 @@ class pointPatchMapper
 
 
 public:
-
-    // Static data members
 
     // Constructors
 
@@ -119,18 +107,18 @@ public:
             const mapPolyMesh& mpm
         );
 
+        //- Disallow default bitwise copy construction
+        pointPatchMapper
+        (
+            const pointPatchMapper&
+        );
+
 
     //- Destructor
     virtual ~pointPatchMapper();
 
 
     // Member Functions
-
-        //- Return size
-        virtual label size() const
-        {
-            return patch_.size();
-        }
 
         virtual bool hasUnmapped() const
         {
@@ -155,9 +143,14 @@ public:
         //- Return interpolated addressing
         virtual const labelListList& addressing() const;
 
-        //- Return interpolaion weights
+        //- Return interpolation weights
         virtual const scalarListList& weights() const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointPatchMapper&) = delete;
 };
 
 

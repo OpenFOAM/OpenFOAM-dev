@@ -8,8 +8,6 @@ cleanCase
 
 rm -rf 0 > /dev/null 2>&1
 
-rm -rf constant/triSurface/blob.stl.gz > /dev/null 2>&1
-
 rm -rf constant/cellAlignments > /dev/null 2>&1
 rm -rf constant/targetCellSize > /dev/null 2>&1
 rm -rf constant/internalDelaunayVertices > /dev/null 2>&1

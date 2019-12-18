@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ Description
     field and derived quantities.  Alternatively, the same actions can be
     executed after the simulation using the \c -postProcess command-line option.
 
-    \subsection secFunctionObjects Using function objects
+    \subsection secFunctionObjects Using functionObjects
 
     FunctionObjects are selected by additional entries in the
     $FOAM_CASE/system/controlDict dictionary.  Each object is listed in the \c
@@ -48,8 +48,8 @@ Description
             libs                ("libMyFunctionObjectlib.so");
             region              defaultRegion;
             enabled             yes;
-            timeStart           0;
-            timeEnd             10;
+            startTime           0;
+            endTime             10;
             writeControl        writeTime;
             writeInterval       1;
             ...
@@ -60,13 +60,13 @@ Description
     Where:
     \table
         Property | Description                       | Required | Default value
-        type     | Type of function object               | yes      |
+        type     | Type of functionObject                | yes      |
         libs     | Libraries containing implementation   | yes      |
         region   | Name of region for multi-region cases | no       |
         enabled  | On/off switch                         | no       | yes
         log      | Log information to standard output    | no       | yes
-        timeStart| Start time                            | no       |
-        timeEnd  | End time                              | no       |
+        startTime| Start time                            | no       |
+        endTime  | End time                              | no       |
         executeControl  | See time controls below        | no       | timeStep
         executeInterval | Steps between each execute phase | no     |
         writeControl    | See time controls below        | no       | timeStep
@@ -92,7 +92,7 @@ Description
     libraries and the \c libs entry is used to specify which library should be
     loaded.
 
-    Each function object has two separate run phases:
+    Each functionObject has two separate run phases:
 
       - The \c execute phase is meant to be used for updating calculations
         or for management tasks.
@@ -104,7 +104,7 @@ Class
     Foam::functionObject
 
 Description
-    Abstract base-class for Time/database function objects.
+    Abstract base-class for Time/database functionObjects.
 
 See also
     Foam::functionObjectList
@@ -139,19 +139,10 @@ class mapPolyMesh;
 
 class functionObject
 {
-    // Private data
+    // Private Data
 
         //- Name
         const word name_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        functionObject(const functionObject&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const functionObject&);
 
 
 public:
@@ -166,6 +157,9 @@ public:
 
     //- Switch write log to Info
     Switch log;
+
+    //- Switch write log to Info
+    Switch executeAtStart_;
 
 
     // Declare run-time constructor selection tables
@@ -192,6 +186,9 @@ public:
             return autoPtr<functionObject>(nullptr);
         }
 
+        //- Disallow default bitwise copy construction
+        functionObject(const functionObject&) = delete;
+
 
     // Selectors
 
@@ -213,8 +210,11 @@ public:
         //- Return the name of this functionObject
         const word& name() const;
 
-        //- Read and set the function object if its data have changed
+        //- Read and set the functionObject if its data have changed
         virtual bool read(const dictionary&);
+
+        //- Return true if the functionObject should be executed at the start
+        virtual bool executeAtStart() const;
 
         //- Called at each ++ or += of the time-loop.
         //  postProcess overrides the usual executeControl behaviour and
@@ -230,12 +230,12 @@ public:
         //  By default it simply calls execute().
         virtual bool end();
 
-        //- Called by Time::setDeltaT(). Allows the function object to override
+        //- Called by Time::setDeltaT(). Allows the functionObject to override
         //  the time-step value.
         //  Returns whether or not the value was overridden.
         virtual bool setTimeStep();
 
-        //- Called by Time::adjustTimeStep(). Allows the function object to
+        //- Called by Time::adjustTimeStep(). Allows the functionObject to
         //  insert a write time earlier than that already in use by the run
         //  time. Returns the write time, or vGreat.
         virtual scalar timeToNextWrite();
@@ -245,6 +245,12 @@ public:
 
         //- Update for changes of mesh
         virtual void movePoints(const polyMesh& mesh);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const functionObject&) = delete;
 };
 
 

@@ -21,7 +21,7 @@
       + parcels.Sh(he)
       + surfaceFilm.Sh()
       + radiation->Sh(thermo, he)
-      + Qdot
+      + combustion->Qdot()
       + fvOptions(rho, he)
     );
 

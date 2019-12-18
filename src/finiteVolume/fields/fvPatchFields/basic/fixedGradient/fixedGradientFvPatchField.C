@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ Foam::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
 )
 :
     fvPatchField<Type>(ptf, p, iF, mapper),
-    gradient_(ptf.gradient_, mapper)
+    gradient_(mapper(ptf.gradient_))
 {
     if (notNull(iF) && mapper.hasUnmapped())
     {
@@ -111,7 +111,7 @@ void Foam::fixedGradientFvPatchField<Type>::autoMap
 )
 {
     fvPatchField<Type>::autoMap(m);
-    gradient_.autoMap(m);
+    m(gradient_, gradient_);
 }
 
 
@@ -193,7 +193,7 @@ template<class Type>
 void Foam::fixedGradientFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    gradient_.writeEntry("gradient", os);
+    writeEntry(os, "gradient", gradient_);
 }
 
 

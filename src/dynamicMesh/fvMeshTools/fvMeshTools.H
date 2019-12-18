@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,20 +48,11 @@ namespace Foam
 
 class fvMeshTools
 {
-    template<class GeoField>
-    static void addPatchFields
-    (
-        fvMesh&,
-        const dictionary& patchFieldDict,
-        const word& defaultPatchFieldType,
-        const typename GeoField::value_type& defaultPatchValue
-    );
-
     //- Set patchFields according to dictionary
     template<class GeoField>
     static void setPatchFields
     (
-        fvMesh& mesh,
+        typename  GeoField::Mesh& mesh,
         const label patchi,
         const dictionary& patchFieldDict
     );
@@ -70,20 +61,10 @@ class fvMeshTools
     template<class GeoField>
     static void setPatchFields
     (
-        fvMesh& mesh,
+        typename  GeoField::Mesh& mesh,
         const label patchi,
         const typename GeoField::value_type& value
     );
-
-    // Remove last patch fields
-    template<class GeoField>
-    static void trimPatchFields(fvMesh&, const label nPatches);
-
-    template<class GeoField>
-    static void reorderPatchFields(fvMesh&, const labelList& oldToNew);
-
-    // Remove trialing patches
-    static void trimPatches(fvMesh&, const label nPatches);
 
 
 public:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ class displacementLaplacianFvMotionSolver
     public displacementMotionSolver,
     public fvMotionSolver
 {
-    // Private data
+    // Private Data
 
         //- Cell-centre motion field
         mutable volVectorField cellDisplacement_;
@@ -73,18 +73,6 @@ class displacementLaplacianFvMotionSolver
         label frozenPointsZone_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        displacementLaplacianFvMotionSolver
-        (
-            const displacementLaplacianFvMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const displacementLaplacianFvMotionSolver&);
-
-
 public:
 
     //- Runtime type information
@@ -93,11 +81,17 @@ public:
 
     // Constructors
 
-        //- Construct from polyMesh and IOdictionary
+        //- Construct from polyMesh and dictionary
         displacementLaplacianFvMotionSolver
         (
             const polyMesh&,
-            const IOdictionary&
+            const dictionary&
+        );
+
+        //- Disallow default bitwise copy construction
+        displacementLaplacianFvMotionSolver
+        (
+            const displacementLaplacianFvMotionSolver&
         );
 
 
@@ -130,6 +124,12 @@ public:
 
         //- Update topology
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const displacementLaplacianFvMotionSolver&) = delete;
 };
 
 

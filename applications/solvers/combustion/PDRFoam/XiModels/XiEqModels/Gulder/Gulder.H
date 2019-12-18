@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class Gulder
 :
     public XiEqModel
 {
-    // Private data
+    // Private Data
 
         //- Model constant
         scalar XiEqCoef_;
@@ -66,15 +66,6 @@ class Gulder
 
         //- Use sub-grid Schelkin effect
         bool subGridSchelkin_;
-
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        Gulder(const Gulder&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const Gulder&);
 
 
 public:
@@ -94,6 +85,9 @@ public:
             const volScalarField& Su
         );
 
+        //- Disallow default bitwise copy construction
+        Gulder(const Gulder&);
+
 
     //- Destructor
     virtual ~Gulder();
@@ -101,12 +95,17 @@ public:
 
     // Member Functions
 
-        //- Return the flame-wrinking XiEq
+        //- Return the flame-wrinkling XiEq
         virtual tmp<volScalarField> XiEq() const;
 
         //- Update properties from given dictionary
         virtual bool read(const dictionary& XiEqProperties);
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const Gulder&) = delete;
 };
 
 

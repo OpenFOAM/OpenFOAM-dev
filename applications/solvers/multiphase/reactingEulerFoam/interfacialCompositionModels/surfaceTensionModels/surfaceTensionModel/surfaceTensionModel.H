@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,7 +83,7 @@ public:
     );
 
 
-    // Static data members
+    // Static Data Members
 
         //- Coefficient dimensions
         static const dimensionSet dimSigma;
@@ -115,8 +115,11 @@ public:
 
     // Member Functions
 
-        //- Aspect ratio
+        //- Surface tension
         virtual tmp<volScalarField> sigma() const = 0;
+
+        //- Surface tension for a patch
+        virtual tmp<scalarField> sigma(label patchi) const = 0;
 
         //- Dummy write for regIOobject
         bool writeData(Ostream& os) const;

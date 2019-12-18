@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -216,7 +216,7 @@ bool Foam::functionObjects::nearWallFields::read(const dictionary& dict)
     dict.lookup("fields") >> fieldSet_;
     patchSet_ =
         mesh_.boundaryMesh().patchSet(wordReList(dict.lookup("patches")));
-    distance_ = readScalar(dict.lookup("distance"));
+    distance_ = dict.lookup<scalar>("distance");
 
 
     // Clear out any previously loaded fields

@@ -13,7 +13,7 @@ Description
 type            writeObjects;
 libs            ("libutilityFunctionObjects.so");
 
-objects         (<object names>);
+objects         (<object_names>);
 
 writeControl    writeTime;
 

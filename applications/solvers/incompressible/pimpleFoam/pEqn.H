@@ -26,7 +26,7 @@ if (pimple.consistent())
     HbyA -= (rAU - rAtU())*fvc::grad(p);
 }
 
-if (pimple.nCorrPISO() <= 1)
+if (pimple.nCorrPiso() <= 1)
 {
     tUEqn.clear();
 }

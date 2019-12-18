@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,9 +59,9 @@ class fixedMultiPhaseHeatFluxFvPatchScalarField
 :
     public fixedValueFvPatchScalarField
 {
-    // Private data
+    // Private Data
 
-        //- Heat power [W] or flux [W/m2]
+        //- Heat power [W] or flux [W/m^2]
         scalarField q_;
 
         //- Relaxation factor
@@ -105,13 +105,13 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         fixedMultiPhaseHeatFluxFvPatchScalarField
         (
             const fixedMultiPhaseHeatFluxFvPatchScalarField&
         );
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         fixedMultiPhaseHeatFluxFvPatchScalarField
         (
             const fixedMultiPhaseHeatFluxFvPatchScalarField&,
@@ -119,7 +119,7 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,11 +53,28 @@ bool Foam::functionObjects::log::calc()
     {
         const volScalarField& x = lookupObject<volScalarField>(fieldName_);
 
-        return store
+        // Cache the current debug setting for dimensionSet
+        const bool dimensionSetDebug = dimensionSet::debug;
+
+        // Switch-off dimension checking if requested
+        if (!checkDimensions_)
+        {
+            dimensionSet::debug = 0;
+        }
+
+        bool stored = store
         (
             resultName_,
-            Foam::log(max(x, clip_))
+            clip_ ? Foam::log(max(x, clipValue_)) : Foam::log(x)
         );
+
+        // Reinstate dimension checking
+        if (!checkDimensions_)
+        {
+            dimensionSet::debug = dimensionSetDebug;
+        }
+
+        return stored;
     }
     else
     {
@@ -77,7 +94,10 @@ Foam::functionObjects::log::log
     const dictionary& dict
 )
 :
-    fieldExpression(name, runTime, dict)
+    fieldExpression(name, runTime, dict, typeName),
+    clip_(false),
+    clipValue_(0),
+    checkDimensions_(true)
 {
     read(dict);
 }
@@ -93,14 +113,13 @@ Foam::functionObjects::log::~log()
 
 bool Foam::functionObjects::log::read(const dictionary& dict)
 {
-    fieldExpression::read(dict);
-
-    if (resultName_.empty())
+    if (dict.found("clip"))
     {
-        resultName_ = "log(" + fieldName_ + ")";
+        clip_ = true;
+        dict.lookup("clip") >> clipValue_;
     }
 
-    clip_ = dict.lookupOrDefault<scalar>("clip", 0);
+    checkDimensions_ = dict.lookupOrDefault<Switch>("checkDimensions", true);
 
     return true;
 }

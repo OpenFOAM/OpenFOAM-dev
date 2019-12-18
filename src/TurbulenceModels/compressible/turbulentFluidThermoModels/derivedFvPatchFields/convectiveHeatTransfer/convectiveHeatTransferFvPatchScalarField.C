@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ convectiveHeatTransferFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(p, iF, dict),
-    L_(readScalar(dict.lookup("L")))
+    L_(dict.lookup<scalar>("L"))
 {}
 
 
@@ -129,8 +129,7 @@ void convectiveHeatTransferFvPatchScalarField::updateCoeffs()
     const vectorField& Uc = turbModel.U();
     const vectorField& Uw = turbModel.U().boundaryField()[patchi];
     const scalarField& Tw = turbModel.transport().T().boundaryField()[patchi];
-    const scalarField& pw = turbModel.transport().p().boundaryField()[patchi];
-    const scalarField Cpw(turbModel.transport().Cp(pw, Tw, patchi));
+    const scalarField Cpw(turbModel.transport().Cp(Tw, patchi));
 
     const scalarField kappaw(Cpw*alphaEffw);
     const scalarField Pr(muw*Cpw/kappaw);
@@ -161,8 +160,8 @@ void convectiveHeatTransferFvPatchScalarField::updateCoeffs()
 void convectiveHeatTransferFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
-    os.writeKeyword("L") << L_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "L", L_);
+    writeEntry(os, "value", *this);
 }
 
 

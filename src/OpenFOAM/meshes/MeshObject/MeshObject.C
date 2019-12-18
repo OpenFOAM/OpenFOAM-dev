@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -353,6 +353,99 @@ void Foam::meshObject::updateMesh(objectRegistry& obr, const mapPolyMesh& mpm)
                 Pout<< "    Updating " << iter()->name() << endl;
             }
             dynamic_cast<UpdateableMeshObject<Mesh>*>(iter())->updateMesh(mpm);
+        }
+        else
+        {
+            if (meshObject::debug)
+            {
+                Pout<< "    Destroying " << iter()->name() << endl;
+            }
+            obr.checkOut(*iter());
+        }
+    }
+}
+
+
+template<class Mesh>
+void Foam::meshObject::addPatch(objectRegistry& obr, const label patchi)
+{
+    HashTable<GeometricMeshObject<Mesh>*> meshObjects
+    (
+        obr.lookupClass<GeometricMeshObject<Mesh>>()
+    );
+
+    if (meshObject::debug)
+    {
+        Pout<< "meshObject::addPatch(objectRegistry&, "
+               "const label patchi) : updating " << Mesh::typeName
+            << " meshObjects for region " << obr.name() << endl;
+    }
+
+    forAllIter
+    (
+        typename HashTable<GeometricMeshObject<Mesh>*>,
+        meshObjects,
+        iter
+    )
+    {
+        if (isA<PatchMeshObject<Mesh>>(*iter()))
+        {
+            if (meshObject::debug)
+            {
+                Pout<< "    Adding patch to " << iter()->name() << endl;
+            }
+            dynamic_cast<PatchMeshObject<Mesh>*>(iter())->addPatch(patchi);
+        }
+        else
+        {
+            if (meshObject::debug)
+            {
+                Pout<< "    Destroying " << iter()->name() << endl;
+            }
+            obr.checkOut(*iter());
+        }
+    }
+}
+
+
+template<class Mesh>
+void Foam::meshObject::reorderPatches
+(
+    objectRegistry& obr,
+    const labelUList& newToOld,
+    const bool validBoundary
+)
+{
+    HashTable<GeometricMeshObject<Mesh>*> meshObjects
+    (
+        obr.lookupClass<GeometricMeshObject<Mesh>>()
+    );
+
+    if (meshObject::debug)
+    {
+        Pout<< "meshObject::addPatch(objectRegistry&, "
+               "const labelUList&, const bool) : updating " << Mesh::typeName
+            << " meshObjects for region " << obr.name() << endl;
+    }
+
+    forAllIter
+    (
+        typename HashTable<GeometricMeshObject<Mesh>*>,
+        meshObjects,
+        iter
+    )
+    {
+        if (isA<PatchMeshObject<Mesh>>(*iter()))
+        {
+            if (meshObject::debug)
+            {
+                Pout<< "    Adding patch to " << iter()->name() << endl;
+            }
+            dynamic_cast<PatchMeshObject<Mesh>*>(iter())->reorderPatches
+            (
+                newToOld,
+                validBoundary
+            );
         }
         else
         {

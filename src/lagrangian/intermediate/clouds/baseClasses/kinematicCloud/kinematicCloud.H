@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,15 +49,6 @@ namespace Foam
 
 class kinematicCloud
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        kinematicCloud(const kinematicCloud&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const kinematicCloud&);
-
-
 public:
 
     //- Runtime type information
@@ -68,8 +59,15 @@ public:
         //- Null constructor
         kinematicCloud();
 
+        //- Disallow default bitwise copy construction
+        kinematicCloud(const kinematicCloud&) = delete;
 
-    // Member functions
+
+    //- Destructor
+    virtual ~kinematicCloud();
+
+
+    // Member Functions
 
         // Check
 
@@ -110,8 +108,10 @@ public:
                 virtual const tmp<volScalarField> rhoEff() const = 0;
 
 
-    //- Destructor
-    virtual ~kinematicCloud();
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const kinematicCloud&) = delete;
 };
 
 

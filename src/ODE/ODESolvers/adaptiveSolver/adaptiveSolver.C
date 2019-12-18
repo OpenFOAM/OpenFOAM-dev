@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,20 +60,21 @@ void Foam::adaptiveSolver::solve
     const ODESystem& odes,
     scalar& x,
     scalarField& y,
+    const label li,
     scalar& dxTry
 ) const
 {
     scalar dx = dxTry;
     scalar err = 0.0;
 
-    odes.derivatives(x, y, dydx0_);
+    odes.derivatives(x, y, li, dydx0_);
 
     // Loop over solver and adjust step-size as necessary
     // to achieve desired error
     do
     {
         // Solve step and provide error estimate
-        err = solve(x, y, dydx0_, dx, yTemp_);
+        err = solve(x, y, li, dydx0_, dx, yTemp_);
 
         // If error is large reduce dx
         if (err > 1)

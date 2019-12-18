@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "ThermoSurfaceFilm.H"
+#include "thermoSingleLayer.H"
 #include "addToRunTimeSelectionTable.H"
 #include "mathematicalConstants.H"
 #include "Pstream.H"
@@ -82,26 +83,6 @@ Foam::word Foam::ThermoSurfaceFilm<CloudType>::interactionTypeStr
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-template<class CloudType>
-Foam::vector Foam::ThermoSurfaceFilm<CloudType>::tangentVector
-(
-    const vector& v
-) const
-{
-    vector tangent = Zero;
-    scalar magTangent = 0.0;
-
-    while (magTangent < small)
-    {
-        vector vTest = rndGen_.sample01<vector>();
-        tangent = vTest - (vTest & v)*v;
-        magTangent = mag(tangent);
-    }
-
-    return tangent/magTangent;
-}
-
 
 template<class CloudType>
 Foam::vector Foam::ThermoSurfaceFilm<CloudType>::splashDirection
@@ -358,7 +339,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::splashInteraction
     const vector& nf = pp.faceNormals()[facei];
 
     // Determine direction vectors tangential to patch normal
-    const vector tanVec1 = tangentVector(nf);
+    const vector tanVec1 = normalised(perpendicular(nf));
     const vector tanVec2 = nf^tanVec1;
 
     // Retrieve parcel properties
@@ -638,10 +619,16 @@ void Foam::ThermoSurfaceFilm<CloudType>::cacheFilmFields
         filmModel
     );
 
-    TFilmPatch_ = filmModel.Ts().boundaryField()[filmPatchi];
+    const regionModels::surfaceFilmModels::thermoSingleLayer& thermalFilmModel =
+        refCast<const regionModels::surfaceFilmModels::thermoSingleLayer>
+        (
+            filmModel
+        );
+
+    TFilmPatch_ = thermalFilmModel.Ts().boundaryField()[filmPatchi];
     filmModel.toPrimary(filmPatchi, TFilmPatch_);
 
-    CpFilmPatch_ = filmModel.Cp().boundaryField()[filmPatchi];
+    CpFilmPatch_ = thermalFilmModel.Cp().boundaryField()[filmPatchi];
     filmModel.toPrimary(filmPatchi, CpFilmPatch_);
 }
 

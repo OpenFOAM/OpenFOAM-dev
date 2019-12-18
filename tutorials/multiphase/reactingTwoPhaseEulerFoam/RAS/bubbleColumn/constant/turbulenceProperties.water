@@ -23,6 +23,11 @@ RAS
 
     turbulence      on;
     printCoeffs     on;
+
+    mixtureKEpsilonCoeffs
+    {
+        alphap      0.3;
+    }
 }
 
 // ************************************************************************* //

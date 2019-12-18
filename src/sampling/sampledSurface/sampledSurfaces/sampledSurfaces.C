@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,11 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sampledSurfaces.H"
-#include "volFields.H"
-#include "dictionary.H"
-#include "Time.H"
-#include "IOmanip.H"
-#include "volPointInterpolation.H"
 #include "PatchTools.H"
 #include "mapPolyMesh.H"
 #include "addToRunTimeSelectionTable.H"

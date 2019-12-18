@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,6 +40,7 @@ SourceFiles
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "fvMatrices.H"
+#include "pimpleControl.H"
 
 #include "injectionModelList.H"
 #include "transferModelList.H"
@@ -66,16 +67,6 @@ class kinematicSingleLayer
 :
     public surfaceFilmRegionModel
 {
-private:
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        kinematicSingleLayer(const kinematicSingleLayer&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const kinematicSingleLayer&);
-
 
 protected:
 
@@ -83,17 +74,7 @@ protected:
 
         // Solution parameters
 
-            //- Momentum predictor
-            Switch momentumPredictor_;
-
-            //- Number of outer correctors
-            label nOuterCorr_;
-
-            //- Number of PISO-like correctors
-            label nCorr_;
-
-            //- Number of non-orthogonal correctors
-            label nNonOrthCorr_;
+            pimpleControl pimple_;
 
             //- Cumulative continuity error
             scalar cumulativeContErr_;
@@ -109,13 +90,13 @@ protected:
 
             // Fields
 
-                //- Density [kg/m3]
+                //- Density [kg/m^3]
                 volScalarField rho_;
 
                 //- Dynamic viscosity [Pa.s]
                 volScalarField mu_;
 
-                //- Surface tension [m/s2]
+                //- Surface tension [m/s^2]
                 volScalarField sigma_;
 
 
@@ -124,7 +105,7 @@ protected:
             //- Film thickness [m]
             volScalarField delta_;
 
-            //- Film coverage indicator, 1 = covered, 0 = uncovered []
+            //- Film volume fraction in the cell layer []
             volScalarField alpha_;
 
             //- Velocity - mean [m/s]
@@ -136,11 +117,17 @@ protected:
             //- Velocity - wall [m/s]
             volVectorField Uw_;
 
-            //- Film thickness*density (helper field) [kg/m2]
-            volScalarField deltaRho_;
-
-            //- Mass flux (includes film thickness) [kg.m/s]
+            //- Mass flux [kg m/s]
             surfaceScalarField phi_;
+
+            //- Film velocity flux [m^3/s]
+            surfaceScalarField phiU_;
+
+            //- Current continuity error caused by delta_ bounding
+            volScalarField::Internal continuityErr_;
+
+            //- Film coverage indicator, 1 = covered, 0 = uncovered []
+            volScalarField coverage_;
 
 
             // Transfer fields
@@ -161,27 +148,27 @@ protected:
             // Note: need boundary value mapped from primary region, and then
             // pushed into the patch internal field
 
-                //- Momementum [kg/m/s2]
-                volVectorField USp_;
+                //- Mass [kg/m^2/s]
+                volScalarField::Internal rhoSp_;
+
+                //- Momentum [kg/m/s^2]
+                volVectorField::Internal USp_;
 
                 //- Pressure [Pa]
-                volScalarField pSp_;
-
-                //- Mass [kg/m2/s]
-                volScalarField rhoSp_;
+                volScalarField::Internal pSp_;
 
 
             // Primary region - registered to the primary region mesh
             // Internal use only - not read-in
 
-                //- Momementum [kg/m/s2]
+                //- Primary region mass source [kg]
+                volScalarField rhoSpPrimary_;
+
+                //- Primary region tangential momentum source [kg m/s]
                 volVectorField USpPrimary_;
 
-                //- Pressure [Pa]
+                //- Primary region normal momentum source (pressure) [kg m/s]
                 volScalarField pSpPrimary_;
-
-                //- Mass [kg/m2/s]
-                volScalarField rhoSpPrimary_;
 
 
         // Fields mapped from primary region - registered to the film region
@@ -193,7 +180,7 @@ protected:
             //- Pressure [Pa]
             volScalarField pPrimary_;
 
-            //- Density [kg/m3]
+            //- Density [kg/m^3]
             volScalarField rhoPrimary_;
 
             //- Viscosity [Pa.s]
@@ -244,17 +231,23 @@ protected:
         //- Transfer source fields from the primary region to the film region
         virtual void transferPrimaryRegionSourceFields();
 
-        //- Explicit pressure source contribution
-        virtual tmp<volScalarField> pu();
+        //- Hydrostatic pressure coefficient
+        tmp<volScalarField> rhog() const;
 
-        //- Implicit pressure source coefficient
-        virtual tmp<volScalarField> pp();
+        //- Capillary pressure
+        tmp<volScalarField> pc();
+
+        //- Explicit pressure
+        tmp<volScalarField> pe();
 
         //- Correct film coverage field
-        virtual void correctAlpha();
+        virtual void correctCoverage();
 
         //- Update the film sub-models
         virtual void updateSubmodels();
+
+        // Update continuity error
+        virtual void updateContinuityErr();
 
         //- Continuity check
         virtual void continuityCheck();
@@ -265,31 +258,29 @@ protected:
         //- Constrain a film region master/slave boundaries of a field to a
         //  given value
         template<class Type>
-        void constrainFilmField
+        tmp<Type> constrainFilmField
         (
-            Type& field,
+            const tmp<Type>& field,
             const typename Type::cmptType& value
         );
 
 
         // Equations
 
-            //- Solve continuity equation
-            virtual void solveContinuity();
+            //- Predict delta_ from the continuity equation
+            virtual void predictDelta();
 
             //- Solve for film velocity
             virtual tmp<fvVectorMatrix> solveMomentum
             (
-                const volScalarField& pu,
-                const volScalarField& pp
+                const volScalarField& Su
             );
 
-            //- Solve coupled velocity-thickness equations
-            virtual void solveThickness
+            //- Solve for film volume fraction and thickness
+            virtual void solveAlpha
             (
-                const volScalarField& pu,
-                const volScalarField& pp,
-                const fvVectorMatrix& UEqn
+                const fvVectorMatrix& UEqn,
+                const volScalarField& Su
             );
 
 
@@ -311,6 +302,9 @@ public:
             const bool readFields = true
         );
 
+        //- Disallow default bitwise copy construction
+        kinematicSingleLayer(const kinematicSingleLayer&) = delete;
+
 
     //- Destructor
     virtual ~kinematicSingleLayer();
@@ -323,18 +317,6 @@ public:
             //- Courant number evaluation
             virtual scalar CourantNumber() const;
 
-            //- Return the momentum predictor
-            inline const Switch& momentumPredictor() const;
-
-            //- Return the number of outer correctors
-            inline label nOuterCorr() const;
-
-            //- Return the number of PISO correctors
-            inline label nCorr() const;
-
-            //- Return the number of non-orthogonal correctors
-            inline label nNonOrthCorr() const;
-
             //- Return small delta
             inline const dimensionedScalar& deltaSmall() const;
 
@@ -344,7 +326,7 @@ public:
             //- Return const access to the dynamic viscosity [Pa.s]
             inline const volScalarField& mu() const;
 
-            //- Return const access to the surface tension [kg/s2]
+            //- Return const access to the surface tension [kg/s^2]
             inline const volScalarField& sigma() const;
 
 
@@ -353,44 +335,32 @@ public:
             //- Return const access to the film thickness [m]
             inline const volScalarField& delta() const;
 
-            //- Return the film coverage, 1 = covered, 0 = uncovered []
+            //- Return const access to the film volume fraction []
             inline const volScalarField& alpha() const;
 
+            //- Return the film density [kg/m^3]
+            inline const volScalarField& rho() const;
+
             //- Return the film velocity [m/s]
-            virtual const volVectorField& U() const;
+            inline const volVectorField& U() const;
 
             //- Return the film surface velocity [m/s]
-            virtual const volVectorField& Us() const;
+            inline const volVectorField& Us() const;
 
             //- Return the film wall velocity [m/s]
-            virtual const volVectorField& Uw() const;
+            inline const volVectorField& Uw() const;
 
-            //- Return the film thickness*density (helper field) [kg/m3]
-            virtual const volScalarField& deltaRho() const;
+            //- Return the film flux [kg m/s]
+            inline const surfaceScalarField& phi() const;
 
-            //- Return the film flux [kg.m/s]
-            virtual const surfaceScalarField& phi() const;
+            //- Return the film velocity flux [m^3/s]
+            inline const surfaceScalarField& phiU() const;
 
-            //- Return the film density [kg/m3]
-            virtual const volScalarField& rho() const;
+            //- Return the current continuity error
+            inline const volScalarField::Internal& continuityErr() const;
 
-            //- Return the film mean temperature [K]
-            virtual const volScalarField& T() const;
-
-            //- Return the film surface temperature [K]
-            virtual const volScalarField& Ts() const;
-
-            //- Return the film wall temperature [K]
-            virtual const volScalarField& Tw() const;
-
-            //- Return the film surface enthalpy [J/kg]
-            virtual const volScalarField& hs() const;
-
-            //- Return the film specific heat capacity [J/kg/K]
-            virtual const volScalarField& Cp() const;
-
-            //- Return the film thermal conductivity [W/m/K]
-            virtual const volScalarField& kappa() const;
+            //- Return the film coverage, 1 = covered, 0 = uncovered []
+            inline const volScalarField& coverage() const;
 
 
             // Transfer fields - to the primary region
@@ -413,8 +383,8 @@ public:
                 const label patchi,            // patchi on primary region
                 const label facei,             // facei of patchi
                 const scalar massSource,       // [kg]
-                const vector& momentumSource,  // [kg.m/s] (tang'l momentum)
-                const scalar pressureSource,   // [kg.m/s] (normal momentum)
+                const vector& momentumSource,  // [kg m/s] (tang'l momentum)
+                const scalar pressureSource,   // [kg m/s] (normal momentum)
                 const scalar energySource = 0  // [J]
             );
 
@@ -423,35 +393,35 @@ public:
 
             // Primary region
 
-                //- Momementum [kg/m/s2]
+                //- Momentum [kg/m/s^2]
                 inline volVectorField& USpPrimary();
 
                 //- Pressure [Pa]
                 inline volScalarField& pSpPrimary();
 
-                //- Mass [kg/m2/s]
+                //- Mass [kg/m^2/s]
                 inline volScalarField& rhoSpPrimary();
 
 
             // Film region
 
-                //- Momentum [kg/m/s2]
-                inline volVectorField& USp();
+                //- Momentum [kg/m/s^2]
+                inline volVectorField::Internal& USp();
 
                 //- Pressure [Pa]
-                inline volScalarField& pSp();
+                inline volScalarField::Internal& pSp();
 
-                //- Mass [kg/m2/s]
-                inline volScalarField& rhoSp();
+                //- Mass [kg/m^2/s]
+                inline volScalarField::Internal& rhoSp();
 
-                //- Momentum [kg/m/s2]
-                inline const volVectorField& USp() const;
+                //- Momentum [kg/m/s^2]
+                inline const volVectorField::Internal& USp() const;
 
                 //- Pressure [Pa]
-                inline const volScalarField& pSp() const;
+                inline const volScalarField::Internal& pSp() const;
 
-                //- Mass [kg/m2/s]
-                inline const volScalarField& rhoSp() const;
+                //- Mass [kg/m^2/s]
+                inline const volScalarField::Internal& rhoSp() const;
 
 
         // Fields mapped from primary region
@@ -462,7 +432,7 @@ public:
             //- Pressure [Pa]
             inline const volScalarField& pPrimary() const;
 
-            //- Density [kg/m3]
+            //- Density [kg/m^3]
             inline const volScalarField& rhoPrimary() const;
 
             //- Viscosity [Pa.s]
@@ -487,20 +457,10 @@ public:
         // Helper functions
 
             //- Return the current film mass
-            inline tmp<volScalarField> mass() const;
+            inline tmp<volScalarField::Internal> mass() const;
 
             //- Return the change in film mass due to sources/sinks
-            inline tmp<volScalarField> deltaMass() const;
-
-            //- Return the gravity normal-to-patch component contribution
-            inline tmp<volScalarField> gNorm() const;
-
-            //- Return the gravity normal-to-patch component contribution
-            //  Clipped so that only non-zero if g & nHat_ < 0
-            inline tmp<volScalarField> gNormClipped() const;
-
-            //- Return the gravity tangential component contributions
-            inline tmp<volVectorField> gTan() const;
+            inline tmp<volScalarField::Internal> deltaMass() const;
 
 
         // Evolution
@@ -533,6 +493,12 @@ public:
 
             //- Provide some feedback
             virtual void info();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const kinematicSingleLayer&) = delete;
 };
 
 

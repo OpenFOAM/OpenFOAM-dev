@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
     but otherwise separate properties. The type of phase model is run time
     selectable and can optionally represent multiple species and in-phase
     reactions. The phase system is also run time selectable and can optionally
-    represent different types of momentun, heat and mass transfer.
+    represent different types of momentum, heat and mass transfer.
 
 \*---------------------------------------------------------------------------*/
 
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 
     Info<< "\nStarting time loop\n" << endl;
 
-    while (runTime.run())
+    while (pimple.run(runTime))
     {
         #include "readTimeControls.H"
 
@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            fluid.solve();
+            fluid.solve(rAUs, rAUfs);
             fluid.correct();
 
             #include "YEqns.H"

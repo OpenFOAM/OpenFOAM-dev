@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to the source mesh
         const polyMesh& srcRegion_;
@@ -103,13 +103,13 @@ private:
         //- Target to source cell addressing
         labelListList tgtToSrcCellAddr_;
 
-        //- Source to target cell interplation weights
+        //- Source to target cell interpolation weights
         scalarListList srcToTgtCellWght_;
 
         //- Target to source cell interpolation weights
         scalarListList tgtToSrcCellWght_;
 
-        //- Cell total volume in overlap region [m3]
+        //- Cell total volume in overlap region [m^3]
         scalar V_;
 
         //- Index of processor that holds all of both sides. -1 in all other
@@ -239,7 +239,7 @@ private:
                 List<labelList>& procLocalFaceIDs
             ) const;
 
-            //- Collect pieces of tgt mesh from other procssors and restructure
+            //- Collect pieces of tgt mesh from other processors and restructure
             void distributeAndMergeCells
             (
                 const mapDistribute& map,
@@ -253,59 +253,55 @@ private:
             ) const;
 
 
-        //- Disallow default bitwise copy construct
-        meshToMesh(const meshToMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const meshToMesh&);
-
-
 public:
 
     //- Run-time type information
     TypeName("meshToMesh");
 
+    // Constructors
 
-    //- Construct from source and target meshes
-    meshToMesh
-    (
-        const polyMesh& src,
-        const polyMesh& tgt,
-        const interpolationMethod& method,
-        const bool interpAllPatches = true
-    );
+        //- Construct from source and target meshes
+        meshToMesh
+        (
+            const polyMesh& src,
+            const polyMesh& tgt,
+            const interpolationMethod& method,
+            const bool interpAllPatches = true
+        );
 
-    //- Construct from source and target meshes, generic mapping methods
-    meshToMesh
-    (
-        const polyMesh& src,
-        const polyMesh& tgt,
-        const word& methodName,     // internal mapping
-        const word& AMIMethodName,  // boundary mapping
-        const bool interpAllPatches = true
-    );
+        //- Construct from source and target meshes, generic mapping methods
+        meshToMesh
+        (
+            const polyMesh& src,
+            const polyMesh& tgt,
+            const word& methodName,     // internal mapping
+            const word& AMIMethodName,  // boundary mapping
+            const bool interpAllPatches = true
+        );
 
-    //- Construct from source and target meshes
-    meshToMesh
-    (
-        const polyMesh& src,
-        const polyMesh& tgt,
-        const interpolationMethod& method,
-        const HashTable<word>& patchMap,
-        const wordList& cuttingPatches
-    );
+        //- Construct from source and target meshes
+        meshToMesh
+        (
+            const polyMesh& src,
+            const polyMesh& tgt,
+            const interpolationMethod& method,
+            const HashTable<word>& patchMap,
+            const wordList& cuttingPatches
+        );
 
+        //- Construct from source and target meshes, generic mapping methods
+        meshToMesh
+        (
+            const polyMesh& src,
+            const polyMesh& tgt,
+            const word& methodName,     // internal mapping
+            const word& AMIMethodName,  // boundary mapping
+            const HashTable<word>& patchMap,
+            const wordList& cuttingPatches
+        );
 
-    //- Construct from source and target meshes, generic mapping methods
-    meshToMesh
-    (
-        const polyMesh& src,
-        const polyMesh& tgt,
-        const word& methodName,     // internal mapping
-        const word& AMIMethodName,  // boundary mapping
-        const HashTable<word>& patchMap,
-        const wordList& cuttingPatches
-    );
+        //- Disallow default bitwise copy construction
+        meshToMesh(const meshToMesh&) = delete;
 
 
     //- Destructor
@@ -538,6 +534,12 @@ public:
                     const tmp<GeometricField<Type, fvPatchField, volMesh>>&
                         tfield
                 ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const meshToMesh&) = delete;
 };
 
 

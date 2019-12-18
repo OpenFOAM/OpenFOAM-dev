@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,18 +64,9 @@ protected:
 
 private:
 
-    // Private data
+    // Private Data
 
         const word name_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cellSizeAndAlignmentControl(const cellSizeAndAlignmentControl&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellSizeAndAlignmentControl&);
 
 
 public:
@@ -120,6 +111,12 @@ public:
             const conformationSurfaces& geometryToConformTo,
             const scalar& defaultCellSize
         );
+
+        //- Disallow default bitwise copy construction
+        cellSizeAndAlignmentControl
+        (
+            const cellSizeAndAlignmentControl&
+        ) = delete;
 
 
     // Selectors
@@ -170,6 +167,12 @@ public:
                 scalarField& sizes,
                 triadField& alignments
             ) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellSizeAndAlignmentControl&) = delete;
 };
 
 

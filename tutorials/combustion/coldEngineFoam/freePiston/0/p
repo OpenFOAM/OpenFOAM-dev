@@ -14,12 +14,11 @@ FoamFile
     object      p;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "include/caseSettings"
+#inputSyntax slash;
 
 dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform $:internalField.p;
+internalField   uniform $include/caseSettings!internalField/p;
 
 boundaryField
 {
@@ -35,7 +34,7 @@ boundaryField
 
     liner
     {
-        $:wall.p;
+        $include/caseSettings!wall/p;
     }
 
     cylinderHead

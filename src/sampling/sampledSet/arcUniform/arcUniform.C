@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,11 +127,11 @@ Foam::sampledSets::arcUniform::arcUniform
 :
     sampledSet(name, mesh, searchEngine, dict),
     centre_(dict.lookup("centre")),
-    normal_(normalised(dict.lookupType<vector>("normal"))),
-    radial_(dict.lookupType<vector>("radial")),
-    startAngle_(readScalar(dict.lookup("startAngle"))),
-    endAngle_(readScalar(dict.lookup("endAngle"))),
-    nPoints_(dict.lookupType<scalar>("nPoints"))
+    normal_(normalised(dict.lookup<vector>("normal"))),
+    radial_(dict.lookup<vector>("radial")),
+    startAngle_(dict.lookup<scalar>("startAngle")),
+    endAngle_(dict.lookup<scalar>("endAngle")),
+    nPoints_(dict.lookup<scalar>("nPoints"))
 {
     genSamples();
 

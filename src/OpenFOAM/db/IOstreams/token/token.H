@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,9 @@ SourceFiles
 #include "uLabel.H"
 #include "scalar.H"
 #include "word.H"
+#include "functionName.H"
+#include "variable.H"
+#include "verbatimString.H"
 #include "InfoProxy.H"
 #include "refCount.H"
 #include "typeInfo.H"
@@ -79,6 +82,7 @@ public:
 
         PUNCTUATION    = char(128),
         WORD,
+        FUNCTIONNAME,
         VARIABLE,
         STRING,
         VERBATIMSTRING,
@@ -125,18 +129,9 @@ public:
     :
         public refCount
     {
-        // Private data
+        // Private Data
 
             bool empty_;
-
-
-        // Private Member Functions
-
-            //- Disallow default bitwise copy construct
-            compound(const compound&);
-
-            //- Disallow default bitwise assignment
-            void operator=(const compound&);
 
 
     public:
@@ -164,6 +159,9 @@ public:
                 empty_(false)
             {}
 
+            //- Disallow default bitwise copy construction
+            compound(const compound&) = delete;
+
 
         // Selectors
 
@@ -177,31 +175,28 @@ public:
 
         // Member Functions
 
-            // Access
+            //- Return true if name is a compound type
+            static bool isCompound(const word& name);
 
-                //- Return true if name is a compound type
-                static bool isCompound(const word& name);
+            bool empty() const
+            {
+                return empty_;
+            }
 
-                bool empty() const
-                {
-                    return empty_;
-                }
+            bool& empty()
+            {
+                return empty_;
+            }
 
-                bool& empty()
-                {
-                    return empty_;
-                }
+            virtual label size() const = 0;
 
-                virtual label size() const = 0;
+            virtual void write(Ostream&) const = 0;
 
 
-            // Check
+        // Member Operators
 
-            // Edit
-
-            // Write
-
-                virtual void write(Ostream&) const = 0;
+            //- Disallow default bitwise assignment
+            void operator=(const compound&) = delete;
 
 
         // IOstream Operators
@@ -245,7 +240,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- The token type
         tokenType type_;
@@ -255,7 +250,10 @@ private:
         {
             punctuationToken punctuationToken_;
             word* wordTokenPtr_;
+            functionName* functionNameTokenPtr_;
+            variable* variableTokenPtr_;
             string* stringTokenPtr_;
+            verbatimString* verbatimStringTokenPtr_;
             label labelToken_;
             floatScalar floatScalarToken_;
             doubleScalar doubleScalarToken_;
@@ -278,7 +276,7 @@ private:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 
@@ -288,7 +286,7 @@ public:
         //- Construct null
         inline token();
 
-        //- Construct as copy
+        //- Copy constructor
         inline token(const token&);
 
         //- Construct punctuation character token
@@ -299,6 +297,9 @@ public:
 
         //- Construct string token
         inline token(const string&, label lineNumber=0);
+
+        //- Construct verbatimString token
+        inline token(const verbatimString&, label lineNumber=0);
 
         //- Construct label token
         inline token(const label, label lineNumber=0);
@@ -320,7 +321,7 @@ public:
     inline ~token();
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -337,10 +338,20 @@ public:
             inline bool isWord() const;
             inline const word& wordToken() const;
 
+            inline bool isFunctionName() const;
+            inline const functionName& functionNameToken() const;
+
             inline bool isVariable() const;
+            inline const variable& variableToken() const;
 
             inline bool isString() const;
             inline const string& stringToken() const;
+
+            inline bool isVerbatimString() const;
+            inline const verbatimString& verbatimStringToken() const;
+
+            inline bool isAnyString() const;
+            inline const string& anyStringToken() const;
 
             inline bool isLabel() const;
             inline label labelToken() const;
@@ -384,7 +395,7 @@ public:
             }
 
 
-    // Member operators
+    // Member Operators
 
         // Assignment
 
@@ -395,8 +406,17 @@ public:
             inline void operator=(word*);
             inline void operator=(const word&);
 
+            inline void operator=(functionName*);
+            inline void operator=(const functionName&);
+
+            inline void operator=(variable*);
+            inline void operator=(const variable&);
+
             inline void operator=(string*);
             inline void operator=(const string&);
+
+            inline void operator=(verbatimString*);
+            inline void operator=(const verbatimString&);
 
             inline void operator=(const label);
             inline void operator=(const floatScalar);
@@ -411,7 +431,10 @@ public:
             inline bool operator==(const token&) const;
             inline bool operator==(const punctuationToken) const;
             inline bool operator==(const word&) const;
+            inline bool operator==(const functionName&) const;
+            inline bool operator==(const variable&) const;
             inline bool operator==(const string&) const;
+            inline bool operator==(const verbatimString&) const;
             inline bool operator==(const label) const;
             inline bool operator==(const floatScalar) const;
             inline bool operator==(const doubleScalar) const;
@@ -423,14 +446,17 @@ public:
             inline bool operator!=(const token&) const;
             inline bool operator!=(const punctuationToken) const;
             inline bool operator!=(const word&) const;
+            inline bool operator!=(const functionName&) const;
+            inline bool operator!=(const variable&) const;
             inline bool operator!=(const string&) const;
+            inline bool operator!=(const verbatimString&) const;
             inline bool operator!=(const label) const;
             inline bool operator!=(const floatScalar) const;
             inline bool operator!=(const doubleScalar) const;
             inline bool operator!=(const longDoubleScalar) const;
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream&, token&);
         friend Ostream& operator<<(Ostream&, const token&);

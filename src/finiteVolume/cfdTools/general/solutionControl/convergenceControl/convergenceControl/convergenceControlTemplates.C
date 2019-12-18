@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,8 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
+#include "Residuals.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,12 +52,22 @@ Foam::label Foam::convergenceControl::residualControlIndex
 
 
 template<class Type>
+void Foam::convergenceControl::getFieldTypeNames
+(
+    const fvMesh& mesh,
+    DynamicList<word>& fieldNames
+)
+{
+    fieldNames.append(Residuals<Type>::fieldNames(mesh));
+}
+
+
+template<class Type>
 void Foam::convergenceControl::getInitialTypeResiduals
 (
     const fvMesh& mesh,
     const word& fieldName,
     const label solvei,
-    ITstream& data,
     scalar& r0,
     scalar& r
 )
@@ -64,7 +76,11 @@ void Foam::convergenceControl::getInitialTypeResiduals
 
     if (mesh.foundObject<fieldType>(fieldName))
     {
-        const List<SolverPerformance<Type>> sp(data);
+        const DynamicList<SolverPerformance<Type>>& sp
+        (
+            Residuals<Type>::field(mesh, fieldName)
+        );
+
         r0 = cmptMax(sp[0].initialResidual());
         r = cmptMax(sp[solvei].initialResidual());
     }

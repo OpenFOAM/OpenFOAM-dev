@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,6 @@ namespace Foam
 
 class LESdelta
 {
-
 protected:
 
     // Protected data
@@ -58,15 +57,6 @@ protected:
         const turbulenceModel& turbulenceModel_;
 
         volScalarField delta_;
-
-
-private:
-
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        LESdelta(const LESdelta&);
-        void operator=(const LESdelta&);
 
 
 public:
@@ -99,6 +89,9 @@ public:
             const word& name,
             const turbulenceModel& turbulence
         );
+
+        //- Disallow default bitwise copy construction
+        LESdelta(const LESdelta&) = delete;
 
 
     // Selectors
@@ -142,6 +135,8 @@ public:
 
 
     // Member Operators
+
+        void operator=(const LESdelta&) = delete;
 
         virtual operator const volScalarField&() const
         {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,9 +52,6 @@ class pointPatchDist
 :
     public pointScalarField
 {
-
-private:
-
     // Private Member Data
 
         //- Reference to pointField
@@ -65,15 +62,6 @@ private:
 
         //- Number of unset points
         label nUnset_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        pointPatchDist(const pointPatchDist&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const pointPatchDist&);
 
 
 public:
@@ -87,6 +75,9 @@ public:
             const labelHashSet& patchIDs,
             const pointField& points
         );
+
+        //- Disallow default bitwise copy construction
+        pointPatchDist(const pointPatchDist&) = delete;
 
 
     //- Destructor
@@ -107,6 +98,12 @@ public:
 
         //- Correct for mesh geom/topo changes
         void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const pointPatchDist&) = delete;
 };
 
 

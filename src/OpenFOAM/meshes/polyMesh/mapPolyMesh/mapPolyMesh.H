@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -158,7 +158,7 @@ class polyMesh;
 
 class mapPolyMesh
 {
-    // Private data
+    // Private Data
 
         //- Reference to polyMesh
         const polyMesh& mesh_;
@@ -270,15 +270,6 @@ class mapPolyMesh
         autoPtr<scalarField> oldCellVolumesPtr_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        mapPolyMesh(const mapPolyMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const mapPolyMesh&);
-
-
 public:
 
     // Constructors
@@ -349,6 +340,10 @@ public:
             autoPtr<scalarField>& oldCellVolumesPtr,
             const bool reuse
         );
+
+        //- Disallow default bitwise copy construction
+        mapPolyMesh(const mapPolyMesh&) = delete;
+
 
     // Member Functions
 
@@ -648,6 +643,11 @@ public:
                     return oldCellVolumesPtr_();
                 }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const mapPolyMesh&) = delete;
 };
 
 

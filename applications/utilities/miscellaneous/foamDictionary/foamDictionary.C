@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,8 +27,26 @@ Application
 Description
     Interrogates and manipulates dictionaries.
 
+    Supports parallel operation for decomposed dictionary files associated with
+    a case.  These may be mesh or field files or any other decomposed
+    dictionaries.
+
 Usage
     \b foamDictionary [OPTION] dictionary
+      - \par -case \<dir\>
+        Select a case directory
+
+      - \par -parallel
+        Specify case as a parallel job
+
+      - \par -doc
+        Display the documentation in browser
+
+      - \par -srcDoc
+        Display the source documentation in browser
+
+      - \par -help
+        Print the usage
 
       - \par -entry \<name\>
         Selects an entry
@@ -63,9 +81,6 @@ Usage
       - \par -includes
         List the \c #include and \c #includeIfPresent files to standard output
 
-      - \par -disableFunctionEntries
-        Do not expand macros or directives (#include etc)
-
     Example usage:
       - Change simulation to run for one timestep only:
         \verbatim
@@ -86,6 +101,13 @@ Usage
         \verbatim
            foamDictionary 0/U -entry boundaryField.movingWall.value \
              -set "uniform (2 0 0)"
+        \endverbatim
+
+      - Change bc parameter in parallel:
+        \verbatim
+           mpirun -np 4 foamDictionary 0.5/U \
+             -entry boundaryField.movingWall.value \
+             -set "uniform (2 0 0)" -parallel
         \endverbatim
 
       - Change whole bc type:
@@ -119,20 +141,80 @@ Usage
 
 #include "argList.H"
 #include "Time.H"
+#include "localIOdictionary.H"
+#include "Pair.H"
 #include "IFstream.H"
 #include "OFstream.H"
 #include "includeEntry.H"
+#include "inputSyntaxEntry.H"
 
 using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- Converts old scope syntax to new syntax
+//- Read dictionary from file and return
+//  Sets steam to binary mode if specified in the optional header
+IOstream::streamFormat readDict(dictionary& dict, const fileName& dictFileName)
+{
+    IOstream::streamFormat dictFormat = IOstream::ASCII;
+
+    // Read the first entry and if it is FoamFile set the file format
+    {
+        IFstream dictFile(dictFileName);
+        if (!dictFile().good())
+        {
+            FatalErrorInFunction
+                << "Cannot open file " << dictFileName
+                << exit(FatalError, 1);
+        }
+
+        // Check if the first token in the file is "FoamFile"
+        // to avoid problems if the first entry is a variable or function
+        token firstToken;
+        dictFile.read(firstToken);
+        if (firstToken.isWord() && firstToken.wordToken() == IOobject::foamFile)
+        {
+            dictFile.putBack(firstToken);
+
+            // Read the first entry from the dictionary
+            autoPtr<entry> firstEntry(entry::New(dictFile()));
+
+            // If the first entry is the "FoamFile" header
+            // read and set the stream format
+            if
+            (
+                firstEntry->isDict()
+             && firstEntry->keyword() == IOobject::foamFile
+            )
+            {
+                dictFormat = IOstream::formatEnum
+                (
+                    firstEntry->dict().lookup("format")
+                );
+            }
+        }
+    }
+
+    IFstream dictFile(dictFileName, dictFormat);
+
+    // Read and add the rest of the dictionary entries
+    // preserving the IOobject::foamFile header dictionary if present
+    dict.read(dictFile(), true);
+
+    return dictFormat;
+}
+
+
+//- Convert keyword syntax to "dot" if the dictionary is "dot" syntax
 word scope(const fileName& entryName)
 {
-    if (entryName.find(':') != string::npos)
+    if
+    (
+        functionEntries::inputSyntaxEntry::dot()
+     && entryName.find('/') != string::npos
+    )
     {
-        wordList entryNames(entryName.components(':'));
+        wordList entryNames(entryName.components('/'));
 
         word entry(entryNames[0]);
         for (label i = 1; i < entryNames.size(); i++)
@@ -151,7 +233,11 @@ word scope(const fileName& entryName)
 //- Extracts dict name and keyword
 Pair<word> dictAndKeyword(const word& scopedName)
 {
-    string::size_type i = scopedName.find_last_of(".");
+    string::size_type i = scopedName.find_last_of
+    (
+        functionEntries::inputSyntaxEntry::scopeChar()
+    );
+
     if (i != string::npos)
     {
         return Pair<word>
@@ -244,12 +330,12 @@ void remove(dictionary& dict, const dictionary& removeDict)
 
 int main(int argc, char *argv[])
 {
-    #include "removeCaseOptions.H"
-
     writeInfoHeader = false;
 
     argList::addNote("manipulates dictionaries");
+
     argList::validArgs.append("dictionary file");
+
     argList::addBoolOption("keywords", "list keywords");
     argList::addOption("entry", "name", "report/select the named entry");
     argList::addBoolOption
@@ -302,11 +388,6 @@ int main(int argc, char *argv[])
         "Read the specified dictionary file, expand the macros etc. and write "
         "the resulting dictionary to standard output"
     );
-    argList::addBoolOption
-    (
-        "disableFunctionEntries",
-        "Disable expansion of dictionary directives - #include, #codeStream etc"
-    );
 
     argList args(argc, argv);
 
@@ -314,29 +395,74 @@ int main(int argc, char *argv[])
 
     if (listIncludes)
     {
-        Foam::functionEntries::includeEntry::log = true;
+        functionEntries::includeEntry::log = true;
     }
 
-    if (args.optionFound("disableFunctionEntries"))
+    // Do not expand functionEntries except during dictionary expansion
+    // with the -expand option
+    entry::disableFunctionEntries = true;
+
+    const fileName dictPath(args[1]);
+
+    Time* runTimePtr = nullptr;
+    localIOdictionary* localDictPtr = nullptr;
+
+    dictionary* dictPtr = nullptr;
+    IOstream::streamFormat dictFormat = IOstream::ASCII;
+
+    // When running in parallel read the dictionary as a case localIOdictionary
+    // supporting file handlers
+    if (Pstream::parRun())
     {
-        entry::disableFunctionEntries = true;
+        if (!args.checkRootCase())
+        {
+            FatalError.exit();
+        }
+
+        runTimePtr = new Time(Time::controlDictName, args);
+
+        const wordList dictPathComponents(dictPath.components());
+
+        if (dictPathComponents.size() == 1)
+        {
+            FatalErrorInFunction
+                << "File name " << dictPath
+                << " does not contain an instance path needed in parallel"
+                << exit(FatalError, 1);
+        }
+
+        const word instance = dictPathComponents[0];
+        const fileName dictFileName
+        (
+            SubList<word>(dictPathComponents, dictPathComponents.size() - 1, 1)
+        );
+
+        scalar time;
+        if (readScalar(instance.c_str(), time))
+        {
+            runTimePtr->setTime(time, 0);
+        }
+
+        localDictPtr = new localIOdictionary
+        (
+            IOobject
+            (
+                dictFileName,
+                instance,
+                *runTimePtr,
+                IOobject::MUST_READ,
+                IOobject::NO_WRITE,
+                false
+            )
+        );
     }
-
-
-    fileName dictFileName(args[1]);
-
-    autoPtr<IFstream> dictFile(new IFstream(dictFileName));
-    if (!dictFile().good())
+    else
     {
-        FatalErrorInFunction
-            << "Cannot open file " << dictFileName
-            << exit(FatalError, 1);
+        dictPtr = new dictionary(dictPath);
+        dictFormat = readDict(*dictPtr, dictPath);
     }
 
-    // Read but preserve headers
-    dictionary dict;
-    dict.read(dictFile(), true);
-
+    dictionary& dict = localDictPtr ? *localDictPtr : *dictPtr;
 
     bool changed = false;
 
@@ -346,9 +472,11 @@ int main(int argc, char *argv[])
     }
     else if (args.optionFound("expand"))
     {
+        entry::disableFunctionEntries = false;
+
         IOobject::writeBanner(Info)
-            <<"//\n// " << dictFileName << "\n//\n";
-        dict.write(Info, false);
+            <<"//\n// " << dictPath << "\n//\n";
+        dict.dictionary::write(Info, false);
         IOobject::writeDivider(Info);
 
         return 0;
@@ -356,27 +484,19 @@ int main(int argc, char *argv[])
 
 
     // Second dictionary for -diff
-    dictionary diffDict;
     fileName diffFileName;
+    dictionary diffDict;
+
     if (args.optionReadIfPresent("diff", diffFileName))
     {
-        autoPtr<IFstream> diffFile(new IFstream(diffFileName));
-        if (!diffFile().good())
-        {
-            FatalErrorInFunction
-                << "Cannot open file " << diffFileName
-                << exit(FatalError, 1);
-        }
-
-        // Read but preserve headers
-        diffDict.read(diffFile(), true);
+        readDict(diffDict, diffFileName);
     }
 
 
     word entryName;
     if (args.optionReadIfPresent("entry", entryName))
     {
-        word scopedName(scope(entryName));
+        const word scopedName(scope(entryName));
 
         string newValue;
         if
@@ -397,15 +517,8 @@ int main(int argc, char *argv[])
             if (args.optionFound("dict"))
             {
                 const fileName fromDictFileName(newValue);
-                autoPtr<IFstream> fromDictFile(new IFstream(fromDictFileName));
-                if (!fromDictFile().good())
-                {
-                    FatalErrorInFunction
-                        << "Cannot open file " << fromDictFileName
-                        << exit(FatalError, 1);
-                }
-
-                dictionary fromDict(fromDictFile());
+                dictionary fromDict;
+                readDict(fromDict, fromDictFileName);
 
                 const entry* fePtr
                 (
@@ -435,6 +548,7 @@ int main(int argc, char *argv[])
 
             if (overwrite)
             {
+                Info << "New entry " << *ePtr << endl;
                 const_cast<dictionary&>(d).set(ePtr);
             }
             else
@@ -544,7 +658,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                FatalIOErrorInFunction(dictFile)
+                FatalIOErrorInFunction(dict)
                     << "Cannot find entry " << entryName
                     << exit(FatalIOError, 2);
             }
@@ -560,21 +674,38 @@ int main(int argc, char *argv[])
     else if (args.optionFound("diff"))
     {
         remove(dict, diffDict);
-        dict.write(Info, false);
+        dict.dictionary::write(Info, false);
     }
     else
     {
-        dict.write(Info, false);
+        dict.dictionary::write(Info, false);
     }
 
     if (changed)
     {
-        dictFile.clear();
-        OFstream os(dictFileName);
-        IOobject::writeBanner(os);
-        dict.write(os, false);
-        IOobject::writeEndDivider(os);
+        if (localDictPtr)
+        {
+            localDictPtr->regIOobject::write();
+        }
+        else if (dictPtr)
+        {
+            OFstream os(dictPath, dictFormat);
+            IOobject::writeBanner(os);
+            if (dictPtr->found(IOobject::foamFile))
+            {
+                os << IOobject::foamFile;
+                dictPtr->subDict(IOobject::foamFile).write(os);
+                dictPtr->remove(IOobject::foamFile);
+                IOobject::writeDivider(os) << nl;
+            }
+            dictPtr->write(os, false);
+            IOobject::writeEndDivider(os);
+        }
     }
+
+    delete dictPtr;
+    delete localDictPtr;
+    delete runTimePtr;
 
     return 0;
 }

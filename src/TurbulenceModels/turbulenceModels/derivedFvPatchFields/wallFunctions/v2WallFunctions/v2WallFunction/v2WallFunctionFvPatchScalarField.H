@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,17 +30,11 @@ Description
     cases.
 
     The model operates in two modes, based on the computed laminar-to-turbulent
-    switch-over y+ value derived from kappa and E.
+    switch-over y+ value derived from kappa and E specified in the corresponding
+    nutWallFunction.
 
 
 Usage
-    \table
-        Property     | Description             | Required    | Default value
-        Cmu          | model coefficient       | no          | 0.09
-        kappa        | Von Karman constant     | no          | 0.41
-        E            | model coefficient       | no          | 9.8
-    \endtable
-
     Example of the boundary condition specification:
     \verbatim
     <patchName>
@@ -77,34 +71,6 @@ class v2WallFunctionFvPatchScalarField
 :
     public fixedValueFvPatchField<scalar>
 {
-protected:
-
-    // Protected data
-
-        //- Cmu coefficient
-        scalar Cmu_;
-
-        //- Von Karman constant
-        scalar kappa_;
-
-        //- E coefficient
-        scalar E_;
-
-        //- Y+ at the edge of the laminar sublayer
-        scalar yPlusLam_;
-
-
-    // Protected Member Functions
-
-        //- Check the type of the patch
-        virtual void checkType();
-
-        //- Write local wall function variables
-        virtual void writeLocalEntries(Ostream&) const;
-
-        //- Calculate the Y+ at the edge of the laminar sublayer
-        scalar yPlusLam(const scalar kappa, const scalar E);
-
 
 public:
 
@@ -139,7 +105,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         v2WallFunctionFvPatchScalarField
         (
             const v2WallFunctionFvPatchScalarField&
@@ -154,7 +120,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         v2WallFunctionFvPatchScalarField
         (
             const v2WallFunctionFvPatchScalarField&,
@@ -174,21 +140,12 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Evaluation functions
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();
-
-            //- Evaluate the patchField
-            virtual void evaluate(const Pstream::commsTypes);
-
-
-        // I-O
-
-            //- Write
-            virtual void write(Ostream&) const;
 };
 
 

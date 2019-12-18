@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,8 +48,8 @@ Foam::thermoParcelInjectionData::thermoParcelInjectionData
 )
 :
     kinematicParcelInjectionData(dict),
-    T_(readScalar(dict.lookup("T"))),
-    Cp_(readScalar(dict.lookup("Cp")))
+    T_(dict.template lookup<scalar>("T")),
+    Cp_(dict.template lookup<scalar>("Cp"))
 {}
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

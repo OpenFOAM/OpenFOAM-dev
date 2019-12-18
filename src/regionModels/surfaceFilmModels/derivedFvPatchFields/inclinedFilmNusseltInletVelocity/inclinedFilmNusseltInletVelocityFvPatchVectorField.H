@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ class inclinedFilmNusseltInletVelocityFvPatchVectorField
 :
     public fixedValueFvPatchVectorField
 {
-    // Private data
+    // Private Data
 
         //- Mean mass flow rate per unit length [kg/s/m]
         autoPtr<Function1<scalar>> GammaMean_;
@@ -99,7 +99,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         inclinedFilmNusseltInletVelocityFvPatchVectorField
         (
             const inclinedFilmNusseltInletVelocityFvPatchVectorField&
@@ -114,7 +114,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         inclinedFilmNusseltInletVelocityFvPatchVectorField
         (
             const inclinedFilmNusseltInletVelocityFvPatchVectorField&,
@@ -137,7 +137,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

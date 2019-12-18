@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,23 +89,11 @@ public:
         template<unsigned Size>
         HashSet(const FixedList<Key, Size>&);
 
-        //- Construct as copy
-        HashSet(const HashSet<Key, Hash>& hs)
-        :
-            HashTable<nil, Key, Hash>(hs)
-        {}
+        //- Copy constructor
+        HashSet(const HashSet<Key, Hash>& hs) = default;
 
-        //- Construct by transferring the parameter contents
-        HashSet(const Xfer<HashSet<Key, Hash>>& hs)
-        :
-            HashTable<nil, Key, Hash>(hs)
-        {}
-
-        //- Construct by transferring the parameter contents
-        HashSet(const Xfer<HashTable<nil, Key, Hash>>& hs)
-        :
-            HashTable<nil, Key, Hash>(hs)
-        {}
+        //- Move constructor
+        HashSet(HashSet<Key, Hash>&& hs) = default;
 
         //- Construct from the keys of another HashTable,
         //  the type of values held is arbitrary.
@@ -150,6 +138,12 @@ public:
 
         //- Return true if the entry exists, same as found()
         inline bool operator[](const Key&) const;
+
+        //- Assignment operator
+        void operator=(const HashSet<Key, Hash>&);
+
+        //- Move assignment operator
+        void operator=(HashSet<Key, Hash>&&);
 
         //- Equality. Two hashtables are equal when their contents are equal.
         //  Independent of table size or order.

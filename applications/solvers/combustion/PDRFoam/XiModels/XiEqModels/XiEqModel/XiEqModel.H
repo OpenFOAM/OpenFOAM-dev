@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,17 +75,6 @@ protected:
         const volScalarField& Su_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        XiEqModel(const XiEqModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const XiEqModel&);
-
-
 public:
 
     //- Runtime type information
@@ -114,10 +103,10 @@ public:
         );
 
 
-    // Selectors
+    // Constructors
 
-        //- Return a reference to the selected XiEq model
-        static autoPtr<XiEqModel> New
+        //- Construct from components
+        XiEqModel
         (
             const dictionary& XiEqProperties,
             const psiuReactionThermo& thermo,
@@ -125,11 +114,14 @@ public:
             const volScalarField& Su
         );
 
+        //- Disallow default bitwise copy construction
+        XiEqModel(const XiEqModel&);
 
-    // Constructors
 
-        //- Construct from components
-        XiEqModel
+    // Selectors
+
+        //- Return a reference to the selected XiEq model
+        static autoPtr<XiEqModel> New
         (
             const dictionary& XiEqProperties,
             const psiuReactionThermo& thermo,
@@ -144,7 +136,7 @@ public:
 
     // Member Functions
 
-        //- Return the flame-wrinking XiEq
+        //- Return the flame-wrinkling XiEq
         virtual tmp<volScalarField> XiEq() const
         {
             return turbulence_.muEff();
@@ -158,6 +150,12 @@ public:
 
         //- Write fields
         void writeFields() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const XiEqModel&) = delete;
 };
 
 

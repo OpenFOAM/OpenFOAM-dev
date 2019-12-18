@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,11 +53,12 @@ class laminar
 :
     public ChemistryCombustion<ReactionThermo>
 {
-    // Private data
+    // Private Data
 
         //- Integrate reaction rate over the time-step
         //  using the selected ODE solver
         bool integrateReactionRate_;
+
 
 protected:
 
@@ -65,16 +66,6 @@ protected:
 
         //- Return the chemical time scale
         tmp<volScalarField> tc() const;
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow copy construct
-        laminar(const laminar&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const laminar&);
 
 
 public:
@@ -89,10 +80,13 @@ public:
         laminar
         (
             const word& modelType,
-            ReactionThermo& thermo,
+            const ReactionThermo& thermo,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );
+
+        //- Disallow default bitwise copy construction
+        laminar(const laminar&);
 
 
     //- Destructor
@@ -107,11 +101,17 @@ public:
         //- Fuel consumption rate matrix.
         virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
 
-        //- Heat release rate [kg/m/s3]
+        //- Heat release rate [kg/m/s^3]
         virtual tmp<volScalarField> Qdot() const;
 
         //- Update properties from given dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const laminar&) = delete;
 };
 
 

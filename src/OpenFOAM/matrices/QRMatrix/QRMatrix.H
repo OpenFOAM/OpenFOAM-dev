@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- The Q-matrix
         QMatrixType Q_;
@@ -69,7 +69,7 @@ private:
         RMatrixType R_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Solve the linear system with the Field argument x initialized to
         //  the appropriate transformed source (e.g. Q.T()*source)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class baseIOdictionary
     public regIOobject,
     public dictionary
 {
-    // Private data
+    // Private Data
 
         static bool writeDictionaries;
 
@@ -77,12 +77,18 @@ public:
         //- Construct given an IOobject and Istream
         baseIOdictionary(const IOobject&, Istream&);
 
+        //- Copy constructor
+        baseIOdictionary(const baseIOdictionary&);
+
+        //- Move constructor
+        baseIOdictionary(baseIOdictionary&&);
+
 
     //- Destructor
     virtual ~baseIOdictionary();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return complete path + object name if the file exists
         //  either in the case/processor or case otherwise null
@@ -102,11 +108,14 @@ public:
         virtual bool global() const = 0;
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment of other baseIOdictionary's entries to this
         //  baseIOdictionary
         void operator=(const baseIOdictionary&);
+
+        //- Move assignment
+        void operator=(baseIOdictionary&&);
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,16 +100,9 @@ gaussLaplacianScheme<Type, GType>::gammaSnGradCorr
 
     tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> tgammaSnGradCorr
     (
-        new GeometricField<Type, fvsPatchField, surfaceMesh>
+        GeometricField<Type, fvsPatchField, surfaceMesh>::New
         (
-            IOobject
-            (
-                "gammaSnGradCorr("+vf.name()+')',
-                vf.instance(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            "gammaSnGradCorr("+vf.name()+')',
             mesh,
             SfGammaCorr.dimensions()
            *vf.dimensions()*mesh.deltaCoeffs().dimensions()

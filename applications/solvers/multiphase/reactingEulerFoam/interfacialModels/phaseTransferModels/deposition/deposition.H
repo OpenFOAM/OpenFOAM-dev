@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ class deposition
 {
 private:
 
-    // Private data
+    // Private Data
 
         //- The name of the phase which deposits
         const word dropletName_;
@@ -92,8 +92,11 @@ public:
 
     // Member Functions
 
-        //- The mass transfer rate
-        virtual tmp<volScalarField> dmdt() const;
+        //- Whether or not there is a mass transfer rate for the mixture
+        virtual bool mixture() const;
+
+        //- The mass transfer rate for the mixture
+        virtual tmp<volScalarField> dmdtf() const;
 };
 
 

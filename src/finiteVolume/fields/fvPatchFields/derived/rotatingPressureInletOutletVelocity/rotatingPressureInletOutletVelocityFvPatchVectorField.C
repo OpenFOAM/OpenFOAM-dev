@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,9 +127,9 @@ void Foam::rotatingPressureInletOutletVelocityFvPatchVectorField::write
 ) const
 {
     fvPatchVectorField::write(os);
-    os.writeKeyword("phi") << phiName() << token::END_STATEMENT << nl;
-    omega_->writeData(os);
-    writeEntry("value", os);
+    writeEntry(os, "phi", phiName());
+    writeEntry(os, omega_());
+    writeEntry(os, "value", *this);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,11 +86,15 @@ protected:
         template<class ObjectType>
         ObjectType& lookupObjectRef(const word& fieldName);
 
+        //- Store the given field in the objectRegistry
+        template<class ObjectType>
+        bool store(const tmp<ObjectType>& tfield);
+
         //- Store the given field in the objectRegistry under the given name
         template<class ObjectType>
         bool store
         (
-            word& fieldName,
+            const word& fieldName,
             const tmp<ObjectType>& tfield,
             bool cacheable = false
         );
@@ -100,17 +104,6 @@ protected:
 
         //- Clear field from the objectRegistry if present
         bool clearObject(const word& fieldName);
-
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        regionFunctionObject(const regionFunctionObject&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const regionFunctionObject&);
 
 
 public:
@@ -139,6 +132,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        regionFunctionObject(const regionFunctionObject&) = delete;
+
 
     //- Destructor
     virtual ~regionFunctionObject();
@@ -148,6 +144,12 @@ public:
 
         //- Read optional controls
         virtual bool read(const dictionary&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const regionFunctionObject&) = delete;
 };
 
 

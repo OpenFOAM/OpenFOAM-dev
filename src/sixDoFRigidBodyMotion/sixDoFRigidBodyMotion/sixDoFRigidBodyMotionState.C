@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,20 +56,6 @@ Foam::sixDoFRigidBodyMotionState::sixDoFRigidBodyMotionState
     a_(dict.lookupOrDefault("acceleration", vector::zero)),
     pi_(dict.lookupOrDefault("angularMomentum", vector::zero)),
     tau_(dict.lookupOrDefault("torque", vector::zero))
-{}
-
-
-Foam::sixDoFRigidBodyMotionState::sixDoFRigidBodyMotionState
-(
-    const sixDoFRigidBodyMotionState& sDoFRBMS
-)
-:
-    centreOfRotation_(sDoFRBMS.centreOfRotation()),
-    Q_(sDoFRBMS.Q()),
-    v_(sDoFRBMS.v()),
-    a_(sDoFRBMS.a()),
-    pi_(sDoFRBMS.pi()),
-    tau_(sDoFRBMS.tau())
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class singleCellFvMesh
 :
     public fvMesh
 {
-    // Private data
+    // Private Data
 
         const labelListIOList patchFaceAgglomeration_;
 
@@ -78,25 +78,19 @@ class singleCellFvMesh
         void agglomerateMesh(const fvMesh&, const labelListList&);
 
 
-        //- Disallow default bitwise copy construct
-        singleCellFvMesh(const singleCellFvMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const singleCellFvMesh&);
-
-
 public:
 
         //- Patch field mapper class for agglomerated meshes
         class agglomPatchFieldMapper
         :
-            public fvPatchFieldMapper
+            public generalFvPatchFieldMapper
         {
-            // Private data
+            // Private Data
 
                 const labelListList& addressing_;
                 const scalarListList& weights_;
                 bool hasUnmapped_;
+
 
         public:
 
@@ -167,6 +161,10 @@ public:
         //- Read from IOobject
         singleCellFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        singleCellFvMesh(const singleCellFvMesh&) = delete;
+
+
     // Member Functions
 
         bool agglomerate() const
@@ -208,6 +206,11 @@ public:
             const GeometricField<Type, fvPatchField, volMesh>&
         ) const;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const singleCellFvMesh&) = delete;
 };
 
 

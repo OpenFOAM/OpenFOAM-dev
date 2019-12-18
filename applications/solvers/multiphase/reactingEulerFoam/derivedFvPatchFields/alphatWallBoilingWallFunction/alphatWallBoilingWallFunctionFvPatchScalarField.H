@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,16 +26,16 @@ Class
 
 Description
     A thermal wall function for simulation of subcooled nucleate wall boiling
-    with runtime selctable submodels for:
+    with runtime selectable submodels for:
       - wall heat flux partitioning model
       - nucleation site density
       - bubble departure frequency
       - bubble departure diameter
 
     Implements a version of the well-known RPI wall boiling model
-    (Kurul & Podowski, 1991). The model implementation is similar to the model
-    described by Peltola & Pättikangas (2012) but has been extended with the
-    wall heat flux partitioning models.
+    (Kurul & Podowski, 1991). The model implementation is described in Peltola
+    et al. (2019) and is similar to the model described by Peltola &
+    Pättikangas (2012).
 
     References:
     \verbatim
@@ -44,6 +44,14 @@ Description
         ANS. Proc. National Heat Transfer Con. Minneapolis, Minnesota, USA,
         1991.
         ISBN: 0-89448-162-1, pp. 30-40.
+    \endverbatim
+
+    \verbatim
+        Peltola, J., Pättikangas, T., Bainbridge, W., Lehnigk, R., Schlegel, F.
+        (2019).
+        On Development and validation of subcooled nucleate boiling models for
+        OpenFOAM Foundation Release.
+        NURETH-18 Conference Proceedings, Portland, Oregon, United States, 2019.
     \endverbatim
 
     \verbatim
@@ -73,12 +81,12 @@ Usage
         if phaseType 'liquid':
 
         partitioningModel|                     | yes         |
-        nucleationSiteModel|                     | yes         |
-        departureDiamModel|                     | yes         |
-        departureFreqModel|                     | yes         |
+        nucleationSiteModel|                   | yes         |
+        departureDiamModel|                    | yes         |
+        departureFreqModel|                    | yes         |
     \endtable
 
-    NOTE: Runtime selectabale submodels may require model specific entries
+    NOTE: Runtime selectable submodels may require model specific entries
 
     Example usage:
     \verbatim
@@ -90,7 +98,7 @@ Usage
         Cmu             0.09;
         kappa           0.41;
         E               9.8;
-        relax           0.001;
+        relax           0.1;
         dmdt            uniform 0;
         partitioningModel
         {
@@ -123,7 +131,7 @@ SourceFiles
 #ifndef compressible_alphatWallBoilingWallFunctionFvPatchScalarField_H
 #define compressible_alphatWallBoilingWallFunctionFvPatchScalarField_H
 
-#include "alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField.H"
+#include "alphatPhaseChangeWallFunctionFvPatchScalarField.H"
 #include "partitioningModel.H"
 #include "nucleationSiteModel.H"
 #include "departureDiameterModel.H"
@@ -142,7 +150,7 @@ namespace compressible
 
 class alphatWallBoilingWallFunctionFvPatchScalarField
 :
-    public alphatPhaseChangeJayatillekeWallFunctionFvPatchScalarField
+    public alphatPhaseChangeWallFunctionFvPatchScalarField
 {
 public:
 
@@ -155,22 +163,16 @@ public:
             liquidPhase
         };
 
-
-private:
-
-    // Private data
-
-        //- name of the other phase (vapor/liquid phase)
-        word otherPhaseName_;
-
         //- Heat source type names
         static const NamedEnum<phaseType, 2> phaseTypeNames_;
 
+
+private:
+
+    // Private Data
+
         //- Heat source type
         phaseType phaseType_;
-
-        //- dmdt relaxationFactor
-        scalar relax_;
 
         //- Patch face area by cell volume
         scalarField AbyV_;
@@ -235,7 +237,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         alphatWallBoilingWallFunctionFvPatchScalarField
         (
             const alphatWallBoilingWallFunctionFvPatchScalarField&
@@ -250,7 +252,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         alphatWallBoilingWallFunctionFvPatchScalarField
         (
             const alphatWallBoilingWallFunctionFvPatchScalarField&,
@@ -270,18 +272,7 @@ public:
         }
 
 
-    // Member functions
-
-        using alphatPhaseChangeWallFunctionFvPatchScalarField::dmdt;
-
-        //- Is there phase change mass transfer for this phasePair
-        virtual bool activePhasePair(const phasePairKey&) const;
-
-        //- Return the rate of phase-change for specific phase pair
-        virtual const scalarField& dmdt(const phasePairKey&) const;
-
-        //- Return the rate of phase-change for specific phase pair
-        virtual const scalarField& mDotL(const phasePairKey&) const;
+    // Member Functions
 
         //- Return the departure diameter field
         const scalarField& dDeparture() const
@@ -289,17 +280,18 @@ public:
             return dDep_;
         }
 
-        //- Return the quenching surface heat flux [W/m2]
+        //- Return the quenching surface heat flux [W/m^2]
         const scalarField& qq() const
         {
             return qq_;
         }
 
-        //- Return the evaporation surface heat flux [W/m2]
+        //- Return the evaporation surface heat flux [W/m^2]
         tmp<scalarField> qe() const
         {
-            return mDotL_/AbyV_;
+            return dmdtLf_/AbyV_;
         }
+
 
         // Evaluation functions
 

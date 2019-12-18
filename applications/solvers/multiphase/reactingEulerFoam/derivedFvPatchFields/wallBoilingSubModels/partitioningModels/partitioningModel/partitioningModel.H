@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
 
 SourceFiles
     partitioningModel.C
-    newpartitioningModel.C
+    newPartitioningModel.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -53,15 +53,6 @@ namespace wallBoilingModels
 
 class partitioningModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        partitioningModel(const partitioningModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const partitioningModel&);
-
-
 public:
 
     //- Runtime type information
@@ -86,6 +77,9 @@ public:
         //- Construct null
         partitioningModel();
 
+        //- Disallow default bitwise copy construction
+        partitioningModel(const partitioningModel&) = delete;
+
 
     // Selectors
 
@@ -106,6 +100,12 @@ public:
         ) const = 0;
 
         virtual void write(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const partitioningModel&) = delete;
 };
 
 

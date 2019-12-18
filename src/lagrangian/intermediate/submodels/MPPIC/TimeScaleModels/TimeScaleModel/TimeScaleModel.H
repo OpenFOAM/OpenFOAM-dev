@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,12 +52,10 @@ namespace Foam
 
 class TimeScaleModel
 {
-private:
-
-    //- Private member functions
+    // Private member functions
 
         //- Disallow default bitwise assignment
-        void operator=(const TimeScaleModel&);
+        void operator=(const TimeScaleModel&) = delete;
 
 
 protected:

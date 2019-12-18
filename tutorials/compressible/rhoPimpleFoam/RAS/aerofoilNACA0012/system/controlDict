@@ -14,8 +14,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-libs            ("libmodifiedInletOutlet.so");
-
 application     rhoPimpleFoam;
 
 startFrom       latestTime;

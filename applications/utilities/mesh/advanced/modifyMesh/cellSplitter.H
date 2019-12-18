@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class polyMesh;
 
 class cellSplitter
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const polyMesh& mesh_;
@@ -91,11 +91,6 @@ class cellSplitter
             const Map<labelList>& cellToCells
         ) const;
 
-        //- Disallow default bitwise copy construct
-        cellSplitter(const cellSplitter&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellSplitter&);
 
 public:
 
@@ -106,6 +101,9 @@ public:
 
         //- Construct from mesh
         cellSplitter(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        cellSplitter(const cellSplitter&) = delete;
 
 
     //- Destructor
@@ -135,6 +133,12 @@ public:
             {
                 return addedPoints_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellSplitter&) = delete;
 };
 
 

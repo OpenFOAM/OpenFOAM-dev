@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ namespace Foam
 
 class hexBlock
 {
-    // Private data
+    // Private Data
 
         //- Handedness of the block
         enum handed
@@ -74,12 +74,6 @@ class hexBlock
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        hexBlock(const hexBlock&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const hexBlock&);
-
         //- Vertex addressing inside the block
         inline label vtxLabel(label i, label j, label k) const;
 
@@ -90,6 +84,10 @@ public:
 
         //- Construct from components
         hexBlock(const label nx, const label ny, const label nz);
+
+        //- Disallow default bitwise copy construction
+        hexBlock(const hexBlock&) = delete;
+
 
     // Member Functions
 
@@ -145,6 +143,12 @@ public:
 
         //- Read block points
         void readPoints(Istream&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const hexBlock&) = delete;
 };
 
 

@@ -73,7 +73,7 @@ CONSTRUCT
 )
 :
     PARENT(p, iF),
-    scalarData_(readScalar(dict.lookup("scalarData"))),
+    scalarData_(dict.lookup<scalar>("scalarData")),
     data_(pTraits<TYPE>(dict.lookup("data"))),
     fieldData_("fieldData", dict, p.size()),
     timeVsData_(Function1<TYPE>::New("timeVsData", dict)),
@@ -113,7 +113,7 @@ CONSTRUCT
     PARENT(ptf, p, iF, mapper),
     scalarData_(ptf.scalarData_),
     data_(ptf.data_),
-    fieldData_(ptf.fieldData_, mapper),
+    fieldData_(mapper(ptf.fieldData_)),
     timeVsData_(ptf.timeVsData_, false),
     wordData_(ptf.wordData_),
     labelData_(-1),
@@ -167,7 +167,7 @@ void Foam::CLASS::autoMap
 )
 {
     PARENT::autoMap(m);
-    fieldData_.autoMap(m);
+    m(fieldData_, fieldData_);
 }
 
 
@@ -220,12 +220,12 @@ void Foam::CLASS::write
 ) const
 {
     FVPATCHF::write(os);
-    os.writeKeyword("scalarData") << scalarData_ << token::END_STATEMENT << nl;
-    os.writeKeyword("data") << data_ << token::END_STATEMENT << nl;
-    fieldData_.writeEntry("fieldData", os);
-    timeVsData_->writeData(os);
-    os.writeKeyword("wordData") << wordData_ << token::END_STATEMENT << nl;
-    this->writeEntry("value", os);
+    writeEntry(os, "scalarData", scalarData_);
+    writeEntry(os, "data", data_);
+    writeEntry(os, "fieldData", fieldData_);
+    writeEntry(os, timeVsData_());
+    writeEntry(os, "wordData", wordData_);
+    writeEntry(os, "value", *this);
 }
 
 

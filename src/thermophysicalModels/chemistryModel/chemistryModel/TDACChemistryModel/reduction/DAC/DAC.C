@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,12 +120,13 @@ Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::DAC
 
     if (this->coeffsDict_.found("phiTol"))
     {
-        phiTol_ = readScalar(this->coeffsDict_.lookup("phiTol"));
+        phiTol_ = this->coeffsDict_.template lookup<scalar>("phiTol");
     }
 
     if (this->coeffsDict_.found("NOxThreshold"))
     {
-        NOxThreshold_ = readScalar(this->coeffsDict_.lookup("NOxThreshold"));
+        NOxThreshold_ =
+            this->coeffsDict_.template lookup<scalar>("NOxThreshold");
     }
     const List<List<specieElement>>& specieComposition =
         chemistry.specieComp();
@@ -218,7 +219,7 @@ Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::DAC
 
         if (this->coeffsDict_.found("nbCLarge"))
         {
-            nbCLarge_ = readLabel(fuelDict.lookup("nbCLarge"));
+            nbCLarge_ = fuelDict.lookup<label>("nbCLarge");
         }
 
         fuelSpeciesID_.setSize(fuelSpecies_.size());
@@ -227,7 +228,7 @@ Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::DAC
 
         forAll(fuelSpecies_, i)
         {
-            fuelSpeciesProp_[i] = readScalar(fuelDict.lookup(fuelSpecies_[i]));
+            fuelSpeciesProp_[i] = fuelDict.lookup<scalar>(fuelSpecies_[i]);
             for (label j=0; j<this->nSpecie_; j++)
             {
                 if (this->chemistry_.Y()[j].member() == fuelSpecies_[i])
@@ -270,9 +271,10 @@ Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::~DAC()
 template<class CompType, class ThermoType>
 void Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::reduceMechanism
 (
-    const scalarField &c,
+    const scalar p,
     const scalar T,
-    const scalar p
+    const scalarField& c,
+    const label li
 )
 {
     scalarField& completeC(this->chemistry_.completeC());
@@ -303,10 +305,11 @@ void Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::reduceMechanism
     forAll(this->chemistry_.reactions(), i)
     {
         const Reaction<ThermoType>& R = this->chemistry_.reactions()[i];
+
         // for each reaction compute omegai
         scalar omegai = this->chemistry_.omega
         (
-            R, c1, T, p, pf, cf, lRef, pr, cr, rRef
+            R, p, T, c1, li, pf, cf, lRef, pr, cr, rRef
         );
 
         // Then for each pair of species composing this reaction,

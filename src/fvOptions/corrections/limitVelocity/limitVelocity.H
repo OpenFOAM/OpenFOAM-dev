@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,6 @@ class limitVelocity
 :
     public cellSetOption
 {
-
 protected:
 
     // Protected data
@@ -75,17 +74,6 @@ protected:
 
         //- Maximum velocity magnitude
         scalar max_;
-
-
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        limitVelocity(const limitVelocity&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const limitVelocity&);
 
 
 public:
@@ -105,6 +93,9 @@ public:
             const fvMesh& mesh
         );
 
+        //- Disallow default bitwise copy construction
+        limitVelocity(const limitVelocity&) = delete;
+
 
     //- Destructor
     virtual ~limitVelocity()
@@ -118,6 +109,12 @@ public:
 
         //- Correct the energy field
         virtual void correct(volVectorField& U);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const limitVelocity&) = delete;
 };
 
 

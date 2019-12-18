@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,30 +38,6 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline const Switch& kinematicSingleLayer::momentumPredictor() const
-{
-    return momentumPredictor_;
-}
-
-
-inline label kinematicSingleLayer::nOuterCorr() const
-{
-    return nOuterCorr_;
-}
-
-
-inline label kinematicSingleLayer::nCorr() const
-{
-    return nCorr_;
-}
-
-
-inline label kinematicSingleLayer::nNonOrthCorr() const
-{
-    return nNonOrthCorr_;
-}
-
-
 inline const dimensionedScalar& kinematicSingleLayer::deltaSmall() const
 {
     return deltaSmall_;
@@ -92,6 +68,55 @@ inline const volScalarField& kinematicSingleLayer::alpha() const
 }
 
 
+inline const volScalarField& kinematicSingleLayer::rho() const
+{
+    return rho_;
+}
+
+
+inline const volVectorField& kinematicSingleLayer::U() const
+{
+    return U_;
+}
+
+
+inline const volVectorField& kinematicSingleLayer::Us() const
+{
+    return Us_;
+}
+
+
+inline const volVectorField& kinematicSingleLayer::Uw() const
+{
+    return Uw_;
+}
+
+
+inline const surfaceScalarField& kinematicSingleLayer::phi() const
+{
+    return phi_;
+}
+
+
+inline const surfaceScalarField& kinematicSingleLayer::phiU() const
+{
+    return phiU_;
+}
+
+
+inline const volScalarField::Internal&
+kinematicSingleLayer::continuityErr() const
+{
+    return continuityErr_;
+}
+
+
+inline const volScalarField& kinematicSingleLayer::coverage() const
+{
+    return coverage_;
+}
+
+
 inline volVectorField& kinematicSingleLayer::USpPrimary()
 {
     return USpPrimary_;
@@ -110,37 +135,37 @@ inline volScalarField& kinematicSingleLayer::rhoSpPrimary()
 }
 
 
-inline volVectorField& kinematicSingleLayer::USp()
+inline volVectorField::Internal& kinematicSingleLayer::USp()
 {
     return USp_;
 }
 
 
-inline volScalarField& kinematicSingleLayer::pSp()
+inline volScalarField::Internal& kinematicSingleLayer::pSp()
 {
     return pSp_;
 }
 
 
-inline volScalarField& kinematicSingleLayer::rhoSp()
+inline volScalarField::Internal& kinematicSingleLayer::rhoSp()
 {
     return rhoSp_;
 }
 
 
-inline const volVectorField& kinematicSingleLayer::USp() const
+inline const volVectorField::Internal& kinematicSingleLayer::USp() const
 {
     return USp_;
 }
 
 
-inline const volScalarField& kinematicSingleLayer::pSp() const
+inline const volScalarField::Internal& kinematicSingleLayer::pSp() const
 {
     return pSp_;
 }
 
 
-inline const volScalarField& kinematicSingleLayer::rhoSp() const
+inline const volScalarField::Internal& kinematicSingleLayer::rhoSp() const
 {
     return rhoSp_;
 }
@@ -194,41 +219,15 @@ inline const filmTurbulenceModel& kinematicSingleLayer::turbulence() const
 }
 
 
-inline tmp<volScalarField> kinematicSingleLayer::mass() const
+inline tmp<volScalarField::Internal> kinematicSingleLayer::mass() const
 {
-    return rho_*delta_*magSf();
+    return rho_()*delta_()*magSf();
 }
 
 
-inline tmp<volScalarField> kinematicSingleLayer::deltaMass() const
+inline tmp<volScalarField::Internal> kinematicSingleLayer::deltaMass() const
 {
     return rhoSp_*magSf()*time().deltaT();
-}
-
-
-inline tmp<volScalarField> kinematicSingleLayer::gNorm() const
-{
-    return volScalarField::New("gNorm", g_ & nHat());
-}
-
-
-inline tmp<volScalarField> kinematicSingleLayer::gNormClipped() const
-{
-    tmp<volScalarField> tgNormClipped
-    (
-        volScalarField::New("gNormClipped", g_ & nHat())
-    );
-
-    volScalarField& gNormClipped = tgNormClipped.ref();
-    gNormClipped.min(0.0);
-
-    return tgNormClipped;
-}
-
-
-inline tmp<volVectorField> kinematicSingleLayer::gTan() const
-{
-    return volVectorField::New("gTan", g_ - nHat()*gNorm());
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,8 +52,8 @@ hydrostaticDisplacementFvPatchVectorField
 )
 :
     tractionDisplacementFvPatchVectorField(p, iF),
-    rhoLiquid_(readScalar(dict.lookup("rhoLiquid"))),
-    liquidSurfacePressure_(readScalar(dict.lookup("liquidSurfacePressure"))),
+    rhoLiquid_(dict.lookup<scalar>("rhoLiquid")),
+    liquidSurfacePressure_(dict.lookup<scalar>("liquidSurfacePressure")),
     liquidSurfacePoint_(dict.lookup("liquidSurfacePoint"))
 {}
 
@@ -125,12 +125,10 @@ void Foam::hydrostaticDisplacementFvPatchVectorField::updateCoeffs()
 void Foam::hydrostaticDisplacementFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
-    os.writeKeyword("rhoLiquid") << rhoLiquid_ << token::END_STATEMENT << nl;
-    os.writeKeyword("liquidSurfacePressure")
-        << liquidSurfacePressure_ << token::END_STATEMENT << nl;
-    os.writeKeyword("liquidSurfacePoint")
-        << liquidSurfacePoint_ << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "rhoLiquid", rhoLiquid_);
+    writeEntry(os, "liquidSurfacePressure", liquidSurfacePressure_);
+    writeEntry(os, "liquidSurfacePoint", liquidSurfacePoint_);
+    writeEntry(os, "value", *this);
 }
 
 

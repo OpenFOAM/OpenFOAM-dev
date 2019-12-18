@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,26 +78,26 @@ TemplateName(PrimitivePatch);
                            Class PrimitivePatch Declaration
 \*---------------------------------------------------------------------------*/
 
-template
-<
-    class Face,
-    template<class> class FaceList,
-    class PointField,
-    class PointType=point
->
+template<class FaceList, class PointField>
 class PrimitivePatch
 :
     public PrimitivePatchName,
-    public FaceList<Face>
+    public FaceList
 {
 
 public:
 
-    // Public typedefs
+    // Public Typedefs
 
-        typedef Face FaceType;
-        typedef FaceList<Face> FaceListType;
+        typedef FaceList FaceListType;
+
+        typedef typename std::remove_reference<FaceList>::type::value_type
+            FaceType;
+
         typedef PointField PointFieldType;
+
+        typedef typename std::remove_reference<PointField>::type::value_type
+            PointType;
 
 
     // Public data types
@@ -112,7 +112,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Reference to global list of points
         PointField points_;
@@ -147,7 +147,7 @@ private:
         mutable labelListList* pointFacesPtr_;
 
         //- Faces addressing into local point list
-        mutable List<Face>* localFacesPtr_;
+        mutable List<FaceType>* localFacesPtr_;
 
         //- Labels of mesh points
         mutable labelList* meshPointsPtr_;
@@ -239,58 +239,100 @@ public:
         //- Construct from components
         PrimitivePatch
         (
-            const FaceList<Face>& faces,
+            const FaceList& faces,
             const Field<PointType>& points
         );
 
-        //- Construct from components
+        //- Move constructor from components
         PrimitivePatch
         (
-            const Xfer<FaceList<Face>>& faces,
-            const Xfer<List<PointType>>& points
+            FaceList&& faces,
+            Field<PointType>&& points
+        );
+
+        //- Move constructor from components
+        PrimitivePatch
+        (
+            FaceList&& faces,
+            List<PointType>&& points
         );
 
         //- Construct from components, reuse storage
         PrimitivePatch
         (
-            FaceList<Face>& faces,
+            FaceList& faces,
             Field<PointType>& points,
             const bool reuse
         );
 
-        //- Construct as copy
+        //- Copy constructor
         PrimitivePatch
         (
-            const PrimitivePatch<Face, FaceList, PointField, PointType>&
+            const PrimitivePatch<FaceList, PointField>&
         );
+
+        //- Move constructor
+        PrimitivePatch
+        (
+            PrimitivePatch<FaceList, PointField>&&
+        );
+
+        //- Construct and return a clone
+        virtual autoPtr<PrimitivePatch<FaceList, PointField>> clone() const
+        {
+            return autoPtr<PrimitivePatch<FaceList, PointField>>
+            (
+                new PrimitivePatch<FaceList, PointField>(*this)
+            );
+        }
+
+        //- Construct from Istream
+        PrimitivePatch
+        (
+            Istream&,
+            const Field<PointType>& points
+        );
+
+        class iNew
+        {
+            const Field<PointType>& points_;
+
+        public:
+
+            iNew(const Field<PointType>& points)
+            :
+                points_(points)
+            {}
+
+            autoPtr<PrimitivePatch<FaceList, PointField>> operator()
+            (
+                Istream& is
+            ) const
+            {
+                return autoPtr<PrimitivePatch<FaceList, PointField>>
+                (
+                    new PrimitivePatch<FaceList, PointField>(is, points_)
+                );
+            }
+        };
 
 
     //- Destructor
     virtual ~PrimitivePatch();
 
-        void clearOut();
-
-        void clearGeom();
-
-        void clearTopology();
-
-        void clearPatchMeshAddr();
-
 
     // Member Functions
 
-    // Access
+        // Access
 
-        //- Return reference to global points
-        const Field<PointType>& points() const
-        {
-            return points_;
-        }
+            //- Return reference to global points
+            const Field<PointType>& points() const
+            {
+                return points_;
+            }
 
 
-    // Access functions for demand driven data
-
-        // Topological data; no mesh required.
+        // Access functions for Topological data; no mesh required.
 
             //- Return number of points supporting patch faces
             label nPoints() const
@@ -336,7 +378,7 @@ public:
             const labelListList& pointFaces() const;
 
             //- Return patch faces addressing into local point list
-            const List<Face>& localFaces() const;
+            const List<FaceType>& localFaces() const;
 
 
         // Addressing into mesh
@@ -423,49 +465,63 @@ public:
             const labelListList& edgeLoops() const;
 
 
-    // Check
+        // Check
 
-        //- Calculate surface type formed by patch.
-        //  Types:
-        //  - all edges have two neighbours (manifold)
-        //  - some edges have more than two neighbours (illegal)
-        //  - other (open)
-        surfaceTopo surfaceType() const;
+            //- Calculate surface type formed by patch.
+            //  Types:
+            //  - all edges have two neighbours (manifold)
+            //  - some edges have more than two neighbours (illegal)
+            //  - other (open)
+            surfaceTopo surfaceType() const;
 
-        //- Check surface formed by patch for manifoldness (see above).
-        //  Return true if any incorrect edges are found.
-        //  Insert vertices of incorrect edges into set.
-        bool checkTopology
-        (
-            const bool report = false,
-            labelHashSet* setPtr = nullptr
-        ) const;
+            //- Check surface formed by patch for manifoldness (see above).
+            //  Return true if any incorrect edges are found.
+            //  Insert vertices of incorrect edges into set.
+            bool checkTopology
+            (
+                const bool report = false,
+                labelHashSet* setPtr = nullptr
+            ) const;
 
-        //- Checks primitivePatch for faces sharing point but not edge.
-        //  This denotes a surface that is pinched at a single point
-        //  (test for pinched at single edge is already in PrimitivePatch)
-        //  Returns true if this situation found and puts conflicting
-        //  (mesh)point in set. Based on all the checking routines in
-        //  primitiveMesh.
-        bool checkPointManifold
-        (
-            const bool report = false,
-            labelHashSet* setPtr = nullptr
-        ) const;
-
-
-    // Edit
-
-        //- Correct patch after moving points
-        virtual void movePoints(const Field<PointType>&);
+            //- Checks primitivePatch for faces sharing point but not edge.
+            //  This denotes a surface that is pinched at a single point
+            //  (test for pinched at single edge is already in PrimitivePatch)
+            //  Returns true if this situation found and puts conflicting
+            //  (mesh)point in set. Based on all the checking routines in
+            //  primitiveMesh.
+            bool checkPointManifold
+            (
+                const bool report = false,
+                labelHashSet* setPtr = nullptr
+            ) const;
 
 
-    // Member operators
+        // Edit
 
-        //- Assignment
+            void clearOut();
+
+            void clearGeom();
+
+            void clearTopology();
+
+            void clearPatchMeshAddr();
+
+            //- Correct patch after moving points
+            virtual void movePoints(const Field<PointType>&);
+
+
+    // Member Operators
+
+        //- Assignment operator
         void operator=
         (
-            const PrimitivePatch<Face, FaceList, PointField, PointType>&
+            const PrimitivePatch<FaceList, PointField>&
+        );
+
+        //- Move assignment operator
+        void operator=
+        (
+            PrimitivePatch<FaceList, PointField>&&
         );
 };
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,16 +28,16 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class T, class BaseType>
-void Foam::CompactIOField<T, BaseType>::readFromStream(const bool valid)
+template<class Type, class BaseType>
+void Foam::CompactIOField<Type, BaseType>::readFromStream(const bool read)
 {
-    Istream& is = readStream(word::null, valid);
+    Istream& is = readStream(word::null, read);
 
-    if (valid)
+    if (read)
     {
-        if (headerClassName() == IOField<T>::typeName)
+        if (headerClassName() == IOField<Type>::typeName)
         {
-            is >> static_cast<Field<T>&>(*this);
+            is >> static_cast<Field<Type>&>(*this);
             close();
         }
         else if (headerClassName() == typeName)
@@ -51,7 +51,7 @@ void Foam::CompactIOField<T, BaseType>::readFromStream(const bool valid)
             (
                 is
             )   << "unexpected class name " << headerClassName()
-                << " expected " << typeName << " or " << IOField<T>::typeName
+                << " expected " << typeName << " or " << IOField<Type>::typeName
                 << endl
                 << "    while reading object " << name()
                 << exit(FatalIOError);
@@ -62,8 +62,8 @@ void Foam::CompactIOField<T, BaseType>::readFromStream(const bool valid)
 
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
-template<class T, class BaseType>
-Foam::CompactIOField<T, BaseType>::CompactIOField(const IOobject& io)
+template<class Type, class BaseType>
+Foam::CompactIOField<Type, BaseType>::CompactIOField(const IOobject& io)
 :
     regIOobject(io)
 {
@@ -78,29 +78,29 @@ Foam::CompactIOField<T, BaseType>::CompactIOField(const IOobject& io)
 }
 
 
-template<class T, class BaseType>
-Foam::CompactIOField<T, BaseType>::CompactIOField
+template<class Type, class BaseType>
+Foam::CompactIOField<Type, BaseType>::CompactIOField
 (
     const IOobject& io,
-    const bool valid
+    const bool read
 )
 :
     regIOobject(io)
 {
     if (io.readOpt() == IOobject::MUST_READ)
     {
-        readFromStream(valid);
+        readFromStream(read);
     }
     else if (io.readOpt() == IOobject::READ_IF_PRESENT)
     {
         bool haveFile = headerOk();
-        readFromStream(valid && haveFile);
+        readFromStream(read && haveFile);
     }
 }
 
 
-template<class T, class BaseType>
-Foam::CompactIOField<T, BaseType>::CompactIOField
+template<class Type, class BaseType>
+Foam::CompactIOField<Type, BaseType>::CompactIOField
 (
     const IOobject& io,
     const label size
@@ -118,16 +118,16 @@ Foam::CompactIOField<T, BaseType>::CompactIOField
     }
     else
     {
-        Field<T>::setSize(size);
+        Field<Type>::setSize(size);
     }
 }
 
 
-template<class T, class BaseType>
-Foam::CompactIOField<T, BaseType>::CompactIOField
+template<class Type, class BaseType>
+Foam::CompactIOField<Type, BaseType>::CompactIOField
 (
     const IOobject& io,
-    const Field<T>& list
+    const Field<Type>& field
 )
 :
     regIOobject(io)
@@ -142,22 +142,21 @@ Foam::CompactIOField<T, BaseType>::CompactIOField
     }
     else
     {
-        Field<T>::operator=(list);
+        Field<Type>::operator=(field);
     }
 }
 
 
-template<class T, class BaseType>
-Foam::CompactIOField<T, BaseType>::CompactIOField
+template<class Type, class BaseType>
+Foam::CompactIOField<Type, BaseType>::CompactIOField
 (
     const IOobject& io,
-    const Xfer<Field<T>>& list
+    Field<Type>&& field
 )
 :
-    regIOobject(io)
+    regIOobject(io),
+    Field<Type>(move(field))
 {
-    Field<T>::transfer(list());
-
     if
     (
         io.readOpt() == IOobject::MUST_READ
@@ -169,23 +168,34 @@ Foam::CompactIOField<T, BaseType>::CompactIOField
 }
 
 
+template<class Type, class BaseType>
+Foam::CompactIOField<Type, BaseType>::CompactIOField
+(
+    CompactIOField<Type, BaseType>&& field
+)
+:
+    regIOobject(move(field)),
+    Field<Type>(move(field))
+{}
+
+
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
 
-template<class T, class BaseType>
-Foam::CompactIOField<T, BaseType>::~CompactIOField()
+template<class Type, class BaseType>
+Foam::CompactIOField<Type, BaseType>::~CompactIOField()
 {}
 
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class T, class BaseType>
-bool Foam::CompactIOField<T, BaseType>::writeObject
+template<class Type, class BaseType>
+bool Foam::CompactIOField<Type, BaseType>::writeObject
 (
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp,
-    const bool valid
+    const bool write
 ) const
 {
     if (fmt == IOstream::ASCII)
@@ -193,9 +203,9 @@ bool Foam::CompactIOField<T, BaseType>::writeObject
         // Change type to be non-compact format type
         const word oldTypeName = typeName;
 
-        const_cast<word&>(typeName) = IOField<T>::typeName;
+        const_cast<word&>(typeName) = IOField<Type>::typeName;
 
-        bool good = regIOobject::writeObject(fmt, ver, cmp, valid);
+        bool good = regIOobject::writeObject(fmt, ver, cmp, write);
 
         // Change type back
         const_cast<word&>(typeName) = oldTypeName;
@@ -204,13 +214,13 @@ bool Foam::CompactIOField<T, BaseType>::writeObject
     }
     else
     {
-        return regIOobject::writeObject(fmt, ver, cmp, valid);
+        return regIOobject::writeObject(fmt, ver, cmp, write);
     }
 }
 
 
-template<class T, class BaseType>
-bool Foam::CompactIOField<T, BaseType>::writeData(Ostream& os) const
+template<class Type, class BaseType>
+bool Foam::CompactIOField<Type, BaseType>::writeData(Ostream& os) const
 {
     return (os << *this).good();
 }
@@ -218,30 +228,47 @@ bool Foam::CompactIOField<T, BaseType>::writeData(Ostream& os) const
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-template<class T, class BaseType>
-void Foam::CompactIOField<T, BaseType>::operator=
+template<class Type, class BaseType>
+void Foam::CompactIOField<Type, BaseType>::operator=
 (
-    const CompactIOField<T, BaseType>& rhs
+    const CompactIOField<Type, BaseType>& rhs
 )
 {
-    Field<T>::operator=(rhs);
+    Field<Type>::operator=(rhs);
 }
 
 
-template<class T, class BaseType>
-void Foam::CompactIOField<T, BaseType>::operator=(const Field<T>& rhs)
+template<class Type, class BaseType>
+void Foam::CompactIOField<Type, BaseType>::operator=
+(
+    CompactIOField<Type, BaseType>&& rhs
+)
 {
-    Field<T>::operator=(rhs);
+    Field<Type>::operator=(move(rhs));
+}
+
+
+template<class Type, class BaseType>
+void Foam::CompactIOField<Type, BaseType>::operator=(const Field<Type>& rhs)
+{
+    Field<Type>::operator=(rhs);
+}
+
+
+template<class Type, class BaseType>
+void Foam::CompactIOField<Type, BaseType>::operator=(Field<Type>&& rhs)
+{
+    Field<Type>::operator=(move(rhs));
 }
 
 
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
-template<class T, class BaseType>
+template<class Type, class BaseType>
 Foam::Istream& Foam::operator>>
 (
     Foam::Istream& is,
-    Foam::CompactIOField<T, BaseType>& L
+    Foam::CompactIOField<Type, BaseType>& L
 )
 {
     // Read compact
@@ -253,7 +280,7 @@ Foam::Istream& Foam::operator>>
 
     forAll(L, i)
     {
-        T& subField = L[i];
+        Type& subField = L[i];
 
         label index = start[i];
         subField.setSize(start[i+1] - index);
@@ -268,17 +295,17 @@ Foam::Istream& Foam::operator>>
 }
 
 
-template<class T, class BaseType>
+template<class Type, class BaseType>
 Foam::Ostream& Foam::operator<<
 (
     Foam::Ostream& os,
-    const Foam::CompactIOField<T, BaseType>& L
+    const Foam::CompactIOField<Type, BaseType>& L
 )
 {
     // Keep ascii writing same.
     if (os.format() == IOstream::ASCII)
     {
-        os << static_cast<const Field<T>&>(L);
+        os << static_cast<const Field<Type>&>(L);
     }
     else
     {
@@ -296,7 +323,7 @@ Foam::Ostream& Foam::operator<<
         label elemI = 0;
         forAll(L, i)
         {
-            const T& subField = L[i];
+            const Type& subField = L[i];
 
             forAll(subField, j)
             {

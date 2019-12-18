@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,24 +89,25 @@ Foam::PairSpringSliderDashpot<CloudType>::PairSpringSliderDashpot
     PairModel<CloudType>(dict, cloud, typeName),
     Estar_(),
     Gstar_(),
-    alpha_(readScalar(this->coeffDict().lookup("alpha"))),
-    b_(readScalar(this->coeffDict().lookup("b"))),
-    mu_(readScalar(this->coeffDict().lookup("mu"))),
+    alpha_(this->coeffDict().template lookup<scalar>("alpha")),
+    b_(this->coeffDict().template lookup<scalar>("b")),
+    mu_(this->coeffDict().template lookup<scalar>("mu")),
     cohesionEnergyDensity_
     (
-        readScalar(this->coeffDict().lookup("cohesionEnergyDensity"))
+        this->coeffDict().template lookup<scalar>("cohesionEnergyDensity")
     ),
     cohesion_(false),
     collisionResolutionSteps_
     (
-        readScalar(this->coeffDict().lookup("collisionResolutionSteps"))
+        this->coeffDict().template lookup<scalar>("collisionResolutionSteps")
     ),
     volumeFactor_(1.0),
     useEquivalentSize_(Switch(this->coeffDict().lookup("useEquivalentSize")))
 {
     if (useEquivalentSize_)
     {
-        volumeFactor_ = readScalar(this->coeffDict().lookup("volumeFactor"));
+        volumeFactor_ =
+            this->coeffDict().template lookup<scalar>("volumeFactor");
     }
 
     scalar nu = this->owner().constProps().poissonsRatio();

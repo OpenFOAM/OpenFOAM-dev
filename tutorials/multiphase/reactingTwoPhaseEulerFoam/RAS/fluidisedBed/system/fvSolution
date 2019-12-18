@@ -20,11 +20,14 @@ solvers
     "alpha.*"
     {
         nAlphaCorr      1;
-        nAlphaSubCycles 2;
+        nAlphaSubCycles 3;
         implicitPhasePressure yes;
 
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
+        extremaCoeff    1;
+
+        solver          PBiCGStab;
+        preconditioner  DIC;
+
         tolerance       1e-9;
         relTol          0;
         minIter         1;
@@ -60,12 +63,13 @@ solvers
         tolerance       1e-6;
         relTol          0;
         minIter         1;
+        maxIter         10;
     }
 
     "Theta.*"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
+        solver          PBiCGStab;
+        preconditioner  DILU;
         tolerance       1e-6;
         relTol          0;
         minIter         1;
@@ -73,8 +77,8 @@ solvers
 
     "(k|epsilon).*"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
+        solver          PBiCGStab;
+        preconditioner  DILU;
         tolerance       1e-5;
         relTol          0;
         minIter         1;
@@ -84,9 +88,9 @@ solvers
 PIMPLE
 {
     nOuterCorrectors 3;
-    nCorrectors      1;
+    nCorrectors      2;
     nNonOrthogonalCorrectors 0;
-    faceMomentum     yes;
+    faceMomentum     no;
 }
 
 relaxationFactors

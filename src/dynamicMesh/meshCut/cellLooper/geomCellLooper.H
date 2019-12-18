@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,6 @@ class geomCellLooper
 :
     public cellLooper
 {
-
     // Static
 
         //- Tolerance for point equal test. Fraction of edge length.
@@ -112,13 +111,6 @@ class geomCellLooper
         bool edgeEndsCut(const labelList&, const label index) const;
 
 
-        //- Disallow default bitwise copy construct
-        geomCellLooper(const geomCellLooper&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const geomCellLooper&);
-
-
 public:
 
     //- Runtime type information
@@ -138,12 +130,13 @@ public:
         }
 
 
-
-
     // Constructors
 
         //- Construct from components
         geomCellLooper(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        geomCellLooper(const geomCellLooper&) = delete;
 
 
     //- Destructor
@@ -151,8 +144,6 @@ public:
 
 
     // Member Functions
-
-
 
         //- Create cut along circumference of celli. Gets current mesh cuts.
         //  Cut along circumference is expressed as loop of cuts plus weights
@@ -183,6 +174,12 @@ public:
             labelList& loop,
             scalarField& loopWeights
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const geomCellLooper&) = delete;
 };
 
 

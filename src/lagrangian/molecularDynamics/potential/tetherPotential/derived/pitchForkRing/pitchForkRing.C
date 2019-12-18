@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,9 +58,9 @@ pitchForkRing::pitchForkRing
     (
         tetherPotentialProperties.subDict(typeName + "Coeffs")
     ),
-    mu_(readScalar(pitchForkRingCoeffs_.lookup("mu"))),
-    alpha_(readScalar(pitchForkRingCoeffs_.lookup("alpha"))),
-    rOrbit_(readScalar(pitchForkRingCoeffs_.lookup("rOrbit")))
+    mu_(pitchForkRingCoeffs_.template lookup<scalar>("mu")),
+    alpha_(pitchForkRingCoeffs_.template lookup<scalar>("alpha")),
+    rOrbit_(pitchForkRingCoeffs_.template lookup<scalar>("rOrbit"))
 {}
 
 

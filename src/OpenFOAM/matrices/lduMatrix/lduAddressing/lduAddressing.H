@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,7 +111,7 @@ namespace Foam
 
 class lduAddressing
 {
-    // Private data
+    // Private Data
 
         //- Number of equations
         label size_;
@@ -131,12 +131,6 @@ class lduAddressing
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        lduAddressing(const lduAddressing&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const lduAddressing&);
-
         //- Calculate losort
         void calcLosort() const;
 
@@ -149,14 +143,18 @@ class lduAddressing
 
 public:
 
-    // Constructor
-    lduAddressing(const label nEqns)
-    :
-        size_(nEqns),
-        losortPtr_(nullptr),
-        ownerStartPtr_(nullptr),
-        losortStartPtr_(nullptr)
-    {}
+    // Constructors
+
+        lduAddressing(const label nEqns)
+        :
+            size_(nEqns),
+            losortPtr_(nullptr),
+            ownerStartPtr_(nullptr),
+            losortStartPtr_(nullptr)
+        {}
+
+        //- Disallow default bitwise copy construction
+        lduAddressing(const lduAddressing&) = delete;
 
 
     //- Destructor
@@ -200,6 +198,12 @@ public:
 
         //- Calculate bandwidth and profile of addressing
         Tuple2<label, scalar> band() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const lduAddressing&) = delete;
 };
 
 

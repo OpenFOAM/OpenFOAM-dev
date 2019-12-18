@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,7 +172,7 @@ Foam::autoPtr<Foam::globalIndex> Foam::regionSplit::calcRegionSplit
         {
             offsets[i] = mesh().nFaces();
         }
-        const globalIndex globalRegions(offsets.xfer());
+        const globalIndex globalRegions(move(offsets));
 
         // Minimize regions across connected cells
         // Note: still uses global decisions so all processors are running
@@ -215,7 +215,7 @@ Foam::autoPtr<Foam::globalIndex> Foam::regionSplit::calcRegionSplit
             compactOffsets[i] = globalToCompact.size();
         }
 
-        return autoPtr<globalIndex>(new globalIndex(compactOffsets.xfer()));
+        return autoPtr<globalIndex>(new globalIndex(move(compactOffsets)));
     }
 
 

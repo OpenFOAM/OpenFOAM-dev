@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,9 +59,9 @@ class filteredLinear3VLimiter
 :
     public LimiterFunc
 {
-    // Private data
+    // Private Data
 
-        // Scaling corefficient for the gradient ratio,
+        // Scaling coefficient for the gradient ratio,
         // 0 = linear
         // 1 = fully limited
         scalar k_;

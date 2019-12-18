@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ Ostream& operator<<(Ostream& os, const globalIndex& gi);
 
 class globalIndex
 {
-    // Private data
+    // Private Data
 
         //- Start of proci. Size is nProcs()+1. (so like CompactListList)
         labelList offsets_;
@@ -93,8 +93,8 @@ public:
         //- Construct from components
         globalIndex(const labelList& offsets);
 
-        //- Construct from components
-        inline globalIndex(const Xfer<labelList>& offsets);
+        //- Move constructor from components
+        inline globalIndex(labelList&& offsets);
 
         //- Construct from Istream
         globalIndex(Istream& is);

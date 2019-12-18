@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,18 +50,11 @@ class tolerances
 :
     public IOdictionary
 {
-    // Private data
+    // Private Data
 
         dictionary relaxationFactors_;
         dictionary solverTolerances_;
         dictionary solverRelativeTolerances_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        tolerances(const tolerances&);
-        void operator=(const tolerances&);
 
 
 public:
@@ -70,6 +63,9 @@ public:
 
         //- Construct from time
         tolerances(const Time& t, const fileName& dictName);
+
+        //- Disallow default bitwise copy construction
+        tolerances(const tolerances&) = delete;
 
 
     // Member Functions
@@ -89,6 +85,11 @@ public:
 
             //- Read the tolerances
             bool read();
+
+
+    // Member Operators
+
+        void operator=(const tolerances&) = delete;
 };
 
 

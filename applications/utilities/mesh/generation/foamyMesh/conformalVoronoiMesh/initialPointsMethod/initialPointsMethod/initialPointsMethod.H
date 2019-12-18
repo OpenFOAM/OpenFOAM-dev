@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,17 +83,6 @@ protected:
         Switch fixInitialPoints_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        initialPointsMethod(const initialPointsMethod&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const initialPointsMethod&);
-
-
 public:
 
     //- Runtime type information
@@ -139,6 +128,9 @@ public:
             const cellShapeControl& cellShapeControls,
             const autoPtr<backgroundMeshDecomposition>& decomposition
         );
+
+        //- Disallow default bitwise copy construction
+        initialPointsMethod(const initialPointsMethod&) = delete;
 
 
     // Selectors
@@ -204,6 +196,12 @@ public:
 
             //- Return the initial points for the conformalVoronoiMesh
             virtual List<Vb::Point> initialPoints() const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const initialPointsMethod&) = delete;
 };
 
 

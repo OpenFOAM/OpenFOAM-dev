@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Description
     CA = sum_i=1->Nr (max (0, -vAi wi)) -> consumption of species A
 
     where i is the reaction index, Nr the number of reactions, vAi is the net
-    stoechiometric coefficient of species A in the ith reaction (vAi = v''-v')
+    stoichiometric coefficient of species A in the ith reaction (vAi = v''-v')
     , wi is the progress variable of reaction i and dBi equals 1 if reaction i
     involves B and O otherwise.
     rAB show the error introduced to the production rates of A when B and all
@@ -104,7 +104,7 @@ class DAC
 :
     public chemistryReductionMethod<CompType, ThermoType>
 {
-    // Private data
+    // Private Data
 
         //- List of label for the search initiating set
         labelList searchInitSet_;
@@ -147,9 +147,10 @@ public:
         //- Reduce the mechanism
         virtual void reduceMechanism
         (
-            const scalarField &c,
+            const scalar p,
             const scalar T,
-            const scalar p
+            const scalarField& c,
+            const label li
         );
 };
 

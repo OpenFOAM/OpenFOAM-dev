@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,8 +63,11 @@ public:
         //- Construct given initial table size
         PtrDictionary(const label size = 128);
 
-        //- Copy construct
+        //- Copy constructor
         PtrDictionary(const PtrDictionary&);
+
+        //- Move constructor
+        PtrDictionary(PtrDictionary&&);
 
         //- Construct from Istream using given Istream constructor class
         template<class INew>
@@ -74,7 +77,7 @@ public:
         PtrDictionary(Istream&);
 
 
-    // Member operators
+    // Member Operators
 
         //- Find and return entry
         const T& operator[](const word& key) const

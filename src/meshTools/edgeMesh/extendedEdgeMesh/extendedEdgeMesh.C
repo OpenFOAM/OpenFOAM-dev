@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -311,6 +311,30 @@ Foam::extendedEdgeMesh::extendedEdgeMesh(const extendedEdgeMesh& fem)
 {}
 
 
+Foam::extendedEdgeMesh::extendedEdgeMesh(extendedEdgeMesh&& fem)
+:
+    edgeMesh(move(fem)),
+    concaveStart_(fem.concaveStart()),
+    mixedStart_(fem.mixedStart()),
+    nonFeatureStart_(fem.nonFeatureStart()),
+    internalStart_(fem.internalStart()),
+    flatStart_(fem.flatStart()),
+    openStart_(fem.openStart()),
+    multipleStart_(fem.multipleStart()),
+    normals_(move(fem.normals())),
+    normalVolumeTypes_(move(fem.normalVolumeTypes())),
+    edgeDirections_(move(fem.edgeDirections())),
+    normalDirections_(move(fem.normalDirections())),
+    edgeNormals_(move(fem.edgeNormals())),
+    featurePointNormals_(move(fem.featurePointNormals())),
+    featurePointEdges_(move(fem.featurePointEdges())),
+    regionEdges_(move(fem.regionEdges())),
+    pointTree_(),
+    edgeTree_(),
+    edgeTreesByType_()
+{}
+
+
 Foam::extendedEdgeMesh::extendedEdgeMesh(Istream& is)
 {
     is >> *this;
@@ -319,11 +343,11 @@ Foam::extendedEdgeMesh::extendedEdgeMesh(Istream& is)
 
 Foam::extendedEdgeMesh::extendedEdgeMesh
 (
-    const Xfer<pointField>& pointLst,
-    const Xfer<edgeList>& edgeLst
+    pointField&& pointLst,
+    edgeList&& edgeLst
 )
 :
-    edgeMesh(pointLst, edgeLst),
+    edgeMesh(move(pointLst), move(edgeLst)),
     concaveStart_(0),
     mixedStart_(0),
     nonFeatureStart_(0),
@@ -426,7 +450,7 @@ Foam::extendedEdgeMesh::extendedEdgeMesh
 
 Foam::extendedEdgeMesh::extendedEdgeMesh
 (
-    const PrimitivePatch<face, List, pointField, point>& surf,
+    const PrimitivePatch<faceList, pointField>& surf,
     const labelList& featureEdges,
     const labelList& regionFeatureEdges,
     const labelList& featurePoints
@@ -969,12 +993,6 @@ void Foam::extendedEdgeMesh::transfer(extendedEdgeMesh& mesh)
 }
 
 
-Foam::Xfer<Foam::extendedEdgeMesh> Foam::extendedEdgeMesh::xfer()
-{
-    return xferMoveTo<extendedEdgeMesh, extendedEdgeMesh>(*this);
-}
-
-
 void Foam::extendedEdgeMesh::clear()
 {
     edgeMesh::clear();
@@ -1225,7 +1243,7 @@ void Foam::extendedEdgeMesh::add(const extendedEdgeMesh& fem)
     nonFeatureStart_ = newNonFeatureStart;
 
     // Reset points and edges
-    reset(xferMove(newPoints), newEdges.xfer());
+    reset(move(newPoints), move(newEdges));
 
     // Transfer
     internalStart_ = newInternalStart;
@@ -1338,7 +1356,7 @@ void Foam::extendedEdgeMesh::flipNormals()
     concaveStart_ = newConcaveStart;
 
     // Reset points and edges
-    reset(xferMove(newPoints), newEdges.xfer());
+    reset(move(newPoints), move(newEdges));
 
     // Transfer
     internalStart_ = newInternalStart;

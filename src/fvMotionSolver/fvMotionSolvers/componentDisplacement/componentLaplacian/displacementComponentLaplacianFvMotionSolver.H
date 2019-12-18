@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ class displacementComponentLaplacianFvMotionSolver
     public componentDisplacementMotionSolver,
     public fvMotionSolver
 {
-    // Private data
+    // Private Data
 
         //- Cell-centre motion field
         mutable volScalarField cellDisplacement_;
@@ -75,15 +75,6 @@ class displacementComponentLaplacianFvMotionSolver
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        displacementComponentLaplacianFvMotionSolver
-        (
-            const displacementComponentLaplacianFvMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const displacementComponentLaplacianFvMotionSolver&);
-
         //- Return the component corresponding to the given component name
         direction cmpt(const word& cmptName) const;
 
@@ -96,12 +87,18 @@ public:
 
     // Constructors
 
-        //- Construct from polyMesh and IOdictionary
+        //- Construct from polyMesh and dictionary
         displacementComponentLaplacianFvMotionSolver
         (
             const polyMesh&,
-            const IOdictionary&
+            const dictionary&
         );
+
+        //- Disallow default bitwise copy construction
+        displacementComponentLaplacianFvMotionSolver
+        (
+            const displacementComponentLaplacianFvMotionSolver&
+        ) = delete;
 
 
     //- Destructor
@@ -126,6 +123,14 @@ public:
         //- Update topology
         virtual void updateMesh(const mapPolyMesh&);
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=
+        (
+            const displacementComponentLaplacianFvMotionSolver&
+        ) = delete;
 };
 
 

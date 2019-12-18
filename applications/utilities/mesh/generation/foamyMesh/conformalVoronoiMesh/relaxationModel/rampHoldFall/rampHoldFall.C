@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,11 +45,11 @@ rampHoldFall::rampHoldFall
 )
 :
     relaxationModel(typeName, relaxationDict, runTime),
-    rampStartRelaxation_(readScalar(coeffDict().lookup("rampStartRelaxation"))),
-    holdRelaxation_(readScalar(coeffDict().lookup("holdRelaxation"))),
-    fallEndRelaxation_(readScalar(coeffDict().lookup("fallEndRelaxation"))),
-    rampEndFraction_(readScalar(coeffDict().lookup("rampEndFraction"))),
-    fallStartFraction_(readScalar(coeffDict().lookup("fallStartFraction"))),
+    rampStartRelaxation_(coeffDict().lookup<scalar>("rampStartRelaxation")),
+    holdRelaxation_(coeffDict().lookup<scalar>("holdRelaxation")),
+    fallEndRelaxation_(coeffDict().lookup<scalar>("fallEndRelaxation")),
+    rampEndFraction_(coeffDict().lookup<scalar>("rampEndFraction")),
+    fallStartFraction_(coeffDict().lookup<scalar>("fallStartFraction")),
     rampGradient_((holdRelaxation_ - rampStartRelaxation_)/(rampEndFraction_)),
     fallGradient_
     (

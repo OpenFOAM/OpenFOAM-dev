@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ class SpalartAllmarasIDDES
 :
     public SpalartAllmarasDES<BasicTurbulenceModel>
 {
-    // Private data
+    // Private Data
 
         // Model constants
 
@@ -78,34 +78,43 @@ class SpalartAllmarasIDDES
 
     // Private Member Functions
 
-        tmp<volScalarField> alpha() const;
-        tmp<volScalarField> ft(const volScalarField& magGradU) const;
-        tmp<volScalarField> fl(const volScalarField& magGradU) const;
+        tmp<volScalarField::Internal> IDDESalpha() const;
 
-        tmp<volScalarField> rd
+        tmp<volScalarField::Internal> ft
         (
-            const volScalarField& nur,
-            const volScalarField& magGradU
+            const volScalarField::Internal& magGradU
+        ) const;
+
+        tmp<volScalarField::Internal> fl
+        (
+            const volScalarField::Internal& magGradU
+        ) const;
+
+        tmp<volScalarField::Internal> rd
+        (
+            const volScalarField::Internal& nur,
+            const volScalarField::Internal& magGradU
         ) const;
 
         //- Delay function
-        tmp<volScalarField> fd(const volScalarField& magGradU) const;
-
-        // Disallow default bitwise copy construct and assignment
-        SpalartAllmarasIDDES(const SpalartAllmarasIDDES&);
-        void operator=(const SpalartAllmarasIDDES&);
+        tmp<volScalarField::Internal> fd
+        (
+            const volScalarField::Internal& magGradU
+        ) const;
 
 
 protected:
 
     // Protected Member Functions
 
+        using IOobject::modelName;
+
         //- Length scale
-        virtual tmp<volScalarField> dTilda
+        virtual tmp<volScalarField::Internal> dTilda
         (
-            const volScalarField& chi,
-            const volScalarField& fv1,
-            const volTensorField& gradU
+            const volScalarField::Internal& chi,
+            const volScalarField::Internal& fv1,
+            const volTensorField::Internal& gradU
         ) const;
 
 
@@ -135,6 +144,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        SpalartAllmarasIDDES(const SpalartAllmarasIDDES&) = delete;
+
 
     //- Destructor
     virtual ~SpalartAllmarasIDDES()
@@ -145,6 +157,12 @@ public:
 
         //- Read model coefficients if they have changed
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const SpalartAllmarasIDDES&) = delete;
 };
 
 

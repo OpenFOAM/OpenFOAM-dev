@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ class linearValveFvMesh
 :
     public topoChangerFvMesh
 {
-    // Private data
+    // Private Data
 
         //- Motion dictionary
         dictionary motionDict_;
@@ -61,13 +61,6 @@ class linearValveFvMesh
 
 
     // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        linearValveFvMesh(const linearValveFvMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const linearValveFvMesh&);
-
 
         //- Add linearValve zones and modifiers
         void addZonesAndModifiers();
@@ -93,6 +86,9 @@ public:
         //- Construct from database
         explicit linearValveFvMesh(const IOobject& io);
 
+        //- Disallow default bitwise copy construction
+        linearValveFvMesh(const linearValveFvMesh&) = delete;
+
 
     //- Destructor
     virtual ~linearValveFvMesh();
@@ -102,6 +98,12 @@ public:
 
         //- Update the mesh for both mesh motion and topology change
         virtual bool update();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const linearValveFvMesh&) = delete;
 };
 
 

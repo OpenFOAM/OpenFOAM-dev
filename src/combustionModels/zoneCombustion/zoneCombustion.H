@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ class zoneCombustion
 :
     public CombustionModel<ReactionThermo>
 {
-    // Private data
+    // Private Data
 
         //- The combustion model to be zone-filtered
         autoPtr<CombustionModel<ReactionThermo>> combustionModelPtr_;
@@ -73,12 +73,6 @@ class zoneCombustion
         //- Filter the given field on the cellZones
         tmp<volScalarField> filter(const tmp<volScalarField>& tS) const;
 
-        //- Disallow copy construct
-        zoneCombustion(const zoneCombustion&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const zoneCombustion&);
-
 
 public:
 
@@ -92,10 +86,13 @@ public:
         zoneCombustion
         (
             const word& modelType,
-            ReactionThermo& thermo,
+            const ReactionThermo& thermo,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );
+
+        //- Disallow default bitwise copy construction
+        zoneCombustion(const zoneCombustion&);
 
 
     //- Destructor
@@ -103,9 +100,6 @@ public:
 
 
     // Member Functions
-
-        //- Return access to the thermo package
-        virtual ReactionThermo& thermo();
 
         //- Return const access to the thermo package
         virtual const ReactionThermo& thermo() const;
@@ -116,11 +110,17 @@ public:
         //- Fuel consumption rate matrix.
         virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
 
-        //- Heat release rate [kg/m/s3]
+        //- Heat release rate [kg/m/s^3]
         virtual tmp<volScalarField> Qdot() const;
 
         //- Update properties from given dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const zoneCombustion&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -223,7 +223,7 @@ Foam::procFacesGAMGProcAgglomeration::procFacesGAMGProcAgglomeration
 )
 :
     GAMGProcAgglomeration(agglom, controlDict),
-    nAgglomeratingCells_(readLabel(controlDict.lookup("nAgglomeratingCells")))
+    nAgglomeratingCells_(controlDict.lookup<label>("nAgglomeratingCells"))
 {}
 
 
@@ -303,7 +303,7 @@ bool Foam::procFacesGAMGProcAgglomeration::agglomerate()
                     );
 
 
-                    // Use procesor agglomeration maps to do the actual
+                    // Use processor agglomeration maps to do the actual
                     // collecting.
                     GAMGProcAgglomeration::agglomerate
                     (

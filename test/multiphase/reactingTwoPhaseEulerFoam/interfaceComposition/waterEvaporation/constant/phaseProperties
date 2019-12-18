@@ -27,7 +27,7 @@ gas
     diameterModel   constant;
     d               1e-3;
     residualAlpha   1e-6;
-    Sc              0.7;
+    Sct             0.7;
 }
 
 liquid
@@ -79,9 +79,9 @@ virtualMass
 (
 );
 
-interfaceComposition
+interfaceComposition.gas
 (
-    (gas in liquid)
+    (gas and liquid)
     {
         type saturated;
         species ( H2O );
@@ -91,6 +91,10 @@ interfaceComposition
             type ArdenBuck;
         }
     }
+);
+
+interfaceComposition.liquid
+(
 );
 
 heatTransfer.gas
@@ -111,7 +115,7 @@ heatTransfer.liquid
     }
 );
 
-massTransfer.gas
+diffusiveMassTransfer.gas
 (
     (liquid in gas)
     {
@@ -120,13 +124,8 @@ massTransfer.gas
     }
 );
 
-massTransfer.liquid
+diffusiveMassTransfer.liquid
 (
-    (liquid in gas)
-    {
-        type spherical;
-        Le 1.0;
-    }
 );
 
 phaseTransfer

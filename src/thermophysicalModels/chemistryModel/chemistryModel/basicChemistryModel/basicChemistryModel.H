@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,15 +58,6 @@ class basicChemistryModel
 :
     public IOdictionary
 {
-    // Private Member Functions
-
-        //- Construct as copy (not implemented)
-        basicChemistryModel(const basicChemistryModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const basicChemistryModel&);
-
-
 protected:
 
     // Protected data
@@ -106,7 +97,10 @@ public:
     // Constructors
 
         //- Construct from thermo
-        basicChemistryModel(basicThermo& thermo);
+        basicChemistryModel(const basicThermo& thermo);
+
+        //- Construct as copy (not implemented)
+        basicChemistryModel(const basicChemistryModel&);
 
 
     // Selectors
@@ -115,7 +109,7 @@ public:
         template<class ChemistryModel>
         static autoPtr<ChemistryModel> New
         (
-            typename ChemistryModel::reactionThermo& thermo
+            const typename ChemistryModel::reactionThermo& thermo
         );
 
 
@@ -145,13 +139,13 @@ public:
 
             // Fields
 
-                //- Return const access to chemical source terms [kg/m3/s]
+                //- Return const access to chemical source terms [kg/m^3/s]
                 virtual const volScalarField::Internal& RR
                 (
                     const label i
                 ) const = 0;
 
-                //- Return access to chemical source terms [kg/m3/s]
+                //- Return access to chemical source terms [kg/m^3/s]
                 virtual volScalarField::Internal& RR
                 (
                     const label i
@@ -181,8 +175,14 @@ public:
                 //- Return the chemical time scale
                 virtual tmp<volScalarField> tc() const = 0;
 
-                //- Return the heat release rate [kg/m/s3]
+                //- Return the heat release rate [kg/m/s^3]
                 virtual tmp<volScalarField> Qdot() const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const basicChemistryModel&) = delete;
 };
 
 

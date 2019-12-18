@@ -83,14 +83,6 @@ public:
             const DimensionedField<Type, volMesh>&
         );
 
-        //- Construct from patch, internal field and value
-        fixedValueFvPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
-            const Type& value
-        );
-
         //- Construct from patch, internal field and dictionary
         fixedValueFvPatchField
         (
@@ -111,7 +103,7 @@ public:
             const bool mappingRequired=true
         );
 
-        //- Construct as copy
+        //- Copy constructor
         fixedValueFvPatchField
         (
             const fixedValueFvPatchField<Type>&
@@ -126,7 +118,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         fixedValueFvPatchField
         (
             const fixedValueFvPatchField<Type>&,
@@ -146,7 +138,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Attributes
 
@@ -194,7 +186,7 @@ public:
         virtual void write(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
         virtual void operator=(const UList<Type>&) {}
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,18 +59,9 @@ class gaussGrad
 :
     public fv::gradScheme<Type>
 {
-    // Private data
+    // Private Data
 
         tmp<surfaceInterpolationScheme<Type>> tinterpScheme_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        gaussGrad(const gaussGrad&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const gaussGrad&);
 
 
 public:
@@ -112,6 +103,9 @@ public:
             }
         }
 
+        //- Disallow default bitwise copy construction
+        gaussGrad(const gaussGrad&) = delete;
+
 
     // Member Functions
 
@@ -148,6 +142,12 @@ public:
             GeometricField
             <typename outerProduct<vector, Type>::type, fvPatchField, volMesh>&
         );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const gaussGrad&) = delete;
 };
 
 

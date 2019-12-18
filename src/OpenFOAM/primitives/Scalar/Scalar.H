@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ public:
         static const direction nComponents = 1;
 
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
         static const char* const componentNames[];
@@ -156,37 +156,37 @@ inline Scalar component(const Scalar s, const direction)
 
 
 //- Return 1 if s is positive or 0 otherwise -1
-inline Scalar sign(const Scalar s)
+inline int sign(const Scalar s)
 {
-    return (s >= 0)? 1: -1;
+    return (s >= 0) ? 1: -1;
 }
 
 
 //- Return 1 if s is positive but not 0
-inline Scalar pos(const Scalar s)
+inline int pos(const Scalar s)
 {
-    return (s > 0)? 1: 0;
+    return (s > 0) ? 1: 0;
 }
 
 
 //- Return 1 if s is positive or 0
-inline Scalar pos0(const Scalar s)
+inline int pos0(const Scalar s)
 {
-    return (s >= 0)? 1: 0;
+    return (s >= 0) ? 1: 0;
 }
 
 
 //- Return 1 if s is negative but not 0
-inline Scalar neg(const Scalar s)
+inline int neg(const Scalar s)
 {
-    return (s < 0)? 1: 0;
+    return (s < 0) ? 1: 0;
 }
 
 
 //- Return 1 if s is negative or 0
-inline Scalar neg0(const Scalar s)
+inline int neg0(const Scalar s)
 {
-    return (s <= 0)? 1: 0;
+    return (s <= 0) ? 1: 0;
 }
 
 
@@ -362,9 +362,15 @@ inline Scalar stabilise(const Scalar s, const Scalar small)
 }
 
 
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
 
 Scalar readScalar(Istream&);
+
+void writeEntry(Ostream& os, const Scalar value);
+
+
+// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
+
 Istream& operator>>(Istream&, Scalar&);
 Ostream& operator<<(Ostream&, const Scalar);
 

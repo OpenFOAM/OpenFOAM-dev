@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -520,10 +520,8 @@ void Foam::conformalVoronoiMesh::buildCellSizeAndAlignmentMesh()
     const dictionary& motionControlDict
         = foamyHexMeshControls().foamyHexMeshDict().subDict("motionControl");
 
-    label nMaxIter = readLabel
-    (
-        motionControlDict.lookup("maxRefinementIterations")
-    );
+    const label nMaxIter =
+        motionControlDict.lookup<label>("maxRefinementIterations");
 
     Info<< "Maximum number of refinement iterations : " << nMaxIter << endl;
 
@@ -557,10 +555,9 @@ void Foam::conformalVoronoiMesh::buildCellSizeAndAlignmentMesh()
         }
     }
 
-    label maxSmoothingIterations = readLabel
-    (
-        motionControlDict.lookup("maxSmoothingIterations")
-    );
+    const label maxSmoothingIterations =
+        motionControlDict.lookup<label>("maxSmoothingIterations");
+
     meshAlignmentSmoother.smoothAlignments(maxSmoothingIterations);
 
     Info<< "Background cell size and alignment mesh:" << endl;

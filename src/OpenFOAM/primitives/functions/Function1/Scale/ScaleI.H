@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,10 +28,39 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-inline Type Foam::Function1Types::Scale<Type>::value(const scalar t) const
+inline Type Foam::Function1s::Scale<Type>::value(const scalar x) const
 {
-    const scalar st = xScale_->value(t)*t;
-    return scale_->value(st)*value_->value(st);
+    const scalar sx = xScale_->value(x)*x;
+    return scale_->value(sx)*value_->value(sx);
+}
+
+
+template<class Type>
+inline Type Foam::Function1s::Scale<Type>::integrate
+(
+    const scalar x1,
+    const scalar x2
+) const
+{
+    if (integrableScale_)
+    {
+        const scalar sx = xScale_->value(NaN);
+        return scale_->value(NaN)*value_->integrate(sx*x1, sx*x2)/sx;
+    }
+
+    if (integrableValue_)
+    {
+        const scalar sx = xScale_->value(NaN);
+        return scale_->integrate(sx*x1, sx*x2)/sx*value_->value(NaN);
+    }
+
+    FatalErrorInFunction
+        << "Integration is not defined for " << type() << " functions "
+        << "unless x-scaling is constant and either scaling is constant or "
+        << "the value is constant"
+        << exit(FatalError);
+
+    return Zero;
 }
 
 

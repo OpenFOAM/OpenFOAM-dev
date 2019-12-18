@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,12 +66,6 @@ class OBJedgeFormat
             DynamicList<label>& dynVertices
         );
 
-        //- Disallow default bitwise copy construct
-        OBJedgeFormat(const OBJedgeFormat&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const OBJedgeFormat&);
-
 
 public:
 
@@ -79,6 +73,9 @@ public:
 
         //- Construct from file name
         OBJedgeFormat(const fileName&);
+
+        //- Disallow default bitwise copy construction
+        OBJedgeFormat(const OBJedgeFormat&) = delete;
 
 
     // Selectors
@@ -111,6 +108,12 @@ public:
         {
             write(name, *this);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const OBJedgeFormat&) = delete;
 };
 
 

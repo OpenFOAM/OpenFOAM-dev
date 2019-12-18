@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -23,10 +23,11 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     supersededByPostProcess
+#     mergedDyM
 #
 # Description
-#     Script to suggest using the new "postProcess" utility.
+#     Script to inform the user that the "DyM" solvers have been merged into
+#     the corresponding standard solvers.
 #
 #------------------------------------------------------------------------------
 DyMsolver=${0##*/}

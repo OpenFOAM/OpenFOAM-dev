@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,22 +78,13 @@ class removeRegisteredObject
 :
     public functionObject
 {
-    // Private data
+    // Private Data
 
         //- Reference to the objectRegistry
         const objectRegistry& obr_;
 
         //- Names of objects to control
         wordList objectNames_;
-
-
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        removeRegisteredObject(const removeRegisteredObject&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const removeRegisteredObject&);
 
 
 public:
@@ -112,6 +103,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        removeRegisteredObject(const removeRegisteredObject&) = delete;
+
 
     //- Destructor
     virtual ~removeRegisteredObject();
@@ -127,6 +121,12 @@ public:
 
         //- Do nothing
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const removeRegisteredObject&) = delete;
 };
 
 

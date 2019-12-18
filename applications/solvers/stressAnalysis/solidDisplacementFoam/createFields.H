@@ -1,6 +1,5 @@
-#include "readMechanicalProperties.H"
-#include "readThermalProperties.H"
-mesh.Sf();
+#include "readThermophysicalProperties.H"
+
 Info<< "Reading field D\n" << endl;
 volVectorField D
 (
@@ -14,30 +13,6 @@ volVectorField D
     ),
     mesh
 );
-
-
-autoPtr<volScalarField> Tptr(nullptr);
-
-if (thermalStress)
-{
-    Info<< "Reading field T\n" << endl;
-    Tptr.reset
-    (
-        new volScalarField
-        (
-            IOobject
-            (
-                "T",
-                runTime.timeName(),
-                mesh,
-                IOobject::MUST_READ,
-                IOobject::AUTO_WRITE
-            ),
-            mesh
-        )
-    );
-}
-
 
 Info<< "Calculating stress field sigmaD\n" << endl;
 volSymmTensorField sigmaD

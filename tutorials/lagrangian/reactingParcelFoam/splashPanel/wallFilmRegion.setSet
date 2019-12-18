@@ -1,3 +1,0 @@
-# Create face set
-faceSet wallFilmFaces new patchToFace filmWalls
-faceZoneSet wallFilmFaces new setToFaceZone wallFilmFaces

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ Foam::porosityModels::powerLawLopesdaCostaZone::powerLawLopesdaCostaZone
     vector zDir(coeffs.lookup("zDir"));
 
     // Span of the search for the cells in the porous region
-    scalar searchSpan(readScalar(coeffs.lookup("searchSpan")));
+    scalar searchSpan(coeffs.lookup<scalar>("searchSpan"));
 
     // Top surface file name defining the extent of the porous region
     word topSurfaceFileName(coeffs.lookup("topSurface"));
@@ -305,8 +305,8 @@ Foam::porosityModels::powerLawLopesdaCosta::powerLawLopesdaCosta
         dict,
         powerLawLopesdaCostaZone::zoneName_
     ),
-    Cd_(readScalar(coeffs_.lookup("Cd"))),
-    C1_(readScalar(coeffs_.lookup("C1"))),
+    Cd_(coeffs_.lookup<scalar>("Cd")),
+    C1_(coeffs_.lookup<scalar>("C1")),
     rhoName_(coeffs_.lookupOrDefault<word>("rho", "rho"))
 {}
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,18 +51,16 @@ Description
     \endverbatim
 
     or switched between these values based on the laminar-to-turbulent y+ value
-    derived from kappa and E.  Recent tests have shown that the standard
-    switching method provides more accurate results for 10 < y+ < 30 when used
-    with high Reynolds number wall-functions and both methods provide accurate
-    results when used with continuous wall-functions.  Based on this the
-    standard switching method is used by default.
+    derived from kappa and E specified in the corresponding nutWallFunction.
+    Recent tests have shown that the standard switching method provides more
+    accurate results for 10 < y+ < 30 when used with high Reynolds number
+    wall-functions and both methods provide accurate results when used with
+    continuous wall-functions.  Based on this the standard switching method is
+    used by default.
 
 Usage
     \table
         Property     | Description             | Required    | Default value
-        Cmu          | Model coefficient       | no          | 0.09
-        kappa        | von Karman constant     | no          | 0.41
-        E            | Model coefficient       | no          | 9.8
         beta1        | Model coefficient       | no          | 0.075
         blended      | Blending switch         | no          | false
     \endtable
@@ -111,23 +109,11 @@ protected:
         //- Tolerance used in weighted calculations
         static scalar tolerance_;
 
-        //- Cmu coefficient
-        scalar Cmu_;
-
-        //- Von Karman constant
-        scalar kappa_;
-
-        //- E coefficient
-        scalar E_;
-
         //- beta1 coefficient
         scalar beta1_;
 
         //- Blending switch (defaults to false)
         Switch blended_;
-
-        //- y+ at the edge of the laminar sublayer
-        scalar yPlusLam_;
 
         //- Local copy of turbulence G field
         scalarField G_;
@@ -146,12 +132,6 @@ protected:
 
 
     // Protected Member Functions
-
-        //- Check the type of the patch
-        virtual void checkType();
-
-        //- Write local wall function variables
-        virtual void writeLocalEntries(Ostream&) const;
 
         //- Set the master patch - master is responsible for updating all
         //  wall function patches
@@ -228,7 +208,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         omegaWallFunctionFvPatchScalarField
         (
             const omegaWallFunctionFvPatchScalarField&
@@ -243,7 +223,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         omegaWallFunctionFvPatchScalarField
         (
             const omegaWallFunctionFvPatchScalarField&,
@@ -263,7 +243,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,13 +46,14 @@ void Foam::CorrectPhi
     const volScalarField& p,
     const RAUfType& rAUf,
     const DivUType& divU,
-    nonOrthogonalSolutionControl& pcorrControl
+    nonOrthogonalSolutionControl& pcorrControl,
+    const bool evaluateUBCs
 )
 {
     const fvMesh& mesh = U.mesh();
     const Time& runTime = mesh.time();
 
-    correctUphiBCs(U, phi);
+    correctUphiBCs(U, phi, evaluateUBCs);
 
     // Initialize BCs list for pcorr to zero-gradient
     wordList pcorrTypes
@@ -123,13 +124,14 @@ void Foam::CorrectPhi
     const volScalarField& psi,
     const RAUfType& rAUf,
     const DivRhoUType& divRhoU,
-    nonOrthogonalSolutionControl& pcorrControl
+    nonOrthogonalSolutionControl& pcorrControl,
+    const bool evaluateUBCs
 )
 {
     const fvMesh& mesh = U.mesh();
     const Time& runTime = mesh.time();
 
-    correctUphiBCs(rho, U, phi);
+    correctUphiBCs(rho, U, phi, evaluateUBCs);
 
     // Initialize BCs list for pcorr to zero-gradient
     wordList pcorrTypes

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,8 +60,8 @@ Foam::PackingModels::Implicit<CloudType>::Implicit
     uCorrect_(nullptr),
     applyLimiting_(this->coeffDict().lookup("applyLimiting")),
     applyGravity_(this->coeffDict().lookup("applyGravity")),
-    alphaMin_(readScalar(this->coeffDict().lookup("alphaMin"))),
-    rhoMin_(readScalar(this->coeffDict().lookup("rhoMin")))
+    alphaMin_(this->coeffDict().template lookup<scalar>("alphaMin")),
+    rhoMin_(this->coeffDict().template lookup<scalar>("rhoMin"))
 {
     alpha_ = this->owner().theta();
     alpha_.oldTime();

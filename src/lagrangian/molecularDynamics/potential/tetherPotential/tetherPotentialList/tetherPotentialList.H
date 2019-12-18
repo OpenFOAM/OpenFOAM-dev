@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ class tetherPotentialList
 :
     public PtrList<tetherPotential>
 {
-    // Private data
+    // Private Data
 
         List<label> idMap_;
 
@@ -71,12 +71,6 @@ class tetherPotentialList
             const List<word>& tetherSiteIdList
         );
 
-        //- Disallow default bitwise assignment
-        void operator=(const tetherPotentialList&);
-
-        //- Disallow default bitwise copy construct
-        tetherPotentialList(const tetherPotentialList&);
-
 
 public:
 
@@ -91,6 +85,9 @@ public:
             const dictionary& tetherPotentialDict,
             const List<word>& tetherSiteIdList
         );
+
+        //- Disallow default bitwise assignment
+        void operator=(const tetherPotentialList&) = delete;
 
 
     //- Destructor
@@ -115,6 +112,12 @@ public:
             vector force(const label a, const vector rIT) const;
 
             scalar energy (const label a, const vector rIT) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise copy construction
+        tetherPotentialList(const tetherPotentialList&) = delete;
 };
 
 

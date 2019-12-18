@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ class cylindrical
 :
     public coordinateRotation
 {
-    // Private data
+    // Private Data
 
         //- AutoPtr to transformation tensor
         autoPtr<tensorField> Rptr_;
@@ -81,12 +81,19 @@ class cylindrical
 
     // Private members
 
-        //- Init transformation tensor field
+        //- Return the local transformation tensor
+        //  corresponding to the given vector
+        tensor R(const vector& dir) const;
+
+        //- Initialise transformation tensor field for cell set
         void init
         (
             const objectRegistry& obr,
-            const List<label>& cells = List<label>()
+            const List<label>& cells
         );
+
+        //- Initialise transformation tensor field for all cells
+        void init(const objectRegistry& obr);
 
 
 public:

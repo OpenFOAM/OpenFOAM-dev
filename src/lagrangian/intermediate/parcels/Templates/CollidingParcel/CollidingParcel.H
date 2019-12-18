@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,9 +86,9 @@ public:
         public ParcelType::constantProperties
     {
 
-        // Private data
+        // Private Data
 
-            //- Young's modulus [N/m2]
+            //- Young's modulus [N/m^2]
             demandDrivenEntry<scalar> youngsModulus_;
 
             //- Poisson's ratio
@@ -109,7 +109,7 @@ public:
             constantProperties(const dictionary& parentDict);
 
 
-        // Member functions
+        // Member Functions
 
             //- Return const access to Young's Modulus
             inline scalar youngsModulus() const;
@@ -143,7 +143,7 @@ protected:
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         //- Runtime type information
         TypeName("CollidingParcel");

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,7 +72,7 @@ public:
             )
         {}
 
-        //- Construct as copy
+        //- Copy constructor
         OStringStream(const OStringStream& oss)
         :
             OSstream
@@ -100,7 +100,7 @@ public:
     }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 

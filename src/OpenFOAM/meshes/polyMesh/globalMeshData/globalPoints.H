@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,7 +100,7 @@ class mapDistribute;
 
 class globalPoints
 {
-    // Private data
+    // Private Data
 
         //- Mesh reference
         const polyMesh& mesh_;
@@ -262,12 +262,6 @@ class globalPoints
             const bool mergeSeparated
         );
 
-        //- Disallow default bitwise copy construct
-        globalPoints(const globalPoints&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const globalPoints&);
-
 
 public:
 
@@ -300,6 +294,9 @@ public:
             const bool keepAllPoints,
             const bool mergeSeparated
         );
+
+        //- Disallow default bitwise copy construction
+        globalPoints(const globalPoints&) = delete;
 
 
     // Member Functions
@@ -368,6 +365,12 @@ public:
             {
                 return procPoints_;
             }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const globalPoints&) = delete;
 };
 
 

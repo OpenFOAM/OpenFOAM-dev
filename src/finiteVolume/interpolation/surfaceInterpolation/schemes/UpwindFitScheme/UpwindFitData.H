@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ class UpwindFitData
         Polynomial
     >
 {
-    // Private data
+    // Private Data
 
         //- For each face of the mesh store the coefficients to multiply the
         //  stencil cell values by if the flow is from the owner
@@ -102,7 +102,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         //- Return reference to owner fit coefficients
         const List<scalarList>& owncoeffs() const

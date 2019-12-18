@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -137,15 +137,6 @@ private:
         static const string illegalSource_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        topoSetSource(const topoSetSource&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const topoSetSource&);
-
-
 public:
 
     //- Runtime type information
@@ -239,6 +230,9 @@ public:
         //- Construct from components
         topoSetSource(const polyMesh& mesh);
 
+        //- Disallow default bitwise copy construction
+        topoSetSource(const topoSetSource&) = delete;
+
         //- Clone
         autoPtr<topoSetSource> clone() const
         {
@@ -284,6 +278,11 @@ public:
 
         virtual void applyToSet(const setAction action, topoSet&) const = 0;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const topoSetSource&) = delete;
 };
 
 

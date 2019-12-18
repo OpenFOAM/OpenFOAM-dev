@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,10 @@ Foam::MixedDiffuseSpecular<CloudType>::MixedDiffuseSpecular
 )
 :
     WallInteractionModel<CloudType>(dict, cloud, typeName),
-    diffuseFraction_(readScalar(this->coeffDict().lookup("diffuseFraction")))
+    diffuseFraction_
+    (
+        this->coeffDict().template lookup<scalar>("diffuseFraction")
+    )
 {}
 
 

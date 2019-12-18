@@ -25,8 +25,8 @@ solvers
 
     p_rgh
     {
-        solver          GAMG;
-        smoother        DIC;
+        solver          PBiCGStab;
+        preconditioner  DIC;
         tolerance       1e-12;
         relTol          0.001;
     }
@@ -39,29 +39,26 @@ solvers
 
     "U.*"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
+        solver          PBiCGStab;
+        preconditioner  DILU;
         tolerance       1e-12;
         relTol          0;
-        minIter         1;
     }
 
     "(e|h).*"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
+        solver          PBiCGStab;
+        preconditioner  DILU;
         tolerance       1e-12;
         relTol          0;
-        minIter         1;
     }
 
     "Yi.*"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
+        solver          PBiCGStab;
+        preconditioner  DILU;
         tolerance       1e-12;
         relTol          0;
-        minIter         1;
         residualAlpha   1e-8;
     }
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,17 +68,6 @@ protected:
         const Time& time_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        solidBodyMotionFunction(const solidBodyMotionFunction&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const solidBodyMotionFunction&);
-
-
 public:
 
     //- Runtime type information
@@ -105,6 +94,9 @@ public:
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
+
+        //- Disallow default bitwise copy construction
+        solidBodyMotionFunction(const solidBodyMotionFunction&) = delete;
 
         //- Construct and return a clone
         virtual autoPtr<solidBodyMotionFunction> clone() const = 0;
@@ -134,6 +126,12 @@ public:
 
         //- Write in dictionary format
         virtual void writeData(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const solidBodyMotionFunction&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ class septernion
 
 public:
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 
@@ -105,7 +105,7 @@ public:
         septernion(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
            // Access
 
@@ -128,9 +128,8 @@ public:
                inline vector invTransformPoint(const vector& v) const;
 
 
-    // Member operators
+    // Member Operators
 
-        inline void operator=(const septernion&);
         inline void operator*=(const septernion&);
 
         inline void operator=(const vector&);
@@ -145,7 +144,7 @@ public:
         inline void operator/=(const scalar);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream& is, septernion&);
         friend Ostream& operator<<(Ostream& os, const septernion& C);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -285,7 +285,7 @@ void Foam::primitiveMesh::reset
     const label nInternalFaces,
     const label nFaces,
     const label nCells,
-    const Xfer<cellList>& clst
+    cellList&& clst
 )
 {
     reset
@@ -296,7 +296,7 @@ void Foam::primitiveMesh::reset
         nCells
     );
 
-    cfPtr_ = new cellList(clst);
+    cfPtr_ = new cellList(move(clst));
 }
 
 

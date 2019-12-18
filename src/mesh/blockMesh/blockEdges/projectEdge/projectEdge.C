@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ void Foam::projectEdge::findNearest
 {
     if (surfaces_.size())
     {
-        const scalar distSqr = magSqr(points_[end_]-points_[start_]);
+        const scalar distSqr = magSqr(points_[end_] - points_[start_]);
 
         pointField boundaryNear(1);
         List<pointConstraint> boundaryConstraint(1);
@@ -111,11 +111,14 @@ Foam::projectEdge::projectEdge
 Foam::point Foam::projectEdge::position(const scalar lambda) const
 {
     // Initial guess
-    const point start(points_[start_] + lambda*(points_[end_]-points_[start_]));
+    const point start
+    (
+        points_[start_] + lambda*(points_[end_] - points_[start_])
+    );
 
     point near(start);
 
-    if (lambda >= small && lambda < 1.0-small)
+    if (lambda >= small && lambda < 1 - small)
     {
         pointConstraint constraint;
         findNearest(start, near, constraint);
@@ -159,11 +162,12 @@ Foam::projectEdge::position(const scalarList& lambdas) const
 
     // Upper limit for number of iterations
     const label maxIter = 10;
+
     // Residual tolerance
     const scalar relTol = 0.1;
     const scalar absTol = 1e-4;
 
-    scalar initialResidual = 0.0;
+    scalar initialResidual = 0;
 
     for (label iter = 0; iter < maxIter; iter++)
     {
@@ -186,7 +190,7 @@ Foam::projectEdge::position(const scalarList& lambdas) const
             {
                 points[0] = startPt;
             }
-            if (lambdas.last() > 1.0-small)
+            if (lambdas.last() > 1 - small)
             {
                 points.last() = endPt;
             }
@@ -203,10 +207,11 @@ Foam::projectEdge::position(const scalarList& lambdas) const
         // Calculate lambdas (normalised coordinate along edge)
         scalarField projLambdas(points.size());
         {
-            projLambdas[0] = 0.0;
+            projLambdas[0] = 0;
             for (label i = 1; i < points.size(); i++)
             {
-                projLambdas[i] = projLambdas[i-1] + mag(points[i]-points[i-1]);
+                projLambdas[i] =
+                    projLambdas[i-1] + mag(points[i] - points[i-1]);
             }
             projLambdas /= projLambdas.last();
         }
@@ -226,10 +231,10 @@ Foam::projectEdge::position(const scalarList& lambdas) const
             {
                 predicted += weights[indexi]*points[indices[indexi]];
             }
-            residual[i] = predicted-points[i];
+            residual[i] = predicted - points[i];
         }
 
-        scalar scalarResidual = sum(mag(residual));
+        const scalar scalarResidual = sum(mag(residual));
 
         if (debug)
         {
@@ -249,7 +254,6 @@ Foam::projectEdge::position(const scalarList& lambdas) const
         {
             break;
         }
-
 
         if (debugStr.valid())
         {

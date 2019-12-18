@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,8 +28,7 @@ Description
     Abstract base-class for all alphatWallFunctions supporting phase-change.
 
 See also
-    Foam::fixedValueFvPatchScalarField
-    Foam::alphatWallFunctionFvPatchScalarField
+    Foam::alphatPhaseJayatillekeWallFunctionFvPatchScalarField
 
 SourceFiles
     alphatPhaseChangeWallFunctionFvPatchScalarField.C
@@ -39,7 +38,7 @@ SourceFiles
 #ifndef alphatPhaseChangeWallFunctionFvPatchScalarField_H
 #define alphatPhaseChangeWallFunctionFvPatchScalarField_H
 
-#include "fixedValueFvPatchFields.H"
+#include "alphatPhaseJayatillekeWallFunctionFvPatchScalarField.H"
 #include "phasePairKey.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -55,17 +54,23 @@ namespace compressible
 
 class alphatPhaseChangeWallFunctionFvPatchScalarField
 :
-    public fixedValueFvPatchScalarField
+    public alphatPhaseJayatillekeWallFunctionFvPatchScalarField
 {
 protected:
 
     // Protected data
 
+        //- Name of the other phase
+        const word otherPhaseName_;
+
+        //- Relaxation factor
+        const scalar relax_;
+
         //- Rate of phase-change
-        scalarField dmdt_;
+        scalarField dmdtf_;
 
         //- Latent heat of the phase-change
-        scalarField mDotL_;
+        scalarField dmdtLf_;
 
 
 public:
@@ -102,13 +107,13 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         alphatPhaseChangeWallFunctionFvPatchScalarField
         (
             const alphatPhaseChangeWallFunctionFvPatchScalarField&
         );
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         alphatPhaseChangeWallFunctionFvPatchScalarField
         (
             const alphatPhaseChangeWallFunctionFvPatchScalarField&,
@@ -116,49 +121,24 @@ public:
         );
 
 
-    // Member functions
+    // Member Functions
 
-        //- Return the rate of phase-change
-        virtual const scalarField& dmdt() const
-        {
-            return dmdt_;
-        }
-
-        //- Return the enthalpy source due to phase-change
-        virtual const scalarField& mDotL() const
-        {
-            return mDotL_;
-        }
 
         //- Is there phase change mass transfer for this phasePair
-        virtual bool activePhasePair(const phasePairKey&) const
-        {
-            return false;
-        }
+        bool activePhasePair(const phasePairKey&) const;
+
+        //- Return the rate of phase-change
+        const scalarField& dmdtf() const;
 
         //- Return the rate of phase-change for specific phase pair
-        virtual const scalarField& dmdt(const phasePairKey&) const
-        {
-            return dmdt_;
-        }
+        const scalarField& dmdtf(const phasePairKey&) const;
+
+        //- Return the enthalpy source due to phase-change
+        const scalarField& dmdtLf() const;
 
         //- Return the rate of phase-change for specific phase pair
-        virtual const scalarField& mDotL(const phasePairKey&) const
-        {
-            return mDotL_;
-        }
+        const scalarField& dmdtLf(const phasePairKey&) const;
 
-        //- Return the rate of phase-change for specific phase
-        virtual scalarField dmdt(const word&) const
-        {
-            return dmdt_;
-        }
-
-        //- Return the enthalpy source due to phase-change for specific phase
-        virtual scalarField mDotL(const word&) const
-        {
-            return mDotL_;
-        }
 
         // Evaluation functions
 

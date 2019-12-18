@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,27 +61,11 @@ class surfacePatchIOList
     public surfacePatchList,
     public regIOobject
 {
-    // Private data
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        surfacePatchIOList(const surfacePatchIOList&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfacePatchIOList&);
-
-
 public:
 
     //- Runtime type information
     TypeName("surfacePatchIOList");
 
-
-    // Static data members
-
-        //- Static data someStaticData
 
     // Constructors
 
@@ -91,6 +75,10 @@ public:
         //- Construct from IOobject
         surfacePatchIOList(const IOobject& io, const surfacePatchList&);
 
+        //- Disallow default bitwise copy construction
+        surfacePatchIOList(const surfacePatchIOList&) = delete;
+
+
     //- Destructor
     ~surfacePatchIOList();
 
@@ -99,6 +87,12 @@ public:
 
         //- writeData member function required by regIOobject
         bool writeData(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfacePatchIOList&) = delete;
 
 
     // IOstream Operators

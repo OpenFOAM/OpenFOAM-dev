@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,18 +62,18 @@ class gradScheme
 :
     public tmp<gradScheme<Type>>::refCount
 {
-    // Private data
+    // Private Data
 
         const fvMesh& mesh_;
 
 
     // Private Member Functions
 
-        //- Disallow copy construct
+        //- Disallow default bitwise copy construction
         gradScheme(const gradScheme&);
 
         //- Disallow default bitwise assignment
-        void operator=(const gradScheme&);
+        void operator=(const gradScheme&) = delete;
 
 
 public:

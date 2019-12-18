@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "VoFPatchTransfer.H"
 #include "twoPhaseMixtureThermo.H"
+#include "thermoSingleLayer.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -143,16 +144,18 @@ void VoFPatchTransfer::correct
     // Do not correct if no patches selected
     if (!patchIDs_.size()) return;
 
-    const scalarField& delta = film().delta();
-    const scalarField& rho = film().rho();
-    const scalarField& magSf = film().magSf();
+    const thermoSingleLayer& film = filmType<thermoSingleLayer>();
 
-    const polyBoundaryMesh& pbm = film().regionMesh().boundaryMesh();
+    const scalarField& delta = film.delta();
+    const scalarField& rho = film.rho();
+    const scalarField& magSf = film.magSf();
+
+    const polyBoundaryMesh& pbm = film.regionMesh().boundaryMesh();
 
 
     const twoPhaseMixtureThermo& thermo
     (
-        film().primaryMesh().lookupObject<twoPhaseMixtureThermo>
+        film.primaryMesh().lookupObject<twoPhaseMixtureThermo>
         (
             twoPhaseMixtureThermo::dictName
         )
@@ -169,13 +172,13 @@ void VoFPatchTransfer::correct
         const label patchi = patchIDs_[pidi];
         label primaryPatchi = -1;
 
-        forAll(film().intCoupledPatchIDs(), i)
+        forAll(film.intCoupledPatchIDs(), i)
         {
-            const label filmPatchi = film().intCoupledPatchIDs()[i];
+            const label filmPatchi = film.intCoupledPatchIDs()[i];
 
             if (filmPatchi == patchi)
             {
-                primaryPatchi = film().primaryPatchIDs()[i];
+                primaryPatchi = film.primaryPatchIDs()[i];
             }
         }
 
@@ -183,31 +186,31 @@ void VoFPatchTransfer::correct
         {
             scalarField deltaCoeffs
             (
-                film().primaryMesh().boundary()[primaryPatchi].deltaCoeffs()
+                film.primaryMesh().boundary()[primaryPatchi].deltaCoeffs()
             );
-            film().toRegion(patchi, deltaCoeffs);
+            film.toRegion(patchi, deltaCoeffs);
 
             scalarField hp(heVoF.boundaryField()[primaryPatchi]);
-            film().toRegion(patchi, hp);
+            film.toRegion(patchi, hp);
 
             scalarField Tp(TVoF.boundaryField()[primaryPatchi]);
-            film().toRegion(patchi, Tp);
+            film.toRegion(patchi, Tp);
 
             scalarField Cpp(CpVoF.boundaryField()[primaryPatchi]);
-            film().toRegion(patchi, Cpp);
+            film.toRegion(patchi, Cpp);
 
             scalarField rhop(rhoVoF.boundaryField()[primaryPatchi]);
-            film().toRegion(patchi, rhop);
+            film.toRegion(patchi, rhop);
 
             scalarField alphap(alphaVoF.boundaryField()[primaryPatchi]);
-            film().toRegion(patchi, alphap);
+            film.toRegion(patchi, alphap);
 
             scalarField Vp
             (
-                film().primaryMesh().boundary()[primaryPatchi]
-               .patchInternalField(film().primaryMesh().V())
+                film.primaryMesh().boundary()[primaryPatchi]
+               .patchInternalField(film.primaryMesh().V())
             );
-            film().toRegion(patchi, Vp);
+            film.toRegion(patchi, Vp);
 
             const polyPatch& pp = pbm[patchi];
             const labelList& faceCells = pp.faceCells();
@@ -231,7 +234,7 @@ void VoFPatchTransfer::correct
                         transferRateCoeff_*delta[celli]*rho[celli]*magSf[celli];
 
                     massToTransfer[celli] += dMass;
-                    energyToTransfer[celli] += dMass*film().hs()[celli];
+                    energyToTransfer[celli] += dMass*film.h()[celli];
                 }
 
                 if

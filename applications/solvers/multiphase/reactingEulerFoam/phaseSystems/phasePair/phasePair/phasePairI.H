@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,6 +91,12 @@ inline Foam::label Foam::phasePair::index(const phaseModel& phase) const
 inline const Foam::uniformDimensionedVectorField& Foam::phasePair::g() const
 {
     return g_;
+}
+
+
+inline const Foam::fvMesh& Foam::phasePair::mesh() const
+{
+    return phase1_.mesh();
 }
 
 

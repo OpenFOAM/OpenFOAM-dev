@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ See also
     Foam::regionModels::surfaceFilmModels::contactAngleForce
     Foam::regionModels::surfaceFilmModels::temperatureDependentContactAngleForce
     Foam::regionModels::surfaceFilmModels::distributionContactAngleForce
-    Foam::Function1Types
+    Foam::Function1s
     Foam::distributionModel
 
 SourceFiles
@@ -82,18 +82,6 @@ class perturbedTemperatureDependentContactAngleForce
         const autoPtr<distributionModel> distribution_;
 
 
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        perturbedTemperatureDependentContactAngleForce
-        (
-            const perturbedTemperatureDependentContactAngleForce&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const perturbedTemperatureDependentContactAngleForce&);
-
-
 protected:
 
         //- Return the contact angle field
@@ -115,9 +103,24 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        perturbedTemperatureDependentContactAngleForce
+        (
+            const perturbedTemperatureDependentContactAngleForce&
+        ) = delete;
+
 
     //- Destructor
     virtual ~perturbedTemperatureDependentContactAngleForce();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=
+        (
+            const perturbedTemperatureDependentContactAngleForce&
+        ) = delete;
 };
 
 

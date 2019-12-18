@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,8 +58,6 @@ void Foam::Pstream::exchange
             << UPstream::nProcs(comm)
             << Foam::abort(FatalError);
     }
-
-    recvBufs.setSize(sendBufs.size());
 
     recvBufs.setSize(sendBufs.size());
 

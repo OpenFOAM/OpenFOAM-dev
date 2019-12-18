@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ class ZoneMesh
     public PtrList<ZoneType>,
     public regIOobject
 {
-    // Private data
+    // Private Data
 
         //- Reference to mesh
         const MeshType& mesh_;
@@ -79,10 +79,10 @@ class ZoneMesh
         //- Read if IOobject flags set. Return true if read.
         bool read();
 
-        //- Disallow construct as copy
+        //- Disallow default bitwise copy construction
         ZoneMesh(const ZoneMesh&);
 
-        //- Disallow assignment
+        //- Disallow default bitwise assignment
         void operator=(const ZoneMesh<ZoneType, MeshType>&);
 
 

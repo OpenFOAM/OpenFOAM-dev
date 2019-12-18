@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,12 +73,6 @@ class TRIsurfaceFormatCore
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        TRIsurfaceFormatCore(const TRIsurfaceFormatCore&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const TRIsurfaceFormatCore&);
-
         bool read(const fileName&);
 
 
@@ -88,6 +82,9 @@ public:
 
         //- Read from file, filling in the information
         TRIsurfaceFormatCore(const fileName&);
+
+        //- Disallow default bitwise copy construction
+        TRIsurfaceFormatCore(const TRIsurfaceFormatCore&) = delete;
 
 
     //- Destructor
@@ -128,6 +125,12 @@ public:
         {
             return sizes_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const TRIsurfaceFormatCore&) = delete;
 };
 
 

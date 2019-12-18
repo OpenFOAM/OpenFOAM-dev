@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,6 +87,30 @@ void Foam::polyMesh::updateMesh(const mapPolyMesh& mpm)
             if (mpm.pointMap()[newPointi] == -1)
             {
                 newMotionPoints[newPointi] = points_[newPointi];
+            }
+        }
+    }
+
+    if (oldCellCentresPtr_.valid())
+    {
+        // Make a copy of the original cell-centres
+        pointField oldMotionCellCentres = oldCellCentresPtr_();
+
+        pointField& newMotionCellCentres = oldCellCentresPtr_();
+
+        // Resize the list to new size
+        newMotionCellCentres.setSize(cellCentres().size());
+
+        // Map the list
+        newMotionCellCentres.map(oldMotionCellCentres, mpm.cellMap());
+
+        // Any points created out-of-nothing get set to the current coordinate
+        // for lack of anything better.
+        forAll(mpm.cellMap(), newCelli)
+        {
+            if (mpm.cellMap()[newCelli] == -1)
+            {
+                newMotionCellCentres[newCelli] = cellCentres()[newCelli];
             }
         }
     }

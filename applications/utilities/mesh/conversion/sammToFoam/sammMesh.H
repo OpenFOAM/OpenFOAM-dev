@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ Class
 Description
     A messy mesh class which supports the possibility of creating a shapeMesh
     for regular Samm meshes (no arbitrary interfaces or collapsed SAMM cells).
-    If any of these special feateres exist, the mesh is created as polyMesh
+    If any of these special features exist, the mesh is created as polyMesh
 
 SourceFiles
     sammMesh.C
@@ -53,7 +53,7 @@ namespace Foam
 
 class sammMesh
 {
-    // Private data
+    // Private Data
 
         //- Name of the case
         fileName casePrefix_;
@@ -141,13 +141,6 @@ class sammMesh
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        sammMesh(const sammMesh&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const sammMesh&);
-
-
         //- Fill SAMM lookup tables
         void fillSammCellShapeTable();
         void fillSammAddressingTable();
@@ -230,6 +223,9 @@ public:
             const scalar scaleFactor
         );
 
+        //- Disallow default bitwise copy construction
+        sammMesh(const sammMesh&) = delete;
+
 
     //- Destructor
     ~sammMesh();
@@ -239,6 +235,12 @@ public:
 
         //- Write mesh
         void writeMesh();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const sammMesh&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Foam::dictionary Foam::ScaledForce<CloudType>::modelDict
 ) const
 {
     dictionary modelDict(dict);
-    modelDict.add<word>("type", dict.lookupType<word>("forceType"), true);
+    modelDict.add<word>("type", dict.lookup<word>("forceType"), true);
     return modelDict;
 }
 
@@ -58,10 +58,10 @@ Foam::ScaledForce<CloudType>::ScaledForce
             owner,
             mesh,
             modelDict(dict),
-            dict.lookupType<word>("forceType")
+            dict.lookup<word>("forceType")
         )
     ),
-    factor_(readScalar(this->coeffs().lookup("factor")))
+    factor_(this->coeffs().template lookup<scalar>("factor"))
 {}
 
 

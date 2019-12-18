@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,8 +63,6 @@ Usage
     emissivity   | Surface emissivity for radiative flux to ambient | no | 0
     qr           | Name of the radiative field | no | none
     qrRelaxation | Relaxation factor for radiative field | no | 1
-    kappaMethod  | Inherited from temperatureCoupledBase | inherited |
-    kappa        | Inherited from temperatureCoupledBase | inherited |
     \endtable
 
     Example of the boundary condition specification:
@@ -79,8 +77,6 @@ Usage
         h               uniform 10.0;
         thicknessLayers (0.1 0.2 0.3 0.4);
         kappaLayers     (1 2 3 4);
-
-        kappaMethod     fluidThermo;
 
         value           $internalField;
     }
@@ -133,7 +129,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Operation mode
         operationMode mode_;
@@ -141,10 +137,10 @@ private:
         //- Heat power [W]
         scalar Q_;
 
-        //- Heat flux [W/m2]
+        //- Heat flux [W/m^2]
         scalarField q_;
 
-        //- Heat transfer coefficient [W/m2K]
+        //- Heat transfer coefficient [W/m^2K]
         scalarField h_;
 
         //- Ambient temperature [K]
@@ -206,7 +202,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         externalWallHeatFluxTemperatureFvPatchScalarField
         (
             const externalWallHeatFluxTemperatureFvPatchScalarField&
@@ -221,7 +217,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         externalWallHeatFluxTemperatureFvPatchScalarField
         (
             const externalWallHeatFluxTemperatureFvPatchScalarField&,
@@ -241,7 +237,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Access
 
@@ -255,17 +251,12 @@ public:
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const fvPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
 
             //- Reverse map the given fvPatchField onto this fvPatchField
-            virtual void rmap
-            (
-                const fvPatchScalarField&,
-                const labelList&
-            );
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchScalarField&, const labelList&);
 
 
         // Evaluation functions

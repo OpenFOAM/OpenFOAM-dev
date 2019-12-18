@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ class sixDoFRigidBodyState
     public fvMeshFunctionObject,
     public logFiles
 {
-    // Private data
+    // Private Data
 
         word angleFormat_;
 
@@ -86,12 +86,6 @@ class sixDoFRigidBodyState
     // Private Member Functions
 
         const sixDoFRigidBodyMotion& motion() const;
-
-        //- Disallow default bitwise copy construct
-        sixDoFRigidBodyState(const sixDoFRigidBodyState&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const sixDoFRigidBodyState&);
 
 
 protected:
@@ -118,6 +112,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        sixDoFRigidBodyState(const sixDoFRigidBodyState&) = delete;
+
 
     //- Destructor
     virtual ~sixDoFRigidBodyState();
@@ -125,9 +122,11 @@ public:
 
     // Member Functions
 
-    vector velocity() const;
+        //- Return the current body velocity
+        vector velocity() const;
 
-    vector angularVelocity() const;
+        //- Return the current body angular velocity
+        vector angularVelocity() const;
 
         //- Read the sixDoFRigidBodyState data
         virtual bool read(const dictionary&);
@@ -137,6 +136,12 @@ public:
 
         //- Write the sixDoFRigidBodyState
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const sixDoFRigidBodyState&) = delete;
 };
 
 

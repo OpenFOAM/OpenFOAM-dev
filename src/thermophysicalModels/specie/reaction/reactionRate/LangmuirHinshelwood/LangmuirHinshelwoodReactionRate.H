@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,10 +63,7 @@ Ostream& operator<<(Ostream&, const LangmuirHinshelwoodReactionRate&);
 
 class LangmuirHinshelwoodReactionRate
 {
-    // Private data
-
-        //- List of species present in reaction system
-        const speciesTable& species_;
+    // Private Data
 
         //- Reactant names
         FixedList<word, 2> reactantNames_;
@@ -105,14 +102,16 @@ public:
         (
             const scalar p,
             const scalar T,
-            const scalarField& c
+            const scalarField& c,
+            const label li
         ) const;
 
         inline scalar ddT
         (
             const scalar p,
             const scalar T,
-            const scalarField& c
+            const scalarField& c,
+            const label li
         ) const;
 
         //- Third-body efficiencies (beta = 1-alpha)
@@ -126,6 +125,7 @@ public:
             const scalar p,
             const scalar T,
             const scalarField& c,
+            const label li,
             scalarField& dcidc
         ) const;
 
@@ -134,7 +134,8 @@ public:
         (
             const scalar p,
             const scalar T,
-            const scalarField& c
+            const scalarField& c,
+            const label li
         ) const;
 
         //- Write to stream

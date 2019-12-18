@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ class ITstream
     public Istream,
     public tokenList
 {
-    // Private data
+    // Private Data
 
         //- Name of ITstream
         fileName name_;
@@ -84,17 +84,17 @@ public:
         }
 
 
-        //- Construct from components, transferring the tokens
+        //- Move construct from components, transferring the tokens
         ITstream
         (
             const string& name,
-            const Xfer<List<token>>& tokens,
+            List<token>&& tokens,
             streamFormat format=ASCII,
             versionNumber version=currentVersion
         )
         :
             Istream(format, version),
-            tokenList(tokens),
+            tokenList(move(tokens)),
             name_(name),
             tokenIndex_(0)
         {
@@ -103,7 +103,7 @@ public:
         }
 
 
-        //- Construct as copy
+        //- Copy constructor
         ITstream(const ITstream& its)
         :
             Istream(ASCII, currentVersion),
@@ -121,7 +121,7 @@ public:
         {}
 
 
-    // Member functions
+    // Member Functions
 
         // Inquiry
 
@@ -208,6 +208,21 @@ public:
 
             //- Print description of IOstream to Ostream
             void print(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Assignment operator
+        void operator=(const ITstream& its)
+        {
+            Istream::operator=(its);
+            tokenList::operator=(its);
+            name_ = its.name_;
+            tokenIndex_ = 0;
+
+            setOpened();
+            setGood();
+        }
 };
 
 

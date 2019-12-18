@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,9 +63,16 @@ Foam::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
             << exit(FatalIOError);
     }
 
-    if (!dict.found("value") && this->coupled())
+    if (!dict.found("value"))
     {
-        this->evaluate(Pstream::commsTypes::blocking);
+        if (this->coupled())
+        {
+            this->evaluate(Pstream::commsTypes::blocking);
+        }
+        else
+        {
+            fvPatchField<Type>::operator=(this->patchInternalField());
+        }
     }
 }
 
@@ -254,7 +261,7 @@ template<class Type>
 void Foam::cyclicAMIFvPatchField<Type>::write(Ostream& os) const
 {
     fvPatchField<Type>::write(os);
-    this->writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

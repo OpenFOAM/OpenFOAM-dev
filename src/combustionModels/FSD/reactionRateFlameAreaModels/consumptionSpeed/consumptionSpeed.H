@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,16 +65,10 @@ class consumptionSpeed
         scalar omegaMin_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Return consumption rate
         scalar omega0Sigma(scalar sigma, scalar a) const;
-
-        //- Disallow copy construct
-        consumptionSpeed(const consumptionSpeed&);
-
-         //- Disallow default bitwise assignment
-        void operator=(const consumptionSpeed&);
 
 
 public:
@@ -88,12 +82,15 @@ public:
         //- Construct from dictionary
         consumptionSpeed(const dictionary& dict);
 
+        //- Disallow default bitwise copy construction
+        consumptionSpeed(const consumptionSpeed&);
+
 
     //- Destructor
-        virtual ~consumptionSpeed();
+    virtual ~consumptionSpeed();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return speed consumption rate temp
         tmp<volScalarField> omega0Sigma(const volScalarField& sigma);
@@ -126,6 +123,12 @@ public:
 
         //- Update properties
         void read(const dictionary& dict);
+
+
+    // Member Operators
+
+         //- Disallow default bitwise assignment
+        void operator=(const consumptionSpeed&) = delete;
 };
 
 

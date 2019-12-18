@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ class entry
 :
     public IDLList<entry>::link
 {
-    // Private data
+    // Private Data
 
         //- Keyword of entry
         keyType keyword_;
@@ -92,7 +92,7 @@ public:
         //- Construct from keyword
         entry(const keyType&);
 
-        //- Construct as copy
+        //- Copy constructor
         entry(const entry&);
 
         //- Construct on freestore as copy with reference to the
@@ -118,7 +118,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         //- Return keyword
         const keyType& keyword() const
@@ -169,7 +169,7 @@ public:
         virtual void write(Ostream&) const = 0;
 
 
-    // Member operators
+    // Member Operators
 
         void operator=(const entry&);
 

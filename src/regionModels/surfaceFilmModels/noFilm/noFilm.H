@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,15 +61,6 @@ class noFilm
         const fvMesh& mesh_;
 
 
-    // Private member functions
-
-        //- Disallow default bitwise copy construct
-        noFilm(const noFilm&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const noFilm&);
-
-
 public:
 
     //- Runtime type information
@@ -86,6 +77,9 @@ public:
             const dimensionedVector& g,
             const word& regionType
         );
+
+        //- Disallow default bitwise copy construction
+        noFilm(const noFilm&) = delete;
 
 
     //- Destructor
@@ -119,6 +113,12 @@ public:
 
             //- Main driver routing to evolve the region - calls other evolves
             virtual void evolve();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const noFilm&) = delete;
 };
 
 

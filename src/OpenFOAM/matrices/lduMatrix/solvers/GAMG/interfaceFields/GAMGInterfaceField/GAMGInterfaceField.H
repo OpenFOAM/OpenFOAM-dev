@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,19 +53,10 @@ class GAMGInterfaceField
 :
     public lduInterfaceField
 {
-    // Private data
+    // Private Data
 
         //- Local reference cast into the interface
         const GAMGInterface& interface_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        GAMGInterfaceField(const GAMGInterfaceField&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const GAMGInterfaceField&);
 
 
 public:
@@ -147,6 +138,9 @@ public:
             interface_(GAMGCp)
         {}
 
+        //- Disallow default bitwise copy construction
+        GAMGInterfaceField(const GAMGInterfaceField&) = delete;
+
 
     // Member Functions
 
@@ -158,6 +152,11 @@ public:
                 return interface_;
             }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const GAMGInterfaceField&) = delete;
 };
 
 

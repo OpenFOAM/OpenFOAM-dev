@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,13 +62,6 @@ class limitWith
         tmp<limitedSurfaceInterpolationScheme<Type>> tLimiter_;
 
 
-        //- Disallow default bitwise copy construct
-        limitWith(const limitWith&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const limitWith&);
-
-
 public:
 
     //- Runtime type information
@@ -116,6 +109,9 @@ public:
             )
         {}
 
+        //- Disallow default bitwise copy construction
+        limitWith(const limitWith&) = delete;
+
 
     // Member Functions
 
@@ -146,6 +142,12 @@ public:
         {
             return tLimiter_().limiter(vf)*tInterp_().correction(vf);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const limitWith&) = delete;
 };
 
 

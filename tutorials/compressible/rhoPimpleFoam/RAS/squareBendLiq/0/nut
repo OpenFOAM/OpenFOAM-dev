@@ -21,7 +21,7 @@ internalField   uniform 0;
 
 boundaryField
 {
-    Default_Boundary_Region
+    walls
     {
         type            nutkWallFunction;
         Cmu             0.09;

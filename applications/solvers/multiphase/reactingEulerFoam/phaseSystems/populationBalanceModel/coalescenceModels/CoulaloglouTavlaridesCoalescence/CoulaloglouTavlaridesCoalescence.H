@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,12 +45,12 @@ Description
 
     \vartable
         \sigma      |  Surface tension [N/m]
-        v_i         |  Volume of droplet i [m3]
-        v_j         |  Volume of droplet j [m3]
-        \epsilon_c  |  Turbulent dissipation rate of continuous phase [m2/s3]
+        v_i         |  Volume of droplet i [m^3]
+        v_j         |  Volume of droplet j [m^3]
+        \epsilon_c  |  Turbulent dissipation rate of continuous phase [m^2/s^3]
         \alpha_d    |  Total void fraction of disperse phase [-]
         \mu_c       |  Molecular dynamic viscosity of liquid phase [Pa s]
-        \rho_c      |  Density of continuous phase [kg/m3]
+        \rho_c      |  Density of continuous phase [kg/m^3]
     \endvartable
 
     References:
@@ -96,7 +96,7 @@ class CoulaloglouTavlaridesCoalescence
 :
     public coalescenceModel
 {
-    // Private data
+    // Private Data
 
         //- Optional coefficient C1, defaults to 2.8
         dimensionedScalar C1_;

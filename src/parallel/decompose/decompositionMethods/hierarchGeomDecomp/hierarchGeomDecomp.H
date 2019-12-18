@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ class hierarchGeomDecomp
 :
     public geomDecomp
 {
-    // Private data
+    // Private Data
 
         //- Decomposition order in terms of components.
         FixedList<direction, 3> decompOrder_;
@@ -154,10 +154,6 @@ class hierarchGeomDecomp
             labelList& finalDecomp          // overall decomposition
         );
 
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const hierarchGeomDecomp&);
-        hierarchGeomDecomp(const hierarchGeomDecomp&);
-
 
 public:
 
@@ -169,6 +165,9 @@ public:
 
         //- Construct given the decomposition dictionary
         hierarchGeomDecomp(const dictionary& decompositionDict);
+
+        //- Disallow default bitwise copy construction
+        hierarchGeomDecomp(const hierarchGeomDecomp&) = delete;
 
 
     //- Destructor
@@ -240,6 +239,12 @@ public:
         {
             return decompose(cc);
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const hierarchGeomDecomp&) = delete;
 };
 
 

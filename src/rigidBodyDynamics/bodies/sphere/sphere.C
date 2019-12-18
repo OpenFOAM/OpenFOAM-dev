@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,14 +62,11 @@ Foam::RBD::sphere::~sphere()
 
 void Foam::RBD::sphere::write(Ostream& os) const
 {
-    os.writeKeyword("type")
-        << type() << token::END_STATEMENT << nl;
+    writeEntry(os, "type", type());
 
-    os.writeKeyword("mass")
-        << m() << token::END_STATEMENT << nl;
+    writeEntry(os, "mass", m());
 
-    os.writeKeyword("radius")
-        << r() << token::END_STATEMENT << nl;
+    writeEntry(os, "radius", r());
 }
 
 

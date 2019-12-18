@@ -48,6 +48,7 @@ primitives/Scalar/longDoubleScalar/longDoubleScalar.C
 primitives/Scalar/doubleScalar/doubleScalar.C
 primitives/Scalar/floatScalar/floatScalar.C
 primitives/Scalar/scalar/scalar.C
+primitives/Scalar/scalar/incGamma.C
 primitives/Scalar/scalar/invIncGamma.C
 primitives/Scalar/lists/scalarList.C
 primitives/Scalar/lists/scalarIOList.C
@@ -89,12 +90,14 @@ primitives/triad/triad.C
 
 /* Run-time selectable functions */
 primitives/functions/Function1/makeFunction1s.C
-primitives/functions/Function1/ramp/ramp.C
+primitives/functions/Function1/reverseRamp/reverseRamp.C
 primitives/functions/Function1/linearRamp/linearRamp.C
 primitives/functions/Function1/quadraticRamp/quadraticRamp.C
 primitives/functions/Function1/quarterSineRamp/quarterSineRamp.C
 primitives/functions/Function1/quarterCosineRamp/quarterCosineRamp.C
 primitives/functions/Function1/halfCosineRamp/halfCosineRamp.C
+primitives/functions/Function1/Table/tableBase.C
+primitives/functions/Function1/TableFile/TableReader/makeTableReaders.C
 
 primitives/subModelBase/subModelBase.C
 
@@ -102,12 +105,17 @@ strings = primitives/strings
 $(strings)/string/string.C
 $(strings)/string/stringIO.C
 $(strings)/string/stringIOList.C
+$(strings)/verbatimString/verbatimString.C
+$(strings)/verbatimString/verbatimStringIO.C
 $(strings)/word/word.C
 $(strings)/word/wordIO.C
 $(strings)/word/wordIOList.C
 $(strings)/fileName/fileName.C
 $(strings)/fileName/fileNameIO.C
-$(strings)/keyType/keyType.C
+$(strings)/variable/variable.C
+$(strings)/variable/variableIO.C
+$(strings)/functionName/functionName.C
+$(strings)/functionName/functionNameIO.C
 $(strings)/wordRe/wordRe.C
 $(strings)/lists/hashedWordList.C
 $(strings)/stringOps/stringOps.C
@@ -141,7 +149,7 @@ primitives/Barycentric/barycentric/barycentric.C
 primitives/Barycentric2D/barycentric2D/barycentric2D.C
 
 containers/HashTables/HashTable/HashTableCore.C
-containers/HashTables/StaticHashTable/StaticHashTableCore.C
+containers/HashTables/ListHashTable/ListHashTableCore.C
 containers/Lists/SortableList/ParSortableListName.C
 containers/Lists/PackedList/PackedListCore.C
 containers/Lists/PackedList/PackedBoolList.C
@@ -192,6 +200,8 @@ dictionary = db/dictionary
 $(dictionary)/dictionary.C
 $(dictionary)/dictionaryIO.C
 
+$(dictionary)/keyType/keyType.C
+
 entry = $(dictionary)/entry
 $(entry)/entry.C
 $(entry)/entryIO.C
@@ -217,6 +227,7 @@ $(functionEntries)/includeEntry/includeEntry.C
 $(functionEntries)/includeEtcEntry/includeEtcEntry.C
 $(functionEntries)/includeFuncEntry/includeFuncEntry.C
 $(functionEntries)/includeIfPresentEntry/includeIfPresentEntry.C
+$(functionEntries)/inputSyntaxEntry/inputSyntaxEntry.C
 $(functionEntries)/inputModeEntry/inputModeEntry.C
 $(functionEntries)/removeEntry/removeEntry.C
 $(functionEntries)/ifeqEntry/ifeqEntry.C
@@ -241,7 +252,7 @@ $(IOobject)/IOobjectReadHeader.C
 $(IOobject)/IOobjectWriteHeader.C
 
 regIOobject = db/regIOobject
-/* $(regIOobject)/regIOobject.C in global.Cver */
+$(regIOobject)/regIOobject.C
 $(regIOobject)/regIOobjectRead.C
 $(regIOobject)/regIOobjectWrite.C
 
@@ -462,7 +473,6 @@ $(constraintPolyPatches)/cyclic/cyclicPolyPatch.C
 $(constraintPolyPatches)/cyclicSlip/cyclicSlipPolyPatch.C
 $(constraintPolyPatches)/oldCyclic/oldCyclicPolyPatch.C
 $(constraintPolyPatches)/empty/emptyPolyPatch.C
-$(constraintPolyPatches)/nonuniformTransformCyclic/nonuniformTransformCyclicPolyPatch.C
 $(constraintPolyPatches)/processorCyclic/processorCyclicPolyPatch.C
 $(constraintPolyPatches)/processor/processorPolyPatch.C
 $(constraintPolyPatches)/symmetryPlane/symmetryPlanePolyPatch.C
@@ -584,7 +594,6 @@ constraintPointPatches = $(pointPatches)/constraint
 $(constraintPointPatches)/cyclic/cyclicPointPatch.C
 $(constraintPointPatches)/cyclicSlip/cyclicSlipPointPatch.C
 $(constraintPointPatches)/empty/emptyPointPatch.C
-$(constraintPointPatches)/nonuniformTransformCyclic/nonuniformTransformCyclicPointPatch.C
 $(constraintPointPatches)/processor/processorPointPatch.C
 $(constraintPointPatches)/processorCyclic/processorCyclicPointPatch.C
 $(constraintPointPatches)/symmetryPlane/symmetryPlanePointPatch.C
@@ -610,6 +619,9 @@ fields/cloud/cloud.C
 
 Fields = fields/Fields
 
+$(Fields)/fieldMappers/directFieldMapper/directFieldMapper.C
+$(Fields)/fieldMappers/generalFieldMapper/generalFieldMapper.C
+$(Fields)/fieldMappers/setSizeFieldMapper/setSizeFieldMapper.C
 $(Fields)/labelField/labelField.C
 $(Fields)/scalarField/scalarField.C
 $(Fields)/vectorField/vectorField.C
@@ -656,7 +668,6 @@ constraintPointPatchFields = $(pointPatchFields)/constraint
 $(constraintPointPatchFields)/cyclic/cyclicPointPatchFields.C
 $(constraintPointPatchFields)/cyclicSlip/cyclicSlipPointPatchFields.C
 $(constraintPointPatchFields)/empty/emptyPointPatchFields.C
-$(constraintPointPatchFields)/nonuniformTransformCyclic/nonuniformTransformCyclicPointPatchFields.C
 $(constraintPointPatchFields)/processor/processorPointPatchFields.C
 $(constraintPointPatchFields)/processorCyclic/processorCyclicPointPatchFields.C
 $(constraintPointPatchFields)/symmetryPlane/symmetryPlanePointPatchFields.C
@@ -667,7 +678,6 @@ derivedPointPatchFields = $(pointPatchFields)/derived
 $(derivedPointPatchFields)/slip/slipPointPatchFields.C
 $(derivedPointPatchFields)/fixedNormalSlip/fixedNormalSlipPointPatchFields.C
 $(derivedPointPatchFields)/uniformFixedValue/uniformFixedValuePointPatchFields.C
-$(derivedPointPatchFields)/timeVaryingUniformFixedValue/timeVaryingUniformFixedValuePointPatchFields.C
 $(derivedPointPatchFields)/codedFixedValue/codedFixedValuePointPatchFields.C
 
 fields/GeometricFields/pointFields/pointFields.C
@@ -678,10 +688,6 @@ meshes/preservePatchTypes/preservePatchTypes.C
 interpolations = interpolations
 interpolation = $(interpolations)/interpolation
 $(interpolations)/patchToPatchInterpolation/PatchToPatchInterpolationName.C
-
-$(interpolations)/interpolationTable/tableReaders/tableReaders.C
-$(interpolations)/interpolationTable/tableReaders/openFoam/openFoamTableReaders.C
-$(interpolations)/interpolationTable/tableReaders/csv/csvTableReaders.C
 
 interpolationWeights = $(interpolations)/interpolationWeights
 $(interpolationWeights)/interpolationWeights/interpolationWeights.C
@@ -708,5 +714,6 @@ $(writers)/xmgrGraph/xmgrGraph.C
 $(writers)/jplotGraph/jplotGraph.C
 
 meshes/data/data.C
+meshes/Residuals/residuals.C
 
 LIB = $(FOAM_LIBBIN)/libOpenFOAM

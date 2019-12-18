@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,8 +79,6 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
     const scalar TMax = phaseChange.TMax(td.pc(), X);
     const scalar Tdash = min(T, TMax);
     const scalar Tsdash = min(Ts, TMax);
-
-    scalarField hmm(dMassPC);
 
     // Calculate mass transfer due to phase change
     phaseChange.calculate

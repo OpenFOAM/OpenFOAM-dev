@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ class IDDESDelta
 :
     public LESdelta
 {
-    // Private data
+    // Private Data
 
         maxDeltaxyz hmax_;
 
@@ -62,10 +62,6 @@ class IDDESDelta
 
 
     // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        IDDESDelta(const IDDESDelta&);
-        void operator=(const IDDESDelta&);
 
         //- Calculate the delta values
         void calcDelta();
@@ -87,6 +83,9 @@ public:
             const dictionary&
         );
 
+        //- Disallow default bitwise copy construction
+        IDDESDelta(const IDDESDelta&) = delete;
+
 
     // Destructor
 
@@ -107,6 +106,12 @@ public:
 
         // Correct values
         void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const IDDESDelta&) = delete;
 };
 
 

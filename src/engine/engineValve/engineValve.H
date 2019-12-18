@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ class engineTime;
 
 class engineValve
 {
-    // Private data
+    // Private Data
 
         //- Name of valve
         word name_;
@@ -133,20 +133,11 @@ class engineValve
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        engineValve(const engineValve&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const engineValve&);
-
-
         //- Adjust crank angle to drop within the limits of the lift profile
         scalar adjustCrankAngle(const scalar theta) const;
 
+
 public:
-
-    // Static data members
-
 
     // Constructors
 
@@ -182,8 +173,8 @@ public:
             const dictionary& dict
         );
 
-
-    // Destructor - default
+        //- Disallow default bitwise copy construction
+        engineValve(const engineValve&) = delete;
 
 
     // Member Functions
@@ -309,6 +300,12 @@ public:
 
         //- Write dictionary
         void writeDict(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const engineValve&) = delete;
 };
 
 

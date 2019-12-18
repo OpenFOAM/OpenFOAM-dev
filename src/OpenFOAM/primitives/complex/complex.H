@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,7 @@ public:
     typedef complex cmptType;
 
 
-    // Static data members
+    // Static Data Members
 
         static const char* const typeName;
 
@@ -107,7 +107,7 @@ public:
         complex(Istream&);
 
 
-    // Member functions
+    // Member Functions
 
            // Access
 
@@ -124,9 +124,8 @@ public:
                inline complex conjugate() const;
 
 
-    // Member operators
+    // Member Operators
 
-        inline void operator=(const complex&);
         inline void operator+=(const complex&);
         inline void operator-=(const complex&);
         inline void operator*=(const complex&);
@@ -144,7 +143,7 @@ public:
         inline bool operator!=(const complex&) const;
 
 
-    // Friend functions
+    // Friend Functions
 
         friend scalar magSqr(const complex& c);
         friend complex sqr(const complex& c);
@@ -171,7 +170,7 @@ public:
         friend complex operator/(const scalar, const complex&);
 
 
-    // IOstream operators
+    // IOstream Operators
 
         friend Istream& operator>>(Istream&, complex&);
         friend Ostream& operator<<(Ostream&, const complex&);

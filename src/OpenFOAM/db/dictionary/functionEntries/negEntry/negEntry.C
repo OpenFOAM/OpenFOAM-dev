@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ namespace functionEntries
 }
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::string Foam::functionEntries::negEntry::negateVariable
 (
@@ -62,21 +62,10 @@ Foam::string Foam::functionEntries::negEntry::negateVariable
 )
 {
     // Read variable name as a word including the '$'
-    const word varWord(is);
-
-    if (varWord[0] != '$')
-    {
-        FatalIOErrorInFunction
-        (
-            parentDict
-        )   << "Expected variable name beginning with a '$' but found '"
-            << varWord << "'" << exit(FatalIOError);
-
-        return string::null;
-    }
+    const variable var(is);
 
     // Strip the leading '$' from the variable name
-    const string varName = varWord(1, varWord.size()-1);
+    const string varName = var(1, var.size() - 1);
 
     // Lookup the variable name in the parent dictionary....
     const entry* ePtr = parentDict.lookupScopedEntryPtr(varName, true, false);
@@ -114,20 +103,7 @@ Foam::string Foam::functionEntries::negEntry::negateVariable
 }
 
 
-bool Foam::functionEntries::negEntry::execute
-(
-    const dictionary& parentDict,
-    primitiveEntry& thisEntry,
-    Istream& is
-)
-{
-    // Reinsert negated variable into entry
-    IStringStream resultStream(negateVariable(parentDict, is));
-    thisEntry.read(parentDict, resultStream);
-
-    return true;
-}
-
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 bool Foam::functionEntries::negEntry::execute
 (
@@ -135,11 +111,18 @@ bool Foam::functionEntries::negEntry::execute
     Istream& is
 )
 {
-    // Reinsert negated variable into dictionary
-    IStringStream resultStream(negateVariable(parentDict, is));
-    parentDict.read(resultStream);
+    return insert(parentDict, negateVariable(parentDict, is));
+}
 
-    return true;
+
+bool Foam::functionEntries::negEntry::execute
+(
+    const dictionary& parentDict,
+    primitiveEntry& thisEntry,
+    Istream& is
+)
+{
+    return insert(parentDict, thisEntry, negateVariable(parentDict, is));
 }
 
 

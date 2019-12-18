@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,7 +82,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Per 'interface' surface : name of faceZone to put faces into
         word faceZoneName_;
@@ -101,12 +101,6 @@ private:
         //- Per 'interface' surface :
         //  What to do with outside
         faceZoneType faceType_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise assignment
-        void operator=(const surfaceZonesInfo&);
 
 
 public:
@@ -235,6 +229,12 @@ public:
                 const labelList& namedSurfaces,
                 polyMesh& mesh
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const surfaceZonesInfo&) = delete;
 };
 
 

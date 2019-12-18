@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -239,35 +239,31 @@ Foam::label Foam::probes::prepare()
             mkDir(probeDir);
 
             OFstream* fPtr = new OFstream(probeDir/fieldName);
-
-            OFstream& fout = *fPtr;
+            OFstream& os = *fPtr;
 
             if (debug)
             {
-                Info<< "open probe stream: " << fout.name() << endl;
+                Info<< "open probe stream: " << os.name() << endl;
             }
 
             probeFilePtrs_.insert(fieldName, fPtr);
 
-            unsigned int w = IOstream::defaultPrecision() + 7;
+            const unsigned int w = IOstream::defaultPrecision() + 7;
+            os << setf(ios_base::left);
 
             forAll(*this, probei)
             {
-                fout<< "# Probe " << probei << ' ' << operator[](probei)
+                os<< "# Probe " << probei << ' ' << operator[](probei)
                     << endl;
             }
 
-            fout<< '#' << setw(IOstream::defaultPrecision() + 6)
-                << "Probe";
+            os  << setw(w) << "# Time";
 
             forAll(*this, probei)
             {
-                fout<< ' ' << setw(w) << probei;
+                os<< ' ' << setw(w) << probei;
             }
-            fout<< endl;
-
-            fout<< '#' << setw(IOstream::defaultPrecision() + 6)
-                << "Time" << endl;
+            os<< endl;
         }
     }
 

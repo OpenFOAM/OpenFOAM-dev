@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,8 @@ namespace Foam
 
 Foam::fluidThermo::fluidThermo(const fvMesh& mesh, const word& phaseName)
 :
-    basicThermo(mesh, phaseName)
+    basicThermo(mesh, phaseName),
+    p_(lookupOrConstruct(mesh, "p"))
 {}
 
 
@@ -50,7 +51,8 @@ Foam::fluidThermo::fluidThermo
     const word& phaseName
 )
 :
-    basicThermo(mesh, dict, phaseName)
+    basicThermo(mesh, dict, phaseName),
+    p_(lookupOrConstruct(mesh, "p"))
 {}
 
 
@@ -73,6 +75,18 @@ Foam::fluidThermo::~fluidThermo()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::volScalarField& Foam::fluidThermo::p()
+{
+    return p_;
+}
+
+
+const Foam::volScalarField& Foam::fluidThermo::p() const
+{
+    return p_;
+}
+
 
 Foam::tmp<Foam::volScalarField> Foam::fluidThermo::nu() const
 {

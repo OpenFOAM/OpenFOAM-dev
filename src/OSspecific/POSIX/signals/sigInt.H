@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ namespace Foam
 
 class sigInt
 {
-    // Private data
+    // Private Data
 
         //- Saved old signal trapping setting
         static struct sigaction oldAction_;
@@ -77,7 +77,7 @@ public:
     ~sigInt();
 
 
-    // Member functions
+    // Member Functions
 
         //- Activate SIGINT signal handler
         void set(const bool verbose);

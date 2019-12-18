@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,25 +56,13 @@ class velocityComponentLaplacianFvMotionSolver
     public componentVelocityMotionSolver,
     public fvMotionSolver
 {
-    // Private data
+    // Private Data
 
         //- Cell-centre motion field
         mutable volScalarField cellMotionU_;
 
         //- Diffusivity used to control the motion
         autoPtr<motionDiffusivity> diffusivityPtr_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        velocityComponentLaplacianFvMotionSolver
-        (
-            const velocityComponentLaplacianFvMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const velocityComponentLaplacianFvMotionSolver&);
 
 
 public:
@@ -85,12 +73,18 @@ public:
 
     // Constructors
 
-        //- Construct from polyMesh and IOdictionary
+        //- Construct from polyMesh and dictionary
         velocityComponentLaplacianFvMotionSolver
         (
             const polyMesh&,
-            const IOdictionary&
+            const dictionary&
         );
+
+        //- Disallow default bitwise copy construction
+        velocityComponentLaplacianFvMotionSolver
+        (
+            const velocityComponentLaplacianFvMotionSolver&
+        ) = delete;
 
 
     //- Destructor
@@ -114,6 +108,15 @@ public:
 
         //- Update topology
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=
+        (
+            const velocityComponentLaplacianFvMotionSolver&
+        ) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,24 +48,20 @@ class noDecomp
 :
     public decompositionMethod
 {
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        void operator=(const noDecomp&);
-        noDecomp(const noDecomp&);
-
-
 public:
 
     //- Runtime type information
-    TypeName("noDecomp");
+    TypeName("none");
 
 
     // Constructors
 
         //- Construct given the decomposition dictionary
         noDecomp(const dictionary& decompositionDict);
+
+        //- Disallow default bitwise copy construction
+        noDecomp(const noDecomp&) = delete;
+
 
     //- Destructor
     virtual ~noDecomp()
@@ -110,6 +106,11 @@ public:
             return labelList(globalCellCells.size(), Pstream::myProcNo());
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const noDecomp&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,6 +58,7 @@ namespace Foam
     static const scalar rootSmall = floatScalarRootSmall;
     static const scalar vSmall = floatScalarVSmall;
     static const scalar rootVSmall = floatScalarRootVSmall;
+    static const scalar NaN = floatScalarNaN;
 }
 
 #elif defined(WM_DP)
@@ -76,6 +77,7 @@ namespace Foam
     static const scalar rootSmall = doubleScalarRootSmall;
     static const scalar vSmall = doubleScalarVSmall;
     static const scalar rootVSmall = doubleScalarRootVSmall;
+    static const scalar NaN = doubleScalarNaN;
 }
 
 #elif defined(WM_LP)
@@ -94,6 +96,7 @@ namespace Foam
     static const scalar rootSmall = longDoubleScalarRootSmall;
     static const scalar vSmall = longDoubleScalarVSmall;
     static const scalar rootVSmall = longDoubleScalarRootVSmall;
+    static const scalar NaN = longDoubleScalarNaN;
 }
 
 #else
@@ -125,6 +128,18 @@ namespace Foam
 
     //- Inverse normalized incomplete gamma function
     scalar invIncGamma(const scalar a, const scalar P);
+
+    //- Normalized upper incomplete gamma function
+    scalar incGammaRatio_Q(const scalar a, const scalar x);
+
+    //- Normalized lower incomplete gamma function
+    scalar incGammaRatio_P(const scalar a, const scalar x);
+
+    //- Upper incomplete gamma function
+    scalar incGamma_Q(const scalar a, const scalar x);
+
+    //- Lower incomplete gamma function
+    scalar incGamma_P(const scalar a, const scalar x);
 }
 
 

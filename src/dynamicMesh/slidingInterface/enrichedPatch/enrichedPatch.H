@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ namespace Foam
 
 class enrichedPatch
 {
-    // Private data
+    // Private Data
 
         //- Reference to master patch
         const primitiveFacePatch& masterPatch_;
@@ -133,12 +133,6 @@ class enrichedPatch
 
     // Private Member Functions
 
-        //- Disallow default bitwise copy construct
-        enrichedPatch(const enrichedPatch&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const enrichedPatch&);
-
         // Creation of demand-driven private data
 
             //- Calculate point merge map
@@ -172,7 +166,7 @@ class enrichedPatch
             void clearOut();
 
 
-    // Static data members
+    // Static Data Members
 
         //- Estimated ratio of original-to-enriched face size
         static const label enrichedFaceRatio_;
@@ -186,7 +180,7 @@ class enrichedPatch
 
 public:
 
-    // Static data members
+    // Static Data Members
     ClassName("enrichedPatch");
 
     // Constructors
@@ -203,6 +197,9 @@ public:
             const List<objectHit>& slavePointFaceHits
                                             // master face snapped to
         );
+
+        //- Disallow default bitwise copy construction
+        enrichedPatch(const enrichedPatch&) = delete;
 
 
     //- Destructor
@@ -279,6 +276,12 @@ public:
 
         //- Debugging: dump graphical representation to obj format file
         void writeOBJ(const fileName&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const enrichedPatch&) = delete;
 };
 
 

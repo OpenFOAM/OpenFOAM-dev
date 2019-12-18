@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::combustionModels::singleStepCombustion
 
 Description
-    Base class for combustion models using singleStepReactingMixture.
+    Base class for combustion models using multiComponentMixture.
 
 SourceFiles
     singleStepCombustion.C
@@ -35,8 +35,9 @@ SourceFiles
 #ifndef singleStepCombustion_H
 #define singleStepCombustion_H
 
-#include "singleStepReactingMixture.H"
+#include "multiComponentMixture.H"
 #include "ThermoCombustion.H"
+#include "ReactionList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,27 +55,59 @@ class singleStepCombustion
 :
     public ThermoCombustion<ReactionThermo>
 {
-    // Private Member Functions
-
-        //- Disallow copy construct
-        singleStepCombustion(const singleStepCombustion&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const singleStepCombustion&);
-
-
 protected:
 
     // Protected data
 
-        //- Pointer to singleStepReactingMixture mixture
-        singleStepReactingMixture<ThermoType>* singleMixturePtr_;
+        const multiComponentMixture<ThermoType>& mixture_;
+
+        //- The single-step reaction
+        autoPtr<Reaction<ThermoType>> reaction_;
+
+        //- Stoichiometric air-fuel mass ratio
+        dimensionedScalar stoicRatio_;
+
+        //- Stoichiometric oxygen-fuel mass ratio
+        dimensionedScalar s_;
+
+        //- Heat of combustion [J/Kg]
+        dimensionedScalar qFuel_;
+
+        //- Stoichiometric coefficient for the reaction.
+        scalarList specieStoichCoeffs_;
+
+        //- Mass concentrations at stoichiometric mixture for fres.
+        scalarList Yprod0_;
+
+        //- List of components residual
+        PtrList<volScalarField> fres_;
+
+        //- Inert specie index
+        label inertIndex_;
+
+        //- Fuel specie index
+        label fuelIndex_;
+
+        //- List to indicate if specie is produced/consumed
+        List<int> specieProd_;
 
         //- Fuel consumption rate
         volScalarField wFuel_;
 
         //- Semi-implicit (true) or explicit (false) treatment
         bool semiImplicit_;
+
+
+    // Protected member functions
+
+        //- Calculate qFuel
+        void calculateqFuel();
+
+        //- Calculate air/fuel and oxygen/fuel ratio
+        void massAndAirStoichRatios();
+
+        //- Calculate maximum products at stoichiometric mixture
+        void calculateMaxProducts();
 
 
 public:
@@ -85,10 +118,13 @@ public:
         singleStepCombustion
         (
             const word& modelType,
-            ReactionThermo& thermo,
+            const ReactionThermo& thermo,
             const compressibleTurbulenceModel& turb,
             const word& combustionProperties
         );
+
+        //- Disallow default bitwise copy construction
+        singleStepCombustion(const singleStepCombustion&);
 
 
     //- Destructor
@@ -97,14 +133,61 @@ public:
 
     // Member Functions
 
+        // Access functions
+
+    const multiComponentMixture<ThermoType>& mixture() const
+    {
+        return mixture_;
+    }
+
+            //- Return the single step reaction
+            inline const Reaction<ThermoType>& reaction() const;
+
+            //- Return the stoichiometric air-fuel mass ratio
+            inline const dimensionedScalar stoicRatio() const;
+
+            //- Return the Stoichiometric oxygen-fuel mass ratio
+            inline const dimensionedScalar s() const;
+
+            //- Return the heat of combustion [J/Kg]
+            inline const dimensionedScalar qFuel() const;
+
+            //- Return the stoichiometric coefficient for the reaction
+            inline const List<scalar>& specieStoichCoeffs() const;
+
+            //- Return the list of components residual
+            inline tmp<volScalarField> fres(const label index) const;
+
+            //- Return the inert specie index
+            inline label inertIndex() const;
+
+            //- Return the fuel specie index
+            inline label fuelIndex() const;
+
+            //- Return the list to indicate if specie is produced/consumed
+            inline const List<int>& specieProd() const;
+
+            //- Return the list of products mass concentrations
+            inline const scalarList& Yprod0() const;
+
+
         //- Fuel consumption rate matrix
         virtual tmp<fvScalarMatrix> R(volScalarField& Y) const;
 
-        //- Heat release rate [kg/m/s3]
+        //- Heat release rate [kg/m/s^3]
         virtual tmp<volScalarField> Qdot() const;
 
         //- Update properties from given dictionary
         virtual bool read();
+
+        //- Calculates the residual for all components
+        void fresCorrect();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const singleStepCombustion&) = delete;
 };
 
 
@@ -112,6 +195,10 @@ public:
 
 } // End namespace combustionModels
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "singleStepCombustionI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -20,19 +20,11 @@ internalField   uniform 293;
 
 boundaryField
 {
+    walls
+    {
+        type            zeroGradient;
+    }
 
-    front
-    {
-        type            zeroGradient;
-    }
-    back
-    {
-        type            zeroGradient;
-    }
-    wall
-    {
-        type            zeroGradient;
-    }
     porosityWall
     {
         type            zeroGradient;
@@ -43,6 +35,7 @@ boundaryField
         type            fixedValue;
         value           $internalField;
     }
+
     outlet
     {
         type            inletOutlet;

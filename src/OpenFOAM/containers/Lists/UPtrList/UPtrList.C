@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,13 +39,6 @@ Foam::UPtrList<T>::UPtrList(const label s)
 :
     ptrs_(s, reinterpret_cast<T*>(0))
 {}
-
-
-template<class T>
-Foam::UPtrList<T>::UPtrList(const Xfer<UPtrList<T>>& lst)
-{
-    transfer(lst());
-}
 
 
 template<class T>
@@ -142,6 +135,25 @@ void Foam::UPtrList<T>::reorder(const labelUList& oldToNew)
     }
 
     ptrs_.transfer(newPtrs_);
+}
+
+
+template<class T>
+void Foam::UPtrList<T>::shuffle(const labelUList& newToOld)
+{
+    List<T*> newPtrs_(newToOld.size(), reinterpret_cast<T*>(0));
+
+    forAll(newToOld, newI)
+    {
+        label oldI = newToOld[newI];
+
+        if (oldI >= 0 && oldI < this->size())
+        {
+            newPtrs_[newI] = this->ptrs_[oldI];
+        }
+    }
+
+    this->ptrs_.transfer(newPtrs_);
 }
 
 

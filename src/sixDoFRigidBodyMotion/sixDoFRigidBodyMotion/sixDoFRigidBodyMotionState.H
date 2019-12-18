@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ Ostream& operator<<(Ostream&, const sixDoFRigidBodyMotionState&);
 
 class sixDoFRigidBodyMotionState
 {
-    // Private data
+    // Private Data
 
         //- Current position of the centre of mass of the body
         point centreOfRotation_;
@@ -99,9 +99,6 @@ public:
 
         //- Construct from dictionary
         sixDoFRigidBodyMotionState(const dictionary& dict);
-
-        //- Construct as copy
-        sixDoFRigidBodyMotionState(const sixDoFRigidBodyMotionState&);
 
 
     //- Destructor

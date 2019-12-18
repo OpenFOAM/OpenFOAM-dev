@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ class layerAdditionRemoval
 :
     public polyMeshModifier
 {
-    // Private data
+    // Private Data
 
         //- Master face zone ID
         faceZoneID faceZoneID_;
@@ -87,12 +87,6 @@ class layerAdditionRemoval
 
 
     // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        layerAdditionRemoval(const layerAdditionRemoval&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const layerAdditionRemoval&);
 
         //- Check validity of construction data
         void checkDefinition();
@@ -131,7 +125,7 @@ class layerAdditionRemoval
             static scalar readOldThickness(const dictionary&);
 
 
-    // Static data members
+    // Static Data Members
 
         //- Thickness insertion fraction for the pre-motion
         static const scalar addDelta_;
@@ -169,6 +163,9 @@ public:
             const label index,
             const polyTopoChanger& ptc
         );
+
+        //- Disallow default bitwise copy construction
+        layerAdditionRemoval(const layerAdditionRemoval&) = delete;
 
 
     //- Destructor
@@ -217,6 +214,12 @@ public:
 
         //- Write dictionary
         virtual void writeDict(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const layerAdditionRemoval&) = delete;
 };
 
 

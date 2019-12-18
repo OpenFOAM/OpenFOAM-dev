@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,15 +51,6 @@ namespace Foam
 
 class compressibleTransportModel
 {
-    // Private Member Functions
-
-        //- Disallow copy construct
-        compressibleTransportModel(const compressibleTransportModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const compressibleTransportModel&);
-
-
 public:
 
     //- Runtime type information
@@ -71,6 +62,9 @@ public:
         //- Construct from components
         compressibleTransportModel
         ();
+
+        //- Disallow default bitwise copy construction
+        compressibleTransportModel(const compressibleTransportModel&);
 
 
     //- Destructor
@@ -90,6 +84,12 @@ public:
 
         //- Return the laminar viscosity for patch
         virtual tmp<scalarField> nu(const label patchi) const = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const compressibleTransportModel&) = delete;
 };
 
 

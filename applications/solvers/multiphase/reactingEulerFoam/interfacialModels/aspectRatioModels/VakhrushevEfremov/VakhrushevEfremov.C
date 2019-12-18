@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,13 +67,13 @@ Foam::aspectRatioModels::VakhrushevEfremov::~VakhrushevEfremov()
 Foam::tmp<Foam::volScalarField>
 Foam::aspectRatioModels::VakhrushevEfremov::E() const
 {
-    volScalarField Ta(pair_.Ta());
+    const volScalarField Ta(pair_.Ta());
 
     return
-        neg(Ta - scalar(1))*scalar(1)
-      + pos0(Ta - scalar(1))*neg(Ta - scalar(39.8))
+        neg(Ta - 1)
+      + pos0(Ta - 1)*neg(Ta - 39.8)
        *pow3(0.81 + 0.206*tanh(1.6 - 2*log10(max(Ta, scalar(1)))))
-      + pos0(Ta - scalar(39.8))*0.24;
+      + pos0(Ta - 39.8)*0.24;
 }
 
 

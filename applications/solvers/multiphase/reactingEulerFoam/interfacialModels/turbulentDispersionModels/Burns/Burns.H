@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,13 +28,6 @@ Description
     Turbulent dispersion model of Burns et al.
 
     References:
-    \verbatim
-        Otromke, M. (2013).
-        Implementation and Comparison of Correlations for interfacial Forces in
-        a Gas-Liquid System within an Euler-Euler Framework.
-        PhD Thesis.
-    \endverbatim
-
     \verbatim
         Burns, A. D., Frank, T., Hamill, I., & Shi, J. M. (2004, May).
         The Favre averaged drag model for turbulent dispersion in Eulerian
@@ -71,13 +64,10 @@ class Burns
 :
     public turbulentDispersionModel
 {
-    // Private data
+    // Private Data
 
         //- Schmidt number
         const dimensionedScalar sigma_;
-
-        //- Residual phase fraction
-        const dimensionedScalar residualAlpha_;
 
 
 public:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class UOPstream
     public UPstream,
     public Ostream
 {
-    // Private data
+    // Private Data
 
         int toProcNo_;
 
@@ -109,7 +109,7 @@ public:
     ~UOPstream();
 
 
-    // Member functions
+    // Member Functions
 
         // Inquiry
 
@@ -133,9 +133,6 @@ public:
                 const label communicator = 0
             );
 
-            //- Write next token to stream
-            Ostream& write(const token&);
-
             //- Write character
             Ostream& write(const char);
 
@@ -147,6 +144,9 @@ public:
 
             //- Write string
             Ostream& write(const string&);
+
+            //- Write verbatimString
+            Ostream& write(const verbatimString&);
 
             //- Write std::string surrounded by quotes.
             //  Optional write without quotes.

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,13 +75,6 @@ class dynamicKEqn
 :
     public LESeddyViscosity<BasicTurbulenceModel>
 {
-    // Private Member Functions
-
-        // Disallow default bitwise copy construct and assignment
-        dynamicKEqn(const dynamicKEqn&);
-        void operator=(const dynamicKEqn&);
-
-
 protected:
 
     // Protected data
@@ -99,6 +92,9 @@ protected:
 
 
     // Protected Member Functions
+
+        //- Return the KK field obtained by filtering the velocity field U
+        tmp<volScalarField> KK() const;
 
         //- Calculate Ck by filtering the velocity field U
         volScalarField Ck
@@ -154,6 +150,9 @@ public:
             const word& type = typeName
         );
 
+        //- Disallow default bitwise copy construction
+        dynamicKEqn(const dynamicKEqn&) = delete;
+
 
     //- Destructor
     virtual ~dynamicKEqn()
@@ -186,6 +185,12 @@ public:
 
         //- Correct Eddy-Viscosity and related properties
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const dynamicKEqn&) = delete;
 };
 
 

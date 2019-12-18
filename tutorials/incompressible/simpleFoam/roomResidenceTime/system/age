@@ -1,0 +1,31 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Solves a transport equation to determine the time taken for a particle to
+    convect from an inlet to the location in the flow.
+
+    This will output a field, age, with units of time. This field needs a
+    solver setting in fvSolution and a div(phi,age) scheme in fvSchemes.
+    Alternatively, a schemesField entry can be used to reuse settings from
+    another field.
+
+    The number of correctors, nCorr, determines how many times the solution is
+    repeated to iterate away any non-linearities in the choice of scheme. If
+    the divergence scheme is set to upwind, no corrections will be necessary.
+
+\*---------------------------------------------------------------------------*/
+
+type            age;
+libs            ("libfieldFunctionObjects.so");
+
+diffusion       true;
+
+executeControl  writeTime;
+writeControl    writeTime;
+
+// ************************************************************************* //

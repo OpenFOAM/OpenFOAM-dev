@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,8 @@ void Foam::phaseSystem::generatePairsAndSubModels
         autoPtr<modelType>,
         phasePairKey,
         phasePairKey::hash
-    >& models
+    >& models,
+    const bool correctFixedFluxBCs
 )
 {
     dictTable modelDicts(lookup(modelName));
@@ -115,26 +116,6 @@ void Foam::phaseSystem::generatePairsAndSubModels
         }
 
         const phasePairKey key(iter.key().first(), iter.key().second());
-        const phasePairKey key1In2(key.first(), key.second(), true);
-        const phasePairKey key2In1(key.second(), key.first(), true);
-
-        models.insert
-        (
-            key,
-            autoPtr<BlendedInterfacialModel<modelType>>
-            (
-                new BlendedInterfacialModel<modelType>
-                (
-                    phaseModels_[key.first()],
-                    phaseModels_[key.second()],
-                    blending,
-                    tempModels.found(key    ) ? tempModels[key    ] : noModel,
-                    tempModels.found(key1In2) ? tempModels[key1In2] : noModel,
-                    tempModels.found(key2In1) ? tempModels[key2In1] : noModel,
-                    correctFixedFluxBCs
-                )
-            )
-        );
 
         if (!phasePairs_.found(key))
         {
@@ -151,6 +132,30 @@ void Foam::phaseSystem::generatePairsAndSubModels
                 )
             );
         }
+
+        const phasePair& pair = phasePairs_[key];
+        const phaseModel& phase1 = pair.phase1();
+        const phaseModel& phase2 = pair.phase2();
+        const phasePairKey key1In2(phase1.name(), phase2.name(), true);
+        const phasePairKey key2In1(phase2.name(), phase1.name(), true);
+
+        models.insert
+        (
+            key,
+            autoPtr<BlendedInterfacialModel<modelType>>
+            (
+                new BlendedInterfacialModel<modelType>
+                (
+                    phase1,
+                    phase2,
+                    blending,
+                    tempModels.found(key) ? tempModels[key] : noModel,
+                    tempModels.found(key1In2) ? tempModels[key1In2] : noModel,
+                    tempModels.found(key2In1) ? tempModels[key2In1] : noModel,
+                    correctFixedFluxBCs
+                )
+            )
+        );
     }
 }
 
@@ -211,88 +216,6 @@ void Foam::phaseSystem::generatePairsAndSubModels
             models[key][pair.index(phase)] = tempModelIter().ptr();
         }
     }
-}
-
-
-template<class GeoField>
-void Foam::phaseSystem::addField
-(
-    const phaseModel& phase,
-    const word& fieldName,
-    tmp<GeoField> field,
-    PtrList<GeoField>& fieldList
-) const
-{
-    if (fieldList.set(phase.index()))
-    {
-        fieldList[phase.index()] += field;
-    }
-    else
-    {
-        fieldList.set
-        (
-            phase.index(),
-            new GeoField
-            (
-                IOobject::groupName(fieldName, phase.name()),
-                field
-            )
-        );
-    }
-}
-
-
-template<class GeoField>
-void Foam::phaseSystem::addField
-(
-    const phaseModel& phase,
-    const word& fieldName,
-    const GeoField& field,
-    PtrList<GeoField>& fieldList
-) const
-{
-    addField(phase, fieldName, tmp<GeoField>(field), fieldList);
-}
-
-
-template<class GeoField>
-void Foam::phaseSystem::addField
-(
-    const phaseModel& phase,
-    const word& fieldName,
-    tmp<GeoField> field,
-    HashPtrTable<GeoField>& fieldTable
-) const
-{
-    if (fieldTable.found(phase.name()))
-    {
-        *fieldTable[phase.name()] += field;
-    }
-    else
-    {
-        fieldTable.set
-        (
-            phase.name(),
-            new GeoField
-            (
-                IOobject::groupName(fieldName, phase.name()),
-                field
-            )
-        );
-    }
-}
-
-
-template<class GeoField>
-void Foam::phaseSystem::addField
-(
-    const phaseModel& phase,
-    const word& fieldName,
-    const GeoField& field,
-    HashPtrTable<GeoField>& fieldTable
-) const
-{
-    addField(phase, fieldName, tmp<GeoField>(field), fieldTable);
 }
 
 
@@ -371,6 +294,44 @@ void Foam::phaseSystem::fillFields
 
 
 template<class modelType>
+bool Foam::phaseSystem::foundSubModel(const phasePair& key) const
+{
+    const word name(IOobject::groupName(modelType::typeName, key.name()));
+
+    if (key.ordered())
+    {
+        if (mesh().foundObject<modelType>(name))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        if
+        (
+            mesh().foundObject<modelType>(name)
+         ||
+            mesh().foundObject<modelType>
+            (
+                IOobject::groupName(modelType::typeName, key.otherName())
+            )
+        )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+}
+
+
+template<class modelType>
 const modelType& Foam::phaseSystem::lookupSubModel(const phasePair& key) const
 {
     const word name(IOobject::groupName(modelType::typeName, key.name()));
@@ -387,6 +348,17 @@ const modelType& Foam::phaseSystem::lookupSubModel(const phasePair& key) const
                 IOobject::groupName(modelType::typeName, key.otherName())
             );
     }
+}
+
+
+template<class modelType>
+bool Foam::phaseSystem::foundSubModel
+(
+    const phaseModel& dispersed,
+    const phaseModel& continuous
+) const
+{
+    return foundSubModel<modelType>(orderedPhasePair(dispersed, continuous));
 }
 
 
@@ -464,5 +436,98 @@ Foam::phaseSystem::lookupBlendedSubModel(const phasePair& key) const
     }
 }
 
+
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template<class GeoField, class Group>
+inline void addField
+(
+    const Group& group,
+    const word& name,
+    tmp<GeoField> field,
+    PtrList<GeoField>& fieldList
+)
+{
+    if (fieldList.set(group.index()))
+    {
+        fieldList[group.index()] += field;
+    }
+    else
+    {
+        fieldList.set
+        (
+            group.index(),
+            new GeoField
+            (
+                IOobject::groupName(name, group.name()),
+                field
+            )
+        );
+    }
+}
+
+
+template<class GeoField, class Group>
+inline void addField
+(
+    const Group& group,
+    const word& name,
+    const GeoField& field,
+    PtrList<GeoField>& fieldList
+)
+{
+    addField(group, name, tmp<GeoField>(field), fieldList);
+}
+
+
+template<class GeoField, class Group>
+inline void addField
+(
+    const Group& group,
+    const word& name,
+    tmp<GeoField> field,
+    HashPtrTable<GeoField>& fieldTable
+)
+{
+    if (fieldTable.found(group.name()))
+    {
+        *fieldTable[group.name()] += field;
+    }
+    else
+    {
+        fieldTable.set
+        (
+            group.name(),
+            new GeoField
+            (
+                IOobject::groupName(name, group.name()),
+                field
+            )
+        );
+    }
+}
+
+
+template<class GeoField, class Group>
+inline void addField
+(
+    const Group& group,
+    const word& name,
+    const GeoField& field,
+    HashPtrTable<GeoField>& fieldTable
+)
+{
+    addField(group, name, tmp<GeoField>(field), fieldTable);
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
 
 // ************************************************************************* //

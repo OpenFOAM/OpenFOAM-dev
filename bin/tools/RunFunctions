@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -41,12 +41,12 @@ isTest()
 
 getNumberOfProcessors()
 {
-    foamDictionary -disableFunctionEntries -entry numberOfSubdomains -value system/decomposeParDict
+    foamDictionary -entry numberOfSubdomains -value system/decomposeParDict
 }
 
 getApplication()
 {
-    foamDictionary -disableFunctionEntries -entry application -value system/controlDict
+    foamDictionary -entry application -value system/controlDict
 }
 
 runApplication()
@@ -154,45 +154,46 @@ compileApplication()
 
 cloneCase()
 {
-    if [ -d $2 ]
+    from=$1
+    to=$2
+
+    if [ ! -d $from ]
     then
-        echo "Case already cloned: remove case directory $2 to clone"
+        echo "Case $from does not exist"
+        return 1
+    elif [ -d $to ]
+    then
+        echo "Case already cloned: remove case directory $to to clone"
+        return 1
     else
-        echo "Cloning $2 case from $1"
-        mkdir $2
-        cpfiles="0 system constant"
-        for f in $cpfiles
+        echo "Cloning $to case from $from"
+        mkdir -p $to
+        for f in 0 system constant
         do
-            cp -r $1/$f $2
+            cp -r $from/$f $to
         done
+        return 0
     fi
 }
 
-transposeFile()
+cloneMesh()
 {
-    awk '
-    {
-        for (i = 1; i <= NF; i++)
-        {
-            a[NR, i] = $i
-        }
-    }
+    from=$1/constant/polyMesh
+    to=$2/constant/polyMesh
 
-    NF > p {p = NF}
-
-    END {
-            for (j = 1; j <= p; j++)
-            {
-                str = a[1,j]
-
-                for(i = 2; i <= NR; i++)
-                {
-                    str = str" "a[i,j];
-                }
-
-                print str
-            }
-        }' $1
+    if [ ! -d $from ]
+    then
+        echo "Mesh $from does not exist"
+        return 1
+    elif [ -d $to ]
+    then
+        echo "Mesh already cloned: remove mesh directory $to to clone"
+        return 1
+    else
+        echo "Cloning $to mesh from $from"
+        cp -pr $from $to
+        return 0
+    fi
 }
 
 #------------------------------------------------------------------------------

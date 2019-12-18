@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ namespace Foam
 
 class controlMeshRefinement
 {
-    // Private data
+    // Private Data
 
         const cellShapeControl& shapeController_;
 
@@ -99,12 +99,6 @@ class controlMeshRefinement
 
         pointHit findDiscontinuities(const linePointRef& l) const;
 
-        //- Disallow default bitwise copy construct
-        controlMeshRefinement(const controlMeshRefinement&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const controlMeshRefinement&);
-
 
 public:
 
@@ -116,6 +110,9 @@ public:
 
         //- Construct null
         controlMeshRefinement(cellShapeControl& shapeController);
+
+        //- Disallow default bitwise copy construction
+        controlMeshRefinement(const controlMeshRefinement&) = delete;
 
 
     //- Destructor
@@ -135,6 +132,12 @@ public:
             (
                 const autoPtr<backgroundMeshDecomposition>& decomposition
             );
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const controlMeshRefinement&) = delete;
 };
 
 

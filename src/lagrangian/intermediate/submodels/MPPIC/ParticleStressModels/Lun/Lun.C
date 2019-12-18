@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,8 +52,8 @@ Foam::ParticleStressModels::Lun::Lun
 )
 :
     ParticleStressModel(dict),
-    e_(readScalar(dict.lookup("e"))),
-    eps_(readScalar(dict.lookup("eps")))
+    e_(dict.template lookup<scalar>("e")),
+    eps_(dict.template lookup<scalar>("eps"))
 {}
 
 

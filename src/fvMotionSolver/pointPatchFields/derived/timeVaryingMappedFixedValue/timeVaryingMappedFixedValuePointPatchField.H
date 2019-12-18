@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class timeVaryingMappedFixedValuePointPatchField
 :
     public fixedValuePointPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         //- Name of the field data table, defaults to the name of the field
         word fieldTableName_;
@@ -131,7 +131,7 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         timeVaryingMappedFixedValuePointPatchField
         (
             const timeVaryingMappedFixedValuePointPatchField<Type>&
@@ -146,7 +146,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         timeVaryingMappedFixedValuePointPatchField
         (
             const timeVaryingMappedFixedValuePointPatchField<Type>&,
@@ -166,7 +166,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         // Utility functions
 
@@ -177,18 +177,12 @@ public:
         // Mapping functions
 
             //- Map (and resize as needed) from self given a mapping object
-            virtual void autoMap
-            (
-                const pointPatchFieldMapper&
-            );
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const pointPatchFieldMapper&);
 
-            //- Reverse map the given PointPatchField onto
-            //  this PointPatchField
-            virtual void rmap
-            (
-                const pointPatchField<Type>&,
-                const labelList&
-            );
+            //- Reverse map the given pointPatchField onto this pointPatchField
+            //  Used to reconstruct fields
+            virtual void rmap(const pointPatchField<Type>&, const labelList&);
 
 
         // Evaluation functions

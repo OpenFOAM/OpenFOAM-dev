@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,13 +61,18 @@ inline Ostream& operator<<(Ostream&, const Tuple2<Type1, Type2>&);
 template<class Type1, class Type2>
 class Tuple2
 {
-    // Private data
+    // Private Data
 
         Type1 f_;
         Type2 s_;
 
 
 public:
+
+    // Static Data Members
+
+        static const char* const typeName;
+
 
     // Constructors
 
@@ -116,7 +121,7 @@ public:
         }
 
 
-    // IOstream operators
+    // IOstream Operators
 
         //- Read Tuple2 from Istream, discarding contents of existing Tuple2.
         friend Istream& operator>> <Type1, Type2>

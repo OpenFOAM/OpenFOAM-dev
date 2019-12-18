@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,13 +37,12 @@ SourceFiles
     vtkPVFoamMeshSet.C
     vtkPVFoamMeshVolume.C
     vtkPVFoamMeshZone.C
-    vtkPVFoamFaceField.H
+    vtkPVFoamSurfaceField.H
     vtkPVFoamLagrangianFields.H
     vtkPVFoamPatchField.H
     vtkPVFoamPointFields.H
     vtkPVFoamPoints.H
     vtkPVFoamUpdateInfo.C
-    vtkPVFoamUpdateInfoFields.H
     vtkPVFoamUtils.C
     vtkPVFoamVolFields.H
     vtkPVFoamAddToSelection.H
@@ -58,7 +57,7 @@ SourceFiles
 
 // do not include legacy strstream headers
 #ifndef  VTK_EXCLUDE_STRSTREAM_HEADERS
-# define VTK_EXCLUDE_STRSTREAM_HEADERS
+    #define VTK_EXCLUDE_STRSTREAM_HEADERS
 #endif
 
 #include "className.H"
@@ -68,6 +67,8 @@ SourceFiles
 #include "primitivePatch.H"
 #include "PrimitivePatchInterpolation.H"
 #include "volPointInterpolation.H"
+#include "surfaceFieldsFwd.H"
+#include "instantList.H"
 
 // * * * * * * * * * * * * * Forward Declarations  * * * * * * * * * * * * * //
 
@@ -380,9 +381,26 @@ class vtkPVFoam
                 const string& suffix=string::null
             );
 
-            //- Field info
+            //- Add objects of Type to paraview array selection
             template<template<class> class patchType, class meshType>
-            void updateInfoFields(vtkDataArraySelection*);
+            void addFieldsToSelection
+            (
+                vtkDataArraySelection *select,
+                const IOobjectList& objects,
+                const string& suffix=string::null
+            );
+
+            //- Add objects of Type to paraview array selection
+            template<template<class> class patchType, class meshType>
+            void addInternalFieldsToSelection
+            (
+                vtkDataArraySelection *select,
+                const IOobjectList& objects,
+                const string& suffix=string::null
+            );
+
+            //- Field info
+            void updateInfoFields();
 
             //- Lagrangian field info
             void updateInfoLagrangianFields();
@@ -475,11 +493,8 @@ class vtkPVFoam
 
         // Field conversion functions
 
-            //- Convert volume fields
-            void convertVolFields(vtkMultiBlockDataSet*);
-
-            //- Convert point fields
-            void convertPointFields(vtkMultiBlockDataSet*);
+            //- Convert fields
+            void convertFields(vtkMultiBlockDataSet*);
 
             //- Convert Lagrangian fields
             void convertLagrangianFields(vtkMultiBlockDataSet*);
@@ -509,6 +524,15 @@ class vtkPVFoam
                 vtkMultiBlockDataSet* output
             );
 
+            //- Volume internal fields - all types
+            template<class Type>
+            void convertVolInternalFields
+            (
+                const fvMesh&,
+                const IOobjectList&,
+                vtkMultiBlockDataSet* output
+            );
+
             //- Volume field - all selected parts
             template<class Type>
             void convertVolFieldBlock
@@ -520,11 +544,23 @@ class vtkPVFoam
                 const List<polyDecomp>& decompLst
             );
 
+            //- Volume internal field - all selected parts
+            template<class Type>
+            void convertVolInternalFieldBlock
+            (
+                const typename GeometricField<Type, fvPatchField, volMesh>
+                    ::Internal&,
+                vtkMultiBlockDataSet* output,
+                const arrayRange&,
+                const List<polyDecomp>& decompLst
+            );
+
             //- Volume field
             template<class Type>
-            void convertVolField
+            void convertVolInternalField
             (
-                const GeometricField<Type, fvPatchField, volMesh>&,
+                const typename GeometricField<Type, fvPatchField, volMesh>
+                    ::Internal&,
                 vtkMultiBlockDataSet* output,
                 const arrayRange&,
                 const label datasetNo,
@@ -542,9 +578,9 @@ class vtkPVFoam
                 const label datasetNo
             );
 
-            //- Face set/zone field
+            //- Face set/zone field from volField
             template<class Type>
-            void convertFaceField
+            void convertSurfaceField
             (
                 const GeometricField<Type, fvPatchField, volMesh>&,
                 vtkMultiBlockDataSet* output,
@@ -552,6 +588,27 @@ class vtkPVFoam
                 const label datasetNo,
                 const fvMesh&,
                 const labelList& faceLabels
+            );
+
+            //- Face set/zone field from surfaceField
+            template<class Type>
+            void convertSurfaceField
+            (
+                const GeometricField<Type, fvsPatchField, surfaceMesh>& tf,
+                vtkMultiBlockDataSet* output,
+                const arrayRange& range,
+                const label datasetNo,
+                const fvMesh& mesh,
+                const labelList& faceLabels
+            );
+
+            //- Surface fields - all types
+            template<class Type>
+            void convertSurfaceFields
+            (
+                const fvMesh& mesh,
+                const IOobjectList& objects,
+                vtkMultiBlockDataSet* output
             );
 
             //- Lagrangian fields - all types
@@ -666,13 +723,6 @@ class vtkPVFoam
             word getPartName(const int);
 
 
-        //- Disallow default bitwise copy construct
-        vtkPVFoam(const vtkPVFoam&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const vtkPVFoam&);
-
-
 public:
 
     //- Static data members
@@ -688,6 +738,9 @@ public:
             const char* const FileName,
             vtkPVFoamReader* reader
         );
+
+        //- Disallow default bitwise copy construction
+        vtkPVFoam(const vtkPVFoam&) = delete;
 
 
     //- Destructor
@@ -736,6 +789,12 @@ public:
         //- Simple memory used debugging information
         static void printMemory();
 
+
+    // Member Operators
+
+
+        //- Disallow default bitwise assignment
+        void operator=(const vtkPVFoam&) = delete;
 };
 
 

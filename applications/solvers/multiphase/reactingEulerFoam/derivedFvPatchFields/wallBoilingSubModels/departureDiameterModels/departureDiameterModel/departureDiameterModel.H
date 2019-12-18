@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
 
 SourceFiles
     departureDiameterModel.C
-    newdepartureDiameterModel.C
+    newDepartureDiameterModel.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -55,15 +55,6 @@ namespace wallBoilingModels
 
 class departureDiameterModel
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        departureDiameterModel(const departureDiameterModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const departureDiameterModel&);
-
-
 public:
 
     //- Runtime type information
@@ -87,6 +78,9 @@ public:
 
         //- Construct null
         departureDiameterModel();
+
+        //- Disallow default bitwise copy construction
+        departureDiameterModel(const departureDiameterModel&) = delete;
 
 
     // Selectors
@@ -113,6 +107,12 @@ public:
         ) const = 0;
 
         virtual void write(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const departureDiameterModel&) = delete;
 };
 
 

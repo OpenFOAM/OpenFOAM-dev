@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,20 +53,11 @@ class multivariateSelectionScheme
 :
     public multivariateSurfaceInterpolationScheme<Type>
 {
-    // Private data
+    // Private Data
 
         dictionary schemes_;
         const surfaceScalarField& faceFlux_;
         surfaceScalarField weights_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        multivariateSelectionScheme(const multivariateSelectionScheme&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const multivariateSelectionScheme&);
 
 
 public:
@@ -87,8 +78,17 @@ public:
             Istream& schemeData
         );
 
+        //- Disallow default bitwise copy construction
+        multivariateSelectionScheme
+        (
+            const multivariateSelectionScheme&
+        ) = delete;
+
 
     // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const multivariateSelectionScheme&) = delete;
 
         //- surfaceInterpolationScheme sub-class returned by operator(field)
         //  which is used as the interpolation scheme for the field
@@ -96,7 +96,7 @@ public:
         :
             public multivariateSurfaceInterpolationScheme<Type>::fieldScheme
         {
-            // Private data
+            // Private Data
 
                 const surfaceScalarField& weights_;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ class Distribution
 :
     public List<List<scalar>>
 {
-    // Private data
+    // Private Data
 
         //- Width of the bin for each component
         Type binWidth_;
@@ -87,12 +87,16 @@ public:
         //- Construct from separate binWidth for each component
         Distribution(const Type& binWidth);
 
-        //- Construct as copy
+        //- Copy constructor
         Distribution(const Distribution& d);
+
+        //- Move constructor
+        Distribution(Distribution&& d);
 
 
     //- Destructor
-        ~Distribution();
+    ~Distribution();
+
 
     // Member Functions
 
@@ -161,6 +165,9 @@ public:
     // Member Operators
 
         void operator=(const Distribution<Type>&);
+
+        void operator=(Distribution<Type>&&);
+
 
     // IOstream Operators
 

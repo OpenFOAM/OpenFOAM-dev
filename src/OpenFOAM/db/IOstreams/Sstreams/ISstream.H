@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ class ISstream
 :
     public Istream
 {
-    // Private data
+    // Private Data
 
         fileName name_;
         istream& is_;
@@ -63,19 +63,14 @@ class ISstream
 
         char nextValid();
 
-        void readWordToken(token&);
-
-    // Private Member Functions
-
-
         //- Read a verbatim string (excluding block delimiters).
-        Istream& readVerbatim(string&);
+        Istream& readVerbatim(verbatimString&);
 
-        //- Read a variable name (includes '{')
+        //- Read a variable name
         Istream& readVariable(string&);
 
-        //- Disallow default bitwise assignment
-        void operator=(const ISstream&);
+        //- Read a work token
+        void readWordToken(token&);
 
 
 public:
@@ -98,7 +93,7 @@ public:
     {}
 
 
-    // Member functions
+    // Member Functions
 
         // Inquiry
 
@@ -133,6 +128,10 @@ public:
 
             //- Raw, low-level getline into a string function.
             inline ISstream& getLine(string&);
+
+            //- Get multiple lines using the '\' continuation character
+            //   into a string
+            inline ISstream& getMultiLines(string&);
 
             //- Raw, low-level putback character function.
             inline ISstream& putback(const char&);
@@ -195,6 +194,12 @@ public:
 
             //- Print description of IOstream to Ostream
             virtual void print(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const ISstream&) = delete;
 };
 
 

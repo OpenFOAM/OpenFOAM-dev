@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,15 +76,6 @@ protected:
         const surfaceScalarField& phi_;
 
 
-    // Private Member Functions
-
-        //- Disallow copy construct
-        viscosityModel(const viscosityModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const viscosityModel&);
-
-
 public:
 
     //- Runtime type information
@@ -108,10 +99,10 @@ public:
         );
 
 
-    // Selectors
+    // Constructors
 
-        //- Return a reference to the selected viscosity model
-        static autoPtr<viscosityModel> New
+        //- Construct from components
+        viscosityModel
         (
             const word& name,
             const dictionary& viscosityProperties,
@@ -119,11 +110,14 @@ public:
             const surfaceScalarField& phi
         );
 
+        //- Disallow default bitwise copy construction
+        viscosityModel(const viscosityModel&);
 
-    // Constructors
 
-        //- Construct from components
-        viscosityModel
+    // Selectors
+
+        //- Return a reference to the selected viscosity model
+        static autoPtr<viscosityModel> New
         (
             const word& name,
             const dictionary& viscosityProperties,
@@ -159,6 +153,12 @@ public:
 
         //- Read transportProperties dictionary
         virtual bool read(const dictionary& viscosityProperties) = 0;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const viscosityModel&) = delete;
 };
 
 

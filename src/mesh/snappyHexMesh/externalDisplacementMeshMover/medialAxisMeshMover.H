@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ class medialAxisMeshMover
 :
     public externalDisplacementMeshMover
 {
-    // Private data
+    // Private Data
 
         const labelList adaptPatchIDs_;
 
@@ -224,12 +224,6 @@ class medialAxisMeshMover
             labelList& checkFaces
         );
 
-        //- Disallow default bitwise copy construct
-        medialAxisMeshMover(const medialAxisMeshMover&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const medialAxisMeshMover&);
-
 
 public:
 
@@ -246,6 +240,9 @@ public:
             const List<labelPair>& baffles,
             pointVectorField& pointDisplacement
         );
+
+        //- Disallow default bitwise copy construction
+        medialAxisMeshMover(const medialAxisMeshMover&) = delete;
 
 
     // Destructor
@@ -274,6 +271,11 @@ public:
             NotImplemented;
         }
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const medialAxisMeshMover&) = delete;
 };
 
 

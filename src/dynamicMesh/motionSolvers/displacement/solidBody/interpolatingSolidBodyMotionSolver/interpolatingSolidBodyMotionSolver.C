@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ namespace Foam
 Foam::interpolatingSolidBodyMotionSolver::interpolatingSolidBodyMotionSolver
 (
     const polyMesh& mesh,
-    const IOdictionary& dict
+    const dictionary& dict
 )
 :
     points0MotionSolver(mesh, dict, typeName),
@@ -56,8 +56,8 @@ Foam::interpolatingSolidBodyMotionSolver::interpolatingSolidBodyMotionSolver
     patches_(wordReList(coeffDict().lookup("patches"))),
     patchSet_(mesh.boundaryMesh().patchSet(patches_)),
     CofG_(coeffDict().lookup("CofG")),
-    di_(readScalar(coeffDict().lookup("innerDistance"))),
-    do_(readScalar(coeffDict().lookup("outerDistance"))),
+    di_(coeffDict().lookup<scalar>("innerDistance")),
+    do_(coeffDict().lookup<scalar>("outerDistance")),
     scale_
     (
         IOobject

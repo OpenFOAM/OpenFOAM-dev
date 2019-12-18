@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,7 @@ Class
     Foam::diameterModels::breakupModels::exponential
 
 Description
-    Exponential kernel. Used for verification and validation of the breakup
-    formulation implemented in the populationBalanceModel class.
+    Exponential kernel.
 
 SourceFiles
     exponential.C
@@ -55,7 +54,7 @@ class exponential
 :
     public breakupModel
 {
-    // Private data
+    // Private Data
 
         //- Exponent
         scalar exponent_;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,11 +73,11 @@ thermalBaffle1DFvPatchScalarField
     mixedFvPatchScalarField(ptf, p, iF, mapper),
     TName_(ptf.TName_),
     baffleActivated_(ptf.baffleActivated_),
-    thickness_(ptf.thickness_, mapper),
-    Qs_(ptf.Qs_, mapper),
+    thickness_(mapper(ptf.thickness_)),
+    Qs_(mapper(ptf.Qs_)),
     solidDict_(ptf.solidDict_),
     solidPtr_(ptf.solidPtr_),
-    qrPrevious_(ptf.qrPrevious_, mapper),
+    qrPrevious_(mapper(ptf.qrPrevious_)),
     qrRelaxation_(ptf.qrRelaxation_),
     qrName_(ptf.qrName_)
 {}
@@ -303,8 +303,8 @@ void thermalBaffle1DFvPatchScalarField<solidType>::autoMap
 
     if (this->owner())
     {
-        thickness_.autoMap(m);
-        Qs_.autoMap(m);
+        m(thickness_, thickness_);
+        m(Qs_, Qs_);
     }
 }
 
@@ -430,15 +430,14 @@ void thermalBaffle1DFvPatchScalarField<solidType>::write(Ostream& os) const
 
     if (this->owner())
     {
-        baffleThickness()().writeEntry("thickness", os);
-        Qs()().writeEntry("Qs", os);
+        writeEntry(os, "thickness", baffleThickness()());
+        writeEntry(os, "Qs", Qs()());
         solid().write(os);
     }
 
-    qrPrevious_.writeEntry("qrPrevious", os);
-    os.writeKeyword("qr")<< qrName_ << token::END_STATEMENT << nl;
-    os.writeKeyword("qrRelaxation")<< qrRelaxation_
-        << token::END_STATEMENT << nl;
+    writeEntry(os, "qrPrevious", qrPrevious_);
+    writeEntry(os, "qr", qrName_);
+    writeEntry(os, "qrRelaxation", qrRelaxation_);
 }
 
 

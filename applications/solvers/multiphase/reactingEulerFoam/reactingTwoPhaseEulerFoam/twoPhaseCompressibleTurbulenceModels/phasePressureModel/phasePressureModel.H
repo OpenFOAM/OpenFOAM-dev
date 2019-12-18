@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,12 +75,7 @@ class phasePressureModel
         RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel>>
     >
 {
-    // Private data
-
-        // Input Fields
-
-            const phaseModel& phase_;
-
+    // Private Data
 
         // Kinetic Theory Model coefficients
 
@@ -101,12 +96,6 @@ class phasePressureModel
 
         void correctNut()
         {}
-
-        //- Disallow default bitwise copy construct
-        phasePressureModel(const phasePressureModel&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const phasePressureModel&);
 
 
 public:
@@ -129,6 +118,9 @@ public:
             const word& propertiesName = turbulenceModel::propertiesName,
             const word& type = typeName
         );
+
+        //- Disallow default bitwise copy construction
+        phasePressureModel(const phasePressureModel&) = delete;
 
 
     //- Destructor
@@ -177,6 +169,12 @@ public:
 
         //- Solve the kinetic theory equations and correct the viscosity
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const phasePressureModel&) = delete;
 };
 
 

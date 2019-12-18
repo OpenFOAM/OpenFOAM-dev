@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,34 +48,34 @@ namespace Foam
 {
 
 // Forward declaration of friend functions and operators
-template<class T, class BaseType> class CompactIOField;
+template<class Type, class BaseType> class CompactIOField;
 
-template<class T, class BaseType> Istream& operator>>
+template<class Type, class BaseType> Istream& operator>>
 (
     Istream&,
-    CompactIOField<T, BaseType>&
+    CompactIOField<Type, BaseType>&
 );
 
-template<class T, class BaseType> Ostream& operator<<
+template<class Type, class BaseType> Ostream& operator<<
 (
     Ostream&,
-    const CompactIOField<T, BaseType>&
+    const CompactIOField<Type, BaseType>&
 );
 
 /*---------------------------------------------------------------------------*\
                         Class CompactIOField Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class T, class BaseType>
+template<class Type, class BaseType>
 class CompactIOField
 :
     public regIOobject,
-    public Field<T>
+    public Field<Type>
 {
     // Private Member Functions
 
         //- Read according to header type
-        void readFromStream(const bool valid = true);
+        void readFromStream(const bool read = true);
 
 public:
 
@@ -89,16 +89,19 @@ public:
         CompactIOField(const IOobject&);
 
         //- Construct from IOobject; does local processor require reading?
-        CompactIOField(const IOobject&, const bool valid);
+        CompactIOField(const IOobject&, const bool read);
 
         //- Construct from IOobject and size
         CompactIOField(const IOobject&, const label);
 
         //- Construct from IOobject and a Field
-        CompactIOField(const IOobject&, const Field<T>&);
+        CompactIOField(const IOobject&, const Field<Type>&);
 
-        //- Construct by transferring the Field contents
-        CompactIOField(const IOobject&, const Xfer<Field<T>>&);
+        //- Move construct by transferring the Field contents
+        CompactIOField(const IOobject&, Field<Type>&&);
+
+        //- Move constructor
+        CompactIOField(CompactIOField<Type, BaseType>&&);
 
 
     // Destructor
@@ -106,24 +109,26 @@ public:
         virtual ~CompactIOField();
 
 
-    // Member functions
+    // Member Functions
 
         virtual bool writeObject
         (
             IOstream::streamFormat,
             IOstream::versionNumber,
             IOstream::compressionType,
-            const bool valid
+            const bool write
         ) const;
 
         virtual bool writeData(Ostream&) const;
 
 
-    // Member operators
+    // Member Operators
 
-        void operator=(const CompactIOField<T, BaseType>&);
+        void operator=(const CompactIOField<Type, BaseType>&);
+        void operator=(CompactIOField<Type, BaseType>&&);
 
-        void operator=(const Field<T>&);
+        void operator=(const Field<Type>&);
+        void operator=(Field<Type>&&);
 };
 
 

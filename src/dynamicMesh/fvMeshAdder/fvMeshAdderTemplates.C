@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,9 @@ License
 
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "emptyFvPatchField.H"
+#include "pointFields.H"
 #include "directFvPatchFieldMapper.H"
+#include "directPointPatchFieldMapper.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -628,6 +629,316 @@ void Foam::fvMeshAdder::MapSurfaceFields
             }
 
             MapSurfaceField<Type>(meshMap, fld, fldToAdd);
+        }
+        else
+        {
+            WarningInFunction
+                << "Not mapping field " << fld.name()
+                << " since not present on mesh to add"
+                << endl;
+        }
+    }
+}
+
+
+template<class Type>
+void Foam::fvMeshAdder::MapPointField
+(
+    const pointMesh& mesh,
+    const mapAddedPolyMesh& meshMap,
+    const labelListList& oldMeshPoints,
+
+    GeometricField<Type, pointPatchField, pointMesh>& fld,
+    const GeometricField<Type, pointPatchField, pointMesh>& fldToAdd
+)
+{
+    // This is a bit tricky:
+    // - mesh pointed to by fld is invalid
+    // - pointPatches pointed to be fld are invalid
+
+    typename GeometricField<Type, pointPatchField, pointMesh>::
+    Boundary& bfld = fld.boundaryFieldRef();
+
+    // Internal field
+    // ~~~~~~~~~~~~~~
+
+    // Store old internal field
+    {
+        Field<Type> oldField(fld);
+
+        // Modify internal field
+        Field<Type>& intFld = fld.primitiveFieldRef();
+
+        intFld.setSize(mesh.size());
+
+        intFld.rmap(oldField, meshMap.oldPointMap());
+        intFld.rmap(fldToAdd, meshMap.addedPointMap());
+    }
+
+
+    // Patch fields from old mesh
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    {
+        const labelList& oldPatchMap = meshMap.oldPatchMap();
+
+        // Reorder old patches in order of new ones. Put removed patches at end.
+
+        label unusedPatchi = 0;
+
+        forAll(oldPatchMap, patchi)
+        {
+            label newPatchi = oldPatchMap[patchi];
+
+            if (newPatchi != -1)
+            {
+                unusedPatchi++;
+            }
+        }
+
+        label nUsedPatches = unusedPatchi;
+
+        // Reorder list for patchFields
+        labelList oldToNew(oldPatchMap.size());
+
+        forAll(oldPatchMap, patchi)
+        {
+            label newPatchi = oldPatchMap[patchi];
+
+            if (newPatchi != -1)
+            {
+                oldToNew[patchi] = newPatchi;
+            }
+            else
+            {
+                oldToNew[patchi] = unusedPatchi++;
+            }
+        }
+
+
+        // Sort deleted ones last so is now in newPatch ordering
+        bfld.reorder(oldToNew);
+        // Extend to covers all patches
+        bfld.setSize(mesh.boundary().size());
+        // Delete unused patches
+        for
+        (
+            label newPatchi = nUsedPatches;
+            newPatchi < bfld.size();
+            newPatchi++
+        )
+        {
+            bfld.set(newPatchi, nullptr);
+        }
+
+
+        // Map old values
+        // ~~~~~~~~~~~~~~
+
+        forAll(oldPatchMap, patchi)
+        {
+            label newPatchi = oldPatchMap[patchi];
+
+            if (newPatchi != -1)
+            {
+                const labelList& oldMp = oldMeshPoints[patchi];
+                const pointPatch& newPp = mesh.boundary()[newPatchi];
+                const labelList& newMeshPoints = newPp.meshPoints();
+                Map<label> newMeshPointMap(2*newMeshPoints.size());
+                forAll(newMeshPoints, ppi)
+                {
+                    newMeshPointMap.insert(newMeshPoints[ppi], ppi);
+                }
+
+                labelList newToOld(newPp.size(), -1);
+                forAll(oldMp, oldPointi)
+                {
+                    label newPointi = oldMp[oldPointi];
+
+                    Map<label>::const_iterator fnd =
+                        newMeshPointMap.find(newPointi);
+                    if (fnd == newMeshPointMap.end())
+                    {
+                        // Possibly an internal point
+                    }
+                    else
+                    {
+                        // Part of new patch
+                        newToOld[fnd()] = oldPointi;
+                    }
+                }
+
+                directPointPatchFieldMapper patchMapper(newToOld);
+
+                // Create new patchField with same type as existing one.
+                // Note:
+                // - boundaryField already in new order so access with newPatchi
+                // - bfld[newPatchi] both used for type and old
+                //   value
+                // - hope that field mapping allows aliasing since old and new
+                //   are same memory!
+                bfld.set
+                (
+                    newPatchi,
+                    pointPatchField<Type>::New
+                    (
+                        bfld[newPatchi],                // old field
+                        mesh.boundary()[newPatchi],     // new pointPatch
+                        fld(), // new internal field
+                        patchMapper                     // mapper (new to old)
+                    )
+                );
+            }
+        }
+    }
+
+
+
+    // Patch fields from added mesh
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    {
+        const labelList& addedPatchMap = meshMap.addedPatchMap();
+
+        // Add addedMesh patches
+        forAll(addedPatchMap, patchi)
+        {
+            label newPatchi = addedPatchMap[patchi];
+
+            if (newPatchi != -1)
+            {
+                const pointPatch& oldPatch = fldToAdd.mesh().boundary()[patchi];
+                const labelList& oldMp = oldPatch.meshPoints();
+                const pointPatch& newPp = mesh.boundary()[newPatchi];
+                const labelList& newMeshPoints = newPp.meshPoints();
+                Map<label> newMpm(2*newMeshPoints.size());
+                forAll(newMeshPoints, ppi)
+                {
+                    newMpm.insert(newMeshPoints[ppi], ppi);
+                }
+
+                if (!bfld(newPatchi))
+                {
+                    // First occurrence of newPatchi. Map from existing
+                    // patchField
+
+                    labelList newToAdded(newPp.size(), -1);
+                    forAll(oldMp, oldPointi)
+                    {
+                        label newPointi = oldMp[oldPointi];
+                        Map<label>::const_iterator fnd = newMpm.find(newPointi);
+                        if (fnd == newMpm.end())
+                        {
+                            // Possibly an internal point
+                        }
+                        else
+                        {
+                            // Part of new patch
+                            newToAdded[fnd()] = oldPointi;
+                        }
+                    }
+
+                    directPointPatchFieldMapper patchMapper(newToAdded);
+
+                    bfld.set
+                    (
+                        newPatchi,
+                        pointPatchField<Type>::New
+                        (
+                            fldToAdd.boundaryField()[patchi],// added field
+                            mesh.boundary()[newPatchi],      // new pointPatch
+                            fld(),  // new int. field
+                            patchMapper                      // mapper
+                        )
+                    );
+                }
+                else
+                {
+                    // PatchField will have correct size already. Just slot in
+                    // my elements.
+
+                    labelList oldToNew(oldPatch.size(), -1);
+                    forAll(oldMp, oldPointi)
+                    {
+                        label newPointi = oldMp[oldPointi];
+                        Map<label>::const_iterator fnd = newMpm.find(newPointi);
+                        if (fnd != newMpm.end())
+                        {
+                            // Part of new patch
+                            oldToNew[oldPointi] = fnd();
+                        }
+                    }
+
+                    bfld[newPatchi].rmap
+                    (
+                        fldToAdd.boundaryField()[patchi],
+                        oldToNew
+                    );
+                }
+            }
+        }
+    }
+}
+
+
+template<class Type>
+void Foam::fvMeshAdder::MapPointFields
+(
+    const mapAddedPolyMesh& meshMap,
+    const pointMesh& mesh,
+    const labelListList& oldMeshPoints,
+    const objectRegistry& meshToAdd
+)
+{
+    typedef GeometricField<Type, pointPatchField, pointMesh> fldType;
+
+    HashTable<const fldType*> fields(mesh.thisDb().lookupClass<fldType>());
+    HashTable<const fldType*> fieldsToAdd(meshToAdd.lookupClass<fldType>());
+
+    // It is necessary to enforce that all old-time fields are stored
+    // before the mapping is performed.  Otherwise, if the
+    // old-time-level field is mapped before the field itself, sizes
+    // will not match.
+
+    for
+    (
+        typename HashTable<const fldType*>::
+            iterator fieldIter = fields.begin();
+        fieldIter != fields.end();
+        ++fieldIter
+    )
+    {
+        if (debug)
+        {
+            Pout<< "MapPointFields : Storing old time for "
+                << fieldIter()->name() << endl;
+        }
+
+        const_cast<fldType*>(fieldIter())->storeOldTimes();
+    }
+
+
+    for
+    (
+        typename HashTable<const fldType*>::
+            iterator fieldIter = fields.begin();
+        fieldIter != fields.end();
+        ++fieldIter
+    )
+    {
+        fldType& fld = const_cast<fldType&>(*fieldIter());
+
+        if (fieldsToAdd.found(fld.name()))
+        {
+            const fldType& fldToAdd = *fieldsToAdd[fld.name()];
+
+            if (debug)
+            {
+                Pout<< "MapPointFields : mapping " << fld.name()
+                    << " and " << fldToAdd.name() << endl;
+            }
+
+            MapPointField<Type>(mesh, meshMap, oldMeshPoints, fld, fldToAdd);
         }
         else
         {

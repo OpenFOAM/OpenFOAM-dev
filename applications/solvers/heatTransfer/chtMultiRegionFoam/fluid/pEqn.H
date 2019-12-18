@@ -6,7 +6,7 @@ if (!mesh.steady() && !pimple.simpleRho())
 volScalarField rAU("rAU", 1.0/UEqn.A());
 surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
 volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p_rgh));
-if (pimple.nCorrPISO() <= 1)
+if (pimple.nCorrPiso() <= 1)
 {
     tUEqn.clear();
 }
@@ -16,7 +16,7 @@ surfaceScalarField phig(-rhorAUf*ghf*fvc::snGrad(rho)*mesh.magSf());
 surfaceScalarField phiHbyA
 (
     "phiHbyA",
-    fvc::flux(rho*HbyA)
+    fvc::interpolate(rho)*fvc::flux(HbyA)
   + MRF.zeroFilter(rhorAUf*fvc::ddtCorr(rho, U, phi))
 );
 
@@ -93,6 +93,8 @@ constrainPressure(p_rgh, rho, U, phiHbyA, rhorAUf, MRF);
 
     p = p_rgh + rho*gh;
 
+    pressureControl.limit(p);
+
     // Thermodynamic density update
     if (!mesh.steady())
     {
@@ -117,8 +119,6 @@ else
     #include "incompressible/continuityErrs.H"
 }
 
-// Pressure limiting
-const bool pLimited = pressureControl.limit(p);
 
 // For closed-volume compressible cases adjust the pressure level
 // to obey overall mass continuity
@@ -127,15 +127,11 @@ if (adjustMass)
     p += (initialMass - fvc::domainIntegrate(thermo.rho()))
         /fvc::domainIntegrate(psi);
     p_rgh = p - rho*gh;
-}
-
-if (adjustMass || pLimited)
-{
     p.correctBoundaryConditions();
 }
 
 // Density updates
-if (adjustMass || pLimited || mesh.steady() || pimple.simpleRho())
+if (adjustMass || mesh.steady() || pimple.simpleRho())
 {
     rho = thermo.rho();
 }

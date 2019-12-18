@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ Foam::scalar Foam::WLFTransport<Thermo>::readCoeff
     const dictionary& dict
 )
 {
-    return readScalar(dict.subDict("transport").lookup(coeffName));
+    return dict.subDict("transport").lookup<scalar>(coeffName);
 }
 
 
@@ -49,7 +49,7 @@ Foam::WLFTransport<Thermo>::WLFTransport(const dictionary& dict)
     Tr_(readCoeff("Tr", dict)),
     C1_(readCoeff("C1", dict)),
     C2_(readCoeff("C2", dict)),
-    rPr_(1.0/readScalar(dict.subDict("transport").lookup("Pr")))
+    rPr_(1.0/dict.subDict("transport").lookup<scalar>("Pr"))
 {}
 
 

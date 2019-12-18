@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ public:
         {}
 
 
-        //- Construct as copy
+        //- Copy constructor
         surfaceSlipDisplacementFvPatchField
         (
             const surfaceSlipDisplacementFvPatchField<Type>& ptf
@@ -115,7 +115,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         surfaceSlipDisplacementFvPatchField
         (
             const surfaceSlipDisplacementFvPatchField<Type>& ptf,
@@ -141,7 +141,7 @@ public:
         {
             slipFvPatchField<Type>::write(os);
             // Only so we can easily postprocess.
-            this->writeEntry("value", os);
+            writeEntry(os, "value", *this);
         }
 };
 

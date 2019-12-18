@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,16 +66,10 @@ class contactAngleForce
         volScalarField mask_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Initialise
         void initialise();
-
-        //- Disallow default bitwise copy construct
-        contactAngleForce(const contactAngleForce&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const contactAngleForce&);
 
 
 protected:
@@ -100,6 +94,9 @@ public:
             const dictionary& dict
         );
 
+        //- Disallow default bitwise copy construction
+        contactAngleForce(const contactAngleForce&) = delete;
+
 
     //- Destructor
     virtual ~contactAngleForce();
@@ -109,6 +106,12 @@ public:
 
         //- Correct
         virtual tmp<fvVectorMatrix> correct(volVectorField& U);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const contactAngleForce&) = delete;
 };
 
 

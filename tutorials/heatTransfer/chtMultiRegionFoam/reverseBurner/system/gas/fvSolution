@@ -16,27 +16,17 @@ FoamFile
 
 solvers
 {
-    rho
+    "rho.*"
     {
-        solver          PCG;
-        preconditioner  DIC;
-        tolerance       1e-7;
-        relTol          0.1;
-    }
-
-    rhoFinal
-    {
-        $rho;
-        tolerance       1e-7;
-        relTol          0;
+        solver          diagonal;
     }
 
     p_rgh
     {
         solver           GAMG;
+        smoother         GaussSeidel;
         tolerance        1e-7;
         relTol           0.01;
-        smoother         GaussSeidel;
     }
 
     p_rghFinal
@@ -46,7 +36,7 @@ solvers
         relTol           0;
     }
 
-    "(U|h|k|epsilon|R|Yi)"
+    "(U|e|k|epsilon|Yi)"
     {
         solver           PBiCGStab;
         preconditioner   DILU;
@@ -54,11 +44,25 @@ solvers
         relTol           0.1;
     }
 
-    "(U|h|k|epsilon|R|Yi)Final"
+    "(U|e|k|epsilon|Yi)Final"
     {
         $U;
         tolerance        1e-7;
         relTol           0;
+    }
+
+    G
+    {
+        solver          GAMG;
+        smoother        GaussSeidel;
+        tolerance       1e-5;
+        relTol          0.1;
+    }
+
+    GFinal
+    {
+        $G;
+        relTol          0;
     }
 }
 
@@ -73,8 +77,7 @@ relaxationFactors
 {
     equations
     {
-        h               1;
-        U               1;
+        ".*"            1;
     }
 }
 

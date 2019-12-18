@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,7 @@ Foam::scalar Foam::Trapezoid::solve
 (
     const scalar x0,
     const scalarField& y0,
+    const label li,
     const scalarField& dydx0,
     const scalar dx,
     scalarField& y
@@ -80,7 +81,7 @@ Foam::scalar Foam::Trapezoid::solve
     }
 
     // Evaluate the system for the predicted state
-    odes_.derivatives(x0 + dx, y, err_);
+    odes_.derivatives(x0 + dx, y, li, err_);
 
     // Update the state as the average between the prediction and the correction
     // and estimate the error from the difference
@@ -98,10 +99,11 @@ void Foam::Trapezoid::solve
 (
     scalar& x,
     scalarField& y,
+    const label li,
     scalar& dxTry
 ) const
 {
-    adaptiveSolver::solve(odes_, x, y, dxTry);
+    adaptiveSolver::solve(odes_, x, y, li, dxTry);
 }
 
 

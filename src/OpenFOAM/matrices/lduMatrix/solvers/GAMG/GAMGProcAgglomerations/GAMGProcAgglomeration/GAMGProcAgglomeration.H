@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,18 +78,6 @@ protected:
         //- Debug: calculate global cell-cells
         static labelListList globalCellCells(const lduMesh&);
 
-private:
-
-    // Private data
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        GAMGProcAgglomeration(const GAMGProcAgglomeration&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const GAMGProcAgglomeration&);
-
 
 public:
 
@@ -125,6 +113,9 @@ public:
             const dictionary& controlDict
         );
 
+        //- Disallow default bitwise copy construction
+        GAMGProcAgglomeration(const GAMGProcAgglomeration&) = delete;
+
 
     // Selectors
 
@@ -146,6 +137,11 @@ public:
         //- Modify agglomeration. Return true if modified
         virtual bool agglomerate() = 0;
 
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const GAMGProcAgglomeration&) = delete;
 };
 
 

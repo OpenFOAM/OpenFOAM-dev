@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,9 +104,6 @@ protected:
             const label maxLen
         ) const;
 
-
-        //- Disallow default bitwise copy construct
-        topoSet(const topoSet&);
 
 public:
 
@@ -214,6 +211,8 @@ public:
         //- Construct from IOobject and labelHashSet.
         topoSet(const IOobject&, const labelHashSet&);
 
+        //- Disallow default bitwise copy construction
+        topoSet(const topoSet&) = delete;
 
 
         //- Clone
@@ -261,7 +260,7 @@ public:
     virtual ~topoSet();
 
 
-    // Member functions
+    // Member Functions
 
         //- Invert contents. (insert all members 0..maxLen-1 which were not in
         //  set)
@@ -302,7 +301,7 @@ public:
 
 
 
-    // Member operators
+    // Member Operators
 
         //- Copy labelHashSet part only
         void operator=(const topoSet&);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ namespace Foam
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-tmp<scalarField> nutUWallFunctionFvPatchScalarField::calcNut() const
+tmp<scalarField> nutUWallFunctionFvPatchScalarField::nut() const
 {
     const label patchi = patch().index();
 
@@ -48,13 +48,13 @@ tmp<scalarField> nutUWallFunctionFvPatchScalarField::calcNut() const
             internalField().group()
         )
     );
-    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
-    const scalarField magUp(mag(Uw.patchInternalField() - Uw));
     const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();
 
-    tmp<scalarField> tyPlus = calcYPlus(magUp);
-    scalarField& yPlus = tyPlus.ref();
+    const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
+    const scalarField magUp(mag(Uw.patchInternalField() - Uw));
+
+    const scalarField yPlus(this->yPlus(magUp));
 
     tmp<scalarField> tnutw(new scalarField(patch().size(), 0.0));
     scalarField& nutw = tnutw.ref();
@@ -64,7 +64,7 @@ tmp<scalarField> nutUWallFunctionFvPatchScalarField::calcNut() const
         if (yPlus[facei] > yPlusLam_)
         {
             nutw[facei] =
-                nuw[facei]*(yPlus[facei]*kappa_/log(E_*yPlus[facei]) - 1.0);
+                nuw[facei]*(yPlus[facei]*kappa_/log(E_*yPlus[facei]) - 1);
         }
     }
 
@@ -72,7 +72,7 @@ tmp<scalarField> nutUWallFunctionFvPatchScalarField::calcNut() const
 }
 
 
-tmp<scalarField> nutUWallFunctionFvPatchScalarField::calcYPlus
+tmp<scalarField> nutUWallFunctionFvPatchScalarField::yPlus
 (
     const scalarField& magUp
 ) const
@@ -96,22 +96,27 @@ tmp<scalarField> nutUWallFunctionFvPatchScalarField::calcYPlus
 
     forAll(yPlus, facei)
     {
-        scalar kappaRe = kappa_*magUp[facei]*y[facei]/nuw[facei];
-
-        scalar yp = yPlusLam_;
-        scalar ryPlusLam = 1.0/yp;
+        const scalar Re = magUp[facei]*y[facei]/nuw[facei];
+        const scalar ryPlusLam = 1/yPlusLam_;
 
         int iter = 0;
-        scalar yPlusLast = 0.0;
+        scalar yp = yPlusLam_;
+        scalar yPlusLast = yp;
 
         do
         {
             yPlusLast = yp;
-            yp = (kappaRe + yp)/(1.0 + log(E_*yp));
+            if (yp > yPlusLam_)
+            {
+                yp = (kappa_*Re + yp)/(1 + log(E_*yp));
+            }
+            else
+            {
+                yp = sqrt(Re);
+            }
+        } while(mag(ryPlusLam*(yp - yPlusLast)) > 0.0001 && ++iter < 20);
 
-        } while (mag(ryPlusLam*(yp - yPlusLast)) > 0.01 && ++iter < 10 );
-
-        yPlus[facei] = max(0.0, yp);
+        yPlus[facei] = yp;
     }
 
     return tyPlus;
@@ -188,7 +193,7 @@ tmp<scalarField> nutUWallFunctionFvPatchScalarField::yPlus() const
     const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     const scalarField magUp(mag(Uw.patchInternalField() - Uw));
 
-    return calcYPlus(magUp);
+    return yPlus(magUp);
 }
 
 
@@ -196,7 +201,7 @@ void nutUWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
     writeLocalEntries(os);
-    writeEntry("value", os);
+    writeEntry(os, "value", *this);
 }
 
 

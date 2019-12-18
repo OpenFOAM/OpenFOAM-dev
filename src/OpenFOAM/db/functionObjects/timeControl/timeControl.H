@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ public:
 
 private:
 
-    // Private data
+    // Private Data
 
         //- Time object
         const Time& time_;
@@ -92,15 +92,6 @@ private:
         label executionIndex_;
 
 
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct and assignment
-        timeControl(const timeControl&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const timeControl&);
-
-
 public:
 
     // Constructors
@@ -112,6 +103,9 @@ public:
             const dictionary&,
             const word& prefix
         );
+
+        //- Disallow default bitwise copy construction
+        timeControl(const timeControl&) = delete;
 
 
     //- Destructor
@@ -137,6 +131,12 @@ public:
 
         //- Return the index of the previous execution
         inline label executionIndex() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const timeControl&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,8 +32,8 @@ inline Foam::MichaelisMentenReactionRate::MichaelisMentenReactionRate
 )
 :
     species_(st),
-    Vmax_(readScalar(dict.lookup("Vmax"))),
-    Km_(readScalar(dict.lookup("Km"))),
+    Vmax_(dict.lookup<scalar>("Vmax")),
+    Km_(dict.lookup<scalar>("Km")),
     s_(st[dict.lookup("S")])
 {
     beta_.append(Tuple2<label, scalar>(s_, 1.0));
@@ -46,7 +46,8 @@ inline Foam::scalar Foam::MichaelisMentenReactionRate::operator()
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return Vmax_/(Km_ + c[s_]);
@@ -57,7 +58,8 @@ inline Foam::scalar Foam::MichaelisMentenReactionRate::ddT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return 0;
@@ -76,6 +78,7 @@ inline void Foam::MichaelisMentenReactionRate::dcidc
     const scalar p,
     const scalar T,
     const scalarField& c,
+    const label li,
     scalarField& dcidc
 ) const
 {
@@ -87,7 +90,8 @@ inline Foam::scalar Foam::MichaelisMentenReactionRate::dcidT
 (
     const scalar p,
     const scalar T,
-    const scalarField& c
+    const scalarField& c,
+    const label li
 ) const
 {
     return 0;
@@ -96,9 +100,9 @@ inline Foam::scalar Foam::MichaelisMentenReactionRate::dcidT
 
 inline void Foam::MichaelisMentenReactionRate::write(Ostream& os) const
 {
-    os.writeKeyword("Vmax") << Vmax_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Km") << Km_ << token::END_STATEMENT << nl;
-    os.writeKeyword("S") << species_[s_] << token::END_STATEMENT << nl;
+    writeEntry(os, "Vmax", Vmax_);
+    writeEntry(os, "Km", Km_);
+    writeEntry(os, "S", species_[s_]);
 }
 
 

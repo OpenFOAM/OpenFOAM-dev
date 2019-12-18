@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,49 +24,14 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kLowReWallFunctionFvPatchScalarField.H"
+#include "nutWallFunctionFvPatchScalarField.H"
 #include "turbulenceModel.H"
-#include "fvPatchFieldMapper.H"
-#include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
-#include "wallFvPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-void kLowReWallFunctionFvPatchScalarField::checkType()
-{
-    if (!isA<wallFvPatch>(patch()))
-    {
-        FatalErrorInFunction
-            << "Invalid wall function specification" << nl
-            << "    Patch type for patch " << patch().name()
-            << " must be wall" << nl
-            << "    Current patch type is " << patch().type() << nl << endl
-            << abort(FatalError);
-    }
-}
-
-
-scalar kLowReWallFunctionFvPatchScalarField::yPlusLam
-(
-    const scalar kappa,
-    const scalar E
-)
-{
-    scalar ypl = 11.0;
-
-    for (int i=0; i<10; i++)
-    {
-        ypl = log(max(E*ypl, 1))/kappa;
-    }
-
-    return ypl;
-}
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -77,14 +42,8 @@ kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchField<scalar>(p, iF),
-    Cmu_(0.09),
-    kappa_(0.41),
-    E_(9.8),
-    Ceps2_(1.9),
-    yPlusLam_(yPlusLam(kappa_, E_))
-{
-    checkType();
-}
+    Ceps2_(1.9)
+{}
 
 
 kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
@@ -96,14 +55,8 @@ kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchField<scalar>(ptf, p, iF, mapper),
-    Cmu_(ptf.Cmu_),
-    kappa_(ptf.kappa_),
-    E_(ptf.E_),
-    Ceps2_(ptf.Ceps2_),
-    yPlusLam_(ptf.yPlusLam_)
-{
-    checkType();
-}
+    Ceps2_(ptf.Ceps2_)
+{}
 
 
 kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
@@ -114,14 +67,8 @@ kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchField<scalar>(p, iF, dict),
-    Cmu_(dict.lookupOrDefault<scalar>("Cmu", 0.09)),
-    kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
-    E_(dict.lookupOrDefault<scalar>("E", 9.8)),
-    Ceps2_(dict.lookupOrDefault<scalar>("Ceps2", 1.9)),
-    yPlusLam_(yPlusLam(kappa_, E_))
-{
-    checkType();
-}
+    Ceps2_(dict.lookupOrDefault<scalar>("Ceps2", 1.9))
+{}
 
 
 kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
@@ -130,14 +77,8 @@ kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchField<scalar>(kwfpsf),
-    Cmu_(kwfpsf.Cmu_),
-    kappa_(kwfpsf.kappa_),
-    E_(kwfpsf.E_),
-    Ceps2_(kwfpsf.Ceps2_),
-    yPlusLam_(kwfpsf.yPlusLam_)
-{
-    checkType();
-}
+    Ceps2_(kwfpsf.Ceps2_)
+{}
 
 
 kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
@@ -147,14 +88,8 @@ kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchField<scalar>(kwfpsf, iF),
-    Cmu_(kwfpsf.Cmu_),
-    kappa_(kwfpsf.kappa_),
-    E_(kwfpsf.E_),
-    Ceps2_(kwfpsf.Ceps2_),
-    yPlusLam_(kwfpsf.yPlusLam_)
-{
-    checkType();
-}
+    Ceps2_(kwfpsf.Ceps2_)
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -176,6 +111,10 @@ void kLowReWallFunctionFvPatchScalarField::updateCoeffs()
             internalField().group()
         )
     );
+
+    const nutWallFunctionFvPatchScalarField& nutw =
+        nutWallFunctionFvPatchScalarField::nutw(turbModel, patchi);
+
     const scalarField& y = turbModel.y()[patchi];
 
     const tmp<volScalarField> tk = turbModel.k();
@@ -184,7 +123,7 @@ void kLowReWallFunctionFvPatchScalarField::updateCoeffs()
     const tmp<scalarField> tnuw = turbModel.nu(patchi);
     const scalarField& nuw = tnuw();
 
-    const scalar Cmu25 = pow025(Cmu_);
+    const scalar Cmu25 = pow025(nutw.Cmu());
 
     scalarField& kw = *this;
 
@@ -197,11 +136,11 @@ void kLowReWallFunctionFvPatchScalarField::updateCoeffs()
 
         scalar yPlus = uTau*y[facei]/nuw[facei];
 
-        if (yPlus > yPlusLam_)
+        if (yPlus > nutw.yPlusLam())
         {
             scalar Ck = -0.416;
             scalar Bk = 8.366;
-            kw[facei] = Ck/kappa_*log(yPlus) + Bk;
+            kw[facei] = Ck/nutw.kappa()*log(yPlus) + Bk;
         }
         else
         {
@@ -222,21 +161,9 @@ void kLowReWallFunctionFvPatchScalarField::updateCoeffs()
 }
 
 
-void kLowReWallFunctionFvPatchScalarField::evaluate
-(
-    const Pstream::commsTypes commsType
-)
-{
-    fixedValueFvPatchField<scalar>::evaluate(commsType);
-}
-
-
 void kLowReWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
-    os.writeKeyword("Cmu") << Cmu_ << token::END_STATEMENT << nl;
-    os.writeKeyword("kappa") << kappa_ << token::END_STATEMENT << nl;
-    os.writeKeyword("E") << E_ << token::END_STATEMENT << nl;
-    os.writeKeyword("Ceps2") << Ceps2_ << token::END_STATEMENT << nl;
+    writeEntry(os, "Ceps2", Ceps2_);
     fixedValueFvPatchField<scalar>::write(os);
 }
 

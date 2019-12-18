@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ namespace Foam
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-tmp<scalarField> nutUTabulatedWallFunctionFvPatchScalarField::calcNut() const
+tmp<scalarField> nutUTabulatedWallFunctionFvPatchScalarField::nut() const
 {
     const label patchi = patch().index();
 
@@ -204,9 +204,8 @@ tmp<scalarField> nutUTabulatedWallFunctionFvPatchScalarField::yPlus() const
 void nutUTabulatedWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);
-    os.writeKeyword("uPlusTable") << uPlusTableName_
-        << token::END_STATEMENT << nl;
-    writeEntry("value", os);
+    writeEntry(os, "uPlusTable", uPlusTableName_);
+    writeEntry(os, "value", *this);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,11 +43,10 @@ const char* const atomic::group = "atomic";
 // Note: cannot use dimless etc. since not guaranteed to be constructed
 defineDimensionedConstantWithDefault
 (
-    atomic::group,
-    atomic::alpha,
+    atomic,
+    alpha,
     dimensionedScalar
     (
-        "alpha",
         sqr(electromagnetic::e)
        /(
             dimensionedScalar("C", dimensionSet(0, 0, 0, 0, 0), 2.0)
@@ -55,24 +54,21 @@ defineDimensionedConstantWithDefault
            *universal::h
            *universal::c
         )
-    ),
-    constantatomicalpha,
-    "alpha"
+    )
 );
 
 
 defineDimensionedConstantWithDefault
 (
-    atomic::group,
-    atomic::Rinf,
+    atomic,
+    Rinf,
     dimensionedScalar
     (
-        "Rinf",
         sqr(atomic::alpha)
        *atomic::me
        *universal::c
        /(
-            Foam::dimensionedScalar
+            dimensionedScalar
             (
                 "C",
                 dimensionSet(0, 0, 0, 0, 0),
@@ -80,22 +76,19 @@ defineDimensionedConstantWithDefault
             )
            *universal::h
         )
-    ),
-    constantatomicRinf,
-    "Rinf"
+    )
 );
 
 
 defineDimensionedConstantWithDefault
 (
-    atomic::group,
-    atomic::a0,
+    atomic,
+    a0,
     dimensionedScalar
     (
-        "a0",
         atomic::alpha
        /(
-            Foam::dimensionedScalar
+            dimensionedScalar
             (
                 "C",
                 dimensionSet(0, 0, 0, 0, 0),
@@ -103,22 +96,19 @@ defineDimensionedConstantWithDefault
             )
            *atomic::Rinf
         )
-    ),
-    constantatomica0,
-    "a0"
+    )
 );
 
 
 defineDimensionedConstantWithDefault
 (
-    atomic::group,
-    atomic::re,
+    atomic,
+    re,
     dimensionedScalar
     (
-        "re",
-        Foam::sqr(electromagnetic::e)
+        sqr(electromagnetic::e)
        /(
-            Foam::dimensionedScalar
+            dimensionedScalar
             (
                 "C",
                 dimensionSet(0, 0, 0, 0, 0),
@@ -126,26 +116,21 @@ defineDimensionedConstantWithDefault
             )
            *electromagnetic::epsilon0
            *atomic::me
-           *Foam::sqr(universal::c)
+           *sqr(universal::c)
         )
-    ),
-    constantatomicre,
-    "re"
+    )
 );
 
 
 defineDimensionedConstantWithDefault
 (
-    atomic::group,
-    atomic::Eh,
+    atomic,
+    Eh,
     dimensionedScalar
     (
-        "Eh",
-        Foam::dimensionedScalar("C", dimensionSet(0, 0, 0, 0, 0), 2.0)
+        dimensionedScalar("C", dimensionSet(0, 0, 0, 0, 0), 2.0)
        *atomic::Rinf*universal::h*universal::c
-    ),
-    constantatomicEh,
-    "Eh"
+    )
 );
 
 

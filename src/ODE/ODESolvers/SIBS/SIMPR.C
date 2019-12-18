@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,7 @@ void Foam::SIBS::SIMPR
 (
     const scalar xStart,
     const scalarField& y,
+    const label li,
     const scalarField& dydx,
     const scalarField& dfdx,
     const scalarSquareMatrix& dfdy,
@@ -71,7 +72,7 @@ void Foam::SIBS::SIMPR
 
     scalar x = xStart + h;
 
-    odes_.derivatives(x, ytemp, yEnd);
+    odes_.derivatives(x, ytemp, li, yEnd);
 
     for (label nn=2; nn<=nSteps; nn++)
     {
@@ -89,7 +90,7 @@ void Foam::SIBS::SIMPR
 
         x += h;
 
-        odes_.derivatives(x, ytemp, yEnd);
+        odes_.derivatives(x, ytemp, li, yEnd);
     }
     for (label i=0; i<n_; i++)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        uniformValue | uniform value           |         yes |
+        uniformValue | uniform value           | yes         |
     \endtable
 
     Example of the boundary condition specification:
@@ -48,7 +48,7 @@ Note
     constant value.
 
 See also
-    Foam::Function1Types
+    Foam::Function1s
     Foam::fixedValueFvPatchField
 
 SourceFiles
@@ -76,7 +76,7 @@ class uniformFixedValueFvPatchField
 :
     public fixedValueFvPatchField<Type>
 {
-    // Private data
+    // Private Data
 
         autoPtr<Function1<Type>> uniformValue_;
 
@@ -122,7 +122,7 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy
+        //- Copy constructor
         uniformFixedValueFvPatchField
         (
             const uniformFixedValueFvPatchField<Type>&
@@ -137,7 +137,7 @@ public:
             );
         }
 
-        //- Construct as copy setting internal field reference
+        //- Copy constructor setting internal field reference
         uniformFixedValueFvPatchField
         (
             const uniformFixedValueFvPatchField<Type>&,
@@ -157,7 +157,7 @@ public:
         }
 
 
-    // Member functions
+    // Member Functions
 
         //- Update the coefficients associated with the patch field
         virtual void updateCoeffs();

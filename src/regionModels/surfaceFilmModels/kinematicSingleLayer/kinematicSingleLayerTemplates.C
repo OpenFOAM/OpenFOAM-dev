@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,37 +37,39 @@ namespace surfaceFilmModels
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void kinematicSingleLayer::constrainFilmField
+tmp<Type> kinematicSingleLayer::constrainFilmField
 (
-    Type& field,
+    const tmp<Type>& tfield,
     const typename Type::cmptType& value
 )
 {
-    typename Type::Boundary& fieldBf = field.boundaryFieldRef();
+    tmp<Type> tresult(tfield);
+    Type& result = tresult.ref();
+
+    typename Type::Boundary& fieldBf = result.boundaryFieldRef();
 
     forAll(intCoupledPatchIDs_, i)
     {
-        label patchi = intCoupledPatchIDs_[i];
+        const label patchi = intCoupledPatchIDs_[i];
         fieldBf[patchi] = value;
-        if (debug)
-        {
-            Info<< "Constraining " << field.name()
-                << " boundary " << field.boundaryField()[patchi].patch().name()
-                << " to " << value << endl;
-        }
+
+        DebugInFunction
+            << "Constraining " << tfield().name()
+            << " boundary " << tfield().boundaryField()[patchi].patch().name()
+            << " to " << value << endl;
     }
 
-    forAll(passivePatchIDs_, i)
+    forAll(passivePatchIDs(), i)
     {
-        label patchi = passivePatchIDs_[i];
+        const label patchi = passivePatchIDs()[i];
         fieldBf[patchi] = value;
-        if (debug)
-        {
-            Info<< "Constraining " << field.name()
-                << " boundary " << field.boundaryField()[patchi].patch().name()
-                << " to " << value << endl;
-        }
+        DebugInFunction
+            << "Constraining " << tfield().name()
+            << " boundary " << tfield().boundaryField()[patchi].patch().name()
+            << " to " << value << endl;
     }
+
+    return tresult;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,11 +92,11 @@ public:
             const label startIndex
         );
 
-        //- Construct as copy
+        //- Copy constructor
         inline SubField(const SubField<Type>&);
 
 
-    // Member functions
+    // Member Functions
 
         //- Return a null SubField
         static inline const SubField<Type>& null();
@@ -108,7 +108,7 @@ public:
         tmp<Field<Type>> T() const;
 
 
-    // Member operators
+    // Member Operators
 
         //- Assignment via UList operator. Takes linear time.
         inline void operator=(const SubField<Type>&);

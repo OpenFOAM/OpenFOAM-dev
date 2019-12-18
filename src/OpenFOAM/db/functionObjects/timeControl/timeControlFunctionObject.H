@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ class timeControl
 :
     public functionObject
 {
-    // Private data
+    // Private Data
 
         //- Reference to the time database
         const Time& time_;
@@ -71,10 +71,10 @@ class timeControl
         // Optional user inputs
 
             //- Activation time - defaults to -vGreat
-            scalar timeStart_;
+            scalar startTime_;
 
             //- De-activation time - defaults to vGreat
-            scalar timeEnd_;
+            scalar endTime_;
 
             //- Number of steps before the dump-time during which deltaT
             //  may be changed (valid for adjustableRunTime)
@@ -99,12 +99,6 @@ class timeControl
         //- Returns true if within time bounds
         bool active() const;
 
-        //- Disallow default bitwise copy construct
-        timeControl(const timeControl&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const timeControl&);
-
 
 public:
 
@@ -121,6 +115,9 @@ public:
             const Time&,
             const dictionary&
         );
+
+        //- Disallow default bitwise copy construction
+        timeControl(const timeControl&) = delete;
 
 
     // Member Functions
@@ -144,6 +141,10 @@ public:
 
 
         // Function object control
+
+            //- Return true if the functionObject should be executed
+            //  at the start
+            virtual bool executeAtStart() const;
 
             //- Called at each ++ or += of the time-loop.
             //  postProcess overrides the usual executeControl behaviour and
@@ -169,6 +170,12 @@ public:
 
             //- Update for changes of mesh
             virtual void movePoints(const polyMesh& mesh);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const timeControl&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "DimensionedField.H"
 #include "dimensionedType.H"
+#include "Time.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -144,13 +145,13 @@ DimensionedField<Type, GeoMesh>::DimensionedField
 template<class Type, class GeoMesh>
 DimensionedField<Type, GeoMesh>::DimensionedField
 (
-    const Xfer<DimensionedField<Type, GeoMesh>>& df
+    DimensionedField<Type, GeoMesh>&& df
 )
 :
-    regIOobject(df(), true),
-    Field<Type>(df),
-    mesh_(df->mesh_),
-    dimensions_(df->dimensions_)
+    regIOobject(move(df), true),
+    Field<Type>(move(df)),
+    mesh_(df.mesh_),
+    dimensions_(move(df.dimensions_))
 {}
 
 
@@ -235,20 +236,6 @@ template<class Type, class GeoMesh>
 DimensionedField<Type, GeoMesh>::DimensionedField
 (
     const word& newName,
-    const Xfer<DimensionedField<Type, GeoMesh>>& df
-)
-:
-    regIOobject(newName, df, true),
-    Field<Type>(df),
-    mesh_(df->mesh_),
-    dimensions_(df->dimensions_)
-{}
-
-
-template<class Type, class GeoMesh>
-DimensionedField<Type, GeoMesh>::DimensionedField
-(
-    const word& newName,
     const tmp<DimensionedField<Type, GeoMesh>>& tdf
 )
 :
@@ -296,7 +283,7 @@ DimensionedField<Type, GeoMesh>::New
                 mesh,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                false
+                mesh.cacheTemporaryObject(name)
             ),
             mesh,
             ds,
@@ -326,7 +313,7 @@ DimensionedField<Type, GeoMesh>::New
                 mesh,
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                false
+                mesh.cacheTemporaryObject(name)
             ),
             mesh,
             dt,
@@ -356,7 +343,7 @@ DimensionedField<Type, GeoMesh>::New
                 df.db(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                false
+                df.db().cacheTemporaryObject(newName)
             ),
             df
         )
@@ -384,7 +371,7 @@ DimensionedField<Type, GeoMesh>::New
                 tdf().db(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                false
+                tdf().db().cacheTemporaryObject(newName)
             ),
             tdf
         )
@@ -396,7 +383,9 @@ DimensionedField<Type, GeoMesh>::New
 
 template<class Type, class GeoMesh>
 DimensionedField<Type, GeoMesh>::~DimensionedField()
-{}
+{
+    db().cacheTemporaryObject(*this);
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -540,6 +529,27 @@ void DimensionedField<Type, GeoMesh>::operator=
 
     dimensions_ = df.dimensions();
     Field<Type>::operator=(df);
+}
+
+
+template<class Type, class GeoMesh>
+void DimensionedField<Type, GeoMesh>::operator=
+(
+    DimensionedField<Type, GeoMesh>&& df
+)
+{
+    // Check for assignment to self
+    if (this == &df)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
+
+    checkField(*this, df, "=");
+
+    dimensions_ = move(df.dimensions());
+    Field<Type>::operator=(move(df));
 }
 
 

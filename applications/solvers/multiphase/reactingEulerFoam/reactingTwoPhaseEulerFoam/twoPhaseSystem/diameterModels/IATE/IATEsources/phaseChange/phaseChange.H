@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,13 +54,17 @@ class phaseChange
 :
     public IATEsource
 {
-    // Private data
+    // Private Data
 
-        //- Phase pair name
-        word pairName_;
+        //- Name of the other phase
+        const word otherPhaseName_;
 
-        //- Pointer to the corresponding iDmdt field
-        mutable const volScalarField* iDmdtPtr_;
+        //- Name of the interfacial mass transfer rate
+        const word dmdtfName_;
+
+        //- Name of the specie which is transferring (optional)
+        const word specieName_;
+
 
 public:
 

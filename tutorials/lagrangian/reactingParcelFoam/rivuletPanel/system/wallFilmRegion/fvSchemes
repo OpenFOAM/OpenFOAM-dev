@@ -17,45 +17,33 @@ FoamFile
 
 ddtSchemes
 {
-    default none;
-    ddt(deltaf*rhof) Euler;
-    ddt(rhof,deltaf) Euler;
-    ddt(deltaf*rhof,Uf) Euler;
-    ddt(deltaf*rhof,hf) Euler;
-}
-
-divSchemes
-{
-    default none;
-    div(phi,Uf) Gauss upwind;
-    div(phid,deltaf) Gauss upwind;
-    div(phi,hf) Gauss upwind;
+    default         Euler;
 }
 
 gradSchemes
 {
-    default none;
-    grad(pL) Gauss linear;
-    grad(sigmaf) Gauss linear;
-    snGradCorr(deltaf) Gauss linear;
-    snGradCorr(pp) Gauss linear;
-    snGradCorr(pu) Gauss linear;
-    grad(nHat) Gauss linear;
+    default         Gauss linear;
+}
 
-    grad(alpha) Gauss linear;
+divSchemes
+{
+    default         none;
+
+    div(phid,alpha) Gauss upwind;
+    div(phi,U)      Gauss upwind;
+    div(phi,h)      Gauss upwind;
+
+    div(nHat)       Gauss linear;
 }
 
 laplacianSchemes
 {
-    default none;
-    laplacian(sigmaf,deltaf) Gauss linear orthogonal;
-    laplacian(deltaCoeff,deltaf) Gauss linear orthogonal;
+    default         Gauss linear orthogonal;
 }
 
 snGradSchemes
 {
-    snGrad(p) orthogonal;
-    snGrad(deltaf) orthogonal;
+    default         orthogonal;
 }
 
 

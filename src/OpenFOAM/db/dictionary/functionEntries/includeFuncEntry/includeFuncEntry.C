@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "includeFuncEntry.H"
 #include "functionObjectList.H"
+#include "stringOps.H"
 #include "addToMemberFunctionSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -54,13 +55,17 @@ bool Foam::functionEntries::includeFuncEntry::execute
     Istream& is
 )
 {
-    const word fNameArgs(is);
+    // Read line containing the function name and all the arguments
+    string fNameArgs;
+    dynamic_cast<ISstream&>(is).getMultiLines(fNameArgs);
+
     HashSet<word> selectedFields;
 
     return functionObjectList::readFunctionObject
     (
         fNameArgs,
         parentDict,
+        "file " + is.name() + " at line " + Foam::name(is.lineNumber()),
         selectedFields
     );
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -338,19 +338,19 @@ inline void Foam::PengRobinsonGas<Specie>::operator+=
     const PengRobinsonGas<Specie>& pg
 )
 {
-    scalar Y1 = this->Y();
+    scalar X1 = this->Y()/this->W();
     Specie::operator+=(pg);
 
     if (mag(this->Y()) > small)
     {
-        Y1 /= this->Y();
-        const scalar Y2 = pg.Y()/this->Y();
+        X1 *= this->W()/this->Y();
+        const scalar X2 = this->W()*pg.Y()/(pg.W()*this->Y());
 
-        Tc_ = Y1*Tc_ + Y2*pg.Tc_;
-        Vc_ = Y1*Vc_ + Y2*pg.Vc_;
-        Zc_ = Y1*Zc_ + Y2*pg.Zc_;
+        Tc_ = X1*Tc_ + X2*pg.Tc_;
+        Vc_ = X1*Vc_ + X2*pg.Vc_;
+        Zc_ = X1*Zc_ + X2*pg.Zc_;
         Pc_ = RR*Zc_*Tc_/Vc_;
-        omega_ = Y1*omega_ + Y2*pg.omega_;
+        omega_ = X1*omega_ + X2*pg.omega_;
     }
 }
 
@@ -392,12 +392,12 @@ Foam::PengRobinsonGas<Specie> Foam::operator+
     }
     else
     {
-        const scalar Y1 = pg1.Y()/sp.Y();
-        const scalar Y2 = pg2.Y()/sp.Y();
+        const scalar X1 = sp.W()*pg1.Y()/(pg1.W()*sp.Y());
+        const scalar X2 = sp.W()*pg2.Y()/(pg2.W()*sp.Y());
 
-        const scalar Tc = Y1*pg1.Tc_ + Y2*pg2.Tc_;
-        const scalar Vc = Y1*pg1.Vc_ + Y2*pg2.Vc_;
-        const scalar Zc = Y1*pg1.Zc_ + Y2*pg2.Zc_;
+        const scalar Tc = X1*pg1.Tc_ + X2*pg2.Tc_;
+        const scalar Vc = X1*pg1.Vc_ + X2*pg2.Vc_;
+        const scalar Zc = X1*pg1.Zc_ + X2*pg2.Zc_;
 
         return PengRobinsonGas<Specie>
         (
@@ -406,7 +406,7 @@ Foam::PengRobinsonGas<Specie> Foam::operator+
             Vc,
             Zc,
             RR*Zc*Tc/Vc,
-            Y1*pg1.omega_ + Y2*pg2.omega_
+            X1*pg1.omega_ + X2*pg2.omega_
         );
     }
 }
@@ -438,27 +438,14 @@ Foam::PengRobinsonGas<Specie> Foam::operator==
     const PengRobinsonGas<Specie>& pg2
 )
 {
-    Specie sp
-    (
-        static_cast<const Specie&>(pg1)
-     == static_cast<const Specie&>(pg2)
-    );
-
-    const scalar Y1 = pg1.Y()/sp.Y();
-    const scalar Y2 = pg2.Y()/sp.Y();
-
-    const scalar Tc = Y2*pg2.Tc_ - Y1*pg1.Tc_;
-    const scalar Vc = Y2*pg2.Vc_ - Y1*pg1.Vc_;
-    const scalar Zc = Y2*pg2.Zc_ - Y1*pg1.Zc_;
-
     return PengRobinsonGas<Specie>
     (
-        sp,
-        Tc,
-        Vc,
-        Zc,
-        RR*Zc*Tc/Vc,
-        Y2*pg2.omega_ - Y1*pg1.omega_
+        static_cast<const Specie&>(pg1) == static_cast<const Specie&>(pg2),
+        NaN,
+        NaN,
+        NaN,
+        NaN,
+        NaN
     );
 }
 

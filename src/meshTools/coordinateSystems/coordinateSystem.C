@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -301,16 +301,16 @@ void Foam::coordinateSystem::writeDict(Ostream& os, bool subDict) const
             << indent << token::BEGIN_BLOCK << incrIndent << nl;
     }
 
-    os.writeKeyword("type") << type() << token::END_STATEMENT << nl;
+    writeEntry(os, "type", type());
 
 
     // The note entry is optional
     if (note_.size())
     {
-        os.writeKeyword("note") << note_ << token::END_STATEMENT << nl;
+        writeEntry(os, "note", note_);
     }
 
-    os.writeKeyword("origin") << origin_ << token::END_STATEMENT << nl;
+    writeEntry(os, "origin", origin_);
     R_->write(os);
 
     if (subDict)

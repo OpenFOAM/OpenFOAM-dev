@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "mathematicalConstants.H"
 #include "phaseCompressibleTurbulenceModel.H"
+#include "fvcGrad.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -49,6 +50,7 @@ namespace coalescenceModels
 
 using Foam::constant::mathematical::pi;
 
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::diameterModels::coalescenceModels::PrinceBlanch::
@@ -59,16 +61,67 @@ PrinceBlanch
 )
 :
     coalescenceModel(popBal, dict),
-    C1_("C1", dimless, dict.lookupOrDefault<scalar>("C1", 0.356)),
-    h0_("h0", dimLength, dict.lookupOrDefault<scalar>("h0", 1e-4)),
-    hf_("hf", dimLength, dict.lookupOrDefault<scalar>("hf", 1e-8)),
+    C1_(dimensionedScalar::lookupOrDefault("C1", dict, dimless, 0.356)),
+    h0_
+    (
+        dimensionedScalar::lookupOrDefault
+        (
+            "h0",
+            dict,
+            dimLength,
+            1e-4
+        )
+    ),
+    hf_
+    (
+        dimensionedScalar::lookupOrDefault
+        (
+            "hf",
+            dict,
+            dimLength,
+            1e-8
+        )
+    ),
     turbulence_(dict.lookup("turbulence")),
     buoyancy_(dict.lookup("buoyancy")),
     laminarShear_(dict.lookup("laminarShear"))
-{}
+{
+    if (laminarShear_)
+    {
+        shearStrainRate_.set
+        (
+            new volScalarField
+            (
+                IOobject
+                (
+                    "shearStrainRate",
+                    popBal_.time().timeName(),
+                    popBal_.mesh()
+                ),
+                popBal_.mesh(),
+                dimensionedScalar
+                (
+                    "shearStrainRate",
+                    dimVelocity/dimLength,
+                    Zero
+                )
+            )
+        );
+    }
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::diameterModels::coalescenceModels::PrinceBlanch::correct()
+{
+    if (laminarShear_)
+    {
+        shearStrainRate_() =
+            sqrt(2.0)*mag(symm(fvc::grad(popBal_.continuousPhase().U())));
+    }
+}
+
 
 void Foam::diameterModels::coalescenceModels::PrinceBlanch::
 addToCoalescenceRate
@@ -84,7 +137,7 @@ addToCoalescenceRate
     const uniformDimensionedVectorField& g =
         popBal_.mesh().lookupObject<uniformDimensionedVectorField>("g");
 
-    dimensionedScalar rij(1.0/(1.0/fi.d() + 1.0/fj.d()));
+    const dimensionedScalar rij(1/(1/fi.dSph() + 1/fj.dSph()));
 
     const volScalarField collisionEfficiency
     (
@@ -93,7 +146,7 @@ addToCoalescenceRate
           - sqrt
             (
                 pow3(rij)*continuousPhase.rho()
-               /(16.0*popBal_.sigmaWithContinuousPhase(fi.phase()))
+               /(16*popBal_.sigmaWithContinuousPhase(fi.phase()))
             )
            *log(h0_/hf_)
            *cbrt(popBal_.continuousTurbulence().epsilon())/pow(rij, 2.0/3.0)
@@ -104,16 +157,16 @@ addToCoalescenceRate
     {
         coalescenceRate +=
             (
-                C1_*pi*sqr(fi.d() + fj.d())
+                C1_*pi*sqr(fi.dSph() + fj.dSph())
                *cbrt(popBal_.continuousTurbulence().epsilon())
-               *sqrt(pow(fi.d(), 2.0/3.0) + pow(fj.d(), 2.0/3.0))
+               *sqrt(pow(fi.dSph(), 2.0/3.0) + pow(fj.dSph(), 2.0/3.0))
             )
            *collisionEfficiency;
     }
 
     if (buoyancy_)
     {
-        dimensionedScalar Sij(pi/4.0*sqr(fi.d() + fj.d()));
+        const dimensionedScalar Sij(pi/4*sqr(fi.dSph() + fj.dSph()));
 
         coalescenceRate +=
             (
@@ -123,12 +176,14 @@ addToCoalescenceRate
                     sqrt
                     (
                         2.14*popBal_.sigmaWithContinuousPhase(fi.phase())
-                       /(continuousPhase.rho()*fi.d()) + 0.505*mag(g)*fi.d()
+                       /(continuousPhase.rho()*fi.dSph())
+                      + 0.505*mag(g)*fi.dSph()
                     )
                   - sqrt
                     (
                         2.14*popBal_.sigmaWithContinuousPhase(fi.phase())
-                       /(continuousPhase.rho()*fj.d()) + 0.505*mag(g)*fj.d()
+                       /(continuousPhase.rho()*fj.dSph())
+                      + 0.505*mag(g)*fj.dSph()
                     )
                 )
             )
@@ -137,10 +192,9 @@ addToCoalescenceRate
 
     if (laminarShear_)
     {
-        FatalErrorInFunction
-            << "Laminar shear collision contribution not implemented for "
-            << this->type() << " coalescence model."
-            << exit(FatalError);
+        coalescenceRate +=
+            1.0/6.0*pow3(fi.d() + fj.d())*shearStrainRate_()
+           *collisionEfficiency;
     }
 }
 

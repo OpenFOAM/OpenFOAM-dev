@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,25 +56,13 @@ class displacementSBRStressFvMotionSolver
     public displacementMotionSolver,
     public fvMotionSolver
 {
-    // Private data
+    // Private Data
 
         //- Cell-centre motion field
         mutable volVectorField cellDisplacement_;
 
         //- Diffusivity used to control the motion
         autoPtr<motionDiffusivity> diffusivityPtr_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        displacementSBRStressFvMotionSolver
-        (
-            const displacementSBRStressFvMotionSolver&
-        );
-
-        //- Disallow default bitwise assignment
-        void operator=(const displacementSBRStressFvMotionSolver&);
 
 
 public:
@@ -85,11 +73,17 @@ public:
 
     // Constructors
 
-        //- Construct from polyMesh and IOdictionary
+        //- Construct from polyMesh and dictionary
         displacementSBRStressFvMotionSolver
         (
             const polyMesh&,
-            const IOdictionary&
+            const dictionary&
+        );
+
+        //- Disallow default bitwise copy construction
+        displacementSBRStressFvMotionSolver
+        (
+            const displacementSBRStressFvMotionSolver&
         );
 
 
@@ -125,6 +119,12 @@ public:
 
         //- Update topology
         virtual void updateMesh(const mapPolyMesh&);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const displacementSBRStressFvMotionSolver&) = delete;
 };
 
 

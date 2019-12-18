@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,21 +57,10 @@ class injectionModelList
     public PtrList<injectionModel>,
     public filmSubModelBase
 {
-private:
-
-    // Private data
+    // Private Data
 
         //- List of mass injected per patch
         scalarField massInjected_;
-
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        injectionModelList(const injectionModelList&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const injectionModelList&);
 
 
 public:
@@ -87,6 +76,9 @@ public:
             surfaceFilmRegionModel& film,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        injectionModelList(const injectionModelList&) = delete;
 
 
     //- Destructor
@@ -110,6 +102,12 @@ public:
 
             //- Provide some info
             virtual void info(Ostream& os);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const injectionModelList&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,12 +74,6 @@ class cellDistFuncs
         static label findIndex(const label n, const labelList&, const label);
 
 
-        //- Disallow default bitwise copy construct
-        cellDistFuncs(const cellDistFuncs&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellDistFuncs&);
-
 public:
 
     ClassName("cellDistFuncs");
@@ -88,6 +82,9 @@ public:
 
         //- Construct from mesh
         cellDistFuncs(const polyMesh& mesh);
+
+        //- Disallow default bitwise copy construction
+        cellDistFuncs(const cellDistFuncs&) = delete;
 
 
     // Member Functions
@@ -152,6 +149,12 @@ public:
             scalarField& wallDistCorrected,
             Map<label>& nearestFace
         ) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellDistFuncs&) = delete;
 };
 
 

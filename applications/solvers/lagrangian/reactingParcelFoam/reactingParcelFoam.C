@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 
     Info<< "\nStarting time loop\n" << endl;
 
-    while (runTime.run())
+    while (pimple.run(runTime))
     {
         #include "readTimeControls.H"
 
@@ -94,10 +94,7 @@ int main(int argc, char *argv[])
 
         if (solvePrimaryRegion)
         {
-            if (pimple.nCorrPimple() <= 1)
-            {
-                #include "rhoEqn.H"
-            }
+            #include "rhoEqn.H"
 
             // --- PIMPLE loop
             while (pimple.loop())

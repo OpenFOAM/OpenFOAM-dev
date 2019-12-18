@@ -3,7 +3,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,6 +73,7 @@ struct searchReplace
 int nDirectories = 0;
 char** directories;
 char* sourceFile = NULL;
+char* sourcePath = NULL;
 char* depFilePath = NULL;
 char* depFileName = NULL;
 
@@ -136,6 +137,17 @@ int main(int argc, char* argv[])
     depFilePath = strdup(argv[argc-1]);
 
     char* basePos = strrchr(sourceFile, '/');
+
+    if (basePos == NULL)
+    {
+        sourcePath = strdup(".");
+    }
+    else
+    {
+        sourcePath = (char*)malloc(basePos - sourceFile + 1);
+        strncpy(sourcePath, sourceFile, basePos - sourceFile);
+    }
+
     if (basePos == NULL)
     {
         basePos = sourceFile;
@@ -146,7 +158,7 @@ int main(int argc, char* argv[])
     }
 
     char* dotPos = strrchr(sourceFile, '.');
-    if(dotPos == NULL || dotPos < basePos)
+    if (dotPos == NULL || dotPos < basePos)
     {
         fprintf
         (
@@ -176,7 +188,7 @@ int main(int argc, char* argv[])
     }
 
     /* Count number of -I directories */
-    nDirectories = 0;
+    nDirectories = 1;
     for (i = 1; i < argc - 1; i++)
     {
         if (strncmp(argv[i], "-I", 2) == 0)
@@ -190,8 +202,11 @@ int main(int argc, char* argv[])
 
     directories = (char**)malloc(sizeof(char*)*nDirectories);
 
+    // Insert the source directory as the first directory searched
+    directories[0] = strdup(sourcePath);
+
     /* Build list of -I directories */
-    nDirectories = 0;
+    nDirectories = 1;
     for (i = 1; i < argc - 1; i++)
     {
         if (strncmp(argv[i], "-I", 2) == 0)
@@ -290,20 +305,6 @@ void nextFile(const char* fileName)
     if (lookUp(visitedFiles, fileName))
     {
         return;   /* Already existed (did not insert) */
-    }
-
-    /* Check if the file has same path as the last file read */
-    if (currentPath != NULL)
-    {
-        char* pathName = addDirectoryName(currentPath, fileName);
-
-        if (access(pathName, R_OK ) != -1)
-        {
-            addFile(pathName);
-            return;
-        }
-
-        free(pathName);
     }
 
     if (access(fileName, R_OK ) != -1)

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
     Seven parameters are specified in terms of polynomial functions of
     stoichiometry. Two polynomials are fitted, covering different parts of the
     flammable range. If the mixture is outside the fitted range, linear
-    interpolation is used between the extreme of the polynomio and the upper or
+    interpolation is used between the extreme of the polynomial and the upper or
     lower flammable limit with the Markstein number constant.
 
     Variations of pressure and temperature from the reference values are taken
@@ -43,7 +43,7 @@ Description
 
     where:
 
-        \f$ a_{i} \f$ are the polinomial coefficients.
+        \f$ a_{i} \f$ are the polynomial coefficients.
 
         \f$ pexp \f$ and \f$ texp \f$ are the pressure and temperature factors
         respectively.
@@ -109,10 +109,10 @@ class SCOPE
 
         dictionary coeffsDict_;
 
-        //- Lower flamability limit
+        //- Lower flammability limit
         scalar LFL_;
 
-        //- Upper flamability limit
+        //- Upper flammability limit
         scalar UFL_;
 
         //- Lower Su polynomial
@@ -134,7 +134,7 @@ class SCOPE
         polynomial MaPolyU_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Polynomial evaluated from the given equivalence ratio
         //  and polynomial coefficients
@@ -198,7 +198,7 @@ public:
     ~SCOPE();
 
 
-    // Member functions
+    // Member Functions
 
         //- Return the Markstein number
         tmp<volScalarField> Ma() const;

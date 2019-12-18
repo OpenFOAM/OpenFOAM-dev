@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -193,7 +193,7 @@ namespace Foam
         // Either construct features from surface & featureAngle or read set.
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        const scalar includedAngle = readScalar(dict.lookup("includedAngle"));
+        const scalar includedAngle = dict.lookup<scalar>("includedAngle");
 
         autoPtr<surfaceFeatures> set
         (
@@ -585,7 +585,7 @@ namespace Foam
                 << "edges to the surface" << endl;
 
             const scalar searchDistance =
-                readScalar(dict.lookup("maxFeatureProximity"));
+                dict.lookup<scalar>("maxFeatureProximity");
 
             scalarField featureProximity(surf.size(), searchDistance);
 

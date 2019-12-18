@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ class block
 :
     public blockDescriptor
 {
-    // Private data
+    // Private Data
 
         //- List of points
         pointField points_;
@@ -81,12 +81,6 @@ class block
 
         //- Creates boundary patch faces for the block
         void createBoundary();
-
-        //- Disallow default bitwise copy construct
-        block(const block&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const block&);
 
 
 public:
@@ -129,6 +123,9 @@ public:
 
         //- Construct from a block definition
         block(const blockDescriptor&);
+
+        //- Disallow default bitwise copy construction
+        block(const block&) = delete;
 
         //- Clone
         autoPtr<block> clone() const
@@ -202,10 +199,17 @@ public:
                 boundaryPatches() const;
 
 
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const block&) = delete;
+
+
     // Ostream Operator
 
         friend Ostream& operator<<(Ostream&, const block&);
 };
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

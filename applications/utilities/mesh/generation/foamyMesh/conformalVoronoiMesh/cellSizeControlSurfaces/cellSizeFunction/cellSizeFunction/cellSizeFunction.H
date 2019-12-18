@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,17 +106,6 @@ protected:
         label priority_;
 
 
-private:
-
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        cellSizeFunction(const cellSizeFunction&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const cellSizeFunction&);
-
-
 public:
 
     // Declare run-time constructor selection table
@@ -147,6 +136,9 @@ public:
             const scalar& defaultCellSize,
             const labelList regionIndices
         );
+
+        //- Disallow default bitwise copy construction
+        cellSizeFunction(const cellSizeFunction&) = delete;
 
 
     // Selectors
@@ -207,6 +199,12 @@ public:
         {
             return priority_;
         }
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const cellSizeFunction&) = delete;
 };
 
 

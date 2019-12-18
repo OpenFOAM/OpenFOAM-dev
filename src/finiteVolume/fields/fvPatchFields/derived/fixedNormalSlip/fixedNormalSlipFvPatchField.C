@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ Foam::fixedNormalSlipFvPatchField<Type>::fixedNormalSlipFvPatchField
 )
 :
     transformFvPatchField<Type>(ptf, p, iF, mapper),
-    fixedValue_(ptf.fixedValue_, mapper)
+    fixedValue_(mapper(ptf.fixedValue_))
 {}
 
 
@@ -102,7 +102,7 @@ void Foam::fixedNormalSlipFvPatchField<Type>::autoMap
 )
 {
     transformFvPatchField<Type>::autoMap(m);
-    fixedValue_.autoMap(m);
+    m(fixedValue_, fixedValue_);
 }
 
 
@@ -178,7 +178,7 @@ template<class Type>
 void Foam::fixedNormalSlipFvPatchField<Type>::write(Ostream& os) const
 {
     transformFvPatchField<Type>::write(os);
-    fixedValue_.writeEntry("fixedValue", os);
+    writeEntry(os, "fixedValue", fixedValue_);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,15 +48,6 @@ namespace Foam
 
 class thermoCloud
 {
-    // Private Member Functions
-
-        //- Disallow default bitwise copy construct
-        thermoCloud(const thermoCloud&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const thermoCloud&);
-
-
 public:
 
     //- Runtime type information
@@ -67,6 +58,9 @@ public:
         //- Null constructor
         thermoCloud();
 
+        //- Disallow default bitwise copy construction
+        thermoCloud(const thermoCloud&) = delete;
+
 
     //- Destructor
     virtual ~thermoCloud();
@@ -74,18 +68,20 @@ public:
 
     // Member Functions
 
-        // Access
+        //- Return tmp equivalent particulate emission
+        virtual tmp<volScalarField> Ep() const = 0;
 
-            // Radiation
+        //- Return tmp equivalent particulate absorption
+        virtual tmp<volScalarField> ap() const = 0;
 
-                //- Return tmp equivalent particulate emission
-                virtual tmp<volScalarField> Ep() const = 0;
+        //- Return tmp equivalent particulate scattering factor
+        virtual tmp<volScalarField> sigmap() const = 0;
 
-                //- Return tmp equivalent particulate absorption
-                virtual tmp<volScalarField> ap() const = 0;
 
-                //- Return tmp equivalent particulate scattering factor
-                virtual tmp<volScalarField> sigmap() const = 0;
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const thermoCloud&) = delete;
 };
 
 

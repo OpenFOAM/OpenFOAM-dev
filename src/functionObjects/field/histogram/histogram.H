@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ class histogram
 :
     public fvMeshFunctionObject
 {
-    // Private data
+    // Private Data
 
         writeFile file_;
 
@@ -115,12 +115,6 @@ class histogram
             const scalarField& values
         ) const;
 
-        //- Disallow default bitwise copy construct
-        histogram(const histogram&);
-
-        //- Disallow default bitwise assignment
-        void operator=(const histogram&);
-
 
 public:
 
@@ -137,6 +131,9 @@ public:
             const Time& runTime,
             const dictionary& dict
         );
+
+        //- Disallow default bitwise copy construction
+        histogram(const histogram&) = delete;
 
 
     // Destructor
@@ -155,6 +152,12 @@ public:
         //  postProcess overrides the usual writeControl behaviour and
         //  forces writing always (used in post-processing mode)
         virtual bool write();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const histogram&) = delete;
 };
 
 
