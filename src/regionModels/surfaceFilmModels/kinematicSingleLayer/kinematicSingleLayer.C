@@ -176,9 +176,23 @@ tmp<volScalarField> kinematicSingleLayer::pe()
 }
 
 
-tmp<volScalarField> kinematicSingleLayer::rhog() const
+tmp<surfaceScalarField> kinematicSingleLayer::rhog() const
 {
-    return -rho_*min(nHat() & g_, dimensionedScalar(g_.dimensions(), 0))*VbyA();
+    return
+        fvc::interpolate
+        (
+            max(nHat() & -g_, dimensionedScalar(g_.dimensions(), 0))*VbyA()
+        )*fvc::interpolate(rho_);
+}
+
+
+tmp<surfaceScalarField> kinematicSingleLayer::gGradRho() const
+{
+    return
+        fvc::interpolate
+        (
+            max(nHat() & -g_, dimensionedScalar(g_.dimensions(), 0))*VbyA()
+        )*fvc::snGrad(rho_);
 }
 
 
@@ -311,6 +325,8 @@ tmp<Foam::fvVectorMatrix> kinematicSingleLayer::solveMomentum
 
     if (pimple_.momentumPredictor())
     {
+        const surfaceScalarField alphaf(fvc::interpolate(alpha_));
+
         solve
         (
             UEqn
@@ -319,11 +335,12 @@ tmp<Foam::fvVectorMatrix> kinematicSingleLayer::solveMomentum
             (
                 constrainFilmField
                 (
-                    fvc::interpolate(alpha_)
+                    alphaf
                    *(
                         (
                             fvc::snGrad(pe + pc(), "snGrad(p)")
-                          + fvc::interpolate(rhog())*fvc::snGrad(alpha_)
+                          + gGradRho()*alphaf
+                          + rhog()*fvc::snGrad(alpha_)
                         )*regionMesh().magSf()
                       - fvc::interpolate(rho_)*(g_ & regionMesh().Sf())
                     ), 0
@@ -355,7 +372,7 @@ void kinematicSingleLayer::solveAlpha
     const surfaceScalarField alphaf(fvc::interpolate(alpha_));
     const surfaceScalarField rhof(fvc::interpolate(rho_));
     const surfaceScalarField alpharAUf(fvc::interpolate(alpha_*rAU));
-    const surfaceScalarField rhogf(fvc::interpolate(rhog()));
+    const surfaceScalarField rhogf(rhog());
 
     const surfaceScalarField phiu
     (
@@ -363,7 +380,10 @@ void kinematicSingleLayer::solveAlpha
         (
             constrainFilmField
             (
-                fvc::snGrad(pe + pc(), "snGrad(p)")*regionMesh().magSf()
+                (
+                    fvc::snGrad(pe + pc(), "snGrad(p)")
+                  + gGradRho()*alphaf
+                )*regionMesh().magSf()
               - rhof*(g_ & regionMesh().Sf()),
                 0
             )

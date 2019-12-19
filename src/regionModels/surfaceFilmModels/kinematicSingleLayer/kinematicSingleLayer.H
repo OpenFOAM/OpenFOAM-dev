@@ -232,7 +232,10 @@ protected:
         virtual void transferPrimaryRegionSourceFields();
 
         //- Hydrostatic pressure coefficient
-        tmp<volScalarField> rhog() const;
+        tmp<surfaceScalarField> rhog() const;
+
+        //- Hydrostatic pressure coefficient gradient
+        tmp<surfaceScalarField> gGradRho() const;
 
         //- Capillary pressure
         tmp<volScalarField> pc();
