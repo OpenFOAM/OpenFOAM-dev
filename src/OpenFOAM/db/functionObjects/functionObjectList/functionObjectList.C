@@ -322,7 +322,7 @@ bool Foam::functionObjectList::readFunctionObject
     // Delay processing the functionEntries
     // until after the function argument entries have been added
     entry::disableFunctionEntries = true;
-    dictionary funcsDict(fileStream);
+    dictionary funcsDict(funcName, functionsDict, fileStream);
     entry::disableFunctionEntries = false;
 
     dictionary* funcDictPtr = &funcsDict;
@@ -389,7 +389,12 @@ bool Foam::functionObjectList::readFunctionObject
     {
         OStringStream os;
         funcArgsDict.write(os);
-        funcArgsDict = dictionary(IStringStream(os.str())());
+        funcArgsDict = dictionary
+        (
+            funcName,
+            functionsDict,
+            IStringStream(os.str())()
+        );
     }
 
     checkUnsetEntries(funcCall, funcArgsDict, funcDict0, context);
