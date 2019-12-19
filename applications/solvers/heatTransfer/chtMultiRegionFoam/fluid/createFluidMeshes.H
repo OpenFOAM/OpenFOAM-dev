@@ -1,4 +1,7 @@
-    const wordList fluidNames(rp["fluid"]);
+    const wordList fluidNames
+    (
+        rp.found("fluid") ? rp["fluid"] : wordList(0)
+    );
 
     PtrList<fvMesh> fluidRegions(fluidNames.size());
 
