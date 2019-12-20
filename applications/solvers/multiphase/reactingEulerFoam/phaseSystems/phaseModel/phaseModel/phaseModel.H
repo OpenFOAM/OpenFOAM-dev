@@ -192,6 +192,12 @@ public:
         //- Correct the thermodynamics
         virtual void correctThermo();
 
+        //- Correct the reactions
+        virtual void correctReactions();
+
+        //- Correct the species concentrations
+        virtual void correctSpecies();
+
         //- Correct the turbulence
         virtual void correctTurbulence();
 

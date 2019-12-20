@@ -84,8 +84,8 @@ public:
 
     // Member Functions
 
-        //- Correct the thermodynamics
-        virtual void correctThermo();
+        //- Correct the species fractions
+        virtual void correctSpecies();
 
         // Species
 

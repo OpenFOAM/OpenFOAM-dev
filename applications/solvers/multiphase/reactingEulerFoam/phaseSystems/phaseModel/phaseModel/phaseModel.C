@@ -150,6 +150,11 @@ void Foam::phaseModel::correctKinematics()
 void Foam::phaseModel::correctThermo()
 {}
 
+void Foam::phaseModel::correctReactions()
+{}
+
+void Foam::phaseModel::correctSpecies()
+{}
 
 void Foam::phaseModel::correctTurbulence()
 {}

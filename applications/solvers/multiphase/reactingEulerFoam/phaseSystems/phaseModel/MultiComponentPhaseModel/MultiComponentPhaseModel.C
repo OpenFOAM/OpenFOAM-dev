@@ -88,7 +88,7 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::~MultiComponentPhaseModel()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasePhaseModel>
-void Foam::MultiComponentPhaseModel<BasePhaseModel>::correctThermo()
+void Foam::MultiComponentPhaseModel<BasePhaseModel>::correctSpecies()
 {
     volScalarField Yt
     (
@@ -126,7 +126,7 @@ void Foam::MultiComponentPhaseModel<BasePhaseModel>::correctThermo()
         }
     }
 
-    BasePhaseModel::correctThermo();
+    BasePhaseModel::correctSpecies();
 }
 
 
