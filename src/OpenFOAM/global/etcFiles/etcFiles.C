@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,7 +84,7 @@ Foam::fileNameList Foam::findEtcDirs(const fileName& local)
         searchDir = getEnv("WM_PROJECT_INST_DIR");
         if (isDir(searchDir))
         {
-            fileName fullName = searchDir/"site/etc"/FOAMversion/local;
+            fileName fullName = searchDir/"site"/FOAMversion/"etc"/local;
             if (isDir(fullName))
             {
                 dirs.append(fullName);
@@ -191,7 +191,7 @@ Foam::fileNameList Foam::findEtcFiles
         searchDir = getEnv("WM_PROJECT_INST_DIR");
         if (isDir(searchDir))
         {
-            fileName fullName = searchDir/"site/etc"/FOAMversion/name;
+            fileName fullName = searchDir/"site"/FOAMversion/"etc"/name;
             if (isFile(fullName))
             {
                 results.append(fullName);
