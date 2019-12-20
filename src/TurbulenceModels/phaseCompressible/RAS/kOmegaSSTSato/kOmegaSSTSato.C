@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,8 @@ License
 
 #include "kOmegaSSTSato.H"
 #include "fvOptions.H"
-#include "twoPhaseSystem.H"
+#include "phaseSystem.H"
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -61,7 +62,14 @@ kOmegaSSTSato<BasicTurbulenceModel>::kOmegaSSTSato
         type
     ),
 
-    gasTurbulencePtr_(nullptr),
+    phase_(transport),
+
+    hasDispersedPhaseNames_(this->coeffDict_.found("dispersedPhases")),
+
+    dispersedPhaseNames_
+    (
+        this->coeffDict_.lookupOrDefault("dispersedPhases", hashedWordList())
+    ),
 
     Cmub_
     (
@@ -97,35 +105,50 @@ bool kOmegaSSTSato<BasicTurbulenceModel>::read()
     }
 }
 
+
 template<class BasicTurbulenceModel>
-const PhaseCompressibleTurbulenceModel
-<
-    typename BasicTurbulenceModel::transportModel
->&
-kOmegaSSTSato<BasicTurbulenceModel>::gasTurbulence() const
+UPtrList<const phaseModel>
+kOmegaSSTSato<BasicTurbulenceModel>::getDispersedPhases() const
 {
-    if (!gasTurbulencePtr_)
+    UPtrList<const phaseModel> dispersedPhases;
+
+    const phaseSystem& fluid = phase_.fluid();
+
+    if (hasDispersedPhaseNames_)
     {
-        const volVectorField& U = this->U_;
+        dispersedPhases.resize(dispersedPhaseNames_.size());
 
-        const transportModel& liquid = this->transport();
-        const twoPhaseSystem& fluid =
-            refCast<const twoPhaseSystem>(liquid.fluid());
-        const transportModel& gas = fluid.otherPhase(liquid);
-
-        gasTurbulencePtr_ =
-           &U.db()
-           .lookupObject<PhaseCompressibleTurbulenceModel<transportModel>>
+        forAll(dispersedPhaseNames_, dispersedPhasei)
+        {
+            dispersedPhases.set
             (
-                IOobject::groupName
-                (
-                    turbulenceModel::propertiesName,
-                    gas.name()
-                )
+                dispersedPhasei,
+                &fluid.phases()[dispersedPhaseNames_[dispersedPhasei]]
             );
+        }
+    }
+    else
+    {
+        dispersedPhases.resize(fluid.movingPhases().size() - 1);
+
+        label dispersedPhasei = 0;
+
+        forAll(fluid.movingPhases(), movingPhasei)
+        {
+            const phaseModel& otherPhase = fluid.movingPhases()[movingPhasei];
+
+            if (&otherPhase != &phase_)
+            {
+                dispersedPhases.set
+                (
+                    dispersedPhasei ++,
+                    &otherPhase
+                );
+            }
+        }
     }
 
-    return *gasTurbulencePtr_;
+    return dispersedPhases;
 }
 
 
@@ -136,19 +159,22 @@ void kOmegaSSTSato<BasicTurbulenceModel>::correctNut
     const volScalarField& F2
 )
 {
-    const PhaseCompressibleTurbulenceModel<transportModel>& gasTurbulence =
-        this->gasTurbulence();
-
     volScalarField yPlus
     (
         pow(this->betaStar_, 0.25)*this->y_*sqrt(this->k_)/this->nu()
     );
 
     this->nut_ =
-        this->a1_*this->k_/max(this->a1_*this->omega_, this->b1_*F2*sqrt(S2))
-      + sqr(1 - exp(-yPlus/16.0))
-       *Cmub_*gasTurbulence.transport().d()*gasTurbulence.alpha()
-       *(mag(this->U_ - gasTurbulence.U()));
+        this->a1_*this->k_/max(this->a1_*this->omega_, this->b1_*F2*sqrt(S2));
+
+    UPtrList<const phaseModel> dispersedPhases(getDispersedPhases());
+    forAllIter(UPtrList<const phaseModel>, dispersedPhases, phaseIter)
+    {
+        this->nut_ +=
+            sqr(1 - exp(-yPlus/16.0))
+           *Cmub_*phaseIter().d()*phaseIter()
+           *(mag(this->U_ - phaseIter().U()));
+    }
 
     this->nut_.correctBoundaryConditions();
     fv::options::New(this->mesh_).correct(this->nut_);

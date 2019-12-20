@@ -77,6 +77,9 @@ makeRASModel(kEpsilon);
 #include "kOmegaSST.H"
 makeRASModel(kOmegaSST);
 
+#include "kOmegaSSTSato.H"
+makeRASModel(kOmegaSSTSato);
+
 #include "Smagorinsky.H"
 makeLESModel(Smagorinsky);
 

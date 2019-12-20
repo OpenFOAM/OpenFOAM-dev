@@ -5,6 +5,8 @@
     phaseSystem::specieTransferTable&
         specieTransfer(specieTransferPtr());
 
+    fluid.correctReactions();
+
     forAll(fluid.multiComponentPhases(), multiComponentPhasei)
     {
         phaseModel& phase = fluid.multiComponentPhases()[multiComponentPhasei];
@@ -27,4 +29,6 @@
             YiEqn.solve("Yi");
         }
     }
+
+    fluid.correctSpecies();
 }

@@ -191,11 +191,26 @@ inline void Foam::hRefConstThermo<EquationOfState>::operator+=
 
     if (mag(this->Y()) > small)
     {
+        if
+        (
+            hRefConstThermo<EquationOfState>::debug
+         && notEqual(Tref_, ct.Tref_)
+        )
+        {
+            FatalErrorInFunction
+                << "Tref " << Tref_ << " for "
+                << (this->name().size() ? this->name() : "others")
+                << " != " << ct.Tref_ << " for "
+                << (ct.name().size() ? ct.name() : "others")
+                << exit(FatalError);
+        }
+
         Y1 /= this->Y();
         const scalar Y2 = ct.Y()/this->Y();
 
         Cp_ = Y1*Cp_ + Y2*ct.Cp_;
         Hf_ = Y1*Hf_ + Y2*ct.Hf_;
+        Href_ = Y1*Href_ + Y2*ct.Href_;
     }
 }
 
@@ -228,6 +243,20 @@ inline Foam::hRefConstThermo<EquationOfState> Foam::operator+
     }
     else
     {
+        if
+        (
+            hRefConstThermo<EquationOfState>::debug
+         && notEqual(ct1.Tref_, ct2.Tref_)
+        )
+        {
+            FatalErrorInFunction
+                << "Tref " << ct1.Tref_ << " for "
+                << (ct1.name().size() ? ct1.name() : "others")
+                << " != " << ct2.Tref_ << " for "
+                << (ct2.name().size() ? ct2.name() : "others")
+                << exit(FatalError);
+        }
+
         return hRefConstThermo<EquationOfState>
         (
             eofs,
@@ -235,8 +264,7 @@ inline Foam::hRefConstThermo<EquationOfState> Foam::operator+
           + ct2.Y()/eofs.Y()*ct2.Cp_,
             ct1.Y()/eofs.Y()*ct1.Hf_
           + ct2.Y()/eofs.Y()*ct2.Hf_,
-            ct1.Y()/eofs.Y()*ct1.Tref_
-          + ct2.Y()/eofs.Y()*ct2.Tref_,
+            ct1.Tref_,
             ct1.Y()/eofs.Y()*ct1.Href_
           + ct2.Y()/eofs.Y()*ct2.Href_
         );
@@ -275,13 +303,30 @@ inline Foam::hRefConstThermo<EquationOfState> Foam::operator==
      == static_cast<const EquationOfState&>(ct2)
     );
 
+    if
+    (
+        hRefConstThermo<EquationOfState>::debug
+     && notEqual(ct1.Tref_, ct2.Tref_)
+    )
+    {
+        FatalErrorInFunction
+            << "Tref " << ct1.Tref_ << " for "
+            << (ct1.name().size() ? ct1.name() : "others")
+            << " != " << ct2.Tref_ << " for "
+            << (ct2.name().size() ? ct2.name() : "others")
+            << exit(FatalError);
+    }
+
     return hRefConstThermo<EquationOfState>
     (
         eofs,
         ct2.Y()/eofs.Y()*ct2.Cp_
       - ct1.Y()/eofs.Y()*ct1.Cp_,
         ct2.Y()/eofs.Y()*ct2.Hf_
-      - ct1.Y()/eofs.Y()*ct1.Hf_
+      - ct1.Y()/eofs.Y()*ct1.Hf_,
+        ct1.Tref_,
+        ct2.Y()/eofs.Y()*ct2.Href_
+      - ct1.Y()/eofs.Y()*ct1.Href_
     );
 }
 

@@ -428,6 +428,24 @@ void Foam::phaseSystem::correctThermo()
 }
 
 
+void Foam::phaseSystem::correctReactions()
+{
+    forAll(phaseModels_, phasei)
+    {
+        phaseModels_[phasei].correctReactions();
+    }
+}
+
+
+void Foam::phaseSystem::correctSpecies()
+{
+    forAll(phaseModels_, phasei)
+    {
+        phaseModels_[phasei].correctSpecies();
+    }
+}
+
+
 void Foam::phaseSystem::correctTurbulence()
 {
     forAll(phaseModels_, phasei)

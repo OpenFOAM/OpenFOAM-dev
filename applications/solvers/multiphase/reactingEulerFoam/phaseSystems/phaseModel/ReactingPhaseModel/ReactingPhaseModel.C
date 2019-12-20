@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,11 +52,11 @@ Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::~ReactingPhaseModel()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasePhaseModel, class ReactionType>
-void Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::correctThermo()
+void Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::correctReactions()
 {
-    BasePhaseModel::correctThermo();
-
     reaction_->correct();
+
+    BasePhaseModel::correctReactions();
 }
 
 
