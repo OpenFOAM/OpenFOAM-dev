@@ -54,7 +54,7 @@ Description
 
     Note that this implementation is written in terms of alpha diffusion
     coefficients rather than the more traditional sigma (alpha = 1/sigma) so
-    that the blending can be applied to all coefficuients in a consistent
+    that the blending can be applied to all coefficients in a consistent
     manner.  The paper suggests that sigma is blended but this would not be
     consistent with the blending of the k-epsilon and k-omega models.
 
@@ -91,9 +91,6 @@ Description
     \endverbatim
 
 SourceFiles
-    kOmegaSST.C
-
-SourceFiles
     kOmegaSSTSato.C
 
 \*---------------------------------------------------------------------------*/
@@ -102,6 +99,8 @@ SourceFiles
 #define kOmegaSSTSato_H
 
 #include "kOmegaSST.H"
+#include "phaseSystem.H"
+#include "hashedWordList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -121,20 +120,19 @@ class kOmegaSSTSato
 {
     // Private Data
 
-        mutable const PhaseCompressibleTurbulenceModel
-        <
-            typename BasicTurbulenceModel::transportModel
-        > *gasTurbulencePtr_;
+        //- The phase to which the turbulent model is applied to
+        const phaseModel& phase_;
 
+        //- True if a list of dispersed phases is specified in the dictionary
+        bool hasDispersedPhaseNames_;
+
+        //- Optional list of names of dispersed phases
+        hashedWordList dispersedPhaseNames_;
 
     // Private Member Functions
 
-        //- Return the turbulence model for the gas phase
-        const PhaseCompressibleTurbulenceModel
-        <
-            typename BasicTurbulenceModel::transportModel
-        >&
-        gasTurbulence() const;
+        //- Return the dispersed phase models
+        UPtrList<const phaseModel> getDispersedPhases() const;
 
 
 protected:

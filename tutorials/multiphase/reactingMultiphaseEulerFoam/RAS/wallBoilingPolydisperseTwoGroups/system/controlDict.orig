@@ -114,6 +114,7 @@ functions
         operation       sum;
         fields          ( alphaRhoPhi.gas alphaRhoPhi.gas2 alphaRhoPhi.liquid );
     }
+    #includeFunc writeObjects(d.gas, d.gas2)
 }
 
 
