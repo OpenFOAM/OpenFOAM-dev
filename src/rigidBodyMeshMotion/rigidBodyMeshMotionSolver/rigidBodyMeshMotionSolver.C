@@ -30,6 +30,7 @@ License
 #include "pointConstraints.H"
 #include "uniformDimensionedFields.H"
 #include "forces.H"
+#include "OneConstant.H"
 #include "mathematicalConstants.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -99,6 +100,7 @@ Foam::rigidBodyMeshMotionSolver::rigidBodyMeshMotionSolver
     test_(coeffDict().lookupOrDefault<Switch>("test", false)),
     rhoInf_(1.0),
     rhoName_(coeffDict().lookupOrDefault<word>("rho", "rho")),
+    ramp_(nullptr),
     curTimeIndex_(-1),
     meshSolverPtr_
     (
@@ -122,6 +124,15 @@ Foam::rigidBodyMeshMotionSolver::rigidBodyMeshMotionSolver
     if (rhoName_ == "rhoInf")
     {
         rhoInf_ = coeffDict().lookup<scalar>("rhoInf");
+    }
+
+    if (coeffDict().found("ramp"))
+    {
+        ramp_ = Function1<scalar>::New("ramp", coeffDict());
+    }
+    else
+    {
+        ramp_ = new Function1s::OneConstant<scalar>("ramp");
     }
 
     const dictionary& bodiesDict = coeffDict().subDict("bodies");
@@ -193,10 +204,13 @@ void Foam::rigidBodyMeshMotionSolver::solve()
         curTimeIndex_ = t.timeIndex();
     }
 
+    const scalar ramp = ramp_->value(t.value());
+
     if (mesh().foundObject<uniformDimensionedVectorField>("g"))
     {
         g() =
-            mesh().lookupObject<uniformDimensionedVectorField>("g").value();
+            ramp
+           *mesh().lookupObject<uniformDimensionedVectorField>("g").value();
     }
 
     if (test_)
@@ -232,7 +246,7 @@ void Foam::rigidBodyMeshMotionSolver::solve()
             functionObjects::forces f("forces", t, forcesDict);
             f.calcForcesMoment();
 
-            fx[bodyID] = spatialVector(f.momentEff(), f.forceEff());
+            fx[bodyID] = ramp*spatialVector(f.momentEff(), f.forceEff());
         }
 
         RBD::rigidBodyMotion::solve
