@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -261,38 +261,6 @@ void writeCyclicMatchObjs(const fileName& prefix, const polyMesh& mesh)
 }
 
 
-void separateList
-(
-    const vectorField& separation,
-    UList<vector>& field
-)
-{
-    if (separation.size() == 1)
-    {
-        // Single value for all.
-
-        forAll(field, i)
-        {
-            field[i] += separation[0];
-        }
-    }
-    else if (separation.size() == field.size())
-    {
-        forAll(field, i)
-        {
-            field[i] += separation[i];
-        }
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Sizes of field and transformation not equal. field:"
-            << field.size() << " transformation:" << separation.size()
-            << abort(FatalError);
-    }
-}
-
-
 // Synchronise points on both sides of coupled boundaries.
 template<class CombineOp>
 void syncPoints
@@ -397,7 +365,7 @@ void syncPoints
                 else if (procPatch.separated())
                 {
                     hasTransformation = true;
-                    separateList(-procPatch.separation(), nbrPatchInfo);
+                    nbrPatchInfo -= procPatch.separation();
                 }
 
                 const labelList& meshPts = procPatch.meshPoints();
@@ -447,7 +415,7 @@ void syncPoints
             else if (cycPatch.separated())
             {
                 hasTransformation = true;
-                separateList(cycPatch.separation(), half0Values);
+                half0Values += cycPatch.separation();
             }
 
             forAll(coupledPoints, i)
@@ -800,8 +768,8 @@ int main(int argc, char *argv[])
                 if (cpp.separated())
                 {
                     Info<< "On coupled patch " << pp.name()
-                        << " separation[0] was "
-                        << cpp.separation()[0] << endl;
+                        << " separation was "
+                        << cpp.separation() << endl;
 
                     if (isA<cyclicPolyPatch>(pp) && pp.size())
                     {
@@ -814,19 +782,15 @@ int main(int argc, char *argv[])
                             Info<< "On cyclic translation patch " << pp.name()
                                 << " forcing uniform separation of "
                                 << cycpp.separationVector() << endl;
-                            const_cast<vectorField&>(cpp.separation()) =
-                                pointField(1, cycpp.separationVector());
+                            const_cast<vector&>(cpp.separation()) =
+                                cycpp.separationVector();
                         }
                         else
                         {
                             const cyclicPolyPatch& nbr = cycpp.neighbPatch();
-                            const_cast<vectorField&>(cpp.separation()) =
-                                pointField
-                                (
-                                    1,
-                                    nbr[0].centre(mesh.points())
-                                  - cycpp[0].centre(mesh.points())
-                                );
+                            const_cast<vector&>(cpp.separation()) =
+                                nbr[0].centre(mesh.points())
+                              - cycpp[0].centre(mesh.points());
                         }
                     }
                     Info<< "On coupled patch " << pp.name()
@@ -837,20 +801,16 @@ int main(int argc, char *argv[])
                 {
                     Info<< "On coupled patch " << pp.name()
                         << " forcing uniform rotation of "
-                        << cpp.forwardT()[0] << endl;
-
-                    const_cast<tensorField&>
-                    (
-                        cpp.forwardT()
-                    ).setSize(1);
-                    const_cast<tensorField&>
-                    (
-                        cpp.reverseT()
-                    ).setSize(1);
-
-                    Info<< "On coupled patch " << pp.name()
-                        << " forcing uniform rotation of "
                         << cpp.forwardT() << endl;
+
+                    // const_cast<tensorField&>
+                    // (
+                    //     cpp.forwardT()
+                    // ).setSize(1);
+                    // const_cast<tensorField&>
+                    // (
+                    //     cpp.reverseT()
+                    // ).setSize(1);
                 }
             }
         }

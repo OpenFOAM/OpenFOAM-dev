@@ -291,10 +291,11 @@ void Foam::cyclicPolyPatch::calcTransforms
             );
             const tensor revT(E1.T() & E0);
 
-            const_cast<tensorField&>(forwardT()) = tensorField(1, revT.T());
-            const_cast<tensorField&>(reverseT()) = tensorField(1, revT);
-            const_cast<vectorField&>(separation()).setSize(0);
-            const_cast<boolList&>(collocated()) = boolList(1, false);
+            parallel_ = false;
+            separated_ = false;
+            separation_ = Zero;
+            forwardT_ = revT.T();
+            reverseT_ = revT;
         }
         else
         {
@@ -351,11 +352,7 @@ void Foam::cyclicPolyPatch::calcTransforms
 
 
                 // Override computed transform with specified.
-                if
-                (
-                    separation().size() != 1
-                 || mag(separation()[0] - separationVector_) > avgTol
-                )
+                if (mag(separation() - separationVector_) > avgTol)
                 {
                     WarningInFunction
                         << "Specified separationVector " << separationVector_
@@ -372,14 +369,11 @@ void Foam::cyclicPolyPatch::calcTransforms
                 }
 
                 // Set tensors
-                const_cast<tensorField&>(forwardT()).clear();
-                const_cast<tensorField&>(reverseT()).clear();
-                const_cast<vectorField&>(separation()) = vectorField
-                (
-                    1,
-                    separationVector_
-                );
-                const_cast<boolList&>(collocated()) = boolList(1, false);
+                parallel_ = true;
+                separated_ = true;
+                separation_ = separationVector_;
+                forwardT_ = Zero;
+                reverseT_ = Zero;
             }
         }
     }
@@ -869,19 +863,7 @@ void Foam::cyclicPolyPatch::transformPosition(pointField& l) const
     {
         // transformPosition gets called on the receiving side,
         // separation gets calculated on the sending side so subtract.
-
-        const vectorField& s = separation();
-        if (s.size() == 1)
-        {
-            forAll(l, i)
-            {
-                l[i] -= s[0];
-            }
-        }
-        else
-        {
-            l -= s;
-        }
+        l -= separation();
     }
 }
 
@@ -890,32 +872,19 @@ void Foam::cyclicPolyPatch::transformPosition(point& l, const label facei) const
 {
     if (!parallel())
     {
-        const tensor& T =
-        (
-            forwardT().size() == 1
-          ? forwardT()[0]
-          : forwardT()[facei]
-        );
-
         if (transform() == ROTATIONAL)
         {
-            l = Foam::transform(T, l-rotationCentre_) + rotationCentre_;
+            l = Foam::transform(forwardT(), l - rotationCentre_)
+              + rotationCentre_;
         }
         else
         {
-            l = Foam::transform(T, l);
+            l = Foam::transform(forwardT(), l);
         }
     }
     else if (separated())
     {
-        const vector& s =
-        (
-            separation().size() == 1
-          ? separation()[0]
-          : separation()[facei]
-        );
-
-        l -= s;
+        l -= separation();
     }
 }
 

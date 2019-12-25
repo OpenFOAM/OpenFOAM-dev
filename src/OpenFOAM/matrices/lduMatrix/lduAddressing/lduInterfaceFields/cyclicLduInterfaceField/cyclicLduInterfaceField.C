@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,14 +50,7 @@ void Foam::cyclicLduInterfaceField::transformCoupleField
 {
     if (doTransform())
     {
-        if (forwardT().size() == 1)
-        {
-            f *= pow(diag(forwardT()[0]).component(cmpt), rank());
-        }
-        else
-        {
-            f *= pow(diag(forwardT())().component(cmpt), rank());
-        }
+        f *= pow(diag(forwardT()).component(cmpt), rank());
     }
 }
 

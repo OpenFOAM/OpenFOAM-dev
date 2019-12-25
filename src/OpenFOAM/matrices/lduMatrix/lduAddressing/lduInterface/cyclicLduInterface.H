@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,10 +74,10 @@ public:
             virtual const cyclicLduInterface& neighbPatch() const = 0;
 
             //- Return face transformation tensor
-            virtual const tensorField& forwardT() const = 0;
+            virtual const tensor& forwardT() const = 0;
 
             //- Return face reverse transformation tensor
-            virtual const tensorField& reverseT() const = 0;
+            virtual const tensor& reverseT() const = 0;
 };
 
 

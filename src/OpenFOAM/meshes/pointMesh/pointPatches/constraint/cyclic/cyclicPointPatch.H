@@ -139,13 +139,13 @@ public:
             }
 
             //- Return face transformation tensor
-            const tensorField& forwardT() const
+            const tensor& forwardT() const
             {
                 return cyclicPolyPatch_.forwardT();
             }
 
             //- Return neighbour-cell transformation tensor
-            const tensorField& reverseT() const
+            const tensor& reverseT() const
             {
                 return cyclicPolyPatch_.reverseT();
             }

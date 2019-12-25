@@ -322,10 +322,8 @@ void Foam::coupledPolyPatch::calcTransformTensors
     if (Cf.size() == 0)
     {
         // Dummy geometry. Assume non-separated, parallel.
-        separation_.setSize(0);
-        forwardT_.clear();
-        reverseT_.clear();
-        collocated_.setSize(0);
+        parallel_ = true;
+        separated_ = false;
     }
     else
     {
@@ -348,70 +346,56 @@ void Foam::coupledPolyPatch::calcTransformTensors
         {
             // Type is rotation or unknown and normals not aligned
 
-            // Assume per-face differing transformation, correct later
+            parallel_ = false;
+            separated_ = false;
+            separation_ = Zero;
 
-            separation_.setSize(0);
+            tensorField forwardT(Cf.size());
+            tensorField reverseT(Cf.size());
 
-            forwardT_.setSize(Cf.size());
-            reverseT_.setSize(Cf.size());
-            collocated_.setSize(Cf.size());
-            collocated_ = false;
-
-            forAll(forwardT_, facei)
+            forAll(forwardT, facei)
             {
-                forwardT_[facei] = rotationTensor(-nr[facei], nf[facei]);
-                reverseT_[facei] = rotationTensor(nf[facei], -nr[facei]);
+                forwardT[facei] = rotationTensor(-nr[facei], nf[facei]);
+                reverseT[facei] = rotationTensor(nf[facei], -nr[facei]);
             }
 
-            if (debug)
+            if (sum(mag(forwardT - forwardT[0])) > error)
             {
-                Pout<< "    sum(mag(forwardT_ - forwardT_[0])):"
-                    << sum(mag(forwardT_ - forwardT_[0]))
-                    << endl;
+                Pout<< "--> FOAM Warning : "
+                    << " Variation in rotation greater than"
+                    << " local tolerance " << error << endl;
             }
 
-            if (sum(mag(forwardT_ - forwardT_[0])) < error)
-            {
-                forwardT_.setSize(1);
-                reverseT_.setSize(1);
-                collocated_.setSize(1);
-
-                if (debug)
-                {
-                    Pout<< "    difference in rotation less than"
-                        << " local tolerance "
-                        << error << ". Assuming uniform rotation." << endl;
-                }
-            }
+            forwardT_ = forwardT[0];
+            reverseT_ = reverseT[0];
         }
         else
         {
             // Translational or (unknown and normals aligned)
 
-            forwardT_.setSize(0);
-            reverseT_.setSize(0);
+            parallel_ = true;
 
-            separation_ = Cr - Cf;
+            forwardT_ = Zero;
+            reverseT_ = Zero;
 
-            collocated_.setSize(separation_.size());
 
             // Three situations:
             // - separation is zero. No separation.
             // - separation is same. Single separation vector.
-            // - separation differs per face. Separation vectorField.
+            // - separation differs per face -> error.
 
             // Check for different separation per face
             bool sameSeparation = true;
             bool doneWarning = false;
 
-            forAll(separation_, facei)
-            {
-                scalar smallSqr = sqr(smallDist[facei]);
+            const vectorField separation(Cr - Cf);
 
-                collocated_[facei] = (magSqr(separation_[facei]) < smallSqr);
+            forAll(separation, facei)
+            {
+                const scalar smallSqr = sqr(smallDist[facei]);
 
                 // Check if separation differing w.r.t. face 0.
-                if (magSqr(separation_[facei] - separation_[0]) > smallSqr)
+                if (magSqr(separation[facei] - separation[0]) > smallSqr)
                 {
                     sameSeparation = false;
 
@@ -419,9 +403,9 @@ void Foam::coupledPolyPatch::calcTransformTensors
                     {
                         doneWarning = true;
 
-                        Pout<< "    separation " << separation_[facei]
+                        Pout<< "    separation " << separation[facei]
                             << " at " << facei
-                            << " differs from separation[0] " << separation_[0]
+                            << " differs from separation[0] " << separation[0]
                             << " by more than local tolerance "
                             << smallDist[facei]
                             << ". Assuming non-uniform separation." << endl;
@@ -431,39 +415,42 @@ void Foam::coupledPolyPatch::calcTransformTensors
 
             if (sameSeparation)
             {
-                // Check for zero separation (at 0 so everywhere)
-                if (collocated_[0])
+                // Check for zero separation
+                if (mag(separation[0]) < smallDist[0])
                 {
                     if (debug)
                     {
-                        Pout<< "    separation " << mag(separation_[0])
+                        Pout<< "    separation " << mag(separation[0])
                             << " less than local tolerance " << smallDist[0]
                             << ". Assuming zero separation." << endl;
                     }
 
-                    separation_.setSize(0);
-                    collocated_ = boolList(1, true);
+                    separated_ = false;
+                    separation_ = Zero;
                 }
                 else
                 {
                     if (debug)
                     {
-                        Pout<< "    separation " << mag(separation_[0])
+                        Pout<< "    separation " << mag(separation[0])
                             << " more than local tolerance " << smallDist[0]
                             << ". Assuming uniform separation." << endl;
                     }
 
-                    separation_.setSize(1);
-                    collocated_ = boolList(1, false);
+                    separated_ = true;
+                    separation_ = separation[0];
                 }
             }
-        }
-    }
+            else
+            {
+                Pout<< "--> FOAM Warning : "
+                    << " Variation in separation greater than"
+                    << " local tolerance " << smallDist[0] << endl;
 
-    if (debug)
-    {
-        Pout<< "    separation_:" << separation_.size() << nl
-            << "    forwardT size:" << forwardT_.size() << endl;
+                separated_ = true;
+                separation_ = separation[0];
+            }
+        }
     }
 }
 
@@ -483,7 +470,9 @@ Foam::coupledPolyPatch::coupledPolyPatch
 :
     polyPatch(name, size, start, index, bm, patchType),
     matchTolerance_(defaultMatchTol_),
-    transform_(transform)
+    transform_(transform),
+    parallel_(true),
+    separated_(false)
 {}
 
 
@@ -504,7 +493,9 @@ Foam::coupledPolyPatch::coupledPolyPatch
         dict.found("transform")
       ? transformTypeNames.read(dict.lookup("transform"))
       : defaultTransform
-    )
+    ),
+    parallel_(true),
+    separated_(false)
 {}
 
 
@@ -516,7 +507,9 @@ Foam::coupledPolyPatch::coupledPolyPatch
 :
     polyPatch(pp, bm),
     matchTolerance_(pp.matchTolerance_),
-    transform_(pp.transform_)
+    transform_(pp.transform_),
+    parallel_(true),
+    separated_(false)
 {}
 
 
@@ -531,7 +524,9 @@ Foam::coupledPolyPatch::coupledPolyPatch
 :
     polyPatch(pp, bm, index, newSize, newStart),
     matchTolerance_(pp.matchTolerance_),
-    transform_(pp.transform_)
+    transform_(pp.transform_),
+    parallel_(true),
+    separated_(false)
 {}
 
 
@@ -546,7 +541,9 @@ Foam::coupledPolyPatch::coupledPolyPatch
 :
     polyPatch(pp, bm, index, mapAddressing, newStart),
     matchTolerance_(pp.matchTolerance_),
-    transform_(pp.transform_)
+    transform_(pp.transform_),
+    parallel_(true),
+    separated_(false)
 {}
 
 
@@ -561,11 +558,8 @@ Foam::coupledPolyPatch::~coupledPolyPatch()
 void Foam::coupledPolyPatch::write(Ostream& os) const
 {
     polyPatch::write(os);
-    // if (matchTolerance_ != defaultMatchTol_)
-    {
-        writeEntry(os, "matchTolerance", matchTolerance_);
-        writeEntry(os, "transform", transformTypeNames[transform_]);
-    }
+    writeEntry(os, "matchTolerance", matchTolerance_);
+    writeEntry(os, "transform", transformTypeNames[transform_]);
 }
 
 

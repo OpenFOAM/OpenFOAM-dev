@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,31 +119,13 @@ template<class Type, class TrackingData>
 void Foam::PointEdgeWave<Type, TrackingData>::transform
 (
     const polyPatch& patch,
-    const tensorField& rotTensor,
+    const tensor& rotTensor,
     List<Type>& pointInfo
 ) const
 {
-    if (rotTensor.size() == 1)
+    forAll(pointInfo, i)
     {
-        const tensor& T = rotTensor[0];
-
-        forAll(pointInfo, i)
-        {
-            pointInfo[i].transform(T, td_);
-        }
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Non-uniform transformation on patch " << patch.name()
-            << " of type " << patch.type()
-            << " not supported for point fields"
-            << abort(FatalError);
-
-        forAll(pointInfo, i)
-        {
-            pointInfo[i].transform(rotTensor[i], td_);
-        }
+        pointInfo[i].transform(rotTensor, td_);
     }
 }
 

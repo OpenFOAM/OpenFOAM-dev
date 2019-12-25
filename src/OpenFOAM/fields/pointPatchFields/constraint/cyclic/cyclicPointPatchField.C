@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,8 +147,8 @@ void Foam::cyclicPointPatchField<Type>::swapAddSeparated
                 label nbrPointi = pairs[pairi][1];
 
                 Type tmp = pf[pointi];
-                pf[pointi] = transform(forwardT()[0], nbrPf[nbrPointi]);
-                nbrPf[nbrPointi] = transform(reverseT()[0], tmp);
+                pf[pointi] = transform(forwardT(), nbrPf[nbrPointi]);
+                nbrPf[nbrPointi] = transform(reverseT(), tmp);
             }
         }
         else

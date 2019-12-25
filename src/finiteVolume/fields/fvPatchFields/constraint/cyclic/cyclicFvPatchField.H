@@ -190,13 +190,13 @@ public:
             }
 
             //- Return face transformation tensor
-            virtual const tensorField& forwardT() const
+            virtual const tensor& forwardT() const
             {
                 return cyclicPatch_.forwardT();
             }
 
             //- Return neighbour-cell transformation tensor
-            virtual const tensorField& reverseT() const
+            virtual const tensor& reverseT() const
             {
                 return cyclicPatch_.reverseT();
             }

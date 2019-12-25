@@ -154,11 +154,8 @@ void Foam::cyclicAMIPointPatchField<Type>::swapAddSeparated
 
         if (doTransform())
         {
-            const tensor& forwardT = this->forwardT()[0];
-            const tensor& reverseT = this->reverseT()[0];
-
-            transform(ptFld, reverseT, ptFld);
-            transform(nbrPtFld, forwardT, nbrPtFld);
+            transform(ptFld, this->reverseT(), ptFld);
+            transform(nbrPtFld, this->forwardT(), nbrPtFld);
         }
 
         // convert point field to face field, AMI interpolate, then

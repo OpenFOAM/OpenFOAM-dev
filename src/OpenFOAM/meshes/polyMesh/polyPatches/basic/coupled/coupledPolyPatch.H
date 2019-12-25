@@ -68,9 +68,9 @@ public:
     static const NamedEnum<transformType, 5> transformTypeNames;
 
 
-private:
+protected:
 
-    // Private Data
+    // Protected Data
 
         //- Default matching tolerance
         static const scalar defaultMatchTol_;
@@ -81,17 +81,21 @@ private:
         //- Type of transformation
         transformType transform_;
 
+        //- Are coupled patches parallel
+        mutable bool parallel_;
+
+        //- Are coupled patches separated
+        mutable bool separated_;
+
         //- Offset (distance) vector from one side of the couple to the other
-        mutable vectorField separation_;
+        mutable vector separation_;
 
         //- Face transformation tensor
-        mutable tensorField forwardT_;
+        mutable tensor forwardT_;
 
         //- Neighbour-cell transformation tensor
-        mutable tensorField reverseT_;
+        mutable tensor reverseT_;
 
-        //- Are faces collocated. Either size 0,1 or length of patch.
-        mutable boolList collocated_;
 
 
 protected:
@@ -274,40 +278,34 @@ public:
             //- Transform a patch-based position from other side to this side
             virtual void transformPosition(point&, const label facei) const = 0;
 
+            //- Are the cyclic planes parallel.
+            virtual bool parallel() const
+            {
+                return parallel_;
+            }
+
             //- Are the planes separated.
             virtual bool separated() const
             {
-                return separation_.size();
+                return separated_;
             }
 
             //- If the planes are separated the separation vector.
-            virtual const vectorField& separation() const
+            virtual const vector& separation() const
             {
                 return separation_;
             }
 
-            //- Are the cyclic planes parallel.
-            virtual bool parallel() const
-            {
-                return forwardT_.empty();
-            }
-
             //- Return face transformation tensor.
-            virtual const tensorField& forwardT() const
+            virtual const tensor& forwardT() const
             {
                 return forwardT_;
             }
 
             //- Return neighbour-cell transformation tensor.
-            virtual const tensorField& reverseT() const
+            virtual const tensor& reverseT() const
             {
                 return reverseT_;
-            }
-
-            //- Are faces collocated. Either size 0,1 or length of patch
-            virtual const boolList& collocated() const
-            {
-                return collocated_;
             }
 
             scalar matchTolerance() const

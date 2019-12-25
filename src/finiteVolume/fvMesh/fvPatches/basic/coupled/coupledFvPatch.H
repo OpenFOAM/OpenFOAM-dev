@@ -100,14 +100,14 @@ public:
                 return coupledPolyPatch_.coupled();
             }
 
-            //- Are the cyclic planes parallel.
+            //- Are the cyclic planes parallel
             virtual bool parallel() const = 0;
 
-            //- Return face transformation tensor.
-            virtual const tensorField& forwardT() const = 0;
+            //- Return face transformation tensor
+            virtual const tensor& forwardT() const = 0;
 
-            //- Return neighbour-cell transformation tensor.
-            virtual const tensorField& reverseT() const = 0;
+            //- Return neighbour-cell transformation tensor
+            virtual const tensor& reverseT() const = 0;
 
             //- Return faceCell addressing
             virtual const labelUList& faceCells() const

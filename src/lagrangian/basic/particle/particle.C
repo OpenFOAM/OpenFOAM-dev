@@ -1069,23 +1069,11 @@ void Foam::particle::correctAfterParallelTransfer
 
     if (!ppp.parallel())
     {
-        const tensor& T =
-        (
-            ppp.forwardT().size() == 1
-          ? ppp.forwardT()[0]
-          : ppp.forwardT()[facei_]
-        );
-        transformProperties(T);
+        transformProperties(ppp.forwardT());
     }
     else if (ppp.separated())
     {
-        const vector& s =
-        (
-            (ppp.separation().size() == 1)
-          ? ppp.separation()[0]
-          : ppp.separation()[facei_]
-        );
-        transformProperties(-s);
+        transformProperties(-ppp.separation());
     }
 
     // Set the topology

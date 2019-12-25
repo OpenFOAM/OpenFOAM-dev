@@ -64,7 +64,7 @@ class processorGAMGInterface
         label neighbProcNo_;
 
         //- Transformation tensor
-        tensorField forwardT_;
+        tensor forwardT_;
 
         //- Message tag used for sending
         int tag_;
@@ -100,7 +100,7 @@ public:
             const label coarseComm,
             const label myProcNo,
             const label neighbProcNo,
-            const tensorField& forwardT,
+            const tensor& forwardT,
             const int tag
         );
 
@@ -160,7 +160,7 @@ public:
             }
 
             //- Return face transformation tensor
-            virtual const tensorField& forwardT() const
+            virtual const tensor& forwardT() const
             {
                 return forwardT_;
             }

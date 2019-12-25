@@ -352,7 +352,7 @@ public:
         }
 
         //- If the planes are separated the separation vector.
-        virtual const vectorField& separation() const
+        virtual const vector& separation() const
         {
             return referPatch().separation();
         }
@@ -364,23 +364,16 @@ public:
         }
 
         //- Return face transformation tensor.
-        virtual const tensorField& forwardT() const
+        virtual const tensor& forwardT() const
         {
             return referPatch().forwardT();
         }
 
         //- Return neighbour-cell transformation tensor.
-        virtual const tensorField& reverseT() const
+        virtual const tensor& reverseT() const
         {
             return referPatch().reverseT();
         }
-
-        //- Are faces collocated. Either size 0,1 or length of patch
-        virtual const boolList& collocated() const
-        {
-            return referPatch().collocated();
-        }
-
 
         //- Initialize ordering for primitivePatch. Does not
         //  refer to *this (except for name() and type() etc.)
@@ -398,7 +391,6 @@ public:
             labelList& faceMap,
             labelList& rotation
         ) const;
-
 
         //- Write the polyPatch data as a dictionary
         virtual void write(Ostream&) const;

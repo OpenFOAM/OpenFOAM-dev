@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -159,61 +159,51 @@ void Foam::globalIndexAndTransform::determineTransforms()
 
             if (cpp.separated())
             {
-                const vectorField& sepVecs = cpp.separation();
+                const vector& sepVec = cpp.separation();
 
-                forAll(sepVecs, sVI)
+                if (mag(sepVec) > small)
                 {
-                    const vector& sepVec = sepVecs[sVI];
+                    vectorTensorTransform transform(sepVec);
 
-                    if (mag(sepVec) > small)
-                    {
-                        vectorTensorTransform transform(sepVec);
-
-                        if
+                    if
+                    (
+                        matchTransform
                         (
-                            matchTransform
-                            (
-                                localTransforms,
-                                dummyMatch,
-                                transform,
-                                cpp.matchTolerance(),
-                                false
-                            ) == 0
-                        )
-                        {
-                            localTransforms.append(transform);
-                            localTols.append(cpp.matchTolerance());
-                        }
+                            localTransforms,
+                            dummyMatch,
+                            transform,
+                            cpp.matchTolerance(),
+                            false
+                        ) == 0
+                    )
+                    {
+                        localTransforms.append(transform);
+                        localTols.append(cpp.matchTolerance());
                     }
                 }
             }
             else if (!cpp.parallel())
             {
-                const tensorField& transTensors = cpp.reverseT();
+                const tensor& transT = cpp.reverseT();
 
-                forAll(transTensors, tTI)
+                if (mag(transT - I) > small)
                 {
-                    const tensor& transT = transTensors[tTI];
+                    vectorTensorTransform transform(transT);
 
-                    if (mag(transT - I) > small)
-                    {
-                        vectorTensorTransform transform(transT);
-
-                        if
+                    if
+                    (
+                        matchTransform
                         (
-                            matchTransform
-                            (
-                                localTransforms,
-                                dummyMatch,
-                                transform,
-                                cpp.matchTolerance(),
-                                false
-                            ) == 0
-                        )
-                        {
-                            localTransforms.append(transform);
-                            localTols.append(cpp.matchTolerance());
-                        }
+                            localTransforms,
+                            dummyMatch,
+                            transform,
+                            cpp.matchTolerance(),
+                            false
+                        ) == 0
+                    )
+                    {
+                        localTransforms.append(transform);
+                        localTols.append(cpp.matchTolerance());
                     }
                 }
             }
@@ -343,60 +333,43 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
 
             if (cpp.separated())
             {
-                const vectorField& sepVecs = cpp.separation();
+                const vector& sepVec = cpp.separation();
 
-                // This loop is implicitly expecting only a single
-                // value for separation()
-                forAll(sepVecs, sVI)
+                if (mag(sepVec) > small)
                 {
-                    const vector& sepVec = sepVecs[sVI];
+                    vectorTensorTransform t(sepVec);
 
-                    if (mag(sepVec) > small)
-                    {
-                        vectorTensorTransform t(sepVec);
-
-                        label matchTransI;
-                        label sign = matchTransform
-                        (
-                            transforms_,
-                            matchTransI,
-                            t,
-                            cpp.matchTolerance(),
-                            true
-                        );
-                        patchTransformSign_[patchi] =
-                            labelPair(matchTransI, sign);
-                    }
+                    label matchTransI;
+                    label sign = matchTransform
+                    (
+                        transforms_,
+                        matchTransI,
+                        t,
+                        cpp.matchTolerance(),
+                        true
+                    );
+                    patchTransformSign_[patchi] = labelPair(matchTransI, sign);
                 }
-
             }
             else if (!cpp.parallel())
             {
-                const tensorField& transTensors = cpp.reverseT();
+                const tensor& transT = cpp.reverseT();
 
-                // This loop is implicitly expecting only a single
-                // value for reverseT()
-                forAll(transTensors, tTI)
+                if (mag(transT - I) > small)
                 {
-                    const tensor& transT = transTensors[tTI];
+                    vectorTensorTransform t(transT);
 
-                    if (mag(transT - I) > small)
-                    {
-                        vectorTensorTransform t(transT);
+                    label matchTransI;
+                    label sign = matchTransform
+                    (
+                        transforms_,
+                        matchTransI,
+                        t,
+                        cpp.matchTolerance(),
+                        true
+                    );
 
-                        label matchTransI;
-                        label sign = matchTransform
-                        (
-                            transforms_,
-                            matchTransI,
-                            t,
-                            cpp.matchTolerance(),
-                            true
-                        );
-
-                        patchTransformSign_[patchi] =
-                            labelPair(matchTransI, sign);
-                    }
+                    patchTransformSign_[patchi] = labelPair(matchTransI, sign);
                 }
             }
         }

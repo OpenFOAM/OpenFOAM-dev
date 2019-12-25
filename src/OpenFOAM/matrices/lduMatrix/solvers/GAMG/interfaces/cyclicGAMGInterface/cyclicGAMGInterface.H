@@ -61,10 +61,10 @@ class cyclicGAMGInterface
         bool owner_;
 
         //- Transformation tensor
-        tensorField forwardT_;
+        tensor forwardT_;
 
         //- Transformation tensor
-        tensorField reverseT_;
+        tensor reverseT_;
 
 
 public:
@@ -138,13 +138,13 @@ public:
             }
 
             //- Return face transformation tensor
-            virtual const tensorField& forwardT() const
+            virtual const tensor& forwardT() const
             {
                 return forwardT_;
             }
 
             //- Return neighbour-cell transformation tensor
-            virtual const tensorField& reverseT() const
+            virtual const tensor& reverseT() const
             {
                 return reverseT_;
             }

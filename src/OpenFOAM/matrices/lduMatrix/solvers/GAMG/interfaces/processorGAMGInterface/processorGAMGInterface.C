@@ -146,7 +146,7 @@ Foam::processorGAMGInterface::processorGAMGInterface
     const label coarseComm,
     const label myProcNo,
     const label neighbProcNo,
-    const tensorField& forwardT,
+    const tensor& forwardT,
     const int tag
 )
 :

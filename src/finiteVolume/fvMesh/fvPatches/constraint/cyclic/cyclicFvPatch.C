@@ -97,7 +97,7 @@ Foam::tmp<Foam::vectorField> Foam::cyclicFvPatch::delta() const
             vector ddi = patchD[facei];
             vector dni = nbrPatchD[facei];
 
-            pdv[facei] = ddi - transform(forwardT()[0], dni);
+            pdv[facei] = ddi - transform(forwardT(), dni);
         }
     }
 

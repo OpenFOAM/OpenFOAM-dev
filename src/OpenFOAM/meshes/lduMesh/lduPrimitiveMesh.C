@@ -926,7 +926,7 @@ Foam::lduPrimitiveMesh::lduPrimitiveMesh
                 comm_,
                 myAgglom,
                 neighbProcNo,
-                tensorField(),          // forwardT
+                Zero,                   // forwardT
                 Pstream::msgType()      // tag
             )
         );

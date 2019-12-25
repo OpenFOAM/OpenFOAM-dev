@@ -100,31 +100,18 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
                 << "This is not allowed." << exit(FatalError);
         }
 
-        if
-        (
-            transformPatch.separation().size() > 1
-         || transformPatch.forwardT().size() > 1
-        )
-        {
-            FatalErrorInFunction
-                << "Transform patch " << transformPatch.name() << " for "
-                << typeName << " patch " << name() << " has a non-uniform "
-                << "transformation. This is not allowed."
-                << exit(FatalError);
-        }
-
         Tuple2<bool, vectorTensorTransform> bt
         (
             transformPatch.size(),
             vectorTensorTransform
             (
-                transformPatch.separation().size() > 0
-              ? transformPatch.separation()[0]
+                transformPatch.separated()
+              ? transformPatch.separation()
               : vector::zero,
-                transformPatch.forwardT().size() > 0
-              ? transformPatch.forwardT()[0]
+               !transformPatch.parallel()
+              ? transformPatch.forwardT()
               : tensor::zero,
-                transformPatch.forwardT().size() > 0
+               !transformPatch.parallel()
             )
         );
 

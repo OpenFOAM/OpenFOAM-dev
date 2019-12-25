@@ -160,7 +160,7 @@ class PointEdgeWave
         void transform
         (
             const polyPatch& patch,
-            const tensorField& rotTensor,
+            const tensor& rotTensor,
             List<Type>& pointInfo
         ) const;
 

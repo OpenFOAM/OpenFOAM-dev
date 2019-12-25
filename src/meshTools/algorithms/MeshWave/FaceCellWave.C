@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -457,28 +457,14 @@ void Foam::FaceCellWave<Type, TrackingData>::enterDomain
 template<class Type, class TrackingData>
 void Foam::FaceCellWave<Type, TrackingData>::transform
 (
-    const tensorField& rotTensor,
+    const tensor& rotTensor,
     const label nFaces,
     List<Type>& faceInfo
 )
 {
-    // Transform. Implementation referred to Type
-
-    if (rotTensor.size() == 1)
+    for (label facei = 0; facei < nFaces; facei++)
     {
-        const tensor& T = rotTensor[0];
-
-        for (label facei = 0; facei < nFaces; facei++)
-        {
-            faceInfo[facei].transform(mesh_, T, td_);
-        }
-    }
-    else
-    {
-        for (label facei = 0; facei < nFaces; facei++)
-        {
-            faceInfo[facei].transform(mesh_, rotTensor[facei], td_);
-        }
+        faceInfo[facei].transform(mesh_, rotTensor, td_);
     }
 }
 

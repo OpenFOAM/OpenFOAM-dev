@@ -127,7 +127,7 @@ public:
 
     // Member Functions
 
-        //- Constraint handling
+        // Constraint handling
 
             //- Return the constraint type this pointPatchField implements
             virtual const word& constraintType() const
@@ -135,7 +135,8 @@ public:
                 return cyclicPointPatch::typeName;
             }
 
-        //- Cyclic coupled interface functions
+
+        // Cyclic coupled interface functions
 
             //- Does the patch field perform the transformation
             virtual bool doTransform() const
@@ -144,13 +145,13 @@ public:
             }
 
             //- Return face transformation tensor
-            virtual const tensorField& forwardT() const
+            virtual const tensor& forwardT() const
             {
                 return cyclicPatch_.forwardT();
             }
 
             //- Return neighbour-cell transformation tensor
-            virtual const tensorField& reverseT() const
+            virtual const tensor& reverseT() const
             {
                 return cyclicPatch_.reverseT();
             }

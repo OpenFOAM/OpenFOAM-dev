@@ -94,7 +94,7 @@ public:
             virtual int neighbProcNo() const = 0;
 
             //- Return face transformation tensor
-            virtual const tensorField& forwardT() const = 0;
+            virtual const tensor& forwardT() const = 0;
 
             //- Return message tag used for sending
             virtual int tag() const = 0;

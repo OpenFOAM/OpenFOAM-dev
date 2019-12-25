@@ -308,17 +308,6 @@ void Foam::processorPolyPatch::calcGeometry(PstreamBuffers& pBufs)
                 nbrFaceNormals[facei] = neighbFaceAreas_[facei]/nbrMagSf;
             }
         }
-
-        calcTransformTensors
-        (
-            faceCentres(),
-            neighbFaceCentres_,
-            faceNormals,
-            nbrFaceNormals,
-            matchTolerance()*tols,
-            matchTolerance(),
-            transform()
-        );
     }
 }
 

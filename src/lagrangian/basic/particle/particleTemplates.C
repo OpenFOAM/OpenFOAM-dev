@@ -280,23 +280,11 @@ void Foam::particle::hitCyclicPatch(TrackCloudType&, trackingData&)
     // Transform the properties
     if (!receiveCpp.parallel())
     {
-        const tensor& T =
-        (
-            receiveCpp.forwardT().size() == 1
-          ? receiveCpp.forwardT()[0]
-          : receiveCpp.forwardT()[receiveFacei]
-        );
-        transformProperties(T);
+        transformProperties(receiveCpp.forwardT());
     }
     else if (receiveCpp.separated())
     {
-        const vector& s =
-        (
-            (receiveCpp.separation().size() == 1)
-          ? receiveCpp.separation()[0]
-          : receiveCpp.separation()[receiveFacei]
-        );
-        transformProperties(-s);
+        transformProperties(-receiveCpp.separation());
     }
 }
 
@@ -388,24 +376,12 @@ void Foam::particle::hitCyclicAMIPatch
 
     if (!receiveCpp.parallel())
     {
-        const tensor& T =
-        (
-            receiveCpp.forwardT().size() == 1
-          ? receiveCpp.forwardT()[0]
-          : receiveCpp.forwardT()[facei_]
-        );
-        transformProperties(T);
-        displacementT = transform(T, displacementT);
+        transformProperties(receiveCpp.forwardT());
+        displacementT = transform(receiveCpp.forwardT(), displacementT);
     }
     else if (receiveCpp.separated())
     {
-        const vector& s =
-        (
-            (receiveCpp.separation().size() == 1)
-          ? receiveCpp.separation()[0]
-          : receiveCpp.separation()[facei_]
-        );
-        transformProperties(-s);
+        transformProperties(-receiveCpp.separation());
     }
 
     // If on a boundary and the displacement points into the receiving face

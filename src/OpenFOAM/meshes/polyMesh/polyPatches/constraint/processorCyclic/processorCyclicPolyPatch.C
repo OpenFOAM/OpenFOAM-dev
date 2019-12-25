@@ -237,6 +237,16 @@ void Foam::processorCyclicPolyPatch::calcGeometry(PstreamBuffers& pBufs)
 
     if (Pstream::parRun())
     {
+        calcTransformTensors
+        (
+            faceCentres(),
+            neighbFaceCentres(),
+            faceAreas()/mag(faceAreas()),
+            neighbFaceAreas()/mag(neighbFaceAreas()),
+            matchTolerance()*calcFaceTol(*this, points(), faceCentres()),
+            matchTolerance(),
+            transform()
+        );
 
         // Where do we store the calculated transformation?
         // - on the processor patch?

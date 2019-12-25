@@ -227,10 +227,11 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
                 }
             }
 
-            const_cast<tensorField&>(forwardT()) = tensorField(1, revT.T());
-            const_cast<tensorField&>(reverseT()) = tensorField(1, revT);
-            const_cast<vectorField&>(separation()).setSize(0);
-            const_cast<boolList&>(collocated()) = boolList(1, false);
+            parallel_ = false;
+            separated_ = false;
+            separation_ = Zero;
+            forwardT_ = revT.T();
+            reverseT_ = revT;
 
             break;
         }
@@ -243,14 +244,11 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
                     << endl;
             }
 
-            const_cast<tensorField&>(forwardT()).clear();
-            const_cast<tensorField&>(reverseT()).clear();
-            const_cast<vectorField&>(separation()) = vectorField
-            (
-                1,
-                separationVector_
-            );
-            const_cast<boolList&>(collocated()) = boolList(1, false);
+            parallel_ = true;
+            separated_ = true;
+            separation_ = separationVector_;
+            forwardT_ = Zero;
+            reverseT_ = Zero;
 
             break;
         }
@@ -262,10 +260,11 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
                     << " Assuming cyclic AMI pairs are colocated" << endl;
             }
 
-            const_cast<tensorField&>(forwardT()).clear();
-            const_cast<tensorField&>(reverseT()).clear();
-            const_cast<vectorField&>(separation()).setSize(0);
-            const_cast<boolList&>(collocated()) = boolList(1, true);
+            parallel_ = true;
+            separated_ = false;
+            separation_ = Zero;
+            forwardT_ = Zero;
+            reverseT_ = Zero;
 
             break;
         }
@@ -276,8 +275,7 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
         Pout<< "patch: " << name() << nl
             << "    forwardT = " << forwardT() << nl
             << "    reverseT = " << reverseT() << nl
-            << "    separation = " << separation() << nl
-            << "    collocated = " << collocated() << nl << endl;
+            << "    separation = " << separation() << nl << endl;
     }
 }
 
@@ -387,8 +385,7 @@ void Foam::cyclicAMIPolyPatch::calcTransforms()
         Pout<< "calcTransforms() : patch: " << name() << nl
             << "    forwardT = " << forwardT() << nl
             << "    reverseT = " << reverseT() << nl
-            << "    separation = " << separation() << nl
-            << "    collocated = " << collocated() << nl << endl;
+            << "    separation = " << separation() << nl << endl;
     }
 }
 
@@ -897,19 +894,7 @@ void Foam::cyclicAMIPolyPatch::transformPosition(pointField& l) const
     {
         // transformPosition gets called on the receiving side,
         // separation gets calculated on the sending side so subtract
-
-        const vectorField& s = separation();
-        if (s.size() == 1)
-        {
-            forAll(l, i)
-            {
-                l[i] -= s[0];
-            }
-        }
-        else
-        {
-            l -= s;
-        }
+        l -= separation();
     }
 }
 
@@ -922,32 +907,19 @@ void Foam::cyclicAMIPolyPatch::transformPosition
 {
     if (!parallel())
     {
-        const tensor& T =
-        (
-            forwardT().size() == 1
-          ? forwardT()[0]
-          : forwardT()[facei]
-        );
-
         if (transform() == ROTATIONAL)
         {
-            l = Foam::transform(T, l - rotationCentre_) + rotationCentre_;
+            l = Foam::transform(forwardT(), l - rotationCentre_)
+              + rotationCentre_;
         }
         else
         {
-            l = Foam::transform(T, l);
+            l = Foam::transform(forwardT(), l);
         }
     }
     else if (separated())
     {
-        const vector& s =
-        (
-            separation().size() == 1
-          ? separation()[0]
-          : separation()[facei]
-        );
-
-        l -= s;
+        l -= separation();
     }
 }
 
@@ -960,14 +932,7 @@ void Foam::cyclicAMIPolyPatch::transformDirection
 {
     if (!parallel())
     {
-        const tensor& T =
-        (
-            forwardT().size() == 1
-          ? forwardT()[0]
-          : forwardT()[facei]
-        );
-
-        d = Foam::transform(T, d);
+        d = Foam::transform(forwardT(), d);
     }
 }
 
@@ -980,32 +945,19 @@ void Foam::cyclicAMIPolyPatch::reverseTransformPosition
 {
     if (!parallel())
     {
-        const tensor& T =
-        (
-            reverseT().size() == 1
-          ? reverseT()[0]
-          : reverseT()[facei]
-        );
-
         if (transform() == ROTATIONAL)
         {
-            l = Foam::transform(T, l - rotationCentre_) + rotationCentre_;
+            l = Foam::transform(reverseT(), l - rotationCentre_)
+              + rotationCentre_;
         }
         else
         {
-            l = Foam::transform(T, l);
+            l = Foam::transform(reverseT(), l);
         }
     }
     else if (separated())
     {
-        const vector& s =
-        (
-            separation().size() == 1
-          ? separation()[0]
-          : separation()[facei]
-        );
-
-        l += s;
+        l += separation();
     }
 }
 
@@ -1018,14 +970,7 @@ void Foam::cyclicAMIPolyPatch::reverseTransformDirection
 {
     if (!parallel())
     {
-        const tensor& T =
-        (
-            reverseT().size() == 1
-          ? reverseT()[0]
-          : reverseT()[facei]
-        );
-
-        d = Foam::transform(T, d);
+        d = Foam::transform(reverseT(), d);
     }
 }
 
