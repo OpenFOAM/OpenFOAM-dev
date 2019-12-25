@@ -229,7 +229,7 @@ bool Foam::functionObjectList::readFunctionObject
     word funcName(funcCall);
 
     int argLevel = 0;
-    wordList args;
+    wordReList args;
 
     List<Tuple2<word, string>> namedArgs;
     bool namedArg = false;
@@ -274,10 +274,7 @@ bool Foam::functionObjectList::readFunctionObject
                 }
                 else
                 {
-                    args.append
-                    (
-                        string::validate<word>(funcCall(start, i - start))
-                    );
+                    args.append(wordRe(funcCall(start, i - start)));
                 }
                 start = i+1;
             }

@@ -114,7 +114,21 @@ Foam::functionObjects::writeObjectsBase::writeObjectNames() const
 
 bool Foam::functionObjects::writeObjectsBase::read(const dictionary& dict)
 {
-    dict.lookup("objects") >> writeObjectNames_;
+    regExp_ = dict.lookupOrDefault<Switch>("regExp", true);
+
+    if (regExp_)
+    {
+        dict.lookup("objects") >> writeObjectNames_;
+    }
+    else
+    {
+        const wordList objectNames(dict.lookup("objects"));
+        writeObjectNames_.setSize(objectNames.size());
+        forAll(objectNames, i)
+        {
+            writeObjectNames_[i] = objectNames[i];
+        }
+    }
 
     return true;
 }
