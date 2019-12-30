@@ -359,7 +359,7 @@ void Foam::particle::hitCyclicAMIPatch
     // Transform the properties
     vector displacementT = displacement;
 
-    const vectorTensorTransform AMITransform =
+    const transformer AMITransform =
         receiveCpp.owner()
       ? receiveCpp.AMITransforms()[receiveAMIi]
       : inv(cpp.AMITransforms()[receiveAMIi]);

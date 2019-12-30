@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Type Foam::vectorTensorTransform::transform(const Type& x) const
+Type Foam::transformer::transform(const Type& x) const
 {
     if (hasR_)
     {
@@ -40,7 +40,7 @@ Type Foam::vectorTensorTransform::transform(const Type& x) const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::vectorTensorTransform::transform
+Foam::tmp<Foam::Field<Type>> Foam::transformer::transform
 (
     const Field<Type>& fld
 ) const
@@ -57,7 +57,7 @@ Foam::tmp<Foam::Field<Type>> Foam::vectorTensorTransform::transform
 
 
 template<class Type>
-Type Foam::vectorTensorTransform::invTransform(const Type& x) const
+Type Foam::transformer::invTransform(const Type& x) const
 {
     if (hasR_)
     {
@@ -71,7 +71,7 @@ Type Foam::vectorTensorTransform::invTransform(const Type& x) const
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::vectorTensorTransform::invTransform
+Foam::tmp<Foam::Field<Type>> Foam::transformer::invTransform
 (
     const Field<Type>& fld
 ) const

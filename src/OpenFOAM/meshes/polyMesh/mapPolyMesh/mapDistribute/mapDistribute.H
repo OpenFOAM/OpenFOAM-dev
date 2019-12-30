@@ -135,7 +135,7 @@ SourceFiles
 
 #include "mapDistributeBase.H"
 #include "transformList.H"
-#include "vectorTensorTransform.H"
+#include "transformer.H"
 #include "coupledPolyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -211,7 +211,7 @@ public:
             template<class Type>
             void operator()
             (
-                const vectorTensorTransform& vt,
+                const transformer& vt,
                 const bool forward,
                 List<Type>& fld
             ) const
@@ -223,7 +223,7 @@ public:
             template<class Type>
             void operator()
             (
-                const vectorTensorTransform& vt,
+                const transformer& vt,
                 const bool forward,
                 List<List<Type>>& flds
             ) const
@@ -263,7 +263,7 @@ public:
 
             void operator()
             (
-                const vectorTensorTransform& vt,
+                const transformer& vt,
                 const bool forward,
                 List<point>& fld
             ) const
@@ -280,7 +280,7 @@ public:
             }
             void operator()
             (
-                const vectorTensorTransform& vt,
+                const transformer& vt,
                 const bool forward,
                 List<List<point>>& flds
             ) const
@@ -567,7 +567,7 @@ public:
 template<>
 void mapDistribute::transform::operator()
 (
-    const vectorTensorTransform&,
+    const transformer&,
     const bool,
     List<label>&
 ) const;
@@ -599,7 +599,7 @@ void mapDistribute::transform::operator()
 template<>
 void mapDistribute::transform::operator()
 (
-    const vectorTensorTransform&,
+    const transformer&,
     const bool,
     List<scalar>&
 ) const;
@@ -625,7 +625,7 @@ void mapDistribute::transform::operator()
 template<>
 void mapDistribute::transform::operator()
 (
-    const vectorTensorTransform&,
+    const transformer&,
     const bool,
     List<bool>&
 ) const;

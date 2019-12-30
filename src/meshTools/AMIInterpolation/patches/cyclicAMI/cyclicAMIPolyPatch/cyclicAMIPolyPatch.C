@@ -340,7 +340,7 @@ void Foam::cyclicAMIPolyPatch::resetAMI() const
             )
         );
 
-        AMITransforms_.resize(1, vectorTensorTransform::I);
+        AMITransforms_.resize(1, transformer::I);
 
         if (debug)
         {
@@ -818,7 +818,7 @@ Foam::cyclicAMIPolyPatch::AMIs() const
 }
 
 
-const Foam::List<Foam::vectorTensorTransform>&
+const Foam::List<Foam::transformer>&
 Foam::cyclicAMIPolyPatch::AMITransforms() const
 {
     if (!owner())

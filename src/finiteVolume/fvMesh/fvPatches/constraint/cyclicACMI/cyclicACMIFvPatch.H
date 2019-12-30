@@ -96,9 +96,9 @@ public:
             }
 
             //- Return a reference to the AMI transformations
-            virtual const List<vectorTensorTransform>& AMITransforms() const
+            virtual const List<transformer>& AMITransforms() const
             {
-                const List<vectorTensorTransform>& AMITransforms =
+                const List<transformer>& AMITransforms =
                     cyclicAMIFvPatch::AMITransforms();
 
                 updateAreas();

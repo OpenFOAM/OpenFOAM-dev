@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,16 +23,16 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "vectorTensorTransform.H"
+#include "transformer.H"
 #include "IOstreams.H"
 #include "OStringStream.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-const char* const Foam::vectorTensorTransform::typeName =
-    "vectorTensorTransform";
+const char* const Foam::transformer::typeName =
+    "transformer";
 
-const Foam::vectorTensorTransform Foam::vectorTensorTransform::zero
+const Foam::transformer Foam::transformer::zero
 (
     Zero,
     Zero,
@@ -40,7 +40,7 @@ const Foam::vectorTensorTransform Foam::vectorTensorTransform::zero
 );
 
 
-const Foam::vectorTensorTransform Foam::vectorTensorTransform::I
+const Foam::transformer Foam::transformer::I
 (
     Zero,
     sphericalTensor::I,
@@ -50,7 +50,7 @@ const Foam::vectorTensorTransform Foam::vectorTensorTransform::I
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::vectorTensorTransform::vectorTensorTransform(Istream& is)
+Foam::transformer::transformer(Istream& is)
 {
     is  >> *this;
 }
@@ -58,7 +58,7 @@ Foam::vectorTensorTransform::vectorTensorTransform(Istream& is)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::word Foam::name(const vectorTensorTransform& s)
+Foam::word Foam::name(const transformer& s)
 {
     OStringStream buf;
 
@@ -69,7 +69,7 @@ Foam::word Foam::name(const vectorTensorTransform& s)
 
 
 template<>
-Foam::tmp<Foam::Field<bool>> Foam::vectorTensorTransform::transform
+Foam::tmp<Foam::Field<bool>> Foam::transformer::transform
 (
     const Field<bool>& fld
 ) const
@@ -77,7 +77,7 @@ Foam::tmp<Foam::Field<bool>> Foam::vectorTensorTransform::transform
     return fld;
 }
 template<>
-Foam::tmp<Foam::Field<Foam::label>> Foam::vectorTensorTransform::transform
+Foam::tmp<Foam::Field<Foam::label>> Foam::transformer::transform
 (
     const Field<label>& fld
 ) const
@@ -85,7 +85,7 @@ Foam::tmp<Foam::Field<Foam::label>> Foam::vectorTensorTransform::transform
     return fld;
 }
 template<>
-Foam::tmp<Foam::Field<Foam::scalar>> Foam::vectorTensorTransform::transform
+Foam::tmp<Foam::Field<Foam::scalar>> Foam::transformer::transform
 (
     const Field<scalar>& fld
 ) const
@@ -96,24 +96,24 @@ Foam::tmp<Foam::Field<Foam::scalar>> Foam::vectorTensorTransform::transform
 
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-Foam::Istream& Foam::operator>>(Istream& is, vectorTensorTransform& tr)
+Foam::Istream& Foam::operator>>(Istream& is, transformer& tr)
 {
-    // Read beginning of vectorTensorTransform
-    is.readBegin("vectorTensorTransform");
+    // Read beginning of transformer
+    is.readBegin("transformer");
 
     is  >> tr.t_ >> tr.R_ >> tr.hasR_;
 
-    // Read end of vectorTensorTransform
-    is.readEnd("vectorTensorTransform");
+    // Read end of transformer
+    is.readEnd("transformer");
 
     // Check state of Istream
-    is.check("operator>>(Istream&, vectorTensorTransform&)");
+    is.check("operator>>(Istream&, transformer&)");
 
     return is;
 }
 
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const vectorTensorTransform& tr)
+Foam::Ostream& Foam::operator<<(Ostream& os, const transformer& tr)
 {
     os  << token::BEGIN_LIST
         << tr.t() << token::SPACE << tr.R() << token::SPACE << tr.hasR()

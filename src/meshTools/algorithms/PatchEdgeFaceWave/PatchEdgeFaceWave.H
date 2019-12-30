@@ -40,7 +40,7 @@ SourceFiles
 #include "scalarField.H"
 #include "PackedBoolList.H"
 #include "PrimitivePatch.H"
-#include "vectorTensorTransform.H"
+#include "transformer.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -333,7 +333,7 @@ public:
 
     void operator()
     (
-        const vectorTensorTransform& vt,
+        const transformer& vt,
         const bool forward,
         List<Type>& fld
     ) const

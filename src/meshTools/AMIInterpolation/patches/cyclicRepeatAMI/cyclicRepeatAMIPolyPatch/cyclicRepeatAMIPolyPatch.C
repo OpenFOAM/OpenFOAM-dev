@@ -87,7 +87,7 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
         << endl;
 
     // Get the transform associated with the transform patch
-    vectorTensorTransform t;
+    transformer t;
     {
         const coupledPolyPatch& transformPatch = this->transformPatch();
 
@@ -100,10 +100,10 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
                 << "This is not allowed." << exit(FatalError);
         }
 
-        Tuple2<bool, vectorTensorTransform> bt
+        Tuple2<bool, transformer> bt
         (
             transformPatch.size(),
-            vectorTensorTransform
+            transformer
             (
                 transformPatch.separated()
               ? transformPatch.separation()
@@ -115,7 +115,7 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
             )
         );
 
-        reduce(bt, keepIfTrueOp<vectorTensorTransform>());
+        reduce(bt, keepIfTrueOp<transformer>());
 
         if (!bt.first())
         {
@@ -130,7 +130,7 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
 
         t = bt.second();
     }
-    const vectorTensorTransform tInv(inv(t));
+    const transformer tInv(inv(t));
 
     // Work out the number of repetitions of the transform that separate this
     // patch from its neighbour
@@ -172,7 +172,7 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
     }
 
     // Generate the full transformations
-    vectorTensorTransform TLeft(t), T(vectorTensorTransform::I), TRight(tInv);
+    transformer TLeft(t), T(transformer::I), TRight(tInv);
     if (n > 0)
     {
         for (label i = 0; i < n - 1; ++ i)

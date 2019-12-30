@@ -39,7 +39,7 @@ namespace Foam
 template<>
 void Foam::mapDistribute::transform::operator()
 (
-    const vectorTensorTransform&,
+    const transformer&,
     const bool,
     List<label>&
 ) const
@@ -70,7 +70,7 @@ void Foam::mapDistribute::transform::operator()
 template<>
 void Foam::mapDistribute::transform::operator()
 (
-    const vectorTensorTransform&,
+    const transformer&,
     const bool,
     List<scalar>&
 ) const
@@ -101,7 +101,7 @@ void Foam::mapDistribute::transform::operator()
 template<>
 void Foam::mapDistribute::transform::operator()
 (
-    const vectorTensorTransform&,
+    const transformer&,
     const bool,
     List<bool>&
 ) const

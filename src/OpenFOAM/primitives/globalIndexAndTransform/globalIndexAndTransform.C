@@ -40,9 +40,9 @@ namespace Foam
 
 Foam::label Foam::globalIndexAndTransform::matchTransform
 (
-    const List<vectorTensorTransform>& refTransforms,
+    const List<transformer>& refTransforms,
     label& matchedRefTransformI,
-    const vectorTensorTransform& testTransform,
+    const transformer& testTransform,
     scalar tolerance,
     bool checkBothSigns
 ) const
@@ -51,7 +51,7 @@ Foam::label Foam::globalIndexAndTransform::matchTransform
 
     forAll(refTransforms, i)
     {
-        const vectorTensorTransform& refTransform = refTransforms[i];
+        const transformer& refTransform = refTransforms[i];
 
         scalar maxVectorMag = sqrt
         (
@@ -128,7 +128,7 @@ void Foam::globalIndexAndTransform::determineTransforms()
 {
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
 
-    DynamicList<vectorTensorTransform> localTransforms;
+    DynamicList<transformer> localTransforms;
     DynamicField<scalar> localTols;
 
     label dummyMatch = -1;
@@ -163,7 +163,7 @@ void Foam::globalIndexAndTransform::determineTransforms()
 
                 if (mag(sepVec) > small)
                 {
-                    vectorTensorTransform transform(sepVec);
+                    transformer transform(sepVec);
 
                     if
                     (
@@ -188,7 +188,7 @@ void Foam::globalIndexAndTransform::determineTransforms()
 
                 if (mag(transT - I) > small)
                 {
-                    vectorTensorTransform transform(transT);
+                    transformer transform(transT);
 
                     if
                     (
@@ -212,7 +212,7 @@ void Foam::globalIndexAndTransform::determineTransforms()
 
 
     // Collect transforms on master
-    List<List<vectorTensorTransform>> allTransforms(Pstream::nProcs());
+    List<List<transformer>> allTransforms(Pstream::nProcs());
     allTransforms[Pstream::myProcNo()] = localTransforms;
     Pstream::gatherList(allTransforms);
 
@@ -227,12 +227,12 @@ void Foam::globalIndexAndTransform::determineTransforms()
 
         forAll(allTransforms, proci)
         {
-            const List<vectorTensorTransform>& procTransVecs =
+            const List<transformer>& procTransVecs =
                 allTransforms[proci];
 
             forAll(procTransVecs, pSVI)
             {
-                const vectorTensorTransform& transform = procTransVecs[pSVI];
+                const transformer& transform = procTransVecs[pSVI];
 
                 if (mag(transform.t()) > small || transform.hasR())
                 {
@@ -268,7 +268,7 @@ void Foam::globalIndexAndTransform::determineTransformPermutations()
 
     forAll(transformPermutations_, tPI)
     {
-        vectorTensorTransform transform;
+        transformer transform;
 
         label transformIndex = tPI;
 
@@ -337,7 +337,7 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
 
                 if (mag(sepVec) > small)
                 {
-                    vectorTensorTransform t(sepVec);
+                    transformer t(sepVec);
 
                     label matchTransI;
                     label sign = matchTransform
@@ -357,7 +357,7 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
 
                 if (mag(transT - I) > small)
                 {
-                    vectorTensorTransform t(transT);
+                    transformer t(transT);
 
                     label matchTransI;
                     label sign = matchTransform
@@ -447,7 +447,7 @@ Foam::globalIndexAndTransform::globalIndexAndTransform(const polyMesh& mesh)
         forAll(transforms_, i)
         {
             Info<< '\t' << i << '\t';
-            const vectorTensorTransform& trafo = transforms_[i];
+            const transformer& trafo = transforms_[i];
             if (trafo.hasR())
             {
                  Info<< trafo.t() << '\t' << trafo.R();
@@ -480,7 +480,7 @@ Foam::globalIndexAndTransform::globalIndexAndTransform(const polyMesh& mesh)
         forAll(transformPermutations_, i)
         {
             Info<< '\t' << i << '\t';
-            const vectorTensorTransform& trafo = transformPermutations_[i];
+            const transformer& trafo = transformPermutations_[i];
             if (trafo.hasR())
             {
                  Info<< trafo.t() << '\t' << trafo.R();

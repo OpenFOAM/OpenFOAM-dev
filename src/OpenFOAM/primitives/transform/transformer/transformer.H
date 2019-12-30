@@ -22,21 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::vectorTensorTransform
+    Foam::transformer
 
 Description
     Vector-tensor class used to perform translations and rotations in
     3D space.
 
 SourceFiles
-    vectorTensorTransformI.H
-    vectorTensorTransform.C
-    vectorTensorTransformTemplates.C
+    transformerI.H
+    transformer.C
+    transformerTemplates.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef vectorTensorTransform_H
-#define vectorTensorTransform_H
+#ifndef transformer_H
+#define transformer_H
 
 #include "tensor.H"
 #include "word.H"
@@ -51,16 +51,16 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 
-class vectorTensorTransform;
-Istream& operator>>(Istream& is, vectorTensorTransform&);
-Ostream& operator<<(Ostream& os, const vectorTensorTransform& C);
+class transformer;
+Istream& operator>>(Istream& is, transformer&);
+Ostream& operator<<(Ostream& os, const transformer& C);
 
 
 /*---------------------------------------------------------------------------*\
-                    Class vectorTensorTransform Declaration
+                    Class transformer Declaration
 \*---------------------------------------------------------------------------*/
 
-class vectorTensorTransform
+class transformer
 {
     // private data
 
@@ -82,35 +82,35 @@ public:
 
         static const char* const typeName;
 
-        static const vectorTensorTransform zero;
+        static const transformer zero;
 
-        static const vectorTensorTransform I;
+        static const transformer I;
 
 
     // Constructors
 
         //- Construct null
-        inline vectorTensorTransform();
+        inline transformer();
 
         //- Construct given a translation vector, rotation tensor and
         //  hasR bool
-        inline vectorTensorTransform
+        inline transformer
         (
             const vector& t,
             const tensor& R,
             bool hasR = true
         );
 
-        //- Construct a pure translation vectorTensorTransform given a
+        //- Construct a pure translation transformer given a
         //  translation vector
-        inline explicit vectorTensorTransform(const vector& t);
+        inline explicit transformer(const vector& t);
 
-        //- Construct a pure rotation vectorTensorTransform given a
+        //- Construct a pure rotation transformer given a
         //  rotation tensor
-        inline explicit vectorTensorTransform(const tensor& R);
+        inline explicit transformer(const tensor& R);
 
         //- Construct from Istream
-        vectorTensorTransform(Istream&);
+        transformer(Istream&);
 
 
     // Member Functions
@@ -164,7 +164,7 @@ public:
 
     // Member Operators
 
-        inline void operator&=(const vectorTensorTransform&);
+        inline void operator&=(const transformer&);
 
         inline void operator=(const vector&);
         inline void operator+=(const vector&);
@@ -176,33 +176,33 @@ public:
 
     // IOstream Operators
 
-        friend Istream& operator>>(Istream& is, vectorTensorTransform&);
+        friend Istream& operator>>(Istream& is, transformer&);
 
-        friend Ostream& operator<<(Ostream& os, const vectorTensorTransform&);
+        friend Ostream& operator<<(Ostream& os, const transformer&);
 };
 
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
-//- Return the inverse of the given vectorTensorTransform
-inline vectorTensorTransform inv(const vectorTensorTransform& tr);
+//- Return the inverse of the given transformer
+inline transformer inv(const transformer& tr);
 
 
-//- Return a string representation of a vectorTensorTransform
-word name(const vectorTensorTransform&);
+//- Return a string representation of a transformer
+word name(const transformer&);
 
 
-//- Data associated with vectorTensorTransform type are contiguous
+//- Data associated with transformer type are contiguous
 template<>
-inline bool contiguous<vectorTensorTransform>() {return true;}
+inline bool contiguous<transformer>() {return true;}
 
 //- Template specialisations
 template<>
-tmp<Field<bool>> vectorTensorTransform::transform(const Field<bool>&) const;
+tmp<Field<bool>> transformer::transform(const Field<bool>&) const;
 template<>
-tmp<Field<label>> vectorTensorTransform::transform(const Field<label>&) const;
+tmp<Field<label>> transformer::transform(const Field<label>&) const;
 template<>
-tmp<Field<scalar>> vectorTensorTransform::transform(const Field<scalar>&)
+tmp<Field<scalar>> transformer::transform(const Field<scalar>&)
 const;
 
 
@@ -210,44 +210,44 @@ const;
 
 inline bool operator==
 (
-    const vectorTensorTransform& tr1,
-    const vectorTensorTransform& tr2
+    const transformer& tr1,
+    const transformer& tr2
 );
 
 
 inline bool operator!=
 (
-    const vectorTensorTransform& tr1,
-    const vectorTensorTransform& tr2
+    const transformer& tr1,
+    const transformer& tr2
 
 );
 
 
-inline vectorTensorTransform operator+
+inline transformer operator+
 (
-    const vectorTensorTransform& tr,
+    const transformer& tr,
     const vector& t
 );
 
 
-inline vectorTensorTransform operator+
+inline transformer operator+
 (
     const vector& t,
-    const vectorTensorTransform& tr
+    const transformer& tr
 );
 
 
-inline vectorTensorTransform operator-
+inline transformer operator-
 (
-    const vectorTensorTransform& tr,
+    const transformer& tr,
     const vector& t
 );
 
 
-inline vectorTensorTransform operator&
+inline transformer operator&
 (
-    const vectorTensorTransform& tr1,
-    const vectorTensorTransform& tr2
+    const transformer& tr1,
+    const transformer& tr2
 );
 
 
@@ -257,10 +257,10 @@ inline vectorTensorTransform operator&
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "vectorTensorTransformI.H"
+#include "transformerI.H"
 
 #ifdef NoRepository
-    #include "vectorTensorTransformTemplates.C"
+    #include "transformerTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

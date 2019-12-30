@@ -25,7 +25,7 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-inline Foam::vectorTensorTransform::vectorTensorTransform()
+inline Foam::transformer::transformer()
 :
     t_(Zero),
     R_(sphericalTensor::I),
@@ -33,7 +33,7 @@ inline Foam::vectorTensorTransform::vectorTensorTransform()
 {}
 
 
-inline Foam::vectorTensorTransform::vectorTensorTransform
+inline Foam::transformer::transformer
 (
     const vector& t,
     const tensor& R,
@@ -46,7 +46,7 @@ inline Foam::vectorTensorTransform::vectorTensorTransform
 {}
 
 
-inline Foam::vectorTensorTransform::vectorTensorTransform(const vector& t)
+inline Foam::transformer::transformer(const vector& t)
 :
     t_(t),
     R_(sphericalTensor::I),
@@ -54,7 +54,7 @@ inline Foam::vectorTensorTransform::vectorTensorTransform(const vector& t)
 {}
 
 
-inline Foam::vectorTensorTransform::vectorTensorTransform(const tensor& R)
+inline Foam::transformer::transformer(const tensor& R)
 :
     t_(Zero),
     R_(R),
@@ -64,31 +64,31 @@ inline Foam::vectorTensorTransform::vectorTensorTransform(const tensor& R)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::vector& Foam::vectorTensorTransform::t() const
+inline const Foam::vector& Foam::transformer::t() const
 {
     return t_;
 }
 
 
-inline const Foam::tensor& Foam::vectorTensorTransform::R() const
+inline const Foam::tensor& Foam::transformer::R() const
 {
     return R_;
 }
 
 
-inline bool Foam::vectorTensorTransform::hasR() const
+inline bool Foam::transformer::hasR() const
 {
     return hasR_;
 }
 
 
-inline Foam::vector& Foam::vectorTensorTransform::t()
+inline Foam::vector& Foam::transformer::t()
 {
     return t_;
 }
 
 
-inline Foam::tensor& Foam::vectorTensorTransform::R()
+inline Foam::tensor& Foam::transformer::R()
 {
     // Assume that non-const access to R changes it from I, so set
     // hasR to true
@@ -99,7 +99,7 @@ inline Foam::tensor& Foam::vectorTensorTransform::R()
 }
 
 
-inline Foam::vector Foam::vectorTensorTransform::transformPosition
+inline Foam::vector Foam::transformer::transformPosition
 (
     const vector& v
 ) const
@@ -115,7 +115,7 @@ inline Foam::vector Foam::vectorTensorTransform::transformPosition
 }
 
 
-inline Foam::pointField Foam::vectorTensorTransform::transformPosition
+inline Foam::pointField Foam::transformer::transformPosition
 (
     const pointField& pts
 ) const
@@ -134,7 +134,7 @@ inline Foam::pointField Foam::vectorTensorTransform::transformPosition
 }
 
 
-inline Foam::vector Foam::vectorTensorTransform::invTransformPosition
+inline Foam::vector Foam::transformer::invTransformPosition
 (
     const vector& v
 ) const
@@ -150,7 +150,7 @@ inline Foam::vector Foam::vectorTensorTransform::invTransformPosition
 }
 
 
-inline Foam::pointField Foam::vectorTensorTransform::invTransformPosition
+inline Foam::pointField Foam::transformer::invTransformPosition
 (
     const pointField& pts
 ) const
@@ -171,9 +171,9 @@ inline Foam::pointField Foam::vectorTensorTransform::invTransformPosition
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-inline void Foam::vectorTensorTransform::operator&=
+inline void Foam::transformer::operator&=
 (
-    const vectorTensorTransform& tr
+    const transformer& tr
 )
 {
     t_ += tr.t_;
@@ -185,25 +185,25 @@ inline void Foam::vectorTensorTransform::operator&=
 }
 
 
-inline void Foam::vectorTensorTransform::operator=(const vector& t)
+inline void Foam::transformer::operator=(const vector& t)
 {
     t_ = t;
 }
 
 
-inline void Foam::vectorTensorTransform::operator+=(const vector& t)
+inline void Foam::transformer::operator+=(const vector& t)
 {
     t_ += t;
 }
 
 
-inline void Foam::vectorTensorTransform::operator-=(const vector& t)
+inline void Foam::transformer::operator-=(const vector& t)
 {
     t_ -= t;
 }
 
 
-inline void Foam::vectorTensorTransform::operator=(const tensor& R)
+inline void Foam::transformer::operator=(const tensor& R)
 {
     hasR_ = true;
 
@@ -211,7 +211,7 @@ inline void Foam::vectorTensorTransform::operator=(const tensor& R)
 }
 
 
-inline void Foam::vectorTensorTransform::operator&=(const tensor& R)
+inline void Foam::transformer::operator&=(const tensor& R)
 {
     hasR_ = true;
 
@@ -221,9 +221,9 @@ inline void Foam::vectorTensorTransform::operator&=(const tensor& R)
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
-inline Foam::vectorTensorTransform Foam::inv(const vectorTensorTransform& tr)
+inline Foam::transformer Foam::inv(const transformer& tr)
 {
-    return vectorTensorTransform(-tr.t(), tr.R().T(), tr.hasR());
+    return transformer(-tr.t(), tr.R().T(), tr.hasR());
 }
 
 
@@ -231,8 +231,8 @@ inline Foam::vectorTensorTransform Foam::inv(const vectorTensorTransform& tr)
 
 inline bool Foam::operator==
 (
-    const vectorTensorTransform& tr1,
-    const vectorTensorTransform& tr2
+    const transformer& tr1,
+    const transformer& tr2
 )
 {
     return (tr1.t() == tr2.t() && tr1.R() == tr2.R());
@@ -241,51 +241,51 @@ inline bool Foam::operator==
 
 inline bool Foam::operator!=
 (
-    const vectorTensorTransform& tr1,
-    const vectorTensorTransform& tr2
+    const transformer& tr1,
+    const transformer& tr2
 )
 {
     return !operator==(tr1, tr2);
 }
 
 
-inline Foam::vectorTensorTransform Foam::operator+
+inline Foam::transformer Foam::operator+
 (
-    const vectorTensorTransform& tr,
+    const transformer& tr,
     const vector& t
 )
 {
-    return vectorTensorTransform(tr.t() + t, tr.R(), tr.hasR());
+    return transformer(tr.t() + t, tr.R(), tr.hasR());
 }
 
 
-inline Foam::vectorTensorTransform Foam::operator+
+inline Foam::transformer Foam::operator+
 (
     const vector& t,
-    const vectorTensorTransform& tr
+    const transformer& tr
 )
 {
-    return vectorTensorTransform(t + tr.t(), tr.R(), tr.hasR());
+    return transformer(t + tr.t(), tr.R(), tr.hasR());
 }
 
 
-inline Foam::vectorTensorTransform Foam::operator-
+inline Foam::transformer Foam::operator-
 (
-    const vectorTensorTransform& tr,
+    const transformer& tr,
     const vector& t
 )
 {
-    return vectorTensorTransform(tr.t() - t, tr.R(), tr.hasR());
+    return transformer(tr.t() - t, tr.R(), tr.hasR());
 }
 
 
-inline Foam::vectorTensorTransform Foam::operator&
+inline Foam::transformer Foam::operator&
 (
-    const vectorTensorTransform& tr1,
-    const vectorTensorTransform& tr2
+    const transformer& tr1,
+    const transformer& tr2
 )
 {
-    return vectorTensorTransform
+    return transformer
     (
         tr1.t() + tr2.t(),
         tr1.R() & tr2.R(),

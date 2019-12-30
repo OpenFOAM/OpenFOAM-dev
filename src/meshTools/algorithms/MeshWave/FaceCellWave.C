@@ -472,7 +472,7 @@ void Foam::FaceCellWave<Type, TrackingData>::transform
 template<class Type, class TrackingData>
 void Foam::FaceCellWave<Type, TrackingData>::transform
 (
-    const vectorTensorTransform& trans,
+    const transformer& trans,
     const label nFaces,
     List<Type>& faceInfo
 )

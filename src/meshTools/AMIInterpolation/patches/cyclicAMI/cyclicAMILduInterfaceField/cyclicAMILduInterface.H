@@ -84,7 +84,7 @@ public:
             virtual const PtrList<AMIInterpolation>& AMIs() const = 0;
 
             // Return a reference to the AMI transformations
-            virtual const List<vectorTensorTransform>&
+            virtual const List<transformer>&
                 AMITransforms() const = 0;
 
             //- Return face transformation tensor

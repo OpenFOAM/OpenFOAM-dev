@@ -62,7 +62,7 @@ class cyclicAMIGAMGInterface
         PtrList<AMIInterpolation> AMIs_;
 
         //- AMI transformations
-        List<vectorTensorTransform> AMITransforms_;
+        List<transformer> AMITransforms_;
 
 
 public:
@@ -136,7 +136,7 @@ public:
             }
 
             // Return a reference to the AMI transformations
-            virtual const List<vectorTensorTransform>& AMITransforms() const
+            virtual const List<transformer>& AMITransforms() const
             {
                 return AMITransforms_;
             }

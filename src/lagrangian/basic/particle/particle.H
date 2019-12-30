@@ -44,7 +44,7 @@ Description
 #include "FixedList.H"
 #include "polyMeshTetDecomposition.H"
 #include "particleMacros.H"
-#include "vectorTensorTransform.H"
+#include "transformer.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -648,7 +648,7 @@ public:
         //  particle can be referred.
         void prepareForInteractionListReferral
         (
-            const vectorTensorTransform& transform
+            const transformer& transform
         );
 
         //- Correct the topology after referral. The particle may still be

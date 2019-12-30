@@ -60,7 +60,7 @@ namespace Foam
 // Forward declaration of classes
 class polyMesh;
 class polyPatch;
-class vectorTensorTransform;
+class transformer;
 
 /*---------------------------------------------------------------------------*\
                         Class FaceCellWaveName Declaration
@@ -223,7 +223,7 @@ protected:
             //- Apply transformation to Type
             void transform
             (
-                const vectorTensorTransform& trans,
+                const transformer& trans,
                 const label nFaces,
                 List<Type>& faceInfo
             );

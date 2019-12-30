@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -187,7 +187,7 @@ Foam::label Foam::globalIndexAndTransform::addToTransformIndex
                 // once +1)
                 bool antiCyclic = false;
 
-                const vectorTensorTransform& vt = transforms_[matchTransI];
+                const transformer& vt = transforms_[matchTransI];
                 if (mag(vt.t()) < small && vt.hasR())
                 {
                     const tensor& R = vt.R();
@@ -374,14 +374,14 @@ Foam::label Foam::globalIndexAndTransform::nIndependentTransforms() const
 }
 
 
-const Foam::List<Foam::vectorTensorTransform>&
+const Foam::List<Foam::transformer>&
 Foam::globalIndexAndTransform::transforms() const
 {
     return transforms_;
 }
 
 
-const Foam::List<Foam::vectorTensorTransform>&
+const Foam::List<Foam::transformer>&
 Foam::globalIndexAndTransform::transformPermutations() const
 {
     return transformPermutations_;
@@ -401,7 +401,7 @@ Foam::globalIndexAndTransform::patchTransformSign() const
 }
 
 
-const Foam::vectorTensorTransform& Foam::globalIndexAndTransform::transform
+const Foam::transformer& Foam::globalIndexAndTransform::transform
 (
     label transformIndex
 ) const

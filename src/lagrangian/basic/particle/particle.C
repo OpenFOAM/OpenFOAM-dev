@@ -1097,7 +1097,7 @@ void Foam::particle::correctAfterParallelTransfer
 
 void Foam::particle::prepareForInteractionListReferral
 (
-    const vectorTensorTransform& transform
+    const transformer& transform
 )
 {
     // Get the transformed position

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ protected:
         mutable PtrList<AMIInterpolation> AMIs_;
 
         //- AMI transforms (from source to target)
-        mutable List<vectorTensorTransform> AMITransforms_;
+        mutable List<transformer> AMITransforms_;
 
         //- Flag to indicate that slave patch should be reversed for AMI
         const bool AMIReverse_;
@@ -310,7 +310,7 @@ public:
             const PtrList<AMIInterpolation>& AMIs() const;
 
             //- Return a reference to the AMI transforms
-            const List<vectorTensorTransform>& AMITransforms() const;
+            const List<transformer>& AMITransforms() const;
 
             //- Return true if applying the low weight correction
             bool applyLowWeightCorrection() const;

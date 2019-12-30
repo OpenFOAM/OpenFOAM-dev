@@ -128,7 +128,7 @@ public:
             }
 
             //- Return a reference to the AMI transforms
-            virtual const List<vectorTensorTransform>& AMITransforms() const
+            virtual const List<transformer>& AMITransforms() const
             {
                 return cyclicAMIPolyPatch_.AMITransforms();
             }

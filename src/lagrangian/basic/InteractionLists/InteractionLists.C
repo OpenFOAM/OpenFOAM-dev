@@ -186,7 +186,7 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
     {
         const labelPair& ciat = cellIAndTToExchange[bbI];
 
-        const vectorTensorTransform& transform = globalTransforms.transform
+        const transformer& transform = globalTransforms.transform
         (
             globalTransforms.transformIndex(ciat)
         );
@@ -403,7 +403,7 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
     {
         const labelPair& wfiat = wallFaceIAndTToExchange[bbI];
 
-        const vectorTensorTransform& transform = globalTransforms.transform
+        const transformer& transform = globalTransforms.transform
         (
             globalTransforms.transformIndex(wfiat)
         );
@@ -533,7 +533,7 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
         label wallFaceIndex = globalTransforms.index(wfiat);
 
-        const vectorTensorTransform& transform = globalTransforms.transform
+        const transformer& transform = globalTransforms.transform
         (
             globalTransforms.transformIndex(wfiat)
         );
@@ -700,7 +700,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
                             permutationIndices
                         );
 
-                        const vectorTensorTransform& transform =
+                        const transformer& transform =
                             globalTransforms.transform(transI);
 
                         treeBoundBox extendedReferredProcBb
@@ -747,7 +747,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
                         permutationIndices
                     );
 
-                    const vectorTensorTransform& transform =
+                    const transformer& transform =
                         globalTransforms.transform(transI);
 
                     treeBoundBox extendedReferredProcBb
@@ -790,7 +790,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
                     permutationIndices
                 );
 
-                const vectorTensorTransform& transform =
+                const transformer& transform =
                     globalTransforms.transform(transI);
 
                 treeBoundBox extendedReferredProcBb
@@ -958,7 +958,7 @@ void Foam::InteractionLists<ParticleType>::prepareParticleToBeReferred
     const globalIndexAndTransform& globalTransforms =
         mesh_.globalData().globalTransforms();
 
-    const vectorTensorTransform& transform = globalTransforms.transform
+    const transformer& transform = globalTransforms.transform
     (
         globalTransforms.transformIndex(ciat)
     );
@@ -1008,7 +1008,7 @@ void Foam::InteractionLists<ParticleType>::prepareWallDataToRefer()
 
         label wallFaceIndex = globalTransforms.index(wfiat);
 
-        const vectorTensorTransform& transform = globalTransforms.transform
+        const transformer& transform = globalTransforms.transform
         (
             globalTransforms.transformIndex(wfiat)
         );
