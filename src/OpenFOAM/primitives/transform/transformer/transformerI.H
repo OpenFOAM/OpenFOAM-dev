@@ -28,37 +28,51 @@ License
 inline Foam::transformer::transformer()
 :
     t_(Zero),
-    R_(sphericalTensor::I),
-    hasR_(false)
-{}
-
-
-inline Foam::transformer::transformer
-(
-    const vector& t,
-    const tensor& R,
-    bool hasR
-)
-:
-    t_(t),
-    R_(R),
-    hasR_(hasR)
+    translates_(false),
+    R_(tensor::I),
+    rotates_(false)
 {}
 
 
 inline Foam::transformer::transformer(const vector& t)
 :
     t_(t),
-    R_(sphericalTensor::I),
-    hasR_(false)
+    translates_(true),
+    R_(tensor::I),
+    rotates_(false)
 {}
 
 
 inline Foam::transformer::transformer(const tensor& R)
 :
     t_(Zero),
+    translates_(false),
     R_(R),
-    hasR_(true)
+    rotates_(true)
+{}
+
+
+inline Foam::transformer::transformer(const vector& t, const tensor& R)
+:
+    t_(t),
+    translates_(true),
+    R_(R),
+    rotates_(true)
+{}
+
+
+inline Foam::transformer::transformer
+(
+    const vector& t,
+    const bool translates,
+    const tensor& R,
+    const bool rotates
+)
+:
+    t_(t),
+    translates_(translates),
+    R_(R),
+    rotates_(rotates)
 {}
 
 
@@ -70,30 +84,43 @@ inline const Foam::vector& Foam::transformer::t() const
 }
 
 
+inline bool Foam::transformer::translates() const
+{
+    return translates_;
+}
+
+
 inline const Foam::tensor& Foam::transformer::R() const
 {
     return R_;
 }
 
 
-inline bool Foam::transformer::hasR() const
+inline bool Foam::transformer::rotates() const
 {
-    return hasR_;
+    return rotates_;
+}
+
+
+inline bool Foam::transformer::transforms() const
+{
+    return translates_ || rotates_;
 }
 
 
 inline Foam::vector& Foam::transformer::t()
 {
+    // Assume that non-const access to t changes it from zero
+    translates_ = true;
+
     return t_;
 }
 
 
 inline Foam::tensor& Foam::transformer::R()
 {
-    // Assume that non-const access to R changes it from I, so set
-    // hasR to true
-
-    hasR_ = true;
+    // Assume that non-const access to R changes it from I
+    rotates_ = true;
 
     return R_;
 }
@@ -104,33 +131,46 @@ inline Foam::vector Foam::transformer::transformPosition
     const vector& v
 ) const
 {
-    if (hasR_)
+    if (translates_ && !rotates_)
     {
-        return t() + (R() & v);
+        return v + t();
+    }
+    else if (!translates_ && rotates_)
+    {
+        return R() & v;
+    }
+    else if (translates_ && rotates_)
+    {
+        return (R() & v) + t();
     }
     else
     {
-        return t() + v;
+        return v;
     }
 }
 
 
-inline Foam::pointField Foam::transformer::transformPosition
+inline Foam::tmp<Foam::pointField> Foam::transformer::transformPosition
 (
     const pointField& pts
 ) const
 {
-    tmp<pointField> tfld;
-
-    if (hasR_)
+    if (translates_ && !rotates_)
     {
-        tfld = t() + (R() & pts);
+        return pts + t();
+    }
+    else if (!translates_ && rotates_)
+    {
+        return R() & pts;
+    }
+    else if (translates_ && rotates_)
+    {
+        return (R() & pts) + t();
     }
     else
     {
-        tfld = t() + pts;
+        return pts;
     }
-    return tfld();
 }
 
 
@@ -139,33 +179,46 @@ inline Foam::vector Foam::transformer::invTransformPosition
     const vector& v
 ) const
 {
-    if (hasR_)
+    if (translates_ && !rotates_)
+    {
+        return v - t();
+    }
+    else if (!translates_ && rotates_)
+    {
+        return R().T() & v;
+    }
+    else if (translates_ && rotates_)
     {
         return (R().T() & (v - t()));
     }
     else
     {
-        return v - t();
+        return v;
     }
 }
 
 
-inline Foam::pointField Foam::transformer::invTransformPosition
+inline Foam::tmp<Foam::pointField> Foam::transformer::invTransformPosition
 (
     const pointField& pts
 ) const
 {
-    tmp<pointField> tfld;
-
-    if (hasR_)
+    if (translates_ && !rotates_)
     {
-        tfld = (R().T() & (pts - t()));
+        return pts - t();
+    }
+    else if (!translates_ && rotates_)
+    {
+        return R().T() & pts;
+    }
+    else if (translates_ && rotates_)
+    {
+        return (R().T() & (pts - t()));
     }
     else
     {
-        tfld = pts - t();
+        return pts;
     }
-    return tfld();
 }
 
 
@@ -177,44 +230,50 @@ inline void Foam::transformer::operator&=
 )
 {
     t_ += tr.t_;
+
+    // If either of the two objects has translates_ as true, then inherit
+    // it, otherwise, these should both be zero vectors.
+    translates_ = tr.translates_ || translates_;
+
     R_ = tr.R_ & R_;
 
-    // If either of the two objects has hasR_ as true, then inherit
+    // If either of the two objects has rotates_ as true, then inherit
     // it, otherwise, these should both be I tensors.
-    hasR_ = tr.hasR_ || hasR_;
+    rotates_ = tr.rotates_ || rotates_;
 }
 
 
 inline void Foam::transformer::operator=(const vector& t)
 {
+    translates_ = true;
     t_ = t;
 }
 
 
 inline void Foam::transformer::operator+=(const vector& t)
 {
+    translates_ = true;
     t_ += t;
 }
 
 
 inline void Foam::transformer::operator-=(const vector& t)
 {
+    translates_ = true;
     t_ -= t;
 }
 
 
 inline void Foam::transformer::operator=(const tensor& R)
 {
-    hasR_ = true;
-
+    rotates_ = true;
     R_ = R;
 }
 
 
 inline void Foam::transformer::operator&=(const tensor& R)
 {
-    hasR_ = true;
-
+    rotates_ = true;
     R_ = R & R_;
 }
 
@@ -223,59 +282,54 @@ inline void Foam::transformer::operator&=(const tensor& R)
 
 inline Foam::transformer Foam::inv(const transformer& tr)
 {
-    return transformer(-tr.t(), tr.R().T(), tr.hasR());
+    if (tr.translates() && !tr.rotates())
+    {
+        return transformer(-tr.t());
+    }
+    else if (!tr.translates() && tr.rotates())
+    {
+        return transformer(tr.R().T());
+    }
+    else if (tr.translates() && tr.rotates())
+    {
+        return transformer(tr.R().T() & (-tr.t()), tr.R().T());
+    }
+    else
+    {
+        return transformer();
+    }
 }
 
 
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 
-inline bool Foam::operator==
-(
-    const transformer& tr1,
-    const transformer& tr2
-)
+inline bool Foam::operator==(const transformer& tr1, const transformer& tr2)
 {
     return (tr1.t() == tr2.t() && tr1.R() == tr2.R());
 }
 
 
-inline bool Foam::operator!=
-(
-    const transformer& tr1,
-    const transformer& tr2
-)
+inline bool Foam::operator!=(const transformer& tr1, const transformer& tr2)
 {
     return !operator==(tr1, tr2);
 }
 
 
-inline Foam::transformer Foam::operator+
-(
-    const transformer& tr,
-    const vector& t
-)
+inline Foam::transformer Foam::operator+(const transformer& tr, const vector& t)
 {
-    return transformer(tr.t() + t, tr.R(), tr.hasR());
+    return transformer(tr.t() + t, true, tr.R(), tr.rotates());
 }
 
 
-inline Foam::transformer Foam::operator+
-(
-    const vector& t,
-    const transformer& tr
-)
+inline Foam::transformer Foam::operator+(const vector& t, const transformer& tr)
 {
-    return transformer(t + tr.t(), tr.R(), tr.hasR());
+    return transformer(t + tr.t(), true, tr.R(), tr.rotates());
 }
 
 
-inline Foam::transformer Foam::operator-
-(
-    const transformer& tr,
-    const vector& t
-)
+inline Foam::transformer Foam::operator-(const transformer& tr, const vector& t)
 {
-    return transformer(tr.t() - t, tr.R(), tr.hasR());
+    return transformer(tr.t() - t, true, tr.R(), tr.rotates());
 }
 
 
@@ -288,8 +342,9 @@ inline Foam::transformer Foam::operator&
     return transformer
     (
         tr1.t() + tr2.t(),
+        tr1.translates() || tr2.translates(),
         tr1.R() & tr2.R(),
-        (tr1.hasR() || tr2.hasR())
+        tr1.rotates() || tr2.rotates()
     );
 }
 

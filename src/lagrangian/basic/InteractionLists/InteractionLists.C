@@ -193,7 +193,7 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
         treeBoundBox tempTransformedBb
         (
-            transform.invTransformPosition(cellBbsToExchange[bbI].points())
+            transform.invTransformPosition(cellBbsToExchange[bbI].points())()
         );
 
         treeBoundBox extendedBb
@@ -410,7 +410,10 @@ void Foam::InteractionLists<ParticleType>::buildInteractionLists()
 
         treeBoundBox tempTransformedBb
         (
-            transform.invTransformPosition(wallFaceBbsToExchange[bbI].points())
+            transform.invTransformPosition
+            (
+                wallFaceBbsToExchange[bbI].points()
+            )()
         );
 
         treeBoundBox extendedBb
@@ -708,7 +711,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
                             transform.transformPosition
                             (
                                 allExtendedProcBbs[proci].points()
-                            )
+                            )()
                         );
 
                         if (procBb.overlaps(extendedReferredProcBb))
@@ -755,7 +758,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
                         transform.transformPosition
                         (
                             allExtendedProcBbs[proci].points()
-                        )
+                        )()
                     );
 
                     if (procBb.overlaps(extendedReferredProcBb))
@@ -798,7 +801,7 @@ void Foam::InteractionLists<ParticleType>::findExtendedProcBbsInRange
                     transform.transformPosition
                     (
                         allExtendedProcBbs[proci].points()
-                    )
+                    )()
                 );
 
                 if (procBb.overlaps(extendedReferredProcBb))
@@ -1026,7 +1029,7 @@ void Foam::InteractionLists<ParticleType>::prepareWallDataToRefer()
         // supported
         referredWallData_[rWVI] = U.boundaryField()[patchi][patchFacei];
 
-        if (transform.hasR())
+        if (transform.rotates())
         {
             referredWallData_[rWVI] =
                 transform.R().T() & referredWallData_[rWVI];

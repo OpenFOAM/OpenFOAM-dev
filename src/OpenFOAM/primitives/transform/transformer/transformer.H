@@ -67,13 +67,14 @@ class transformer
         //- Translation vector
         vector t_;
 
+        //- True if the translation vector is non-zero
+        bool translates_;
+
         //- Rotation tensor
         tensor R_;
 
-        //- Recording if the transform has non-identity transform to
-        //  allow its calculation to be skipped, which is the majority
-        //  of the expected cases
-        bool hasR_;
+        //- True if the rotation tensor is non-I
+        bool rotates_;
 
 
 public:
@@ -92,15 +93,6 @@ public:
         //- Construct null
         inline transformer();
 
-        //- Construct given a translation vector, rotation tensor and
-        //  hasR bool
-        inline transformer
-        (
-            const vector& t,
-            const tensor& R,
-            bool hasR = true
-        );
-
         //- Construct a pure translation transformer given a
         //  translation vector
         inline explicit transformer(const vector& t);
@@ -108,6 +100,18 @@ public:
         //- Construct a pure rotation transformer given a
         //  rotation tensor
         inline explicit transformer(const tensor& R);
+
+        //- Construct given a translation vector and rotation tensor
+        inline transformer(const vector& t, const tensor& R);
+
+        //- Construct given a translation vector and rotation tensor
+        inline transformer
+        (
+            const vector& t,
+            const bool translates,
+            const tensor& R,
+            const bool rotates
+        );
 
         //- Construct from Istream
         transformer(Istream&);
@@ -117,17 +121,28 @@ public:
 
         // Access
 
+            //- Return the translation vector
             inline const vector& t() const;
 
+            //- Return true is the translation vector is non-zero
+            inline bool translates() const;
+
+            //- Return the rotation tensor
             inline const tensor& R() const;
 
-            inline bool hasR() const;
+            //- Return true if the rotation tensor is non-I
+            inline bool rotates() const;
+
+            //- Return true if the transformer either translates or rotates
+            inline bool transforms() const;
 
 
         // Edit
 
+            //- Return non-const access to the translation vector
             inline vector& t();
 
+            //- Return non-const access to the rotation tensor
             inline tensor& R();
 
 
@@ -137,13 +152,19 @@ public:
             inline vector transformPosition(const vector& v) const;
 
             //- Transform the given pointField
-            inline pointField transformPosition(const pointField& pts) const;
+            inline tmp<pointField> transformPosition
+            (
+                const pointField& pts
+            ) const;
 
             //- Inverse transform the given position
             inline vector invTransformPosition(const vector& v) const;
 
             //- Inverse transform the given pointField
-            inline pointField invTransformPosition(const pointField& pts) const;
+            inline tmp<pointField> invTransformPosition
+            (
+                const pointField& pts
+            ) const;
 
             //- Transform the given type
             template<class Type>
@@ -153,6 +174,10 @@ public:
             template<class Type>
             tmp<Field<Type>> transform(const Field<Type>&) const;
 
+            //- Transform the given field
+            template<class Type>
+            tmp<Field<Type>> transform(const tmp<Field<Type>>&) const;
+
             //- Inverse transform the given type
             template<class Type>
             Type invTransform(const Type&) const;
@@ -160,6 +185,10 @@ public:
             //- Inverse transform the given field
             template<class Type>
             tmp<Field<Type>> invTransform(const Field<Type>&) const;
+
+            //- Inverse transform the given field
+            template<class Type>
+            tmp<Field<Type>> invTransform(const tmp<Field<Type>>&) const;
 
 
     // Member Operators
@@ -187,68 +216,49 @@ public:
 //- Return the inverse of the given transformer
 inline transformer inv(const transformer& tr);
 
-
 //- Return a string representation of a transformer
 word name(const transformer&);
-
 
 //- Data associated with transformer type are contiguous
 template<>
 inline bool contiguous<transformer>() {return true;}
 
-//- Template specialisations
+// Template specialisations
+
 template<>
 tmp<Field<bool>> transformer::transform(const Field<bool>&) const;
+
+template<>
+tmp<Field<bool>> transformer::transform(const tmp<Field<bool>>&) const;
+
 template<>
 tmp<Field<label>> transformer::transform(const Field<label>&) const;
+
+template<>
+tmp<Field<label>> transformer::transform(const tmp<Field<label>>&) const;
+
 template<>
 tmp<Field<scalar>> transformer::transform(const Field<scalar>&)
+const;
+
+template<>
+tmp<Field<scalar>> transformer::transform(const tmp<Field<scalar>>&)
 const;
 
 
 // * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
 
-inline bool operator==
-(
-    const transformer& tr1,
-    const transformer& tr2
-);
+inline bool operator==(const transformer& tr1, const transformer& tr2);
 
+inline bool operator!=(const transformer& tr1, const transformer& tr2);
 
-inline bool operator!=
-(
-    const transformer& tr1,
-    const transformer& tr2
+inline transformer operator+(const transformer& tr, const vector& t);
 
-);
+inline transformer operator+(const vector& t, const transformer& tr);
 
+inline transformer operator-(const transformer& tr, const vector& t);
 
-inline transformer operator+
-(
-    const transformer& tr,
-    const vector& t
-);
-
-
-inline transformer operator+
-(
-    const vector& t,
-    const transformer& tr
-);
-
-
-inline transformer operator-
-(
-    const transformer& tr,
-    const vector& t
-);
-
-
-inline transformer operator&
-(
-    const transformer& tr1,
-    const transformer& tr2
-);
+inline transformer operator&(const transformer& tr1, const transformer& tr2);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

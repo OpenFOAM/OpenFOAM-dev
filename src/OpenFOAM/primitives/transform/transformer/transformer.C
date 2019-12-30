@@ -35,15 +35,16 @@ const char* const Foam::transformer::typeName =
 const Foam::transformer Foam::transformer::zero
 (
     Zero,
+    false,
     Zero,
     false
 );
 
-
 const Foam::transformer Foam::transformer::I
 (
     Zero,
-    sphericalTensor::I,
+    false,
+    tensor::I,
     false
 );
 
@@ -76,6 +77,18 @@ Foam::tmp<Foam::Field<bool>> Foam::transformer::transform
 {
     return fld;
 }
+
+
+template<>
+Foam::tmp<Foam::Field<bool>> Foam::transformer::transform
+(
+    const tmp<Field<bool>>& tfld
+) const
+{
+    return tfld;
+}
+
+
 template<>
 Foam::tmp<Foam::Field<Foam::label>> Foam::transformer::transform
 (
@@ -84,6 +97,18 @@ Foam::tmp<Foam::Field<Foam::label>> Foam::transformer::transform
 {
     return fld;
 }
+
+
+template<>
+Foam::tmp<Foam::Field<Foam::label>> Foam::transformer::transform
+(
+    const tmp<Field<label>>& tfld
+) const
+{
+    return tfld;
+}
+
+
 template<>
 Foam::tmp<Foam::Field<Foam::scalar>> Foam::transformer::transform
 (
@@ -94,6 +119,16 @@ Foam::tmp<Foam::Field<Foam::scalar>> Foam::transformer::transform
 }
 
 
+template<>
+Foam::tmp<Foam::Field<Foam::scalar>> Foam::transformer::transform
+(
+    const tmp<Field<scalar>>& tfld
+) const
+{
+    return tfld;
+}
+
+
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
 Foam::Istream& Foam::operator>>(Istream& is, transformer& tr)
@@ -101,7 +136,7 @@ Foam::Istream& Foam::operator>>(Istream& is, transformer& tr)
     // Read beginning of transformer
     is.readBegin("transformer");
 
-    is  >> tr.t_ >> tr.R_ >> tr.hasR_;
+    is  >> tr.t_ >> tr.R_ >> tr.rotates_;
 
     // Read end of transformer
     is.readEnd("transformer");
@@ -116,7 +151,7 @@ Foam::Istream& Foam::operator>>(Istream& is, transformer& tr)
 Foam::Ostream& Foam::operator<<(Ostream& os, const transformer& tr)
 {
     os  << token::BEGIN_LIST
-        << tr.t() << token::SPACE << tr.R() << token::SPACE << tr.hasR()
+        << tr.t() << token::SPACE << tr.R() << token::SPACE << tr.rotates()
         << token::END_LIST;
 
     return os;

@@ -108,6 +108,7 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
                 transformPatch.separated()
               ? transformPatch.separation()
               : vector::zero,
+                transformPatch.separated(),
                !transformPatch.parallel()
               ? transformPatch.forwardT()
               : tensor::zero,

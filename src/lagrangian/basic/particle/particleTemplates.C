@@ -363,7 +363,7 @@ void Foam::particle::hitCyclicAMIPatch
         receiveCpp.owner()
       ? receiveCpp.AMITransforms()[receiveAMIi]
       : inv(cpp.AMITransforms()[receiveAMIi]);
-    if (AMITransform.hasR())
+    if (AMITransform.rotates())
     {
         transformProperties(AMITransform.R());
         displacementT = transform(AMITransform.R(), displacementT);

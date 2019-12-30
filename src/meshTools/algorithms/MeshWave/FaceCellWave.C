@@ -479,7 +479,7 @@ void Foam::FaceCellWave<Type, TrackingData>::transform
 {
     // Transform. Implementation referred to Type
 
-    if (trans.hasR())
+    if (trans.rotates())
     {
         for (label facei = 0; facei < nFaces; facei++)
         {

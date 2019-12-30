@@ -28,7 +28,7 @@ License
 template<class Type>
 Type Foam::transformer::transform(const Type& x) const
 {
-    if (hasR_)
+    if (rotates_)
     {
         return Foam::transform(R(), x);
     }
@@ -45,7 +45,7 @@ Foam::tmp<Foam::Field<Type>> Foam::transformer::transform
     const Field<Type>& fld
 ) const
 {
-    if (hasR_)
+    if (rotates_)
     {
         return Foam::transform(R(), fld);
     }
@@ -57,9 +57,26 @@ Foam::tmp<Foam::Field<Type>> Foam::transformer::transform
 
 
 template<class Type>
+Foam::tmp<Foam::Field<Type>> Foam::transformer::transform
+(
+    const tmp<Field<Type>>& tfld
+) const
+{
+    if (rotates_)
+    {
+        return Foam::transform(R(), tfld);
+    }
+    else
+    {
+        return tfld;
+    }
+}
+
+
+template<class Type>
 Type Foam::transformer::invTransform(const Type& x) const
 {
-    if (hasR_)
+    if (rotates_)
     {
         return Foam::transform(R().T(), x);
     }
@@ -76,13 +93,30 @@ Foam::tmp<Foam::Field<Type>> Foam::transformer::invTransform
     const Field<Type>& fld
 ) const
 {
-    if (hasR_)
+    if (rotates_)
     {
         return Foam::transform(R().T(), fld);
     }
     else
     {
         return fld;
+    }
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>> Foam::transformer::invTransform
+(
+    const tmp<Field<Type>>& tfld
+) const
+{
+    if (rotates_)
+    {
+        return Foam::transform(R().T(), tfld);
+    }
+    else
+    {
+        return tfld;
     }
 }
 

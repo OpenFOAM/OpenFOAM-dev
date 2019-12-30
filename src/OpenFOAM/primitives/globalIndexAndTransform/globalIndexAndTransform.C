@@ -53,7 +53,7 @@ Foam::label Foam::globalIndexAndTransform::matchTransform
     {
         const transformer& refTransform = refTransforms[i];
 
-        scalar maxVectorMag = sqrt
+        const scalar maxVectorMag = sqrt
         (
             max(magSqr(testTransform.t()), magSqr(refTransform.t()))
         );
@@ -74,7 +74,7 @@ Foam::label Foam::globalIndexAndTransform::matchTransform
 
         scalar tensorDiff = 0;
 
-        if (refTransform.hasR() || testTransform.hasR())
+        if (refTransform.rotates() || testTransform.rotates())
         {
             tensorDiff =
                 mag(refTransform.R() - testTransform.R())
@@ -103,7 +103,7 @@ Foam::label Foam::globalIndexAndTransform::matchTransform
 
             tensorDiff = 0;
 
-            if (refTransform.hasR() || testTransform.hasR())
+            if (refTransform.rotates() || testTransform.rotates())
             {
                 tensorDiff =
                     mag(refTransform.R() - testTransform.R().T())
@@ -234,7 +234,7 @@ void Foam::globalIndexAndTransform::determineTransforms()
             {
                 const transformer& transform = procTransVecs[pSVI];
 
-                if (mag(transform.t()) > small || transform.hasR())
+                if (transform.translates() || transform.rotates())
                 {
                     if
                     (
@@ -448,7 +448,7 @@ Foam::globalIndexAndTransform::globalIndexAndTransform(const polyMesh& mesh)
         {
             Info<< '\t' << i << '\t';
             const transformer& trafo = transforms_[i];
-            if (trafo.hasR())
+            if (trafo.rotates())
             {
                  Info<< trafo.t() << '\t' << trafo.R();
             }
@@ -481,7 +481,7 @@ Foam::globalIndexAndTransform::globalIndexAndTransform(const polyMesh& mesh)
         {
             Info<< '\t' << i << '\t';
             const transformer& trafo = transformPermutations_[i];
-            if (trafo.hasR())
+            if (trafo.rotates())
             {
                  Info<< trafo.t() << '\t' << trafo.R();
             }

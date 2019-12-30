@@ -1114,7 +1114,7 @@ void Foam::particle::prepareForInteractionListReferral
 
     // Transform the properties
     transformProperties(- transform.t());
-    if (transform.hasR())
+    if (transform.rotates())
     {
         transformProperties(transform.R().T());
     }
