@@ -93,7 +93,7 @@ protected:
             const polyBoundaryMesh& bm,
             const int myProcNo,
             const int neighbProcNo,
-            const transformType transform = UNKNOWN,  // transformation type
+            const orderingType defaultOrdering = UNKNOWN,
             const word& patchType = typeName
         );
 
@@ -152,7 +152,7 @@ public:
             const polyBoundaryMesh& bm,
             const int myProcNo,
             const int neighbProcNo,
-            const transformType transform = UNKNOWN,  // transformation type
+            const orderingType ordering = UNKNOWN,
             const word& patchType = typeName
         );
 

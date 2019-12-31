@@ -84,11 +84,6 @@ class cyclicPolyPatch
             //- Point on axis of rotation for rotational cyclics
             point rotationCentre_;
 
-        // For translation
-
-            //- Translation vector
-            vector separationVector_;
-
 
         //- List of edges formed from connected points. e[0] is the point on
         //  the first half of the patch, e[1] the corresponding point on the
@@ -104,6 +99,23 @@ class cyclicPolyPatch
 
 
     // Private Member Functions
+
+        //- Calculate the transformation tensors
+        //  smallDist : matching distance per face
+        //  absTol    : absolute error in normal
+        //  if orderingType = unknown it first tries rotational, then
+        //  translational transform
+        void calcTransformTensors
+        (
+            const vectorField& Cf,
+            const vectorField& Cr,
+            const vectorField& nf,
+            const vectorField& nr,
+            const scalarField& smallDist,
+            const scalar absTol,
+            const orderingType = UNKNOWN,
+            const transformType = UNSPECIFIED
+        ) const;
 
         //- Find amongst selected faces the one with the largest area
         static label findMaxArea(const pointField&, const faceList&);
@@ -204,7 +216,7 @@ public:
             const label index,
             const polyBoundaryMesh& bm,
             const word& patchType,
-            const transformType transform = UNKNOWN
+            const orderingType defaultOrdering = UNKNOWN
         );
 
         //- Construct from components
@@ -215,11 +227,9 @@ public:
             const label start,
             const label index,
             const polyBoundaryMesh& bm,
+            const word& patchType,
             const word& neighbPatchName,
-            const transformType transform,  // transformation type
-            const vector& rotationAxis,     // for rotation only
-            const point& rotationCentre,    // for rotation only
-            const vector& separationVector  // for translation only
+            const orderingType ordering
         );
 
         //- Construct from dictionary
@@ -230,7 +240,7 @@ public:
             const label index,
             const polyBoundaryMesh& bm,
             const word& patchType,
-            const transformType defaultTransform = UNKNOWN
+            const orderingType ordering = UNKNOWN
         );
 
         //- Construct as copy, resetting the boundary mesh
@@ -380,12 +390,6 @@ public:
         const point& rotationCentre() const
         {
             return rotationCentre_;
-        }
-
-        //- Translation vector for translational cyclics
-        const vector& separationVector() const
-        {
-            return separationVector_;
         }
 
 

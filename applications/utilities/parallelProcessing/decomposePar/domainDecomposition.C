@@ -496,7 +496,7 @@ bool Foam::domainDecomposition::writeDecomposition(const bool decomposeSets)
                             proci,
                             curNeighbourProcessors[procPatchi],
                             pcPatch.name(),
-                            pcPatch.transform()
+                            pcPatch.ordering()
                         );
                 }
 

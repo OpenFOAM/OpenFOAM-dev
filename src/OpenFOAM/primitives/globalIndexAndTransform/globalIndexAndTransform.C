@@ -137,23 +137,7 @@ void Foam::globalIndexAndTransform::determineTransforms()
     {
         const polyPatch& pp = patches[patchi];
 
-        // Note: special check for unordered cyclics. These are in fact
-        // transform bcs and should probably be split off.
-        // Note: We don't want to be finding transforms for patches marked as
-        // coincident full match. These should have no transform by definition.
-        if
-        (
-            isA<coupledPolyPatch>(pp)
-        && !(
-                isA<cyclicPolyPatch>(pp)
-             && refCast<const cyclicPolyPatch>(pp).transform()
-             == cyclicPolyPatch::NOORDERING
-            )
-        && !(
-                refCast<const coupledPolyPatch>(pp).transform()
-             == coupledPolyPatch::COINCIDENTFULLMATCH
-            )
-        )
+        if (isA<coupledPolyPatch>(pp))
         {
             const coupledPolyPatch& cpp = refCast<const coupledPolyPatch>(pp);
 
@@ -311,23 +295,7 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
     {
         const polyPatch& pp = patches[patchi];
 
-        // Note: special check for unordered cyclics. These are in fact
-        // transform bcs and should probably be split off.
-        // Note: We don't want to be finding transforms for patches marked as
-        // coincident full match. These should have no transform by definition.
-        if
-        (
-            isA<coupledPolyPatch>(pp)
-        && !(
-                isA<cyclicPolyPatch>(pp)
-             && refCast<const cyclicPolyPatch>(pp).transform()
-             == cyclicPolyPatch::NOORDERING
-            )
-        && !(
-                refCast<const coupledPolyPatch>(pp).transform()
-             == coupledPolyPatch::COINCIDENTFULLMATCH
-            )
-        )
+        if (isA<coupledPolyPatch>(pp))
         {
             const coupledPolyPatch& cpp = refCast<const coupledPolyPatch>(pp);
 

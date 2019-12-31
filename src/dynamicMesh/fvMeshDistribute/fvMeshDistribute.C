@@ -1245,7 +1245,7 @@ void Foam::fvMeshDistribute::addProcPatches
                         Pstream::myProcNo(),
                         proci,
                         pcPatch.name(),
-                        pcPatch.transform()
+                        pcPatch.ordering()
                     );
 
                     procPatchID[proci].insert

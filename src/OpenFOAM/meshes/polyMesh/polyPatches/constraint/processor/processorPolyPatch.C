@@ -56,11 +56,11 @@ Foam::processorPolyPatch::processorPolyPatch
     const polyBoundaryMesh& bm,
     const int myProcNo,
     const int neighbProcNo,
-    const transformType transform,
+    const orderingType ordering,
     const word& patchType
 )
 :
-    coupledPolyPatch(name, size, start, index, bm, patchType, transform),
+    coupledPolyPatch(name, size, start, index, bm, patchType, ordering),
     myProcNo_(myProcNo),
     neighbProcNo_(neighbProcNo),
     neighbFaceCentres_(),
@@ -77,7 +77,7 @@ Foam::processorPolyPatch::processorPolyPatch
     const polyBoundaryMesh& bm,
     const int myProcNo,
     const int neighbProcNo,
-    const transformType transform,
+    const orderingType ordering,
     const word& patchType
 )
 :
@@ -89,7 +89,7 @@ Foam::processorPolyPatch::processorPolyPatch
         index,
         bm,
         patchType,
-        transform
+        ordering
     ),
     myProcNo_(myProcNo),
     neighbProcNo_(neighbProcNo),
@@ -525,7 +525,7 @@ void Foam::processorPolyPatch::initOrder
     if
     (
         !Pstream::parRun()
-     || transform() == NOORDERING
+     || ordering() == NOORDERING
     )
     {
         return;
@@ -562,7 +562,7 @@ void Foam::processorPolyPatch::initOrder
 
     if (owner())
     {
-        if (transform() == COINCIDENTFULLMATCH)
+        if (ordering() == COINCIDENTFULLMATCH)
         {
             // Pass the patch points and faces across
             UOPstream toNeighbour(neighbProcNo(), pBufs);
@@ -573,7 +573,7 @@ void Foam::processorPolyPatch::initOrder
         {
             const pointField& ppPoints = pp.points();
 
-            pointField anchors(getAnchorPoints(pp, ppPoints, transform()));
+            pointField anchors(getAnchorPoints(pp, ppPoints, ordering()));
 
             // Get the average of the points of each face. This is needed in
             // case the face centroid calculation is incorrect due to the face
@@ -719,7 +719,7 @@ bool Foam::processorPolyPatch::order
     if
     (
         !Pstream::parRun()
-     || transform() == NOORDERING
+     || ordering() == NOORDERING
     )
     {
         return false;
@@ -742,11 +742,11 @@ bool Foam::processorPolyPatch::order
             faceMap[patchFacei] = patchFacei;
         }
 
-        if (transform() != COINCIDENTFULLMATCH)
+        if (ordering() != COINCIDENTFULLMATCH)
         {
             const pointField& ppPoints = pp.points();
 
-            pointField anchors(getAnchorPoints(pp, ppPoints, transform()));
+            pointField anchors(getAnchorPoints(pp, ppPoints, ordering()));
 
             // Calculate typical distance from face centre
             scalarField tols
@@ -783,7 +783,7 @@ bool Foam::processorPolyPatch::order
             matchTolerance()*calcFaceTol(pp, pp.points(), pp.faceCentres())
         );
 
-        if (transform() == COINCIDENTFULLMATCH)
+        if (ordering() == COINCIDENTFULLMATCH)
         {
             vectorField masterPts;
             faceList masterFaces;

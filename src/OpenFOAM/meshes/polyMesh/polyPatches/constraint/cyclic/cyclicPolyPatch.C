@@ -49,6 +49,173 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+void Foam::cyclicPolyPatch::calcTransformTensors
+(
+    const vectorField& Cf,
+    const vectorField& Cr,
+    const vectorField& nf,
+    const vectorField& nr,
+    const scalarField& smallDist,
+    const scalar absTol,
+    const orderingType ordering,
+    const transformType transform
+) const
+{
+    if (debug)
+    {
+        Pout<< "coupledPolyPatch::calcTransformTensors : " << name() << endl
+            << "    transform:" << transformTypeNames[transform] << nl
+            << "    (half)size:" << Cf.size() << nl
+            << "    absTol:" << absTol << nl
+            << "    smallDist min:" << min(smallDist) << nl
+            << "    smallDist max:" << max(smallDist) << nl
+            << "    sum(mag(nf & nr)):" << sum(mag(nf & nr)) << endl;
+    }
+
+    // Tolerance calculation.
+    // - normal calculation: assume absTol is the absolute error in a
+    // single normal/transformation calculation. Consists both of numerical
+    // precision (on the order of small and of writing precision
+    // (from e.g. decomposition)
+    // Then the overall error of summing the normals is sqrt(size())*absTol
+    // - separation calculation: pass in from the outside an allowable error.
+
+    if (Cf.size() == 0)
+    {
+        // Dummy geometry. Assume non-separated, parallel.
+        parallel_ = true;
+        separated_ = false;
+    }
+    else
+    {
+        scalar error = absTol*Foam::sqrt(1.0*Cf.size());
+
+        if (debug)
+        {
+            Pout<< "    error:" << error << endl;
+        }
+
+        if
+        (
+            transform == ROTATIONAL
+         || (
+                transform != TRANSLATIONAL
+             && ordering != COINCIDENTFULLMATCH
+             && (sum(mag(nf & nr)) < Cf.size() - error)
+            )
+        )
+        {
+            // Type is rotation or unknown and normals not aligned
+
+            parallel_ = false;
+            separated_ = false;
+            separation_ = Zero;
+
+            tensorField forwardT(Cf.size());
+            tensorField reverseT(Cf.size());
+
+            forAll(forwardT, facei)
+            {
+                forwardT[facei] = rotationTensor(-nr[facei], nf[facei]);
+                reverseT[facei] = rotationTensor(nf[facei], -nr[facei]);
+            }
+
+            if (sum(mag(forwardT - forwardT[0])) > error)
+            {
+                Pout<< "--> FOAM Warning : "
+                    << " Variation in rotation greater than"
+                    << " local tolerance " << error << endl;
+            }
+
+            forwardT_ = forwardT[0];
+            reverseT_ = reverseT[0];
+        }
+        else
+        {
+            // Translational or (unknown and normals aligned)
+
+            parallel_ = true;
+
+            forwardT_ = Zero;
+            reverseT_ = Zero;
+
+
+            // Three situations:
+            // - separation is zero. No separation.
+            // - separation is same. Single separation vector.
+            // - separation differs per face -> error.
+
+            // Check for different separation per face
+            bool sameSeparation = true;
+            bool doneWarning = false;
+
+            const vectorField separation(Cr - Cf);
+
+            forAll(separation, facei)
+            {
+                const scalar smallSqr = sqr(smallDist[facei]);
+
+                // Check if separation differing w.r.t. face 0.
+                if (magSqr(separation[facei] - separation[0]) > smallSqr)
+                {
+                    sameSeparation = false;
+
+                    if (!doneWarning && debug)
+                    {
+                        doneWarning = true;
+
+                        Pout<< "    separation " << separation[facei]
+                            << " at " << facei
+                            << " differs from separation[0] " << separation[0]
+                            << " by more than local tolerance "
+                            << smallDist[facei]
+                            << ". Assuming non-uniform separation." << endl;
+                    }
+                }
+            }
+
+            if (sameSeparation)
+            {
+                // Check for zero separation
+                if (mag(separation[0]) < smallDist[0])
+                {
+                    if (debug)
+                    {
+                        Pout<< "    separation " << mag(separation[0])
+                            << " less than local tolerance " << smallDist[0]
+                            << ". Assuming zero separation." << endl;
+                    }
+
+                    separated_ = false;
+                    separation_ = Zero;
+                }
+                else
+                {
+                    if (debug)
+                    {
+                        Pout<< "    separation " << mag(separation[0])
+                            << " more than local tolerance " << smallDist[0]
+                            << ". Assuming uniform separation." << endl;
+                    }
+
+                    separated_ = true;
+                    separation_ = separation[0];
+                }
+            }
+            else
+            {
+                Pout<< "--> FOAM Warning : "
+                    << " Variation in separation greater than"
+                    << " local tolerance " << smallDist[0] << endl;
+
+                separated_ = true;
+                separation_ = separation[0];
+            }
+        }
+    }
+}
+
+
 Foam::label Foam::cyclicPolyPatch::findMaxArea
 (
     const pointField& points,
@@ -252,7 +419,7 @@ void Foam::cyclicPolyPatch::calcTransforms
         }
 
 
-        // Calculate transformation tensors
+        // Calculate transformation
 
         if (transform() == ROTATIONAL)
         {
@@ -297,9 +464,53 @@ void Foam::cyclicPolyPatch::calcTransforms
             forwardT_ = revT.T();
             reverseT_ = revT;
         }
+        else if (transform() == TRANSLATIONAL)
+        {
+            if (debug)
+            {
+                Pout<< "cyclicPolyPatch::calcTransforms :"
+                    << " patch:" << name()
+                    << " Specified separation vector : "
+                    << separation_ << endl;
+            }
+
+            const scalarField half0Tols
+            (
+                matchTolerance()
+               *calcFaceTol
+                (
+                    half0,
+                    half0.points(),
+                    static_cast<const pointField&>(half0Ctrs)
+                )
+            );
+
+            // Check that separation vectors are same.
+            const scalar avgTol = average(half0Tols);
+            if
+            (
+                mag(separation_ + neighbPatch().separation_) > avgTol
+            )
+            {
+                WarningInFunction
+                    << "Specified separation vector " << separation_
+                    << " differs by that of neighbouring patch "
+                    << neighbPatch().separation_
+                    << " by more than tolerance " << avgTol << endl
+                    << "patch:" << name()
+                    << " neighbour:" << neighbPatchName()
+                    << endl;
+            }
+
+            // Set transformation
+            parallel_ = true;
+            separated_ = true;
+            forwardT_ = Zero;
+            reverseT_ = Zero;
+        }
         else
         {
-            scalarField half0Tols
+            const scalarField half0Tols
             (
                 matchTolerance()
                *calcFaceTol
@@ -318,63 +529,9 @@ void Foam::cyclicPolyPatch::calcTransforms
                 half1Normals,
                 half0Tols,
                 matchTolerance(),
+                ordering(),
                 transform()
             );
-
-
-            if (transform() == TRANSLATIONAL)
-            {
-                if (debug)
-                {
-                    Pout<< "cyclicPolyPatch::calcTransforms :"
-                        << " patch:" << name()
-                        << " Specified separation vector : "
-                        << separationVector_ << endl;
-                }
-
-                // Check that separation vectors are same.
-                const scalar avgTol = average(half0Tols);
-                if
-                (
-                    mag(separationVector_ + neighbPatch().separationVector_)
-                  > avgTol
-                )
-                {
-                    WarningInFunction
-                        << "Specified separation vector " << separationVector_
-                        << " differs by that of neighbouring patch "
-                        << neighbPatch().separationVector_
-                        << " by more than tolerance " << avgTol << endl
-                        << "patch:" << name()
-                        << " neighbour:" << neighbPatchName()
-                        << endl;
-                }
-
-
-                // Override computed transform with specified.
-                if (mag(separation() - separationVector_) > avgTol)
-                {
-                    WarningInFunction
-                        << "Specified separationVector " << separationVector_
-                        << " differs from computed separation vector "
-                        << separation() << endl
-                        << "This probably means your geometry is not consistent"
-                        << " with the specified separation and might lead"
-                        << " to problems." << endl
-                        << "Continuing with specified separation vector "
-                        << separationVector_ << endl
-                        << "patch:" << name()
-                        << " neighbour:" << neighbPatchName()
-                        << endl;
-                }
-
-                // Set tensors
-                parallel_ = true;
-                separated_ = true;
-                separation_ = separationVector_;
-                forwardT_ = Zero;
-                reverseT_ = Zero;
-            }
         }
     }
 }
@@ -393,7 +550,7 @@ void Foam::cyclicPolyPatch::getCentresAndAnchors
 {
     // Get geometric data on both halves.
     half0Ctrs = pp0.faceCentres();
-    anchors0 = getAnchorPoints(pp0, pp0.points(), transform());
+    anchors0 = getAnchorPoints(pp0, pp0.points(), ordering());
     half1Ctrs = pp1.faceCentres();
 
     if (debug)
@@ -474,15 +631,15 @@ void Foam::cyclicPolyPatch::getCentresAndAnchors
                 {
                     Pout<< "cyclicPolyPatch::getCentresAndAnchors :"
                         << " patch:" << name()
-                        << "Specified translation : " << separationVector_
+                        << "Specified translation : " << separation_
                         << endl;
                 }
 
                 // Note: getCentresAndAnchors gets called on the slave side
-                // so separationVector is owner-slave points.
+                // so separation is owner-slave points.
 
-                half0Ctrs -= separationVector_;
-                anchors0 -= separationVector_;
+                half0Ctrs -= separation_;
+                anchors0 -= separation_;
                 break;
             }
             default:
@@ -591,15 +748,14 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     const label index,
     const polyBoundaryMesh& bm,
     const word& patchType,
-    const transformType transform
+    const orderingType ordering
 )
 :
-    coupledPolyPatch(name, size, start, index, bm, patchType, transform),
+    coupledPolyPatch(name, size, start, index, bm, patchType, ordering),
     neighbPatchName_(word::null),
     neighbPatchID_(-1),
     rotationAxis_(Zero),
     rotationCentre_(Zero),
-    separationVector_(Zero),
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr)
 {
@@ -615,19 +771,16 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     const label start,
     const label index,
     const polyBoundaryMesh& bm,
+    const word& patchType,
     const word& neighbPatchName,
-    const transformType transform,
-    const vector& rotationAxis,
-    const point& rotationCentre,
-    const vector& separationVector
+    const orderingType ordering
 )
 :
-    coupledPolyPatch(name, size, start, index, bm, typeName, transform),
+    coupledPolyPatch(name, size, start, index, bm, patchType, ordering),
     neighbPatchName_(neighbPatchName),
     neighbPatchID_(-1),
-    rotationAxis_(rotationAxis),
-    rotationCentre_(rotationCentre),
-    separationVector_(separationVector),
+    rotationAxis_(Zero),
+    rotationCentre_(Zero),
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr)
 {
@@ -643,16 +796,15 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     const label index,
     const polyBoundaryMesh& bm,
     const word& patchType,
-    const transformType defaultTransform
+    const orderingType ordering
 )
 :
-    coupledPolyPatch(name, dict, index, bm, patchType, defaultTransform),
+    coupledPolyPatch(name, dict, index, bm, patchType, ordering),
     neighbPatchName_(dict.lookupOrDefault("neighbourPatch", word::null)),
     coupleGroup_(dict),
     neighbPatchID_(-1),
     rotationAxis_(Zero),
     rotationCentre_(Zero),
-    separationVector_(Zero),
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr)
 {
@@ -696,7 +848,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
         }
         case TRANSLATIONAL:
         {
-            dict.lookup("separationVector") >> separationVector_;
+            dict.lookup("separation") >> separation_;
             break;
         }
         default:
@@ -722,7 +874,6 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     neighbPatchID_(-1),
     rotationAxis_(pp.rotationAxis_),
     rotationCentre_(pp.rotationCentre_),
-    separationVector_(pp.separationVector_),
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr)
 {
@@ -747,7 +898,6 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     neighbPatchID_(-1),
     rotationAxis_(pp.rotationAxis_),
     rotationCentre_(pp.rotationCentre_),
-    separationVector_(pp.separationVector_),
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr)
 {
@@ -779,7 +929,6 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     neighbPatchID_(-1),
     rotationAxis_(pp.rotationAxis_),
     rotationCentre_(pp.rotationCentre_),
-    separationVector_(pp.separationVector_),
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr)
 {}
@@ -1240,7 +1389,7 @@ bool Foam::cyclicPolyPatch::order
     rotation.setSize(pp.size());
     rotation = 0;
 
-    if (transform() == NOORDERING)
+    if (ordering() == NOORDERING)
     {
         // No faces, nothing to change.
         return false;
@@ -1428,11 +1577,7 @@ void Foam::cyclicPolyPatch::write(Ostream& os) const
         }
         case TRANSLATIONAL:
         {
-            writeEntry(os, "separationVector", separationVector_);
-            break;
-        }
-        case NOORDERING:
-        {
+            writeEntry(os, "separation", separation_);
             break;
         }
         default:

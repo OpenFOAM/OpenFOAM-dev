@@ -38,6 +38,7 @@ SourceFiles
 #define processorCyclicPolyPatch_H
 
 #include "processorPolyPatch.H"
+#include "cyclicPolyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -121,7 +122,7 @@ public:
             const int myProcNo,
             const int neighbProcNo,
             const word& referPatchName,
-            const transformType transform = UNKNOWN,
+            const orderingType ordering = UNKNOWN,
             const word& patchType = typeName
         );
 
@@ -304,10 +305,10 @@ public:
             return referPatchID_;
         }
 
-        const coupledPolyPatch& referPatch() const
+        const cyclicPolyPatch& referPatch() const
         {
             const polyPatch& pp = this->boundaryMesh()[referPatchID()];
-            return refCast<const coupledPolyPatch>(pp);
+            return refCast<const cyclicPolyPatch>(pp);
         }
 
         //- Return message tag to use for communication
@@ -323,14 +324,6 @@ public:
         virtual transformType transform() const
         {
             return referPatch().transform();
-        }
-
-        //- Type of transform
-        //  This is currently only for use when collapsing generated
-        //  meshes that can have zero area faces.
-        virtual transformType& transform()
-        {
-            return const_cast<coupledPolyPatch&>(referPatch()).transform();
         }
 
         //- Transform a patch-based position from other side to this side

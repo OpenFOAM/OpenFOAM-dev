@@ -776,18 +776,10 @@ int main(int argc, char *argv[])
                         const cyclicPolyPatch& cycpp =
                             refCast<const cyclicPolyPatch>(pp);
 
-                        if (cycpp.transform() == cyclicPolyPatch::TRANSLATIONAL)
-                        {
-                            // Force to wanted separation
-                            Info<< "On cyclic translation patch " << pp.name()
-                                << " forcing uniform separation of "
-                                << cycpp.separationVector() << endl;
-                            const_cast<vector&>(cpp.separation()) =
-                                cycpp.separationVector();
-                        }
-                        else
+                        if (cycpp.transform() != cyclicPolyPatch::TRANSLATIONAL)
                         {
                             const cyclicPolyPatch& nbr = cycpp.neighbPatch();
+
                             const_cast<vector&>(cpp.separation()) =
                                 nbr[0].centre(mesh.points())
                               - cycpp[0].centre(mesh.points());
@@ -800,17 +792,8 @@ int main(int argc, char *argv[])
                 else if (!cpp.parallel())
                 {
                     Info<< "On coupled patch " << pp.name()
-                        << " forcing uniform rotation of "
+                        << " uniform rotation of "
                         << cpp.forwardT() << endl;
-
-                    // const_cast<tensorField&>
-                    // (
-                    //     cpp.forwardT()
-                    // ).setSize(1);
-                    // const_cast<tensorField&>
-                    // (
-                    //     cpp.reverseT()
-                    // ).setSize(1);
                 }
             }
         }

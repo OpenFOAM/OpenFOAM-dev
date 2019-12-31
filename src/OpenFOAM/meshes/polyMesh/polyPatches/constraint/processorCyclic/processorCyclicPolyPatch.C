@@ -48,7 +48,7 @@ Foam::processorCyclicPolyPatch::processorCyclicPolyPatch
     const int myProcNo,
     const int neighbProcNo,
     const word& referPatchName,
-    const transformType transform,
+    const orderingType ordering,
     const word& patchType
 )
 :
@@ -61,7 +61,7 @@ Foam::processorCyclicPolyPatch::processorCyclicPolyPatch
         bm,
         myProcNo,
         neighbProcNo,
-        transform,
+        ordering,
         patchType
     ),
     referPatchName_(referPatchName),
@@ -237,7 +237,9 @@ void Foam::processorCyclicPolyPatch::calcGeometry(PstreamBuffers& pBufs)
 
     if (Pstream::parRun())
     {
-        calcTransformTensors
+        cyclicPolyPatch& pp = const_cast<cyclicPolyPatch&>(referPatch());
+
+        pp.calcTransformTensors
         (
             faceCentres(),
             neighbFaceCentres(),
@@ -245,6 +247,7 @@ void Foam::processorCyclicPolyPatch::calcGeometry(PstreamBuffers& pBufs)
             neighbFaceAreas()/mag(neighbFaceAreas()),
             matchTolerance()*calcFaceTol(*this, points(), faceCentres()),
             matchTolerance(),
+            ordering(),
             transform()
         );
 
@@ -256,7 +259,7 @@ void Foam::processorCyclicPolyPatch::calcGeometry(PstreamBuffers& pBufs)
 
         // Update underlying cyclic halves. Need to do both since only one
         // half might be present as a processorCyclic.
-        coupledPolyPatch& pp = const_cast<coupledPolyPatch&>(referPatch());
+
         pp.calcGeometry
         (
             *this,
@@ -268,20 +271,16 @@ void Foam::processorCyclicPolyPatch::calcGeometry(PstreamBuffers& pBufs)
             neighbFaceCellCentres()
         );
 
-        if (isA<cyclicPolyPatch>(pp))
-        {
-            const cyclicPolyPatch& cpp = refCast<const cyclicPolyPatch>(pp);
-            const_cast<cyclicPolyPatch&>(cpp.neighbPatch()).calcGeometry
-            (
-                *this,
-                neighbFaceCentres(),
-                neighbFaceAreas(),
-                neighbFaceCellCentres(),
-                faceCentres(),
-                faceAreas(),
-                faceCellCentres()
-            );
-        }
+        const_cast<cyclicPolyPatch&>(pp.neighbPatch()).calcGeometry
+        (
+            *this,
+            neighbFaceCentres(),
+            neighbFaceAreas(),
+            neighbFaceCellCentres(),
+            faceCentres(),
+            faceAreas(),
+            faceCellCentres()
+        );
     }
 }
 

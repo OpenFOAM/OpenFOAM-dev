@@ -240,13 +240,12 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
             if (debug)
             {
                 Pout<< "cyclicAMIPolyPatch::calcTransforms : patch:" << name()
-                    << " Specified translation : " << separationVector_
+                    << " Specified translation : " << separation_
                     << endl;
             }
 
             parallel_ = true;
             separated_ = true;
-            separation_ = separationVector_;
             forwardT_ = Zero;
             reverseT_ = Zero;
 
@@ -480,19 +479,18 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     const label index,
     const polyBoundaryMesh& bm,
     const word& patchType,
-    const transformType transform,
+    const orderingType ordering,
     const bool AMIRequireMatch,
     const AMIInterpolation::interpolationMethod AMIMethod
 )
 :
-    coupledPolyPatch(name, size, start, index, bm, patchType, transform),
+    coupledPolyPatch(name, size, start, index, bm, patchType, ordering),
     nbrPatchName_(word::null),
     nbrPatchID_(-1),
     rotationAxis_(Zero),
     rotationCentre_(point::zero),
     rotationAngleDefined_(false),
     rotationAngle_(0.0),
-    separationVector_(Zero),
     AMIs_(),
     AMITransforms_(),
     AMIReverse_(false),
@@ -526,7 +524,6 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     rotationCentre_(point::zero),
     rotationAngleDefined_(false),
     rotationAngle_(0.0),
-    separationVector_(Zero),
     AMIs_(),
     AMITransforms_(),
     AMIReverse_(dict.lookupOrDefault<bool>("flipNormals", false)),
@@ -597,7 +594,7 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
         }
         case TRANSLATIONAL:
         {
-            dict.lookup("separationVector") >> separationVector_;
+            dict.lookup("separation") >> separation_;
             break;
         }
         default:
@@ -625,7 +622,6 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     rotationCentre_(pp.rotationCentre_),
     rotationAngleDefined_(pp.rotationAngleDefined_),
     rotationAngle_(pp.rotationAngle_),
-    separationVector_(pp.separationVector_),
     AMIs_(),
     AMITransforms_(),
     AMIReverse_(pp.AMIReverse_),
@@ -658,7 +654,6 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     rotationCentre_(pp.rotationCentre_),
     rotationAngleDefined_(pp.rotationAngleDefined_),
     rotationAngle_(pp.rotationAngle_),
-    separationVector_(pp.separationVector_),
     AMIs_(),
     AMITransforms_(),
     AMIReverse_(pp.AMIReverse_),
@@ -698,7 +693,6 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     rotationCentre_(pp.rotationCentre_),
     rotationAngleDefined_(pp.rotationAngleDefined_),
     rotationAngle_(pp.rotationAngle_),
-    separationVector_(pp.separationVector_),
     AMIs_(),
     AMITransforms_(),
     AMIReverse_(pp.AMIReverse_),
@@ -1166,11 +1160,7 @@ void Foam::cyclicAMIPolyPatch::write(Ostream& os) const
         }
         case TRANSLATIONAL:
         {
-            writeEntry(os, "separationVector", separationVector_);
-            break;
-        }
-        case NOORDERING:
-        {
+            writeEntry(os, "separation", separation_);
             break;
         }
         default:

@@ -55,17 +55,25 @@ class coupledPolyPatch
 {
 public:
 
-    enum transformType
+    enum orderingType
     {
-        UNKNOWN,            // unspecified; automatic ordering
-        ROTATIONAL,         // rotation along coordinate axis
-        TRANSLATIONAL,      // translation
-        COINCIDENTFULLMATCH,// assume no transforms
+        UNKNOWN,            // Unspecified -> automatic ordering
+        COINCIDENTFULLMATCH,// Assume no transforms
                             // and check the points in faces match
-        NOORDERING          // unspecified, no automatic ordering
+        NOORDERING          // Unspecified -> no automatic ordering
     };
 
-    static const NamedEnum<transformType, 5> transformTypeNames;
+    static const NamedEnum<orderingType, 3> orderingTypeNames;
+
+    enum transformType
+    {
+        UNSPECIFIED,        // Unspecified -> automatic transformation
+        NONE,               // No tranformation
+        ROTATIONAL,         // Rotation around a coordinate axis
+        TRANSLATIONAL       // Translation
+    };
+
+    static const NamedEnum<transformType, 4> transformTypeNames;
 
 
 protected:
@@ -77,6 +85,9 @@ protected:
 
         //- Local matching tolerance
         const scalar matchTolerance_;
+
+        //- Type of ordering
+        orderingType ordering_;
 
         //- Type of transformation
         transformType transform_;
@@ -102,22 +113,6 @@ protected:
 
     // Protected Member Functions
 
-        //- Calculate the transformation tensors
-        //  smallDist : matching distance per face
-        //  absTol    : absolute error in normal
-        //  if transformType = unknown it first tries rotational, then
-        //  translational transform
-        void calcTransformTensors
-        (
-            const vectorField& Cf,
-            const vectorField& Cr,
-            const vectorField& nf,
-            const vectorField& nr,
-            const scalarField& smallDist,
-            const scalar absTol,
-            const transformType = UNKNOWN
-        ) const;
-
         //- Initialise the calculation of the patch geometry
         virtual void initGeometry(PstreamBuffers&) = 0;
 
@@ -135,7 +130,6 @@ protected:
 
         //- Update of the patch topology
         virtual void updateMesh(PstreamBuffers&) = 0;
-
 
         //- Write point in OBJ format
         static void writeOBJ(Ostream& os, const point& pt);
@@ -165,7 +159,7 @@ protected:
         (
             const UList<face>&,
             const pointField&,
-            const transformType
+            const orderingType
         );
 
         //- Get the number of vertices face f needs to be rotated such that
@@ -196,7 +190,7 @@ public:
             const label index,
             const polyBoundaryMesh& bm,
             const word& patchType,
-            const transformType transform
+            const orderingType ordering
         );
 
         //- Construct from dictionary
@@ -207,7 +201,7 @@ public:
             const label index,
             const polyBoundaryMesh& bm,
             const word& patchType,
-            const transformType defaultTransform = UNKNOWN
+            const orderingType ordering = UNKNOWN
         );
 
         //- Construct as copy, resetting the boundary mesh
@@ -258,16 +252,14 @@ public:
                 return !owner();
             }
 
-            //- Type of transform
-            virtual transformType transform() const
+            //- Type of ordering
+            virtual orderingType ordering() const
             {
-                return transform_;
+                return ordering_;
             }
 
             //- Type of transform
-            //  This is currently only for use when collapsing generated
-            //  meshes that can have zero area faces.
-            virtual transformType& transform()
+            virtual transformType transform() const
             {
                 return transform_;
             }

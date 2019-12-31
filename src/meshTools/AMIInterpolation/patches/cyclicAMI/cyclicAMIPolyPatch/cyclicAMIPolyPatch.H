@@ -99,12 +99,6 @@ protected:
                 scalar rotationAngle_;
 
 
-            // For translation
-
-                //- Translation vector
-                vector separationVector_;
-
-
         //- AMI interpolation classes
         mutable PtrList<AMIInterpolation> AMIs_;
 
@@ -177,7 +171,7 @@ public:
             const label index,
             const polyBoundaryMesh& bm,
             const word& patchType,
-            const transformType transform = UNKNOWN,
+            const orderingType ordering = UNKNOWN,
             const bool AMIRequireMatch = true,
             const AMIInterpolation::interpolationMethod AMIMethod =
                 AMIInterpolation::imFaceAreaWeight
@@ -330,9 +324,6 @@ public:
 
                 //- Point on axis of rotation for rotational cyclic AMI
                 inline const point& rotationCentre() const;
-
-                //- Translation vector for translational cyclic AMI
-                inline const vector& separationVector() const;
 
                 //- Transform patch-based positions from nbr side to this side
                 virtual void transformPosition(pointField&) const;

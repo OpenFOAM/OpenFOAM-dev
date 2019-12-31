@@ -334,23 +334,6 @@ void Foam::oldCyclicPolyPatch::getCentresAndAnchors
 
             break;
         }
-        //- Problem: usually specified translation is not accurate enough
-        //- To get proper match so keep automatic determination over here.
-        // case TRANSLATIONAL:
-        //{
-        //    // Transform 0 points.
-        //
-        //    if (debug)
-        //    {
-        //        Pout<< "oldCyclicPolyPatch::getCentresAndAnchors :"
-        //            << "Specified translation : " << separationVector_
-        //            << endl;
-        //    }
-        //
-        //    half0Ctrs += separationVector_;
-        //    anchors0 += separationVector_;
-        //    break;
-        //}
         default:
         {
             // Assumes that cyclic is planar. This is also the initial
@@ -564,14 +547,13 @@ Foam::oldCyclicPolyPatch::oldCyclicPolyPatch
     const label index,
     const polyBoundaryMesh& bm,
     const word& patchType,
-    const transformType transform
+    const orderingType ordering
 )
 :
-    coupledPolyPatch(name, size, start, index, bm, patchType, transform),
+    coupledPolyPatch(name, size, start, index, bm, patchType, ordering),
     featureCos_(0.9),
     rotationAxis_(Zero),
-    rotationCentre_(Zero),
-    separationVector_(Zero)
+    rotationCentre_(Zero)
 {}
 
 
@@ -587,8 +569,7 @@ Foam::oldCyclicPolyPatch::oldCyclicPolyPatch
     coupledPolyPatch(name, dict, index, bm, patchType),
     featureCos_(0.9),
     rotationAxis_(Zero),
-    rotationCentre_(Zero),
-    separationVector_(Zero)
+    rotationCentre_(Zero)
 {
     if (dict.found("neighbourPatch"))
     {
@@ -615,7 +596,7 @@ Foam::oldCyclicPolyPatch::oldCyclicPolyPatch
         }
         case TRANSLATIONAL:
         {
-            dict.lookup("separationVector") >> separationVector_;
+            dict.lookup("separation") >> separation_;
             break;
         }
         default:
@@ -635,8 +616,7 @@ Foam::oldCyclicPolyPatch::oldCyclicPolyPatch
     coupledPolyPatch(pp, bm),
     featureCos_(pp.featureCos_),
     rotationAxis_(pp.rotationAxis_),
-    rotationCentre_(pp.rotationCentre_),
-    separationVector_(pp.separationVector_)
+    rotationCentre_(pp.rotationCentre_)
 {}
 
 
@@ -652,8 +632,7 @@ Foam::oldCyclicPolyPatch::oldCyclicPolyPatch
     coupledPolyPatch(pp, bm, index, newSize, newStart),
     featureCos_(pp.featureCos_),
     rotationAxis_(pp.rotationAxis_),
-    rotationCentre_(pp.rotationCentre_),
-    separationVector_(pp.separationVector_)
+    rotationCentre_(pp.rotationCentre_)
 {}
 
 
@@ -1236,7 +1215,7 @@ void Foam::oldCyclicPolyPatch::write(Ostream& os) const
         }
         case TRANSLATIONAL:
         {
-            writeEntry(os, "separationVector", separationVector_);
+            writeEntry(os, "separation", separation_);
             break;
         }
         default:

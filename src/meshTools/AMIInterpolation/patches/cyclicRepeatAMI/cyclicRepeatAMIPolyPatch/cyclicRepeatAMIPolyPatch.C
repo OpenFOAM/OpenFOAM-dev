@@ -305,7 +305,7 @@ Foam::cyclicRepeatAMIPolyPatch::cyclicRepeatAMIPolyPatch
     const label index,
     const polyBoundaryMesh& bm,
     const word& patchType,
-    const transformType transform
+    const orderingType ordering
 )
 :
     cyclicAMIPolyPatch
@@ -316,7 +316,7 @@ Foam::cyclicRepeatAMIPolyPatch::cyclicRepeatAMIPolyPatch
         index,
         bm,
         patchType,
-        transform,
+        ordering,
         false,
         AMIInterpolation::imFaceAreaWeight
     ),

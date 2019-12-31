@@ -80,7 +80,7 @@ baffles
                 type            cyclicAMI;
                 matchTolerance  0.0001;
                 neighbourPatch  AMI2;
-                transform       noOrdering;
+                ordering        noOrdering;
                 // Switch to zero-gradient for low weights
                 lowWeightCorrection 0.2;
             }
@@ -92,7 +92,7 @@ baffles
                 type            cyclicAMI;
                 matchTolerance  0.0001;
                 neighbourPatch  AMI1;
-                transform       noOrdering;
+                ordering        noOrdering;
                 lowWeightCorrection 0.2;
             }
         }

@@ -69,11 +69,6 @@ class oldCyclicPolyPatch
             //- Point on axis of rotation for rotational cyclics
             point rotationCentre_;
 
-        // For translation
-
-            //- Translation vector
-            vector separationVector_;
-
 
     // Private Member Functions
 
@@ -185,7 +180,7 @@ public:
             const label index,
             const polyBoundaryMesh& bm,
             const word& patchType,
-            const transformType transform = UNKNOWN
+            const orderingType ordering = UNKNOWN
         );
 
         //- Construct from dictionary

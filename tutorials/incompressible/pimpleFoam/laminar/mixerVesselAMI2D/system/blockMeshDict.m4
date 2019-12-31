@@ -790,7 +790,7 @@ boundary
     {
         type            cyclicAMI;
         neighbourPatch  AMI2;
-        transform       noOrdering;
+        ordering        noOrdering;
 /* optional
         surface
         {
@@ -817,7 +817,7 @@ boundary
     {
         type            cyclicAMI;
         neighbourPatch  AMI1;
-        transform       noOrdering;
+        ordering        noOrdering;
 /* optional
         surface
         {
