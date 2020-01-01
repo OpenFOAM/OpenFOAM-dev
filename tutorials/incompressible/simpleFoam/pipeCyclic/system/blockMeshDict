@@ -84,7 +84,7 @@ boundary
             (0 1 5 4)
         );
 
-        transform rotational;
+        transformType rotational;
         rotationAxis (1 0 0);
         rotationCentre (0 0 0);
     }
@@ -98,7 +98,7 @@ boundary
             (7 6 2 3)
         );
 
-        transform rotational;
+        transformType rotational;
         rotationAxis (1 0 0);
         rotationCentre (0 0 0);
     }

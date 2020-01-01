@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ public:
 
     static const NamedEnum<orderingType, 3> orderingTypeNames;
 
-    enum transformType
+    enum transformTypes
     {
         UNSPECIFIED,        // Unspecified -> automatic transformation
         NONE,               // No tranformation
@@ -73,7 +73,7 @@ public:
         TRANSLATIONAL       // Translation
     };
 
-    static const NamedEnum<transformType, 4> transformTypeNames;
+    static const NamedEnum<transformTypes, 4> transformTypeNames;
 
 
 protected:
@@ -90,7 +90,7 @@ protected:
         orderingType ordering_;
 
         //- Type of transformation
-        transformType transform_;
+        transformTypes transformType_;
 
         //- Are coupled patches parallel
         mutable bool parallel_;
@@ -259,9 +259,9 @@ public:
             }
 
             //- Type of transform
-            virtual transformType transform() const
+            virtual transformTypes transformType() const
             {
-                return transform_;
+                return transformType_;
             }
 
             //- Transform a patch-based position from other side to this side

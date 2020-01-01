@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ namespace Foam
         coupledPolyPatch::orderingTypeNames;
 
     template<>
-    const char* NamedEnum<coupledPolyPatch::transformType, 4>::names[] =
+    const char* NamedEnum<coupledPolyPatch::transformTypes, 4>::names[] =
     {
         "unspecified",
         "none",
@@ -56,7 +56,7 @@ namespace Foam
         "translational"
     };
 
-    const NamedEnum<coupledPolyPatch::transformType, 4>
+    const NamedEnum<coupledPolyPatch::transformTypes, 4>
         coupledPolyPatch::transformTypeNames;
 }
 
@@ -315,7 +315,7 @@ Foam::coupledPolyPatch::coupledPolyPatch
     polyPatch(name, size, start, index, bm, patchType),
     matchTolerance_(defaultMatchTol_),
     ordering_(ordering),
-    transform_(UNSPECIFIED),
+    transformType_(UNSPECIFIED),
     parallel_(true),
     separated_(false)
 {}
@@ -339,10 +339,10 @@ Foam::coupledPolyPatch::coupledPolyPatch
       ? orderingTypeNames.read(dict.lookup("ordering"))
       : ordering
     ),
-    transform_
+    transformType_
     (
-        dict.found("transform")
-      ? transformTypeNames.read(dict.lookup("transform"))
+        dict.found("transformType")
+      ? transformTypeNames.read(dict.lookup("transformType"))
       : UNSPECIFIED
     ),
     parallel_(true),
@@ -358,7 +358,7 @@ Foam::coupledPolyPatch::coupledPolyPatch
 :
     polyPatch(pp, bm),
     matchTolerance_(pp.matchTolerance_),
-    transform_(pp.transform_),
+    transformType_(pp.transformType_),
     parallel_(true),
     separated_(false)
 {}
@@ -375,7 +375,7 @@ Foam::coupledPolyPatch::coupledPolyPatch
 :
     polyPatch(pp, bm, index, newSize, newStart),
     matchTolerance_(pp.matchTolerance_),
-    transform_(pp.transform_),
+    transformType_(pp.transformType_),
     parallel_(true),
     separated_(false)
 {}
@@ -392,7 +392,7 @@ Foam::coupledPolyPatch::coupledPolyPatch
 :
     polyPatch(pp, bm, index, mapAddressing, newStart),
     matchTolerance_(pp.matchTolerance_),
-    transform_(pp.transform_),
+    transformType_(pp.transformType_),
     parallel_(true),
     separated_(false)
 {}
@@ -411,7 +411,7 @@ void Foam::coupledPolyPatch::write(Ostream& os) const
     polyPatch::write(os);
     writeEntry(os, "matchTolerance", matchTolerance_);
     writeEntry(os, "ordering", orderingTypeNames[ordering_]);
-    writeEntry(os, "transform", transformTypeNames[transform_]);
+    writeEntry(os, "transformType", transformTypeNames[transformType_]);
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -301,7 +301,7 @@ void Foam::oldCyclicPolyPatch::getCentresAndAnchors
     anchors0 = getAnchorPoints(half0Faces, pp.points());
     half1Ctrs = calcFaceCentres(half1Faces, pp.points());
 
-    switch (transform())
+    switch (transformType())
     {
         case ROTATIONAL:
         {
@@ -586,7 +586,7 @@ Foam::oldCyclicPolyPatch::oldCyclicPolyPatch
 
     dict.readIfPresent("featureCos", featureCos_);
 
-    switch (transform())
+    switch (transformType())
     {
         case ROTATIONAL:
         {
@@ -1205,7 +1205,7 @@ void Foam::oldCyclicPolyPatch::write(Ostream& os) const
 
 
     writeEntry(os, "featureCos", featureCos_);
-    switch (transform())
+    switch (transformType())
     {
         case ROTATIONAL:
         {

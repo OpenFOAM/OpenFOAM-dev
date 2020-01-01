@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,21 +77,21 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
     const vectorField& half1Areas
 )
 {
-    if (transform() != neighbPatch().transform())
+    if (transformType() != neighbPatch().transformType())
     {
         FatalErrorInFunction
             << "Patch " << name()
-            << " has transform type " << transformTypeNames[transform()]
+            << " has transform type " << transformTypeNames[transformType()]
             << ", neighbour patch " << neighbPatchName()
             << " has transform type "
-            << neighbPatch().transformTypeNames[neighbPatch().transform()]
+            << neighbPatch().transformTypeNames[neighbPatch().transformType()]
             << exit(FatalError);
     }
 
 
     // Calculate transformation tensors
 
-    switch (transform())
+    switch (transformType())
     {
         case ROTATIONAL:
         {
@@ -560,7 +560,7 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
             << exit(FatalIOError);
     }
 
-    switch (transform())
+    switch (transformType())
     {
         case ROTATIONAL:
         {
@@ -874,7 +874,7 @@ void Foam::cyclicAMIPolyPatch::transformPosition(pointField& l) const
 {
     if (!parallel())
     {
-        if (transform() == ROTATIONAL)
+        if (transformType() == ROTATIONAL)
         {
             l = Foam::transform(forwardT(), l - rotationCentre_)
               + rotationCentre_;
@@ -901,7 +901,7 @@ void Foam::cyclicAMIPolyPatch::transformPosition
 {
     if (!parallel())
     {
-        if (transform() == ROTATIONAL)
+        if (transformType() == ROTATIONAL)
         {
             l = Foam::transform(forwardT(), l - rotationCentre_)
               + rotationCentre_;
@@ -939,7 +939,7 @@ void Foam::cyclicAMIPolyPatch::reverseTransformPosition
 {
     if (!parallel())
     {
-        if (transform() == ROTATIONAL)
+        if (transformType() == ROTATIONAL)
         {
             l = Foam::transform(reverseT(), l - rotationCentre_)
               + rotationCentre_;
@@ -1144,7 +1144,7 @@ void Foam::cyclicAMIPolyPatch::write(Ostream& os) const
     }
     coupleGroup_.write(os);
 
-    switch (transform())
+    switch (transformType())
     {
         case ROTATIONAL:
         {

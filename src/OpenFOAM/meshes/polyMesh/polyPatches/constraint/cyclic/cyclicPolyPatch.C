@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,7 @@ void Foam::cyclicPolyPatch::calcTransformTensors
     const scalarField& smallDist,
     const scalar absTol,
     const orderingType ordering,
-    const transformType transform
+    const transformTypes transform
 ) const
 {
     if (debug)
@@ -328,14 +328,14 @@ void Foam::cyclicPolyPatch::calcTransforms
             << exit(FatalError);
     }
 
-    if (transform() != neighbPatch().transform())
+    if (transformType() != neighbPatch().transformType())
     {
         FatalErrorInFunction
             << "Patch " << name()
-            << " has transform type " << transformTypeNames[transform()]
+            << " has transform type " << transformTypeNames[transformType()]
             << ", neighbour patch " << neighbPatchName()
             << " has transform type "
-            << neighbPatch().transformTypeNames[neighbPatch().transform()]
+            << neighbPatch().transformTypeNames[neighbPatch().transformType()]
             << exit(FatalError);
     }
 
@@ -421,7 +421,7 @@ void Foam::cyclicPolyPatch::calcTransforms
 
         // Calculate transformation
 
-        if (transform() == ROTATIONAL)
+        if (transformType() == ROTATIONAL)
         {
             // Calculate using the given rotation axis and centre. Do not
             // use calculated normals.
@@ -464,7 +464,7 @@ void Foam::cyclicPolyPatch::calcTransforms
             forwardT_ = revT.T();
             reverseT_ = revT;
         }
-        else if (transform() == TRANSLATIONAL)
+        else if (transformType() == TRANSLATIONAL)
         {
             if (debug)
             {
@@ -530,7 +530,7 @@ void Foam::cyclicPolyPatch::calcTransforms
                 half0Tols,
                 matchTolerance(),
                 ordering(),
-                transform()
+                transformType()
             );
         }
     }
@@ -565,7 +565,7 @@ void Foam::cyclicPolyPatch::getCentresAndAnchors
 
     if (half0Ctrs.size())
     {
-        switch (transform())
+        switch (transformType())
         {
             case ROTATIONAL:
             {
@@ -827,7 +827,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
             << exit(FatalIOError);
     }
 
-    switch (transform())
+    switch (transformType())
     {
         case ROTATIONAL:
         {
@@ -997,7 +997,7 @@ void Foam::cyclicPolyPatch::transformPosition(pointField& l) const
 {
     if (!parallel())
     {
-        if (transform() == ROTATIONAL)
+        if (transformType() == ROTATIONAL)
         {
             l =
                 Foam::transform(forwardT(), l-rotationCentre_)
@@ -1021,7 +1021,7 @@ void Foam::cyclicPolyPatch::transformPosition(point& l, const label facei) const
 {
     if (!parallel())
     {
-        if (transform() == ROTATIONAL)
+        if (transformType() == ROTATIONAL)
         {
             l = Foam::transform(forwardT(), l - rotationCentre_)
               + rotationCentre_;
@@ -1567,7 +1567,7 @@ void Foam::cyclicPolyPatch::write(Ostream& os) const
         writeEntry(os, "neighbourPatch", neighbPatchName_);
     }
     coupleGroup_.write(os);
-    switch (transform())
+    switch (transformType())
     {
         case ROTATIONAL:
         {

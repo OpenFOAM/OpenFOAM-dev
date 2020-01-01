@@ -122,7 +122,7 @@ boundary
     {
         type cyclic;
         neighbourPatch cyclic_half1;
-        transform rotational;
+        transformType rotational;
         rotationAxis (0 0 1);
         rotationCentre (0 0 0);
         faces
@@ -135,7 +135,7 @@ boundary
     {
         type cyclic;
         neighbourPatch cyclic_half0;
-        transform rotational;
+        transformType rotational;
         rotationAxis (0 0 1);
         rotationCentre (0 0 0);
         faces

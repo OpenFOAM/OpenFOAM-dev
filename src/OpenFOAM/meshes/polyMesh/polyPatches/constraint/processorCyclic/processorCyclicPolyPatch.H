@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -321,9 +321,9 @@ public:
         }
 
         //- Type of transform
-        virtual transformType transform() const
+        virtual transformTypes transformType() const
         {
-            return referPatch().transform();
+            return referPatch().transformType();
         }
 
         //- Transform a patch-based position from other side to this side
