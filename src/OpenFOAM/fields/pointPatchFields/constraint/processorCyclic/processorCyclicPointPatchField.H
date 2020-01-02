@@ -150,14 +150,6 @@ public:
                 }
             }
 
-            //- Does the patch field perform the transformation
-            virtual bool doTransform() const
-            {
-                return
-                    procPatch_.procPolyPatch().transform().rotates()
-                 && pTraits<Type>::rank != 0;
-            }
-
 
         // Evaluation functions
 

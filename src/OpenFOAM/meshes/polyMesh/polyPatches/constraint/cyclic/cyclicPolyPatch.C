@@ -83,9 +83,6 @@ void Foam::cyclicPolyPatch::calcTransformTensors
     if (Cf.size() == 0)
     {
         // Dummy geometry. Assume non-separated, parallel.
-        parallel_ = true;
-        separated_ = false;
-
         transform_ = transformer();
     }
     else
@@ -109,10 +106,6 @@ void Foam::cyclicPolyPatch::calcTransformTensors
         {
             // Type is rotation or unknown and normals not aligned
 
-            parallel_ = false;
-            separated_ = false;
-            separation_ = Zero;
-
             tensorField forwardT(Cf.size());
             tensorField reverseT(Cf.size());
 
@@ -129,20 +122,11 @@ void Foam::cyclicPolyPatch::calcTransformTensors
                     << " local tolerance " << error << endl;
             }
 
-            forwardT_ = forwardT[0];
-            reverseT_ = reverseT[0];
-
             transform_ = transformer(forwardT[0]);
         }
         else
         {
             // Translational or (unknown and normals aligned)
-
-            parallel_ = true;
-
-            forwardT_ = Zero;
-            reverseT_ = Zero;
-
 
             // Three situations:
             // - separation is zero. No separation.
@@ -190,9 +174,6 @@ void Foam::cyclicPolyPatch::calcTransformTensors
                             << ". Assuming zero separation." << endl;
                     }
 
-                    separated_ = false;
-                    separation_ = Zero;
-
                     transform_ = transformer();
                 }
                 else
@@ -204,9 +185,6 @@ void Foam::cyclicPolyPatch::calcTransformTensors
                             << ". Assuming uniform separation." << endl;
                     }
 
-                    separated_ = true;
-                    separation_ = separation[0];
-
                     transform_ = transformer(separation[0]);
                 }
             }
@@ -215,9 +193,6 @@ void Foam::cyclicPolyPatch::calcTransformTensors
                 Pout<< "--> FOAM Warning : "
                     << " Variation in separation greater than"
                     << " local tolerance " << smallDist[0] << endl;
-
-                separated_ = true;
-                separation_ = separation[0];
 
                 transform_ = transformer(separation[0]);
             }
@@ -468,12 +443,6 @@ void Foam::cyclicPolyPatch::calcTransforms
             );
             const tensor revT(E1.T() & E0);
 
-            parallel_ = false;
-            separated_ = false;
-            separation_ = Zero;
-            forwardT_ = revT.T();
-            reverseT_ = revT;
-
             transform_ = transformer(revT.T());
         }
         else if (transformType() == TRANSLATIONAL)
@@ -515,12 +484,7 @@ void Foam::cyclicPolyPatch::calcTransforms
             }
 
             // Set transformation
-            parallel_ = true;
-            separated_ = true;
-            forwardT_ = Zero;
-            reverseT_ = Zero;
-
-            transform_ = transformer();
+            transform_ = transformer(separation_);
         }
         else
         {
@@ -1576,11 +1540,14 @@ bool Foam::cyclicPolyPatch::order
 void Foam::cyclicPolyPatch::write(Ostream& os) const
 {
     coupledPolyPatch::write(os);
+
     if (!neighbPatchName_.empty())
     {
         writeEntry(os, "neighbourPatch", neighbPatchName_);
     }
+
     coupleGroup_.write(os);
+
     switch (transformType())
     {
         case ROTATIONAL:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,8 +81,12 @@ protected:
         //- Index of other half
         mutable label nbrPatchID_;
 
+        // Specified transformation
 
-        // Transformations
+            // For translation
+
+                //- Offset vector from one side of the cyclic to the other
+                vector separation_;
 
             // For rotation
 
@@ -97,7 +101,6 @@ protected:
 
                 //- Rotation angle
                 scalar rotationAngle_;
-
 
         //- AMI interpolation classes
         mutable PtrList<AMIInterpolation> AMIs_;

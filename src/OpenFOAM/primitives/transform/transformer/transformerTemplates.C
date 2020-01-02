@@ -102,6 +102,20 @@ Type Foam::transformer::invTransform(const Type& x) const
 
 
 template<class Type>
+void Foam::transformer::invTransform
+(
+    Field<Type>& res,
+    const Field<Type>& fld
+) const
+{
+    if (rotates_)
+    {
+        Foam::transform(res, R().T(), fld);
+    }
+}
+
+
+template<class Type>
 Foam::tmp<Foam::Field<Type>> Foam::transformer::invTransform
 (
     const Field<Type>& fld

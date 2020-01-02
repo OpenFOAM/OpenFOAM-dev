@@ -93,21 +93,6 @@ protected:
         //- Type of transformation
         transformTypes transformType_;
 
-        //- Are coupled patches parallel
-        mutable bool parallel_;
-
-        //- Are coupled patches separated
-        mutable bool separated_;
-
-        //- Offset (distance) vector from one side of the couple to the other
-        mutable vector separation_;
-
-        //- Face transformation tensor
-        mutable tensor forwardT_;
-
-        //- Neighbour-cell transformation tensor
-        mutable tensor reverseT_;
-
         //- Transformation between the coupled patches
         mutable transformer transform_;
 

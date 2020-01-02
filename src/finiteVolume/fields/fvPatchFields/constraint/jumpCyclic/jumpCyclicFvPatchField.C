@@ -106,21 +106,11 @@ Foam::jumpCyclicFvPatchField<Type>::patchNeighbourField() const
         jf *= -1.0;
     }
 
-    if (this->doTransform())
+    forAll(*this, facei)
     {
-        forAll(*this, facei)
-        {
-            pnf[facei] =
-                this->transform().transform(iField[nbrFaceCells[facei]])
-              - jf[facei];
-        }
-    }
-    else
-    {
-        forAll(*this, facei)
-        {
-            pnf[facei] = iField[nbrFaceCells[facei]] - jf[facei];
-        }
+        pnf[facei] =
+            this->transform().transform(iField[nbrFaceCells[facei]])
+          - jf[facei];
     }
 
     return tpnf;

@@ -156,10 +156,7 @@ Foam::cyclicAMIFvPatchField<Type>::patchNeighbourField() const
         tpnf = cyclicAMIPatch_.interpolate(pnf);
     }
 
-    if (doTransform())
-    {
-        transform().transform(tpnf.ref(), tpnf());
-    }
+    transform().transform(tpnf.ref(), tpnf());
 
     return tpnf;
 }

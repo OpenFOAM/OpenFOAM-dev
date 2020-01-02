@@ -315,9 +315,7 @@ Foam::coupledPolyPatch::coupledPolyPatch
     polyPatch(name, size, start, index, bm, patchType),
     matchTolerance_(defaultMatchTol_),
     ordering_(ordering),
-    transformType_(UNSPECIFIED),
-    parallel_(true),
-    separated_(false)
+    transformType_(UNSPECIFIED)
 {}
 
 
@@ -344,9 +342,7 @@ Foam::coupledPolyPatch::coupledPolyPatch
         dict.found("transformType")
       ? transformTypeNames.read(dict.lookup("transformType"))
       : UNSPECIFIED
-    ),
-    parallel_(true),
-    separated_(false)
+    )
 {}
 
 
@@ -358,9 +354,7 @@ Foam::coupledPolyPatch::coupledPolyPatch
 :
     polyPatch(pp, bm),
     matchTolerance_(pp.matchTolerance_),
-    transformType_(pp.transformType_),
-    parallel_(true),
-    separated_(false)
+    transformType_(pp.transformType_)
 {}
 
 
@@ -375,9 +369,7 @@ Foam::coupledPolyPatch::coupledPolyPatch
 :
     polyPatch(pp, bm, index, newSize, newStart),
     matchTolerance_(pp.matchTolerance_),
-    transformType_(pp.transformType_),
-    parallel_(true),
-    separated_(false)
+    transformType_(pp.transformType_)
 {}
 
 
@@ -392,9 +384,7 @@ Foam::coupledPolyPatch::coupledPolyPatch
 :
     polyPatch(pp, bm, index, mapAddressing, newStart),
     matchTolerance_(pp.matchTolerance_),
-    transformType_(pp.transformType_),
-    parallel_(true),
-    separated_(false)
+    transformType_(pp.transformType_)
 {}
 
 

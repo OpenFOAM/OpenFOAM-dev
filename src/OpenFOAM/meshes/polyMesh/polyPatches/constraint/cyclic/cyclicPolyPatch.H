@@ -76,14 +76,20 @@ class cyclicPolyPatch
         //- Index of other half
         mutable label neighbPatchID_;
 
-        // For rotation
+        // Specified transformation
 
-            //- Axis of rotation for rotational cyclics
-            vector rotationAxis_;
+            // For translation
 
-            //- Point on axis of rotation for rotational cyclics
-            point rotationCentre_;
+                //- Offset vector from one side of the cyclic to the other
+                vector separation_;
 
+            // For rotation
+
+                //- Axis of rotation for rotational cyclics
+                vector rotationAxis_;
+
+                //- Point on axis of rotation for rotational cyclics
+                point rotationCentre_;
 
         //- List of edges formed from connected points. e[0] is the point on
         //  the first half of the patch, e[1] the corresponding point on the

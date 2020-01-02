@@ -751,7 +751,7 @@ int main(int argc, char *argv[])
 
         // This is a bit tricky. Both normal and position might be out and
         // current separation also includes the normal
-        // ( separation_ = (nf&(Cr - Cf))*nf ).
+        // (separation = (nf&(Cr - Cf))*nf ).
 
         // For cyclic patches:
         // - for separated ones use user specified offset vector

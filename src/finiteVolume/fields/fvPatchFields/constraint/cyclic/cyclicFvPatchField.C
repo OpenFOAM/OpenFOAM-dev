@@ -132,19 +132,9 @@ Foam::cyclicFvPatchField<Type>::patchNeighbourField() const
     Field<Type>& pnf = tpnf.ref();
 
 
-    if (doTransform())
+    forAll(pnf, facei)
     {
-        forAll(pnf, facei)
-        {
-            pnf[facei] = transform().transform(iField[nbrFaceCells[facei]]);
-        }
-    }
-    else
-    {
-        forAll(pnf, facei)
-        {
-            pnf[facei] = iField[nbrFaceCells[facei]];
-        }
+        pnf[facei] = transform().transform(iField[nbrFaceCells[facei]]);
     }
 
     return tpnf;

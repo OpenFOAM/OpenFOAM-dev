@@ -198,6 +198,10 @@ public:
 
             //- Inverse transform the given field
             template<class Type>
+            void invTransform(Field<Type>&, const Field<Type>&) const;
+
+            //- Inverse transform the given field
+            template<class Type>
             tmp<Field<Type>> invTransform(const Field<Type>&) const;
 
             //- Inverse transform the given field

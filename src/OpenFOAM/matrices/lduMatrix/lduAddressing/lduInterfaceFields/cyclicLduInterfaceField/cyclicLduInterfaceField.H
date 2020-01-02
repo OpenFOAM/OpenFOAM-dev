@@ -72,11 +72,11 @@ public:
 
         // Access
 
-            //- Is the transform required
-            virtual bool doTransform() const = 0;
-
             //- Return the transformation
             virtual const transformer& transform() const = 0;
+
+            //- Is the transform required
+            virtual bool doTransform() const = 0;
 
             //- Return rank of component for transform
             virtual int rank() const = 0;

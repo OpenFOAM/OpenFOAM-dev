@@ -81,14 +81,14 @@ public:
             //- Return neighbour processor number
             virtual int neighbProcNo() const = 0;
 
-            //- Is the transform required
-            virtual bool doTransform() const = 0;
-
             //- Return transformation between the coupled patches
             virtual const transformer& transform() const = 0;
 
             //- Return rank of component for transform
             virtual int rank() const = 0;
+
+            //- Is the transform required
+            virtual bool doTransform() const = 0;
 
 
         //- Transform given patch field

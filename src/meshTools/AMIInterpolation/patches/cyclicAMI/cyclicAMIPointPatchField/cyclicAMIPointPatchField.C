@@ -151,12 +151,8 @@ void Foam::cyclicAMIPointPatchField<Type>::swapAddSeparated
         Field<Type> ptFld(this->patchInternalField(pField));
         Field<Type> nbrPtFld(nbr.patchInternalField(pField));
 
-
-        if (doTransform())
-        {
-            ptFld = transform().invTransform(ptFld);
-            nbrPtFld = transform().transform(nbrPtFld);
-        }
+        transform().invTransform(ptFld, ptFld);
+        transform().transform(nbrPtFld, nbrPtFld);
 
         // convert point field to face field, AMI interpolate, then
         // face back to point

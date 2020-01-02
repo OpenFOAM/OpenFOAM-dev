@@ -162,14 +162,11 @@ void Foam::processorCyclicPointPatchField<Type>::swapAddSeparated
             );
         }
 
-        if (doTransform())
-        {
-            procPatch_.procCyclicPolyPatch().transform().transform
-            (
-                receiveBuf_,
-                receiveBuf_
-            );
-        }
+        procPatch_.procCyclicPolyPatch().transform().transform
+        (
+            receiveBuf_,
+            receiveBuf_
+        );
 
         // All points are separated
         this->addToInternalField(pField, receiveBuf_);

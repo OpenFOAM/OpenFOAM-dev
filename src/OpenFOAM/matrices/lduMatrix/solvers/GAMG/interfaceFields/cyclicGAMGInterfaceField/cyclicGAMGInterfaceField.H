@@ -109,12 +109,6 @@ public:
 
         //- Cyclic interface functions
 
-            //- Does the interface field perform the transformation
-            virtual bool doTransform() const
-            {
-                return doTransform_;
-            }
-
             //- Return the transformation
             virtual const transformer& transform() const
             {
@@ -125,6 +119,12 @@ public:
             virtual int rank() const
             {
                 return rank_;
+            }
+
+            //- Does the interface field perform the transformation
+            virtual bool doTransform() const
+            {
+                return doTransform_;
             }
 
 

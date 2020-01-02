@@ -227,11 +227,7 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
                 }
             }
 
-            parallel_ = false;
-            separated_ = false;
             separation_ = Zero;
-            forwardT_ = revT.T();
-            reverseT_ = revT;
 
             transform_ = transformer(revT.T());
 
@@ -246,11 +242,6 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
                     << endl;
             }
 
-            parallel_ = true;
-            separated_ = true;
-            forwardT_ = Zero;
-            reverseT_ = Zero;
-
             transform_ = transformer(separation_);
 
             break;
@@ -263,11 +254,7 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
                     << " Assuming cyclic AMI pairs are colocated" << endl;
             }
 
-            parallel_ = true;
-            separated_ = false;
             separation_ = Zero;
-            forwardT_ = Zero;
-            reverseT_ = Zero;
 
             transform_ = transformer();
 

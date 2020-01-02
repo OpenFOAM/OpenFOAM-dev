@@ -115,10 +115,7 @@ Foam::jumpCyclicAMIFvPatchField<Type>::patchNeighbourField() const
         tpnf = this->cyclicAMIPatch().interpolate(pnf);
     }
 
-    if (this->doTransform())
-    {
-        this->transform().transform(tpnf.ref(), tpnf());
-    }
+    this->transform().transform(tpnf.ref(), tpnf());
 
     tmp<Field<Type>> tjf = jump();
     if (!this->cyclicAMIPatch().owner())
