@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,10 +154,8 @@ public:
             virtual bool doTransform() const
             {
                 return
-                   !(
-                        pTraits<Type>::rank == 0
-                     || procPatch_.procPolyPatch().parallel()
-                    );
+                    procPatch_.procPolyPatch().transform().rotates()
+                 && pTraits<Type>::rank != 0;
             }
 
 

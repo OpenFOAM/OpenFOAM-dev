@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,22 +132,10 @@ public:
                 return refCast<const cyclicPointPatch>(pp);
             }
 
-            //- Are the cyclic planes parallel
-            bool parallel() const
+            //- Return transformation between the coupled patches
+            virtual const transformer& transform() const
             {
-                return cyclicPolyPatch_.parallel();
-            }
-
-            //- Return face transformation tensor
-            const tensor& forwardT() const
-            {
-                return cyclicPolyPatch_.forwardT();
-            }
-
-            //- Return neighbour-cell transformation tensor
-            const tensor& reverseT() const
-            {
-                return cyclicPolyPatch_.reverseT();
+                return cyclicPolyPatch_.transform();
             }
 
 

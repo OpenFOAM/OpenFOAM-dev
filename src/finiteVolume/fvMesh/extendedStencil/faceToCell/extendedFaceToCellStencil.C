@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Foam::extendedFaceToCellStencil::extendedFaceToCellStencil(const polyMesh& mesh)
             const coupledPolyPatch& cpp =
                 refCast<const coupledPolyPatch>(patches[patchi]);
 
-            if (!cpp.parallel() || cpp.separated())
+            if (cpp.transform().transformsPosition())
             {
                 FatalErrorInFunction
                     << "Coupled patches with transformations not supported."

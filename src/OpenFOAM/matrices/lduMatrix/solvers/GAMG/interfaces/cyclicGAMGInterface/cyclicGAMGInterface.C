@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,8 +84,7 @@ Foam::cyclicGAMGInterface::cyclicGAMGInterface
         refCast<const cyclicLduInterface>(fineInterface).neighbPatchID()
     ),
     owner_(refCast<const cyclicLduInterface>(fineInterface).owner()),
-    forwardT_(refCast<const cyclicLduInterface>(fineInterface).forwardT()),
-    reverseT_(refCast<const cyclicLduInterface>(fineInterface).reverseT())
+    transform_(refCast<const cyclicLduInterface>(fineInterface).transform())
 {
     // From coarse face to coarse cell
     DynamicList<label> dynFaceCells(localRestrictAddressing.size());
@@ -159,8 +158,7 @@ Foam::cyclicGAMGInterface::cyclicGAMGInterface
     GAMGInterface(index, coarseInterfaces, is),
     neighbPatchID_(readLabel(is)),
     owner_(readBool(is)),
-    forwardT_(is),
-    reverseT_(is)
+    transform_(is)
 {}
 
 
@@ -198,8 +196,7 @@ void Foam::cyclicGAMGInterface::write(Ostream& os) const
     GAMGInterface::write(os);
     os  << token::SPACE << neighbPatchID_
         << token::SPACE << owner_
-        << token::SPACE << forwardT_
-        << token::SPACE << reverseT_;
+        << token::SPACE << transform_;
 }
 
 

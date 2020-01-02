@@ -38,6 +38,7 @@ SourceFiles
 #define coupledPolyPatch_H
 
 #include "polyPatch.H"
+#include "transformer.H"
 #include "diagTensorField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -107,6 +108,8 @@ protected:
         //- Neighbour-cell transformation tensor
         mutable tensor reverseT_;
 
+        //- Transformation between the coupled patches
+        mutable transformer transform_;
 
 
 protected:
@@ -270,34 +273,10 @@ public:
             //- Transform a patch-based position from other side to this side
             virtual void transformPosition(point&, const label facei) const = 0;
 
-            //- Are the cyclic planes parallel.
-            virtual bool parallel() const
+            //- Return transformation between the coupled patches
+            virtual const transformer& transform() const
             {
-                return parallel_;
-            }
-
-            //- Are the planes separated.
-            virtual bool separated() const
-            {
-                return separated_;
-            }
-
-            //- If the planes are separated the separation vector.
-            virtual const vector& separation() const
-            {
-                return separation_;
-            }
-
-            //- Return face transformation tensor.
-            virtual const tensor& forwardT() const
-            {
-                return forwardT_;
-            }
-
-            //- Return neighbour-cell transformation tensor.
-            virtual const tensor& reverseT() const
-            {
-                return reverseT_;
+                return transform_;
             }
 
             scalar matchTolerance() const

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "processorCyclicPointPatchField.H"
-#include "transformField.H"
 #include "processorPolyPatch.H"
 
 
@@ -165,10 +164,11 @@ void Foam::processorCyclicPointPatchField<Type>::swapAddSeparated
 
         if (doTransform())
         {
-            const processorCyclicPolyPatch& ppp =
-                procPatch_.procCyclicPolyPatch();
-
-            transform(receiveBuf_, ppp.forwardT(), receiveBuf_);
+            procPatch_.procCyclicPolyPatch().transform().transform
+            (
+                receiveBuf_,
+                receiveBuf_
+            );
         }
 
         // All points are separated

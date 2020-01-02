@@ -357,15 +357,15 @@ void syncPoints
                 // Null any value which is not on neighbouring processor
                 nbrPatchInfo.setSize(procPatch.nPoints(), nullValue);
 
-                if (!procPatch.parallel())
+                if (procPatch.transform().rotates())
                 {
                     hasTransformation = true;
-                    transformList(procPatch.forwardT(), nbrPatchInfo);
+                    transformList(procPatch.transform().R(), nbrPatchInfo);
                 }
-                else if (procPatch.separated())
+                else if (procPatch.transform().translates())
                 {
                     hasTransformation = true;
-                    nbrPatchInfo -= procPatch.separation();
+                    nbrPatchInfo -= procPatch.transform().t();
                 }
 
                 const labelList& meshPts = procPatch.meshPoints();
@@ -407,15 +407,15 @@ void syncPoints
                 half0Values[i] = points[point0];
             }
 
-            if (!cycPatch.parallel())
+            if (cycPatch.transform().rotates())
             {
                 hasTransformation = true;
-                transformList(cycPatch.reverseT(), half0Values);
+                transformList(cycPatch.transform().R().T(), half0Values);
             }
-            else if (cycPatch.separated())
+            else if (cycPatch.transform().translates())
             {
                 hasTransformation = true;
-                half0Values += cycPatch.separation();
+                half0Values += cycPatch.transform().t();
             }
 
             forAll(coupledPoints, i)
@@ -765,11 +765,11 @@ int main(int argc, char *argv[])
                 const coupledPolyPatch& cpp =
                     refCast<const coupledPolyPatch>(pp);
 
-                if (cpp.separated())
+                if (cpp.transform().translates())
                 {
                     Info<< "On coupled patch " << pp.name()
                         << " separation was "
-                        << cpp.separation() << endl;
+                        << cpp.transform().t() << endl;
 
                     if (isA<cyclicPolyPatch>(pp) && pp.size())
                     {
@@ -784,20 +784,20 @@ int main(int argc, char *argv[])
                         {
                             const cyclicPolyPatch& nbr = cycpp.neighbPatch();
 
-                            const_cast<vector&>(cpp.separation()) =
+                            const_cast<vector&>(cpp.transform().t()) =
                                 nbr[0].centre(mesh.points())
                               - cycpp[0].centre(mesh.points());
                         }
                     }
                     Info<< "On coupled patch " << pp.name()
                         << " forcing uniform separation of "
-                        << cpp.separation() << endl;
+                        << cpp.transform().t() << endl;
                 }
-                else if (!cpp.parallel())
+                else if (cpp.transform().rotates())
                 {
                     Info<< "On coupled patch " << pp.name()
                         << " uniform rotation of "
-                        << cpp.forwardT() << endl;
+                        << cpp.transform().R() << endl;
                 }
             }
         }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -277,13 +277,13 @@ void Foam::particle::hitCyclicPatch(TrackCloudType&, trackingData&)
     reflect();
 
     // Transform the properties
-    if (!receiveCpp.parallel())
+    if (receiveCpp.transform().rotates())
     {
-        transformProperties(receiveCpp.forwardT());
+        transformProperties(receiveCpp.transform().R());
     }
-    else if (receiveCpp.separated())
+    else if (receiveCpp.transform().translates())
     {
-        transformProperties(-receiveCpp.separation());
+        transformProperties(-receiveCpp.transform().t());
     }
 }
 
@@ -373,14 +373,14 @@ void Foam::particle::hitCyclicAMIPatch
         transformProperties(AMITransform.t());
     }
 
-    if (!receiveCpp.parallel())
+    if (receiveCpp.transform().rotates())
     {
-        transformProperties(receiveCpp.forwardT());
-        displacementT = transform(receiveCpp.forwardT(), displacementT);
+        transformProperties(receiveCpp.transform().R());
+        displacementT = transform(receiveCpp.transform().R(), displacementT);
     }
-    else if (receiveCpp.separated())
+    else if (receiveCpp.transform().translates())
     {
-        transformProperties(-receiveCpp.separation());
+        transformProperties(-receiveCpp.transform().t());
     }
 
     // If on a boundary and the displacement points into the receiving face

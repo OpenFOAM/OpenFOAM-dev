@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,13 +157,15 @@ public:
             //- Does the patch field perform the transformation
             virtual bool doTransform() const
             {
-                return !(procPatch_.parallel() || pTraits<Type>::rank == 0);
+                return
+                    procPatch_.transform().rotates()
+                 && pTraits<Type>::rank != 0;
             }
 
-            //- Return face transformation tensor
-            virtual const tensor& forwardT() const
+            //- Return transformation between the coupled patches
+            virtual const transformer& transform() const
             {
-                return procPatch_.forwardT();
+                return procPatch_.transform();
             }
 };
 

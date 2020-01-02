@@ -338,34 +338,10 @@ public:
             referPatch().transformPosition(l, facei);
         }
 
-        //- Are the planes separated.
-        virtual bool separated() const
+        //- Return transformation between the coupled patches
+        virtual const transformer& transform() const
         {
-            return referPatch().separated();
-        }
-
-        //- If the planes are separated the separation vector.
-        virtual const vector& separation() const
-        {
-            return referPatch().separation();
-        }
-
-        //- Are the cyclic planes parallel.
-        virtual bool parallel() const
-        {
-            return referPatch().parallel();
-        }
-
-        //- Return face transformation tensor.
-        virtual const tensor& forwardT() const
-        {
-            return referPatch().forwardT();
-        }
-
-        //- Return neighbour-cell transformation tensor.
-        virtual const tensor& reverseT() const
-        {
-            return referPatch().reverseT();
+            return referPatch().transform_;
         }
 
         //- Initialize ordering for primitivePatch. Does not

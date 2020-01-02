@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -238,9 +238,9 @@ public:
             template<class Type>
             void operator()(const coupledPolyPatch& cpp, UList<Type>& fld) const
             {
-                if (!cpp.parallel())
+                if (cpp.transform().transforms())
                 {
-                    transformList(cpp.forwardT(), fld);
+                    transformList(cpp.transform().R(), fld);
                 }
             }
 
@@ -249,9 +249,9 @@ public:
             void operator()(const coupledPolyPatch& cpp, Container<Type>& map)
             const
             {
-                if (!cpp.parallel())
+                if (cpp.transform().transforms())
                 {
-                    transformList(cpp.forwardT(), map);
+                    transformList(cpp.transform().R(), map);
                 }
             }
         };

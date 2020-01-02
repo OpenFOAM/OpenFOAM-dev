@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,6 +37,7 @@ SourceFiles
 #define processorLduInterface_H
 
 #include "lduInterface.H"
+#include "transformer.H"
 #include "primitiveFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -93,11 +94,12 @@ public:
             //- Return neighbour processor number (rank in communicator)
             virtual int neighbProcNo() const = 0;
 
-            //- Return face transformation tensor
-            virtual const tensor& forwardT() const = 0;
+            //- Return transformation between the coupled patches
+            virtual const transformer& transform() const = 0;
 
             //- Return message tag used for sending
             virtual int tag() const = 0;
+
 
         // Transfer functions
 

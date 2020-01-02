@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,6 +35,20 @@ Type Foam::transformer::transform(const Type& x) const
     else
     {
         return x;
+    }
+}
+
+
+template<class Type>
+void Foam::transformer::transform
+(
+    Field<Type>& res,
+    const Field<Type>& fld
+) const
+{
+    if (rotates_)
+    {
+        return Foam::transform(res, R(), fld);
     }
 }
 

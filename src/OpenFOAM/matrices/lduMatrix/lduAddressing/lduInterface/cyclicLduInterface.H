@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,7 @@ SourceFiles
 #define cyclicLduInterface_H
 
 #include "lduInterface.H"
+#include "transformer.H"
 #include "primitiveFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -73,11 +74,8 @@ public:
             //- Return processor number
             virtual const cyclicLduInterface& neighbPatch() const = 0;
 
-            //- Return face transformation tensor
-            virtual const tensor& forwardT() const = 0;
-
-            //- Return face reverse transformation tensor
-            virtual const tensor& reverseT() const = 0;
+            //- Return transformation between the coupled patches
+            virtual const transformer& transform() const = 0;
 };
 
 

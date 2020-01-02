@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,10 +174,10 @@ public:
                 return doTransform_;
             }
 
-            //- Return face transformation tensor
-            virtual const tensor& forwardT() const
+            //- Return transformation between the coupled patches
+            virtual const transformer& transform() const
             {
-                return procInterface_.forwardT();
+                return procInterface_.transform();
             }
 
             //- Return rank of component for transform

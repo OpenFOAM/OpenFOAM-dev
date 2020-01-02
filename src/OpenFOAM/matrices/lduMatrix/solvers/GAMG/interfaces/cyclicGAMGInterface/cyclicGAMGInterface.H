@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,11 +60,8 @@ class cyclicGAMGInterface
         //- Am I owner?
         bool owner_;
 
-        //- Transformation tensor
-        tensor forwardT_;
-
-        //- Transformation tensor
-        tensor reverseT_;
+        //- Transformation
+        transformer transform_;
 
 
 public:
@@ -138,15 +135,9 @@ public:
             }
 
             //- Return face transformation tensor
-            virtual const tensor& forwardT() const
+            virtual const transformer& transform() const
             {
-                return forwardT_;
-            }
-
-            //- Return neighbour-cell transformation tensor
-            virtual const tensor& reverseT() const
-            {
-                return reverseT_;
+                return transform_;
             }
 
 

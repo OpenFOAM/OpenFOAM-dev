@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -861,9 +861,7 @@ bool Foam::motionSmootherAlgo::scaleMesh
                     refCast<const coupledPolyPatch>(patches[patchi]);
 
                 Pout<< '\t' << patchi << '\t' << pp.name()
-                    << " parallel:" << pp.parallel()
-                    << " separated:" << pp.separated()
-                    << " forwardT:" << pp.forwardT().size()
+                    << " transform:" << pp.transform()
                     << endl;
             }
         }
@@ -871,6 +869,7 @@ bool Foam::motionSmootherAlgo::scaleMesh
 
     const scalar errorReduction =
         paramDict.lookup<scalar>("errorReduction");
+
     const label nSmoothScale =
         paramDict.lookup<label>("nSmoothScale");
 

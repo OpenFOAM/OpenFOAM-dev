@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,8 +133,18 @@ public:
             //- Return true if the rotation tensor is non-I
             inline bool rotates() const;
 
-            //- Return true if the transformer either translates or rotates
+            //- Return true if the transformer transforms a type
+            //  (i.e. rotates)
             inline bool transforms() const;
+
+            //- Return true if the transformer transforms the given type
+            //  (i.e. rotates)
+            template<typename Type>
+            inline bool transforms() const;
+
+            //- Return true if the transformer transforms a point
+            // (i.e. translates or rotates)
+            inline bool transformsPosition() const;
 
 
         // Edit
@@ -169,6 +179,10 @@ public:
             //- Transform the given type
             template<class Type>
             Type transform(const Type&) const;
+
+            //- Transform the given field
+            template<class Type>
+            void transform(Field<Type>&, const Field<Type>&) const;
 
             //- Transform the given field
             template<class Type>

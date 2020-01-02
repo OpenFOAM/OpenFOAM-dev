@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -597,11 +597,11 @@ void Foam::FaceCellWave<Type, TrackingData>::handleProcPatches()
         }
 
         // Apply transform to received data for non-parallel planes
-        if (!procPatch.parallel())
+        if (procPatch.transform().rotates())
         {
             transform
             (
-                procPatch.forwardT(),
+                procPatch.transform().R(),
                 receiveFaces.size(),
                 receiveFacesInfo
             );
@@ -669,12 +669,12 @@ void Foam::FaceCellWave<Type, TrackingData>::handleCyclicPatches()
             const cyclicPolyPatch& cycPatch =
                 refCast<const cyclicPolyPatch>(patch);
 
-            if (!cycPatch.parallel())
+            if (cycPatch.transform().rotates())
             {
                 // received data from other half
                 transform
                 (
-                    cycPatch.forwardT(),
+                    cycPatch.transform().R(),
                     nReceiveFaces,
                     receiveFacesInfo
                 );
@@ -743,7 +743,7 @@ void Foam::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
                     )
                 );
 
-                if (!nbrPatch.parallel() || nbrPatch.separated())
+                if (nbrPatch.transform().transformsPosition())
                 {
                     // Adapt sendInfo for leaving domain
                     const vectorField::subField fc = nbrPatch.faceCentres();
@@ -805,17 +805,17 @@ void Foam::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
             }
 
             // Apply transform to received data for non-parallel planes
-            if (!cycPatch.parallel())
+            if (cycPatch.transform().rotates())
             {
                 transform
                 (
-                    cycPatch.forwardT(),
+                    cycPatch.transform().R(),
                     receiveInfo.size(),
                     receiveInfo
                 );
             }
 
-            if (!cycPatch.parallel() || cycPatch.separated())
+            if (cycPatch.transform().transformsPosition())
             {
                 // Adapt receiveInfo for entering domain
                 const vectorField::subField fc = cycPatch.faceCentres();

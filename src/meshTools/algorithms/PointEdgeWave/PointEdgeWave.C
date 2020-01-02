@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -368,9 +368,9 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleProcPatches()
         //}
 
         // Apply transform to received data for non-parallel planes
-        if (!procPatch.parallel())
+        if (procPatch.transform().rotates())
         {
-            transform(procPatch, procPatch.forwardT(), patchInfo);
+            transform(procPatch, procPatch.transform().R(), patchInfo);
         }
 
         // Adapt for entering domain
@@ -453,10 +453,10 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleCyclicPatches()
 
             // Apply rotation for non-parallel planes
 
-            if (!cycPatch.parallel())
+            if (cycPatch.transform().rotates())
             {
                 // received data from half1
-                transform(cycPatch, cycPatch.forwardT(), nbrInfo);
+                transform(cycPatch, cycPatch.transform().R(), nbrInfo);
             }
 
             // if (debug)

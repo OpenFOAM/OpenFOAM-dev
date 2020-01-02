@@ -85,6 +85,8 @@ void Foam::cyclicPolyPatch::calcTransformTensors
         // Dummy geometry. Assume non-separated, parallel.
         parallel_ = true;
         separated_ = false;
+
+        transform_ = transformer();
     }
     else
     {
@@ -129,6 +131,8 @@ void Foam::cyclicPolyPatch::calcTransformTensors
 
             forwardT_ = forwardT[0];
             reverseT_ = reverseT[0];
+
+            transform_ = transformer(forwardT[0]);
         }
         else
         {
@@ -188,6 +192,8 @@ void Foam::cyclicPolyPatch::calcTransformTensors
 
                     separated_ = false;
                     separation_ = Zero;
+
+                    transform_ = transformer();
                 }
                 else
                 {
@@ -200,6 +206,8 @@ void Foam::cyclicPolyPatch::calcTransformTensors
 
                     separated_ = true;
                     separation_ = separation[0];
+
+                    transform_ = transformer(separation[0]);
                 }
             }
             else
@@ -210,6 +218,8 @@ void Foam::cyclicPolyPatch::calcTransformTensors
 
                 separated_ = true;
                 separation_ = separation[0];
+
+                transform_ = transformer(separation[0]);
             }
         }
     }
@@ -463,6 +473,8 @@ void Foam::cyclicPolyPatch::calcTransforms
             separation_ = Zero;
             forwardT_ = revT.T();
             reverseT_ = revT;
+
+            transform_ = transformer(revT.T());
         }
         else if (transformType() == TRANSLATIONAL)
         {
@@ -507,6 +519,8 @@ void Foam::cyclicPolyPatch::calcTransforms
             separated_ = true;
             forwardT_ = Zero;
             reverseT_ = Zero;
+
+            transform_ = transformer();
         }
         else
         {
@@ -995,45 +1009,45 @@ Foam::label Foam::cyclicPolyPatch::neighbPatchID() const
 
 void Foam::cyclicPolyPatch::transformPosition(pointField& l) const
 {
-    if (!parallel())
+    if (transform().rotates())
     {
         if (transformType() == ROTATIONAL)
         {
             l =
-                Foam::transform(forwardT(), l-rotationCentre_)
+                Foam::transform(transform().R(), l-rotationCentre_)
               + rotationCentre_;
         }
         else
         {
-            l = Foam::transform(forwardT(), l);
+            l = Foam::transform(transform().R(), l);
         }
     }
-    else if (separated())
+    else if (transform().translates())
     {
         // transformPosition gets called on the receiving side,
         // separation gets calculated on the sending side so subtract.
-        l -= separation();
+        l -= transform().t();
     }
 }
 
 
 void Foam::cyclicPolyPatch::transformPosition(point& l, const label facei) const
 {
-    if (!parallel())
+    if (transform().rotates())
     {
         if (transformType() == ROTATIONAL)
         {
-            l = Foam::transform(forwardT(), l - rotationCentre_)
+            l = Foam::transform(transform().R(), l - rotationCentre_)
               + rotationCentre_;
         }
         else
         {
-            l = Foam::transform(forwardT(), l);
+            l = Foam::transform(transform().R(), l);
         }
     }
-    else if (separated())
+    else if (transform().translates())
     {
-        l -= separation();
+        l -= transform().t();
     }
 }
 

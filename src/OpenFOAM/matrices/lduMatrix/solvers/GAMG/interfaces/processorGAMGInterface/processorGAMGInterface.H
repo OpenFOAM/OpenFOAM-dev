@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,8 +63,8 @@ class processorGAMGInterface
         //- Neighbouring processor rank in communicator
         label neighbProcNo_;
 
-        //- Transformation tensor
-        tensor forwardT_;
+        //- Transformation
+        transformer transform_;
 
         //- Message tag used for sending
         int tag_;
@@ -100,7 +100,7 @@ public:
             const label coarseComm,
             const label myProcNo,
             const label neighbProcNo,
-            const tensor& forwardT,
+            const transformer& transform,
             const int tag
         );
 
@@ -159,10 +159,10 @@ public:
                 return neighbProcNo_;
             }
 
-            //- Return face transformation tensor
-            virtual const tensor& forwardT() const
+            //- Return transformation between the coupled patches
+            virtual const transformer& transform() const
             {
-                return forwardT_;
+                return transform_;
             }
 
             //- Return message tag used for sending

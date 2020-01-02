@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1067,13 +1067,13 @@ void Foam::particle::correctAfterParallelTransfer
     const coupledPolyPatch& ppp =
         refCast<const coupledPolyPatch>(mesh_.boundaryMesh()[patchi]);
 
-    if (!ppp.parallel())
+    if (ppp.transform().rotates())
     {
-        transformProperties(ppp.forwardT());
+        transformProperties(ppp.transform().R());
     }
-    else if (ppp.separated())
+    else if (ppp.transform().translates())
     {
-        transformProperties(-ppp.separation());
+        transformProperties(-ppp.transform().t());
     }
 
     // Set the topology

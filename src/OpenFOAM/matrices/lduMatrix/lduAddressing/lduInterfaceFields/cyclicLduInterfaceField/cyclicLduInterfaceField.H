@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,7 @@ SourceFiles
 #define cyclicLduInterfaceField_H
 
 #include "primitiveFieldsFwd.H"
+#include "transformer.H"
 #include "typeInfo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -74,11 +75,8 @@ public:
             //- Is the transform required
             virtual bool doTransform() const = 0;
 
-            //- Return face transformation tensor
-            virtual const tensor& forwardT() const = 0;
-
-            //- Return neighbour-cell transformation tensor
-            virtual const tensor& reverseT() const = 0;
+            //- Return the transformation
+            virtual const transformer& transform() const = 0;
 
             //- Return rank of component for transform
             virtual int rank() const = 0;
@@ -106,14 +104,14 @@ public:
 #include "tensorField.H"
 
 template<class Type>
-void Foam::cyclicLduInterfaceField::transformCoupleField
+inline void Foam::cyclicLduInterfaceField::transformCoupleField
 (
     Field<Type>& f
 ) const
 {
     if (doTransform())
     {
-        transform(f, forwardT(), f);
+        transform().transform(f, f);
     }
 }
 

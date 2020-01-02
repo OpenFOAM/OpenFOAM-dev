@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,8 +154,8 @@ void Foam::cyclicAMIPointPatchField<Type>::swapAddSeparated
 
         if (doTransform())
         {
-            transform(ptFld, this->reverseT(), ptFld);
-            transform(nbrPtFld, this->forwardT(), nbrPtFld);
+            ptFld = transform().invTransform(ptFld);
+            nbrPtFld = transform().transform(nbrPtFld);
         }
 
         // convert point field to face field, AMI interpolate, then

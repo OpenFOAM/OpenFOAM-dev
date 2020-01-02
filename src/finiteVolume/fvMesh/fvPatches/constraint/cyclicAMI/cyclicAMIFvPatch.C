@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,14 +139,14 @@ Foam::tmp<Foam::vectorField> Foam::cyclicAMIFvPatch::delta() const
         vectorField& pdv = tpdv.ref();
 
         // do the transformation if necessary
-        if (parallel())
+        if (transform().rotates())
         {
             forAll(patchD, facei)
             {
                 const vector& ddi = patchD[facei];
                 const vector& dni = nbrPatchD[facei];
 
-                pdv[facei] = ddi - dni;
+                pdv[facei] = ddi - transform().transform(dni);
             }
         }
         else
@@ -156,7 +156,7 @@ Foam::tmp<Foam::vectorField> Foam::cyclicAMIFvPatch::delta() const
                 const vector& ddi = patchD[facei];
                 const vector& dni = nbrPatchD[facei];
 
-                pdv[facei] = ddi - transform(forwardT(), dni);
+                pdv[facei] = ddi - dni;
             }
         }
 

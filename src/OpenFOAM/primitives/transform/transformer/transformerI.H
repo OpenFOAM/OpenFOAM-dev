@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,6 +103,19 @@ inline bool Foam::transformer::rotates() const
 
 
 inline bool Foam::transformer::transforms() const
+{
+    return rotates_;
+}
+
+
+template<typename Type>
+inline bool Foam::transformer::transforms() const
+{
+    return pTraits<Type>::rank != 0 && (translates_ || rotates_);
+}
+
+
+inline bool Foam::transformer::transformsPosition() const
 {
     return translates_ || rotates_;
 }

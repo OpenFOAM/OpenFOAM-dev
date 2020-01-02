@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,11 +93,12 @@ Foam::tmp<Foam::vectorField> Foam::processorFvPatch::delta() const
     if (Pstream::parRun())
     {
         // To the transformation if necessary
-        if (parallel())
+        if (transform().rotates())
         {
             return
                 coupledFvPatch::delta()
-              - (
+               -transform().transform
+                (
                     procPolyPatch_.neighbFaceCentres()
                   - procPolyPatch_.neighbFaceCellCentres()
                 );
@@ -106,13 +107,9 @@ Foam::tmp<Foam::vectorField> Foam::processorFvPatch::delta() const
         {
             return
                 coupledFvPatch::delta()
-              - transform
-                (
-                    forwardT(),
-                    (
-                        procPolyPatch_.neighbFaceCentres()
-                      - procPolyPatch_.neighbFaceCellCentres()
-                    )
+              - (
+                    procPolyPatch_.neighbFaceCentres()
+                  - procPolyPatch_.neighbFaceCellCentres()
                 );
         }
     }

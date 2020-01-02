@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,17 +103,7 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
         Tuple2<bool, transformer> bt
         (
             transformPatch.size(),
-            transformer
-            (
-                transformPatch.separated()
-              ? transformPatch.separation()
-              : vector::zero,
-                transformPatch.separated(),
-               !transformPatch.parallel()
-              ? transformPatch.forwardT()
-              : tensor::zero,
-               !transformPatch.parallel()
-            )
+            transformPatch.transform()
         );
 
         reduce(bt, keepIfTrueOp<transformer>());

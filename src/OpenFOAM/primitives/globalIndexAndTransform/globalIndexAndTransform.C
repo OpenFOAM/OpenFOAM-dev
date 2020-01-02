@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,9 +141,9 @@ void Foam::globalIndexAndTransform::determineTransforms()
         {
             const coupledPolyPatch& cpp = refCast<const coupledPolyPatch>(pp);
 
-            if (cpp.separated())
+            if (cpp.transform().translates())
             {
-                const vector& sepVec = cpp.separation();
+                const vector& sepVec = cpp.transform().t();
 
                 if (mag(sepVec) > small)
                 {
@@ -166,9 +166,9 @@ void Foam::globalIndexAndTransform::determineTransforms()
                     }
                 }
             }
-            else if (!cpp.parallel())
+            else if (cpp.transform().rotates())
             {
-                const tensor& transT = cpp.reverseT();
+                const tensor& transT = cpp.transform().R().T();
 
                 if (mag(transT - I) > small)
                 {
@@ -299,9 +299,9 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
         {
             const coupledPolyPatch& cpp = refCast<const coupledPolyPatch>(pp);
 
-            if (cpp.separated())
+            if (cpp.transform().translates())
             {
-                const vector& sepVec = cpp.separation();
+                const vector& sepVec = cpp.transform().t();
 
                 if (mag(sepVec) > small)
                 {
@@ -319,9 +319,9 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
                     patchTransformSign_[patchi] = labelPair(matchTransI, sign);
                 }
             }
-            else if (!cpp.parallel())
+            else if (cpp.transform().rotates())
             {
-                const tensor& transT = cpp.reverseT();
+                const tensor& transT = cpp.transform().R().T();
 
                 if (mag(transT - I) > small)
                 {
