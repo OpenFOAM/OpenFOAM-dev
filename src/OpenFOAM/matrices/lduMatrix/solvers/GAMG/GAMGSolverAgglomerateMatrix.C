@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -328,10 +328,8 @@ void Foam::GAMGSolver::gatherMatrices
             otherMats.set(otherI, new lduMatrix(dummyMesh, fromSlave));
 
             // Receive number of/valid interfaces
-            boolList& procTransforms = otherTransforms[otherI];
             List<label>& procRanks = otherRanks[otherI];
 
-            fromSlave >> procTransforms;
             fromSlave >> procRanks;
 
             // Size coefficients
@@ -368,7 +366,6 @@ void Foam::GAMGSolver::gatherMatrices
         // Send to master
 
         // Count valid interfaces
-        boolList procTransforms(interfaceBouCoeffs.size(), false);
         List<label> procRanks(interfaceBouCoeffs.size(), -1);
         forAll(interfaces, intI)
         {
@@ -380,7 +377,6 @@ void Foam::GAMGSolver::gatherMatrices
                         interfaces[intI]
                     );
 
-                procTransforms[intI] = interface.doTransform();
                 procRanks[intI] = interface.rank();
             }
         }
@@ -394,7 +390,7 @@ void Foam::GAMGSolver::gatherMatrices
             meshComm
         );
 
-        toMaster << mat << procTransforms << procRanks;
+        toMaster << mat << procRanks;
         forAll(procRanks, intI)
         {
             if (procRanks[intI] != -1)
@@ -593,7 +589,6 @@ void Foam::GAMGSolver::procAgglomerateMatrix
                     {
                         // Construct lduInterfaceField
 
-                        bool doTransform = false;
                         int rank = -1;
                         if (proci == 0)
                         {
@@ -605,13 +600,10 @@ void Foam::GAMGSolver::procAgglomerateMatrix
                                 (
                                     coarsestInterfaces[procIntI]
                                 );
-                            doTransform = procInt.doTransform();
                             rank = procInt.rank();
                         }
                         else
                         {
-                            doTransform =
-                                otherTransforms[proci-1][procIntI];
                             rank = otherRanks[proci-1][procIntI];
                         }
 
@@ -624,7 +616,6 @@ void Foam::GAMGSolver::procAgglomerateMatrix
                                 (
                                     allMeshInterfaces[allIntI]
                                 ),
-                                doTransform,
                                 rank
                             ).ptr()
                         );

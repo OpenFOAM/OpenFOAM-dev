@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,10 +86,9 @@ public:
             lduInterface,
             (
                 const GAMGInterface& GAMGCp,
-                const bool doTransform,
                 const int rank
             ),
-            (GAMGCp, doTransform, rank)
+            (GAMGCp, rank)
         );
 
 
@@ -108,7 +107,6 @@ public:
         static autoPtr<GAMGInterfaceField> New
         (
             const GAMGInterface& GAMGCp,
-            const bool doTransform,
             const int rank
         );
 
@@ -130,7 +128,6 @@ public:
         GAMGInterfaceField
         (
             const GAMGInterface& GAMGCp,
-            const bool doTransform,
             const int rank
         )
         :

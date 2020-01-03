@@ -194,14 +194,6 @@ public:
                 return cyclicAMIPatch_.transform();
             }
 
-            //- Does the patch field perform the transformation
-            virtual bool doTransform() const
-            {
-                return
-                    cyclicAMIPatch_.transform().rotates()
-                 && pTraits<Type>::rank != 0;
-            }
-
             //- Return rank of component for transform
             virtual int rank() const
             {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,13 +57,11 @@ Foam::processorGAMGInterfaceField::processorGAMGInterfaceField
 :
     GAMGInterfaceField(GAMGCp, fineInterface),
     procInterface_(refCast<const processorGAMGInterface>(GAMGCp)),
-    doTransform_(false),
     rank_(0)
 {
     const processorLduInterfaceField& p =
         refCast<const processorLduInterfaceField>(fineInterface);
 
-    doTransform_ = p.doTransform();
     rank_ = p.rank();
 }
 
@@ -71,13 +69,11 @@ Foam::processorGAMGInterfaceField::processorGAMGInterfaceField
 Foam::processorGAMGInterfaceField::processorGAMGInterfaceField
 (
     const GAMGInterface& GAMGCp,
-    const bool doTransform,
     const int rank
 )
 :
-    GAMGInterfaceField(GAMGCp, doTransform, rank),
+    GAMGInterfaceField(GAMGCp, rank),
     procInterface_(refCast<const processorGAMGInterface>(GAMGCp)),
-    doTransform_(doTransform),
     rank_(rank)
 {}
 

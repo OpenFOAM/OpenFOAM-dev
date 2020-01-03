@@ -58,9 +58,6 @@ class processorGAMGInterfaceField
         //- Local reference cast into the processor interface
         const processorGAMGInterface& procInterface_;
 
-        //- Is the transform required
-        bool doTransform_;
-
         //- Rank of component for transformation
         int rank_;
 
@@ -99,7 +96,6 @@ public:
         processorGAMGInterfaceField
         (
             const GAMGInterface& GAMGCp,
-            const bool doTransform,
             const int rank
         );
 
@@ -166,12 +162,6 @@ public:
             virtual int neighbProcNo() const
             {
                 return procInterface_.neighbProcNo();
-            }
-
-            //- Does the interface field perform the transformation
-            virtual bool doTransform() const
-            {
-                return doTransform_;
             }
 
             //- Return transformation between the coupled patches

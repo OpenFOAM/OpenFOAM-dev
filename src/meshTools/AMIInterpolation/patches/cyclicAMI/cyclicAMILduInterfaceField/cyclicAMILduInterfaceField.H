@@ -71,14 +71,17 @@ public:
 
         // Access
 
-            //- Is the transform required
-            virtual bool doTransform() const = 0;
-
             //- Return transformation between the coupled patches
             virtual const transformer& transform() const = 0;
 
             //- Return rank of component for transform
             virtual int rank() const = 0;
+
+            //- Is the transform required
+            bool transforms() const
+            {
+                return transform().rotates() && rank() != 0;
+            }
 
 
         //- Transform given patch field
@@ -108,7 +111,7 @@ void Foam::cyclicAMILduInterfaceField::transformCoupleField
     Field<Type>& f
 ) const
 {
-    if (doTransform())
+    if (transforms())
     {
         transform().transform(f, f);
     }

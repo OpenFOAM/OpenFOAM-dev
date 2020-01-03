@@ -88,7 +88,10 @@ public:
             virtual int rank() const = 0;
 
             //- Is the transform required
-            virtual bool doTransform() const = 0;
+            bool transforms() const
+            {
+                return transform().rotates() && rank() != 0;
+            }
 
 
         //- Transform given patch field
@@ -118,7 +121,7 @@ void Foam::processorLduInterfaceField::transformCoupleField
     Field<Type>& f
 ) const
 {
-    if (doTransform())
+    if (transforms())
     {
         transform().transform(f, f);
     }

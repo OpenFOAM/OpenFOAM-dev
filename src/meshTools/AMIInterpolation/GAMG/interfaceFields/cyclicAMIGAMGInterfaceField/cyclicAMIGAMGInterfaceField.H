@@ -58,9 +58,6 @@ class cyclicAMIGAMGInterfaceField
         //- Local reference cast into the cyclic interface
         const cyclicAMIGAMGInterface& cyclicAMIInterface_;
 
-        //- Is the transform required
-        bool doTransform_;
-
         //- Rank of component for transformation
         int rank_;
 
@@ -84,7 +81,6 @@ public:
         cyclicAMIGAMGInterfaceField
         (
             const GAMGInterface& GAMGCp,
-            const bool doTransform,
             const int rank
         );
 
@@ -124,12 +120,6 @@ public:
 
 
         //- Cyclic interface functions
-
-            //- Does the interface field perform the transformation
-            virtual bool doTransform() const
-            {
-                return doTransform_;
-            }
 
             //- Return transformation between the coupled patches
             virtual const transformer& transform() const

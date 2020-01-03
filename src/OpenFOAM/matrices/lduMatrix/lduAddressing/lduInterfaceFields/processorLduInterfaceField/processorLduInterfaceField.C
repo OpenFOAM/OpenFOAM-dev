@@ -30,7 +30,7 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(processorLduInterfaceField, 0);
+    defineTypeNameAndDebug(processorLduInterfaceField, 0);
 }
 
 
@@ -48,7 +48,7 @@ void Foam::processorLduInterfaceField::transformCoupleField
     const direction cmpt
 ) const
 {
-    if (doTransform())
+    if (transforms())
     {
         f *= pow(diag(transform().R()).component(cmpt), rank());
     }

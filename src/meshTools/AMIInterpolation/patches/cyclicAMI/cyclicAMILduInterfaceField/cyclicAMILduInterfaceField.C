@@ -48,7 +48,7 @@ void Foam::cyclicAMILduInterfaceField::transformCoupleField
     const direction cmpt
 ) const
 {
-    if (doTransform())
+    if (transforms())
     {
         f *= pow(diag(transform().R()).component(cmpt), rank());
     }

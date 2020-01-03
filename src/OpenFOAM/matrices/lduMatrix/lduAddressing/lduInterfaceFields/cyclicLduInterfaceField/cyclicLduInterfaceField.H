@@ -76,7 +76,10 @@ public:
             virtual const transformer& transform() const = 0;
 
             //- Is the transform required
-            virtual bool doTransform() const = 0;
+            bool transforms() const
+            {
+                return transform().rotates() && rank() != 0;
+            }
 
             //- Return rank of component for transform
             virtual int rank() const = 0;
@@ -109,7 +112,7 @@ inline void Foam::cyclicLduInterfaceField::transformCoupleField
     Field<Type>& f
 ) const
 {
-    if (doTransform())
+    if (transforms())
     {
         transform().transform(f, f);
     }
