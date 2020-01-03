@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,7 +108,7 @@ void thixotropicViscosity::correct
 {
     const kinematicSingleLayer& film = filmType<kinematicSingleLayer>();
 
-    const volVectorField& U = film.U();
+    const volVectorField& Us = film.Us();
     const volVectorField& Uw = film.Uw();
     const volScalarField& delta = film.delta();
     const volScalarField alphaRho = film.alpha()*film.rho();
@@ -119,7 +119,7 @@ void thixotropicViscosity::correct
     const volScalarField gDot
     (
         "gDot",
-        coverage*mag(U - Uw)/(delta + film.deltaSmall())
+        coverage*mag(Us - Uw)/(delta + film.deltaSmall())
     );
 
     const dimensionedScalar alphaRho0
