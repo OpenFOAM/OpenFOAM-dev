@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -957,6 +957,8 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::mergeBaffles
             );
         }
     }
+
+    mesh_.clearOut();
 
     // Change the mesh (no inflation)
     autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
@@ -2767,6 +2769,8 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::dupNonManifoldPoints
     // Insert changes into meshMod
     pointDuplicator.setRefinement(regionSide, meshMod);
 
+    mesh_.clearOut();
+
     // Change the mesh (no inflation, parallel sync)
     autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
 
@@ -3398,6 +3402,8 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::meshRefinement::zonify
             );
         }
     }
+
+    mesh_.clearOut();
 
     // Change the mesh (no inflation, parallel sync)
     autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
