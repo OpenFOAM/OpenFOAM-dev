@@ -36,6 +36,7 @@ SourceFiles
 #define cyclicAMIPolyPatch_H
 
 #include "coupledPolyPatch.H"
+#include "cyclicTransform.H"
 #include "AMIInterpolation.H"
 #include "polyBoundaryMesh.H"
 #include "coupleGroupIdentifier.H"
@@ -51,7 +52,8 @@ namespace Foam
 
 class cyclicAMIPolyPatch
 :
-    public coupledPolyPatch
+    public coupledPolyPatch,
+    public cyclicTransform
 {
     // Private Member Functions
 
@@ -319,73 +321,78 @@ public:
             virtual const scalarField& neighbWeightsSum() const;
 
 
+        // Transformations
 
-            // Transformations
+            //- Return transformation between the coupled patches
+            virtual const transformer& transform() const
+            {
+                return cyclicTransform::transform();
+            }
 
-                //- Axis of rotation for rotational cyclic AMI
-                inline const vector& rotationAxis() const;
+            //- Axis of rotation for rotational cyclic AMI
+            inline const vector& rotationAxis() const;
 
-                //- Point on axis of rotation for rotational cyclic AMI
-                inline const point& rotationCentre() const;
+            //- Point on axis of rotation for rotational cyclic AMI
+            inline const point& rotationCentre() const;
 
-                //- Transform patch-based positions from nbr side to this side
-                virtual void transformPosition(pointField&) const;
+            //- Transform patch-based positions from nbr side to this side
+            virtual void transformPosition(pointField&) const;
 
-                //- Transform a patch-based position from nbr side to this side
-                virtual void transformPosition
-                (
-                    point& l,
-                    const label facei
-                ) const;
+            //- Transform a patch-based position from nbr side to this side
+            virtual void transformPosition
+            (
+                point& l,
+                const label facei
+            ) const;
 
-                //- Transform a patch-based direction from nbr side to this side
-                virtual void transformDirection
-                (
-                    vector& d,
-                    const label facei
-                ) const;
+            //- Transform a patch-based direction from nbr side to this side
+            virtual void transformDirection
+            (
+                vector& d,
+                const label facei
+            ) const;
 
-                //- Transform a patch-based position from this side to nbr side
-                virtual void reverseTransformPosition
-                (
-                    point& l,
-                    const label facei
-                ) const;
+            //- Transform a patch-based position from this side to nbr side
+            virtual void reverseTransformPosition
+            (
+                point& l,
+                const label facei
+            ) const;
 
-                //- Transform a patch-based direction from this side to nbr side
-                virtual void reverseTransformDirection
-                (
-                    vector& d,
-                    const label facei
-                ) const;
+            //- Transform a patch-based direction from this side to nbr side
+            virtual void reverseTransformDirection
+            (
+                vector& d,
+                const label facei
+            ) const;
 
 
-            // Interpolations
+        // Interpolations
 
-                //- Interpolate field
-                template<class Type>
-                tmp<Field<Type>> interpolate
-                (
-                    const Field<Type>& fld,
-                    const UList<Type>& defaultValues = UList<Type>()
-                ) const;
+            //- Interpolate field
+            template<class Type>
+            tmp<Field<Type>> interpolate
+            (
+                const Field<Type>& fld,
+                const UList<Type>& defaultValues = UList<Type>()
+            ) const;
 
-                //- Interpolate tmp field
-                template<class Type>
-                tmp<Field<Type>> interpolate
-                (
-                    const tmp<Field<Type>>& tFld,
-                    const UList<Type>& defaultValues = UList<Type>()
-                ) const;
+            //- Interpolate tmp field
+            template<class Type>
+            tmp<Field<Type>> interpolate
+            (
+                const tmp<Field<Type>>& tFld,
+                const UList<Type>& defaultValues = UList<Type>()
+            ) const;
 
-                //- Interpolate field component
-                tmp<scalarField> interpolate
-                (
-                    const scalarField& field,
-                    const direction cmpt,
-                    const direction rank,
-                    const scalarUList& defaultValues = scalarUList()
-                ) const;
+            //- Interpolate field component
+            tmp<scalarField> interpolate
+            (
+                const scalarField& field,
+                const direction cmpt,
+                const direction rank,
+                const scalarUList& defaultValues = scalarUList()
+            ) const;
 
 
         //- Calculate the patch geometry

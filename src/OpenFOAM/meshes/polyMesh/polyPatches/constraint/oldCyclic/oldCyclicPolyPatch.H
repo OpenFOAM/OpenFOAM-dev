@@ -40,6 +40,7 @@ SourceFiles
 #define oldCyclicPolyPatch_H
 
 #include "coupledPolyPatch.H"
+#include "cyclicTransform.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,7 +53,8 @@ namespace Foam
 
 class oldCyclicPolyPatch
 :
-    public coupledPolyPatch
+    public coupledPolyPatch,
+    public cyclicTransform
 {
     // Private Data
 
@@ -241,26 +243,30 @@ public:
 
     // Member Functions
 
-        // Access
+        //- Does this side own the patch ?
+        virtual bool owner() const
+        {
+            NotImplemented;
+            return true;
+        }
 
-            //- Does this side own the patch ?
-            virtual bool owner() const
-            {
-                NotImplemented;
-                return true;
-            }
+        //- Return transformation between the coupled patches
+        virtual const transformer& transform() const
+        {
+            return cyclicTransform::transform();
+        }
 
-            //- Transform a patch-based position from other side to this side
-            virtual void transformPosition(pointField& l) const
-            {
-                NotImplemented;
-            }
+        //- Transform a patch-based position from other side to this side
+        virtual void transformPosition(pointField& l) const
+        {
+            NotImplemented;
+        }
 
-            //- Transform a patch-based position from other side to this side
-            virtual void transformPosition(point&, const label facei) const
-            {
-                NotImplemented;
-            }
+        //- Transform a patch-based position from other side to this side
+        virtual void transformPosition(point&, const label facei) const
+        {
+            NotImplemented;
+        }
 
         //- Calculate the patch geometry
         virtual void calcGeometry

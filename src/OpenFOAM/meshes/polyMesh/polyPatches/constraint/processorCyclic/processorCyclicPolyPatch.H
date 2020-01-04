@@ -321,7 +321,7 @@ public:
         }
 
         //- Type of transform
-        virtual transformTypes transformType() const
+        virtual cyclicTransform::transformTypes transformType() const
         {
             return referPatch().transformType();
         }

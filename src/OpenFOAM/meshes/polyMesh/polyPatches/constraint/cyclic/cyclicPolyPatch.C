@@ -778,6 +778,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
 )
 :
     coupledPolyPatch(name, dict, index, bm, patchType, ordering),
+    cyclicTransform(dict),
     neighbPatchName_(dict.lookupOrDefault("neighbourPatch", word::null)),
     coupleGroup_(dict),
     neighbPatchID_(-1),
@@ -847,6 +848,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
 )
 :
     coupledPolyPatch(pp, bm),
+    cyclicTransform(pp),
     neighbPatchName_(pp.neighbPatchName_),
     coupleGroup_(pp.coupleGroup_),
     neighbPatchID_(-1),
@@ -871,6 +873,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
 )
 :
     coupledPolyPatch(pp, bm, index, newSize, newStart),
+    cyclicTransform(pp),
     neighbPatchName_(neighbName),
     coupleGroup_(pp.coupleGroup_),
     neighbPatchID_(-1),
@@ -902,6 +905,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
 )
 :
     coupledPolyPatch(pp, bm, index, mapAddressing, newStart),
+    cyclicTransform(pp),
     neighbPatchName_(pp.neighbPatchName_),
     coupleGroup_(pp.coupleGroup_),
     neighbPatchID_(-1),
@@ -1547,6 +1551,8 @@ void Foam::cyclicPolyPatch::write(Ostream& os) const
     }
 
     coupleGroup_.write(os);
+
+    cyclicTransform::write(os);
 
     switch (transformType())
     {

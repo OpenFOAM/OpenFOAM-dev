@@ -469,6 +469,7 @@ $(basicPolyPatches)/coupled/coupledPolyPatch.C
 $(basicPolyPatches)/generic/genericPolyPatch.C
 
 constraintPolyPatches = $(polyPatches)/constraint
+$(constraintPolyPatches)/cyclic/cyclicTransform.C
 $(constraintPolyPatches)/cyclic/cyclicPolyPatch.C
 $(constraintPolyPatches)/cyclicSlip/cyclicSlipPolyPatch.C
 $(constraintPolyPatches)/oldCyclic/oldCyclicPolyPatch.C

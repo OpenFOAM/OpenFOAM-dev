@@ -87,6 +87,9 @@ public:
 
         static const transformer I;
 
+        //- Null transformer
+        static const transformer null;
+
 
     // Constructors
 

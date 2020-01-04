@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,9 +35,7 @@ License
 
 namespace Foam
 {
-
-defineTypeNameAndDebug(regionSplit, 0);
-
+    defineTypeNameAndDebug(regionSplit, 0);
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

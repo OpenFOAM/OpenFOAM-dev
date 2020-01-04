@@ -567,6 +567,7 @@ Foam::oldCyclicPolyPatch::oldCyclicPolyPatch
 )
 :
     coupledPolyPatch(name, dict, index, bm, patchType),
+    cyclicTransform(dict),
     featureCos_(0.9),
     rotationAxis_(Zero),
     rotationCentre_(Zero)
@@ -614,6 +615,7 @@ Foam::oldCyclicPolyPatch::oldCyclicPolyPatch
 )
 :
     coupledPolyPatch(pp, bm),
+    cyclicTransform(pp),
     featureCos_(pp.featureCos_),
     rotationAxis_(pp.rotationAxis_),
     rotationCentre_(pp.rotationCentre_)
@@ -630,6 +632,7 @@ Foam::oldCyclicPolyPatch::oldCyclicPolyPatch
 )
 :
     coupledPolyPatch(pp, bm, index, newSize, newStart),
+    cyclicTransform(pp),
     featureCos_(pp.featureCos_),
     rotationAxis_(pp.rotationAxis_),
     rotationCentre_(pp.rotationCentre_)
@@ -1203,8 +1206,10 @@ void Foam::oldCyclicPolyPatch::write(Ostream& os) const
     writeEntry(os, "nFaces", size());
     writeEntry(os, "startFace", start());
 
-
     writeEntry(os, "featureCos", featureCos_);
+
+    cyclicTransform::write(os);
+
     switch (transformType())
     {
         case ROTATIONAL:

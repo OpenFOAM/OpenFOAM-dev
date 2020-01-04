@@ -47,6 +47,7 @@ SourceFiles
 #define cyclicPolyPatch_H
 
 #include "coupledPolyPatch.H"
+#include "cyclicTransform.H"
 #include "edgeList.H"
 #include "polyBoundaryMesh.H"
 #include "diagTensorField.H"
@@ -63,7 +64,8 @@ namespace Foam
 
 class cyclicPolyPatch
 :
-    public coupledPolyPatch
+    public coupledPolyPatch,
+    public cyclicTransform
 {
     // Private Data
 
@@ -358,6 +360,12 @@ public:
         //  Demand driven calculation. Does primitivePatch::clearOut after
         //  calculation!
         const edgeList& coupledEdges() const;
+
+        //- Return transformation between the coupled patches
+        virtual const transformer& transform() const
+        {
+            return cyclicTransform::transform();
+        }
 
         //- Transform a patch-based position from other side to this side
         virtual void transformPosition(pointField& l) const;

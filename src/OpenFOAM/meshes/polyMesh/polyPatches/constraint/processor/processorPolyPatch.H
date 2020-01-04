@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -328,6 +328,12 @@ public:
         virtual label comm() const
         {
             return boundaryMesh().mesh().comm();
+        }
+
+        //- Return null transform between processor patches
+        virtual const transformer& transform() const
+        {
+            return transformer::null;
         }
 
         //- Transform a patch-based position from other side to this side
