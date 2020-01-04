@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,7 +147,7 @@ void Foam::syncTools::syncPointMap
                 // Get data per patchPoint in neighbouring point numbers.
 
                 const labelList& meshPts = procPatch.meshPoints();
-                const labelList& nbrPts = procPatch.neighbPoints();
+                const labelList& nbrPts = procPatch.nbrPoints();
 
                 // Extract local values. Create map from nbrPoint to value.
                 // Note: how small initial size?
@@ -219,7 +219,7 @@ void Foam::syncTools::syncPointMap
             {
                 // Owner does all.
 
-                const cyclicPolyPatch& nbrPatch = cycPatch.neighbPatch();
+                const cyclicPolyPatch& nbrPatch = cycPatch.nbrPatch();
                 const edgeList& coupledPoints = cycPatch.coupledPoints();
                 const labelList& meshPtsA = cycPatch.meshPoints();
                 const labelList& meshPtsB = nbrPatch.meshPoints();
@@ -429,7 +429,7 @@ void Foam::syncTools::syncEdgeMap
 
                 const edgeList& edges = procPatch.edges();
                 const labelList& meshPts = procPatch.meshPoints();
-                const labelList& nbrPts = procPatch.neighbPoints();
+                const labelList& nbrPts = procPatch.nbrPoints();
 
                 EdgeMap<T> patchInfo(edges.size() / 20);
 
@@ -516,7 +516,7 @@ void Foam::syncTools::syncEdgeMap
                 const edgeList& coupledEdges = cycPatch.coupledEdges();
                 const labelList& meshPtsA = cycPatch.meshPoints();
                 const edgeList& edgesA = cycPatch.edges();
-                const cyclicPolyPatch& nbrPatch = cycPatch.neighbPatch();
+                const cyclicPolyPatch& nbrPatch = cycPatch.nbrPatch();
                 const labelList& meshPtsB = nbrPatch.meshPoints();
                 const edgeList& edgesB = nbrPatch.edges();
 
@@ -830,7 +830,7 @@ void Foam::syncTools::syncEdgeMap
 //                Field<T> patchInfo(procPatch.nPoints());
 //
 //                const labelList& meshPts = procPatch.meshPoints();
-//                const labelList& nbrPts = procPatch.neighbPoints();
+//                const labelList& nbrPts = procPatch.nbrPoints();
 //
 //                forAll(nbrPts, pointi)
 //                {
@@ -892,7 +892,7 @@ void Foam::syncTools::syncEdgeMap
 //
 //                const edgeList& coupledPoints = cycPatch.coupledPoints();
 //                const labelList& meshPts = cycPatch.meshPoints();
-//                const cyclicPolyPatch& nbrPatch = cycPatch.neighbPatch();
+//                const cyclicPolyPatch& nbrPatch = cycPatch.nbrPatch();
 //                const labelList& nbrMeshPoints = nbrPatch.meshPoints();
 //
 //                Field<T> half0Values(coupledPoints.size());
@@ -1381,7 +1381,7 @@ void Foam::syncTools::syncBoundaryFaceList
             if (cycPatch.owner())
             {
                 // Owner does all.
-                const cyclicPolyPatch& nbrPatch = cycPatch.neighbPatch();
+                const cyclicPolyPatch& nbrPatch = cycPatch.nbrPatch();
                 label ownStart = cycPatch.start()-mesh.nInternalFaces();
                 label nbrStart = nbrPatch.start()-mesh.nInternalFaces();
 
@@ -1506,7 +1506,7 @@ void Foam::syncTools::syncFaceList
             if (cycPatch.owner())
             {
                 // Owner does all.
-                const cyclicPolyPatch& nbrPatch = cycPatch.neighbPatch();
+                const cyclicPolyPatch& nbrPatch = cycPatch.nbrPatch();
 
                 for (label i = 0; i < cycPatch.size(); i++)
                 {

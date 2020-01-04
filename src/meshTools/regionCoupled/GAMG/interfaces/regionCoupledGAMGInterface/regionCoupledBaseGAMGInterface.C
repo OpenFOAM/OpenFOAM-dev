@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,7 +130,7 @@ Foam::regionCoupledBaseGAMGInterface::regionCoupledBaseGAMGInterface
                 nbrLduInterface
                 (
                     nbrLevel,
-                    neighbPatchID()
+                    nbrPatchID()
                 ).faceCells();
 
 
@@ -218,7 +218,7 @@ internalFieldTransfer
 ) const
 {
     /*
-    // const labelUList& nbrFaceCells = neighbPatch().faceCells();
+    // const labelUList& nbrFaceCells = nbrPatch().faceCells();
 
     const labelUList& nbrFaceCells = nbrLduInterface().faceCells();
 

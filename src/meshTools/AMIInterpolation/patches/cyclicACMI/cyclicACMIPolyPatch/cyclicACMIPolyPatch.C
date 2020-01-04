@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ void Foam::cyclicACMIPolyPatch::resetAMI() const
         if (tgtMask_.size())
         {
             const cyclicACMIPolyPatch& cp =
-                refCast<const cyclicACMIPolyPatch>(this->neighbPatch());
+                refCast<const cyclicACMIPolyPatch>(this->nbrPatch());
             const polyPatch& pp = cp.nonOverlapPatch();
 
             vectorField::subField Sf = cp.faceAreas();
@@ -349,9 +349,9 @@ Foam::cyclicACMIPolyPatch::~cyclicACMIPolyPatch()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::cyclicACMIPolyPatch& Foam::cyclicACMIPolyPatch::neighbPatch() const
+const Foam::cyclicACMIPolyPatch& Foam::cyclicACMIPolyPatch::nbrPatch() const
 {
-    const polyPatch& pp = this->boundaryMesh()[neighbPatchID()];
+    const polyPatch& pp = this->boundaryMesh()[nbrPatchID()];
     return refCast<const cyclicACMIPolyPatch>(pp);
 }
 

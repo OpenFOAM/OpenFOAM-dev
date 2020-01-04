@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,9 +104,9 @@ public:
         //- Cyclic interface functions
 
             //- Return neighbour processor number
-            virtual label neighbPatchID() const
+            virtual label nbrPatchID() const
             {
-                return fineRegionCoupledLduInterface_.neighbPatchID();
+                return fineRegionCoupledLduInterface_.nbrPatchID();
             }
 
             virtual bool owner() const
@@ -114,11 +114,11 @@ public:
                 return fineRegionCoupledLduInterface_.owner();
             }
 
-            virtual const regionCoupledBaseGAMGInterface& neighbPatch() const
+            virtual const regionCoupledBaseGAMGInterface& nbrPatch() const
             {
                 return dynamic_cast<const regionCoupledBaseGAMGInterface&>
                 (
-                    fineRegionCoupledLduInterface_.neighbPatch()
+                    fineRegionCoupledLduInterface_.nbrPatch()
                 );
             }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -371,7 +371,7 @@ private:
                 const labelList& neiLevel,
                 const pointField& neiCc,
                 labelList& ownPatch,
-                labelList& neiPatch
+                labelList& nbrPatch
             ) const;
 
             //- Repatches external face or creates baffle for internal face
@@ -381,7 +381,7 @@ private:
             (
                 const label facei,
                 const label ownPatch,
-                const label neiPatch,
+                const label nbrPatch,
                 polyTopoChange& meshMod
             ) const;
 
@@ -854,12 +854,12 @@ public:
             autoPtr<mapPolyMesh> dupNonManifoldPoints();
 
             //- Create baffle for every internal face where ownPatch != -1.
-            //  External faces get repatched according to ownPatch (neiPatch
+            //  External faces get repatched according to ownPatch (nbrPatch
             //  should be -1 for these)
             autoPtr<mapPolyMesh> createBaffles
             (
                 const labelList& ownPatch,
-                const labelList& neiPatch
+                const labelList& nbrPatch
             );
 
             //- Debug helper: check faceZones are not on processor patches

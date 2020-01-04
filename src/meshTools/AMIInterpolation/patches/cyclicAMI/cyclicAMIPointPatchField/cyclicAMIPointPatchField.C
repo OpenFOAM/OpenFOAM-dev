@@ -132,7 +132,7 @@ void Foam::cyclicAMIPointPatchField<Type>::swapAddSeparated
         // all swaps on the side that gets evaluated first.
 
         // Get neighbouring pointPatch
-        const cyclicAMIPointPatch& nbrPatch = cyclicAMIPatch_.neighbPatch();
+        const cyclicAMIPointPatch& nbrPatch = cyclicAMIPatch_.nbrPatch();
 
         // Get neighbouring pointPatchField
         const GeometricField<Type, pointPatchField, pointMesh>& fld =
@@ -196,7 +196,7 @@ void Foam::cyclicAMIPointPatchField<Type>::swapAddSeparated
                 Field<Type> nbrFcFld(nbrPpi().pointToFaceInterpolate(nbrPtFld));
 
                 fcFld =
-                    cyclicAMIPatch_.cyclicAMIPatch().neighbPatch().interpolate
+                    cyclicAMIPatch_.cyclicAMIPatch().nbrPatch().interpolate
                     (
                         fcFld,
                         nbrFcFld
@@ -205,7 +205,7 @@ void Foam::cyclicAMIPointPatchField<Type>::swapAddSeparated
             else
             {
                 fcFld =
-                    cyclicAMIPatch_.cyclicAMIPatch().neighbPatch().interpolate
+                    cyclicAMIPatch_.cyclicAMIPatch().nbrPatch().interpolate
                     (
                         fcFld
                     );

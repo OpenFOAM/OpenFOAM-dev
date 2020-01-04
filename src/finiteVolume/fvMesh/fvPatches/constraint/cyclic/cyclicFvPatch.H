@@ -94,9 +94,9 @@ public:
             }
 
             //- Return neighbour
-            virtual label neighbPatchID() const
+            virtual label nbrPatchID() const
             {
-                return cyclicPolyPatch_.neighbPatchID();
+                return cyclicPolyPatch_.nbrPatchID();
             }
 
             virtual bool owner() const
@@ -105,11 +105,11 @@ public:
             }
 
             //- Return processor number
-            virtual const cyclicFvPatch& neighbPatch() const
+            virtual const cyclicFvPatch& nbrPatch() const
             {
                 return refCast<const cyclicFvPatch>
                 (
-                    this->boundaryMesh()[cyclicPolyPatch_.neighbPatchID()]
+                    this->boundaryMesh()[cyclicPolyPatch_.nbrPatchID()]
                 );
             }
 
@@ -123,7 +123,7 @@ public:
             {
                 return refCast<const cyclicFvPatch>
                 (
-                    this->boundaryMesh()[cyclicPolyPatch_.neighbPatchID()]
+                    this->boundaryMesh()[cyclicPolyPatch_.nbrPatchID()]
                 );
             }
 

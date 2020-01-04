@@ -55,7 +55,7 @@ class cyclicGAMGInterface
     // Private Data
 
         //- Neighbour patch number
-        label neighbPatchID_;
+        label nbrPatchID_;
 
         //- Am I owner?
         bool owner_;
@@ -116,9 +116,9 @@ public:
         //- Cyclic interface functions
 
             //- Return neighbour processor number
-            virtual label neighbPatchID() const
+            virtual label nbrPatchID() const
             {
-                return neighbPatchID_;
+                return nbrPatchID_;
             }
 
             virtual bool owner() const
@@ -126,11 +126,11 @@ public:
                 return owner_;
             }
 
-            virtual const cyclicGAMGInterface& neighbPatch() const
+            virtual const cyclicGAMGInterface& nbrPatch() const
             {
                 return dynamic_cast<const cyclicGAMGInterface&>
                 (
-                    coarseInterfaces_[neighbPatchID()]
+                    coarseInterfaces_[nbrPatchID()]
                 );
             }
 

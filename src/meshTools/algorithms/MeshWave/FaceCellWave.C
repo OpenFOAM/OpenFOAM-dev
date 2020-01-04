@@ -88,7 +88,7 @@ namespace Foam
                     }
                     else
                     {
-                        meshFacei = patch_.neighbPatch().start() + facei;
+                        meshFacei = patch_.nbrPatch().start() + facei;
                     }
                     x.updateFace
                     (
@@ -260,7 +260,7 @@ void Foam::FaceCellWave<Type, TrackingData>::checkCyclic
     // For debugging: check status on both sides of cyclic
 
     const cyclicPolyPatch& nbrPatch =
-        refCast<const cyclicPolyPatch>(patch).neighbPatch();
+        refCast<const cyclicPolyPatch>(patch).nbrPatch();
 
     forAll(patch, patchFacei)
     {
@@ -640,7 +640,7 @@ void Foam::FaceCellWave<Type, TrackingData>::handleCyclicPatches()
         if (isA<cyclicPolyPatch>(patch))
         {
             const cyclicPolyPatch& nbrPatch =
-                refCast<const cyclicPolyPatch>(patch).neighbPatch();
+                refCast<const cyclicPolyPatch>(patch).nbrPatch();
 
             // Allocate buffers
             label nReceiveFaces;
@@ -732,7 +732,7 @@ void Foam::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
 
             {
                 const cyclicAMIPolyPatch& nbrPatch =
-                    refCast<const cyclicAMIPolyPatch>(patch).neighbPatch();
+                    refCast<const cyclicAMIPolyPatch>(patch).nbrPatch();
 
                 // Get nbrPatch data (so not just changed faces)
                 typename List<Type>::subList sendInfo
@@ -784,16 +784,16 @@ void Foam::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
                 }
                 else
                 {
-                    forAll(cycPatch.neighbPatch().AMIs(), i)
+                    forAll(cycPatch.nbrPatch().AMIs(), i)
                     {
                         List<Type> sendInfoT(sendInfo);
                         transform
                         (
-                            cycPatch.neighbPatch().AMITransforms()[i],
+                            cycPatch.nbrPatch().AMITransforms()[i],
                             sendInfoT.size(),
                             sendInfoT
                         );
-                        cycPatch.neighbPatch().AMIs()[i].interpolateToTarget
+                        cycPatch.nbrPatch().AMIs()[i].interpolateToTarget
                         (
                             sendInfoT,
                             cmb,

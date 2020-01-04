@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -179,7 +179,7 @@ public:
                     index,
                     newSize,
                     newStart,
-                    neighbPatchName(),
+                    nbrPatchName(),
                     nonOverlapPatchName_
                 )
             );
@@ -224,7 +224,7 @@ public:
             inline bool updated() const;
 
             //- Return a reference to the neighbour patch
-            virtual const cyclicACMIPolyPatch& neighbPatch() const;
+            virtual const cyclicACMIPolyPatch& nbrPatch() const;
 
             //- Non-overlapping patch name
             inline const word& nonOverlapPatchName() const;

@@ -200,7 +200,7 @@ int Foam::processorCyclicPolyPatch::tag() const
         }
         else
         {
-            tag_ = Hash<word>()(cycPatch.neighbPatch().name()) % 32768u;
+            tag_ = Hash<word>()(cycPatch.nbrPatch().name()) % 32768u;
         }
 
         if (tag_ == Pstream::msgType() || tag_ == -1)
@@ -271,7 +271,7 @@ void Foam::processorCyclicPolyPatch::calcGeometry(PstreamBuffers& pBufs)
             neighbFaceCellCentres()
         );
 
-        const_cast<cyclicPolyPatch&>(pp.neighbPatch()).calcGeometry
+        const_cast<cyclicPolyPatch&>(pp.nbrPatch()).calcGeometry
         (
             *this,
             neighbFaceCentres(),

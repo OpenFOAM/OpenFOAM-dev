@@ -114,7 +114,7 @@ void Foam::cyclicGAMGInterfaceField::updateInterfaceMatrix
     // Get neighbouring field
     scalarField pnf
     (
-        cyclicInterface_.neighbPatch().interfaceInternalField(psiInternal)
+        cyclicInterface_.nbrPatch().interfaceInternalField(psiInternal)
     );
 
     transformCoupleField(pnf, cmpt);

@@ -96,7 +96,7 @@ void Foam::cyclicAMIGAMGInterfaceField::updateInterfaceMatrix
 ) const
 {
     const cyclicAMIGAMGInterface& thisInterface = cyclicAMIInterface_;
-    const cyclicAMIGAMGInterface& neiInterface = thisInterface.neighbPatch();
+    const cyclicAMIGAMGInterface& neiInterface = thisInterface.nbrPatch();
 
     // Get neighbouring field
     scalarField pnf(neiInterface.interfaceInternalField(psiInternal));

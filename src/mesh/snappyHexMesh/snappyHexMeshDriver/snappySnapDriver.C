@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1961,7 +1961,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::snappySnapDriver::repatchToSurface
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     labelList ownPatch(mesh.nFaces(), -1);
-    labelList neiPatch(mesh.nFaces(), -1);
+    labelList nbrPatch(mesh.nFaces(), -1);
 
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
@@ -1972,7 +1972,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::snappySnapDriver::repatchToSurface
         forAll(pp, i)
         {
             ownPatch[pp.start()+i] = patchi;
-            neiPatch[pp.start()+i] = patchi;
+            nbrPatch[pp.start()+i] = patchi;
         }
     }
 
@@ -1984,7 +1984,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::snappySnapDriver::repatchToSurface
         if (closestPatch[i] != -1 && closestPatch[i] != ownPatch[facei])
         {
             ownPatch[facei] = closestPatch[i];
-            neiPatch[facei] = closestPatch[i];
+            nbrPatch[facei] = closestPatch[i];
             nChanged++;
         }
     }
@@ -1993,7 +1993,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::snappySnapDriver::repatchToSurface
         << " faces in = " << mesh.time().cpuTimeIncrement() << " s\n" << nl
         << endl;
 
-    return meshRefiner_.createBaffles(ownPatch, neiPatch);
+    return meshRefiner_.createBaffles(ownPatch, nbrPatch);
 }
 
 

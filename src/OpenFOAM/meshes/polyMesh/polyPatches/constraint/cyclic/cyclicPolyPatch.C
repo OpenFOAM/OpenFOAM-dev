@@ -51,10 +51,10 @@ namespace Foam
 
 void Foam::cyclicPolyPatch::calcTransformTensors
 (
-    const vectorField& Cf,
-    const vectorField& Cr,
-    const vectorField& nf,
-    const vectorField& nr,
+    const vectorField& thisPatchCtrs,
+    const vectorField& nbrPatchCtrs,
+    const vectorField& thisPatchNormals,
+    const vectorField& nbrPatchNormals,
     const scalarField& smallDist,
     const scalar absTol,
     const orderingType ordering,
@@ -65,11 +65,12 @@ void Foam::cyclicPolyPatch::calcTransformTensors
     {
         Pout<< "coupledPolyPatch::calcTransformTensors : " << name() << endl
             << "    transform:" << transformTypeNames[transform] << nl
-            << "    (half)size:" << Cf.size() << nl
+            << "    (half)size:" << thisPatchCtrs.size() << nl
             << "    absTol:" << absTol << nl
             << "    smallDist min:" << min(smallDist) << nl
             << "    smallDist max:" << max(smallDist) << nl
-            << "    sum(mag(nf & nr)):" << sum(mag(nf & nr)) << endl;
+            << "    sum(mag(thisPatchNormals & nbrPatchNormals)):"
+            << sum(mag(thisPatchNormals & nbrPatchNormals)) << endl;
     }
 
     // Tolerance calculation.
@@ -80,14 +81,14 @@ void Foam::cyclicPolyPatch::calcTransformTensors
     // Then the overall error of summing the normals is sqrt(size())*absTol
     // - separation calculation: pass in from the outside an allowable error.
 
-    if (Cf.size() == 0)
+    if (thisPatchCtrs.size() == 0)
     {
         // Dummy geometry. Assume non-separated, parallel.
         transform_ = transformer();
     }
     else
     {
-        scalar error = absTol*Foam::sqrt(1.0*Cf.size());
+        scalar error = absTol*Foam::sqrt(1.0*thisPatchCtrs.size());
 
         if (debug)
         {
@@ -100,19 +101,31 @@ void Foam::cyclicPolyPatch::calcTransformTensors
          || (
                 transform != TRANSLATIONAL
              && ordering != COINCIDENTFULLMATCH
-             && (sum(mag(nf & nr)) < Cf.size() - error)
+             && (
+                    sum(mag(thisPatchNormals & nbrPatchNormals))
+                  < thisPatchCtrs.size() - error
+                )
             )
         )
         {
             // Type is rotation or unknown and normals not aligned
 
-            tensorField forwardT(Cf.size());
-            tensorField reverseT(Cf.size());
+            tensorField forwardT(thisPatchCtrs.size());
+            tensorField reverseT(thisPatchCtrs.size());
 
             forAll(forwardT, facei)
             {
-                forwardT[facei] = rotationTensor(-nr[facei], nf[facei]);
-                reverseT[facei] = rotationTensor(nf[facei], -nr[facei]);
+                forwardT[facei] = rotationTensor
+                (
+                    -nbrPatchNormals[facei],
+                    thisPatchNormals[facei]
+                );
+
+                reverseT[facei] = rotationTensor
+                (
+                    thisPatchNormals[facei],
+                    -nbrPatchNormals[facei]
+                );
             }
 
             if (sum(mag(forwardT - forwardT[0])) > error)
@@ -137,7 +150,7 @@ void Foam::cyclicPolyPatch::calcTransformTensors
             bool sameSeparation = true;
             bool doneWarning = false;
 
-            const vectorField separation(Cr - Cf);
+            const vectorField separation(nbrPatchCtrs - thisPatchCtrs);
 
             forAll(separation, facei)
             {
@@ -228,29 +241,29 @@ void Foam::cyclicPolyPatch::calcTransforms()
 {
     if (size())
     {
-        // Half0
-        const cyclicPolyPatch& half0 = *this;
-        vectorField half0Areas(half0.size());
-        forAll(half0, facei)
+        // thisPatch
+        const cyclicPolyPatch& thisPatch = *this;
+        vectorField thisPatchAreas(thisPatch.size());
+        forAll(thisPatch, facei)
         {
-            half0Areas[facei] = half0[facei].area(half0.points());
+            thisPatchAreas[facei] = thisPatch[facei].area(thisPatch.points());
         }
 
-        // Half1
-        const cyclicPolyPatch& half1 = neighbPatch();
-        vectorField half1Areas(half1.size());
-        forAll(half1, facei)
+        // nbrPatch
+        const cyclicPolyPatch& nbrPatch = this->nbrPatch();
+        vectorField nbrPatchAreas(nbrPatch.size());
+        forAll(nbrPatch, facei)
         {
-            half1Areas[facei] = half1[facei].area(half1.points());
+            nbrPatchAreas[facei] = nbrPatch[facei].area(nbrPatch.points());
         }
 
         calcTransforms
         (
-            half0,
-            half0.faceCentres(),
-            half0Areas,
-            half1.faceCentres(),
-            half1Areas
+            thisPatch,
+            thisPatch.faceCentres(),
+            thisPatchAreas,
+            nbrPatch.faceCentres(),
+            nbrPatchAreas
         );
     }
 }
@@ -258,11 +271,11 @@ void Foam::cyclicPolyPatch::calcTransforms()
 
 void Foam::cyclicPolyPatch::calcTransforms
 (
-    const primitivePatch& half0,
-    const pointField& half0Ctrs,
-    const vectorField& half0Areas,
-    const pointField& half1Ctrs,
-    const vectorField& half1Areas
+    const primitivePatch& thisPatch,
+    const pointField& thisPatchCtrs,
+    const vectorField& thisPatchAreas,
+    const pointField& nbrPatchCtrs,
+    const vectorField& nbrPatchAreas
 )
 {
     if (debug && owner())
@@ -272,27 +285,28 @@ void Foam::cyclicPolyPatch::calcTransforms
             fileName nm0(casePath/name()+"_faces.obj");
             Pout<< "cyclicPolyPatch::calcTransforms : Writing " << name()
                 << " faces to OBJ file " << nm0 << endl;
-            writeOBJ(nm0, half0, half0.points());
+            writeOBJ(nm0, thisPatch, thisPatch.points());
         }
-        const cyclicPolyPatch& half1 = neighbPatch();
+        const cyclicPolyPatch& nbrPatch = this->nbrPatch();
         {
-            fileName nm1(casePath/half1.name()+"_faces.obj");
-            Pout<< "cyclicPolyPatch::calcTransforms : Writing " << half1.name()
+            fileName nm1(casePath/nbrPatch.name()+"_faces.obj");
+            Pout<< "cyclicPolyPatch::calcTransforms : Writing "
+                << nbrPatch.name()
                 << " faces to OBJ file " << nm1 << endl;
-            writeOBJ(nm1, half1, half1.points());
+            writeOBJ(nm1, nbrPatch, nbrPatch.points());
         }
         {
-            OFstream str(casePath/name()+"_to_" + half1.name() + ".obj");
+            OFstream str(casePath/name()+"_to_" + nbrPatch.name() + ".obj");
             label vertI = 0;
             Pout<< "cyclicPolyPatch::calcTransforms :"
                 << " Writing coupled face centres as lines to " << str.name()
                 << endl;
-            forAll(half0Ctrs, i)
+            forAll(thisPatchCtrs, i)
             {
-                const point& p0 = half0Ctrs[i];
+                const point& p0 = thisPatchCtrs[i];
                 str << "v " << p0.x() << ' ' << p0.y() << ' ' << p0.z() << nl;
                 vertI++;
-                const point& p1 = half1Ctrs[i];
+                const point& p1 = nbrPatchCtrs[i];
                 str << "v " << p1.x() << ' ' << p1.y() << ' ' << p1.z() << nl;
                 vertI++;
                 str << "l " << vertI-1 << ' ' << vertI << nl;
@@ -303,42 +317,42 @@ void Foam::cyclicPolyPatch::calcTransforms
 
     // Some sanity checks
 
-    if (half0Ctrs.size() != half1Ctrs.size())
+    if (thisPatchCtrs.size() != nbrPatchCtrs.size())
     {
         FatalErrorInFunction
             << "For patch " << name()
-            << " there are " << half0Ctrs.size()
-            << " face centres, for the neighbour patch " << neighbPatch().name()
-            << " there are " << half1Ctrs.size()
+            << " there are " << thisPatchCtrs.size()
+            << " face centres, for the neighbour patch " << nbrPatch().name()
+            << " there are " << nbrPatchCtrs.size()
             << exit(FatalError);
     }
 
-    if (transformType() != neighbPatch().transformType())
+    if (transformType() != nbrPatch().transformType())
     {
         FatalErrorInFunction
             << "Patch " << name()
             << " has transform type " << transformTypeNames[transformType()]
-            << ", neighbour patch " << neighbPatchName()
+            << ", neighbour patch " << nbrPatchName()
             << " has transform type "
-            << neighbPatch().transformTypeNames[neighbPatch().transformType()]
+            << nbrPatch().transformTypeNames[nbrPatch().transformType()]
             << exit(FatalError);
     }
 
 
     // Calculate transformation tensors
 
-    if (half0Ctrs.size() > 0)
+    if (thisPatchCtrs.size() > 0)
     {
-        vectorField half0Normals(half0Areas.size());
-        vectorField half1Normals(half1Areas.size());
+        vectorField thisPatchNormals(thisPatchAreas.size());
+        vectorField nbrPatchNormals(nbrPatchAreas.size());
 
         scalar maxAreaDiff = -great;
         label maxAreaFacei = -1;
 
-        forAll(half0, facei)
+        forAll(thisPatch, facei)
         {
-            scalar magSf = mag(half0Areas[facei]);
-            scalar nbrMagSf = mag(half1Areas[facei]);
+            scalar magSf = mag(thisPatchAreas[facei]);
+            scalar nbrMagSf = mag(nbrPatchAreas[facei]);
             scalar avSf = (magSf + nbrMagSf)/2.0;
 
             if (magSf < rootVSmall && nbrMagSf < rootVSmall)
@@ -346,8 +360,8 @@ void Foam::cyclicPolyPatch::calcTransforms
                 // Undetermined normal. Use dummy normal to force separation
                 // check. (note use of sqrt(vSmall) since that is how mag
                 // scales)
-                half0Normals[facei] = point(1, 0, 0);
-                half1Normals[facei] = half0Normals[facei];
+                thisPatchNormals[facei] = point(1, 0, 0);
+                nbrPatchNormals[facei] = thisPatchNormals[facei];
             }
             else
             {
@@ -372,9 +386,9 @@ void Foam::cyclicPolyPatch::calcTransforms
                         << " matching tolerance:" << matchTolerance()
                          << endl
                         << "Mesh face:" << start()+facei
-                        << " fc:" << half0Ctrs[facei]
+                        << " fc:" << thisPatchCtrs[facei]
                         << endl
-                        << "Neighbour fc:" << half1Ctrs[facei]
+                        << "Neighbour fc:" << nbrPatchCtrs[facei]
                         << endl
                         << "If you are certain your matching is correct"
                         << " you can increase the 'matchTolerance' setting"
@@ -385,8 +399,8 @@ void Foam::cyclicPolyPatch::calcTransforms
                 }
                 else
                 {
-                    half0Normals[facei] = half0Areas[facei] / magSf;
-                    half1Normals[facei] = half1Areas[facei] / nbrMagSf;
+                    thisPatchNormals[facei] = thisPatchAreas[facei] / magSf;
+                    nbrPatchNormals[facei] = nbrPatchAreas[facei] / nbrMagSf;
                 }
             }
         }
@@ -398,8 +412,8 @@ void Foam::cyclicPolyPatch::calcTransforms
             Pout<< "cyclicPolyPatch::calcTransforms :"
                 << " patch:" << name()
                 << " Max area error:" << 100*maxAreaDiff << "% at face:"
-                << maxAreaFacei << " at:" << half0Ctrs[maxAreaFacei]
-                << " coupled face at:" << half1Ctrs[maxAreaFacei]
+                << maxAreaFacei << " at:" << thisPatchCtrs[maxAreaFacei]
+                << " coupled face at:" << nbrPatchCtrs[maxAreaFacei]
                 << endl;
         }
 
@@ -410,8 +424,8 @@ void Foam::cyclicPolyPatch::calcTransforms
         {
             // Calculate using the given rotation axis and centre. Do not
             // use calculated normals.
-            vector n0 = findFaceMaxRadius(half0Ctrs);
-            vector n1 = -findFaceMaxRadius(half1Ctrs);
+            vector n0 = findFaceMaxRadius(thisPatchCtrs);
+            vector n1 = -findFaceMaxRadius(nbrPatchCtrs);
             n0 /= mag(n0) + vSmall;
             n1 /= mag(n1) + vSmall;
 
@@ -455,31 +469,31 @@ void Foam::cyclicPolyPatch::calcTransforms
                     << separation_ << endl;
             }
 
-            const scalarField half0Tols
+            const scalarField thisPatchTols
             (
                 matchTolerance()
                *calcFaceTol
                 (
-                    half0,
-                    half0.points(),
-                    static_cast<const pointField&>(half0Ctrs)
+                    thisPatch,
+                    thisPatch.points(),
+                    static_cast<const pointField&>(thisPatchCtrs)
                 )
             );
 
             // Check that separation vectors are same.
-            const scalar avgTol = average(half0Tols);
+            const scalar avgTol = average(thisPatchTols);
             if
             (
-                mag(separation_ + neighbPatch().separation_) > avgTol
+                mag(separation_ + nbrPatch().separation_) > avgTol
             )
             {
                 WarningInFunction
                     << "Specified separation vector " << separation_
                     << " differs by that of neighbouring patch "
-                    << neighbPatch().separation_
+                    << nbrPatch().separation_
                     << " by more than tolerance " << avgTol << endl
                     << "patch:" << name()
-                    << " neighbour:" << neighbPatchName()
+                    << " neighbour:" << nbrPatchName()
                     << endl;
             }
 
@@ -488,24 +502,24 @@ void Foam::cyclicPolyPatch::calcTransforms
         }
         else
         {
-            const scalarField half0Tols
+            const scalarField thisPatchTols
             (
                 matchTolerance()
                *calcFaceTol
                 (
-                    half0,
-                    half0.points(),
-                    static_cast<const pointField&>(half0Ctrs)
+                    thisPatch,
+                    thisPatch.points(),
+                    static_cast<const pointField&>(thisPatchCtrs)
                 )
             );
 
             calcTransformTensors
             (
-                static_cast<const pointField&>(half0Ctrs),
-                static_cast<const pointField&>(half1Ctrs),
-                half0Normals,
-                half1Normals,
-                half0Tols,
+                thisPatchCtrs,
+                nbrPatchCtrs,
+                thisPatchNormals,
+                nbrPatchNormals,
+                thisPatchTols,
                 matchTolerance(),
                 ordering(),
                 transformType()
@@ -520,35 +534,35 @@ void Foam::cyclicPolyPatch::getCentresAndAnchors
     const primitivePatch& pp0,
     const primitivePatch& pp1,
 
-    pointField& half0Ctrs,
-    pointField& half1Ctrs,
+    pointField& thisPatchCtrs,
+    pointField& nbrPatchCtrs,
     pointField& anchors0,
     scalarField& tols
 ) const
 {
     // Get geometric data on both halves.
-    half0Ctrs = pp0.faceCentres();
+    thisPatchCtrs = pp0.faceCentres();
     anchors0 = getAnchorPoints(pp0, pp0.points(), ordering());
-    half1Ctrs = pp1.faceCentres();
+    nbrPatchCtrs = pp1.faceCentres();
 
     if (debug)
     {
         Pout<< "cyclicPolyPatch::getCentresAndAnchors :"
             << " patch:" << name() << nl
-            << "half0 untransformed faceCentres (avg) : "
-            << gAverage(half0Ctrs) << nl
-            << "half1 untransformed faceCentres (avg) : "
-            << gAverage(half1Ctrs) << endl;
+            << "thisPatch untransformed faceCentres (avg) : "
+            << gAverage(thisPatchCtrs) << nl
+            << "nbrPatch untransformed faceCentres (avg) : "
+            << gAverage(nbrPatchCtrs) << endl;
     }
 
-    if (half0Ctrs.size())
+    if (thisPatchCtrs.size())
     {
         switch (transformType())
         {
             case ROTATIONAL:
             {
-                vector n0 = findFaceMaxRadius(half0Ctrs);
-                vector n1 = -findFaceMaxRadius(half1Ctrs);
+                vector n0 = findFaceMaxRadius(thisPatchCtrs);
+                vector n1 = -findFaceMaxRadius(nbrPatchCtrs);
                 n0 /= mag(n0) + vSmall;
                 n1 /= mag(n1) + vSmall;
 
@@ -581,13 +595,13 @@ void Foam::cyclicPolyPatch::getCentresAndAnchors
                 const tensor revT(E1.T() & E0);
 
                 // Rotation
-                forAll(half0Ctrs, facei)
+                forAll(thisPatchCtrs, facei)
                 {
-                    half0Ctrs[facei] =
+                    thisPatchCtrs[facei] =
                         Foam::transform
                         (
                             revT,
-                            half0Ctrs[facei] - rotationCentre_
+                            thisPatchCtrs[facei] - rotationCentre_
                         )
                       + rotationCentre_;
                     anchors0[facei] =
@@ -616,7 +630,7 @@ void Foam::cyclicPolyPatch::getCentresAndAnchors
                 // Note: getCentresAndAnchors gets called on the slave side
                 // so separation is owner-slave points.
 
-                half0Ctrs -= separation_;
+                thisPatchCtrs -= separation_;
                 anchors0 -= separation_;
                 break;
             }
@@ -647,12 +661,12 @@ void Foam::cyclicPolyPatch::getCentresAndAnchors
                     const tensor revT(rotationTensor(n0, -n1));
 
                     // Rotation
-                    forAll(half0Ctrs, facei)
+                    forAll(thisPatchCtrs, facei)
                     {
-                        half0Ctrs[facei] = Foam::transform
+                        thisPatchCtrs[facei] = Foam::transform
                         (
                             revT,
-                            half0Ctrs[facei]
+                            thisPatchCtrs[facei]
                         );
                         anchors0[facei] = Foam::transform
                         (
@@ -677,7 +691,7 @@ void Foam::cyclicPolyPatch::getCentresAndAnchors
                             << " ctr0:" << ctr0 << " ctr1:" << ctr1 << endl;
                     }
 
-                    half0Ctrs += ctr1 - ctr0;
+                    thisPatchCtrs += ctr1 - ctr0;
                     anchors0 += ctr1 - ctr0;
                 }
                 break;
@@ -686,7 +700,7 @@ void Foam::cyclicPolyPatch::getCentresAndAnchors
     }
 
     // Calculate typical distance per face
-    tols = matchTolerance()*calcFaceTol(pp1, pp1.points(), half1Ctrs);
+    tols = matchTolerance()*calcFaceTol(pp1, pp1.points(), nbrPatchCtrs);
 }
 
 
@@ -730,8 +744,8 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
 )
 :
     coupledPolyPatch(name, size, start, index, bm, patchType, ordering),
-    neighbPatchName_(word::null),
-    neighbPatchID_(-1),
+    nbrPatchName_(word::null),
+    nbrPatchID_(-1),
     rotationAxis_(Zero),
     rotationCentre_(Zero),
     coupledPointsPtr_(nullptr),
@@ -750,13 +764,13 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     const label index,
     const polyBoundaryMesh& bm,
     const word& patchType,
-    const word& neighbPatchName,
+    const word& nbrPatchName,
     const orderingType ordering
 )
 :
     coupledPolyPatch(name, size, start, index, bm, patchType, ordering),
-    neighbPatchName_(neighbPatchName),
-    neighbPatchID_(-1),
+    nbrPatchName_(nbrPatchName),
+    nbrPatchID_(-1),
     rotationAxis_(Zero),
     rotationCentre_(Zero),
     coupledPointsPtr_(nullptr),
@@ -779,15 +793,15 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
 :
     coupledPolyPatch(name, dict, index, bm, patchType, ordering),
     cyclicTransform(dict),
-    neighbPatchName_(dict.lookupOrDefault("neighbourPatch", word::null)),
+    nbrPatchName_(dict.lookupOrDefault("neighbourPatch", word::null)),
     coupleGroup_(dict),
-    neighbPatchID_(-1),
+    nbrPatchID_(-1),
     rotationAxis_(Zero),
     rotationCentre_(Zero),
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr)
 {
-    if (neighbPatchName_ == word::null && !coupleGroup_.valid())
+    if (nbrPatchName_ == word::null && !coupleGroup_.valid())
     {
         FatalIOErrorInFunction
         (
@@ -798,10 +812,10 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
             << " to split cyclics." << exit(FatalIOError);
     }
 
-    if (neighbPatchName_ == name)
+    if (nbrPatchName_ == name)
     {
         FatalIOErrorInFunction(dict)
-            << "Neighbour patch name " << neighbPatchName_
+            << "Neighbour patch name " << nbrPatchName_
             << " cannot be the same as this patch " << name
             << exit(FatalIOError);
     }
@@ -849,9 +863,9 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
 :
     coupledPolyPatch(pp, bm),
     cyclicTransform(pp),
-    neighbPatchName_(pp.neighbPatchName_),
+    nbrPatchName_(pp.nbrPatchName_),
     coupleGroup_(pp.coupleGroup_),
-    neighbPatchID_(-1),
+    nbrPatchID_(-1),
     rotationAxis_(pp.rotationAxis_),
     rotationCentre_(pp.rotationCentre_),
     coupledPointsPtr_(nullptr),
@@ -869,23 +883,23 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     const label index,
     const label newSize,
     const label newStart,
-    const word& neighbName
+    const word& neiName
 )
 :
     coupledPolyPatch(pp, bm, index, newSize, newStart),
     cyclicTransform(pp),
-    neighbPatchName_(neighbName),
+    nbrPatchName_(neiName),
     coupleGroup_(pp.coupleGroup_),
-    neighbPatchID_(-1),
+    nbrPatchID_(-1),
     rotationAxis_(pp.rotationAxis_),
     rotationCentre_(pp.rotationCentre_),
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr)
 {
-    if (neighbName == name())
+    if (neiName == name())
     {
         FatalErrorInFunction
-            << "Neighbour patch name " << neighbName
+            << "Neighbour patch name " << neiName
             << " cannot be the same as this patch " << name()
             << exit(FatalError);
     }
@@ -906,9 +920,9 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
 :
     coupledPolyPatch(pp, bm, index, mapAddressing, newStart),
     cyclicTransform(pp),
-    neighbPatchName_(pp.neighbPatchName_),
+    nbrPatchName_(pp.nbrPatchName_),
     coupleGroup_(pp.coupleGroup_),
-    neighbPatchID_(-1),
+    nbrPatchID_(-1),
     rotationAxis_(pp.rotationAxis_),
     rotationCentre_(pp.rotationCentre_),
     coupledPointsPtr_(nullptr),
@@ -927,29 +941,29 @@ Foam::cyclicPolyPatch::~cyclicPolyPatch()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::word& Foam::cyclicPolyPatch::neighbPatchName() const
+const Foam::word& Foam::cyclicPolyPatch::nbrPatchName() const
 {
-    if (neighbPatchName_.empty())
+    if (nbrPatchName_.empty())
     {
         // Try and use patchGroup to find samplePatch and sampleRegion
         label patchID = coupleGroup_.findOtherPatchID(*this);
 
-        neighbPatchName_ = boundaryMesh()[patchID].name();
+        nbrPatchName_ = boundaryMesh()[patchID].name();
     }
-    return neighbPatchName_;
+    return nbrPatchName_;
 }
 
 
-Foam::label Foam::cyclicPolyPatch::neighbPatchID() const
+Foam::label Foam::cyclicPolyPatch::nbrPatchID() const
 {
-    if (neighbPatchID_ == -1)
+    if (nbrPatchID_ == -1)
     {
-        neighbPatchID_ = this->boundaryMesh().findPatchID(neighbPatchName());
+        nbrPatchID_ = this->boundaryMesh().findPatchID(nbrPatchName());
 
-        if (neighbPatchID_ == -1)
+        if (nbrPatchID_ == -1)
         {
             FatalErrorInFunction
-                << "Illegal neighbourPatch name " << neighbPatchName()
+                << "Illegal neighbourPatch name " << nbrPatchName()
                 << endl << "Valid patch names are "
                 << this->boundaryMesh().names()
                 << exit(FatalError);
@@ -958,20 +972,20 @@ Foam::label Foam::cyclicPolyPatch::neighbPatchID() const
         // Check that it is a cyclic
         const cyclicPolyPatch& nbrPatch = refCast<const cyclicPolyPatch>
         (
-            this->boundaryMesh()[neighbPatchID_]
+            this->boundaryMesh()[nbrPatchID_]
         );
 
-        if (nbrPatch.neighbPatchName() != name())
+        if (nbrPatch.nbrPatchName() != name())
         {
             WarningInFunction
                 << "Patch " << name()
-                << " specifies neighbour patch " << neighbPatchName()
+                << " specifies neighbour patch " << nbrPatchName()
                 << endl << " but that in return specifies "
-                << nbrPatch.neighbPatchName()
+                << nbrPatch.nbrPatchName()
                 << endl;
         }
     }
-    return neighbPatchID_;
+    return nbrPatchID_;
 }
 
 
@@ -1066,9 +1080,9 @@ void Foam::cyclicPolyPatch::calcGeometry(PstreamBuffers& pBufs)
         faceCentres(),
         faceAreas(),
         faceCellCentres(),
-        neighbPatch().faceCentres(),
-        neighbPatch().faceAreas(),
-        neighbPatch().faceCellCentres()
+        nbrPatch().faceCentres(),
+        nbrPatch().faceAreas(),
+        nbrPatch().faceCellCentres()
     );
 }
 
@@ -1112,8 +1126,8 @@ const Foam::edgeList& Foam::cyclicPolyPatch::coupledPoints() const
 {
     if (!coupledPointsPtr_)
     {
-        const faceList& nbrLocalFaces = neighbPatch().localFaces();
-        const labelList& nbrMeshPoints = neighbPatch().meshPoints();
+        const faceList& nbrLocalFaces = nbrPatch().localFaces();
+        const labelList& nbrMeshPoints = nbrPatch().meshPoints();
 
         // Now all we know is that relative face index in *this is same
         // as coupled face in nbrPatch and also that the 0th vertex
@@ -1233,8 +1247,8 @@ const Foam::edgeList& Foam::cyclicPolyPatch::coupledEdges() const
 
         // Use the edgeMap to get the edges on the B side.
 
-        const cyclicPolyPatch& neighbPatch = this->neighbPatch();
-        const labelList& nbrMp = neighbPatch.meshPoints();
+        const cyclicPolyPatch& nbrPatch = this->nbrPatch();
+        const labelList& nbrMp = nbrPatch.meshPoints();
         const labelList& mp = meshPoints();
 
 
@@ -1243,15 +1257,15 @@ const Foam::edgeList& Foam::cyclicPolyPatch::coupledEdges() const
         edgeList& coupledEdges = *coupledEdgesPtr_;
         label coupleI = 0;
 
-        forAll(neighbPatch, patchFacei)
+        forAll(nbrPatch, patchFacei)
         {
-            const labelList& fEdges = neighbPatch.faceEdges()[patchFacei];
+            const labelList& fEdges = nbrPatch.faceEdges()[patchFacei];
 
             forAll(fEdges, i)
             {
                 label edgeI = fEdges[i];
 
-                const edge& e = neighbPatch.edges()[edgeI];
+                const edge& e = nbrPatch.edges()[edgeI];
 
                 // Look up A edge from HashTable.
                 EdgeMap<label>::iterator iter = edgeMap.find(e);
@@ -1311,9 +1325,9 @@ const Foam::edgeList& Foam::cyclicPolyPatch::coupledEdges() const
                 const edge& e = coupledEdges[i];
 
                 const point& a = edges()[e[0]].centre(localPoints());
-                const point& b = neighbPatch.edges()[e[1]].centre
+                const point& b = nbrPatch.edges()[e[1]].centre
                 (
-                    neighbPatch.localPoints()
+                    nbrPatch.localPoints()
                 );
 
                 str<< "v " << a.x() << ' ' << a.y() << ' ' << a.z() << nl;
@@ -1362,7 +1376,7 @@ bool Foam::cyclicPolyPatch::order
     {
         Pout<< "order : of " << pp.size()
             << " faces of patch:" << name()
-            << " neighbour:" << neighbPatchName()
+            << " neighbour:" << nbrPatchName()
             << endl;
     }
     faceMap.setSize(pp.size());
@@ -1391,35 +1405,35 @@ bool Foam::cyclicPolyPatch::order
     else
     {
         // Get stored geometry from initOrder invocation of owner.
-        const primitivePatch& pp0 = neighbPatch().ownerPatchPtr_();
+        const primitivePatch& pp0 = nbrPatch().ownerPatchPtr_();
 
         // Get geometric quantities
-        pointField half0Ctrs, half1Ctrs, anchors0;
+        pointField thisPatchCtrs, nbrPatchCtrs, anchors0;
         scalarField tols;
         getCentresAndAnchors
         (
             pp0,
             pp,
 
-            half0Ctrs,
-            half1Ctrs,
+            thisPatchCtrs,
+            nbrPatchCtrs,
             anchors0,
             tols
         );
 
         if (debug)
         {
-            Pout<< "half0 transformed faceCentres (avg)   : "
-                << gAverage(half0Ctrs) << nl
-                << "half1 untransformed faceCentres (avg) : "
-                << gAverage(half1Ctrs) << endl;
+            Pout<< "thisPatch transformed faceCentres (avg)   : "
+                << gAverage(thisPatchCtrs) << nl
+                << "nbrPatch untransformed faceCentres (avg) : "
+                << gAverage(nbrPatchCtrs) << endl;
         }
 
         // Geometric match of face centre vectors
         bool matchedAll = matchPoints
         (
-            half1Ctrs,
-            half0Ctrs,
+            nbrPatchCtrs,
+            thisPatchCtrs,
             tols,
             true,
             faceMap
@@ -1431,7 +1445,7 @@ bool Foam::cyclicPolyPatch::order
             fileName nm0
             (
                 boundaryMesh().mesh().time().path()
-               /neighbPatch().name()+"_faces.obj"
+               /nbrPatch().name()+"_faces.obj"
             );
             Pout<< "cyclicPolyPatch::order : Writing neighbour"
                 << " faces to OBJ file " << nm0 << endl;
@@ -1457,17 +1471,17 @@ bool Foam::cyclicPolyPatch::order
                 << endl;
 
             // Recalculate untransformed face centres
-            // pointField rawHalf0Ctrs =
-            //    calcFaceCentres(half0Faces, pp.points());
+            // pointField rawthisPatchCtrs =
+            //    calcFaceCentres(thisPatchFaces, pp.points());
             label vertI = 0;
 
-            forAll(half1Ctrs, i)
+            forAll(nbrPatchCtrs, i)
             {
                 if (faceMap[i] != -1)
                 {
                     // Write edge between c1 and c0
-                    const point& c0 = half0Ctrs[faceMap[i]];
-                    const point& c1 = half1Ctrs[i];
+                    const point& c0 = thisPatchCtrs[faceMap[i]];
+                    const point& c1 = nbrPatchCtrs[i];
                     writeOBJ(ccStr, c0, c1, vertI);
                 }
             }
@@ -1545,9 +1559,9 @@ void Foam::cyclicPolyPatch::write(Ostream& os) const
 {
     coupledPolyPatch::write(os);
 
-    if (!neighbPatchName_.empty())
+    if (!nbrPatchName_.empty())
     {
-        writeEntry(os, "neighbourPatch", neighbPatchName_);
+        writeEntry(os, "neighbourPatch", nbrPatchName_);
     }
 
     coupleGroup_.write(os);

@@ -111,7 +111,7 @@ void Foam::cyclicPointPatchField<Type>::swapAddSeparated
 ) const
 {
     // Get neighbouring pointPatch
-    const cyclicPointPatch& nbrPatch = cyclicPatch_.neighbPatch();
+    const cyclicPointPatch& nbrPatch = cyclicPatch_.nbrPatch();
 
     if (cyclicPatch_.cyclicPatch().owner())
     {

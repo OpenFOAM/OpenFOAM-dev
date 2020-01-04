@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Foam::tmp<Foam::Field<Type>> Foam::regionCoupledBase::interpolate
     }
     else
     {
-        return neighbPatch().AMI().interpolateToTarget(fld);
+        return nbrPatch().AMI().interpolateToTarget(fld);
     }
 }
 
@@ -54,7 +54,7 @@ Foam::tmp<Foam::Field<Type>> Foam::regionCoupledBase::interpolate
     }
     else
     {
-        return neighbPatch().AMI().interpolateToTarget(tFld);
+        return nbrPatch().AMI().interpolateToTarget(tFld);
     }
 }
 
@@ -73,7 +73,7 @@ void Foam::regionCoupledBase::interpolate
     }
     else
     {
-        neighbPatch().AMI().interpolateToTarget(fld, bop, result);
+        nbrPatch().AMI().interpolateToTarget(fld, bop, result);
     }
 }
 

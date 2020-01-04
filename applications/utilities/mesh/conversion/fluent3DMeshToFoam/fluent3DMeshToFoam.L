@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1048,7 +1048,7 @@ int main(int argc, char *argv[])
         if (iter != fluentToFoamType.end())
         {
             // See if we have a periodic and can derive the other side.
-            word neighbPatchName;
+            word nbrPatchName;
             if (iter() == cyclicPolyPatch::typeName)
             {
                 // Periodic
@@ -1056,22 +1056,22 @@ int main(int argc, char *argv[])
 
                 if (n != string::npos)
                 {
-                    neighbPatchName = name.substr(0, n) + "-SIDE-2";
+                    nbrPatchName = name.substr(0, n) + "-SIDE-2";
                 }
                 else
                 {
                     n = name.rfind("-SIDE-2");
                     if (n != string::npos)
                     {
-                        neighbPatchName = name.substr(0, n) + "-SIDE-1";
+                        nbrPatchName = name.substr(0, n) + "-SIDE-1";
                     }
                 }
             }
 
-            if (neighbPatchName.size())
+            if (nbrPatchName.size())
             {
                 Info<< "Adding cyclicPolyPatch for Fluent zone " << name
-                    << " with neighbour patch " << neighbPatchName
+                    << " with neighbour patch " << nbrPatchName
                     << endl;
 
                 newPatches[patchi] = new cyclicPolyPatch
@@ -1082,7 +1082,7 @@ int main(int argc, char *argv[])
                     patchi,
                     mesh.boundaryMesh(),
                     cyclicPolyPatch::typeName,
-                    neighbPatchName,
+                    nbrPatchName,
                     cyclicPolyPatch::NOORDERING
                 );
             }

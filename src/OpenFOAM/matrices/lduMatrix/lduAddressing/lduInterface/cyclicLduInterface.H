@@ -67,12 +67,12 @@ public:
         // Access
 
             //- Return neighbour
-            virtual label neighbPatchID() const = 0;
+            virtual label nbrPatchID() const = 0;
 
             virtual bool owner() const = 0;
 
             //- Return processor number
-            virtual const cyclicLduInterface& neighbPatch() const = 0;
+            virtual const cyclicLduInterface& nbrPatch() const = 0;
 
             //- Return transformation between the coupled patches
             virtual const transformer& transform() const = 0;

@@ -224,7 +224,7 @@ void writeCyclicMatchObjs(const fileName& prefix, const polyMesh& mesh)
                 );
             }
 
-            const cyclicPolyPatch& nbrPatch = cycPatch.neighbPatch();
+            const cyclicPolyPatch& nbrPatch = cycPatch.nbrPatch();
             {
                 OFstream str(prefix+nbrPatch.name()+".obj");
                 Pout<< "Writing " << nbrPatch.name()
@@ -306,7 +306,7 @@ void syncPoints
                 pointField patchInfo(procPatch.nPoints(), nullValue);
 
                 const labelList& meshPts = procPatch.meshPoints();
-                const labelList& nbrPts = procPatch.neighbPoints();
+                const labelList& nbrPts = procPatch.nbrPoints();
 
                 forAll(nbrPts, pointi)
                 {
@@ -395,7 +395,7 @@ void syncPoints
 
             const edgeList& coupledPoints = cycPatch.coupledPoints();
             const labelList& meshPts = cycPatch.meshPoints();
-            const cyclicPolyPatch& nbrPatch = cycPatch.neighbPatch();
+            const cyclicPolyPatch& nbrPatch = cycPatch.nbrPatch();
             const labelList& nbrMeshPts = nbrPatch.meshPoints();
 
             pointField half0Values(coupledPoints.size());
@@ -782,7 +782,7 @@ int main(int argc, char *argv[])
                          != cyclicPolyPatch::TRANSLATIONAL
                         )
                         {
-                            const cyclicPolyPatch& nbr = cycpp.neighbPatch();
+                            const cyclicPolyPatch& nbr = cycpp.nbrPatch();
 
                             const_cast<vector&>(cpp.transform().t()) =
                                 nbr[0].centre(mesh.points())

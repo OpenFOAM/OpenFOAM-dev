@@ -122,9 +122,9 @@ public:
         }
 
         //- Return neighbour point patch
-        const cyclicAMIPointPatch& neighbPatch() const
+        const cyclicAMIPointPatch& nbrPatch() const
         {
-            label patchi = cyclicAMIPolyPatch_.neighbPatchID();
+            label patchi = cyclicAMIPolyPatch_.nbrPatchID();
             const pointPatch& pp = this->boundaryMesh()[patchi];
             return refCast<const cyclicAMIPointPatch>(pp);
         }

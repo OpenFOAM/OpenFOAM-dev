@@ -72,13 +72,13 @@ public:
         // Access
 
             //- Return neighbour
-            virtual label neighbPatchID() const = 0;
+            virtual label nbrPatchID() const = 0;
 
             //- Does this side own the interface?
             virtual bool owner() const = 0;
 
             //- Return processor number
-            virtual const cyclicAMILduInterface& neighbPatch() const = 0;
+            virtual const cyclicAMILduInterface& nbrPatch() const = 0;
 
             //- Return a reference to the AMI interpolators
             virtual const PtrList<AMIInterpolation>& AMIs() const = 0;

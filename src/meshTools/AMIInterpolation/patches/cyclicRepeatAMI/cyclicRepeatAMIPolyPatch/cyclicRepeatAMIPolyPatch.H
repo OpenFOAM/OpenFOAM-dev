@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -192,7 +192,7 @@ public:
         // Access
 
             //- Return a reference to the neighbour patch
-            virtual const cyclicRepeatAMIPolyPatch& neighbPatch() const;
+            virtual const cyclicRepeatAMIPolyPatch& nbrPatch() const;
 
             //- Neighbour patch name
             inline const word& transformPatchName() const;
@@ -207,7 +207,7 @@ public:
             virtual const scalarField& weightsSum() const;
 
             //- Return the weights sum for the neighbour patch
-            virtual const scalarField& neighbWeightsSum() const;
+            virtual const scalarField& nbrWeightsSum() const;
 
 
         //- Write the polyPatch data as a dictionary

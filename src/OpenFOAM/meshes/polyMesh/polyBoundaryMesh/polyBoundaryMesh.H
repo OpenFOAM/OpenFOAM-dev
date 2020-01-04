@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ class polyBoundaryMesh
         mutable autoPtr<HashTable<labelList, word>> groupPatchIDsPtr_;
 
         //- Edges of neighbouring patches
-        mutable autoPtr<List<labelPairList>> neighbourEdgesPtr_;
+        mutable autoPtr<List<labelPairList>> nbrEdgesPtr_;
 
 
     // Private Member Functions
@@ -149,7 +149,7 @@ public:
         //  it as much as possible consistent with coupled patch addressing
         //  (where coupling is by local patch face index).
         //  Only valid for singly connected polyBoundaryMesh and not parallel
-        const List<labelPairList>& neighbourEdges() const;
+        const List<labelPairList>& nbrEdges() const;
 
         //- Return a list of patch names
         wordList names() const;

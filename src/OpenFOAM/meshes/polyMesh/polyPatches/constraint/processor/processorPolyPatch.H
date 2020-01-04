@@ -72,12 +72,12 @@ class processorPolyPatch
         vectorField neighbFaceCellCentres_;
 
         //- Corresponding neighbouring local point label for every local point
-        //  (so localPoints()[i] == neighb.localPoints()[neighbPoints_[i]])
-        mutable autoPtr<labelList> neighbPointsPtr_;
+        //  (so localPoints()[i] == neighb.localPoints()[nbrPoints_[i]])
+        mutable autoPtr<labelList> nbrPointsPtr_;
 
         //- Corresponding neighbouring local edge label for every local edge
-        //  (so edges()[i] == neighb.edges()[neighbEdges_[i]])
-        mutable autoPtr<labelList> neighbEdgesPtr_;
+        //  (so edges()[i] == neighb.edges()[nbrEdges_[i]])
+        mutable autoPtr<labelList> nbrEdgesPtr_;
 
 protected:
 
@@ -313,10 +313,10 @@ public:
         }
 
         //- Return neighbour point labels. WIP.
-        const labelList& neighbPoints() const;
+        const labelList& nbrPoints() const;
 
         //- Return neighbour edge labels. WIP.
-        const labelList& neighbEdges() const;
+        const labelList& nbrEdges() const;
 
         //- Return message tag to use for communication
         virtual int tag() const

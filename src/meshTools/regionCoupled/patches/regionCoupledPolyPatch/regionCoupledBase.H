@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,13 +140,13 @@ public:
             }
 
             //- Neighbour patch ID
-            label neighbPatchID() const;
+            label nbrPatchID() const;
 
             //- Does this side own the patch?
             bool owner() const;
 
             //- Return a reference to the neighbour patch
-            const regionCoupledBase& neighbPatch() const;
+            const regionCoupledBase& nbrPatch() const;
 
             //- Return a reference to the projection surface
             const autoPtr<searchableSurface>& surfPtr() const;

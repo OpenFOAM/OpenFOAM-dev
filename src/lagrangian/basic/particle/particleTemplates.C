@@ -265,7 +265,7 @@ void Foam::particle::hitCyclicPatch(TrackCloudType&, trackingData&)
 {
     const cyclicPolyPatch& cpp =
         static_cast<const cyclicPolyPatch&>(mesh_.boundaryMesh()[patch()]);
-    const cyclicPolyPatch& receiveCpp = cpp.neighbPatch();
+    const cyclicPolyPatch& receiveCpp = cpp.nbrPatch();
 
     // Set the topology
     facei_ = tetFacei_ = cpp.transformGlobalFace(facei_);
@@ -299,7 +299,7 @@ void Foam::particle::hitCyclicAMIPatch
 {
     const cyclicAMIPolyPatch& cpp =
         static_cast<const cyclicAMIPolyPatch&>(mesh_.boundaryMesh()[patch()]);
-    const cyclicAMIPolyPatch& receiveCpp = cpp.neighbPatch();
+    const cyclicAMIPolyPatch& receiveCpp = cpp.nbrPatch();
 
     if (debug)
     {

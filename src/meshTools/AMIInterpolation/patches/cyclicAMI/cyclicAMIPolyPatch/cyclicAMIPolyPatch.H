@@ -62,11 +62,11 @@ class cyclicAMIPolyPatch
 
         void calcTransforms
         (
-            const primitivePatch& half0,
-            const pointField& half0Ctrs,
-            const vectorField& half0Areas,
-            const pointField& half1Ctrs,
-            const vectorField& half1Areas
+            const primitivePatch& thisPatch,
+            const pointField& thisPatchCtrs,
+            const vectorField& thisPatchAreas,
+            const pointField& neiPatchCtrs,
+            const vectorField& neiPatchAreas
         );
 
 
@@ -74,13 +74,13 @@ protected:
 
     // Protected data
 
-        //- Name of other half
+        //- Name of cyclic neighbour patch
         mutable word nbrPatchName_;
 
-        //- Optional patchGroup to find neighbPatch
+        //- Optional patchGroup to find nbrPatch
         const coupleGroupIdentifier coupleGroup_;
 
-        //- Index of other half
+        //- Index of cyclic neighbour patch
         mutable label nbrPatchID_;
 
         // Specified transformation
@@ -291,16 +291,16 @@ public:
             }
 
             //- Neighbour patch name
-            inline const word& neighbPatchName() const;
+            inline const word& nbrPatchName() const;
 
             //- Neighbour patch ID
-            virtual label neighbPatchID() const;
+            virtual label nbrPatchID() const;
 
             //- Does this side own the patch?
             virtual bool owner() const;
 
             //- Return a reference to the neighbour patch
-            virtual const cyclicAMIPolyPatch& neighbPatch() const;
+            virtual const cyclicAMIPolyPatch& nbrPatch() const;
 
             //- Return a reference to the projection surface
             const autoPtr<searchableSurface>& surfPtr() const;
@@ -318,7 +318,7 @@ public:
             virtual const scalarField& weightsSum() const;
 
             //- Return the weights sum for the neighbour patch
-            virtual const scalarField& neighbWeightsSum() const;
+            virtual const scalarField& nbrWeightsSum() const;
 
 
         // Transformations

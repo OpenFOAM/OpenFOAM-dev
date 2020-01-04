@@ -109,9 +109,9 @@ public:
         //- Cyclic interface functions
 
             //- Return neighbour processor number
-            virtual label neighbPatchID() const
+            virtual label nbrPatchID() const
             {
-                return fineCyclicAMIInterface_.neighbPatchID();
+                return fineCyclicAMIInterface_.nbrPatchID();
             }
 
             //- Does this side own the interface?
@@ -121,11 +121,11 @@ public:
             }
 
             //- Return neighbour patch
-            virtual const cyclicAMIGAMGInterface& neighbPatch() const
+            virtual const cyclicAMIGAMGInterface& nbrPatch() const
             {
                 return dynamic_cast<const cyclicAMIGAMGInterface&>
                 (
-                    coarseInterfaces_[neighbPatchID()]
+                    coarseInterfaces_[nbrPatchID()]
                 );
             }
 

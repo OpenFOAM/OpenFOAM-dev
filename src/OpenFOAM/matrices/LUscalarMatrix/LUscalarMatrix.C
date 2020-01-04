@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -237,7 +237,7 @@ void Foam::LUscalarMatrix::convert
 
             const cyclicLduInterface& cycInterface =
                 refCast<const cyclicLduInterface>(interface);
-            label nbrInt = cycInterface.neighbPatchID();
+            label nbrInt = cycInterface.nbrPatchID();
             const label* __restrict__ uPtr =
                 interfaces[nbrInt].interface().faceCells().begin();
 

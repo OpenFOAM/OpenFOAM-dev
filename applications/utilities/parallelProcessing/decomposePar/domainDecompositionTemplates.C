@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ void Foam::domainDecomposition::processInterCyclics
             // cyclic: check opposite side on this processor
             const labelUList& patchFaceCells = pp.faceCells();
             const labelUList& nbrPatchFaceCells =
-                pp.neighbPatch().faceCells();
+                pp.nbrPatch().faceCells();
 
             // Store old sizes. Used to detect which inter-proc patches
             // have been added to.

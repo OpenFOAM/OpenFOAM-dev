@@ -101,9 +101,9 @@ public:
             }
 
             //- Return the neighbour patch ID
-            virtual label neighbPatchID() const
+            virtual label nbrPatchID() const
             {
-                return cyclicAMIPolyPatch_.neighbPatchID();
+                return cyclicAMIPolyPatch_.nbrPatchID();
             }
 
             //- Is this side the owner?
@@ -113,11 +113,11 @@ public:
             }
 
             //- Return the neighbour patch
-            virtual const cyclicAMIFvPatch& neighbPatch() const
+            virtual const cyclicAMIFvPatch& nbrPatch() const
             {
                 return refCast<const cyclicAMIFvPatch>
                 (
-                    this->boundaryMesh()[cyclicAMIPolyPatch_.neighbPatchID()]
+                    this->boundaryMesh()[cyclicAMIPolyPatch_.nbrPatchID()]
                 );
             }
 
@@ -149,7 +149,7 @@ public:
             {
                 return refCast<const cyclicAMIFvPatch>
                 (
-                    this->boundaryMesh()[cyclicAMIPolyPatch_.neighbPatchID()]
+                    this->boundaryMesh()[cyclicAMIPolyPatch_.nbrPatchID()]
                 );
             }
 

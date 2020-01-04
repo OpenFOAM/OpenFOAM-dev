@@ -79,9 +79,9 @@ Foam::cyclicGAMGInterface::cyclicGAMGInterface
 )
 :
     GAMGInterface(index, coarseInterfaces),
-    neighbPatchID_
+    nbrPatchID_
     (
-        refCast<const cyclicLduInterface>(fineInterface).neighbPatchID()
+        refCast<const cyclicLduInterface>(fineInterface).nbrPatchID()
     ),
     owner_(refCast<const cyclicLduInterface>(fineInterface).owner()),
     transform_(refCast<const cyclicLduInterface>(fineInterface).transform())
@@ -156,7 +156,7 @@ Foam::cyclicGAMGInterface::cyclicGAMGInterface
 )
 :
     GAMGInterface(index, coarseInterfaces, is),
-    neighbPatchID_(readLabel(is)),
+    nbrPatchID_(readLabel(is)),
     owner_(readBool(is)),
     transform_(is)
 {}
@@ -176,7 +176,7 @@ Foam::tmp<Foam::labelField> Foam::cyclicGAMGInterface::internalFieldTransfer
     const labelUList& iF
 ) const
 {
-    const cyclicGAMGInterface& nbr = neighbPatch();
+    const cyclicGAMGInterface& nbr = nbrPatch();
     const labelUList& nbrFaceCells = nbr.faceCells();
 
     tmp<labelField> tpnf(new labelField(size()));
@@ -194,7 +194,7 @@ Foam::tmp<Foam::labelField> Foam::cyclicGAMGInterface::internalFieldTransfer
 void Foam::cyclicGAMGInterface::write(Ostream& os) const
 {
     GAMGInterface::write(os);
-    os  << token::SPACE << neighbPatchID_
+    os  << token::SPACE << nbrPatchID_
         << token::SPACE << owner_
         << token::SPACE << transform_;
 }

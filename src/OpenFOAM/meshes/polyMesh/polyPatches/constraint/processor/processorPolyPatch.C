@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,8 +172,8 @@ Foam::processorPolyPatch::processorPolyPatch
 
 Foam::processorPolyPatch::~processorPolyPatch()
 {
-    neighbPointsPtr_.clear();
-    neighbEdgesPtr_.clear();
+    nbrPointsPtr_.clear();
+    nbrEdgesPtr_.clear();
 }
 
 
@@ -385,8 +385,8 @@ void Foam::processorPolyPatch::updateMesh(PstreamBuffers& pBufs)
     // For completeness
     polyPatch::updateMesh(pBufs);
 
-    neighbPointsPtr_.clear();
-    neighbEdgesPtr_.clear();
+    nbrPointsPtr_.clear();
+    nbrEdgesPtr_.clear();
 
     if (Pstream::parRun())
     {
@@ -419,8 +419,8 @@ void Foam::processorPolyPatch::updateMesh(PstreamBuffers& pBufs)
         // Convert points.
         // ~~~~~~~~~~~~~~~
 
-        neighbPointsPtr_.reset(new labelList(nPoints(), -1));
-        labelList& neighbPoints = neighbPointsPtr_();
+        nbrPointsPtr_.reset(new labelList(nPoints(), -1));
+        labelList& nbrPoints = nbrPointsPtr_();
 
         forAll(nbrPointFace, nbrPointi)
         {
@@ -430,32 +430,32 @@ void Foam::processorPolyPatch::updateMesh(PstreamBuffers& pBufs)
             label index = (f.size() - nbrPointIndex[nbrPointi]) % f.size();
             label patchPointi = f[index];
 
-            if (neighbPoints[patchPointi] == -1)
+            if (nbrPoints[patchPointi] == -1)
             {
                 // First reference of point
-                neighbPoints[patchPointi] = nbrPointi;
+                nbrPoints[patchPointi] = nbrPointi;
             }
-            else if (neighbPoints[patchPointi] >= 0)
+            else if (nbrPoints[patchPointi] >= 0)
             {
                 // Point already visited. Mark as duplicate.
-                neighbPoints[patchPointi] = -2;
+                nbrPoints[patchPointi] = -2;
             }
         }
 
         // Reset all duplicate entries to -1.
-        forAll(neighbPoints, patchPointi)
+        forAll(nbrPoints, patchPointi)
         {
-            if (neighbPoints[patchPointi] == -2)
+            if (nbrPoints[patchPointi] == -2)
             {
-                neighbPoints[patchPointi] = -1;
+                nbrPoints[patchPointi] = -1;
             }
         }
 
         // Convert edges.
         // ~~~~~~~~~~~~~~
 
-        neighbEdgesPtr_.reset(new labelList(nEdges(), -1));
-        labelList& neighbEdges = neighbEdgesPtr_();
+        nbrEdgesPtr_.reset(new labelList(nEdges(), -1));
+        labelList& nbrEdges = nbrEdgesPtr_();
 
         forAll(nbrEdgeFace, nbrEdgeI)
         {
@@ -464,24 +464,24 @@ void Foam::processorPolyPatch::updateMesh(PstreamBuffers& pBufs)
             label index = (f.size() - nbrEdgeIndex[nbrEdgeI] - 1) % f.size();
             label patchEdgeI = f[index];
 
-            if (neighbEdges[patchEdgeI] == -1)
+            if (nbrEdges[patchEdgeI] == -1)
             {
                 // First reference of edge
-                neighbEdges[patchEdgeI] = nbrEdgeI;
+                nbrEdges[patchEdgeI] = nbrEdgeI;
             }
-            else if (neighbEdges[patchEdgeI] >= 0)
+            else if (nbrEdges[patchEdgeI] >= 0)
             {
                 // Edge already visited. Mark as duplicate.
-                neighbEdges[patchEdgeI] = -2;
+                nbrEdges[patchEdgeI] = -2;
             }
         }
 
         // Reset all duplicate entries to -1.
-        forAll(neighbEdges, patchEdgeI)
+        forAll(nbrEdges, patchEdgeI)
         {
-            if (neighbEdges[patchEdgeI] == -2)
+            if (nbrEdges[patchEdgeI] == -2)
             {
-                neighbEdges[patchEdgeI] = -1;
+                nbrEdges[patchEdgeI] = -1;
             }
         }
 
@@ -492,27 +492,27 @@ void Foam::processorPolyPatch::updateMesh(PstreamBuffers& pBufs)
 }
 
 
-const Foam::labelList& Foam::processorPolyPatch::neighbPoints() const
+const Foam::labelList& Foam::processorPolyPatch::nbrPoints() const
 {
-    if (!neighbPointsPtr_.valid())
+    if (!nbrPointsPtr_.valid())
     {
         FatalErrorInFunction
             << "No extended addressing calculated for patch " << name()
             << abort(FatalError);
     }
-    return neighbPointsPtr_();
+    return nbrPointsPtr_();
 }
 
 
-const Foam::labelList& Foam::processorPolyPatch::neighbEdges() const
+const Foam::labelList& Foam::processorPolyPatch::nbrEdges() const
 {
-    if (!neighbEdgesPtr_.valid())
+    if (!nbrEdgesPtr_.valid())
     {
         FatalErrorInFunction
             << "No extended addressing calculated for patch " << name()
             << abort(FatalError);
     }
-    return neighbEdgesPtr_();
+    return nbrEdgesPtr_();
 }
 
 

@@ -554,7 +554,7 @@ void Foam::writeAMIWeightsSums(const polyMesh& mesh)
             {
                 Info<< "Calculating AMI weights between owner patch: "
                     << cpp.name() << " and neighbour patch: "
-                    << cpp.neighbPatch().name() << endl;
+                    << cpp.nbrPatch().name() << endl;
 
                 writeAMIWeightsSum
                 (
@@ -566,8 +566,8 @@ void Foam::writeAMIWeightsSums(const polyMesh& mesh)
                 writeAMIWeightsSum
                 (
                     mesh,
-                    cpp.neighbPatch(),
-                    cpp.neighbWeightsSum(),
+                    cpp.nbrPatch(),
+                    cpp.nbrWeightsSum(),
                     fileName("postProcessing") / "tgt_" + tmName
                 );
             }

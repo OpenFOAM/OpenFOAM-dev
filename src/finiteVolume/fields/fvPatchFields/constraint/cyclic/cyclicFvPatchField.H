@@ -159,7 +159,7 @@ public:
             tmp<Field<Type>> patchNeighbourField() const;
 
             //- Return reference to neighbour patchField
-            const cyclicFvPatchField<Type>& neighbourPatchField() const;
+            const cyclicFvPatchField<Type>& nbrPatchField() const;
 
             //- Update result field based on interface functionality
             virtual void updateInterfaceMatrix

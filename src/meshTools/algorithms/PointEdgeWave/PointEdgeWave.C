@@ -313,7 +313,7 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleProcPatches()
         nbrPoints.reserve(procPatch.nPoints());
 
         // Get all changed points in reverse order
-        const labelList& neighbPoints = procPatch.neighbPoints();
+        const labelList& neighbPoints = procPatch.nbrPoints();
         forAll(neighbPoints, thisPointi)
         {
             label meshPointi = procPatch.meshPoints()[thisPointi];
@@ -428,7 +428,7 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleCyclicPatches()
 
             // Collect nbrPatch points that have changed
             {
-                const cyclicPolyPatch& nbrPatch = cycPatch.neighbPatch();
+                const cyclicPolyPatch& nbrPatch = cycPatch.nbrPatch();
                 const edgeList& pairs = cycPatch.coupledPoints();
                 const labelList& meshPoints = nbrPatch.meshPoints();
 
