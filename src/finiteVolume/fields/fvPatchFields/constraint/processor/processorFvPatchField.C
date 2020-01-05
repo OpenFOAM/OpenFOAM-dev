@@ -295,7 +295,7 @@ void Foam::processorFvPatchField<Type>::evaluate
             procPatch_.compressedReceive<Type>(commsType, *this);
         }
 
-        procPatch_.transform().transform<Type>(*this, *this);
+        procPatch_.transform().transform(*this, *this);
     }
 }
 
