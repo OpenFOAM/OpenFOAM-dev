@@ -111,7 +111,7 @@ void thixotropicViscosity::correct
     const volVectorField& Us = film.Us();
     const volVectorField& Uw = film.Uw();
     const volScalarField& delta = film.delta();
-    const volScalarField alphaRho = film.alpha()*film.rho();
+    const volScalarField alphaRho(film.alpha()*film.rho());
     const surfaceScalarField& phiU = film.phiU();
     const volScalarField& coverage = film.coverage();
 
