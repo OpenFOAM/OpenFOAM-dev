@@ -75,7 +75,7 @@ class faceSetSampledSet
 
     // Private Member Functions
 
-        //- Uses calcSamples to obtain samples. Copies them into *this.
+        //- Generate the samples
         void genSamples();
 
 
