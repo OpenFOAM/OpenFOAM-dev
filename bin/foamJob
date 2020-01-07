@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -177,7 +177,7 @@ then
     #
     if [ -r "processor0" -o -r "processors" -o "$(echo processors[1-9]*)" != "processors[1-9]*" ]
     then
-        NPROCS="$(foamDictionary -entry numberOfSubdomains -value system/decomposeParDict)"
+        NPROCS="$(foamDictionary -expand -entry numberOfSubdomains -value system/decomposeParDict)"
     else
         echo "Case is not currently decomposed"
         if [ -r system/decomposeParDict ]

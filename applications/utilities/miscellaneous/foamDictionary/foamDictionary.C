@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -400,7 +400,10 @@ int main(int argc, char *argv[])
 
     // Do not expand functionEntries except during dictionary expansion
     // with the -expand option
-    entry::disableFunctionEntries = true;
+    if (!args.optionFound("expand"))
+    {
+        entry::disableFunctionEntries = true;
+    }
 
     const fileName dictPath(args[1]);
 
@@ -470,10 +473,8 @@ int main(int argc, char *argv[])
     {
         return 0;
     }
-    else if (args.optionFound("expand"))
+    else if (args.optionFound("expand") && !args.optionFound("entry"))
     {
-        entry::disableFunctionEntries = false;
-
         IOobject::writeBanner(Info)
             <<"//\n// " << dictPath << "\n//\n";
         dict.dictionary::write(Info, false);
