@@ -357,15 +357,10 @@ void syncPoints
                 // Null any value which is not on neighbouring processor
                 nbrPatchInfo.setSize(procPatch.nPoints(), nullValue);
 
-                if (procPatch.transform().rotates())
+                if (procPatch.transform().transformsPosition())
                 {
                     hasTransformation = true;
-                    transformList(procPatch.transform().R(), nbrPatchInfo);
-                }
-                else if (procPatch.transform().translates())
-                {
-                    hasTransformation = true;
-                    nbrPatchInfo -= procPatch.transform().t();
+                    procPatch.transform().transformPosition(nbrPatchInfo);
                 }
 
                 const labelList& meshPts = procPatch.meshPoints();
@@ -398,31 +393,26 @@ void syncPoints
             const cyclicPolyPatch& nbrPatch = cycPatch.nbrPatch();
             const labelList& nbrMeshPts = nbrPatch.meshPoints();
 
-            pointField half0Values(coupledPoints.size());
+            pointField patchPoints(coupledPoints.size());
 
             forAll(coupledPoints, i)
             {
                 const edge& e = coupledPoints[i];
                 label point0 = meshPts[e[0]];
-                half0Values[i] = points[point0];
+                patchPoints[i] = points[point0];
             }
 
-            if (cycPatch.transform().rotates())
+            if (cycPatch.transform().transformsPosition())
             {
                 hasTransformation = true;
-                transformList(cycPatch.transform().R().T(), half0Values);
-            }
-            else if (cycPatch.transform().translates())
-            {
-                hasTransformation = true;
-                half0Values += cycPatch.transform().t();
+                cycPatch.transform().invTransformPosition(patchPoints);
             }
 
             forAll(coupledPoints, i)
             {
                 const edge& e = coupledPoints[i];
                 label point1 = nbrMeshPts[e[1]];
-                points[point1] = half0Values[i];
+                points[point1] = patchPoints[i];
             }
         }
     }

@@ -310,7 +310,7 @@ namespace Foam
 
                 // Now ptsAtIndex will have for every face either zero or
                 // the position of the i'th vertex. Transform.
-                cpp.transformPosition(ptsAtIndex);
+                cpp.transform().transformPosition(ptsAtIndex, ptsAtIndex);
 
                 // Extract back from ptsAtIndex into newPts
                 forAll(cpp, facei)

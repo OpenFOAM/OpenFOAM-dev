@@ -233,12 +233,6 @@ public:
             //- Return transformation between the coupled patches
             virtual const transformer& transform() const = 0;
 
-            //- Transform a patch-based position from other side to this side
-            virtual void transformPosition(pointField&) const = 0;
-
-            //- Transform a patch-based position from other side to this side
-            virtual void transformPosition(point&, const label facei) const = 0;
-
             scalar matchTolerance() const
             {
                 return matchTolerance_;

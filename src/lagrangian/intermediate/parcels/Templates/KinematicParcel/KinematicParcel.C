@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -426,21 +426,13 @@ void Foam::KinematicParcel<ParcelType>::hitWallPatch
 
 
 template<class ParcelType>
-void Foam::KinematicParcel<ParcelType>::transformProperties(const tensor& T)
-{
-    ParcelType::transformProperties(T);
-
-    U_ = transform(T, U_);
-}
-
-
-template<class ParcelType>
 void Foam::KinematicParcel<ParcelType>::transformProperties
 (
-    const vector& separation
+    const transformer& transform
 )
 {
-    ParcelType::transformProperties(separation);
+    ParcelType::transformProperties(transform);
+    U_ = transform.transform(U_);
 }
 
 

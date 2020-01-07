@@ -256,7 +256,7 @@ template<class TrackCloudType>
 void Foam::particle::hitSymmetryPatch(TrackCloudType&, trackingData&)
 {
     const vector nf = normal();
-    transformProperties(I - 2.0*nf*nf);
+    transformProperties(transformer(I - 2.0*nf*nf));
 }
 
 
@@ -270,6 +270,7 @@ void Foam::particle::hitCyclicPatch(TrackCloudType&, trackingData&)
     // Set the topology
     facei_ = tetFacei_ = cpp.transformGlobalFace(facei_);
     celli_ = mesh_.faceOwner()[facei_];
+
     // See note in correctAfterParallelTransfer for tetPti addressing ...
     tetPti_ = mesh_.faces()[tetFacei_].size() - 1 - tetPti_;
 
@@ -277,13 +278,9 @@ void Foam::particle::hitCyclicPatch(TrackCloudType&, trackingData&)
     reflect();
 
     // Transform the properties
-    if (receiveCpp.transform().rotates())
+    if (receiveCpp.transform().transformsPosition())
     {
-        transformProperties(receiveCpp.transform().R());
-    }
-    else if (receiveCpp.transform().translates())
-    {
-        transformProperties(-receiveCpp.transform().t());
+        transformProperties(receiveCpp.transform());
     }
 }
 
@@ -363,24 +360,17 @@ void Foam::particle::hitCyclicAMIPatch
         receiveCpp.owner()
       ? receiveCpp.AMITransforms()[receiveAMIi]
       : inv(cpp.AMITransforms()[receiveAMIi]);
-    if (AMITransform.rotates())
+
+    if (AMITransform.transformsPosition())
     {
-        transformProperties(AMITransform.R());
-        displacementT = transform(AMITransform.R(), displacementT);
-    }
-    else if (AMITransform.t() != vector::zero)
-    {
-        transformProperties(AMITransform.t());
+        transformProperties(AMITransform);
+        displacementT = AMITransform.transform(displacementT);
     }
 
-    if (receiveCpp.transform().rotates())
+    if (receiveCpp.transform().transformsPosition())
     {
-        transformProperties(receiveCpp.transform().R());
-        displacementT = transform(receiveCpp.transform().R(), displacementT);
-    }
-    else if (receiveCpp.transform().translates())
-    {
-        transformProperties(-receiveCpp.transform().t());
+        transformProperties(receiveCpp.transform());
+        displacementT = receiveCpp.transform().transform(displacementT);
     }
 
     // If on a boundary and the displacement points into the receiving face

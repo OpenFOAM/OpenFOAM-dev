@@ -78,27 +78,27 @@ inline Foam::transformer::transformer
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+inline bool Foam::transformer::translates() const
+{
+    return translates_ && !rotates_;
+}
+
+
 inline const Foam::vector& Foam::transformer::t() const
 {
     return t_;
 }
 
 
-inline bool Foam::transformer::translates() const
+inline bool Foam::transformer::rotates() const
 {
-    return translates_;
+    return rotates_;
 }
 
 
 inline const Foam::tensor& Foam::transformer::R() const
 {
     return R_;
-}
-
-
-inline bool Foam::transformer::rotates() const
-{
-    return rotates_;
 }
 
 
@@ -111,7 +111,7 @@ inline bool Foam::transformer::transforms() const
 template<typename Type>
 inline bool Foam::transformer::transforms() const
 {
-    return pTraits<Type>::rank != 0 && (translates_ || rotates_);
+    return pTraits<Type>::rank != 0 && rotates_;
 }
 
 
@@ -141,96 +141,48 @@ inline Foam::tensor& Foam::transformer::R()
 
 inline Foam::vector Foam::transformer::transformPosition
 (
-    const vector& v
+    const vector& p
 ) const
 {
     if (translates_ && !rotates_)
     {
-        return v + t();
+        return p + t();
     }
     else if (!translates_ && rotates_)
     {
-        return R() & v;
+        return R() & p;
     }
     else if (translates_ && rotates_)
     {
-        return (R() & v) + t();
+        return (R() & p) + t();
     }
     else
     {
-        return v;
-    }
-}
-
-
-inline Foam::tmp<Foam::pointField> Foam::transformer::transformPosition
-(
-    const pointField& pts
-) const
-{
-    if (translates_ && !rotates_)
-    {
-        return pts + t();
-    }
-    else if (!translates_ && rotates_)
-    {
-        return R() & pts;
-    }
-    else if (translates_ && rotates_)
-    {
-        return (R() & pts) + t();
-    }
-    else
-    {
-        return pts;
+        return p;
     }
 }
 
 
 inline Foam::vector Foam::transformer::invTransformPosition
 (
-    const vector& v
+    const vector& p
 ) const
 {
     if (translates_ && !rotates_)
     {
-        return v - t();
+        return p - t();
     }
     else if (!translates_ && rotates_)
     {
-        return R().T() & v;
+        return R().T() & p;
     }
     else if (translates_ && rotates_)
     {
-        return (R().T() & (v - t()));
+        return (R().T() & (p - t()));
     }
     else
     {
-        return v;
-    }
-}
-
-
-inline Foam::tmp<Foam::pointField> Foam::transformer::invTransformPosition
-(
-    const pointField& pts
-) const
-{
-    if (translates_ && !rotates_)
-    {
-        return pts - t();
-    }
-    else if (!translates_ && rotates_)
-    {
-        return R().T() & pts;
-    }
-    else if (translates_ && rotates_)
-    {
-        return (R().T() & (pts - t()));
-    }
-    else
-    {
-        return pts;
+        return p;
     }
 }
 
@@ -295,15 +247,15 @@ inline void Foam::transformer::operator&=(const tensor& R)
 
 inline Foam::transformer Foam::inv(const transformer& tr)
 {
-    if (tr.translates() && !tr.rotates())
+    if (tr.translates_ && !tr.rotates_)
     {
         return transformer(-tr.t());
     }
-    else if (!tr.translates() && tr.rotates())
+    else if (!tr.translates_ && tr.rotates_)
     {
         return transformer(tr.R().T());
     }
-    else if (tr.translates() && tr.rotates())
+    else if (tr.translates_ && tr.rotates_)
     {
         return transformer(tr.R().T() & (-tr.t()), tr.R().T());
     }
@@ -330,19 +282,19 @@ inline bool Foam::operator!=(const transformer& tr1, const transformer& tr2)
 
 inline Foam::transformer Foam::operator+(const transformer& tr, const vector& t)
 {
-    return transformer(tr.t() + t, true, tr.R(), tr.rotates());
+    return transformer(tr.t() + t, true, tr.R(), tr.rotates_);
 }
 
 
 inline Foam::transformer Foam::operator+(const vector& t, const transformer& tr)
 {
-    return transformer(t + tr.t(), true, tr.R(), tr.rotates());
+    return transformer(t + tr.t(), true, tr.R(), tr.rotates_);
 }
 
 
 inline Foam::transformer Foam::operator-(const transformer& tr, const vector& t)
 {
-    return transformer(tr.t() - t, true, tr.R(), tr.rotates());
+    return transformer(tr.t() - t, true, tr.R(), tr.rotates_);
 }
 
 
@@ -355,9 +307,9 @@ inline Foam::transformer Foam::operator&
     return transformer
     (
         tr1.t() + tr2.t(),
-        tr1.translates() || tr2.translates(),
+        tr1.translates_ || tr2.translates_,
         tr1.R() & tr2.R(),
-        tr1.rotates() || tr2.rotates()
+        tr1.rotates_ || tr2.rotates_
     );
 }
 

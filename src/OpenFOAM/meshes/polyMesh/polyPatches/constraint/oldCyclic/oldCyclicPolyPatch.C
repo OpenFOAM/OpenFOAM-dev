@@ -32,7 +32,6 @@ License
 #include "patchZones.H"
 #include "matchPoints.H"
 #include "Time.H"
-#include "transformList.H"
 #include "cyclicPolyPatch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

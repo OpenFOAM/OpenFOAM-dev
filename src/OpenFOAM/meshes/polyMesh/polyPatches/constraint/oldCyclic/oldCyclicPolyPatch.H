@@ -256,18 +256,6 @@ public:
             return cyclicTransform::transform();
         }
 
-        //- Transform a patch-based position from other side to this side
-        virtual void transformPosition(pointField& l) const
-        {
-            NotImplemented;
-        }
-
-        //- Transform a patch-based position from other side to this side
-        virtual void transformPosition(point&, const label facei) const
-        {
-            NotImplemented;
-        }
-
         //- Calculate the patch geometry
         virtual void calcGeometry
         (

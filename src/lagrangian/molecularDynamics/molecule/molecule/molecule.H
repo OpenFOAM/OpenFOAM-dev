@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -312,9 +312,7 @@ public:
 
             bool move(moleculeCloud&, trackingData&, const scalar trackTime);
 
-            virtual void transformProperties(const tensor& T);
-
-            virtual void transformProperties(const vector& separation);
+            virtual void transformProperties(const transformer&);
 
             void setSitePositions(const constantProperties& constProps);
 

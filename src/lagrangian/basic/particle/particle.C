@@ -1043,11 +1043,7 @@ Foam::vector Foam::particle::deviationFromMeshCentre() const
 }
 
 
-void Foam::particle::transformProperties(const tensor&)
-{}
-
-
-void Foam::particle::transformProperties(const vector&)
+void Foam::particle::transformProperties(const transformer&)
 {}
 
 
@@ -1067,19 +1063,16 @@ void Foam::particle::correctAfterParallelTransfer
     const coupledPolyPatch& ppp =
         refCast<const coupledPolyPatch>(mesh_.boundaryMesh()[patchi]);
 
-    if (ppp.transform().rotates())
+    if (ppp.transform().transformsPosition())
     {
-        transformProperties(ppp.transform().R());
-    }
-    else if (ppp.transform().translates())
-    {
-        transformProperties(-ppp.transform().t());
+        transformProperties(ppp.transform());
     }
 
     // Set the topology
     celli_ = ppp.faceCells()[facei_];
     facei_ += ppp.start();
     tetFacei_ = facei_;
+
     // Faces either side of a coupled patch are numbered in opposite directions
     // as their normals both point away from their connected cells. The tet
     // point therefore counts in the opposite direction from the base point.
@@ -1113,10 +1106,9 @@ void Foam::particle::prepareForInteractionListReferral
     coordinates_ = barycentric(1 - cmptSum(pos), pos.x(), pos.y(), pos.z());
 
     // Transform the properties
-    transformProperties(- transform.t());
-    if (transform.rotates())
+    if (transform.transformsPosition())
     {
-        transformProperties(transform.R().T());
+        transformProperties(inv(transform));
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -192,7 +192,7 @@ Foam::label Foam::globalIndexAndTransform::addToTransformIndex
                 {
                     const tensor& R = vt.R();
                     scalar sumDiag = tr(R);
-                    scalar sumMagDiag = mag(R.xx())+mag(R.yy())+mag(R.zz());
+                    scalar sumMagDiag = mag(R.xx()) + mag(R.yy())+mag(R.zz());
 
                     if (mag(sumMagDiag-3) < tol && mag(sumDiag+1) < tol)
                     {
@@ -593,16 +593,12 @@ Foam::pointField Foam::globalIndexAndTransform::transformPatches
 {
     labelList transIs = transformIndicesForPatches(patchis);
 
-    // Pout<< patchis << nl << transIs << endl;
-
     pointField transPts(transIs.size());
 
     forAll(transIs, tII)
     {
-        transPts[tII] = transformPermutations_[transIs[tII]].transformPosition
-        (
-            pt
-        );
+        transPts[tII] =
+            transformPermutations_[transIs[tII]].transformPosition(pt);
     }
 
     return transPts;

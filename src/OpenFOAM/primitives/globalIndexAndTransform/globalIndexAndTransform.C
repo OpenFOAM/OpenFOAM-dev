@@ -141,54 +141,24 @@ void Foam::globalIndexAndTransform::determineTransforms()
         {
             const coupledPolyPatch& cpp = refCast<const coupledPolyPatch>(pp);
 
-            if (cpp.transform().translates())
+            const transformer transform(inv(cpp.transform()));
+
+            if (transform.transformsPosition())
             {
-                const vector& sepVec = cpp.transform().t();
-
-                if (mag(sepVec) > small)
-                {
-                    transformer transform(sepVec);
-
-                    if
+                if
+                (
+                    matchTransform
                     (
-                        matchTransform
-                        (
-                            localTransforms,
-                            dummyMatch,
-                            transform,
-                            cpp.matchTolerance(),
-                            false
-                        ) == 0
-                    )
-                    {
-                        localTransforms.append(transform);
-                        localTols.append(cpp.matchTolerance());
-                    }
-                }
-            }
-            else if (cpp.transform().rotates())
-            {
-                const tensor& transT = cpp.transform().R().T();
-
-                if (mag(transT - I) > small)
+                        localTransforms,
+                        dummyMatch,
+                        transform,
+                        cpp.matchTolerance(),
+                        false
+                    ) == 0
+                )
                 {
-                    transformer transform(transT);
-
-                    if
-                    (
-                        matchTransform
-                        (
-                            localTransforms,
-                            dummyMatch,
-                            transform,
-                            cpp.matchTolerance(),
-                            false
-                        ) == 0
-                    )
-                    {
-                        localTransforms.append(transform);
-                        localTols.append(cpp.matchTolerance());
-                    }
+                    localTransforms.append(transform);
+                    localTols.append(cpp.matchTolerance());
                 }
             }
         }
@@ -218,7 +188,7 @@ void Foam::globalIndexAndTransform::determineTransforms()
             {
                 const transformer& transform = procTransVecs[pSVI];
 
-                if (transform.translates() || transform.rotates())
+                if (transform.transformsPosition())
                 {
                     if
                     (
@@ -299,46 +269,20 @@ void Foam::globalIndexAndTransform::determinePatchTransformSign()
         {
             const coupledPolyPatch& cpp = refCast<const coupledPolyPatch>(pp);
 
-            if (cpp.transform().translates())
+            const transformer transform(inv(cpp.transform()));
+
+            if (transform.transformsPosition())
             {
-                const vector& sepVec = cpp.transform().t();
-
-                if (mag(sepVec) > small)
-                {
-                    transformer t(sepVec);
-
-                    label matchTransI;
-                    label sign = matchTransform
-                    (
-                        transforms_,
-                        matchTransI,
-                        t,
-                        cpp.matchTolerance(),
-                        true
-                    );
-                    patchTransformSign_[patchi] = labelPair(matchTransI, sign);
-                }
-            }
-            else if (cpp.transform().rotates())
-            {
-                const tensor& transT = cpp.transform().R().T();
-
-                if (mag(transT - I) > small)
-                {
-                    transformer t(transT);
-
-                    label matchTransI;
-                    label sign = matchTransform
-                    (
-                        transforms_,
-                        matchTransI,
-                        t,
-                        cpp.matchTolerance(),
-                        true
-                    );
-
-                    patchTransformSign_[patchi] = labelPair(matchTransI, sign);
-                }
+                label matchTransI;
+                label sign = matchTransform
+                (
+                    transforms_,
+                    matchTransI,
+                    transform,
+                    cpp.matchTolerance(),
+                    true
+                );
+                patchTransformSign_[patchi] = labelPair(matchTransI, sign);
             }
         }
     }

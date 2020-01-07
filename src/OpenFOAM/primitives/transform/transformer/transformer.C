@@ -71,6 +71,96 @@ Foam::word Foam::name(const transformer& s)
 }
 
 
+void Foam::transformer::transformPosition
+(
+    pointField& res,
+    const pointField& pts
+) const
+{
+    if (translates_ && !rotates_)
+    {
+        res = pts + t();
+    }
+    else if (!translates_ && rotates_)
+    {
+        res = R() & pts;
+    }
+    else if (translates_ && rotates_)
+    {
+        res = (R() & pts) + t();
+    }
+}
+
+
+Foam::tmp<Foam::pointField> Foam::transformer::transformPosition
+(
+    const pointField& pts
+) const
+{
+    if (translates_ && !rotates_)
+    {
+        return pts + t();
+    }
+    else if (!translates_ && rotates_)
+    {
+        return R() & pts;
+    }
+    else if (translates_ && rotates_)
+    {
+        return (R() & pts) + t();
+    }
+    else
+    {
+        return pts;
+    }
+}
+
+
+Foam::tmp<Foam::pointField> Foam::transformer::invTransformPosition
+(
+    const pointField& pts
+) const
+{
+    if (translates_ && !rotates_)
+    {
+        return pts - t();
+    }
+    else if (!translates_ && rotates_)
+    {
+        return R().T() & pts;
+    }
+    else if (translates_ && rotates_)
+    {
+        return (R().T() & (pts - t()));
+    }
+    else
+    {
+        return pts;
+    }
+}
+
+
+void Foam::transformer::invTransformPosition
+(
+    pointField& res,
+    const pointField& pts
+) const
+{
+    if (translates_ && !rotates_)
+    {
+        res = pts - t();
+    }
+    else if (!translates_ && rotates_)
+    {
+        res = R().T() & pts;
+    }
+    else if (translates_ && rotates_)
+    {
+        res = (R().T() & (pts - t()));
+    }
+}
+
+
 template<>
 Foam::tmp<Foam::Field<bool>> Foam::transformer::transform
 (

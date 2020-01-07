@@ -30,7 +30,6 @@ License
 #include "globalMeshData.H"
 #include "contiguous.H"
 #include "transform.H"
-#include "transformList.H"
 #include "SubField.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

@@ -56,6 +56,27 @@ Istream& operator>>(Istream& is, transformer&);
 Ostream& operator<<(Ostream& os, const transformer& C);
 
 
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
+
+//- Return the inverse of the given transformer
+inline transformer inv(const transformer& tr);
+
+
+// * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
+
+inline bool operator==(const transformer& tr1, const transformer& tr2);
+
+inline bool operator!=(const transformer& tr1, const transformer& tr2);
+
+inline transformer operator+(const transformer& tr, const vector& t);
+
+inline transformer operator+(const vector& t, const transformer& tr);
+
+inline transformer operator-(const transformer& tr, const vector& t);
+
+inline transformer operator&(const transformer& tr1, const transformer& tr2);
+
+
 /*---------------------------------------------------------------------------*\
                     Class transformer Declaration
 \*---------------------------------------------------------------------------*/
@@ -124,17 +145,19 @@ public:
 
         // Access
 
+            //- Return true if the transformer performs pure translation
+            //  i.e. the translation vector is non-zero and the rotation tensor
+            //   is I
+            inline bool translates() const;
+
             //- Return the translation vector
             inline const vector& t() const;
 
-            //- Return true is the translation vector is non-zero
-            inline bool translates() const;
+            //- Return true if the rotation tensor is non-I
+            inline bool rotates() const;
 
             //- Return the rotation tensor
             inline const tensor& R() const;
-
-            //- Return true if the rotation tensor is non-I
-            inline bool rotates() const;
 
             //- Return true if the transformer transforms a type
             //  (i.e. rotates)
@@ -165,19 +188,19 @@ public:
             inline vector transformPosition(const vector& v) const;
 
             //- Transform the given pointField
-            inline tmp<pointField> transformPosition
-            (
-                const pointField& pts
-            ) const;
+            void transformPosition(pointField&, const pointField&) const;
+
+            //- Transform the given pointField
+            tmp<pointField> transformPosition(const pointField&) const;
 
             //- Inverse transform the given position
             inline vector invTransformPosition(const vector& v) const;
 
             //- Inverse transform the given pointField
-            inline tmp<pointField> invTransformPosition
-            (
-                const pointField& pts
-            ) const;
+            void invTransformPosition(pointField&, const pointField&) const;
+
+            //- Inverse transform the given pointField
+            tmp<pointField> invTransformPosition(const pointField&) const;
 
             //- Transform the given type
             template<class Type>
@@ -195,6 +218,10 @@ public:
             template<class Type>
             tmp<Field<Type>> transform(const tmp<Field<Type>>&) const;
 
+            //- Transform the given container
+            template<class Type, template<class> class Container>
+            void transformList(Container<Type>&) const;
+
             //- Inverse transform the given type
             template<class Type>
             Type invTransform(const Type&) const;
@@ -211,6 +238,10 @@ public:
             template<class Type>
             tmp<Field<Type>> invTransform(const tmp<Field<Type>>&) const;
 
+            //- Inverse transform the given container
+            template<class Type, template<class> class Container>
+            void invTransformList(Container<Type>&) const;
+
 
     // Member Operators
 
@@ -224,6 +255,51 @@ public:
         inline void operator&=(const tensor&);
 
 
+    // Global Functions
+
+        //- Return the inverse of the given transformer
+        friend inline transformer inv(const transformer& tr);
+
+
+    // Global Operators
+
+        friend inline bool operator==
+        (
+            const transformer& tr1,
+            const transformer& tr2
+        );
+
+        friend inline bool operator!=
+        (
+            const transformer& tr1,
+            const transformer& tr2
+        );
+
+        friend inline transformer operator+
+        (
+            const transformer& tr,
+            const vector& t
+        );
+
+        friend inline transformer operator+
+        (
+            const vector& t,
+            const transformer& tr
+        );
+
+        friend inline transformer operator-
+        (
+            const transformer& tr,
+            const vector& t
+        );
+
+        friend inline transformer operator&
+        (
+            const transformer& tr1,
+            const transformer& tr2
+        );
+
+
     // IOstream Operators
 
         friend Istream& operator>>(Istream& is, transformer&);
@@ -233,9 +309,6 @@ public:
 
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
-
-//- Return the inverse of the given transformer
-inline transformer inv(const transformer& tr);
 
 //- Return a string representation of a transformer
 word name(const transformer&);
@@ -265,21 +338,6 @@ const;
 template<>
 tmp<Field<scalar>> transformer::transform(const tmp<Field<scalar>>&)
 const;
-
-
-// * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
-
-inline bool operator==(const transformer& tr1, const transformer& tr2);
-
-inline bool operator!=(const transformer& tr1, const transformer& tr2);
-
-inline transformer operator+(const transformer& tr, const vector& t);
-
-inline transformer operator+(const vector& t, const transformer& tr);
-
-inline transformer operator-(const transformer& tr, const vector& t);
-
-inline transformer operator&(const transformer& tr1, const transformer& tr2);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

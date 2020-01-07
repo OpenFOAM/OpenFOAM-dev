@@ -326,18 +326,6 @@ public:
             return referPatch().transformType();
         }
 
-        //- Transform a patch-based position from other side to this side
-        virtual void transformPosition(pointField& l) const
-        {
-            referPatch().transformPosition(l);
-        }
-
-        //- Transform a patch-based position from other side to this side
-        virtual void transformPosition(point& l, const label facei) const
-        {
-            referPatch().transformPosition(l, facei);
-        }
-
         //- Return transformation between the coupled patches
         virtual const transformer& transform() const
         {

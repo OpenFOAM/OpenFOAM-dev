@@ -87,6 +87,19 @@ Foam::tmp<Foam::Field<Type>> Foam::transformer::transform
 }
 
 
+template<class Type, template<class> class Container>
+void Foam::transformer::transformList(Container<Type>& l) const
+{
+    if (rotates_)
+    {
+        forAllIter(typename Container<Type>, l, iter)
+        {
+            *iter = Foam::transform(R(), *iter);
+        }
+    }
+}
+
+
 template<class Type>
 Type Foam::transformer::invTransform(const Type& x) const
 {
@@ -145,6 +158,19 @@ Foam::tmp<Foam::Field<Type>> Foam::transformer::invTransform
     else
     {
         return tfld;
+    }
+}
+
+
+template<class Type, template<class> class Container>
+void Foam::transformer::invTransformList(Container<Type>& l) const
+{
+    if (rotates_)
+    {
+        forAllIter(typename Container<Type>, l, iter)
+        {
+            *iter = Foam::transform(R().T(), *iter);
+        }
     }
 }
 

@@ -150,7 +150,7 @@ void Foam::cyclicPolyPatch::calcTransformTensors
             bool sameSeparation = true;
             bool doneWarning = false;
 
-            const vectorField separation(nbrPatchCtrs - thisPatchCtrs);
+            const vectorField separation(thisPatchCtrs - nbrPatchCtrs);
 
             forAll(separation, facei)
             {
@@ -455,9 +455,21 @@ void Foam::cyclicPolyPatch::calcTransforms
                 (-n1 ^ rotationAxis_),
                 -n1
             );
+
             const tensor revT(E1.T() & E0);
 
-            transform_ = transformer(revT.T());
+            if (mag(rotationCentre_) > small)
+            {
+                transform_ = transformer
+                (
+                    (revT.T() - I) & rotationCentre_,
+                    revT.T()
+                );
+            }
+            else
+            {
+                transform_ = transformer(revT.T());
+            }
         }
         else if (transformType() == TRANSLATIONAL)
         {
@@ -627,11 +639,8 @@ void Foam::cyclicPolyPatch::getCentresAndAnchors
                         << endl;
                 }
 
-                // Note: getCentresAndAnchors gets called on the slave side
-                // so separation is owner-slave points.
-
-                thisPatchCtrs -= separation_;
-                anchors0 -= separation_;
+                thisPatchCtrs += separation_;
+                anchors0 += separation_;
                 break;
             }
             default:
@@ -986,51 +995,6 @@ Foam::label Foam::cyclicPolyPatch::nbrPatchID() const
         }
     }
     return nbrPatchID_;
-}
-
-
-void Foam::cyclicPolyPatch::transformPosition(pointField& l) const
-{
-    if (transform().rotates())
-    {
-        if (transformType() == ROTATIONAL)
-        {
-            l =
-                Foam::transform(transform().R(), l-rotationCentre_)
-              + rotationCentre_;
-        }
-        else
-        {
-            l = Foam::transform(transform().R(), l);
-        }
-    }
-    else if (transform().translates())
-    {
-        // transformPosition gets called on the receiving side,
-        // separation gets calculated on the sending side so subtract.
-        l -= transform().t();
-    }
-}
-
-
-void Foam::cyclicPolyPatch::transformPosition(point& l, const label facei) const
-{
-    if (transform().rotates())
-    {
-        if (transformType() == ROTATIONAL)
-        {
-            l = Foam::transform(transform().R(), l - rotationCentre_)
-              + rotationCentre_;
-        }
-        else
-        {
-            l = Foam::transform(transform().R(), l);
-        }
-    }
-    else if (transform().translates())
-    {
-        l -= transform().t();
-    }
 }
 
 

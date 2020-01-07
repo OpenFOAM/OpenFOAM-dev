@@ -335,37 +335,6 @@ public:
             //- Point on axis of rotation for rotational cyclic AMI
             inline const point& rotationCentre() const;
 
-            //- Transform patch-based positions from nbr side to this side
-            virtual void transformPosition(pointField&) const;
-
-            //- Transform a patch-based position from nbr side to this side
-            virtual void transformPosition
-            (
-                point& l,
-                const label facei
-            ) const;
-
-            //- Transform a patch-based direction from nbr side to this side
-            virtual void transformDirection
-            (
-                vector& d,
-                const label facei
-            ) const;
-
-            //- Transform a patch-based position from this side to nbr side
-            virtual void reverseTransformPosition
-            (
-                point& l,
-                const label facei
-            ) const;
-
-            //- Transform a patch-based direction from this side to nbr side
-            virtual void reverseTransformDirection
-            (
-                vector& d,
-                const label facei
-            ) const;
-
 
         // Interpolations
 

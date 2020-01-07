@@ -134,9 +134,9 @@ SourceFiles
 #define mapDistribute_H
 
 #include "mapDistributeBase.H"
-#include "transformList.H"
 #include "transformer.H"
 #include "coupledPolyPatch.H"
+#include "EdgeMap.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -216,8 +216,14 @@ public:
                 List<Type>& fld
             ) const
             {
-                const tensor T(forward ? vt.R() : vt.R().T());
-                transformList(T, fld);
+                if (forward)
+                {
+                    vt.transformList(fld);
+                }
+                else
+                {
+                    vt.invTransformList(fld);
+                }
             }
 
             template<class Type>
@@ -240,7 +246,7 @@ public:
             {
                 if (cpp.transform().transforms())
                 {
-                    transformList(cpp.transform().R(), fld);
+                    cpp.transform().transformList(fld);
                 }
             }
 
@@ -251,7 +257,7 @@ public:
             {
                 if (cpp.transform().transforms())
                 {
-                    transformList(cpp.transform().R(), map);
+                    cpp.transform().transformList(map);
                 }
             }
         };
@@ -278,6 +284,7 @@ public:
                     fld = vt.invTransformPosition(pfld);
                 }
             }
+
             void operator()
             (
                 const transformer& vt,
@@ -290,22 +297,27 @@ public:
                     operator()(vt, forward, flds[i]);
                 }
             }
+
             //- Transform patch-based field
             void operator()(const coupledPolyPatch& cpp, pointField& fld) const
             {
-                cpp.transformPosition(fld);
+                cpp.transform().transformPosition(fld, fld);
             }
+
             template<template<class> class Container>
             void operator()(const coupledPolyPatch& cpp, Container<point>& map)
             const
             {
                 Field<point> fld(map.size());
+
                 label i = 0;
                 forAllConstIter(typename Container<point>, map, iter)
                 {
                     fld[i++] = iter();
                 }
-                cpp.transformPosition(fld);
+
+                cpp.transform().transformPosition(fld, fld);
+
                 i = 0;
                 forAllIter(typename Container<point>, map, iter)
                 {

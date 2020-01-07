@@ -336,14 +336,6 @@ public:
             return transformer::null;
         }
 
-        //- Transform a patch-based position from other side to this side
-        virtual void transformPosition(pointField& l) const
-        {}
-
-        //- Transform a patch-based position from other side to this side
-        virtual void transformPosition(point&, const label facei) const
-        {}
-
         //- Initialize ordering for primitivePatch. Does not
         //  refer to *this (except for name() and type() etc.)
         virtual void initOrder(PstreamBuffers&, const primitivePatch&) const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1029,10 +1029,10 @@ void Foam::InteractionLists<ParticleType>::prepareWallDataToRefer()
         // supported
         referredWallData_[rWVI] = U.boundaryField()[patchi][patchFacei];
 
-        if (transform.rotates())
+        if (transform.transforms())
         {
             referredWallData_[rWVI] =
-                transform.R().T() & referredWallData_[rWVI];
+                transform.invTransform(referredWallData_[rWVI]);
         }
     }
 }

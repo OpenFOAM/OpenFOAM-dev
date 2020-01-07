@@ -229,7 +229,18 @@ void Foam::cyclicAMIPolyPatch::calcTransforms
 
             separation_ = Zero;
 
-            transform_ = transformer(revT.T());
+            if (mag(rotationCentre_) > small)
+            {
+                transform_ = transformer
+                (
+                    (I - revT.T()) & rotationCentre_,
+                    revT.T()
+                );
+            }
+            else
+            {
+                transform_ = transformer(revT.T());
+            }
 
             break;
         }
@@ -291,7 +302,8 @@ void Foam::cyclicAMIPolyPatch::resetAMI() const
         }
 
         // Transform neighbour patch to local system
-        transformPosition(nbrPoints);
+        transform().transformPosition(nbrPoints, nbrPoints);
+
         primitivePatch nbrPatch0
         (
             SubList<face>
@@ -862,105 +874,6 @@ const Foam::scalarField& Foam::cyclicAMIPolyPatch::nbrWeightsSum() const
 }
 
 
-void Foam::cyclicAMIPolyPatch::transformPosition(pointField& l) const
-{
-    if (transform().rotates())
-    {
-        if (transformType() == ROTATIONAL)
-        {
-            l = Foam::transform(transform().R(), l - rotationCentre_)
-              + rotationCentre_;
-        }
-        else
-        {
-            l = Foam::transform(transform().R(), l);
-        }
-    }
-    else if (transform().translates())
-    {
-        // transformPosition gets called on the receiving side,
-        // separation gets calculated on the sending side so subtract
-        l -= transform().t();
-    }
-}
-
-
-void Foam::cyclicAMIPolyPatch::transformPosition
-(
-    point& l,
-    const label facei
-) const
-{
-    if (transform().rotates())
-    {
-        if (transformType() == ROTATIONAL)
-        {
-            l = Foam::transform(transform().R(), l - rotationCentre_)
-              + rotationCentre_;
-        }
-        else
-        {
-            l = Foam::transform(transform().R(), l);
-        }
-    }
-    else if (transform().translates())
-    {
-        l -= transform().t();
-    }
-}
-
-
-void Foam::cyclicAMIPolyPatch::transformDirection
-(
-    vector& d,
-    const label facei
-) const
-{
-    if (transform().rotates())
-    {
-        d = Foam::transform(transform().R(), d);
-    }
-}
-
-
-void Foam::cyclicAMIPolyPatch::reverseTransformPosition
-(
-    point& l,
-    const label facei
-) const
-{
-    if (transform().rotates())
-    {
-        if (transformType() == ROTATIONAL)
-        {
-            l = Foam::transform(transform().R().T(), l - rotationCentre_)
-              + rotationCentre_;
-        }
-        else
-        {
-            l = Foam::transform(transform().R().T(), l);
-        }
-    }
-    else if (transform().translates())
-    {
-        l += transform().t();
-    }
-}
-
-
-void Foam::cyclicAMIPolyPatch::reverseTransformDirection
-(
-    vector& d,
-    const label facei
-) const
-{
-    if (transform().rotates())
-    {
-        d = Foam::transform(transform().R().T(), d);
-    }
-}
-
-
 Foam::tmp<Foam::scalarField> Foam::cyclicAMIPolyPatch::interpolate
 (
     const scalarField& fld,
@@ -1055,11 +968,8 @@ Foam::labelPair Foam::cyclicAMIPolyPatch::pointAMIAndFace
     point& p
 ) const
 {
-    point pt(p);
-    reverseTransformPosition(pt, facei);
-
-    vector nt(n);
-    reverseTransformDirection(nt, facei);
+    point pt(transform().invTransformPosition(p));
+    vector nt(transform().invTransform(n));
 
     if (owner())
     {
