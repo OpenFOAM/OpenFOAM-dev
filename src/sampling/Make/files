@@ -17,6 +17,8 @@ sampledSet/boundaryRandom/boundaryRandom.C
 sampledSet/points/points.C
 sampledSet/sphereRandom/sphereRandom.C
 sampledSet/triSurfaceMeshSampledSet/triSurfaceMeshSampledSet.C
+sampledSet/cellSetSampledSet/cellSetSampledSet.C
+sampledSet/faceSetSampledSet/faceSetSampledSet.C
 
 cuttingPlane/cuttingPlane.C
 
