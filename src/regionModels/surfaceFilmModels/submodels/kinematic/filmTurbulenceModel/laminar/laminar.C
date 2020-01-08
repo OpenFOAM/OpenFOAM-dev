@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,8 +81,8 @@ tmp<volVectorField> laminar::Us() const
         )
     );
 
-    // apply quadratic profile
-    tUs.ref() = Foam::sqrt(2.0)*filmModel_.U();
+    // Evaluate surface velocity assuming parabolic profile
+    tUs.ref() = 1.5*filmModel_.U();
     tUs.ref().correctBoundaryConditions();
 
     return tUs;
