@@ -204,13 +204,11 @@ void Foam::molecule::transformProperties(const transformer& transform)
 
     transform.transformList(siteForces_);
 
-    vectorField sitePositions(sitePositions_ - position());
-    transform.transformPosition(sitePositions, sitePositions);
-    sitePositions_ = sitePositions + position();
+    sitePositions_ = transform.transformPosition(vectorField(sitePositions_));
 
-    if (transform.translates() && special_ == SPECIAL_TETHERED)
+    if (special_ == SPECIAL_TETHERED)
     {
-        specialPosition_ += transform.t();
+        specialPosition_ = transform.transformPosition(specialPosition_);
     }
 }
 
