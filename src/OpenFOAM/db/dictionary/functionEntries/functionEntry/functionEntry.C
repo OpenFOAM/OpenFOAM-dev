@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "functionEntry.H"
 #include "IOstreams.H"
 #include "ISstream.H"
+#include "Pstream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -200,6 +201,14 @@ void Foam::functionEntry::write(Ostream& os) const
         {
             os  << token::SPACE;
         }
+    }
+
+    // If the functionEntry is being transferred from master to slaves
+    // in parallel append a ';' as the slaves will not treat the entry
+    // as a functionEntry
+    if (isA<Pstream>(os))
+    {
+        os << ';';
     }
 
     os  << endl;
