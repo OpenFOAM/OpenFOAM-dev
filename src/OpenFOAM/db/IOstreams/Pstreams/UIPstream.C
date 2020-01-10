@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -154,7 +154,15 @@ Foam::Istream& Foam::UIPstream::read(token& t)
                 }
                 else
                 {
-                    t = pval;
+                    if (pval->size() > 1 && (*pval)[0] == '#')
+                    {
+                        t = new functionName(*pval);
+                        delete pval;
+                    }
+                    else
+                    {
+                        t = pval;
+                    }
                 }
             }
             else
