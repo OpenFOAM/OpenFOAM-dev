@@ -54,20 +54,57 @@ class coupledPolyPatch
 :
     public polyPatch
 {
-public:
+private:
 
-    enum orderingType
-    {
-        UNKNOWN,            // Unspecified -> automatic ordering
-        COINCIDENTFULLMATCH,// Assume no transforms
-                            // and check the points in faces match
-        NOORDERING          // Unspecified -> no automatic ordering
-    };
+    // Private Member Functions
 
-    static const NamedEnum<orderingType, 3> orderingTypeNames;
+        //- Walk the given primitive patch. Starts at the given seed face and
+        //  point within that face. Traverses through the next available
+        //  manifold edge to an as yet unvisited face. Stores the order in
+        //  which faces are visited and the point/edge through which they are
+        //  first walked into. Direction reverses the order in which face-edges
+        //  are considered. For two conformal patches, with the same seed face
+        //  and point, the maps are guaranteed to match. They can therefore be
+        //  used for ordering purposes. This can also be used to identify
+        //  contiguous regions of the patch.
+        bool walk
+        (
+            const primitivePatch& pp,
+            const bool direction,
+            const label seedFacei,
+            const label seedFacePointi,
+            labelList& faceMap,
+            labelList& facePointMap,
+            label& mapFacei,
+            autoPtr<labelListList>& walks
+        ) const;
 
 
 protected:
+
+    // Protected Classes
+
+        //- Data to pass from owner.initOrder to owner.order
+        struct ownToOwnOrderData
+        {
+            labelList seedFaceis;
+        };
+
+        //- Data to pass from owner.initOrder to nbr.order
+        struct ownToNbrOrderData
+        {
+            List<pointField> seedFacePoints;
+        };
+
+        //- Data to pass from owner.initOrder to nbr.order if debugging
+        struct ownToNbrDebugOrderData
+        {
+            label nFaces;
+            label nPoints;
+            label nEdges;
+            label nInternalEdges;
+        };
+
 
     // Protected Data
 
@@ -77,11 +114,9 @@ protected:
         //- Local matching tolerance
         const scalar matchTolerance_;
 
-        //- Type of ordering
-        orderingType ordering_;
+        //- Data to pass from owner.initOrder to owner.order
+        mutable autoPtr<ownToOwnOrderData> ownToOwnOrderDataPtr_;
 
-
-protected:
 
     // Protected Member Functions
 
@@ -103,46 +138,52 @@ protected:
         //- Update of the patch topology
         virtual void updateMesh(PstreamBuffers&) = 0;
 
-        //- Write point in OBJ format
-        static void writeOBJ(Ostream& os, const point& pt);
-
-        //- Write selected points in OBJ format
-        static void writeOBJ(Ostream&, const pointField&, const labelList&);
-
-        //- Write patch
+        //- Write a patch in OBJ format
         static void writeOBJ
         (
             const fileName&,
-            const UList<face>&,
+            const primitivePatch&
+        );
+
+        //- Write lines between two lists of points in OBJ format
+        static void writeOBJ
+        (
+            const fileName&,
+            const pointField&,
             const pointField&
         );
 
-        //- Write edge in OBJ format
+        //- Write a set of paths in OBJ format
         static void writeOBJ
         (
-            Ostream& os,
-            const point& p0,
-            const point& p1,
-            label& vertI
-        );
-
-        //- Get a unique anchor point for all faces
-        static pointField getAnchorPoints
-        (
-            const UList<face>&,
+            const fileName&,
             const pointField&,
-            const orderingType
+            const labelListList&
         );
 
-        //- Get the number of vertices face f needs to be rotated such that
-        //  its f[0] point aligns with given anchor (within tol).
-        static label getRotation
+        //- Initialise ordering for the given primitivePatch. Fills the
+        //  referenced data structures, but leaves transferring them to the
+        //  opposite patch to the caller.
+        virtual void initOrder
         (
-            const pointField& points,
-            const face& f,
-            const point& anchor,
-            const scalar tol
-        );
+            ownToNbrOrderData& ownToNbr,
+            autoPtr<ownToNbrDebugOrderData>& ownToNbrDebugPtr,
+            const primitivePatch&
+        ) const;
+
+        //- Return new ordering for the given primitivePatch.
+        //  Ordering is -faceMap: for every face
+        //  index of the new face -rotation:for every new face the clockwise
+        //  shift of the original face. Return false if nothing changes
+        //  (faceMap is identity, rotation is 0), true otherwise.
+        virtual bool order
+        (
+            const ownToNbrOrderData& ownToNbr,
+            const autoPtr<ownToNbrDebugOrderData>& ownToNbrDebugPtr,
+            const primitivePatch&,
+            labelList& faceMap,
+            labelList& rotation
+        ) const;
 
 
 public:
@@ -161,8 +202,7 @@ public:
             const label start,
             const label index,
             const polyBoundaryMesh& bm,
-            const word& patchType,
-            const orderingType ordering
+            const word& patchType
         );
 
         //- Construct from dictionary
@@ -172,8 +212,7 @@ public:
             const dictionary& dict,
             const label index,
             const polyBoundaryMesh& bm,
-            const word& patchType,
-            const orderingType ordering = UNKNOWN
+            const word& patchType
         );
 
         //- Construct as copy, resetting the boundary mesh
@@ -224,15 +263,10 @@ public:
                 return !owner();
             }
 
-            //- Type of ordering
-            virtual orderingType ordering() const
-            {
-                return ordering_;
-            }
-
             //- Return transformation between the coupled patches
             virtual const transformer& transform() const = 0;
 
+            //- Return the matching tolerance
             scalar matchTolerance() const
             {
                 return matchTolerance_;
@@ -283,7 +317,21 @@ public:
 
         //- Write the polyPatch data as a dictionary
         virtual void write(Ostream&) const;
+
+
+    // IOstream Operators
+
+        friend Istream& operator>>(Istream&, ownToNbrOrderData&);
+        friend Ostream& operator<<(Ostream&, const ownToNbrOrderData&);
+        friend Istream& operator>>(Istream&, ownToNbrDebugOrderData&);
+        friend Ostream& operator<<(Ostream&, const ownToNbrDebugOrderData&);
 };
+
+
+Istream& operator>>(Istream&, coupledPolyPatch::ownToNbrOrderData&);
+Ostream& operator<<(Ostream&, const coupledPolyPatch::ownToNbrOrderData&);
+Istream& operator>>(Istream&, coupledPolyPatch::ownToNbrDebugOrderData&);
+Ostream& operator<<(Ostream&, const coupledPolyPatch::ownToNbrDebugOrderData&);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

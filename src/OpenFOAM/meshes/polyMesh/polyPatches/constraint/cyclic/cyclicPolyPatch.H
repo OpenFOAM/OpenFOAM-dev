@@ -78,21 +78,6 @@ class cyclicPolyPatch
         //- Index of cyclic neighbour patch
         mutable label nbrPatchID_;
 
-        // Specified transformation
-
-            // For translation
-
-                //- Offset vector from one side of the cyclic to the other
-                vector separation_;
-
-            // For rotation
-
-                //- Axis of rotation for rotational cyclics
-                vector rotationAxis_;
-
-                //- Point on axis of rotation for rotational cyclics
-                point rotationCentre_;
-
         //- List of edges formed from connected points. e[0] is the point on
         //  this patch, e[1] the corresponding point on the cyclic neighbour.
         mutable edgeList* coupledPointsPtr_;
@@ -101,65 +86,16 @@ class cyclicPolyPatch
         //  e[1] the corresponding edge on the cyclic neigbour
         mutable edgeList* coupledEdgesPtr_;
 
-        //- Temporary storage of owner side patch during ordering.
-        mutable autoPtr<primitivePatch> ownerPatchPtr_;
+        //- Data to pass from owner.initOrder to nbr.order
+        mutable autoPtr<ownToNbrOrderData> ownToNbrOrderDataPtr_;
 
-
-    // Private Member Functions
-
-        //- Calculate the transformation tensors
-        //  smallDist : matching distance per face
-        //  absTol    : absolute error in normal
-        //  if orderingType = unknown it first tries rotational, then
-        //  translational transform
-        void calcTransformTensors
-        (
-            const vectorField& thisPatchCtrs,
-            const vectorField& nbrPatchCtrs,
-            const vectorField& thisPatchNormals,
-            const vectorField& nbrPatchNormals,
-            const scalarField& smallDist,
-            const scalar absTol,
-            const orderingType = UNKNOWN,
-            const transformTypes = UNSPECIFIED
-        ) const;
-
-        //- Find amongst selected faces the one with the largest area
-        static label findMaxArea(const pointField&, const faceList&);
-
-        void calcTransforms
-        (
-            const primitivePatch& thisPatch,
-            const pointField& thisPatchCtrs,
-            const vectorField& thisPatchAreas,
-            const pointField& nbrPatchCtrs,
-            const vectorField& nbrPatchAreas
-        );
-
-        // Face ordering
-
-            // Transform the points of this patch so they align with those of
-            // the cyclic neighbour
-            void getCentresAndAnchors
-            (
-                const primitivePatch& thisPatch,
-                const primitivePatch& nbrPatch,
-                pointField& thisPatchCtrs,
-                pointField& nbrPatchCtrs,
-                pointField& anchors,
-                scalarField& tols
-            ) const;
-
-            //- Return normal of face at max distance from rotation axis
-            vector findFaceMaxRadius(const pointField& faceCentres) const;
+        //- Data to pass from owner.initOrder to nbr.order if debugging
+        mutable autoPtr<ownToNbrDebugOrderData> ownToNbrDebugOrderDataPtr_;
 
 
 protected:
 
     // Protected Member functions
-
-        //- Recalculate the transformation tensors
-        virtual void calcTransforms();
 
         //- Initialise the calculation of the patch geometry
         virtual void initGeometry(PstreamBuffers&);
@@ -220,8 +156,7 @@ public:
             const label start,
             const label index,
             const polyBoundaryMesh& bm,
-            const word& patchType,
-            const orderingType defaultOrdering = UNKNOWN
+            const word& patchType
         );
 
         //- Construct from components
@@ -233,8 +168,7 @@ public:
             const label index,
             const polyBoundaryMesh& bm,
             const word& patchType,
-            const word& nbrPatchName,
-            const orderingType ordering
+            const word& nbrPatchName
         );
 
         //- Construct from dictionary
@@ -244,8 +178,7 @@ public:
             const dictionary& dict,
             const label index,
             const polyBoundaryMesh& bm,
-            const word& patchType,
-            const orderingType ordering = UNKNOWN
+            const word& patchType
         );
 
         //- Construct as copy, resetting the boundary mesh
@@ -364,17 +297,16 @@ public:
             return cyclicTransform::transform();
         }
 
-
-        // Transformation
-
+        //- For a given patch face index, return the corresponding index of the
+        //  face on the neighbour
         label transformGlobalFace(const label facei) const
         {
-            label offset = facei-start();
+            label offset = facei - start();
             label neiStart = nbrPatch().start();
 
             if (offset >= 0 && offset < size())
             {
-                return neiStart+offset;
+                return neiStart + offset;
             }
             else
             {
@@ -384,19 +316,6 @@ public:
                 return -1;
             }
         }
-
-        //- Axis of rotation for rotational cyclics
-        const vector& rotationAxis() const
-        {
-            return rotationAxis_;
-        }
-
-        //- Point on axis of rotation for rotational cyclics
-        const point& rotationCentre() const
-        {
-            return rotationCentre_;
-        }
-
 
         //- Initialize ordering for primitivePatch. Does not
         //  refer to *this (except for name() and type() etc.)
@@ -414,7 +333,6 @@ public:
             labelList& faceMap,
             labelList& rotation
         ) const;
-
 
         //- Write the polyPatch data as a dictionary
         virtual void write(Ostream&) const;

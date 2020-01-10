@@ -109,8 +109,7 @@ public:
             const label start,
             const label index,
             const polyBoundaryMesh& bm,
-            const word& patchType,
-            const orderingType ordering = UNKNOWN
+            const word& patchType
         );
 
         //- Construct from dictionary

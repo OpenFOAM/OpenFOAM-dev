@@ -55,21 +55,6 @@ class cyclicAMIPolyPatch
     public coupledPolyPatch,
     public cyclicTransform
 {
-    // Private Member Functions
-
-        //- Return normal of face at max distance from rotation axis
-        vector findFaceNormalMaxRadius(const pointField& faceCentres) const;
-
-        void calcTransforms
-        (
-            const primitivePatch& thisPatch,
-            const pointField& thisPatchCtrs,
-            const vectorField& thisPatchAreas,
-            const pointField& neiPatchCtrs,
-            const vectorField& neiPatchAreas
-        );
-
-
 protected:
 
     // Protected data
@@ -82,27 +67,6 @@ protected:
 
         //- Index of cyclic neighbour patch
         mutable label nbrPatchID_;
-
-        // Specified transformation
-
-            // For translation
-
-                //- Offset vector from one side of the cyclic to the other
-                vector separation_;
-
-            // For rotation
-
-                //- Axis of rotation for rotational cyclics
-                vector rotationAxis_;
-
-                //- Point on axis of rotation for rotational cyclics
-                point rotationCentre_;
-
-                //- Flag to show whether the rotation angle is defined
-                bool rotationAngleDefined_;
-
-                //- Rotation angle
-                scalar rotationAngle_;
 
         //- AMI interpolation classes
         mutable PtrList<AMIInterpolation> AMIs_;
@@ -133,9 +97,6 @@ protected:
 
         //- Reset the AMI interpolator
         virtual void resetAMI() const;
-
-        //- Recalculate the transformation tensors
-        virtual void calcTransforms();
 
         //- Initialise the calculation of the patch geometry
         virtual void initGeometry(PstreamBuffers&);
@@ -176,7 +137,6 @@ public:
             const label index,
             const polyBoundaryMesh& bm,
             const word& patchType,
-            const orderingType ordering = UNKNOWN,
             const bool AMIRequireMatch = true,
             const AMIInterpolation::interpolationMethod AMIMethod =
                 AMIInterpolation::imFaceAreaWeight
@@ -328,12 +288,6 @@ public:
             {
                 return cyclicTransform::transform();
             }
-
-            //- Axis of rotation for rotational cyclic AMI
-            inline const vector& rotationAxis() const;
-
-            //- Point on axis of rotation for rotational cyclic AMI
-            inline const point& rotationCentre() const;
 
 
         // Interpolations

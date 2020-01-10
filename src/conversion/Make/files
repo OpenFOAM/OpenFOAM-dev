@@ -6,6 +6,9 @@ ensight/part/ensightPartCells.C
 ensight/part/ensightPartFaces.C
 ensight/part/ensightParts.C
 
+mergedCyclic/mergedCyclicPolyPatch.C
+mergedCyclic/polyMeshUnMergeCyclics.C
+
 meshTables/boundaryRegion.C
 meshTables/cellTable.C
 

@@ -4,4 +4,10 @@ EXE_INC = \
     /* -DDEBUG_COUPLE_INTERSECTION */ \
     /* -DDEBUG_RIGHT_HAND_WALK */ \
     /* -DDEBUG_FACE_ORDERING */ \
-    /* -DDEBUG_COUPLE_PROJECTION */
+    /* -DDEBUG_COUPLE_PROJECTION */ \
+    -I$(LIB_SRC)/dynamicMesh/lnInclude \
+    -I$(LIB_SRC)/conversion/lnInclude
+
+EXE_LIBS = \
+    -ldynamicMesh \
+    -lconversion

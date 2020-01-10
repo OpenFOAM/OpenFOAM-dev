@@ -93,7 +93,6 @@ protected:
             const polyBoundaryMesh& bm,
             const int myProcNo,
             const int neighbProcNo,
-            const orderingType defaultOrdering = UNKNOWN,
             const word& patchType = typeName
         );
 
@@ -152,7 +151,6 @@ public:
             const polyBoundaryMesh& bm,
             const int myProcNo,
             const int neighbProcNo,
-            const orderingType ordering = UNKNOWN,
             const word& patchType = typeName
         );
 
@@ -339,21 +337,6 @@ public:
         //- Initialize ordering for primitivePatch. Does not
         //  refer to *this (except for name() and type() etc.)
         virtual void initOrder(PstreamBuffers&, const primitivePatch&) const;
-
-        //- Returns rotation.
-        //    -1 : no match
-        //     0 : match
-        //    >0 : match if rotated clockwise by this amount
-        static label matchFace
-        (
-            const face& localFace,
-            const pointField& localPts,
-            const face& masterFace,
-            const pointField& masterPts,
-            const bool sameOrientation,
-            const scalar absTolSqr,
-            scalar& matchDistSqr
-        );
 
         //- Return new ordering for primitivePatch.
         //  Ordering is -faceMap: for every face

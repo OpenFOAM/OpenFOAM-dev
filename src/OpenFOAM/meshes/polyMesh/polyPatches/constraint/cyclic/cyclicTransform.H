@@ -65,25 +65,95 @@ public:
 
 private:
 
+    // Private Data
+
         //- Type of transformation
         transformTypes transformType_;
 
+        //- Axis of rotation
+        vector rotationAxis_;
 
-protected:
+        //- Centre of rotation
+        point rotationCentre_;
 
-        //- Transformation between the coupled patches
-        mutable transformer transform_;
+        //- Rotation angle
+        scalar rotationAngle_;
+
+        //- Separation vector
+        vector separation_;
+
+        //- Is the transformation specification complete, or do some parts of
+        //  the above data still need to be computed from the patch geometry?
+        bool transformComplete_;
+
+        //- Generic transformer object
+        transformer transform_;
+
+
+    // Private Member Functions
+
+        //- Re-calculate the transformer object from the other data if possible
+        void update();
+
+        //- Set the transform to that supplied. Return true if the
+        //  transformations are compatible. Used for copying transformation
+        //  data from the neighbour patch.
+        bool set
+        (
+            const cyclicTransform& t,
+            const scalar lengthScale,
+            const scalar matchTolerance
+        );
 
 
 public:
 
+    //- Runtime type information
+    TypeName("cyclicTransform");
+
+
     // Constructors
 
-        // Unspecified tranformation
-        cyclicTransform();
+        // Transformation set as UNSPECIFIED or NONE
+        cyclicTransform(const bool defaultIsNone);
 
         // Transformation read from dictionary
-        cyclicTransform(const dictionary& dict);
+        cyclicTransform(const dictionary& dict, const bool defaultIsNone);
+
+        //- Construct from coupled patch data. Copies from the supplied
+        //  transform and neighbour transform. Suitable for
+        //  geometrically dissimilar patches.
+        cyclicTransform
+        (
+            const word& name,
+            const vectorField& areas,
+            const cyclicTransform& transform,
+            const word& nbrName,
+            const cyclicTransform& nbrTransform,
+            const scalar matchTolerance
+        );
+
+        //- Construct from coupled patch data. Copies from the supplied
+        //  transform and neighbour transform, then tries to determine missing
+        //  parts of the transformation automatically from the patch geometry.
+        //  Suitable for geometrically similar patches only.
+        cyclicTransform
+        (
+            const word& name,
+            const pointField& ctrs,
+            const vectorField& areas,
+            const cyclicTransform& transform,
+            const word& nbrName,
+            const pointField& nbrCtrs,
+            const vectorField& nbrAreas,
+            const cyclicTransform& nbrTransform,
+            const scalar matchTolerance
+        );
+
+
+
+    // Destructor
+    virtual ~cyclicTransform();
 
 
     // Member Functions
@@ -96,16 +166,44 @@ public:
                 return transformType_;
             }
 
+            //- Is the transform fully specified?
+            bool transformComplete() const
+            {
+                return transformComplete_;
+            }
+
             //- Return transformation between the coupled patches
             const transformer& transform() const
             {
+                if (!transformComplete_)
+                {
+                    FatalErrorInFunction
+                        << "The transformation has not been fully specified or "
+                        << "calculated" << exit(FatalError);
+                }
                 return transform_;
             }
 
 
-        //- Write the polyPatch data as a dictionary
+        //- Write the data to a dictionary
         void write(Ostream& os) const;
+
+
+        // Global Operators
+
+            friend cyclicTransform operator&
+            (
+                const transformer& t,
+                const cyclicTransform& c
+            );
+
+            friend cyclicTransform inv(const cyclicTransform& c);
 };
+
+
+cyclicTransform operator&(const transformer& t, const cyclicTransform& c);
+
+cyclicTransform inv(const cyclicTransform& c);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

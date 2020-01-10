@@ -122,7 +122,6 @@ public:
             const int myProcNo,
             const int neighbProcNo,
             const word& referPatchName,
-            const orderingType ordering = UNKNOWN,
             const word& patchType = typeName
         );
 
@@ -329,7 +328,7 @@ public:
         //- Return transformation between the coupled patches
         virtual const transformer& transform() const
         {
-            return referPatch().transform_;
+            return referPatch().transform();
         }
 
         //- Initialize ordering for primitivePatch. Does not

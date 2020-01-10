@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cyclicTransform.H"
+#include "unitConversion.H"
+#include "IOmanip.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -40,25 +42,390 @@ namespace Foam
 
     const NamedEnum<cyclicTransform::transformTypes, 4>
         cyclicTransform::transformTypeNames;
+
+    defineTypeNameAndDebug(cyclicTransform, 0);
 }
 
 
-// * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::cyclicTransform::cyclicTransform()
+void Foam::cyclicTransform::update()
+{
+    if (!transformComplete_)
+    {
+        return;
+    }
+
+    switch (transformType_)
+    {
+        case UNSPECIFIED:
+            break;
+
+        case NONE:
+            transform_ = transformer();
+            break;
+
+        case ROTATIONAL:
+            if (rotationAngle_ == 0)
+            {
+                transform_ = transformer();
+            }
+            else
+            {
+                const tensor R =
+                    quaternion(rotationAxis_, degToRad(rotationAngle_)).R();
+
+                if (mag(rotationCentre_) == 0)
+                {
+                    transform_ = transformer(R);
+                }
+                else
+                {
+                    const vector t = rotationCentre_ - (R & rotationCentre_);
+
+                    transform_ = transformer(t, R);
+                }
+            }
+            break;
+
+        case TRANSLATIONAL:
+            if (mag(separation_) == 0)
+            {
+                transform_ = transformer();
+            }
+            else
+            {
+                transform_ = transformer(separation_);
+            }
+            break;
+    }
+}
+
+
+bool Foam::cyclicTransform::set
+(
+    const cyclicTransform& t,
+    const scalar lengthScale,
+    const scalar matchTolerance
+)
+{
+    // If the supplied transform is unspecified then there is nothing to do
+    if (t.transformType_ == UNSPECIFIED)
+    {
+        return true;
+    }
+
+    // If this transform is specified then we need to check that it is
+    // compatible with the supplied transform
+    if (transformType_ != UNSPECIFIED)
+    {
+        // If the transforms are of different types then they are incompatible
+        if (transformType_ != t.transformType_)
+        {
+            return false;
+        }
+
+        // Length-tolerance
+        const scalar lengthTolerance = lengthScale*matchTolerance;
+
+        // If the transforms are both rotational then the axes must be in the
+        // same direction, the centre points must lie on the same line, and the
+        // angles (if available) must be opposing.
+        if (transformType_ == ROTATIONAL)
+        {
+            const scalar dot = rotationAxis_ & t.rotationAxis_;
+
+            if (mag(dot) < 1 - matchTolerance)
+            {
+                return false;
+            }
+
+            if
+            (
+                (rotationAxis_ & (rotationCentre_ - t.rotationCentre_))
+              > lengthTolerance
+            )
+            {
+                return false;
+            }
+
+            if (transformComplete_ && t.transformComplete_)
+            {
+                if
+                (
+                    mag(degToRad(rotationAngle_ - sign(dot)*t.rotationAngle_))
+                  > matchTolerance
+                )
+                {
+                    return false;
+                }
+            }
+        }
+
+        // If the transforms are both translational then the separations must
+        // be opposing
+        if (transformType_ == TRANSLATIONAL)
+        {
+            if (transformComplete_ && t.transformComplete_)
+            {
+                if (mag(separation_ - t.separation_) > lengthTolerance)
+                {
+                    return false;
+                }
+            }
+        }
+    }
+
+    // If the supplied transform is more complete then overwrite this with it
+    if (!transformComplete_ && t.transformComplete_)
+    {
+        *this = t;
+    }
+
+    return true;
+}
+
+
+// * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
+
+Foam::cyclicTransform::cyclicTransform
+(
+    const bool defaultIsNone
+)
 :
-    transformType_(UNSPECIFIED)
+    transformType_(defaultIsNone ? NONE : UNSPECIFIED),
+    rotationAxis_(vector::uniform(NaN)),
+    rotationCentre_(vector::uniform(NaN)),
+    rotationAngle_(NaN),
+    separation_(vector::uniform(NaN)),
+    transformComplete_(transformType_ == NONE),
+    transform_()
 {}
 
 
-Foam::cyclicTransform::cyclicTransform(const dictionary& dict)
+Foam::cyclicTransform::cyclicTransform
+(
+    const dictionary& dict,
+    const bool defaultIsNone
+)
 :
     transformType_
     (
         dict.found("transformType")
       ? transformTypeNames.read(dict.lookup("transformType"))
-      : UNSPECIFIED
+      : (defaultIsNone ? NONE : UNSPECIFIED)
+    ),
+    rotationAxis_
+    (
+        transformType_ == ROTATIONAL
+      ? normalised(dict.lookup<vector>("rotationAxis"))
+      : vector::uniform(NaN)
+    ),
+    rotationCentre_
+    (
+        transformType_ == ROTATIONAL
+      ? dict.lookup<point>("rotationCentre")
+      : point::uniform(NaN)
+    ),
+    rotationAngle_(dict.lookupOrDefault<scalar>("rotationAngle", NaN)),
+    separation_
+    (
+        transformType_ == TRANSLATIONAL
+      ? dict.lookup<vector>("separation")
+      : vector::uniform(NaN)
+    ),
+    transformComplete_
+    (
+        transformType_ == NONE
+     || (transformType_ == ROTATIONAL && dict.found("rotationAngle"))
+     || (transformType_ == TRANSLATIONAL && dict.found("separation"))
+    ),
+    transform_(vector::uniform(NaN), tensor::uniform(NaN))
+{
+    if (transformComplete_)
+    {
+        update();
+    }
+}
+
+
+Foam::cyclicTransform::cyclicTransform
+(
+    const word& name,
+    const vectorField& areas,
+    const cyclicTransform& transform,
+    const word& nbrName,
+    const cyclicTransform& nbrTransform,
+    const scalar matchTolerance
+)
+:
+    cyclicTransform(transform)
+{
+    // Calculate the total (vector) areas for the supplied patch data
+    const vector area = sum(areas);
+
+    // Calculate patch length scales
+    const scalar lengthScale = sqrt(mag(area));
+
+    // Copy as much data from the neighbour as possible
+    if (!transformComplete_ && nbrTransform.transformType_ != UNSPECIFIED)
+    {
+        if (!set(inv(nbrTransform), lengthScale, matchTolerance))
+        {
+            FatalErrorInFunction
+                << "Patch " << name
+                << " and neighbour patch " << nbrName
+                << " have incompatible transforms:" << nl << nl << incrIndent;
+
+            FatalErrorInFunction
+                << indent << name << nl << indent << token::BEGIN_BLOCK << nl
+                << incrIndent;
+
+            cyclicTransform::write(FatalError);
+
+            FatalErrorInFunction
+                << decrIndent << indent << token::END_BLOCK << nl << nl;
+
+            FatalErrorInFunction
+                << indent << nbrName << nl << indent << token::BEGIN_BLOCK << nl
+                << incrIndent;
+
+            nbrTransform.write(FatalError);
+
+            FatalErrorInFunction
+                << decrIndent << indent << token::END_BLOCK << nl << nl;
+
+            FatalErrorInFunction
+                << decrIndent << exit(FatalError);
+        }
+    }
+}
+
+
+Foam::cyclicTransform::cyclicTransform
+(
+    const word& name,
+    const pointField& ctrs,
+    const vectorField& areas,
+    const cyclicTransform& transform,
+    const word& nbrName,
+    const pointField& nbrCtrs,
+    const vectorField& nbrAreas,
+    const cyclicTransform& nbrTransform,
+    const scalar matchTolerance
+)
+:
+    cyclicTransform
+    (
+        name,
+        areas,
+        transform,
+        nbrName,
+        nbrTransform,
+        matchTolerance
     )
+{
+    // If there is no geometry from which to calculate the transform then
+    // nothing can be calculated
+    if (areas.size() == 0 || nbrAreas.size() == 0) return;
+
+    // Calculate the total (vector) areas for the supplied patch data
+    const vector area = sum(areas);
+    const vector nbrArea = sum(nbrAreas);
+
+    // Calculate patch length scales
+    const scalar lengthScale = sqrt(mag(area));
+
+    // Calculate the centroids for the supplied patch data
+    const scalarField magAreas(mag(areas));
+    const scalarField magNbrAreas(mag(nbrAreas));
+    const point ctr = sum(ctrs*magAreas)/sum(magAreas);
+    const point nbrCtr = sum(nbrCtrs*magNbrAreas)/sum(magNbrAreas);
+
+    // Calculate the transformation from the patch geometry
+    if (!transformComplete_)
+    {
+        // Calculate the average patch normals
+        const vector normal = normalised(area);
+        const vector nbrNormal = normalised(nbrArea);
+        const vector cross = normal ^ nbrNormal;
+
+        // Calculate the angle and distance separations
+        const scalar theta = acos(- min(max(normal & nbrNormal, -1), 1));
+        const vector delta = ctr - nbrCtr;
+
+        // If the transformation is not known then we need to detect the type
+        // and calculate all the properties that define it.
+        if (transformType_ == UNSPECIFIED)
+        {
+            transformType_ =
+                mag(theta) > rootSmall
+              ? ROTATIONAL
+              : mag(delta) > lengthScale*rootSmall
+              ? TRANSLATIONAL
+              : NONE;
+
+            if (transformType_ == ROTATIONAL)
+            {
+                rotationAxis_ = normalised(cross);
+
+                const tensor T(normal, nbrNormal, rotationAxis_);
+
+                rotationCentre_ =
+                    inv(T) & vector(normal & ctr, nbrNormal & nbrCtr, 0);
+            }
+
+            // Fall through to angle and separation calculations below
+        }
+
+        // If the transformation is known to be rotational, then the axis and
+        // centre are already defined. Just set the angle.
+        if (transformType_ == ROTATIONAL)
+        {
+            rotationAngle_ = sign(cross & rotationAxis_)*radToDeg(theta);
+        }
+
+        // If the transformation is known to be translational then just
+        // calculate the separation.
+        if (transformType_ == TRANSLATIONAL)
+        {
+            separation_ = delta;
+        }
+
+        // Update the transform object
+        transformComplete_ = true;
+        update();
+    }
+
+    // Check the transformation is correct to within the matching tolerance
+    const point nbrCtrT =
+        transform_.transformPosition(nbrCtr);
+
+    const scalar ctrNbrCtrTDistance = mag(ctr - nbrCtrT);
+
+    if (ctrNbrCtrTDistance > lengthScale*matchTolerance)
+    {
+        FatalErrorInFunction
+            << "The distance between the centre of patch " << name
+            << " and the transformed centre of patch " << nbrName << " is "
+            << ctrNbrCtrTDistance << "."
+            << nl
+            << "This is greater than the match tolerance of "
+            << lengthScale*matchTolerance << " for the patch."
+            << nl
+            << "Check that the patches are geometrically similar and that any "
+            << "transformations defined between them are correct"
+            << nl
+            << "It might be possible to fix this problem by increasing the "
+            << "\"matchTolerance\" setting for this patch in the boundary "
+            << exit(FatalError);
+    }
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::cyclicTransform::~cyclicTransform()
 {}
 
 
@@ -66,7 +433,97 @@ Foam::cyclicTransform::cyclicTransform(const dictionary& dict)
 
 void Foam::cyclicTransform::write(Ostream& os) const
 {
-    writeEntry(os, "transformType", transformTypeNames[transformType_]);
+    const label oldPrecision = os.precision();
+
+    os.precision(16);
+
+    if (transformType_ != UNSPECIFIED)
+    {
+        writeEntry(os, "transformType", transformTypeNames[transformType_]);
+    }
+
+    if (transformType_ == ROTATIONAL)
+    {
+        writeEntry(os, "rotationAxis", rotationAxis_);
+        writeEntry(os, "rotationCentre", rotationCentre_);
+
+        if (transformComplete_)
+        {
+            writeEntry(os, "rotationAngle", rotationAngle_);
+        }
+    }
+
+    if (transformType_ == TRANSLATIONAL)
+    {
+        if (transformComplete_)
+        {
+            writeEntry(os, "separation", separation_);
+        }
+    }
+
+    os.precision(oldPrecision);
+}
+
+
+// * * * * * * * * * * * * * * * Global Operators  * * * * * * * * * * * * * //
+
+Foam::cyclicTransform Foam::operator&
+(
+    const transformer& t,
+    const cyclicTransform& c0
+)
+{
+    cyclicTransform c1(c0);
+
+    if (c1.transformType_ == cyclicTransform::ROTATIONAL)
+    {
+        c1.rotationAxis_ = normalised(t.transform(c1.rotationAxis_));
+        c1.rotationCentre_ = t.transformPosition(c1.rotationCentre_);
+    }
+
+    if (c1.transformType_ == cyclicTransform::TRANSLATIONAL)
+    {
+        if (c1.transformComplete_)
+        {
+            c1.separation_ = t.transform(c1.separation_);
+        }
+    }
+
+    if (c1.transformComplete_)
+    {
+        c1.update();
+    }
+
+    return c1;
+}
+
+
+Foam::cyclicTransform Foam::inv(const cyclicTransform& c0)
+{
+    cyclicTransform c1(c0);
+
+    if (c1.transformType_ == cyclicTransform::ROTATIONAL)
+    {
+        if (c1.transformComplete_)
+        {
+            c1.rotationAngle_ = - c1.rotationAngle_;
+        }
+    }
+
+    if (c1.transformType_ == cyclicTransform::TRANSLATIONAL)
+    {
+        if (c1.transformComplete_)
+        {
+            c1.separation_ = - c1.separation_;
+        }
+    }
+
+    if (c1.transformComplete_)
+    {
+        c1.update();
+    }
+
+    return c1;
 }
 
 

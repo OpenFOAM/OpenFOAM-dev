@@ -256,6 +256,7 @@ boundary
         type cyclic;
         neighbourPatch  baffleCyclic_half1;
         faces ();
+        transformType none;
     }
 
     baffleCyclic_half1
@@ -263,6 +264,7 @@ boundary
         type cyclic;
         neighbourPatch  baffleCyclic_half0;
         faces ();
+        transformType none;
     }
 );
 

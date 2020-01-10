@@ -48,7 +48,6 @@ Foam::processorCyclicPolyPatch::processorCyclicPolyPatch
     const int myProcNo,
     const int neighbProcNo,
     const word& referPatchName,
-    const orderingType ordering,
     const word& patchType
 )
 :
@@ -61,7 +60,6 @@ Foam::processorCyclicPolyPatch::processorCyclicPolyPatch
         bm,
         myProcNo,
         neighbProcNo,
-        ordering,
         patchType
     ),
     referPatchName_(referPatchName),
@@ -237,28 +235,10 @@ void Foam::processorCyclicPolyPatch::calcGeometry(PstreamBuffers& pBufs)
 
     if (Pstream::parRun())
     {
-        cyclicPolyPatch& pp = const_cast<cyclicPolyPatch&>(referPatch());
-
-        pp.calcTransformTensors
-        (
-            faceCentres(),
-            neighbFaceCentres(),
-            faceAreas()/mag(faceAreas()),
-            neighbFaceAreas()/mag(neighbFaceAreas()),
-            matchTolerance()*calcFaceTol(*this, points(), faceCentres()),
-            matchTolerance(),
-            ordering(),
-            transformType()
-        );
-
-        // Where do we store the calculated transformation?
-        // - on the processor patch?
-        // - on the underlying cyclic patch?
-        // - or do we not auto-calculate the transformation but
-        //   have option of reading it.
-
         // Update underlying cyclic halves. Need to do both since only one
         // half might be present as a processorCyclic.
+
+        cyclicPolyPatch& pp = const_cast<cyclicPolyPatch&>(referPatch());
 
         pp.calcGeometry
         (
@@ -325,7 +305,6 @@ void Foam::processorCyclicPolyPatch::initOrder
     const primitivePatch& pp
 ) const
 {
-    // For now use the same algorithm as processorPolyPatch
     processorPolyPatch::initOrder(pBufs, pp);
 }
 
@@ -338,7 +317,6 @@ bool Foam::processorCyclicPolyPatch::order
     labelList& rotation
 ) const
 {
-    // For now use the same algorithm as processorPolyPatch
     return processorPolyPatch::order(pBufs, pp, faceMap, rotation);
 }
 

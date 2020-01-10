@@ -204,8 +204,7 @@ Foam::cyclicACMIPolyPatch::cyclicACMIPolyPatch
     const label start,
     const label index,
     const polyBoundaryMesh& bm,
-    const word& patchType,
-    const orderingType ordering
+    const word& patchType
 )
 :
     cyclicAMIPolyPatch
@@ -216,7 +215,6 @@ Foam::cyclicACMIPolyPatch::cyclicACMIPolyPatch
         index,
         bm,
         patchType,
-        ordering,
         false,
         AMIInterpolation::imPartialFaceAreaWeight
     ),
@@ -433,16 +431,16 @@ void Foam::cyclicACMIPolyPatch::calcGeometry
     const pointField& nbrCc
 )
 {
-    cyclicAMIPolyPatch::calcGeometry
-    (
-        referPatch,
-        thisCtrs,
-        thisAreas,
-        thisCc,
-        nbrCtrs,
-        nbrAreas,
-        nbrCc
-    );
+    static_cast<cyclicTransform&>(*this) =
+        cyclicTransform
+        (
+            name(),
+            thisAreas,
+            *this,
+            nbrPatchName(),
+            nbrPatch(),
+            matchTolerance()
+        );
 }
 
 

@@ -360,7 +360,11 @@ void syncPoints
                 if (procPatch.transform().transformsPosition())
                 {
                     hasTransformation = true;
-                    procPatch.transform().transformPosition(nbrPatchInfo);
+                    procPatch.transform().transformPosition
+                    (
+                        nbrPatchInfo,
+                        nbrPatchInfo
+                    );
                 }
 
                 const labelList& meshPts = procPatch.meshPoints();
@@ -405,7 +409,11 @@ void syncPoints
             if (cycPatch.transform().transformsPosition())
             {
                 hasTransformation = true;
-                cycPatch.transform().invTransformPosition(patchPoints);
+                cycPatch.transform().invTransformPosition
+                (
+                    patchPoints,
+                    patchPoints
+                );
             }
 
             forAll(coupledPoints, i)

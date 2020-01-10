@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
 #include "starMesh.H"
 #include "Time.H"
 #include "wallPolyPatch.H"
-#include "oldCyclicPolyPatch.H"
+#include "mergedCyclicPolyPatch.H"
 #include "symmetryPolyPatch.H"
 #include "preservePatchTypes.H"
 #include "IFstream.H"
@@ -204,9 +204,7 @@ void Foam::starMesh::readBoundary()
             }
             else if (patchType == "CYCL")
             {
-                // incorrect. should be cyclicPatch but this
-                // requires info on connected faces.
-                patchTypes_[patchLabel] = oldCyclicPolyPatch::typeName;
+                patchTypes_[patchLabel] = mergedCyclicPolyPatch::typeName;
             }
             else
             {

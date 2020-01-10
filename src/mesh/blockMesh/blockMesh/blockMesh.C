@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "blockMesh.H"
 #include "Time.H"
+#include "cyclicTransform.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -127,11 +128,22 @@ Foam::PtrList<Foam::dictionary> Foam::blockMesh::patchDicts() const
 
     forAll(patchTopologies, patchi)
     {
+        autoPtr<polyPatch> ppPtr =
+            patchTopologies[patchi].clone(topology().boundaryMesh());
+
+        if (isA<cyclicTransform>(ppPtr()))
+        {
+            refCast<cyclicTransform>(ppPtr()) =
+                transformer(scaleFactor_*tensor::I)
+              & refCast<cyclicTransform>(ppPtr());
+        }
+
         OStringStream os;
-        patchTopologies[patchi].write(os);
+        ppPtr->write(os);
         IStringStream is(os.str());
         patchDicts.set(patchi, new dictionary(is));
     }
+
     return patchDicts;
 }
 
@@ -179,18 +191,6 @@ Foam::wordList Foam::blockMesh::patchNames() const
 {
     return topology().boundaryMesh().names();
 }
-
-
-//Foam::wordList Foam::blockMesh::patchTypes() const
-//{
-//    return topology().boundaryMesh().types();
-//}
-//
-//
-//Foam::wordList Foam::blockMesh::patchPhysicalTypes() const
-//{
-//    return topology().boundaryMesh().physicalTypes();
-//}
 
 
 Foam::label Foam::blockMesh::numZonedBlocks() const

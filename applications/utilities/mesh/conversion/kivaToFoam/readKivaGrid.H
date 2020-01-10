@@ -196,7 +196,7 @@ const word* kivaPatchTypes[nBCs] =
     &polyPatch::typeName,
     &polyPatch::typeName,
     &symmetryPolyPatch::typeName,
-    &oldCyclicPolyPatch::typeName
+    &mergedCyclicPolyPatch::typeName
 };
 
 enum patchTypeNames
@@ -573,6 +573,9 @@ polyMesh pShapeMesh
     defaultFacesName,
     defaultFacesType
 );
+
+// Un-merge any merged cyclics
+polyMeshUnMergeCyclics(pShapeMesh);
 
 Info << "Writing polyMesh" << endl;
 pShapeMesh.write();

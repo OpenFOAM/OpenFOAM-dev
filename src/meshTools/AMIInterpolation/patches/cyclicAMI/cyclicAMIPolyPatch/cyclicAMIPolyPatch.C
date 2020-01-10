@@ -40,247 +40,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
-
-Foam::vector Foam::cyclicAMIPolyPatch::findFaceNormalMaxRadius
-(
-    const pointField& faceCentres
-) const
-{
-    // Determine a face furthest away from the axis
-
-    const vectorField n((faceCentres - rotationCentre_) ^ rotationAxis_);
-
-    const scalarField magRadSqr(magSqr(n));
-
-    label facei = findMax(magRadSqr);
-
-    if (debug)
-    {
-        Info<< "findFaceMaxRadius(const pointField&) : patch: " << name() << nl
-            << "    rotFace  = " << facei << nl
-            << "    point    = " << faceCentres[facei] << nl
-            << "    distance = " << Foam::sqrt(magRadSqr[facei])
-            << endl;
-    }
-
-    return n[facei];
-}
-
-
-void Foam::cyclicAMIPolyPatch::calcTransforms
-(
-    const primitivePatch& thisPatch,
-    const pointField& thisPatchCtrs,
-    const vectorField& thisPatchAreas,
-    const pointField& nbrPatchCtrs,
-    const vectorField& nbrPatchAreas
-)
-{
-    if (transformType() != nbrPatch().transformType())
-    {
-        FatalErrorInFunction
-            << "Patch " << name()
-            << " has transform type " << transformTypeNames[transformType()]
-            << ", neighbour patch " << nbrPatchName()
-            << " has transform type "
-            << nbrPatch().transformTypeNames[nbrPatch().transformType()]
-            << exit(FatalError);
-    }
-
-
-    // Calculate transformation tensors
-
-    switch (transformType())
-    {
-        case ROTATIONAL:
-        {
-            tensor revT = Zero;
-
-            if (rotationAngleDefined_)
-            {
-                const tensor T(rotationAxis_*rotationAxis_);
-
-                const tensor S
-                (
-                    0, -rotationAxis_.z(), rotationAxis_.y(),
-                    rotationAxis_.z(), 0, -rotationAxis_.x(),
-                    -rotationAxis_.y(), rotationAxis_.x(), 0
-                );
-
-                const tensor revTPos
-                (
-                    T
-                  + cos(rotationAngle_)*(tensor::I - T)
-                  + sin(rotationAngle_)*S
-                );
-
-                const tensor revTNeg
-                (
-                    T
-                  + cos(-rotationAngle_)*(tensor::I - T)
-                  + sin(-rotationAngle_)*S
-                );
-
-                // Check - assume correct angle when difference in face areas
-                // is the smallest
-                const vector transformedAreaPos = gSum(nbrPatchAreas & revTPos);
-                const vector transformedAreaNeg = gSum(nbrPatchAreas & revTNeg);
-                const vector area0 = gSum(thisPatchAreas);
-                const scalar magArea0 = mag(area0) + rootVSmall;
-
-                // Areas have opposite sign, so sum should be zero when correct
-                // rotation applied
-                const scalar errorPos = mag(transformedAreaPos + area0);
-                const scalar errorNeg = mag(transformedAreaNeg + area0);
-
-                const scalar normErrorPos = errorPos/magArea0;
-                const scalar normErrorNeg = errorNeg/magArea0;
-
-                if (errorPos > errorNeg && normErrorNeg < matchTolerance())
-                {
-                    revT = revTNeg;
-                    rotationAngle_ *= -1;
-                }
-                else
-                {
-                    revT = revTPos;
-                }
-
-                const scalar areaError = min(normErrorPos, normErrorNeg);
-
-                if (areaError > matchTolerance())
-                {
-                    WarningInFunction
-                        << "Patch areas are not consistent within "
-                        << 100*matchTolerance()
-                        << " % indicating a possible error in the specified "
-                        << "angle of rotation" << nl
-                        << "    owner patch     : " << name() << nl
-                        << "    neighbour patch : " << nbrPatch().name()
-                        << nl
-                        << "    angle           : "
-                        << radToDeg(rotationAngle_) << " deg" << nl
-                        << "    area error      : " << 100*areaError << " %"
-                        << "    match tolerance : " <<  matchTolerance()
-                        << endl;
-                }
-
-                if (debug)
-                {
-                    scalar theta = radToDeg(rotationAngle_);
-
-                    Pout<< "cyclicAMIPolyPatch::calcTransforms: patch:"
-                        << name()
-                        << " Specified rotation:"
-                        << " swept angle: " << theta << " [deg]"
-                        << " reverse transform: " << revT
-                        << endl;
-                }
-            }
-            else
-            {
-                point n0 = Zero;
-                point n1 = Zero;
-                if (thisPatchCtrs.size())
-                {
-                    n0 = findFaceNormalMaxRadius(thisPatchCtrs);
-                }
-                if (nbrPatchCtrs.size())
-                {
-                    n1 = -findFaceNormalMaxRadius(nbrPatchCtrs);
-                }
-
-                reduce(n0, maxMagSqrOp<point>());
-                reduce(n1, maxMagSqrOp<point>());
-
-                n0 /= mag(n0) + vSmall;
-                n1 /= mag(n1) + vSmall;
-
-                // Extended tensor from two local coordinate systems calculated
-                // using normal and rotation axis
-                const tensor E0
-                (
-                    rotationAxis_,
-                    (n0 ^ rotationAxis_),
-                    n0
-                );
-                const tensor E1
-                (
-                    rotationAxis_,
-                    (-n1 ^ rotationAxis_),
-                    -n1
-                );
-                revT = E1.T() & E0;
-
-                if (debug)
-                {
-                    scalar theta = radToDeg(acos(-(n0 & n1)));
-
-                    Pout<< "cyclicAMIPolyPatch::calcTransforms: patch:"
-                        << name()
-                        << " Specified rotation:"
-                        << " n0:" << n0 << " n1:" << n1
-                        << " swept angle: " << theta << " [deg]"
-                        << " reverse transform: " << revT
-                        << endl;
-                }
-            }
-
-            separation_ = Zero;
-
-            if (mag(rotationCentre_) > small)
-            {
-                transform_ = transformer
-                (
-                    (I - revT.T()) & rotationCentre_,
-                    revT.T()
-                );
-            }
-            else
-            {
-                transform_ = transformer(revT.T());
-            }
-
-            break;
-        }
-        case TRANSLATIONAL:
-        {
-            if (debug)
-            {
-                Pout<< "cyclicAMIPolyPatch::calcTransforms : patch:" << name()
-                    << " Specified translation : " << separation_
-                    << endl;
-            }
-
-            transform_ = transformer(separation_);
-
-            break;
-        }
-        default:
-        {
-            if (debug)
-            {
-                Pout<< "patch:" << name()
-                    << " Assuming cyclic AMI pairs are colocated" << endl;
-            }
-
-            separation_ = Zero;
-
-            transform_ = transformer();
-
-            break;
-        }
-    }
-
-    if (debug)
-    {
-        Pout<< "patch: " << name() << nl
-            << "    transform = " << transform() << nl << endl;
-    }
-}
-
-
 // * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
 
 void Foam::cyclicAMIPolyPatch::resetAMI() const
@@ -357,39 +116,6 @@ void Foam::cyclicAMIPolyPatch::resetAMI() const
 }
 
 
-void Foam::cyclicAMIPolyPatch::calcTransforms()
-{
-    const cyclicAMIPolyPatch& thisPatch = *this;
-    vectorField thisPatchAreas(thisPatch.size());
-    forAll(thisPatch, facei)
-    {
-        thisPatchAreas[facei] = thisPatch[facei].area(thisPatch.points());
-    }
-
-    const cyclicAMIPolyPatch& nbrPatch = this->nbrPatch();
-    vectorField nbrPatchAreas(nbrPatch.size());
-    forAll(nbrPatch, facei)
-    {
-        nbrPatchAreas[facei] = nbrPatch[facei].area(nbrPatch.points());
-    }
-
-    calcTransforms
-    (
-        thisPatch,
-        thisPatch.faceCentres(),
-        thisPatchAreas,
-        nbrPatch.faceCentres(),
-        nbrPatchAreas
-    );
-
-    if (debug)
-    {
-        Pout<< "calcTransforms() : patch: " << name() << nl
-            << "    transform = " << transform() << nl << endl;
-    }
-}
-
-
 void Foam::cyclicAMIPolyPatch::initGeometry(PstreamBuffers& pBufs)
 {
     // Clear the invalid AMIs and transforms
@@ -439,8 +165,6 @@ void Foam::cyclicAMIPolyPatch::movePoints
 )
 {
     polyPatch::movePoints(pBufs, p);
-
-    calcTransforms();
 }
 
 
@@ -480,18 +204,14 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     const label index,
     const polyBoundaryMesh& bm,
     const word& patchType,
-    const orderingType ordering,
     const bool AMIRequireMatch,
     const AMIInterpolation::interpolationMethod AMIMethod
 )
 :
-    coupledPolyPatch(name, size, start, index, bm, patchType, ordering),
+    coupledPolyPatch(name, size, start, index, bm, patchType),
+    cyclicTransform(true),
     nbrPatchName_(word::null),
     nbrPatchID_(-1),
-    rotationAxis_(Zero),
-    rotationCentre_(point::zero),
-    rotationAngleDefined_(false),
-    rotationAngle_(0.0),
     AMIs_(),
     AMITransforms_(),
     AMIReverse_(false),
@@ -518,14 +238,10 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
 )
 :
     coupledPolyPatch(name, dict, index, bm, patchType),
-    cyclicTransform(dict),
+    cyclicTransform(dict, true),
     nbrPatchName_(dict.lookupOrDefault<word>("neighbourPatch", "")),
     coupleGroup_(dict),
     nbrPatchID_(-1),
-    rotationAxis_(Zero),
-    rotationCentre_(point::zero),
-    rotationAngleDefined_(false),
-    rotationAngle_(0.0),
     AMIs_(),
     AMITransforms_(),
     AMIReverse_(dict.lookupOrDefault<bool>("flipNormals", false)),
@@ -562,49 +278,6 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
             << exit(FatalIOError);
     }
 
-    switch (transformType())
-    {
-        case ROTATIONAL:
-        {
-            dict.lookup("rotationAxis") >> rotationAxis_;
-            dict.lookup("rotationCentre") >> rotationCentre_;
-            if (dict.readIfPresent("rotationAngle", rotationAngle_))
-            {
-                rotationAngleDefined_ = true;
-                rotationAngle_ = degToRad(rotationAngle_);
-
-                if (debug)
-                {
-                    Info<< "rotationAngle: " << rotationAngle_ << " [rad]"
-                        <<  endl;
-                }
-            }
-
-            scalar magRot = mag(rotationAxis_);
-            if (magRot < small)
-            {
-                FatalIOErrorInFunction
-                (
-                    dict
-                )   << "Illegal rotationAxis " << rotationAxis_ << endl
-                    << "Please supply a non-zero vector."
-                    << exit(FatalIOError);
-            }
-            rotationAxis_ /= magRot;
-
-            break;
-        }
-        case TRANSLATIONAL:
-        {
-            dict.lookup("separation") >> separation_;
-            break;
-        }
-        default:
-        {
-            // No additional info required
-        }
-    }
-
     // Neighbour patch might not be valid yet so no transformation
     // calculation possible
 }
@@ -617,13 +290,10 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
 )
 :
     coupledPolyPatch(pp, bm),
+    cyclicTransform(pp),
     nbrPatchName_(pp.nbrPatchName_),
     coupleGroup_(pp.coupleGroup_),
     nbrPatchID_(-1),
-    rotationAxis_(pp.rotationAxis_),
-    rotationCentre_(pp.rotationCentre_),
-    rotationAngleDefined_(pp.rotationAngleDefined_),
-    rotationAngle_(pp.rotationAngle_),
     AMIs_(),
     AMITransforms_(),
     AMIReverse_(pp.AMIReverse_),
@@ -653,10 +323,6 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     nbrPatchName_(nbrPatchName),
     coupleGroup_(pp.coupleGroup_),
     nbrPatchID_(-1),
-    rotationAxis_(pp.rotationAxis_),
-    rotationCentre_(pp.rotationCentre_),
-    rotationAngleDefined_(pp.rotationAngleDefined_),
-    rotationAngle_(pp.rotationAngle_),
     AMIs_(),
     AMITransforms_(),
     AMIReverse_(pp.AMIReverse_),
@@ -693,10 +359,6 @@ Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch
     nbrPatchName_(pp.nbrPatchName_),
     coupleGroup_(pp.coupleGroup_),
     nbrPatchID_(-1),
-    rotationAxis_(pp.rotationAxis_),
-    rotationCentre_(pp.rotationCentre_),
-    rotationAngleDefined_(pp.rotationAngleDefined_),
-    rotationAngle_(pp.rotationAngle_),
     AMIs_(),
     AMITransforms_(),
     AMIReverse_(pp.AMIReverse_),
@@ -924,14 +586,39 @@ void Foam::cyclicAMIPolyPatch::calcGeometry
     const pointField& nbrCc
 )
 {
-    calcTransforms
+    if
     (
-        referPatch,
-        thisCtrs,
-        thisAreas,
-        nbrCtrs,
-        nbrAreas
-    );
+        !Pstream::parRun()
+     && !this->boundaryMesh().mesh().time().processorCase()
+    )
+    {
+        static_cast<cyclicTransform&>(*this) =
+            cyclicTransform
+            (
+                name(),
+                thisCtrs,
+                thisAreas,
+                *this,
+                nbrPatchName(),
+                nbrCtrs,
+                nbrAreas,
+                nbrPatch(),
+                matchTolerance()
+            );
+    }
+    else
+    {
+        static_cast<cyclicTransform&>(*this) =
+            cyclicTransform
+            (
+                name(),
+                thisAreas,
+                *this,
+                nbrPatchName(),
+                nbrPatch(),
+                matchTolerance()
+            );
+    }
 }
 
 
@@ -1047,31 +734,6 @@ void Foam::cyclicAMIPolyPatch::write(Ostream& os) const
     coupleGroup_.write(os);
 
     cyclicTransform::write(os);
-
-    switch (transformType())
-    {
-        case ROTATIONAL:
-        {
-            writeEntry(os, "rotationAxis", rotationAxis_);
-            writeEntry(os, "rotationCentre", rotationCentre_);
-
-            if (rotationAngleDefined_)
-            {
-                writeEntry(os, "rotationAngle", radToDeg(rotationAngle_));
-            }
-
-            break;
-        }
-        case TRANSLATIONAL:
-        {
-            writeEntry(os, "separation", separation_);
-            break;
-        }
-        default:
-        {
-            // No additional info to write
-        }
-    }
 
     if (AMIReverse_)
     {

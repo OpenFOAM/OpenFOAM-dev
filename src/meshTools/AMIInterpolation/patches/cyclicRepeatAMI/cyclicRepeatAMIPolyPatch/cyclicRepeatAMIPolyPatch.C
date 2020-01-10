@@ -294,8 +294,7 @@ Foam::cyclicRepeatAMIPolyPatch::cyclicRepeatAMIPolyPatch
     const label start,
     const label index,
     const polyBoundaryMesh& bm,
-    const word& patchType,
-    const orderingType ordering
+    const word& patchType
 )
 :
     cyclicAMIPolyPatch
@@ -306,7 +305,6 @@ Foam::cyclicRepeatAMIPolyPatch::cyclicRepeatAMIPolyPatch
         index,
         bm,
         patchType,
-        ordering,
         false,
         AMIInterpolation::imFaceAreaWeight
     ),
@@ -460,6 +458,30 @@ Foam::cyclicRepeatAMIPolyPatch::nbrWeightsSum() const
     // See above.
 
     return cyclicAMIPolyPatch::nbrWeightsSum();
+}
+
+
+void Foam::cyclicRepeatAMIPolyPatch::calcGeometry
+(
+    const primitivePatch& referPatch,
+    const pointField& thisCtrs,
+    const vectorField& thisAreas,
+    const pointField& thisCc,
+    const pointField& nbrCtrs,
+    const vectorField& nbrAreas,
+    const pointField& nbrCc
+)
+{
+    static_cast<cyclicTransform&>(*this) =
+        cyclicTransform
+        (
+            name(),
+            thisAreas,
+            *this,
+            nbrPatchName(),
+            nbrPatch(),
+            matchTolerance()
+        );
 }
 
 

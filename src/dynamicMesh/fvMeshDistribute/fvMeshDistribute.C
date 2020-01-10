@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1244,8 +1244,7 @@ void Foam::fvMeshDistribute::addProcPatches
                         mesh_.boundaryMesh(),
                         Pstream::myProcNo(),
                         proci,
-                        pcPatch.name(),
-                        pcPatch.ordering()
+                        pcPatch.name()
                     );
 
                     procPatchID[proci].insert

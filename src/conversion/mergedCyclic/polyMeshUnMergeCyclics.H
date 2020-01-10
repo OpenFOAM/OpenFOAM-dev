@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +23,29 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#ifndef polyMeshUnMergeCyclics_H
+#define polyMeshUnMergeCyclics_H
+
+#include "polyMesh.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline const Foam::word& Foam::cyclicAMIPolyPatch::nbrPatchName() const
+namespace Foam
 {
-    if (nbrPatchName_.empty())
-    {
-        // Try and use patchGroup to find samplePatch and sampleRegion
-        label patchID = coupleGroup_.findOtherPatchID(*this);
 
-        nbrPatchName_ = boundaryMesh()[patchID].name();
-    }
-    return nbrPatchName_;
-}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+//- Find all patches of type "mergedCyclic" in the given mesh and split them
+//  into two "standard" cyclics, using the given included angle to
+//  geometrically separate the halves if they meet at an angle at the axis
+void polyMeshUnMergeCyclics(polyMesh& mesh, const scalar includedAngle=165);
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#endif
 
 // ************************************************************************* //

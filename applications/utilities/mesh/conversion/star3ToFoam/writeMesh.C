@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,7 @@ Description
 #include "starMesh.H"
 #include "Time.H"
 #include "polyMesh.H"
+#include "polyMeshUnMergeCyclics.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -60,6 +61,8 @@ void Foam::starMesh::writeMesh()
             patchPhysicalTypes_
         );
 
+        polyMeshUnMergeCyclics(pShapeMesh);
+
         Info<< "Writing polyMesh" << endl;
         pShapeMesh.write();
     }
@@ -88,6 +91,8 @@ void Foam::starMesh::writeMesh()
 
         // adding patches also checks the mesh
         pMesh.addPatches(polyBoundaryPatches(pMesh));
+
+        polyMeshUnMergeCyclics(pMesh);
 
         Info<< "Writing polyMesh" << endl;
         pMesh.write();

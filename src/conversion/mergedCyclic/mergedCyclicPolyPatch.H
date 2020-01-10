@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,25 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::cyclicRepeatAMIPolyPatch
+    Foam::mergedCyclicPolyPatch
 
 Description
-    Repeat patch for Arbitrary Mesh Interface (AMI)
+    Placeholder for two patches describing a cyclic interface. Used in mesh
+    conversion processes involving formats in which both halves of a cyclic
+    interface are stored on the same patch.
+
+See also
+    Foam::polyMeshUnMergeCyclics
 
 SourceFiles
-    cyclicRepeatAMIPolyPatch.C
+    mergedCyclicPolyPatch.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef cyclicRepeatAMIPolyPatch_H
-#define cyclicRepeatAMIPolyPatch_H
+#ifndef mergedCyclicPolyPatch_H
+#define mergedCyclicPolyPatch_H
 
-#include "cyclicAMIPolyPatch.H"
-#include "AMIInterpolation.H"
-#include "polyBoundaryMesh.H"
+#include "polyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -45,40 +48,23 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class cyclicRepeatAMIPolyPatch Declaration
+                      Class mergedCyclicPolyPatch Declaration
 \*---------------------------------------------------------------------------*/
 
-class cyclicRepeatAMIPolyPatch
+class mergedCyclicPolyPatch
 :
-    public cyclicAMIPolyPatch
+    public polyPatch
 {
-protected:
-
-    // Protected data
-
-        //- Name of the transform patch
-        mutable word transformPatchName_;
-
-        //- Index of the transform patch
-        mutable label transformPatchID_;
-
-
-    // Protected Member Functions
-
-        //- Reset the AMI interpolator
-        virtual void resetAMI() const;
-
-
 public:
 
     //- Runtime type information
-    TypeName("cyclicRepeatAMI");
+    TypeName("mergedCyclic");
 
 
     // Constructors
 
-        //- Construct from (base couped patch) components
-        cyclicRepeatAMIPolyPatch
+        //- Construct from components
+        mergedCyclicPolyPatch
         (
             const word& name,
             const label size,
@@ -89,7 +75,7 @@ public:
         );
 
         //- Construct from dictionary
-        cyclicRepeatAMIPolyPatch
+        mergedCyclicPolyPatch
         (
             const word& name,
             const dictionary& dict,
@@ -99,39 +85,37 @@ public:
         );
 
         //- Construct as copy, resetting the boundary mesh
-        cyclicRepeatAMIPolyPatch
+        mergedCyclicPolyPatch
         (
-            const cyclicRepeatAMIPolyPatch&,
+            const mergedCyclicPolyPatch&,
             const polyBoundaryMesh&
         );
 
         //- Construct given the original patch and resetting the
         //  face list and boundary mesh information
-        cyclicRepeatAMIPolyPatch
+        mergedCyclicPolyPatch
         (
-            const cyclicRepeatAMIPolyPatch& pp,
+            const mergedCyclicPolyPatch& pp,
             const polyBoundaryMesh& bm,
             const label index,
             const label newSize,
-            const label newStart,
-            const word& nbrPatchName
+            const label newStart
         );
 
         //- Construct given the original patch and a map
-        cyclicRepeatAMIPolyPatch
+        mergedCyclicPolyPatch
         (
-            const cyclicRepeatAMIPolyPatch& pp,
+            const mergedCyclicPolyPatch& pp,
             const polyBoundaryMesh& bm,
             const label index,
             const labelUList& mapAddressing,
             const label newStart
         );
 
-
         //- Construct and return a clone, resetting the boundary mesh
         virtual autoPtr<polyPatch> clone(const polyBoundaryMesh& bm) const
         {
-            return autoPtr<polyPatch>(new cyclicRepeatAMIPolyPatch(*this, bm));
+            return autoPtr<polyPatch>(new mergedCyclicPolyPatch(*this, bm));
         }
 
         //- Construct and return a clone, resetting the face list
@@ -146,15 +130,7 @@ public:
         {
             return autoPtr<polyPatch>
             (
-                new cyclicRepeatAMIPolyPatch
-                (
-                    *this,
-                    bm,
-                    index,
-                    newSize,
-                    newStart,
-                    nbrPatchName_
-                )
+                new mergedCyclicPolyPatch(*this, bm, index, newSize, newStart)
             );
         }
 
@@ -170,7 +146,7 @@ public:
         {
             return autoPtr<polyPatch>
             (
-                new cyclicRepeatAMIPolyPatch
+                new mergedCyclicPolyPatch
                 (
                     *this,
                     bm,
@@ -180,59 +156,12 @@ public:
                 )
             );
         }
-
-
-    //- Destructor
-    virtual ~cyclicRepeatAMIPolyPatch();
-
-
-    // Member Functions
-
-        // Access
-
-            //- Return a reference to the neighbour patch
-            virtual const cyclicRepeatAMIPolyPatch& nbrPatch() const;
-
-            //- Neighbour patch name
-            inline const word& transformPatchName() const;
-
-            //- Neighbour patch ID
-            virtual label transformPatchID() const;
-
-            //- Return a reference to the transform patch
-            virtual const coupledPolyPatch& transformPatch() const;
-
-            //- Return the weights sum for this patch
-            virtual const scalarField& weightsSum() const;
-
-            //- Return the weights sum for the neighbour patch
-            virtual const scalarField& nbrWeightsSum() const;
-
-
-        //- Calculate the patch geometry
-        virtual void calcGeometry
-        (
-            const primitivePatch& referPatch,
-            const pointField& thisCtrs,
-            const vectorField& thisAreas,
-            const pointField& thisCc,
-            const pointField& nbrCtrs,
-            const vectorField& nbrAreas,
-            const pointField& nbrCc
-        );
-
-        //- Write the polyPatch data as a dictionary
-        virtual void write(Ostream&) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "cyclicRepeatAMIPolyPatchI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
