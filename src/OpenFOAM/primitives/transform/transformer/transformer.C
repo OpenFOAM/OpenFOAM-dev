@@ -228,7 +228,7 @@ Foam::Istream& Foam::operator>>(Istream& is, transformer& tr)
     // Read beginning of transformer
     is.readBegin("transformer");
 
-    is  >> tr.t_ >> tr.R_ >> tr.rotates_;
+    is  >> tr.translates_ >> tr.t_ >> tr.rotates_ >> tr.R_;
 
     // Read end of transformer
     is.readEnd("transformer");
@@ -243,7 +243,8 @@ Foam::Istream& Foam::operator>>(Istream& is, transformer& tr)
 Foam::Ostream& Foam::operator<<(Ostream& os, const transformer& tr)
 {
     os  << token::BEGIN_LIST
-        << tr.t() << token::SPACE << tr.R() << token::SPACE << tr.rotates()
+        << tr.translates_ << token::SPACE << tr.t_ << token::SPACE
+        << tr.rotates_ << token::SPACE << tr.R_
         << token::END_LIST;
 
     return os;
