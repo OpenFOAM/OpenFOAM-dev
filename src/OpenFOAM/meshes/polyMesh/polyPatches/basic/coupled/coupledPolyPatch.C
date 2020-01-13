@@ -334,7 +334,8 @@ Foam::coupledPolyPatch::coupledPolyPatch
 )
 :
     polyPatch(pp, bm),
-    matchTolerance_(pp.matchTolerance_)
+    matchTolerance_(pp.matchTolerance_),
+    ordering_(UNKNOWN)
 {}
 
 
@@ -348,7 +349,8 @@ Foam::coupledPolyPatch::coupledPolyPatch
 )
 :
     polyPatch(pp, bm, index, newSize, newStart),
-    matchTolerance_(pp.matchTolerance_)
+    matchTolerance_(pp.matchTolerance_),
+    ordering_(UNKNOWN)
 {}
 
 
@@ -362,7 +364,8 @@ Foam::coupledPolyPatch::coupledPolyPatch
 )
 :
     polyPatch(pp, bm, index, mapAddressing, newStart),
-    matchTolerance_(pp.matchTolerance_)
+    matchTolerance_(pp.matchTolerance_),
+    ordering_(UNKNOWN)
 {}
 
 
