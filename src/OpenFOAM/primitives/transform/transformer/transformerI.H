@@ -194,17 +194,15 @@ inline void Foam::transformer::operator&=
     const transformer& tr
 )
 {
-    t_ += tr.t_;
-
     // If either of the two objects has translates_ as true, then inherit
     // it, otherwise, these should both be zero vectors.
     translates_ = tr.translates_ || translates_;
-
-    R_ = tr.R_ & R_;
+    t_ = (tr.R_ & t_) + tr.t_;
 
     // If either of the two objects has rotates_ as true, then inherit
     // it, otherwise, these should both be I tensors.
     rotates_ = tr.rotates_ || rotates_;
+    R_ = tr.R_ & R_;
 }
 
 
@@ -212,6 +210,9 @@ inline void Foam::transformer::operator=(const vector& t)
 {
     translates_ = true;
     t_ = t;
+
+    rotates_ = false;
+    R_ = tensor::I;
 }
 
 
@@ -231,6 +232,9 @@ inline void Foam::transformer::operator-=(const vector& t)
 
 inline void Foam::transformer::operator=(const tensor& R)
 {
+    translates_ = false;
+    t_ = Zero;
+
     rotates_ = true;
     R_ = R;
 }
@@ -239,6 +243,7 @@ inline void Foam::transformer::operator=(const tensor& R)
 inline void Foam::transformer::operator&=(const tensor& R)
 {
     rotates_ = true;
+    t_ = R & t_;
     R_ = R & R_;
 }
 
@@ -306,7 +311,7 @@ inline Foam::transformer Foam::operator&
 {
     return transformer
     (
-        tr1.t() + tr2.t(),
+        (tr1.R() & tr2.t()) + tr1.t(),
         tr1.translates_ || tr2.translates_,
         tr1.R() & tr2.R(),
         tr1.rotates_ || tr2.rotates_
