@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,7 +77,7 @@ public:
     // Constructors
 
         //- Construct from a dictionary
-        polynomial(const dictionary& dict, const objectRegistry& db);
+        polynomial(const dictionary& dict, const phasePair& pair);
 
 
     //- Destructor

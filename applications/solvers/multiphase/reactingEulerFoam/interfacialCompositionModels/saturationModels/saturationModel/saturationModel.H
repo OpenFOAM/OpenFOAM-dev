@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,7 @@ SourceFiles
 #include "volFields.H"
 #include "dictionary.H"
 #include "runTimeSelectionTables.H"
+#include "phasePair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,16 +67,16 @@ public:
         saturationModel,
         dictionary,
         (
-            const dictionary& dict, const objectRegistry& db
+            const dictionary& dict, const phasePair& pair
         ),
-        (dict, db)
+        (dict, pair)
     );
 
 
     // Constructors
 
         //- Construct null
-        saturationModel(const objectRegistry& db);
+        saturationModel(const phasePair& pair);
 
         //- Disallow default bitwise copy construction
         saturationModel(const saturationModel&) = delete;
@@ -87,7 +88,7 @@ public:
         static autoPtr<saturationModel> New
         (
             const dictionary& dict,
-            const objectRegistry& db
+            const phasePair& pair
         );
 
 

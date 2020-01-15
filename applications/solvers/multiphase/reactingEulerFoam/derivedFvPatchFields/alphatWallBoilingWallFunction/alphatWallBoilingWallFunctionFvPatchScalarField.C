@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,7 @@ License
 #include "ThermalDiffusivity.H"
 #include "PhaseCompressibleTurbulenceModel.H"
 #include "saturationModel.H"
+#include "rhoReactionThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
 using namespace Foam::constant::mathematical;
@@ -112,6 +113,17 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     departureDiamModel_(nullptr),
     departureFreqModel_(nullptr)
 {
+    // Check that otherPhaseName != this phase
+    if (internalField().group() == otherPhaseName_)
+    {
+        FatalErrorInFunction
+            << "otherPhase should be the name of the vapor phase that "
+            << "corresponds to the liquid base or vice versa" << nl
+            << "This phase: " << internalField().group() << nl
+            << "otherPhase: " << otherPhaseName_
+            << abort(FatalError);
+    }
+
     switch (phaseType_)
     {
         case vaporPhase:
@@ -266,13 +278,9 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
     // Lookup the fluid model
     const phaseSystem& fluid =
-        refCast<const phaseSystem>
-        (
-            db().lookupObject<phaseSystem>("phaseProperties")
-        );
+        db().lookupObject<phaseSystem>("phaseProperties");
 
-    const saturationModel& satModel =
-        db().lookupObject<saturationModel>("saturationModel");
+    const word volatileSpecie(fluid.lookupOrDefault<word>("volatile", "none"));
 
     const label patchi = patch().index();
 
@@ -364,7 +372,10 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             const tmp<scalarField> tmuw = turbModel.mu(patchi);
             const scalarField& muw = tmuw();
 
-            const tmp<scalarField> talphaw = liquid.thermo().alpha(patchi);
+            const rhoThermo& lThermo = liquid.thermo();
+            const rhoThermo& vThermo = vapor.thermo();
+
+            const tmp<scalarField> talphaw = lThermo.alpha(patchi);
             const scalarField& alphaw = talphaw();
 
             const tmp<volScalarField> tk = turbModel.k();
@@ -382,11 +393,9 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             const fvPatchScalarField& rhoVaporw =
                 vaporTurbModel.rho().boundaryField()[patchi];
 
-            const fvPatchScalarField& pw =
-                liquid.thermo().p().boundaryField()[patchi];
-
             const fvPatchScalarField& Tw =
-                liquid.thermo().T().boundaryField()[patchi];
+                lThermo.T().boundaryField()[patchi];
+
             const scalarField Tc(Tw.patchInternalField());
 
             const scalarField uTau(Cmu25*sqrt(kw));
@@ -403,34 +412,67 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
             const scalarField yPlusTherm(this->yPlusTherm(nutw, P, Prat));
 
-            tmp<volScalarField> tCp = liquid.thermo().Cp();
+            tmp<volScalarField> tCp = lThermo.Cp();
             const volScalarField& Cp = tCp();
             const fvPatchScalarField& Cpw = Cp.boundaryField()[patchi];
 
             // Saturation temperature
+            const saturationModel& satModel =
+                db().lookupObject<saturationModel>
+                (
+                    IOobject::groupName
+                    (
+                        "saturationModel",
+                        phasePair(vapor,liquid).name()
+                    )
+                );
+
             const tmp<volScalarField> tTsat =
-                satModel.Tsat(liquid.thermo().p());
+                satModel.Tsat(lThermo.p());
 
             const volScalarField& Tsat = tTsat();
             const fvPatchScalarField& Tsatw(Tsat.boundaryField()[patchi]);
             const scalarField Tsatc(Tsatw.patchInternalField());
 
-            const fvPatchScalarField& hew
-                = liquid.thermo().he().boundaryField()[patchi];
+            const fvPatchScalarField& pw =
+                lThermo.p().boundaryField()[patchi];
 
-            const scalarField hw
-            (
-                liquid.thermo().he().member() == "e"
-              ? hew.patchInternalField() + pw/rhoLiquidw.patchInternalField()
-              : hew.patchInternalField()
-            );
+            const fvPatchScalarField& hew =
+                lThermo.he().boundaryField()[patchi];
 
-            const scalarField L
-            (
-                vapor.thermo().he().member() == "e"
-              ? vapor.thermo().he(Tsatc, patchi) + pw/rhoVaporw - hw
-              : vapor.thermo().he(Tsatc, patchi) - hw
-            );
+            scalarField liquidHaw(lThermo.ha(Tc, patchi));
+
+            scalarField vaporHaw(vThermo.ha(Tsatw, patchi));
+
+            if (volatileSpecie != "none" && isA<rhoReactionThermo>(lThermo))
+            {
+                const basicSpecieMixture& composition =
+                    refCast<const rhoReactionThermo>(lThermo).composition();
+
+                liquidHaw =
+                    composition.Ha
+                    (
+                        composition.species()[volatileSpecie],
+                        pw,
+                        Tc
+                    );
+            }
+
+            if (volatileSpecie != "none" && isA<rhoReactionThermo>(vThermo))
+            {
+                const basicSpecieMixture& composition =
+                    refCast<const rhoReactionThermo>(vThermo).composition();
+
+                vaporHaw =
+                    composition.Ha
+                    (
+                        composition.species()[volatileSpecie],
+                        pw,
+                        Tsatw
+                    );
+            }
+
+            const scalarField L(vaporHaw - liquidHaw);
 
             // Liquid phase fraction at the wall
             const scalarField liquidw(liquid.boundaryField()[patchi]);
@@ -519,9 +561,16 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                     fLiquid*4.8*exp( min(-Ja/80, log(vGreat)))
                 );
 
-                const scalarField A2(min(pi*sqr(dDep_)*N*Al/4, scalar(1)));
+                scalarField A2(min(pi*sqr(dDep_)*N*Al/4, scalar(1)));
                 const scalarField A1(max(1 - A2, scalar(1e-4)));
-                const scalarField A2E(min(pi*sqr(dDep_)*N*Al/4, scalar(5)));
+                scalarField A2E(min(pi*sqr(dDep_)*N*Al/4, scalar(5)));
+
+                if (volatileSpecie != "none" && !liquid.pure())
+                {
+                    const volScalarField& Yvolatile = liquid.Y(volatileSpecie);
+                    A2E *= Yvolatile.boundaryField()[patchi];
+                    A2 *= Yvolatile.boundaryField()[patchi];
+                }
 
                 // Volumetric mass source in the near wall cell due to the
                 // wall boiling

@@ -19,8 +19,6 @@ type    thermalPhaseChangeTwoPhaseSystem;
 
 phases (gas liquid);
 
-phaseChange on;
-
 gas
 {
     type            purePhaseModel;
@@ -178,30 +176,33 @@ blending
 aspectRatio
 ();
 
-saturationModel
-{
-    type function1;
-
-    function scale;
-    functionCoeffs
+saturation
+(
+    (gas and liquid)
     {
-        xScale 1e-6;
-        scale   1;
-        value
+        type function1;
+
+        function scale;
+        functionCoeffs
         {
-            type                tableFile;
-            format              csv;
-            nHeaderLine         1;
-            refColumn           1;
-            componentColumns    (0);
-            separator           ";";
-            mergeSeparators     no;
-            file                "R12.csv";
-            outOfBounds         clamp;
-            interpolationScheme linear;
-        }
-    };
-};
+            xScale 1e-6;
+            scale   1;
+            value
+            {
+                type                tableFile;
+                format              csv;
+                nHeaderLine         1;
+                refColumn           1;
+                componentColumns    (0);
+                separator           ";";
+                mergeSeparators     no;
+                file                "R12.csv";
+                outOfBounds         clamp;
+                interpolationScheme linear;
+            }
+        };
+    }
+);
 
 surfaceTension
 (

@@ -64,13 +64,15 @@ surfaceTension
     }
 );
 
-saturationModel
-{
-    type constant;
-    pSat 1e5;
-    Tsat 372.76;
-};
-
+saturation
+(
+    (steam and water)
+    {
+        type constant;
+        pSat 1e5;
+        Tsat 372.76;
+    }
+);
 
 aspectRatio
 (

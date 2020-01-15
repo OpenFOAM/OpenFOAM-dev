@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,6 +177,14 @@ public:
                 const label speciei,
                 const scalar p,
                 const scalar T
+            ) const;
+
+            //- Enthalpy/Internal energy [J/kg]
+            virtual tmp<scalarField> Ha
+            (
+                const label speciei,
+                const scalarField& p,
+                const scalarField& T
             ) const;
 
             //- Absolute enthalpy [J/kg]

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,9 +33,11 @@ Description
       - bubble departure diameter
 
     Implements a version of the well-known RPI wall boiling model
-    (Kurul & Podowski, 1991). The model implementation is described in Peltola
-    et al. (2019) and is similar to the model described by Peltola &
-    Pättikangas (2012).
+    (Kurul & Podowski, 1991). The model implementation based on implementation
+    described in Peltola et al. (2019) and is similar to the model described by
+    Peltola & Pättikangas (2012). The present implementation includes simplified
+    support for presence of non-volatile components in addition to a single
+    volatile component.
 
     References:
     \verbatim

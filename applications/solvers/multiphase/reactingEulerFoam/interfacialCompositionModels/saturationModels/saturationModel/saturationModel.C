@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,15 +36,15 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::saturationModel::saturationModel(const objectRegistry& db)
+Foam::saturationModel::saturationModel(const phasePair& pair)
 :
     IOdictionary
     (
         IOobject
         (
-            "saturationModel",
-            db.time().constant(),
-            db
+            IOobject::groupName("saturationModel", pair.name()),
+            pair.phase1().time().constant(),
+            pair.phase1().mesh()
         )
     )
 {}

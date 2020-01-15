@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -258,6 +258,18 @@ Foam::scalar Foam::SpecieMixture<MixtureType>::Ha
 ) const
 {
     return this->getLocalThermo(speciei).Ha(p, T);
+}
+
+
+template<class MixtureType>
+Foam::tmp<Foam::scalarField> Foam::SpecieMixture<MixtureType>::Ha
+(
+    const label speciei,
+    const scalarField& p,
+    const scalarField& T
+) const
+{
+    return fieldProperty(&MixtureType::thermoType::Ha, speciei, p, T);
 }
 
 
