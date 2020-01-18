@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,42 +40,45 @@ void Foam::triSurfaceMesh::drawHitProblem
     const pointIndexHitList& hitInfo
 ) const
 {
-    const List<labelledTri>& tris = *this;
-    const pointField& points = this->points();
-
-    Info<< nl << "# findLineAll did not hit its own face."
-        << nl << "# fi " << fi
-        << nl << "# start " << start
-        << nl << "# point " << p
-        << nl << "# end " << end
-        << nl << "# hitInfo " << hitInfo
-        << endl;
-
-    meshTools::writeOBJ(Info, start);
-    meshTools::writeOBJ(Info, p);
-    meshTools::writeOBJ(Info, end);
-
-    Info<< "l 1 2 3" << endl;
-
-    meshTools::writeOBJ(Info, points[tris[fi][0]]);
-    meshTools::writeOBJ(Info, points[tris[fi][1]]);
-    meshTools::writeOBJ(Info, points[tris[fi][2]]);
-
-    Info<< "f 4 5 6" << endl;
-
-    forAll(hitInfo, hi)
+    if (debug)
     {
-        label hfi = hitInfo[hi].index();
+        const List<labelledTri>& tris = *this;
+        const pointField& points = this->points();
 
-        meshTools::writeOBJ(Info, points[tris[hfi][0]]);
-        meshTools::writeOBJ(Info, points[tris[hfi][1]]);
-        meshTools::writeOBJ(Info, points[tris[hfi][2]]);
-
-        Info<< "f "
-            << 3*hi + 7 << " "
-            << 3*hi + 8 << " "
-            << 3*hi + 9
+        Info<< nl << "# findLineAll did not hit its own face."
+            << nl << "# fi " << fi
+            << nl << "# start " << start
+            << nl << "# point " << p
+            << nl << "# end " << end
+            << nl << "# hitInfo " << hitInfo
             << endl;
+
+        meshTools::writeOBJ(Info, start);
+        meshTools::writeOBJ(Info, p);
+        meshTools::writeOBJ(Info, end);
+
+        Info<< "l 1 2 3" << endl;
+
+        meshTools::writeOBJ(Info, points[tris[fi][0]]);
+        meshTools::writeOBJ(Info, points[tris[fi][1]]);
+        meshTools::writeOBJ(Info, points[tris[fi][2]]);
+
+        Info<< "f 4 5 6" << endl;
+
+        forAll(hitInfo, hi)
+        {
+            label hfi = hitInfo[hi].index();
+
+            meshTools::writeOBJ(Info, points[tris[hfi][0]]);
+            meshTools::writeOBJ(Info, points[tris[hfi][1]]);
+            meshTools::writeOBJ(Info, points[tris[hfi][2]]);
+
+            Info<< "f "
+                << 3*hi + 7 << " "
+                << 3*hi + 8 << " "
+                << 3*hi + 9
+                << endl;
+        }
     }
 }
 

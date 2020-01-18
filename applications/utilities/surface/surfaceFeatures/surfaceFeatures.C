@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,8 +172,10 @@ namespace Foam
             dict.lookupOrDefault<Switch>("curvature", "off");
         const Switch featureProximity =
             dict.lookupOrDefault<Switch>("featureProximity", "off");
-        const Switch closeness =
-            dict.lookupOrDefault<Switch>("closeness", "off");
+        const Switch faceCloseness =
+            dict.lookupOrDefault<Switch>("faceCloseness", "off");
+        const Switch pointCloseness =
+            dict.lookupOrDefault<Switch>("pointCloseness", "off");
 
 
         Info<< nl << "Feature line extraction is only valid on closed manifold "
@@ -424,7 +426,7 @@ namespace Foam
 
 
         // Find distance between close features
-        if (closeness)
+        if (faceCloseness || pointCloseness)
         {
             Info<< nl << "Extracting internal and external closeness of "
                 << "surface." << endl;
@@ -442,13 +444,19 @@ namespace Foam
                 surf
             );
 
+            if (faceCloseness)
             {
                 Pair<tmp<triSurfaceScalarField>> closenessFields
                 (
                     searchSurf.extractCloseness()
                 );
 
+                Info<< "    writing "
+                    << closenessFields.first()->name() << endl;
                 closenessFields.first()->write();
+
+                Info<< "    writing "
+                    << closenessFields.second()->name() << endl;
                 closenessFields.second()->write();
 
                 if (writeVTK)
@@ -481,13 +489,19 @@ namespace Foam
                 }
             }
 
+            if (pointCloseness)
             {
                 Pair<tmp<triSurfacePointScalarField >> closenessFields
                 (
                     searchSurf.extractPointCloseness()
                 );
 
+                Info<< "    writing "
+                    << closenessFields.first()->name() << endl;
                 closenessFields.first()->write();
+
+                Info<< "    writing "
+                    << closenessFields.second()->name() << endl;
                 closenessFields.second()->write();
 
                 if (writeVTK)
