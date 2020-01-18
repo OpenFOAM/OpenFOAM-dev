@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -4687,31 +4687,6 @@ _surfaceFeatureConvert_ ()
 }
 complete -o filenames -o nospace -F _surfaceFeatureConvert_ surfaceFeatureConvert
 
-_surfaceFeatureExtract_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="-case -dict -doc -fileHandler -help -noFunctionObjects -srcDoc"
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-        -case)
-            opts="" ; extra="-d" ;;
-        -dict)
-            opts="" ; extra="-d -f" ;;
-        -fileHandler)
-            opts="uncollated collated masterUncollated" ; extra="" ;;
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _surfaceFeatureExtract_ surfaceFeatureExtract
-
 _surfaceFeatures_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -6230,25 +6205,6 @@ _pimpleDyMFoam_ ()
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
 complete -o filenames -o nospace -F _pimpleDyMFoam_ pimpleDyMFoam
-
-_surfaceFeatureExtract_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts=""
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _surfaceFeatureExtract_ surfaceFeatureExtract
 
 _wclean_ ()
 {

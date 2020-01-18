@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -42,20 +42,10 @@ follows:
 find \$FOAM_TUTORIALS -name surfaceFeaturesDict
 find \$FOAM_ETC -name surfaceFeaturesDict
 
-If you wish to run the old surfaceFeatureExtract application,
-- EITHER run with full path, e.g.:
-  $FOAM_APPBIN/surfaceFeatureExtract ...
-- OR run with the additional -f | -force option, e.g.:
-  surfaceFeatureExtract -force ...
-
 EOF
 exit 0
 }
 
-echo "$*" | grep -qE "\-(f|force)( |$)" || announcement
-
-# shellcheck disable=SC2046
-"$FOAM_APPBIN/surfaceFeatureExtract" \
-    $(echo "$*" | sed -E "s/\-(f|force)( |$)//g")
+announcement
 
 #------------------------------------------------------------------------------
