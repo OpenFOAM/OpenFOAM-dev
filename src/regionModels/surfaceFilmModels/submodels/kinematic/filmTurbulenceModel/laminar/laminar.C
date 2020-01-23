@@ -127,7 +127,7 @@ tmp<fvVectorMatrix> laminar::Su(volVectorField& U) const
     volScalarField::Internal Cw
     (
         "Cw",
-        mu/((1.0/3.0)*VbyA*delta + mu*film.time().deltaT()/rho)
+        mu/((1.0/3.0)*VbyA*delta + 1e-5*mu*film.time().deltaT()/rho)
     );
 
     return

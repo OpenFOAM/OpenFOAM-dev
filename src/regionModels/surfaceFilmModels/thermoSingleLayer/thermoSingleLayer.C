@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -631,13 +631,16 @@ void thermoSingleLayer::evolveRegion()
     // Predict delta_ from continuity with updated source
     predictDelta();
 
+    // Capillary pressure
+    const volScalarField pc(this->pc());
+
     while (pimple_.loop())
     {
         // External pressure
         const volScalarField pe(this->pe());
 
         // Solve for momentum for U_
-        const fvVectorMatrix UEqn(solveMomentum(pe));
+        const fvVectorMatrix UEqn(solveMomentum(pc, pe));
 
         // Solve energy for h_ - also updates thermo
         solveEnergy();
@@ -645,7 +648,7 @@ void thermoSingleLayer::evolveRegion()
         // Film thickness correction loop
         while (pimple_.correct())
         {
-            solveAlpha(UEqn, pe);
+            solveAlpha(UEqn, pc, pe);
         }
     }
 

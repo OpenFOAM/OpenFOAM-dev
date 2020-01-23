@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -276,14 +276,16 @@ protected:
             //- Solve for film velocity
             virtual tmp<fvVectorMatrix> solveMomentum
             (
-                const volScalarField& Su
+                const volScalarField& pc,
+                const volScalarField& pe
             );
 
             //- Solve for film volume fraction and thickness
             virtual void solveAlpha
             (
                 const fvVectorMatrix& UEqn,
-                const volScalarField& Su
+                const volScalarField& pc,
+                const volScalarField& pe
             );
 
 

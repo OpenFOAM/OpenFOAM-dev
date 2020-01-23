@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -293,6 +293,7 @@ void kinematicSingleLayer::updateSurfaceVelocities()
 
 tmp<Foam::fvVectorMatrix> kinematicSingleLayer::solveMomentum
 (
+    const volScalarField& pc,
     const volScalarField& pe
 )
 {
@@ -338,7 +339,7 @@ tmp<Foam::fvVectorMatrix> kinematicSingleLayer::solveMomentum
                     alphaf
                    *(
                         (
-                            fvc::snGrad(pe + pc(), "snGrad(p)")
+                            fvc::snGrad(pe + pc, "snGrad(p)")
                           + gGradRho()*alphaf
                           + rhog()*fvc::snGrad(alpha_)
                         )*regionMesh().magSf()
@@ -361,6 +362,7 @@ tmp<Foam::fvVectorMatrix> kinematicSingleLayer::solveMomentum
 void kinematicSingleLayer::solveAlpha
 (
     const fvVectorMatrix& UEqn,
+    const volScalarField& pc,
     const volScalarField& pe
 )
 {
@@ -381,7 +383,7 @@ void kinematicSingleLayer::solveAlpha
             constrainFilmField
             (
                 (
-                    fvc::snGrad(pe + pc(), "snGrad(p)")
+                    fvc::snGrad(pe + pc, "snGrad(p)")
                   + gGradRho()*alphaf
                 )*regionMesh().magSf()
               - rhof*(g_ & regionMesh().Sf()),
@@ -944,18 +946,21 @@ void kinematicSingleLayer::evolveRegion()
     // Predict delta_ from continuity with updated source
     predictDelta();
 
+    // Capillary pressure
+    const volScalarField pc(this->pc());
+
     while (pimple_.loop())
     {
         // External pressure
         const volScalarField pe(this->pe());
 
         // Solve for momentum
-        const fvVectorMatrix UEqn(solveMomentum(pe));
+        const fvVectorMatrix UEqn(solveMomentum(pc, pe));
 
         // Film thickness correction loop
         while (pimple_.correct())
         {
-            solveAlpha(UEqn, pe);
+            solveAlpha(UEqn, pc, pe);
         }
     }
 
