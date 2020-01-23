@@ -211,8 +211,13 @@ Foam::cyclicTransform::cyclicTransform
 :
     transformType_
     (
+        // Lookup the new "transformType" keyword first, then for backwards
+        // compatibility try "transform", then finally assume the default
+        // transform type
         dict.found("transformType")
       ? transformTypeNames.read(dict.lookup("transformType"))
+      : dict.found("transform")
+      ? transformTypeNames.read(dict.lookup("transform"))
       : (defaultIsNone ? NONE : UNSPECIFIED)
     ),
     rotationAxis_
@@ -231,14 +236,29 @@ Foam::cyclicTransform::cyclicTransform
     separation_
     (
         transformType_ == TRANSLATIONAL
-      ? dict.lookup<vector>("separation")
+      ? (
+            // Lookup the new "separation" keyword first, then for backwards
+            // compatibility try "separationVector", then finally spit an error
+            // that the new "separation" keyword is not present
+            dict.found("separation")
+          ? dict.lookup<vector>("separation")
+          : dict.found("separationVector")
+          ? dict.lookup<vector>("separationVector")
+          : dict.lookup<vector>("separation")
+        )
       : vector::uniform(NaN)
     ),
     transformComplete_
     (
         transformType_ == NONE
-     || (transformType_ == ROTATIONAL && dict.found("rotationAngle"))
-     || (transformType_ == TRANSLATIONAL && dict.found("separation"))
+     || (
+            transformType_ == ROTATIONAL
+         && dict.found("rotationAngle")
+        )
+     || (
+            transformType_ == TRANSLATIONAL
+         && (dict.found("separation") || dict.found("separationVector"))
+        )
     ),
     transform_(vector::uniform(NaN), tensor::uniform(NaN))
 {
