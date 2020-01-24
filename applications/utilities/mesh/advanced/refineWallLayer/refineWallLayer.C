@@ -146,11 +146,13 @@ int main(int argc, char *argv[])
             << " cells from cellSet " << cellsToRefine.objectPath()
             << nl << endl;
 
-        forAll(mesh.cells(), celli)
+        const labelList allCutCells(cutCells.toc());
+
+        forAll(allCutCells, i)
         {
-            if (!cellsToRefine.found(celli))
+            if (!cellsToRefine.found(allCutCells[i]))
             {
-                cutCells.erase(celli);
+                cutCells.erase(allCutCells[i]);
             }
         }
     }
