@@ -1,0 +1,121 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeEtc "caseDicts/mesh/generation/snappyHexMeshDict.cfg"
+
+castellatedMesh on;
+snap            on;
+addLayers       off;
+
+geometry
+{
+    pipe
+    {
+        type closedTriSurfaceMesh;
+        file "pipe.obj";
+    }
+};
+
+castellatedMeshControls
+{
+    features
+    (
+        {
+           file "pipe.eMesh";
+           levels ((1 1));
+        }
+    );
+
+    refinementSurfaces
+    {
+        pipe
+        {
+            level (1 1);
+            patchInfo
+            {
+                type wall;
+            }
+        }
+    }
+
+    refinementRegions
+    {
+        pipe
+        {
+            mode span;
+            levels ((1000 2));
+            cellsAcrossSpan 40;
+        }
+    }
+
+    locationInMesh (1e-5 1e-5 1e-5);
+}
+
+snapControls
+{
+    // Number of patch smoothing iterations before finding correspondence
+    // to surface
+    nSmoothPatch 3;
+
+    // Maximum relative distance for points to be attracted by surface.
+    // True distance is this factor times local maximum edge length.
+    // Note: changed(corrected) w.r.t 17x! (17x used 2* tolerance)
+    tolerance 3.0;
+
+    // Number of mesh displacement relaxation iterations.
+    nSolveIter 30;
+
+    // Maximum number of snapping relaxation iterations. Should stop
+    // before upon reaching a correct mesh.
+    nRelaxIter 5;
+
+    // Feature snapping
+
+        // Number of feature edge snapping iterations.
+        // Leave out altogether to disable.
+        nFeatureSnapIter 15;
+
+        // Detect (geometric only) features by sampling the surface
+        // (default=false).
+        implicitFeatureSnap false;
+
+        // Use castellatedMeshControls::features (default = true)
+        explicitFeatureSnap true;
+
+        // Detect features between multiple surfaces
+        // (only for explicitFeatureSnap, default = false)
+        multiRegionFeatureSnap false;
+}
+
+addLayersControls
+{
+    layers
+    {
+    }
+
+    relativeSizes       true;
+    expansionRatio      1.2;
+    finalLayerThickness 0.5;
+    minThickness        1e-3;
+}
+
+writeFlags
+(
+);
+
+mergeTolerance 1e-6;
+
+// ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,15 +41,16 @@ namespace Foam
 
 template<>
 const char*
-NamedEnum<shellSurfaces::refineMode, 3>::
+NamedEnum<shellSurfaces::refineMode, 4>::
 names[] =
 {
     "inside",
     "outside",
-    "distance"
+    "distance",
+    "span"
 };
 
-const NamedEnum<shellSurfaces::refineMode, 3> shellSurfaces::refineModeNames_;
+const NamedEnum<shellSurfaces::refineMode, 4> shellSurfaces::refineModeNames_;
 
 } // End namespace Foam
 
@@ -225,11 +226,36 @@ void Foam::shellSurfaces::orient()
 }
 
 
-// Find maximum level of a shell.
+Foam::scalar Foam::shellSurfaces::interpolate
+(
+    const triSurfaceMesh& tsm,
+    const triSurfacePointScalarField& closeness,
+    const point& pt,
+    const label index
+) const
+{
+    const barycentric2D bary
+    (
+        triPointRef
+        (
+            tsm.points(),
+            tsm.triSurface::operator[](index)
+        ).pointToBarycentric(pt)
+    );
+
+    const labelledTri& lf = tsm.localFaces()[index];
+
+    return closeness[lf[0]]*bary[0]
+         + closeness[lf[1]]*bary[1]
+         + closeness[lf[2]]*bary[2];
+}
+
+
 void Foam::shellSurfaces::findHigherLevel
 (
     const pointField& pt,
     const label shellI,
+    const scalar level0EdgeLength,
     labelList& maxLevel
 ) const
 {
@@ -293,6 +319,80 @@ void Foam::shellSurfaces::findHigherLevel
 
                 // pt is in between shell[minDistI] and shell[minDistI+1]
                 maxLevel[pointi] = levels[minDistI+1];
+            }
+        }
+    }
+    else if (modes_[shellI] == SPAN)
+    {
+        const triSurfaceMesh& tsm =
+            refCast<const triSurfaceMesh>(allGeometry_[shells_[shellI]]);
+
+        // Collect all those points that have a current maxLevel less than
+        // the maximum and furthest distance allowable for the shell.
+
+        pointField candidates(pt.size());
+        labelList candidateMap(pt.size());
+        scalarField candidateDistSqr(pt.size());
+        label candidateI = 0;
+
+        forAll(pt, pointi)
+        {
+            if (levels[0] > maxLevel[pointi])
+            {
+                candidates[candidateI] = pt[pointi];
+                candidateMap[candidateI] = pointi;
+                candidateDistSqr[candidateI] = sqr(distances_[shellI][0]);
+                candidateI++;
+            }
+        }
+        candidates.setSize(candidateI);
+        candidateMap.setSize(candidateI);
+        candidateDistSqr.setSize(candidateI);
+
+        // Do the expensive nearest test only for the candidate points.
+        List<pointIndexHit> nearInfo;
+        tsm.findNearest
+        (
+            candidates,
+            candidateDistSqr,
+            nearInfo
+        );
+
+        // Minimum span for the maximum level specified
+        const scalar minSpan
+        (
+            cellsAcrossSpan_[shellI]*level0EdgeLength/(1 << (levels[0] - 1))
+        );
+
+        // Update maxLevel
+        forAll(nearInfo, candidateI)
+        {
+            if (nearInfo[candidateI].hit())
+            {
+                const scalar span
+                (
+                    interpolate
+                    (
+                        tsm,
+                        closeness_[shellI],
+                        nearInfo[candidateI].rawPoint(),
+                        nearInfo[candidateI].index()
+                    )
+                );
+
+                if (span > minSpan)
+                {
+                    const label level
+                    (
+                        log2(cellsAcrossSpan_[shellI]*level0EdgeLength/span) + 1
+                    );
+
+                    maxLevel[candidateMap[candidateI]] = min(levels[0], level);
+                }
+                else
+                {
+                    maxLevel[candidateMap[candidateI]] = levels[0];
+                }
             }
         }
     }
@@ -370,12 +470,13 @@ Foam::shellSurfaces::shellSurfaces
         }
     }
 
-
     // Size lists
     shells_.setSize(shellI);
     modes_.setSize(shellI);
     distances_.setSize(shellI);
     levels_.setSize(shellI);
+    cellsAcrossSpan_.setSize(shellI);
+    closeness_.setSize(shellI);
 
     HashSet<word> unmatchedKeys(shellsDict.toc());
     shellI = 0;
@@ -396,6 +497,47 @@ Foam::shellSurfaces::shellSurfaces
 
             // Read pairs of distance+level
             setAndCheckLevels(shellI, dict.lookup("levels"));
+
+            if (modes_[shellI] == SPAN)
+            {
+                const searchableSurface& surface = allGeometry_[geomI];
+
+                if (isA<triSurfaceMesh>(surface))
+                {
+                    dict.lookup("cellsAcrossSpan") >> cellsAcrossSpan_[shellI];
+
+                    const triSurfaceMesh& tsm =
+                        refCast<const triSurfaceMesh>(surface);
+
+                    closeness_.set
+                    (
+                        shellI,
+                        new triSurfacePointScalarField
+                        (
+                            IOobject
+                            (
+                                surface.name()
+                              + ".closeness.internalPointCloseness",
+                                surface.searchableSurface::time().constant(),
+                                "triSurface",
+                                surface.searchableSurface::time(),
+                                IOobject::MUST_READ
+                            ),
+                            tsm,
+                            dimLength,
+                            true
+                        )
+                    );
+                }
+                else
+                {
+                    FatalIOErrorInFunction(shellsDict)
+                        << "Surface " << surface.name()
+                        << " is not a triSurface as required by"
+                           " refinement mode " << refineModeNames_[SPAN]
+                        << exit(FatalIOError);
+                }
+            }
 
             shellI++;
         }
@@ -437,6 +579,7 @@ void Foam::shellSurfaces::findHigherLevel
 (
     const pointField& pt,
     const labelList& ptLevel,
+    const scalar level0EdgeLength,
     labelList& maxLevel
 ) const
 {
@@ -445,7 +588,7 @@ void Foam::shellSurfaces::findHigherLevel
 
     forAll(shells_, shellI)
     {
-        findHigherLevel(pt, shellI, maxLevel);
+        findHigherLevel(pt, shellI, level0EdgeLength, maxLevel);
     }
 }
 

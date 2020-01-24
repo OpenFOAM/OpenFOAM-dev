@@ -808,7 +808,13 @@ Foam::label Foam::meshRefinement::markInternalRefinement
 
     // Do test to see whether cells is inside/outside shell with higher level
     labelList maxLevel;
-    shells_.findHigherLevel(testCc, testLevels, maxLevel);
+    shells_.findHigherLevel
+    (
+        testCc,
+        testLevels,
+        meshCutter().level0EdgeLength(),
+        maxLevel
+    );
 
     // Mark for refinement. Note that we didn't store the original cellID so
     // now just reloop in same order.

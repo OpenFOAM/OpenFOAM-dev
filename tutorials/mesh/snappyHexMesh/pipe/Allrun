@@ -1,12 +1,14 @@
 #!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# Copy flange surface from resources directory
-cp $FOAM_TUTORIALS/resources/geometry/flange.stl.gz constant/triSurface/
+# Copy pipe surface from resources directory
+cp $FOAM_TUTORIALS/resources/geometry/pipe.obj.gz constant/triSurface/
 
-runApplication blockMesh
 runApplication surfaceFeatures
+runApplication blockMesh
 runApplication snappyHexMesh -overwrite
 
 #------------------------------------------------------------------------------

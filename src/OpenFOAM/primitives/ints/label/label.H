@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,9 +72,16 @@ inline label readLabel(Istream& is)
 //- Raise one label to the power of another
 label pow(label a, label b);
 
-//- Evaluate n! : 0 < n <= 12
+//- Return n! : 0 < n <= 12
 label factorial(label n);
 
+//- Return the log base 2 by successive bit-shifting of the given label
+inline label log2(label i)
+{
+    label log2i = 0;
+    while (i >>= 1) log2i++;
+    return log2i;
+}
 
 inline label& setComponent(label& l, const direction)
 {
