@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -201,13 +201,13 @@ int main(int argc, char *argv[])
     if (!meshDictIO.typeHeaderOk<IOdictionary>(true))
     {
         FatalErrorInFunction
-            << meshDictIO.objectPath()
+            << meshDictIO.localObjectPath()
             << nl
             << exit(FatalError);
     }
 
     Info<< "Creating block mesh from\n    "
-        << meshDictIO.objectPath() << endl;
+        << meshDictIO.localObjectPath() << endl;
 
     IOdictionary meshDict(meshDictIO);
     blockMesh blocks(meshDict, regionName);

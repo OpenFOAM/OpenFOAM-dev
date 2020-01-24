@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -758,7 +758,7 @@ int main(int argc, char *argv[])
     if (maxLevel > 0)
     {
         Info<< "Read existing refinement level from file "
-            << refLevel.objectPath() << nl
+            << refLevel.localObjectPath() << nl
             << "   min level : " << min(refLevel) << nl
             << "   max level : " << maxLevel << nl
             << endl;
@@ -766,7 +766,7 @@ int main(int argc, char *argv[])
     else
     {
         Info<< "Created zero refinement level in file "
-            << refLevel.objectPath() << nl
+            << refLevel.localObjectPath() << nl
             << endl;
     }
 

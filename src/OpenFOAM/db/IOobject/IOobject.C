@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -376,6 +376,19 @@ Foam::fileName Foam::IOobject::path
 {
     // Note: can only be called with relative instance since is word type
     return rootPath()/caseName()/instance/db_.dbDir()/local;
+}
+
+
+Foam::fileName Foam::IOobject::localPath() const
+{
+    if (instance().isAbsolute())
+    {
+        return instance();
+    }
+    else
+    {
+        return instance()/db_.dbDir()/local();
+    }
 }
 
 

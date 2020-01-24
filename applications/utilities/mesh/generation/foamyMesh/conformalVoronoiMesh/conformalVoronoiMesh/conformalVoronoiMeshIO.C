@@ -316,7 +316,7 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 //        }
 //
 //        Info<< "Writing map from tetDualMesh points to Voronoi mesh to "
-//            << pointDualAddressing.objectPath() << endl;
+//            << pointDualAddressing.localObjectPath() << endl;
 //        pointDualAddressing.write();
 //
 //
@@ -370,7 +370,7 @@ void Foam::conformalVoronoiMesh::writeMesh(const fileName& instance)
 //            }
 //
 //            Info<< "Writing tetDualMesh points mapped onto Voronoi mesh to "
-//                << dualPoints.objectPath() << endl
+//                << dualPoints.localObjectPath() << endl
 //                << "Replace the polyMesh/points with these." << endl;
 //            dualPoints.write();
 //        }

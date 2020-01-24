@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
         const cellSet cellsToRefine(mesh, setName);
 
         Info<< "    Read " << cellsToRefine.size()
-            << " cells from cellSet " << cellsToRefine.objectPath()
+            << " cells from cellSet " << cellsToRefine.localObjectPath()
             << nl << endl;
 
         const labelList allCutCells(cutCells.toc());

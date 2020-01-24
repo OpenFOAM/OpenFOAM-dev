@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -337,7 +337,8 @@ int main(int argc, char *argv[])
                 move(surf)
             );
 
-            Info<< "writing surfMesh as well: " << surfOut.objectPath() << endl;
+            Info<< "writing surfMesh as well: "
+                << surfOut.localObjectPath() << endl;
             surfOut.write();
 
             surfLabelField zoneIds
@@ -366,7 +367,8 @@ int main(int argc, char *argv[])
 
 
 
-            Info<< "writing surfMesh again well: " << surfOut.objectPath()
+            Info<< "writing surfMesh again well: "
+                << surfOut.localObjectPath()
                 << endl;
             surfOut.write();
 
@@ -386,7 +388,7 @@ int main(int argc, char *argv[])
             }
 
             Info<< "write zoneIds (for testing only): "
-                << zoneIds.objectPath() << endl;
+                << zoneIds.localObjectPath() << endl;
             zoneIds.write();
 
             surfPointLabelField pointIds
@@ -394,9 +396,7 @@ int main(int argc, char *argv[])
                 IOobject
                 (
                     "zoneIds.",
-//                    "pointIds",
                     surfOut.instance(),
-//                    "pointFields",
                     surfOut,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
@@ -411,7 +411,7 @@ int main(int argc, char *argv[])
             }
 
             Info<< "write pointIds (for testing only): "
-                << pointIds.objectPath() << endl;
+                << pointIds.localObjectPath() << endl;
             pointIds.write();
 
             Info<<"surfMesh with these names: " << surfOut.names() << endl;

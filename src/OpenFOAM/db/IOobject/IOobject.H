@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -413,10 +413,19 @@ public:
                 const fileName& local = ""
             ) const;
 
+            //- Return the path relative to the case
+            fileName localPath() const;
+
             //- Return complete path + object name
             fileName objectPath() const
             {
                 return path()/name();
+            }
+
+            //- Return complete localPath + object name
+            fileName localObjectPath() const
+            {
+                return localPath()/name();
             }
 
             //- Helper for filePath that searches locally.

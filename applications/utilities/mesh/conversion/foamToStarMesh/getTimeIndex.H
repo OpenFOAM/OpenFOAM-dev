@@ -42,8 +42,6 @@
         else
         {
             timeName = runTime.timeName();
-            // Info<< "skip ... missing entry " << io.objectPath() << endl;
-            // continue;
         }
     }
 

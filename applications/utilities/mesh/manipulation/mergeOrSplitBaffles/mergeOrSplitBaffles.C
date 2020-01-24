@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -209,7 +209,7 @@ labelList findBaffles(const polyMesh& mesh, const labelList& boundaryFaces)
         }
 
         Pout<< "Writing " << duplicateSet.size()
-            << " duplicate faces to faceSet " << duplicateSet.objectPath()
+            << " duplicate faces to faceSet " << duplicateSet.localObjectPath()
             << nl << endl;
         duplicateSet.write();
     }
@@ -365,7 +365,7 @@ int main(int argc, char *argv[])
 
         Pout<< "Writing " << dupPoints.size()
             << " duplicated points to pointSet "
-            << dupPoints.objectPath() << nl << endl;
+            << dupPoints.localObjectPath() << nl << endl;
 
         dupPoints.write();
     }

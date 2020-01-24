@@ -1478,7 +1478,7 @@ int main(int argc, char *argv[])
     // Set the precision of the points data to 10
     IOstream::defaultPrecision(max(10u, IOstream::defaultPrecision()));
 
-    Info<< nl << "Writing mesh to " << mesh.objectPath() << endl;
+    Info<< nl << "Writing mesh to " << mesh.localObjectPath() << endl;
     mesh.write();
 
 

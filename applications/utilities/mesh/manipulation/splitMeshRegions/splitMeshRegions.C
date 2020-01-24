@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1412,7 +1412,7 @@ void writeCellToRegion(const fvMesh& mesh, const labelList& cellRegion)
         cellToRegion.write();
 
         Info<< "Writing region per cell file (for manual decomposition) to "
-            << cellToRegion.objectPath() << nl << endl;
+            << cellToRegion.localObjectPath() << nl << endl;
     }
     // Write for postprocessing
     {
@@ -1438,7 +1438,7 @@ void writeCellToRegion(const fvMesh& mesh, const labelList& cellRegion)
         cellToRegion.write();
 
         Info<< "Writing region per cell as volScalarField to "
-            << cellToRegion.objectPath() << nl << endl;
+            << cellToRegion.localObjectPath() << nl << endl;
     }
 }
 
