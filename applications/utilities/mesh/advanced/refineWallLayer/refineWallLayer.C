@@ -146,13 +146,11 @@ int main(int argc, char *argv[])
             << " cells from cellSet " << cellsToRefine.localObjectPath()
             << nl << endl;
 
-        const labelList allCutCells(cutCells.toc());
-
-        forAll(allCutCells, i)
+        forAllIter(labelHashSet, cutCells, iter)
         {
-            if (!cellsToRefine.found(allCutCells[i]))
+            if (!cellsToRefine.found(iter.key()))
             {
-                cutCells.erase(allCutCells[i]);
+                cutCells.erase(iter);
             }
         }
     }
