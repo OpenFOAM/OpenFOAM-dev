@@ -217,9 +217,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
         (
             dict
         )   << "No \"neighbourPatch\" provided." << endl
-            << "Is your mesh uptodate with split cyclics?" << endl
-            << "Run foamUpgradeCyclics to convert mesh and fields"
-            << " to split cyclics." << exit(FatalIOError);
+            << exit(FatalIOError);
     }
 
     if (nbrPatchName_ == name)
