@@ -190,7 +190,7 @@ void Foam::molecule::transformProperties(const transformer& transform)
 {
     particle::transformProperties(transform);
 
-    Q_ = transform.R() & Q_;
+    Q_ = transform.T() & Q_;
 
     v_ = transform.transform(v_);
 

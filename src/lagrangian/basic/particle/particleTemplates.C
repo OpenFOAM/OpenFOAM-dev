@@ -256,7 +256,7 @@ template<class TrackCloudType>
 void Foam::particle::hitSymmetryPatch(TrackCloudType&, trackingData&)
 {
     const vector nf = normal();
-    transformProperties(transformer(I - 2.0*nf*nf));
+    transformProperties(transformer::rotation(I - 2.0*nf*nf));
 }
 
 

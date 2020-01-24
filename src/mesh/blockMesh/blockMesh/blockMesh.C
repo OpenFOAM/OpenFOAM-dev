@@ -134,7 +134,7 @@ Foam::PtrList<Foam::dictionary> Foam::blockMesh::patchDicts() const
         if (isA<cyclicTransform>(ppPtr()))
         {
             refCast<cyclicTransform>(ppPtr()) =
-                transformer(scaleFactor_*tensor::I)
+                transformer::scaling(scaleFactor_*tensor::I)
               & refCast<cyclicTransform>(ppPtr());
         }
 

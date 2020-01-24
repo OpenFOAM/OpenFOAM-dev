@@ -74,10 +74,10 @@ Foam::label Foam::globalIndexAndTransform::matchTransform
 
         scalar tensorDiff = 0;
 
-        if (refTransform.rotates() || testTransform.rotates())
+        if (refTransform.transforms() || testTransform.transforms())
         {
             tensorDiff =
-                mag(refTransform.R() - testTransform.R())
+                mag(refTransform.T() - testTransform.T())
                /sqrt(3.0)
                /tolerance;
         }
@@ -103,10 +103,10 @@ Foam::label Foam::globalIndexAndTransform::matchTransform
 
             tensorDiff = 0;
 
-            if (refTransform.rotates() || testTransform.rotates())
+            if (refTransform.transforms() || testTransform.transforms())
             {
                 tensorDiff =
-                    mag(refTransform.R() - testTransform.R().T())
+                    mag(refTransform.T() - testTransform.T().T())
                    /sqrt(3.0)
                    /tolerance;
             }
@@ -360,15 +360,7 @@ Foam::globalIndexAndTransform::globalIndexAndTransform(const polyMesh& mesh)
         {
             Info<< '\t' << i << '\t';
             const transformer& trafo = transforms_[i];
-            if (trafo.rotates())
-            {
-                 Info<< trafo.t() << '\t' << trafo.R();
-            }
-            else
-            {
-                 Info<< trafo.t() << '\t' << "---";
-            }
-            Info<< endl;
+            Info<< trafo.t() << '\t' << trafo.T() << endl;
         }
         Info<< endl;
 
@@ -393,15 +385,7 @@ Foam::globalIndexAndTransform::globalIndexAndTransform(const polyMesh& mesh)
         {
             Info<< '\t' << i << '\t';
             const transformer& trafo = transformPermutations_[i];
-            if (trafo.rotates())
-            {
-                 Info<< trafo.t() << '\t' << trafo.R();
-            }
-            else
-            {
-                 Info<< trafo.t() << '\t' << "---";
-            }
-            Info<< endl;
+            Info<< trafo.t() << '\t' << trafo.T() << endl;
         }
         Info<< "nullTransformIndex:" << nullTransformIndex() << endl
             << endl;

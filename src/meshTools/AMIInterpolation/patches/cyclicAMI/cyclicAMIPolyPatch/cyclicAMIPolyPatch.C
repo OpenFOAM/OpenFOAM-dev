@@ -553,7 +553,7 @@ Foam::tmp<Foam::scalarField> Foam::cyclicAMIPolyPatch::interpolate
         forAll(AMIs(), i)
         {
             const scalar r =
-                pow(inv(AMITransforms()[i]).R()(cmpt, cmpt), rank);
+                pow(inv(AMITransforms()[i]).T()(cmpt, cmpt), rank);
 
             result.ref() +=
                 AMIs()[i].interpolateToSource(r*fld, defaultValues);
@@ -564,7 +564,7 @@ Foam::tmp<Foam::scalarField> Foam::cyclicAMIPolyPatch::interpolate
         forAll(nei.AMIs(), i)
         {
             const scalar r =
-                pow(nei.AMITransforms()[i].R()(cmpt, cmpt), rank);
+                pow(nei.AMITransforms()[i].T()(cmpt, cmpt), rank);
 
             result.ref() +=
                 nei.AMIs()[i].interpolateToTarget(r*fld, defaultValues);

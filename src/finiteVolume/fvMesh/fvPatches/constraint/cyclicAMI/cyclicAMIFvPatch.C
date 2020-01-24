@@ -139,7 +139,7 @@ Foam::tmp<Foam::vectorField> Foam::cyclicAMIFvPatch::delta() const
         vectorField& pdv = tpdv.ref();
 
         // do the transformation if necessary
-        if (transform().rotates())
+        if (transform().transforms())
         {
             forAll(patchD, facei)
             {

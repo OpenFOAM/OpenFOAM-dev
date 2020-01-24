@@ -188,11 +188,11 @@ Foam::label Foam::globalIndexAndTransform::addToTransformIndex
                 bool antiCyclic = false;
 
                 const transformer& vt = transforms_[matchTransI];
-                if (!vt.translates() && vt.rotates())
+                if (vt.transforms())
                 {
-                    const tensor& R = vt.R();
-                    scalar sumDiag = tr(R);
-                    scalar sumMagDiag = mag(R.xx()) + mag(R.yy())+mag(R.zz());
+                    const tensor& T = vt.T();
+                    scalar sumDiag = tr(T);
+                    scalar sumMagDiag = mag(T.xx()) + mag(T.yy()) + mag(T.zz());
 
                     if (mag(sumMagDiag-3) < tol && mag(sumDiag+1) < tol)
                     {

@@ -80,7 +80,7 @@ Foam::tmp<Foam::vectorField> Foam::cyclicFvPatch::delta() const
     vectorField& pdv = tpdv.ref();
 
     // To the transformation if necessary
-    if (transform().rotates())
+    if (transform().transforms())
     {
         forAll(patchD, facei)
         {

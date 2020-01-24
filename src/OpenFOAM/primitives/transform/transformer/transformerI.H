@@ -23,66 +23,61 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "transformer.H"
+#include "diagTensor.H"
+
+// * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * * //
+
+inline Foam::transformer Foam::transformer::translation(const vector& t)
+{
+    return transformer(t, true, tensor::I, false, false);
+}
+
+
+inline Foam::transformer Foam::transformer::scaling(const tensor& T)
+{
+    return transformer(vector::zero, false, T, true, false);
+}
+
+
+inline Foam::transformer Foam::transformer::rotation(const tensor& T)
+{
+    return transformer(vector::zero, false, T, false, true);
+}
+
+
+// * * * * * * * * * * * * * * Private Constructors  * * * * * * * * * * * * //
+
+inline Foam::transformer::transformer
+(
+    const vector& t,
+    const bool translates,
+    const tensor& T,
+    const bool scales,
+    const bool rotates
+)
+:
+    t_(t),
+    translates_(translates),
+    T_(T),
+    scales_(scales),
+    rotates_(rotates)
+{}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 inline Foam::transformer::transformer()
 :
     t_(Zero),
     translates_(false),
-    R_(tensor::I),
+    T_(tensor::I),
+    scales_(false),
     rotates_(false)
-{}
-
-
-inline Foam::transformer::transformer(const vector& t)
-:
-    t_(t),
-    translates_(true),
-    R_(tensor::I),
-    rotates_(false)
-{}
-
-
-inline Foam::transformer::transformer(const tensor& R)
-:
-    t_(Zero),
-    translates_(false),
-    R_(R),
-    rotates_(true)
-{}
-
-
-inline Foam::transformer::transformer(const vector& t, const tensor& R)
-:
-    t_(t),
-    translates_(true),
-    R_(R),
-    rotates_(true)
-{}
-
-
-inline Foam::transformer::transformer
-(
-    const vector& t,
-    const bool translates,
-    const tensor& R,
-    const bool rotates
-)
-:
-    t_(t),
-    translates_(translates),
-    R_(R),
-    rotates_(rotates)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-inline bool Foam::transformer::translates() const
-{
-    return translates_ && !rotates_;
-}
-
 
 inline const Foam::vector& Foam::transformer::t() const
 {
@@ -90,52 +85,67 @@ inline const Foam::vector& Foam::transformer::t() const
 }
 
 
-inline bool Foam::transformer::rotates() const
+inline bool Foam::transformer::translates() const
 {
-    return rotates_;
+    return translates_ && !transforms();
 }
 
 
-inline const Foam::tensor& Foam::transformer::R() const
+inline const Foam::tensor& Foam::transformer::T() const
 {
-    return R_;
+    return T_;
+}
+
+
+inline Foam::tensor Foam::transformer::invT() const
+{
+    if (scales_ && rotates_)
+    {
+        return inv(T());
+    }
+    else if (scales_)
+    {
+        return inv(diag(T()));
+    }
+    else if (rotates_)
+    {
+        return T().T();
+    }
+    else
+    {
+        return tensor::I;
+    }
+}
+
+
+inline bool Foam::transformer::scales() const
+{
+    return scales_ && !rotates_;
+}
+
+
+inline bool Foam::transformer::rotates() const
+{
+    return !scales_ && rotates_;
 }
 
 
 inline bool Foam::transformer::transforms() const
 {
-    return rotates_;
+    return scales_ || rotates_;
 }
 
 
 template<typename Type>
 inline bool Foam::transformer::transforms() const
 {
-    return pTraits<Type>::rank != 0 && rotates_;
+    return pTraits<Type>::rank != 0 && transforms();
 }
 
 
 inline bool Foam::transformer::transformsPosition() const
 {
-    return translates_ || rotates_;
-}
-
-
-inline Foam::vector& Foam::transformer::t()
-{
-    // Assume that non-const access to t changes it from zero
-    translates_ = true;
-
-    return t_;
-}
-
-
-inline Foam::tensor& Foam::transformer::R()
-{
-    // Assume that non-const access to R changes it from I
-    rotates_ = true;
-
-    return R_;
+    return translates_ || transforms();
 }
 
 
@@ -144,17 +154,17 @@ inline Foam::vector Foam::transformer::transformPosition
     const vector& p
 ) const
 {
-    if (translates_ && !rotates_)
+    if (translates_ && !transforms())
     {
         return p + t();
     }
-    else if (!translates_ && rotates_)
+    else if (!translates_ && transforms())
     {
-        return R() & p;
+        return T() & p;
     }
-    else if (translates_ && rotates_)
+    else if (translates_ && transforms())
     {
-        return (R() & p) + t();
+        return (T() & p) + t();
     }
     else
     {
@@ -168,17 +178,17 @@ inline Foam::vector Foam::transformer::invTransformPosition
     const vector& p
 ) const
 {
-    if (translates_ && !rotates_)
+    if (translates_ && !transforms())
     {
         return p - t();
     }
-    else if (!translates_ && rotates_)
+    else if (!translates_ && transforms())
     {
-        return R().T() & p;
+        return invT() & p;
     }
-    else if (translates_ && rotates_)
+    else if (translates_ && transforms())
     {
-        return (R().T() & (p - t()));
+        return invT() & (p - t());
     }
     else
     {
@@ -197,54 +207,13 @@ inline void Foam::transformer::operator&=
     // If either of the two objects has translates_ as true, then inherit
     // it, otherwise, these should both be zero vectors.
     translates_ = tr.translates_ || translates_;
-    t_ = (tr.R_ & t_) + tr.t_;
+    t_ = (tr.T_ & t_) + tr.t_;
 
-    // If either of the two objects has rotates_ as true, then inherit
-    // it, otherwise, these should both be I tensors.
+    // If either of the two objects has scales_ or rotates_ as true, then
+    // inherit it, otherwise, these should both be I tensors.
+    scales_ = tr.scales_ || scales_;
     rotates_ = tr.rotates_ || rotates_;
-    R_ = tr.R_ & R_;
-}
-
-
-inline void Foam::transformer::operator=(const vector& t)
-{
-    translates_ = true;
-    t_ = t;
-
-    rotates_ = false;
-    R_ = tensor::I;
-}
-
-
-inline void Foam::transformer::operator+=(const vector& t)
-{
-    translates_ = true;
-    t_ += t;
-}
-
-
-inline void Foam::transformer::operator-=(const vector& t)
-{
-    translates_ = true;
-    t_ -= t;
-}
-
-
-inline void Foam::transformer::operator=(const tensor& R)
-{
-    translates_ = false;
-    t_ = Zero;
-
-    rotates_ = true;
-    R_ = R;
-}
-
-
-inline void Foam::transformer::operator&=(const tensor& R)
-{
-    rotates_ = true;
-    t_ = R & t_;
-    R_ = R & R_;
+    T_ = tr.T_ & T_;
 }
 
 
@@ -252,22 +221,14 @@ inline void Foam::transformer::operator&=(const tensor& R)
 
 inline Foam::transformer Foam::inv(const transformer& tr)
 {
-    if (tr.translates_ && !tr.rotates_)
-    {
-        return transformer(-tr.t());
-    }
-    else if (!tr.translates_ && tr.rotates_)
-    {
-        return transformer(tr.R().T());
-    }
-    else if (tr.translates_ && tr.rotates_)
-    {
-        return transformer(tr.R().T() & (-tr.t()), tr.R().T());
-    }
-    else
-    {
-        return transformer();
-    }
+    return transformer
+    (
+        tr.invT() & (-tr.t()),
+        tr.translates_,
+        tr.invT(),
+        tr.scales_,
+        tr.rotates_
+    );
 }
 
 
@@ -275,31 +236,13 @@ inline Foam::transformer Foam::inv(const transformer& tr)
 
 inline bool Foam::operator==(const transformer& tr1, const transformer& tr2)
 {
-    return (tr1.t() == tr2.t() && tr1.R() == tr2.R());
+    return (tr1.t() == tr2.t() && tr1.T() == tr2.T());
 }
 
 
 inline bool Foam::operator!=(const transformer& tr1, const transformer& tr2)
 {
     return !operator==(tr1, tr2);
-}
-
-
-inline Foam::transformer Foam::operator+(const transformer& tr, const vector& t)
-{
-    return transformer(tr.t() + t, true, tr.R(), tr.rotates_);
-}
-
-
-inline Foam::transformer Foam::operator+(const vector& t, const transformer& tr)
-{
-    return transformer(t + tr.t(), true, tr.R(), tr.rotates_);
-}
-
-
-inline Foam::transformer Foam::operator-(const transformer& tr, const vector& t)
-{
-    return transformer(tr.t() - t, true, tr.R(), tr.rotates_);
 }
 
 
@@ -311,9 +254,10 @@ inline Foam::transformer Foam::operator&
 {
     return transformer
     (
-        (tr1.R() & tr2.t()) + tr1.t(),
+        (tr1.T() & tr2.t()) + tr1.t(),
         tr1.translates_ || tr2.translates_,
-        tr1.R() & tr2.R(),
+        tr1.T() & tr2.T(),
+        tr1.scales_ || tr2.scales_,
         tr1.rotates_ || tr2.rotates_
     );
 }

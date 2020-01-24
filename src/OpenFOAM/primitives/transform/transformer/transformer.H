@@ -83,7 +83,7 @@ inline transformer operator&(const transformer& tr1, const transformer& tr2);
 
 class transformer
 {
-    // private data
+    // Private data
 
         //- Translation vector
         vector t_;
@@ -91,11 +91,28 @@ class transformer
         //- True if the translation vector is non-zero
         bool translates_;
 
-        //- Rotation tensor
-        tensor R_;
+        //- Transformation tensor
+        tensor T_;
 
-        //- True if the rotation tensor is non-I
+        //- True if the transformation tensor has component vectors of
+        //  differing magnitudes
+        bool scales_;
+
+        //- True if the transformation tensor has off-diagonal terms
         bool rotates_;
+
+
+    // Private constructors
+
+        //- Construct given a translation vector and transformation tensor
+        inline transformer
+        (
+            const vector& t,
+            const bool translates,
+            const tensor& T,
+            const bool scales,
+            const bool rotates
+        );
 
 
 public:
@@ -112,30 +129,22 @@ public:
         static const transformer null;
 
 
+    // Static Member Functions
+
+        //- Construct a pure translation transformer
+        inline static transformer translation(const vector& t);
+
+        //- Construct a pure scaling transformer
+        inline static transformer scaling(const tensor& T);
+
+        //- Construct a pure rotation transformer
+        inline static transformer rotation(const tensor& T);
+
+
     // Constructors
 
-        //- Construct null
+        //- Construct null (i.e., no transformation)
         inline transformer();
-
-        //- Construct a pure translation transformer given a
-        //  translation vector
-        inline explicit transformer(const vector& t);
-
-        //- Construct a pure rotation transformer given a
-        //  rotation tensor
-        inline explicit transformer(const tensor& R);
-
-        //- Construct given a translation vector and rotation tensor
-        inline transformer(const vector& t, const tensor& R);
-
-        //- Construct given a translation vector and rotation tensor
-        inline transformer
-        (
-            const vector& t,
-            const bool translates,
-            const tensor& R,
-            const bool rotates
-        );
 
         //- Construct from Istream
         transformer(Istream&);
@@ -145,41 +154,40 @@ public:
 
         // Access
 
-            //- Return true if the transformer performs pure translation
-            //  i.e. the translation vector is non-zero and the rotation tensor
-            //   is I
-            inline bool translates() const;
-
             //- Return the translation vector
             inline const vector& t() const;
 
-            //- Return true if the rotation tensor is non-I
+            //- Return true if the transformer performs pure translation
+            //  (i.e. the translation vector is non-zero and the transformation
+            //  tensor is I)
+            inline bool translates() const;
+
+            //- Return the transformation tensor
+            inline const tensor& T() const;
+
+            //- Return the inverse transformation tensor
+            inline tensor invT() const;
+
+            //- Return true if the transformer performs pure scaling
+            //  (i.e. the transformation tensor is diagonal)
+            inline bool scales() const;
+
+            //- Return true if the transformer performs pure rotation
+            //  (i.e. the transformation tensor is orthogonal)
             inline bool rotates() const;
 
-            //- Return the rotation tensor
-            inline const tensor& R() const;
-
             //- Return true if the transformer transforms a type
-            //  (i.e. rotates)
+            //  (i.e. scales or rotates)
             inline bool transforms() const;
 
             //- Return true if the transformer transforms the given type
-            //  (i.e. rotates)
+            //  (i.e. scales or rotates)
             template<typename Type>
             inline bool transforms() const;
 
             //- Return true if the transformer transforms a point
-            // (i.e. translates or rotates)
+            // (i.e. translates or scales or rotates)
             inline bool transformsPosition() const;
-
-
-        // Edit
-
-            //- Return non-const access to the translation vector
-            inline vector& t();
-
-            //- Return non-const access to the rotation tensor
-            inline tensor& R();
 
 
         // Transform
@@ -247,13 +255,6 @@ public:
 
         inline void operator&=(const transformer&);
 
-        inline void operator=(const vector&);
-        inline void operator+=(const vector&);
-        inline void operator-=(const vector&);
-
-        inline void operator=(const tensor&);
-        inline void operator&=(const tensor&);
-
 
     // Global Functions
 
@@ -273,24 +274,6 @@ public:
         (
             const transformer& tr1,
             const transformer& tr2
-        );
-
-        friend inline transformer operator+
-        (
-            const transformer& tr,
-            const vector& t
-        );
-
-        friend inline transformer operator+
-        (
-            const vector& t,
-            const transformer& tr
-        );
-
-        friend inline transformer operator-
-        (
-            const transformer& tr,
-            const vector& t
         );
 
         friend inline transformer operator&

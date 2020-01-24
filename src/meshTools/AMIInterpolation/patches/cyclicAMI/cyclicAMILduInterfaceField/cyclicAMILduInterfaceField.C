@@ -50,7 +50,7 @@ void Foam::cyclicAMILduInterfaceField::transformCoupleField
 {
     if (transforms())
     {
-        f *= pow(diag(transform().R()).component(cmpt), rank());
+        f *= pow(diag(transform().T()).component(cmpt), rank());
     }
 }
 

@@ -479,11 +479,11 @@ void Foam::FaceCellWave<Type, TrackingData>::transform
 {
     // Transform. Implementation referred to Type
 
-    if (trans.rotates())
+    if (trans.transforms())
     {
         for (label facei = 0; facei < nFaces; facei++)
         {
-            faceInfo[facei].transform(mesh_, trans.R(), td_);
+            faceInfo[facei].transform(mesh_, trans.T(), td_);
         }
     }
 }
@@ -597,11 +597,11 @@ void Foam::FaceCellWave<Type, TrackingData>::handleProcPatches()
         }
 
         // Apply transform to received data for non-parallel planes
-        if (procPatch.transform().rotates())
+        if (procPatch.transform().transforms())
         {
             transform
             (
-                procPatch.transform().R(),
+                procPatch.transform().T(),
                 receiveFaces.size(),
                 receiveFacesInfo
             );
@@ -669,12 +669,12 @@ void Foam::FaceCellWave<Type, TrackingData>::handleCyclicPatches()
             const cyclicPolyPatch& cycPatch =
                 refCast<const cyclicPolyPatch>(patch);
 
-            if (cycPatch.transform().rotates())
+            if (cycPatch.transform().transforms())
             {
                 // received data from other half
                 transform
                 (
-                    cycPatch.transform().R(),
+                    cycPatch.transform().T(),
                     nReceiveFaces,
                     receiveFacesInfo
                 );
@@ -805,11 +805,11 @@ void Foam::FaceCellWave<Type, TrackingData>::handleAMICyclicPatches()
             }
 
             // Apply transform to received data for non-parallel planes
-            if (cycPatch.transform().rotates())
+            if (cycPatch.transform().transforms())
             {
                 transform
                 (
-                    cycPatch.transform().R(),
+                    cycPatch.transform().T(),
                     receiveInfo.size(),
                     receiveInfo
                 );

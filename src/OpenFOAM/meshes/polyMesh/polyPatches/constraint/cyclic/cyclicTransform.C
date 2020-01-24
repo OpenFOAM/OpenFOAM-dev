@@ -77,13 +77,14 @@ void Foam::cyclicTransform::update()
 
                 if (mag(rotationCentre_) == 0)
                 {
-                    transform_ = transformer(R);
+                    transform_ = transformer::rotation(R);
                 }
                 else
                 {
-                    const vector t = rotationCentre_ - (R & rotationCentre_);
-
-                    transform_ = transformer(t, R);
+                    transform_ =
+                        transformer::translation(rotationCentre_)
+                      & transformer::rotation(R)
+                      & transformer::translation(- rotationCentre_);
                 }
             }
             break;
@@ -95,7 +96,7 @@ void Foam::cyclicTransform::update()
             }
             else
             {
-                transform_ = transformer(separation_);
+                transform_ = transformer::translation(separation_);
             }
             break;
     }
@@ -260,7 +261,7 @@ Foam::cyclicTransform::cyclicTransform
          && (dict.found("separation") || dict.found("separationVector"))
         )
     ),
-    transform_(vector::uniform(NaN), tensor::uniform(NaN))
+    transform_()
 {
     if (transformComplete_)
     {

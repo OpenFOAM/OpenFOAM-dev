@@ -93,7 +93,7 @@ Foam::tmp<Foam::vectorField> Foam::processorFvPatch::delta() const
     if (Pstream::parRun())
     {
         // To the transformation if necessary
-        if (transform().rotates())
+        if (transform().transforms())
         {
             return
                 coupledFvPatch::delta()

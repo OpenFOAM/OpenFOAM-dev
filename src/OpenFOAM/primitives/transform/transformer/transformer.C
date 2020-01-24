@@ -37,6 +37,7 @@ const Foam::transformer Foam::transformer::zero
     Zero,
     false,
     Zero,
+    false,
     false
 );
 
@@ -45,6 +46,7 @@ const Foam::transformer Foam::transformer::I
     Zero,
     false,
     tensor::I,
+    false,
     false
 );
 
@@ -65,7 +67,7 @@ Foam::word Foam::name(const transformer& s)
 {
     OStringStream buf;
 
-    buf << '(' << s.t() << ',' << s.R() << ')';
+    buf << '(' << s.t() << ',' << s.T() << ')';
 
     return buf.str();
 }
@@ -77,17 +79,17 @@ void Foam::transformer::transformPosition
     const pointField& pts
 ) const
 {
-    if (translates_ && !rotates_)
+    if (translates_ && !transforms())
     {
         res = pts + t();
     }
-    else if (!translates_ && rotates_)
+    else if (!translates_ && transforms())
     {
-        res = R() & pts;
+        res = T() & pts;
     }
-    else if (translates_ && rotates_)
+    else if (translates_ && transforms())
     {
-        res = (R() & pts) + t();
+        res = (T() & pts) + t();
     }
 }
 
@@ -97,17 +99,17 @@ Foam::tmp<Foam::pointField> Foam::transformer::transformPosition
     const pointField& pts
 ) const
 {
-    if (translates_ && !rotates_)
+    if (translates_ && !transforms())
     {
         return pts + t();
     }
-    else if (!translates_ && rotates_)
+    else if (!translates_ && transforms())
     {
-        return R() & pts;
+        return T() & pts;
     }
-    else if (translates_ && rotates_)
+    else if (translates_ && transforms())
     {
-        return (R() & pts) + t();
+        return (T() & pts) + t();
     }
     else
     {
@@ -121,17 +123,17 @@ Foam::tmp<Foam::pointField> Foam::transformer::invTransformPosition
     const pointField& pts
 ) const
 {
-    if (translates_ && !rotates_)
+    if (translates_ && !transforms())
     {
         return pts - t();
     }
-    else if (!translates_ && rotates_)
+    else if (!translates_ && transforms())
     {
-        return R().T() & pts;
+        return T().T() & pts;
     }
-    else if (translates_ && rotates_)
+    else if (translates_ && transforms())
     {
-        return (R().T() & (pts - t()));
+        return (T().T() & (pts - t()));
     }
     else
     {
@@ -146,17 +148,17 @@ void Foam::transformer::invTransformPosition
     const pointField& pts
 ) const
 {
-    if (translates_ && !rotates_)
+    if (translates_ && !transforms())
     {
         res = pts - t();
     }
-    else if (!translates_ && rotates_)
+    else if (!translates_ && transforms())
     {
-        res = R().T() & pts;
+        res = T().T() & pts;
     }
-    else if (translates_ && rotates_)
+    else if (translates_ && transforms())
     {
-        res = (R().T() & (pts - t()));
+        res = (T().T() & (pts - t()));
     }
 }
 
@@ -228,7 +230,7 @@ Foam::Istream& Foam::operator>>(Istream& is, transformer& tr)
     // Read beginning of transformer
     is.readBegin("transformer");
 
-    is  >> tr.translates_ >> tr.t_ >> tr.rotates_ >> tr.R_;
+    is  >> tr.translates_ >> tr.t_ >> tr.scales_ >> tr.rotates_ >> tr.T_;
 
     // Read end of transformer
     is.readEnd("transformer");
@@ -244,7 +246,7 @@ Foam::Ostream& Foam::operator<<(Ostream& os, const transformer& tr)
 {
     os  << token::BEGIN_LIST
         << tr.translates_ << token::SPACE << tr.t_ << token::SPACE
-        << tr.rotates_ << token::SPACE << tr.R_
+        << tr.scales_ << token::SPACE << tr.rotates_ << token::SPACE << tr.T_
         << token::END_LIST;
 
     return os;

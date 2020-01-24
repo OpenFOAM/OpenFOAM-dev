@@ -113,7 +113,7 @@ void Foam::cyclicAMIGAMGInterfaceField::updateInterfaceMatrix
             const scalar r =
                 pow
                 (
-                    inv(thisInterface.AMITransforms()[i]).R()(cmpt, cmpt),
+                    inv(thisInterface.AMITransforms()[i]).T()(cmpt, cmpt),
                     rank()
                 );
 
@@ -127,7 +127,7 @@ void Foam::cyclicAMIGAMGInterfaceField::updateInterfaceMatrix
             const scalar r =
                 pow
                 (
-                    neiInterface.AMITransforms()[i].R()(cmpt, cmpt),
+                    neiInterface.AMITransforms()[i].T()(cmpt, cmpt),
                     rank()
                 );
 

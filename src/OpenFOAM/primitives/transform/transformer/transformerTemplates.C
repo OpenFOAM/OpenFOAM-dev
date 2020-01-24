@@ -28,9 +28,9 @@ License
 template<class Type>
 Type Foam::transformer::transform(const Type& x) const
 {
-    if (rotates_)
+    if (transforms())
     {
-        return Foam::transform(R(), x);
+        return Foam::transform(T(), x);
     }
     else
     {
@@ -46,9 +46,9 @@ void Foam::transformer::transform
     const Field<Type>& fld
 ) const
 {
-    if (rotates_)
+    if (transforms())
     {
-        return Foam::transform(res, R(), fld);
+        return Foam::transform(res, T(), fld);
     }
 }
 
@@ -59,9 +59,9 @@ Foam::tmp<Foam::Field<Type>> Foam::transformer::transform
     const Field<Type>& fld
 ) const
 {
-    if (rotates_)
+    if (transforms())
     {
-        return Foam::transform(R(), fld);
+        return Foam::transform(T(), fld);
     }
     else
     {
@@ -76,9 +76,9 @@ Foam::tmp<Foam::Field<Type>> Foam::transformer::transform
     const tmp<Field<Type>>& tfld
 ) const
 {
-    if (rotates_)
+    if (transforms())
     {
-        return Foam::transform(R(), tfld);
+        return Foam::transform(T(), tfld);
     }
     else
     {
@@ -90,11 +90,11 @@ Foam::tmp<Foam::Field<Type>> Foam::transformer::transform
 template<class Type, template<class> class Container>
 void Foam::transformer::transformList(Container<Type>& l) const
 {
-    if (rotates_)
+    if (transforms())
     {
         forAllIter(typename Container<Type>, l, iter)
         {
-            *iter = Foam::transform(R(), *iter);
+            *iter = Foam::transform(T(), *iter);
         }
     }
 }
@@ -103,9 +103,9 @@ void Foam::transformer::transformList(Container<Type>& l) const
 template<class Type>
 Type Foam::transformer::invTransform(const Type& x) const
 {
-    if (rotates_)
+    if (transforms())
     {
-        return Foam::transform(R().T(), x);
+        return Foam::transform(invT(), x);
     }
     else
     {
@@ -121,9 +121,9 @@ void Foam::transformer::invTransform
     const Field<Type>& fld
 ) const
 {
-    if (rotates_)
+    if (transforms())
     {
-        Foam::transform(res, R().T(), fld);
+        Foam::transform(res, invT(), fld);
     }
 }
 
@@ -134,9 +134,9 @@ Foam::tmp<Foam::Field<Type>> Foam::transformer::invTransform
     const Field<Type>& fld
 ) const
 {
-    if (rotates_)
+    if (transforms())
     {
-        return Foam::transform(R().T(), fld);
+        return Foam::transform(invT(), fld);
     }
     else
     {
@@ -151,9 +151,9 @@ Foam::tmp<Foam::Field<Type>> Foam::transformer::invTransform
     const tmp<Field<Type>>& tfld
 ) const
 {
-    if (rotates_)
+    if (transforms())
     {
-        return Foam::transform(R().T(), tfld);
+        return Foam::transform(invT(), tfld);
     }
     else
     {
@@ -165,11 +165,13 @@ Foam::tmp<Foam::Field<Type>> Foam::transformer::invTransform
 template<class Type, template<class> class Container>
 void Foam::transformer::invTransformList(Container<Type>& l) const
 {
-    if (rotates_)
+    if (transforms())
     {
+        tensor invT = this->invT();
+
         forAllIter(typename Container<Type>, l, iter)
         {
-            *iter = Foam::transform(R().T(), *iter);
+            *iter = Foam::transform(invT, *iter);
         }
     }
 }

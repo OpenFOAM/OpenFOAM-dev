@@ -368,9 +368,9 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleProcPatches()
         //}
 
         // Apply transform to received data for non-parallel planes
-        if (procPatch.transform().rotates())
+        if (procPatch.transform().transforms())
         {
-            transform(procPatch, procPatch.transform().R(), patchInfo);
+            transform(procPatch, procPatch.transform().T(), patchInfo);
         }
 
         // Adapt for entering domain
@@ -453,10 +453,10 @@ void Foam::PointEdgeWave<Type, TrackingData>::handleCyclicPatches()
 
             // Apply rotation for non-parallel planes
 
-            if (cycPatch.transform().rotates())
+            if (cycPatch.transform().transforms())
             {
                 // received data from half1
-                transform(cycPatch, cycPatch.transform().R(), nbrInfo);
+                transform(cycPatch, cycPatch.transform().T(), nbrInfo);
             }
 
             // if (debug)

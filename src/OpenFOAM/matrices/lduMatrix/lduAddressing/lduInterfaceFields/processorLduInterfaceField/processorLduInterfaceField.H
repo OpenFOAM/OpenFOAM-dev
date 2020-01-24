@@ -90,7 +90,7 @@ public:
             //- Is the transform required
             bool transforms() const
             {
-                return transform().rotates() && rank() != 0;
+                return transform().transforms() && rank() != 0;
             }
 
 
