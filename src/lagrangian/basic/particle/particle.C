@@ -915,7 +915,8 @@ Foam::scalar Foam::particle::trackToMovingTri
                     const scalar detAH = detAEqn.value(mu[j]);
 
                     Info<< "Hit on tet face " << i << " at local coordinate "
-                        << yH/detAH << ", " << mu[j]*detA[0]*100 << "% of the "
+                        << (std::isnormal(detAH) ? name(yH/detAH) : "???")
+                        << ", " << mu[j]*detA[0]*100 << "% of the "
                         << "way along the track" << endl;
                 }
 
