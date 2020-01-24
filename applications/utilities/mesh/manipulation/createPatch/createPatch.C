@@ -747,61 +747,6 @@ int main(int argc, char *argv[])
     {
         Info<< "Synchronising points." << nl << endl;
 
-        // This is a bit tricky. Both normal and position might be out and
-        // current separation also includes the normal
-        // (separation = (nf&(Cr - Cf))*nf ).
-
-        // For cyclic patches:
-        // - for separated ones use user specified offset vector
-
-        forAll(mesh.boundaryMesh(), patchi)
-        {
-            const polyPatch& pp = mesh.boundaryMesh()[patchi];
-
-            if (pp.size() && isA<coupledPolyPatch>(pp))
-            {
-                const coupledPolyPatch& cpp =
-                    refCast<const coupledPolyPatch>(pp);
-
-                if (cpp.transform().translates())
-                {
-                    Info<< "On coupled patch " << pp.name()
-                        << " separation was "
-                        << cpp.transform().t() << endl;
-
-                    if (isA<cyclicPolyPatch>(pp) && pp.size())
-                    {
-                        const cyclicPolyPatch& cycpp =
-                            refCast<const cyclicPolyPatch>(pp);
-
-                        if
-                        (
-                            cycpp.transformType()
-                         != cyclicPolyPatch::TRANSLATIONAL
-                        )
-                        {
-                            const cyclicPolyPatch& nbr = cycpp.nbrPatch();
-
-                            const_cast<vector&>(cpp.transform().t()) =
-                                nbr[0].centre(mesh.points())
-                              - cycpp[0].centre(mesh.points());
-                        }
-                    }
-                    Info<< "On coupled patch " << pp.name()
-                        << " forcing uniform separation of "
-                        << cpp.transform().t() << endl;
-                }
-                else if (cpp.transform().rotates())
-                {
-                    Info<< "On coupled patch " << pp.name()
-                        << " uniform rotation of "
-                        << cpp.transform().R() << endl;
-                }
-            }
-        }
-
-        Info<< "Synchronising points." << endl;
-
         pointField newPoints(mesh.points());
 
         syncPoints
