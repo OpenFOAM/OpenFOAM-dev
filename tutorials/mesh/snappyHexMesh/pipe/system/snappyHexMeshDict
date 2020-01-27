@@ -27,6 +27,12 @@ geometry
         type closedTriSurfaceMesh;
         file "pipe.obj";
     }
+
+    pipeWall
+    {
+        type closedTriSurfaceMesh;
+        file "pipeWall.obj";
+    }
 };
 
 castellatedMeshControls
@@ -53,7 +59,7 @@ castellatedMeshControls
 
     refinementRegions
     {
-        pipe
+        pipeWall
         {
             mode span;
             levels ((1000 2));

@@ -14,23 +14,43 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-surfaces
-(
-    "pipe.obj"
-);
+pipe
+{
+    surfaces
+    (
+        "pipe.obj"
+    );
 
-// Mark edges whose adjacent surface normals are at an angle less
-// than includedAngle as features
-// - 0  : selects no edges
-// - 180: selects all edges
-includedAngle   150;
+    // Mark edges whose adjacent surface normals are at an angle less
+    // than includedAngle as features
+    // - 0  : selects no edges
+    // - 180: selects all edges
+    includedAngle           150;
 
-// Do not mark region edges
-geometricTestOnly       yes;
+    // Do not mark region edges
+    geometricTestOnly       yes;
 
-// Output the closeness of surface points to other surface elements.
-pointCloseness          yes;
+    writeObj                yes;
+    verboseObj              yes;
+}
 
-writeVTK                yes;
+pipeWall
+{
+    surfaces
+    (
+        "pipeWall.obj"
+    );
+
+    // Mark edges whose adjacent surface normals are at an angle less
+    // than includedAngle as features
+    // - 0  : selects no edges
+    // - 180: selects all edges
+    includedAngle           150;
+
+    // Output the closeness of surface points to other surface elements.
+    pointCloseness          yes;
+
+    writeVTK                yes;
+}
 
 // ************************************************************************* //

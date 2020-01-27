@@ -14,15 +14,15 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-radius      25.2;
-radiusNeg  -25.2;
+radius      25.5;
+radiusNeg  -25.5;
 box         5;
 boxNeg     -5;
-zMax        70;
-zMin       -50;
+zMax        84;
+zMin       -60;
 
 nR          7;
-nZ          20;
+nZ          24;
 
 verbose no;
 

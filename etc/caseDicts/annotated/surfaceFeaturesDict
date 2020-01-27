@@ -68,6 +68,7 @@ surface2
         // (minPt)(maxPt)
         // Keep edges inside the box:
         insideBox           (0 0 0)(1 1 1);
+
         // Keep edges outside the box:
         outsideBox          (0 0 0)(1 1 1);
 
