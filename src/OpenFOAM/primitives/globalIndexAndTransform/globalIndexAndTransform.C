@@ -96,8 +96,10 @@ Foam::label Foam::globalIndexAndTransform::matchTransform
         {
             // Test the inverse transform differences too
 
+            const transformer testInvTransform = inv(testTransform);
+
             vectorDiff =
-                mag(refTransform.t() + testTransform.t())
+                mag(refTransform.t() - testInvTransform.t())
                /(maxVectorMag + vSmall)
                /tolerance;
 
@@ -106,7 +108,7 @@ Foam::label Foam::globalIndexAndTransform::matchTransform
             if (refTransform.transforms() || testTransform.transforms())
             {
                 tensorDiff =
-                    mag(refTransform.T() - testTransform.T().T())
+                    mag(refTransform.T() - testInvTransform.T())
                    /sqrt(3.0)
                    /tolerance;
             }
