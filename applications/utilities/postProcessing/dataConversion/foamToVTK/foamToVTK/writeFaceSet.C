@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "writeFaceSet.H"
 #include "OFstream.H"
-#include "writeFuns.H"
+#include "vtkWriteFieldOps.H"
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
@@ -41,7 +41,7 @@ void Foam::writeFaceSet
 
     std::ofstream ostr(fileName.c_str());
 
-    writeFuns::writeHeader
+    vtkWriteOps::writeHeader
     (
         ostr,
         binary,
@@ -78,9 +78,9 @@ void Foam::writeFaceSet
 
     DynamicList<floatScalar> ptField(3*fp.nPoints());
 
-    writeFuns::insert(fp.localPoints(), ptField);
+    vtkWriteOps::insert(fp.localPoints(), ptField);
 
-    writeFuns::write(ostr, binary, ptField);
+    vtkWriteOps::write(ostr, binary, ptField);
 
 
     label nFaceVerts = 0;
@@ -100,9 +100,9 @@ void Foam::writeFaceSet
 
         vertLabels.append(f.size());
 
-        writeFuns::insert(f, vertLabels);
+        vtkWriteOps::insert(f, vertLabels);
     }
-    writeFuns::write(ostr, binary, vertLabels);
+    vtkWriteOps::write(ostr, binary, vertLabels);
 
 
     //-----------------------------------------------------------------
@@ -120,7 +120,7 @@ void Foam::writeFaceSet
     // Cell ids first
     ostr<< "faceID 1 " << fp.size() << " int" << std::endl;
 
-    writeFuns::write(ostr, binary, setFaceLabels);
+    vtkWriteOps::write(ostr, binary, setFaceLabels);
 }
 
 

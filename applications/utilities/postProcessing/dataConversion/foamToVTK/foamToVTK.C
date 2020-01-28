@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,7 +150,7 @@ Note
 
 #include "vtkMesh.H"
 #include "readFields.H"
-#include "writeFuns.H"
+#include "vtkWriteOps.H"
 
 #include "internalWriter.H"
 #include "patchWriter.H"
@@ -746,7 +746,7 @@ int main(int argc, char *argv[])
             internalWriter writer(vMesh, binary, vtkFileName);
 
             // cellID + volFields::Internal + VolFields
-            writeFuns::writeCellDataHeader
+            vtkWriteOps::writeCellDataHeader
             (
                 writer.os(),
                 vMesh.nFieldCells(),
@@ -772,7 +772,7 @@ int main(int argc, char *argv[])
 
             if (!noPointValues)
             {
-                writeFuns::writePointDataHeader
+                vtkWriteOps::writePointDataHeader
                 (
                     writer.os(),
                     vMesh.nFieldPoints(),
@@ -909,7 +909,7 @@ int main(int argc, char *argv[])
             );
 
             // VolFields + patchID
-            writeFuns::writeCellDataHeader
+            vtkWriteOps::writeCellDataHeader
             (
                 writer.os(),
                 writer.nFaces(),
@@ -928,7 +928,7 @@ int main(int argc, char *argv[])
 
             if (!noPointValues)
             {
-                writeFuns::writePointDataHeader
+                vtkWriteOps::writePointDataHeader
                 (
                     writer.os(),
                     writer.nPoints(),
@@ -986,7 +986,7 @@ int main(int argc, char *argv[])
                     if (!isA<emptyPolyPatch>(pp))
                     {
                         // VolFields + patchID
-                        writeFuns::writeCellDataHeader
+                        vtkWriteOps::writeCellDataHeader
                         (
                             writer.os(),
                             writer.nFaces(),
@@ -1005,7 +1005,7 @@ int main(int argc, char *argv[])
 
                         if (!noPointValues)
                         {
-                            writeFuns::writePointDataHeader
+                            vtkWriteOps::writePointDataHeader
                             (
                                 writer.os(),
                                 writer.nPoints(),
@@ -1111,7 +1111,7 @@ int main(int argc, char *argv[])
                 );
 
                 // Number of fields
-                writeFuns::writeCellDataHeader
+                vtkWriteOps::writeCellDataHeader
                 (
                     writer.os(),
                     pp.size(),

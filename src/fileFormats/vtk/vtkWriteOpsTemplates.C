@@ -21,47 +21,24 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-InNamespace
-    Foam
-
-Description
-    Write pointSet to vtk polydata file. Only one data which is original
-    pointID.
-
-SourceFiles
-    writePointSet.C
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef writePointSet_H
-#define writePointSet_H
-
-#include "primitiveMesh.H"
-#include "pointSet.H"
+#include "vtkWriteOps.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-namespace vtkWriteOps
-{
-
-//- Write pointSet to vtk polydata file.
-//  Only one data which is original pointID.
-void writePointSet
+template<class Type>
+void Foam::vtkWriteOps::insert
 (
-    const bool binary,
-    const primitiveMesh& mesh,
-    const topoSet& set,
-    const fileName& fileName
-);
+    const List<Type>& source,
+    DynamicList<floatScalar>& dest
+)
+{
+    forAll(source, i)
+    {
+        insert(source[i], dest);
+    }
+}
 
-} // End namespace vtkWriteOps
-} // End namespace Foam
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

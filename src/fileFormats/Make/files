@@ -1,3 +1,4 @@
+vtk/vtkWriteOps.C
 vtk/vtkUnstructuredReader.C
 nas/NASCore.C
 starcd/STARCDCore.C

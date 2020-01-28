@@ -2,7 +2,6 @@ surfaceMeshWriter.C
 internalWriter.C
 lagrangianWriter.C
 patchWriter.C
-writeFuns.C
 writeFaceSet.C
 writePointSet.C
 writeSurfFields.C

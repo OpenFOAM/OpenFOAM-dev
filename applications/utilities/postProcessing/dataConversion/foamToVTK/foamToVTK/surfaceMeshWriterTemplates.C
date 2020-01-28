@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "surfaceMeshWriter.H"
-#include "writeFuns.H"
+#include "vtkWriteFieldOps.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,8 +78,8 @@ void Foam::surfaceMeshWriter::write
             << pp_.size() << " float" << std::endl;
 
         DynamicList<floatScalar> fField(pTraits<Type>::nComponents*pp_.size());
-        writeFuns::insert(getFaceField(fld)(), fField);
-        writeFuns::write(os_, binary_, fField);
+        vtkWriteOps::insert(getFaceField(fld)(), fField);
+        vtkWriteOps::write(os_, binary_, fField);
     }
 }
 

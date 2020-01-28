@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "writeSurfFields.H"
 #include "OFstream.H"
 #include "floatScalar.H"
-#include "writeFuns.H"
+#include "vtkWriteFieldOps.H"
 #include "emptyFvsPatchFields.H"
 #include "fvsPatchFields.H"
 
@@ -44,7 +44,7 @@ void Foam::writeSurfFields
 
     std::ofstream str(fileName.c_str());
 
-    writeFuns::writeHeader
+    vtkWriteOps::writeHeader
     (
         str,
         binary,
@@ -61,10 +61,10 @@ void Foam::writeSurfFields
 
     for (label facei = 0; facei < mesh.nFaces(); facei++)
     {
-        writeFuns::insert(fc[facei], pField);
+        vtkWriteOps::insert(fc[facei], pField);
     }
 
-    writeFuns::write(str, binary, pField);
+    vtkWriteOps::write(str, binary, pField);
 
     str << "POINT_DATA " << mesh.nFaces() << std::endl
         << "FIELD attributes " << surfVectorFields.size() << std::endl;
@@ -81,7 +81,7 @@ void Foam::writeSurfFields
 
         for (label facei = 0; facei < mesh.nInternalFaces(); facei++)
         {
-            writeFuns::insert(svf[facei], fField);
+            vtkWriteOps::insert(svf[facei], fField);
         }
 
         forAll(svf.boundaryField(), patchi)
@@ -95,19 +95,19 @@ void Foam::writeSurfFields
                 // Note: loop over polypatch size, not fvpatch size.
                 forAll(pp.patch(), i)
                 {
-                    writeFuns::insert(vector::zero, fField);
+                    vtkWriteOps::insert(vector::zero, fField);
                 }
             }
             else
             {
                 forAll(pf, i)
                 {
-                    writeFuns::insert(pf[i], fField);
+                    vtkWriteOps::insert(pf[i], fField);
                 }
             }
         }
 
-        writeFuns::write(str, binary, fField);
+        vtkWriteOps::write(str, binary, fField);
     }
 }
 

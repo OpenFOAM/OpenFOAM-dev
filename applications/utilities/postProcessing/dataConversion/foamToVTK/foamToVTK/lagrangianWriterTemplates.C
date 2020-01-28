@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "lagrangianWriter.H"
-#include "writeFuns.H"
+#include "vtkWriteFieldOps.H"
 #include "IOField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -54,9 +54,9 @@ void Foam::lagrangianWriter::writeIOField(const wordList& objects)
 
         DynamicList<floatScalar> fField(pTraits<Type>::nComponents*fld.size());
 
-        writeFuns::insert(fld, fField);
+        vtkWriteOps::insert(fld, fField);
 
-        writeFuns::write(os_, binary_, fField);
+        vtkWriteOps::write(os_, binary_, fField);
     }
 }
 

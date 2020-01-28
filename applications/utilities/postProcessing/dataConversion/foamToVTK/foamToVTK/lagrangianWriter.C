@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "lagrangianWriter.H"
-#include "writeFuns.H"
+#include "vtkWriteFieldOps.H"
 #include "Cloud.H"
 #include "passiveParticle.H"
 
@@ -48,7 +48,7 @@ Foam::lagrangianWriter::lagrangianWriter
     const fvMesh& mesh = vMesh_.mesh();
 
     // Write header
-    writeFuns::writeHeader(os_, binary_, mesh.time().caseName());
+    vtkWriteOps::writeHeader(os_, binary_, mesh.time().caseName());
     os_ << "DATASET POLYDATA" << std::endl;
 
     if (dummyCloud)
@@ -69,9 +69,9 @@ Foam::lagrangianWriter::lagrangianWriter
 
         forAllConstIter(Cloud<passiveParticle>, parcels, elmnt)
         {
-            writeFuns::insert(elmnt().position(), partField);
+            vtkWriteOps::insert(elmnt().position(), partField);
         }
-        writeFuns::write(os_, binary_, partField);
+        vtkWriteOps::write(os_, binary_, partField);
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,11 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "writeFuns.H"
+#include "vtkWriteOps.H"
 
 #if defined(__mips)
     #include <standards.h>
     #include <sys/endian.h>
+#endif
+
+// MacOSX
+#ifdef __DARWIN_BYTE_ORDER
+    #if __DARWIN_BYTE_ORDER==__DARWIN_BIG_ENDIAN
+        #undef LITTLE_ENDIAN
+    #else
+        #undef BIG_ENDIAN
+    #endif
 #endif
 
 #if defined(LITTLE_ENDIAN) \
@@ -43,7 +52,7 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void Foam::writeFuns::swapWord(int32_t& word32)
+void Foam::vtkWriteOps::swapWord(label& word32)
 {
     char* mem = reinterpret_cast<char*>(&word32);
 
@@ -57,16 +66,16 @@ void Foam::writeFuns::swapWord(int32_t& word32)
 }
 
 
-void Foam::writeFuns::swapWords(const label nWords, int32_t* words32)
+void Foam::vtkWriteOps::swapWords(const label nWords, label* words32)
 {
-    for (label i=0; i<nWords; i++)
+    for (label i = 0; i < nWords; i++)
     {
         swapWord(words32[i]);
     }
 }
 
 
-void Foam::writeFuns::write
+void Foam::vtkWriteOps::write
 (
     std::ostream& os,
     const bool binary,
@@ -76,9 +85,8 @@ void Foam::writeFuns::write
     if (binary)
     {
         #ifdef LITTLEENDIAN
-        swapWords(fField.size(), reinterpret_cast<int32_t*>(fField.begin()));
+        swapWords(fField.size(), reinterpret_cast<label*>(fField.begin()));
         #endif
-
         os.write
         (
             reinterpret_cast<char*>(fField.begin()),
@@ -91,19 +99,23 @@ void Foam::writeFuns::write
     {
         forAll(fField, i)
         {
-            os  << fField[i] << ' ';
+            os  << fField[i];
 
             if (i > 0 && (i % 10) == 0)
             {
                 os  << std::endl;
             }
+            else
+            {
+                os  << ' ';
+            }
         }
-        os  << std::endl;
+        os << std::endl;
     }
 }
 
 
-void Foam::writeFuns::write
+void Foam::vtkWriteOps::write
 (
     std::ostream& os,
     const bool binary,
@@ -111,11 +123,12 @@ void Foam::writeFuns::write
 )
 {
     List<floatScalar>& fld = fField.shrink();
+
     write(os, binary, fld);
 }
 
 
-void Foam::writeFuns::write
+void Foam::vtkWriteOps::write
 (
     std::ostream& os,
     const bool binary,
@@ -125,11 +138,7 @@ void Foam::writeFuns::write
     if (binary)
     {
         #ifdef LITTLEENDIAN
-        swapWords
-        (
-            (sizeof(label)/4)*elems.size(),
-            reinterpret_cast<int32_t*>(elems.begin())
-        );
+        swapWords(elems.size(), reinterpret_cast<label*>(elems.begin()));
         #endif
         os.write
         (
@@ -143,11 +152,15 @@ void Foam::writeFuns::write
     {
         forAll(elems, i)
         {
-            os  << elems[i] << ' ';
+            os  << elems[i];
 
             if (i > 0 && (i % 10) == 0)
             {
                 os  << std::endl;
+            }
+            else
+            {
+                os  << ' ';
             }
         }
         os  << std::endl;
@@ -155,7 +168,7 @@ void Foam::writeFuns::write
 }
 
 
-void Foam::writeFuns::write
+void Foam::vtkWriteOps::write
 (
     std::ostream& os,
     const bool binary,
@@ -163,41 +176,123 @@ void Foam::writeFuns::write
 )
 {
     labelList& fld = elems.shrink();
+
     write(os, binary, fld);
 }
 
 
-void Foam::writeFuns::insert(const point& pt, DynamicList<floatScalar>& dest)
+void Foam::vtkWriteOps::writeHeader
+(
+    std::ostream& os,
+    const bool binary,
+    const std::string& title
+)
 {
-    dest.append(float(pt.x()));
-    dest.append(float(pt.y()));
-    dest.append(float(pt.z()));
-}
+    os  << "# vtk DataFile Version 2.0" << std::endl
+        << title << std::endl;
 
-
-void Foam::writeFuns::insert(const labelList& source, DynamicList<label>& dest)
-{
-    forAll(source, i)
+    if (binary)
     {
-        dest.append(source[i]);
+        os  << "BINARY" << std::endl;
+    }
+    else
+    {
+        os  << "ASCII" << std::endl;
     }
 }
 
 
-void Foam::writeFuns::insert
+void Foam::vtkWriteOps::writeCellDataHeader
 (
-    const List<scalar>& source,
+    std::ostream& os,
+    const label nCells,
+    const label nFields
+)
+{
+    os  << "CELL_DATA " << nCells << std::endl
+        << "FIELD attributes " << nFields << std::endl;
+}
+
+
+void Foam::vtkWriteOps::writePointDataHeader
+(
+    std::ostream& os,
+    const label nPoints,
+    const label nFields
+)
+{
+    os  << "POINT_DATA  " << nPoints << std::endl
+        << "FIELD attributes " << nFields << std::endl;
+}
+
+
+void Foam::vtkWriteOps::insert(const scalar src, DynamicList<floatScalar>& dest)
+{
+    dest.append(float(src));
+}
+
+
+void Foam::vtkWriteOps::insert
+(
+    const vector& src,
     DynamicList<floatScalar>& dest
 )
 {
-    forAll(source, i)
+    for (direction cmpt = 0; cmpt < vector::nComponents; ++cmpt)
     {
-        dest.append(float(source[i]));
+        dest.append(float(src[cmpt]));
     }
 }
 
 
-void Foam::writeFuns::insert
+void Foam::vtkWriteOps::insert
+(
+    const sphericalTensor& src,
+    DynamicList<floatScalar>& dest
+)
+{
+    for (direction cmpt = 0; cmpt < sphericalTensor::nComponents; ++cmpt)
+    {
+        dest.append(float(src[cmpt]));
+    }
+}
+
+
+void Foam::vtkWriteOps::insert
+(
+    const symmTensor& src,
+    DynamicList<floatScalar>& dest
+)
+{
+    dest.append(float(src.xx()));
+    dest.append(float(src.yy()));
+    dest.append(float(src.zz()));
+    dest.append(float(src.xy()));
+    dest.append(float(src.yz()));
+    dest.append(float(src.xz()));
+}
+
+
+void Foam::vtkWriteOps::insert
+(
+    const tensor& src,
+    DynamicList<floatScalar>& dest
+)
+{
+    for (direction cmpt = 0; cmpt < tensor::nComponents; ++cmpt)
+    {
+        dest.append(float(src[cmpt]));
+    }
+}
+
+
+void Foam::vtkWriteOps::insert(const labelList& src, DynamicList<label>& dest)
+{
+    dest.append(src);
+}
+
+
+void Foam::vtkWriteOps::insert
 (
     const labelList& map,
     const List<scalar>& source,
@@ -211,7 +306,7 @@ void Foam::writeFuns::insert
 }
 
 
-void Foam::writeFuns::insert
+void Foam::vtkWriteOps::insert
 (
     const List<point>& source,
     DynamicList<floatScalar>& dest
@@ -223,7 +318,8 @@ void Foam::writeFuns::insert
     }
 }
 
-void Foam::writeFuns::insert
+
+void Foam::vtkWriteOps::insert
 (
     const labelList& map,
     const List<point>& source,

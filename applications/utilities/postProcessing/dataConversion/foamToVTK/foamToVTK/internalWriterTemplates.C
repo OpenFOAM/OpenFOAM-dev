@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "internalWriter.H"
-#include "writeFuns.H"
+#include "vtkWriteFieldOps.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -36,7 +36,7 @@ void Foam::internalWriter::write
 {
     forAll(flds, i)
     {
-        writeFuns::write(os_, binary_, flds[i], vMesh_);
+        vtkWriteOps::write(os_, binary_, flds[i], vMesh_);
     }
 }
 
@@ -49,7 +49,7 @@ void Foam::internalWriter::write
 {
     forAll(flds, i)
     {
-        writeFuns::write(os_, binary_, flds[i], vMesh_);
+        vtkWriteOps::write(os_, binary_, flds[i], vMesh_);
     }
 }
 
@@ -63,7 +63,7 @@ void Foam::internalWriter::write
 {
     forAll(flds, i)
     {
-        writeFuns::write
+        vtkWriteOps::write
         (
             os_,
             binary_,

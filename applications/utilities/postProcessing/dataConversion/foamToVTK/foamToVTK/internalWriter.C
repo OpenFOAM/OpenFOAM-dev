@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "internalWriter.H"
-#include "writeFuns.H"
+#include "vtkWriteFieldOps.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -44,7 +44,7 @@ Foam::internalWriter::internalWriter
     const vtkTopo& topo = vMesh_.topo();
 
     // Write header
-    writeFuns::writeHeader(os_, binary_, mesh.time().caseName());
+    vtkWriteOps::writeHeader(os_, binary_, mesh.time().caseName());
     os_ << "DATASET UNSTRUCTURED_GRID" << std::endl;
 
 
@@ -61,14 +61,14 @@ Foam::internalWriter::internalWriter
 
     DynamicList<floatScalar> ptField(3*nTotPoints);
 
-    writeFuns::insert(mesh.points(), ptField);
+    vtkWriteOps::insert(mesh.points(), ptField);
 
     const pointField& ctrs = mesh.cellCentres();
     forAll(addPointCellLabels, api)
     {
-        writeFuns::insert(ctrs[addPointCellLabels[api]], ptField);
+        vtkWriteOps::insert(ctrs[addPointCellLabels[api]], ptField);
     }
-    writeFuns::write(os_, binary_, ptField);
+    vtkWriteOps::write(os_, binary_, ptField);
 
 
     //
@@ -95,9 +95,9 @@ Foam::internalWriter::internalWriter
 
         vertLabels.append(vtkVerts.size());
 
-        writeFuns::insert(vtkVerts, vertLabels);
+        vtkWriteOps::insert(vtkVerts, vertLabels);
     }
-    writeFuns::write(os_, binary_, vertLabels);
+    vtkWriteOps::write(os_, binary_, vertLabels);
 
 
     const labelList& vtkCellTypes = topo.cellTypes();
@@ -107,9 +107,9 @@ Foam::internalWriter::internalWriter
     // Make copy since writing might swap stuff.
     DynamicList<label> cellTypes(vtkCellTypes.size());
 
-    writeFuns::insert(vtkCellTypes, cellTypes);
+    vtkWriteOps::insert(vtkCellTypes, cellTypes);
 
-    writeFuns::write(os_, binary_, cellTypes);
+    vtkWriteOps::write(os_, binary_, cellTypes);
 }
 
 
@@ -158,7 +158,7 @@ void Foam::internalWriter::writeCellIDs()
         }
     }
 
-    writeFuns::write(os_, binary_, cellId);
+    vtkWriteOps::write(os_, binary_, cellId);
 }
 
 

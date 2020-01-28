@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,30 +22,24 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::writeFuns
+    Foam::vtkWriteOps
 
 Description
-    Various functions for collecting and writing binary data.
-
-    The LITTLE_ENDIAN is based on 32bit words.
-    It is not clear how 64bit labels should be handled, currently they are
-    split into two 32bit words and swapWord applied to these two.
-
-    writeFuns should be a namespace rather than a class.
+    VTK ASCII and binary write functions
 
 SourceFiles
-    writeFuns.C
+    vtkWriteOps.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef writeFuns_H
-#define writeFuns_H
+#ifndef vtkWriteOps_H
+#define vtkWriteOps_H
 
-#include "labelList.H"
 #include "floatScalar.H"
-#include "OFstream.H"
-#include "DynamicList.H"
 #include "point.H"
+#include "tensor.H"
+#include "labelList.H"
+#include "DynamicList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,49 +47,81 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class writeFuns Declaration
+                       Namespace vtkWriteOps Declaration
 \*---------------------------------------------------------------------------*/
 
-class writeFuns
+namespace vtkWriteOps
 {
-    // Private Member Functions
+    //- Swap halves of word
+    void swapWord(label& word32);
 
-        //- Swap halves of word
-        static void swapWord(int32_t& word32);
+    //- Swap halves of word
+    void swapWords(const label nWords, label* words32);
 
-        //- Swap halves of word
-        static void swapWords(const label nWords, int32_t* words32);
+    //- Write header
+    void writeHeader
+    (
+        std::ostream&,
+        const bool isBinary,
+        const std::string& title
+    );
 
+    void writeCellDataHeader
+    (
+        std::ostream&,
+        const label nCells,
+        const label nFields
+    );
 
-public:
+    void writePointDataHeader
+    (
+        std::ostream&,
+        const label nPoints,
+        const label nFields
+    );
+
 
     //- Write floats ascii or binary.
     //  If binary optionally in-place swaps argument
-    static void write(std::ostream&, const bool, DynamicList<floatScalar>&);
-
-    //- Write labels ascii or binary.
-    //  If binary optionally in-place swaps argument
-    static void write(std::ostream&, const bool, DynamicList<label>&);
+    void write(std::ostream& os, const bool binary, List<floatScalar>& fField);
 
     //- Write floats ascii or binary.
     //  If binary optionally in-place swaps argument
-    static void write(std::ostream&, const bool, List<floatScalar>&);
+    void write(std::ostream&, const bool, DynamicList<floatScalar>&);
 
-    //- Write labels ascii or binary.
+    //- Write floats ascii or binary.
     //  If binary optionally in-place swaps argument
-    static void write(std::ostream&, const bool, labelList&);
+    void write(std::ostream&, const bool, labelList&);
+
+    //- Write floats ascii or binary.
+    //  If binary optionally in-place swaps argument
+    void write(std::ostream&, const bool, DynamicList<label>&);
+
+
+    //- Append scalar to given DynamicList
+    void insert(const scalar, DynamicList<floatScalar>&);
 
     //- Append point to given DynamicList
-    static void insert(const point&, DynamicList<floatScalar>& dest);
+    void insert(const point&, DynamicList<floatScalar>&);
 
-    //- Append elements of labelList to given DynamicList
-    static void insert(const labelList&, DynamicList<label>&);
+    //- Append sphericalTensor to given DynamicList
+    void insert(const sphericalTensor&, DynamicList<floatScalar>&);
 
-    //- Append elements of scalarList to given DynamicList
-    static void insert(const List<scalar>&, DynamicList<floatScalar>&);
+    //- Append symmTensor to given DynamicList
+    void insert(const symmTensor&, DynamicList<floatScalar>&);
+
+    //- Append tensor to given DynamicList
+    void insert(const tensor&, DynamicList<floatScalar>&);
+
+    //- Append elements to DynamicList
+    void insert(const labelList&, DynamicList<label>&);
+
+    //- Append elements to DynamicList
+    template<class Type>
+    void insert(const List<Type>&, DynamicList<floatScalar>&);
 
     //- Append elements of scalarList to given DynamicList using map
-    static void insert
+    void insert
     (
         const labelList& map,
         const List<scalar>& source,
@@ -103,22 +129,28 @@ public:
     );
 
     //- Append points to given DynamicList of floats
-    static void insert(const List<point>& source, DynamicList<floatScalar>&);
+    void insert(const List<point>& source, DynamicList<floatScalar>&);
 
     //- Append points to given DynamicList of floats using map
-    static void insert
+    void insert
     (
         const labelList& map,
         const List<point>& source,
         DynamicList<floatScalar>&
     );
-};
+
+} // End namespace vtkWriteOps
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "vtkWriteOpsTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

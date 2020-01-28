@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,27 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "writeFuns.H"
+#include "vtkWriteFieldOps.H"
 #include "interpolatePointToCell.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::writeFuns::insert
-(
-    const List<Type>& source,
-    DynamicList<floatScalar>& dest
-)
-{
-    forAll(source, i)
-    {
-        insert(source[i], dest);
-    }
-}
-
-
-template<class Type>
-void Foam::writeFuns::write
+void Foam::vtkWriteOps::write
 (
     std::ostream& os,
     const bool binary,
@@ -75,7 +61,7 @@ void Foam::writeFuns::write
 
 
 template<class Type>
-void Foam::writeFuns::write
+void Foam::vtkWriteOps::write
 (
     std::ostream& os,
     const bool binary,
@@ -107,7 +93,7 @@ void Foam::writeFuns::write
 
 
 template<class Type>
-void Foam::writeFuns::write
+void Foam::vtkWriteOps::write
 (
     std::ostream& os,
     const bool binary,
@@ -140,7 +126,7 @@ void Foam::writeFuns::write
 
 
 template<class Type, template<class> class PatchField, class GeoMesh>
-void Foam::writeFuns::write
+void Foam::vtkWriteOps::write
 (
     std::ostream& os,
     const bool binary,
@@ -156,7 +142,7 @@ void Foam::writeFuns::write
 
 
 template<class Type>
-void Foam::writeFuns::write
+void Foam::vtkWriteOps::write
 (
     std::ostream& os,
     const bool binary,
