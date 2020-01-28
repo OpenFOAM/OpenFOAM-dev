@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,9 +108,6 @@ public:
 
         //- Does the list contain the specified name
         inline bool found(const word&) const;
-
-        //- Does the list contain the specified name
-        inline bool contains(const word&) const;
 
         //- Transfer the contents of the argument List into this list
         //  and annul the argument list.
