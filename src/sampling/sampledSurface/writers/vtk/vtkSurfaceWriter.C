@@ -92,7 +92,7 @@ void Foam::vtkSurfaceWriter::writeGeometry
 
 
 template<class Type>
-void Foam::vtkSurfaceWriter::writeTemplate
+void Foam::vtkSurfaceWriter::write
 (
     const fileName& outputDir,
     const fileName& surfaceName,
