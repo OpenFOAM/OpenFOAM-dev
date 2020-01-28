@@ -55,11 +55,10 @@ namespace Foam
         const faceList& faces,                                                 \
         const word& fieldName,                                                 \
         const Field<FieldType>& values,                                        \
-        const bool isNodeValues,                                               \
-        const bool verbose                                                     \
+        const bool isNodeValues                                                \
     ) const                                                                    \
     {                                                                          \
-        write                                                          \
+        write                                                                  \
         (                                                                      \
             outputDir,                                                         \
             surfaceName,                                                       \
@@ -67,8 +66,7 @@ namespace Foam
             faces,                                                             \
             fieldName,                                                         \
             values,                                                            \
-            isNodeValues,                                                      \
-            verbose                                                            \
+            isNodeValues                                                       \
         );                                                                     \
     }
 

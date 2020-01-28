@@ -51,8 +51,7 @@ void Foam::ensightSurfaceWriter::write
     const faceList& faces,
     const word& fieldName,
     const Field<Type>& values,
-    const bool isNodeValues,
-    const bool verbose
+    const bool isNodeValues
 ) const
 {
     if (!isDir(outputDir/fieldName))
@@ -75,7 +74,7 @@ void Foam::ensightSurfaceWriter::write
         writeFormat_
     );
 
-    if (verbose)
+    if (debug)
     {
         Info<< "Writing case file to " << osCase.name() << endl;
     }
@@ -146,8 +145,7 @@ void Foam::ensightSurfaceWriter::write
     const fileName& outputDir,
     const fileName& surfaceName,
     const pointField& points,
-    const faceList& faces,
-    const bool verbose
+    const faceList& faces
 ) const
 {
     if (!isDir(outputDir))
@@ -165,7 +163,7 @@ void Foam::ensightSurfaceWriter::write
         writeFormat_
     );
 
-    if (verbose)
+    if (debug)
     {
         Info<< "Writing case file to " << osCase.name() << endl;
     }

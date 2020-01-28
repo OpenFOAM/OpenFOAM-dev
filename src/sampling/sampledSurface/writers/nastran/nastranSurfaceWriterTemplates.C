@@ -123,8 +123,7 @@ void Foam::nastranSurfaceWriter::write
     const faceList& faces,
     const word& fieldName,
     const Field<Type>& values,
-    const bool isNodeValues,
-    const bool verbose
+    const bool isNodeValues
 ) const
 {
     if (!fieldMap_.found(fieldName))
@@ -151,7 +150,7 @@ void Foam::nastranSurfaceWriter::write
     OFstream os(outputDir/fieldName/surfaceName + ".dat");
     formatOS(os);
 
-    if (verbose)
+    if (debug)
     {
         Info<< "Writing nastran file to " << os.name() << endl;
     }

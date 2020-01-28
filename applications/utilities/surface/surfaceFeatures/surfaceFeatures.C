@@ -471,8 +471,7 @@ namespace Foam
                         faces,
                         "internalCloseness",                // fieldName
                         closenessFields.first(),
-                        false,                              // isNodeValues
-                        true                                // verbose
+                        false                               // isNodeValues
                     );
 
                     vtkSurfaceWriter().write
@@ -483,8 +482,7 @@ namespace Foam
                         faces,
                         "externalCloseness",                // fieldName
                         closenessFields.second(),
-                        false,                              // isNodeValues
-                        true                                // verbose
+                        false                               // isNodeValues
                     );
                 }
             }
@@ -535,8 +533,7 @@ namespace Foam
                         faces,
                         "internalPointCloseness",           // fieldName
                         internalCloseness,
-                        true,                               // isNodeValues
-                        true                                // verbose
+                        true                                // isNodeValues
                     );
 
                     vtkSurfaceWriter().write
@@ -547,8 +544,7 @@ namespace Foam
                         faces,
                         "externalPointCloseness",           // fieldName
                         externalCloseness,
-                        true,                               // isNodeValues
-                        true                                // verbose
+                        true                                // isNodeValues
                     );
                 }
             }
@@ -586,8 +582,7 @@ namespace Foam
                     faces,
                     "curvature",                        // fieldName
                     k,
-                    true,                               // isNodeValues
-                    true                                // verbose
+                    true                                // isNodeValues
                 );
             }
         }
@@ -659,8 +654,7 @@ namespace Foam
                     faces,
                     "featureProximity",                 // fieldName
                     featureProximity,
-                    false,                              // isNodeValues
-                    true                                // verbose
+                    false                               // isNodeValues
                 );
             }
         }

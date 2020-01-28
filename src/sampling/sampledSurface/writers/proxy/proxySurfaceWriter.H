@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,8 +90,7 @@ public:
             const fileName& outputDir,
             const fileName& surfaceName,
             const pointField& points,
-            const faceList& faces,
-            const bool verbose = false
+            const faceList& faces
         ) const;
 
         //- Write scalarField for a single surface to file.
@@ -104,8 +103,7 @@ public:
             const faceList& faces,
             const word& fieldName,          // name of field
             const Field<scalar>& values,
-            const bool isNodeValues,
-            const bool verbose = false
+            const bool isNodeValues
         ) const
         {}
 
@@ -119,8 +117,7 @@ public:
             const faceList& faces,
             const word& fieldName,          // name of field
             const Field<vector>& values,
-            const bool isNodeValues,
-            const bool verbose = false
+            const bool isNodeValues
         ) const
         {}
 
@@ -134,8 +131,7 @@ public:
             const faceList& faces,
             const word& fieldName,          // name of field
             const Field<sphericalTensor>& values,
-            const bool isNodeValues,
-            const bool verbose = false
+            const bool isNodeValues
         ) const
         {}
 
@@ -149,8 +145,7 @@ public:
             const faceList& faces,
             const word& fieldName,          // name of field
             const Field<symmTensor>& values,
-            const bool isNodeValues,
-            const bool verbose = false
+            const bool isNodeValues
         ) const
         {}
 
@@ -164,8 +159,7 @@ public:
             const faceList& faces,
             const word& fieldName,          // name of field
             const Field<tensor>& values,
-            const bool isNodeValues,
-            const bool verbose = false
+            const bool isNodeValues
         ) const
         {}
 };

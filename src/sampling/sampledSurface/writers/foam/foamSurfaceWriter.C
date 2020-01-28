@@ -47,8 +47,7 @@ void Foam::foamSurfaceWriter::write
     const faceList& faces,
     const word& fieldName,
     const Field<Type>& values,
-    const bool isNodeValues,
-    const bool verbose
+    const bool isNodeValues
 ) const
 {
     fileName surfaceDir(outputDir/surfaceName);
@@ -58,7 +57,7 @@ void Foam::foamSurfaceWriter::write
         mkDir(surfaceDir);
     }
 
-    if (verbose)
+    if (debug)
     {
         Info<< "Writing field " << fieldName << " to " << surfaceDir << endl;
     }
@@ -100,8 +99,7 @@ void Foam::foamSurfaceWriter::write
     const fileName& outputDir,
     const fileName& surfaceName,
     const pointField& points,
-    const faceList& faces,
-    const bool verbose
+    const faceList& faces
 ) const
 {
     fileName surfaceDir(outputDir/surfaceName);
@@ -111,7 +109,7 @@ void Foam::foamSurfaceWriter::write
         mkDir(surfaceDir);
     }
 
-    if (verbose)
+    if (debug)
     {
         Info<< "Writing geometry to " << surfaceDir << endl;
     }

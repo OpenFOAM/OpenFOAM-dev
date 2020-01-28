@@ -100,8 +100,7 @@ void Foam::vtkSurfaceWriter::write
     const faceList& faces,
     const word& fieldName,
     const Field<Type>& values,
-    const bool isNodeValues,
-    const bool verbose
+    const bool isNodeValues
 ) const
 {
     if (!isDir(outputDir))
@@ -113,7 +112,7 @@ void Foam::vtkSurfaceWriter::write
 
     ofstream os(filePath, std::ios::binary);
 
-    if (verbose)
+    if (debug)
     {
         Info<< "Writing field " << fieldName << " to " << filePath << endl;
     }
@@ -173,8 +172,7 @@ void Foam::vtkSurfaceWriter::write
     const fileName& outputDir,
     const fileName& surfaceName,
     const pointField& points,
-    const faceList& faces,
-    const bool verbose
+    const faceList& faces
 ) const
 {
     if (!isDir(outputDir))
@@ -185,7 +183,7 @@ void Foam::vtkSurfaceWriter::write
     word filePath =  outputDir/surfaceName + ".vtk";
     ofstream os(filePath, std::ios::binary);
 
-    if (verbose)
+    if (debug)
     {
         Info<< "Writing geometry to " << filePath << endl;
     }

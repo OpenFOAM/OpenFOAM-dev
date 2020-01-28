@@ -62,8 +62,7 @@ class foamSurfaceWriter
             const faceList& faces,
             const word& fieldName,
             const Field<Type>& values,
-            const bool isNodeValues,
-            const bool verbose
+            const bool isNodeValues
         ) const;
 
 
@@ -98,8 +97,7 @@ public:
             const fileName& outputDir,
             const fileName& surfaceName,
             const pointField& points,
-            const faceList& faces,
-            const bool verbose = false
+            const faceList& faces
         ) const;
 
 
@@ -113,8 +111,7 @@ public:
             const faceList& faces,
             const word& fieldName,          // name of field
             const Field<scalar>& values,
-            const bool isNodeValues,
-            const bool verbose = false
+            const bool isNodeValues
         ) const;
 
         //- Write vectorField for a single surface to file.
@@ -127,8 +124,7 @@ public:
             const faceList& faces,
             const word& fieldName,          // name of field
             const Field<vector>& values,
-            const bool isNodeValues,
-            const bool verbose = false
+            const bool isNodeValues
         ) const;
 
         //- Write sphericalTensorField for a single surface to file.
@@ -141,8 +137,7 @@ public:
             const faceList& faces,
             const word& fieldName,          // name of field
             const Field<sphericalTensor>& values,
-            const bool isNodeValues,
-            const bool verbose = false
+            const bool isNodeValues
         ) const;
 
         //- Write symmTensorField for a single surface to file.
@@ -155,8 +150,7 @@ public:
             const faceList& faces,
             const word& fieldName,          // name of field
             const Field<symmTensor>& values,
-            const bool isNodeValues,
-            const bool verbose = false
+            const bool isNodeValues
         ) const;
 
         //- Write tensorField for a single surface to file.
@@ -169,8 +163,7 @@ public:
             const faceList& faces,
             const word& fieldName,          // name of field
             const Field<tensor>& values,
-            const bool isNodeValues,
-            const bool verbose = false
+            const bool isNodeValues
         ) const;
 };
 
