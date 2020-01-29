@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,10 @@ int main(int argc, char *argv[])
 
         if (solvePrimaryRegion)
         {
-            #include "rhoEqn.H"
+            if (pimple.firstPimpleIter() && !pimple.simpleRho())
+            {
+                #include "rhoEqn.H"
+            }
 
             // --- PIMPLE loop
             while (pimple.loop())
@@ -114,9 +117,9 @@ int main(int argc, char *argv[])
                     turbulence->correct();
                 }
             }
-
-            rho = thermo.rho();
         }
+
+        rho = thermo.rho();
 
         runTime.write();
 
