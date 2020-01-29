@@ -50,7 +50,7 @@ void Foam::foamSurfaceWriter::Write
     const bool isNodeValues
 ) const
 {
-    fileName surfaceDir(outputDir/surfaceName);
+    const fileName surfaceDir(outputDir/surfaceName);
 
     if (!isDir(surfaceDir))
     {
@@ -62,19 +62,18 @@ void Foam::foamSurfaceWriter::Write
         Info<< "Writing field " << fieldName << " to " << surfaceDir << endl;
     }
 
-    // geometry should already have been written
+    // Geometry should already have been written
     // Values to separate directory (e.g. "scalarField/p")
 
-    fileName foamName(pTraits<Type>::typeName);
-    fileName valuesDir(surfaceDir  / (foamName + Field<Type>::typeName));
+    const fileName foamName(pTraits<Type>::typeName);
+    const fileName valuesDir(surfaceDir/(foamName + Field<Type>::typeName));
 
     if (!isDir(valuesDir))
     {
         mkDir(valuesDir);
     }
 
-    // values
-    OFstream(valuesDir/fieldName)()  << values;
+    OFstream(valuesDir/fieldName, writeFormat_)()  << values;
 }
 
 
@@ -105,7 +104,7 @@ void Foam::foamSurfaceWriter::write
     const faceList& faces
 ) const
 {
-    fileName surfaceDir(outputDir/surfaceName);
+    const fileName surfaceDir(outputDir/surfaceName);
 
     if (!isDir(surfaceDir))
     {
@@ -117,23 +116,22 @@ void Foam::foamSurfaceWriter::write
         Info<< "Writing geometry to " << surfaceDir << endl;
     }
 
-
     // Points
-    OFstream(surfaceDir/"points")() << points;
+    OFstream(surfaceDir/"points", writeFormat_)() << points;
 
     // Faces
-    OFstream(surfaceDir/"faces")() << faces;
+    OFstream(surfaceDir/"faces", writeFormat_)() << faces;
 
     // Face centers. Not really necessary but very handy when reusing as inputs
     // for e.g. timeVaryingMapped bc.
-    pointField faceCentres(faces.size(),point::zero);
+    pointField faceCentres(faces.size(), Zero);
 
     forAll(faces, facei)
     {
         faceCentres[facei] = faces[facei].centre(points);
     }
 
-    OFstream(surfaceDir/"faceCentres")() << faceCentres;
+    OFstream(surfaceDir/"faceCentres", writeFormat_)() << faceCentres;
 }
 
 

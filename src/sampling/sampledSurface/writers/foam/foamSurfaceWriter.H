@@ -25,7 +25,8 @@ Class
     Foam::foamSurfaceWriter
 
 Description
-    A surfaceWriter for foams
+    A surfaceWriter for native OpenFOAM format
+    with support for writing ASCII or binary.
 
 SourceFiles
     foamSurfaceWriter.C
