@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,14 +24,13 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "OBJstream.H"
-//#include "token.H"
 #include "primitivePatch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-defineTypeNameAndDebug(OBJstream, 0);
+    defineTypeNameAndDebug(OBJstream, 0);
 }
 
 

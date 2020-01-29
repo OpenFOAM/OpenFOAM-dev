@@ -25,7 +25,6 @@ $(surfaceFormats)/ac3d/AC3DsurfaceFormatRunTime.C
 $(surfaceFormats)/gts/GTSsurfaceFormatRunTime.C
 $(surfaceFormats)/nas/NASsurfaceFormatRunTime.C
 $(surfaceFormats)/obj/OBJsurfaceFormatRunTime.C
-$(surfaceFormats)/obj/OBJstream.C
 $(surfaceFormats)/off/OFFsurfaceFormatRunTime.C
 $(surfaceFormats)/ofs/OFSsurfaceFormatCore.C
 $(surfaceFormats)/ofs/OFSsurfaceFormatRunTime.C
