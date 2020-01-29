@@ -81,8 +81,8 @@ public:
 
     // Constructors
 
-        //- Construct null
-        vtkSurfaceWriter();
+        //- Construct given write format
+        vtkSurfaceWriter(const IOstream::streamFormat writeFormat);
 
 
     //- Destructor

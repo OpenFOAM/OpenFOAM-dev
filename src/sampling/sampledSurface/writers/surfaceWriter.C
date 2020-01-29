@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,11 @@ namespace Foam
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
 Foam::autoPtr<Foam::surfaceWriter>
-Foam::surfaceWriter::New(const word& writeType)
+Foam::surfaceWriter::New
+(
+    const word& writeType,
+    const IOstream::streamFormat format
+)
 {
     wordConstructorTable::iterator cstrIter =
         wordConstructorTablePtr_->find(writeType);
@@ -67,12 +71,16 @@ Foam::surfaceWriter::New(const word& writeType)
         }
     }
 
-    return autoPtr<surfaceWriter>(cstrIter()());
+    return autoPtr<surfaceWriter>(cstrIter()(format));
 }
 
 
 Foam::autoPtr<Foam::surfaceWriter>
-Foam::surfaceWriter::New(const word& writeType, const dictionary& optDict)
+Foam::surfaceWriter::New
+(
+    const word& writeType,
+    const dictionary& optDict
+)
 {
     // find constructors with dictionary options
     wordDictConstructorTable::iterator cstrIter =
@@ -80,8 +88,18 @@ Foam::surfaceWriter::New(const word& writeType, const dictionary& optDict)
 
     if (cstrIter == wordDictConstructorTablePtr_->end())
     {
-        // revert to versions without options
-        return Foam::surfaceWriter::New(writeType);
+        IOstream::streamFormat writeFormat = IOstream::ASCII;
+
+        if (optDict.found("writeFormat"))
+        {
+            writeFormat = IOstream::formatEnum
+            (
+                optDict.lookup("writeFormat")
+            );
+        }
+
+        // Revert to versions without options
+        return Foam::surfaceWriter::New(writeType, writeFormat);
     }
 
     return autoPtr<surfaceWriter>(cstrIter()(optDict));
@@ -90,8 +108,24 @@ Foam::surfaceWriter::New(const word& writeType, const dictionary& optDict)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::surfaceWriter::surfaceWriter()
+Foam::surfaceWriter::surfaceWriter(const IOstream::streamFormat writeFormat)
+:
+    writeFormat_(writeFormat)
 {}
+
+
+Foam::surfaceWriter::surfaceWriter(const dictionary& optDict)
+:
+    writeFormat_(IOstream::ASCII)
+{
+    if (optDict.found("writeFormat"))
+    {
+        writeFormat_ = IOstream::formatEnum
+        (
+            optDict.lookup("writeFormat")
+        );
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

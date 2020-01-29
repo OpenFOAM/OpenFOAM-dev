@@ -523,7 +523,7 @@ void Foam::writeAMIWeightsSum
     // Write the surface
     if (Pstream::master())
     {
-        vtkSurfaceWriter().write
+        vtkSurfaceWriter(mesh.time().writeFormat()).write
         (
             file.path(),
             file.name(),

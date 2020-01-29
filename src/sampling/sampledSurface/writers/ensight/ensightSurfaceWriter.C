@@ -112,24 +112,19 @@ void Foam::ensightSurfaceWriter::write
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::ensightSurfaceWriter::ensightSurfaceWriter()
+Foam::ensightSurfaceWriter::ensightSurfaceWriter
+(
+    const IOstream::streamFormat writeFormat
+)
 :
-    surfaceWriter(),
-    writeFormat_(IOstream::ASCII)
+    surfaceWriter(writeFormat)
 {}
 
 
-Foam::ensightSurfaceWriter::ensightSurfaceWriter(const dictionary& options)
+Foam::ensightSurfaceWriter::ensightSurfaceWriter(const dictionary& optDict)
 :
-    surfaceWriter(),
-    writeFormat_(IOstream::ASCII)
-{
-    // choose ascii or binary format
-    if (options.found("format"))
-    {
-        writeFormat_ = IOstream::formatEnum(options.lookup("format"));
-    }
-}
+    surfaceWriter(optDict)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

@@ -155,11 +155,11 @@ public:
 
     // Constructors
 
-        //- Construct null
-        nastranSurfaceWriter();
+        //- Construct given write format
+        nastranSurfaceWriter(const IOstream::streamFormat writeFormat);
 
         //- Construct with some output options
-        nastranSurfaceWriter(const dictionary& options);
+        nastranSurfaceWriter(const dictionary& optDict);
 
 
     //- Destructor

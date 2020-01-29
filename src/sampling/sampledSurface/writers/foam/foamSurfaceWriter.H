@@ -74,8 +74,8 @@ public:
 
     // Constructors
 
-        //- Construct null
-        foamSurfaceWriter();
+        //- Construct given write format
+        foamSurfaceWriter(const IOstream::streamFormat writeFormat);
 
 
     //- Destructor

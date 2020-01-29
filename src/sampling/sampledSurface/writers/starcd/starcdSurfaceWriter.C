@@ -119,9 +119,12 @@ void Foam::starcdSurfaceWriter::write
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::starcdSurfaceWriter::starcdSurfaceWriter()
+Foam::starcdSurfaceWriter::starcdSurfaceWriter
+(
+    const IOstream::streamFormat writeFormat
+)
 :
-    surfaceWriter()
+    surfaceWriter(writeFormat)
 {}
 
 

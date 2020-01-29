@@ -273,22 +273,25 @@ void Foam::rawSurfaceWriter::write
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::rawSurfaceWriter::rawSurfaceWriter()
+Foam::rawSurfaceWriter::rawSurfaceWriter
+(
+    const IOstream::streamFormat writeFormat
+)
 :
-    surfaceWriter(),
+    surfaceWriter(writeFormat),
     writeCompression_(IOstream::UNCOMPRESSED)
 {}
 
 
-Foam::rawSurfaceWriter::rawSurfaceWriter(const dictionary& options)
+Foam::rawSurfaceWriter::rawSurfaceWriter(const dictionary& optDict)
 :
-    surfaceWriter(),
+    surfaceWriter(optDict),
     writeCompression_(IOstream::UNCOMPRESSED)
 {
-    if (options.found("compression"))
+    if (optDict.found("compression"))
     {
         writeCompression_ =
-            IOstream::compressionEnum(options.lookup("compression"));
+            IOstream::compressionEnum(optDict.lookup("compression"));
     }
 }
 

@@ -463,7 +463,7 @@ namespace Foam
                 {
                     const faceList faces(searchSurf.faces());
 
-                    vtkSurfaceWriter().write
+                    vtkSurfaceWriter(runTime.writeFormat()).write
                     (
                         runTime.constantPath()/"triSurface",// outputDir
                         searchSurf.objectRegistry::name(),  // surfaceName
@@ -474,7 +474,7 @@ namespace Foam
                         false                               // isNodeValues
                     );
 
-                    vtkSurfaceWriter().write
+                    vtkSurfaceWriter(runTime.writeFormat()).write
                     (
                         runTime.constantPath()/"triSurface",// outputDir
                         searchSurf.objectRegistry::name(),  // surfaceName
@@ -525,7 +525,7 @@ namespace Foam
                             externalClosenessPointField[meshPointMap[pi]];
                     }
 
-                    vtkSurfaceWriter().write
+                    vtkSurfaceWriter(runTime.writeFormat()).write
                     (
                         runTime.constantPath()/"triSurface",// outputDir
                         searchSurf.objectRegistry::name(),  // surfaceName
@@ -536,7 +536,7 @@ namespace Foam
                         true                                // isNodeValues
                     );
 
-                    vtkSurfaceWriter().write
+                    vtkSurfaceWriter(runTime.writeFormat()).write
                     (
                         runTime.constantPath()/"triSurface",// outputDir
                         searchSurf.objectRegistry::name(),  // surfaceName
@@ -574,7 +574,7 @@ namespace Foam
 
             if (writeVTK)
             {
-                vtkSurfaceWriter().write
+                vtkSurfaceWriter(runTime.writeFormat()).write
                 (
                     runTime.constantPath()/"triSurface",// outputDir
                     sFeatFileName,                      // surfaceName
@@ -646,7 +646,7 @@ namespace Foam
 
             if (writeVTK)
             {
-                vtkSurfaceWriter().write
+                vtkSurfaceWriter(runTime.writeFormat()).write
                 (
                     runTime.constantPath()/"triSurface",// outputDir
                     sFeatFileName,                      // surfaceName

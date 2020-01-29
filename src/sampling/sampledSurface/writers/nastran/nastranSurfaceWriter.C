@@ -316,28 +316,31 @@ void Foam::nastranSurfaceWriter::writeGeometry
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::nastranSurfaceWriter::nastranSurfaceWriter()
+Foam::nastranSurfaceWriter::nastranSurfaceWriter
+(
+    const IOstream::streamFormat writeFormat
+)
 :
-    surfaceWriter(),
+    surfaceWriter(writeFormat),
     writeFormat_(wfShort),
     fieldMap_(),
     scale_(1.0)
 {}
 
 
-Foam::nastranSurfaceWriter::nastranSurfaceWriter(const dictionary& options)
+Foam::nastranSurfaceWriter::nastranSurfaceWriter(const dictionary& optDict)
 :
-    surfaceWriter(),
+    surfaceWriter(optDict),
     writeFormat_(wfLong),
     fieldMap_(),
-    scale_(options.lookupOrDefault("scale", 1.0))
+    scale_(optDict.lookupOrDefault("scale", 1.0))
 {
-    if (options.found("format"))
+    if (optDict.found("format"))
     {
-        writeFormat_ = writeFormatNames_.read(options.lookup("format"));
+        writeFormat_ = writeFormatNames_.read(optDict.lookup("format"));
     }
 
-    List<Tuple2<word, word>> fieldSet(options.lookup("fields"));
+    List<Tuple2<word, word>> fieldSet(optDict.lookup("fields"));
 
     forAll(fieldSet, i)
     {

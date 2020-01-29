@@ -97,8 +97,8 @@ public:
 
     // Constructors
 
-        //- Construct null
-        starcdSurfaceWriter();
+        //- Construct given write format
+        starcdSurfaceWriter(const IOstream::streamFormat writeFormat);
 
 
     //- Destructor

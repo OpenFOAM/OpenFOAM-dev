@@ -39,7 +39,7 @@ namespace Foam
 
 Foam::proxySurfaceWriter::proxySurfaceWriter(const word& ext)
 :
-    surfaceWriter(),
+    surfaceWriter(IOstream::ASCII),
     ext_(ext)
 {}
 

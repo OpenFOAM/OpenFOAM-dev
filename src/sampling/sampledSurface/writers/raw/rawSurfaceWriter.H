@@ -108,11 +108,11 @@ public:
 
     // Constructors
 
-        //- Construct null
-        rawSurfaceWriter();
+        //- Construct given write format
+        rawSurfaceWriter(const IOstream::streamFormat writeFormat);
 
-        //- Construct with some output options
-        rawSurfaceWriter(const dictionary& options);
+        //- Construct with output options
+        rawSurfaceWriter(const dictionary& optDict);
 
 
     //- Destructor

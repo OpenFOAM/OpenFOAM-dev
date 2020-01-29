@@ -59,8 +59,8 @@ public:
 
     // Constructors
 
-        //- Construct null
-        noSurfaceWriter();
+        //- Construct given write format
+        noSurfaceWriter(const IOstream::streamFormat writeFormat);
 
 
     //- Destructor

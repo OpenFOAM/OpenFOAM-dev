@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -449,7 +449,10 @@ void Foam::ParticleCollector<CloudType>::write()
     {
         if (Pstream::master())
         {
-            autoPtr<surfaceWriter> writer(surfaceWriter::New(surfaceFormat_));
+            autoPtr<surfaceWriter> writer
+            (
+                surfaceWriter::New(surfaceFormat_, time.writeFormat())
+            );
 
             writer->write
             (

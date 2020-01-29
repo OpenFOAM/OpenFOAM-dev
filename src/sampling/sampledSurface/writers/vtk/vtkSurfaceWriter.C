@@ -153,9 +153,12 @@ void Foam::vtkSurfaceWriter::write
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::vtkSurfaceWriter::vtkSurfaceWriter()
+Foam::vtkSurfaceWriter::vtkSurfaceWriter
+(
+    const IOstream::streamFormat writeFormat
+)
 :
-    surfaceWriter()
+    surfaceWriter(writeFormat)
 {}
 
 

@@ -80,9 +80,12 @@ void Foam::foamSurfaceWriter::write
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::foamSurfaceWriter::foamSurfaceWriter()
+Foam::foamSurfaceWriter::foamSurfaceWriter
+(
+    const IOstream::streamFormat writeFormat
+)
 :
-    surfaceWriter()
+    surfaceWriter(writeFormat)
 {}
 
 

@@ -50,12 +50,6 @@ class ensightSurfaceWriter
 :
     public surfaceWriter
 {
-    // Private Data
-
-        //- Write option (default is IOstream::ASCII
-        IOstream::streamFormat writeFormat_;
-
-
     // Private Member Functions
 
         //- Templated write operation
@@ -80,11 +74,11 @@ public:
 
     // Constructors
 
-        //- Construct null
-        ensightSurfaceWriter();
+        //- Construct given write format
+        ensightSurfaceWriter(const IOstream::streamFormat writeFormat);
 
         //- Construct with some output options
-        ensightSurfaceWriter(const dictionary& options);
+        ensightSurfaceWriter(const dictionary& optDict);
 
 
     //- Destructor
