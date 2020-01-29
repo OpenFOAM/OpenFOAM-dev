@@ -13,6 +13,7 @@ surfaces
     writeControl    writeTime;
 
     surfaceFormat   vtk;
+    writeFormat     binary;
     fields          (p U Q);
 
     interpolationScheme cellPoint;

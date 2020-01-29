@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -241,12 +241,7 @@ bool Foam::sampledSurfaces::read(const dictionary& dict)
         const word writeType(dict.lookup("surfaceFormat"));
 
         // Define the surface formatter
-        // Optionally defined extra controls for the output formats
-        formatter_ = surfaceWriter::New
-        (
-            writeType,
-            dict.subOrEmptyDict("formatOptions").subOrEmptyDict(writeType)
-        );
+        formatter_ = surfaceWriter::New(writeType, dict);
 
         PtrList<sampledSurface> newList
         (

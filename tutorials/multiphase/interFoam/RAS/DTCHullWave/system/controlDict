@@ -66,6 +66,7 @@ functions
         startTime       10;
 
         surfaceFormat   vtk;
+        writeFormat     binary;
         fields          (p_rgh U);
 
         interpolationScheme cellPoint;

@@ -37,15 +37,15 @@ namespace Foam
     defineSurfaceWriterWriteFields(nastranSurfaceWriter);
 
     template<>
-    const char* NamedEnum<nastranSurfaceWriter::writeFormat, 3>::names[] =
+    const char* NamedEnum<nastranSurfaceWriter::format, 3>::names[] =
     {
         "short",
         "long",
         "free"
     };
 
-    const NamedEnum<nastranSurfaceWriter::writeFormat, 3>
-        nastranSurfaceWriter::writeFormatNames_;
+    const NamedEnum<nastranSurfaceWriter::format, 3>
+        nastranSurfaceWriter::formatNames_;
 }
 
 
@@ -60,7 +60,7 @@ void Foam::nastranSurfaceWriter::formatOS(OFstream& os) const
 
     label prec = 0;
     label offset = 7;
-    switch (writeFormat_)
+    switch (format_)
     {
         case (wfShort):
         case (wfFree):
@@ -100,7 +100,7 @@ void Foam::nastranSurfaceWriter::writeCoord
     // 8 PS   : single point constraints             (blank)
     // 9 SEID : super-element ID
 
-    switch (writeFormat_)
+    switch (format_)
     {
         case wfShort:
         {
@@ -155,7 +155,7 @@ void Foam::nastranSurfaceWriter::writeCoord
         default:
         {
             FatalErrorInFunction
-                << "Unknown writeFormat enumeration" << abort(FatalError);
+                << "Unknown format enumeration" << abort(FatalError);
         }
     }
 }
@@ -182,7 +182,7 @@ void Foam::nastranSurfaceWriter::writeFace
 
     // For CTRIA3 elements, cols 7 onwards are not used
 
-    switch (writeFormat_)
+    switch (format_)
     {
         case wfShort:
         {
@@ -248,7 +248,7 @@ void Foam::nastranSurfaceWriter::writeFace
         default:
         {
             FatalErrorInFunction
-                << "Unknown writeFormat enumeration" << abort(FatalError);
+                << "Unknown format enumeration" << abort(FatalError);
         }
     }
 
@@ -322,7 +322,7 @@ Foam::nastranSurfaceWriter::nastranSurfaceWriter
 )
 :
     surfaceWriter(writeFormat),
-    writeFormat_(wfShort),
+    format_(wfShort),
     fieldMap_(),
     scale_(1.0)
 {}
@@ -331,20 +331,27 @@ Foam::nastranSurfaceWriter::nastranSurfaceWriter
 Foam::nastranSurfaceWriter::nastranSurfaceWriter(const dictionary& optDict)
 :
     surfaceWriter(optDict),
-    writeFormat_(wfLong),
+    format_(wfLong),
     fieldMap_(),
-    scale_(optDict.lookupOrDefault("scale", 1.0))
+    scale_(1.0)
 {
-    if (optDict.found("format"))
+    const dictionary& nastranDict(optDict.lookup("nastranOptions"));
+
+    if (nastranDict.found("format"))
     {
-        writeFormat_ = writeFormatNames_.read(optDict.lookup("format"));
+        format_ = formatNames_.read(nastranDict.lookup("format"));
     }
 
-    List<Tuple2<word, word>> fieldSet(optDict.lookup("fields"));
+    List<Tuple2<word, word>> fieldSet(nastranDict.lookup("fields"));
 
     forAll(fieldSet, i)
     {
         fieldMap_.insert(fieldSet[i].first(), fieldSet[i].second());
+    }
+
+    if (nastranDict.found("scale"))
+    {
+        nastranDict.lookup("scale") >> scale_;
     }
 }
 

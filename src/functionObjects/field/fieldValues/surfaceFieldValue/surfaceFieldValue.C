@@ -525,12 +525,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
 
         surfaceWriterPtr_.reset
         (
-            surfaceWriter::New
-            (
-                surfaceFormat,
-                dict.subOrEmptyDict("formatOptions").
-                    subOrEmptyDict(surfaceFormat)
-            ).ptr()
+            surfaceWriter::New(surfaceFormat, dict).ptr()
         );
     }
 }

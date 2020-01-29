@@ -36,7 +36,6 @@ namespace Foam
     makeSurfaceWriterType(vtkSurfaceWriter);
 }
 
-static bool binary = false;
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -45,8 +44,10 @@ void Foam::vtkSurfaceWriter::writeGeometry
     std::ostream& os,
     const pointField& points,
     const faceList& faces
-)
+) const
 {
+    const bool binary = (writeFormat_ == IOstream::BINARY);
+
     // VTK header
     vtkWriteOps::writeHeader(os, binary, "sampleSurface");
     os << "DATASET POLYDATA" << nl;
@@ -103,6 +104,8 @@ void Foam::vtkSurfaceWriter::Write
     const bool isNodeValues
 ) const
 {
+    const bool binary = (writeFormat_ == IOstream::BINARY);
+
     if (!isDir(outputDir))
     {
         mkDir(outputDir);

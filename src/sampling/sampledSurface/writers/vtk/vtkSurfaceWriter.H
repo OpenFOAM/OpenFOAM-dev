@@ -25,7 +25,8 @@ Class
     Foam::vtkSurfaceWriter
 
 Description
-    A surfaceWriter for VTK legacy format.
+    A surfaceWriter for VTK legacy format
+    with support for writing ASCII or binary.
 
 SourceFiles
     vtkSurfaceWriter.C
@@ -52,12 +53,12 @@ class vtkSurfaceWriter
 {
     // Private Member Functions
 
-        static void writeGeometry
+        void writeGeometry
         (
             std::ostream&,
             const pointField&,
             const faceList&
-        );
+        ) const;
 
         //- Templated write operation
         template<class Type>

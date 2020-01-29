@@ -48,7 +48,7 @@ void Foam::nastranSurfaceWriter::writeFaceValue
 
     Type scaledValue = scale_*value;
 
-    switch (writeFormat_)
+    switch (format_)
     {
         case wfShort:
         {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -194,12 +194,7 @@ void Foam::FacePostProcessing<CloudType>::write()
 
                 autoPtr<surfaceWriter> writer
                 (
-                    surfaceWriter::New
-                    (
-                        surfaceFormat_,
-                        this->coeffDict().subOrEmptyDict("formatOptions").
-                            subOrEmptyDict(surfaceFormat_)
-                    )
+                    surfaceWriter::New(surfaceFormat_, this->coeffDict())
                 );
 
                 writer->write
