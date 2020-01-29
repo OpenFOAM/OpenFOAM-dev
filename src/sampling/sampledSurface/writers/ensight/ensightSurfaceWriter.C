@@ -43,7 +43,7 @@ namespace Foam
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::ensightSurfaceWriter::write
+void Foam::ensightSurfaceWriter::Write
 (
     const fileName& outputDir,
     const fileName& surfaceName,

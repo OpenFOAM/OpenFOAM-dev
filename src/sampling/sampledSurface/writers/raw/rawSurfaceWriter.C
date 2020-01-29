@@ -207,7 +207,7 @@ namespace Foam
 
 
 template<class Type>
-void Foam::rawSurfaceWriter::write
+void Foam::rawSurfaceWriter::Write
 (
     const fileName& outputDir,
     const fileName& surfaceName,

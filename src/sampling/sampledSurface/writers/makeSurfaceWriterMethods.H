@@ -58,7 +58,7 @@ namespace Foam
         const bool isNodeValues                                                \
     ) const                                                                    \
     {                                                                          \
-        write                                                                  \
+        Write                                                                  \
         (                                                                      \
             outputDir,                                                         \
             surfaceName,                                                       \

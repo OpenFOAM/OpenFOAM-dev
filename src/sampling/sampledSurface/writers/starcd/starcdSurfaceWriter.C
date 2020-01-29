@@ -84,7 +84,7 @@ inline void Foam::starcdSurfaceWriter::writeData
 
 
 template<class Type>
-void Foam::starcdSurfaceWriter::write
+void Foam::starcdSurfaceWriter::Write
 (
     const fileName& outputDir,
     const fileName& surfaceName,

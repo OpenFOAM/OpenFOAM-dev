@@ -54,7 +54,7 @@ class foamSurfaceWriter
 
         //- Templated write operation
         template<class Type>
-        void write
+        void Write
         (
             const fileName& outputDir,
             const fileName& surfaceName,

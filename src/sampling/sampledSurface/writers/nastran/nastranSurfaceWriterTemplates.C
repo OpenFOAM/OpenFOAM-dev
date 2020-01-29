@@ -115,7 +115,7 @@ void Foam::nastranSurfaceWriter::writeFaceValue
 
 
 template<class Type>
-void Foam::nastranSurfaceWriter::write
+void Foam::nastranSurfaceWriter::Write
 (
     const fileName& outputDir,
     const fileName& surfaceName,
