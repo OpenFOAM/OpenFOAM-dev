@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,6 +72,9 @@ public:
 
         //- Move construct by transferring the List contents
         GlobalIOList(const IOobject&, List<Type>&&);
+
+        //- Copy constructor
+        GlobalIOList(const GlobalIOList<Type>&);
 
         //- Move constructor
         GlobalIOList(GlobalIOList<Type>&&);
