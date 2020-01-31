@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -748,7 +748,7 @@ bool Foam::functionObjectList::read()
 
         const dictionary& functionsDict = entryPtr->dict();
 
-        const_cast<Time&>(time_).libs().open
+        libs.open
         (
             functionsDict,
             "libs",

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "dlLibraryTable.H"
 #include "OSspecific.H"
-#include "int.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -33,6 +32,8 @@ namespace Foam
 {
     defineTypeNameAndDebug(dlLibraryTable, 0);
 }
+
+Foam::dlLibraryTable Foam::libs;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -79,31 +80,31 @@ Foam::dlLibraryTable::~dlLibraryTable()
 
 bool Foam::dlLibraryTable::open
 (
-    const fileName& functionLibName,
+    const fileName& libName,
     const bool verbose
 )
 {
-    if (functionLibName.size())
+    if (libName.size())
     {
-        void* functionLibPtr = dlOpen
+        void* libPtr = dlOpen
         (
-            fileName(functionLibName).expand(),
+            fileName(libName).expand(),
             verbose
         );
 
         if (debug)
         {
             InfoInFunction
-                << "Opened " << functionLibName
-                << " resulting in handle " << uintptr_t(functionLibPtr) << endl;
+                << "Opened " << libName
+                << " resulting in handle " << uintptr_t(libPtr) << endl;
         }
 
-        if (!functionLibPtr)
+        if (!libPtr)
         {
             if (verbose)
             {
                 WarningInFunction
-                    << "could not load " << functionLibName
+                    << "could not load " << libName
                     << endl;
             }
 
@@ -111,8 +112,8 @@ bool Foam::dlLibraryTable::open
         }
         else
         {
-            libPtrs_.append(functionLibPtr);
-            libNames_.append(functionLibName);
+            libPtrs_.append(libPtr);
+            libNames_.append(libName);
             return true;
         }
     }
@@ -123,71 +124,20 @@ bool Foam::dlLibraryTable::open
 }
 
 
-bool Foam::dlLibraryTable::close
+bool Foam::dlLibraryTable::open
 (
-    const fileName& functionLibName,
+    const fileNameList& libNames,
     const bool verbose
 )
 {
-    label index = -1;
-    forAllReverse(libNames_, i)
+    bool allOpened = !libNames.empty();
+
+    forAll(libNames, i)
     {
-        if (libNames_[i] == functionLibName)
-        {
-            index = i;
-            break;
-        }
+        allOpened = open(libNames[i], verbose) && allOpened;
     }
 
-    if (index != -1)
-    {
-        if (debug)
-        {
-            InfoInFunction
-                << "Closing " << functionLibName
-                << " with handle " << uintptr_t(libPtrs_[index]) << endl;
-        }
-
-        bool ok = dlClose(libPtrs_[index]);
-
-        libPtrs_[index] = nullptr;
-        libNames_[index] = fileName::null;
-
-        if (!ok)
-        {
-            if (verbose)
-            {
-                WarningInFunction
-                    << "could not close " << functionLibName
-                    << endl;
-            }
-
-            return false;
-        }
-
-        return true;
-    }
-    return false;
-}
-
-
-void* Foam::dlLibraryTable::findLibrary(const fileName& functionLibName)
-{
-    label index = -1;
-    forAllReverse(libNames_, i)
-    {
-        if (libNames_[i] == functionLibName)
-        {
-            index = i;
-            break;
-        }
-    }
-
-    if (index != -1)
-    {
-        return libPtrs_[index];
-    }
-    return nullptr;
+    return allOpened;
 }
 
 
@@ -205,7 +155,7 @@ bool Foam::dlLibraryTable::open
 
         forAll(libNames, i)
         {
-            allOpened = dlLibraryTable::open(libNames[i]) && allOpened;
+            allOpened = open(libNames[i]) && allOpened;
         }
 
         return allOpened;
@@ -214,6 +164,74 @@ bool Foam::dlLibraryTable::open
     {
         return false;
     }
+}
+
+
+bool Foam::dlLibraryTable::close
+(
+    const fileName& libName,
+    const bool verbose
+)
+{
+    label index = -1;
+    forAllReverse(libNames_, i)
+    {
+        if (libNames_[i] == libName)
+        {
+            index = i;
+            break;
+        }
+    }
+
+    if (index != -1)
+    {
+        if (debug)
+        {
+            InfoInFunction
+                << "Closing " << libName
+                << " with handle " << uintptr_t(libPtrs_[index]) << endl;
+        }
+
+        bool ok = dlClose(libPtrs_[index]);
+
+        libPtrs_[index] = nullptr;
+        libNames_[index] = fileName::null;
+
+        if (!ok)
+        {
+            if (verbose)
+            {
+                WarningInFunction
+                    << "could not close " << libName
+                    << endl;
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+    return false;
+}
+
+
+void* Foam::dlLibraryTable::findLibrary(const fileName& libName)
+{
+    label index = -1;
+    forAllReverse(libNames_, i)
+    {
+        if (libNames_[i] == libName)
+        {
+            index = i;
+            break;
+        }
+    }
+
+    if (index != -1)
+    {
+        return libPtrs_[index];
+    }
+    return nullptr;
 }
 
 

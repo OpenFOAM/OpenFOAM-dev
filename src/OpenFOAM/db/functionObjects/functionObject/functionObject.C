@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,7 @@ Foam::autoPtr<Foam::functionObject> Foam::functionObject::New
 
     if (dict.found("functionObjectLibs"))
     {
-        const_cast<Time&>(runTime).libs().open
+        libs.open
         (
             dict,
             "functionObjectLibs",
@@ -76,7 +76,7 @@ Foam::autoPtr<Foam::functionObject> Foam::functionObject::New
     }
     else
     {
-        const_cast<Time&>(runTime).libs().open
+        libs.open
         (
             dict,
             "libs",

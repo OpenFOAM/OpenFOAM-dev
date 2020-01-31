@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,11 +70,7 @@ Foam::dlLibraryTable& Foam::functionEntries::codeStream::libs
     const dictionary& dict
 )
 {
-    const baseIOdictionary& d = static_cast<const baseIOdictionary&>
-    (
-        dict.topDict()
-    );
-    return const_cast<Time&>(d.time()).libs();
+    return Foam::libs;
 }
 
 

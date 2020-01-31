@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -331,8 +331,6 @@ Foam::Time::Time
 
     objectRegistry(*this),
 
-    libs_(),
-
     controlDict_
     (
         IOobject
@@ -368,7 +366,7 @@ Foam::Time::Time
 
     functionObjects_(*this, enableFunctionObjects)
 {
-    libs_.open(controlDict_, "libs");
+    libs.open(controlDict_, "libs");
 
     // Explicitly set read flags on objectRegistry so anything constructed
     // from it reads as well (e.g. fvSolution).
@@ -407,8 +405,6 @@ Foam::Time::Time
     ),
 
     objectRegistry(*this),
-
-    libs_(),
 
     controlDict_
     (
@@ -451,7 +447,7 @@ Foam::Time::Time
       : !args.optionFound("noFunctionObjects")
     )
 {
-    libs_.open(controlDict_, "libs");
+    libs.open(controlDict_, "libs");
 
     // Explicitly set read flags on objectRegistry so anything constructed
     // from it reads as well (e.g. fvSolution).
@@ -491,8 +487,6 @@ Foam::Time::Time
 
     objectRegistry(*this),
 
-    libs_(),
-
     controlDict_
     (
         IOobject
@@ -529,7 +523,7 @@ Foam::Time::Time
 
     functionObjects_(*this, enableFunctionObjects)
 {
-    libs_.open(controlDict_, "libs");
+    libs.open(controlDict_, "libs");
 
 
     // Explicitly set read flags on objectRegistry so anything constructed
@@ -572,8 +566,6 @@ Foam::Time::Time
 
     objectRegistry(*this),
 
-    libs_(),
-
     controlDict_
     (
         IOobject
@@ -607,7 +599,7 @@ Foam::Time::Time
 
     functionObjects_(*this, enableFunctionObjects)
 {
-    libs_.open(controlDict_, "libs");
+    libs.open(controlDict_, "libs");
 }
 
 

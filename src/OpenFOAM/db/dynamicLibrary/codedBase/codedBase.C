@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,9 +54,9 @@ void* Foam::codedBase::loadLibrary
     // avoid compilation by loading an existing library
     if (!libPath.empty())
     {
-        if (libs().open(libPath, false))
+        if (libs.open(libPath, false))
         {
-            lib = libs().findLibrary(libPath);
+            lib = libs.findLibrary(libPath);
 
             // verify the loaded version and unload if needed
             if (lib)
@@ -92,7 +92,7 @@ void* Foam::codedBase::loadLibrary
                         << "from " << libPath << exit(FatalIOError);
 
                     lib = 0;
-                    if (!libs().close(libPath, false))
+                    if (!libs.close(libPath, false))
                     {
                         FatalIOErrorInFunction
                         (
@@ -124,7 +124,7 @@ void Foam::codedBase::unloadLibrary
         return;
     }
 
-    lib = libs().findLibrary(libPath);
+    lib = libs.findLibrary(libPath);
 
     if (!lib)
     {
@@ -154,7 +154,7 @@ void Foam::codedBase::unloadLibrary
         }
     }
 
-    if (!libs().close(libPath, false))
+    if (!libs.close(libPath, false))
     {
         FatalIOErrorInFunction
         (
@@ -306,7 +306,7 @@ void Foam::codedBase::updateLibrary
 
 
     // the correct library was already loaded => we are done
-    if (libs().findLibrary(libPath))
+    if (libs.findLibrary(libPath))
     {
         return;
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,13 +96,6 @@ const Foam::IOdictionary& Foam::codedMixedFvPatchField<Type>::dict() const
             )
         );
     }
-}
-
-
-template<class Type>
-Foam::dlLibraryTable& Foam::codedMixedFvPatchField<Type>::libs() const
-{
-    return const_cast<dlLibraryTable&>(this->db().time().libs());
 }
 
 

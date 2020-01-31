@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ void Foam::codedFunctionObject::prepare
     // Copy filtered H template
     dynCode.addCopyFile("functionObjectTemplate.H");
 
-    // Debugging: make BC verbose
+    // Debugging: make verbose
     // dynCode.setFilterVariable("verbose", "true");
     // Info<<"compile " << name_ << " sha1: "
     //     << context.sha1() << endl;
@@ -96,12 +96,6 @@ void Foam::codedFunctionObject::prepare
       + "    -lmeshTools \\\n"
       + context.libs()
     );
-}
-
-
-Foam::dlLibraryTable& Foam::codedFunctionObject::libs() const
-{
-    return const_cast<Time&>(time_).libs();
 }
 
 

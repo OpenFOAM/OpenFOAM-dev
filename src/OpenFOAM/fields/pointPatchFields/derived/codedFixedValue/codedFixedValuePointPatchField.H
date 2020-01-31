@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,8 +91,6 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class dynamicCode;
-class dynamicCodeContext;
 class IOdictionary;
 
 /*---------------------------------------------------------------------------*\
@@ -127,9 +125,6 @@ class codedFixedValuePointPatchField
 
         //- Set the rewrite vars controlling the Type
         static void setFieldTemplates(dynamicCode& dynCode);
-
-        //- Get the loaded dynamic libraries
-        virtual dlLibraryTable& libs() const;
 
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
