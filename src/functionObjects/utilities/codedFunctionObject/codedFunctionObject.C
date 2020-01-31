@@ -193,13 +193,9 @@ bool Foam::codedFunctionObject::read(const dictionary& dict)
     // The name keyword is "name". "redirectType" is also maintained here
     // for backwards compatibility, but "name" is taken in preference and
     // is printed in the error message if neither keyword is present.
-    name_ = word::null;
-    name_ = dict.lookupOrDefault("redirectType", name_);
-    name_ = dict.lookupOrDefault("name", name_);
-    if (name_ == word::null)
-    {
-        dict.lookup("name"); // <-- generate error message with "name" in it
-    }
+    name_ =  dict.found("redirectType")
+        ? dict.lookup<word>("redirectType")
+        : dict.lookup<word>("name");
 
     updateLibrary(name_);
     return redirectFunctionObject().read(dict);

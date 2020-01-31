@@ -104,10 +104,10 @@ protected:
         //- Input dictionary
         dictionary dict_;
 
-        //- The name
+        //- Name of the dynamically generated functionObject
         word name_;
 
-        //- Underlying functionObject
+        //- The dynamically generated functionObject pointer
         mutable autoPtr<functionObject> redirectFunctionObjectPtr_;
 
 
