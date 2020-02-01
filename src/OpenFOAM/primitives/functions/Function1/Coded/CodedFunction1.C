@@ -31,7 +31,10 @@ License
 
 template<class Type>
 const Foam::wordList Foam::Function1s::Coded<Type>::codeKeys_ =
-    {"code", "codeInclude"};
+{
+    "code",
+    "codeInclude"
+};
 
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -85,7 +88,7 @@ void Foam::Function1s::Coded<Type>::prepare
 template<class Type>
 Foam::string Foam::Function1s::Coded<Type>::description() const
 {
-    return "Function1 " + name_;
+    return Function1<Type>::typeName_() + " " + name_;
 }
 
 
@@ -112,6 +115,19 @@ const Foam::wordList& Foam::Function1s::Coded<Type>::codeKeys() const
 }
 
 
+template<class Type>
+Foam::autoPtr<Foam::Function1<Type>>
+Foam::Function1s::Coded<Type>::compileAndLink()
+{
+    updateLibrary(name_);
+
+    dictionary redirectDict(dict_);
+    redirectDict.set(name_, name_);
+
+    return Function1<Type>::New(name_, redirectDict);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -129,14 +145,8 @@ Foam::Function1s::Coded<Type>::Coded
       ? dict.lookup("redirectType")
       : dict.lookup("name")
     ),
-    redirectFunction1Ptr_()
-{
-    updateLibrary(name_);
-
-    dictionary redirectDict(dict_);
-    redirectDict.set(name_, name_);
-    redirectFunction1Ptr_ = Function1<Type>::New(name_, redirectDict);
-}
+    redirectFunction1Ptr_(compileAndLink())
+{}
 
 
 
@@ -146,14 +156,9 @@ Foam::Function1s::Coded<Type>::Coded(const Coded<Type>& cf1)
     Function1<Type>(cf1),
     codedBase(),
     dict_(cf1.dict_),
-    name_(cf1.name_)
-{
-    updateLibrary(name_);
-
-    dictionary redirectDict(dict_);
-    redirectDict.set(name_, name_);
-    redirectFunction1Ptr_ = Function1<Type>::New(name_, redirectDict);
-}
+    name_(cf1.name_),
+    redirectFunction1Ptr_(compileAndLink())
+{}
 
 
 template<class Type>

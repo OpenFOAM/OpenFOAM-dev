@@ -25,44 +25,31 @@ Class
     Foam::Function1s::Coded
 
 Description
-    Constructs on-the-fly a Function1 which is then used to evaluate.
+    Constructs a dynamically compiled Function1.
 
 Usage
-    Example:
+    Example of a cosine bell shaped pulse inlet:
     \verbatim
-    <patchName>
+    inlet
     {
-        type            codedFixedValue;
-        value           uniform 0;
-        name            rampedFixedValue;   // name of generated BC
+        type            uniformFixedValue;
+        uniformValue    coded;
 
-        code
+        name            pulse;
+
+        codeInclude
         #{
-            operator==(min(10, 0.1*this->db().time().value()));
+            #include "mathematicalConstants.H"
         #};
 
-        // codeInclude
-        //#{
-        //    #include "fvCFD.H"
-        //#};
-
-        // codeOptions
-        //#{
-        //    -I$(LIB_SRC)/finiteVolume/lnInclude
-        //#};
-    }
-    \endverbatim
-
-    A special form is if the 'code' section is not supplied. In this case
-    the code is read from a (runTimeModifiable!) dictionary system/codeDict
-    which would have a corresponding entry:
-
-    \verbatim
-    <patchName>
-    {
         code
         #{
-            operator==(min(10, 0.1*this->db().time().value()));
+            return vector
+            (
+                0.5*(1 - cos(constant::mathematical::twoPi*min(x/0.3, 1))),
+                0,
+                0
+            );
         #};
     }
     \endverbatim
@@ -72,8 +59,8 @@ See also
     Foam::functionEntries::codeStream
 
 SourceFiles
-    CodedI.H
-    Coded.C
+    CodedFunction1I.H
+    CodedFunction1.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -134,6 +121,8 @@ class Coded
 
         //- Get the keywords associated with source code
         virtual const wordList& codeKeys() const;
+
+        autoPtr<Function1<Type>> compileAndLink();
 
 
 public:
