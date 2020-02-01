@@ -88,7 +88,7 @@ void Foam::Function1s::Coded<Type>::prepare
 template<class Type>
 Foam::string Foam::Function1s::Coded<Type>::description() const
 {
-    return Function1<Type>::typeName_() + " " + name_;
+    return Function1<Type>::typeName_() + (" " + name_);
 }
 
 
