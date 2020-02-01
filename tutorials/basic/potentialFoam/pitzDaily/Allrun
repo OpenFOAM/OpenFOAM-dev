@@ -6,7 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 application=$(getApplication)
 
-runApplication blockMesh
+runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/pitzDaily
 runApplication $application -writePhi -writep
 runApplication postProcess -func streamFunction
 
