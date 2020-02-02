@@ -68,7 +68,7 @@ SourceFiles
 #define CodedFunction1_H
 
 #include "Function1.H"
-#include "codedBase.H"
+#include "CodedBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,6 +78,18 @@ namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
+                       Class coded Declaration
+\*---------------------------------------------------------------------------*/
+
+class coded
+{
+public:
+
+    ClassNameNoDebug("Function1");
+};
+
+
+/*---------------------------------------------------------------------------*\
                            Class Coded Declaration
 \*---------------------------------------------------------------------------*/
 
@@ -85,21 +97,9 @@ template<class Type>
 class Coded
 :
     public Function1<Type>,
-    public codedBase
+    public CodedBase<coded>
 {
-    // Private static data
-
-        //- The keywords associated with source code
-        static const wordList codeKeys_;
-
-
     // Private Data
-
-        //- Dictionary contents for the Function1
-        const dictionary dict_;
-
-        //- Name of the dynamically generated Function1
-        const word name_;
 
         //- The dynamically generated Function1 pointer
         mutable autoPtr<Function1<Type>> redirectFunction1Ptr_;
@@ -110,31 +110,14 @@ class Coded
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
 
-        //- Return a description (type + name) for the output
-        virtual string description() const;
-
         //- Clear the ptr to the redirected object
         virtual void clearRedirect() const;
 
-        //- Get the dictionary to initialize the codeContext
-        virtual const dictionary& codeDict() const;
-
-        //- Get the keywords associated with source code
-        virtual const wordList& codeKeys() const;
-
-        autoPtr<Function1<Type>> compileAndLink();
+        //- Compile, link and return the now coded Function1
+        autoPtr<Function1<Type>> compileNew();
 
 
 public:
-
-    // Static Data Members
-
-        //- Name of the C code template to be used
-        static const word codeTemplateC;
-
-        //- Name of the H code template to be used
-        static const word codeTemplateH;
-
 
     // Runtime type information
     TypeName("coded");

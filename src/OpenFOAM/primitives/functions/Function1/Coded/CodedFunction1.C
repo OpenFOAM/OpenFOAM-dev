@@ -27,25 +27,16 @@ License
 #include "dynamicCode.H"
 #include "dynamicCodeContext.H"
 
-// * * * * * * * * * * * * Private Static Data Members * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-template<class Type>
-const Foam::wordList Foam::Function1s::Coded<Type>::codeKeys_ =
+defineTypeName(Foam::Function1s::coded);
+
+template<>
+const Foam::wordList Foam::CodedBase<Foam::Function1s::coded>::codeKeys_ =
 {
     "code",
     "codeInclude"
 };
-
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-template<class Type>
-const Foam::word Foam::Function1s::Coded<Type>::codeTemplateC =
-    "Function1Template.C";
-
-template<class Type>
-const Foam::word Foam::Function1s::Coded<Type>::codeTemplateH =
-    "Function1Template.H";
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -57,7 +48,7 @@ void Foam::Function1s::Coded<Type>::prepare
     const dynamicCodeContext& context
 ) const
 {
-    dynCode.setFilterVariable("typeName", name_);
+    dynCode.setFilterVariable("typeName", codeName());
 
     // Set TemplateType filter variables
     dynCode.setFilterVariable("TemplateType", pTraits<Type>::typeName);
@@ -70,7 +61,7 @@ void Foam::Function1s::Coded<Type>::prepare
 
     // debugging: make verbose
     //  dynCode.setFilterVariable("verbose", "true");
-    //  Info<<"compile " << name_ << " sha1: "
+    //  Info<<"compile " << codeName() << " sha1: "
     //      << context.sha1() << endl;
 
     // define Make/options
@@ -86,13 +77,6 @@ void Foam::Function1s::Coded<Type>::prepare
 
 
 template<class Type>
-Foam::string Foam::Function1s::Coded<Type>::description() const
-{
-    return Function1<Type>::typeName_() + (" " + name_);
-}
-
-
-template<class Type>
 void Foam::Function1s::Coded<Type>::clearRedirect() const
 {
     // Remove instantiation of Function1 provided by library
@@ -101,30 +85,15 @@ void Foam::Function1s::Coded<Type>::clearRedirect() const
 
 
 template<class Type>
-const Foam::dictionary& Foam::Function1s::Coded<Type>::codeDict()
-const
-{
-    return dict_;
-}
-
-
-template<class Type>
-const Foam::wordList& Foam::Function1s::Coded<Type>::codeKeys() const
-{
-    return codeKeys_;
-}
-
-
-template<class Type>
 Foam::autoPtr<Foam::Function1<Type>>
-Foam::Function1s::Coded<Type>::compileAndLink()
+Foam::Function1s::Coded<Type>::compileNew()
 {
-    updateLibrary(name_);
+    this->updateLibrary(codeName());
 
-    dictionary redirectDict(dict_);
-    redirectDict.set(name_, name_);
+    dictionary redirectDict(codeDict());
+    redirectDict.set(codeName(), codeName());
 
-    return Function1<Type>::New(name_, redirectDict);
+    return Function1<Type>::New(codeName(), redirectDict);
 }
 
 
@@ -138,15 +107,10 @@ Foam::Function1s::Coded<Type>::Coded
 )
 :
     Function1<Type>(entryName),
-    dict_(dict),
-    name_
-    (
-        dict.found("redirectType")
-      ? dict.lookup("redirectType")
-      : dict.lookup("name")
-    ),
-    redirectFunction1Ptr_(compileAndLink())
-{}
+    CodedBase<coded>(dict)
+{
+    redirectFunction1Ptr_ = compileNew();
+}
 
 
 
@@ -154,11 +118,10 @@ template<class Type>
 Foam::Function1s::Coded<Type>::Coded(const Coded<Type>& cf1)
 :
     Function1<Type>(cf1),
-    codedBase(),
-    dict_(cf1.dict_),
-    name_(cf1.name_),
-    redirectFunction1Ptr_(compileAndLink())
-{}
+    CodedBase<coded>(cf1)
+{
+    redirectFunction1Ptr_ = compileNew();
+}
 
 
 template<class Type>
@@ -216,21 +179,7 @@ void Foam::Function1s::Coded<Type>::writeData(Ostream& os) const
 {
     Function1<Type>::writeData(os);
     os  << token::END_STATEMENT << nl;
-    writeEntry(os, "name", name_);
-
-    if (dict_.found("codeInclude"))
-    {
-        writeKeyword(os, "codeInclude");
-        os.write(verbatimString(dict_["codeInclude"]))
-            << token::END_STATEMENT << nl;
-    }
-
-    if (dict_.found("code"))
-    {
-        writeKeyword(os, "code");
-        os.write(verbatimString(dict_["code"]))
-            << token::END_STATEMENT << nl;
-    }
+    writeCode(os);
 }
 
 
