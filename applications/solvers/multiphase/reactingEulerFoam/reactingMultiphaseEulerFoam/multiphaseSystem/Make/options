@@ -2,8 +2,7 @@ EXE_INC = \
     -I../../interfacialModels/lnInclude \
     -I../../interfacialCompositionModels/lnInclude \
     -I../../phaseSystems/lnInclude \
-    -I../multiphaseCompressibleTurbulenceModels/lnInclude \
-    -I../../derivedFvPatchFields/lnInclude \
+    -I../../phaseCompressibleTurbulenceModels/lnInclude \
     -IalphaContactAngle \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \

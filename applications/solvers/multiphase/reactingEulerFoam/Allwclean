@@ -4,7 +4,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 wclean libso phaseSystems
 wclean libso interfacialModels
 wclean libso interfacialCompositionModels
-wclean libso derivedFvPatchFields
+wclean libso phaseCompressibleTurbulenceModels
 reactingTwoPhaseEulerFoam/Allwclean
 reactingMultiphaseEulerFoam/Allwclean
 wclean libso functionObjects

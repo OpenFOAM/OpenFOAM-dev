@@ -3,7 +3,6 @@ EXE_INC = \
     -I../../phaseSystems/lnInclude \
     -I../../interfacialModels/lnInclude\
     -I../../interfacialCompositionModels/lnInclude \
-    -I../../derivedFvPatchFields/lnInclude \
     -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/transportModels/incompressible/transportModel \
@@ -18,7 +17,6 @@ LIB_LIBS = \
     -lreactingTwoPhaseSystem \
     -lreactingEulerianInterfacialModels \
     -lreactingEulerianInterfacialCompositionModels \
-    -lreactingEulerianFvPatchFields \
     -lfiniteVolume \
     -lfvOptions \
     -lmeshTools
