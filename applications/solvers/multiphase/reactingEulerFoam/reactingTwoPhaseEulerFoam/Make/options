@@ -1,4 +1,5 @@
 EXE_INC = \
+    -I../include \
     -ItwoPhaseSystem/lnInclude \
     -I../phaseSystems/lnInclude \
     -I../interfacialModels/lnInclude \

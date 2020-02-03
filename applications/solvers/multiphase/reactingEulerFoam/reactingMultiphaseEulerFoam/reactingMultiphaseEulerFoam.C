@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,6 +69,8 @@ int main(int argc, char *argv[])
         pimple.dict().lookupOrDefault<Switch>("partialElimination", false)
     );
 
+    #include "createRDeltaTf.H"
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< "\nStarting time loop\n" << endl;
@@ -85,6 +87,10 @@ int main(int argc, char *argv[])
         if (LTS)
         {
             #include "setRDeltaT.H"
+            if (faceMomentum)
+            {
+                #include "setRDeltaTf.H"
+            }
         }
         else
         {
