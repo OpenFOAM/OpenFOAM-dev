@@ -72,7 +72,7 @@ SourceFiles
 #define functionObjects_codedFunctionObject_H
 
 #include "functionObject.H"
-#include "codedBase.H"
+#include "CodedBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,47 +86,27 @@ namespace Foam
 class codedFunctionObject
 :
     public functionObject,
-    public codedBase
+    public CodedBase<functionObject>
 {
-protected:
-
-    // Protected static data
-
-        //- The keywords associated with source code
-        static const wordList codeKeys_;
-
-
-    // Protected data
+    // Private Data
 
         //- Reference to the time database
         const Time& time_;
-
-        //- Input dictionary
-        dictionary dict_;
-
-        //- Name of the dynamically generated functionObject
-        word name_;
 
         //- The dynamically generated functionObject pointer
         mutable autoPtr<functionObject> redirectFunctionObjectPtr_;
 
 
-    // Protected Member Functions
+    // Private Member Functions
 
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
 
-        //- Return a description (type + name) for the output
-        virtual string description() const;
-
         //- Clear any redirected objects
         virtual void clearRedirect() const;
 
-        //- Get the dictionary to initialize the codeContext
-        virtual const dictionary& codeDict() const;
-
-        //- Get the keywords associated with source code
-        virtual const wordList& codeKeys() const;
+        //- Compile, link and return the now coded functionObject
+        functionObject& redirectFunctionObject() const;
 
 
 public:
@@ -154,9 +134,6 @@ public:
 
 
     // Member Functions
-
-        //- Dynamically compiled functionObject
-        functionObject& redirectFunctionObject() const;
 
         //- Called at each ++ or += of the time-loop.
         //  postProcess overrides the usual executeControl behaviour and

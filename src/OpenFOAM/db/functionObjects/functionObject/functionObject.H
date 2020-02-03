@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,10 +147,10 @@ class functionObject
 
 public:
 
+    ClassName("functionObject");
+
     //- Runtime type information
     virtual const word& type() const = 0;
-
-    static int debug;
 
     //- Global post-processing mode switch
     static bool postProcess;

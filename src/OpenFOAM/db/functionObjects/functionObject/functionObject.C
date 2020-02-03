@@ -32,7 +32,7 @@ License
 
 namespace Foam
 {
-    defineDebugSwitchWithName(functionObject, "functionObject", 0);
+    defineTypeNameAndDebug(functionObject, 0);
     defineRunTimeSelectionTable(functionObject, dictionary);
 }
 

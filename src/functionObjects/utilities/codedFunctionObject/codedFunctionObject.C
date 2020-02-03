@@ -35,16 +35,17 @@ License
 
 // * * * * * * * * * * * Protected Static Data Members * * * * * * * * * * * //
 
-const Foam::wordList Foam::codedFunctionObject::codeKeys_ =
-    {
-        "codeData",
-        "codeEnd",
-        "codeExecute",
-        "codeInclude",
-        "codeRead",
-        "codeWrite",
-        "localCode"
-    };
+template<>
+const Foam::wordList Foam::CodedBase<Foam::functionObject>::codeKeys_ =
+{
+    "codeData",
+    "codeEnd",
+    "codeExecute",
+    "codeInclude",
+    "codeRead",
+    "codeWrite",
+    "localCode"
+};
 
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -70,7 +71,7 @@ void Foam::codedFunctionObject::prepare
     const dynamicCodeContext& context
 ) const
 {
-    dynCode.setFilterVariable("typeName", name_);
+    dynCode.setFilterVariable("typeName", codeName());
 
     // Compile filtered C template
     dynCode.addCompileFile("functionObjectTemplate.C");
@@ -80,7 +81,7 @@ void Foam::codedFunctionObject::prepare
 
     // Debugging: make verbose
     // dynCode.setFilterVariable("verbose", "true");
-    // Info<<"compile " << name_ << " sha1: "
+    // Info<<"compile " << codeName() << " sha1: "
     //     << context.sha1() << endl;
 
     // Define Make/options
@@ -99,27 +100,9 @@ void Foam::codedFunctionObject::prepare
 }
 
 
-Foam::string Foam::codedFunctionObject::description() const
-{
-    return "functionObject " + name();
-}
-
-
 void Foam::codedFunctionObject::clearRedirect() const
 {
     redirectFunctionObjectPtr_.clear();
-}
-
-
-const Foam::dictionary& Foam::codedFunctionObject::codeDict() const
-{
-    return dict_;
-}
-
-
-const Foam::wordList& Foam::codedFunctionObject::codeKeys() const
-{
-    return codeKeys_;
 }
 
 
@@ -133,11 +116,10 @@ Foam::codedFunctionObject::codedFunctionObject
 )
 :
     functionObject(name),
-    codedBase(),
-    time_(time),
-    dict_(dict)
+    CodedBase<functionObject>(dict),
+    time_(time)
 {
-    read(dict_);
+    read(dict);
 }
 
 
@@ -153,12 +135,12 @@ Foam::functionObject& Foam::codedFunctionObject::redirectFunctionObject() const
 {
     if (!redirectFunctionObjectPtr_.valid())
     {
-        dictionary constructDict(dict_);
-        constructDict.set("type", name_);
+        dictionary constructDict(codeDict());
+        constructDict.set("type", codeName());
 
         redirectFunctionObjectPtr_ = functionObject::New
         (
-            name_,
+            codeName(),
             time_,
             constructDict
         );
@@ -169,35 +151,28 @@ Foam::functionObject& Foam::codedFunctionObject::redirectFunctionObject() const
 
 bool Foam::codedFunctionObject::execute()
 {
-    updateLibrary(name_);
+    updateLibrary(codeName());
     return redirectFunctionObject().execute();
 }
 
 
 bool Foam::codedFunctionObject::write()
 {
-    updateLibrary(name_);
+    updateLibrary(codeName());
     return redirectFunctionObject().write();
 }
 
 
 bool Foam::codedFunctionObject::end()
 {
-    updateLibrary(name_);
+    updateLibrary(codeName());
     return redirectFunctionObject().end();
 }
 
 
 bool Foam::codedFunctionObject::read(const dictionary& dict)
 {
-    // The name keyword is "name". "redirectType" is also maintained here
-    // for backwards compatibility, but "name" is taken in preference and
-    // is printed in the error message if neither keyword is present.
-    name_ =  dict.found("redirectType")
-        ? dict.lookup<word>("redirectType")
-        : dict.lookup<word>("name");
-
-    updateLibrary(name_);
+    updateLibrary(codeName());
     return redirectFunctionObject().read(dict);
 }
 
