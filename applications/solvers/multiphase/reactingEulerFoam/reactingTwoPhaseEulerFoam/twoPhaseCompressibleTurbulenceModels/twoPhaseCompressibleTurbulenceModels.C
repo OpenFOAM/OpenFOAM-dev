@@ -43,16 +43,6 @@ makeTurbulenceModelTypes
     phaseModel
 );
 
-makeBaseTurbulenceModel
-(
-    volScalarField,
-    volScalarField,
-    compressibleTurbulenceModel,
-    PhaseCompressibleTurbulenceModel,
-    ThermalDiffusivity,
-    phaseModel
-);
-
 #define makeLaminarModel(Type)                                                 \
     makeTemplatedLaminarModel                                                  \
     (phaseModelPhaseCompressibleTurbulenceModel, laminar, Type)
