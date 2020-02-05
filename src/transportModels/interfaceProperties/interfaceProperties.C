@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,17 +25,11 @@ License
 
 #include "interfaceProperties.H"
 #include "alphaContactAngleFvPatchScalarField.H"
-#include "mathematicalConstants.H"
+#include "unitConversion.H"
 #include "surfaceInterpolate.H"
 #include "fvcDiv.H"
 #include "fvcGrad.H"
 #include "fvcSnGrad.H"
-
-// * * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * //
-
-const Foam::scalar Foam::interfaceProperties::convertToRad =
-    Foam::constant::mathematical::pi/180.0;
-
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -72,7 +66,7 @@ void Foam::interfaceProperties::correctContactAngle
             fvsPatchVectorField& nHatp = nHatb[patchi];
             const scalarField theta
             (
-                convertToRad*acap.theta(U_.boundaryField()[patchi], nHatp)
+                degToRad(acap.theta(U_.boundaryField()[patchi], nHatp))
             );
 
             const vectorField nf
