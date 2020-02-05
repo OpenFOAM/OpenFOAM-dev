@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,19 +185,19 @@ Foam::phaseSystem::phaseSystem
         phaseModel& phase = phaseModels_[phasei];
         if (!phase.stationary())
         {
-            movingPhaseModels_.set(movingPhasei ++, &phase);
+            movingPhaseModels_.set(movingPhasei++, &phase);
         }
         if (phase.stationary())
         {
-            stationaryPhaseModels_.set(stationaryPhasei ++, &phase);
+            stationaryPhaseModels_.set(stationaryPhasei++, &phase);
         }
         if (!phase.isothermal())
         {
-            anisothermalPhaseModels_.set(anisothermalPhasei ++, &phase);
+            anisothermalPhaseModels_.set(anisothermalPhasei++, &phase);
         }
         if (!phase.pure())
         {
-            multiComponentPhaseModels_.set(multiComponentPhasei ++, &phase);
+            multiComponentPhaseModels_.set(multiComponentPhasei++, &phase);
         }
     }
 

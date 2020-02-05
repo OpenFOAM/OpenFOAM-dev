@@ -354,10 +354,52 @@ void Foam::multiphaseSystem::solve
 {
     const dictionary& alphaControls = mesh_.solverDict("alpha");
 
-    label nAlphaSubCycles(alphaControls.lookup<label>("nAlphaSubCycles"));
-    label nAlphaCorr(alphaControls.lookup<label>("nAlphaCorr"));
+    const label nAlphaSubCycles(alphaControls.lookup<label>("nAlphaSubCycles"));
+    const label nAlphaCorr(alphaControls.lookup<label>("nAlphaCorr"));
 
-    bool LTS = fv::localEulerDdt::enabled(mesh_);
+    const bool LTS = fv::localEulerDdt::enabled(mesh_);
+
+    // Optional reference phase which is not solved for
+    // but obtained from the sum of the other phases
+    phaseModel* referencePhasePtr = nullptr;
+
+    // The phases which are solved
+    // i.e. the moving phases less the optional reference phase
+    phaseModelPartialList solvePhases;
+
+    if (found("referencePhase"))
+    {
+        referencePhasePtr = &phases()[lookup<word>("referencePhase")];
+        const phaseModel& referencePhase = *referencePhasePtr;
+
+        solvePhases.setSize(movingPhases().size() - 1);
+        label solvePhasesi = 0;
+        forAll(movingPhases(), movingPhasei)
+        {
+            if (movingPhases()[movingPhasei] != referencePhase)
+            {
+                solvePhases.set(solvePhasesi++, &movingPhases()[movingPhasei]);
+            }
+        }
+    }
+    else
+    {
+        solvePhases = movingPhases();
+    }
+
+    // The phases included in the flux sum limit
+    // which is all moving phases if the number of solved phases is > 1
+    // otherwise it is just the solved phases
+    // as the flux sum limit is not needed in this case
+    phaseModelPartialList fluxPhases;
+    if (solvePhases.size() == 1)
+    {
+        fluxPhases = solvePhases;
+    }
+    else
+    {
+        fluxPhases = movingPhases();
+    }
 
     forAll(phases(), phasei)
     {
@@ -369,9 +411,9 @@ void Foam::multiphaseSystem::solve
     {
         const PtrList<surfaceScalarField> DByAfs(this->DByAfs(rAUs, rAUfs));
 
-        forAll(phases(), phasei)
+        forAll(solvePhases, solvePhasei)
         {
-            phaseModel& phase = phases()[phasei];
+            phaseModel& phase = phases()[solvePhasei];
             volScalarField& alpha = phase;
 
             alphaPhiDbyA0s.set
@@ -394,7 +436,6 @@ void Foam::multiphaseSystem::solve
         }
 
         List<volScalarField*> alphaPtrs(phases().size());
-
         forAll(phases(), phasei)
         {
             alphaPtrs[phasei] = &phases()[phasei];
@@ -429,40 +470,47 @@ void Foam::multiphaseSystem::solve
 
             // Generate face-alphas
             PtrList<surfaceScalarField> alphafs(phases().size());
-            forAll(phases(), phasei)
+            if (solvePhases.size() > 1)
             {
-                phaseModel& phase = phases()[phasei];
-                alphafs.set
-                (
-                    phasei,
-                    new surfaceScalarField
+                forAll(phases(), phasei)
+                {
+                    phaseModel& phase = phases()[phasei];
+                    alphafs.set
                     (
-                        IOobject::groupName("alphaf", phase.name()),
-                        upwind<scalar>(mesh_, phi_).interpolate(phase)
-                    )
-                );
+                        phasei,
+                        new surfaceScalarField
+                        (
+                            IOobject::groupName("alphaf", phase.name()),
+                            upwind<scalar>(mesh_, phi_).interpolate(phase)
+                        )
+                    );
+                }
             }
 
             // Create correction fluxes
             PtrList<surfaceScalarField> alphaPhiCorrs(phases().size());
-            forAll(stationaryPhases(), stationaryPhasei)
-            {
-                phaseModel& phase = stationaryPhases()[stationaryPhasei];
 
-                alphaPhiCorrs.set
-                (
-                    phase.index(),
-                    new surfaceScalarField
+            if (solvePhases.size() > 1)
+            {
+                forAll(stationaryPhases(), stationaryPhasei)
+                {
+                    phaseModel& phase = stationaryPhases()[stationaryPhasei];
+
+                    alphaPhiCorrs.set
                     (
-                        IOobject::groupName("alphaPhiCorr", phase.name()),
-                      - upwind<scalar>(mesh_, phi_).flux(phase)
-                    )
-                );
+                        phase.index(),
+                        new surfaceScalarField
+                        (
+                            IOobject::groupName("alphaPhiCorr", phase.name()),
+                          - upwind<scalar>(mesh_, phi_).flux(phase)
+                        )
+                    );
+                }
             }
 
-            forAll(movingPhases(), movingPhasei)
+            forAll(fluxPhases, fluxPhasei)
             {
-                phaseModel& phase = movingPhases()[movingPhasei];
+                phaseModel& phase = fluxPhases[fluxPhasei];
                 volScalarField& alpha = phase;
 
                 alphaPhiCorrs.set
@@ -477,9 +525,9 @@ void Foam::multiphaseSystem::solve
 
                 surfaceScalarField& alphaPhiCorr = alphaPhiCorrs[phase.index()];
 
-                forAll(phases(), phasei)
+                forAll(movingPhases(), movingPhasej)
                 {
-                    phaseModel& phase2 = phases()[phasei];
+                    phaseModel& phase2 = movingPhases()[movingPhasej];
                     volScalarField& alpha2 = phase2;
 
                     if (&phase2 == &phase) continue;
@@ -540,21 +588,23 @@ void Foam::multiphaseSystem::solve
                 );
             }
 
-            // Limit the flux sums, fixing those of the stationary phases
-            labelHashSet fixedAlphaPhiCorrs;
-            forAll(stationaryPhases(), stationaryPhasei)
+            if (solvePhases.size() > 1)
             {
-                fixedAlphaPhiCorrs.insert
-                (
-                    stationaryPhases()[stationaryPhasei].index()
-                );
+                // Limit the flux sums, fixing those of the stationary phases
+                labelHashSet fixedAlphaPhiCorrs;
+                forAll(stationaryPhases(), stationaryPhasei)
+                {
+                    fixedAlphaPhiCorrs.insert
+                    (
+                        stationaryPhases()[stationaryPhasei].index()
+                    );
+                }
+                MULES::limitSum(alphafs, alphaPhiCorrs, fixedAlphaPhiCorrs);
             }
-            MULES::limitSum(alphafs, alphaPhiCorrs, fixedAlphaPhiCorrs);
 
-            // Solve for the moving phase alphas
-            forAll(movingPhases(), movingPhasei)
+            forAll(solvePhases, solvePhasei)
             {
-                phaseModel& phase = movingPhases()[movingPhasei];
+                phaseModel& phase = solvePhases[solvePhasei];
                 volScalarField& alpha = phase;
 
                 surfaceScalarField& alphaPhi = alphaPhiCorrs[phase.index()];
@@ -658,9 +708,9 @@ void Foam::multiphaseSystem::solve
                     this->DByAfs(rAUs, rAUfs)
                 );
 
-                forAll(phases(), phasei)
+                forAll(solvePhases, solvePhasei)
                 {
-                    phaseModel& phase = phases()[phasei];
+                    phaseModel& phase = solvePhases[solvePhasei];
                     volScalarField& alpha = phase;
 
                     const surfaceScalarField alphaDbyA
@@ -679,6 +729,19 @@ void Foam::multiphaseSystem::solve
                     alphaEqn.solve();
 
                     phase.alphaPhiRef() += alphaEqn.flux();
+                }
+            }
+
+            if (referencePhasePtr)
+            {
+                phaseModel& referencePhase = *referencePhasePtr;
+
+                volScalarField& referenceAlpha = referencePhase;
+                referenceAlpha == alphaVoid;
+
+                forAll(solvePhases, solvePhasei)
+                {
+                    referenceAlpha -= solvePhases[solvePhasei];
                 }
             }
 
@@ -735,14 +798,31 @@ void Foam::multiphaseSystem::solve
         }
     }
 
-    forAll(movingPhases(), movingPhasei)
+    forAll(solvePhases, solvePhasei)
     {
-        phaseModel& phase = movingPhases()[movingPhasei];
+        phaseModel& phase = solvePhases[solvePhasei];
 
         phase.alphaRhoPhiRef() =
             fvc::interpolate(phase.rho())*phase.alphaPhi();
 
         phase.maxMin(0, 1);
+    }
+
+    if (referencePhasePtr)
+    {
+        phaseModel& referencePhase = *referencePhasePtr;
+
+        referencePhase.alphaPhiRef() = phi_;
+
+        forAll(solvePhases, solvePhasei)
+        {
+            phaseModel& phase = solvePhases[solvePhasei];
+            referencePhase.alphaPhiRef() -= phase.alphaPhi();
+        }
+
+        referencePhase.correctInflowOutflow(referencePhase.alphaPhiRef());
+        referencePhase.alphaRhoPhiRef() =
+            fvc::interpolate(referencePhase.rho())*referencePhase.alphaPhi();
     }
 
     calcAlphas();

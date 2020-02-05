@@ -1,0 +1,121 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type    basicMultiphaseSystem;
+
+phases (particles air);
+
+referencePhase air;
+
+particles
+{
+    type          purePhaseModel;
+
+    diameterModel constant;
+    constantCoeffs
+    {
+        d               3e-4;
+    }
+
+    alphaMax        0.62;
+    residualAlpha   1e-6;
+}
+
+air
+{
+    type          purePhaseModel;
+
+    diameterModel constant;
+    constantCoeffs
+    {
+        d               1;
+    }
+
+    residualAlpha   0;
+}
+
+blending
+{
+    default
+    {
+        type            none;
+        continuousPhase air;
+    }
+}
+
+surfaceTension
+(
+    (air and particles)
+    {
+        type            constant;
+        sigma           0;
+    }
+);
+
+aspectRatio
+();
+
+interfaceCompression
+();
+
+drag
+(
+    (particles in air)
+    {
+        type            GidaspowErgunWenYu;
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+);
+
+virtualMass
+(
+);
+
+heatTransfer
+(
+    (particles in air)
+    {
+        type            RanzMarshall;
+        residualAlpha   1e-4;
+    }
+);
+
+phaseTransfer
+(
+);
+
+lift
+(
+);
+
+wallLubrication
+(
+);
+
+turbulentDispersion
+(
+);
+
+// Minimum allowable pressure
+pMin            10000;
+
+
+// ************************************************************************* //
