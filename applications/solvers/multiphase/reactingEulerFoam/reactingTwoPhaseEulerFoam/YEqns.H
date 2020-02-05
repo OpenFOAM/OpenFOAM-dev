@@ -23,12 +23,6 @@
 
             Y1iEqn.relax();
             Y1iEqn.solve("Yi");
-
-            Info<< "Phase 1 " << Y1[i].name()
-                << ": min = " << min(Y1[i].primitiveField())
-                << ", mean = " << average(Y1[i].primitiveField())
-                << ", max = " << max(Y1[i].primitiveField())
-                << endl;
         }
     }
 
@@ -48,13 +42,6 @@
 
             Y2iEqn.relax();
             Y2iEqn.solve("Yi");
-
-            Info<< "Phase 2 " << Y2[i].name()
-                << ": min = " << min(Y2[i].primitiveField())
-                << ", mean = " << average(Y2[i].primitiveField())
-                << ", max = " << max(Y2[i].primitiveField())
-                << endl;
-
         }
     }
 
