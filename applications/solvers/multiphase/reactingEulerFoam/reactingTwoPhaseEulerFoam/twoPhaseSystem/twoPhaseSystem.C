@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,8 +122,6 @@ void Foam::twoPhaseSystem::solve
     const PtrList<surfaceScalarField>& rAUfs
 )
 {
-    const Time& runTime = mesh_.time();
-
     volScalarField& alpha1 = phase1_;
     volScalarField& alpha2 = phase2_;
 
@@ -189,7 +187,7 @@ void Foam::twoPhaseSystem::solve
             IOobject
             (
                 "Sp",
-                runTime.timeName(),
+                mesh_.time().timeName(),
                 mesh_
             ),
             mesh_,
@@ -201,7 +199,7 @@ void Foam::twoPhaseSystem::solve
             IOobject
             (
                 "Su",
-                runTime.timeName(),
+                mesh_.time().timeName(),
                 mesh_
             ),
             // Divergence term is handled explicitly to be
