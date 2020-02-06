@@ -238,10 +238,8 @@ Foam::phaseSystem::~phaseSystem()
 
 Foam::tmp<Foam::volScalarField> Foam::phaseSystem::rho() const
 {
-    const label nMovingPhases = movingPhaseModels_.size();
-
     tmp<volScalarField> rho(movingPhaseModels_[0]*movingPhaseModels_[0].rho());
-    for (label movingPhasei = 1; movingPhasei < nMovingPhases; ++ movingPhasei)
+    forAll(movingPhaseModels_, movingPhasei)
     {
         rho.ref() +=
             movingPhaseModels_[movingPhasei]
@@ -253,22 +251,29 @@ Foam::tmp<Foam::volScalarField> Foam::phaseSystem::rho() const
         return rho;
     }
 
-    volScalarField alpha(movingPhaseModels_[0]);
-    for (label movingPhasei = 1; movingPhasei < nMovingPhases; ++ movingPhasei)
+    volScalarField sumAlphaMoving
+    (
+        volScalarField::New
+        (
+            "sumAlphaMoving",
+            movingPhaseModels_[0],
+            calculatedFvPatchScalarField::typeName
+        )
+    );
+
+    forAll(movingPhaseModels_, movingPhasei)
     {
-        alpha += movingPhaseModels_[movingPhasei];
+        sumAlphaMoving += movingPhaseModels_[movingPhasei];
     }
 
-    return rho/alpha;
+    return rho/sumAlphaMoving;
 }
 
 
 Foam::tmp<Foam::volVectorField> Foam::phaseSystem::U() const
 {
-    const label nMovingPhases = movingPhaseModels_.size();
-
     tmp<volVectorField> U(movingPhaseModels_[0]*movingPhaseModels_[0].U());
-    for (label movingPhasei = 1; movingPhasei < nMovingPhases; ++ movingPhasei)
+    forAll(movingPhaseModels_, movingPhasei)
     {
         U.ref() +=
             movingPhaseModels_[movingPhasei]
@@ -280,13 +285,22 @@ Foam::tmp<Foam::volVectorField> Foam::phaseSystem::U() const
         return U;
     }
 
-    volScalarField alpha(movingPhaseModels_[0]);
-    for (label movingPhasei = 1; movingPhasei < nMovingPhases; ++ movingPhasei)
+    volScalarField sumAlphaMoving
+    (
+        volScalarField::New
+        (
+            "sumAlphaMoving",
+            movingPhaseModels_[0],
+            calculatedFvPatchScalarField::typeName
+        )
+    );
+
+    forAll(movingPhaseModels_, movingPhasei)
     {
-        alpha += movingPhaseModels_[movingPhasei];
+        sumAlphaMoving += movingPhaseModels_[movingPhasei];
     }
 
-    return U/alpha;
+    return U/sumAlphaMoving;
 }
 
 

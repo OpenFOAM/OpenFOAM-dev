@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,7 +129,7 @@ public:
 
             //- Construct from a BoundaryMesh,
             //  reference to the internal field
-            //  and a patch type
+            //  and a patch field type
             Boundary
             (
                 const BoundaryMesh&,
@@ -139,8 +139,8 @@ public:
 
             //- Construct from a BoundaryMesh,
             //  reference to the internal field
-            //  and a wordList of patch types and optional the actual patch
-            //  types (to override constraint patches)
+            //  and a wordList of patch field types and optionally
+            //  the actual patch types (to override constraint patches)
             Boundary
             (
                 const BoundaryMesh&,
@@ -210,7 +210,7 @@ public:
             //- Evaluate boundary conditions
             void evaluate();
 
-            //- Return a list of the patch types
+            //- Return a list of the patch field types
             wordList types() const;
 
             //- Return BoundaryField of the cell values neighbouring
@@ -301,7 +301,7 @@ public:
 
     // Constructors
 
-        //- Constructor given IOobject, mesh, dimensions and patch type.
+        //- Constructor given IOobject, mesh, dimensions and patch field type.
         //  This allocates storage for the field but not values.
         //  Used only within this class to create TEMPORARY variables
         GeometricField
@@ -312,7 +312,7 @@ public:
             const word& patchFieldType=PatchField<Type>::calculatedType()
         );
 
-        //- Constructor given IOobject, mesh, dimensions and patch types.
+        //- Constructor given IOobject, mesh, dimensions and patch field types.
         //  This allocates storage for the field but not values.
         //  Used only within this class to create TEMPORARY variables
         GeometricField
@@ -324,7 +324,8 @@ public:
             const wordList& actualPatchTypes = wordList()
         );
 
-        //- Constructor given IOobject, mesh, dimensioned<Type> and patch type.
+        //- Constructor given IOobject, mesh, dimensioned<Type>
+        //  and patch field type.
         GeometricField
         (
             const IOobject&,
@@ -333,7 +334,8 @@ public:
             const word& patchFieldType=PatchField<Type>::calculatedType()
         );
 
-        //- Constructor given IOobject, mesh, dimensioned<Type> and patch types.
+        //- Constructor given IOobject, mesh, dimensioned<Type>
+        //  and patch field types.
         GeometricField
         (
             const IOobject&,
@@ -422,7 +424,7 @@ public:
             const tmp<GeometricField<Type, PatchField, GeoMesh>>&
         );
 
-        //- Construct as copy resetting IO parameters and patch type
+        //- Construct as copy resetting IO parameters and patch field type
         GeometricField
         (
             const IOobject&,
@@ -461,7 +463,7 @@ public:
         );
 
         //- Return a temporary field constructed from name, mesh, dimensionSet
-        //  and patch type.
+        //  and patch field type.
         static tmp<GeometricField<Type, PatchField, GeoMesh>> New
         (
             const word& name,
@@ -471,7 +473,7 @@ public:
         );
 
         //- Return a temporary field constructed from mesh, dimensioned<Type>
-        //  and patch type.
+        //  and patch field type.
         static tmp<GeometricField<Type, PatchField, GeoMesh>> New
         (
             const word& name,
@@ -481,7 +483,7 @@ public:
         );
 
         //- Return a temporary field constructed from mesh, dimensioned<Type>
-        //  and patch types.
+        //  and patch field types.
         static tmp<GeometricField<Type, PatchField, GeoMesh>> New
         (
             const word& name,
@@ -496,6 +498,14 @@ public:
         (
             const word& newName,
             const tmp<GeometricField<Type, PatchField, GeoMesh>>&
+        );
+
+        //- Rename temporary field, reset patch field type and return
+        static tmp<GeometricField<Type, PatchField, GeoMesh>> New
+        (
+            const word& newName,
+            const tmp<GeometricField<Type, PatchField, GeoMesh>>&,
+            const word&
         );
 
         //- Rename and reset patch fields types of temporary field and return

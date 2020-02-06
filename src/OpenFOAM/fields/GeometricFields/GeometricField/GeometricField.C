@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -891,6 +891,36 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
                 tgf().db().cacheTemporaryObject(newName)
             ),
             tgf
+        )
+    );
+}
+
+
+template<class Type, template<class> class PatchField, class GeoMesh>
+Foam::tmp<Foam::GeometricField<Type, PatchField, GeoMesh>>
+Foam::GeometricField<Type, PatchField, GeoMesh>::New
+(
+    const word& newName,
+    const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf,
+    const word& patchFieldType
+)
+{
+    return tmp<GeometricField<Type, PatchField, GeoMesh>>
+    (
+        new GeometricField<Type, PatchField, GeoMesh>
+        (
+            IOobject
+            (
+                newName,
+                tgf().instance(),
+                tgf().local(),
+                tgf().db(),
+                IOobject::NO_READ,
+                IOobject::NO_WRITE,
+                tgf().db().cacheTemporaryObject(newName)
+            ),
+            tgf,
+            patchFieldType
         )
     );
 }
