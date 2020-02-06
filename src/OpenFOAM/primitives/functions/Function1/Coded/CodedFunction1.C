@@ -59,20 +59,23 @@ void Foam::Function1s::Coded<Type>::prepare
     // Copy filtered H template
     dynCode.addCopyFile(codeTemplateH);
 
-    // debugging: make verbose
-    //  dynCode.setFilterVariable("verbose", "true");
-    //  Info<<"compile " << codeName() << " sha1: "
-    //      << context.sha1() << endl;
+    // Debugging: make verbose
+    if (debug)
+    {
+        dynCode.setFilterVariable("verbose", "true");
+        Info<<"compile " << codeName() << " sha1: "
+            << context.sha1() << endl;
+    }
 
-    // define Make/options
+    // Define Make/options
     dynCode.setMakeOptions
-        (
-            "EXE_INC = -g \\\n"
-            + context.options()
-            + "\n\nLIB_LIBS = \\\n"
-            + "    -lOpenFOAM \\\n"
-            + context.libs()
-        );
+    (
+        "EXE_INC = -g \\\n"
+      + context.options()
+      + "\n\nLIB_LIBS = \\\n"
+      + "    -lOpenFOAM \\\n"
+      + context.libs()
+    );
 }
 
 

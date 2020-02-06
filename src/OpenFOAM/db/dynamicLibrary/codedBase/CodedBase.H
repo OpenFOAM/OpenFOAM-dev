@@ -85,6 +85,10 @@ public:
 
     // Constructors
 
+        //- Construct null
+        CodedBase()
+        {}
+
         //- Construct from dictionary
         CodedBase(const dictionary& dict);
 

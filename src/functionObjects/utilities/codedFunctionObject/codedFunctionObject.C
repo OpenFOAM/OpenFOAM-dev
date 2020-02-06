@@ -80,9 +80,12 @@ void Foam::codedFunctionObject::prepare
     dynCode.addCopyFile("functionObjectTemplate.H");
 
     // Debugging: make verbose
-    // dynCode.setFilterVariable("verbose", "true");
-    // Info<<"compile " << codeName() << " sha1: "
-    //     << context.sha1() << endl;
+    if (debug)
+    {
+        dynCode.setFilterVariable("verbose", "true");
+        Info<<"compile " << codeName() << " sha1: "
+            << context.sha1() << endl;
+    }
 
     // Define Make/options
     dynCode.setMakeOptions

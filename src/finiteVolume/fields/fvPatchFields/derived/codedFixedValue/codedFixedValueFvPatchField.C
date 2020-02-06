@@ -31,73 +31,7 @@ License
 #include "dynamicCodeContext.H"
 #include "stringOps.H"
 
-// * * * * * * * * * * * * Private Static Data Members * * * * * * * * * * * //
-
-template<class Type>
-const Foam::wordList Foam::codedFixedValueFvPatchField<Type>::codeKeys_ =
-    {"code", "codeInclude", "localCode"};
-
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-template<class Type>
-const Foam::word Foam::codedFixedValueFvPatchField<Type>::codeTemplateC =
-    "fixedValueFvPatchFieldTemplate.C";
-
-template<class Type>
-const Foam::word Foam::codedFixedValueFvPatchField<Type>::codeTemplateH =
-    "fixedValueFvPatchFieldTemplate.H";
-
-
-// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
-
-template<class Type>
-void Foam::codedFixedValueFvPatchField<Type>::setFieldTemplates
-(
-    dynamicCode& dynCode
-)
-{
-    word fieldType(pTraits<Type>::typeName);
-
-    // template type for fvPatchField
-    dynCode.setFilterVariable("TemplateType", fieldType);
-
-    // Name for fvPatchField - eg, ScalarField, VectorField, ...
-    fieldType[0] = toupper(fieldType[0]);
-    dynCode.setFilterVariable("FieldType", fieldType + "Field");
-}
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-const Foam::IOdictionary& Foam::codedFixedValueFvPatchField<Type>::dict() const
-{
-    const objectRegistry& obr = this->db();
-
-    if (obr.foundObject<IOdictionary>("codeDict"))
-    {
-        return obr.lookupObject<IOdictionary>("codeDict");
-    }
-    else
-    {
-        return obr.store
-        (
-            new IOdictionary
-            (
-                IOobject
-                (
-                    "codeDict",
-                    this->db().time().system(),
-                    this->db(),
-                    IOobject::MUST_READ_IF_MODIFIED,
-                    IOobject::NO_WRITE
-                )
-            )
-        );
-    }
-}
-
 
 template<class Type>
 void Foam::codedFixedValueFvPatchField<Type>::prepare
@@ -106,75 +40,51 @@ void Foam::codedFixedValueFvPatchField<Type>::prepare
     const dynamicCodeContext& context
 ) const
 {
-    // take no chances - typeName must be identical to name_
-    dynCode.setFilterVariable("typeName", name_);
+    dynCode.setFilterVariable("typeName", codeName());
 
-    // set TemplateType and FieldType filter variables
+    // Set TemplateType and FieldType filter variables
     // (for fvPatchField)
-    setFieldTemplates(dynCode);
+    word fieldType(pTraits<Type>::typeName);
 
-    // compile filtered C template
+    // Template type for fvPatchField
+    dynCode.setFilterVariable("TemplateType", fieldType);
+
+    // Name for fvPatchField - eg, ScalarField, VectorField, ...
+    fieldType[0] = toupper(fieldType[0]);
+    dynCode.setFilterVariable("FieldType", fieldType + "Field");
+
+    // Compile filtered C template
     dynCode.addCompileFile(codeTemplateC);
 
-    // copy filtered H template
+    // Copy filtered H template
     dynCode.addCopyFile(codeTemplateH);
 
+    // Debugging: make BC verbose
+    if (debug)
+    {
+        dynCode.setFilterVariable("verbose", "true");
+        Info<<"compile " << codeName() << " sha1: "
+            << context.sha1() << endl;
+    }
 
-    // debugging: make BC verbose
-    //  dynCode.setFilterVariable("verbose", "true");
-    //  Info<<"compile " << name_ << " sha1: "
-    //      << context.sha1() << endl;
-
-    // define Make/options
+    // Define Make/options
     dynCode.setMakeOptions
-        (
-            "EXE_INC = -g \\\n"
-            "-I$(LIB_SRC)/finiteVolume/lnInclude \\\n"
-            + context.options()
-            + "\n\nLIB_LIBS = \\\n"
-            + "    -lOpenFOAM \\\n"
-            + "    -lfiniteVolume \\\n"
-            + context.libs()
-        );
-}
-
-
-template<class Type>
-const Foam::dictionary& Foam::codedFixedValueFvPatchField<Type>::codeDict()
-const
-{
-    // use system/codeDict or in-line
-    return
     (
-        dict_.found("code")
-      ? dict_
-      : this->dict().subDict(name_)
+        "EXE_INC = -g \\\n"
+        "-I$(LIB_SRC)/finiteVolume/lnInclude \\\n"
+      + context.options()
+      + "\n\nLIB_LIBS = \\\n"
+      + "    -lOpenFOAM \\\n"
+      + "    -lfiniteVolume \\\n"
+      + context.libs()
     );
-}
-
-
-template<class Type>
-const Foam::wordList& Foam::codedFixedValueFvPatchField<Type>::codeKeys() const
-{
-    return codeKeys_;
-}
-
-
-template<class Type>
-Foam::string Foam::codedFixedValueFvPatchField<Type>::description() const
-{
-    return
-        "patch "
-      + this->patch().name()
-      + " on field "
-      + this->internalField().name();
 }
 
 
 template<class Type>
 void Foam::codedFixedValueFvPatchField<Type>::clearRedirect() const
 {
-    // remove instantiation of fvPatchField provided by library
+    // Remove instantiation of fvPatchField provided by library
     redirectPatchFieldPtr_.clear();
 }
 
@@ -189,7 +99,7 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(p, iF),
-    codedBase(),
+    CodedBase<codedFixedValueFvPatchFieldBase>(),
     redirectPatchFieldPtr_()
 {}
 
@@ -204,9 +114,7 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
-    codedBase(),
-    dict_(ptf.dict_),
-    name_(ptf.name_),
+    CodedBase<codedFixedValueFvPatchFieldBase>(ptf),
     redirectPatchFieldPtr_()
 {}
 
@@ -220,17 +128,10 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(p, iF, dict),
-    codedBase(),
-    dict_(dict),
-    name_
-    (
-        dict.found("redirectType")
-      ? dict.lookup("redirectType")
-      : dict.lookup("name")
-    ),
+    CodedBase<codedFixedValueFvPatchFieldBase>(dict),
     redirectPatchFieldPtr_()
 {
-    updateLibrary(name_);
+    updateLibrary(codeName());
 }
 
 
@@ -241,9 +142,7 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(ptf),
-    codedBase(),
-    dict_(ptf.dict_),
-    name_(ptf.name_),
+    CodedBase<codedFixedValueFvPatchFieldBase>(ptf),
     redirectPatchFieldPtr_()
 {}
 
@@ -256,9 +155,7 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(ptf, iF),
-    codedBase(),
-    dict_(ptf.dict_),
-    name_(ptf.name_),
+    CodedBase<codedFixedValueFvPatchFieldBase>(ptf),
     redirectPatchFieldPtr_()
 {}
 
@@ -275,7 +172,7 @@ Foam::codedFixedValueFvPatchField<Type>::redirectPatchField() const
         // Make sure to construct the patchfield with up-to-date value
 
         OStringStream os;
-        writeEntry(os, "type", name_);
+        writeEntry(os, "type", codeName());
         writeEntry(os, "value", *this);
         IStringStream is(os.str());
         dictionary dict(is);
@@ -290,6 +187,7 @@ Foam::codedFixedValueFvPatchField<Type>::redirectPatchField() const
             ).ptr()
         );
     }
+
     return redirectPatchFieldPtr_();
 }
 
@@ -303,7 +201,7 @@ void Foam::codedFixedValueFvPatchField<Type>::updateCoeffs()
     }
 
     // Make sure library containing user-defined fvPatchField is up-to-date
-    updateLibrary(name_);
+    updateLibrary(codeName());
 
     const fvPatchField<Type>& fvp = redirectPatchField();
 
@@ -323,7 +221,7 @@ void Foam::codedFixedValueFvPatchField<Type>::evaluate
 )
 {
     // Make sure library containing user-defined fvPatchField is up-to-date
-    updateLibrary(name_);
+    updateLibrary(codeName());
 
     const fvPatchField<Type>& fvp = redirectPatchField();
 
@@ -337,42 +235,7 @@ template<class Type>
 void Foam::codedFixedValueFvPatchField<Type>::write(Ostream& os) const
 {
     fixedValueFvPatchField<Type>::write(os);
-    writeEntry(os, "name", name_);
-
-    if (dict_.found("codeInclude"))
-    {
-        writeKeyword(os, "codeInclude");
-        os.write(verbatimString(dict_["codeInclude"]))
-            << token::END_STATEMENT << nl;
-    }
-
-    if (dict_.found("localCode"))
-    {
-        writeKeyword(os, "localCode");
-        os.write(verbatimString(dict_["localCode"]))
-            << token::END_STATEMENT << nl;
-    }
-
-    if (dict_.found("code"))
-    {
-        writeKeyword(os, "code");
-        os.write(verbatimString(dict_["code"]))
-            << token::END_STATEMENT << nl;
-    }
-
-    if (dict_.found("codeOptions"))
-    {
-        writeKeyword(os, "codeOptions");
-        os.write(verbatimString(dict_["codeOptions"]))
-            << token::END_STATEMENT << nl;
-    }
-
-    if (dict_.found("codeLibs"))
-    {
-        writeKeyword(os, "codeLibs");
-        os.write(verbatimString(dict_["codeLibs"]))
-            << token::END_STATEMENT << nl;
-    }
+    writeCode(os);
 }
 
 
