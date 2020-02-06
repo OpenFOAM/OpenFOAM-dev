@@ -239,7 +239,13 @@ Foam::phaseSystem::~phaseSystem()
 Foam::tmp<Foam::volScalarField> Foam::phaseSystem::rho() const
 {
     tmp<volScalarField> rho(movingPhaseModels_[0]*movingPhaseModels_[0].rho());
-    forAll(movingPhaseModels_, movingPhasei)
+
+    for
+    (
+        label movingPhasei=1;
+        movingPhasei<movingPhaseModels_.size();
+        movingPhasei++
+    )
     {
         rho.ref() +=
             movingPhaseModels_[movingPhasei]
@@ -261,7 +267,12 @@ Foam::tmp<Foam::volScalarField> Foam::phaseSystem::rho() const
         )
     );
 
-    forAll(movingPhaseModels_, movingPhasei)
+    for
+    (
+        label movingPhasei=1;
+        movingPhasei<movingPhaseModels_.size();
+        movingPhasei++
+    )
     {
         sumAlphaMoving += movingPhaseModels_[movingPhasei];
     }
@@ -273,7 +284,13 @@ Foam::tmp<Foam::volScalarField> Foam::phaseSystem::rho() const
 Foam::tmp<Foam::volVectorField> Foam::phaseSystem::U() const
 {
     tmp<volVectorField> U(movingPhaseModels_[0]*movingPhaseModels_[0].U());
-    forAll(movingPhaseModels_, movingPhasei)
+
+    for
+    (
+        label movingPhasei=1;
+        movingPhasei<movingPhaseModels_.size();
+        movingPhasei++
+    )
     {
         U.ref() +=
             movingPhaseModels_[movingPhasei]
@@ -295,7 +312,12 @@ Foam::tmp<Foam::volVectorField> Foam::phaseSystem::U() const
         )
     );
 
-    forAll(movingPhaseModels_, movingPhasei)
+    for
+    (
+        label movingPhasei=1;
+        movingPhasei<movingPhaseModels_.size();
+        movingPhasei++
+    )
     {
         sumAlphaMoving += movingPhaseModels_[movingPhasei];
     }
