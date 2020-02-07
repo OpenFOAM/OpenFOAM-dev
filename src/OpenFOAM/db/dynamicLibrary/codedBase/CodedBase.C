@@ -29,11 +29,11 @@ License
 
 template<class CodedType>
 const Foam::word Foam::CodedBase<CodedType>::codeTemplateC =
-    CodedType::typeName + "Template.C";
+    Foam::word(CodedType::typeName_()) + "Template.C";
 
 template<class CodedType>
 const Foam::word Foam::CodedBase<CodedType>::codeTemplateH =
-    CodedType::typeName + "Template.H";
+    Foam::word(CodedType::typeName_()) + "Template.H";
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

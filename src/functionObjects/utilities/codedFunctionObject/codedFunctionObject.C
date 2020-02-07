@@ -74,10 +74,10 @@ void Foam::codedFunctionObject::prepare
     dynCode.setFilterVariable("typeName", codeName());
 
     // Compile filtered C template
-    dynCode.addCompileFile("functionObjectTemplate.C");
+    dynCode.addCompileFile(codeTemplateC);
 
     // Copy filtered H template
-    dynCode.addCopyFile("functionObjectTemplate.H");
+    dynCode.addCopyFile(codeTemplateH);
 
     // Debugging: make verbose
     if (debug)
