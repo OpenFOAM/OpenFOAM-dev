@@ -27,18 +27,6 @@ License
 #include "dynamicCode.H"
 #include "dynamicCodeContext.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-defineTypeName(Foam::Function1s::coded);
-
-template<>
-const Foam::wordList Foam::CodedBase<Foam::Function1s::coded>::codeKeys_ =
-{
-    "code",
-    "codeInclude"
-};
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>

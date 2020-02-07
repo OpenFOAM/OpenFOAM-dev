@@ -37,6 +37,18 @@ License
 
 #include "fieldTypes.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+defineTypeName(Foam::Function1s::coded);
+
+template<>
+const Foam::wordList Foam::CodedBase<Foam::Function1s::coded>::codeKeys_ =
+{
+    "code",
+    "codeInclude"
+};
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #define makeFunction1s(Type)                                                   \
