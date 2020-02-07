@@ -154,28 +154,28 @@ Foam::functionObject& Foam::codedFunctionObject::redirectFunctionObject() const
 
 bool Foam::codedFunctionObject::execute()
 {
-    updateLibrary(codeName());
+    updateLibrary();
     return redirectFunctionObject().execute();
 }
 
 
 bool Foam::codedFunctionObject::write()
 {
-    updateLibrary(codeName());
+    updateLibrary();
     return redirectFunctionObject().write();
 }
 
 
 bool Foam::codedFunctionObject::end()
 {
-    updateLibrary(codeName());
+    updateLibrary();
     return redirectFunctionObject().end();
 }
 
 
 bool Foam::codedFunctionObject::read(const dictionary& dict)
 {
-    updateLibrary(codeName());
+    updateLibrary();
     return redirectFunctionObject().read(dict);
 }
 

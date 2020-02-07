@@ -27,7 +27,7 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "volFields.H"
 
-// * * * * * * * * * * * * Private Static Data Members * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 defineTypeName(Foam::codedFixedValueFvPatchFieldBase);
 
@@ -40,18 +40,10 @@ Foam::CodedBase<Foam::codedFixedValueFvPatchFieldBase>::codeKeys_ =
     "localCode"
 };
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 namespace Foam
 {
+    makePatchFields(codedFixedValue);
+}
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-makePatchFields(codedFixedValue);
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

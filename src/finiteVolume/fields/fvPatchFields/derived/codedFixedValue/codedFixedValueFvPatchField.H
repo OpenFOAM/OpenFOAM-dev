@@ -117,9 +117,6 @@ class codedFixedValueFvPatchField
 
     // Private Member Functions
 
-        //- Set the rewrite vars controlling the Type
-        static void setFieldTemplates(dynamicCode& dynCode);
-
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
 

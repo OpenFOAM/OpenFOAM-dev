@@ -31,7 +31,7 @@ template<class Type>
 inline Type Foam::Function1s::Coded<Type>::value(const scalar x) const
 {
     // Make sure library containing user-defined Function1 is up-to-date
-    this->updateLibrary(codeName());
+    this->updateLibrary();
 
     return redirectFunction1Ptr_->value(x);
 }

@@ -29,7 +29,6 @@ License
 #include "volFields.H"
 #include "dynamicCode.H"
 #include "dynamicCodeContext.H"
-#include "stringOps.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -131,7 +130,7 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
     CodedBase<codedFixedValueFvPatchFieldBase>(dict),
     redirectPatchFieldPtr_()
 {
-    updateLibrary(codeName());
+    updateLibrary();
 }
 
 
@@ -168,9 +167,6 @@ Foam::codedFixedValueFvPatchField<Type>::redirectPatchField() const
 {
     if (!redirectPatchFieldPtr_.valid())
     {
-        // Construct a patch
-        // Make sure to construct the patchfield with up-to-date value
-
         OStringStream os;
         writeEntry(os, "type", codeName());
         writeEntry(os, "value", *this);
@@ -201,7 +197,7 @@ void Foam::codedFixedValueFvPatchField<Type>::updateCoeffs()
     }
 
     // Make sure library containing user-defined fvPatchField is up-to-date
-    updateLibrary(codeName());
+    updateLibrary();
 
     const fvPatchField<Type>& fvp = redirectPatchField();
 
@@ -221,7 +217,7 @@ void Foam::codedFixedValueFvPatchField<Type>::evaluate
 )
 {
     // Make sure library containing user-defined fvPatchField is up-to-date
-    updateLibrary(codeName());
+    updateLibrary();
 
     const fvPatchField<Type>& fvp = redirectPatchField();
 

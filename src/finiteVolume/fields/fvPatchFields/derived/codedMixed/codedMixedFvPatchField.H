@@ -91,15 +91,24 @@ SourceFiles
 #define codedMixedFvPatchField_H
 
 #include "mixedFvPatchFields.H"
-#include "codedBase.H"
+#include "CodedBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-// Forward declaration of classes
-class IOdictionary;
+/*---------------------------------------------------------------------------*\
+              Class codedMixedFvPatchFieldBase Declaration
+\*---------------------------------------------------------------------------*/
+
+class codedMixedFvPatchFieldBase
+{
+public:
+
+    ClassNameNoDebug("mixedFvPatchField");
+};
+
 
 /*---------------------------------------------------------------------------*\
                    Class codedMixedFvPatchField Declaration
@@ -109,57 +118,23 @@ template<class Type>
 class codedMixedFvPatchField
 :
     public mixedFvPatchField<Type>,
-    public codedBase
+    public CodedBase<codedMixedFvPatchFieldBase>
 {
-    // Private static data
-
-        //- The keywords associated with source code
-        static const wordList codeKeys_;
-
-
     // Private Data
-
-        //- Dictionary contents for the boundary condition
-        mutable dictionary dict_;
-
-        const word name_;
 
         mutable autoPtr<mixedFvPatchField<Type>> redirectPatchFieldPtr_;
 
 
     // Private Member Functions
 
-        const IOdictionary& dict() const;
-
-        //- Set the rewrite vars controlling the Type
-        static void setFieldTemplates(dynamicCode& dynCode);
-
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
-
-        //- Return a description (type + name) for the output
-        virtual string description() const;
 
         //- Clear the ptr to the redirected object
         virtual void clearRedirect() const;
 
-        //- Get the dictionary to initialize the codeContext
-        virtual const dictionary& codeDict() const;
-
-        //- Get the keywords associated with source code
-        virtual const wordList& codeKeys() const;
-
 
 public:
-
-    // Static Data Members
-
-        //- Name of the C code template to be used
-        static const word codeTemplateC;
-
-        //- Name of the H code template to be used
-        static const word codeTemplateH;
-
 
     //- Runtime type information
     TypeName("codedMixed");

@@ -33,7 +33,13 @@ License
 
 template<class Type>
 const Foam::wordList Foam::fv::CodedSource<Type>::codeKeys_ =
-    {"codeAddSup", "codeCorrect", "codeInclude", "codeSetValue", "localCode"};
+{
+    "codeAddSup",
+    "codeCorrect",
+    "codeInclude",
+    "codeSetValue",
+    "localCode"
+};
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
@@ -160,7 +166,7 @@ void Foam::fv::CodedSource<Type>::correct
             << ">::correct for source " << name_ << endl;
     }
 
-    updateLibrary(name_);
+    updateLibrary();
     redirectFvOption().correct(field);
 }
 
@@ -178,7 +184,7 @@ void Foam::fv::CodedSource<Type>::addSup
             << ">::addSup for source " << name_ << endl;
     }
 
-    updateLibrary(name_);
+    updateLibrary();
     redirectFvOption().addSup(eqn, fieldi);
 }
 
@@ -197,7 +203,7 @@ void Foam::fv::CodedSource<Type>::addSup
             << ">::addSup for source " << name_ << endl;
     }
 
-    updateLibrary(name_);
+    updateLibrary();
     redirectFvOption().addSup(rho, eqn, fieldi);
 }
 
@@ -215,7 +221,7 @@ void Foam::fv::CodedSource<Type>::constrain
             << ">::constrain for source " << name_ << endl;
     }
 
-    updateLibrary(name_);
+    updateLibrary();
     redirectFvOption().constrain(eqn, fieldi);
 }
 

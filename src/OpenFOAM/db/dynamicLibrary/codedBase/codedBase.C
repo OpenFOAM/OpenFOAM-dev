@@ -280,12 +280,10 @@ void Foam::codedBase::createLibrary
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-void Foam::codedBase::updateLibrary
-(
-    const word& name
-) const
+void Foam::codedBase::updateLibrary() const
 {
-    const dictionary& dict = this->codeDict();
+    const word& name = codeName();
+    const dictionary& dict = codeDict();
 
     dynamicCode::checkSecurity
     (

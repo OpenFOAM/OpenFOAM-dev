@@ -91,7 +91,7 @@ template<class Type>
 Foam::autoPtr<Foam::Function1<Type>>
 Foam::Function1s::Coded<Type>::compileNew()
 {
-    this->updateLibrary(codeName());
+    this->updateLibrary();
 
     dictionary redirectDict(codeDict());
     redirectDict.set(codeName(), codeName());

@@ -103,7 +103,7 @@ public:
     // Member Functions
 
         //- Name of the dynamically generated CodedType
-        const word& codeName() const;
+        virtual const word& codeName() const;
 
         //- Get the dictionary to initialize the codeContext
         virtual const dictionary& codeDict() const;

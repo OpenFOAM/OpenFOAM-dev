@@ -149,6 +149,12 @@ protected:
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
 
+        //- Name of the dynamically generated CodedType
+        virtual const word& codeName() const
+        {
+            return name_;
+        }
+
         //- Return a description (type + name) for the output
         virtual string description() const;
 
