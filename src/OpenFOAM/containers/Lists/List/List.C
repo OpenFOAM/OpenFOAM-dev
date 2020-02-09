@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -234,7 +234,7 @@ Foam::List<T>::List(const PtrList<T>& lst)
 template<class T>
 Foam::List<T>::List(const SLList<T>& lst)
 :
-    List<T>(lst.first(), lst.last(), lst.size())
+    List<T>(lst.begin(), lst.end(), lst.size())
 {}
 
 

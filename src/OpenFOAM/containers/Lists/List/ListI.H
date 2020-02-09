@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,8 @@ inline Foam::List<T>::List
         InputIterator iter = first;
         forAll(*this, i)
         {
-            this->operator[](i) = *iter++;
+            this->operator[](i) = *iter;
+            ++iter;
         }
     }
 }
