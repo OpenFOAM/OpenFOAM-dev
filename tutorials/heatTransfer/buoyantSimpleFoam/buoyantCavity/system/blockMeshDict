@@ -28,10 +28,6 @@ vertices
     ( 0  2180   260)
 );
 
-edges
-(
-);
-
 blocks
 (
     hex (0 1 2 3 4 5 6 7) (35 150 15) simpleGrading (1 1 1)
@@ -39,7 +35,7 @@ blocks
 
 boundary
 (
-    frontAndBack
+    topAndBottom
     {
         type wall;
         faces
@@ -49,7 +45,7 @@ boundary
         );
     }
 
-    topAndBottom
+    frontAndBack
     {
         type wall;
         faces
@@ -78,6 +74,4 @@ boundary
     }
 );
 
-mergePatchPairs
-(
-);
+// ************************************************************************* //
