@@ -411,7 +411,7 @@ void Foam::multiphaseSystem::solve
 
         forAll(solvePhases, solvePhasei)
         {
-            phaseModel& phase = phases()[solvePhasei];
+            phaseModel& phase = solvePhases[solvePhasei];
             volScalarField& alpha = phase;
 
             alphaPhiDbyA0s.set
@@ -523,9 +523,9 @@ void Foam::multiphaseSystem::solve
 
                 surfaceScalarField& alphaPhiCorr = alphaPhiCorrs[phase.index()];
 
-                forAll(movingPhases(), movingPhasej)
+                forAll(phases(), phasei)
                 {
-                    phaseModel& phase2 = movingPhases()[movingPhasej];
+                    phaseModel& phase2 = phases()[phasei];
                     volScalarField& alpha2 = phase2;
 
                     if (&phase2 == &phase) continue;
