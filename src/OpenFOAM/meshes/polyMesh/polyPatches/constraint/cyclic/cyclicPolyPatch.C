@@ -49,13 +49,13 @@ namespace Foam
 
 // * * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * //
 
-void Foam::cyclicPolyPatch::initGeometry(PstreamBuffers& pBufs)
+void Foam::cyclicPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
 {
-    polyPatch::initGeometry(pBufs);
+    polyPatch::initCalcGeometry(pBufs);
 }
 
 
-void Foam::cyclicPolyPatch::initGeometry
+void Foam::cyclicPolyPatch::initCalcGeometry
 (
     const primitivePatch& referPatch,
     pointField& nbrCtrs,
@@ -67,40 +67,16 @@ void Foam::cyclicPolyPatch::initGeometry
 
 void Foam::cyclicPolyPatch::calcGeometry(PstreamBuffers& pBufs)
 {
-    calcGeometry
-    (
-        *this,
-        faceCentres(),
-        faceAreas(),
-        faceCellCentres(),
-        nbrPatch().faceCentres(),
-        nbrPatch().faceAreas(),
-        nbrPatch().faceCellCentres()
-    );
-}
-
-
-void Foam::cyclicPolyPatch::calcGeometry
-(
-    const primitivePatch& referPatch,
-    const pointField& thisCtrs,
-    const vectorField& thisAreas,
-    const pointField& thisCc,
-    const pointField& nbrCtrs,
-    const vectorField& nbrAreas,
-    const pointField& nbrCc
-)
-{
     static_cast<cyclicTransform&>(*this) =
         cyclicTransform
         (
             name(),
-            thisCtrs,
-            thisAreas,
+            faceCentres(),
+            faceAreas(),
             *this,
             nbrPatchName(),
-            nbrCtrs,
-            nbrAreas,
+            nbrPatch().faceCentres(),
+            nbrPatch().faceAreas(),
             nbrPatch(),
             matchTolerance()
         );

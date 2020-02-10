@@ -189,7 +189,7 @@ Foam::word Foam::processorPolyPatch::newName
 }
 
 
-void Foam::processorPolyPatch::initGeometry(PstreamBuffers& pBufs)
+void Foam::processorPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
 {
     if (Pstream::parRun())
     {
@@ -304,7 +304,7 @@ void Foam::processorPolyPatch::initMovePoints
 )
 {
     polyPatch::movePoints(pBufs, p);
-    processorPolyPatch::initGeometry(pBufs);
+    processorPolyPatch::initCalcGeometry(pBufs);
 }
 
 

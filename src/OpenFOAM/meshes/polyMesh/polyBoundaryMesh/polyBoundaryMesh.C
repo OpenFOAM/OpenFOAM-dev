@@ -235,7 +235,7 @@ void Foam::polyBoundaryMesh::calcGeometry()
     {
         forAll(*this, patchi)
         {
-            operator[](patchi).initGeometry(pBufs);
+            operator[](patchi).initCalcGeometry(pBufs);
         }
 
         pBufs.finishedSends();
@@ -258,7 +258,7 @@ void Foam::polyBoundaryMesh::calcGeometry()
 
             if (patchSchedule[patchEvali].init)
             {
-                operator[](patchi).initGeometry(pBufs);
+                operator[](patchi).initCalcGeometry(pBufs);
             }
             else
             {

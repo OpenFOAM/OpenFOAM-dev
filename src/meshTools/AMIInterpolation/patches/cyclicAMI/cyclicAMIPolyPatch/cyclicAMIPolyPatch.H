@@ -99,7 +99,7 @@ protected:
         virtual void resetAMI() const;
 
         //- Initialise the calculation of the patch geometry
-        virtual void initGeometry(PstreamBuffers&);
+        virtual void initCalcGeometry(PstreamBuffers&);
 
         //- Calculate the patch geometry
         virtual void calcGeometry(PstreamBuffers&);
@@ -317,18 +317,6 @@ public:
                 const scalarUList& defaultValues = scalarUList()
             ) const;
 
-
-        //- Calculate the patch geometry
-        virtual void calcGeometry
-        (
-            const primitivePatch& referPatch,
-            const pointField& thisCtrs,
-            const vectorField& thisAreas,
-            const pointField& thisCc,
-            const pointField& nbrCtrs,
-            const vectorField& nbrAreas,
-            const pointField& nbrCc
-        );
 
         //- Initialize ordering for primitivePatch. Does not
         //  refer to *this (except for name() and type() etc.)

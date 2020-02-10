@@ -221,10 +221,10 @@ int Foam::processorCyclicPolyPatch::tag() const
 }
 
 
-void Foam::processorCyclicPolyPatch::initGeometry(PstreamBuffers& pBufs)
+void Foam::processorCyclicPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
 {
     // Send over processorPolyPatch data
-    processorPolyPatch::initGeometry(pBufs);
+    processorPolyPatch::initCalcGeometry(pBufs);
 }
 
 
@@ -232,36 +232,6 @@ void Foam::processorCyclicPolyPatch::calcGeometry(PstreamBuffers& pBufs)
 {
     // Receive and initialise processorPolyPatch data
     processorPolyPatch::calcGeometry(pBufs);
-
-    if (Pstream::parRun())
-    {
-        // Update underlying cyclic halves. Need to do both since only one
-        // half might be present as a processorCyclic.
-
-        cyclicPolyPatch& pp = const_cast<cyclicPolyPatch&>(referPatch());
-
-        pp.calcGeometry
-        (
-            *this,
-            faceCentres(),
-            faceAreas(),
-            faceCellCentres(),
-            neighbFaceCentres(),
-            neighbFaceAreas(),
-            neighbFaceCellCentres()
-        );
-
-        const_cast<cyclicPolyPatch&>(pp.nbrPatch()).calcGeometry
-        (
-            *this,
-            neighbFaceCentres(),
-            neighbFaceAreas(),
-            neighbFaceCellCentres(),
-            faceCentres(),
-            faceAreas(),
-            faceCellCentres()
-        );
-    }
 }
 
 
@@ -272,7 +242,7 @@ void Foam::processorCyclicPolyPatch::initMovePoints
 )
 {
     // Recalculate geometry
-    initGeometry(pBufs);
+    initCalcGeometry(pBufs);
 }
 
 

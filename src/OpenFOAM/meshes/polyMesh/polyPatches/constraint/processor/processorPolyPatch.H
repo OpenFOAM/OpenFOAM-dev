@@ -100,26 +100,10 @@ protected:
     // Protected Member functions
 
         //- Initialise the calculation of the patch geometry
-        void initGeometry(PstreamBuffers&);
+        void initCalcGeometry(PstreamBuffers&);
 
         //- Calculate the patch geometry
         void calcGeometry(PstreamBuffers&);
-
-        //- Calculate the patch geometry with externally
-        //  provided geometry
-        virtual void calcGeometry
-        (
-            const primitivePatch& referPatch,
-            const pointField& thisCtrs,
-            const vectorField& thisAreas,
-            const pointField& thisCc,
-            const pointField& nbrCtrs,
-            const vectorField& nbrAreas,
-            const pointField& nbrCc
-        )
-        {
-            NotImplemented;
-        }
 
         //- Initialise the patches for moving points
         void initMovePoints(PstreamBuffers&, const pointField&);

@@ -116,28 +116,51 @@ void Foam::cyclicAMIPolyPatch::resetAMI() const
 }
 
 
-void Foam::cyclicAMIPolyPatch::initGeometry(PstreamBuffers& pBufs)
+void Foam::cyclicAMIPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
 {
     // Clear the invalid AMIs and transforms
     AMIs_.clear();
     AMITransforms_.clear();
 
-    polyPatch::initGeometry(pBufs);
+    polyPatch::initCalcGeometry(pBufs);
 }
 
 
 void Foam::cyclicAMIPolyPatch::calcGeometry(PstreamBuffers& pBufs)
 {
-    calcGeometry
+    if
     (
-        *this,
-        faceCentres(),
-        faceAreas(),
-        faceCellCentres(),
-        nbrPatch().faceCentres(),
-        nbrPatch().faceAreas(),
-        nbrPatch().faceCellCentres()
-    );
+        !Pstream::parRun()
+     && !this->boundaryMesh().mesh().time().processorCase()
+    )
+    {
+        static_cast<cyclicTransform&>(*this) =
+            cyclicTransform
+            (
+                name(),
+                faceCentres(),
+                faceAreas(),
+                *this,
+                nbrPatchName(),
+                nbrPatch().faceCentres(),
+                nbrPatch().faceAreas(),
+                nbrPatch(),
+                matchTolerance()
+            );
+    }
+    else
+    {
+        static_cast<cyclicTransform&>(*this) =
+            cyclicTransform
+            (
+                name(),
+                faceAreas(),
+                *this,
+                nbrPatchName(),
+                nbrPatch(),
+                matchTolerance()
+            );
+    }
 }
 
 
@@ -572,53 +595,6 @@ Foam::tmp<Foam::scalarField> Foam::cyclicAMIPolyPatch::interpolate
     }
 
     return result;
-}
-
-
-void Foam::cyclicAMIPolyPatch::calcGeometry
-(
-    const primitivePatch& referPatch,
-    const pointField& thisCtrs,
-    const vectorField& thisAreas,
-    const pointField& thisCc,
-    const pointField& nbrCtrs,
-    const vectorField& nbrAreas,
-    const pointField& nbrCc
-)
-{
-    if
-    (
-        !Pstream::parRun()
-     && !this->boundaryMesh().mesh().time().processorCase()
-    )
-    {
-        static_cast<cyclicTransform&>(*this) =
-            cyclicTransform
-            (
-                name(),
-                thisCtrs,
-                thisAreas,
-                *this,
-                nbrPatchName(),
-                nbrCtrs,
-                nbrAreas,
-                nbrPatch(),
-                matchTolerance()
-            );
-    }
-    else
-    {
-        static_cast<cyclicTransform&>(*this) =
-            cyclicTransform
-            (
-                name(),
-                thisAreas,
-                *this,
-                nbrPatchName(),
-                nbrPatch(),
-                matchTolerance()
-            );
-    }
 }
 
 

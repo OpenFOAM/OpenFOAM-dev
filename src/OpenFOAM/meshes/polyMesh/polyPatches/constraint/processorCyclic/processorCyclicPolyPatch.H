@@ -70,7 +70,7 @@ protected:
     // Protected Member functions
 
         //- Initialise the calculation of the patch geometry
-        void initGeometry(PstreamBuffers&);
+        void initCalcGeometry(PstreamBuffers&);
 
         //- Calculate the patch geometry
         void calcGeometry(PstreamBuffers&);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -179,9 +179,9 @@ Foam::mappedPolyPatch::~mappedPolyPatch()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::mappedPolyPatch::initGeometry(PstreamBuffers& pBufs)
+void Foam::mappedPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
 {
-    polyPatch::initGeometry(pBufs);
+    polyPatch::initCalcGeometry(pBufs);
 }
 
 

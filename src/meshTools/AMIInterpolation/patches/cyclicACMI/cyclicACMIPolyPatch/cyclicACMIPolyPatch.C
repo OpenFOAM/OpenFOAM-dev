@@ -161,12 +161,27 @@ void Foam::cyclicACMIPolyPatch::resetAMI() const
 }
 
 
-void Foam::cyclicACMIPolyPatch::initGeometry(PstreamBuffers& pBufs)
+void Foam::cyclicACMIPolyPatch::initCalcGeometry(PstreamBuffers& pBufs)
 {
-    cyclicAMIPolyPatch::initGeometry(pBufs);
+    cyclicAMIPolyPatch::initCalcGeometry(pBufs);
 
     // Initialise the AMI
     resetAMI();
+}
+
+
+void Foam::cyclicACMIPolyPatch::calcGeometry(PstreamBuffers& pBufs)
+{
+    static_cast<cyclicTransform&>(*this) =
+        cyclicTransform
+        (
+            name(),
+            faceAreas(),
+            *this,
+            nbrPatchName(),
+            nbrPatch(),
+            matchTolerance()
+        );
 }
 
 
@@ -417,30 +432,6 @@ Foam::label Foam::cyclicACMIPolyPatch::nonOverlapPatchID() const
     }
 
     return nonOverlapPatchID_;
-}
-
-
-void Foam::cyclicACMIPolyPatch::calcGeometry
-(
-    const primitivePatch& referPatch,
-    const pointField& thisCtrs,
-    const vectorField& thisAreas,
-    const pointField& thisCc,
-    const pointField& nbrCtrs,
-    const vectorField& nbrAreas,
-    const pointField& nbrCc
-)
-{
-    static_cast<cyclicTransform&>(*this) =
-        cyclicTransform
-        (
-            name(),
-            thisAreas,
-            *this,
-            nbrPatchName(),
-            nbrPatch(),
-            matchTolerance()
-        );
 }
 
 

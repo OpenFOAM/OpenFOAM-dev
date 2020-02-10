@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ void Foam::pointBoundaryMesh::calcGeometry()
     {
         forAll(*this, patchi)
         {
-            operator[](patchi).initGeometry(pBufs);
+            operator[](patchi).initCalcGeometry(pBufs);
         }
 
         pBufs.finishedSends();
@@ -99,7 +99,7 @@ void Foam::pointBoundaryMesh::calcGeometry()
 
             if (patchSchedule[patchEvali].init)
             {
-                operator[](patchi).initGeometry(pBufs);
+                operator[](patchi).initCalcGeometry(pBufs);
             }
             else
             {

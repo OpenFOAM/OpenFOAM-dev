@@ -136,7 +136,7 @@ protected:
     // Protected Member Functions
 
         //- Initialise the calculation of the patch geometry
-        virtual void initGeometry(PstreamBuffers&) = 0;
+        virtual void initCalcGeometry(PstreamBuffers&) = 0;
 
         //- Calculate the patch geometry
         virtual void calcGeometry(PstreamBuffers&) = 0;
@@ -287,18 +287,6 @@ public:
                 return matchTolerance_;
             }
 
-
-        //- Calculate the patch geometry
-        virtual void calcGeometry
-        (
-            const primitivePatch& referPatch,
-            const pointField& thisCtrs,
-            const vectorField& thisAreas,
-            const pointField& thisCc,
-            const pointField& nbrCtrs,
-            const vectorField& nbrAreas,
-            const pointField& nbrCc
-        ) = 0;
 
         //- Initialize ordering for primitivePatch. Does not
         //  refer to *this (except for name() and type() etc.)

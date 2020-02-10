@@ -68,6 +68,9 @@ protected:
         //- Reset the AMI interpolator
         virtual void resetAMI() const;
 
+        //- Calculate the patch geometry
+        virtual void calcGeometry(PstreamBuffers&);
+
 
 public:
 
@@ -208,18 +211,6 @@ public:
             //- Return the weights sum for the neighbour patch
             virtual const scalarField& nbrWeightsSum() const;
 
-
-        //- Calculate the patch geometry
-        virtual void calcGeometry
-        (
-            const primitivePatch& referPatch,
-            const pointField& thisCtrs,
-            const vectorField& thisAreas,
-            const pointField& thisCc,
-            const pointField& nbrCtrs,
-            const vectorField& nbrAreas,
-            const pointField& nbrCc
-        );
 
         //- Write the polyPatch data as a dictionary
         virtual void write(Ostream&) const;

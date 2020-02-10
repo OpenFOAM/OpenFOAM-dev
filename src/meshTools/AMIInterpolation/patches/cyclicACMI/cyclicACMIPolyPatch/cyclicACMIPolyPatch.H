@@ -81,7 +81,10 @@ protected:
         virtual void resetAMI() const;
 
         //- Initialise the calculation of the patch geometry
-        virtual void initGeometry(PstreamBuffers&);
+        virtual void initCalcGeometry(PstreamBuffers&);
+
+        //- Calculate the patch geometry
+        virtual void calcGeometry(PstreamBuffers&);
 
         //- Initialise the patches for moving points
         virtual void initMovePoints(PstreamBuffers& pBufs, const pointField&);
@@ -243,18 +246,6 @@ public:
             //- Overlap tolerance
             inline static scalar tolerance();
 
-
-        //- Calculate the patch geometry
-        virtual void calcGeometry
-        (
-            const primitivePatch& referPatch,
-            const pointField& thisCtrs,
-            const vectorField& thisAreas,
-            const pointField& thisCc,
-            const pointField& nbrCtrs,
-            const vectorField& nbrAreas,
-            const pointField& nbrCc
-        );
 
         //- Initialize ordering for primitivePatch. Does not
         //  refer to *this (except for name() and type() etc.)

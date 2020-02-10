@@ -285,6 +285,21 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
 }
 
 
+void Foam::cyclicRepeatAMIPolyPatch::calcGeometry(PstreamBuffers& pBufs)
+{
+    static_cast<cyclicTransform&>(*this) =
+        cyclicTransform
+        (
+            name(),
+            faceAreas(),
+            *this,
+            nbrPatchName(),
+            nbrPatch(),
+            matchTolerance()
+        );
+}
+
+
 // * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * * //
 
 Foam::cyclicRepeatAMIPolyPatch::cyclicRepeatAMIPolyPatch
@@ -458,30 +473,6 @@ Foam::cyclicRepeatAMIPolyPatch::nbrWeightsSum() const
     // See above.
 
     return cyclicAMIPolyPatch::nbrWeightsSum();
-}
-
-
-void Foam::cyclicRepeatAMIPolyPatch::calcGeometry
-(
-    const primitivePatch& referPatch,
-    const pointField& thisCtrs,
-    const vectorField& thisAreas,
-    const pointField& thisCc,
-    const pointField& nbrCtrs,
-    const vectorField& nbrAreas,
-    const pointField& nbrCc
-)
-{
-    static_cast<cyclicTransform&>(*this) =
-        cyclicTransform
-        (
-            name(),
-            thisAreas,
-            *this,
-            nbrPatchName(),
-            nbrPatch(),
-            matchTolerance()
-        );
 }
 
 
