@@ -407,6 +407,20 @@ Foam::PtrList<Foam::volScalarField> Foam::phaseSystem::dmdts() const
 }
 
 
+bool Foam::phaseSystem::incompressible() const
+{
+    forAll(phaseModels_, phasei)
+    {
+        if (!phaseModels_[phasei].incompressible())
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
 bool Foam::phaseSystem::implicitPhasePressure(const phaseModel& phase) const
 {
     return false;

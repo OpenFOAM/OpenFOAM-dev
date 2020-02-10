@@ -37,14 +37,30 @@ volScalarField p_rgh
 
 label pRefCell = 0;
 scalar pRefValue = 0.0;
-setRefCell
-(
-    p,
-    p_rgh,
-    pimple.dict(),
-    pRefCell,
-    pRefValue
-);
+if (fluid.incompressible())
+{
+    p = max(p_rgh + fluid.rho()*gh, pMin);
+
+    if (p_rgh.needReference())
+    {
+        setRefCell
+        (
+            p,
+            p_rgh,
+            pimple.dict(),
+            pRefCell,
+            pRefValue
+        );
+
+        p += dimensionedScalar
+        (
+            "p",
+            p.dimensions(),
+            pRefValue - getRefCellValue(p, pRefCell)
+        );
+        p_rgh = p - fluid.rho()*gh;
+    }
+}
 mesh.setFluxRequired(p_rgh.name());
 
 PtrList<volScalarField> rAUs;
