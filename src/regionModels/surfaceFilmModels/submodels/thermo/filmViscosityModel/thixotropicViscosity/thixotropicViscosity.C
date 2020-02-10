@@ -69,13 +69,6 @@ thixotropicViscosity::thixotropicViscosity
     c_("c", pow(dimTime, d_.value() - scalar(1)), coeffDict_),
     mu0_("mu0", dimPressure*dimTime, coeffDict_),
     muInf_("muInf", mu0_.dimensions(), coeffDict_),
-    BinghamPlastic_(coeffDict_.found("tauy")),
-    tauy_
-    (
-        BinghamPlastic_
-      ? dimensionedScalar("tauy", dimPressure, coeffDict_)
-      : dimensionedScalar("tauy", dimPressure, 0)
-    ),
     K_(1 - sqrt(muInf_/mu0_)),
     lambda_
     (
@@ -164,20 +157,6 @@ void thixotropicViscosity::correct
     lambda_.max(0);
 
     mu_ = muInf_/(sqr(1 - K_*lambda_) + rootVSmall);
-
-    // Add optional yield stress contribution to the viscosity
-    if (BinghamPlastic_)
-    {
-        dimensionedScalar tauySmall("tauySmall", tauy_.dimensions(), small);
-        dimensionedScalar muMax_("muMax", 100*mu0_);
-
-        mu_ = min
-        (
-            tauy_/(gDot + 1.0e-4*(tauy_ + tauySmall)/mu0_) + mu_,
-            muMax_
-        );
-    }
-
     mu_.correctBoundaryConditions();
 }
 
