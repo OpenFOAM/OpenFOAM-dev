@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,6 +51,7 @@ Foam::PrimitivePatch<FaceList, PointField>::PrimitivePatch
     localPointsPtr_(nullptr),
     localPointOrderPtr_(nullptr),
     faceCentresPtr_(nullptr),
+    faceAreasPtr_(nullptr),
     faceNormalsPtr_(nullptr),
     pointNormalsPtr_(nullptr)
 {}
@@ -80,6 +81,7 @@ Foam::PrimitivePatch<FaceList, PointField>::PrimitivePatch
     localPointsPtr_(nullptr),
     localPointOrderPtr_(nullptr),
     faceCentresPtr_(nullptr),
+    faceAreasPtr_(nullptr),
     faceNormalsPtr_(nullptr),
     pointNormalsPtr_(nullptr)
 {}
@@ -109,6 +111,7 @@ Foam::PrimitivePatch<FaceList, PointField>::PrimitivePatch
     localPointsPtr_(nullptr),
     localPointOrderPtr_(nullptr),
     faceCentresPtr_(nullptr),
+    faceAreasPtr_(nullptr),
     faceNormalsPtr_(nullptr),
     pointNormalsPtr_(nullptr)
 {}
@@ -139,6 +142,7 @@ Foam::PrimitivePatch<FaceList, PointField>::PrimitivePatch
     localPointsPtr_(nullptr),
     localPointOrderPtr_(nullptr),
     faceCentresPtr_(nullptr),
+    faceAreasPtr_(nullptr),
     faceNormalsPtr_(nullptr),
     pointNormalsPtr_(nullptr)
 {}
@@ -168,6 +172,7 @@ Foam::PrimitivePatch<FaceList, PointField>::PrimitivePatch
     localPointsPtr_(nullptr),
     localPointOrderPtr_(nullptr),
     faceCentresPtr_(nullptr),
+    faceAreasPtr_(nullptr),
     faceNormalsPtr_(nullptr),
     pointNormalsPtr_(nullptr)
 {}
@@ -197,6 +202,7 @@ Foam::PrimitivePatch<FaceList, PointField>::PrimitivePatch
     localPointsPtr_(nullptr),
     localPointOrderPtr_(nullptr),
     faceCentresPtr_(nullptr),
+    faceAreasPtr_(nullptr),
     faceNormalsPtr_(nullptr),
     pointNormalsPtr_(nullptr)
 {}
@@ -226,6 +232,7 @@ Foam::PrimitivePatch<FaceList, PointField>::PrimitivePatch
     localPointsPtr_(nullptr),
     localPointOrderPtr_(nullptr),
     faceCentresPtr_(nullptr),
+    faceAreasPtr_(nullptr),
     faceNormalsPtr_(nullptr),
     pointNormalsPtr_(nullptr)
 {}
@@ -467,6 +474,22 @@ Foam::PrimitivePatch<FaceList, PointField>::faceCentres() const
     }
 
     return *faceCentresPtr_;
+}
+
+
+template<class FaceList, class PointField>
+const Foam::Field
+<
+    typename Foam::PrimitivePatch<FaceList, PointField>::PointType
+>&
+Foam::PrimitivePatch<FaceList, PointField>::faceAreas() const
+{
+    if (!faceAreasPtr_)
+    {
+        calcFaceAreas();
+    }
+
+    return *faceAreasPtr_;
 }
 
 

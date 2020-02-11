@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,6 +168,9 @@ private:
         //- Face centres
         mutable Field<PointType>* faceCentresPtr_;
 
+        //- Face areas
+        mutable Field<PointType>* faceAreasPtr_;
+
         //- Face unit normals
         mutable Field<PointType>* faceNormalsPtr_;
 
@@ -209,6 +212,9 @@ private:
 
         //- Calculate face centres
         void calcFaceCentres() const;
+
+        //- Calculate face areas
+        void calcFaceAreas() const;
 
         //- Calculate unit face normals
         void calcFaceNormals() const;
@@ -425,6 +431,9 @@ public:
 
             //- Return face centres for patch
             const Field<PointType>& faceCentres() const;
+
+            //- Return face areas for patch
+            const Field<PointType>& faceAreas() const;
 
             //- Return face normals for patch
             const Field<PointType>& faceNormals() const;

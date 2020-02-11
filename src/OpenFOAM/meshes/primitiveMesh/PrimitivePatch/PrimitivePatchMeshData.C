@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -291,6 +291,43 @@ void Foam::PrimitivePatch<FaceList, PointField>::calcFaceCentres() const
     {
         Pout<< "PrimitivePatch<FaceList, PointField>::calcFaceCentres() : "
                "finished calculating faceCentres in PrimitivePatch"
+            << endl;
+    }
+}
+
+
+template<class FaceList, class PointField>
+void Foam::PrimitivePatch<FaceList, PointField>::calcFaceAreas() const
+{
+    if (debug)
+    {
+        Pout<< "PrimitivePatch<FaceList, PointField>::calcFaceAreas() : "
+               "calculating faceAreas in PrimitivePatch"
+            << endl;
+    }
+
+    // It is considered an error to attempt to recalculate faceAreas
+    // if they have already been calculated.
+    if (faceAreasPtr_)
+    {
+        FatalErrorInFunction
+            << "faceAreasPtr_already allocated"
+            << abort(FatalError);
+    }
+
+    faceAreasPtr_ = new Field<PointType>(this->size());
+
+    Field<PointType>& c = *faceAreasPtr_;
+
+    forAll(c, facei)
+    {
+        c[facei] = this->operator[](facei).area(points_);
+    }
+
+    if (debug)
+    {
+        Pout<< "PrimitivePatch<FaceList, PointField>::calcFaceAreas() : "
+               "finished calculating faceAreas in PrimitivePatch"
             << endl;
     }
 }
