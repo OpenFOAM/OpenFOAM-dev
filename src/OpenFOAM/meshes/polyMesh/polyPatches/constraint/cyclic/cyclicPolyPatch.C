@@ -160,6 +160,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr),
     ownToNbrOrderDataPtr_(nullptr),
+    ownToNbrCyclicOrderDataPtr_(nullptr),
     ownToNbrDebugOrderDataPtr_(nullptr)
 {
     // Neighbour patch might not be valid yet so no transformation
@@ -185,6 +186,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr),
     ownToNbrOrderDataPtr_(nullptr),
+    ownToNbrCyclicOrderDataPtr_(nullptr),
     ownToNbrDebugOrderDataPtr_(nullptr)
 {
     // Neighbour patch might not be valid yet so no transformation
@@ -209,6 +211,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr),
     ownToNbrOrderDataPtr_(nullptr),
+    ownToNbrCyclicOrderDataPtr_(nullptr),
     ownToNbrDebugOrderDataPtr_(nullptr)
 {
     if (nbrPatchName_ == word::null && !coupleGroup_.valid())
@@ -247,6 +250,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr),
     ownToNbrOrderDataPtr_(nullptr),
+    ownToNbrCyclicOrderDataPtr_(nullptr),
     ownToNbrDebugOrderDataPtr_(nullptr)
 {
     // Neighbour patch might not be valid yet so no transformation
@@ -272,6 +276,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr),
     ownToNbrOrderDataPtr_(nullptr),
+    ownToNbrCyclicOrderDataPtr_(nullptr),
     ownToNbrDebugOrderDataPtr_(nullptr)
 {
     if (neiName == name())
@@ -304,6 +309,7 @@ Foam::cyclicPolyPatch::cyclicPolyPatch
     coupledPointsPtr_(nullptr),
     coupledEdgesPtr_(nullptr),
     ownToNbrOrderDataPtr_(nullptr),
+    ownToNbrCyclicOrderDataPtr_(nullptr),
     ownToNbrDebugOrderDataPtr_(nullptr)
 {}
 
@@ -593,7 +599,7 @@ void Foam::cyclicPolyPatch::initOrder
     const primitivePatch& pp
 ) const
 {
-    if (empty())
+    if (pp.empty())
     {
         return;
     }
@@ -601,7 +607,6 @@ void Foam::cyclicPolyPatch::initOrder
     if (owner())
     {
         ownToNbrOrderDataPtr_ = new ownToNbrOrderData();
-
         if (coupledPolyPatch::debug)
         {
             ownToNbrDebugOrderDataPtr_ = new ownToNbrDebugOrderData();
@@ -613,6 +618,13 @@ void Foam::cyclicPolyPatch::initOrder
             ownToNbrDebugOrderDataPtr_,
             pp
         );
+
+        const scalarField magAreas(mag(pp.faceAreas()));
+
+        ownToNbrCyclicOrderDataPtr_ = new ownToNbrCyclicOrderData();
+        ownToNbrCyclicOrderDataPtr_->ctr =
+            sum(pp.faceCentres()*magAreas)/sum(magAreas);
+        ownToNbrCyclicOrderDataPtr_->area = sum(pp.faceAreas());
     }
 }
 
@@ -625,24 +637,38 @@ bool Foam::cyclicPolyPatch::order
     labelList& rotation
 ) const
 {
-    if (empty())
+    if (pp.empty())
     {
         return false;
     }
 
-    // Use dummy ownToNbr data if this is the owner, as they will not be used
-    static ownToNbrOrderData ownToNbrNull;
-    static autoPtr<ownToNbrDebugOrderData> ownToNbrDebugNull(nullptr);
+    ownToNbrOrderData ownToNbr;
+    autoPtr<ownToNbrDebugOrderData> ownToNbrDebugPtr(nullptr);
 
-    const ownToNbrOrderData& ownToNbr =
-        owner()
-      ? ownToNbrNull
-      : nbrPatch().ownToNbrOrderDataPtr_();
+    if (!owner())
+    {
+        ownToNbr = nbrPatch().ownToNbrOrderDataPtr_();
+        ownToNbrDebugPtr = nbrPatch().ownToNbrDebugOrderDataPtr_;
 
-    const autoPtr<ownToNbrDebugOrderData>& ownToNbrDebugPtr =
-        owner()
-      ? ownToNbrDebugNull
-      : nbrPatch().ownToNbrDebugOrderDataPtr_;
+        cyclicTransform ct
+        (
+            name(),
+            pp.faceCentres(),
+            pp.faceAreas(),
+            *this,
+            nbrPatchName(),
+            pointField(1, nbrPatch().ownToNbrCyclicOrderDataPtr_->ctr),
+            vectorField(1, nbrPatch().ownToNbrCyclicOrderDataPtr_->area),
+            nbrPatch(),
+            matchTolerance()
+        );
+
+        ownToNbr &= ct.transform();
+        if (ownToNbrDebugPtr.valid())
+        {
+            ownToNbrDebugPtr() &= ct.transform();
+        }
+    }
 
     return
         coupledPolyPatch::order

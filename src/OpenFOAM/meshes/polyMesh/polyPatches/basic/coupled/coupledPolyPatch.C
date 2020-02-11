@@ -293,8 +293,7 @@ void Foam::coupledPolyPatch::initOrder
         forAll(ownToOwnOrderDataPtr_->seedFaceis, regioni)
         {
             const face& f = pp[ownToOwnOrderDataPtr_->seedFaceis[regioni]];
-            ownToNbr.seedFacePoints[regioni] =
-                transform().invTransformPosition(f.points(pp.points()));
+            ownToNbr.seedFacePoints[regioni] = f.points(pp.points());
         }
 
         // Get debug data

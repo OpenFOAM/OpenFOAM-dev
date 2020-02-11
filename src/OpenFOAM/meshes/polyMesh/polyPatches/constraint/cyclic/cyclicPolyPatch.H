@@ -67,6 +67,16 @@ class cyclicPolyPatch
     public coupledPolyPatch,
     public cyclicTransform
 {
+    // Private Classes
+
+        //- Data to pass from owner.initOrder to nbr.order
+        struct ownToNbrCyclicOrderData
+        {
+            point ctr;
+            vector area;
+        };
+
+
     // Private Data
 
         //- Name of cyclic neighbour patch
@@ -88,6 +98,9 @@ class cyclicPolyPatch
 
         //- Data to pass from owner.initOrder to nbr.order
         mutable autoPtr<ownToNbrOrderData> ownToNbrOrderDataPtr_;
+
+        //- Data to pass from owner.initOrder to nbr.order
+        mutable autoPtr<ownToNbrCyclicOrderData> ownToNbrCyclicOrderDataPtr_;
 
         //- Data to pass from owner.initOrder to nbr.order if debugging
         mutable autoPtr<ownToNbrDebugOrderData> ownToNbrDebugOrderDataPtr_;

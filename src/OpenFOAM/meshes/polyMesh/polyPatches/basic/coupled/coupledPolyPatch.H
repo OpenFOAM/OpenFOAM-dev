@@ -94,6 +94,18 @@ protected:
         struct ownToNbrOrderData
         {
             List<pointField> seedFacePoints;
+
+            inline void operator&=(const transformer& tr)
+            {
+                forAll(seedFacePoints, regioni)
+                {
+                    tr.transformPosition
+                    (
+                        seedFacePoints[regioni],
+                        seedFacePoints[regioni]
+                    );
+                }
+            }
         };
 
         //- Data to pass from owner.initOrder to nbr.order if debugging
@@ -103,6 +115,9 @@ protected:
             label nPoints;
             label nEdges;
             label nInternalEdges;
+
+            inline void operator&=(const transformer& tr)
+            {}
         };
 
 

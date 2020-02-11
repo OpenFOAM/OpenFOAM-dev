@@ -564,9 +564,11 @@ bool Foam::processorPolyPatch::order
     {
         UIPstream fromOwner(neighbProcNo(), pBufs);
         fromOwner >> ownToNbr;
+        ownToNbr &= transform();
         if (coupledPolyPatch::debug)
         {
             fromOwner >> ownToNbrDebugPtr();
+            ownToNbrDebugPtr() &= transform();
         }
     }
 
