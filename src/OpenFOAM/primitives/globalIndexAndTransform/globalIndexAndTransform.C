@@ -239,11 +239,11 @@ void Foam::globalIndexAndTransform::determineTransformPermutations()
 
             if (w > 0)
             {
-                transform &= transforms_[b];
+                transform = transforms_[b] & transform;
             }
             else if (w < 0)
             {
-                transform &= inv(transforms_[b]);
+                transform = inv(transforms_[b]) & transform;
             }
         }
 

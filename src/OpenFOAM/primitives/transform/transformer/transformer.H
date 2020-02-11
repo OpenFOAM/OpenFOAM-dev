@@ -251,11 +251,6 @@ public:
             void invTransformList(Container<Type>&) const;
 
 
-    // Member Operators
-
-        inline void operator&=(const transformer&);
-
-
     // Global Functions
 
         //- Return the inverse of the given transformer

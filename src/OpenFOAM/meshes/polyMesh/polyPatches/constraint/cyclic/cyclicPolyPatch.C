@@ -639,10 +639,10 @@ bool Foam::cyclicPolyPatch::order
             matchTolerance()
         );
 
-        ownToNbr &= ct.transform();
+        ownToNbr.transform(ct.transform());
         if (ownToNbrDebugPtr.valid())
         {
-            ownToNbrDebugPtr() &= ct.transform();
+            ownToNbrDebugPtr->transform(ct.transform());
         }
     }
 

@@ -95,7 +95,7 @@ protected:
         {
             List<pointField> seedFacePoints;
 
-            inline void operator&=(const transformer& tr)
+            inline void transform(const transformer& tr)
             {
                 forAll(seedFacePoints, regioni)
                 {
@@ -116,7 +116,7 @@ protected:
             label nEdges;
             label nInternalEdges;
 
-            inline void operator&=(const transformer& tr)
+            inline void transform(const transformer& tr)
             {}
         };
 

@@ -197,26 +197,6 @@ inline Foam::vector Foam::transformer::invTransformPosition
 }
 
 
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-inline void Foam::transformer::operator&=
-(
-    const transformer& tr
-)
-{
-    // If either of the two objects has translates_ as true, then inherit
-    // it, otherwise, these should both be zero vectors.
-    translates_ = tr.translates_ || translates_;
-    t_ = (tr.T_ & t_) + tr.t_;
-
-    // If either of the two objects has scales_ or rotates_ as true, then
-    // inherit it, otherwise, these should both be I tensors.
-    scales_ = tr.scales_ || scales_;
-    rotates_ = tr.rotates_ || rotates_;
-    T_ = tr.T_ & T_;
-}
-
-
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
 inline Foam::transformer Foam::inv(const transformer& tr)
