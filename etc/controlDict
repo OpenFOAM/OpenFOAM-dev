@@ -711,7 +711,6 @@ DebugSwitches
     pointZone           0;
     polyBoundaryMesh    0;
     polyMesh            0;
-    polyMeshGeometry    0;
     polyMeshInfo        0;
     polyTopoChange      0;
     polyTopoChanger     0;
@@ -724,7 +723,6 @@ DebugSwitches
     pressureNormalInletOutletVelocity 0;
     pressureSwirlInjector 0;
     primitiveMesh       0;
-    primitiveMeshGeometry 0;
     probes              0;
     processor           0;
     processorLduInterface 0;

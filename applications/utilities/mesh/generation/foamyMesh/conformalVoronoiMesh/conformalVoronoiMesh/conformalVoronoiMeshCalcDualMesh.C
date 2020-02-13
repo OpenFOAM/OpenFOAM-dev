@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "conformalVoronoiMesh.H"
 #include "motionSmoother.H"
 #include "backgroundMeshDecomposition.H"
-#include "polyMeshGeometry.H"
+#include "polyMeshCheck.H"
 #include "indexedCellChecks.H"
 #include "OBJstream.H"
 #include "indexedCellOps.H"
@@ -846,7 +846,7 @@ void Foam::conformalVoronoiMesh::checkCellSizing()
 
     if (maxNonOrtho < 180.0 - small)
     {
-        polyMeshGeometry::checkFaceDotProduct
+        polyMeshCheck::checkFaceDotProduct
         (
             false,
             maxNonOrtho,

@@ -94,7 +94,7 @@ motionSmoother/motionSmoother.C
 motionSmoother/motionSmootherAlgo.C
 motionSmoother/motionSmootherAlgoCheck.C
 motionSmoother/motionSmootherData.C
-motionSmoother/polyMeshGeometry/polyMeshGeometry.C
+motionSmoother/polyMeshCheck/polyMeshCheck.C
 motionSmoother/badQualityToCell/badQualityToCell.C
 motionSmoother/badQualityToFace/badQualityToFace.C
 

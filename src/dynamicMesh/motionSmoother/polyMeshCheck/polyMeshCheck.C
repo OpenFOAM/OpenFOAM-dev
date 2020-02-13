@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "polyMeshGeometry.H"
+#include "polyMeshCheck.H"
 #include "polyMeshTetDecomposition.H"
 #include "pyramidPointFaceRef.H"
 #include "tetPointRef.H"
@@ -31,188 +31,16 @@ License
 #include "unitConversion.H"
 #include "primitiveMeshTools.H"
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 namespace Foam
 {
-    defineTypeNameAndDebug(polyMeshGeometry, 0);
-}
-
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::polyMeshGeometry::updateFaceCentresAndAreas
-(
-    const pointField& p,
-    const labelList& changedFaces
-)
+namespace polyMeshCheck
 {
-    const faceList& fs = mesh_.faces();
 
-    forAll(changedFaces, i)
-    {
-        label facei = changedFaces[i];
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-        const labelList& f = fs[facei];
-        label nPoints = f.size();
-
-        // If the face is a triangle, do a direct calculation for efficiency
-        // and to avoid round-off error-related problems
-        if (nPoints == 3)
-        {
-            faceCentres_[facei] = (1.0/3.0)*(p[f[0]] + p[f[1]] + p[f[2]]);
-            faceAreas_[facei] = 0.5*((p[f[1]] - p[f[0]])^(p[f[2]] - p[f[0]]));
-        }
-        else
-        {
-            vector sumN = Zero;
-            scalar sumA = 0.0;
-            vector sumAc = Zero;
-
-            point fCentre = p[f[0]];
-            for (label pi = 1; pi < nPoints; pi++)
-            {
-                fCentre += p[f[pi]];
-            }
-
-            fCentre /= nPoints;
-
-            for (label pi = 0; pi < nPoints; pi++)
-            {
-                const point& nextPoint = p[f[(pi + 1) % nPoints]];
-
-                vector c = p[f[pi]] + nextPoint + fCentre;
-                vector n = (nextPoint - p[f[pi]])^(fCentre - p[f[pi]]);
-                scalar a = mag(n);
-
-                sumN += n;
-                sumA += a;
-                sumAc += a*c;
-            }
-
-            faceCentres_[facei] = (1.0/3.0)*sumAc/(sumA + vSmall);
-            faceAreas_[facei] = 0.5*sumN;
-        }
-    }
-}
-
-
-void Foam::polyMeshGeometry::updateCellCentresAndVols
-(
-    const labelList& changedCells,
-    const labelList& changedFaces
-)
-{
-    // Clear the fields for accumulation
-    UIndirectList<vector>(cellCentres_, changedCells) = Zero;
-    UIndirectList<scalar>(cellVolumes_, changedCells) = 0.0;
-
-    const labelList& own = mesh_.faceOwner();
-    const labelList& nei = mesh_.faceNeighbour();
-
-    // first estimate the approximate cell centre as the average of face centres
-
-    vectorField cEst(mesh_.nCells());
-    UIndirectList<vector>(cEst, changedCells) = Zero;
-    scalarField nCellFaces(mesh_.nCells());
-    UIndirectList<scalar>(nCellFaces, changedCells) = 0.0;
-
-    forAll(changedFaces, i)
-    {
-        label facei = changedFaces[i];
-        cEst[own[facei]] += faceCentres_[facei];
-        nCellFaces[own[facei]] += 1;
-
-        if (mesh_.isInternalFace(facei))
-        {
-            cEst[nei[facei]] += faceCentres_[facei];
-            nCellFaces[nei[facei]] += 1;
-        }
-    }
-
-    forAll(changedCells, i)
-    {
-        label celli = changedCells[i];
-        cEst[celli] /= nCellFaces[celli];
-    }
-
-    forAll(changedFaces, i)
-    {
-        label facei = changedFaces[i];
-
-        // Calculate 3*face-pyramid volume
-        scalar pyr3Vol = max
-        (
-            faceAreas_[facei] & (faceCentres_[facei] - cEst[own[facei]]),
-            vSmall
-        );
-
-        // Calculate face-pyramid centre
-        vector pc = (3.0/4.0)*faceCentres_[facei] + (1.0/4.0)*cEst[own[facei]];
-
-        // Accumulate volume-weighted face-pyramid centre
-        cellCentres_[own[facei]] += pyr3Vol*pc;
-
-        // Accumulate face-pyramid volume
-        cellVolumes_[own[facei]] += pyr3Vol;
-
-        if (mesh_.isInternalFace(facei))
-        {
-            // Calculate 3*face-pyramid volume
-            scalar pyr3Vol = max
-            (
-                faceAreas_[facei] & (cEst[nei[facei]] - faceCentres_[facei]),
-                vSmall
-            );
-
-            // Calculate face-pyramid centre
-            vector pc =
-                (3.0/4.0)*faceCentres_[facei]
-              + (1.0/4.0)*cEst[nei[facei]];
-
-            // Accumulate volume-weighted face-pyramid centre
-            cellCentres_[nei[facei]] += pyr3Vol*pc;
-
-            // Accumulate face-pyramid volume
-            cellVolumes_[nei[facei]] += pyr3Vol;
-        }
-    }
-
-    forAll(changedCells, i)
-    {
-        label celli = changedCells[i];
-
-        cellCentres_[celli] /= cellVolumes_[celli] + vSmall;
-        cellVolumes_[celli] *= (1.0/3.0);
-    }
-}
-
-
-Foam::labelList Foam::polyMeshGeometry::affectedCells
-(
-    const polyMesh& mesh,
-    const labelList& changedFaces
-)
-{
-    const labelList& own = mesh.faceOwner();
-    const labelList& nei = mesh.faceNeighbour();
-
-    labelHashSet affectedCells(2*changedFaces.size());
-
-    forAll(changedFaces, i)
-    {
-        label facei = changedFaces[i];
-
-        affectedCells.insert(own[facei]);
-
-        if (mesh.isInternalFace(facei))
-        {
-            affectedCells.insert(nei[facei]);
-        }
-    }
-    return affectedCells.toc();
-}
-
-
-Foam::scalar Foam::polyMeshGeometry::checkNonOrtho
+scalar checkNonOrtho
 (
     const polyMesh& mesh,
     const bool report,
@@ -279,8 +107,7 @@ Foam::scalar Foam::polyMeshGeometry::checkNonOrtho
 }
 
 
-// Create the neighbour pyramid - it will have positive volume
-bool Foam::polyMeshGeometry::checkFaceTet
+bool checkFaceTet
 (
     const polyMesh& mesh,
     const bool report,
@@ -309,7 +136,7 @@ bool Foam::polyMeshGeometry::checkFaceTet
         {
             if (report)
             {
-                Pout<< "bool polyMeshGeometry::checkFaceTets("
+                Pout<< "bool polyMeshCheck::checkFaceTets("
                     << "const bool, const scalar, const pointField&"
                     << ", const pointField&"
                     << ", const labelList&, labelHashSet*) : "
@@ -332,42 +159,39 @@ bool Foam::polyMeshGeometry::checkFaceTet
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-// Construct from components
-Foam::polyMeshGeometry::polyMeshGeometry(const polyMesh& mesh)
-:
-    mesh_(mesh)
-{
-    correct();
-}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::polyMeshGeometry::correct()
-{
-    faceAreas_ = mesh_.faceAreas();
-    faceCentres_ = mesh_.faceCentres();
-    cellCentres_ = mesh_.cellCentres();
-    cellVolumes_ = mesh_.cellVolumes();
-}
-
-
-void Foam::polyMeshGeometry::correct
+labelList getAffectedCells
 (
-    const pointField& p,
+    const polyMesh& mesh,
     const labelList& changedFaces
 )
 {
-    // Update face quantities
-    updateFaceCentresAndAreas(p, changedFaces);
-    // Update cell quantities from face quantities
-    updateCellCentresAndVols(affectedCells(mesh_, changedFaces), changedFaces);
+    const labelList& own = mesh.faceOwner();
+    const labelList& nei = mesh.faceNeighbour();
+
+    labelHashSet affectedCells(2*changedFaces.size());
+
+    forAll(changedFaces, i)
+    {
+        label facei = changedFaces[i];
+
+        affectedCells.insert(own[facei]);
+
+        if (mesh.isInternalFace(facei))
+        {
+            affectedCells.insert(nei[facei]);
+        }
+    }
+    return affectedCells.toc();
 }
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-bool Foam::polyMeshGeometry::checkFaceDotProduct
+} // End namespace polyMeshCheck
+} // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+bool Foam::polyMeshCheck::checkFaceDotProduct
 (
     const bool report,
     const scalar orthWarn,
@@ -549,7 +373,7 @@ bool Foam::polyMeshGeometry::checkFaceDotProduct
 }
 
 
-bool Foam::polyMeshGeometry::checkFacePyramids
+bool Foam::polyMeshCheck::checkFacePyramids
 (
     const bool report,
     const scalar minPyrVol,
@@ -584,7 +408,7 @@ bool Foam::polyMeshGeometry::checkFacePyramids
         {
             if (report)
             {
-                Pout<< "bool polyMeshGeometry::checkFacePyramids("
+                Pout<< "bool polyMeshCheck::checkFacePyramids("
                     << "const bool, const scalar, const pointField&"
                     << ", const labelList&, labelHashSet*): "
                     << "face " << facei << " points the wrong way. " << endl
@@ -615,7 +439,7 @@ bool Foam::polyMeshGeometry::checkFacePyramids
             {
                 if (report)
                 {
-                    Pout<< "bool polyMeshGeometry::checkFacePyramids("
+                    Pout<< "bool polyMeshCheck::checkFacePyramids("
                         << "const bool, const scalar, const pointField&"
                         << ", const labelList&, labelHashSet*): "
                         << "face " << facei << " points the wrong way. " << endl
@@ -655,7 +479,7 @@ bool Foam::polyMeshGeometry::checkFacePyramids
         {
             if (report)
             {
-                Pout<< "bool polyMeshGeometry::checkFacePyramids("
+                Pout<< "bool polyMeshCheck::checkFacePyramids("
                     << "const bool, const scalar, const pointField&"
                     << ", const labelList&, labelHashSet*): "
                     << "face " << face0 << " points the wrong way. " << endl
@@ -684,7 +508,7 @@ bool Foam::polyMeshGeometry::checkFacePyramids
         {
             if (report)
             {
-                Pout<< "bool polyMeshGeometry::checkFacePyramids("
+                Pout<< "bool polyMeshCheck::checkFacePyramids("
                     << "const bool, const scalar, const pointField&"
                     << ", const labelList&, labelHashSet*): "
                     << "face " << face0 << " points the wrong way. " << endl
@@ -730,7 +554,7 @@ bool Foam::polyMeshGeometry::checkFacePyramids
 }
 
 
-bool Foam::polyMeshGeometry::checkFaceTets
+bool Foam::polyMeshCheck::checkFaceTets
 (
     const bool report,
     const scalar minTetQuality,
@@ -959,7 +783,7 @@ bool Foam::polyMeshGeometry::checkFaceTets
 }
 
 
-bool Foam::polyMeshGeometry::checkFaceSkewness
+bool Foam::polyMeshCheck::checkFaceSkewness
 (
     const bool report,
     const scalar internalSkew,
@@ -1172,7 +996,7 @@ bool Foam::polyMeshGeometry::checkFaceSkewness
 }
 
 
-bool Foam::polyMeshGeometry::checkFaceWeights
+bool Foam::polyMeshCheck::checkFaceWeights
 (
     const bool report,
     const scalar warnWeight,
@@ -1327,7 +1151,7 @@ bool Foam::polyMeshGeometry::checkFaceWeights
 }
 
 
-bool Foam::polyMeshGeometry::checkVolRatio
+bool Foam::polyMeshCheck::checkVolRatio
 (
     const bool report,
     const scalar warnRatio,
@@ -1465,11 +1289,7 @@ bool Foam::polyMeshGeometry::checkVolRatio
 }
 
 
-// Check convexity of angles in a face. Allow a slight non-convexity.
-// E.g. maxDeg = 10 allows for angles < 190 (or 10 degrees concavity)
-// (if truly concave and points not visible from face centre the face-pyramid
-//  check in checkMesh will fail)
-bool Foam::polyMeshGeometry::checkFaceAngles
+bool Foam::polyMeshCheck::checkFaceAngles
 (
     const bool report,
     const scalar maxDeg,
@@ -1600,9 +1420,7 @@ bool Foam::polyMeshGeometry::checkFaceAngles
 }
 
 
-// Check twist of faces. Is calculated as the difference between normals of
-// individual triangles and the cell-cell centre edge.
-bool Foam::polyMeshGeometry::checkFaceTwist
+bool Foam::polyMeshCheck::checkFaceTwist
 (
     const bool report,
     const scalar minTwist,
@@ -1786,8 +1604,7 @@ bool Foam::polyMeshGeometry::checkFaceTwist
 }
 
 
-// Like checkFaceTwist but compares normals of consecutive triangles.
-bool Foam::polyMeshGeometry::checkTriangleTwist
+bool Foam::polyMeshCheck::checkTriangleTwist
 (
     const bool report,
     const scalar minTwist,
@@ -1937,7 +1754,7 @@ bool Foam::polyMeshGeometry::checkTriangleTwist
 }
 
 
-bool Foam::polyMeshGeometry::checkFaceFlatness
+bool Foam::polyMeshCheck::checkFaceFlatness
 (
     const bool report,
     const scalar minFlatness,
@@ -2035,7 +1852,7 @@ bool Foam::polyMeshGeometry::checkFaceFlatness
 }
 
 
-bool Foam::polyMeshGeometry::checkFaceArea
+bool Foam::polyMeshCheck::checkFaceArea
 (
     const bool report,
     const scalar minArea,
@@ -2096,14 +1913,13 @@ bool Foam::polyMeshGeometry::checkFaceArea
 }
 
 
-bool Foam::polyMeshGeometry::checkCellDeterminant
+bool Foam::polyMeshCheck::checkCellDeterminant
 (
     const bool report,
     const scalar warnDet,
     const polyMesh& mesh,
     const vectorField& faceAreas,
     const labelList& checkFaces,
-    const labelList& affectedCells,
     labelHashSet* setPtr
 )
 {
@@ -2113,6 +1929,8 @@ bool Foam::polyMeshGeometry::checkCellDeterminant
     scalar sumDet = 0.0;
     label nSumDet = 0;
     label nWarnDet = 0;
+
+    const labelList affectedCells(getAffectedCells(mesh, checkFaces));
 
     forAll(affectedCells, i)
     {
@@ -2194,284 +2012,6 @@ bool Foam::polyMeshGeometry::checkCellDeterminant
     {
         return false;
     }
-}
-
-
-bool Foam::polyMeshGeometry::checkFaceDotProduct
-(
-    const bool report,
-    const scalar orthWarn,
-    const labelList& checkFaces,
-    const List<labelPair>& baffles,
-    labelHashSet* setPtr
-) const
-{
-    return checkFaceDotProduct
-    (
-        report,
-        orthWarn,
-        mesh_,
-        cellCentres_,
-        faceAreas_,
-        checkFaces,
-        baffles,
-        setPtr
-    );
-}
-
-
-bool Foam::polyMeshGeometry::checkFacePyramids
-(
-    const bool report,
-    const scalar minPyrVol,
-    const pointField& p,
-    const labelList& checkFaces,
-    const List<labelPair>& baffles,
-    labelHashSet* setPtr
-) const
-{
-    return checkFacePyramids
-    (
-        report,
-        minPyrVol,
-        mesh_,
-        cellCentres_,
-        p,
-        checkFaces,
-        baffles,
-        setPtr
-    );
-}
-
-
-bool Foam::polyMeshGeometry::checkFaceTets
-(
-    const bool report,
-    const scalar minTetQuality,
-    const pointField& p,
-    const labelList& checkFaces,
-    const List<labelPair>& baffles,
-    labelHashSet* setPtr
-) const
-{
-    return checkFaceTets
-    (
-        report,
-        minTetQuality,
-        mesh_,
-        cellCentres_,
-        faceCentres_,
-        p,
-        checkFaces,
-        baffles,
-        setPtr
-    );
-}
-
-
-//bool Foam::polyMeshGeometry::checkFaceSkewness
-//(
-//    const bool report,
-//    const scalar internalSkew,
-//    const scalar boundarySkew,
-//    const labelList& checkFaces,
-//    const List<labelPair>& baffles,
-//    labelHashSet* setPtr
-//) const
-//{
-//    return checkFaceSkewness
-//    (
-//        report,
-//        internalSkew,
-//        boundarySkew,
-//        mesh_,
-//        cellCentres_,
-//        faceCentres_,
-//        faceAreas_,
-//        checkFaces,
-//        baffles,
-//        setPtr
-//    );
-//}
-
-
-bool Foam::polyMeshGeometry::checkFaceWeights
-(
-    const bool report,
-    const scalar warnWeight,
-    const labelList& checkFaces,
-    const List<labelPair>& baffles,
-    labelHashSet* setPtr
-) const
-{
-    return checkFaceWeights
-    (
-        report,
-        warnWeight,
-        mesh_,
-        cellCentres_,
-        faceCentres_,
-        faceAreas_,
-        checkFaces,
-        baffles,
-        setPtr
-    );
-}
-
-
-bool Foam::polyMeshGeometry::checkVolRatio
-(
-    const bool report,
-    const scalar warnRatio,
-    const labelList& checkFaces,
-    const List<labelPair>& baffles,
-    labelHashSet* setPtr
-) const
-{
-    return checkVolRatio
-    (
-        report,
-        warnRatio,
-        mesh_,
-        cellVolumes_,
-        checkFaces,
-        baffles,
-        setPtr
-    );
-}
-
-
-bool Foam::polyMeshGeometry::checkFaceAngles
-(
-    const bool report,
-    const scalar maxDeg,
-    const pointField& p,
-    const labelList& checkFaces,
-    labelHashSet* setPtr
-) const
-{
-    return checkFaceAngles
-    (
-        report,
-        maxDeg,
-        mesh_,
-        faceAreas_,
-        p,
-        checkFaces,
-        setPtr
-    );
-}
-
-
-bool Foam::polyMeshGeometry::checkFaceTwist
-(
-    const bool report,
-    const scalar minTwist,
-    const pointField& p,
-    const labelList& checkFaces,
-    labelHashSet* setPtr
-) const
-{
-    return checkFaceTwist
-    (
-        report,
-        minTwist,
-        mesh_,
-        cellCentres_,
-        faceAreas_,
-        faceCentres_,
-        p,
-        checkFaces,
-        setPtr
-    );
-}
-
-
-bool Foam::polyMeshGeometry::checkTriangleTwist
-(
-    const bool report,
-    const scalar minTwist,
-    const pointField& p,
-    const labelList& checkFaces,
-    labelHashSet* setPtr
-) const
-{
-    return checkTriangleTwist
-    (
-        report,
-        minTwist,
-        mesh_,
-        faceAreas_,
-        faceCentres_,
-        p,
-        checkFaces,
-        setPtr
-    );
-}
-
-
-bool Foam::polyMeshGeometry::checkFaceFlatness
-(
-    const bool report,
-    const scalar minFlatness,
-    const pointField& p,
-    const labelList& checkFaces,
-    labelHashSet* setPtr
-) const
-{
-    return checkFaceFlatness
-    (
-        report,
-        minFlatness,
-        mesh_,
-        faceAreas_,
-        faceCentres_,
-        p,
-        checkFaces,
-        setPtr
-    );
-}
-
-
-bool Foam::polyMeshGeometry::checkFaceArea
-(
-    const bool report,
-    const scalar minArea,
-    const labelList& checkFaces,
-    labelHashSet* setPtr
-) const
-{
-    return checkFaceArea
-    (
-        report,
-        minArea,
-        mesh_,
-        faceAreas_,
-        checkFaces,
-        setPtr
-    );
-}
-
-
-bool Foam::polyMeshGeometry::checkCellDeterminant
-(
-    const bool report,
-    const scalar warnDet,
-    const labelList& checkFaces,
-    const labelList& affectedCells,
-    labelHashSet* setPtr
-) const
-{
-    return checkCellDeterminant
-    (
-        report,
-        warnDet,
-        mesh_,
-        faceAreas_,
-        checkFaces,
-        affectedCells,
-        setPtr
-    );
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,6 @@ SourceFiles
 namespace Foam
 {
 
-class polyMeshGeometry;
 class faceSet;
 
 /*---------------------------------------------------------------------------*\
@@ -455,31 +454,6 @@ public:
                 const bool report,
                 const polyMesh& mesh,
                 const dictionary& dict,
-                const labelList& checkFaces,
-                const List<labelPair>& baffles,
-                labelHashSet& wrongFaces
-            );
-
-            //- Check part of mesh with mesh settings in dict.
-            //  Collects incorrect faces in set. Returns true if one or
-            //  more faces in error. Parallel ok.
-            static bool checkMesh
-            (
-                const bool report,
-                const dictionary& dict,
-                const polyMeshGeometry&,
-                const labelList& checkFaces,
-                labelHashSet& wrongFaces
-            );
-
-            //- Check part of mesh including baffles with mesh settings in dict.
-            //  Collects incorrect faces in set. Returns true if one or
-            //  more faces in error. Parallel ok.
-            static bool checkMesh
-            (
-                const bool report,
-                const dictionary& dict,
-                const polyMeshGeometry&,
                 const labelList& checkFaces,
                 const List<labelPair>& baffles,
                 labelHashSet& wrongFaces

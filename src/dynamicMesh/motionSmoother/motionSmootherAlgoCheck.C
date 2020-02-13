@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "motionSmootherAlgo.H"
-#include "polyMeshGeometry.H"
+#include "polyMeshCheck.H"
 #include "IOmanip.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -117,7 +117,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (maxNonOrtho < 180.0-small)
     {
-        polyMeshGeometry::checkFaceDotProduct
+        polyMeshCheck::checkFaceDotProduct
         (
             report,
             maxNonOrtho,
@@ -141,7 +141,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minVol > -great)
     {
-        polyMeshGeometry::checkFacePyramids
+        polyMeshCheck::checkFacePyramids
         (
             report,
             minVol,
@@ -164,7 +164,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minTetQuality > -great)
     {
-        polyMeshGeometry::checkFaceTets
+        polyMeshCheck::checkFaceTets
         (
             report,
             minTetQuality,
@@ -188,7 +188,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (maxConcave < 180.0-small)
     {
-        polyMeshGeometry::checkFaceAngles
+        polyMeshCheck::checkFaceAngles
         (
             report,
             maxConcave,
@@ -211,7 +211,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minArea > -small)
     {
-        polyMeshGeometry::checkFaceArea
+        polyMeshCheck::checkFaceArea
         (
             report,
             minArea,
@@ -233,7 +233,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (maxIntSkew > 0 || maxBounSkew > 0)
     {
-        polyMeshGeometry::checkFaceSkewness
+        polyMeshCheck::checkFaceSkewness
         (
             report,
             maxIntSkew,
@@ -260,7 +260,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minWeight >= 0 && minWeight < 1)
     {
-        polyMeshGeometry::checkFaceWeights
+        polyMeshCheck::checkFaceWeights
         (
             report,
             minWeight,
@@ -285,7 +285,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minVolRatio >= 0)
     {
-        polyMeshGeometry::checkVolRatio
+        polyMeshCheck::checkVolRatio
         (
             report,
             minVolRatio,
@@ -310,7 +310,7 @@ bool Foam::motionSmootherAlgo::checkMesh
     {
         // Pout<< "Checking face twist: dot product of face normal "
         //    << "with face triangle normals" << endl;
-        polyMeshGeometry::checkFaceTwist
+        polyMeshCheck::checkFaceTwist
         (
             report,
             minTwist,
@@ -337,7 +337,7 @@ bool Foam::motionSmootherAlgo::checkMesh
     {
         // Pout<< "Checking triangle twist: dot product of consecutive triangle"
         //    << " normals resulting from face-centre decomposition" << endl;
-        polyMeshGeometry::checkTriangleTwist
+        polyMeshCheck::checkTriangleTwist
         (
             report,
             minTriangleTwist,
@@ -361,7 +361,7 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minFaceFlatness > -small)
     {
-        polyMeshGeometry::checkFaceFlatness
+        polyMeshCheck::checkFaceFlatness
         (
             report,
             minFaceFlatness,
@@ -385,14 +385,13 @@ bool Foam::motionSmootherAlgo::checkMesh
 
     if (minDet > -1)
     {
-        polyMeshGeometry::checkCellDeterminant
+        polyMeshCheck::checkCellDeterminant
         (
             report,
             minDet,
             mesh,
             mesh.faceAreas(),
             checkFaces,
-            polyMeshGeometry::affectedCells(mesh, checkFaces),
             &wrongFaces
         );
 
@@ -427,352 +426,6 @@ bool Foam::motionSmootherAlgo::checkMesh
         identity(mesh.nFaces()),
         wrongFaces
     );
-}
-
-bool Foam::motionSmootherAlgo::checkMesh
-(
-    const bool report,
-    const dictionary& dict,
-    const polyMeshGeometry& meshGeom,
-    const labelList& checkFaces,
-    labelHashSet& wrongFaces
-)
-{
-    List<labelPair> emptyBaffles;
-
-    return checkMesh
-    (
-        report,
-        dict,
-        meshGeom,
-        checkFaces,
-        emptyBaffles,
-        wrongFaces
-     );
-}
-
-
-bool Foam::motionSmootherAlgo::checkMesh
-(
-    const bool report,
-    const dictionary& dict,
-    const polyMeshGeometry& meshGeom,
-    const labelList& checkFaces,
-    const List<labelPair>& baffles,
-    labelHashSet& wrongFaces
-)
-{
-    const scalar maxNonOrtho
-    (
-        dict.lookup<scalar>("maxNonOrtho", true)
-    );
-    const scalar minVol
-    (
-        dict.lookup<scalar>("minVol", true)
-    );
-    const scalar minTetQuality
-    (
-        dict.lookup<scalar>("minTetQuality", true)
-    );
-    const scalar maxConcave
-    (
-        dict.lookup<scalar>("maxConcave", true)
-    );
-    const scalar minArea
-    (
-        dict.lookup<scalar>("minArea", true)
-    );
-    // const scalar maxIntSkew
-    //(
-    //    dict.lookup<scalar>("maxInternalSkewness", true)
-    //);
-    // const scalar maxBounSkew
-    //(
-    //    dict.lookup<scalar>("maxBoundarySkewness", true)
-    //);
-    const scalar minWeight
-    (
-        dict.lookup<scalar>("minFaceWeight", true)
-    );
-    const scalar minVolRatio
-    (
-        dict.lookup<scalar>("minVolRatio", true)
-    );
-    const scalar minTwist
-    (
-        dict.lookup<scalar>("minTwist", true)
-    );
-    const scalar minTriangleTwist
-    (
-        dict.lookup<scalar>("minTriangleTwist", true)
-    );
-    scalar minFaceFlatness = -1.0;
-    dict.readIfPresent("minFaceFlatness", minFaceFlatness, true);
-    const scalar minDet
-    (
-        dict.lookup<scalar>("minDeterminant", true)
-    );
-
-    label nWrongFaces = 0;
-
-    Info<< "Checking faces in error :" << endl;
-    // Pout.setf(ios_base::left);
-
-    if (maxNonOrtho < 180.0-small)
-    {
-        meshGeom.checkFaceDotProduct
-        (
-            report,
-            maxNonOrtho,
-            checkFaces,
-            baffles,
-            &wrongFaces
-        );
-
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
-
-        Info<< "    non-orthogonality > "
-            << setw(3) << maxNonOrtho
-            << " degrees                        : "
-            << nNewWrongFaces-nWrongFaces << endl;
-
-        nWrongFaces = nNewWrongFaces;
-    }
-
-    if (minVol > -great)
-    {
-        meshGeom.checkFacePyramids
-        (
-            report,
-            minVol,
-            meshGeom.mesh().points(),
-            checkFaces,
-            baffles,
-            &wrongFaces
-        );
-
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
-
-        Info<< "    faces with face pyramid volume < "
-            << setw(5) << minVol << "                 : "
-            << nNewWrongFaces-nWrongFaces << endl;
-
-        nWrongFaces = nNewWrongFaces;
-    }
-
-    if (minTetQuality > -great)
-    {
-        meshGeom.checkFaceTets
-        (
-            report,
-            minTetQuality,
-            meshGeom.mesh().points(),
-            checkFaces,
-            baffles,
-            &wrongFaces
-        );
-
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
-
-        Info<< "    faces with face-decomposition tet quality < "
-            << setw(5) << minTetQuality << "                : "
-            << nNewWrongFaces-nWrongFaces << endl;
-
-        nWrongFaces = nNewWrongFaces;
-    }
-
-    if (maxConcave < 180.0-small)
-    {
-        meshGeom.checkFaceAngles
-        (
-            report,
-            maxConcave,
-            meshGeom.mesh().points(),
-            checkFaces,
-            &wrongFaces
-        );
-
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
-
-        Info<< "    faces with concavity > "
-            << setw(3) << maxConcave
-            << " degrees                     : "
-            << nNewWrongFaces-nWrongFaces << endl;
-
-        nWrongFaces = nNewWrongFaces;
-    }
-
-    if (minArea > -small)
-    {
-        meshGeom.checkFaceArea(report, minArea, checkFaces, &wrongFaces);
-
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
-
-        Info<< "    faces with area < "
-            << setw(5) << minArea
-            << " m^2                            : "
-            << nNewWrongFaces-nWrongFaces << endl;
-
-        nWrongFaces = nNewWrongFaces;
-    }
-
-
-    //- Note: cannot check the skewness without the points and don't want
-    //  to store them on polyMeshGeometry.
-    // if (maxIntSkew > 0 || maxBounSkew > 0)
-    //{
-    //    meshGeom.checkFaceSkewness
-    //    (
-    //        report,
-    //        maxIntSkew,
-    //        maxBounSkew,
-    //        checkFaces,
-    //        baffles,
-    //        &wrongFaces
-    //    );
-    //
-    //    label nNewWrongFaces = returnReduce(wrongFaces.size(),sumOp<label>());
-    //
-    //    Info<< "    faces with skewness > "
-    //        << setw(3) << maxIntSkew
-    //        << " (internal) or " << setw(3) << maxBounSkew
-    //        << " (boundary) : " << nNewWrongFaces-nWrongFaces << endl;
-    //
-    //    nWrongFaces = nNewWrongFaces;
-    //}
-
-    if (minWeight >= 0 && minWeight < 1)
-    {
-        meshGeom.checkFaceWeights
-        (
-            report,
-            minWeight,
-            checkFaces,
-            baffles,
-            &wrongFaces
-        );
-
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
-
-        Info<< "    faces with interpolation weights (0..1)  < "
-            << setw(5) << minWeight
-            << "       : "
-            << nNewWrongFaces-nWrongFaces << endl;
-
-        nWrongFaces = nNewWrongFaces;
-    }
-
-    if (minVolRatio >= 0)
-    {
-        meshGeom.checkVolRatio
-        (
-            report,
-            minVolRatio,
-            checkFaces,
-            baffles,
-            &wrongFaces
-        );
-
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
-
-        Info<< "    faces with volume ratio of neighbour cells < "
-            << setw(5) << minVolRatio
-            << "     : "
-            << nNewWrongFaces-nWrongFaces << endl;
-
-        nWrongFaces = nNewWrongFaces;
-    }
-
-    if (minTwist > -1)
-    {
-        // Pout<< "Checking face twist: dot product of face normal "
-        //    << "with face triangle normals" << endl;
-        meshGeom.checkFaceTwist
-        (
-            report,
-            minTwist,
-            meshGeom.mesh().points(),
-            checkFaces,
-            &wrongFaces
-        );
-
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
-
-        Info<< "    faces with face twist < "
-            << setw(5) << minTwist
-            << "                          : "
-            << nNewWrongFaces-nWrongFaces << endl;
-
-        nWrongFaces = nNewWrongFaces;
-    }
-
-    if (minTriangleTwist > -1)
-    {
-        // Pout<< "Checking triangle twist: dot product of consecutive triangle"
-        //    << " normals resulting from face-centre decomposition" << endl;
-        meshGeom.checkTriangleTwist
-        (
-            report,
-            minTriangleTwist,
-            meshGeom.mesh().points(),
-            checkFaces,
-            &wrongFaces
-        );
-
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
-
-        Info<< "    faces with triangle twist < "
-            << setw(5) << minTriangleTwist
-            << "                      : "
-            << nNewWrongFaces-nWrongFaces << endl;
-
-        nWrongFaces = nNewWrongFaces;
-    }
-
-    if (minFaceFlatness > -1)
-    {
-        meshGeom.checkFaceFlatness
-        (
-            report,
-            minFaceFlatness,
-            meshGeom.mesh().points(),
-            checkFaces,
-            &wrongFaces
-        );
-
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
-
-        Info<< "    faces with flatness < "
-            << setw(5) << minFaceFlatness
-            << "                      : "
-            << nNewWrongFaces-nWrongFaces << endl;
-
-        nWrongFaces = nNewWrongFaces;
-    }
-
-    if (minDet > -1)
-    {
-        meshGeom.checkCellDeterminant
-        (
-            report,
-            minDet,
-            checkFaces,
-            meshGeom.affectedCells(meshGeom.mesh(), checkFaces),
-            &wrongFaces
-        );
-
-        label nNewWrongFaces = returnReduce(wrongFaces.size(), sumOp<label>());
-
-        Info<< "    faces on cells with determinant < "
-            << setw(5) << minDet << "                : "
-            << nNewWrongFaces-nWrongFaces << endl;
-
-        nWrongFaces = nNewWrongFaces;
-    }
-
-    // Pout.setf(ios_base::right);
-
-    return nWrongFaces > 0;
 }
 
 
