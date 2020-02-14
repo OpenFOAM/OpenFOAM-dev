@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,6 +67,12 @@ class interfaceCompositionModel
 
         //- Lewis number
         const dimensionedScalar Le_;
+
+        //- Phase
+        const phaseModel& phase_;
+
+        //- Other phase
+        const phaseModel& otherPhase_;
 
         //- Multi-component thermo model for this side of the interface
         const rhoReactionThermo& thermo_;
