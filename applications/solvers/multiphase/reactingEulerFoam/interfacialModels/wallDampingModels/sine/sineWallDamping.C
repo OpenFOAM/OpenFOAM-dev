@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,18 +70,7 @@ Foam::wallDampingModels::sine::sine
     const phasePair& pair
 )
 :
-    interpolated(dict, pair),
-    Cd_("Cd", dimless, dict),
-    zeroWallDist_
-    (
-        dimensionedScalar::lookupOrDefault
-        (
-            "zeroWallDist",
-            dict,
-            dimLength,
-            0
-        )
-    )
+    wallDampingModel(dict, pair)
 {}
 
 
