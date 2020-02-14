@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "interfaceCompositionModel.H"
 #include "phaseModel.H"
 #include "phasePair.H"
+#include "phaseSystem.H"
 #include "rhoReactionThermo.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -48,18 +49,29 @@ Foam::interfaceCompositionModel::interfaceCompositionModel
     pair_(pair),
     species_(dict.lookup("species")),
     Le_("Le", dimless, dict),
+    phase_
+    (
+        // !!! This is a hack, to let the models know which side of the
+        // interface it applies to. In general, we are going to need improve
+        // the phase-pair system to take into account model sidedness and other
+        // types of asymmetry from just dispersed/continuous.
+        pair.phase1().name() == IOobject::group(dict.dictName())
+      ? pair.phase1()
+      : pair.phase2()
+    ),
+    otherPhase_(pair.otherPhase(phase_)),
     thermo_
     (
-        pair.phase1().mesh().lookupObject<rhoReactionThermo>
+        phase_.mesh().lookupObject<rhoReactionThermo>
         (
-            IOobject::groupName(basicThermo::dictName, pair.phase1().name())
+            IOobject::groupName(basicThermo::dictName, phase_.name())
         )
     ),
     otherThermo_
     (
-        pair.phase2().mesh().lookupObject<rhoThermo>
+        otherPhase_.mesh().lookupObject<rhoThermo>
         (
-            IOobject::groupName(basicThermo::dictName, pair.phase2().name())
+            IOobject::groupName(basicThermo::dictName, otherPhase_.name())
         )
     )
 {}
