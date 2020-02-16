@@ -10,40 +10,38 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      p_rgh;
+    location    "0";
+    object      T.water;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [1 -1 -2 0 0 0 0];
+dimensions      [0 0 0 1 0];
 
-internalField   uniform 0;
+internalField   uniform 300;
 
 boundaryField
 {
     leftWall
     {
-        type            fixedFluxPressure;
-        value           uniform 0;
+        type            zeroGradient;
     }
 
     rightWall
     {
-        type            fixedFluxPressure;
-        value           uniform 0;
+        type            zeroGradient;
     }
 
     lowerWall
     {
-        type            fixedFluxPressure;
-        value           uniform 0;
+        type            zeroGradient;
     }
 
     atmosphere
     {
-        type            totalPressure;
-        p0              uniform 0;
-        U               U.air;
-        phi             phi.air;
+        type            inletOutlet;
+        phi             phi.water;
+        inletValue      $internalField;
+        value           $internalField;
     }
 
     defaultFaces
@@ -51,5 +49,6 @@ boundaryField
         type            empty;
     }
 }
+
 
 // ************************************************************************* //

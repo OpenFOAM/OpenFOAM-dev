@@ -9,47 +9,44 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
-    object      p_rgh;
+    class       dictionary;
+    location    "constant";
+    object      thermophysicalProperties.oil;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [1 -1 -2 0 0 0 0];
-
-internalField   uniform 0;
-
-boundaryField
+thermoType
 {
-    leftWall
-    {
-        type            fixedFluxPressure;
-        value           uniform 0;
-    }
+    type            heRhoThermo;
+    mixture         pureMixture;
+    transport       const;
+    thermo          hConst;
+    equationOfState rhoConst;
+    specie          specie;
+    energy          sensibleInternalEnergy;
+}
 
-    rightWall
+mixture
+{
+    specie
     {
-        type            fixedFluxPressure;
-        value           uniform 0;
+        molWeight   200;
     }
-
-    lowerWall
+    equationOfState
     {
-        type            fixedFluxPressure;
-        value           uniform 0;
+        rho         13529;
     }
-
-    atmosphere
+    thermodynamics
     {
-        type            totalPressure;
-        p0              uniform 0;
-        U               U.air;
-        phi             phi.air;
+        Cp          135;
+        Hf          0;
     }
-
-    defaultFaces
+    transport
     {
-        type            empty;
+        mu          8.6e-4;
+        Pr          111;
     }
 }
+
 
 // ************************************************************************* //

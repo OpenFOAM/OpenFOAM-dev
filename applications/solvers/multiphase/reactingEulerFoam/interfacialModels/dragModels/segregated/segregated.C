@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,30 +107,14 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
     L.primitiveFieldRef() = cbrt(mesh.V());
     L.correctBoundaryConditions();
 
-    const volScalarField I
+    const dimensionedScalar residualAlpha
     (
-        alpha1
-       /max
-        (
-            alpha1 + alpha2,
-            pair_.phase1().residualAlpha() + pair_.phase2().residualAlpha()
-        )
+        (pair_.phase1().residualAlpha() + pair_.phase2().residualAlpha())/2
     );
 
-    const volScalarField magGradI
-    (
-        max
-        (
-            mag(fvc::grad(I)),
-            (pair_.phase1().residualAlpha() + pair_.phase2().residualAlpha())/L
-        )
-    );
-
-    const volScalarField muI
-    (
-        rho1*nu1*rho2*nu2
-       /(rho1*nu1 + rho2*nu2)
-    );
+    const volScalarField I(alpha1/max(alpha1 + alpha2, residualAlpha));
+    const volScalarField magGradI(max(mag(fvc::grad(I)), 0.5*residualAlpha/L));
+    const volScalarField muI(rho1*nu1*rho2*nu2/(rho1*nu1 + rho2*nu2));
 
     const volScalarField limitedAlpha1
     (
@@ -144,7 +128,7 @@ Foam::tmp<Foam::volScalarField> Foam::dragModels::segregated::K() const
 
     const volScalarField muAlphaI
     (
-        alpha1*rho1*nu1*alpha2*rho2*nu2
+        limitedAlpha1*rho1*nu1*limitedAlpha2*rho2*nu2
        /(limitedAlpha1*rho1*nu1 + limitedAlpha2*rho2*nu2)
     );
 

@@ -9,40 +9,48 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volVectorField;
-    location    "0";
-    object      U;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+application     reactingMultiphaseEulerFoam;
 
-internalField   uniform (0 0 0);
+startFrom       startTime;
 
-boundaryField
-{
-    leftWall
-    {
-        type            noSlip;
-    }
-    rightWall
-    {
-        type            noSlip;
-    }
-    lowerWall
-    {
-        type            noSlip;
-    }
-    atmosphere
-    {
-        type            fluxCorrectedVelocity;
-        value           uniform (0 0 0);
-    }
-    defaultFaces
-    {
-        type            empty;
-    }
-}
+startTime       0;
+
+stopAt          endTime;
+
+endTime         6;
+
+deltaT          0.001;
+
+writeControl    adjustableRunTime;
+
+writeInterval   0.02;
+
+purgeWrite      0;
+
+writeFormat     binary;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+adjustTimeStep  yes;
+
+maxCo           0.5;
+maxAlphaCo      0.5;
+
+maxDeltaT       1;
 
 
 // ************************************************************************* //

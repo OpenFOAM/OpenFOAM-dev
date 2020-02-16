@@ -16,34 +16,36 @@ FoamFile
 
 dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform 0;
+internalField   uniform 1e5;
 
 boundaryField
 {
     leftWall
     {
         type            fixedFluxPressure;
-        value           uniform 0;
+        value           $internalField;
     }
 
     rightWall
     {
         type            fixedFluxPressure;
-        value           uniform 0;
+        value           $internalField;
     }
 
     lowerWall
     {
         type            fixedFluxPressure;
-        value           uniform 0;
+        value           $internalField;
     }
 
     atmosphere
     {
-        type            totalPressure;
-        p0              uniform 0;
+        type            prghTotalPressure;
+        p0              $internalField;
         U               U.air;
         phi             phi.air;
+        rho             thermo:rho.air;
+        value           $internalField;
     }
 
     defaultFaces

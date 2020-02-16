@@ -9,40 +9,12 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volVectorField;
-    location    "0";
-    object      U;
+    class       dictionary;
+    location    "constant";
+    object      turbulenceProperties.air;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
-
-internalField   uniform (0 0 0);
-
-boundaryField
-{
-    leftWall
-    {
-        type            noSlip;
-    }
-    rightWall
-    {
-        type            noSlip;
-    }
-    lowerWall
-    {
-        type            noSlip;
-    }
-    atmosphere
-    {
-        type            fluxCorrectedVelocity;
-        value           uniform (0 0 0);
-    }
-    defaultFaces
-    {
-        type            empty;
-    }
-}
-
+simulationType  laminar;
 
 // ************************************************************************* //
