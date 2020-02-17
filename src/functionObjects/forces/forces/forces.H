@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,11 +88,12 @@ Note
     \endverbatim
     or
     \verbatim
-        coordinateSystem
+        origin (0 0 0);
+        coordinateRotation
         {
-            origin  (0 0 0);
-            e3      (0 0 1);
-            e1      (1 0 0);
+            type axesRotation;
+            e1 (1 0 0);
+            e3 (0 0 1);
         }
     \endverbatim
 
