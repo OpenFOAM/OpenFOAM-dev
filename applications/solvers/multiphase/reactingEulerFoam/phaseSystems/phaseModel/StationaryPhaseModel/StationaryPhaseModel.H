@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -119,12 +119,6 @@ public:
 
             //- Return the continuity error
             virtual tmp<volScalarField> continuityError() const;
-
-            //- Return the continuity error due to the flow field
-            virtual tmp<volScalarField> continuityErrorFlow() const;
-
-            //- Return the continuity error due to any sources
-            virtual tmp<volScalarField> continuityErrorSources() const;
 
             //- Return the phase kinetic energy
             virtual tmp<volScalarField> K() const;

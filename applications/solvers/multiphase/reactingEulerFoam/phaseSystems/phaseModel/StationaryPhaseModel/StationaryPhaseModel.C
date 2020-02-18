@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,32 +212,6 @@ Foam::StationaryPhaseModel<BasePhaseModel>::continuityError() const
     return volScalarField::New
     (
         IOobject::groupName("continuityError", this->name()),
-        this->mesh(),
-        dimensionedScalar(dimDensity/dimTime, 0)
-    );
-}
-
-
-template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
-Foam::StationaryPhaseModel<BasePhaseModel>::continuityErrorFlow() const
-{
-    return volScalarField::New
-    (
-        IOobject::groupName("continuityErrorFlow", this->name()),
-        this->mesh(),
-        dimensionedScalar(dimDensity/dimTime, 0)
-    );
-}
-
-
-template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
-Foam::StationaryPhaseModel<BasePhaseModel>::continuityErrorSources() const
-{
-    return volScalarField::New
-    (
-        IOobject::groupName("continuityErrorSources", this->name()),
         this->mesh(),
         dimensionedScalar(dimDensity/dimTime, 0)
     );

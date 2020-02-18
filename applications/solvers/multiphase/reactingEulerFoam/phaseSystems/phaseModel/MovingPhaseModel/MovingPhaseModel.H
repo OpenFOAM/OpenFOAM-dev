@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,11 +89,8 @@ protected:
         //- Turbulence model
         autoPtr<phaseCompressibleTurbulenceModel> turbulence_;
 
-        //- Continuity error due to the flow
-        volScalarField continuityErrorFlow_;
-
-        //- Continuity error due to any sources
-        volScalarField continuityErrorSources_;
+        //- Continuity error
+        volScalarField continuityError_;
 
         //- Kinetic Energy
         mutable tmp<volScalarField> K_;
@@ -106,8 +103,8 @@ private:
         //- Calculate and return the flux field
         tmp<surfaceScalarField> phi(const volVectorField& U) const;
 
-        //- Correct the continuity errors
-        void correctContinuityErrors();
+        //- Correct the continuity error
+        void correctContinuityError();
 
 
 public:
@@ -187,12 +184,6 @@ public:
 
             //- Return the continuity error
             virtual tmp<volScalarField> continuityError() const;
-
-            //- Return the continuity error due to the flow field
-            virtual tmp<volScalarField> continuityErrorFlow() const;
-
-            //- Return the continuity error due to any sources
-            virtual tmp<volScalarField> continuityErrorSources() const;
 
             //- Return the phase kinetic energy
             virtual tmp<volScalarField> K() const;
