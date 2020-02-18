@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,7 +34,7 @@ SourceFiles
 #ifndef linearWallDamping_H
 #define linearWallDamping_H
 
-#include "interpolatedWallDamping.H"
+#include "wallDampingModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,17 +52,8 @@ namespace wallDampingModels
 
 class linear
 :
-    public interpolated
+    public wallDampingModel
 {
-    // Private Data
-
-        //- Diameter coefficient
-        const dimensionedScalar Cd_;
-
-        //- Distance from wall below which the field is damped to zero
-        const dimensionedScalar zeroWallDist_;
-
-
 protected:
 
     // Protected member functions

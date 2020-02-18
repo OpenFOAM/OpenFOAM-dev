@@ -366,48 +366,85 @@ Foam::cyclicTransform::cyclicTransform
     // Calculate the transformation from the patch geometry
     if (!transformComplete_)
     {
+        // Store the old transformation type
+        const transformTypes oldTransformType = transformType_;
+
         // Calculate the average patch normals
         const vector normal = normalised(area);
-        const vector nbrNormal = normalised(nbrArea);
-        const vector cross = normal ^ nbrNormal;
+        const vector negNbrNormal = - normalised(nbrArea);
 
         // Calculate the angle and distance separations
-        const scalar theta = acos(- min(max(normal & nbrNormal, -1), 1));
+        const scalar dot = normal & negNbrNormal;
         const vector delta = ctr - nbrCtr;
 
-        // If the transformation is not known then we need to detect the type
-        // and calculate all the properties that define it.
+        // Determine the type of transformation if it has not been specified
         if (transformType_ == UNSPECIFIED)
         {
             transformType_ =
-                mag(theta) > rootSmall
+                dot < 1 - rootSmall
               ? ROTATIONAL
               : mag(delta) > lengthScale*rootSmall
               ? TRANSLATIONAL
               : NONE;
-
-            if (transformType_ == ROTATIONAL)
-            {
-                rotationAxis_ = normalised(cross);
-
-                const tensor T(normal, nbrNormal, rotationAxis_);
-
-                rotationCentre_ =
-                    inv(T) & vector(normal & ctr, nbrNormal & nbrCtr, 0);
-            }
-
-            // Fall through to angle and separation calculations below
         }
 
-        // If the transformation is known to be rotational, then the axis and
-        // centre are already defined. Just set the angle.
+        // If the transformation is known to be rotational, then we need to
+        // calculate the angle. If the transformation was previously
+        // unspecified then we also need to calculate the axis and the centre
+        // of rotation.
         if (transformType_ == ROTATIONAL)
         {
-            rotationAngle_ = sign(cross & rotationAxis_)*radToDeg(theta);
+            // Calculate the axis, if necessary
+            if (transformType_ != oldTransformType)
+            {
+                const vector midNormal = normalised(normal + negNbrNormal);
+                const vector axis =
+                    (ctr - nbrCtr)
+                  ^ (
+                        normal*(negNbrNormal & midNormal)
+                      - negNbrNormal*(normal & midNormal)
+                    );
+                const vector axis180 =
+                    (ctr - nbrCtr)
+                  ^ (normal - negNbrNormal);
+
+                rotationAxis_ =
+                    normalised
+                    (
+                        mag(axis) > lengthScale*rootSmall
+                      ? axis
+                      : axis180
+                    );
+            }
+
+            // Calculate the angle
+            const tensor PerpA = tensor::I - sqr(rotationAxis_);
+            const vector normalPerpA = normalised(PerpA & normal);
+            const vector negNbrNormalPerpA = normalised(PerpA & negNbrNormal);
+            const scalar theta =
+                acos(min(max(normalPerpA & negNbrNormalPerpA, -1), 1));
+            rotationAngle_ =
+              - sign((normalPerpA ^ negNbrNormalPerpA) & rotationAxis_)
+               *radToDeg(theta);
+
+            // Calculate the centre of rotation, if necessary
+            if (transformType_ != oldTransformType)
+            {
+                const tensor R = quaternion(rotationAxis_, theta).R();
+                tensor A = tensor::I - R;
+                vector b = ctr - (R & nbrCtr);
+                const label i = findMax(cmptMag(rotationAxis_));
+                forAll(b, j)
+                {
+                    A(i, j) = j == i;
+                }
+                b[i] = 0;
+                rotationCentre_ = inv(A) & b;
+            }
         }
 
-        // If the transformation is known to be translational then just
-        // calculate the separation.
+        // If the transformation is known to be translational then we just need
+        // to set the separation.
         if (transformType_ == TRANSLATIONAL)
         {
             separation_ = delta;
@@ -416,6 +453,18 @@ Foam::cyclicTransform::cyclicTransform
         // Update the transform object
         transformComplete_ = true;
         update();
+
+        // Print results of calculation
+        if (debug)
+        {
+            Info<< "Transformation calculated between patches " << name
+                << " and " << nbrName << ":" << nl << token::BEGIN_BLOCK << nl
+                << incrIndent;
+
+            cyclicTransform::write(Info);
+
+            Info<< decrIndent << token::END_BLOCK << nl << endl;
+        }
     }
 
     // Check the transformation is correct to within the matching tolerance

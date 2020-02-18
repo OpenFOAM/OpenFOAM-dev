@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,25 +66,25 @@ Foam::liftModels::wallDamped::~wallDamped()
 
 Foam::tmp<Foam::volScalarField> Foam::liftModels::wallDamped::Cl() const
 {
-    return wallDampingModel_->damp(liftModel_->Cl());
+    return wallDampingModel_->damping()*liftModel_->Cl();
 }
 
 
 Foam::tmp<Foam::volVectorField> Foam::liftModels::wallDamped::Fi() const
 {
-    return wallDampingModel_->damp(liftModel_->Fi());
+    return wallDampingModel_->damping()*liftModel_->Fi();
 }
 
 
 Foam::tmp<Foam::volVectorField> Foam::liftModels::wallDamped::F() const
 {
-    return wallDampingModel_->damp(liftModel_->F());
+    return wallDampingModel_->damping()*liftModel_->F();
 }
 
 
 Foam::tmp<Foam::surfaceScalarField> Foam::liftModels::wallDamped::Ff() const
 {
-    return wallDampingModel_->damp(liftModel_->Ff());
+    return wallDampingModel_->dampingf()*liftModel_->Ff();
 }
 
 

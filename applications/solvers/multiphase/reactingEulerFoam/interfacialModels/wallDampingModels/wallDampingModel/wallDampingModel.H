@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,6 +86,21 @@ protected:
         //- Phase pair
         const phasePair& pair_;
 
+        //- Diameter coefficient
+        const dimensionedScalar Cd_;
+
+        //- Distance from wall below which the field is damped to zero
+        const dimensionedScalar zeroWallDist_;
+
+        //- Set the value to zero in wall-adjacent cells
+        const Switch zeroInNearWallCells_;
+
+
+    // Protected member functions
+
+        //- Return the force limiter field
+        virtual tmp<volScalarField> limiter() const = 0;
+
 
 public:
 
@@ -140,22 +155,10 @@ public:
     // Member Functions
 
         //- Return damped coefficient
-        virtual tmp<volScalarField> damp
-        (
-            const tmp<volScalarField>&
-        ) const = 0;
+        virtual tmp<volScalarField> damping() const;
 
-        //- Return damped force
-        virtual tmp<volVectorField> damp
-        (
-            const tmp<volVectorField>&
-        ) const = 0;
-
-        //- Return damped face force
-        virtual tmp<surfaceScalarField> damp
-        (
-            const tmp<surfaceScalarField>&
-        ) const = 0;
+        //- Return damped face coefficient
+        virtual tmp<surfaceScalarField> dampingf() const;
 };
 
 

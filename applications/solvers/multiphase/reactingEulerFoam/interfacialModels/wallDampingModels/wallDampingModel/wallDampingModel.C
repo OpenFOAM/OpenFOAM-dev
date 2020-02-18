@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,8 @@ License
 
 #include "wallDampingModel.H"
 #include "phasePair.H"
+#include "surfaceInterpolate.H"
+#include "wallFvPatch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -46,7 +48,22 @@ Foam::wallDampingModel::wallDampingModel
 )
 :
     wallDependentModel(pair.phase1().mesh()),
-    pair_(pair)
+    pair_(pair),
+    Cd_("Cd", dimless, dict),
+    zeroWallDist_
+    (
+        dimensionedScalar::lookupOrDefault
+        (
+            "zeroWallDist",
+            dict,
+            dimLength,
+            0
+        )
+    ),
+    zeroInNearWallCells_
+    (
+        dict.lookupOrDefault<Switch>("zeroInNearWallCells", false)
+    )
 {}
 
 
@@ -54,6 +71,57 @@ Foam::wallDampingModel::wallDampingModel
 
 Foam::wallDampingModel::~wallDampingModel()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField>
+Foam::wallDampingModel::damping() const
+{
+    tmp<volScalarField> tlimiter(limiter());
+
+    if (zeroInNearWallCells_)
+    {
+        tmp<volScalarField> tlimiterPrime
+        (
+            volScalarField::New
+            (
+                tlimiter->name(),
+                tlimiter
+            )
+        );
+
+        volScalarField& limiterPrime = tlimiterPrime.ref();
+
+        const fvBoundaryMesh& bMesh = limiterPrime.mesh().boundary();
+
+        forAll(bMesh, patchi)
+        {
+            if (isA<wallFvPatch>(bMesh[patchi]))
+            {
+                const labelUList& faceCells = bMesh[patchi].faceCells();
+
+                forAll(faceCells, facei)
+                {
+                    limiterPrime[faceCells[facei]] = 0;
+                }
+            }
+        }
+
+        return tlimiterPrime;
+    }
+    else
+    {
+        return tlimiter;
+    }
+}
+
+
+Foam::tmp<Foam::surfaceScalarField>
+Foam::wallDampingModel::dampingf() const
+{
+    return fvc::interpolate(limiter());
+}
 
 
 // ************************************************************************* //
