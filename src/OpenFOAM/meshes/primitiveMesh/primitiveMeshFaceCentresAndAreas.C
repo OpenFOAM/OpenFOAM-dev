@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,45 +91,61 @@ void Foam::primitiveMesh::makeFaceCentresAndAreas
             fCtrs[facei] = (1.0/3.0)*(p[f[0]] + p[f[1]] + p[f[2]]);
             fAreas[facei] = 0.5*((p[f[1]] - p[f[0]])^(p[f[2]] - p[f[0]]));
         }
+
+        // For more complex faces, decompose into triangles
         else
         {
-            vector sumN = Zero;
-            scalar sumA = 0.0;
-            vector sumAc = Zero;
-
-            point fCentre = p[f[0]];
+            // Compute an estimate of the centre as the average of the points
+            point pAvg = p[f[0]];
             for (label pi = 1; pi < nPoints; pi++)
             {
-                fCentre += p[f[pi]];
+                pAvg += p[f[pi]];
             }
+            pAvg /= nPoints;
 
-            fCentre /= nPoints;
-
-            for (label pi = 0; pi < nPoints; pi++)
+            // Compute the face area normal and unit normal by summing up the
+            // normals of the triangles formed by connecting each edge to the
+            // point average.
+            vector sumA = Zero;
+            forAll(f, i)
             {
-                const point& nextPoint = p[f[(pi + 1) % nPoints]];
+                const vector a =
+                    (p[f[f.fcIndex(i)]] - p[f[i]])^(pAvg - p[f[i]]);
 
-                vector c = p[f[pi]] + nextPoint + fCentre;
-                vector n = (nextPoint - p[f[pi]])^(fCentre - p[f[pi]]);
-                scalar a = mag(n);
-
-                sumN += n;
                 sumA += a;
-                sumAc += a*c;
+            }
+            const vector sumAHat = normalised(sumA);
+
+            // Compute the area-weighted sum of the triangle centres. Note use
+            // the triangle area projected in the direction of the face normal
+            // as the weight, *not* the triangle area magnitude. Only the
+            // former makes the calculation independent of the initial estimate.
+            scalar sumAn = 0.0;
+            vector sumAnc = Zero;
+            forAll(f, i)
+            {
+                const vector a =
+                    (p[f[f.fcIndex(i)]] - p[f[i]])^(pAvg - p[f[i]]);
+                const vector c = p[f[i]] + p[f[f.fcIndex(i)]] + pAvg;
+
+                const scalar an = a & sumAHat;
+
+                sumAn += an;
+                sumAnc += an*c;
             }
 
-            // This is to deal with zero-area faces. Mark very small faces
-            // to be detected in e.g., processorPolyPatch.
-            if (sumA < rootVSmall)
+            // Complete calculating centres and areas. If the face is too small
+            // for the sums to be reliably divided then just set the centre to
+            // the initial estimate.
+            if (sumAn > vSmall)
             {
-                fCtrs[facei] = fCentre;
-                fAreas[facei] = Zero;
+                fCtrs[facei] = (1.0/3.0)*sumAnc/sumAn;
             }
             else
             {
-                fCtrs[facei] = (1.0/3.0)*sumAc/sumA;
-                fAreas[facei] = 0.5*sumN;
+                fCtrs[facei] = pAvg;
             }
+            fAreas[facei] = 0.5*sumA;
         }
     }
 }

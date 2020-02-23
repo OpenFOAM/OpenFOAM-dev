@@ -47,6 +47,7 @@ PecletNo/PecletNo.C
 blendingFactor/blendingFactor.C
 pressure/pressure.C
 MachNo/MachNo.C
+shearStress/shearStress.C
 
 turbulenceFields/turbulenceFields.C
 yPlus/yPlus.C

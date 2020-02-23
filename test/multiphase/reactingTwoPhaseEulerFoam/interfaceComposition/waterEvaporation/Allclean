@@ -4,4 +4,4 @@ cd ${0%/*} || exit 1
 
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
-cleanCase && rm -rf postProcessing_* postProcessing.pdf
+cleanCase && rm -rf postProcessing_* postProcessing.eps

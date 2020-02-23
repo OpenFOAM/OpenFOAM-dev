@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -29,9 +29,10 @@
 #
 #------------------------------------------------------------------------------
 
-cleanTimeDirectories()
+cleanCase()
 {
     echo "Cleaning $PWD case"
+
     zeros=""
     while [ ${#zeros} -lt 8 ]
     do
@@ -39,23 +40,14 @@ cleanTimeDirectories()
         rm -rf ./${timeDir} ./-${timeDir} > /dev/null 2>&1
         zeros="0$zeros"
     done
-    rm -rf ./[1-9]* ./-[1-9]* ./log ./log.* ./log-* ./logSummary.* ./*.xml \
-       ./*.dat ./*.eps ./ParaView* ./paraFoam* ./*.OpenFOAM ./*.blockMesh \
-       ./.setSet > /dev/null 2>&1
-}
 
-cleanDynamicCode()
-{
+    rm -rf ./[1-9]* ./-[1-9]* ./log ./log.* ./logSummary.* \
+        ./*.OpenFOAM ./*.blockMesh ./*.foam ./.setSet > /dev/null 2>&1
+
     if [ -d system -a -d dynamicCode ]
     then
         rm -rf dynamicCode > /dev/null 2>&1
     fi
-}
-
-cleanCase()
-{
-    cleanTimeDirectories
-    cleanDynamicCode
 
     rm -rf processor* > /dev/null 2>&1
     rm -rf jobInfo > /dev/null 2>&1
@@ -100,16 +92,6 @@ removeCase()
 {
     echo "Removing ${1:-unknown} case"
     rm -rf $1
-}
-
-cleanSamples()
-{
-    rm -rf ./sets ./samples ./sampleSurfaces > /dev/null 2>&1
-}
-
-cleanUcomponents()
-{
-    rm -rf 0/Ux 0/Uy 0/Uz > /dev/null 2>&1
 }
 
 cleanApplication()
