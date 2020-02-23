@@ -85,16 +85,11 @@ Foam::MovingPhaseModel<BasePhaseModel>::phi(const volVectorField& U) const
             calculatedFvPatchScalarField::typeName
         );
 
-        forAll(U.boundaryField(), i)
+        forAll(U.boundaryField(), patchi)
         {
-            if
-            (
-                isA<fixedValueFvPatchVectorField>(U.boundaryField()[i])
-             || isA<slipFvPatchVectorField>(U.boundaryField()[i])
-             || isA<partialSlipFvPatchVectorField>(U.boundaryField()[i])
-            )
+            if (!U.boundaryField()[patchi].assignable())
             {
-                phiTypes[i] = fixedValueFvPatchScalarField::typeName;
+                phiTypes[patchi] = fixedValueFvPatchScalarField::typeName;
             }
         }
 
