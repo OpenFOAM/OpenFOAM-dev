@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -179,9 +179,9 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
         scalarField V(filterField(fieldValue::mesh_.V()));
         scalarField weightField(values.size(), 1.0);
 
-        if (weightFieldName_ != "none")
+        forAll(weightFieldNames_, i)
         {
-            weightField = setFieldValues<scalar>(weightFieldName_, true);
+            weightField *= setFieldValues<scalar>(weightFieldNames_[i], true);
         }
 
         Type result = processValues(values, V, weightField);

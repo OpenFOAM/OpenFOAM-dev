@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,6 +65,7 @@ Usage
         name         | Name of volRegion if required       | no    |
         operation    | Operation to perform                | yes   |
         weightField  | Name of field to apply weighting    | no    |
+        weightFields | Names of fields to apply weighting  | no    |
         fields       | List of fields to operate on        | yes   |
     \endtable
 
@@ -159,8 +160,8 @@ protected:
         //- Operation to apply to values
         operationType operation_;
 
-        //- Weight field name - only used for weighted modes
-        word weightFieldName_;
+        //- Weight field names - only used for weighted modes
+        wordList weightFieldNames_;
 
 
     // Protected Member Functions

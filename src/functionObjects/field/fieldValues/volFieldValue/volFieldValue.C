@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,9 +80,18 @@ void Foam::functionObjects::fieldValues::volFieldValue::initialise
     const dictionary& dict
 )
 {
-    if (dict.readIfPresent("weightField", weightFieldName_))
+    if (dict.readIfPresent("weightFields", weightFieldNames_))
     {
-        Info<< "    weight field = " << weightFieldName_;
+        Info<< name() << " " << operationTypeNames_[operation_]
+            << " weight fields " << weightFieldNames_;
+    }
+    else if (dict.found("weightField"))
+    {
+        weightFieldNames_.setSize(1);
+        dict.lookup("weightField") >> weightFieldNames_[0];
+
+        Info<< name() << " " << operationTypeNames_[operation_]
+            << " weight field " << weightFieldNames_[0];
     }
 
     Info<< nl << endl;
@@ -100,9 +109,14 @@ void Foam::functionObjects::fieldValues::volFieldValue::writeFileHeader
 
     forAll(fields_, fieldi)
     {
-        file()
-            << tab << operationTypeNames_[operation_]
-            << "(" << fields_[fieldi] << ")";
+        file() << tab << operationTypeNames_[operation_] << "(";
+
+        forAll(weightFieldNames_, i)
+        {
+            file() << weightFieldNames_[i] << ',';
+        }
+
+        file() << fields_[fieldi] << ")";
     }
 
     file() << endl;
@@ -120,8 +134,7 @@ Foam::functionObjects::fieldValues::volFieldValue::volFieldValue
 :
     fieldValue(name, runTime, dict, typeName),
     volRegion(fieldValue::mesh_, dict),
-    operation_(operationTypeNames_.read(dict.lookup("operation"))),
-    weightFieldName_("none")
+    operation_(operationTypeNames_.read(dict.lookup("operation")))
 {
     read(dict);
 }
@@ -136,8 +149,7 @@ Foam::functionObjects::fieldValues::volFieldValue::volFieldValue
 :
     fieldValue(name, obr, dict, typeName),
     volRegion(fieldValue::mesh_, dict),
-    operation_(operationTypeNames_.read(dict.lookup("operation"))),
-    weightFieldName_("none")
+    operation_(operationTypeNames_.read(dict.lookup("operation")))
 {
     read(dict);
 }
