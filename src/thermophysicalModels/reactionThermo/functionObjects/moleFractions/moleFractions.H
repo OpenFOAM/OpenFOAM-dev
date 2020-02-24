@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,6 +48,8 @@ Description
     \endverbatim
     depending on the thermodynamics package used in the solver.
 
+    Optionally, the name of the phase can be specified for multiphase cases.
+
 See also
     Foam::functionObjects::fvMeshFunctionObject
 
@@ -80,6 +82,9 @@ class moleFractions
 
         //- Species mole fractions
         PtrList<volScalarField> X_;
+
+        //- Optional phase name
+        word phaseName_;
 
 
     // Private Member Functions

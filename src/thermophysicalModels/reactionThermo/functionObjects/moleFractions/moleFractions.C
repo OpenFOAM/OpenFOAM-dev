@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,10 @@ template<class ThermoType>
 void Foam::moleFractions<ThermoType>::calculateMoleFractions()
 {
     const ThermoType& thermo =
-        mesh_.lookupObject<ThermoType>(basicThermo::dictName);
+        mesh_.lookupObject<ThermoType>
+        (
+            IOobject::groupName(basicThermo::dictName, phaseName_)
+        );
 
     const PtrList<volScalarField>& Y = thermo.composition().Y();
 
@@ -62,12 +65,17 @@ Foam::moleFractions<ThermoType>::moleFractions
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict)
+    fvMeshFunctionObject(name, runTime, dict),
+    phaseName_(dict.lookupOrDefault<word>("phase", word::null))
 {
-    if (mesh_.foundObject<ThermoType>(basicThermo::dictName))
+    const word dictName
+    (
+        IOobject::groupName(basicThermo::dictName, phaseName_)
+    );
+
+    if (mesh_.foundObject<ThermoType>(dictName))
     {
-        const ThermoType& thermo =
-            mesh_.lookupObject<ThermoType>(basicThermo::dictName);
+        const ThermoType& thermo = mesh_.lookupObject<ThermoType>(dictName);
 
         const PtrList<volScalarField>& Y = thermo.composition().Y();
 
@@ -96,10 +104,22 @@ Foam::moleFractions<ThermoType>::moleFractions
     }
     else
     {
-        FatalErrorInFunction
-            << "Cannot find thermodynamics model of type "
-            << ThermoType::typeName
-            << exit(FatalError);
+        if (phaseName_ != word::null)
+        {
+            FatalErrorInFunction
+                << "Cannot find thermodynamics model of type "
+                << ThermoType::typeName
+                << " for phase "
+                << phaseName_
+                << exit(FatalError);
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "Cannot find thermodynamics model of type "
+                << ThermoType::typeName
+                << exit(FatalError);
+        }
     }
 }
 
