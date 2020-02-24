@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -358,7 +358,7 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
     {
         case fixedPower:
         {
-            refGrad() = (Q_/gSum(patch().magSf()) + qr)/kappa(Tp);
+            refGrad() = (Q_/gSum(patch().magSf()) + qr)/kappa(*this);
             refValue() = Tp;
             valueFraction() = 0;
 
@@ -366,7 +366,7 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
         }
         case fixedHeatFlux:
         {
-            refGrad() = (q_ + qr)/kappa(Tp);
+            refGrad() = (q_ + qr)/kappa(*this);
             refValue() = Tp;
             valueFraction() = 0;
 
@@ -417,7 +417,7 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
 
             const scalarField kappaDeltaCoeffs
             (
-                this->kappa(Tp)*patch().deltaCoeffs()
+                this->kappa(*this)*patch().deltaCoeffs()
             );
 
             refGrad() = 0;
@@ -452,7 +452,7 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
 
     if (debug)
     {
-        const scalar Q = gSum(kappa(Tp)*patch().magSf()*snGrad());
+        const scalar Q = gSum(kappa(*this)*patch().magSf()*snGrad());
 
         Info<< patch().boundaryMesh().mesh().name() << ':'
             << patch().name() << ':'

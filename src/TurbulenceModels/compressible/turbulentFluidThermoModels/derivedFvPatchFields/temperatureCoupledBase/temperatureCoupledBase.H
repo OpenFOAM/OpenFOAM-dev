@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,7 +103,7 @@ public:
     // Member Functions
 
         //- Given patch temperature calculate corresponding K field
-        tmp<scalarField> kappa(const scalarField& Tp) const;
+        tmp<scalarField> kappa(const fvPatchScalarField& Tp) const;
 
         //- Write
         void write(Ostream&) const;

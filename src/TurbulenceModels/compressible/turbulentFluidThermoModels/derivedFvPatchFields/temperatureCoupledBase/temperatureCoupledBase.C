@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,30 +67,38 @@ Foam::temperatureCoupledBase::temperatureCoupledBase
 
 Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
 (
-    const scalarField& Tp
+    const fvPatchScalarField& Tp
 ) const
 {
     const fvMesh& mesh = patch_.boundaryMesh().mesh();
     const label patchi = patch_.index();
 
-    if (mesh.foundObject<fluidThermo>(basicThermo::dictName))
+    const word& phase(Tp.internalField().group());
+    const word fluidThermoName
+    (
+        IOobject::groupName(basicThermo::dictName, phase)
+    );
+
+    if (mesh.foundObject<fluidThermo>(fluidThermoName))
     {
         typedef compressible::turbulenceModel turbulenceModel;
 
-        if (mesh.foundObject<turbulenceModel>(turbulenceModel::propertiesName))
+        const word turbulenceModelName
+        (
+            IOobject::groupName(turbulenceModel::propertiesName, phase)
+        );
+
+        if (mesh.foundObject<turbulenceModel>(turbulenceModelName))
         {
             const turbulenceModel& turbModel =
-                mesh.lookupObject<turbulenceModel>
-                (
-                    turbulenceModel::propertiesName
-                );
+                mesh.lookupObject<turbulenceModel>( turbulenceModelName);
 
             return turbModel.kappaEff(patchi);
         }
         else
         {
             const fluidThermo& thermo =
-                mesh.lookupObject<fluidThermo>(basicThermo::dictName);
+                mesh.lookupObject<fluidThermo>(fluidThermoName);
 
             return thermo.kappa(patchi);
         }
