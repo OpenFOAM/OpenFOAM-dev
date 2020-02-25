@@ -368,13 +368,12 @@ void Foam::multiphaseSystem::solve
     if (found("referencePhase"))
     {
         referencePhasePtr = &phases()[lookup<word>("referencePhase")];
-        const phaseModel& referencePhase = *referencePhasePtr;
 
         solvePhases.setSize(movingPhases().size() - 1);
         label solvePhasesi = 0;
         forAll(movingPhases(), movingPhasei)
         {
-            if (movingPhases()[movingPhasei] != referencePhase)
+            if (&movingPhases()[movingPhasei] != referencePhasePtr)
             {
                 solvePhases.set(solvePhasesi++, &movingPhases()[movingPhasei]);
             }
