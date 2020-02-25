@@ -734,7 +734,7 @@ void Foam::multiphaseSystem::solve
                 phaseModel& referencePhase = *referencePhasePtr;
 
                 volScalarField& referenceAlpha = referencePhase;
-                referenceAlpha == alphaVoid;
+                referenceAlpha = alphaVoid;
 
                 forAll(solvePhases, solvePhasei)
                 {
