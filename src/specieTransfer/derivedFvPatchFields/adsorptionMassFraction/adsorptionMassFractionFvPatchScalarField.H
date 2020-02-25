@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ Description
             \phi_{Yi}  | Flux of the adsorbing specie [kg/s]
             c          | Transfer coefficient [kg/m^2/s/<property-dimensions>]
             A          | Patch face area [m^2]
-            \C_i       | Property adjacent to the patch [<property-dimensions>]
+            C_i        | Property adjacent to the patch [<property-dimensions>]
         \endvartable
 
     A species that is adsorbed by the patch will, therefore, have a coefficient
