@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,17 +55,13 @@ void Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefs
         const volScalarField K1(phase1.K());
         const volScalarField K2(phase2.K());
 
-        // Note that the phase EEqn contains a continuity error term. See
-        // MomentumTransferPhaseSystem::addDmdtUfs for an explanation of the
-        // fvm::Sp terms below.
-
         // Transfer of energy from bulk to bulk
-        *eqns[phase1.name()] += dmdtf21*he2 - fvm::Sp(dmdtf21, he1);
-        *eqns[phase2.name()] -= dmdtf12*he1 - fvm::Sp(dmdtf12, he2);
+        *eqns[phase1.name()] += dmdtf21*he2 + fvm::Sp(dmdtf12, he1);
+        *eqns[phase2.name()] -= dmdtf12*he1 + fvm::Sp(dmdtf21, he2);
 
         // Transfer of kinetic energy
-        *eqns[phase1.name()] += dmdtf21*(K2 - K1);
-        *eqns[phase2.name()] -= dmdtf12*(K1 - K2);
+        *eqns[phase1.name()] += dmdtf21*K2 + dmdtf12*K1;
+        *eqns[phase2.name()] -= dmdtf12*K1 + dmdtf21*K2;
     }
 }
 
@@ -90,10 +86,6 @@ void Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHef
         const volScalarField& he2(thermo2.he());
         const volScalarField K1(phase1.K());
         const volScalarField K2(phase2.K());
-
-        // Note that the phase EEqn contains a continuity error term. See
-        // MomentumTransferPhaseSystem::addDmdtUfs for an explanation of the
-        // fvm::Sp terms below.
 
         forAllConstIter(HashPtrTable<volScalarField>, *dmidtfIter(), dmidtfJter)
         {
@@ -135,12 +127,12 @@ void Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHef
             }
 
             // Transfer of energy from bulk to bulk
-            *eqns[phase1.name()] += dmidtf21*hei2 - fvm::Sp(dmidtf21, he1);
-            *eqns[phase2.name()] -= dmidtf12*hei1 - fvm::Sp(dmidtf12, he2);
+            *eqns[phase1.name()] += dmidtf21*hei2 + fvm::Sp(dmidtf12, he1);
+            *eqns[phase2.name()] -= dmidtf12*hei1 + fvm::Sp(dmidtf21, he2);
 
             // Transfer of kinetic energy
-            *eqns[phase1.name()] += dmidtf21*(K2 - K1);
-            *eqns[phase2.name()] -= dmidtf12*(K1 - K2);
+            *eqns[phase1.name()] += dmidtf21*K2 + dmidtf12*K1;
+            *eqns[phase2.name()] -= dmidtf12*K1 + dmidtf21*K2;
         }
     }
 }

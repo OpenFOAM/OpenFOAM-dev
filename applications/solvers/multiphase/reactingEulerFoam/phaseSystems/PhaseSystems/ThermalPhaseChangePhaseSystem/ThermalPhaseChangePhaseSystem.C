@@ -68,7 +68,8 @@ ThermalPhaseChangePhaseSystem
 )
 :
     BasePhaseSystem(mesh),
-    volatile_(this->template lookupOrDefault<word>("volatile", "none"))
+    volatile_(this->template lookupOrDefault<word>("volatile", "none")),
+    dmdt0s_(this->phases().size())
 {
     this->generatePairsAndSubModels
     (
@@ -325,9 +326,15 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
         const volScalarField dmdtf21(posPart(dmdtf));
         const volScalarField dmdtf12(negPart(dmdtf));
 
-        *eqns[phase1.name()] += - fvm::Sp(dmdtf21, he1) + dmdtf21*(K2 - K1);
+        *eqns[phase1.name()] +=
+            fvm::Sp(dmdt0s_[phase1.index()],he1)
+          - fvm::Sp(dmdtf21, he1)
+          + dmdtf21*K2 + dmdtf12*K1;
 
-        *eqns[phase2.name()] -= - fvm::Sp(dmdtf12, he2) + dmdtf12*(K1 - K2);
+        *eqns[phase2.name()] -=
+          - fvm::Sp(dmdt0s_[phase2.index()],he2)
+          - fvm::Sp(dmdtf12, he2)
+          + dmdtf12*K1 + dmdtf21*K2;
 
         if (this->saturationModels_.found(phasePairIter.key()))
         {
@@ -376,14 +383,12 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
         else
         {
             *eqns[phase1.name()] += dmdtf21*he2;
-
             *eqns[phase2.name()] -= dmdtf12*he1;
         }
 
         if (this->nDmdtLfs_.found(phasePairIter.key()))
         {
             *eqns[phase1.name()] += negPart(*this->nDmdtLfs_[pair]);
-
             *eqns[phase2.name()] -= posPart(*this->nDmdtLfs_[pair]);
         }
 
@@ -398,7 +403,6 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
             *eqns[phase2.name()] -=
                 phase2.thermo().p()*dmdtf/phase2.thermo().rho();
         }
-
     }
 
     return eqnsPtr;
@@ -447,9 +451,6 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::specieTransfer() const
         const volScalarField& Y1 = phase1.Y(volatile_);
         const volScalarField& Y2 = phase2.Y(volatile_);
 
-        // Note that the phase YiEqn does not contain a continuity error
-        // term, so these additions represent the entire mass transfer
-
         const volScalarField dmdtf(this->totalDmdtf(pair));
 
         *eqns[Y1.name()] += dmdtf;
@@ -457,6 +458,34 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::specieTransfer() const
     }
 
     return eqnsPtr;
+}
+
+
+template<class BasePhaseSystem>
+void Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::
+correctContinuityError()
+{
+    dmdt0s_ = PtrList<volScalarField>(this->phases().size());
+
+    forAllConstIter(phaseSystem::dmdtfTable, dmdtfs_, dmdtfIter)
+    {
+        const phasePair& pair = this->phasePairs_[dmdtfIter.key()];
+        const volScalarField& dmdtf = *dmdtfIter();
+
+        addField(pair.phase1(), "dmdt", dmdtf, dmdt0s_);
+        addField(pair.phase2(), "dmdt", - dmdtf, dmdt0s_);
+    }
+
+    forAllConstIter(phaseSystem::dmdtfTable, nDmdtfs_, nDmdtfIter)
+    {
+        const phasePair& pair = this->phasePairs_[nDmdtfIter.key()];
+        const volScalarField& nDmdtf = *nDmdtfIter();
+
+        addField(pair.phase1(), "dmdt", nDmdtf, dmdt0s_);
+        addField(pair.phase2(), "dmdt", - nDmdtf, dmdt0s_);
+    }
+
+    BasePhaseSystem::correctContinuityError();
 }
 
 

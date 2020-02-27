@@ -52,10 +52,10 @@ codeRead
             mesh(),
             dimensionedScalar(dimMass/dimVolume, 0)
         );
-    volScalarField* dMassGas = new volScalarField("dMass.gas", *dMass);
-    volScalarField* mass0Gas = new volScalarField("mass0.gas", *dMass);
-    volScalarField* dMassLiq = new volScalarField("dMass.liquid", *dMass);
-    volScalarField* mass0Liq = new volScalarField("mass0.liquid", *dMass);
+    volScalarField* dMassGas = new volScalarField("dMass.steam", *dMass);
+    volScalarField* mass0Gas = new volScalarField("mass0.steam", *dMass);
+    volScalarField* dMassLiq = new volScalarField("dMass.water", *dMass);
+    volScalarField* mass0Liq = new volScalarField("mass0.water", *dMass);
     volScalarField* dEnergy =
         new volScalarField
         (
@@ -63,19 +63,19 @@ codeRead
             mesh(),
             dimensionedScalar(dimEnergy/dimVolume, 0)
         );
-    volScalarField* dEnergyLiq = new volScalarField("dEnergy.liquid", *dEnergy);
-    volScalarField* energy0Liq = new volScalarField("energy0.liquid", *dEnergy);
-    volScalarField* dEnergyGas = new volScalarField("dEnergy.gas", *dEnergy);
-    volScalarField* energy0Gas = new volScalarField("energy0.gas", *dEnergy);
+    volScalarField* dEnergyLiq = new volScalarField("dEnergy.water", *dEnergy);
+    volScalarField* energy0Liq = new volScalarField("energy0.water", *dEnergy);
+    volScalarField* dEnergyGas = new volScalarField("dEnergy.steam", *dEnergy);
+    volScalarField* energy0Gas = new volScalarField("energy0.steam", *dEnergy);
 
     const volScalarField& alphaGas =
-        mesh().lookupObject<volScalarField>("alpha.gas");
+        mesh().lookupObject<volScalarField>("alpha.steam");
     const volScalarField& alphaLiq =
-        mesh().lookupObject<volScalarField>("alpha.liquid");
+        mesh().lookupObject<volScalarField>("alpha.water");
     const rhoThermo& thermoGas =
-        mesh().lookupObject<rhoThermo>("thermophysicalProperties.gas");
+        mesh().lookupObject<rhoThermo>("thermophysicalProperties.steam");
     const rhoThermo& thermoLiq =
-        mesh().lookupObject<rhoThermo>("thermophysicalProperties.liquid");
+        mesh().lookupObject<rhoThermo>("thermophysicalProperties.water");
 
     *mass0Gas = alphaGas*thermoGas.rho();
     *mass0Liq = alphaLiq*thermoLiq.rho();
@@ -103,33 +103,33 @@ codeExecute
     volScalarField& dMass =
         mesh().lookupObjectRef<volScalarField>("dMass");
     volScalarField& dMassGas =
-        mesh().lookupObjectRef<volScalarField>("dMass.gas");
+        mesh().lookupObjectRef<volScalarField>("dMass.steam");
     const volScalarField& mass0Gas =
-        mesh().lookupObject<volScalarField>("mass0.gas");
+        mesh().lookupObject<volScalarField>("mass0.steam");
     volScalarField& dMassLiq =
-        mesh().lookupObjectRef<volScalarField>("dMass.liquid");
+        mesh().lookupObjectRef<volScalarField>("dMass.water");
     const volScalarField& mass0Liq =
-        mesh().lookupObject<volScalarField>("mass0.liquid");
+        mesh().lookupObject<volScalarField>("mass0.water");
 
     volScalarField& dEnergy =
         mesh().lookupObjectRef<volScalarField>("dEnergy");
     volScalarField& dEnergyGas =
-        mesh().lookupObjectRef<volScalarField>("dEnergy.gas");
+        mesh().lookupObjectRef<volScalarField>("dEnergy.steam");
     const volScalarField& energy0Gas =
-        mesh().lookupObject<volScalarField>("energy0.gas");
+        mesh().lookupObject<volScalarField>("energy0.steam");
     volScalarField& dEnergyLiq =
-        mesh().lookupObjectRef<volScalarField>("dEnergy.liquid");
+        mesh().lookupObjectRef<volScalarField>("dEnergy.water");
     const volScalarField& energy0Liq =
-        mesh().lookupObject<volScalarField>("energy0.liquid");
+        mesh().lookupObject<volScalarField>("energy0.water");
 
     const volScalarField& alphaGas =
-        mesh().lookupObject<volScalarField>("alpha.gas");
+        mesh().lookupObject<volScalarField>("alpha.steam");
     const volScalarField& alphaLiq =
-        mesh().lookupObject<volScalarField>("alpha.liquid");
+        mesh().lookupObject<volScalarField>("alpha.water");
     const rhoThermo& thermoGas =
-        mesh().lookupObject<rhoThermo>("thermophysicalProperties.gas");
+        mesh().lookupObject<rhoThermo>("thermophysicalProperties.steam");
     const rhoThermo& thermoLiq =
-        mesh().lookupObject<rhoThermo>("thermophysicalProperties.liquid");
+        mesh().lookupObject<rhoThermo>("thermophysicalProperties.water");
 
     dMassGas = alphaGas*thermoGas.rho() - mass0Gas;
     dMassLiq = alphaLiq*thermoLiq.rho() - mass0Liq;

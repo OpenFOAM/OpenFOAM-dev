@@ -215,23 +215,6 @@ void Foam::diameterModels::shapeModels::fractal::correct()
       + alpha*rho*fi*fvm::ddt(kappa_)
       + fvm::div(fAlphaRhoPhi, kappa_)
       + fvm::SuSp(-phase.continuityError()*fi, kappa_)
-      + fvm::SuSp
-        (
-            (
-                fi.VelocityGroup().dmdt()
-
-                // Temporary term pending update of continuityError
-              - (
-                    phase.fluid().fvOptions()
-                    (
-                        alpha,
-                        const_cast<volScalarField&>(rho)
-                    ) & rho
-                )
-            )
-           *fi,
-            kappa_
-        )
       ==
       - sinteringModel_->R()
       + fvc::Su(Su_*rho, kappa_)

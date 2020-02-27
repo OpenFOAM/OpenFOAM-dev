@@ -10,42 +10,46 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "constant";
-    object      thermophysicalProperties.liquid;
+    object      blockMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-thermoType
+convertToMeters 1;
+
+vertices
+(
+    (-1 -1 -1)
+    (1 -1 -1)
+    (1 1 -1)
+    (-1 1 -1)
+
+    (-1 -1 1)
+    (1 -1 1)
+    (1 1 1)
+    (-1 1 1)
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (1 1 1) simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+defaultPatch
 {
-    type            heRhoThermo;
-    mixture         pureMixture;
-    transport       const;
-    thermo          eConst;
-    equationOfState rhoConst;
-    specie          specie;
-    energy          sensibleInternalEnergy;
+    name defaultPatch;
+    type empty;
 }
 
-mixture
-{
-    specie
-    {
-        molWeight       18.0153;
-    }
-    equationOfState
-    {
-        rho         1027;
-    }
-    thermodynamics
-    {
-        Cv          4195;
-        Hf          -1.5879e+07;
-    }
-    transport
-    {
-        mu          3.645e-4;
-        Pr          2.289;
-    }
-}
+patches
+(
+);
+
+mergePatchPairs
+(
+);
 
 // ************************************************************************* //

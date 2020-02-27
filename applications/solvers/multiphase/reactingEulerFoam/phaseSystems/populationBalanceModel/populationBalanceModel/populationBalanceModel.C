@@ -1304,21 +1304,7 @@ void Foam::diameterModels::populationBalanceModel::solve()
                         phase.alphaRhoPhi(),
                         fi
                     )
-                  + fvm::SuSp
-                    (
-                        fi.VelocityGroup().dmdt()
-                      - phase.continuityError()
-
-                        // Temporary term pending update of continuityError
-                      - (
-                            phase.fluid().fvOptions()
-                            (
-                                alpha,
-                                const_cast<volScalarField&>(rho)
-                            ) & rho
-                        ),
-                        fi
-                    )
+                  + fvm::SuSp(-phase.continuityError(), fi)
                   ==
                     fvc::Su(Su_[i]*rho, fi)
                   - fvm::SuSp(SuSp_[i]*rho, fi)

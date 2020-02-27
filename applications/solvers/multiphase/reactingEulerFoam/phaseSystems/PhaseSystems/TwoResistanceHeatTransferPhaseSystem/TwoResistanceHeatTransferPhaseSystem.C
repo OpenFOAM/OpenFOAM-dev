@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,10 +80,6 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefs
         const volScalarField K1(phase1.K());
         const volScalarField K2(phase2.K());
 
-        // Note that the phase EEqn contains a continuity error term. See
-        // MomentumTransferPhaseSystem::addDmdtU for an explanation of the
-        // fvm::Sp terms below.
-
         if (heatTransferModels_.found(key))
         {
             // Assume a thermally-coupled mass transfer process. Calculate
@@ -94,8 +90,8 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefs
             const volScalarField& Tf(*Tf_[key]);
             const volScalarField hef1(thermo1.he(thermo1.p(), Tf));
             const volScalarField hef2(thermo2.he(thermo2.p(), Tf));
-            *eqns[phase1.name()] += dmdtf*hef1 - fvm::Sp(dmdtf, he1);
-            *eqns[phase2.name()] -= dmdtf*hef2 - fvm::Sp(dmdtf, he2);
+            *eqns[phase1.name()] += dmdtf*hef1;
+            *eqns[phase2.name()] -= dmdtf*hef2;
 
             // Latent heat contribution
             const volScalarField L(hef2 + thermo2.hc() - hef1 - thermo1.hc());
@@ -106,8 +102,8 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefs
             *eqns[phase2.name()] += (1 - H1Fac)*dmdtf*L;
 
             // Transfer of kinetic energy
-            *eqns[phase1.name()] += dmdtf21*(K2 - K1);
-            *eqns[phase2.name()] -= dmdtf12*(K1 - K2);
+            *eqns[phase1.name()] += dmdtf21*K2 + dmdtf12*K1;
+            *eqns[phase2.name()] -= dmdtf12*K1 + dmdtf21*K2;
         }
         else
         {
@@ -116,12 +112,12 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefs
             // change and therefore no interface state or latent heat...
 
             // Transfer of energy from bulk to bulk
-            *eqns[phase1.name()] += dmdtf21*he2 - fvm::Sp(dmdtf21, he1);
-            *eqns[phase2.name()] -= dmdtf12*he1 - fvm::Sp(dmdtf12, he2);
+            *eqns[phase1.name()] += dmdtf21*he2 + fvm::Sp(dmdtf12, he1);
+            *eqns[phase2.name()] -= dmdtf12*he1 + fvm::Sp(dmdtf21, he2);
 
             // Transfer of kinetic energy
-            *eqns[phase1.name()] += dmdtf21*(K2 - K1);
-            *eqns[phase2.name()] -= dmdtf12*(K1 - K2);
+            *eqns[phase1.name()] += dmdtf21*K2 + dmdtf12*K1;
+            *eqns[phase2.name()] -= dmdtf12*K1 + dmdtf21*K2;
         }
     }
 }
@@ -149,10 +145,6 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHef
         const volScalarField& he2(thermo2.he());
         const volScalarField K1(phase1.K());
         const volScalarField K2(phase2.K());
-
-        // Note that the phase EEqn contains a continuity error term. See
-        // MomentumTransferPhaseSystem::addDmdtU for an explanation of the
-        // fvm::Sp terms below.
 
         if (heatTransferModels_.found(key))
         {
@@ -233,16 +225,16 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHef
                 const volScalarField Li(hefi2 + hci2 - hefi1 - hci1);
 
                 // Transfer of energy from the interface into the bulk
-                *eqns[phase1.name()] += dmidtf*hefi1 - fvm::Sp(dmidtf, he1);
-                *eqns[phase2.name()] -= dmidtf*hefi2 - fvm::Sp(dmidtf, he2);
+                *eqns[phase1.name()] += dmidtf*hefi1;
+                *eqns[phase2.name()] -= dmidtf*hefi2;
 
                 // Latent heat contribution
                 *eqns[phase1.name()] += H1Fac*dmidtf*Li;
                 *eqns[phase2.name()] += (1 - H1Fac)*dmidtf*Li;
 
                 // Transfer of kinetic energy
-                *eqns[phase1.name()] += dmidtf21*(K2 - K1);
-                *eqns[phase2.name()] -= dmidtf12*(K1 - K2);
+                *eqns[phase1.name()] += dmidtf21*K2 + dmidtf12*K1;
+                *eqns[phase2.name()] -= dmidtf12*K1 + dmidtf21*K2;
             }
         }
         else
@@ -297,12 +289,12 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHef
                 }
 
                 // Transfer of energy from bulk to bulk
-                *eqns[phase1.name()] += dmidtf21*hei2 - fvm::Sp(dmidtf21, he1);
-                *eqns[phase2.name()] -= dmidtf12*hei1 - fvm::Sp(dmidtf12, he2);
+                *eqns[phase1.name()] += dmidtf21*hei2 + fvm::Sp(dmidtf12, he1);
+                *eqns[phase2.name()] -= dmidtf12*hei1 + fvm::Sp(dmidtf21, he2);
 
                 // Transfer of kinetic energy
-                *eqns[phase1.name()] += dmidtf21*(K2 - K1);
-                *eqns[phase2.name()] -= dmidtf12*(K1 - K2);
+                *eqns[phase1.name()] += dmidtf21*K2 + dmidtf12*K1;
+                *eqns[phase2.name()] -= dmidtf12*K1 + dmidtf21*K2;
             }
         }
     }

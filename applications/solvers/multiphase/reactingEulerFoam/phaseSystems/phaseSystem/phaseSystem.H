@@ -187,10 +187,7 @@ protected:
         ) const;
 
         //- Generate pairs
-        void generatePairs
-        (
-            const dictTable& modelDicts
-        );
+        void generatePairs(const dictTable& modelDicts);
 
         //- Generate pairs and sub-model tables
         template<class modelType>
@@ -522,6 +519,9 @@ public:
 
             //- Correct the fluid properties other than those listed below
             virtual void correct();
+
+            //- Correct the continuity errors
+            virtual void correctContinuityError();
 
             //- Correct the kinematics
             virtual void correctKinematics();
