@@ -91,15 +91,8 @@ class ThermalPhaseChangePhaseSystem
         //- Name of the volatile specie
         word volatile_;
 
-        //- The saturation model used to evaluate Tsat = Tf
-        //autoPtr<saturationModel> saturationModel_;
-
         //- Saturation models used to evaluate Tsat = Tf
         saturationModelTable saturationModels_;
-
-        //- PhasePairs between which phaseChange occurs, e.g.,
-        //  "((gasI and liquid) (gasII and liquid))"
-        //List<phasePairKey> phaseChangePairKeys_;
 
         //- Mass transfer rates
         phaseSystem::dmdtfTable dmdtfs_;
@@ -109,6 +102,10 @@ class ThermalPhaseChangePhaseSystem
 
         //- Nucleate thermal energy transfer rates
         phaseSystem::dmdtfTable nDmdtLfs_;
+
+        //- Previous continuity error update phase dmdts for the heat transfer
+        //  function
+        PtrList<volScalarField> dmdt0s_;
 
 
     // Private member functions
@@ -152,6 +149,9 @@ public:
         //- Return the specie transfer matrices
         virtual autoPtr<phaseSystem::specieTransferTable>
             specieTransfer() const;
+
+        //- Store phase dmdts at the during the continuity error update
+        virtual void correctContinuityError();
 
         //- Correct the interface thermodynamics
         virtual void correctInterfaceThermo();
