@@ -20,7 +20,7 @@ thermoType
     type            heRhoThermo;
     mixture         pureMixture;
     transport       const;
-    thermo          eRefConst;
+    thermo          eConst;
     equationOfState rPolynomial;
     specie          specie;
     energy          sensibleInternalEnergy;
@@ -45,7 +45,7 @@ mixture
         Hf          0;
         Cv          4195;
         Tref        372.76;
-        Eref        417500;
+        Esref       417500;
     }
 
     transport

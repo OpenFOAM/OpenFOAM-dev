@@ -12,7 +12,7 @@ setThermoAndEnergy()
     he=${1%.*}
     phase=${1#*.}
 
-    foamDictionary -entry thermoType.thermo -set ${he}RefConst \
+    foamDictionary -entry thermoType.thermo -set ${he}Const \
         constant/thermophysicalProperties.$phase
 
     case $he in
