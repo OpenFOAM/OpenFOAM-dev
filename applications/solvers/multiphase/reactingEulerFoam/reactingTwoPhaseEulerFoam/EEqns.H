@@ -16,7 +16,7 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
          ==
            *heatTransfer[phase1.name()]
           + alpha1*rho1*(U1&g)
-          + fvOptions(alpha1, rho1, thermo1.he())
+          + fvOptions(alpha1, rho1, phase1.thermoRef().he())
         );
 
         E1Eqn.relax();
