@@ -48,6 +48,7 @@ blendingFactor/blendingFactor.C
 pressure/pressure.C
 MachNo/MachNo.C
 shearStress/shearStress.C
+totalEnthalpy/totalEnthalpy.C
 
 turbulenceFields/turbulenceFields.C
 yPlus/yPlus.C
