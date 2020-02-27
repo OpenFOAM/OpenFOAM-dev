@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,33 +135,19 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::addDmdtUfs
         phaseModel& phase1 = this->phases()[pair.phase1().name()];
         phaseModel& phase2 = this->phases()[pair.phase2().name()];
 
-        // Note that the phase UEqn contains a continuity error term, which
-        // implicitly adds a mass transfer term of fvm::Sp(dmdt, U). These
-        // additions remove the part of this term corresponding to the supplied
-        // mass transfer rate; I.e.:
-        //
-        // DDt(alpha1*rho1*U1) + ... = dmdt21*U2 + dmdt12*U1
-        // DDt(alpha1*rho1*U1) - contErr + ... = dmdt21*U2 + dmdt12*U1 - contErr
-        // DDt(alpha1*rho1*U1) - contErr + ... = dmdt21*U2 + dmdt12*U1 - dmdt*U1
-        // DDt(alpha1*rho1*U1) - contErr + ... = dmdt21*U2 - dmdt21*U1
-        //
-        // Where contErr is the continuity error associated with this mass
-        // transfer rate, dmdt.
+        const volScalarField dmdtf21(posPart(dmdtf));
+        const volScalarField dmdtf12(negPart(dmdtf));
 
         if (!phase1.stationary())
         {
-            const volScalarField dmdtf21(posPart(dmdtf));
-
             *eqns[phase1.name()] +=
-                dmdtf21*phase2.U() - fvm::Sp(dmdtf21, phase1.URef());
+                dmdtf21*phase2.U() + fvm::Sp(dmdtf12, phase1.URef());
         }
 
         if (!phase2.stationary())
         {
-            const volScalarField dmdtf12(negPart(dmdtf));
-
             *eqns[phase2.name()] -=
-                dmdtf12*phase1.U() - fvm::Sp(dmdtf12, phase2.URef());
+                dmdtf12*phase1.U() + fvm::Sp(dmdtf21, phase2.URef());
         }
     }
 }

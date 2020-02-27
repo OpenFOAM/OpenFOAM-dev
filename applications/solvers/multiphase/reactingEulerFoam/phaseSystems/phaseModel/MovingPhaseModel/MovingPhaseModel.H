@@ -103,9 +103,6 @@ private:
         //- Calculate and return the flux field
         tmp<surfaceScalarField> phi(const volVectorField& U) const;
 
-        //- Correct the continuity error
-        void correctContinuityError();
-
 
 public:
 
@@ -128,11 +125,11 @@ public:
         //- Correct the phase properties other than the thermo and turbulence
         virtual void correct();
 
+        //- Correct the continuity error
+        virtual void correctContinuityError(const volScalarField& source);
+
         //- Correct the kinematics
         virtual void correctKinematics();
-
-        //- Correct the thermodynamics
-        virtual void correctThermo();
 
         //- Correct the turbulence
         virtual void correctTurbulence();

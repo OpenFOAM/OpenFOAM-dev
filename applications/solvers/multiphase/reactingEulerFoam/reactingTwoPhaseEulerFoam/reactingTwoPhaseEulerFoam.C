@@ -102,6 +102,7 @@ int main(int argc, char *argv[])
         {
             fluid.solve(rAUs, rAUfs);
             fluid.correct();
+            fluid.correctContinuityError();
 
             #include "YEqns.H"
 

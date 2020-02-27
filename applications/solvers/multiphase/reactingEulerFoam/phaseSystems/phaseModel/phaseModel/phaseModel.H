@@ -186,6 +186,9 @@ public:
         //- Correct the phase properties
         virtual void correct();
 
+        //- Correct the continuity error
+        virtual void correctContinuityError(const volScalarField& source);
+
         //- Correct the kinematics
         virtual void correctKinematics();
 

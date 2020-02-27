@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,9 +92,6 @@ void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::addDmdtYfs
         const phaseModel& phase1 = pair.phase1();
         const phaseModel& phase2 = pair.phase2();
 
-        // Note that the phase YiEqn does not contain a continuity error term,
-        // so the transfers below are complete.
-
         forAll(phase1.Y(), Yi1)
         {
             const volScalarField& Y1 = phase1.Y()[Yi1];
@@ -121,9 +118,6 @@ void Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::addDmidtYf
 
         const phaseModel& phase1 = pair.phase1();
         const phaseModel& phase2 = pair.phase2();
-
-        // Note that the phase YiEqn does not contain a continuity error term,
-        // so the transfers below are complete.
 
         forAllConstIter(HashPtrTable<volScalarField>, *dmidtfIter(), dmidtfJter)
         {

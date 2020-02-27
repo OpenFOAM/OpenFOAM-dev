@@ -447,9 +447,6 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::specieTransfer() const
         const volScalarField& Y1 = phase1.Y(volatile_);
         const volScalarField& Y2 = phase2.Y(volatile_);
 
-        // Note that the phase YiEqn does not contain a continuity error
-        // term, so these additions represent the entire mass transfer
-
         const volScalarField dmdtf(this->totalDmdtf(pair));
 
         *eqns[Y1.name()] += dmdtf;

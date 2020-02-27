@@ -450,6 +450,41 @@ void Foam::phaseSystem::correct()
 }
 
 
+void Foam::phaseSystem::correctContinuityError()
+{
+    const PtrList<volScalarField> dmdts = this->dmdts();
+
+    forAll(movingPhaseModels_, movingPhasei)
+    {
+        phaseModel& phase = movingPhaseModels_[movingPhasei];
+        const volScalarField& alpha = phase;
+        volScalarField& rho = phase.thermoRef().rho();
+
+        volScalarField source
+        (
+            volScalarField::New
+            (
+                IOobject::groupName("source", phase.name()),
+                mesh_,
+                dimensionedScalar(dimDensity/dimTime, 0)
+            )
+        );
+
+        if (fvOptions().appliesToField(rho.name()))
+        {
+            source += fvOptions()(alpha, rho)&rho;
+        }
+
+        if (dmdts.set(phase.index()))
+        {
+            source += dmdts[phase.index()];
+        }
+
+        phase.correctContinuityError(source);
+    }
+}
+
+
 void Foam::phaseSystem::correctKinematics()
 {
     bool updateDpdt = false;
