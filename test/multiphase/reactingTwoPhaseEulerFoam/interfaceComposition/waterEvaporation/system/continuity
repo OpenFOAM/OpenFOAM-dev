@@ -26,6 +26,21 @@ codeOptions
 codeInclude
 #{
     #include "rhoThermo.H"
+
+    namespace Foam
+    {
+        tmp<volScalarField> ea(const rhoThermo& thermo)
+        {
+            tmp<volScalarField> tEa = thermo.he() + thermo.hc();
+
+            if (thermo.he().name() == thermo.phasePropertyName("h"))
+            {
+                tEa.ref() -= thermo.p()/thermo.rho();
+            }
+
+            return tEa;
+        }
+    }
 #};
 
 codeRead
@@ -66,11 +81,10 @@ codeRead
     *mass0Liq = alphaLiq*thermoLiq.rho();
 
     // !!! Note that this is only a valid measure of energy
-    // conservation because the case is of fixed volume, has no
-    // velocity, and is set up to solve in terms of sensible internal
-    // energy
-    *energy0Gas = alphaGas*thermoGas.rho()*(thermoGas.he() + thermoGas.hc());
-    *energy0Liq = alphaLiq*thermoLiq.rho()*(thermoLiq.he() + thermoLiq.hc());
+    // conservation because the case is of fixed volume and has no
+    // kinetic energy
+    *energy0Gas = alphaGas*thermoGas.rho()*ea(thermoGas);
+    *energy0Liq = alphaLiq*thermoLiq.rho()*ea(thermoLiq);
 
     dMass->store();
     dMassGas->store();
@@ -122,11 +136,10 @@ codeExecute
     dMass = dMassGas + dMassLiq;
 
     // !!! Note that this is only a valid measure of energy
-    // conservation because the case is of fixed volume, has no
-    // velocity, and is set up to solve in terms of sensible internal
-    // energy
-    dEnergyGas = alphaGas*thermoGas.rho()*(thermoGas.he() + thermoGas.hc()) - energy0Gas;
-    dEnergyLiq = alphaLiq*thermoLiq.rho()*(thermoLiq.he() + thermoLiq.hc()) - energy0Liq;
+    // conservation because the case is of fixed volume and has no
+    // kinetic energy
+    dEnergyGas = alphaGas*thermoGas.rho()*ea(thermoGas) - energy0Gas;
+    dEnergyLiq = alphaLiq*thermoLiq.rho()*ea(thermoLiq) - energy0Liq;
     dEnergy = dEnergyGas + dEnergyLiq;
 #};
 

@@ -38,6 +38,7 @@ mixture
     }
     thermodynamics
     {
+        Cp          4195;
         Cv          4195;
         Hf          -1.5879e+07;
     }
