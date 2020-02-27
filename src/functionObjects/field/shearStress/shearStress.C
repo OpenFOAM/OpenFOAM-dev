@@ -86,28 +86,34 @@ bool Foam::functionObjects::shearStress::execute()
 {
     const word fieldName(IOobject::groupName(type(), phaseName_));
 
-    typedef compressible::turbulenceModel cmpModel;
-    typedef incompressible::turbulenceModel icoModel;
+    typedef compressibleTurbulenceModel cmpModel;
+    typedef incompressibleTurbulenceModel icoModel;
 
-    if (mesh_.foundObject<cmpModel>(turbulenceModel::propertiesName))
+    const word turbulenceModelName
+    (
+        IOobject::groupName(turbulenceModel::propertiesName, phaseName_)
+    );
+
+    if (mesh_.foundObject<cmpModel>(turbulenceModelName))
     {
         const cmpModel& model =
-            mesh_.lookupObject<cmpModel>(turbulenceModel::propertiesName);
+            mesh_.lookupObject<cmpModel>(turbulenceModelName);
 
         return store(fieldName, model.devRhoReff());
     }
-    else if (mesh_.foundObject<icoModel>(turbulenceModel::propertiesName))
+    else if (mesh_.foundObject<icoModel>(turbulenceModelName))
     {
         const icoModel& model =
-            mesh_.lookupObject<icoModel>(turbulenceModel::propertiesName);
+            mesh_.lookupObject<icoModel>(turbulenceModelName);
 
         return store(fieldName, model.devReff());
     }
     else
     {
         FatalErrorInFunction
-            << "Unable to find turbulence model in the "
-            << "database" << exit(FatalError);
+            << "Unable to find compressible turbulence model "
+            << turbulenceModelName << " in the database"
+            << exit(FatalError);
 
         return false;
     }
