@@ -1,8 +1,15 @@
+#include "createRDeltaT.H"
+
 Info<< "Reading thermophysical properties\n" << endl;
 
-autoPtr<rhoThermo> pThermo(rhoThermo::New(mesh));
-rhoThermo& thermo = pThermo();
+autoPtr<fluidThermo> pThermo
+(
+    fluidThermo::New(mesh)
+);
+fluidThermo& thermo = pThermo();
 thermo.validate(args.executable(), "h", "e");
+
+volScalarField& p = thermo.p();
 
 volScalarField rho
 (
@@ -16,8 +23,6 @@ volScalarField rho
     ),
     thermo.rho()
 );
-
-volScalarField& p = thermo.p();
 
 Info<< "Reading field U\n" << endl;
 volVectorField U
@@ -34,7 +39,6 @@ volVectorField U
 );
 
 #include "compressibleCreatePhi.H"
-
 
 Info<< "Creating turbulence model\n" << endl;
 autoPtr<compressible::turbulenceModel> turbulence
@@ -71,20 +75,7 @@ volScalarField p_rgh
 // Force p_rgh to be consistent with p
 p_rgh = p - rho*gh;
 
-label pRefCell = 0;
-scalar pRefValue = 0.0;
-
-if (thermo.incompressible())
-{
-    setRefCell
-    (
-        p,
-        p_rgh,
-        pimple.dict(),
-        pRefCell,
-        pRefValue
-    );
-}
+pressureControl pressureControl(p, rho, pimple.dict(), false);
 
 mesh.setFluxRequired(p_rgh.name());
 
