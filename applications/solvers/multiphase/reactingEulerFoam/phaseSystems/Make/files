@@ -77,6 +77,4 @@ BlendedInterfacialModel/blendingMethods/noBlending/noBlending.C
 BlendedInterfacialModel/blendingMethods/linear/linear.C
 BlendedInterfacialModel/blendingMethods/hyperbolic/hyperbolic.C
 
-reactionThermo/hRefConstThermos.C
-
 LIB = $(FOAM_LIBBIN)/libreactingPhaseSystem

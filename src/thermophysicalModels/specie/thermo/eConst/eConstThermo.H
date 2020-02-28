@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,8 +36,6 @@ SourceFiles
 
 #ifndef eConstThermo_H
 #define eConstThermo_H
-
-#include "thermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -94,6 +92,12 @@ class eConstThermo
         //- Heat of formation [J/kg]
         scalar Hf_;
 
+        //- Reference temperature around which to linearise [K]
+        scalar Tref_;
+
+        //- Reference sensible enthalpy around which to linearise [J/kg]
+        scalar Esref_;
+
 
     // Private Member Functions
 
@@ -101,8 +105,10 @@ class eConstThermo
         inline eConstThermo
         (
             const EquationOfState& st,
-            const scalar cv,
-            const scalar hf
+            const scalar Cv,
+            const scalar Hf,
+            const scalar Tref,
+            const scalar Esref
         );
 
 
@@ -119,7 +125,7 @@ public:
         //- Construct and return a clone
         inline autoPtr<eConstThermo> clone() const;
 
-        // Selector from dictionary
+        //- Selector from dictionary
         inline static autoPtr<eConstThermo> New(const dictionary& dict);
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,9 @@ Foam::eConstThermo<EquationOfState>::eConstThermo(const dictionary& dict)
 :
     EquationOfState(dict),
     Cv_(dict.subDict("thermodynamics").lookup<scalar>("Cv")),
-    Hf_(dict.subDict("thermodynamics").lookup<scalar>("Hf"))
+    Hf_(dict.subDict("thermodynamics").lookup<scalar>("Hf")),
+    Tref_(dict.subDict("thermodynamics").lookupOrDefault<scalar>("Tref", Tstd)),
+    Esref_(dict.subDict("thermodynamics").lookupOrDefault<scalar>("Esref", 0))
 {}
 
 
@@ -47,6 +49,14 @@ void Foam::eConstThermo<EquationOfState>::write(Ostream& os) const
     dictionary dict("thermodynamics");
     dict.add("Cv", Cv_);
     dict.add("Hf", Hf_);
+    if (Tref_ != Tstd)
+    {
+        dict.add("Tref", Tref_);
+    }
+    if (Esref_ != 0)
+    {
+        dict.add("Esref", Esref_);
+    }
     os  << indent << dict.dictName() << dict;
 }
 

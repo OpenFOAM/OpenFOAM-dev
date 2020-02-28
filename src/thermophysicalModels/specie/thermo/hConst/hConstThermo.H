@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,6 +92,12 @@ class hConstThermo
         //- Heat of formation [J/kg]
         scalar Hf_;
 
+        //- Reference temperature around which to linearise [K]
+        scalar Tref_;
+
+        //- Reference sensible enthalpy around which to linearise [J/kg]
+        scalar Hsref_;
+
 
     // Private Member Functions
 
@@ -99,8 +105,10 @@ class hConstThermo
         inline hConstThermo
         (
             const EquationOfState& st,
-            const scalar cp,
-            const scalar hf
+            const scalar Cp,
+            const scalar Hf,
+            const scalar Tref,
+            const scalar Hsref
         );
 
 
