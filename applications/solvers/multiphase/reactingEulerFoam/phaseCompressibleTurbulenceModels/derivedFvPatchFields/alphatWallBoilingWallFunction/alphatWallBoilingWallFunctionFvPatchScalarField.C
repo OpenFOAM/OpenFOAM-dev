@@ -311,6 +311,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
         }
         case liquidPhase:
         {
+
             // Check that nucleationSiteModel has been constructed
             if (!nucleationSiteModel_.valid())
             {
@@ -342,333 +343,363 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
             const phaseModel& vapor(fluid.phases()[otherPhaseName_]);
 
-            // Retrieve turbulence properties from models
-            const phaseCompressibleTurbulenceModel& turbModel =
-                db().lookupObject<phaseCompressibleTurbulenceModel>
-                (
-                    IOobject::groupName
-                    (
-                        turbulenceModel::propertiesName,
-                        liquid.name()
-                    )
-                );
-            const phaseCompressibleTurbulenceModel& vaporTurbModel =
-                db().lookupObject<phaseCompressibleTurbulenceModel>
-                (
-                    IOobject::groupName
-                    (
-                        turbulenceModel::propertiesName,
-                        vapor.name()
-                    )
-                );
-
-            const nutWallFunctionFvPatchScalarField& nutw =
-                nutWallFunctionFvPatchScalarField::nutw(turbModel, patchi);
-
-            const scalar Cmu25(pow025(nutw.Cmu()));
-
-            const scalarField& y = turbModel.y()[patchi];
-
-            const tmp<scalarField> tmuw = turbModel.mu(patchi);
-            const scalarField& muw = tmuw();
-
-            const rhoThermo& lThermo = liquid.thermo();
-            const rhoThermo& vThermo = vapor.thermo();
-
-            const tmp<scalarField> talphaw = lThermo.alpha(patchi);
-            const scalarField& alphaw = talphaw();
-
-            const tmp<volScalarField> tk = turbModel.k();
-            const volScalarField& k = tk();
-            const fvPatchScalarField& kw = k.boundaryField()[patchi];
-
-            const fvPatchVectorField& Uw =
-                turbModel.U().boundaryField()[patchi];
-            const scalarField magUp(mag(Uw.patchInternalField() - Uw));
-            const scalarField magGradUw(mag(Uw.snGrad()));
-
-            const fvPatchScalarField& rhoLiquidw =
-                turbModel.rho().boundaryField()[patchi];
-
-            const fvPatchScalarField& rhoVaporw =
-                vaporTurbModel.rho().boundaryField()[patchi];
-
-            const fvPatchScalarField& Tw =
-                lThermo.T().boundaryField()[patchi];
-
-            const scalarField Tc(Tw.patchInternalField());
-
-            const scalarField uTau(Cmu25*sqrt(kw));
-
-            const scalarField yPlus(uTau*y/(muw/rhoLiquidw));
-
-            const scalarField Pr(muw/alphaw);
-
-            // Molecular-to-turbulent Prandtl number ratio
-            const scalarField Prat(Pr/Prt_);
-
-            // Thermal sublayer thickness
-            const scalarField P(this->Psmooth(Prat));
-
-            const scalarField yPlusTherm(this->yPlusTherm(nutw, P, Prat));
-
-            tmp<volScalarField> tCp = lThermo.Cp();
-            const volScalarField& Cp = tCp();
-            const fvPatchScalarField& Cpw = Cp.boundaryField()[patchi];
-
-            // Saturation temperature
-            const saturationModel& satModel =
-                db().lookupObject<saturationModel>
+            if
+            (
+                db().foundObject<saturationModel>
                 (
                     IOobject::groupName
                     (
                         "saturationModel",
                         phasePair(vapor,liquid).name()
                     )
-                );
-
-            const tmp<volScalarField> tTsat =
-                satModel.Tsat(lThermo.p());
-
-            const volScalarField& Tsat = tTsat();
-            const fvPatchScalarField& Tsatw(Tsat.boundaryField()[patchi]);
-            const scalarField Tsatc(Tsatw.patchInternalField());
-
-            const fvPatchScalarField& pw =
-                lThermo.p().boundaryField()[patchi];
-
-            const fvPatchScalarField& hew =
-                lThermo.he().boundaryField()[patchi];
-
-            scalarField liquidHaw(lThermo.ha(Tc, patchi));
-
-            scalarField vaporHaw(vThermo.ha(Tsatw, patchi));
-
-            if (volatileSpecie != "none" && isA<rhoReactionThermo>(lThermo))
+                )
+            )
             {
-                const basicSpecieMixture& composition =
-                    refCast<const rhoReactionThermo>(lThermo).composition();
-
-                liquidHaw =
-                    composition.Ha
+                // Retrieve turbulence properties from models
+                const phaseCompressibleTurbulenceModel& turbModel =
+                    db().lookupObject<phaseCompressibleTurbulenceModel>
                     (
-                        composition.species()[volatileSpecie],
-                        pw,
-                        Tc
+                        IOobject::groupName
+                        (
+                            turbulenceModel::propertiesName,
+                            liquid.name()
+                        )
                     );
-            }
-
-            if (volatileSpecie != "none" && isA<rhoReactionThermo>(vThermo))
-            {
-                const basicSpecieMixture& composition =
-                    refCast<const rhoReactionThermo>(vThermo).composition();
-
-                vaporHaw =
-                    composition.Ha
+                const phaseCompressibleTurbulenceModel& vaporTurbModel =
+                    db().lookupObject<phaseCompressibleTurbulenceModel>
                     (
-                        composition.species()[volatileSpecie],
-                        pw,
-                        Tsatw
+                        IOobject::groupName
+                        (
+                            turbulenceModel::propertiesName,
+                            vapor.name()
+                        )
                     );
-            }
 
-            const scalarField L(vaporHaw - liquidHaw);
+                const nutWallFunctionFvPatchScalarField& nutw =
+                    nutWallFunctionFvPatchScalarField::nutw(turbModel, patchi);
 
-            // Liquid phase fraction at the wall
-            const scalarField liquidw(liquid.boundaryField()[patchi]);
+                const scalar Cmu25(pow025(nutw.Cmu()));
 
-            const scalarField fLiquid(partitioningModel_->fLiquid(liquidw));
+                const scalarField& y = turbModel.y()[patchi];
 
-            // Convective thermal diffusivity
-            alphatConv_ = calcAlphat(alphatConv_);
+                const tmp<scalarField> tmuw = turbModel.mu(patchi);
+                const scalarField& muw = tmuw();
 
-            label maxIter(10);
-            for (label i=0; i<maxIter; i++)
-            {
-                // Liquid temperature at y+=250 is estimated from logarithmic
-                // thermal wall function (Koncar, Krepper & Egorov, 2005)
-                const scalarField Tplus_y250
-                (
-                    Prt_*(log(nutw.E()*250)/nutw.kappa() + P)
-                );
+                const rhoThermo& lThermo = liquid.thermo();
+                const rhoThermo& vThermo = vapor.thermo();
 
-                const scalarField Tplus
-                (
-                    Prt_*(log(nutw.E()*yPlus)/nutw.kappa() + P)
-                );
+                const tmp<scalarField> talphaw = lThermo.alpha(patchi);
+                const scalarField& alphaw = talphaw();
 
-                const scalarField Tl
-                (
-                    max
+                const tmp<volScalarField> tk = turbModel.k();
+                const volScalarField& k = tk();
+                const fvPatchScalarField& kw = k.boundaryField()[patchi];
+
+                const fvPatchVectorField& Uw =
+                    turbModel.U().boundaryField()[patchi];
+                const scalarField magUp(mag(Uw.patchInternalField() - Uw));
+                const scalarField magGradUw(mag(Uw.snGrad()));
+
+                const fvPatchScalarField& rhoLiquidw =
+                    turbModel.rho().boundaryField()[patchi];
+
+                const fvPatchScalarField& rhoVaporw =
+                    vaporTurbModel.rho().boundaryField()[patchi];
+
+                const fvPatchScalarField& Tw =
+                    lThermo.T().boundaryField()[patchi];
+
+                const scalarField Tc(Tw.patchInternalField());
+
+                const scalarField uTau(Cmu25*sqrt(kw));
+
+                const scalarField yPlus(uTau*y/(muw/rhoLiquidw));
+
+                const scalarField Pr(muw/alphaw);
+
+                // Molecular-to-turbulent Prandtl number ratio
+                const scalarField Prat(Pr/Prt_);
+
+                // Thermal sublayer thickness
+                const scalarField P(this->Psmooth(Prat));
+
+                const scalarField yPlusTherm(this->yPlusTherm(nutw, P, Prat));
+
+                const scalarField Cpw = lThermo.Cp(Tw, patchi);
+
+                // Saturation temperature
+                const saturationModel& satModel =
+                    db().lookupObject<saturationModel>
                     (
-                        Tc - 40,
-                        Tw - (Tplus_y250/Tplus)*(Tw - Tc)
-                    )
-                );
+                        IOobject::groupName
+                        (
+                            "saturationModel",
+                            phasePair(vapor,liquid).name()
+                        )
+                    );
 
-                // Bubble departure diameter:
-                dDep_ = departureDiamModel_->dDeparture
-                (
-                    liquid,
-                    vapor,
-                    patchi,
-                    Tl,
-                    Tsatw,
-                    L
-                );
+                const tmp<volScalarField> tTsat =
+                    satModel.Tsat(lThermo.p());
 
-                // Bubble departure frequency:
-                const scalarField fDep
-                (
-                    departureFreqModel_->fDeparture
+                const volScalarField& Tsat = tTsat();
+                const fvPatchScalarField& Tsatw(Tsat.boundaryField()[patchi]);
+                const scalarField Tsatc(Tsatw.patchInternalField());
+
+                const fvPatchScalarField& pw =
+                    lThermo.p().boundaryField()[patchi];
+
+                const fvPatchScalarField& hew =
+                    lThermo.he().boundaryField()[patchi];
+
+                scalarField liquidHaw(lThermo.ha(Tc, patchi));
+
+                scalarField vaporHaw(vThermo.ha(Tsatw, patchi));
+
+                if (volatileSpecie != "none" && isA<rhoReactionThermo>(lThermo))
+                {
+                    const basicSpecieMixture& composition =
+                        refCast<const rhoReactionThermo>(lThermo).composition();
+
+                    liquidHaw =
+                        composition.Ha
+                        (
+                            composition.species()[volatileSpecie],
+                            pw,
+                            Tc
+                        );
+                }
+
+                if (volatileSpecie != "none" && isA<rhoReactionThermo>(vThermo))
+                {
+                    const basicSpecieMixture& composition =
+                        refCast<const rhoReactionThermo>(vThermo).composition();
+
+                    vaporHaw =
+                        composition.Ha
+                        (
+                            composition.species()[volatileSpecie],
+                            pw,
+                            Tsatw
+                        );
+                }
+
+                const scalarField L(vaporHaw - liquidHaw);
+
+                // Liquid phase fraction at the wall
+                const scalarField liquidw(liquid.boundaryField()[patchi]);
+
+                const scalarField fLiquid(partitioningModel_->fLiquid(liquidw));
+
+                // Convective thermal diffusivity
+                alphatConv_ = calcAlphat(alphatConv_);
+
+                label maxIter(10);
+                for (label i=0; i<maxIter; i++)
+                {
+                    // Liquid temperature at y+=250 is estimated from
+                    // logarithmic thermal wall function (Koncar, Krepper &
+                    // Egorov, 2005)
+                    const scalarField Tplus_y250
+                    (
+                        Prt_*(log(nutw.E()*250)/nutw.kappa() + P)
+                    );
+
+                    const scalarField Tplus
+                    (
+                        Prt_*(log(nutw.E()*yPlus)/nutw.kappa() + P)
+                    );
+
+                    const scalarField Tl
+                    (
+                        max
+                        (
+                            Tc - 40,
+                            Tw - (Tplus_y250/Tplus)*(Tw - Tc)
+                        )
+                    );
+
+                    // Bubble departure diameter:
+                    dDep_ = departureDiamModel_->dDeparture
                     (
                         liquid,
                         vapor,
                         patchi,
                         Tl,
                         Tsatw,
-                        L,
-                        dDep_
-                    )
-                );
-
-                // Nucleation site density:
-                const scalarField N
-                (
-                    nucleationSiteModel_->N
-                    (
-                        liquid,
-                        vapor,
-                        patchi,
-                        Tl,
-                        Tsatw,
-                        L,
-                        dDep_,
-                        fDep
-                    )
-                );
-
-                // Area fractions:
-
-                // Del Valle & Kenning (1985)
-                const scalarField Ja
-                (
-                    rhoLiquidw*Cpw*(Tsatw - Tl)/(rhoVaporw*L)
-                );
-
-                const scalarField Al
-                (
-                    fLiquid*4.8*exp( min(-Ja/80, log(vGreat)))
-                );
-
-                scalarField A2(min(pi*sqr(dDep_)*N*Al/4, scalar(1)));
-                const scalarField A1(max(1 - A2, scalar(1e-4)));
-                scalarField A2E(min(pi*sqr(dDep_)*N*Al/4, scalar(5)));
-
-                if (volatileSpecie != "none" && !liquid.pure())
-                {
-                    const volScalarField& Yvolatile = liquid.Y(volatileSpecie);
-                    A2E *= Yvolatile.boundaryField()[patchi];
-                    A2 *= Yvolatile.boundaryField()[patchi];
-                }
-
-                // Volumetric mass source in the near wall cell due to the
-                // wall boiling
-                dmdtf_ =
-                    (1 - relax_)*dmdtf_
-                  + relax_*(1.0/6.0)*A2E*dDep_*rhoVaporw*fDep*AbyV_;
-
-                // Volumetric source in the near wall cell due to the wall
-                // boiling
-                dmdtLf_ = dmdtf_*L;
-
-                // Quenching heat transfer coefficient
-                const scalarField hQ
-                (
-                    2*(alphaw*Cpw)*fDep
-                   *sqrt
-                    (
-                        (0.8/max(fDep, small))/(pi*alphaw/rhoLiquidw)
-                    )
-                );
-
-                // Quenching heat flux
-                qq_ = (1 - relax_)*qq_ + relax_*(A2*hQ*max(Tw - Tl, scalar(0)));
-
-                // Effective thermal diffusivity that corresponds to the
-                // calculated convective, quenching and evaporative heat fluxes
-
-                operator==
-                (
-                    (
-                        A1*alphatConv_
-                      + (qq_ + qe())/max(hew.snGrad(), scalar(1e-16))
-                    )
-                   /max(liquidw, scalar(1e-8))
-                );
-
-                scalarField TsupPrev(max((Tw - Tsatw), scalar(0)));
-                const_cast<fvPatchScalarField&>(Tw).evaluate();
-                scalarField TsupNew(max((Tw - Tsatw), scalar(0)));
-
-                scalar maxErr(max(mag(TsupPrev - TsupNew)));
-
-                if (debug)
-                {
-                    const scalarField qc
-                    (
-                        fLiquid*A1*(alphatConv_ + alphaw)*hew.snGrad()
+                        L
                     );
 
-                    const scalarField qEff
+                    // Bubble departure frequency:
+                    const scalarField fDep
                     (
-                        liquidw*(*this + alphaw)*hew.snGrad()
+                        departureFreqModel_->fDeparture
+                        (
+                            liquid,
+                            vapor,
+                            patchi,
+                            Tl,
+                            Tsatw,
+                            L,
+                            dDep_
+                        )
                     );
 
-                    Info<< "  L: " << gMin(L) << " - " << gMax(L) << endl;
-                    Info<< "  Tl: " << gMin(Tl) << " - " << gMax(Tl) << endl;
-                    Info<< "  N: " << gMin(N) << " - " << gMax(N) << endl;
-                    Info<< "  dDep_: " << gMin(dDep_) << " - "
-                        << gMax(dDep_) << endl;
-                    Info<< "  fDep: " << gMin(fDep) << " - "
-                        << gMax(fDep) << endl;
-                    Info<< "  Al: " << gMin(Al) << " - " << gMax(Al) << endl;
-                    Info<< "  A1: " << gMin(A1) << " - " << gMax(A1) << endl;
-                    Info<< "  A2: " << gMin(A2) << " - " << gMax(A2) << endl;
-                    Info<< "  A2E: " << gMin(A2E) << " - "
-                        << gMax(A2E) << endl;
-                    Info<< "  dmdtW: " << gMin(dmdtf_) << " - "
-                        << gMax(dmdtf_) << endl;
-                    Info<< "  qc: " << gMin(qc) << " - " << gMax(qc) << endl;
-                    Info<< "  qq: " << gMin(fLiquid*qq()) << " - "
-                        << gMax(fLiquid*qq()) << endl;
-                    Info<< "  qe: " << gMin(fLiquid*qe()) << " - "
-                        << gMax(fLiquid*qe()) << endl;
-                    Info<< "  qEff: " << gMin(qEff) << " - "
-                        << gMax(qEff) << endl;
-                    Info<< "  alphat: " << gMin(*this) << " - "
-                        << gMax(*this) << endl;
-                    Info<< "  alphatConv: " << gMin(alphatConv_)
-                        << " - " << gMax(alphatConv_) << endl;
-                }
+                    // Nucleation site density:
+                    const scalarField N
+                    (
+                        nucleationSiteModel_->N
+                        (
+                            liquid,
+                            vapor,
+                            patchi,
+                            Tl,
+                            Tsatw,
+                            L,
+                            dDep_,
+                            fDep
+                        )
+                    );
 
-                if (maxErr < 1e-1)
-                {
-                    if (i > 0)
+                    // Area fractions:
+
+                    // Del Valle & Kenning (1985)
+                    const scalarField Ja
+                    (
+                        rhoLiquidw*Cpw*(Tsatw - Tl)/(rhoVaporw*L)
+                    );
+
+                    const scalarField Al
+                    (
+                        fLiquid*4.8*exp( min(-Ja/80, log(vGreat)))
+                    );
+
+                    scalarField A2(min(pi*sqr(dDep_)*N*Al/4, scalar(1)));
+                    const scalarField A1(max(1 - A2, scalar(1e-4)));
+                    scalarField A2E(min(pi*sqr(dDep_)*N*Al/4, scalar(5)));
+
+                    if (volatileSpecie != "none" && !liquid.pure())
                     {
-                        Info<< "Wall boiling wall function iterations: "
-                            << i + 1 << endl;
+                        const volScalarField& Yvolatile =
+                            liquid.Y(volatileSpecie);
+                        A2E *= Yvolatile.boundaryField()[patchi];
+                        A2 *= Yvolatile.boundaryField()[patchi];
                     }
-                    break;
-                }
-                else if (i == (maxIter - 1))
-                {
-                    Info<< "Maximum number of wall boiling wall function "
-                        << "iterations (" << maxIter << ") reached." << endl
-                        << "Maximum change in wall temperature on last "
-                        << "iteration: " << maxErr << endl;
-                }
 
+                    // Volumetric mass source in the near wall cell due to the
+                    // wall boiling
+                    dmdtf_ =
+                        (1 - relax_)*dmdtf_
+                      + relax_*(1.0/6.0)*A2E*dDep_*rhoVaporw*fDep*AbyV_;
+
+                    // Volumetric source in the near wall cell due to the wall
+                    // boiling
+                    dmdtLf_ = dmdtf_*L;
+
+                    // Quenching heat transfer coefficient
+                    const scalarField hQ
+                    (
+                        2*(alphaw*Cpw)*fDep
+                       *sqrt
+                        (
+                            (0.8/max(fDep, small))/(pi*alphaw/rhoLiquidw)
+                        )
+                    );
+
+                    // Quenching heat flux
+                    qq_ =
+                        (1 - relax_)*qq_
+                      + relax_*(A2*hQ*max(Tw - Tl, scalar(0)));
+
+                    // Effective thermal diffusivity that corresponds to the
+                    // calculated convective, quenching and evaporative heat
+                    // fluxes
+
+                    operator==
+                    (
+                        (
+                            A1*alphatConv_
+                          + (qq_ + qe())/max(hew.snGrad(), scalar(1e-16))
+                        )
+                       /max(liquidw, scalar(1e-8))
+                    );
+
+                    scalarField TsupPrev(max((Tw - Tsatw), scalar(0)));
+                    const_cast<fvPatchScalarField&>(Tw).evaluate();
+                    scalarField TsupNew(max((Tw - Tsatw), scalar(0)));
+
+                    scalar maxErr(max(mag(TsupPrev - TsupNew)));
+
+                    if (debug)
+                    {
+                        const scalarField qc
+                        (
+                            fLiquid*A1*(alphatConv_ + alphaw)*hew.snGrad()
+                        );
+
+                        const scalarField qEff
+                        (
+                            liquidw*(*this + alphaw)*hew.snGrad()
+                        );
+
+                        Info<< "  L: " << gMin(L) << " - " << gMax(L) << endl;
+                        Info<< "  Tl: " << gMin(Tl) << " - " << gMax(Tl)
+                            << endl;
+                        Info<< "  N: " << gMin(N) << " - " << gMax(N) << endl;
+                        Info<< "  dDep_: " << gMin(dDep_) << " - "
+                            << gMax(dDep_) << endl;
+                        Info<< "  fDep: " << gMin(fDep) << " - "
+                            << gMax(fDep) << endl;
+                        Info<< "  Al: " << gMin(Al) << " - " << gMax(Al)
+                            << endl;
+                        Info<< "  A1: " << gMin(A1) << " - " << gMax(A1)
+                            << endl;
+                        Info<< "  A2: " << gMin(A2) << " - " << gMax(A2)
+                            << endl;
+                        Info<< "  A2E: " << gMin(A2E) << " - "
+                            << gMax(A2E) << endl;
+                        Info<< "  dmdtW: " << gMin(dmdtf_) << " - "
+                            << gMax(dmdtf_) << endl;
+                        Info<< "  qc: " << gMin(qc) << " - " << gMax(qc)
+                            << endl;
+                        Info<< "  qq: " << gMin(fLiquid*qq()) << " - "
+                            << gMax(fLiquid*qq()) << endl;
+                        Info<< "  qe: " << gMin(fLiquid*qe()) << " - "
+                            << gMax(fLiquid*qe()) << endl;
+                        Info<< "  qEff: " << gMin(qEff) << " - "
+                            << gMax(qEff) << endl;
+                        Info<< "  alphat: " << gMin(*this) << " - "
+                            << gMax(*this) << endl;
+                        Info<< "  alphatConv: " << gMin(alphatConv_)
+                            << " - " << gMax(alphatConv_) << endl;
+                    }
+
+                    if (maxErr < 1e-1)
+                    {
+                        if (i > 0)
+                        {
+                            Info<< "Wall boiling wall function iterations: "
+                                << i + 1 << endl;
+                        }
+                        break;
+                    }
+                    else if (i == (maxIter - 1))
+                    {
+                        Info<< "Maximum number of wall boiling wall function "
+                            << "iterations (" << maxIter << ") reached." << endl
+                            << "Maximum change in wall temperature on last "
+                            << "iteration: " << maxErr << endl;
+                    }
+
+                }
+                break;
+            }
+            else
+            {
+                Info<< "Saturation model for phase pair "
+                    << phasePair(vapor,liquid).name()
+                    << " not found. Wall boiling disabled." << endl;
+
+                operator== (alphatConv_);
             }
             break;
         }
