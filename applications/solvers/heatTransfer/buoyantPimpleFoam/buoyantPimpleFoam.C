@@ -26,10 +26,11 @@ Application
 
 Description
     Transient solver for buoyant, turbulent flow of compressible fluids for
-    ventilation and heat-transfer.
+    ventilation and heat-transfer, with optional mesh motion and
+    mesh topology changes.
 
-    Turbulence is modelled using a run-time selectable compressible RAS or
-    LES model.
+    Uses the flexible PIMPLE (PISO-SIMPLE) solution for time-resolved and
+    pseudo-transient simulations.
 
 \*---------------------------------------------------------------------------*/
 
