@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,10 +27,6 @@ License
 #define patchToPatchInterpolation_H
 
 #include "PatchToPatchInterpolation.H"
-#include "PrimitivePatch.H"
-#include "face.H"
-#include "SubList.H"
-#include "pointField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -38,9 +34,9 @@ namespace Foam
 {
     typedef PatchToPatchInterpolation
     <
-        PrimitivePatch<face, SubList, const pointField&>,
-        PrimitivePatch<face, SubList, const pointField&>
-    >   patchToPatchInterpolation;
+        PrimitivePatch<SubList<face>, const pointField&>,
+        PrimitivePatch<SubList<face>, const pointField&>
+    > patchToPatchInterpolation;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
