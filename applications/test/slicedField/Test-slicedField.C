@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,16 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    slicedFieldTest
+    Test-slicedField
 
 Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "fvCFD.H"
+#include "argList.H"
 #include "SlicedGeometricField.H"
 #include "slicedFvPatchFields.H"
 #include "slicedSurfaceFields.H"
+#include "surfaceInterpolate.H"
+
+using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -111,6 +114,25 @@ int main(int argc, char *argv[])
     );
 
     // Info<< Sf << endl;
+
+    surfaceScalarField phi(fvc::interpolate(U) & mesh.Sf());
+
+    scalarField completePhi
+    (
+        slicedSurfaceScalarField
+        (
+            IOobject
+            (
+                "slicedPhi",
+                runTime.timeName(),
+                mesh
+            ),
+            phi,
+            false
+        ).splice()
+    );
+
+    // Info<< completePhi << endl;
 
     return 0;
 }
