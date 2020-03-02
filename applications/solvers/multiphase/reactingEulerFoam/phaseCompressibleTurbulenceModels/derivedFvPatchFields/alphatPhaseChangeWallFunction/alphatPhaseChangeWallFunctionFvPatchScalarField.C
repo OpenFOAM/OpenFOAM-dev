@@ -88,7 +88,7 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
 
     if (dict.found("dmdtLf"))
     {
-        dmdtf_ = scalarField("dmdtLf", dict, p.size());
+        dmdtLf_ = scalarField("dmdtLf", dict, p.size());
     }
 }
 
