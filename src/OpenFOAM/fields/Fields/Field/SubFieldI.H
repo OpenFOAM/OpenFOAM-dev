@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,6 +117,13 @@ inline void Foam::SubField<Type>::operator=(const SubField<Type>& rhs)
 
 template<class Type>
 inline void Foam::SubField<Type>::operator=(const Field<Type>& rhs)
+{
+    SubList<Type>::operator=(rhs);
+}
+
+
+template<class Type>
+inline void Foam::SubField<Type>::operator=(const Type& rhs)
 {
     SubList<Type>::operator=(rhs);
 }
