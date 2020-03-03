@@ -416,9 +416,9 @@ splice() const
 
     label completeSize = GeoMesh::size(mesh);
 
-    forAll(mesh.boundary(), patchi)
+    forAll(mesh.boundaryMesh(), patchi)
     {
-        completeSize += mesh.boundary()[patchi].size();
+        completeSize += mesh.boundaryMesh()[patchi].size();
     }
 
     tmp<Field<Type>> tCompleteField(new Field<Type>(completeSize));
@@ -429,16 +429,32 @@ splice() const
 
     label start = GeoMesh::size(mesh);
 
-    forAll(mesh.boundary(), patchi)
+    forAll(mesh.boundaryMesh(), patchi)
     {
-        typename Field<Type>::subField
+        if
         (
-            completeField,
-            mesh.boundary()[patchi].size(),
-            start
-        ) = this->boundaryField()[patchi];
+            mesh.boundary()[patchi].size()
+         == mesh.boundaryMesh()[patchi].size()
+        )
+        {
+            typename Field<Type>::subField
+            (
+                completeField,
+                mesh.boundary()[patchi].size(),
+                start
+            ) = this->boundaryField()[patchi];
+        }
+        else
+        {
+            typename Field<Type>::subField
+            (
+                completeField,
+                mesh.boundaryMesh()[patchi].size(),
+                start
+            ) = Zero;
+        }
 
-        start += mesh.boundary()[patchi].size();
+        start += mesh.boundaryMesh()[patchi].size();
     }
 
     return tCompleteField;
