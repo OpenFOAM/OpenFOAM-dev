@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -495,8 +495,10 @@ public:
                     //- Internal edges (i.e. not on boundary face) using
                     //  no boundary point
                     inline label nInternal0Edges() const;
+
                     //- Internal edges using 0 or 1 boundary point
                     inline label nInternal1Edges() const;
+
                     //- Internal edges using 0,1 or 2 boundary points
                     inline label nInternalEdges() const;
 
