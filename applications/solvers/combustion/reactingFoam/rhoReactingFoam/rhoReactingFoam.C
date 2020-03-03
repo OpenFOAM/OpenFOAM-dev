@@ -151,14 +151,7 @@ int main(int argc, char *argv[])
             // --- Pressure corrector loop
             while (pimple.correct())
             {
-                if (pimple.consistent())
-                {
-                    #include "../../../compressible/rhoPimpleFoam/pcEqn.H"
-                }
-                else
-                {
-                    #include "../../../compressible/rhoPimpleFoam/pEqn.H"
-                }
+                #include "../../../compressible/rhoPimpleFoam/pEqn.H"
             }
 
             if (pimple.turbCorr())
