@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -292,6 +292,18 @@ makeThermoPhysicsReactionThermos
     constEThermoPhysics
 );
 
+makeReactionThermo
+(
+    rhoReactionThermo,
+    heRhoThermo,
+    multiComponentMixture,
+    constTransport,
+    sensibleInternalEnergy,
+    janafThermo,
+    rhoConst,
+    specie
+);
+
 
 // Single-component thermo for internal energy
 
@@ -471,6 +483,18 @@ makeThermoPhysicsReactionThermos
     constHThermoPhysics
 );
 
+makeReactionThermo
+(
+    rhoReactionThermo,
+    heRhoThermo,
+    multiComponentMixture,
+    constTransport,
+    sensibleEnthalpy,
+    janafThermo,
+    rhoConst,
+    specie
+);
+
 
 // Single-component thermo for sensible enthalpy
 
@@ -559,6 +583,18 @@ makeReactionThermo
     sensibleEnthalpy,
     janafThermo,
     Boussinesq,
+    specie
+);
+
+makeReactionThermo
+(
+    rhoReactionThermo,
+    heRhoThermo,
+    singleComponentMixture,
+    WLFTransport,
+    sensibleEnthalpy,
+    eConstThermo,
+    rhoConst,
     specie
 );
 
