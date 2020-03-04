@@ -1304,7 +1304,12 @@ void Foam::diameterModels::populationBalanceModel::solve()
                         phase.alphaRhoPhi(),
                         fi
                     )
-                  + fvm::SuSp(-phase.continuityError(), fi)
+                  + fvm::SuSp
+                    (
+                        fi.VelocityGroup().dmdt()
+                      - (fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi())),
+                        fi
+                    )
                   ==
                     fvc::Su(Su_[i]*rho, fi)
                   - fvm::SuSp(SuSp_[i]*rho, fi)
