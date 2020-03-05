@@ -78,7 +78,7 @@ Foam::wallDampingModel::~wallDampingModel()
 Foam::tmp<Foam::volScalarField>
 Foam::wallDampingModel::damping() const
 {
-    tmp<volScalarField> tlimiter(limiter());
+    tmp<volScalarField> tlimiter(limiter().ptr());
 
     if (zeroInNearWallCells_)
     {
