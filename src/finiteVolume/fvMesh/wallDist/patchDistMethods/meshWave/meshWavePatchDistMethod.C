@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -151,6 +151,9 @@ bool Foam::patchDistMethods::meshWave::correct
             nbf[patchi].transfer(wavePatchData);
         }
     }
+
+    // Update coupled BCs
+    y.correctBoundaryConditions();
 
     // Transfer number of unset values
     nUnset_ = wave.nUnset();
