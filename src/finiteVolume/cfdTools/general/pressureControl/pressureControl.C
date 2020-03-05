@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,7 @@ License
 Foam::pressureControl::pressureControl
 (
     const volScalarField& p,
+    const volScalarField& pRef,
     const volScalarField& rho,
     const dictionary& dict,
     const bool pRefRequired
@@ -48,7 +49,7 @@ Foam::pressureControl::pressureControl
     scalar pMin = great;
 
     // Set the reference cell and value for closed domain simulations
-    if (pRefRequired && setRefCell(p, dict, refCell_, refValue_))
+    if (pRefRequired && setRefCell(p, pRef, dict, refCell_, refValue_))
     {
         pLimits = true;
 
@@ -228,6 +229,18 @@ Foam::pressureControl::pressureControl
         Info << endl;
     }
 }
+
+
+Foam::pressureControl::pressureControl
+(
+    const volScalarField& p,
+    const volScalarField& rho,
+    const dictionary& dict,
+    const bool pRefRequired
+)
+:
+    pressureControl(p, p, rho, dict, pRefRequired)
+{}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //

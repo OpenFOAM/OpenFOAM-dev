@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,6 +76,17 @@ class pressureControl
 public:
 
     // Constructors
+
+        //- Construct from the simple/pimple sub-dictionary
+        //  supporting the pressure and derived pressure fields (e.g. p_rgh)
+        pressureControl
+        (
+            const volScalarField& p,
+            const volScalarField& pRef,
+            const volScalarField& rho,
+            const dictionary& dict,
+            const bool pRefRequired = true
+        );
 
         //- Construct from the simple/pimple sub-dictionary
         pressureControl
