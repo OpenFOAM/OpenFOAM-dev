@@ -7,8 +7,8 @@ if (!mesh.steady() && !pimple.simpleRho())
 // pressure solution
 const volScalarField psip0(psi*p);
 
-volScalarField rAU(1.0/UEqn.A());
-surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
+const volScalarField rAU("rAU", 1.0/UEqn.A());
+const surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
 volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p_rgh));
 
 if (pimple.nCorrPiso() <= 1)
@@ -25,7 +25,7 @@ surfaceScalarField phiHbyA
 
 MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
-bool adjustMass = false;
+bool adjustMass = pimple.transonic() ? false : adjustPhi(phiHbyA, U, p_rgh);
 
 surfaceScalarField phig(-rhorAUf*ghf*fvc::snGrad(rho)*mesh.magSf());
 
@@ -172,6 +172,3 @@ if (thermo.dpdt())
         dpdt -= fvc::div(fvc::meshPhi(rho, U), p);
     }
 }
-
-Info<< "Min/max rho:" << min(rho).value() << ' '
-    << max(rho).value() << endl;

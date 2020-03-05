@@ -70,21 +70,18 @@ volScalarField p_rgh
 // Force p_rgh to be consistent with p
 p_rgh = p - rho*gh;
 
-label pRefCell = 0;
-scalar pRefValue = 0.0;
-setRefCell
+pressureControl pressureControl
 (
     p,
     p_rgh,
+    rho,
     simple.dict(),
-    pRefCell,
-    pRefValue
+    thermo.incompressible()
 );
 
 mesh.setFluxRequired(p_rgh.name());
 
 dimensionedScalar initialMass = fvc::domainIntegrate(rho);
-dimensionedScalar totalVolume = sum(mesh.V());
 
 #include "createMRF.H"
 #include "createRadiationModel.H"

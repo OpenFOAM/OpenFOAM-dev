@@ -27,10 +27,15 @@ volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
 
 tUEqn.clear();
 
-bool closedVolume = false;
+surfaceScalarField phiHbyA
+(
+    "phiHbyA",
+    fvc::interpolate(rho)*fvc::flux(HbyA)
+);
 
-surfaceScalarField phiHbyA("phiHbyA", fvc::interpolate(rho)*fvc::flux(HbyA));
 MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
+
+bool closedVolume = false;
 
 // Update the pressure BCs to ensure flux consistency
 constrainPressure(p, rho, U, phiHbyA, rhorAAtUf, MRF);
@@ -127,7 +132,7 @@ pressureControl.limit(p);
 
 // For closed-volume cases adjust the pressure and density levels
 // to obey overall mass continuity
-if (closedVolume)
+if (closedVolume && !thermo.incompressible())
 {
     p += (initialMass - fvc::domainIntegrate(psi*p))
         /fvc::domainIntegrate(psi);

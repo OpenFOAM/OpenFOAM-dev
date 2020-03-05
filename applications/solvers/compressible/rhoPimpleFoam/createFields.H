@@ -40,7 +40,13 @@ volVectorField U
 
 #include "compressibleCreatePhi.H"
 
-pressureControl pressureControl(p, rho, pimple.dict(), false);
+pressureControl pressureControl
+(
+    p,
+    rho,
+    pimple.dict(),
+    thermo.incompressible()
+);
 
 mesh.setFluxRequired(p.name());
 
