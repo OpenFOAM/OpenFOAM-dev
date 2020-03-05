@@ -1,4 +1,4 @@
-if (!pimple.simpleRho())
+if (!mesh.steady() && !pimple.simpleRho())
 {
     rho = thermo.rho();
 }
@@ -11,16 +11,21 @@ volScalarField rAU(1.0/UEqn.A());
 surfaceScalarField rhorAUf("rhorAUf", fvc::interpolate(rho*rAU));
 volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p_rgh));
 
+if (pimple.nCorrPiso() <= 1)
+{
+    tUEqn.clear();
+}
+
 surfaceScalarField phiHbyA
 (
     "phiHbyA",
-    (
-        fvc::interpolate(rho)*fvc::flux(HbyA)
-      + MRF.zeroFilter(rhorAUf*fvc::ddtCorr(rho, U, phi, rhoUf))
-    )
+    fvc::interpolate(rho)*fvc::flux(HbyA)
+  + MRF.zeroFilter(rhorAUf*fvc::ddtCorr(rho, U, phi, rhoUf))
 );
 
 MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
+
+bool adjustMass = false;
 
 surfaceScalarField phig(-rhorAUf*ghf*fvc::snGrad(rho)*mesh.magSf());
 
@@ -31,66 +36,128 @@ constrainPressure(p_rgh, rho, U, phiHbyA, rhorAUf, MRF);
 
 fvc::makeRelative(phiHbyA, rho, U);
 
-fvScalarMatrix p_rghDDtEqn
-(
-    fvc::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
-  + fvc::div(phiHbyA)
-  ==
-    fvOptions(psi, p_rgh, rho.name())
-);
+fvScalarMatrix p_rghEqn(p_rgh, dimMass/dimTime);
 
-while (pimple.correctNonOrthogonal())
+if (pimple.transonic())
 {
-    fvScalarMatrix p_rghEqn(p_rghDDtEqn - fvm::laplacian(rhorAUf, p_rgh));
-
-    p_rghEqn.setReference
+    surfaceScalarField phid
     (
-        pressureControl.refCell(),
-        pressureControl.refValue()
+        "phid",
+        (fvc::interpolate(psi)/fvc::interpolate(rho))*phiHbyA
     );
 
-    p_rghEqn.solve();
+    phiHbyA -= fvc::interpolate(psi*p_rgh)*phiHbyA/fvc::interpolate(rho);
 
-    if (pimple.finalNonOrthogonalIter())
+    fvScalarMatrix p_rghDDtEqn
+    (
+        fvc::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
+      + fvc::div(phiHbyA) + fvm::div(phid, p_rgh)
+     ==
+        fvOptions(psi, p_rgh, rho.name())
+    );
+
+    while (pimple.correctNonOrthogonal())
     {
-        // Calculate the conservative fluxes
-        phi = phiHbyA + p_rghEqn.flux();
+        p_rghEqn = p_rghDDtEqn - fvm::laplacian(rhorAUf, p_rgh);
 
-        // Explicitly relax pressure for momentum corrector
-        p_rgh.relax();
+        // Relax the pressure equation to ensure diagonal-dominance
+        p_rghEqn.relax();
 
-        // Correct the momentum source with the pressure gradient flux
-        // calculated from the relaxed pressure
-        U = HbyA + rAU*fvc::reconstruct((phig + p_rghEqn.flux())/rhorAUf);
-        U.correctBoundaryConditions();
-        fvOptions.correct(U);
-        K = 0.5*magSqr(U);
+        p_rghEqn.setReference
+        (
+            pressureControl.refCell(),
+            pressureControl.refValue()
+        );
+
+        p_rghEqn.solve();
+    }
+}
+else
+{
+    if (mesh.steady())
+    {
+        adjustMass = adjustPhi(phiHbyA, U, p_rgh);
+    }
+
+    fvScalarMatrix p_rghDDtEqn
+    (
+        fvc::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
+      + fvc::div(phiHbyA)
+     ==
+        fvOptions(psi, p_rgh, rho.name())
+    );
+
+    while (pimple.correctNonOrthogonal())
+    {
+        p_rghEqn = p_rghDDtEqn - fvm::laplacian(rhorAUf, p_rgh);
+
+        p_rghEqn.setReference
+        (
+            pressureControl.refCell(),
+            pressureControl.refValue()
+        );
+
+        p_rghEqn.solve();
     }
 }
 
+phi = phiHbyA + p_rghEqn.flux();
+
 p = p_rgh + rho*gh;
 
-bool limitedp = pressureControl.limit(p);
-
-if (limitedp)
+if (mesh.steady())
 {
+    #include "incompressible/continuityErrs.H"
+}
+else
+{
+    const bool limitedp = pressureControl.limit(p);
+
+    // Thermodynamic density update
+    thermo.correctRho(psi*p - psip0);
+
+    if (limitedp)
+    {
+        rho = thermo.rho();
+    }
+
+    #include "rhoEqn.H"
+    #include "compressibleContinuityErrs.H"
+}
+
+// Explicitly relax pressure for momentum corrector
+p_rgh.relax();
+
+// Correct the momentum source with the pressure gradient flux
+// calculated from the relaxed pressure
+U = HbyA + rAU*fvc::reconstruct((phig + p_rghEqn.flux())/rhorAUf);
+U.correctBoundaryConditions();
+fvOptions.correct(U);
+K = 0.5*magSqr(U);
+
+if (mesh.steady())
+{
+    pressureControl.limit(p);
+}
+
+// For steady closed-volume compressible cases adjust the pressure level
+// to obey overall mass continuity
+if (adjustMass && !thermo.incompressible())
+{
+    p += (initialMass - fvc::domainIntegrate(thermo.rho()))
+        /fvc::domainIntegrate(psi);
     p_rgh = p - rho*gh;
+    p.correctBoundaryConditions();
 }
 
-// Thermodynamic density update
-thermo.correctRho(psi*p - psip0);
-
-if (limitedp)
+if (mesh.steady() || pimple.simpleRho() || adjustMass)
 {
     rho = thermo.rho();
 }
 
-#include "rhoEqn.H"
-#include "compressibleContinuityErrs.H"
-
-if (pimple.simpleRho())
+if ((mesh.steady() || pimple.simpleRho()) && !pimple.transonic())
 {
-    rho = thermo.rho();
+    rho.relax();
 }
 
 // Correct rhoUf if the mesh is moving
@@ -105,3 +172,6 @@ if (thermo.dpdt())
         dpdt -= fvc::div(fvc::meshPhi(rho, U), p);
     }
 }
+
+Info<< "Min/max rho:" << min(rho).value() << ' '
+    << max(rho).value() << endl;

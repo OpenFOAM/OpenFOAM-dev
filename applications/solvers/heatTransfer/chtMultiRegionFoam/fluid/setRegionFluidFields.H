@@ -60,3 +60,7 @@
     pressureControl& pressureControl = pressureControlFluid[i];
 
     scalar cumulativeContErr = cumulativeContErrs[i];
+
+    // This solver does not support moving mesh but it uses the pressure
+    // equation of one which does, so we need a dummy face-momentum field
+    autoPtr<surfaceVectorField> rhoUf(nullptr);
