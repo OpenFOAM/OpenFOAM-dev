@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,10 +73,10 @@ public:
 
     // Member Functions
 
-        // Return the wall distance, creating and storing it if necessary
+        //- Return the wall distance, creating and storing it if necessary
         const volScalarField& yWall() const;
 
-        // Return the wall normal, creating and storing it if necessary
+        //- Return the wall normal, creating and storing it if necessary
         const volVectorField& nWall() const;
 
 

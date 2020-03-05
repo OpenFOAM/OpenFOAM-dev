@@ -82,18 +82,9 @@ Foam::wallDampingModel::damping() const
 
     if (zeroInNearWallCells_)
     {
-        tmp<volScalarField> tlimiterPrime
-        (
-            volScalarField::New
-            (
-                tlimiter->name(),
-                tlimiter
-            )
-        );
+        volScalarField& limiter = tlimiter.ref();
 
-        volScalarField& limiterPrime = tlimiterPrime.ref();
-
-        const fvBoundaryMesh& bMesh = limiterPrime.mesh().boundary();
+        const fvBoundaryMesh& bMesh = limiter.mesh().boundary();
 
         forAll(bMesh, patchi)
         {
@@ -103,12 +94,12 @@ Foam::wallDampingModel::damping() const
 
                 forAll(faceCells, facei)
                 {
-                    limiterPrime[faceCells[facei]] = 0;
+                    limiter[faceCells[facei]] = 0;
                 }
             }
         }
 
-        return tlimiterPrime;
+        return tlimiter;
     }
     else
     {
@@ -120,7 +111,7 @@ Foam::wallDampingModel::damping() const
 Foam::tmp<Foam::surfaceScalarField>
 Foam::wallDampingModel::dampingf() const
 {
-    return fvc::interpolate(limiter());
+    return fvc::interpolate(damping());
 }
 
 
