@@ -32,7 +32,7 @@ boundaryField
         type            mapped;
         uniformValue    constant (0 0 0);
         value           uniform (0 0 0);
-        field           Us;
+        field           U;
         average         (0 0 0);
         setAverage      no;
     }
