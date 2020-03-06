@@ -285,7 +285,6 @@ void kinematicSingleLayer::updateSurfaceVelocities()
     }
 
     Uw_ -= nHat()*(Uw_ & nHat());
-    Uw_.correctBoundaryConditions();
 
     Us_ = turbulence_->Us();
 }
@@ -571,8 +570,7 @@ kinematicSingleLayer::kinematicSingleLayer
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        U_,
-        zeroGradientFvPatchScalarField::typeName
+        U_
     ),
 
     Uw_
@@ -585,8 +583,7 @@ kinematicSingleLayer::kinematicSingleLayer
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        U_,
-        zeroGradientFvPatchScalarField::typeName
+        U_
     ),
 
     phi_

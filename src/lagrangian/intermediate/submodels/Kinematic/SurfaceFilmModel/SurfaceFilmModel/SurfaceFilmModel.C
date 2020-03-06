@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -200,7 +200,7 @@ void Foam::SurfaceFilmModel<CloudType>::cacheFilmFields
         filmModel.cloudDiameterTrans().boundaryField()[filmPatchi];
     filmModel.toPrimary(filmPatchi, diameterParcelPatch_, maxEqOp<scalar>());
 
-    UFilmPatch_ = filmModel.Us().boundaryField()[filmPatchi];
+    UFilmPatch_ = filmModel.U().boundaryField()[filmPatchi];
     filmModel.toPrimary(filmPatchi, UFilmPatch_);
 
     rhoFilmPatch_ = filmModel.rho().boundaryField()[filmPatchi];

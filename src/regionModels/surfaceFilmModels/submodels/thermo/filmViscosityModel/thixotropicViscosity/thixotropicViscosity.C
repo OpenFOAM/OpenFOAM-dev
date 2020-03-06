@@ -115,15 +115,15 @@ void thixotropicViscosity::correct
 {
     const kinematicSingleLayer& film = filmType<kinematicSingleLayer>();
 
-    const volVectorField& Us = film.Us();
-    const volVectorField& Uw = film.Uw();
-    const volScalarField& delta = film.delta();
-    const volScalarField alphaRho(film.alpha()*film.rho());
+    const volVectorField::Internal& Us = film.Us();
+    const volVectorField::Internal& Uw = film.Uw();
+    const volScalarField::Internal& delta = film.delta();
+    const volScalarField::Internal alphaRho(film.alpha()()*film.rho()());
+    const volScalarField::Internal& coverage = film.coverage();
     const surfaceScalarField& phiU = film.phiU();
-    const volScalarField& coverage = film.coverage();
 
     // Shear rate
-    const volScalarField gDot
+    const volScalarField::Internal gDot
     (
         "gDot",
         coverage*mag(Us - Uw)/(delta + film.deltaSmall())
@@ -152,7 +152,7 @@ void thixotropicViscosity::correct
             (
                -film.rhoSp(),
                 dimensionedScalar(film.rhoSp().dimensions(), 0)
-            )/(alphaRho() + alphaRho0),
+            )/(alphaRho + alphaRho0),
             lambda_
         )
     );
@@ -171,9 +171,9 @@ void thixotropicViscosity::correct
         dimensionedScalar tauySmall("tauySmall", tauy_.dimensions(), small);
         dimensionedScalar muMax_("muMax", 100*mu0_);
 
-        mu_ = min
+        mu_.ref() = min
         (
-            tauy_/(gDot + 1.0e-4*(tauy_ + tauySmall)/mu0_) + mu_,
+            tauy_/(gDot + 1.0e-4*(tauy_ + tauySmall)/mu0_) + mu_(),
             muMax_
         );
     }

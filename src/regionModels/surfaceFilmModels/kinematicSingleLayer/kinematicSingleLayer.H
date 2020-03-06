@@ -112,10 +112,10 @@ protected:
             volVectorField U_;
 
             //- Velocity - surface [m/s]
-            volVectorField Us_;
+            volVectorField::Internal Us_;
 
             //- Velocity - wall [m/s]
-            volVectorField Uw_;
+            volVectorField::Internal Uw_;
 
             //- Mass flux [kg m/s]
             surfaceScalarField phi_;
@@ -350,10 +350,10 @@ public:
             inline const volVectorField& U() const;
 
             //- Return the film surface velocity [m/s]
-            inline const volVectorField& Us() const;
+            inline const volVectorField::Internal& Us() const;
 
             //- Return the film wall velocity [m/s]
-            inline const volVectorField& Uw() const;
+            inline const volVectorField::Internal& Uw() const;
 
             //- Return the film flux [kg m/s]
             inline const surfaceScalarField& phi() const;

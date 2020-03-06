@@ -68,22 +68,17 @@ laminar::~laminar()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-tmp<volVectorField> laminar::Us() const
+tmp<volVectorField::Internal> laminar::Us() const
 {
-    tmp<volVectorField> tUs
+    // Evaluate surface velocity assuming parabolic profile
+    tmp<volVectorField::Internal> tUs
     (
-        volVectorField::New
+        volVectorField::Internal::New
         (
             IOobject::modelName("Us", typeName),
-            filmModel_.regionMesh(),
-            dimensionedVector(dimVelocity, Zero),
-            extrapolatedCalculatedFvPatchVectorField::typeName
+            1.5*filmModel_.U()
         )
     );
-
-    // Evaluate surface velocity assuming parabolic profile
-    tUs.ref() = 1.5*filmModel_.U();
-    tUs.ref().correctBoundaryConditions();
 
     return tUs;
 }

@@ -491,7 +491,7 @@ namespace Foam
             {
                 Pair<tmp<triSurfacePointScalarField >> closenessFields
                 (
-                    searchSurf.extractPointCloseness()
+                    searchSurf.extractPointCloseness(10, 10)
                 );
 
                 Info<< "    writing "
