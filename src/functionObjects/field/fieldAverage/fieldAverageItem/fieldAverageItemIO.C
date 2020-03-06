@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fieldAverageItem.H"
-#include "IOstreams.H"
 #include "dictionaryEntry.H"
 #include "IOobject.H"
 
@@ -40,38 +39,7 @@ Foam::functionObjects::fieldAverageItem::fieldAverageItem(Istream& is)
     base_(baseType::iter),
     window_(-1.0)
 {
-    is.check
-    (
-        "Foam::functionObjects::fieldAverageItem::fieldAverageItem"
-        "(Foam::Istream&)"
-    );
-
-    const dictionaryEntry entry(dictionary::null, is);
-
-    fieldName_ = entry.keyword();
-    entry.lookup("mean") >> mean_;
-    entry.lookup("prime2Mean") >> prime2Mean_;
-    base_ = baseTypeNames_[entry.lookup("base")];
-    window_ = entry.lookupOrDefault<scalar>("window", -1.0);
-    windowName_ = entry.lookupOrDefault<word>("windowName", "");
-
-    meanFieldName_ = IOobject::groupName
-    (
-        IOobject::member(fieldName_) + meanExt,
-        IOobject::group(fieldName_)
-    );
-
-    prime2MeanFieldName_ = IOobject::groupName
-    (
-        IOobject::member(fieldName_) + prime2MeanExt,
-        IOobject::group(fieldName_)
-    );
-
-    if ((window_ > 0) && (windowName_ != ""))
-    {
-        meanFieldName_ = meanFieldName_ + "_" + windowName_;
-        prime2MeanFieldName_ = prime2MeanFieldName_ + "_" + windowName_;
-    }
+    is >> *this;
 }
 
 
@@ -89,14 +57,31 @@ Foam::Istream& Foam::functionObjects::operator>>
         "(Foam::Istream&, Foam::functionObjects::fieldAverageItem&)"
     );
 
-    const dictionaryEntry entry(dictionary::null, is);
+    token fieldNameToken(is);
+    faItem.fieldName_ = fieldNameToken.wordToken();
 
-    faItem.fieldName_ = entry.keyword();
-    entry.lookup("mean") >> faItem.mean_;
-    entry.lookup("prime2Mean") >> faItem.prime2Mean_;
-    faItem.base_ = faItem.baseTypeNames_[entry.lookup("base")];
-    faItem.window_ = entry.lookupOrDefault<scalar>("window", -1.0);
-    faItem.windowName_ = entry.lookupOrDefault<word>("windowName", "");
+    token nextToken(is);
+    is.putBack(nextToken);
+
+    if (nextToken.isPunctuation() && nextToken.pToken() == token::BEGIN_BLOCK)
+    {
+        const dictionary entry(dictionary::null, is);
+
+        faItem.mean_ = entry.lookupOrDefault<Switch>("mean", true);
+        faItem.prime2Mean_ = entry.lookupOrDefault<Switch>("prime2Mean", false);
+        faItem.base_ =
+            faItem.baseTypeNames_[entry.lookupOrDefault<word>("base", "time")];
+        faItem.window_ = entry.lookupOrDefault<scalar>("window", -1);
+        faItem.windowName_ = entry.lookupOrDefault<word>("windowName", "");
+    }
+    else
+    {
+        faItem.mean_ = true;
+        faItem.prime2Mean_ = false;
+        faItem.base_ = faItem.baseTypeNames_["time"];
+        faItem.window_ = -1;
+        faItem.windowName_ = "";
+    }
 
     faItem.meanFieldName_ = IOobject::groupName
     (
@@ -118,47 +103,8 @@ Foam::Istream& Foam::functionObjects::operator>>
         faItem.prime2MeanFieldName_ =
             faItem.prime2MeanFieldName_ + "_" + faItem.windowName_;
     }
+
     return is;
-}
-
-
-Foam::Ostream& Foam::functionObjects::operator<<
-(
-    Ostream& os,
-    const fieldAverageItem& faItem
-)
-{
-    os.check
-    (
-        "Foam::Ostream& Foam::operator<<"
-        "(Foam::Ostream&, const Foam::functionObjects::fieldAverageItem&)"
-    );
-
-    os  << faItem.fieldName_ << nl << token::BEGIN_BLOCK << nl;
-
-    writeEntry(os, "mean", faItem.mean_);
-    writeEntry(os, "prime2Mean", faItem.prime2Mean_);
-    writeEntry(os, "base", faItem.baseTypeNames_[faItem.base_]);
-
-    if (faItem.window_ > 0)
-    {
-        writeEntry(os, "window", faItem.window_);
-
-        if (faItem.windowName_ != "")
-        {
-            writeEntry(os, "windowName", faItem.windowName_);
-        }
-    }
-
-    os  << token::END_BLOCK << nl;
-
-    os.check
-    (
-        "Foam::Ostream& Foam::operator<<"
-        "(Foam::Ostream&, const Foam::functionObjects::fieldAverageItem&)"
-    );
-
-    return os;
 }
 
 

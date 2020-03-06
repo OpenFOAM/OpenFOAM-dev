@@ -51,66 +51,19 @@ functions
 {
     fieldAverage1
     {
-        type            fieldAverage;
-        libs            ("libfieldFunctionObjects.so");
-        writeControl    writeTime;
+        #includeEtc "caseDicts/postProcessing/fields/fieldAverage.cfg"
 
         fields
         (
             rhoN
-            {
-                mean        on;
-                prime2Mean  off;
-                base        time;
-            }
             rhoM
-            {
-                mean        on;
-                prime2Mean  off;
-                base        time;
-            }
             dsmcRhoN
-            {
-                mean        on;
-                prime2Mean  off;
-                base        time;
-            }
             momentum
-            {
-                mean        on;
-                prime2Mean  off;
-                base        time;
-            }
             linearKE
-            {
-                mean        on;
-                prime2Mean  off;
-                base        time;
-            }
             internalE
-            {
-                mean        on;
-                prime2Mean  off;
-                base        time;
-            }
             iDof
-            {
-                mean        on;
-                prime2Mean  off;
-                base        time;
-            }
             q
-            {
-                mean        on;
-                prime2Mean  off;
-                base        time;
-            }
             fD
-            {
-                mean        on;
-                prime2Mean  off;
-                base        time;
-            }
         );
     }
 

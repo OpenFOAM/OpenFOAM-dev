@@ -55,52 +55,16 @@ functions
 {
     fieldAverage1
     {
-        type            fieldAverage;
-        libs            ("libfieldFunctionObjects.so");
-        writeControl    writeTime;
+        #includeEtc "caseDicts/postProcessing/fields/fieldAverage.cfg"
+
         fields
         (
             U.air1
-            {
-                 mean        on;
-                 prime2Mean  off;
-                 base        time;
-            }
-
             U.air2
-            {
-                 mean        on;
-                 prime2Mean  off;
-                 base        time;
-            }
-
             U.water
-            {
-                 mean        on;
-                 prime2Mean  off;
-                 base        time;
-            }
-
             alpha.air1
-            {
-                 mean        on;
-                 prime2Mean  off;
-                 base        time;
-            }
-
             alpha.air2
-            {
-                 mean        on;
-                 prime2Mean  off;
-                 base        time;
-            }
-
             p
-            {
-                 mean        on;
-                 prime2Mean  off;
-                 base        time;
-            }
         );
     }
 

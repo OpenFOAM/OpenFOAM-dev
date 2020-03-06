@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,9 +30,9 @@ Description
 
     \verbatim
     {
-        mean            on;
-        prime2Mean      on;
-        base            time; // iteration
+        mean            on;   // (default = on)
+        prime2Mean      on;   // (default = off)
+        base            time; // time or iteration (default = time)
         window          200;  // optional averaging window
         windowName      w1;   // optional window name (default = "")
     }
@@ -68,7 +68,6 @@ namespace functionObjects
 // Forward declaration of friend functions and operators
 class fieldAverageItem;
 Istream& operator>>(Istream&, fieldAverageItem&);
-Ostream& operator<<(Ostream&, const fieldAverageItem&);
 
 /*---------------------------------------------------------------------------*\
                       Class fieldAverageItem Declaration
@@ -259,7 +258,6 @@ public:
     // IOstream Operators
 
         friend Istream& operator>>(Istream&, fieldAverageItem&);
-        friend Ostream& operator<<(Ostream&, const fieldAverageItem&);
 };
 
 

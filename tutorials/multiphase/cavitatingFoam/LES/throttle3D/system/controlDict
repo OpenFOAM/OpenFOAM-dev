@@ -53,31 +53,13 @@ functions
 {
     fieldAverage1
     {
-        type            fieldAverage;
-        libs            ("libfieldFunctionObjects.so");
-        writeControl    writeTime;
+        #includeEtc "caseDicts/postProcessing/fields/fieldAverage.cfg"
+
         fields
         (
             U
-            {
-                mean        on;
-                prime2Mean  off;
-                base        time;
-            }
-
             p
-            {
-                mean        on;
-                prime2Mean  off;
-                base        time;
-            }
-
             alpha.vapour
-            {
-                mean        on;
-                prime2Mean  off;
-                base        time;
-            }
         );
     }
 }
