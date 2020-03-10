@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,31 +42,36 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- Rotational transformation tensor from vector n1 to n2
+//- Rotational transformation tensor from unit vector n1 to n2
 inline tensor rotationTensor
 (
     const vector& n1,
     const vector& n2
 )
 {
-    const scalar s = n1 & n2;
+    const scalar c = n1 & n2;
     const vector n3 = n1 ^ n2;
     const scalar magSqrN3 = magSqr(n3);
 
     // n1 and n2 define a plane n3
     if (magSqrN3 > small)
     {
-        // Return rotational transformation tensor in the n3-plane
+        // Return rotational transformation tensor in the n3-plane using
+        // Rodrigues' rotation formula
         return
-            s*I
-          + (1 - s)*sqr(n3)/magSqrN3
-          + (n2*n1 - n1*n2);
+            c*I
+          + (n2*n1 - n1*n2)
+          + (1 - c)*sqr(n3)/magSqrN3;
     }
     // n1 and n2 are contradirectional
-    else if (s < 0)
+    else if (c < 0)
     {
-        // Return mirror transformation tensor
-        return I + 2*n1*n2;
+        // Return rotational transformation tensor in a plane with arbitrary
+        // normal perpendicular to n1 and n2 using a subset of Rodrigues'
+        // rotation formula
+        const vector n4 = perpendicular(n1);
+        const scalar magSqrN4 = magSqr(n4);
+        return - I + 2*sqr(n4)/magSqrN4;
     }
     // n1 and n2 are codirectional
     else
