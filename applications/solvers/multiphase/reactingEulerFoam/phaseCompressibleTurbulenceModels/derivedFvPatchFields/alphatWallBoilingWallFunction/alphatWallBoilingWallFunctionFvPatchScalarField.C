@@ -425,7 +425,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
                 const scalarField yPlusTherm(this->yPlusTherm(nutw, P, Prat));
 
-                const scalarField Cpw = lThermo.Cp(Tw, patchi);
+                const scalarField Cpw(lThermo.Cp(Tw, patchi));
 
                 // Saturation temperature
                 const saturationModel& satModel =
