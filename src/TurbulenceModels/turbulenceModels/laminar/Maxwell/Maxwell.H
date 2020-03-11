@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,11 @@ Class
     Foam::laminarModels::Maxwell
 
 Description
-    Maxwell model for viscoelasticity using the upper-convected time
-    derivative of the stress tensor.
+    Generalised Maxwell model for viscoelasticity using the upper-convected time
+    derivative of the stress tensor with support for multiple modes.
+
     See http://en.wikipedia.org/wiki/Upper-convected_Maxwell_model
+        http://en.wikipedia.org/wiki/Generalized_Maxwell_model
 
     The model includes an additional viscosity (nu) from the transport
     model from which it is instantiated, which makes it equivalent to
@@ -37,6 +39,13 @@ Description
 
     Reference:
     \verbatim
+        Wiechert, E. (1889). Ueber elastische Nachwirkung.
+        (Doctoral dissertation, Hartungsche buchdr.).
+
+        Wiechert, E. (1893).
+        Gesetze der elastischen Nachwirkung für constante Temperatur.
+        Annalen der Physik, 286(11), 546-570.
+
         Amoreira, L. J., & Oliveira, P. J. (2010).
         Comparison of different formulations for the numerical calculation
         of unsteady incompressible viscoelastic fluid flow.
@@ -76,16 +85,31 @@ protected:
 
         // Model coefficients
 
+            PtrList<dictionary> modeCoefficients_;
+
+            label nModes_;
+
             dimensionedScalar nuM_;
-            dimensionedScalar lambda_;
+
+            PtrList<dimensionedScalar> lambdas_;
 
 
         // Fields
 
+            //- Single or mode sum viscoelastic stress
             volSymmTensorField sigma_;
+
+            //- Mode viscoelastic stresses
+            PtrList<volSymmTensorField> sigmas_;
 
 
     // Protected Member Functions
+
+        PtrList<dimensionedScalar> readModeCoefficients
+        (
+            const word& name,
+            const dimensionSet& dims
+        ) const;
 
         //- Return the turbulence viscosity
         tmp<volScalarField> nu0() const
@@ -93,7 +117,11 @@ protected:
             return this->nu() + nuM_;
         }
 
-        virtual tmp<fvSymmTensorMatrix> sigmaSource() const;
+        virtual tmp<fvSymmTensorMatrix> sigmaSource
+        (
+            const label modei,
+            volSymmTensorField& sigma
+        ) const;
 
 
 public:

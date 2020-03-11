@@ -23,14 +23,44 @@ laminar
     MaxwellCoeffs
     {
         nuM             0.002;
+
+        // Single mode coefficient
         lambda          0.03;
+
+        // Example 2-mode specification
+        // modes
+        // (
+        //     {
+        //         lambda          0.01;
+        //     }
+
+        //     {
+        //         lambda          0.04;
+        //     }
+        // );
     }
 
     GiesekusCoeffs
     {
         nuM             0.002;
+
+        // Single mode coefficients
         lambda          0.03;
         alphaG          0.1;
+
+        // Example 2-mode specification
+        // modes
+        // (
+        //     {
+        //         lambda          0.01;
+        //         alphaG          0.05;
+        //     }
+
+        //     {
+        //         lambda          0.04;
+        //         alphaG          0.2;
+        //     }
+        // );
     }
 
     printCoeffs         on;

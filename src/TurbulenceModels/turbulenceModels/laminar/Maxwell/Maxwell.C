@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,14 +37,75 @@ namespace laminarModels
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-tmp<fvSymmTensorMatrix> Maxwell<BasicTurbulenceModel>::sigmaSource() const
+Foam::PtrList<Foam::dimensionedScalar>
+Maxwell<BasicTurbulenceModel>::readModeCoefficients
+(
+    const word& name,
+    const dimensionSet& dims
+) const
+{
+    PtrList<dimensionedScalar> modeCoeffs(nModes_);
+
+    if (nModes_ > 1)
+    {
+        if (this->coeffDict().found(name))
+        {
+            IOWarningInFunction(this->coeffDict())
+                << "For multi-mode entry '" << name << "' will be ignored."
+                << endl;
+        }
+
+        forAll(modeCoefficients_, modei)
+        {
+            modeCoeffs.set
+            (
+                modei,
+                new dimensioned<scalar>
+                (
+                    name,
+                    dims,
+                    modeCoefficients_[modei].lookup(name)
+                )
+            );
+        }
+    }
+    else
+    {
+        if (modeCoefficients_.size() == 1)
+        {
+            IOWarningInFunction(this->coeffDict())
+                << "For single mode 'modes' entry will be ignored." << endl;
+        }
+
+        modeCoeffs.set
+        (
+            0,
+            new dimensioned<scalar>
+            (
+                name,
+                dims,
+                this->coeffDict_.lookup(name)
+            )
+        );
+    }
+
+    return modeCoeffs;
+}
+
+
+template<class BasicTurbulenceModel>
+tmp<fvSymmTensorMatrix> Maxwell<BasicTurbulenceModel>::sigmaSource
+(
+    const label modei,
+    volSymmTensorField& sigma
+) const
 {
     return tmp<fvSymmTensorMatrix>
     (
         new fvSymmTensorMatrix
         (
-            sigma_,
-            dimVolume*this->rho_.dimensions()*sigma_.dimensions()/dimTime
+            sigma,
+            dimVolume*this->rho_.dimensions()*sigma.dimensions()/dimTime
         )
     );
 }
@@ -77,6 +138,18 @@ Maxwell<BasicTurbulenceModel>::Maxwell
         propertiesName
     ),
 
+    modeCoefficients_
+    (
+        this->coeffDict().found("modes")
+      ? PtrList<dictionary>
+        (
+            this->coeffDict().lookup("modes")
+        )
+      : PtrList<dictionary>()
+    ),
+
+    nModes_(modeCoefficients_.size() ? modeCoefficients_.size() : 1),
+
     nuM_
     (
         dimensioned<scalar>
@@ -87,15 +160,7 @@ Maxwell<BasicTurbulenceModel>::Maxwell
         )
     ),
 
-    lambda_
-    (
-        dimensioned<scalar>
-        (
-            "lambda",
-            dimTime,
-            this->coeffDict_.lookup("lambda")
-        )
-    ),
+    lambdas_(readModeCoefficients("lambda", dimTime)),
 
     sigma_
     (
@@ -110,6 +175,65 @@ Maxwell<BasicTurbulenceModel>::Maxwell
         this->mesh_
     )
 {
+    if (nModes_ > 1)
+    {
+        sigmas_.setSize(nModes_);
+
+        forAll(sigmas_, modei)
+        {
+            IOobject header
+            (
+                IOobject::groupName("sigma" + name(modei), alphaRhoPhi.group()),
+                this->runTime_.timeName(),
+                this->mesh_,
+                IOobject::NO_READ
+            );
+
+            // Check if mode field exists and can be read
+            if (header.typeHeaderOk<volSymmTensorField>(true))
+            {
+                Info<< "    Reading mode stress field "
+                    << header.name() << endl;
+
+                sigmas_.set
+                (
+                    modei,
+                    new volSymmTensorField
+                    (
+                        IOobject
+                        (
+                            header.name(),
+                            this->runTime_.timeName(),
+                            this->mesh_,
+                            IOobject::MUST_READ,
+                            IOobject::AUTO_WRITE
+                        ),
+                        this->mesh_
+                    )
+                );
+            }
+            else
+            {
+                sigmas_.set
+                (
+                    modei,
+                    new volSymmTensorField
+                    (
+                        IOobject
+                        (
+                            header.name(),
+                            this->runTime_.timeName(),
+                            this->mesh_,
+                            IOobject::NO_READ,
+                            IOobject::AUTO_WRITE
+                        ),
+                        sigma_
+                    )
+                );
+            }
+        }
+    }
+
     if (type == typeName)
     {
         this->printCoeffs(type);
@@ -124,8 +248,14 @@ bool Maxwell<BasicTurbulenceModel>::read()
 {
     if (laminarModel<BasicTurbulenceModel>::read())
     {
+        if (modeCoefficients_.size())
+        {
+            this->coeffDict().lookup("modes") >> modeCoefficients_;
+        }
+
         nuM_.readIfPresent(this->coeffDict());
-        lambda_.readIfPresent(this->coeffDict());
+
+        lambdas_ = readModeCoefficients("lambda", dimTime);
 
         return true;
     }
@@ -135,12 +265,14 @@ bool Maxwell<BasicTurbulenceModel>::read()
     }
 }
 
+
 template<class BasicTurbulenceModel>
 tmp<Foam::volSymmTensorField>
 Maxwell<BasicTurbulenceModel>::R() const
 {
     return sigma_;
 }
+
 
 template<class BasicTurbulenceModel>
 tmp<Foam::volSymmTensorField>
@@ -205,7 +337,6 @@ void Maxwell<BasicTurbulenceModel>::correct()
     const rhoField& rho = this->rho_;
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
-    volSymmTensorField& sigma = this->sigma_;
     fv::options& fvOptions(fv::options::New(this->mesh_));
 
     laminarModel<BasicTurbulenceModel>::correct();
@@ -213,40 +344,67 @@ void Maxwell<BasicTurbulenceModel>::correct()
     tmp<volTensorField> tgradU(fvc::grad(U));
     const volTensorField& gradU = tgradU();
 
-    uniformDimensionedScalarField rLambda
-    (
-        IOobject
+    forAll(lambdas_, modei)
+    {
+        volSymmTensorField& sigma = nModes_ == 1 ? sigma_ : sigmas_[modei];
+
+        uniformDimensionedScalarField rLambda
         (
-            IOobject::groupName("rLambda", this->alphaRhoPhi_.group()),
-            this->runTime_.constant(),
-            this->mesh_
-        ),
-        1.0/(lambda_)
-    );
+            IOobject
+            (
+                IOobject::groupName
+                (
+                    "rLambda"
+                  + (nModes_ == 1 ? word::null : name(modei)),
+                    this->alphaRhoPhi_.group()
+                ),
+                this->runTime_.constant(),
+                this->mesh_
+            ),
+            1/lambdas_[modei]
+        );
 
-    // Note sigma is positive on lhs of momentum eqn
-    volSymmTensorField P
-    (
-        twoSymm(sigma & gradU)
-      - nuM_*rLambda*twoSymm(gradU)
-    );
+        // Note sigma is positive on lhs of momentum eqn
+        const volSymmTensorField P
+        (
+            twoSymm(sigma & gradU)
+          - nuM_*rLambda*twoSymm(gradU)
+        );
 
-    // Viscoelastic stress equation
-    tmp<fvSymmTensorMatrix> sigmaEqn
-    (
-        fvm::ddt(alpha, rho, sigma)
-      + fvm::div(alphaRhoPhi, sigma)
-      + fvm::Sp(alpha*rho*rLambda, sigma)
-     ==
-        alpha*rho*P
-      + sigmaSource()
-      + fvOptions(alpha, rho, sigma)
-    );
+        // Viscoelastic stress equation
+        fvSymmTensorMatrix sigmaEqn
+        (
+            fvm::ddt(alpha, rho, sigma)
+          + fvm::div
+            (
+                alphaRhoPhi,
+                sigma,
+                "div(" + alphaRhoPhi.name() + ',' + sigma_.name() + ')'
+            )
+          + fvm::Sp(alpha*rho*rLambda, sigma)
+         ==
+            alpha*rho*P
+          + sigmaSource(modei, sigma)
+          + fvOptions(alpha, rho, sigma)
+        );
 
-    sigmaEqn.ref().relax();
-    fvOptions.constrain(sigmaEqn.ref());
-    solve(sigmaEqn);
-    fvOptions.correct(sigma_);
+        sigmaEqn.relax();
+        fvOptions.constrain(sigmaEqn);
+        sigmaEqn.solve("sigma");
+        fvOptions.correct(sigma);
+    }
+
+    if (sigmas_.size())
+    {
+        volSymmTensorField sigmaSum("sigmaSum", sigmas_[0]);
+
+        for (label modei = 1; modei<sigmas_.size(); modei++)
+        {
+            sigmaSum += sigmas_[modei];
+        }
+
+        sigma_ == sigmaSum;
+    }
 }
 
 

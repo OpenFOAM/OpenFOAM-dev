@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ Giesekus<BasicTurbulenceModel>::Giesekus
         type
     ),
 
-    alphaG_("alphaG", dimless, this->coeffDict_)
+    alphaGs_(this->readModeCoefficients("alphaG", dimless))
 {
     if (type == typeName)
     {
@@ -76,7 +76,7 @@ bool Giesekus<BasicTurbulenceModel>::read()
 {
     if (Maxwell<BasicTurbulenceModel>::read())
     {
-        alphaG_.read(this->coeffDict());
+        alphaGs_ = this->readModeCoefficients("alphaG", dimless);
 
         return true;
     }
@@ -89,12 +89,16 @@ bool Giesekus<BasicTurbulenceModel>::read()
 
 template<class BasicTurbulenceModel>
 tmp<fvSymmTensorMatrix>
-Giesekus<BasicTurbulenceModel>::sigmaSource() const
+Giesekus<BasicTurbulenceModel>::sigmaSource
+(
+    const label modei,
+    volSymmTensorField& sigma
+) const
 {
     return fvm::Su
     (
         this->alpha_*this->rho_
-       *alphaG_*innerSqr(this->sigma_)/this->nuM_, this->sigma_
+       *alphaGs_[modei]*innerSqr(sigma)/this->nuM_, sigma
     );
 }
 

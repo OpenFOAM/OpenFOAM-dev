@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,8 @@ Class
     Foam::laminarModels::Giesekus
 
 Description
-    Giesekus model for viscoelasticity.
+    Giesekus model for viscoelasticity using the upper-convected time
+    derivative of the stress tensor with support for multiple modes.
 
     Reference:
     \verbatim
@@ -68,14 +69,18 @@ protected:
 
     // Protected data
 
-        // Model coefficients
+        // Mode coefficients
 
-            dimensionedScalar alphaG_;
+            PtrList<dimensionedScalar> alphaGs_;
 
 
     // Protected Member Functions
 
-        virtual tmp<fvSymmTensorMatrix> sigmaSource() const;
+        virtual tmp<fvSymmTensorMatrix> sigmaSource
+        (
+            const label modei,
+            volSymmTensorField& sigma
+        ) const;
 
 
 public:
