@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,25 +55,6 @@ Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
 
 Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
 (
-    const smoluchowskiJumpTFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    mixedFvPatchScalarField(ptf, p, iF, mapper),
-    UName_(ptf.UName_),
-    rhoName_(ptf.rhoName_),
-    psiName_(ptf.psiName_),
-    muName_(ptf.muName_),
-    accommodationCoeff_(ptf.accommodationCoeff_),
-    Twall_(ptf.Twall_),
-    gamma_(ptf.gamma_)
-{}
-
-
-Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -122,6 +103,25 @@ Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
 
 Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
 (
+    const smoluchowskiJumpTFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    mixedFvPatchScalarField(ptf, p, iF, mapper),
+    UName_(ptf.UName_),
+    rhoName_(ptf.rhoName_),
+    psiName_(ptf.psiName_),
+    muName_(ptf.muName_),
+    accommodationCoeff_(ptf.accommodationCoeff_),
+    Twall_(mapper(ptf.Twall_)),
+    gamma_(ptf.gamma_)
+{}
+
+
+Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
+(
     const smoluchowskiJumpTFvPatchScalarField& ptpsf,
     const DimensionedField<scalar, volMesh>& iF
 )
@@ -135,17 +135,16 @@ Foam::smoluchowskiJumpTFvPatchScalarField::smoluchowskiJumpTFvPatchScalarField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-// Map from self
 void Foam::smoluchowskiJumpTFvPatchScalarField::autoMap
 (
     const fvPatchFieldMapper& m
 )
 {
     mixedFvPatchScalarField::autoMap(m);
+    m(Twall_, Twall_);
 }
 
 
-// Reverse-map the given fvPatchField onto this fvPatchField
 void Foam::smoluchowskiJumpTFvPatchScalarField::rmap
 (
     const fvPatchField<scalar>& ptf,
@@ -153,10 +152,14 @@ void Foam::smoluchowskiJumpTFvPatchScalarField::rmap
 )
 {
     mixedFvPatchField<scalar>::rmap(ptf, addr);
+
+    const smoluchowskiJumpTFvPatchScalarField& ptpsf =
+        refCast<const smoluchowskiJumpTFvPatchScalarField>(ptf);
+
+    Twall_.rmap(ptpsf.Twall_, addr);
 }
 
 
-// Update the coefficients associated with the patch field
 void Foam::smoluchowskiJumpTFvPatchScalarField::updateCoeffs()
 {
     if (updated())

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,17 +66,6 @@ Foam::fixedRhoFvPatchScalarField::fixedRhoFvPatchScalarField
     fixedValueFvPatchScalarField(p, iF, dict),
     pName_(dict.lookupOrDefault<word>("p", "p")),
     psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi"))
-{}
-
-
-Foam::fixedRhoFvPatchScalarField::fixedRhoFvPatchScalarField
-(
-    const fixedRhoFvPatchScalarField& frpsf
-)
-:
-    fixedValueFvPatchScalarField(frpsf),
-    pName_(frpsf.pName_),
-    psiName_(frpsf.psiName_)
 {}
 
 
