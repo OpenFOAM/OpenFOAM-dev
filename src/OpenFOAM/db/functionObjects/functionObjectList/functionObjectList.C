@@ -405,7 +405,45 @@ bool Foam::functionObjectList::readFunctionObject
     }
     else if (expandedFuncDict.found("fields"))
     {
-        requiredFields.insert(wordList(expandedFuncDict.lookup("fields")));
+        ITstream& is = expandedFuncDict.lookup("fields");
+
+        // Read BEGIN_LIST
+        const token firstToken(is);
+
+        if
+        (
+            firstToken.isPunctuation()
+         && firstToken.pToken() == token::BEGIN_LIST
+        )
+        {
+            // Read first field name
+            const token secondToken(is);
+
+            // Read second field name or BEGIN_BLOCK
+            const token thirdToken(is);
+
+            if
+            (
+                thirdToken.isPunctuation()
+             && thirdToken.pToken() == token::BEGIN_BLOCK
+            )
+            {
+                requiredFields.insert
+                (
+                    wordList
+                    (
+                        dictionary(expandedFuncDict.lookup("fields")).toc()
+                    )
+                );
+            }
+            else
+            {
+                requiredFields.insert
+                (
+                    wordList(expandedFuncDict.lookup("fields"))
+                );
+            }
+        }
     }
 
     // Merge this functionObject dictionary into functionsDict
