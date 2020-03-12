@@ -46,12 +46,12 @@ Maxwell<BasicTurbulenceModel>::readModeCoefficients
 {
     PtrList<dimensionedScalar> modeCoeffs(nModes_);
 
-    if (nModes_ > 1)
+    if (modeCoefficients_.size())
     {
         if (this->coeffDict().found(name))
         {
             IOWarningInFunction(this->coeffDict())
-                << "For multi-mode entry '" << name << "' will be ignored."
+                << "Using 'modes' list, '" << name << "' entry will be ignored."
                 << endl;
         }
 
@@ -71,12 +71,6 @@ Maxwell<BasicTurbulenceModel>::readModeCoefficients
     }
     else
     {
-        if (modeCoefficients_.size() == 1)
-        {
-            IOWarningInFunction(this->coeffDict())
-                << "For single mode 'modes' entry will be ignored." << endl;
-        }
-
         modeCoeffs.set
         (
             0,
