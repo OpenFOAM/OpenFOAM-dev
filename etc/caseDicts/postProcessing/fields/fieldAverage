@@ -6,15 +6,12 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Writes the specified objects, e.g. fields, stored in the case database.
+    Calculates and writes the time averages of given list of fields.
 
 \*---------------------------------------------------------------------------*/
 
-type            writeObjects;
-libs            ("libutilityFunctionObjects.so");
+#includeEtc "caseDicts/postProcessing/fields/fieldAverage.cfg"
 
-objects         (<object_names>);
-
-writeControl    writeTime;
+fields          (<field_names>);
 
 // ************************************************************************* //
