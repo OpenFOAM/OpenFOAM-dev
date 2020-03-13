@@ -73,6 +73,11 @@ class functionEntry
 
 protected:
 
+        //- Read the function name and optional argument list
+        //  and return as a string.
+        //  The optional argument list can be on one or more lines.
+        static string readFuncNameArgs(Istream& is);
+
         //- Insert the given string in a sub-dict context
         static bool insert
         (

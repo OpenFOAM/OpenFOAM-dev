@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,9 +55,8 @@ bool Foam::functionEntries::includeFuncEntry::execute
     Istream& is
 )
 {
-    // Read line containing the function name and all the arguments
-    string fNameArgs;
-    dynamic_cast<ISstream&>(is).getMultiLines(fNameArgs);
+    // Read line containing the function name and the optional arguments
+    const string fNameArgs(readFuncNameArgs(is));
 
     HashSet<word> selectedFields;
 

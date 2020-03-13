@@ -75,10 +75,10 @@ functions
         geometric           yes;
     }
 
-    #includeFunc writeObjects                         \
-    (                                                 \
-        d.particles,                                  \
-        phaseTransfer:dmidtf.TiO2.particlesAndVapor   \
+    #includeFunc writeObjects
+    (
+        d.particles,
+        phaseTransfer:dmidtf.TiO2.particlesAndVapor
     )
 }
 

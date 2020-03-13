@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,8 +66,11 @@ class ISstream
         //- Read a verbatim string (excluding block delimiters).
         Istream& readVerbatim(verbatimString&);
 
-        //- Read a variable name
+        //- Read a variable name into a string
         Istream& readVariable(string&);
+
+        //- Read a delimited set of characters into a string
+        Istream& readDelimited(string&, const char begin, const char end);
 
         //- Read a work token
         void readWordToken(token&);
@@ -117,24 +120,26 @@ public:
 
         // Read functions
 
-            //- Raw, low-level get character function.
+            //- Low-level get character function.
             inline ISstream& get(char&);
 
-            //- Raw, low-level peek function.
+            //- Low-level peek function.
             //  Does not remove the character from the stream.
             //  Returns the next character in the stream or EOF if the
             //  end of file is read.
             inline int peek();
 
-            //- Raw, low-level getline into a string function.
-            inline ISstream& getLine(string&);
-
-            //- Get multiple lines using the '\' continuation character
-            //   into a string
-            inline ISstream& getMultiLines(string&);
-
-            //- Raw, low-level putback character function.
+            //- Low-level putback character function.
             inline ISstream& putback(const char&);
+
+            //- Read line into a string
+            ISstream& getLine(string&);
+
+            //- Read a '(...)' delimited set of characters into a string
+            Istream& readList(string&);
+
+            //- Read a '{...}' delimited set of characters into a string
+            Istream& readBlock(string&);
 
             //- Return next token from stream
             virtual Istream& read(token&);

@@ -58,14 +58,83 @@ Foam::token Foam::functionEntry::readLine(Istream& is)
     }
     else
     {
-        word s;
-        dynamic_cast<ISstream&>(is).getLine(s);
-        return token(s, is.lineNumber());
+        return token(word(readFuncNameArgs(is)), is.lineNumber());
     }
 }
 
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+Foam::string Foam::functionEntry::readFuncNameArgs(Istream& is)
+{
+    string fNameArgs;
+
+    // Read the function name with arguments if on the same line
+    const token fName(is);
+
+    if (fName.isWord())
+    {
+        const word& fNameWord = fName.wordToken();
+
+        if (fNameWord.find(token::BEGIN_LIST) != string::npos)
+        {
+            // If the function name includes a '(' push it back onto the stream
+            // and re-read as a list
+
+            ISstream& iss = dynamic_cast<ISstream&>(is);
+
+            for
+            (
+                string::const_reverse_iterator rit = fNameWord.rbegin();
+                rit != fNameWord.rend();
+                ++rit
+            )
+            {
+                iss.putback(*rit);
+            }
+
+            iss.readList(fNameArgs);
+        }
+        else
+        {
+            // Read the next token to check for '('
+            // in case the optional arguments start on the next line
+
+            const token nextToken(is);
+
+            if
+            (
+                nextToken.isPunctuation()
+             && nextToken.pToken() == token::BEGIN_LIST
+            )
+            {
+                ISstream& iss = dynamic_cast<ISstream&>(is);
+
+                iss.putback(token::BEGIN_LIST);
+                iss.readList(fNameArgs);
+                fNameArgs = fNameWord + fNameArgs;
+            }
+            else
+            {
+                is.putBack(nextToken);
+                fNameArgs = fNameWord;
+            }
+        }
+    }
+    else if (fName.isString())
+    {
+        // If the function name is a string delimit with '"'s
+        fNameArgs = '"' + fName.stringToken() + '"';
+    }
+    else
+    {
+        // For any other kind of string return for error reporting
+        fNameArgs = fName.anyStringToken();
+    }
+
+    return fNameArgs;
+}
+
 
 bool Foam::functionEntry::insert
 (
@@ -192,8 +261,6 @@ bool Foam::functionEntry::execute
 
 void Foam::functionEntry::write(Ostream& os) const
 {
-    os.indent();
-
     writeKeyword(os, keyword());
 
     if (size() == 1)
