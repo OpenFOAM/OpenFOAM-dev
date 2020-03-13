@@ -354,14 +354,14 @@ Foam::cyclicTransform::cyclicTransform
     const vector area = sum(areas);
     const vector nbrArea = sum(nbrAreas);
 
-    // Calculate patch length scales
-    const scalar lengthScale = sqrt(mag(area));
-
     // Calculate the centroids for the supplied patch data
     const scalarField magAreas(mag(areas));
     const scalarField magNbrAreas(mag(nbrAreas));
     const point ctr = sum(ctrs*magAreas)/sum(magAreas);
     const point nbrCtr = sum(nbrCtrs*magNbrAreas)/sum(magNbrAreas);
+
+    // Calculate patch length scales
+    const scalar lengthScale = sqrt(sum(magAreas));
 
     // Calculate the transformation from the patch geometry
     if (!transformComplete_)
