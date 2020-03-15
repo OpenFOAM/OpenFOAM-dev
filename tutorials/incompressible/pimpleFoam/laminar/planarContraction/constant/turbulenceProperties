@@ -18,7 +18,7 @@ simulationType laminar;
 
 laminar
 {
-    laminarModel        Maxwell; // Giesekus;
+    laminarModel        Maxwell; // Giesekus; // PTT;
 
     MaxwellCoeffs
     {
@@ -59,6 +59,29 @@ laminar
         //     {
         //         lambda          0.04;
         //         alphaG          0.2;
+        //     }
+        // );
+    }
+
+    PTTCoeffs
+    {
+        nuM             0.002;
+
+        // Single mode coefficients
+        lambda          0.03;
+        epsilon         0.25;
+
+        // Example 2-mode specification
+        // modes
+        // (
+        //     {
+        //         lambda          0.01;
+        //         epsilon         0.25;
+        //     }
+
+        //     {
+        //         lambda          0.04;
+        //         epsilon         0.25;
         //     }
         // );
     }

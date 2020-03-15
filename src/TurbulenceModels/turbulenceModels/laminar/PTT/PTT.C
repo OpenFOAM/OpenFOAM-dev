@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Giesekus.H"
+#include "PTT.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -37,25 +37,26 @@ namespace laminarModels
 
 template<class BasicTurbulenceModel>
 tmp<fvSymmTensorMatrix>
-Giesekus<BasicTurbulenceModel>::sigmaSource
+PTT<BasicTurbulenceModel>::sigmaSource
 (
     const label modei,
     volSymmTensorField& sigma
 ) const
 {
-    return fvm::Su
+    return -fvm::Sp
     (
         this->alpha_*this->rho_
-       *alphaGs_[modei]*innerSqr(sigma)/this->nuM_, sigma
-    )
-  - fvm::Sp(this->alpha_*this->rho_/this->lambdas_[modei], sigma);
+       *exp(-epsilons_[modei]*this->lambdas_[modei]*tr(sigma)/this->nuM_)
+       /this->lambdas_[modei],
+        sigma
+    );
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-Giesekus<BasicTurbulenceModel>::Giesekus
+PTT<BasicTurbulenceModel>::PTT
 (
     const alphaField& alpha,
     const rhoField& rho,
@@ -79,7 +80,7 @@ Giesekus<BasicTurbulenceModel>::Giesekus
         type
     ),
 
-    alphaGs_(this->readModeCoefficients("alphaG", dimless))
+    epsilons_(this->readModeCoefficients("epsilon", dimless))
 {
     if (type == typeName)
     {
@@ -91,11 +92,11 @@ Giesekus<BasicTurbulenceModel>::Giesekus
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicTurbulenceModel>
-bool Giesekus<BasicTurbulenceModel>::read()
+bool PTT<BasicTurbulenceModel>::read()
 {
     if (Maxwell<BasicTurbulenceModel>::read())
     {
-        alphaGs_ = this->readModeCoefficients("alphaG", dimless);
+        epsilons_ = this->readModeCoefficients("epsilon", dimless);
 
         return true;
     }

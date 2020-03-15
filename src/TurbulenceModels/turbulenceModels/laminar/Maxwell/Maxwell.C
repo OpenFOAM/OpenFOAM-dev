@@ -94,14 +94,7 @@ tmp<fvSymmTensorMatrix> Maxwell<BasicTurbulenceModel>::sigmaSource
     volSymmTensorField& sigma
 ) const
 {
-    return tmp<fvSymmTensorMatrix>
-    (
-        new fvSymmTensorMatrix
-        (
-            sigma,
-            dimVolume*this->rho_.dimensions()*sigma.dimensions()/dimTime
-        )
-    );
+    return -fvm::Sp(this->alpha_*this->rho_/lambdas_[modei], sigma);
 }
 
 
@@ -375,7 +368,6 @@ void Maxwell<BasicTurbulenceModel>::correct()
                 sigma,
                 "div(" + alphaRhoPhi.name() + ',' + sigma_.name() + ')'
             )
-          + fvm::Sp(alpha*rho*rLambda, sigma)
          ==
             alpha*rho*P
           + sigmaSource(modei, sigma)
