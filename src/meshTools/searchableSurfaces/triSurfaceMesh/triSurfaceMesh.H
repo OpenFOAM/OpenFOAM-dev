@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -318,7 +318,7 @@ public:
             Pair<tmp<triSurfaceScalarField>> extractCloseness
             (
                 const scalar internalAngleTolerance = 80,
-                const scalar externalAngleTolerance = 10
+                const scalar externalAngleTolerance = 80
             ) const;
 
             //- Return a pair of triSurfaceScalarPointFields representing the
@@ -326,7 +326,7 @@ public:
             Pair<tmp<triSurfacePointScalarField>> extractPointCloseness
             (
                 const scalar internalAngleTolerance = 80,
-                const scalar externalAngleTolerance = 10
+                const scalar externalAngleTolerance = 80
             ) const;
 
 

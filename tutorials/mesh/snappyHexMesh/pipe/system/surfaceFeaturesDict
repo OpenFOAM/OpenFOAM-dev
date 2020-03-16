@@ -47,8 +47,11 @@ pipeWall
     // - 180: selects all edges
     includedAngle           150;
 
-    // Output the closeness of surface points to other surface elements.
-    pointCloseness          yes;
+    closeness
+    {
+        // Output the closeness of surface points to other surface elements.
+        pointCloseness          yes;
+    }
 
     writeVTK                yes;
 }

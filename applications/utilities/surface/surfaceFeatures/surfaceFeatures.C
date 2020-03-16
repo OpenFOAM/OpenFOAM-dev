@@ -172,10 +172,6 @@ namespace Foam
             dict.lookupOrDefault<Switch>("curvature", "off");
         const Switch featureProximity =
             dict.lookupOrDefault<Switch>("featureProximity", "off");
-        const Switch faceCloseness =
-            dict.lookupOrDefault<Switch>("faceCloseness", "off");
-        const Switch pointCloseness =
-            dict.lookupOrDefault<Switch>("pointCloseness", "off");
 
 
         Info<< nl << "Feature line extraction is only valid on closed manifold "
@@ -426,10 +422,33 @@ namespace Foam
 
 
         // Find distance between close features
-        if (faceCloseness || pointCloseness)
+        if (dict.isDict("closeness"))
         {
             Info<< nl << "Extracting internal and external closeness of "
                 << "surface." << endl;
+
+            const dictionary& closenessDict = dict.subDict("closeness");
+
+            const Switch faceCloseness =
+                closenessDict.lookupOrDefault<Switch>("faceCloseness", "off");
+            const Switch pointCloseness =
+                closenessDict.lookupOrDefault<Switch>("pointCloseness", "off");
+
+            const scalar internalAngleTolerance
+            (
+                closenessDict.lookupOrDefault<scalar>
+                (
+                    "internalAngleTolerance", 80
+                )
+            );
+
+            const scalar externalAngleTolerance
+            (
+                closenessDict.lookupOrDefault<scalar>
+                (
+                    "externalAngleTolerance", 80
+                )
+            );
 
             // Searchable triSurface
             const triSurfaceMesh searchSurf
@@ -448,7 +467,11 @@ namespace Foam
             {
                 Pair<tmp<triSurfaceScalarField>> closenessFields
                 (
-                    searchSurf.extractCloseness()
+                    searchSurf.extractCloseness
+                    (
+                        internalAngleTolerance,
+                        externalAngleTolerance
+                    )
                 );
 
                 Info<< "    writing "
@@ -491,7 +514,11 @@ namespace Foam
             {
                 Pair<tmp<triSurfacePointScalarField >> closenessFields
                 (
-                    searchSurf.extractPointCloseness(10, 10)
+                    searchSurf.extractPointCloseness
+                    (
+                        internalAngleTolerance,
+                        externalAngleTolerance
+                    )
                 );
 
                 Info<< "    writing "

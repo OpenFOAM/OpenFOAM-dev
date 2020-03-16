@@ -100,11 +100,18 @@ surface2
     // points and edges
     maxFeatureProximity     1;
 
-    // Output the closeness of surface elements to other surface elements.
-    faceCloseness           no;
+    closeness
+    {
+        // Output the closeness of surface elements to other surface elements.
+        faceCloseness           no;
 
-    // Output the closeness of surface points to other surface elements.
-    pointCloseness          no;
+        // Output the closeness of surface points to other surface elements.
+        pointCloseness          no;
+
+        // Optional maximum angle between opposite points considered close
+        internalAngleTolerance  80;
+        externalAngleTolerance  80;
+    }
 
     // Write features to obj format for postprocessing
     writeObj                yes;
