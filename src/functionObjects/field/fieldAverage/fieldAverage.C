@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fieldAverage.H"
-#include "volFields.H"
 #include "fieldAverageItem.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -38,6 +37,20 @@ namespace functionObjects
     addToRunTimeSelectionTable(functionObject, fieldAverage, dictionary);
 }
 }
+
+
+template<>
+const char* Foam::NamedEnum
+<
+    Foam::functionObjects::fieldAverage::baseType,
+    2
+>::names[] = { "iteration", "time"};
+
+const Foam::NamedEnum
+<
+    Foam::functionObjects::fieldAverage::baseType,
+    2
+> Foam::functionObjects::fieldAverage::baseTypeNames_;
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
@@ -293,6 +306,9 @@ Foam::functionObjects::fieldAverage::fieldAverage
     periodicRestart_(false),
     restartPeriod_(great),
     initialised_(false),
+    base_(baseType::iter),
+    window_(-1.0),
+    windowName_(""),
     faItems_(),
     totalIter_(),
     totalTime_(),
@@ -321,7 +337,21 @@ bool Foam::functionObjects::fieldAverage::read(const dictionary& dict)
     dict.readIfPresent("restartOnRestart", restartOnRestart_);
     dict.readIfPresent("restartOnOutput", restartOnOutput_);
     dict.readIfPresent("periodicRestart", periodicRestart_);
-    dict.lookup("fields") >> faItems_;
+
+    mean_ = dict.lookupOrDefault<Switch>("mean", true);
+    prime2Mean_ = dict.lookupOrDefault<Switch>("prime2Mean", false);
+    base_ = baseTypeNames_
+    [
+        dict.lookupOrDefault<word>("base", "time")
+    ];
+    window_ = dict.lookupOrDefault<scalar>("window", -1);
+    windowName_ = dict.lookupOrDefault<word>("windowName", "");
+
+    faItems_ = PtrList<fieldAverageItem>
+    (
+        dict.lookup("fields"),
+        fieldAverageItem::iNew(*this)
+    );
 
     if (periodicRestart_)
     {

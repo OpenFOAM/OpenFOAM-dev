@@ -60,14 +60,11 @@ namespace Foam
 
 // Forward declaration of classes
 class Istream;
-class Ostream;
 
 namespace functionObjects
 {
 
-// Forward declaration of friend functions and operators
-class fieldAverageItem;
-Istream& operator>>(Istream&, fieldAverageItem&);
+class fieldAverage;
 
 /*---------------------------------------------------------------------------*\
                       Class fieldAverageItem Declaration
@@ -75,18 +72,6 @@ Istream& operator>>(Istream&, fieldAverageItem&);
 
 class fieldAverageItem
 {
-public:
-
-        //- Enumeration defining the averaging base type
-        enum class baseType
-        {
-            iter,
-            time
-        };
-
-
-private:
-
     // Private Data
 
         //- Field name
@@ -103,18 +88,6 @@ private:
 
         //- Name of prime-squared mean field
         word prime2MeanFieldName_;
-
-        //- Averaging base type names
-        static const NamedEnum<baseType, 2> baseTypeNames_;
-
-        //- Averaging base type
-        baseType base_;
-
-        //- Averaging window - defaults to -1 for 'all iters/time'
-        scalar window_;
-
-        //- Averaging window name - defaults to 'window'
-        word windowName_;
 
 
 public:
@@ -135,11 +108,36 @@ public:
         //- Construct null
         fieldAverageItem();
 
-        //- Construct from Istream
-        fieldAverageItem(Istream&);
+        //- Construct from Istream for given fieldAverage
+        fieldAverageItem(const fieldAverage& fa, Istream& is);
 
         //- Copy constructor
-        fieldAverageItem(const fieldAverageItem&);
+        fieldAverageItem(const fieldAverageItem&) = default;
+
+        //- Clone function
+        autoPtr<fieldAverageItem> clone() const
+        {
+            return autoPtr<fieldAverageItem>(new fieldAverageItem(*this));
+        }
+
+        //- Class used for the read-construction of
+        //  PtrLists of fieldAverageItem
+        class iNew
+        {
+            const fieldAverage& fa_;
+
+        public:
+
+            iNew(const fieldAverage& fa)
+            :
+                fa_(fa)
+            {}
+
+            autoPtr<fieldAverageItem> operator()(Istream& is) const
+            {
+                return autoPtr<fieldAverageItem>(new fieldAverageItem(fa_, is));
+            }
+        };
 
 
     //- Destructor
@@ -191,73 +189,6 @@ public:
             {
                 return prime2MeanFieldName_;
             }
-
-            //- Return averaging base type name
-            const word base() const
-            {
-                return baseTypeNames_[base_];
-            }
-
-            //- Return true if base is iter
-            Switch iterBase() const
-            {
-                return base_ == baseType::iter;
-            }
-
-            //- Return true if base is time
-            Switch timeBase() const
-            {
-                return base_ == baseType::time;
-            }
-
-            scalar window() const
-            {
-                return window_;
-            }
-
-            const word& windowName() const
-            {
-                return windowName_;
-            }
-
-
-    // Member Operators
-
-        void operator=(const fieldAverageItem&);
-
-
-    // Friend Operators
-
-        friend bool operator==
-        (
-            const fieldAverageItem& a,
-            const fieldAverageItem& b
-        )
-        {
-            return
-                a.fieldName_ == b.fieldName_
-             && a.mean_ == b.mean_
-             && a.meanFieldName_ == b.meanFieldName_
-             && a.prime2Mean_ == b.prime2Mean_
-             && a.prime2MeanFieldName_ == b.prime2MeanFieldName_
-             && a.base_ == b.base_
-             && a.window_ == b.window_
-             && a.windowName_ == b.windowName_;
-        }
-
-        friend bool operator!=
-        (
-            const fieldAverageItem& a,
-            const fieldAverageItem& b
-        )
-        {
-            return !(a == b);
-        }
-
-
-    // IOstream Operators
-
-        friend Istream& operator>>(Istream&, fieldAverageItem&);
 };
 
 

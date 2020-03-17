@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,30 +61,21 @@ Description
         type                fieldAverage;
         libs                ("libfieldFunctionObjects.so");
 
-        writeControl    writeTime;
+        writeControl        writeTime;
 
         restartOnRestart    false;
         restartOnOutput     false;
         periodicRestart     false;
         restartPeriod       0.002;
 
-        fields
-        (
-            U
-            {
-                mean            on;
-                prime2Mean      on;
-                base            time;
-                window          10.0;
-                windowName      w1;
-            }
-            p
-            {
-                mean            on;
-                prime2Mean      on;
-                base            time;
-            }
-        );
+        base                time;
+        window              10.0;
+        windowName          w1;
+
+        mean                yes;
+        prime2Mean          yes;
+
+        fields              (U p);
     }
     \endverbatim
 
@@ -98,7 +89,6 @@ Usage
         restartPeriod     | Periodic restart period              | conditional |
         fields            | list of fields and averaging options | yes |
     \endtable
-
 
 Note
     To employ the \c prime2Mean option, the \c mean option must be selected.
@@ -137,6 +127,17 @@ class fieldAverage
 :
     public fvMeshFunctionObject
 {
+
+public:
+
+        //- Enumeration defining the averaging base type
+        enum class baseType
+        {
+            iter,
+            time
+        };
+
+
 protected:
 
     // Protected data
@@ -159,9 +160,27 @@ protected:
         //- Initialised flag
         bool initialised_;
 
+        //- Averaging base type names
+        static const NamedEnum<baseType, 2> baseTypeNames_;
+
+        //- Averaging base type
+        baseType base_;
+
+        //- Averaging window - defaults to -1 for 'all iters/time'
+        scalar window_;
+
+        //- Averaging window name - defaults to 'window'
+        word windowName_;
+
+        //- Compute mean flag
+        Switch mean_;
+
+        //- Compute prime-squared mean flag
+        Switch prime2Mean_;
+
         //- List of field average items, describing what averages to be
         //  calculated and output
-        List<fieldAverageItem> faItems_;
+        PtrList<fieldAverageItem> faItems_;
 
         // Counters
 
@@ -259,6 +278,9 @@ protected:
 
 public:
 
+    friend class fieldAverageItem;
+
+
     //- Runtime type information
     TypeName("fieldAverage");
 
@@ -282,6 +304,37 @@ public:
 
 
     // Member Functions
+
+        // Access
+
+            //- Return averaging base type name
+            const word base() const
+            {
+                return baseTypeNames_[base_];
+            }
+
+            //- Return true if base is iter
+            Switch iterBase() const
+            {
+                return base_ == baseType::iter;
+            }
+
+            //- Return true if base is time
+            Switch timeBase() const
+            {
+                return base_ == baseType::time;
+            }
+
+            scalar window() const
+            {
+                return window_;
+            }
+
+            const word& windowName() const
+            {
+                return windowName_;
+            }
+
 
         //- Read the field average data
         virtual bool read(const dictionary&);

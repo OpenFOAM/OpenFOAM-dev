@@ -53,18 +53,7 @@ maxDeltaT       0.01;
 
 functions
 {
-    fieldAverage1
-    {
-        #includeEtc "caseDicts/postProcessing/fields/fieldAverage.cfg"
-
-        fields
-        (
-            U.particles
-            U.air
-            alpha.particles
-            p
-        );
-    }
+    #includeFunc fieldAverage(U.particles, U.air, alpha.particles, p)
 }
 
 

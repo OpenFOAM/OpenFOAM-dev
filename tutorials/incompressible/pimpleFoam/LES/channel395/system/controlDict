@@ -47,23 +47,7 @@ runTimeModifiable true;
 
 functions
 {
-    fieldAverage1
-    {
-        #includeEtc "caseDicts/postProcessing/fields/fieldAverage.cfg"
-
-        fields
-        (
-            U
-            {
-                prime2Mean  yes;
-            }
-
-            p
-            {
-                prime2Mean  yes;
-            }
-        );
-    }
+    #includeFunc fieldAverage(U, p, prime2Mean = yes)
 }
 
 // ************************************************************************* //

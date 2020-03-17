@@ -24,32 +24,21 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fieldAverageItem.H"
-#include "dictionaryEntry.H"
-#include "IOobject.H"
+#include "fieldAverage.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::fieldAverageItem::fieldAverageItem(Istream& is)
+Foam::functionObjects::fieldAverageItem::fieldAverageItem
+(
+    const fieldAverage& fa,
+    Istream& is
+)
 :
     fieldName_("unknown"),
-    mean_(0),
+    mean_(false),
     meanFieldName_("unknown"),
-    prime2Mean_(0),
-    prime2MeanFieldName_("unknown"),
-    base_(baseType::iter),
-    window_(-1.0)
-{
-    is >> *this;
-}
-
-
-// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
-
-Foam::Istream& Foam::functionObjects::operator>>
-(
-    Istream& is,
-    fieldAverageItem& faItem
-)
+    prime2Mean_(false),
+    prime2MeanFieldName_("unknown")
 {
     is.check
     (
@@ -58,7 +47,7 @@ Foam::Istream& Foam::functionObjects::operator>>
     );
 
     token fieldNameToken(is);
-    faItem.fieldName_ = fieldNameToken.wordToken();
+    fieldName_ = fieldNameToken.wordToken();
 
     token nextToken(is);
     is.putBack(nextToken);
@@ -67,44 +56,36 @@ Foam::Istream& Foam::functionObjects::operator>>
     {
         const dictionary entry(dictionary::null, is);
 
-        faItem.mean_ = entry.lookupOrDefault<Switch>("mean", true);
-        faItem.prime2Mean_ = entry.lookupOrDefault<Switch>("prime2Mean", false);
-        faItem.base_ =
-            faItem.baseTypeNames_[entry.lookupOrDefault<word>("base", "time")];
-        faItem.window_ = entry.lookupOrDefault<scalar>("window", -1);
-        faItem.windowName_ = entry.lookupOrDefault<word>("windowName", "");
+        mean_ = entry.lookupOrDefault<Switch>("mean", fa.mean_);
+        prime2Mean_ =
+            entry.lookupOrDefault<Switch>("prime2Mean", fa.prime2Mean_);
     }
     else
     {
-        faItem.mean_ = true;
-        faItem.prime2Mean_ = false;
-        faItem.base_ = faItem.baseTypeNames_["time"];
-        faItem.window_ = -1;
-        faItem.windowName_ = "";
+        mean_ = fa.mean_;
+        prime2Mean_ = fa.prime2Mean_;
     }
 
-    faItem.meanFieldName_ = IOobject::groupName
+    meanFieldName_ = IOobject::groupName
     (
-        IOobject::member(faItem.fieldName_) + fieldAverageItem::meanExt,
-        IOobject::group(faItem.fieldName_)
+        IOobject::member(fieldName_) + fieldAverageItem::meanExt,
+        IOobject::group(fieldName_)
     );
 
-    faItem.prime2MeanFieldName_ = IOobject::groupName
+    prime2MeanFieldName_ = IOobject::groupName
     (
-        IOobject::member(faItem.fieldName_) + fieldAverageItem::prime2MeanExt,
-        IOobject::group(faItem.fieldName_)
+        IOobject::member(fieldName_) + fieldAverageItem::prime2MeanExt,
+        IOobject::group(fieldName_)
     );
 
-    if ((faItem.window_ > 0) && (faItem.windowName_ != ""))
+    if ((fa.window_ > 0) && (fa.windowName_ != ""))
     {
-        faItem.meanFieldName_ =
-            faItem.meanFieldName_ + "_" + faItem.windowName_;
+        meanFieldName_ =
+            meanFieldName_ + "_" + fa.windowName_;
 
-        faItem.prime2MeanFieldName_ =
-            faItem.prime2MeanFieldName_ + "_" + faItem.windowName_;
+        prime2MeanFieldName_ =
+            prime2MeanFieldName_ + "_" + fa.windowName_;
     }
-
-    return is;
 }
 
 

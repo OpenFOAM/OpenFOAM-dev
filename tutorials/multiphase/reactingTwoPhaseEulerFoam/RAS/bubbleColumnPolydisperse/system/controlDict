@@ -53,18 +53,7 @@ maxDeltaT       1;
 
 functions
 {
-    fieldAverage1
-    {
-        #includeEtc "caseDicts/postProcessing/fields/fieldAverage.cfg"
-
-        fields
-        (
-            U.air
-            U.water
-            alpha.air
-            p
-        );
-    }
+    #includeFunc fieldAverage(U.air, U.water, alpha.air, p)
 
     numberDensity
     {

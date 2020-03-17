@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "fieldAverageItem.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "OFstream.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -202,7 +201,7 @@ void Foam::functionObjects::fieldAverage::calculateMeanFieldType
         scalar dt = obr_.time().deltaTValue();
         scalar Dt = totalTime_[fieldi];
 
-        if (faItems_[fieldi].iterBase())
+        if (iterBase())
         {
             dt = 1;
             Dt = scalar(totalIter_[fieldi]);
@@ -210,9 +209,9 @@ void Foam::functionObjects::fieldAverage::calculateMeanFieldType
 
         scalar beta = dt/Dt;
 
-        if (faItems_[fieldi].window() > 0)
+        if (window() > 0)
         {
-            const scalar w = faItems_[fieldi].window();
+            const scalar w = window();
 
             if (Dt - dt >= w)
             {
@@ -262,7 +261,7 @@ void Foam::functionObjects::fieldAverage::calculatePrime2MeanFieldType
         scalar dt = obr_.time().deltaTValue();
         scalar Dt = totalTime_[fieldi];
 
-        if (faItems_[fieldi].iterBase())
+        if (iterBase())
         {
             dt = 1;
             Dt = scalar(totalIter_[fieldi]);
@@ -270,9 +269,9 @@ void Foam::functionObjects::fieldAverage::calculatePrime2MeanFieldType
 
         scalar beta = dt/Dt;
 
-        if (faItems_[fieldi].window() > 0)
+        if (window() > 0)
         {
-            const scalar w = faItems_[fieldi].window();
+            const scalar w = window();
 
             if (Dt - dt >= w)
             {

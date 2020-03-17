@@ -12,6 +12,9 @@ Description
 
 #includeEtc "caseDicts/postProcessing/fields/fieldAverage.cfg"
 
+mean            yes;
+prime2Mean      no;
+
 fields          (<field_names>);
 
 // ************************************************************************* //

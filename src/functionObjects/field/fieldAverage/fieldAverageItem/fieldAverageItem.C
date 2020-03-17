@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,19 +37,6 @@ const Foam::word Foam::functionObjects::fieldAverageItem::prime2MeanExt
     "Prime2Mean"
 );
 
-template<>
-const char* Foam::NamedEnum
-<
-    Foam::functionObjects::fieldAverageItem::baseType,
-    2
->::names[] = { "iteration", "time"};
-
-const Foam::NamedEnum
-<
-    Foam::functionObjects::fieldAverageItem::baseType,
-    2
-> Foam::functionObjects::fieldAverageItem::baseTypeNames_;
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -59,26 +46,7 @@ Foam::functionObjects::fieldAverageItem::fieldAverageItem()
     mean_(0),
     meanFieldName_("unknown"),
     prime2Mean_(0),
-    prime2MeanFieldName_("unknown"),
-    base_(baseType::iter),
-    window_(-1.0),
-    windowName_("")
-{}
-
-
-Foam::functionObjects::fieldAverageItem::fieldAverageItem
-(
-    const fieldAverageItem& faItem
-)
-:
-    fieldName_(faItem.fieldName_),
-    mean_(faItem.mean_),
-    meanFieldName_(faItem.meanFieldName_),
-    prime2Mean_(faItem.prime2Mean_),
-    prime2MeanFieldName_(faItem.prime2MeanFieldName_),
-    base_(faItem.base_),
-    window_(faItem.window_),
-    windowName_(faItem.windowName_)
+    prime2MeanFieldName_("unknown")
 {}
 
 
@@ -86,33 +54,6 @@ Foam::functionObjects::fieldAverageItem::fieldAverageItem
 
 Foam::functionObjects::fieldAverageItem::~fieldAverageItem()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-void Foam::functionObjects::fieldAverageItem::operator=
-(
-    const fieldAverageItem& rhs
-)
-{
-    // Check for assignment to self
-    if (this == &rhs)
-    {
-        FatalErrorInFunction
-            << "Attempted assignment to self" << nl
-            << abort(FatalError);
-    }
-
-    // Set updated values
-    fieldName_ = rhs.fieldName_;
-    mean_ = rhs.mean_;
-    meanFieldName_ = rhs.meanFieldName_;
-    prime2Mean_ = rhs.prime2Mean_;
-    prime2MeanFieldName_ = rhs.prime2MeanFieldName_;
-    base_ = rhs.base_;
-    window_ = rhs.window_;
-    windowName_ = rhs.windowName_;
-}
 
 
 // ************************************************************************* //
