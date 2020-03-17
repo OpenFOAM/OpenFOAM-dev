@@ -298,6 +298,22 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
 
     forAllConstIter
     (
+        phaseSystem::phaseModelList,
+        this->phases(),
+        phaseIter
+    )
+    {
+        const phaseModel& phase(phaseIter());
+
+        if (dmdt0s_.set(phase.index()))
+        {
+            *eqns[phase.name()] +=
+                fvm::Sp(dmdt0s_[phase.index()],phase.thermo().he());
+        }
+    }
+
+    forAllConstIter
+    (
         phaseSystem::phasePairTable,
         this->phasePairs_,
         phasePairIter
@@ -327,12 +343,10 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::heatTransfer() const
         const volScalarField dmdtf12(negPart(dmdtf));
 
         *eqns[phase1.name()] +=
-            fvm::Sp(dmdt0s_[phase1.index()],he1)
           - fvm::Sp(dmdtf21, he1)
           + dmdtf21*K2 + dmdtf12*K1;
 
         *eqns[phase2.name()] -=
-          - fvm::Sp(dmdt0s_[phase2.index()],he2)
           - fvm::Sp(dmdtf12, he2)
           + dmdtf12*K1 + dmdtf21*K2;
 
