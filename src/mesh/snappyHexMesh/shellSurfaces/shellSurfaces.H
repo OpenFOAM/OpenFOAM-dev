@@ -58,12 +58,13 @@ public:
     // Public data types
 
         //- Volume refinement controls
-        enum refineMode
+        enum class refineMode
         {
-            INSIDE,         // Refine all inside shell
-            OUTSIDE,        // ,,         outside
-            DISTANCE,       // Refine based on distance to shell
-            SPAN            // Refine based on distance across span
+            inside,         // Refine all inside shell
+            outside,        // ,,         outside
+            distance,       // Refine based on distance to shell
+            insideSpan,     // Refine based on distance internal span
+            outsideSpan     // Refine based on distance external span
         };
 
 
@@ -96,7 +97,7 @@ private:
     // Private Data
 
         //- refineMode names
-        static const NamedEnum<refineMode, 4> refineModeNames_;
+        static const NamedEnum<refineMode, 5> refineModeNames_;
 
 
     // Private Member Functions
@@ -104,10 +105,13 @@ private:
         //- Helper function for initialisation.
         void setAndCheckLevels
         (
-            const label shellI,
+            const label shelli,
             const List<Tuple2<scalar, label>>&
         );
 
+        //- Specifically orient triSurfaces using a calculated point outside.
+        //  Done since quite often triSurfaces not of consistent orientation
+        //  which is (currently) necessary for sideness calculation
         void orient();
 
         //- Interpolate the surface closeness field to the given point
@@ -123,7 +127,7 @@ private:
         void findHigherLevel
         (
             const pointField& pt,
-            const label shellI,
+            const label shelli,
             const scalar level0EdgeLength,
             labelList& maxLevel
         ) const;

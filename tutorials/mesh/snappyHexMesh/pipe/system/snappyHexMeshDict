@@ -61,7 +61,7 @@ castellatedMeshControls
     {
         pipeWall
         {
-            mode span;
+            mode insideSpan;
             levels ((1000 2));
             cellsAcrossSpan 40;
         }
