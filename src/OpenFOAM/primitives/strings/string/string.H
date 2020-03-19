@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,6 +67,8 @@ Istream& operator>>(Istream&, string&);
 Ostream& operator<<(Ostream&, const string&);
 Ostream& operator<<(Ostream&, const std::string&);
 
+template<class T>
+class UList;
 
 /*---------------------------------------------------------------------------*\
                            Class string Declaration
@@ -114,6 +116,9 @@ public:
 
         //- Construct as copy of character array
         inline string(const char*);
+
+        //- Construct as copy of UList of character
+        string(const UList<char>&);
 
         //- Construct as copy of specified number of characters
         inline string(const char*, const size_type);
