@@ -26,6 +26,7 @@ License
 #include "ISstream.H"
 #include "int.H"
 #include "token.H"
+#include "DynamicList.H"
 #include <cctype>
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
@@ -795,28 +796,14 @@ Foam::Istream& Foam::ISstream::readDelimited
     const char end
 )
 {
-    static const int maxLen = 1024;
-    static const int errLen = 80; // Truncate error message for readability
-    static char buf[maxLen];
+    str.clear();
 
-    int nChar = 0;
     int listDepth = 0;
     char c;
 
     while (get(c))
     {
-        buf[nChar++] = c;
-        if (nChar == maxLen)
-        {
-            buf[errLen] = '\0';
-
-            FatalIOErrorInFunction(*this)
-                << "delimited string '" << buf << "...'\n"
-                << "    is too long (max. " << maxLen << " characters)"
-                << exit(FatalIOError);
-
-            return *this;
-        }
+        str += c;
 
         if (c == begin)
         {
@@ -833,28 +820,13 @@ Foam::Istream& Foam::ISstream::readDelimited
         }
     }
 
-    if (bad())
-    {
-        buf[errLen] = buf[nChar] = '\0';
-
-        FatalIOErrorInFunction(*this)
-            << "problem while reading delimited string '" << buf
-            << "...' after " << nChar << " characters\n"
-            << exit(FatalIOError);
-
-        return *this;
-    }
-
-    if (nChar == 0)
+    if (bad() || listDepth != 0)
     {
         FatalIOErrorInFunction(*this)
-            << "invalid first character found : " << c
+            << "    problem while reading delimited string \n"
+            << str.c_str() << endl
             << exit(FatalIOError);
     }
-
-    // Append end string character
-    buf[nChar] = '\0';
-    str = buf;
 
     return *this;
 }
