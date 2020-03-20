@@ -201,6 +201,30 @@ public:
                 const volScalarField& T
             ) const = 0;
 
+            //- Sensible enthalpy [J/kg]
+            virtual scalar Hs
+            (
+                const label speciei,
+                const scalar p,
+                const scalar T
+            ) const = 0;
+
+            //- Sensible enthalpy [J/kg]
+            virtual tmp<scalarField> Hs
+            (
+                const label speciei,
+                const scalarField& p,
+                const scalarField& T
+            ) const = 0;
+
+            //- Sensible enthalpy [J/kg]
+            virtual tmp<volScalarField> Hs
+            (
+                const label speciei,
+                const volScalarField& p,
+                const volScalarField& T
+            ) const = 0;
+
             //- Absolute enthalpy [J/kg]
             virtual scalar Ha
             (
@@ -219,22 +243,6 @@ public:
 
             //- Absolute enthalpy [J/kg]
             virtual tmp<volScalarField> Ha
-            (
-                const label speciei,
-                const volScalarField& p,
-                const volScalarField& T
-            ) const = 0;
-
-            //- Sensible enthalpy [J/kg]
-            virtual scalar Hs
-            (
-                const label speciei,
-                const scalar p,
-                const scalar T
-            ) const = 0;
-
-            //- Sensible enthalpy [J/kg]
-            virtual tmp<volScalarField> Hs
             (
                 const label speciei,
                 const volScalarField& p,

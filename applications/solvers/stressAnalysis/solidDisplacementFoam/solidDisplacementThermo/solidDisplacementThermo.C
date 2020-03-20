@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -266,6 +266,46 @@ Foam::tmp<Foam::scalarField> Foam::solidDisplacementThermo::he
 (
     const scalarField& T,
     const label patchi
+) const
+{
+    NotImplemented;
+    return tmp<scalarField>(nullptr);
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::solidDisplacementThermo::hs() const
+{
+    NotImplemented;
+    return tmp<volScalarField>(nullptr);
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::solidDisplacementThermo::hs
+(
+    const volScalarField& p,
+    const volScalarField& T
+) const
+{
+    NotImplemented;
+    return tmp<volScalarField>(nullptr);
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::solidDisplacementThermo::hs
+(
+    const scalarField& T,
+    const label patchi
+) const
+{
+    NotImplemented;
+    return tmp<scalarField>(nullptr);
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::solidDisplacementThermo::hs
+(
+    const scalarField& T,
+    const labelList& cells
 ) const
 {
     NotImplemented;
