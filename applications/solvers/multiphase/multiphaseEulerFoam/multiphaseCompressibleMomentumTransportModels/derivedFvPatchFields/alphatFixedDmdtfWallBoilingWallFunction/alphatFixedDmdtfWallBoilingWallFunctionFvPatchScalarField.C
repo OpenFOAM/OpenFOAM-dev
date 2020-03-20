@@ -44,8 +44,7 @@ alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
 )
 :
     alphatPhaseChangeWallFunctionFvPatchScalarField(p, iF),
-    fixedDmdtf_(0),
-    L_(0)
+    fixedDmdtf_(0)
 {}
 
 
@@ -58,8 +57,7 @@ alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
 )
 :
     alphatPhaseChangeWallFunctionFvPatchScalarField(p, iF, dict),
-    fixedDmdtf_(dict.lookupOrDefault<scalar>("fixedDmdtf", 0)),
-    L_(dict.lookupOrDefault<scalar>("L", 0))
+    fixedDmdtf_(dict.lookupOrDefault<scalar>("fixedDmdtf", 0))
 {}
 
 
@@ -79,8 +77,7 @@ alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
         iF,
         mapper
     ),
-    fixedDmdtf_(psf.fixedDmdtf_),
-    L_(psf.L_)
+    fixedDmdtf_(psf.fixedDmdtf_)
 {}
 
 
@@ -91,8 +88,7 @@ alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
 )
 :
     alphatPhaseChangeWallFunctionFvPatchScalarField(psf),
-    fixedDmdtf_(psf.fixedDmdtf_),
-    L_(psf.L_)
+    fixedDmdtf_(psf.fixedDmdtf_)
 {}
 
 
@@ -104,8 +100,7 @@ alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
 )
 :
     alphatPhaseChangeWallFunctionFvPatchScalarField(psf, iF),
-    fixedDmdtf_(psf.fixedDmdtf_),
-    L_(psf.L_)
+    fixedDmdtf_(psf.fixedDmdtf_)
 {}
 
 
@@ -119,7 +114,6 @@ void alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
     }
 
     dmdtf_ = (1 - relax_)*dmdtf_ + relax_*fixedDmdtf_;
-    dmdtLf_ = dmdtf_*L_;
 
     operator==(calcAlphat(*this));
 
@@ -135,7 +129,6 @@ void alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField::write
     alphatPhaseChangeWallFunctionFvPatchScalarField::write(os);
 
     writeEntry(os, "fixedDmdtf", fixedDmdtf_);
-    writeEntry(os, "L", L_);
 }
 
 

@@ -282,18 +282,6 @@ public:
             return dDep_;
         }
 
-        //- Return the quenching surface heat flux [W/m^2]
-        const scalarField& qq() const
-        {
-            return qq_;
-        }
-
-        //- Return the evaporation surface heat flux [W/m^2]
-        tmp<scalarField> qe() const
-        {
-            return dmdtLf_/AbyV_;
-        }
-
 
         // Mapping functions
 

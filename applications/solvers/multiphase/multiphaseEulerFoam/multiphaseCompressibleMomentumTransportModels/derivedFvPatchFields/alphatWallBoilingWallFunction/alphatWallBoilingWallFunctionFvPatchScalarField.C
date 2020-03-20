@@ -25,6 +25,7 @@ License
 
 #include "alphatWallBoilingWallFunctionFvPatchScalarField.H"
 #include "phaseSystem.H"
+#include "heatTransferPhaseSystem.H"
 #include "compressibleMomentumTransportModel.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "saturationModel.H"
@@ -373,7 +374,6 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                 const scalarField& muw = tmuw();
 
                 const rhoThermo& lThermo = liquid.thermo();
-                const rhoThermo& vThermo = vapor.thermo();
 
                 const scalarField& alphaw = lThermo.alpha(patchi);
 
@@ -394,9 +394,6 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
                 const fvPatchScalarField& hew =
                     lThermo.he().boundaryField()[patchi];
-
-                const fvPatchScalarField& pw =
-                    lThermo.p().boundaryField()[patchi];
 
                 const fvPatchScalarField& Tw =
                     lThermo.T().boundaryField()[patchi];
@@ -430,39 +427,29 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                 const fvPatchScalarField& Tsatw(Tsat.boundaryField()[patchi]);
 
                 // Latent heat
-                scalarField liquidHaw(lThermo.ha(Tc, patchi));
-
-                scalarField vaporHaw(vThermo.ha(Tsatw, patchi));
-
-                if (volatileSpecie != "none" && isA<rhoReactionThermo>(lThermo))
-                {
-                    const basicSpecieMixture& composition =
-                        refCast<const rhoReactionThermo>(lThermo).composition();
-
-                    liquidHaw =
-                        composition.Ha
-                        (
-                            composition.species()[volatileSpecie],
-                            pw,
-                            Tc
-                        );
-                }
-
-                if (volatileSpecie != "none" && isA<rhoReactionThermo>(vThermo))
-                {
-                    const basicSpecieMixture& composition =
-                        refCast<const rhoReactionThermo>(vThermo).composition();
-
-                    vaporHaw =
-                        composition.Ha
-                        (
-                            composition.species()[volatileSpecie],
-                            pw,
-                            Tsatw
-                        );
-                }
-
-                const scalarField L(vaporHaw - liquidHaw);
+                const scalarField L
+                (
+                    volatileSpecie != "none"
+                  ? -refCast<const heatTransferPhaseSystem>(fluid)
+                    .Li
+                     (
+                         pair,
+                         volatileSpecie,
+                         dmdtf_,
+                         Tsat,
+                         patch().faceCells(),
+                         heatTransferPhaseSystem::latentHeatScheme::upwind
+                     )
+                  : -refCast<const heatTransferPhaseSystem>(fluid)
+                    .L
+                     (
+                         pair,
+                         dmdtf_,
+                         Tsat,
+                         patch().faceCells(),
+                         heatTransferPhaseSystem::latentHeatScheme::upwind
+                     )
+                );
 
                 // Liquid phase fraction at the wall
                 const scalarField liquidw(liquid.boundaryField()[patchi]);
@@ -571,10 +558,6 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                         (1 - relax_)*dmdtf_
                       + relax_*(1.0/6.0)*A2E*dDep_*rhoVaporw*fDep*AbyV_;
 
-                    // Volumetric source in the near wall cell due to the wall
-                    // boiling
-                    dmdtLf_ = dmdtf_*L;
-
                     // Quenching heat transfer coefficient
                     const scalarField hQ
                     (
@@ -590,6 +573,9 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                         (1 - relax_)*qq_
                       + relax_*(A2*hQ*max(Tw - Tl, scalar(0)));
 
+                    // Evaporation heat flux
+                    const scalarField qe(dmdtf_*L/AbyV_);
+
                     // Effective thermal diffusivity that corresponds to the
                     // calculated convective, quenching and evaporative heat
                     // fluxes
@@ -598,7 +584,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                     (
                         (
                             A1*alphatConv_
-                          + (qq_ + qe())/max(hew.snGrad(), scalar(1e-16))
+                          + (qq_ + qe)/max(hew.snGrad(), scalar(1e-16))
                         )
                        /max(liquidw, scalar(1e-8))
                     );
@@ -641,10 +627,10 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                             << gMax(dmdtf_) << endl;
                         Info<< "  qc: " << gMin(qc) << " - " << gMax(qc)
                             << endl;
-                        Info<< "  qq: " << gMin(fLiquid*qq()) << " - "
-                            << gMax(fLiquid*qq()) << endl;
-                        Info<< "  qe: " << gMin(fLiquid*qe()) << " - "
-                            << gMax(fLiquid*qe()) << endl;
+                        Info<< "  qq: " << gMin(fLiquid*qq_) << " - "
+                            << gMax(fLiquid*qq_) << endl;
+                        Info<< "  qe: " << gMin(fLiquid*qe) << " - "
+                            << gMax(fLiquid*qe) << endl;
                         Info<< "  qEff: " << gMin(qEff) << " - "
                             << gMax(qEff) << endl;
                         Info<< "  alphat: " << gMin(*this) << " - "

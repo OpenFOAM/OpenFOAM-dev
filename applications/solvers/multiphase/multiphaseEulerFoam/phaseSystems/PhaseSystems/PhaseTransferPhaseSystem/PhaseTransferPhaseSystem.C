@@ -332,7 +332,7 @@ Foam::PhaseTransferPhaseSystem<BasePhaseSystem>::heatTransfer() const
     phaseSystem::heatTransferTable& eqns = eqnsPtr();
 
     this->addDmdtHefs(dmdtfs_, eqns);
-    this->addDmidtHef(dmidtfs_, eqns);
+    this->addDmidtHefs(dmidtfs_, eqns);
 
     return eqnsPtr;
 }

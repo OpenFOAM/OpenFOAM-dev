@@ -10,6 +10,9 @@ phaseSystem/phaseSystem.C
 phaseSystem/phaseSystemNew.C
 phaseSystem/phaseSystemSolve.C
 
+PhaseSystems/HeatTransferPhaseSystem/heatTransferPhaseSystem.C
+PhaseSystems/TwoResistanceHeatTransferPhaseSystem/twoResistanceHeatTransferPhaseSystem.C
+
 diameterModels/diameterModel/diameterModel.C
 diameterModels/diameterModel/diameterModelNew.C
 diameterModels/sphericalDiameter/sphericalDiameter.C

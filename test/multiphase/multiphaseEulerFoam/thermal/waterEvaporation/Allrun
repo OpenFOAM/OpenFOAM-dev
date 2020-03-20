@@ -81,9 +81,9 @@ plot \
     'postProcessing_'.gHe0.'_'.lHe0.'/plot/0/T.water' w l lc 2 t 'Water', \
     for [gHe in gHes] for [lHe in lHes] \
     'postProcessing_'.gHe.'_'.lHe.'/plot/0/T.water' w l lc 2 notitle, \
-    'postProcessing_'.gHe0.'_'.lHe0.'/plot/0/Tf.steamAndWater' w l lc 3 t 'Interface', \
+    'postProcessing_'.gHe0.'_'.lHe0.'/plot/0/thermalPhaseChange:Tf.steamAndWater' w l lc 3 t 'Interface', \
     for [gHe in gHes] for [lHe in lHes] \
-    'postProcessing_'.gHe.'_'.lHe.'/plot/0/Tf.steamAndWater' w l lc 3 notitle
+    'postProcessing_'.gHe.'_'.lHe.'/plot/0/thermalPhaseChange:Tf.steamAndWater' w l lc 3 notitle
 
 set ytics nomirror
 set y2tics

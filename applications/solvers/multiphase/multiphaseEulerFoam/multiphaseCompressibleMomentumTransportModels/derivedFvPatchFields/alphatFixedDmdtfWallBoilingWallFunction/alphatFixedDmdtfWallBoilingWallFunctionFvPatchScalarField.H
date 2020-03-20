@@ -62,9 +62,6 @@ class alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
         //- Volumetric phase-change mass flux in near wall cells
         scalar fixedDmdtf_;
 
-        //- Latent heat
-        scalar L_;
-
 
 public:
 

@@ -168,32 +168,24 @@ public:
             ) const = 0;
 
             //- Mass fraction difference between the interface and the field
-            virtual tmp<volScalarField> dY
+            tmp<volScalarField> dY
+            (
+                const word& speciesName,
+                const volScalarField& Tf
+            ) const;
+
+            //- Mass fraction difference between the interface and the field
+            //  derivative w.r.t. temperature
+            tmp<volScalarField> dYfPrime
             (
                 const word& speciesName,
                 const volScalarField& Tf
             ) const;
 
             //- Mass diffusivity
-            virtual tmp<volScalarField> D
+            tmp<volScalarField> D
             (
                 const word& speciesName
-            ) const;
-
-            //- Latent heat
-            virtual tmp<volScalarField> L
-            (
-                const word& speciesName,
-                const volScalarField& Tf
-            ) const;
-
-            //- Add latent heat flow rate to total
-            virtual void addDmdtL
-            (
-                const volScalarField& K,
-                const volScalarField& Tf,
-                volScalarField& dmdtL,
-                volScalarField& dmdtLPrime
             ) const;
 
 

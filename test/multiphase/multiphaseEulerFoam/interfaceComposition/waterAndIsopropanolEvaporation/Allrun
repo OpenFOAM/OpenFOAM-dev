@@ -72,9 +72,9 @@ plot \
     'postProcessing_'.gY0.'_'.lY0.'/plot/0/T.liquid' w l lc 2 t 'Liquid', \
     for [gY in gYs] for [lY in lYs] \
     'postProcessing_'.gY.'_'.lY.'/plot/0/T.liquid' w l lc 2 notitle, \
-    'postProcessing_'.gY0.'_'.lY0.'/plot/0/Tf.gasAndLiquid' w l lc 3 t 'Interface', \
+    'postProcessing_'.gY0.'_'.lY0.'/plot/0/interfaceCompositionPhaseChange:Tf.gasAndLiquid' w l lc 3 t 'Interface', \
     for [gY in gYs] for [lY in lYs] \
-    'postProcessing_'.gY.'_'.lY.'/plot/0/Tf.gasAndLiquid' w l lc 3 notitle
+    'postProcessing_'.gY.'_'.lY.'/plot/0/interfaceCompositionPhaseChange:Tf.gasAndLiquid' w l lc 3 notitle
 
 set ytics nomirror
 set y2tics

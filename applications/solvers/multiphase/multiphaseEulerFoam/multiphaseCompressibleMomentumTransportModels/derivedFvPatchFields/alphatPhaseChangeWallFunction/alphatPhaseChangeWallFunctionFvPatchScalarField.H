@@ -69,9 +69,6 @@ protected:
         //- Rate of phase-change
         scalarField dmdtf_;
 
-        //- Latent heat of the phase-change
-        scalarField dmdtLf_;
-
 
 public:
 
@@ -131,12 +128,6 @@ public:
 
         //- Return the rate of phase-change for specific phase pair
         const scalarField& dmdtf(const phasePairKey&) const;
-
-        //- Return the enthalpy source due to phase-change
-        const scalarField& dmdtLf() const;
-
-        //- Return the rate of phase-change for specific phase pair
-        const scalarField& dmdtLf(const phasePairKey&) const;
 
 
         // Mapping functions

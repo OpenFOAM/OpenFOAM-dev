@@ -257,7 +257,29 @@ InterfaceCompositionPhaseChangePhaseSystem
             this->phasePairs_[interfaceCompositionModelIter.key()];
 
         dmidtfSus_.insert(pair, new HashPtrTable<volScalarField>());
+
         dmidtfSps_.insert(pair, new HashPtrTable<volScalarField>());
+
+        Tfs_.insert
+        (
+            pair,
+            new volScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName
+                    (
+                        "interfaceCompositionPhaseChange:Tf",
+                        pair.name()
+                    ),
+                    this->mesh().time().timeName(),
+                    this->mesh(),
+                    IOobject::NO_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                (pair.phase1().thermo().T() + pair.phase2().thermo().T())/2
+            )
+        );
 
         forAllConstIter(phasePair, pair, pairIter)
         {
@@ -454,7 +476,14 @@ heatTransfer() const
 
     phaseSystem::heatTransferTable& eqns = eqnsPtr();
 
-    this->addDmidtHef(dmidtfs(), eqns);
+    this->addDmidtHefs
+    (
+        dmidtfs(),
+        Tfs_,
+        latentHeatScheme::symmetric,
+        latentHeatTransfer::mass,
+        eqns
+    );
 
     return eqnsPtr;
 }
@@ -545,7 +574,7 @@ correct()
         const phasePair& pair =
             this->phasePairs_[interfaceCompositionModelIter.key()];
 
-        const volScalarField& Tf(*this->Tf_[pair]);
+        const volScalarField& Tf(*this->Tfs_[pair]);
 
         forAllConstIter(phasePair, pair, pairIter)
         {
@@ -624,7 +653,13 @@ correctInterfaceThermo()
         const volScalarField H2(this->heatTransferModels_[pair].second()->K());
         const dimensionedScalar HSmall("small", heatTransferModel::dimK, small);
 
-        volScalarField& Tf = *this->Tf_[pair];
+        const typename diffusiveMassTransferModelTable::value_type&
+            diffusiveMassTransfers = this->diffusiveMassTransferModels_[pair];
+
+        const typename interfaceCompositionModelTable::value_type &
+            interfaceCompositions = this->interfaceCompositionModels_[pair];
+
+        volScalarField& Tf = *this->Tfs_[pair];
 
         for (label i = 0; i < nInterfaceCorrectors_; ++ i)
         {
@@ -644,25 +679,58 @@ correctInterfaceThermo()
                 );
 
             // Add latent heats from forward and backward models
-            if (this->interfaceCompositionModels_[pair].first().valid())
+            forAllConstIter(phasePair, pair, pairIter)
             {
-                this->interfaceCompositionModels_[pair].first()->addDmdtL
-                (
-                    diffusiveMassTransferModels_[pair].first()->K(),
-                    Tf,
-                    dmdtLf.ref(),
-                    dmdtLfPrime.ref()
-                );
-            }
-            if (this->interfaceCompositionModels_[pair].second().valid())
-            {
-                this->interfaceCompositionModels_[pair].second()->addDmdtL
-                (
-                  - diffusiveMassTransferModels_[pair].second()->K(),
-                    Tf,
-                    dmdtLf.ref(),
-                    dmdtLfPrime.ref()
-                );
+                if (interfaceCompositions[pairIter.index()].valid())
+                {
+                    const BlendedInterfacialModel<diffusiveMassTransferModel>&
+                        diffusiveMassTransfer =
+                        diffusiveMassTransfers[pairIter.index()];
+
+                    const interfaceCompositionModel&
+                        interfaceComposition =
+                        interfaceCompositions[pairIter.index()];
+
+                    const label sign = pairIter.index() == 0 ? 1 : -1;
+
+                    forAllConstIter
+                    (
+                        hashedWordList,
+                        interfaceComposition.species(),
+                        specieIter
+                    )
+                    {
+                        const word& specie = *specieIter;
+
+                        const volScalarField dY
+                        (
+                            interfaceComposition.dY(specie, Tf)
+                        );
+
+                        const volScalarField dYfPrime
+                        (
+                            interfaceComposition.dYfPrime(specie, Tf)
+                        );
+
+                        const volScalarField rhoKDL
+                        (
+                            pairIter().thermo().rho()
+                           *diffusiveMassTransfer.K()
+                           *interfaceComposition.D(specie)
+                           *this->Li
+                            (
+                                pair,
+                                specie,
+                                dY,
+                                Tf,
+                                latentHeatScheme::symmetric
+                            )
+                        );
+
+                        dmdtLf.ref() += sign*rhoKDL*dY;
+                        dmdtLfPrime.ref() += sign*rhoKDL*dYfPrime;
+                    }
+                }
             }
 
             // Update the interface temperature by applying one step of newton's

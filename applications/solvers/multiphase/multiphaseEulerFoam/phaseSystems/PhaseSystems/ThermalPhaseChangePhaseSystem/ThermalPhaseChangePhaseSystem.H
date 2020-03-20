@@ -85,6 +85,10 @@ class ThermalPhaseChangePhaseSystem
             phasePairKey::hash
         > saturationModelTable;
 
+        using latentHeatScheme = typename BasePhaseSystem::latentHeatScheme;
+
+        using latentHeatTransfer = typename BasePhaseSystem::latentHeatTransfer;
+
 
     // Private data
 
@@ -96,6 +100,9 @@ class ThermalPhaseChangePhaseSystem
 
         //- Mass transfer rates
         phaseSystem::dmdtfTable dmdtfs_;
+
+        //- Interface temperatures
+        phaseSystem::dmdtfTable Tfs_;
 
         //- Nucleate Mass transfer rates
         phaseSystem::dmdtfTable nDmdtfs_;
@@ -110,8 +117,8 @@ class ThermalPhaseChangePhaseSystem
 
     // Private Member Functions
 
-        //- Return the total mass transfer rate for a pair
-        tmp<volScalarField> totalDmdtf(const phasePairKey& key) const;
+        //- Sum the mass transfer rates for each phase into the given list
+        void addDmdts(PtrList<volScalarField>&) const;
 
 
 public:

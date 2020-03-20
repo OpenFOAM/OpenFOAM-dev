@@ -51,8 +51,7 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
     alphatPhaseJayatillekeWallFunctionFvPatchScalarField(p, iF),
     otherPhaseName_(word::null),
     relax_(1),
-    dmdtf_(p.size(), 0),
-    dmdtLf_(p.size(), 0)
+    dmdtf_(p.size(), 0)
 {}
 
 
@@ -67,8 +66,7 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
     alphatPhaseJayatillekeWallFunctionFvPatchScalarField(p, iF, dict),
     otherPhaseName_(dict.lookup("otherPhase")),
     relax_(dict.lookupOrDefault<scalar>("relax", 1)),
-    dmdtf_(p.size(), 0),
-    dmdtLf_(p.size(), 0)
+    dmdtf_(p.size(), 0)
 {
     // Check that otherPhaseName != this phase
     if (internalField().group() == otherPhaseName_)
@@ -85,11 +83,6 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
     {
         dmdtf_ = scalarField("dmdtf", dict, p.size());
     }
-
-    if (dict.found("dmdtLf"))
-    {
-        dmdtLf_ = scalarField("dmdtLf", dict, p.size());
-    }
 }
 
 
@@ -105,8 +98,7 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
     alphatPhaseJayatillekeWallFunctionFvPatchScalarField(ptf, p, iF, mapper),
     otherPhaseName_(ptf.otherPhaseName_),
     relax_(ptf.relax_),
-    dmdtf_(mapper(ptf.dmdtf_)),
-    dmdtLf_(mapper(ptf.dmdtLf_))
+    dmdtf_(mapper(ptf.dmdtf_))
 {}
 
 
@@ -119,8 +111,7 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
     alphatPhaseJayatillekeWallFunctionFvPatchScalarField(awfpsf),
     otherPhaseName_(awfpsf.otherPhaseName_),
     relax_(awfpsf.relax_),
-    dmdtf_(awfpsf.dmdtf_),
-    dmdtLf_(awfpsf.dmdtLf_)
+    dmdtf_(awfpsf.dmdtf_)
 {}
 
 
@@ -134,8 +125,7 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
     alphatPhaseJayatillekeWallFunctionFvPatchScalarField(awfpsf, iF),
     otherPhaseName_(awfpsf.otherPhaseName_),
     relax_(awfpsf.relax_),
-    dmdtf_(awfpsf.dmdtf_),
-    dmdtLf_(awfpsf.dmdtLf_)
+    dmdtf_(awfpsf.dmdtf_)
 {}
 
 
@@ -175,32 +165,7 @@ dmdtf(const phasePairKey& phasePair) const
             << " dmdtf requested for invalid phasePair!"
             << abort(FatalError);
 
-        return dmdtLf_;
-    }
-}
-
-
-const scalarField&
-alphatPhaseChangeWallFunctionFvPatchScalarField::dmdtLf() const
-{
-    return dmdtLf_;
-}
-
-
-const scalarField& alphatPhaseChangeWallFunctionFvPatchScalarField::
-dmdtLf(const phasePairKey& phasePair) const
-{
-    if (activePhasePair(phasePair))
-    {
-        return dmdtLf_;
-    }
-    else
-    {
-        FatalErrorInFunction
-            << " dmdtLf requested for invalid phasePair!"
-            << abort(FatalError);
-
-        return dmdtLf_;
+        return dmdtf_;
     }
 }
 
@@ -213,7 +178,6 @@ void alphatPhaseChangeWallFunctionFvPatchScalarField::autoMap
     alphatPhaseJayatillekeWallFunctionFvPatchScalarField::autoMap(m);
 
     m(dmdtf_, dmdtf_);
-    m(dmdtLf_, dmdtLf_);
 }
 
 
@@ -229,7 +193,6 @@ void alphatPhaseChangeWallFunctionFvPatchScalarField::rmap
         refCast<const alphatPhaseChangeWallFunctionFvPatchScalarField>(ptf);
 
     dmdtf_.rmap(tiptf.dmdtf_, addr);
-    dmdtLf_.rmap(tiptf.dmdtLf_, addr);
 }
 
 
@@ -240,7 +203,6 @@ void alphatPhaseChangeWallFunctionFvPatchScalarField::write(Ostream& os) const
     writeEntry(os, "otherPhase", otherPhaseName_);
     writeEntry(os, "relax", relax_);
     writeEntry(os, "dmdtf", dmdtf_);
-    writeEntry(os, "dmdtLf", dmdtLf_);
 }
 
 

@@ -75,6 +75,10 @@ class InterfaceCompositionPhaseChangePhaseSystem
             phasePairKey::hash
         > diffusiveMassTransferModelTable;
 
+        using latentHeatScheme = typename BasePhaseSystem::latentHeatScheme;
+
+        using latentHeatTransfer = typename BasePhaseSystem::latentHeatTransfer;
+
 
     // Private data
 
@@ -94,6 +98,9 @@ class InterfaceCompositionPhaseChangePhaseSystem
 
             //- The implicit part of the interfacial mass transfer rates
             phaseSystem::dmidtfTable dmidtfSps_;
+
+            //- Interface temperatures
+            phaseSystem::dmdtfTable Tfs_;
 
 
     // Private Member Functions

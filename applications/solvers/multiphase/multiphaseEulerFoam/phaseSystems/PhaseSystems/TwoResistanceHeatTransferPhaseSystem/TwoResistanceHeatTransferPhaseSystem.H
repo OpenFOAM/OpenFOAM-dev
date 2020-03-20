@@ -42,7 +42,8 @@ SourceFiles
 #ifndef TwoResistanceHeatTransferPhaseSystem_H
 #define TwoResistanceHeatTransferPhaseSystem_H
 
-#include "phaseSystem.H"
+#include "twoResistanceHeatTransferPhaseSystem.H"
+#include "HeatTransferPhaseSystem.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -62,7 +63,8 @@ class heatTransferModel;
 template<class BasePhaseSystem>
 class TwoResistanceHeatTransferPhaseSystem
 :
-    public BasePhaseSystem
+    public twoResistanceHeatTransferPhaseSystem,
+    public HeatTransferPhaseSystem<BasePhaseSystem>
 {
 protected:
 
@@ -75,11 +77,12 @@ protected:
             phasePairKey::hash
         > heatTransferModelTable;
 
+        typedef
+            typename HeatTransferPhaseSystem<BasePhaseSystem>::latentHeatScheme
+            latentHeatScheme;
+
 
     // Protected data
-
-        //- Interface temperatures
-        HashPtrTable<volScalarField, phasePairKey, phasePairKey::hash> Tf_;
 
         // Sub Models
 
@@ -90,16 +93,32 @@ protected:
     // Protected Member Functions
 
         //- Add energy transfer terms which result from bulk mass transfers
+        //  and phase changes
+        using HeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefs;
+
+        //- Add energy transfer terms which result from bulk phase changes
+        //  that are coupled to the two-resistance heat transfer model
         void addDmdtHefs
         (
             const phaseSystem::dmdtfTable& dmdtfs,
+            const phaseSystem::dmdtfTable& Tfs,
+            const latentHeatScheme scheme,
+            const latentHeatTransfer transfer,
             phaseSystem::heatTransferTable& eqns
         ) const;
 
         //- Add energy transfer terms which result from specie mass transfers
-        void addDmidtHef
+        //  and phase changes
+        using HeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHefs;
+
+        //- Add energy transfer terms which result from specie phase changes
+        //  that are coupled to the two-resistance heat transfer model
+        void addDmidtHefs
         (
             const phaseSystem::dmidtfTable& dmidtfs,
+            const phaseSystem::dmdtfTable& Tfs,
+            const latentHeatScheme scheme,
+            const latentHeatTransfer transfer,
             phaseSystem::heatTransferTable& eqns
         ) const;
 
@@ -125,7 +144,7 @@ public:
         virtual void correctEnergyTransport();
 
         //- Correct the interface thermodynamics
-        virtual void correctInterfaceThermo();
+        virtual void correctInterfaceThermo() = 0;
 
         //- Read base phaseProperties dictionary
         virtual bool read();

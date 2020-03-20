@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,116 +27,6 @@ License
 #include "BlendedInterfacialModel.H"
 #include "heatTransferModel.H"
 #include "fvmSup.H"
-#include "rhoReactionThermo.H"
-
-// * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
-
-template<class BasePhaseSystem>
-void Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmdtHefs
-(
-    const phaseSystem::dmdtfTable& dmdtfs,
-    phaseSystem::heatTransferTable& eqns
-) const
-{
-    forAllConstIter(phaseSystem::dmdtfTable, dmdtfs, dmdtfIter)
-    {
-        const phasePairKey& key = dmdtfIter.key();
-        const phasePair& pair(this->phasePairs_[key]);
-        const volScalarField dmdtf(Pair<word>::compare(pair, key)**dmdtfIter());
-        const volScalarField dmdtf21(posPart(dmdtf));
-        const volScalarField dmdtf12(negPart(dmdtf));
-
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
-        const rhoThermo& thermo1 = phase1.thermo();
-        const rhoThermo& thermo2 = phase2.thermo();
-        const volScalarField& he1(thermo1.he());
-        const volScalarField& he2(thermo2.he());
-        const volScalarField K1(phase1.K());
-        const volScalarField K2(phase2.K());
-
-        // Transfer of energy from bulk to bulk
-        *eqns[phase1.name()] += dmdtf21*he2 + fvm::Sp(dmdtf12, he1);
-        *eqns[phase2.name()] -= dmdtf12*he1 + fvm::Sp(dmdtf21, he2);
-
-        // Transfer of kinetic energy
-        *eqns[phase1.name()] += dmdtf21*K2 + dmdtf12*K1;
-        *eqns[phase2.name()] -= dmdtf12*K1 + dmdtf21*K2;
-    }
-}
-
-
-template<class BasePhaseSystem>
-void Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHef
-(
-    const phaseSystem::dmidtfTable& dmidtfs,
-    phaseSystem::heatTransferTable& eqns
-) const
-{
-    forAllConstIter(phaseSystem::dmidtfTable, dmidtfs, dmidtfIter)
-    {
-        const phasePairKey& key = dmidtfIter.key();
-        const phasePair& pair(this->phasePairs_[key]);
-
-        const phaseModel& phase1 = pair.phase1();
-        const phaseModel& phase2 = pair.phase2();
-        const rhoThermo& thermo1 = phase1.thermo();
-        const rhoThermo& thermo2 = phase2.thermo();
-        const volScalarField& he1(thermo1.he());
-        const volScalarField& he2(thermo2.he());
-        const volScalarField K1(phase1.K());
-        const volScalarField K2(phase2.K());
-
-        forAllConstIter(HashPtrTable<volScalarField>, *dmidtfIter(), dmidtfJter)
-        {
-            const word& member = dmidtfJter.key();
-
-            const volScalarField dmidtf
-            (
-                Pair<word>::compare(pair, key)**dmidtfJter()
-            );
-            const volScalarField dmidtf21(posPart(dmidtf));
-            const volScalarField dmidtf12(negPart(dmidtf));
-
-            // Create the energies for the transferring specie
-            volScalarField hei1(he1);
-            if (isA<rhoReactionThermo>(thermo1))
-            {
-                const basicSpecieMixture& composition1 =
-                    refCast<const rhoReactionThermo>(thermo1).composition();
-                hei1 =
-                    composition1.HE
-                    (
-                        composition1.species()[member],
-                        thermo1.p(),
-                        thermo1.T()
-                    );
-            }
-            volScalarField hei2(he2);
-            if (isA<rhoReactionThermo>(thermo2))
-            {
-                const basicSpecieMixture& composition2 =
-                    refCast<const rhoReactionThermo>(thermo2).composition();
-                hei2 =
-                    composition2.HE
-                    (
-                        composition2.species()[member],
-                        thermo2.p(),
-                        thermo2.T()
-                    );
-            }
-
-            // Transfer of energy from bulk to bulk
-            *eqns[phase1.name()] += dmidtf21*hei2 + fvm::Sp(dmidtf12, he1);
-            *eqns[phase2.name()] -= dmidtf12*hei1 + fvm::Sp(dmidtf21, he2);
-
-            // Transfer of kinetic energy
-            *eqns[phase1.name()] += dmidtf21*K2 + dmidtf12*K1;
-            *eqns[phase2.name()] -= dmidtf12*K1 + dmidtf21*K2;
-        }
-    }
-}
-
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -147,7 +37,7 @@ OneResistanceHeatTransferPhaseSystem
     const fvMesh& mesh
 )
 :
-    BasePhaseSystem(mesh)
+    HeatTransferPhaseSystem<BasePhaseSystem>(mesh)
 {
     this->generatePairsAndSubModels
     (
@@ -208,8 +98,8 @@ heatTransfer() const
             const phaseModel& phase = iter();
             const phaseModel& otherPhase = iter.otherPhase();
 
-            const volScalarField& he(phase.thermo().he());
-            volScalarField Cpv(phase.thermo().Cpv());
+            const volScalarField& he = phase.thermo().he();
+            const volScalarField Cpv(phase.thermo().Cpv());
 
             *eqns[phase.name()] +=
                 K*(otherPhase.thermo().T() - phase.thermo().T() + he/Cpv)
@@ -224,7 +114,7 @@ heatTransfer() const
 template<class BasePhaseSystem>
 bool Foam::OneResistanceHeatTransferPhaseSystem<BasePhaseSystem>::read()
 {
-    if (BasePhaseSystem::read())
+    if (HeatTransferPhaseSystem<BasePhaseSystem>::read())
     {
         bool readOK = true;
 
