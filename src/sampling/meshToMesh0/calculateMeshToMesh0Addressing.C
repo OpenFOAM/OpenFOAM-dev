@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,17 +21,9 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Description
-    private member of meshToMesh0.
-    Calculates mesh to mesh addressing pattern (for each cell from one mesh
-    find the closest cell centre in the other mesh).
-
 \*---------------------------------------------------------------------------*/
 
 #include "meshToMesh0.H"
-#include "SubField.H"
-
-#include "indexedOctree.H"
 #include "treeDataCell.H"
 #include "treeDataFace.H"
 
@@ -45,7 +37,7 @@ void Foam::meshToMesh0::calcAddressing()
             << "Calculating mesh-to-mesh cell addressing" << endl;
     }
 
-    // set reference to cells
+    // Set reference to cells
     const cellList& fromCells = fromMesh_.cells();
     const pointField& fromPoints = fromMesh_.points();
 
@@ -58,7 +50,7 @@ void Foam::meshToMesh0::calcAddressing()
 
     // SETTING UP RESCUE
 
-    // visit all boundaries and mark the cell next to the boundary.
+    // Visit all boundaries and mark the cell next to the boundary.
 
     if (debug)
     {
@@ -67,12 +59,12 @@ void Foam::meshToMesh0::calcAddressing()
 
     List<bool> boundaryCell(fromCells.size(), false);
 
-    // set reference to boundary
+    // Set reference to boundary
     const polyPatchList& patchesFrom = fromMesh_.boundaryMesh();
 
     forAll(patchesFrom, patchi)
     {
-        // get reference to cells next to the boundary
+        // Get reference to cells next to the boundary
         const labelUList& bCells = patchesFrom[patchi].faceCells();
 
         forAll(bCells, facei)
@@ -93,10 +85,10 @@ void Foam::meshToMesh0::calcAddressing()
 
     if (debug)
     {
-        Info<< "\nMesh" << endl;
-        Info<< "   bounding box           : " << meshBb << endl;
-        Info<< "   bounding box (shifted) : " << shiftedBb << endl;
-        Info<< "   typical dimension      :" << shiftedBb.typDim() << endl;
+        Info<< "\nMesh\n"
+            << "   bounding box           : " << meshBb << nl
+            << "   bounding box (shifted) : " << shiftedBb << nl
+            << "   typical dimension      :" << shiftedBb.typDim() << endl;
     }
 
     indexedOctree<treeDataCell> oc
@@ -187,7 +179,7 @@ void Foam::meshToMesh0::calcAddressing()
 
                 boundaryAddressing_[patchi].setSize(toPatch.size());
 
-                scalar distSqr = sqr(wallBb.mag());
+                const scalar distSqr = sqr(wallBb.mag());
 
                 forAll(toPatch, toi)
                 {
@@ -218,7 +210,7 @@ void Foam::meshToMesh0::cellAddresses
     const indexedOctree<treeDataCell>& oc
 ) const
 {
-    // the implemented search method is a simple neighbour array search.
+    // The implemented search method is a simple neighbour array search.
     // It starts from a cell zero, searches its neighbours and finds one
     // which is nearer to the target point than the current position.
     // The location of the "current position" is reset to that cell and
@@ -226,19 +218,19 @@ void Foam::meshToMesh0::cellAddresses
     // when all the neighbours of the cell are farther from the target
     // point than the current cell
 
-    // set curCell label to zero (start)
+    // Set curCell label to zero (start)
     label curCell = 0;
 
-    // set reference to cell to cell addressing
+    // Set reference to cell to cell addressing
     const vectorField& centresFrom = fromMesh.cellCentres();
     const labelListList& cc = fromMesh.cellCells();
 
-    forAll(points, toI)
+    forAll(points, toi)
     {
-        // pick up target position
-        const vector& p = points[toI];
+        // Pick up target position
+        const vector& p = points[toi];
 
-        // set the sqr-distance
+        // Set the sqr-distance
         scalar distSqr = magSqr(p - centresFrom[curCell]);
 
         bool closer;
@@ -247,31 +239,31 @@ void Foam::meshToMesh0::cellAddresses
         {
             closer = false;
 
-            // set the current list of neighbouring cells
+            // Set the current list of neighbouring cells
             const labelList& neighbours = cc[curCell];
 
-            forAll(neighbours, nI)
+            forAll(neighbours, ni)
             {
-                scalar curDistSqr =
-                    magSqr(p - centresFrom[neighbours[nI]]);
+                const scalar curDistSqr =
+                    magSqr(p - centresFrom[neighbours[ni]]);
 
-                // search through all the neighbours.
+                // Search through all the neighbours.
                 // If the cell is closer, reset current cell and distance
                 if (curDistSqr < (1 - small)*distSqr)
                 {
-                    curCell = neighbours[nI];
+                    curCell = neighbours[ni];
                     distSqr = curDistSqr;
-                    closer = true;    // a closer neighbour has been found
+                    closer = true;    // A closer neighbour has been found
                 }
             }
         } while (closer);
 
-        cellAddressing_[toI] = -1;
+        cellAddressing_[toi] = -1;
 
         // Check point is actually in the nearest cell
         if (fromMesh.pointInCell(p, curCell))
         {
-            cellAddressing_[toI] = curCell;
+            cellAddressing_[toi] = curCell;
         }
         else
         {
@@ -280,23 +272,27 @@ void Foam::meshToMesh0::cellAddresses
             // the octree search to find it.
             if (boundaryCell[curCell])
             {
-                cellAddressing_[toI] = oc.findInside(p);
+                cellAddressing_[toi] = oc.findInside(p);
+                if (cellAddressing_[toi] != -1)
+                {
+                    curCell = cellAddressing_[toi];
+                }
             }
             else
             {
                 // If not on the boundary search the neighbours
                 bool found = false;
 
-                // set the current list of neighbouring cells
+                // Set the current list of neighbouring cells
                 const labelList& neighbours = cc[curCell];
 
-                forAll(neighbours, nI)
+                forAll(neighbours, ni)
                 {
-                    // search through all the neighbours.
+                    // Search through all the neighbours.
                     // If point is in neighbour reset current cell
-                    if (fromMesh.pointInCell(p, neighbours[nI]))
+                    if (fromMesh.pointInCell(p, neighbours[ni]))
                     {
-                        cellAddressing_[toI] = neighbours[nI];
+                        cellAddressing_[toi] = neighbours[ni];
                         found = true;
                         break;
                     }
@@ -306,21 +302,21 @@ void Foam::meshToMesh0::cellAddresses
                 {
                     // If still not found search the neighbour-neighbours
 
-                    // set the current list of neighbouring cells
+                    // Set the current list of neighbouring cells
                     const labelList& neighbours = cc[curCell];
 
-                    forAll(neighbours, nI)
+                    forAll(neighbours, ni)
                     {
-                        // set the current list of neighbour-neighbouring cells
-                        const labelList& nn = cc[neighbours[nI]];
+                        // Set the current list of neighbour-neighbouring cells
+                        const labelList& nn = cc[neighbours[ni]];
 
-                        forAll(nn, nI)
+                        forAll(nn, ni)
                         {
-                            // search through all the neighbours.
+                            // Search through all the neighbours.
                             // If point is in neighbour reset current cell
-                            if (fromMesh.pointInCell(p, nn[nI]))
+                            if (fromMesh.pointInCell(p, nn[ni]))
                             {
-                                cellAddressing_[toI] = nn[nI];
+                                cellAddressing_[toi] = nn[ni];
                                 found = true;
                                 break;
                             }
@@ -331,8 +327,13 @@ void Foam::meshToMesh0::cellAddresses
 
                 if (!found)
                 {
-                    // Still not found so us the octree
-                    cellAddressing_[toI] = oc.findInside(p);
+                    // Still not found so use the octree
+                    cellAddressing_[toi] = oc.findInside(p);
+
+                    if (cellAddressing_[toi] != -1)
+                    {
+                        curCell = cellAddressing_[toi];
+                    }
                 }
             }
         }

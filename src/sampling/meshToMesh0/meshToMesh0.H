@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,10 +25,7 @@ Class
     Foam::meshToMesh0
 
 Description
-    mesh to mesh interpolation class.
-
-Note
-    This class is due to be deprecated in favour of meshToMesh0New
+    Serial mesh to mesh interpolation class.
 
 SourceFiles
     meshToMesh0.C
@@ -65,9 +62,10 @@ class meshToMesh0
 {
     // Private Data
 
-        // mesh references
-
+        //- Source mesh reference
         const fvMesh& fromMesh_;
+
+        //- Target mesh reference
         const fvMesh& toMesh_;
 
         //- fromMesh patch labels
@@ -103,6 +101,9 @@ class meshToMesh0
 
     // Private Member Functions
 
+        //- Calculates mesh to mesh addressing pattern.
+        //  For each cell from one mesh find the closest cell centre
+        //  in the other mesh
         void calcAddressing();
 
         void cellAddresses
