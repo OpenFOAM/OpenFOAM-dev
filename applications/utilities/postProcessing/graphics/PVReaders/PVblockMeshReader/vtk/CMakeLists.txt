@@ -1,0 +1,17 @@
+VTK_MODULE_ADD_MODULE(PVblockMeshReader_VTK CLASSES vtkPVblockMeshReader)
+
+PARAVIEW_ADD_SERVER_MANAGER_XMLS(XMLS ../PVblockMeshReader_SM.xml)
+
+TARGET_LINK_LIBRARIES(
+    PVblockMeshReader_VTK
+    LINK_PUBLIC
+    vtkPVblockMesh
+    Qt5::Core
+    Qt5::Gui
+)
+
+SET_TARGET_PROPERTIES(
+    PVblockMeshReader_VTK
+    PROPERTIES
+    LIBRARY_OUTPUT_DIRECTORY "$ENV{FOAM_LIBBIN}"
+)

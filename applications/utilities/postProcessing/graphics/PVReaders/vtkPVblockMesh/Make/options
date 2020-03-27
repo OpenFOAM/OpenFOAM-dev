@@ -4,7 +4,7 @@ EXE_INC = \
     -I$(LIB_SRC)/mesh/blockMesh/lnInclude \
     -I$(ParaView_INCLUDE_DIR) \
     -I$(ParaView_INCLUDE_DIR)/vtkkwiml \
-    -I../PVblockMeshReader
+    -I../PVblockMeshReader/vtk
 
 LIB_LIBS = \
     -lmeshTools \

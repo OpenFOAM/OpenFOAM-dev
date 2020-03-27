@@ -22,21 +22,31 @@ case "$ParaView_VERSION" in
 
         if [ "$targetType" != "objects" ]
         then
-            (
-                cd PVblockMeshReader
-                mkdir -p Make/$WM_OPTIONS > /dev/null 2>&1
-                cd Make/$WM_OPTIONS
-                cmake ../..
-                make
-            )
+            if [ $(echo "$ParaView_MAJOR < 5.7" | bc) == 1 ]
+            then
+                (
+                    cd PVblockMeshReader
+                    mkdir -p Make/$WM_OPTIONS > /dev/null 2>&1
+                    cd Make/$WM_OPTIONS
+                    cmake ../..
+                    make
+                )
 
-            (
-                cd PVFoamReader
-                mkdir -p Make/$WM_OPTIONS > /dev/null 2>&1
-                cd Make/$WM_OPTIONS
-                cmake ../..
-                make
-            )
+                (
+                    cd PVFoamReader
+                    mkdir -p Make/$WM_OPTIONS > /dev/null 2>&1
+                    cd Make/$WM_OPTIONS
+                    cmake ../..
+                    make
+                )
+            else
+                (
+                    mkdir -p Make/$WM_OPTIONS > /dev/null 2>&1
+                    cd Make/$WM_OPTIONS
+                    cmake ../..
+                    make
+                )
+            fi
         fi
 
     else

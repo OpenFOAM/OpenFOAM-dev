@@ -10,4 +10,6 @@ rm -rf PVblockMeshReader/Make
 rm -f $FOAM_LIBBIN/libPVFoamReader* 2>/dev/null
 rm -rf PVFoamReader/Make
 
+rm -rf Make
+
 #------------------------------------------------------------------------------

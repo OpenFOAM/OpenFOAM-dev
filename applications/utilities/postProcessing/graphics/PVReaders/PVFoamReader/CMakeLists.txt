@@ -1,8 +1,13 @@
 # Set up the environment
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.8)
+PROJECT(PVFoamReader)
 
 FIND_PACKAGE(ParaView REQUIRED)
-INCLUDE(${PARAVIEW_USE_FILE})
+
+# Only ParaView < 5.7 uses include file
+IF(${ParaView_VERSION} VERSION_LESS 5.7)
+    INCLUDE(${PARAVIEW_USE_FILE})
+ENDIF()
 
 LINK_DIRECTORIES(
     $ENV{FOAM_LIBBIN}
@@ -14,6 +19,7 @@ INCLUDE_DIRECTORIES(
     $ENV{WM_PROJECT_DIR}/src/OSspecific/$ENV{WM_OSTYPE}/lnInclude
     $ENV{WM_PROJECT_DIR}/src/finiteVolume/lnInclude
     ${PROJECT_SOURCE_DIR}/../vtkPVFoam
+    ${PROJECT_SOURCE_DIR}/vtk
 )
 
 ADD_DEFINITIONS(
@@ -31,26 +37,39 @@ SET(
 
 # Add the plugin. ParaView-4.0.? requires a GUI_RESOURCE_FILES XML file. As of
 # version 4.1.? this is no longer needed.
-IF(${PARAVIEW_VERSION_MAJOR}.${PARAVIEW_VERSION_MINOR} VERSION_LESS 4.1)
+IF(${ParaView_VERSION} VERSION_LESS 4.1)
     ADD_PARAVIEW_PLUGIN(
         PVFoamReader_SM
         "1.0"
         SERVER_MANAGER_XML PVFoamReader_SM.xml
-        SERVER_MANAGER_SOURCES vtkPVFoamReader.cxx
+        SERVER_MANAGER_SOURCES vtk/vtkPVFoamReader.cxx
         GUI_RESOURCE_FILES PVFoamReader.xml
     )
-ELSE()
+ELSEIF(${ParaView_VERSION} VERSION_LESS 5.7)
     ADD_PARAVIEW_PLUGIN(
         PVFoamReader_SM
         "1.0"
         SERVER_MANAGER_XML PVFoamReader_SM.xml
-        SERVER_MANAGER_SOURCES vtkPVFoamReader.cxx
+        SERVER_MANAGER_SOURCES vtk/vtkPVFoamReader.cxx
+    )
+ELSE()
+    PARAVIEW_ADD_PLUGIN(
+        PVFoamReader_SM
+        VERSION "1.0"
+        MODULES PVFoamReader_VTK
+        MODULE_FILES "vtk/vtk.module"
+    )
+    SET_TARGET_PROPERTIES(
+        PVFoamReader_SM
+        PROPERTIES
+        LIBRARY_OUTPUT_NAME      "libPVFoamReader_SM"
+        LIBRARY_OUTPUT_DIRECTORY "$ENV{PV_PLUGIN_PATH}"
     )
 ENDIF()
 
 # Build the client-side plugin. Paraview-5.5.? needs QT-5 libraries listed in
 # the link command in order for the headers to be available.
-IF(${PARAVIEW_VERSION_MAJOR}.${PARAVIEW_VERSION_MINOR} VERSION_LESS 5.5)
+IF(${ParaView_VERSION} VERSION_LESS 5.5)
     TARGET_LINK_LIBRARIES(
         PVFoamReader_SM
         LINK_PUBLIC

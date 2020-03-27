@@ -5,7 +5,7 @@ EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
-    -I../PVFoamReader \
+    -I../PVFoamReader/vtk \
     -I$(ParaView_INCLUDE_DIR) \
     -I$(ParaView_INCLUDE_DIR)/vtkkwiml \
     $(shell \
