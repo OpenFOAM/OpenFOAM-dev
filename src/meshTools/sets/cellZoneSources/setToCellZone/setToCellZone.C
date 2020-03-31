@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,14 @@ Foam::setToCellZone::setToCellZone
 )
 :
     topoSetSource(mesh),
-    setName_(dict.lookup("set"))
+    setName_
+    (
+        dict.found("set")
+      ? dict.lookup("set")
+      : dict.found("cellSet")
+      ? dict.lookup("cellSet")
+      : dict.lookup("set")
+    )
 {}
 
 
