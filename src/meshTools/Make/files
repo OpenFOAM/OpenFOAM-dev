@@ -178,6 +178,7 @@ $(faceZoneSources)/setsToFaceZone/setsToFaceZone.C
 $(faceZoneSources)/setToFaceZone/setToFaceZone.C
 $(faceZoneSources)/setAndNormalToFaceZone/setAndNormalToFaceZone.C
 $(faceZoneSources)/searchableSurfaceToFaceZone/searchableSurfaceToFaceZone.C
+$(faceZoneSources)/planeToFaceZone/planeToFaceZone.C
 
 cellZoneSources = sets/cellZoneSources
 $(cellZoneSources)/setToCellZone/setToCellZone.C

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,7 +67,14 @@ Foam::setToFaceZone::setToFaceZone
 )
 :
     topoSetSource(mesh),
-    setName_(dict.lookup("faceSet"))
+    setName_
+    (
+        dict.found("set")
+      ? dict.lookup("set")
+      : dict.found("faceSet")
+      ? dict.lookup("faceSet")
+      : dict.lookup("set")
+    )
 {}
 
 
