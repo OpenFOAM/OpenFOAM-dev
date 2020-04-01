@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ Foam::radiationModels::P1::P1(const volScalarField& T)
             "qr",
             mesh_.time().timeName(),
             mesh_,
-            IOobject::NO_READ,
+            IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
         mesh_,
@@ -139,7 +139,7 @@ Foam::radiationModels::P1::P1(const dictionary& dict, const volScalarField& T)
             "qr",
             mesh_.time().timeName(),
             mesh_,
-            IOobject::NO_READ,
+            IOobject::READ_IF_PRESENT,
             IOobject::AUTO_WRITE
         ),
         mesh_,
@@ -199,8 +199,6 @@ bool Foam::radiationModels::P1::read()
 {
     if (radiationModel::read())
     {
-        // nothing to read
-
         return true;
     }
     else
@@ -270,12 +268,9 @@ Foam::tmp<Foam::volScalarField> Foam::radiationModels::P1::Rp() const
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::radiationModels::P1::Ru() const
 {
-    const volScalarField::Internal& G =
-        G_();
-    const volScalarField::Internal E =
-        absorptionEmission_->ECont()()();
-    const volScalarField::Internal a =
-        absorptionEmission_->aCont()()();
+    const volScalarField::Internal& G = G_();
+    const volScalarField::Internal E = absorptionEmission_->ECont()()();
+    const volScalarField::Internal a = absorptionEmission_->aCont()()();
 
     return a*G - E;
 }
