@@ -26,9 +26,13 @@ options
         selectionMode   all;
         volumeMode      specific;
 
-        injectionRateSuSp
+        sources
         {
-            h          (1e7 0); // W/m^3 == kg/m/s^3
+            h
+            {
+                explicit    1e7; // W/m^3 == kg/m/s^3
+                implicit    0;
+            }
         }
     }
 }

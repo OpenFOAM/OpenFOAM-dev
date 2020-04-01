@@ -50,9 +50,8 @@ IOdictionary fvOptions
     )
 );
 const dictionary& gradPDict =
-    fvOptions.subDict("momentumSource").subDict("injectionRateSuSp");
-const scalar K =
-    Tuple2<vector, scalar>(gradPDict.lookup("U")).first().x();
+    fvOptions.subDict("momentumSource").subDict("sources");
+const scalar K(vector(gradPDict.subDict("U").lookup("explicit")).x());
 
 dictionary probes(IFstream(runTime.system()/"probes")());
 const point location = pointField(probes.lookup("probeLocations"))[0];

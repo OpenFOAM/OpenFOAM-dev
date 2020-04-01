@@ -1,7 +1,7 @@
 #!/bin/sh
 
 tail -n +4 ../postProcessing/probes/0/U  | \
-    tr -s " " | tr -d '(' | cut -d " " -f2-3 > ../Numerical.dat
+    tr -s " " | tr -d '(' | cut -d " " -f1-2 > ../Numerical.dat
 
 if ! which gnuplot > /dev/null 2>&1
 then
@@ -24,4 +24,4 @@ gnuplot<<EOF
         "../WatersKing.dat" with lines t "Analytical" lt -1
 EOF
 
-# ----------------------------------------------------------------- end-of-file
+#------------------------------------------------------------------------------

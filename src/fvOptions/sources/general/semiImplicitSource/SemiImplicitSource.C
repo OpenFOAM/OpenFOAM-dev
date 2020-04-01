@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,8 +83,9 @@ Foam::word Foam::fv::SemiImplicitSource<Type>::volumeModeTypeToWord
 template<class Type>
 void Foam::fv::SemiImplicitSource<Type>::setFieldData(const dictionary& dict)
 {
-    fieldNames_.setSize(dict.toc().size());
-    injectionRate_.setSize(fieldNames_.size());
+    fieldNames_.setSize(dict.size());
+    Su_.setSize(fieldNames_.size());
+    Sp_.setSize(fieldNames_.size());
 
     applied_.setSize(fieldNames_.size(), false);
 
@@ -92,7 +93,9 @@ void Foam::fv::SemiImplicitSource<Type>::setFieldData(const dictionary& dict)
     forAllConstIter(dictionary, dict, iter)
     {
         fieldNames_[i] = iter().keyword();
-        dict.lookup(iter().keyword()) >> injectionRate_[i];
+        const dictionary& fieldSubDict(iter().dict());
+        Su_.set(i, Function1<Type>::New("explicit", fieldSubDict));
+        Sp_.set(i, Function1<scalar>::New("implicit", fieldSubDict));
         i++;
     }
 
@@ -117,8 +120,7 @@ Foam::fv::SemiImplicitSource<Type>::SemiImplicitSource
 :
     cellSetOption(name, modelType, dict, mesh),
     volumeMode_(vmAbsolute),
-    VDash_(1.0),
-    injectionRate_()
+    VDash_(1)
 {
     read(dict);
 }
@@ -138,6 +140,8 @@ void Foam::fv::SemiImplicitSource<Type>::addSup
         Info<< "SemiImplicitSource<" << pTraits<Type>::typeName
             << ">::addSup for source " << name_ << endl;
     }
+
+    const scalar t =  mesh_.time().value();
 
     const GeometricField<Type, fvPatchField, volMesh>& psi = eqn.psi();
 
@@ -161,7 +165,7 @@ void Foam::fv::SemiImplicitSource<Type>::addSup
         false
     );
 
-    UIndirectList<Type>(Su, cells_) = injectionRate_[fieldi].first()/VDash_;
+    UIndirectList<Type>(Su, cells_) = Su_[fieldi].value(t)/VDash_;
 
     volScalarField::Internal Sp
     (
@@ -178,12 +182,12 @@ void Foam::fv::SemiImplicitSource<Type>::addSup
         (
             "zero",
             Su.dimensions()/psi.dimensions(),
-            0.0
+            0
         ),
         false
     );
 
-    UIndirectList<scalar>(Sp, cells_) = injectionRate_[fieldi].second()/VDash_;
+    UIndirectList<scalar>(Sp, cells_) = Sp_[fieldi].value(t)/VDash_;
 
     eqn += Su + fvm::SuSp(Sp, psi);
 }
@@ -204,6 +208,23 @@ void Foam::fv::SemiImplicitSource<Type>::addSup
     }
 
     return this->addSup(eqn, fieldi);
+}
+
+
+template<class Type>
+bool Foam::fv::SemiImplicitSource<Type>::read(const dictionary& dict)
+{
+    if (cellSetOption::read(dict))
+    {
+        volumeMode_ = wordToVolumeModeType(coeffs_.lookup("volumeMode"));
+        setFieldData(coeffs_.subDict("sources"));
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

@@ -35,9 +35,14 @@ options
         $injector1;
 
         volumeMode      absolute;
-        injectionRateSuSp
+
+        sources
         {
-            thermo:rho.water     (1 0); // kg/s
+            thermo:rho.water
+            {
+                explicit    1; // kg/s
+                implicit    0;
+            }
         }
     }
 }

@@ -35,9 +35,20 @@ options
         $injector1;
 
         volumeMode      absolute;
-        injectionRateSuSp
+
+        sources
         {
-            thermo:rho.steam     (1.0e-3 0); // kg/s
+            thermo:rho.steam
+            {
+                explicit    1.0e-3; // kg/s
+                implicit    0;
+            }
+
+            h.steam
+            {
+                explicit    3700; // kg*m^2/s^3
+                implicit    0;
+            }
         }
     }
 
@@ -48,22 +59,14 @@ options
         $injector1;
 
         volumeMode      absolute;
-        injectionRateSuSp
+
+        sources
         {
-            U.steam           ((0 1e-1 0) 0); // kg*m/s^2
-        }
-    }
-
-    energySource1
-    {
-        type            scalarSemiImplicitSource;
-
-        $injector1;
-
-        volumeMode      absolute;
-        injectionRateSuSp
-        {
-            h.steam      (3700 0); // kg*m^2/s^3
+            U.steam
+            {
+                explicit    (0 1e-1 0); // kg*m/s^2
+                implicit    0;
+            }
         }
     }
 

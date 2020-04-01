@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,14 +39,41 @@ Description
         S_p     | linearised implicit contribution
     \endvartable
 
-    Example of the source specification:
-
+    Example tabulated heat source specification for internal energy:
     \verbatim
     volumeMode      absolute; // specific
-    injectionRateSuSp
+    sources
     {
-        k           (30.7 0);
-        epsilon     (1.5  0);
+        e
+        {
+            explicit table ((0 0) (1.5 $power));
+            implicit 0;
+        }
+    }
+    \endverbatim
+
+    Example coded heat source specification for enthalpy:
+    \verbatim
+    volumeMode      absolute; // specific
+    sources
+    {
+        h
+        {
+            explicit
+            {
+                type coded;
+                name heatInjection;
+                code
+                #{
+                    // Power amplitude
+                    const scalar powerAmplitude = 1000;
+
+                    // x is the current time
+                    return mag(powerAmplitude*sin(x));
+                #};
+            }
+            implicit 0;
+        }
     }
     \endverbatim
 
@@ -65,8 +92,8 @@ SourceFiles
 #ifndef SemiImplicitSource_H
 #define SemiImplicitSource_H
 
-#include "Tuple2.H"
 #include "cellSetOption.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,22 +101,6 @@ namespace Foam
 {
 namespace fv
 {
-
-// Forward declaration of classes
-
-template<class Type>
-class SemiImplicitSource;
-
-
-// Forward declaration of friend functions
-
-template<class Type>
-Ostream& operator<<
-(
-    Ostream&,
-    const SemiImplicitSource<Type>&
-);
-
 
 /*---------------------------------------------------------------------------*\
                      Class SemiImplicitSource Declaration
@@ -111,13 +122,13 @@ public:
             vmSpecific
         };
 
+
+private:
+
+    // Private member data
+
         //- Word list of volume mode type names
         static const wordList volumeModeTypeNames_;
-
-
-protected:
-
-    // Protected data
 
         //- Volume mode
         volumeModeType volumeMode_;
@@ -125,11 +136,14 @@ protected:
         //- Volume normalisation
         scalar VDash_;
 
-        //- Source field values
-        List<Tuple2<Type, scalar>> injectionRate_;
+        //- Explicit source functions for the fields
+        PtrList<Function1<Type>> Su_;
+
+        //- Implicit source functions for the fields
+        PtrList<Function1<scalar>> Sp_;
 
 
-    // Protected functions
+    // Private member functions
 
         //- Helper function to convert from a word to a volumeModeType
         volumeModeType wordToVolumeModeType(const word& vtName) const;
@@ -160,24 +174,6 @@ public:
 
 
     // Member Functions
-
-        // Access
-
-            //- Return const access to the volume mode
-            inline const volumeModeType& volumeMode() const;
-
-            //- Return const access to the source field values
-            inline const List<Tuple2<Type, scalar>>& injectionRate() const;
-
-
-        // Edit
-
-            //- Return access to the volume mode
-            inline volumeModeType& volumeMode();
-
-            //- Return access to the source field values
-            inline List<Tuple2<Type, scalar>>& injectionRate();
-
 
         // Evaluation
 
@@ -213,12 +209,7 @@ public:
 
 #ifdef NoRepository
     #include "SemiImplicitSource.C"
-    #include "SemiImplicitSourceIO.C"
 #endif
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "SemiImplicitSourceI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

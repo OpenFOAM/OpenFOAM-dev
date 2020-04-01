@@ -35,10 +35,19 @@ fixedPower
 
     power           100;          // Set power (W)
 
-    injectionRateSuSp
+    sources
     {
-        e           ($power 0);
-        h           ($power 0);
+        e
+        {
+            explicit    $power;
+            implicit    0;
+        }
+
+        h
+        {
+            explicit    $power;
+            implicit    0;
+        }
     }
 }
 

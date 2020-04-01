@@ -24,9 +24,14 @@ momentumSource
     selectionMode   all;
 
     volumeMode      specific;
-    injectionRateSuSp
+
+    sources
     {
-        U    ((5 0 0) 0);
+        U
+        {
+            explicit    (5 0 0);
+            implicit    0;
+        }
     }
 }
 

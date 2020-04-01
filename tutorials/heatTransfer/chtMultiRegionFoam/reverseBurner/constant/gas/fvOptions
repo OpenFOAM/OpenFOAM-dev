@@ -27,9 +27,13 @@ options
         cellSet         ignition;
         volumeMode      specific;
 
-        injectionRateSuSp
+        sources
         {
-            e          (5e7 0); // kg/m/s^3
+            e
+            {
+                explicit    5e7; // kg/m/s^3
+                implicit    0;
+            }
         }
     }
 }
