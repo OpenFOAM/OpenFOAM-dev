@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -64,8 +64,8 @@ end
 setenv ParaView_VERSION 5.6.0
 setenv ParaView_MAJOR detect
 
-#setenv ParaView_GL=system
-setenv ParaView_GL=mesa
+#setenv ParaView_GL system
+setenv ParaView_GL mesa
 
 # Evaluate command-line parameters for ParaView
 while ( $#argv > 0 )
