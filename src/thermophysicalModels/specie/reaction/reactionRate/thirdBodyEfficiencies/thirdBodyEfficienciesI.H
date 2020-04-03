@@ -60,10 +60,10 @@ inline Foam::thirdBodyEfficiencies::thirdBodyEfficiencies
         List<Tuple2<word, scalar>> coeffs(dict.lookup("coeffs"));
         if (coeffs.size() != species_.size())
         {
-            FatalErrorInFunction
+            FatalIOErrorInFunction(dict)
                 << "number of efficiencies = " << coeffs.size()
                 << " is not equal to the number of species " << species_.size()
-                << exit(FatalError);
+                << exit(FatalIOError);
         }
 
         forAll(coeffs, i)
