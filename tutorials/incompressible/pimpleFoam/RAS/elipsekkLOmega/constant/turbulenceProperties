@@ -19,7 +19,7 @@ simulationType RAS;
 
 RAS
 {
-    RASModel        kkLOmega;
+    model           kkLOmega;
 
     turbulence      on;
 

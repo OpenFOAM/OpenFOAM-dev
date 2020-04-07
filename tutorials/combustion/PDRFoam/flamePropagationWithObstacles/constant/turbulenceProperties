@@ -19,7 +19,7 @@ simulationType  RAS;
 
 RAS
 {
-    RASModel PDRkEpsilon;
+    model    PDRkEpsilon;
 
     PDRkEpsilonCoeffs
     {

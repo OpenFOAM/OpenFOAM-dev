@@ -19,7 +19,7 @@ simulationType  laminar;
 
 RAS
 {
-    RASModel continuousGasKEpsilon;
+    model    continuousGasKEpsilon;
 
     turbulence      on;
     printCoeffs     on;

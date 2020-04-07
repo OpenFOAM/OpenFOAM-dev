@@ -19,7 +19,7 @@ simulationType  LES;
 
 LES
 {
-    LESModel continuousGasKEqn; // Smagorinsky;
+    model    continuousGasKEqn; // Smagorinsky;
 
     turbulence      on;
     printCoeffs     on;

@@ -20,7 +20,7 @@ simulationType  LES;
 
 LES
 {
-    LESModel       kEqn;
+    model          kEqn;
 
     delta          cubeRootVol;
 

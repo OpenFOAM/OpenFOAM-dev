@@ -18,7 +18,7 @@ simulationType RAS;
 
 RAS
 {
-    RASModel            kOmegaSST;
+    model               kOmegaSST;
 
     turbulence          on;
     printCoeffs         on;
@@ -26,7 +26,7 @@ RAS
 
 LES
 {
-    LESModel            SpalartAllmarasDDES;
+    model               SpalartAllmarasDDES;
     delta               cubeRootVol;
 
     turbulence          on;

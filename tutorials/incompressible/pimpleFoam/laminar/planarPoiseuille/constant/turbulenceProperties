@@ -18,7 +18,7 @@ simulationType laminar;
 
 laminar
 {
-    laminarModel        Maxwell;
+    model               Maxwell;
 
     MaxwellCoeffs
     {

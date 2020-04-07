@@ -19,7 +19,7 @@ simulationType  LES;
 
 LES
 {
-    LESModel        dynamicKEqn;
+    model           dynamicKEqn;
 
     turbulence      on;
 

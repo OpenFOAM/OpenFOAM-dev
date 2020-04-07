@@ -19,7 +19,7 @@ simulationType  LES;
 
 LES
 {
-    LESModel            SpalartAllmarasDDES;
+    model               SpalartAllmarasDDES;
 
     delta               cubeRootVol;
 

@@ -18,7 +18,7 @@ simulationType laminar;
 
 laminar
 {
-    laminarModel        Maxwell; // Giesekus; // PTT;
+    model               Maxwell; // Giesekus; // PTT;
 
     MaxwellCoeffs
     {

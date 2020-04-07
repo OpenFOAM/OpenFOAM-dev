@@ -19,7 +19,7 @@ simulationType  RAS;
 
 RAS
 {
-    RASModel phasePressure;
+    model    phasePressure;
 
     turbulence      on;
     printCoeffs     on;

@@ -19,7 +19,7 @@ simulationType  RAS;
 
 RAS
 {
-    RASModel kineticTheory;
+    model    kineticTheory;
 
     turbulence      on;
     printCoeffs     on;
