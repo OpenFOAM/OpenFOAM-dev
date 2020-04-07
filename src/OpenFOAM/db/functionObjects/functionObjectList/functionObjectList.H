@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,7 @@ SourceFiles
 #include "SHA1Digest.H"
 #include "HashTable.H"
 #include "HashSet.H"
+#include "dictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -102,6 +103,65 @@ class functionObjectList
             const dictionary& funcDict,
             const string& context
         );
+
+
+    // Private Classes
+
+        class wordOrDictName;
+
+        friend Istream& operator>>(Istream& is, wordOrDictName& w);
+
+        //- Class to facilitate reading of either a word or the name of a
+        //  dictionary
+        class wordOrDictName
+        :
+            public word
+        {
+        public:
+
+            using word::word;
+
+            friend Istream& operator>>(Istream& is, wordOrDictName& w)
+            {
+                is >> static_cast<word&>(w);
+
+                token t(is);
+
+                if (t.isPunctuation() && t.pToken() == token::BEGIN_BLOCK)
+                {
+                    is.putBack(t);
+                    dictionary d(is);
+                }
+                else
+                {
+                    is.putBack(t);
+                }
+
+                return is;
+            }
+        };
+
+        class wordOrDictNameList;
+
+        friend Istream& operator>>(Istream& is, wordOrDictNameList& l);
+
+        //- Class to facilitate reading of either a list of words or the names
+        //  of a list of dictionaries
+        class wordOrDictNameList
+        :
+            public wordList
+        {
+        public:
+
+            using wordList::wordList;
+
+            friend Istream& operator>>(Istream& is, wordOrDictNameList& l)
+            {
+                static_cast<wordList&>(l) = wordList(List<wordOrDictName>(is));
+
+                return is;
+            }
+        };
 
 
 public:

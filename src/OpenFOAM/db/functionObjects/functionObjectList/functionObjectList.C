@@ -337,38 +337,49 @@ bool Foam::functionObjectList::readFunctionObject
     // Insert the 'field' and/or 'fields' entry corresponding to the optional
     // arguments or read the 'field' or 'fields' entry and add the required
     // fields to requiredFields
-    if (args.size() == 1)
-    {
-        if (funcDict.found("objects"))
-        {
-            funcDict.set("objects", args);
-        }
-        else
-        {
-            funcDict.set("field", args[0]);
-            funcDict.set("fields", args);
-        }
-    }
-    else if (args.size() > 1)
-    {
-        if (funcDict.found("objects"))
-        {
-            funcDict.set("objects", args);
-        }
-        else
-        {
-            funcDict.set("fields", args);
-        }
-    }
-
-    // Insert named arguments
+    wordList fieldArgs(args);
     forAll(namedArgs, i)
     {
-        IStringStream entryStream
+        if (namedArgs[i].first() == "field")
+        {
+            fieldArgs.append(namedArgs[i].second());
+        }
+        if
         (
-            namedArgs[i].first() + ' ' + namedArgs[i].second() + ';'
-        );
-        funcDict.set(entry::New(entryStream).ptr());
+            namedArgs[i].first() == "fields"
+         || namedArgs[i].first() == "objects"
+        )
+        {
+            IStringStream iss(namedArgs[i].second());
+            fieldArgs.append(wordList(iss));
+        }
+    }
+    if (fieldArgs.size() >= 1)
+    {
+        if (fieldArgs.size() == 1)
+        {
+            funcDict.set("field", fieldArgs[0]);
+        }
+        funcDict.set("fields", fieldArgs);
+        funcDict.set("objects", fieldArgs);
+    }
+
+    // Insert non-field arguments
+    forAll(namedArgs, i)
+    {
+        if
+        (
+            namedArgs[i].first() != "field"
+         && namedArgs[i].first() != "fields"
+         && namedArgs[i].first() != "objects"
+        )
+        {
+            IStringStream entryStream
+            (
+                namedArgs[i].first() + ' ' + namedArgs[i].second() + ';'
+            );
+            funcDict.set(entry::New(entryStream).ptr());
+        }
     }
 
     // Insert the region name if specified
@@ -399,51 +410,27 @@ bool Foam::functionObjectList::readFunctionObject
     // Lookup the field and fields entries from the now expanded funcDict
     // and insert into the requiredFields
     dictionary& expandedFuncDict = funcArgsDict.subDict(funcCallKeyword);
+
     if (expandedFuncDict.found("field"))
     {
-        requiredFields.insert(word(expandedFuncDict.lookup("field")));
-    }
-    else if (expandedFuncDict.found("fields"))
-    {
-        ITstream& is = expandedFuncDict.lookup("fields");
-
-        // Read BEGIN_LIST
-        const token firstToken(is);
-
-        if
+        requiredFields.insert
         (
-            firstToken.isPunctuation()
-         && firstToken.pToken() == token::BEGIN_LIST
-        )
-        {
-            // Read first field name
-            const token secondToken(is);
-
-            // Read second field name or BEGIN_BLOCK
-            const token thirdToken(is);
-
-            if
-            (
-                thirdToken.isPunctuation()
-             && thirdToken.pToken() == token::BEGIN_BLOCK
-            )
-            {
-                requiredFields.insert
-                (
-                    wordList
-                    (
-                        dictionary(expandedFuncDict.lookup("fields")).toc()
-                    )
-                );
-            }
-            else
-            {
-                requiredFields.insert
-                (
-                    wordList(expandedFuncDict.lookup("fields"))
-                );
-            }
-        }
+            word(expandedFuncDict.lookup("field"))
+        );
+    }
+    if (expandedFuncDict.found("fields"))
+    {
+        requiredFields.insert
+        (
+            wordOrDictNameList(expandedFuncDict.lookup("fields"))
+        );
+    }
+    if (expandedFuncDict.found("objects"))
+    {
+        requiredFields.insert
+        (
+            wordOrDictNameList(expandedFuncDict.lookup("objects"))
+        );
     }
 
     // Merge this functionObject dictionary into functionsDict
