@@ -10,7 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      porousZone;
+    object      fvOptions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -27,7 +27,7 @@ fixedTemperature
 
 fixedPower
 {
-    type            scalarSemiImplicitSource;
+    type            semiImplicitSource;
     active          no;
     selectionMode   all;
 
@@ -35,10 +35,18 @@ fixedPower
 
     power           100;          // Set power (W)
 
-    injectionRateSuSp
+    sources
     {
-        e           ($power 0);
-        h           ($power 0);
+        e
+        {
+            explicit    $power;
+            implicit    0;
+        }
+        h
+        {
+            explicit    $power;
+            implicit    0;
+        }
     }
 }
 

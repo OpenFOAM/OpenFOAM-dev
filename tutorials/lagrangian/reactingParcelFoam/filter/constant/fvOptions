@@ -44,9 +44,9 @@ filter1
 }
 
 
-massSource1
+massSource
 {
-    type            scalarSemiImplicitSource;
+    type            semiImplicitSource;
 
     timeStart       0.2;
     duration        2.0;
@@ -66,9 +66,9 @@ massSource1
             implicit    0;
         }
 
-        H2O
+        U
         {
-            explicit    1e-4; // kg/s
+            explicit    (0 0.005 0);
             implicit    0;
         }
 
@@ -77,29 +77,10 @@ massSource1
             explicit    10;
             implicit    0;
         }
-    }
-}
 
-
-momentumSource1
-{
-    type            vectorSemiImplicitSource;
-
-    timeStart       0.2;
-    duration        2.0;
-    selectionMode   points;
-    points
-    (
-        (2.75 0.5 0)
-    );
-
-    volumeMode      absolute;
-
-    sources
-    {
-        U
+        H2O
         {
-            explicit    (0 0.005 0);
+            explicit    1e-4; // kg/s
             implicit    0;
         }
     }

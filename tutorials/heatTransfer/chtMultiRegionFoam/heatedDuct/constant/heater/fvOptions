@@ -19,7 +19,7 @@ options
 {
     energySource
     {
-        type            scalarSemiImplicitSource;
+        type            semiImplicitSource;
 
         timeStart       0;
         duration        1e6;

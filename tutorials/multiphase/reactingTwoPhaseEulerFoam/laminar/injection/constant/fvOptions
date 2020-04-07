@@ -15,24 +15,20 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-injector1
-{
-    timeStart       0.1;
-    duration        5;
-    selectionMode   points;
-    points
-    (
-        (0.075 0.2 0.05)
-    );
-}
-
 options
 {
-    massSource1
+    massSource
     {
-        type            scalarSemiImplicitSource;
+        type            semiImplicitSource;
 
-        $injector1;
+        timeStart       0.1;
+        duration        5;
+
+        selectionMode   points;
+        points
+        (
+            (0.075 0.2 0.05)
+        );
 
         volumeMode      absolute;
 
@@ -44,28 +40,16 @@ options
                 implicit    0;
             }
 
+            U.air
+            {
+                explicit    (0 -1e-2 0); // kg*m/s^2
+                implicit    0;
+            }
+
             e.air
             {
                 explicit    500; // kg*m^2/s^3
                 implicit    0;
-            }
-        }
-    }
-
-    momentumSource1
-    {
-        type            vectorSemiImplicitSource;
-
-        $injector1;
-
-        volumeMode      absolute;
-
-        sources
-        {
-            U.air
-            {
-                explicit    (0 -1e-2 0); // kg*m/s^2
-                implicit    0; // kg*m/s^2
             }
         }
     }

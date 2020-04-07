@@ -19,15 +19,23 @@ options
 {
     massSource
     {
-        type            scalarSemiImplicitSource;
+        type            semiImplicitSource;
 
         selectionMode   all;
         volumeMode      specific;
 
-        injectionRateSuSp
+        sources
         {
-            thermo:rho.air      (0.024535 0);// kg/s/m³
-            thermo:rho.water    (-24.535 0); // kg/s/m³
+            thermo:rho.air
+            {
+                explicit    0.024535; // kg/s/m^3
+                implicit    0;
+            }
+            thermo:rho.water
+            {
+                explicit    -24.535; // kg/s/m^3
+                implicit    0;
+            }
         }
     }
 }
