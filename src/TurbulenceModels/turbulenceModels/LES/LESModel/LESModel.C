@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,8 +48,7 @@ Foam::LESModel<BasicTurbulenceModel>::LESModel
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
-    const word& propertiesName
+    const transportModel& transport
 )
 :
     BasicTurbulenceModel
@@ -60,8 +59,7 @@ Foam::LESModel<BasicTurbulenceModel>::LESModel
         U,
         alphaRhoPhi,
         phi,
-        transport,
-        propertiesName
+        transport
     ),
 
     LESDict_(this->subOrEmptyDict("LES")),
@@ -129,26 +127,31 @@ Foam::LESModel<BasicTurbulenceModel>::New
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
-    const word& propertiesName
+    const transportModel& transport
 )
 {
-    // get model name, but do not register the dictionary
-    // otherwise it is registered in the database twice
+    IOdictionary modelDict
+    (
+        IOobject
+        (
+            IOobject::groupName
+            (
+                turbulenceModel::propertiesName,
+                alphaRhoPhi.group()
+            ),
+            U.time().constant(),
+            U.db(),
+            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
+
     const word modelType
     (
-        IOdictionary
-        (
-            IOobject
-            (
-                IOobject::groupName(propertiesName, alphaRhoPhi.group()),
-                U.time().constant(),
-                U.db(),
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE,
-                false
-            )
-        ).subDict("LES").lookup("LESModel")
+        modelDict.subDict("LES").found("model")
+      ? modelDict.subDict("LES").lookup("model")
+      : modelDict.subDict("LES").lookup("LESModel")
     );
 
     Info<< "Selecting LES turbulence model " << modelType << endl;
@@ -168,7 +171,7 @@ Foam::LESModel<BasicTurbulenceModel>::New
 
     return autoPtr<LESModel>
     (
-        cstrIter()(alpha, rho, U, alphaRhoPhi, phi, transport, propertiesName)
+        cstrIter()(alpha, rho, U, alphaRhoPhi, phi, transport)
     );
 }
 

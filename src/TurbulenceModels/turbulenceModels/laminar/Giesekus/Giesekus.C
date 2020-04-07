@@ -63,7 +63,6 @@ Giesekus<BasicTurbulenceModel>::Giesekus
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
     const transportModel& transport,
-    const word& propertiesName,
     const word& type
 )
 :
@@ -75,7 +74,6 @@ Giesekus<BasicTurbulenceModel>::Giesekus
         alphaRhoPhi,
         phi,
         transport,
-        propertiesName,
         type
     ),
 

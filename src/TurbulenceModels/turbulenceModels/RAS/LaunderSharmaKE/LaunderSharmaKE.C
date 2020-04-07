@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,6 @@ LaunderSharmaKE<BasicTurbulenceModel>::LaunderSharmaKE
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
     const transportModel& transport,
-    const word& propertiesName,
     const word& type
 )
 :
@@ -116,8 +115,7 @@ LaunderSharmaKE<BasicTurbulenceModel>::LaunderSharmaKE
         U,
         alphaRhoPhi,
         phi,
-        transport,
-        propertiesName
+        transport
     ),
 
     Cmu_

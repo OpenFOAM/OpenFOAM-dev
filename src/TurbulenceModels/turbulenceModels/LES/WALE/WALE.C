@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,6 @@ WALE<BasicTurbulenceModel>::WALE
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
     const transportModel& transport,
-    const word& propertiesName,
     const word& type
 )
 :
@@ -111,8 +110,7 @@ WALE<BasicTurbulenceModel>::WALE
         U,
         alphaRhoPhi,
         phi,
-        transport,
-        propertiesName
+        transport
     ),
 
     Ck_

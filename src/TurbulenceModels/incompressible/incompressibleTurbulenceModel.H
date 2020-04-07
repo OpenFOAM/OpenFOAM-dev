@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,8 +83,7 @@ public:
             const geometricOneField& rho,
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
-            const surfaceScalarField& phi,
-            const word& propertiesName
+            const surfaceScalarField& phi
         );
 
         //- Disallow default bitwise copy construction

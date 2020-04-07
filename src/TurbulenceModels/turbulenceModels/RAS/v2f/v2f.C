@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,6 @@ v2f<BasicTurbulenceModel>::v2f
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
     const transportModel& transport,
-    const word& propertiesName,
     const word& type
 )
 :
@@ -86,8 +85,7 @@ v2f<BasicTurbulenceModel>::v2f
         U,
         alphaRhoPhi,
         phi,
-        transport,
-        propertiesName
+        transport
     ),
     v2fBase(),
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,8 +44,7 @@ TurbulenceModel
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
-    const word& propertiesName
+    const transportModel& transport
 )
 :
     BasicTurbulenceModel
@@ -53,8 +52,7 @@ TurbulenceModel
         rho,
         U,
         alphaRhoPhi,
-        phi,
-        propertiesName
+        phi
     ),
     alpha_(alpha),
     transport_(transport)
@@ -81,8 +79,7 @@ Foam::TurbulenceModel<Alpha, Rho, BasicTurbulenceModel, TransportModel>::New
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
-    const word& propertiesName
+    const transportModel& transport
 )
 {
     // get model name, but do not register the dictionary
@@ -93,7 +90,11 @@ Foam::TurbulenceModel<Alpha, Rho, BasicTurbulenceModel, TransportModel>::New
         (
             IOobject
             (
-                IOobject::groupName(propertiesName, alphaRhoPhi.group()),
+                IOobject::groupName
+                (
+                    turbulenceModel::propertiesName,
+                    alphaRhoPhi.group()
+                ),
                 U.time().constant(),
                 U.db(),
                 IOobject::MUST_READ_IF_MODIFIED,
@@ -120,7 +121,7 @@ Foam::TurbulenceModel<Alpha, Rho, BasicTurbulenceModel, TransportModel>::New
 
     return autoPtr<TurbulenceModel>
     (
-        cstrIter()(alpha, rho, U, alphaRhoPhi, phi, transport, propertiesName)
+        cstrIter()(alpha, rho, U, alphaRhoPhi, phi, transport)
     );
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,8 +49,7 @@ Foam::laminarModel<BasicTurbulenceModel>::laminarModel
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
-    const word& propertiesName
+    const transportModel& transport
 )
 :
     BasicTurbulenceModel
@@ -61,8 +60,7 @@ Foam::laminarModel<BasicTurbulenceModel>::laminarModel
         U,
         alphaRhoPhi,
         phi,
-        transport,
-        propertiesName
+        transport
     ),
 
     laminarDict_(this->subOrEmptyDict("laminar")),
@@ -86,15 +84,18 @@ Foam::laminarModel<BasicTurbulenceModel>::New
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
-    const word& propertiesName
+    const transportModel& transport
 )
 {
     IOdictionary modelDict
     (
         IOobject
         (
-            IOobject::groupName(propertiesName, alphaRhoPhi.group()),
+            IOobject::groupName
+            (
+                turbulenceModel::propertiesName,
+                alphaRhoPhi.group()
+            ),
             U.time().constant(),
             U.db(),
             IOobject::MUST_READ_IF_MODIFIED,
@@ -105,11 +106,11 @@ Foam::laminarModel<BasicTurbulenceModel>::New
 
     if (modelDict.found("laminar"))
     {
-        // get model name, but do not register the dictionary
-        // otherwise it is registered in the database twice
         const word modelType
         (
-            modelDict.subDict("laminar").lookup("laminarModel")
+            modelDict.subDict("laminar").found("model")
+          ? modelDict.subDict("laminar").lookup("model")
+          : modelDict.subDict("laminar").lookup("laminarModel")
         );
 
         Info<< "Selecting laminar stress model " << modelType << endl;
@@ -136,7 +137,8 @@ Foam::laminarModel<BasicTurbulenceModel>::New
                 U,
                 alphaRhoPhi,
                 phi,
-                transport, propertiesName)
+                transport
+            )
         );
     }
     else
@@ -153,8 +155,7 @@ Foam::laminarModel<BasicTurbulenceModel>::New
                 U,
                 alphaRhoPhi,
                 phi,
-                transport,
-                propertiesName
+                transport
             )
         );
     }

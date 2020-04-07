@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,8 +38,7 @@ namespace Foam
             const volVectorField& U,
             const surfaceScalarField& phi,
             const typename BasicCompressibleTurbulenceModel::transportModel&
-                transport,
-            const word& propertiesName
+                transport
         )
         {
             return BasicCompressibleTurbulenceModel::New
@@ -49,8 +48,7 @@ namespace Foam
                 U,
                 phi,
                 phi,
-                transport,
-                propertiesName
+                transport
             );
         }
     }

@@ -70,7 +70,6 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
     const transportModel& phase,
-    const word& propertiesName,
     const word& type
 )
 :
@@ -85,8 +84,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         U,
         alphaRhoPhi,
         phi,
-        phase,
-        propertiesName
+        phase
     ),
 
     phase_(phase),

@@ -35,7 +35,6 @@ Foam::RASModels::phasePressureModel::phasePressureModel
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
     const transportModel& phase,
-    const word& propertiesName,
     const word& type
 )
 :
@@ -50,8 +49,7 @@ Foam::RASModels::phasePressureModel::phasePressureModel
         U,
         alphaRhoPhi,
         phi,
-        phase,
-        propertiesName
+        phase
     ),
 
     alphaMax_(coeffDict_.lookup<scalar>("alphaMax")),

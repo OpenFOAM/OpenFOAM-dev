@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,8 +113,7 @@ Foam::ReynoldsStress<BasicTurbulenceModel>::ReynoldsStress
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
-    const word& propertiesName
+    const transportModel& transport
 )
 :
     BasicTurbulenceModel
@@ -125,8 +124,7 @@ Foam::ReynoldsStress<BasicTurbulenceModel>::ReynoldsStress
         U,
         alphaRhoPhi,
         phi,
-        transport,
-        propertiesName
+        transport
     ),
 
     couplingFactor_

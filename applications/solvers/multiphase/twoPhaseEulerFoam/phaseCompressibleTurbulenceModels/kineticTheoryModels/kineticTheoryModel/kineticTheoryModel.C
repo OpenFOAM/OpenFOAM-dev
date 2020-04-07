@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,6 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
     const transportModel& phase,
-    const word& propertiesName,
     const word& type
 )
 :
@@ -53,8 +52,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         U,
         alphaRhoPhi,
         phi,
-        phase,
-        propertiesName
+        phase
     ),
 
     phase_(phase),

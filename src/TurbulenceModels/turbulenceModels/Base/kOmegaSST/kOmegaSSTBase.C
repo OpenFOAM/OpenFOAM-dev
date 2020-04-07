@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -217,8 +217,7 @@ kOmegaSST<TurbulenceModel, BasicTurbulenceModel>::kOmegaSST
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
-    const word& propertiesName
+    const transportModel& transport
 )
 :
     TurbulenceModel
@@ -229,8 +228,7 @@ kOmegaSST<TurbulenceModel, BasicTurbulenceModel>::kOmegaSST
         U,
         alphaRhoPhi,
         phi,
-        transport,
-        propertiesName
+        transport
     ),
 
     alphaK1_

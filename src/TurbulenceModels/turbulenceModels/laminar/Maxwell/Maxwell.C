@@ -109,7 +109,6 @@ Maxwell<BasicTurbulenceModel>::Maxwell
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
     const transportModel& transport,
-    const word& propertiesName,
     const word& type
 )
 :
@@ -121,8 +120,7 @@ Maxwell<BasicTurbulenceModel>::Maxwell
         U,
         alphaRhoPhi,
         phi,
-        transport,
-        propertiesName
+        transport
     ),
 
     modeCoefficients_

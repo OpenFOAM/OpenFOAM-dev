@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,10 +90,9 @@ public:
                 const volVectorField& U,
                 const surfaceScalarField& alphaRhoPhi,
                 const surfaceScalarField& phi,
-                const transportModel& transport,
-                const word& propertiesName
+                const transportModel& transport
             ),
-            (alpha, rho, U, alphaRhoPhi, phi, transport, propertiesName)
+            (alpha, rho, U, alphaRhoPhi, phi, transport)
         );
 
 
@@ -107,8 +106,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
-            const transportModel& transport,
-            const word& propertiesName
+            const transportModel& transport
         );
 
         //- Disallow default bitwise copy construction
@@ -125,8 +123,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
-            const transportModel& transport,
-            const word& propertiesName = turbulenceModel::propertiesName
+            const transportModel& transport
         );
 
 

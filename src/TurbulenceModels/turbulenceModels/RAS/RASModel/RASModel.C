@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,8 +48,7 @@ Foam::RASModel<BasicTurbulenceModel>::RASModel
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
-    const word& propertiesName
+    const transportModel& transport
 )
 :
     BasicTurbulenceModel
@@ -60,8 +59,7 @@ Foam::RASModel<BasicTurbulenceModel>::RASModel
         U,
         alphaRhoPhi,
         phi,
-        transport,
-        propertiesName
+        transport
     ),
 
     RASDict_(this->subOrEmptyDict("RAS")),
@@ -119,26 +117,31 @@ Foam::RASModel<BasicTurbulenceModel>::New
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
-    const word& propertiesName
+    const transportModel& transport
 )
 {
-    // get model name, but do not register the dictionary
-    // otherwise it is registered in the database twice
+    IOdictionary modelDict
+    (
+        IOobject
+        (
+            IOobject::groupName
+            (
+                turbulenceModel::propertiesName,
+                alphaRhoPhi.group()
+            ),
+            U.time().constant(),
+            U.db(),
+            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
+
     const word modelType
     (
-        IOdictionary
-        (
-            IOobject
-            (
-                IOobject::groupName(propertiesName, alphaRhoPhi.group()),
-                U.time().constant(),
-                U.db(),
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE,
-                false
-            )
-        ).subDict("RAS").lookup("RASModel")
+        modelDict.subDict("RAS").found("model")
+      ? modelDict.subDict("RAS").lookup("model")
+      : modelDict.subDict("RAS").lookup("RASModel")
     );
 
     Info<< "Selecting RAS turbulence model " << modelType << endl;
@@ -158,7 +161,7 @@ Foam::RASModel<BasicTurbulenceModel>::New
 
     return autoPtr<RASModel>
     (
-        cstrIter()(alpha, rho, U, alphaRhoPhi, phi, transport, propertiesName)
+        cstrIter()(alpha, rho, U, alphaRhoPhi, phi, transport)
     );
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,6 @@ continuousGasKEqn<BasicTurbulenceModel>::continuousGasKEqn
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
     const transportModel& transport,
-    const word& propertiesName,
     const word& type
 )
 :
@@ -56,7 +55,6 @@ continuousGasKEqn<BasicTurbulenceModel>::continuousGasKEqn
         alphaRhoPhi,
         phi,
         transport,
-        propertiesName,
         type
     ),
 

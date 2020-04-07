@@ -173,7 +173,6 @@ public:
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
             const phaseModel& transport,
-            const word& propertiesName = turbulenceModel::propertiesName,
             const word& type = typeName
         );
 

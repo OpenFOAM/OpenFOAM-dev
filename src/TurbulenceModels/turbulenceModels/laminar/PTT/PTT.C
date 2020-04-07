@@ -64,7 +64,6 @@ PTT<BasicTurbulenceModel>::PTT
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
     const transportModel& transport,
-    const word& propertiesName,
     const word& type
 )
 :
@@ -76,7 +75,6 @@ PTT<BasicTurbulenceModel>::PTT
         alphaRhoPhi,
         phi,
         transport,
-        propertiesName,
         type
     ),
 

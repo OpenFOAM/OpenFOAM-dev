@@ -126,7 +126,6 @@ public:
             const surfaceScalarField& alphaRhoPhi,
             const surfaceScalarField& phi,
             const transportModel& transport,
-            const word& propertiesName = turbulenceModel::propertiesName,
             const word& type = typeName
         );
 

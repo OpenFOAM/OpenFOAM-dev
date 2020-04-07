@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,8 +36,7 @@ Foam::ThermalDiffusivity<BasicTurbulenceModel>::ThermalDiffusivity
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
-    const word& propertiesName
+    const transportModel& transport
 )
 :
     BasicTurbulenceModel
@@ -48,8 +47,7 @@ Foam::ThermalDiffusivity<BasicTurbulenceModel>::ThermalDiffusivity
         U,
         alphaRhoPhi,
         phi,
-        transport,
-        propertiesName
+        transport
     )
 {}
 
@@ -65,8 +63,7 @@ Foam::ThermalDiffusivity<BasicTurbulenceModel>::New
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& transport,
-    const word& propertiesName
+    const transportModel& transport
 )
 {
     return autoPtr<ThermalDiffusivity>
@@ -79,8 +76,7 @@ Foam::ThermalDiffusivity<BasicTurbulenceModel>::New
             U,
             alphaRhoPhi,
             phi,
-            transport,
-            propertiesName
+            transport
         ).ptr())
     );
 }
@@ -93,8 +89,7 @@ Foam::ThermalDiffusivity<BasicTurbulenceModel>::New
     const volScalarField& rho,
     const volVectorField& U,
     const surfaceScalarField& phi,
-    const transportModel& transport,
-    const word& propertiesName
+    const transportModel& transport
 )
 {
     return autoPtr<ThermalDiffusivity>
@@ -105,8 +100,7 @@ Foam::ThermalDiffusivity<BasicTurbulenceModel>::New
             rho,
             U,
             phi,
-            transport,
-            propertiesName
+            transport
         ).ptr())
     );
 }
