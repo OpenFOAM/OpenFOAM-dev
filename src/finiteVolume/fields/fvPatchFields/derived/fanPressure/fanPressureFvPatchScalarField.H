@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,10 +131,10 @@ private:
     // Private Data
 
         //- Fan curve
-        autoPtr<Function1<scalar>> fanCurve_;
+        const autoPtr<Function1<scalar>> fanCurve_;
 
         //- Direction of flow through the fan relative to patch
-        fanFlowDirection direction_;
+        const fanFlowDirection direction_;
 
 
 public:

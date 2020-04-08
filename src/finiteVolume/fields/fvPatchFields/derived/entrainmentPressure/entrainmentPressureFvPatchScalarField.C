@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,27 +23,27 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "totalPressureFvPatchScalarField.H"
+#include "entrainmentPressureFvPatchScalarField.H"
 #include "addToRunTimeSelectionTable.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::totalPressureFvPatchScalarField::totalPressureFvPatchScalarField
+Foam::entrainmentPressureFvPatchScalarField::
+entrainmentPressureFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
     dynamicPressureFvPatchScalarField(p, iF),
-    UName_("U"),
     phiName_("phi")
 {}
 
 
-Foam::totalPressureFvPatchScalarField::totalPressureFvPatchScalarField
+Foam::entrainmentPressureFvPatchScalarField::
+entrainmentPressureFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -51,80 +51,63 @@ Foam::totalPressureFvPatchScalarField::totalPressureFvPatchScalarField
 )
 :
     dynamicPressureFvPatchScalarField(p, iF, dict),
-    UName_(dict.lookupOrDefault<word>("U", "U")),
     phiName_(dict.lookupOrDefault<word>("phi", "phi"))
 {}
 
 
-Foam::totalPressureFvPatchScalarField::totalPressureFvPatchScalarField
+Foam::entrainmentPressureFvPatchScalarField::
+entrainmentPressureFvPatchScalarField
 (
-    const totalPressureFvPatchScalarField& ptf,
+    const entrainmentPressureFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const fvPatchFieldMapper& mapper
 )
 :
     dynamicPressureFvPatchScalarField(ptf, p, iF, mapper),
-    UName_(ptf.UName_),
     phiName_(ptf.phiName_)
 {}
 
 
-Foam::totalPressureFvPatchScalarField::totalPressureFvPatchScalarField
+Foam::entrainmentPressureFvPatchScalarField::
+entrainmentPressureFvPatchScalarField
 (
-    const totalPressureFvPatchScalarField& tppsf
+    const entrainmentPressureFvPatchScalarField& tppsf
 )
 :
     dynamicPressureFvPatchScalarField(tppsf),
-    UName_(tppsf.UName_),
     phiName_(tppsf.phiName_)
 {}
 
 
-Foam::totalPressureFvPatchScalarField::totalPressureFvPatchScalarField
+Foam::entrainmentPressureFvPatchScalarField::
+entrainmentPressureFvPatchScalarField
 (
-    const totalPressureFvPatchScalarField& tppsf,
+    const entrainmentPressureFvPatchScalarField& tppsf,
     const DimensionedField<scalar, volMesh>& iF
 )
 :
     dynamicPressureFvPatchScalarField(tppsf, iF),
-    UName_(tppsf.UName_),
     phiName_(tppsf.phiName_)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::totalPressureFvPatchScalarField::updateCoeffs
-(
-    const scalarField& p0p,
-    const vectorField& Up
-)
+void Foam::entrainmentPressureFvPatchScalarField::updateCoeffs()
 {
     const fvsPatchField<scalar>& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
 
-    dynamicPressureFvPatchScalarField::updateCoeffs
-    (
-        p0_,
-        0.5*(1 - pos0(phip))*magSqr(Up)
-    );
+    const scalarField Unp(phip/patch().magSf());
+
+    dynamicPressureFvPatchScalarField::updateCoeffs(p0_, - 0.5*Unp*mag(Unp));
 }
 
 
-void Foam::totalPressureFvPatchScalarField::updateCoeffs()
-{
-    const fvPatchField<vector>& Up =
-        patch().lookupPatchField<volVectorField, vector>(UName_);
-
-    updateCoeffs(p0_, Up);
-}
-
-
-void Foam::totalPressureFvPatchScalarField::write(Ostream& os) const
+void Foam::entrainmentPressureFvPatchScalarField::write(Ostream& os) const
 {
     dynamicPressureFvPatchScalarField::write(os);
-    writeEntryIfDifferent<word>(os, "U", "U", UName_);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
 }
 
@@ -136,7 +119,7 @@ namespace Foam
     makePatchTypeField
     (
         fvPatchScalarField,
-        totalPressureFvPatchScalarField
+        entrainmentPressureFvPatchScalarField
     );
 }
 
