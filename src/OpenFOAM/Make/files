@@ -268,6 +268,7 @@ $(dll)/codedBase/codedBase.C
 
 db/functionObjects/functionObject/functionObject.C
 db/functionObjects/functionObjectList/functionObjectList.C
+db/functionObjects/functionObjectList/wordAndDictionary.C
 db/functionObjects/writeFile/writeFile.C
 db/functionObjects/logFiles/logFiles.C
 db/functionObjects/writeObjectsBase/writeObjectsBase.C
