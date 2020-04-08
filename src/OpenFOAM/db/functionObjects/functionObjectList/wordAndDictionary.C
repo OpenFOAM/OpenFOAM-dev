@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,58 +23,56 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fieldAverageItem.H"
-#include "fieldAverage.H"
 #include "wordAndDictionary.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::fieldAverageItem::fieldAverageItem
-(
-    const fieldAverage& fa,
-    Istream& is
-)
+Foam::wordAndDictionary::wordAndDictionary(Istream& is)
 :
-    fieldName_("unknown"),
-    mean_(false),
-    meanFieldName_("unknown"),
-    prime2Mean_(false),
-    prime2MeanFieldName_("unknown")
+    Tuple2<word, dictionary>()
 {
-    is.check
-    (
-        "Foam::Istream& Foam::operator>>"
-        "(Foam::Istream&, Foam::functionObjects::fieldAverageItem&)"
-    );
+    is >> *this;
 
-    wordAndDictionary wd(is);
+    is.check("wordAndDictionary::wordAndDictionary(Istream& is)");
+}
 
-    fieldName_ = wd.first();
 
-    mean_ = wd.second().lookupOrDefault<Switch>("mean", fa.mean_);
-    prime2Mean_ =
-        wd.second().lookupOrDefault<Switch>("prime2Mean", fa.prime2Mean_);
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-    meanFieldName_ = IOobject::groupName
-    (
-        IOobject::member(fieldName_) + fieldAverageItem::meanExt,
-        IOobject::group(fieldName_)
-    );
+Foam::wordAndDictionary::~wordAndDictionary()
+{}
 
-    prime2MeanFieldName_ = IOobject::groupName
-    (
-        IOobject::member(fieldName_) + fieldAverageItem::prime2MeanExt,
-        IOobject::group(fieldName_)
-    );
 
-    if ((fa.window_ > 0) && (fa.windowName_ != ""))
+// * * * * * * * * * * * * * * Friend Operators * * * * * * * * * * * * * * //
+
+Foam::Istream& Foam::operator>>(Istream& is, wordAndDictionary& wd)
+{
+    wd.first() = word(is);
+    wd.second().clear();
+
+    token t(is);
+    is.putBack(t);
+
+    if (t.isPunctuation() && t.pToken() == token::BEGIN_BLOCK)
     {
-        meanFieldName_ =
-            meanFieldName_ + "_" + fa.windowName_;
-
-        prime2MeanFieldName_ =
-            prime2MeanFieldName_ + "_" + fa.windowName_;
+        dictionary d(is);
+        wd.second().transfer(d);
     }
+
+    return is;
+}
+
+
+Foam::Ostream& Foam::operator<<(Ostream& os, const wordAndDictionary& wd)
+{
+    os << wd.first();
+
+    if (!wd.second().empty())
+    {
+        os << token::SPACE << wd.second();
+    }
+
+    return os;
 }
 
 

@@ -33,6 +33,8 @@ License
 #include "Tuple2.H"
 #include "etcFiles.H"
 #include "IOdictionary.H"
+#include "wordAndDictionary.H"
+
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
@@ -334,15 +336,19 @@ bool Foam::functionObjectList::readFunctionObject
     // Store the funcDict as read for error reporting context
     const dictionary funcDict0(funcDict);
 
-    // Insert the 'field' and/or 'fields' entry corresponding to the optional
-    // arguments or read the 'field' or 'fields' entry and add the required
-    // fields to requiredFields
-    wordList fieldArgs(args);
+    // Insert the 'field' and/or 'fields' and 'objects' entries corresponding
+    // to both the arguments and the named arguments
+    DynamicList<wordAndDictionary> fieldArgs;
+    forAll(args, i)
+    {
+        fieldArgs.append(wordAndDictionary(args[i], dictionary::null));
+    }
     forAll(namedArgs, i)
     {
         if (namedArgs[i].first() == "field")
         {
-            fieldArgs.append(namedArgs[i].second());
+            IStringStream iss(namedArgs[i].second());
+            fieldArgs.append(wordAndDictionary(iss));
         }
         if
         (
@@ -351,15 +357,16 @@ bool Foam::functionObjectList::readFunctionObject
         )
         {
             IStringStream iss(namedArgs[i].second());
-            fieldArgs.append(wordList(iss));
+            fieldArgs.append(List<wordAndDictionary>(iss));
         }
+    }
+    if (fieldArgs.size() == 1)
+    {
+        funcDict.set("field", fieldArgs[0].first());
+        funcDict.merge(fieldArgs[0].second());
     }
     if (fieldArgs.size() >= 1)
     {
-        if (fieldArgs.size() == 1)
-        {
-            funcDict.set("field", fieldArgs[0]);
-        }
         funcDict.set("fields", fieldArgs);
         funcDict.set("objects", fieldArgs);
     }
@@ -405,32 +412,38 @@ bool Foam::functionObjectList::readFunctionObject
         );
     }
 
+    // Check for anything in the configuration that has not been set
     checkUnsetEntries(funcCall, funcArgsDict, funcDict0, context);
 
-    // Lookup the field and fields entries from the now expanded funcDict
-    // and insert into the requiredFields
+    // Lookup the field, fields and objects entries from the now expanded
+    // funcDict and insert into the requiredFields
     dictionary& expandedFuncDict = funcArgsDict.subDict(funcCallKeyword);
-
+    if (functionObject::debug)
+    {
+        InfoInFunction
+            << nl << incrIndent << indent
+            << funcCall << expandedFuncDict
+            << decrIndent << endl;
+    }
     if (expandedFuncDict.found("field"))
     {
-        requiredFields.insert
-        (
-            word(expandedFuncDict.lookup("field"))
-        );
+        requiredFields.insert(word(expandedFuncDict.lookup("field")));
     }
     if (expandedFuncDict.found("fields"))
     {
-        requiredFields.insert
-        (
-            wordOrDictNameList(expandedFuncDict.lookup("fields"))
-        );
+        List<wordAndDictionary> fields(expandedFuncDict.lookup("fields"));
+        forAll(fields, i)
+        {
+            requiredFields.insert(fields[i].first());
+        }
     }
     if (expandedFuncDict.found("objects"))
     {
-        requiredFields.insert
-        (
-            wordOrDictNameList(expandedFuncDict.lookup("objects"))
-        );
+        List<wordAndDictionary> objects(expandedFuncDict.lookup("objects"));
+        forAll(objects, i)
+        {
+            requiredFields.insert(objects[i].first());
+        }
     }
 
     // Merge this functionObject dictionary into functionsDict
