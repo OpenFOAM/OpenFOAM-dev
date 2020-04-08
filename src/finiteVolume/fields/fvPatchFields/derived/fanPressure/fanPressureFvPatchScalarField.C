@@ -129,7 +129,7 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
     const fvPatchField<vector>& Up =
         patch().lookupPatchField<volVectorField, vector>(UName_);
 
-    int sign = 2*direction_ - 1;
+    int sign = direction_ ? +1 : -1;
 
     // Get the volumetric flow rate
     scalar volFlowRate = 0;

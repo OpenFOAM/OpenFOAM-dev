@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,32 +35,22 @@ void Foam::fanPressureJumpFvPatchScalarField::calcFanJump()
     const fvsPatchField<scalar>& phip =
         patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
 
-    const bool massBasedFlux =
-        phip.internalField().dimensions() == dimDensity*dimVelocity*dimArea;
+    const scalar sign = reverse_ ? -1 : 1;
 
-    const scalar dir =  reverse_ ? -1 : 1;
-
-    //- Jump table is defined in backward compatibility mode
-    if(jumpTable_.valid())
+    if (fanCurve_.valid())
     {
-        //- Patch normal velocity field
-        scalarField Un(max(dir*phip/patch().magSf(), scalar(0)));
+        // Preferred method
 
-        if (massBasedFlux)
-        {
-            const fvPatchField<scalar>& rhop =
-                patch().lookupPatchField<volScalarField, scalar>(rhoName_);
-
-            Un /= rhop;
-        }
-
-        jump_ = dir*max(jumpTable_->value(Un), scalar(0));
-    }
-    else
-    {
         scalar volFlowRate = 0;
 
-        if (massBasedFlux)
+        if (phip.internalField().dimensions() == dimVelocity*dimArea)
+        {
+            volFlowRate = gSum(phip);
+        }
+        else if
+        (
+            phip.internalField().dimensions() == dimVelocity*dimArea*dimDensity
+        )
         {
             const scalarField& rhop =
                 patch().lookupPatchField<volScalarField, scalar>(rhoName_);
@@ -69,11 +59,47 @@ void Foam::fanPressureJumpFvPatchScalarField::calcFanJump()
         }
         else
         {
-            volFlowRate = gSum(phip);
+            FatalErrorInFunction
+                << "dimensions of phi are not correct"
+                << "\n    on patch " << patch().name()
+                << " of field " << internalField().name()
+                << " in file " << internalField().objectPath() << nl
+                << exit(FatalError);
         }
 
+        jump_ = sign*max(fanCurve_->value(max(sign*volFlowRate, 0)), 0);
+    }
+    else
+    {
+        // Backwards compatibility fallback
 
-        jump_ = dir*max(fanCurve_->value(max(dir*volFlowRate, 0)), 0);
+        scalarField Un(max(sign*phip/patch().magSf(), scalar(0)));
+
+        if (phip.internalField().dimensions() == dimVelocity*dimArea)
+        {
+            // Do nothing
+        }
+        else if
+        (
+            phip.internalField().dimensions() == dimVelocity*dimArea*dimDensity
+        )
+        {
+            const fvPatchField<scalar>& rhop =
+                patch().lookupPatchField<volScalarField, scalar>(rhoName_);
+
+            Un /= rhop;
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "dimensions of phi are not correct"
+                << "\n    on patch " << patch().name()
+                << " of field " << internalField().name()
+                << " in file " << internalField().objectPath() << nl
+                << exit(FatalError);
+        }
+
+        jump_ = sign*max(jumpTable_->value(Un), scalar(0));
     }
 }
 
@@ -111,13 +137,19 @@ Foam::fanPressureJumpFvPatchScalarField::fanPressureJumpFvPatchScalarField
 {
     if (cyclicPatch().owner())
     {
-        if (dict.found("jumpTable"))
+        if (dict.found("fanCurve"))
         {
-            //- backward compatibility model
+            // Preferred entry name
+            fanCurve_ = Function1<scalar>::New("fanCurve", dict);
+        }
+        else if (dict.found("jumpTable"))
+        {
+            // Backwards compatibility fallback
             jumpTable_ = Function1<scalar>::New("jumpTable", dict);
         }
         else
         {
+            // Call function construction for error message
             fanCurve_ = Function1<scalar>::New("fanCurve", dict);
         }
     }
@@ -204,8 +236,17 @@ void Foam::fanPressureJumpFvPatchScalarField::write(Ostream& os) const
 {
     fixedJumpFvPatchScalarField::write(os);
 
-    if (jumpTable_.valid()) writeEntry(os, jumpTable_());
-    if (fanCurve_.valid()) writeEntry(os, fanCurve_());
+    if (cyclicPatch().owner())
+    {
+        if (fanCurve_.valid())
+        {
+            writeEntry(os, fanCurve_());
+        }
+        else
+        {
+            writeEntry(os, jumpTable_());
+        }
+    }
 
     writeEntryIfDifferent<Switch>(os, "reverse", false, reverse_);
     writeEntryIfDifferent<word>(os, "phi", "phi", phiName_);
