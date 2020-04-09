@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,6 +50,9 @@ class pointPatchField;
 
 template<class Type, template<class> class PatchField, class GeoMesh>
 class GeometricField;
+
+template<class Type>
+using PointField = GeometricField<Type, pointPatchField, pointMesh>;
 
 typedef GeometricField<scalar, pointPatchField, pointMesh> pointScalarField;
 typedef GeometricField<vector, pointPatchField, pointMesh> pointVectorField;

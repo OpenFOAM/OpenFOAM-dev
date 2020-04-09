@@ -97,11 +97,7 @@ void Foam::fv::semiImplicitSource::addSupType
     );
 
     // Explicit source function for the field
-    autoPtr<Function1<Type>> SuFun1
-    (
-         Function1<Type>::New("explicit", fieldDicts_[fieldi])
-    );
-    UIndirectList<Type>(Su, cells_) = SuFun1->value(t)/VDash_;
+    UIndirectList<Type>(Su, cells_) = fieldSu_[fieldi].value<Type>(t)/VDash_;
 
     volScalarField::Internal Sp
     (
@@ -124,11 +120,7 @@ void Foam::fv::semiImplicitSource::addSupType
     );
 
     // Implicit source function for the field
-    autoPtr<Function1<scalar>> SpFun1
-    (
-        Function1<scalar>::New("implicit", fieldDicts_[fieldi])
-    );
-    UIndirectList<scalar>(Sp, cells_) = SpFun1->value(t)/VDash_;
+    UIndirectList<scalar>(Sp, cells_) = fieldSp_[fieldi].value(t)/VDash_;
 
     eqn += Su + fvm::SuSp(Sp, psi);
 }
@@ -351,20 +343,37 @@ bool Foam::fv::semiImplicitSource::read(const dictionary& dict)
 
         const dictionary& sources = coeffs_.subDict("sources");
 
-        // Number of the fields with source term
+        // Number of fields with a source term
         const label nFields = sources.size();
 
-        // Names of the field
+        // Set field names and source terms
         fieldNames_.setSize(nFields);
-
-        // Field dicts
-        fieldDicts_.setSize(nFields);
-
+        fieldSp_.setSize(nFields);
+        fieldSu_.setSize(nFields);
         label i = 0;
         forAllConstIter(dictionary, sources, iter)
         {
             fieldNames_[i] = iter().keyword();
-            fieldDicts_[i] = iter().dict();
+            fieldSu_.set
+            (
+                i,
+                objectFunction1::New<VolField>
+                (
+                    "explicit",
+                    iter().dict(),
+                    fieldNames_[i],
+                    mesh_
+                ).ptr()
+            );
+            fieldSp_.set
+            (
+                i,
+                Function1<scalar>::New
+                (
+                    "implicit",
+                    iter().dict()
+                ).ptr()
+            );
             i++;
         }
 
