@@ -1,0 +1,92 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      momentumTransport;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+simulationType laminar;
+
+laminar
+{
+    model               Maxwell; // Giesekus; // PTT;
+
+    MaxwellCoeffs
+    {
+        nuM             0.002;
+
+        // Single mode coefficient
+        lambda          0.03;
+
+        // Example 2-mode specification
+        // modes
+        // (
+        //     {
+        //         lambda          0.01;
+        //     }
+
+        //     {
+        //         lambda          0.04;
+        //     }
+        // );
+    }
+
+    GiesekusCoeffs
+    {
+        nuM             0.002;
+
+        // Single mode coefficients
+        lambda          0.03;
+        alphaG          0.1;
+
+        // Example 2-mode specification
+        // modes
+        // (
+        //     {
+        //         lambda          0.01;
+        //         alphaG          0.05;
+        //     }
+
+        //     {
+        //         lambda          0.04;
+        //         alphaG          0.2;
+        //     }
+        // );
+    }
+
+    PTTCoeffs
+    {
+        nuM             0.002;
+
+        // Single mode coefficients
+        lambda          0.03;
+        epsilon         0.25;
+
+        // Example 2-mode specification
+        // modes
+        // (
+        //     {
+        //         lambda          0.01;
+        //         epsilon         0.25;
+        //     }
+
+        //     {
+        //         lambda          0.04;
+        //         epsilon         0.25;
+        //     }
+        // );
+    }
+
+    printCoeffs         on;
+}
+
+// ************************************************************************* //

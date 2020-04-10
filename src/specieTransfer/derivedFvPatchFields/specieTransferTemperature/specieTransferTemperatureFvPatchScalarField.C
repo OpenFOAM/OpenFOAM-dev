@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,7 +168,7 @@ void Foam::specieTransferTemperatureFvPatchScalarField::updateCoeffs()
         patch().magSf()
        *db().lookupObject<compressible::turbulenceModel>
         (
-            turbulenceModel::propertiesName
+            turbulenceModel::typeName
         ).alphaEff(patch().index())
     );
 

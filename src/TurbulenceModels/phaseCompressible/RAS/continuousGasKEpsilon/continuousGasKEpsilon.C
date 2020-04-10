@@ -160,7 +160,7 @@ continuousGasKEpsilon<BasicTurbulenceModel>::liquidTurbulence() const
             (
                 IOobject::groupName
                 (
-                    turbulenceModel::propertiesName,
+                    turbulenceModel::typeName,
                     liquid.name()
                 )
             );

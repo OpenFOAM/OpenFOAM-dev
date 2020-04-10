@@ -104,7 +104,7 @@ public:
         //- Const access to the coefficients dictionary
         virtual const dictionary& coeffDict() const;
 
-        //- Read turbulenceProperties dictionary
+        //- Read momentumTransport dictionary
         virtual bool read();
 
         //- Return the turbulence viscosity, i.e. 0 for Stokes flow

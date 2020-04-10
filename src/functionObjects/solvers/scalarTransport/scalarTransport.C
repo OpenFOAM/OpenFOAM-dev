@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,20 +72,20 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::scalarTransport::D
             dimensionedScalar(Dname, phi.dimensions()/dimLength, D_)
         );
     }
-    else if (mesh_.foundObject<icoModel>(turbulenceModel::propertiesName))
+    else if (mesh_.foundObject<icoModel>(turbulenceModel::typeName))
     {
         const icoModel& model = mesh_.lookupObject<icoModel>
         (
-            turbulenceModel::propertiesName
+            turbulenceModel::typeName
         );
 
         return alphaD_*model.nu() + alphaDt_*model.nut();
     }
-    else if (mesh_.foundObject<cmpModel>(turbulenceModel::propertiesName))
+    else if (mesh_.foundObject<cmpModel>(turbulenceModel::typeName))
     {
         const cmpModel& model = mesh_.lookupObject<cmpModel>
         (
-            turbulenceModel::propertiesName
+            turbulenceModel::typeName
         );
 
         return alphaD_*model.mu() + alphaDt_*model.mut();

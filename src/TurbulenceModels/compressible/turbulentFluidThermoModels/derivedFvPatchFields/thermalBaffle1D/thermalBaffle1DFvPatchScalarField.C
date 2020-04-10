@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -354,7 +354,7 @@ void thermalBaffle1DFvPatchScalarField<solidType>::updateCoeffs()
         const compressible::turbulenceModel& turbModel =
             db().template lookupObject<compressible::turbulenceModel>
             (
-                turbulenceModel::propertiesName
+                turbulenceModel::typeName
             );
 
         // local properties

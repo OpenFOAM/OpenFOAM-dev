@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,7 +175,7 @@ bool Foam::functionObjects::age::execute()
             tmuEff =
                 mesh_.lookupObject<turbulenceModel>
                 (
-                    turbulenceModel::propertiesName
+                    turbulenceModel::typeName
                 ).muEff();
 
             laplacianScheme =
@@ -212,7 +212,7 @@ bool Foam::functionObjects::age::execute()
             tnuEff =
                 mesh_.lookupObject<turbulenceModel>
                 (
-                    turbulenceModel::propertiesName
+                    turbulenceModel::typeName
                 ).nuEff();
 
             laplacianScheme =

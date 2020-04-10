@@ -5,7 +5,7 @@ Reference:
     A two-phase solver for complex fluids: Studies of the Weissenberg effect.
     International Journal of Multiphase Flow, 84, 98-115.
 
-In compressibleInterFoam with turbulenceProperties simulationType set to
+In compressibleInterFoam with momentumTransport simulationType set to
 twoPhaseTransport separate stress models (laminar, non-Newtonian, LES or RAS)
 are instantiated for each of the two phases allowing for different modeling for
 the phases.
@@ -13,13 +13,13 @@ the phases.
 This example case uses:
 - phases "air" and "liquid"
 - air phase
-  - constant/turbulenceProperties.air:
+  - constant/momentumTransport.air:
     - stress model set to laminar, Newtonian
   - constant/thermophysicalProperties.air:
     - transport set to const (Newtonian)
     - mu (dynamic viscoity) = 1.84e-5
 - liquid phase
-  - constant/turbulenceProperties.liquid:
+  - constant/momentumTransport.liquid:
     - stress model set to laminar, Maxwell non-Newtonian
     - nuM (kinematic viscosity) = 0.01476
     - lambda = 0.018225

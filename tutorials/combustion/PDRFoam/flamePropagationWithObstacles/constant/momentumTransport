@@ -1,0 +1,42 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      momentumTransport;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+simulationType  RAS;
+
+RAS
+{
+    model    PDRkEpsilon;
+
+    PDRkEpsilonCoeffs
+    {
+        Cmu              0.09;
+        C1               1.44;
+        C2               1.92;
+        C3               0;
+        C4               0.1;
+        alphah           1;
+        alphak           1;
+        alphaEps         0.76923;
+    }
+
+    turbulence      on;
+
+    printCoeffs     on;
+}
+
+
+// ************************************************************************* //

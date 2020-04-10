@@ -72,7 +72,7 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("incompressibleTurbulenceModel");
+    TypeName(turbulenceModel::typeName_());
 
 
     // Constructors

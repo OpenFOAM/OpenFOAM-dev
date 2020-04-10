@@ -35,7 +35,52 @@ namespace Foam
     defineTypeNameAndDebug(turbulenceModel, 0);
 }
 
-const Foam::word Foam::turbulenceModel::propertiesName("turbulenceProperties");
+
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+Foam::IOdictionary Foam::turbulenceModel::readModelDict
+(
+    const objectRegistry& obr,
+    const word& group,
+    bool registerObject
+)
+{
+    IOobject momentumTransport
+    (
+        IOobject::groupName(typeName, group),
+        obr.time().constant(),
+        obr,
+        IOobject::MUST_READ_IF_MODIFIED,
+        IOobject::NO_WRITE,
+        registerObject
+    );
+
+    if (momentumTransport.typeHeaderOk<IOdictionary>(true))
+    {
+        return momentumTransport;
+    }
+    else
+    {
+        IOobject momentumTransport
+        (
+            IOobject::groupName("momentumTransport", group),
+            obr.time().constant(),
+            obr,
+            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::NO_WRITE,
+            registerObject
+        );
+
+        if (momentumTransport.typeHeaderOk<IOdictionary>(true))
+        {
+            return momentumTransport;
+        }
+        else
+        {
+            return momentumTransport;
+        }
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -47,17 +92,7 @@ Foam::turbulenceModel::turbulenceModel
     const surfaceScalarField& phi
 )
 :
-    IOdictionary
-    (
-        IOobject
-        (
-            IOobject::groupName(propertiesName, alphaRhoPhi.group()),
-            U.time().constant(),
-            U.db(),
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
-        )
-    ),
+    IOdictionary(readModelDict(U.db(), alphaRhoPhi.group(), true)),
 
     runTime_(U.time()),
     mesh_(U.mesh()),
@@ -66,7 +101,10 @@ Foam::turbulenceModel::turbulenceModel
     alphaRhoPhi_(alphaRhoPhi),
     phi_(phi),
     y_(mesh_)
-{}
+{
+    // Ensure name of IOdictionary is typeName
+    rename(IOobject::groupName(typeName, alphaRhoPhi.group()));
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //

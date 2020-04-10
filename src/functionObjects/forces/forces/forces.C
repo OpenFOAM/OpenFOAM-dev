@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -221,17 +221,17 @@ Foam::functionObjects::forces::devRhoReff() const
     typedef compressible::turbulenceModel cmpTurbModel;
     typedef incompressible::turbulenceModel icoTurbModel;
 
-    if (obr_.foundObject<cmpTurbModel>(cmpTurbModel::propertiesName))
+    if (obr_.foundObject<cmpTurbModel>(turbulenceModel::typeName))
     {
         const cmpTurbModel& turb =
-            obr_.lookupObject<cmpTurbModel>(cmpTurbModel::propertiesName);
+            obr_.lookupObject<cmpTurbModel>(turbulenceModel::typeName);
 
         return turb.devRhoReff();
     }
-    else if (obr_.foundObject<icoTurbModel>(icoTurbModel::propertiesName))
+    else if (obr_.foundObject<icoTurbModel>(turbulenceModel::typeName))
     {
         const incompressible::turbulenceModel& turb =
-            obr_.lookupObject<icoTurbModel>(icoTurbModel::propertiesName);
+            obr_.lookupObject<icoTurbModel>(turbulenceModel::typeName);
 
         return rho()*turb.devReff();
     }

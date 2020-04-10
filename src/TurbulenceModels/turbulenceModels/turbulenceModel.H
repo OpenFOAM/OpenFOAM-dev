@@ -74,13 +74,20 @@ protected:
         nearWallDist y_;
 
 
+    // Protected member functions
+
+        static IOdictionary readModelDict
+        (
+            const objectRegistry& obr,
+            const word& group,
+            bool registerObject = false
+        );
+
+
 public:
 
     //- Runtime type information
-    TypeName("turbulenceModel");
-
-    //- Default name of the turbulence properties dictionary
-    static const word propertiesName;
+    TypeName("momentumTransport");
 
 
     // Constructors

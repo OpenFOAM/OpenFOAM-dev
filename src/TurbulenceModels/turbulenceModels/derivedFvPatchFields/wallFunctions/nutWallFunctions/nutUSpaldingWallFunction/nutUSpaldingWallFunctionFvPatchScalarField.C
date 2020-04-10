@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ tmp<scalarField> nutUSpaldingWallFunctionFvPatchScalarField::nut() const
     (
         IOobject::groupName
         (
-            turbulenceModel::propertiesName,
+            turbulenceModel::typeName,
             internalField().group()
         )
     );
@@ -72,7 +72,7 @@ tmp<scalarField> nutUSpaldingWallFunctionFvPatchScalarField::calcUTau
     (
         IOobject::groupName
         (
-            turbulenceModel::propertiesName,
+            turbulenceModel::typeName,
             internalField().group()
         )
     );
@@ -196,7 +196,7 @@ tmp<scalarField> nutUSpaldingWallFunctionFvPatchScalarField::yPlus() const
     (
         IOobject::groupName
         (
-            turbulenceModel::propertiesName,
+            turbulenceModel::typeName,
             internalField().group()
         )
     );

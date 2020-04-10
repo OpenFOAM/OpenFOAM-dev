@@ -1,10 +1,10 @@
-    Info<< "Reading turbulenceProperties\n" << endl;
+    Info<< "Reading momentumTransport\n" << endl;
 
-    IOdictionary turbulenceProperties
+    IOdictionary momentumTransport
     (
         IOobject
         (
-            "turbulenceProperties",
+            "momentumTransport",
             runTime.constant(),
             mesh,
             IOobject::MUST_READ_IF_MODIFIED,
@@ -18,4 +18,4 @@
     );
 
     Kmesh K(mesh);
-    UOprocess forceGen(K, runTime.deltaTValue(), turbulenceProperties);
+    UOprocess forceGen(K, runTime.deltaTValue(), momentumTransport);

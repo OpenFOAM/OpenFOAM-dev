@@ -85,7 +85,7 @@ Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
 
         const word turbulenceModelName
         (
-            IOobject::groupName(turbulenceModel::propertiesName, phase)
+            IOobject::groupName(turbulenceModel::typeName, phase)
         );
 
         if (mesh.foundObject<turbulenceModel>(turbulenceModelName))

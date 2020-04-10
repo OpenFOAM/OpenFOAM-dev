@@ -117,7 +117,7 @@ SmagorinskyZhang<BasicTurbulenceModel>::gasTurbulence() const
             (
                 IOobject::groupName
                 (
-                    turbulenceModel::propertiesName,
+                    turbulenceModel::typeName,
                     gas.name()
                 )
             );

@@ -44,7 +44,7 @@ tmp<scalarField> nutkAtmRoughWallFunctionFvPatchScalarField::nut() const
     (
         IOobject::groupName
         (
-            turbulenceModel::propertiesName,
+            turbulenceModel::typeName,
             internalField().group()
         )
     );

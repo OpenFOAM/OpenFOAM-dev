@@ -130,20 +130,12 @@ Foam::LESModel<BasicTurbulenceModel>::New
     const transportModel& transport
 )
 {
-    IOdictionary modelDict
+    const IOdictionary modelDict
     (
-        IOobject
+        turbulenceModel::readModelDict
         (
-            IOobject::groupName
-            (
-                turbulenceModel::propertiesName,
-                alphaRhoPhi.group()
-            ),
-            U.time().constant(),
             U.db(),
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE,
-            false
+            alphaRhoPhi.group()
         )
     );
 

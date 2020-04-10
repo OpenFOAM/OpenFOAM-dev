@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,7 +174,7 @@ void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
     const compressible::LESModel& lesModel =
         YO2.db().lookupObject<compressible::LESModel>
         (
-            turbulenceModel::propertiesName
+            turbulenceModel::typeName
         );
 
     const volScalarField& delta = lesModel.delta();

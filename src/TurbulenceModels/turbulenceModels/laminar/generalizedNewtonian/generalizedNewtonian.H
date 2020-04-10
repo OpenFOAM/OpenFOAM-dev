@@ -118,7 +118,7 @@ public:
 
     // Member Functions
 
-        //- Read turbulenceProperties dictionary
+        //- Read momentumTransport dictionary
         virtual bool read();
 
         //- Return the turbulence viscosity,

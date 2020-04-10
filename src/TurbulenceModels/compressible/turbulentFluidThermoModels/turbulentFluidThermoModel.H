@@ -25,6 +25,9 @@ Typedef
     Foam::compressible::turbulenceModel
 
 Typedef
+    Foam::compressible::laminarModel
+
+Typedef
     Foam::compressible::RASModel
 
 Typedef

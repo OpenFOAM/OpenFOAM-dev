@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,7 @@ void Foam::fv::variableHeatTransfer::calculateHtc()
     const compressible::turbulenceModel& nbrTurb =
         nbrMesh.lookupObject<compressible::turbulenceModel>
         (
-            turbulenceModel::propertiesName
+            turbulenceModel::typeName
         );
 
     const fluidThermo& nbrThermo =

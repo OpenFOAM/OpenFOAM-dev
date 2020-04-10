@@ -19,11 +19,11 @@ const scalar nu2 =
     ).value();
 
 Info<< "Reading viscoelastic properties\n" << endl;
-IOdictionary turbulenceProperties
+IOdictionary momentumTransport
 (
     IOobject
     (
-        "turbulenceProperties",
+        "momentumTransport",
         runTime.constant(),
         mesh,
         IOobject::MUST_READ,
@@ -31,7 +31,7 @@ IOdictionary turbulenceProperties
     )
 );
 const dictionary& MaxwellCoeffs =
-    turbulenceProperties.subDict("laminar").subDict("MaxwellCoeffs");
+    momentumTransport.subDict("laminar").subDict("MaxwellCoeffs");
 const scalar nu1 = MaxwellCoeffs.lookup<scalar>("nuM");
 const scalar lambda = MaxwellCoeffs.lookup<scalar>("lambda");
 

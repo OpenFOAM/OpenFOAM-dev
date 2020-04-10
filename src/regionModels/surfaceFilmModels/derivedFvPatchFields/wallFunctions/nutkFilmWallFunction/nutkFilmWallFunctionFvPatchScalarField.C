@@ -80,7 +80,7 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::calcUTau
     (
         IOobject::groupName
         (
-            turbulenceModel::propertiesName,
+            turbulenceModel::typeName,
             internalField().group()
         )
     );
@@ -131,7 +131,7 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::nut() const
     (
         IOobject::groupName
         (
-            turbulenceModel::propertiesName,
+            turbulenceModel::typeName,
             internalField().group()
         )
     );
@@ -223,7 +223,7 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::yPlus() const
     (
         IOobject::groupName
         (
-            turbulenceModel::propertiesName,
+            turbulenceModel::typeName,
             internalField().group()
         )
     );

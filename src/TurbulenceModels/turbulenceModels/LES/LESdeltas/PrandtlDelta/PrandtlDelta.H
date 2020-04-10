@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ Description
         delta = min(geometricDelta, (kappa/Cdelta)*y)
     \endverbatim
 
-    Example specification in the turbulenceProperties dictionary:
+    Example specification in the momentumTransport dictionary:
     \verbatim
     delta           Prandtl;
 

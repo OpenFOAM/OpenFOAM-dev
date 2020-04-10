@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -247,7 +247,7 @@ Foam::functionObjects::phaseScalarTransport::D
         );
     }
 
-    const word& nameNoPhase = turbulenceModel::propertiesName;
+    const word& nameNoPhase = turbulenceModel::typeName;
     const word namePhase = IOobject::groupName(nameNoPhase, phaseName_);
 
     const word& name =

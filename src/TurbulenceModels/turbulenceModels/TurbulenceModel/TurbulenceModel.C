@@ -82,25 +82,12 @@ Foam::TurbulenceModel<Alpha, Rho, BasicTurbulenceModel, TransportModel>::New
     const transportModel& transport
 )
 {
-    // get model name, but do not register the dictionary
-    // otherwise it is registered in the database twice
     const word modelType
     (
-        IOdictionary
+        turbulenceModel::readModelDict
         (
-            IOobject
-            (
-                IOobject::groupName
-                (
-                    turbulenceModel::propertiesName,
-                    alphaRhoPhi.group()
-                ),
-                U.time().constant(),
-                U.db(),
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE,
-                false
-            )
+            U.db(),
+            alphaRhoPhi.group()
         ).lookup("simulationType")
     );
 

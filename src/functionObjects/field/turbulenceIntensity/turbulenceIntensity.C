@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,11 +96,11 @@ bool Foam::functionObjects::turbulenceIntensity::read(const dictionary& dict)
 
 bool Foam::functionObjects::turbulenceIntensity::execute()
 {
-    if (mesh_.foundObject<turbulenceModel>(turbulenceModel::propertiesName))
+    if (mesh_.foundObject<turbulenceModel>(turbulenceModel::typeName))
     {
         const turbulenceModel& turbModel = mesh_.lookupObject<turbulenceModel>
         (
-            turbulenceModel::propertiesName
+            turbulenceModel::typeName
         );
 
         volScalarField uPrime(sqrt((2.0/3.0)*turbModel.k()));

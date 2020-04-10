@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,14 +204,14 @@ bool Foam::functionObjects::wallHeatFlux::execute()
     (
         foundObject<compressible::turbulenceModel>
         (
-            turbulenceModel::propertiesName
+            turbulenceModel::typeName
         )
     )
     {
         const compressible::turbulenceModel& turbModel =
             lookupObject<compressible::turbulenceModel>
             (
-                turbulenceModel::propertiesName
+                turbulenceModel::typeName
             );
 
         return store

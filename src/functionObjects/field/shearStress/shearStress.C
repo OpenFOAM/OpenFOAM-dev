@@ -91,7 +91,7 @@ bool Foam::functionObjects::shearStress::execute()
 
     const word turbulenceModelName
     (
-        IOobject::groupName(turbulenceModel::propertiesName, phaseName_)
+        IOobject::groupName(turbulenceModel::typeName, phaseName_)
     );
 
     if (mesh_.foundObject<cmpModel>(turbulenceModelName))
