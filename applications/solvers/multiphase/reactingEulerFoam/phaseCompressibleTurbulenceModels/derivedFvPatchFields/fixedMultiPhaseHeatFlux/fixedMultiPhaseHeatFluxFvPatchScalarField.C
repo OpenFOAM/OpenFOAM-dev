@@ -167,6 +167,31 @@ void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::updateCoeffs()
 }
 
 
+void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::autoMap
+(
+    const fvPatchFieldMapper& m
+)
+{
+    fixedValueFvPatchScalarField::autoMap(m);
+    m(q_, q_);
+}
+
+
+void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::rmap
+(
+    const fvPatchScalarField& ptf,
+    const labelList& addr
+)
+{
+    fixedValueFvPatchScalarField::rmap(ptf, addr);
+
+    const fixedMultiPhaseHeatFluxFvPatchScalarField& mptf =
+        refCast<const fixedMultiPhaseHeatFluxFvPatchScalarField>(ptf);
+
+    q_.rmap(mptf.q_, addr);
+}
+
+
 void Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::write(Ostream& os) const
 {
     fvPatchField<scalar>::write(os);

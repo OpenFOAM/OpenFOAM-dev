@@ -99,12 +99,33 @@ public:
             const copiedFixedValueFvPatchScalarField&
         );
 
+        //- Construct and return a clone
+        virtual tmp<fvPatchScalarField> clone() const
+        {
+            return tmp<fvPatchScalarField>
+            (
+                new copiedFixedValueFvPatchScalarField(*this)
+            );
+        }
+
         //- Copy constructor setting internal field reference
         copiedFixedValueFvPatchScalarField
         (
             const copiedFixedValueFvPatchScalarField&,
             const DimensionedField<scalar, volMesh>&
         );
+
+        //- Construct and return a clone setting internal field reference
+        virtual tmp<fvPatchScalarField> clone
+        (
+            const DimensionedField<scalar, volMesh>& iF
+        ) const
+        {
+            return tmp<fvPatchScalarField>
+            (
+                new copiedFixedValueFvPatchScalarField(*this, iF)
+            );
+        }
 
 
     // Member Functions

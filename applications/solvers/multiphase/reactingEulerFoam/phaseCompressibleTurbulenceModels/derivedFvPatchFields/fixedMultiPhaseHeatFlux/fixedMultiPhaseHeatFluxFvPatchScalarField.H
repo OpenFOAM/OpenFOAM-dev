@@ -111,6 +111,15 @@ public:
             const fixedMultiPhaseHeatFluxFvPatchScalarField&
         );
 
+        //- Construct and return a clone
+        virtual tmp<fvPatchScalarField> clone() const
+        {
+            return tmp<fvPatchScalarField>
+            (
+                new fixedMultiPhaseHeatFluxFvPatchScalarField(*this)
+            );
+        }
+
         //- Copy constructor setting internal field reference
         fixedMultiPhaseHeatFluxFvPatchScalarField
         (
@@ -118,8 +127,30 @@ public:
             const DimensionedField<scalar, volMesh>&
         );
 
+        //- Construct and return a clone setting internal field reference
+        virtual tmp<fvPatchScalarField> clone
+        (
+            const DimensionedField<scalar, volMesh>& iF
+        ) const
+        {
+            return tmp<fvPatchScalarField>
+            (
+                new fixedMultiPhaseHeatFluxFvPatchScalarField(*this, iF)
+            );
+        }
+
 
     // Member Functions
+
+        // Mapping functions
+
+            //- Map (and resize as needed) from self given a mapping object
+            //  Used to update fields following mesh topology change
+            virtual void autoMap(const fvPatchFieldMapper&);
+
+            //- Reverse map the given fvPatchField onto this fvPatchField
+            //  Used to reconstruct fields
+            virtual void rmap(const fvPatchScalarField&, const labelList&);
 
         // Evaluation functions
 
