@@ -89,6 +89,9 @@ public:
         //- Inherit tuple constructors
         using Tuple2<word, dictionary>::Tuple2;
 
+        //- Construct null
+        wordAndDictionary();
+
         //- Construct from Istream
         wordAndDictionary(Istream&);
 

@@ -27,6 +27,12 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
+Foam::wordAndDictionary::wordAndDictionary()
+:
+    Tuple2<word, dictionary>()
+{}
+
+
 Foam::wordAndDictionary::wordAndDictionary(Istream& is)
 :
     Tuple2<word, dictionary>()
