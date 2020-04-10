@@ -188,7 +188,9 @@ $(derivedFvPatchFields)/swirlInletVelocity/swirlInletVelocityFvPatchVectorField.
 $(derivedFvPatchFields)/syringePressure/syringePressureFvPatchScalarField.C
 $(derivedFvPatchFields)/timeVaryingMappedFixedValue/timeVaryingMappedFvPatchField/timeVaryingMapped.C
 $(derivedFvPatchFields)/timeVaryingMappedFixedValue/timeVaryingMappedFixedValueFvPatchFields.C
+$(derivedFvPatchFields)/dynamicPressure/dynamicPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/totalPressure/totalPressureFvPatchScalarField.C
+$(derivedFvPatchFields)/entrainmentPressure/entrainmentPressureFvPatchScalarField.C
 $(derivedFvPatchFields)/totalTemperature/totalTemperatureFvPatchScalarField.C
 $(derivedFvPatchFields)/translatingWallVelocity/translatingWallVelocityFvPatchVectorField.C
 $(derivedFvPatchFields)/turbulentInlet/turbulentInletFvPatchFields.C

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,20 +67,6 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
 
 Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
 (
-    const fanPressureFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    totalPressureFvPatchScalarField(ptf, p, iF, mapper),
-    fanCurve_(ptf.fanCurve_, false),
-    direction_(ptf.direction_)
-{}
-
-
-Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -89,6 +75,20 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
     totalPressureFvPatchScalarField(p, iF, dict),
     fanCurve_(Function1<scalar>::New("fanCurve", dict)),
     direction_(fanFlowDirectionNames_.read(dict.lookup("direction")))
+{}
+
+
+Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
+(
+    const fanPressureFvPatchScalarField& pfopsf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    totalPressureFvPatchScalarField(pfopsf, p, iF, mapper),
+    fanCurve_(pfopsf.fanCurve_, false),
+    direction_(pfopsf.direction_)
 {}
 
 
@@ -124,46 +124,43 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
         return;
     }
 
-    // Retrieve flux field
-    const surfaceScalarField& phi =
-        db().lookupObject<surfaceScalarField>(phiName());
-
     const fvsPatchField<scalar>& phip =
-        patch().patchField<surfaceScalarField, scalar>(phi);
+        patch().lookupPatchField<surfaceScalarField, scalar>(phiName_);
+    const fvPatchField<vector>& Up =
+        patch().lookupPatchField<volVectorField, vector>(UName_);
 
-    int dir = 2*direction_ - 1;
+    int sign = direction_ ? +1 : -1;
 
-    // Average volumetric flow rate
+    // Get the volumetric flow rate
     scalar volFlowRate = 0;
-
-    if (phi.dimensions() == dimVelocity*dimArea)
+    if (phip.internalField().dimensions() == dimVelocity*dimArea)
     {
-        volFlowRate = dir*gSum(phip);
+        volFlowRate = sign*gSum(phip);
     }
-    else if (phi.dimensions() == dimVelocity*dimArea*dimDensity)
+    else if
+    (
+        phip.internalField().dimensions() == dimVelocity*dimArea*dimDensity
+    )
     {
         const scalarField& rhop =
-            patch().lookupPatchField<volScalarField, scalar>(rhoName());
-        volFlowRate = dir*gSum(phip/rhop);
+            patch().lookupPatchField<volScalarField, scalar>(rhoName_);
+
+        volFlowRate = sign*gSum(phip/rhop);
     }
     else
     {
         FatalErrorInFunction
             << "dimensions of phi are not correct"
-                << "\n    on patch " << patch().name()
-                << " of field " << internalField().name()
-                << " in file " << internalField().objectPath() << nl
-                << exit(FatalError);
+            << "\n    on patch " << patch().name()
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath() << nl
+            << exit(FatalError);
     }
 
     // Pressure drop for this flow rate
-    const scalar pdFan = fanCurve_->value(max(volFlowRate, 0.0));
+    const scalar dp0 = fanCurve_->value(max(volFlowRate, scalar(0)));
 
-    totalPressureFvPatchScalarField::updateCoeffs
-    (
-        p0() - dir*pdFan,
-        patch().lookupPatchField<volVectorField, vector>(UName())
-    );
+    totalPressureFvPatchScalarField::updateCoeffs(p0_ - sign*dp0, Up);
 }
 
 
