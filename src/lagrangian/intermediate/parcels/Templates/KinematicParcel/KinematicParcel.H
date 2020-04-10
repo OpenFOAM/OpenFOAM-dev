@@ -216,15 +216,15 @@ public:
 
         // Member Functions
 
-            //- Return conat access to the interpolator for continuous
+            //- Return const access to the interpolator for continuous
             //  phase density field
             inline const interpolation<scalar>& rhoInterp() const;
 
-            //- Return conat access to the interpolator for continuous
+            //- Return const access to the interpolator for continuous
             //  phase velocity field
             inline const interpolation<vector>& UInterp() const;
 
-            //- Return conat access to the interpolator for continuous
+            //- Return const access to the interpolator for continuous
             //  phase dynamic viscosity field
             inline const interpolation<scalar>& muInterp() const;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,7 @@ public:
             //- Maximum number of piso correctors
             inline label nCorrPiso() const;
 
-            //- Flat to indicate any piso iteration
+            //- Flag to indicate any piso iteration
             inline bool anyPisoIter() const;
 
             //- Flag to indicate the first piso iteration

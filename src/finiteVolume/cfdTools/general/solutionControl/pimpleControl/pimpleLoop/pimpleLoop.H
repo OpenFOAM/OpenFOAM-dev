@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ public:
             //- Maximum number of pimple correctors
             inline label nCorrPimple() const;
 
-            //- Flat to indicate any pimple iteration
+            //- Flag to indicate any pimple iteration
             inline bool anyPimpleIter() const;
 
             //- Flag to indicate the first pimple iteration
