@@ -22,6 +22,7 @@ else
     if (pimples.pimpleTurbCorr(i))
     {
         turbulence.correct();
+        thermophysicalTransport.correct();
     }
 
     if (!mesh.steady() && pimples.finalPimpleIter())

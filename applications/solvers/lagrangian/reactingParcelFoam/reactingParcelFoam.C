@@ -32,6 +32,7 @@ Description
 
 #include "fvCFD.H"
 #include "turbulentFluidThermoModel.H"
+#include "fluidThermoTransportModel.H"
 #include "basicReactingMultiphaseCloud.H"
 #include "surfaceFilmModel.H"
 #include "rhoReactionThermo.H"
@@ -115,6 +116,7 @@ int main(int argc, char *argv[])
                 if (pimple.turbCorr())
                 {
                     turbulence->correct();
+                    thermophysicalTransport->correct();
                 }
             }
         }

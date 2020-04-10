@@ -15,7 +15,7 @@
             )
           : -dpdt
         )
-      - fvm::laplacian(turbulence->alphaEff(), he)
+      + thermophysicalTransport->divq(he)
      ==
         rho*(U&g)
       + radiation->Sh(thermo, he)

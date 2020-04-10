@@ -17,12 +17,12 @@ EXE_LIBS = \
     -lfluidThermophysicalModels \
     -lspecie \
     -lturbulenceModels \
-    -lcompressibleTurbulenceModels \
     -lphaseCompressibleTurbulenceModels \
+    -lcompressibleTurbulenceModels \
+    -lthermophysicalTransportModels \
     -lincompressibleTransportModels \
     -lcompressibleTwoPhaseSystem \
     -lcompressibleEulerianInterfacialModels \
     -lfiniteVolume \
     -lfvOptions \
-    -lmeshTools \
-    -lsampling
+    -lmeshTools

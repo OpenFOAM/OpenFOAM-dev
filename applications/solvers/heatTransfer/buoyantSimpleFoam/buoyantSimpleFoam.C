@@ -33,6 +33,7 @@ Description
 #include "fvCFD.H"
 #include "rhoThermo.H"
 #include "turbulentFluidThermoModel.H"
+#include "fluidThermoTransportModel.H"
 #include "radiationModel.H"
 #include "simpleControl.H"
 #include "pressureControl.H"
@@ -70,6 +71,7 @@ int main(int argc, char *argv[])
         }
 
         turbulence->correct();
+        thermophysicalTransport->correct();
 
         runTime.write();
 

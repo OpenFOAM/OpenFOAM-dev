@@ -19,6 +19,8 @@ EXE_LIBS = \
     -lreactingEulerianInterfacialModels \
     -lreactingEulerianInterfacialCompositionModels \
     -lphaseReactingTurbulenceModels \
+    -lphaseReactingTherophysicalTransportModels \
+    -lthermophysicalTransportModels \
     -lfiniteVolume \
     -lfvOptions \
     -lmeshTools \

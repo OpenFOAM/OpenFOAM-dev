@@ -34,6 +34,7 @@ Description
 #include "rhoReactionThermo.H"
 #include "CombustionModel.H"
 #include "turbulentFluidThermoModel.H"
+#include "fluidThermoTransportModel.H"
 #include "multivariateScheme.H"
 #include "pimpleControl.H"
 #include "pressureControl.H"
@@ -104,6 +105,7 @@ int main(int argc, char *argv[])
             if (pimple.turbCorr())
             {
                 turbulence->correct();
+                thermophysicalTransport->correct();
             }
         }
 

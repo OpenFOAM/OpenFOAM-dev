@@ -1,0 +1,3 @@
+phaseThermophysicalTransportModels.C
+
+LIB = $(FOAM_LIBBIN)/libphaseReactingTherophysicalTransportModels

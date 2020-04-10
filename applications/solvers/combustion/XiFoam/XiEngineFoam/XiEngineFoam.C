@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,7 @@ Description
 #include "engineMesh.H"
 #include "psiuReactionThermo.H"
 #include "turbulentFluidThermoModel.H"
+#include "fluidThermoTransportModel.H"
 #include "laminarFlameSpeed.H"
 #include "ignition.H"
 #include "Switch.H"
@@ -127,6 +128,7 @@ int main(int argc, char *argv[])
             if (pimple.turbCorr())
             {
                 turbulence->correct();
+                thermophysicalTransport->correct();
             }
         }
 

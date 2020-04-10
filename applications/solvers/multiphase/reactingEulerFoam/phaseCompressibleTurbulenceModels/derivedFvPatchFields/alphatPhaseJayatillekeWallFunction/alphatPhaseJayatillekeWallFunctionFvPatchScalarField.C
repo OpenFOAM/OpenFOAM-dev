@@ -169,7 +169,6 @@ alphatPhaseJayatillekeWallFunctionFvPatchScalarField::calcAlphat
     const scalarField& prevAlphat
 ) const
 {
-
     // Lookup the fluid model
     const phaseSystem& fluid =
         db().lookupObject<phaseSystem>("phaseProperties");
@@ -185,7 +184,7 @@ alphatPhaseJayatillekeWallFunctionFvPatchScalarField::calcAlphat
     const phaseCompressibleTurbulenceModel& turbModel =
         db().lookupObject<phaseCompressibleTurbulenceModel>
         (
-            IOobject::groupName(turbulenceModel::propertiesName, phase.name())
+            IOobject::groupName(turbulenceModel::typeName, phase.name())
         );
 
     const nutWallFunctionFvPatchScalarField& nutw =
@@ -216,7 +215,7 @@ alphatPhaseJayatillekeWallFunctionFvPatchScalarField::calcAlphat
     const fvPatchScalarField& Tw =
         phase.thermo().T().boundaryField()[patchi];
 
-    scalarField Tp(Tw.patchInternalField());
+    const scalarField Tp(Tw.patchInternalField());
 
     // Heat flux [W/m^2] - lagging alphatw
     const scalarField qDot
@@ -224,19 +223,19 @@ alphatPhaseJayatillekeWallFunctionFvPatchScalarField::calcAlphat
         (prevAlphat + alphaw)*hew.snGrad()
     );
 
-    scalarField uTau(Cmu25*sqrt(kw));
+    const scalarField uTau(Cmu25*sqrt(kw));
 
-    scalarField yPlus(uTau*y/(muw/rhow));
+    const scalarField yPlus(uTau*y/(muw/rhow));
 
-    scalarField Pr(muw/alphaw);
+    const scalarField Pr(muw/alphaw);
 
     // Molecular-to-turbulent Prandtl number ratio
-    scalarField Prat(Pr/Prt_);
+    const scalarField Prat(Pr/Prt_);
 
     // Thermal sublayer thickness
-    scalarField P(this->Psmooth(Prat));
+    const scalarField P(this->Psmooth(Prat));
 
-    scalarField yPlusTherm(this->yPlusTherm(nutw, P, Prat));
+    const scalarField yPlusTherm(this->yPlusTherm(nutw, P, Prat));
 
     tmp<scalarField> talphatConv(new scalarField(this->size()));
     scalarField& alphatConv = talphatConv.ref();

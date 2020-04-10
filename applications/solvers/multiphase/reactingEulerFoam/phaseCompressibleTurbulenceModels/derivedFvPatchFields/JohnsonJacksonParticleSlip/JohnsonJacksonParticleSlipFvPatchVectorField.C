@@ -211,7 +211,7 @@ void Foam::JohnsonJacksonParticleSlipFvPatchVectorField::updateCoeffs()
         db()
        .lookupObject<IOdictionary>
         (
-            IOobject::groupName("turbulenceProperties", phase.name())
+            IOobject::groupName("momentumTransport", phase.name())
         )
        .subDict("RAS")
        .subDict("kineticTheoryCoeffs")

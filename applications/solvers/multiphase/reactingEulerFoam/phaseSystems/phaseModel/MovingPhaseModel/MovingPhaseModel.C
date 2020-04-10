@@ -26,6 +26,7 @@ License
 #include "MovingPhaseModel.H"
 #include "phaseSystem.H"
 #include "phaseCompressibleTurbulenceModel.H"
+#include "phaseThermophysicalTransportModel.H"
 #include "fixedValueFvPatchFields.H"
 #include "slipFvPatchFields.H"
 #include "partialSlipFvPatchFields.H"
@@ -174,6 +175,10 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
             *this
         )
     ),
+    thermophysicalTransport_
+    (
+        phaseThermophysicalTransportModel::New(turbulence_)
+    ),
     continuityError_
     (
         IOobject
@@ -262,6 +267,7 @@ void Foam::MovingPhaseModel<BasePhaseModel>::correctEnergyTransport()
     BasePhaseModel::correctEnergyTransport();
 
     turbulence_->correctEnergyTransport();
+    thermophysicalTransport_->correct();
 }
 
 
@@ -475,7 +481,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::MovingPhaseModel<BasePhaseModel>::kappaEff() const
 {
-    return turbulence_->kappaEff();
+    return thermophysicalTransport_->kappaEff();
 }
 
 
@@ -483,7 +489,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::scalarField>
 Foam::MovingPhaseModel<BasePhaseModel>::kappaEff(const label patchi) const
 {
-    return turbulence_->kappaEff(patchi);
+    return thermophysicalTransport_->kappaEff(patchi);
 }
 
 
@@ -491,7 +497,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::MovingPhaseModel<BasePhaseModel>::alphaEff() const
 {
-    return turbulence_->alphaEff();
+    return thermophysicalTransport_->alphaEff();
 }
 
 
@@ -499,7 +505,7 @@ template<class BasePhaseModel>
 Foam::tmp<Foam::scalarField>
 Foam::MovingPhaseModel<BasePhaseModel>::alphaEff(const label patchi) const
 {
-    return turbulence_->alphaEff(patchi);
+    return thermophysicalTransport_->alphaEff(patchi);
 }
 
 

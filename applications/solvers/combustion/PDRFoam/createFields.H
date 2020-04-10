@@ -57,6 +57,15 @@ autoPtr<compressible::RASModel> turbulence
     )
 );
 
+Info<< "Creating thermophysical transport model\n" << endl;
+autoPtr<compressible::RASThermophysicalTransportModel>
+thermophysicalTransport
+(
+    compressible::RASThermophysicalTransportModel::New
+    (
+        turbulence()
+    )
+);
 
 Info<< "Creating field dpdt\n" << endl;
 volScalarField dpdt

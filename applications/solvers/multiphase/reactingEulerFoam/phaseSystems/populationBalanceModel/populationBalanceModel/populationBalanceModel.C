@@ -1245,7 +1245,7 @@ Foam::diameterModels::populationBalanceModel::continuousTurbulence() const
         (
             IOobject::groupName
             (
-                turbulenceModel::propertiesName,
+                turbulenceModel::typeName,
                 continuousPhase_.name()
             )
         );

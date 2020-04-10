@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,7 @@ Description
 #include "dynamicFvMesh.H"
 #include "psiThermo.H"
 #include "turbulentFluidThermoModel.H"
+#include "fluidThermoTransportModel.H"
 #include "fixedRhoFvPatchScalarField.H"
 #include "directionInterpolate.H"
 #include "localEulerDdtScheme.H"
@@ -248,7 +249,7 @@ int main(int argc, char *argv[])
             solve
             (
                 fvm::ddt(rho, e) - fvc::ddt(rho, e)
-              - fvm::laplacian(turbulence->alphaEff(), e)
+              + thermophysicalTransport->divq(e)
             );
             thermo.correct();
             rhoE = rho*(e + 0.5*magSqr(U));
@@ -261,6 +262,7 @@ int main(int argc, char *argv[])
         rho.boundaryFieldRef() == psi.boundaryField()*p.boundaryField();
 
         turbulence->correct();
+        thermophysicalTransport->correct();
 
         runTime.write();
 

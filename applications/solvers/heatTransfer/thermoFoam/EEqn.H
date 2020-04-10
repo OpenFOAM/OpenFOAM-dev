@@ -15,7 +15,7 @@
             )
           : -dpdt
         )
-      - fvm::laplacian(alphaEff, he)
+      + thermophysicalTransport->divq(he)
      ==
         radiation->Sh(thermo, he)
       + fvOptions(rho, he)

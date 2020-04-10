@@ -234,6 +234,12 @@ public:
             //- Return the thermophysical model
             virtual const rhoThermo& thermo() const = 0;
 
+            //- Cast to the thermophysical model
+            operator const rhoThermo&() const
+            {
+                return thermo();
+            }
+
             //- Access the thermophysical model
             virtual rhoThermo& thermoRef() = 0;
 

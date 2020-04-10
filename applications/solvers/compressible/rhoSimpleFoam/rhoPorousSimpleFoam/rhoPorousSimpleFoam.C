@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,7 @@ Description
 #include "fvCFD.H"
 #include "fluidThermo.H"
 #include "turbulentFluidThermoModel.H"
+#include "fluidThermoTransportModel.H"
 #include "simpleControl.H"
 #include "pressureControl.H"
 #include "fvOptions.H"
@@ -70,6 +71,7 @@ int main(int argc, char *argv[])
         }
 
         turbulence->correct();
+        thermophysicalTransport->correct();
 
         runTime.write();
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"

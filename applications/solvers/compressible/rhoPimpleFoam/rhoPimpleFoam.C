@@ -37,6 +37,7 @@ Description
 #include "dynamicFvMesh.H"
 #include "fluidThermo.H"
 #include "turbulentFluidThermoModel.H"
+#include "fluidThermoTransportModel.H"
 #include "pimpleControl.H"
 #include "pressureControl.H"
 #include "CorrectPhi.H"
@@ -162,6 +163,7 @@ int main(int argc, char *argv[])
             if (pimple.turbCorr())
             {
                 turbulence->correct();
+                thermophysicalTransport->correct();
             }
         }
 

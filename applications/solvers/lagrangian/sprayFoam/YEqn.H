@@ -23,7 +23,7 @@ tmp<fv::convectionScheme<scalar>> mvConvection
             (
                 fvm::ddt(rho, Yi)
               + mvConvection->fvmDiv(phi, Yi)
-              - fvm::laplacian(turbulence->alphaEff(), Yi)
+              - fvm::laplacian(thermophysicalTransport->alphaEff(), Yi)
              ==
                 parcels.SYi(i, Yi)
               + combustion->R(Yi)

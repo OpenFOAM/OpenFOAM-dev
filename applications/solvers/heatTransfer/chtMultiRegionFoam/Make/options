@@ -19,6 +19,7 @@ EXE_INC = \
     -I$(LIB_SRC)/combustionModels/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
     -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
+    -I$(LIB_SRC)/ThermophysicalTransportModels/lnInclude \
     -I$(LIB_SRC)/radiationModels/lnInclude \
     -I$(LIB_SRC)/regionModels/regionModel/lnInclude
 
@@ -34,6 +35,7 @@ EXE_LIBS = \
     -lcombustionModels \
     -lturbulenceModels \
     -lcompressibleTurbulenceModels \
+    -lthermophysicalTransportModels \
     -lmeshTools \
     -lfiniteVolume \
     -lradiationModels \

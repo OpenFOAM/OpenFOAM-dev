@@ -9,7 +9,7 @@
           ? fvc::div(phi, volScalarField("Ekp", 0.5*magSqr(U) + p/rho))
           : fvc::div(phi, volScalarField("K", 0.5*magSqr(U)))
         )
-      - fvm::laplacian(turbulence->alphaEff(), he)
+      + thermophysicalTransport->divq(he)
      ==
         fvOptions(rho, he)
     );

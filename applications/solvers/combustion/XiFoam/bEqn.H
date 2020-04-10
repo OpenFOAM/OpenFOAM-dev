@@ -52,7 +52,7 @@ if (ign.ignited())
       + mvConvection->fvmDiv(phi, b)
       + fvm::div(phiSt, b)
       - fvm::Sp(fvc::div(phiSt), b)
-      - fvm::laplacian(turbulence->alphaEff(), b)
+      - fvm::laplacian(thermophysicalTransport->alphaEff(), b)
      ==
         fvOptions(rho, b)
     );
@@ -103,7 +103,10 @@ if (ign.ignited())
     surfaceScalarField phiXi
     (
         phiSt
-      - fvc::interpolate(fvc::laplacian(turbulence->alphaEff(), b)/mgb)*nf
+      - fvc::interpolate
+        (
+            fvc::laplacian(thermophysicalTransport->alphaEff(), b)/mgb
+        )*nf
       + fvc::interpolate(rho)*fvc::interpolate(Su*(1.0/Xi - Xi))*nf
     );
 

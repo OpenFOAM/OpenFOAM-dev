@@ -60,6 +60,12 @@ autoPtr<compressible::turbulenceModel> turbulence
     )
 );
 
+Info<< "Creating thermophysical transport model\n" << endl;
+autoPtr<compressible::thermophysicalTransportModel> thermophysicalTransport
+(
+    compressible::thermophysicalTransportModel::New(turbulence())
+);
+
 dimensionedScalar initialMass = fvc::domainIntegrate(rho);
 
 #include "createMRF.H"

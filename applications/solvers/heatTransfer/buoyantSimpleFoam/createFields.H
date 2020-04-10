@@ -47,6 +47,12 @@ autoPtr<compressible::turbulenceModel> turbulence
     )
 );
 
+Info<< "Creating thermophysical transport model\n" << endl;
+autoPtr<compressible::thermophysicalTransportModel> thermophysicalTransport
+(
+    compressible::thermophysicalTransportModel::New(turbulence())
+);
+
 
 #include "readGravitationalAcceleration.H"
 #include "readhRef.H"

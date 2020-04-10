@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
     By default the standard mixture transport modelling approach is used in
     which a single momentum stress model (laminar, non-Newtonian, LES or RAS) is
     constructed for the mixture.  However if the \c simulationType in
-    constant/turbulenceProperties is set to \c twoPhaseTransport the alternative
+    constant/momentumTransport is set to \c twoPhaseTransport the alternative
     Euler-Euler two-phase transport modelling approach is used in which separate
     stress models (laminar, non-Newtonian, LES or RAS) are instantiated for each
     of the two phases allowing for different modeling for the phases.

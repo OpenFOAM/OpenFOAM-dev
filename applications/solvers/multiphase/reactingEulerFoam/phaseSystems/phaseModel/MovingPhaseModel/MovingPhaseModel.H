@@ -46,6 +46,7 @@ SourceFiles
 
 #include "phaseModel.H"
 #include "phaseCompressibleTurbulenceModel.H"
+#include "phaseThermophysicalTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -88,6 +89,9 @@ protected:
 
         //- Turbulence model
         autoPtr<phaseCompressibleTurbulenceModel> turbulence_;
+
+        //- Thermophysical transport model
+        autoPtr<phaseThermophysicalTransportModel> thermophysicalTransport_;
 
         //- Continuity error
         volScalarField continuityError_;

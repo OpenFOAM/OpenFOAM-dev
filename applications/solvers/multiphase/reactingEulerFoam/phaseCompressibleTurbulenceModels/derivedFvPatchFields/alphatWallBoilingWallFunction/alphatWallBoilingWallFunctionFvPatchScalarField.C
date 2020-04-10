@@ -361,7 +361,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                     (
                         IOobject::groupName
                         (
-                            turbulenceModel::propertiesName,
+                            turbulenceModel::typeName,
                             liquid.name()
                         )
                     );
@@ -370,7 +370,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                     (
                         IOobject::groupName
                         (
-                            turbulenceModel::propertiesName,
+                            turbulenceModel::typeName,
                             vapor.name()
                         )
                     );

@@ -15,7 +15,7 @@
             )
           : -dpdt
         )
-      - fvm::laplacian(turbulence->alphaEff(), hea)
+      - fvm::laplacian(thermophysicalTransport->alphaEff(), hea)
       + fvOptions(rho, hea)
     );
 

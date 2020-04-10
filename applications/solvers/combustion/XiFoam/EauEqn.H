@@ -16,7 +16,7 @@ if (ign.ignited())
             )*rho/thermo.rhou()
           : -dpdt*rho/thermo.rhou()
         )
-      - fvm::laplacian(turbulence->alphaEff(), heau)
+      - fvm::laplacian(thermophysicalTransport->alphaEff(), heau)
 
         // These terms cannot be used in partially-premixed combustion due to
         // the resultant inconsistency between ft and heau transport.

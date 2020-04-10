@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -163,6 +163,12 @@ public:
         const rhoThermo& thermo() const
         {
             return thermo_();
+        }
+
+        //- Cast to the thermophysical model
+        operator const rhoThermo&() const
+        {
+            return thermo();
         }
 
         //- Return non-const access to the thermophysical model

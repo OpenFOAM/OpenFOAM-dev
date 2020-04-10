@@ -32,6 +32,7 @@ Description
 #include "fvCFD.H"
 #include "fluidThermo.H"
 #include "turbulentFluidThermoModel.H"
+#include "fluidThermoTransportModel.H"
 #include "simpleControl.H"
 #include "pressureControl.H"
 #include "fvOptions.H"
@@ -66,6 +67,7 @@ int main(int argc, char *argv[])
         #include "pEqn.H"
 
         turbulence->correct();
+        thermophysicalTransport->correct();
 
         runTime.write();
 

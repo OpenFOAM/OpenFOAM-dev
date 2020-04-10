@@ -35,7 +35,23 @@ volVectorField U
 
 #include "compressibleCreatePhi.H"
 
-#include "setAlphaEff.H"
+Info<< "Creating turbulence model\n" << endl;
+autoPtr<compressible::turbulenceModel> turbulence
+(
+    compressible::turbulenceModel::New
+    (
+        rho,
+        U,
+        phi,
+        thermo
+    )
+);
+
+Info<< "Creating thermophysical transport model\n" << endl;
+autoPtr<compressible::thermophysicalTransportModel> thermophysicalTransport
+(
+    compressible::thermophysicalTransportModel::New(turbulence())
+);
 
 Info<< "Creating field dpdt\n" << endl;
 volScalarField dpdt

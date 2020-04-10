@@ -8,6 +8,7 @@ wmake $targetType phaseSystems
 wmake $targetType interfacialModels
 wmake $targetType interfacialCompositionModels
 wmake $targetType phaseCompressibleTurbulenceModels
+wmake $targetType phaseThermophysicalTransportModels
 reactingTwoPhaseEulerFoam/Allwmake $targetType $*
 reactingMultiphaseEulerFoam/Allwmake $targetType $*
 wmake $targetType functionObjects

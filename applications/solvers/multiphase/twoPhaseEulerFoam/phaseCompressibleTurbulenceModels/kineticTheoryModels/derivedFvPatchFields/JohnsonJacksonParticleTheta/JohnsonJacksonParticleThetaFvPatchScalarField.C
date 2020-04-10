@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -229,7 +229,7 @@ void Foam::JohnsonJacksonParticleThetaFvPatchScalarField::updateCoeffs()
         db()
        .lookupObject<IOdictionary>
         (
-            IOobject::groupName("turbulenceProperties", phased.name())
+            IOobject::groupName("momentumTransport", phased.name())
         )
        .subDict("RAS")
        .subDict("kineticTheoryCoeffs")

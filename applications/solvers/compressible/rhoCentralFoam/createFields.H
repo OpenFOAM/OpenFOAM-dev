@@ -100,3 +100,9 @@ autoPtr<compressible::turbulenceModel> turbulence
         thermo
     )
 );
+
+Info<< "Creating thermophysical transport model\n" << endl;
+autoPtr<compressible::thermophysicalTransportModel> thermophysicalTransport
+(
+    compressible::thermophysicalTransportModel::New(turbulence())
+);
