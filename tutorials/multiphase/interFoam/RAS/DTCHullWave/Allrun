@@ -5,7 +5,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Mesh if necessary
-if ! cloneMesh ../DTCHull . && ! cloneMesh ../DTCHullMoving .
+if ! isTest $@ || ! cloneMesh ../DTCHull . && ! cloneMesh ../DTCHullMoving .
 then
     ./Allmesh
 fi

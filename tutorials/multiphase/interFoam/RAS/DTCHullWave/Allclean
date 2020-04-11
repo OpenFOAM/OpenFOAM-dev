@@ -10,6 +10,5 @@ rm -rf constant/extendedFeatureEdgeMesh > /dev/null 2>&1
 rm -f constant/triSurface/DTC-scaled.eMesh > /dev/null 2>&1
 
 cleanCase
-rm system/topoSetDict > /dev/null 2>&1
 
 #------------------------------------------------------------------------------
