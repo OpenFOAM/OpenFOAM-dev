@@ -41,10 +41,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
     const word& type
 )
 :
-    eddyViscosity
-    <
-        RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel>>
-    >
+    eddyViscosity<RASModel<phaseCompressibleTurbulenceModel>>
     (
         type,
         alpha,
@@ -204,10 +201,7 @@ bool Foam::RASModels::kineticTheoryModel::read()
 {
     if
     (
-        eddyViscosity
-        <
-            RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel>>
-        >::read()
+        eddyViscosity<RASModel<phaseCompressibleTurbulenceModel>>::read()
     )
     {
         coeffDict().lookup("equilibrium") >> equilibrium_;

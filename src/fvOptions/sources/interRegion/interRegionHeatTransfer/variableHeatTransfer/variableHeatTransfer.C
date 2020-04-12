@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "variableHeatTransfer.H"
-#include "turbulentFluidThermoModel.H"
+#include "thermophysicalTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -102,14 +102,15 @@ void Foam::fv::variableHeatTransfer::calculateHtc()
     const fvMesh& nbrMesh =
         mesh_.time().lookupObject<fvMesh>(nbrRegionName());
 
-    const compressible::turbulenceModel& nbrTurb =
-        nbrMesh.lookupObject<compressible::turbulenceModel>
+    const thermophysicalTransportModel& nbrTtm =
+        nbrMesh.lookupObject<thermophysicalTransportModel>
         (
-            turbulenceModel::typeName
+            thermophysicalTransportModel::typeName
         );
 
-    const fluidThermo& nbrThermo =
-        nbrMesh.lookupObject<fluidThermo>(basicThermo::dictName);
+    const compressibleTurbulenceModel& nbrTurb = nbrTtm.momentumTransport();
+
+    const fluidThermo& nbrThermo = nbrTtm.thermo();
 
     const volVectorField& UNbr =
         nbrMesh.lookupObject<volVectorField>(UNbrName_);
@@ -118,7 +119,7 @@ void Foam::fv::variableHeatTransfer::calculateHtc()
 
     const volScalarField NuNbr(a_*pow(ReNbr, b_)*pow(Pr_, c_));
 
-    const scalarField htcNbr(NuNbr*nbrTurb.kappaEff()/ds_);
+    const scalarField htcNbr(NuNbr*nbrTtm.kappaEff()/ds_);
 
     const scalarField htcNbrMapped(interpolate(htcNbr));
 

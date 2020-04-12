@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,12 +114,11 @@ public:
         omega,
         mut,
         muEff,
-        alphat,
         alphaEff,
         R,
         devRhoReff
     };
-    static const NamedEnum<compressibleField, 9> compressibleFieldNames_;
+    static const NamedEnum<compressibleField, 8> compressibleFieldNames_;
 
     enum class incompressibleField
     {

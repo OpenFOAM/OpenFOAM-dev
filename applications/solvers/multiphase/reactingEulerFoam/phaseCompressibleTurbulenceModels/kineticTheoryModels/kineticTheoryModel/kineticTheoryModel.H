@@ -48,7 +48,6 @@ SourceFiles
 #include "RASModel.H"
 #include "eddyViscosity.H"
 #include "phaseCompressibleTurbulenceModel.H"
-#include "EddyDiffusivity.H"
 #include "phaseModel.H"
 #include "dragModel.H"
 #include "viscosityModel.H"
@@ -71,10 +70,7 @@ namespace RASModels
 
 class kineticTheoryModel
 :
-    public eddyViscosity
-    <
-        RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel>>
-    >
+    public eddyViscosity<RASModel<phaseCompressibleTurbulenceModel>>
 {
     // Private Data
 

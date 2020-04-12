@@ -78,13 +78,7 @@ namespace RASModels
 
 class PDRkEpsilon
 :
-    public Foam::RASModels::kEpsilon
-    <
-        EddyDiffusivity
-        <
-            compressible::turbulenceModel
-        >
-    >
+    public Foam::RASModels::kEpsilon<compressible::turbulenceModel>
 {
     // Private Data
 

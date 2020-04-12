@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "wallHeatFlux.H"
-#include "turbulentFluidThermoModel.H"
+#include "thermophysicalTransportModel.H"
 #include "solidThermo.H"
 #include "surfaceInterpolate.H"
 #include "fvcSnGrad.H"
@@ -202,22 +202,22 @@ bool Foam::functionObjects::wallHeatFlux::execute()
 
     if
     (
-        foundObject<compressible::turbulenceModel>
+        foundObject<thermophysicalTransportModel>
         (
-            turbulenceModel::typeName
+            thermophysicalTransportModel::typeName
         )
     )
     {
-        const compressible::turbulenceModel& turbModel =
-            lookupObject<compressible::turbulenceModel>
+        const thermophysicalTransportModel& ttm =
+            lookupObject<thermophysicalTransportModel>
             (
-                turbulenceModel::typeName
+                thermophysicalTransportModel::typeName
             );
 
         return store
         (
             name,
-            calcWallHeatFlux(turbModel.alphaEff(), turbModel.transport().he())
+            calcWallHeatFlux(ttm.alphaEff(), ttm.thermo().he())
         );
     }
     else if (foundObject<solidThermo>(solidThermo::dictName))

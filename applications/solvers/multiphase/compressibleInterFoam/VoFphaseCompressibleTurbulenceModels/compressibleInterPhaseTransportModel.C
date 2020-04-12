@@ -94,8 +94,7 @@ Foam::compressibleInterPhaseTransportModel::compressibleInterPhaseTransportModel
 
         turbulence1_ =
         (
-            ThermalDiffusivity<PhaseCompressibleTurbulenceModel<fluidThermo>>
-            ::New
+            PhaseCompressibleTurbulenceModel<fluidThermo>::New
             (
                 alpha1,
                 rho1,
@@ -108,8 +107,7 @@ Foam::compressibleInterPhaseTransportModel::compressibleInterPhaseTransportModel
 
         turbulence2_ =
         (
-            ThermalDiffusivity<PhaseCompressibleTurbulenceModel<fluidThermo>>
-            ::New
+            PhaseCompressibleTurbulenceModel<fluidThermo>::New
             (
                 alpha2,
                 rho2,

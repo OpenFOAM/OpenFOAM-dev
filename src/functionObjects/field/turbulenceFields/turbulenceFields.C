@@ -25,7 +25,7 @@ License
 
 #include "turbulenceFields.H"
 #include "turbulentTransportModel.H"
-#include "turbulentFluidThermoModel.H"
+#include "thermophysicalTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,7 +49,7 @@ template<>
 const char* Foam::NamedEnum
 <
     Foam::functionObjects::turbulenceFields::compressibleField,
-    9
+    8
 >::names[] =
 {
     "k",
@@ -57,7 +57,6 @@ const char* Foam::NamedEnum
     "omega",
     "mut",
     "muEff",
-    "alphat",
     "alphaEff",
     "R",
     "devRhoReff"
@@ -66,7 +65,7 @@ const char* Foam::NamedEnum
 const Foam::NamedEnum
 <
     Foam::functionObjects::turbulenceFields::compressibleField,
-    9
+    8
 > Foam::functionObjects::turbulenceFields::compressibleFieldNames_;
 
 template<>
@@ -163,10 +162,15 @@ bool Foam::functionObjects::turbulenceFields::read(const dictionary& dict)
 
 bool Foam::functionObjects::turbulenceFields::execute()
 {
-    if (obr_.foundObject<compressible::turbulenceModel>(modelName()))
+    if (obr_.foundObject<thermophysicalTransportModel>(modelName()))
     {
-        const compressible::turbulenceModel& model =
-            obr_.lookupObject<compressible::turbulenceModel>(modelName());
+        const thermophysicalTransportModel& ttm =
+            obr_.lookupObject<thermophysicalTransportModel>
+            (
+                thermophysicalTransportModel::typeName
+            );
+
+        const compressibleTurbulenceModel& model = ttm.momentumTransport();
 
         forAllConstIter(wordHashSet, fieldSet_, iter)
         {
@@ -198,14 +202,9 @@ bool Foam::functionObjects::turbulenceFields::execute()
                     processField<scalar>(f, model.muEff());
                     break;
                 }
-                case compressibleField::alphat:
-                {
-                    processField<scalar>(f, model.alphat());
-                    break;
-                }
                 case compressibleField::alphaEff:
                 {
-                    processField<scalar>(f, model.alphaEff());
+                    processField<scalar>(f, ttm.alphaEff());
                     break;
                 }
                 case compressibleField::R:

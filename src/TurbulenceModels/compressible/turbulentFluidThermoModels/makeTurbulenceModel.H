@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,28 +23,26 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "EddyDiffusivity.H"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #define makeTurbulenceModelTypes(                                              \
-    Alpha, Rho, baseModel, BaseModel, TDModel, Transport)                      \
+    Alpha, Rho, baseModel, BaseModel, Transport)                               \
                                                                                \
     namespace Foam                                                             \
     {                                                                          \
-        typedef TDModel<BaseModel<Transport>>                                  \
+        typedef BaseModel<Transport>                                           \
             Transport##BaseModel;                                              \
         typedef laminarModel<Transport##BaseModel>                             \
             laminar##Transport##BaseModel;                                     \
-        typedef RASModel<EddyDiffusivity<Transport##BaseModel>>                \
+        typedef RASModel<Transport##BaseModel>                                 \
             RAS##Transport##BaseModel;                                         \
-        typedef LESModel<EddyDiffusivity<Transport##BaseModel>>                \
+        typedef LESModel<Transport##BaseModel>                                 \
             LES##Transport##BaseModel;                                         \
     }
 
 
 #define makeBaseTurbulenceModel(                                               \
-    Alpha, Rho, baseModel, BaseModel, TDModel, Transport)                      \
+    Alpha, Rho, baseModel, BaseModel, Transport)                               \
                                                                                \
     namespace Foam                                                             \
     {                                                                          \
@@ -62,7 +60,7 @@ License
             dictionary                                                         \
         );                                                                     \
                                                                                \
-        typedef TDModel<BaseModel<Transport>>                                  \
+        typedef BaseModel<Transport>                                           \
             Transport##BaseModel;                                              \
                                                                                \
                                                                                \
@@ -82,7 +80,7 @@ License
         );                                                                     \
                                                                                \
                                                                                \
-        typedef RASModel<EddyDiffusivity<Transport##BaseModel>>                \
+        typedef RASModel<Transport##BaseModel>                                 \
             RAS##Transport##BaseModel;                                         \
                                                                                \
         defineNamedTemplateTypeNameAndDebug(RAS##Transport##BaseModel, 0);     \
@@ -98,7 +96,7 @@ License
         );                                                                     \
                                                                                \
                                                                                \
-        typedef LESModel<EddyDiffusivity<Transport##BaseModel>>                \
+        typedef LESModel<Transport##BaseModel>                                 \
             LES##Transport##BaseModel;                                         \
                                                                                \
         defineNamedTemplateTypeNameAndDebug(LES##Transport##BaseModel, 0);     \
@@ -137,7 +135,7 @@ License
 
 
 #define makeTemplatedTurbulenceModel(BaseModel, SType, Type)                   \
-    typedef Foam::SType##Models::Type<Foam::EddyDiffusivity<Foam::BaseModel>> \
+    typedef Foam::SType##Models::Type<Foam::BaseModel>                         \
         Type##SType##BaseModel;                                                \
     defineNamedTemplateTypeNameAndDebug(Type##SType##BaseModel, 0);            \
                                                                                \
@@ -145,7 +143,7 @@ License
     {                                                                          \
         namespace SType##Models                                                \
         {                                                                      \
-            typedef Type<EddyDiffusivity<BaseModel>> Type##SType##BaseModel;   \
+            typedef Type<BaseModel> Type##SType##BaseModel;                    \
                                                                                \
             addToRunTimeSelectionTable                                         \
             (                                                                  \

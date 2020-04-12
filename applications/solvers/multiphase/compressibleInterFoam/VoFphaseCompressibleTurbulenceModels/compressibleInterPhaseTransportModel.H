@@ -84,16 +84,10 @@ class compressibleInterPhaseTransportModel
         autoPtr<compressible::turbulenceModel> turbulence_;
 
         //- Phase-1 transport model (constructed for two-phase transport)
-        autoPtr
-        <
-            ThermalDiffusivity<PhaseCompressibleTurbulenceModel<fluidThermo>>
-        > turbulence1_;
+        autoPtr<PhaseCompressibleTurbulenceModel<fluidThermo>> turbulence1_;
 
         //- Phase-2 transport model (constructed for two-phase transport)
-        autoPtr
-        <
-            ThermalDiffusivity<PhaseCompressibleTurbulenceModel<fluidThermo>>
-        > turbulence2_;
+        autoPtr<PhaseCompressibleTurbulenceModel<fluidThermo>> turbulence2_;
 
 
 public:

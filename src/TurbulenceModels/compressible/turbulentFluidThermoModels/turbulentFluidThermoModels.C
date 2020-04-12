@@ -33,7 +33,6 @@ makeBaseTurbulenceModel
     volScalarField,
     compressibleTurbulenceModel,
     CompressibleTurbulenceModel,
-    ThermalDiffusivity,
     fluidThermo
 );
 

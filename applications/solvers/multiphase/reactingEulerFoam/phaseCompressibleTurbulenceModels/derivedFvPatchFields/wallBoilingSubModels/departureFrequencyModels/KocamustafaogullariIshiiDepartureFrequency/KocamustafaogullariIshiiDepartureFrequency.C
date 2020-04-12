@@ -27,7 +27,6 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "uniformDimensionedFields.H"
 #include "compressibleTurbulenceModel.H"
-#include "ThermalDiffusivity.H"
 #include "PhaseCompressibleTurbulenceModel.H"
 #include "phaseSystem.H"
 

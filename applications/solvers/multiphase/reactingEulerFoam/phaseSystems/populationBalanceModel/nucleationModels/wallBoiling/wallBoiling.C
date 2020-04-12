@@ -71,17 +71,6 @@ wallBoiling
                 )
             ).dPtr()()
         )
-    ),
-    turbulence_
-    (
-        popBal_.mesh().lookupObjectRef<phaseCompressibleTurbulenceModel>
-        (
-            IOobject::groupName
-            (
-                turbulenceModel::typeName,
-                popBal_.continuousPhase().name()
-            )
-        )
     )
 {}
 
@@ -90,8 +79,13 @@ wallBoiling
 
 void Foam::diameterModels::nucleationModels::wallBoiling::correct()
 {
-    const tmp<volScalarField> talphat(turbulence_.alphat());
-    const volScalarField::Boundary& alphatBf = talphat().boundaryField();
+    const volScalarField& alphat =
+        popBal_.mesh().lookupObject<volScalarField>
+        (
+            IOobject::groupName("alphat", popBal_.continuousPhase().name())
+        );
+
+    const volScalarField::Boundary& alphatBf = alphat.boundaryField();
 
     typedef compressible::alphatWallBoilingWallFunctionFvPatchScalarField
         alphatWallBoilingWallFunction;
@@ -153,8 +147,14 @@ Foam::diameterModels::nucleationModels::wallBoiling::addToNucleationRate
     const sizeGroup& fi = popBal_.sizeGroups()[i];
     const phaseModel& phase = fi.phase();
     const volScalarField& rho = phase.rho();
-    const tmp<volScalarField> talphat(turbulence_.alphat());
-    const volScalarField::Boundary& alphatBf = talphat().boundaryField();
+
+    const volScalarField& alphat =
+        popBal_.mesh().lookupObject<volScalarField>
+        (
+            IOobject::groupName("alphat", popBal_.continuousPhase().name())
+        );
+
+    const volScalarField::Boundary& alphatBf = alphat.boundaryField();
 
     typedef compressible::alphatWallBoilingWallFunctionFvPatchScalarField
         alphatWallBoilingWallFunction;

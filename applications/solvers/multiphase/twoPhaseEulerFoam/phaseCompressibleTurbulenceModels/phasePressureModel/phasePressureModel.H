@@ -54,8 +54,6 @@ SourceFiles
 #include "RASModel.H"
 #include "eddyViscosity.H"
 #include "PhaseCompressibleTurbulenceModel.H"
-#include "ThermalDiffusivity.H"
-#include "EddyDiffusivity.H"
 #include "phaseModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -71,13 +69,7 @@ namespace RASModels
 
 class phasePressureModel
 :
-    public eddyViscosity
-    <
-        RASModel<EddyDiffusivity<ThermalDiffusivity
-        <
-            PhaseCompressibleTurbulenceModel<phaseModel>
-        >>>
-    >
+    public eddyViscosity<RASModel<PhaseCompressibleTurbulenceModel<phaseModel>>>
 {
     // Private Data
 

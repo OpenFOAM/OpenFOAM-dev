@@ -38,10 +38,7 @@ Foam::RASModels::phasePressureModel::phasePressureModel
     const word& type
 )
 :
-    eddyViscosity
-    <
-        RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel>>
-    >
+    eddyViscosity<RASModel<phaseCompressibleTurbulenceModel>>
     (
         type,
         alpha,
@@ -83,11 +80,7 @@ bool Foam::RASModels::phasePressureModel::read()
 {
     if
     (
-        eddyViscosity
-        <
-            RASModel<EddyDiffusivity<phaseCompressibleTurbulenceModel>>
-        >::read()
-    )
+        eddyViscosity<RASModel<phaseCompressibleTurbulenceModel>>::read())
     {
         coeffDict().lookup("alphaMax") >> alphaMax_;
         coeffDict().lookup("preAlphaExp") >> preAlphaExp_;

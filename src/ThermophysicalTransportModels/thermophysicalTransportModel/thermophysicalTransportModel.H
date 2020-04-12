@@ -37,6 +37,7 @@ SourceFiles
 #define thermophysicalTransportModel_H
 
 #include "compressibleTurbulenceModel.H"
+#include "fluidThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -93,6 +94,9 @@ public:
         {
             return momentumTransportModel_;
         }
+
+        //- Access function to incompressible transport model
+        virtual const fluidThermo& thermo() const = 0;
 
         //- Const access to the coefficients dictionary
         virtual const dictionary& coeffDict() const = 0;

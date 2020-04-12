@@ -26,11 +26,11 @@ License
 #include "specieTransferTemperatureFvPatchScalarField.H"
 #include "specieTransferMassFractionFvPatchScalarField.H"
 #include "specieTransferVelocityFvPatchVectorField.H"
-#include "addToRunTimeSelectionTable.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "turbulentFluidThermoModel.H"
+#include "thermophysicalTransportModel.H"
 #include "basicSpecieMixture.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -166,9 +166,9 @@ void Foam::specieTransferTemperatureFvPatchScalarField::updateCoeffs()
     const scalarField AAlphaEffp
     (
         patch().magSf()
-       *db().lookupObject<compressible::turbulenceModel>
+       *db().lookupObject<thermophysicalTransportModel>
         (
-            turbulenceModel::typeName
+            thermophysicalTransportModel::typeName
         ).alphaEff(patch().index())
     );
 

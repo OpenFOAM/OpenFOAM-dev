@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "wallBoiling.H"
-#include "phaseCompressibleTurbulenceModel.H"
 #include "alphatWallBoilingWallFunctionFvPatchScalarField.H"
 #include "fvmSup.H"
 #include "addToRunTimeSelectionTable.H"
@@ -89,18 +88,13 @@ Foam::diameterModels::IATEsources::wallBoiling::R
         dimensionedScalar(kappai.dimensions()/dimTime, 0)
     );
 
-    const phaseCompressibleTurbulenceModel& turbulence =
-        phase().db().lookupObjectRef<phaseCompressibleTurbulenceModel>
+    const volScalarField& alphat =
+        phase().mesh().lookupObject<volScalarField>
         (
-            IOobject::groupName
-            (
-                turbulenceModel::typeName,
-                otherPhase().name()
-            )
+            IOobject::groupName("alphat", otherPhase().name())
         );
 
-    const tmp<volScalarField> talphat(turbulence.alphat());
-    const volScalarField::Boundary& alphatBf = talphat().boundaryField();
+    const volScalarField::Boundary& alphatBf = alphat.boundaryField();
 
     const scalarField& rho = phase().rho();
 

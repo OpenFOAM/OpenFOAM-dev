@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,9 +29,6 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "makeTurbulenceModel.H"
 
-#include "ThermalDiffusivity.H"
-#include "EddyDiffusivity.H"
-
 #include "laminarModel.H"
 #include "RASModel.H"
 #include "LESModel.H"
@@ -44,7 +41,6 @@ makeTurbulenceModelTypes
     volScalarField,
     compressibleTurbulenceModel,
     PhaseCompressibleTurbulenceModel,
-    ThermalDiffusivity,
     phaseModel
 );
 
@@ -54,7 +50,6 @@ makeBaseTurbulenceModel
     volScalarField,
     compressibleTurbulenceModel,
     PhaseCompressibleTurbulenceModel,
-    ThermalDiffusivity,
     phaseModel
 );
 

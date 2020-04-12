@@ -24,11 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "volumeFractionSource.H"
-#include "fvmDdt.H"
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
+#include "fvcDiv.H"
 #include "surfaceInterpolate.H"
-#include "turbulentFluidThermoModel.H"
+#include "thermophysicalTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -97,18 +97,18 @@ Foam::tmp<Foam::volScalarField> Foam::fv::volumeFractionSource::D
     }
     else if (phi.dimensions() == dimMass/dimTime)
     {
-        const compressible::turbulenceModel& turbulence =
-            mesh().lookupObject<compressible::turbulenceModel>
+        const thermophysicalTransportModel& ttm =
+            mesh().lookupObject<thermophysicalTransportModel>
             (
-                turbulenceModel::typeName
+                thermophysicalTransportModel::typeName
             );
 
         return
-            fieldNames_[fieldi] == turbulence.transport().T().name()
-          ? turbulence.kappaEff()
-          : fieldNames_[fieldi] == turbulence.transport().he().name()
-          ? turbulence.alphaEff()
-          : turbulence.muEff();
+            fieldNames_[fieldi] == ttm.thermo().T().name()
+          ? ttm.kappaEff()
+          : fieldNames_[fieldi] == ttm.thermo().he().name()
+          ? ttm.alphaEff()
+          : ttm.momentumTransport().muEff();
     }
     else
     {

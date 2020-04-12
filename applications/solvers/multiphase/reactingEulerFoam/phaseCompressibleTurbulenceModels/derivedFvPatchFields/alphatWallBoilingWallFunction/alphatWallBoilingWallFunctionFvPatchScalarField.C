@@ -26,7 +26,6 @@ License
 #include "alphatWallBoilingWallFunctionFvPatchScalarField.H"
 #include "phaseSystem.H"
 #include "compressibleTurbulenceModel.H"
-#include "ThermalDiffusivity.H"
 #include "PhaseCompressibleTurbulenceModel.H"
 #include "saturationModel.H"
 #include "rhoReactionThermo.H"

@@ -39,7 +39,6 @@ makeTurbulenceModelTypes
     volScalarField,
     compressibleTurbulenceModel,
     PhaseCompressibleTurbulenceModel,
-    ThermalDiffusivity,
     phaseModel
 );
 

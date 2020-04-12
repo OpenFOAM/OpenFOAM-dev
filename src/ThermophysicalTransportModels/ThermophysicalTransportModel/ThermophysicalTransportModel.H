@@ -36,8 +36,6 @@ SourceFiles
 #define ThermophysicalTransportModel_H
 
 #include "thermophysicalTransportModel.H"
-#include "autoPtr.H"
-#include "fluidThermo.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -122,7 +120,7 @@ public:
         }
 
         //- Access function to incompressible transport model
-        const fluidThermo& thermo() const
+        virtual const fluidThermo& thermo() const
         {
             return momentumTransport_.transport();
         }

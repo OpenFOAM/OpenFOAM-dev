@@ -29,7 +29,6 @@ License
 
 #include "phaseSystem.H"
 #include "compressibleTurbulenceModel.H"
-#include "ThermalDiffusivity.H"
 #include "PhaseCompressibleTurbulenceModel.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

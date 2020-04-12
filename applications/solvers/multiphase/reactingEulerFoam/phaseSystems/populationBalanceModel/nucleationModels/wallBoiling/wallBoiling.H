@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,6 @@ SourceFiles
 #define wallBoiling_H
 
 #include "nucleationModel.H"
-#include "phaseCompressibleTurbulenceModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,9 +63,6 @@ class wallBoiling
 
         //- Velocity group in which the nucleation occurs
         const velocityGroup& velGroup_;
-
-        //- Pointer to turbulence model
-        const phaseCompressibleTurbulenceModel& turbulence_;
 
 
 public:
