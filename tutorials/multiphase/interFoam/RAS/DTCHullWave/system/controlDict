@@ -47,8 +47,8 @@ runTimeModifiable yes;
 
 adjustTimeStep  yes;
 
-maxCo           20;
-maxAlphaCo      15;
+maxCo           10;
+maxAlphaCo      5;
 maxDeltaT       0.01;
 
 libs            ("libwaves.so");

@@ -13,11 +13,11 @@ runApplication blockMesh
 
 for i in 1 2 3 4 5 6
 do
-    runApplication -s $i \
-        topoSet -dict system/topoSetDict.${i}
+    foamDictionary system/refineMeshDict -entry set -set c${i}
 
-    runApplication -s $i \
-        refineMesh -dict system/refineMeshDict -overwrite
+    runApplication -a topoSet
+
+    runApplication -a refineMesh -dict system/refineMeshDict -overwrite
 done
 
 runApplication snappyHexMesh -overwrite

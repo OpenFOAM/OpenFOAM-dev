@@ -1,0 +1,156 @@
+#!/bin/sh
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamVersionCompare
+#
+# Description
+#     Compare two version numbers
+#
+#------------------------------------------------------------------------------
+
+usage() {
+    cat<<USAGE
+
+Usage: ${0##*/} <version-1> <comparison> <version-2>
+
+Compare two version numbers. The <comparison> argument can be one of; eq
+(equal-to), lt (less-than), gt (greater-than), le (less-than-or-equal-to), or
+ge (greater-than-or-equal-to). Returns a successful exit code if true.
+
+Examples:
+    foamVersionCompare 5.4.3 gt 5.5.1
+    foamVersionCompare 5.4.3 gt 5.5.1 && echo True || echo False
+    if foamVersionCompare 5.4.3 gt 5.5.1
+    then
+        echo "5.4.3 IS greater than 5.5.1"
+    else
+        echo "5.4.3 is NOT greater than 5.5.1"
+    fi
+
+USAGE
+}
+
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
+
+# Comparison functions
+_foamVersionCompare_eq=0
+_foamVersionCompare_lt=1
+_foamVersionCompare_gt=2
+_foamVersionCompare()
+{
+    a=$1.
+    b=$2.
+
+    while [ -n "$a" ] || [ -n "$b" ]
+    do
+        ai="${a%%.*}"
+        bi="${b%%.*}"
+
+        [ -z "$ai" ] && ai=0
+        [ -z "$bi" ] && bi=0
+
+        if [ "$ai" -lt "$bi" ]
+        then
+            return $_foamVersionCompare_lt
+        fi
+
+        if [ "$ai" -gt "$bi" ]
+        then
+            return $_foamVersionCompare_gt
+        fi
+
+        a="${a#*.}"
+        b="${b#*.}"
+    done
+
+    return $_foamVersionCompare_eq
+}
+_foamVersionEq()
+{
+    _foamVersionCompare "$1" "$2"
+    [ $? = $_foamVersionCompare_eq ] && return 0 || return 1
+}
+_foamVersionLt()
+{
+    _foamVersionCompare "$1" "$2"
+    [ $? = $_foamVersionCompare_lt ] && return 0 || return 1
+}
+_foamVersionGt()
+{
+    _foamVersionCompare "$1" "$2"
+    [ $? = $_foamVersionCompare_gt ] && return 0 || return 1
+}
+_foamVersionLe()
+{
+    _foamVersionCompare "$1" "$2"
+    [ $? != $_foamVersionCompare_gt ] && return 0 || return 1
+}
+_foamVersionGe()
+{
+    _foamVersionCompare "$1" "$2"
+    [ $? != $_foamVersionCompare_lt ] && return 0 || return 1
+}
+
+# Parse arguments
+[ $# -eq 3 ] || error "Incorrect arguments specified"
+
+v1=$1
+shift 1
+
+case $1 in
+    -h | -help)
+        usage && exit 0
+        ;;
+    eq)
+        compare=_foamVersionEq
+        ;;
+    lt)
+        compare=_foamVersionLt
+        ;;
+    gt)
+        compare=_foamVersionGt
+        ;;
+    le)
+        compare=_foamVersionLe
+        ;;
+    ge)
+        compare=_foamVersionGe
+        ;;
+    *)
+        error "unknown option: '$*'";
+        ;;
+esac
+shift 1
+
+v2=$1
+shift 1
+
+# Perform comparison and return
+$compare "$v1" "$v2" && exit 0 || exit 1
