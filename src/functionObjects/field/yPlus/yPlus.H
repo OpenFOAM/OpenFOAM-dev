@@ -75,7 +75,7 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class turbulenceModel;
+class momentumTransportModel;
 
 namespace functionObjects
 {
@@ -108,7 +108,7 @@ private:
         //- Calculate y+
         tmp<volScalarField> calcYPlus
         (
-            const turbulenceModel& turbModel
+            const momentumTransportModel& turbModel
         );
 
 

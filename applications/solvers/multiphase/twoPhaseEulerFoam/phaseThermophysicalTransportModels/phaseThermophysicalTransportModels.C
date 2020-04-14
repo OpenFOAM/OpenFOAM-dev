@@ -25,7 +25,7 @@ License
 
 #include "PhaseThermophysicalTransportModel.H"
 
-#include "phaseCompressibleTurbulenceModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 #include "makeThermophysicalTransportModel.H"
 
@@ -38,14 +38,14 @@ License
 makeThermophysicalTransportModelTypes
 (
     PhaseThermophysicalTransportModel,
-    phaseCompressibleTurbulenceModel
+    phaseCompressibleMomentumTransportModel
 );
 
 
 makeThermophysicalTransportModel
 (
     PhaseThermophysicalTransportModel,
-    phaseCompressibleTurbulenceModel
+    phaseCompressibleMomentumTransportModel
 );
 
 
@@ -53,7 +53,7 @@ makeThermophysicalTransportModel
     makeTemplatedThermophysicalTransportModel                                  \
     (                                                                          \
         PhaseThermophysicalTransportModel,                                     \
-        phaseCompressibleTurbulenceModel,                                      \
+        phaseCompressibleMomentumTransportModel,                               \
         laminar,                                                               \
         Type                                                                   \
     )
@@ -62,7 +62,7 @@ makeThermophysicalTransportModel
     makeTemplatedThermophysicalTransportModel                                  \
     (                                                                          \
         PhaseThermophysicalTransportModel,                                     \
-        phaseCompressibleTurbulenceModel,                                      \
+        phaseCompressibleMomentumTransportModel,                               \
         RAS,                                                                   \
         Type                                                                   \
     )
@@ -71,7 +71,7 @@ makeThermophysicalTransportModel
     makeTemplatedThermophysicalTransportModel                                  \
     (                                                                          \
         PhaseThermophysicalTransportModel,                                     \
-        phaseCompressibleTurbulenceModel,                                      \
+        phaseCompressibleMomentumTransportModel,                               \
         LES,                                                                   \
         Type                                                                   \
     )

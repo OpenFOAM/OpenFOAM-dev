@@ -4,7 +4,7 @@
     (
         fvm::div(phi, U)
       + MRF.DDt(rho, U)
-      + turbulence->divDevRhoReff(U)
+      + turbulence->divDevTau(U)
      ==
         rho()*g
       + parcels.SU(U)

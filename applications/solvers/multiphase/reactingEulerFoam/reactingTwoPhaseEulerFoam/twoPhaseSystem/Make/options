@@ -2,15 +2,14 @@ EXE_INC = \
     -I../../interfacialModels/lnInclude \
     -I../../interfacialCompositionModels/lnInclude \
     -I../../phaseSystems/lnInclude \
-    -I../../phaseCompressibleTurbulenceModels/lnInclude \
-    -I../twoPhaseCompressibleTurbulenceModels/lnInclude \
+    -I../../phaseCompressibleMomentumTransportModels/lnInclude \
+    -I../twoPhaseCompressibleMomentumTransportModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
-    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/phaseCompressible/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
     -I$(LIB_SRC)/combustionModels/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \

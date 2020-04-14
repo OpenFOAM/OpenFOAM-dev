@@ -1,0 +1,9 @@
+EXE_INC = \
+    -I$(LIB_SRC)/transportModels/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
+
+LIB_LIBS = \
+    -ltwoPhaseMixture \
+    -lfiniteVolume

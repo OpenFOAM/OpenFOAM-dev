@@ -5,15 +5,14 @@ EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/sampling/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/lnInclude \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
     -I$(LIB_SRC)/lagrangian/intermediate/lnInclude \
     -I$(LIB_SRC)/lagrangian/spray/lnInclude \
     -I$(LIB_SRC)/lagrangian/distributionModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
-    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/thermophysicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
@@ -31,15 +30,14 @@ EXE_LIBS = \
     -lfiniteVolume \
     -lmeshTools \
     -lsampling \
-    -lturbulenceModels \
-    -lcompressibleTurbulenceModels \
+    -lmomentumTransportModels \
+    -lfluidThermoMomentumTransportModels \
     -lthermophysicalTransportModels \
     -llagrangian \
     -llagrangianIntermediate \
     -llagrangianTurbulence \
     -llagrangianSpray \
     -lspecie \
-    -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lthermophysicalProperties \
     -lreactionThermophysicalModels \

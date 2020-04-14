@@ -1,0 +1,20 @@
+EXE_INC = \
+    -I../twoPhaseSystem/lnInclude \
+    -I../../phaseSystems/lnInclude \
+    -I../../interfacialModels/lnInclude\
+    -I../../interfacialCompositionModels/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
+
+LIB_LIBS = \
+    -lreactingPhaseSystem \
+    -lreactingTwoPhaseSystem \
+    -lreactingEulerianInterfacialModels \
+    -lreactingEulerianInterfacialCompositionModels \
+    -lfiniteVolume \
+    -lfvOptions \
+    -lmeshTools

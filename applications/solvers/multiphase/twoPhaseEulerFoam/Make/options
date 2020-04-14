@@ -1,11 +1,9 @@
 EXE_INC = \
-    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
-    -I$(LIB_SRC)/transportModels/incompressible/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/phaseCompressible/lnInclude \
-    -IphaseCompressibleTurbulenceModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
+    -IphaseCompressibleMomentumTransportModels/lnInclude \
     -IinterfacialModels/lnInclude \
     -ItwoPhaseSystem/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
@@ -13,12 +11,11 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude
 
 EXE_LIBS = \
-    -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lspecie \
-    -lturbulenceModels \
-    -lphaseCompressibleTurbulenceModels \
-    -lcompressibleTurbulenceModels \
+    -lmomentumTransportModels \
+    -lphaseCompressibleMomentumTransportModels \
+    -lfluidThermoMomentumTransportModels \
     -lthermophysicalTransportModels \
     -lincompressibleTransportModels \
     -lcompressibleTwoPhaseSystem \

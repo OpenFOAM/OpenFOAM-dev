@@ -3,7 +3,7 @@
         fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
       - fvm::Sp(contErr, U)
       + MRF.DDt(rho, U)
-      + turbulence.divDevRhoReff(U)
+      + turbulence.divDevTau(U)
      ==
         fvOptions(rho, U)
     );

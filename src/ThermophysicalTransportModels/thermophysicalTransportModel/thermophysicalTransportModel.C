@@ -38,7 +38,7 @@ namespace Foam
 
 Foam::thermophysicalTransportModel::thermophysicalTransportModel
 (
-    const compressibleTurbulenceModel& momentumTransport
+    const compressibleMomentumTransportModel& momentumTransport
 )
 :
     IOdictionary

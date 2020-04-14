@@ -87,10 +87,10 @@ Foam::tmp<Foam::volScalarField> Foam::fv::volumeFractionSource::D
 
     if (phi.dimensions() == dimVolume/dimTime)
     {
-        const turbulenceModel& turbulence =
-            mesh().lookupObject<turbulenceModel>
+        const momentumTransportModel& turbulence =
+            mesh().lookupObject<momentumTransportModel>
             (
-                turbulenceModel::typeName
+                momentumTransportModel::typeName
             );
 
         return turbulence.nuEff();

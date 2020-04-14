@@ -2,7 +2,7 @@
     (
         fvm::ddt(rho, U)
       + fvm::div(rhoPhi, U)
-      + turbulence->divDevRhoReff(rho, U)
+      + turbulence->divDevTau(rho, U)
     );
 
     UEqn.relax();

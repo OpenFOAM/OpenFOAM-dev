@@ -7,7 +7,8 @@ PtrList<uniformDimensionedVectorField> gFluid(fluidRegions.size());
 PtrList<uniformDimensionedScalarField> hRefFluid(fluidRegions.size());
 PtrList<volScalarField> ghFluid(fluidRegions.size());
 PtrList<surfaceScalarField> ghfFluid(fluidRegions.size());
-PtrList<compressible::turbulenceModel> turbulenceFluid(fluidRegions.size());
+PtrList<compressible::momentumTransportModel>
+    turbulenceFluid(fluidRegions.size());
 PtrList<compressible::thermophysicalTransportModel>
     thermophysicalTransportFluid(fluidRegions.size());
 PtrList<CombustionModel<rhoReactionThermo>> reactionFluid(fluidRegions.size());
@@ -150,7 +151,7 @@ forAll(fluidRegions, i)
     turbulenceFluid.set
     (
         i,
-        compressible::turbulenceModel::New
+        compressible::momentumTransportModel::New
         (
             rhoFluid[i],
             UFluid[i],

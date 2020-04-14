@@ -29,8 +29,8 @@ License
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
 #include "fvmSup.H"
-#include "turbulentTransportModel.H"
-#include "turbulentFluidThermoModel.H"
+#include "kinematicMomentumTransportModel.H"
+#include "fluidThermoMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -58,8 +58,8 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::scalarTransport::D
     const surfaceScalarField& phi
 ) const
 {
-    typedef incompressible::turbulenceModel icoModel;
-    typedef compressible::turbulenceModel cmpModel;
+    typedef incompressible::momentumTransportModel icoModel;
+    typedef compressible::momentumTransportModel cmpModel;
 
     word Dname("D" + s_.name());
 
@@ -72,20 +72,20 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::scalarTransport::D
             dimensionedScalar(Dname, phi.dimensions()/dimLength, D_)
         );
     }
-    else if (mesh_.foundObject<icoModel>(turbulenceModel::typeName))
+    else if (mesh_.foundObject<icoModel>(momentumTransportModel::typeName))
     {
         const icoModel& model = mesh_.lookupObject<icoModel>
         (
-            turbulenceModel::typeName
+            momentumTransportModel::typeName
         );
 
         return alphaD_*model.nu() + alphaDt_*model.nut();
     }
-    else if (mesh_.foundObject<cmpModel>(turbulenceModel::typeName))
+    else if (mesh_.foundObject<cmpModel>(momentumTransportModel::typeName))
     {
         const cmpModel& model = mesh_.lookupObject<cmpModel>
         (
-            turbulenceModel::typeName
+            momentumTransportModel::typeName
         );
 
         return alphaD_*model.mu() + alphaDt_*model.mut();

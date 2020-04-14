@@ -1,0 +1,11 @@
+incompressibleMomentumTransportModel.C
+
+kinematicMomentumTransportModels/kinematicMomentumTransportModels.C
+kinematicMomentumTransportModels/RAS/qZeta/qZeta.C
+kinematicMomentumTransportModels/RAS/kkLOmega/kkLOmega.C
+kinematicMomentumTransportModels/RAS/LamBremhorstKE/LamBremhorstKE.C
+kinematicMomentumTransportModels/RAS/LienLeschziner/LienLeschziner.C
+kinematicMomentumTransportModels/RAS/ShihQuadraticKE/ShihQuadraticKE.C
+kinematicMomentumTransportModels/RAS/LienCubicKE/LienCubicKE.C
+
+LIB = $(FOAM_LIBBIN)/libincompressibleMomentumTransportModels

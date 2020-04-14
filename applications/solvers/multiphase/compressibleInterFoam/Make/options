@@ -1,15 +1,13 @@
 EXE_INC = \
     -I. \
-    -I../VoF \
     -ItwoPhaseMixtureThermo \
-    -IVoFphaseCompressibleTurbulenceModels/lnInclude \
-    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
+    -IVoFphaseCompressibleMomentumTransportModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
-    -I$(LIB_SRC)/transportModels/twoPhaseMixture/lnInclude \
-    -I$(LIB_SRC)/transportModels/interfaceProperties/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/phaseCompressible/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
@@ -18,15 +16,14 @@ EXE_INC = \
 EXE_LIBS = \
     -ltwoPhaseMixtureThermo \
     -ltwoPhaseSurfaceTension \
-    -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lspecie \
     -ltwoPhaseMixture \
     -ltwoPhaseProperties \
     -linterfaceProperties \
-    -lturbulenceModels \
-    -lcompressibleTurbulenceModels \
-    -lVoFphaseCompressibleTurbulenceModels \
+    -lmomentumTransportModels \
+    -lfluidThermoMomentumTransportModels \
+    -lVoFphaseCompressibleMomentumTransportModels \
     -lfiniteVolume \
     -lfvOptions \
     -lmeshTools \

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ Description
 
 #include "fvCFD.H"
 #include "singlePhaseTransportModel.H"
-#include "turbulentTransportModel.H"
+#include "kinematicMomentumTransportModel.H"
 #include "wallDist.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -123,9 +123,9 @@ int main(int argc, char *argv[])
 
     singlePhaseTransportModel laminarTransport(U, phi);
 
-    autoPtr<incompressible::turbulenceModel> turbulence
+    autoPtr<incompressible::momentumTransportModel> turbulence
     (
-        incompressible::turbulenceModel::New(U, phi, laminarTransport)
+        incompressible::momentumTransportModel::New(U, phi, laminarTransport)
     );
 
     if (isA<incompressible::RASModel>(turbulence()))

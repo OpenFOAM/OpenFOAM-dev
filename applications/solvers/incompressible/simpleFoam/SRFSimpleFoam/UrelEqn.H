@@ -3,7 +3,7 @@
     tmp<fvVectorMatrix> tUrelEqn
     (
         fvm::div(phi, Urel)
-      + turbulence->divDevReff(Urel)
+      + turbulence->divDevSigma(Urel)
       + SRF->Su()
      ==
         fvOptions(Urel)

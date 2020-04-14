@@ -172,7 +172,8 @@ void alphatFilmWallFunctionFvPatchScalarField::updateCoeffs()
             )
         );
 
-    const compressibleTurbulenceModel& turbModel = ttm.momentumTransport();
+    const compressibleMomentumTransportModel& turbModel =
+        ttm.momentumTransport();
 
     const scalarField& y = turbModel.y()[patchi];
     const scalarField& rhow = turbModel.rho().boundaryField()[patchi];

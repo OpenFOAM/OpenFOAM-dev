@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,9 +34,9 @@ SourceFiles
 #ifndef incompressibleThreePhaseMixture_H
 #define incompressibleThreePhaseMixture_H
 
-#include "incompressible/transportModel/transportModel.H"
+#include "transportModel.H"
 #include "IOdictionary.H"
-#include "incompressible/viscosityModels/viscosityModel/viscosityModel.H"
+#include "viscosityModel.H"
 #include "dimensionedScalar.H"
 #include "volFields.H"
 

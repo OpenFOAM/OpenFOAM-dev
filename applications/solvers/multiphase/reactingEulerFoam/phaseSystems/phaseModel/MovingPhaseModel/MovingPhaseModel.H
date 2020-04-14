@@ -45,7 +45,7 @@ SourceFiles
 #define MovingPhaseModel_H
 
 #include "phaseModel.H"
-#include "phaseCompressibleTurbulenceModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "phaseThermophysicalTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -88,7 +88,7 @@ protected:
         tmp<volScalarField> divU_;
 
         //- Turbulence model
-        autoPtr<phaseCompressibleTurbulenceModel> turbulence_;
+        autoPtr<phaseCompressibleMomentumTransportModel> turbulence_;
 
         //- Thermophysical transport model
         autoPtr<phaseThermophysicalTransportModel> thermophysicalTransport_;

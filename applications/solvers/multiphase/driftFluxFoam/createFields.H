@@ -77,10 +77,10 @@ autoPtr<relativeVelocityModel> UdmModelPtr
 // Construct compressible turbulence model
 autoPtr
 <
-    CompressibleTurbulenceModel<incompressibleTwoPhaseInteractingMixture>
+    CompressibleMomentumTransportModel<incompressibleTwoPhaseInteractingMixture>
 > turbulence
 (
-    CompressibleTurbulenceModel<incompressibleTwoPhaseInteractingMixture>
+    CompressibleMomentumTransportModel<incompressibleTwoPhaseInteractingMixture>
     ::New(rho, U, rhoPhi, mixture)
 );
 

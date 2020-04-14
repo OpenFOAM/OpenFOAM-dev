@@ -3,7 +3,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 wclean libso twoPhaseMixtureThermo
 wclean libso surfaceTensionModels
-wclean libso VoFphaseCompressibleTurbulenceModels
+wclean libso VoFphaseCompressibleMomentumTransportModels
 
 wclean
 wclean compressibleInterFilmFoam

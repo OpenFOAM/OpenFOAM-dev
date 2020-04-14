@@ -169,7 +169,8 @@ void alphatJayatillekeWallFunctionFvPatchScalarField::updateCoeffs()
             )
         );
 
-    const compressibleTurbulenceModel& turbModel = ttm.momentumTransport();
+    const compressibleMomentumTransportModel& turbModel =
+        ttm.momentumTransport();
 
     const nutWallFunctionFvPatchScalarField& nutw =
         nutWallFunctionFvPatchScalarField::nutw(turbModel, patchi);

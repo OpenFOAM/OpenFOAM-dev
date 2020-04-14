@@ -213,7 +213,8 @@ inline transferModelList& kinematicSingleLayer::transfer()
 }
 
 
-inline const filmTurbulenceModel& kinematicSingleLayer::turbulence() const
+inline const filmMomentumTransportModel&
+kinematicSingleLayer::turbulence() const
 {
     return turbulence_();
 }

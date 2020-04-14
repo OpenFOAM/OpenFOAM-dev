@@ -28,7 +28,7 @@ License
 #include "fvcGrad.H"
 #include "surfaceInterpolate.H"
 #include "fvcSnGrad.H"
-#include "phaseCompressibleTurbulenceModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "BlendedInterfacialModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -64,15 +64,18 @@ Foam::turbulentDispersionModel::~turbulentDispersionModel()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::phaseCompressibleTurbulenceModel&
+const Foam::phaseCompressibleMomentumTransportModel&
 Foam::turbulentDispersionModel::continuousTurbulence() const
 {
     return
-        pair_.phase1().mesh().lookupObject<phaseCompressibleTurbulenceModel>
+        pair_.phase1().mesh().lookupObject
+        <
+            phaseCompressibleMomentumTransportModel
+        >
         (
             IOobject::groupName
             (
-                turbulenceModel::typeName,
+                momentumTransportModel::typeName,
                 pair_.continuous().name()
             )
         );

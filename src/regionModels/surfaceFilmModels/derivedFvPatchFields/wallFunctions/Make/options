@@ -1,12 +1,11 @@
 EXE_INC = \
-    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/thermophysicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/SLGThermo/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/lnInclude \
     -I$(LIB_SRC)/regionModels/regionModel/lnInclude \
     -I$(LIB_SRC)/regionModels/surfaceFilmModels/lnInclude\
@@ -14,14 +13,13 @@ EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 LIB_LIBS = \
-    -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lspecie \
     -lthermophysicalProperties \
     -lreactionThermophysicalModels \
     -lSLGThermo \
-    -lturbulenceModels \
-    -lcompressibleTurbulenceModels \
+    -lmomentumTransportModels \
+    -lfluidThermoMomentumTransportModels \
     -lthermophysicalTransportModels \
     -lregionModels \
     -lsurfaceFilmModels \

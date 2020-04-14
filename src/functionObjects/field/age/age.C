@@ -26,7 +26,7 @@ License
 #include "age.H"
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
-#include "turbulenceModel.H"
+#include "momentumTransportModel.H"
 #include "inletOutletFvPatchField.H"
 #include "wallFvPatch.H"
 #include "zeroGradientFvPatchField.H"
@@ -173,9 +173,9 @@ bool Foam::functionObjects::age::execute()
         if (diffusion_)
         {
             tmuEff =
-                mesh_.lookupObject<turbulenceModel>
+                mesh_.lookupObject<momentumTransportModel>
                 (
-                    turbulenceModel::typeName
+                    momentumTransportModel::typeName
                 ).muEff();
 
             laplacianScheme =
@@ -210,9 +210,9 @@ bool Foam::functionObjects::age::execute()
         if (diffusion_)
         {
             tnuEff =
-                mesh_.lookupObject<turbulenceModel>
+                mesh_.lookupObject<momentumTransportModel>
                 (
-                    turbulenceModel::typeName
+                    momentumTransportModel::typeName
                 ).nuEff();
 
             laplacianScheme =

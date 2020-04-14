@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ Description
 #include "subCycle.H"
 #include "interfaceProperties.H"
 #include "phaseChangeTwoPhaseMixture.H"
-#include "turbulentTransportModel.H"
+#include "kinematicMomentumTransportModel.H"
 #include "pimpleControl.H"
 #include "fvOptions.H"
 #include "CorrectPhi.H"

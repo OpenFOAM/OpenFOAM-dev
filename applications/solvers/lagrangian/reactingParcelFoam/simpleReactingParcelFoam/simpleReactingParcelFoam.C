@@ -31,7 +31,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "turbulentFluidThermoModel.H"
+#include "fluidThermoMomentumTransportModel.H"
 #include "fluidThermoTransportModel.H"
 #include "basicReactingMultiphaseCloud.H"
 #include "rhoReactionThermo.H"

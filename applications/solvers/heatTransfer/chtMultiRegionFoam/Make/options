@@ -9,7 +9,6 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/finiteVolume/cfdTools \
-    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
@@ -17,15 +16,14 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/chemistryModel/lnInclude \
     -I$(LIB_SRC)/ODE/lnInclude \
     -I$(LIB_SRC)/combustionModels/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/lnInclude \
     -I$(LIB_SRC)/radiationModels/lnInclude \
     -I$(LIB_SRC)/regionModels/regionModel/lnInclude
 
 
 EXE_LIBS = \
-    -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lspecie \
     -lreactionThermophysicalModels \
@@ -33,8 +31,8 @@ EXE_LIBS = \
     -lchemistryModel \
     -lODE \
     -lcombustionModels \
-    -lturbulenceModels \
-    -lcompressibleTurbulenceModels \
+    -lmomentumTransportModels \
+    -lfluidThermoMomentumTransportModels \
     -lthermophysicalTransportModels \
     -lmeshTools \
     -lfiniteVolume \

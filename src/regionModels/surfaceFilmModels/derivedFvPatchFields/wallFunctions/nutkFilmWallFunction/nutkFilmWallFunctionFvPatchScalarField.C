@@ -26,7 +26,7 @@ License
 #include "nutkFilmWallFunctionFvPatchScalarField.H"
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
-#include "turbulentFluidThermoModel.H"
+#include "fluidThermoMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 #include "surfaceFilmRegionModel.H"
 #include "mappedWallPolyPatch.H"
@@ -76,14 +76,15 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::calcUTau
 
 
     // Retrieve RAS turbulence model
-    const turbulenceModel& turbModel = db().lookupObject<turbulenceModel>
-    (
-        IOobject::groupName
+    const momentumTransportModel& turbModel =
+        db().lookupObject<momentumTransportModel>
         (
-            turbulenceModel::typeName,
-            internalField().group()
-        )
-    );
+            IOobject::groupName
+            (
+                momentumTransportModel::typeName,
+                internalField().group()
+            )
+        );
 
     const scalarField& y = turbModel.y()[patchi];
     const tmp<volScalarField> tk = turbModel.k();
@@ -127,14 +128,15 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::nut() const
 {
     const label patchi = patch().index();
 
-    const turbulenceModel& turbModel = db().lookupObject<turbulenceModel>
-    (
-        IOobject::groupName
+    const momentumTransportModel& turbModel =
+        db().lookupObject<momentumTransportModel>
         (
-            turbulenceModel::typeName,
-            internalField().group()
-        )
-    );
+            IOobject::groupName
+            (
+                momentumTransportModel::typeName,
+                internalField().group()
+            )
+        );
 
     const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];
     const scalarField magGradU(mag(Uw.snGrad()));
@@ -219,14 +221,15 @@ tmp<scalarField> nutkFilmWallFunctionFvPatchScalarField::yPlus() const
 {
     const label patchi = patch().index();
 
-    const turbulenceModel& turbModel = db().lookupObject<turbulenceModel>
-    (
-        IOobject::groupName
+    const momentumTransportModel& turbModel =
+        db().lookupObject<momentumTransportModel>
         (
-            turbulenceModel::typeName,
-            internalField().group()
-        )
-    );
+            IOobject::groupName
+            (
+                momentumTransportModel::typeName,
+                internalField().group()
+            )
+        );
 
     const scalarField& y = turbModel.y()[patchi];
     const fvPatchVectorField& Uw = turbModel.U().boundaryField()[patchi];

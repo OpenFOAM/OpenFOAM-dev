@@ -1,25 +1,22 @@
 EXE_INC = \
     -I. \
-    -I../VoF \
     -I../interFoam \
     -ImultiphaseMixtureThermo/lnInclude \
-    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
-    -I$(LIB_SRC)/transportModels/twoPhaseMixture/lnInclude \
-    -I$(LIB_SRC)/transportModels/interfaceProperties/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 EXE_LIBS = \
     -lmultiphaseMixtureThermo \
-    -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lspecie \
     -linterfaceProperties \
-    -lturbulenceModels \
-    -lcompressibleTurbulenceModels \
+    -lmomentumTransportModels \
+    -lfluidThermoMomentumTransportModels \
     -lfiniteVolume \
     -lfvOptions \
     -lmeshTools

@@ -3,7 +3,7 @@
 
     scalar nu = turbulence->nu()().boundaryField()[patchId][faceId];
     scalar nut = turbulence->nut()().boundaryField()[patchId][faceId];
-    symmTensor R = turbulence->devReff()().boundaryField()[patchId][faceId];
+    symmTensor R = turbulence->devSigma()().boundaryField()[patchId][faceId];
     scalar epsilon = turbulence->epsilon()()[cellId];
 //    scalar omega = turbulence->omega()()[cellId];
     scalar k = turbulence->k()()[cellId];

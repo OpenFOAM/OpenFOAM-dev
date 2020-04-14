@@ -37,7 +37,7 @@ Description
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
 #include "fluidThermo.H"
-#include "turbulentFluidThermoModel.H"
+#include "fluidThermoMomentumTransportModel.H"
 #include "fluidThermoTransportModel.H"
 #include "radiationModel.H"
 #include "pimpleControl.H"

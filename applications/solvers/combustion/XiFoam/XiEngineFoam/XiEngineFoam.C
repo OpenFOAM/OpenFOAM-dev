@@ -52,7 +52,7 @@ Description
 #include "engineTime.H"
 #include "engineMesh.H"
 #include "psiuReactionThermo.H"
-#include "turbulentFluidThermoModel.H"
+#include "fluidThermoMomentumTransportModel.H"
 #include "fluidThermoTransportModel.H"
 #include "laminarFlameSpeed.H"
 #include "ignition.H"

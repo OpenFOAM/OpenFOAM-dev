@@ -3,16 +3,14 @@ EXE_INC = \
     -IVoFPatchTransfer \
     -IVoFSolidificationMeltingSource \
     -I.. \
-    -I../../VoF \
     -I../twoPhaseMixtureThermo \
-    -I../VoFphaseCompressibleTurbulenceModels/lnInclude \
-    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
+    -I../VoFphaseCompressibleMomentumTransportModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
-    -I$(LIB_SRC)/transportModels/twoPhaseMixture/lnInclude \
-    -I$(LIB_SRC)/transportModels/interfaceProperties/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/compressible/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/phaseCompressible/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/thermophysicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
@@ -29,15 +27,14 @@ EXE_INC = \
 EXE_LIBS = \
     -ltwoPhaseMixtureThermo \
     -ltwoPhaseSurfaceTension \
-    -lcompressibleTransportModels \
     -lfluidThermophysicalModels \
     -lspecie \
     -ltwoPhaseMixture \
     -ltwoPhaseProperties \
     -linterfaceProperties \
-    -lturbulenceModels \
-    -lcompressibleTurbulenceModels \
-    -lVoFphaseCompressibleTurbulenceModels \
+    -lmomentumTransportModels \
+    -lfluidThermoMomentumTransportModels \
+    -lVoFphaseCompressibleMomentumTransportModels \
     -lSLGThermo \
     -lsurfaceFilmModels \
     -lsurfaceFilmDerivedFvPatchFields \

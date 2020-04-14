@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ Description
 
 #include "fvCFD.H"
 #include "singlePhaseTransportModel.H"
-#include "turbulentTransportModel.H"
+#include "kinematicMomentumTransportModel.H"
 #include "simpleControl.H"
 #include "fvOptions.H"
 
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
             tmp<fvVectorMatrix> tUEqn
             (
                 fvm::div(phi, U)
-              + turbulence->divDevReff(U)
+              + turbulence->divDevSigma(U)
               + fvm::Sp(alpha, U)
              ==
                 fvOptions(U)
@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
             (
                 fvm::div(-phi, Ua)
               - adjointTransposeConvection
-              + turbulence->divDevReff(Ua)
+              + turbulence->divDevSigma(Ua)
               + fvm::Sp(alpha, Ua)
              ==
                 fvOptions(Ua)

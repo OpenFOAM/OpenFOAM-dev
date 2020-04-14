@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -152,7 +152,7 @@ SourceFiles
 #include "sizeGroup.H"
 #include "phasePair.H"
 #include "pimpleControl.H"
-#include "phaseCompressibleTurbulenceModelFwd.H"
+#include "phaseCompressibleMomentumTransportModelFwd.H"
 #include "HashPtrTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -450,7 +450,8 @@ public:
         ) const;
 
         //- Return reference to turbulence model of the continuous phase
-        const phaseCompressibleTurbulenceModel& continuousTurbulence() const;
+        const phaseCompressibleMomentumTransportModel&
+            continuousTurbulence() const;
 
         //- Solve the population balance equation
         void solve();

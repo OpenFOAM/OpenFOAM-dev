@@ -42,7 +42,7 @@ SourceFiles
 #ifndef multiphaseSystem_H
 #define multiphaseSystem_H
 
-#include "incompressible/transportModel/transportModel.H"
+#include "transportModel.H"
 #include "IOdictionary.H"
 #include "phaseModel.H"
 #include "PtrDictionary.H"

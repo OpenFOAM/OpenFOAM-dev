@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "wallHeatTransferCoeff.H"
-#include "turbulentTransportModel.H"
+#include "kinematicMomentumTransportModel.H"
 #include "wallPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -198,16 +198,16 @@ bool Foam::functionObjects::wallHeatTransferCoeff::execute()
 
     if
     (
-        foundObject<incompressible::turbulenceModel>
+        foundObject<incompressible::momentumTransportModel>
         (
-            turbulenceModel::typeName
+            momentumTransportModel::typeName
         )
     )
     {
-        const incompressible::turbulenceModel& turbModel =
-            lookupObject<incompressible::turbulenceModel>
+        const incompressible::momentumTransportModel& turbModel =
+            lookupObject<incompressible::momentumTransportModel>
             (
-                turbulenceModel::typeName
+                momentumTransportModel::typeName
             );
 
         return store

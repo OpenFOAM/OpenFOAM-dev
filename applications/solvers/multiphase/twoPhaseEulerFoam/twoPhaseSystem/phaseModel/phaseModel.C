@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 #include "twoPhaseSystem.H"
 #include "diameterModel.H"
 #include "fvMatrix.H"
-#include "PhaseCompressibleTurbulenceModel.H"
+#include "PhaseCompressibleMomentumTransportModel.H"
 #include "dragModel.H"
 #include "heatTransferModel.H"
 #include "fixedValueFvsPatchFields.H"
@@ -189,7 +189,7 @@ Foam::phaseModel::phaseModel
     );
 
     turbulence_ =
-        PhaseCompressibleTurbulenceModel<phaseModel>::New
+        PhaseCompressibleMomentumTransportModel<phaseModel>::New
         (
             *this,
             thermo_->rho(),
@@ -221,14 +221,14 @@ Foam::tmp<Foam::volScalarField> Foam::phaseModel::d() const
 }
 
 
-Foam::PhaseCompressibleTurbulenceModel<Foam::phaseModel>&
+Foam::PhaseCompressibleMomentumTransportModel<Foam::phaseModel>&
 Foam::phaseModel::turbulence()
 {
     return turbulence_();
 }
 
 
-const Foam::PhaseCompressibleTurbulenceModel<Foam::phaseModel>&
+const Foam::PhaseCompressibleMomentumTransportModel<Foam::phaseModel>&
 Foam::phaseModel::turbulence() const
 {
     return turbulence_();

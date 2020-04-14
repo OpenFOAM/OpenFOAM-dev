@@ -36,7 +36,7 @@ SourceFiles
 #ifndef thermophysicalTransportModel_H
 #define thermophysicalTransportModel_H
 
-#include "compressibleTurbulenceModel.H"
+#include "compressibleMomentumTransportModel.H"
 #include "fluidThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -56,7 +56,7 @@ protected:
 
     // Protected data
 
-        const compressibleTurbulenceModel& momentumTransportModel_;
+        const compressibleMomentumTransportModel& momentumTransportModel_;
 
 
 public:
@@ -67,10 +67,10 @@ public:
 
     // Constructors
 
-        //- Construct from compressibleTurbulenceModel
+        //- Construct from compressibleMomentumTransportModel
         thermophysicalTransportModel
         (
-            const compressibleTurbulenceModel& momentumTransport
+            const compressibleMomentumTransportModel& momentumTransport
         );
 
         //- Disallow default bitwise copy construction
@@ -90,7 +90,7 @@ public:
         //- Read model coefficients if they have changed
         virtual bool read() = 0;
 
-        const compressibleTurbulenceModel& momentumTransport() const
+        const compressibleMomentumTransportModel& momentumTransport() const
         {
             return momentumTransportModel_;
         }

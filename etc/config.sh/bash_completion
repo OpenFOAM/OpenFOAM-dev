@@ -56,7 +56,7 @@ _adjointShapeOptimizationFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -233,7 +233,7 @@ _boundaryFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -srcDoc"
+    opts="-case -doc -fileHandler -help -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -279,7 +279,7 @@ _buoyantPimpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -304,7 +304,7 @@ _buoyantSimpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -329,7 +329,7 @@ _cavitatingDyMFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -354,7 +354,7 @@ _cavitatingFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -509,7 +509,7 @@ _chtMultiRegionFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -534,7 +534,7 @@ _coalChemistryFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -559,7 +559,7 @@ _coldEngineFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -638,7 +638,7 @@ _compressibleInterDyMFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -663,7 +663,7 @@ _compressibleInterFilmFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -688,7 +688,7 @@ _compressibleInterFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -713,7 +713,7 @@ _compressibleMultiphaseInterFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -1098,7 +1098,7 @@ _engineFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -1321,7 +1321,7 @@ _fireFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -1907,7 +1907,7 @@ _icoUncoupledKinematicParcelDyMFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -cloudName -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -cloudName -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -1932,7 +1932,7 @@ _icoUncoupledKinematicParcelFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -cloudName -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -cloudName -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2015,7 +2015,7 @@ _interFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2040,7 +2040,7 @@ _interMixingFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2065,7 +2065,7 @@ _interPhaseChangeDyMFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2090,7 +2090,7 @@ _interPhaseChangeFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2628,7 +2628,7 @@ _multiphaseEulerFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2653,7 +2653,7 @@ _multiphaseInterFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2885,7 +2885,7 @@ _PDRFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2935,7 +2935,7 @@ _pimpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -2960,7 +2960,7 @@ _pisoFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3039,7 +3039,7 @@ _porousSimpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3143,7 +3143,7 @@ _potentialFreeSurfaceDyMFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3168,7 +3168,7 @@ _potentialFreeSurfaceFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3193,7 +3193,7 @@ _reactingFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3243,7 +3243,7 @@ _reactingParcelFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3528,7 +3528,7 @@ _rhoCentralDyMFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3553,7 +3553,7 @@ _rhoCentralFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3578,7 +3578,7 @@ _rhoPimpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3603,7 +3603,7 @@ _rhoPorousSimpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3628,7 +3628,7 @@ _rhoReactingBuoyantFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3653,7 +3653,7 @@ _rhoReactingFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3678,7 +3678,7 @@ _rhoSimpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3936,7 +3936,7 @@ _simpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -3961,7 +3961,7 @@ _simpleReactingParcelFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4119,7 +4119,7 @@ _sonicFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4244,7 +4244,7 @@ _sprayDyMFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4269,7 +4269,7 @@ _sprayFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4294,7 +4294,7 @@ _SRFPimpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4319,7 +4319,7 @@ _SRFSimpleFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -5269,7 +5269,7 @@ _thermoFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -5348,7 +5348,7 @@ _twoLiquidMixingFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -5398,7 +5398,7 @@ _uncoupledKinematicParcelDyMFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -cloudName -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -cloudName -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -5423,7 +5423,7 @@ _uncoupledKinematicParcelFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -cloudName -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -cloudName -doc -fileHandler -help -hostRoots -listFunctionObjects -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -5554,7 +5554,7 @@ _XiEngineFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -5579,7 +5579,7 @@ _XiFoam_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listTurbulenceModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
+    opts="-case -doc -fileHandler -help -hostRoots -listFunctionObjects -listFvOptions -listRegisteredSwitches -listScalarBCs -listSwitches -listMomentumTransportModels -listUnsetSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 

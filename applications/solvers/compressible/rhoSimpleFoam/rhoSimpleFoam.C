@@ -31,7 +31,7 @@ Description
 
 #include "fvCFD.H"
 #include "fluidThermo.H"
-#include "turbulentFluidThermoModel.H"
+#include "fluidThermoMomentumTransportModel.H"
 #include "fluidThermoTransportModel.H"
 #include "simpleControl.H"
 #include "pressureControl.H"

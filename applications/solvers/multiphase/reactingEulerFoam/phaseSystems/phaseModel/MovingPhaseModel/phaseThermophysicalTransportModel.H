@@ -33,7 +33,7 @@ Description
 #define phaseThermophysicalTransportModel_H
 
 #include "PhaseThermophysicalTransportModel.H"
-#include "phaseCompressibleTurbulenceModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -41,7 +41,7 @@ namespace Foam
 {
       typedef PhaseThermophysicalTransportModel
       <
-          phaseCompressibleTurbulenceModel
+          phaseCompressibleMomentumTransportModel
       > phaseThermophysicalTransportModel;
 }
 

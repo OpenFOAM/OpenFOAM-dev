@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "yPlus.H"
-#include "turbulenceModel.H"
+#include "momentumTransportModel.H"
 #include "nutWallFunctionFvPatchScalarField.H"
 #include "wallFvPatch.H"
 #include "addToRunTimeSelectionTable.H"
@@ -64,7 +64,7 @@ void Foam::functionObjects::yPlus::writeFileHeader(const label i)
 
 Foam::tmp<Foam::volScalarField> Foam::functionObjects::yPlus::calcYPlus
 (
-    const turbulenceModel& turbModel
+    const momentumTransportModel& turbModel
 )
 {
     tmp<volScalarField> tyPlus
@@ -161,15 +161,20 @@ bool Foam::functionObjects::yPlus::read(const dictionary& dict)
 
 bool Foam::functionObjects::yPlus::execute()
 {
-    if (mesh_.foundObject<turbulenceModel>
+    if (mesh_.foundObject<momentumTransportModel>
     (
-        IOobject::groupName(turbulenceModel::typeName, phaseName_))
+        IOobject::groupName(momentumTransportModel::typeName, phaseName_))
     )
     {
-        const turbulenceModel& model = mesh_.lookupObject<turbulenceModel>
-        (
-            IOobject::groupName(turbulenceModel::typeName, phaseName_)
-        );
+        const momentumTransportModel& model =
+            mesh_.lookupObject<momentumTransportModel>
+            (
+                IOobject::groupName
+                (
+                    momentumTransportModel::typeName,
+                    phaseName_
+                )
+            );
 
         word name(IOobject::groupName(type(), phaseName_));
 

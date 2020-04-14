@@ -33,7 +33,7 @@ Description
 #include "engineTime.H"
 #include "engineMesh.H"
 #include "psiThermo.H"
-#include "turbulentFluidThermoModel.H"
+#include "fluidThermoMomentumTransportModel.H"
 #include "fluidThermoTransportModel.H"
 #include "OFstream.H"
 #include "fvOptions.H"

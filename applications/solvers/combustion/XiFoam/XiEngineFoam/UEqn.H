@@ -2,7 +2,7 @@
     (
         fvm::ddt(rho, U)
       + fvm::div(phi, U)
-      + turbulence->divDevRhoReff(U)
+      + turbulence->divDevTau(U)
      ==
         fvOptions(rho, U)
     );

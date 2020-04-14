@@ -108,7 +108,8 @@ void Foam::fv::variableHeatTransfer::calculateHtc()
             thermophysicalTransportModel::typeName
         );
 
-    const compressibleTurbulenceModel& nbrTurb = nbrTtm.momentumTransport();
+    const compressibleMomentumTransportModel& nbrTurb =
+        nbrTtm.momentumTransport();
 
     const fluidThermo& nbrThermo = nbrTtm.thermo();
 

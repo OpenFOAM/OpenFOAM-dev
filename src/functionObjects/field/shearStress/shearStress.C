@@ -26,8 +26,8 @@ License
 #include "shearStress.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "turbulentTransportModel.H"
-#include "turbulentFluidThermoModel.H"
+#include "kinematicMomentumTransportModel.H"
+#include "fluidThermoMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -86,33 +86,33 @@ bool Foam::functionObjects::shearStress::execute()
 {
     const word fieldName(IOobject::groupName(type(), phaseName_));
 
-    typedef compressibleTurbulenceModel cmpModel;
-    typedef incompressibleTurbulenceModel icoModel;
+    typedef compressibleMomentumTransportModel cmpModel;
+    typedef incompressibleMomentumTransportModel icoModel;
 
-    const word turbulenceModelName
+    const word momentumTransportModelName
     (
-        IOobject::groupName(turbulenceModel::typeName, phaseName_)
+        IOobject::groupName(momentumTransportModel::typeName, phaseName_)
     );
 
-    if (mesh_.foundObject<cmpModel>(turbulenceModelName))
+    if (mesh_.foundObject<cmpModel>(momentumTransportModelName))
     {
         const cmpModel& model =
-            mesh_.lookupObject<cmpModel>(turbulenceModelName);
+            mesh_.lookupObject<cmpModel>(momentumTransportModelName);
 
-        return store(fieldName, model.devRhoReff());
+        return store(fieldName, model.devTau());
     }
-    else if (mesh_.foundObject<icoModel>(turbulenceModelName))
+    else if (mesh_.foundObject<icoModel>(momentumTransportModelName))
     {
         const icoModel& model =
-            mesh_.lookupObject<icoModel>(turbulenceModelName);
+            mesh_.lookupObject<icoModel>(momentumTransportModelName);
 
-        return store(fieldName, model.devReff());
+        return store(fieldName, model.devSigma());
     }
     else
     {
         FatalErrorInFunction
             << "Unable to find compressible turbulence model "
-            << turbulenceModelName << " in the database"
+            << momentumTransportModelName << " in the database"
             << exit(FatalError);
 
         return false;

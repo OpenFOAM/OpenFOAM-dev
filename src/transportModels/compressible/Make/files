@@ -1,3 +1,0 @@
-compressibleTransportModel/compressibleTransportModel.C
-
-LIB = $(FOAM_LIBBIN)/libcompressibleTransportModels

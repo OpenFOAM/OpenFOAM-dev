@@ -32,7 +32,7 @@ Description
 
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
-#include "turbulenceModel.H"
+#include "momentumTransportModel.H"
 #include "fluidThermoTransportModel.H"
 #include "basicSprayCloud.H"
 #include "psiReactionThermo.H"

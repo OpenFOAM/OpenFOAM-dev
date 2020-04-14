@@ -36,7 +36,7 @@ License
 #include "fvmSup.H"
 #include "fvcSup.H"
 #include "fvcDiv.H"
-#include "phaseCompressibleTurbulenceModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "shapeModel.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -1237,15 +1237,15 @@ Foam::diameterModels::populationBalanceModel::sigmaWithContinuousPhase
 }
 
 
-const Foam::phaseCompressibleTurbulenceModel&
+const Foam::phaseCompressibleMomentumTransportModel&
 Foam::diameterModels::populationBalanceModel::continuousTurbulence() const
 {
     return
-        mesh_.lookupObject<phaseCompressibleTurbulenceModel>
+        mesh_.lookupObject<phaseCompressibleMomentumTransportModel>
         (
             IOobject::groupName
             (
-                turbulenceModel::typeName,
+                momentumTransportModel::typeName,
                 continuousPhase_.name()
             )
         );

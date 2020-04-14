@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ SourceFiles
 #define combustionModel_H
 
 #include "IOdictionary.H"
-#include "turbulentFluidThermoModel.H"
+#include "fluidThermoMomentumTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,7 +69,7 @@ protected:
         const fvMesh& mesh_;
 
         //- Reference to the turbulence model
-        const compressibleTurbulenceModel& turb_;
+        const compressibleMomentumTransportModel& turb_;
 
         //- Dictionary of the model
         dictionary coeffs_;
@@ -94,7 +94,7 @@ public:
         (
             const word& modelType,
             const basicThermo& thermo,
-            const compressibleTurbulenceModel& turb,
+            const compressibleMomentumTransportModel& turb,
             const word& combustionProperties=combustionPropertiesName
         );
 
@@ -109,7 +109,7 @@ public:
         static autoPtr<CombustionModel> New
         (
             const typename CombustionModel::reactionThermo& thermo,
-            const compressibleTurbulenceModel& turb,
+            const compressibleMomentumTransportModel& turb,
             const word& combustionProperties
         );
 
@@ -124,7 +124,7 @@ public:
         inline const fvMesh& mesh() const;
 
         //- Return access to turbulence
-        inline const compressibleTurbulenceModel& turbulence() const;
+        inline const compressibleMomentumTransportModel& turbulence() const;
 
         //- Return const access to rho
         inline const volScalarField& rho() const;

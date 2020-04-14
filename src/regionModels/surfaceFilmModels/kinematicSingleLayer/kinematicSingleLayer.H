@@ -45,7 +45,7 @@ SourceFiles
 #include "injectionModelList.H"
 #include "transferModelList.H"
 #include "forceList.H"
-#include "filmTurbulenceModel.H"
+#include "filmMomentumTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -202,7 +202,7 @@ protected:
             transferModelList transfer_;
 
             //- Turbulence model
-            autoPtr<filmTurbulenceModel> turbulence_;
+            autoPtr<filmMomentumTransportModel> turbulence_;
 
             //- List of film forces
             forceList forces_;
@@ -456,7 +456,7 @@ public:
             inline transferModelList& transfer();
 
             //- Turbulence
-            inline const filmTurbulenceModel& turbulence() const;
+            inline const filmMomentumTransportModel& turbulence() const;
 
 
         // Helper functions

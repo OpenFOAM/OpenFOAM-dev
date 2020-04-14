@@ -61,7 +61,7 @@ SourceFiles
 #define compressible_PDRkEpsilon_H
 
 #include "kEpsilon.H"
-#include "turbulentFluidThermoModel.H"
+#include "fluidThermoMomentumTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,7 +78,7 @@ namespace RASModels
 
 class PDRkEpsilon
 :
-    public Foam::RASModels::kEpsilon<compressible::turbulenceModel>
+    public Foam::RASModels::kEpsilon<compressible::momentumTransportModel>
 {
     // Private Data
 

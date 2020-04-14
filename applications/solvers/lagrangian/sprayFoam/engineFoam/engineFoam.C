@@ -33,7 +33,7 @@ Description
 #include "fvCFD.H"
 #include "engineTime.H"
 #include "engineMesh.H"
-#include "turbulentFluidThermoModel.H"
+#include "fluidThermoMomentumTransportModel.H"
 #include "fluidThermoTransportModel.H"
 #include "basicSprayCloud.H"
 #include "psiReactionThermo.H"

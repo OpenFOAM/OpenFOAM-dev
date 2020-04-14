@@ -45,7 +45,7 @@ Description
 #include "laminarThermophysicalTransportModel.H"
 #include "RASThermophysicalTransportModel.H"
 #include "LESThermophysicalTransportModel.H"
-#include "turbulentFluidThermoModel.H"
+#include "fluidThermoMomentumTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,7 +53,7 @@ namespace Foam
 {
     namespace compressible
     {
-        typedef ThermophysicalTransportModel<turbulenceModel>
+        typedef ThermophysicalTransportModel<momentumTransportModel>
             thermophysicalTransportModel;
 
         typedef laminarThermophysicalTransportModel

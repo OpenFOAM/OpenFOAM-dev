@@ -5,7 +5,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
 wmake $targetType twoPhaseSystem
-wmake $targetType twoPhaseCompressibleTurbulenceModels
+wmake $targetType twoPhaseCompressibleMomentumTransportModels
 wmake $targetType
 
 #------------------------------------------------------------------------------

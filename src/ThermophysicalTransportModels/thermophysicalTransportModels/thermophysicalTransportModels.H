@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "turbulentFluidThermoModels.H"
+#include "fluidThermoMomentumTransportModels.H"
 #include "addToRunTimeSelectionTable.H"
 #include "makeThermophysicalTransportModel.H"
 
@@ -36,7 +36,7 @@ License
 makeThermophysicalTransportModelTypes
 (
     ThermophysicalTransportModel,
-    fluidThermoCompressibleTurbulenceModel
+    fluidThermoCompressibleMomentumTransportModel
 );
 
 
@@ -44,7 +44,7 @@ makeThermophysicalTransportModelTypes
     makeTemplatedThermophysicalTransportModel                                  \
     (                                                                          \
         ThermophysicalTransportModel,                                          \
-        fluidThermoCompressibleTurbulenceModel,                                \
+        fluidThermoCompressibleMomentumTransportModel,                         \
         laminar,                                                               \
         Type                                                                   \
     )
@@ -53,7 +53,7 @@ makeThermophysicalTransportModelTypes
     makeTemplatedThermophysicalTransportModel                                  \
     (                                                                          \
         ThermophysicalTransportModel,                                          \
-        fluidThermoCompressibleTurbulenceModel,                                \
+        fluidThermoCompressibleMomentumTransportModel,                         \
         RAS,                                                                   \
         Type                                                                   \
     )
@@ -62,7 +62,7 @@ makeThermophysicalTransportModelTypes
     makeTemplatedThermophysicalTransportModel                                  \
     (                                                                          \
         ThermophysicalTransportModel,                                          \
-        fluidThermoCompressibleTurbulenceModel,                                \
+        fluidThermoCompressibleMomentumTransportModel,                         \
         LES,                                                                   \
         Type                                                                   \
     )

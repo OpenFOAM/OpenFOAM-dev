@@ -37,9 +37,9 @@ $(KINEMATICMODELS)/filmThermoModel/filmThermoModel/filmThermoModelNew.C
 $(KINEMATICMODELS)/filmThermoModel/constantFilmThermo/constantFilmThermo.C
 $(KINEMATICMODELS)/filmThermoModel/liquidFilmThermo/liquidFilmThermo.C
 
-$(KINEMATICMODELS)/filmTurbulenceModel/filmTurbulenceModel/filmTurbulenceModel.C
-$(KINEMATICMODELS)/filmTurbulenceModel/filmTurbulenceModel/filmTurbulenceModelNew.C
-$(KINEMATICMODELS)/filmTurbulenceModel/laminar/laminar.C
+$(KINEMATICMODELS)/filmMomentumTransportModel/filmMomentumTransportModel/filmMomentumTransportModel.C
+$(KINEMATICMODELS)/filmMomentumTransportModel/filmMomentumTransportModel/filmMomentumTransportModelNew.C
+$(KINEMATICMODELS)/filmMomentumTransportModel/laminar/laminar.C
 
 THERMOMODELS=submodels/thermo
 $(THERMOMODELS)/phaseChangeModel/phaseChangeModel/phaseChangeModel.C

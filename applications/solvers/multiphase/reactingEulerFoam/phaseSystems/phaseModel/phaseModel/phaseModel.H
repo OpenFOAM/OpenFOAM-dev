@@ -38,7 +38,7 @@ SourceFiles
 #include "surfaceFields.H"
 #include "fvMatricesFwd.H"
 #include "rhoThermo.H"
-#include "phaseCompressibleTurbulenceModelFwd.H"
+#include "phaseCompressibleMomentumTransportModelFwd.H"
 #include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

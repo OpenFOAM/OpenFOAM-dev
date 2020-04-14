@@ -54,9 +54,9 @@ mesh.setFluxRequired(p_rgh.name());
 
 
 // Construct compressible turbulence model
-autoPtr<compressible::turbulenceModel> turbulence
+autoPtr<compressible::momentumTransportModel> turbulence
 (
-    compressible::turbulenceModel::New
+    compressible::momentumTransportModel::New
     (
         rho,
         U,

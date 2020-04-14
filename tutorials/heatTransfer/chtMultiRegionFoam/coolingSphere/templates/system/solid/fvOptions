@@ -37,12 +37,6 @@ fixedPower
 
     sources
     {
-        e
-        {
-            explicit    $power;
-            implicit    0;
-        }
-
         h
         {
             explicit    $power;

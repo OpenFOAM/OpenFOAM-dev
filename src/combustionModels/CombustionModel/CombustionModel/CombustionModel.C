@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ Foam::CombustionModel<ReactionThermo>::CombustionModel
 (
     const word& modelType,
     const ReactionThermo& thermo,
-    const compressibleTurbulenceModel& turb,
+    const compressibleMomentumTransportModel& turb,
     const word& combustionProperties
 )
 :
@@ -47,7 +47,7 @@ Foam::autoPtr<Foam::CombustionModel<ReactionThermo>>
 Foam::CombustionModel<ReactionThermo>::New
 (
     const ReactionThermo& thermo,
-    const compressibleTurbulenceModel& turb,
+    const compressibleMomentumTransportModel& turb,
     const word& combustionProperties
 )
 {

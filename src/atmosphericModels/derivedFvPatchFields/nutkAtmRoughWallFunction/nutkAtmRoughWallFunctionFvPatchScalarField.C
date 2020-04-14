@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nutkAtmRoughWallFunctionFvPatchScalarField.H"
-#include "turbulenceModel.H"
+#include "momentumTransportModel.H"
 #include "fvPatchFieldMapper.H"
 #include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
@@ -40,14 +40,15 @@ tmp<scalarField> nutkAtmRoughWallFunctionFvPatchScalarField::nut() const
 {
     const label patchi = patch().index();
 
-    const turbulenceModel& turbModel = db().lookupObject<turbulenceModel>
-    (
-        IOobject::groupName
+    const momentumTransportModel& turbModel =
+        db().lookupObject<momentumTransportModel>
         (
-            turbulenceModel::typeName,
-            internalField().group()
-        )
-    );
+            IOobject::groupName
+            (
+                momentumTransportModel::typeName,
+                internalField().group()
+            )
+        );
     const scalarField& y = turbModel.y()[patchi];
     const tmp<volScalarField> tk = turbModel.k();
     const volScalarField& k = tk();

@@ -41,7 +41,7 @@ FSD<ReactionThermo, ThermoType>::FSD
 (
     const word& modelType,
     const ReactionThermo& thermo,
-    const compressibleTurbulenceModel& turb,
+    const compressibleMomentumTransportModel& turb,
     const word& combustionProperties
 )
 :
@@ -174,7 +174,7 @@ void FSD<ReactionThermo, ThermoType>::calculateSourceNorm()
     const compressible::LESModel& lesModel =
         YO2.db().lookupObject<compressible::LESModel>
         (
-            turbulenceModel::typeName
+            momentumTransportModel::typeName
         );
 
     const volScalarField& delta = lesModel.delta();

@@ -119,7 +119,8 @@ void convectiveHeatTransferFvPatchScalarField::updateCoeffs()
             )
         );
 
-    const compressibleTurbulenceModel& turbModel = ttm.momentumTransport();
+    const compressibleMomentumTransportModel& turbModel =
+        ttm.momentumTransport();
 
     const scalarField alphaEffw(ttm.alphaEff(patchi));
 

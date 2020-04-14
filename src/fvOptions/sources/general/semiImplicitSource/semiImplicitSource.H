@@ -94,6 +94,7 @@ SourceFiles
 
 #include "cellSetOption.H"
 #include "Function1.H"
+#include "objectFunction1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -135,8 +136,11 @@ private:
         //- Volume normalisation
         scalar VDash_;
 
-        //- Explicit/Implicit source dicts
-        List<dictionary> fieldDicts_;
+        //- Explicit parts of the sources
+        PtrList<objectFunction1> fieldSu_;
+
+        //- Implicit parts of the sources
+        PtrList<Function1<scalar>> fieldSp_;
 
 
     // Private member functions

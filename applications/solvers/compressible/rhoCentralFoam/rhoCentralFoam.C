@@ -33,7 +33,7 @@ Description
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
 #include "psiThermo.H"
-#include "turbulentFluidThermoModel.H"
+#include "fluidThermoMomentumTransportModel.H"
 #include "fluidThermoTransportModel.H"
 #include "fixedRhoFvPatchScalarField.H"
 #include "directionInterpolate.H"

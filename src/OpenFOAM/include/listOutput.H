@@ -56,11 +56,11 @@ if (args.optionFound("listFvOptions"))
 }
 #endif
 
-#ifdef turbulentTransportModel_H
-if (args.optionFound("listTurbulenceModels"))
+#ifdef kinematicMomentumTransportModel_H
+if (args.optionFound("listMomentumTransportModels"))
 {
     Info<< "Turbulence models"
-        << incompressible::turbulenceModel::
+        << incompressible::momentumTransportModel::
            dictionaryConstructorTablePtr_->sortedToc()
         << endl;
 
@@ -75,11 +75,11 @@ if (args.optionFound("listTurbulenceModels"))
         << endl;
     listOptions = true;
 }
-#elif defined(turbulentFluidThermoModel_H)
-if (args.optionFound("listTurbulenceModels"))
+#elif defined(fluidThermoMomentumTransportModel_H)
+if (args.optionFound("listMomentumTransportModels"))
 {
     Info<< "Turbulence models"
-        << compressible::turbulenceModel::
+        << compressible::momentumTransportModel::
            dictionaryConstructorTablePtr_->sortedToc()
         << endl;
 

@@ -28,10 +28,10 @@ Description
     Stores turbulence fields on the mesh database for further manipulation.
 
     Fields are stored as copies of the original, with the prefix
-    "turbulenceModel:", e.g.:
+    "momentumTransportModel:", e.g.:
 
     \verbatim
-    turbulenceModel:R
+    momentumTransportModel:R
     \endverbatim
 
     Example of function object specification:
@@ -44,7 +44,7 @@ Description
         fields
         (
             R
-            devRhoReff
+            devTau
         );
     }
     \endverbatim
@@ -69,8 +69,8 @@ Usage
         alphat      | turbulence thermal diffusivity (compressible)
         alphaEff    | effective turbulence thermal diffusivity (compressible)
         R           | Reynolds stress tensor
-        devReff     | Deviatoric part of the effective Reynolds stress
-        devRhoReff  | Divergence of the Reynolds stress
+        devSigma     | Deviatoric part of the effective Reynolds stress
+        devTau  | Divergence of the Reynolds stress
     \endplaintable
 
 See also
@@ -116,7 +116,7 @@ public:
         muEff,
         alphaEff,
         R,
-        devRhoReff
+        devTau
     };
     static const NamedEnum<compressibleField, 8> compressibleFieldNames_;
 
@@ -128,7 +128,7 @@ public:
         nut,
         nuEff,
         R,
-        devReff
+        devSigma
     };
     static const NamedEnum<incompressibleField, 7> incompressibleFieldNames_;
 

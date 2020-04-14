@@ -4,7 +4,7 @@
     (
         betav*fvm::ddt(rho, U) + fvm::div(phi, U)
       + MRF.DDt(rho, U)
-      + turbulence->divDevRhoReff(U)
+      + turbulence->divDevTau(U)
      ==
         betav*rho*g
       + betav*fvOptions(rho, U)

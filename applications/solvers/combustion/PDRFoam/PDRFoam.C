@@ -69,7 +69,7 @@ Description
 
 #include "fvCFD.H"
 #include "psiuReactionThermo.H"
-#include "turbulentFluidThermoModel.H"
+#include "fluidThermoMomentumTransportModel.H"
 #include "fluidThermoTransportModel.H"
 #include "laminarFlameSpeed.H"
 #include "XiModel.H"

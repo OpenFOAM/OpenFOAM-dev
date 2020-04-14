@@ -67,9 +67,9 @@ volScalarField rho
 
 
 // Construct incompressible turbulence model
-autoPtr<incompressible::turbulenceModel> turbulence
+autoPtr<incompressible::momentumTransportModel> turbulence
 (
-    incompressible::turbulenceModel::New(U, phi, fluid)
+    incompressible::momentumTransportModel::New(U, phi, fluid)
 );
 
 

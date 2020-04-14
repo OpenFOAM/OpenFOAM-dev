@@ -1,17 +1,15 @@
 EXE_INC = \
-    -I./DPMTurbulenceModels/lnInclude \
+    -I./DPMMomentumTransportModels/lnInclude \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
     -I$(LIB_SRC)/lagrangian/intermediate/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
-    -I$(LIB_SRC)/transportModels/compressible/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
     -I$(LIB_SRC)/radiationModels/lnInclude \
-    -I$(LIB_SRC)/transportModels \
-    -I$(LIB_SRC)/transportModels/incompressible/singlePhaseTransportModel \
-    -I$(LIB_SRC)/TurbulenceModels/turbulenceModels/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/incompressible/lnInclude \
-    -I$(LIB_SRC)/TurbulenceModels/phaseIncompressible/lnInclude \
+    -I$(LIB_SRC)/transportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude \
+    -I$(LIB_SRC)/MomentumTransportModels/phaseIncompressible/lnInclude \
     -I$(LIB_SRC)/regionModels/regionModel/lnInclude \
     -I$(LIB_SRC)/regionModels/surfaceFilmModels/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
@@ -23,9 +21,9 @@ EXE_LIBS = \
     -llagrangianIntermediate \
     -llagrangianTurbulence \
     -lincompressibleTransportModels \
-    -lturbulenceModels \
-    -lincompressibleTurbulenceModels \
-    -lDPMTurbulenceModels \
+    -lmomentumTransportModels \
+    -lincompressibleMomentumTransportModels \
+    -lDPMMomentumTransportModels \
     -lfiniteVolume \
     -ldynamicFvMesh \
     -ltopoChangerFvMesh \

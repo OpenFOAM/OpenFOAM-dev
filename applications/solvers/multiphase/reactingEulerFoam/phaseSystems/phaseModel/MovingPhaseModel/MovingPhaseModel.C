@@ -25,7 +25,7 @@ License
 
 #include "MovingPhaseModel.H"
 #include "phaseSystem.H"
-#include "phaseCompressibleTurbulenceModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "phaseThermophysicalTransportModel.H"
 #include "fixedValueFvPatchFields.H"
 #include "slipFvPatchFields.H"
@@ -165,7 +165,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
     divU_(nullptr),
     turbulence_
     (
-        phaseCompressibleTurbulenceModel::New
+        phaseCompressibleMomentumTransportModel::New
         (
             *this,
             this->thermo().rho(),
@@ -265,8 +265,6 @@ template<class BasePhaseModel>
 void Foam::MovingPhaseModel<BasePhaseModel>::correctEnergyTransport()
 {
     BasePhaseModel::correctEnergyTransport();
-
-    turbulence_->correctEnergyTransport();
     thermophysicalTransport_->correct();
 }
 
@@ -291,7 +289,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::UEqn()
       + fvm::div(alphaRhoPhi_, U_)
       + fvm::SuSp(-this->continuityError(), U_)
       + this->fluid().MRF().DDt(alpha*rho, U_)
-      + turbulence_->divDevRhoReff(U_)
+      + turbulence_->divDevTau(U_)
     );
 }
 
@@ -310,7 +308,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::UfEqn()
         fvm::div(alphaRhoPhi_, U_)
       + fvm::SuSp(fvc::ddt(*this, rho) - this->continuityError(), U_)
       + this->fluid().MRF().DDt(alpha*rho, U_)
-      + turbulence_->divDevRhoReff(U_)
+      + turbulence_->divDevTau(U_)
     );
 }
 

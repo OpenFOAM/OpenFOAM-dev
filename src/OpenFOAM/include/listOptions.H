@@ -43,10 +43,10 @@ argList::addBoolOption
 );
 #endif
 
-#if defined(turbulentTransportModel_H) || defined(turbulentFluidThermoModel_H)
+#if defined(kinematicMomentumTransportModel_H) || defined(fluidThermoMomentumTransportModel_H)
 argList::addBoolOption
 (
-    "listTurbulenceModels",
-    "List turbulenceModels"
+    "listMomentumTransportModels",
+    "List momentumTransportModels"
 );
 #endif

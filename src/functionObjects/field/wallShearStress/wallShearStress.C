@@ -26,8 +26,8 @@ License
 #include "wallShearStress.H"
 #include "volFields.H"
 #include "surfaceFields.H"
-#include "turbulentTransportModel.H"
-#include "turbulentFluidThermoModel.H"
+#include "kinematicMomentumTransportModel.H"
+#include "fluidThermoMomentumTransportModel.H"
 #include "wallPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -60,7 +60,7 @@ void Foam::functionObjects::wallShearStress::writeFileHeader(const label i)
 Foam::tmp<Foam::volVectorField>
 Foam::functionObjects::wallShearStress::calcShearStress
 (
-    const volSymmTensorField& Reff
+    const volSymmTensorField& tau
 )
 {
     tmp<volVectorField> twallShearStress
@@ -69,7 +69,7 @@ Foam::functionObjects::wallShearStress::calcShearStress
         (
             type(),
             mesh_,
-            dimensionedVector(Reff.dimensions(), Zero)
+            dimensionedVector(tau.dimensions(), Zero)
         )
     );
 
@@ -82,9 +82,9 @@ Foam::functionObjects::wallShearStress::calcShearStress
 
         const vectorField& Sfp = mesh_.Sf().boundaryField()[patchi];
         const scalarField& magSfp = mesh_.magSf().boundaryField()[patchi];
-        const symmTensorField& Reffp = Reff.boundaryField()[patchi];
+        const symmTensorField& taup = tau.boundaryField()[patchi];
 
-        wallShearStressBf[patchi] = (-Sfp/magSfp) & Reffp;
+        wallShearStressBf[patchi] = (-Sfp/magSfp) & taup;
     }
 
     return twallShearStress;
@@ -177,23 +177,23 @@ bool Foam::functionObjects::wallShearStress::read(const dictionary& dict)
 
 bool Foam::functionObjects::wallShearStress::execute()
 {
-    typedef compressible::turbulenceModel cmpModel;
-    typedef incompressible::turbulenceModel icoModel;
+    typedef compressible::momentumTransportModel cmpModel;
+    typedef incompressible::momentumTransportModel icoModel;
 
-    tmp<volSymmTensorField> Reff;
-    if (mesh_.foundObject<cmpModel>(turbulenceModel::typeName))
+    tmp<volSymmTensorField> tau;
+    if (mesh_.foundObject<cmpModel>(momentumTransportModel::typeName))
     {
         const cmpModel& model =
-            mesh_.lookupObject<cmpModel>(turbulenceModel::typeName);
+            mesh_.lookupObject<cmpModel>(momentumTransportModel::typeName);
 
-        Reff = model.devRhoReff();
+        tau = model.devTau();
     }
-    else if (mesh_.foundObject<icoModel>(turbulenceModel::typeName))
+    else if (mesh_.foundObject<icoModel>(momentumTransportModel::typeName))
     {
         const icoModel& model =
-            mesh_.lookupObject<icoModel>(turbulenceModel::typeName);
+            mesh_.lookupObject<icoModel>(momentumTransportModel::typeName);
 
-        Reff = model.devReff();
+        tau = model.devSigma();
     }
     else
     {
@@ -204,7 +204,7 @@ bool Foam::functionObjects::wallShearStress::execute()
 
     word name(type());
 
-    return store(name, calcShearStress(Reff));
+    return store(name, calcShearStress(tau));
 }
 
 

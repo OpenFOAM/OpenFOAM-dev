@@ -3,8 +3,8 @@ EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 EXE_LIBS = \
-    -lturbulenceModels \
-    -lcompressibleTurbulenceModels \
+    -lmomentumTransportModels \
+    -lfluidThermoMomentumTransportModels \
     -lfiniteVolume \
     -lfvOptions \
     -lmeshTools

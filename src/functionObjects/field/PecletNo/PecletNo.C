@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "PecletNo.H"
-#include "turbulenceModel.H"
+#include "momentumTransportModel.H"
 #include "surfaceInterpolate.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -54,9 +54,9 @@ bool Foam::functionObjects::PecletNo::calc()
     {
         tmp<volScalarField> nuEff
         (
-            mesh_.lookupObject<turbulenceModel>
+            mesh_.lookupObject<momentumTransportModel>
             (
-                turbulenceModel::typeName
+                momentumTransportModel::typeName
             ).nuEff()
         );
 

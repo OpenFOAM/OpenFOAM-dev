@@ -2,7 +2,7 @@ fvVectorMatrix UcEqn
 (
     fvm::ddt(alphac, Uc) + fvm::div(alphaPhic, Uc)
   - fvm::Sp(fvc::ddt(alphac) + fvc::div(alphaPhic), Uc)
-  + continuousPhaseTurbulence->divDevRhoReff(Uc)
+  + continuousPhaseTurbulence->divDevTau(Uc)
  ==
     (1.0/rhoc)*cloudSU
 );

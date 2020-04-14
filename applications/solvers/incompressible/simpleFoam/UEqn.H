@@ -6,7 +6,7 @@
     (
         fvm::div(phi, U)
       + MRF.DDt(U)
-      + turbulence->divDevReff(U)
+      + turbulence->divDevSigma(U)
      ==
         fvOptions(U)
     );

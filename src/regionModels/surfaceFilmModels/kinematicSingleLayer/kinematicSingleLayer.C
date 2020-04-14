@@ -836,7 +836,7 @@ kinematicSingleLayer::kinematicSingleLayer
 
     transfer_(*this, coeffs_),
 
-    turbulence_(filmTurbulenceModel::New(*this, coeffs_)),
+    turbulence_(filmMomentumTransportModel::New(*this, coeffs_)),
 
     forces_(*this, coeffs_),
 
