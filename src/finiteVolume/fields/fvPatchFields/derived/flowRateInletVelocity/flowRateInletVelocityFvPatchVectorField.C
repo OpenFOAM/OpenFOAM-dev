@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,7 @@ flowRateInletVelocityFvPatchVectorField
     volumetric_(false),
     rhoName_("rho"),
     rhoInlet_(0.0),
+    alphaName_(word::null),
     extrapolateProfile_(false)
 {}
 
@@ -56,6 +57,7 @@ flowRateInletVelocityFvPatchVectorField
 :
     fixedValueFvPatchField<vector>(p, iF, dict, false),
     rhoInlet_(dict.lookupOrDefault<scalar>("rhoInlet", -vGreat)),
+    alphaName_(dict.lookupOrDefault<word>("alpha", word::null)),
     extrapolateProfile_
     (
         dict.lookupOrDefault<Switch>("extrapolateProfile", false)
@@ -111,6 +113,7 @@ flowRateInletVelocityFvPatchVectorField
     volumetric_(ptf.volumetric_),
     rhoName_(ptf.rhoName_),
     rhoInlet_(ptf.rhoInlet_),
+    alphaName_(ptf.alphaName_),
     extrapolateProfile_(ptf.extrapolateProfile_)
 {}
 
@@ -126,6 +129,7 @@ flowRateInletVelocityFvPatchVectorField
     volumetric_(ptf.volumetric_),
     rhoName_(ptf.rhoName_),
     rhoInlet_(ptf.rhoInlet_),
+    alphaName_(ptf.alphaName_),
     extrapolateProfile_(ptf.extrapolateProfile_)
 {}
 
@@ -142,15 +146,17 @@ flowRateInletVelocityFvPatchVectorField
     volumetric_(ptf.volumetric_),
     rhoName_(ptf.rhoName_),
     rhoInlet_(ptf.rhoInlet_),
+    alphaName_(ptf.alphaName_),
     extrapolateProfile_(ptf.extrapolateProfile_)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class RhoType>
+template<class AlphaType, class RhoType>
 void Foam::flowRateInletVelocityFvPatchVectorField::updateValues
 (
+    const AlphaType& alpha,
     const RhoType& rho
 )
 {
@@ -172,15 +178,18 @@ void Foam::flowRateInletVelocityFvPatchVectorField::updateValues
         nUp = min(nUp, scalar(0));
 
         const scalar flowRate = flowRate_->value(t);
-        const scalar estimatedFlowRate = -gSum(rho*(this->patch().magSf()*nUp));
+        const scalar estimatedFlowRate =
+            -gSum(alpha*rho*(this->patch().magSf()*nUp));
 
         if (estimatedFlowRate/flowRate > 0.5)
         {
-            nUp *= (mag(flowRate)/mag(estimatedFlowRate));
+            nUp *= mag(flowRate)/mag(estimatedFlowRate);
         }
         else
         {
-            nUp -= ((flowRate - estimatedFlowRate)/gSum(rho*patch().magSf()));
+            nUp -=
+                (flowRate - estimatedFlowRate)
+               /gSum(alpha*rho*patch().magSf());
         }
 
         // Add the corrected normal component of velocity to the patch velocity
@@ -191,22 +200,22 @@ void Foam::flowRateInletVelocityFvPatchVectorField::updateValues
     }
     else
     {
-        const scalar avgU = -flowRate_->value(t)/gSum(rho*patch().magSf());
+        const scalar avgU =
+            -flowRate_->value(t)/gSum(alpha*rho*patch().magSf());
         operator==(avgU*n);
     }
 }
 
 
-void Foam::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
+template<class AlphaType>
+void Foam::flowRateInletVelocityFvPatchVectorField::updateValues
+(
+    const AlphaType& alpha
+)
 {
-    if (updated())
-    {
-        return;
-    }
-
     if (volumetric_ || rhoName_ == "none")
     {
-        updateValues(one());
+        updateValues(alpha, one());
     }
     else
     {
@@ -216,7 +225,7 @@ void Foam::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
             const fvPatchField<scalar>& rhop =
                 patch().lookupPatchField<volScalarField, scalar>(rhoName_);
 
-            updateValues(rhop);
+            updateValues(alpha, rhop);
         }
         else
         {
@@ -229,8 +238,29 @@ void Foam::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
                     << exit(FatalError);
             }
 
-            updateValues(rhoInlet_);
+            updateValues(alpha, rhoInlet_);
         }
+    }
+}
+
+
+void Foam::flowRateInletVelocityFvPatchVectorField::updateCoeffs()
+{
+    if (updated())
+    {
+        return;
+    }
+
+    if (alphaName_ != word::null)
+    {
+        const fvPatchField<scalar>& alphap =
+            patch().lookupPatchField<volScalarField, scalar>(alphaName_);
+
+        updateValues(alphap);
+    }
+    else
+    {
+        updateValues(one());
     }
 
     fixedValueFvPatchVectorField::updateCoeffs();
@@ -246,6 +276,7 @@ void Foam::flowRateInletVelocityFvPatchVectorField::write(Ostream& os) const
         writeEntryIfDifferent<word>(os, "rho", "rho", rhoName_);
         writeEntryIfDifferent<scalar>(os, "rhoInlet", -vGreat, rhoInlet_);
     }
+    writeEntryIfDifferent<word>(os, "alpha", word::null, alphaName_);
     writeEntry(os, "extrapolateProfile", extrapolateProfile_);
     writeEntry(os, "value", *this);
 }
