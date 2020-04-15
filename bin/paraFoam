@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -61,10 +61,12 @@ error() {
 }
 
 pvExec () {
-    _opt=""
-    [ "$ParaView_GL" = mesa ] && _opt="--mesa"
-
-    paraview $_opt "$@"
+    if [ "$ParaView_GL" = mesa ]
+    then
+        LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ParaView_LIB_DIR/mesa paraview "$@"
+    else
+        paraview "$@"
+    fi
 }
 
 noPVReader () {

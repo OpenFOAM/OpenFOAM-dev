@@ -1,0 +1,7 @@
+NAME
+  libPVFoamReader_SM
+DESCRIPTION
+  OpenFOAM Foam reader for ParaView
+REQUIRES_MODULES
+  VTK::CommonCore
+  VTK::FiltersCore

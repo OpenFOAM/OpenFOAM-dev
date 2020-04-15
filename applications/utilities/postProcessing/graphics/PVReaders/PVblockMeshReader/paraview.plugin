@@ -1,0 +1,7 @@
+NAME
+  libPVblockMeshReader_SM
+DESCRIPTION
+  OpenFOAM blockMesh reader for ParaView
+REQUIRES_MODULES
+  VTK::CommonCore
+  VTK::FiltersCore

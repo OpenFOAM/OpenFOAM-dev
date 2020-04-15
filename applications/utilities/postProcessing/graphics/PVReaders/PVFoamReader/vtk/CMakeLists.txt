@@ -1,0 +1,17 @@
+VTK_MODULE_ADD_MODULE(PVFoamReader_VTK CLASSES vtkPVFoamReader)
+
+SET_TARGET_PROPERTIES(
+    PVFoamReader_VTK
+    PROPERTIES
+    LIBRARY_OUTPUT_DIRECTORY "$ENV{PV_PLUGIN_PATH}"
+)
+
+TARGET_LINK_LIBRARIES(
+    PVFoamReader_VTK
+    LINK_PUBLIC
+    vtkPVFoam
+    finiteVolume
+    OpenFOAM
+    Qt5::Core
+    Qt5::Gui
+)

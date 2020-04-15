@@ -65,7 +65,8 @@ done
 #export ParaView_VERSION=5.0.1
 #export ParaView_VERSION=5.4.0
 #export ParaView_VERSION=5.5.0
-export ParaView_VERSION=5.6.0
+#export ParaView_VERSION=5.6.0
+export ParaView_VERSION=5.8.0
 export ParaView_MAJOR=detect
 
 #export ParaView_GL=system
@@ -153,7 +154,7 @@ then
     # Alias paraview to launch with mesa if necessary
     if [ "$ParaView_GL" = mesa ]
     then
-        alias paraview="paraview --mesa"
+        alias paraview='LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ParaView_LIB_DIR/mesa paraview'
     fi
 else
     unset PV_PLUGIN_PATH

@@ -4,45 +4,51 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
-case "$ParaView_VERSION" in
-4* | 5*)
-    if [ -d "$ParaView_DIR" -a -r "$ParaView_DIR" ]
+if [ ! -d "$ParaView_DIR" ]
+then
+    echo "    Warning: ParaView not found in $ParaView_DIR. Skipping."
+    exit 0
+fi
+
+if [ -z "$PV_PLUGIN_PATH" ]
+then
+    echo "    Error: \$PV_PLUGIN_PATH is unset."
+    exit 1
+fi
+
+# Ensure CMake gets the correct C/C++ compilers
+[ -n "$WM_CC" ] && export CC="$WM_CC"
+[ -n "$WM_CXX" ] && export CXX="$WM_CXX"
+
+wmake $targetType vtkPVblockMesh
+wmake $targetType vtkPVFoam
+
+if [ "$targetType" != "objects" ]
+then
+    if $WM_PROJECT_DIR/bin/tools/foamVersionCompare $ParaView_VERSION ge 5.7.0
     then
-        [ -n "$PV_PLUGIN_PATH" ] || {
-            echo "$0 : PV_PLUGIN_PATH not valid - it is unset"
-            exit 1
-        }
-
-        # ensure CMake gets the correct C/C++ compilers
-        [ -n "$WM_CC" ] && export CC="$WM_CC"
-        [ -n "$WM_CXX" ] && export CXX="$WM_CXX"
-
-        wmake $targetType vtkPVblockMesh
-        wmake $targetType vtkPVFoam
-
-        if [ "$targetType" != "objects" ]
-        then
-            (
-                cd PVblockMeshReader
-                mkdir -p Make/$WM_OPTIONS > /dev/null 2>&1
-                cd Make/$WM_OPTIONS
-                cmake ../..
-                make
-            )
-
-            (
-                cd PVFoamReader
-                mkdir -p Make/$WM_OPTIONS > /dev/null 2>&1
-                cd Make/$WM_OPTIONS
-                cmake ../..
-                make
-            )
-        fi
-
+        (
+            mkdir -p Make/$WM_OPTIONS > /dev/null 2>&1
+            cd Make/$WM_OPTIONS
+            cmake ../..
+            make
+        )
     else
-        echo "    ERROR: ParaView not found in $ParaView_DIR"
+        (
+            cd PVblockMeshReader
+            mkdir -p Make/$WM_OPTIONS > /dev/null 2>&1
+            cd Make/$WM_OPTIONS
+            cmake ../..
+            make
+        )
+        (
+            cd PVFoamReader
+            mkdir -p Make/$WM_OPTIONS > /dev/null 2>&1
+            cd Make/$WM_OPTIONS
+            cmake ../..
+            make
+        )
     fi
-    ;;
-esac
+fi
 
 #------------------------------------------------------------------------------

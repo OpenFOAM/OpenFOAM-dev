@@ -4,7 +4,9 @@ cd ${0%/*} || exit 1    # Run from this directory
 wclean libso vtkPVblockMesh
 wclean libso vtkPVFoam
 
-rm -f $FOAM_LIBBIN/libPVblockMeshReader*  2>/dev/null
+rm -rf Make
+
+rm -f $FOAM_LIBBIN/libPVblockMeshReader* 2>/dev/null
 rm -rf PVblockMeshReader/Make
 
 rm -f $FOAM_LIBBIN/libPVFoamReader* 2>/dev/null

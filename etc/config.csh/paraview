@@ -60,7 +60,8 @@ end
 #setenv ParaView_VERSION 5.0.1
 #setenv ParaView_VERSION 5.4.0
 #setenv ParaView_VERSION 5.5.0
-setenv ParaView_VERSION 5.6.0
+#setenv ParaView_VERSION 5.6.0
+setenv ParaView_VERSION 5.8.0
 setenv ParaView_MAJOR detect
 
 #setenv ParaView_GL system
@@ -134,7 +135,7 @@ if ( -d $ParaView_DIR || -d $paraviewSrcDir ) then
 
     # Alias paraview to launch with mesa if necessary
     if ("$ParaView_GL" == mesa) then
-        alias paraview 'paraview --mesa'
+        alias paraview 'LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ParaView_LIB_DIR/mesa paraview'
     endif
 else
     unsetenv PV_PLUGIN_PATH

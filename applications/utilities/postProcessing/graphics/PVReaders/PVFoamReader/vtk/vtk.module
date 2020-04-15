@@ -1,0 +1,6 @@
+NAME
+  PVFoamReader_VTK
+DEPENDS
+  VTK::FiltersCore
+PRIVATE_DEPENDS
+  VTK::CommonCore
