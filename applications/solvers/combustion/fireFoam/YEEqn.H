@@ -23,7 +23,7 @@ tmp<fv::convectionScheme<scalar>> mvConvection
             (
                 fvm::ddt(rho, Yi)
               + mvConvection->fvmDiv(phi, Yi)
-              - fvm::laplacian(thermophysicalTransport->alphaEff(), Yi)
+              + thermophysicalTransport->divj(Yi)
               ==
                 parcels.SYi(i, Yi)
               + surfaceFilm.Srho(i)
@@ -63,7 +63,7 @@ tmp<fv::convectionScheme<scalar>> mvConvection
             )
           : -dpdt
         )
-      - fvm::laplacian(thermophysicalTransport->alphaEff(), he)
+      + thermophysicalTransport->divq(he)
      ==
         combustion->Qdot()
       + radiation->Sh(thermo, he)

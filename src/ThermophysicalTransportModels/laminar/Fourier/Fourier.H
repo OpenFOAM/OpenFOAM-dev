@@ -98,6 +98,12 @@ public:
         //- Return the source term for the energy equation
         virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
 
+        //- Return the specie flux for the given specie mass-fraction
+        virtual tmp<volVectorField> j(const volScalarField& Yi) const;
+
+        //- Return the source term for the given specie mass-fraction equation
+        virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
+
         //- Correct the Fourier viscosity
         virtual void correct();
 };

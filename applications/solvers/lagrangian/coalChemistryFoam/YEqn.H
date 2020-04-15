@@ -24,7 +24,7 @@ tmp<fv::convectionScheme<scalar>> mvConvection
             (
                 fvm::ddt(rho, Yi)
               + mvConvection->fvmDiv(phi, Yi)
-              - fvm::laplacian(thermophysicalTransport->alphaEff(), Yi)
+              + thermophysicalTransport->divj(Yi)
               ==
                 coalParcels.SYi(i, Yi)
               + combustion->R(Yi)

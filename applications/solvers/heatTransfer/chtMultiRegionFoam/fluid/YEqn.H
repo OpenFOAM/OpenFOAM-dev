@@ -42,7 +42,7 @@ if (Y.size())
             (
                 fvm::ddt(rho, Yi)
               + mvConvection->fvmDiv(phi, Yi)
-              - fvm::laplacian(thermophysicalTransport.alphaEff(), Yi)
+              + thermophysicalTransport.divj(Yi)
              ==
                 reaction.R(Yi)
               + fvOptions(rho, Yi)

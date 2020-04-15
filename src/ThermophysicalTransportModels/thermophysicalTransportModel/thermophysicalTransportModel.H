@@ -122,6 +122,12 @@ public:
         //- Return the source term for the energy equation
         virtual tmp<fvScalarMatrix> divq(volScalarField& he) const = 0;
 
+        //- Return the specie flux for the given specie mass-fraction
+        virtual tmp<volVectorField> j(const volScalarField& Yi) const = 0;
+
+        //- Return the source term for the given specie mass-fraction equation
+        virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const = 0;
+
         //- Solve the thermophysical transport model equations
         //  and correct the transport coefficients
         virtual void correct() = 0;

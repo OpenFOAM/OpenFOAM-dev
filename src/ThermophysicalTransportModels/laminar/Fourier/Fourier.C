@@ -76,7 +76,7 @@ tmp<volVectorField>Fourier<BasicThermophysicalTransportModel>::q() const
             "q",
             this->momentumTransport().alphaRhoPhi().group()
         ),
-        -this->alpha()*fvc::grad(this->thermo().he())
+        -this->alpha()*this->thermo().alpha()*fvc::grad(this->thermo().he())
     );
 }
 
@@ -85,7 +85,33 @@ template<class BasicThermophysicalTransportModel>
 tmp<fvScalarMatrix>
 Fourier<BasicThermophysicalTransportModel>::divq(volScalarField& he) const
 {
-    return -fvm::laplacian(this->alpha(), he);
+    return -fvm::laplacian(this->alpha()*this->thermo().alpha(), he);
+}
+
+
+template<class BasicThermophysicalTransportModel>
+tmp<volVectorField>Fourier<BasicThermophysicalTransportModel>::j
+(
+    const volScalarField& Yi
+) const
+{
+    return volVectorField::New
+    (
+        IOobject::groupName
+        (
+            "j(" + Yi.name() + ')',
+            this->momentumTransport().alphaRhoPhi().group()
+        ),
+        -this->alpha()*this->thermo().alpha()*fvc::grad(Yi)
+    );
+}
+
+
+template<class BasicThermophysicalTransportModel>
+tmp<fvScalarMatrix>
+Fourier<BasicThermophysicalTransportModel>::divj(volScalarField& Yi) const
+{
+    return -fvm::laplacian(this->alpha()*this->thermo().alpha(), Yi);
 }
 
 

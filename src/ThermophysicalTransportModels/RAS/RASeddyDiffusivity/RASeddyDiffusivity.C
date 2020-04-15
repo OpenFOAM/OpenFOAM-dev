@@ -122,8 +122,7 @@ tmp<volVectorField>eddyDiffusivity<BasicThermophysicalTransportModel>::q() const
             "q",
             this->momentumTransport().alphaRhoPhi().group()
         ),
-       -this->alphaEff()
-       *fvc::grad(this->thermo().he())
+       -this->alpha()*this->alphaEff()*fvc::grad(this->thermo().he())
     );
 }
 
@@ -135,7 +134,36 @@ eddyDiffusivity<BasicThermophysicalTransportModel>::divq
     volScalarField& he
 ) const
 {
-    return -fvm::laplacian(this->alphaEff(), he);
+    return -fvm::laplacian(this->alpha()*this->alphaEff(), he);
+}
+
+
+template<class BasicThermophysicalTransportModel>
+tmp<volVectorField>eddyDiffusivity<BasicThermophysicalTransportModel>::j
+(
+    const volScalarField& Yi
+) const
+{
+    return volVectorField::New
+    (
+        IOobject::groupName
+        (
+            "j(" + Yi.name() + ')',
+            this->momentumTransport().alphaRhoPhi().group()
+        ),
+        -this->alpha()*this->alphaEff()*fvc::grad(Yi)
+    );
+}
+
+
+template<class BasicThermophysicalTransportModel>
+tmp<fvScalarMatrix>
+eddyDiffusivity<BasicThermophysicalTransportModel>::divj
+(
+    volScalarField& Yi
+) const
+{
+    return -fvm::laplacian(this->alpha()*this->alphaEff(), Yi);
 }
 
 

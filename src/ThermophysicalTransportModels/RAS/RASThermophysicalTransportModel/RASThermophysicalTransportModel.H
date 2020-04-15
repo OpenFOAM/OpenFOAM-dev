@@ -200,12 +200,6 @@ public:
             return this->thermo().alphahe(patchi);
         }
 
-        //- Return the heat flux
-        virtual tmp<volVectorField> q() const = 0;
-
-        //- Return the source term for the energy equation
-        virtual tmp<fvScalarMatrix> divq(volScalarField& he) const = 0;
-
         //- Correct the RAS transport
         virtual void correct();
 
