@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,6 +46,7 @@ Usage
         volumetricFlowRate | volumetric flow rate [m^3/s]| no |
         rho          | density field name      | no          | rho
         rhoInlet     | inlet density           | no          |
+        alpha        | volume fraction field name | no       |
         extrapolateProfile | Extrapolate velocity profile | no | false
     \endtable
 
@@ -125,15 +126,25 @@ class flowRateInletVelocityFvPatchVectorField
         //- Rho initialisation value (for start; if value not supplied)
         scalar rhoInlet_;
 
+        //- Name of the volume fraction field used to convert to interstitial
+        //  velocity
+        word alphaName_;
+
         //- Set true to extrapolate the velocity profile from the interior
         Switch extrapolateProfile_;
 
 
     // Private Member Functions
 
-        //- Update the patch values given the appropriate density type and value
-        template<class RhoType>
-        void updateValues(const RhoType& rho);
+        //- Update the patch values given the appropriate volume fraction and
+        //  density types and values
+        template<class AlphaType, class RhoType>
+        void updateValues(const AlphaType& alpha, const RhoType& rho);
+
+        //- Update the patch values given the appropriate volume fraction type
+        //  and values
+        template<class AlphaType>
+        void updateValues(const AlphaType& alpha);
 
 
 public:
