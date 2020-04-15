@@ -328,7 +328,7 @@ public:
             virtual tmp<volScalarField> K() const = 0;
 
 
-        // Transport
+        // Transport properties
 
             //- Return the laminar dynamic viscosity
             virtual tmp<volScalarField> mu() const = 0;
@@ -342,83 +342,9 @@ public:
             //- Return the laminar kinematic viscosity on a patch
             virtual tmp<scalarField> nu(const label patchi) const = 0;
 
-            //- Thermal diffusivity for enthalpy of mixture [kg/m/s]
-            virtual tmp<volScalarField> alpha() const = 0;
-
-            //- Thermal diffusivity for enthalpy of mixture for patch [kg/m/s]
-            virtual tmp<scalarField> alpha(const label patchi) const = 0;
-
-            //- Thermal diffusivity for temperature of mixture [W/m/K]
-            virtual tmp<volScalarField> kappa() const = 0;
-
-            //- Thermal diffusivity for temperature of mixture
-            //  for patch [W/m/K]
-            virtual tmp<scalarField> kappa(const label patchi) const = 0;
-
-            //- Thermal diffusivity for energy of mixture [kg/m/s]
-            virtual tmp<volScalarField> alphahe() const = 0;
-
-            //- Thermal diffusivity for energy of mixture for patch [kg/m/s]
-            virtual tmp<scalarField> alphahe(const label patchi) const = 0;
-
-            //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture [W/m/K]
-            virtual tmp<volScalarField> kappaEff
-            (
-                const volScalarField& alphat
-            ) const = 0;
-
-            //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture for patch [W/m/K]
-            virtual tmp<scalarField> kappaEff
-            (
-                const scalarField& alphat,
-                const label patchi
-            ) const = 0;
-
-            //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
-            virtual tmp<volScalarField> alphaEff
-            (
-                const volScalarField& alphat
-            ) const = 0;
-
-            //- Effective thermal turbulent diffusivity of mixture
-            //  for patch [kg/m/s]
-            virtual tmp<scalarField> alphaEff
-            (
-                const scalarField& alphat,
-                const label patchi
-            ) const = 0;
-
-
-        // Turbulence
-
-            //- Return the turbulent dynamic viscosity
-            virtual tmp<volScalarField> mut() const = 0;
-
-            //- Return the effective dynamic viscosity
-            virtual tmp<volScalarField> muEff() const = 0;
-
-            //- Return the turbulent kinematic viscosity
-            virtual tmp<volScalarField> nut() const = 0;
-
-            //- Return the effective kinematic viscosity
-            virtual tmp<volScalarField> nuEff() const = 0;
-
-            //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture [W/m/K]
-            virtual tmp<volScalarField> kappaEff() const = 0;
-
             //- Effective thermal turbulent diffusivity for temperature
             //  of mixture for patch [W/m/K]
             virtual tmp<scalarField> kappaEff(const label patchi) const = 0;
-
-            //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
-            virtual tmp<volScalarField> alphaEff() const = 0;
-
-            //- Effective thermal turbulent diffusivity of mixture
-            //  for patch [kg/m/s]
-            virtual tmp<scalarField> alphaEff(const label patchi) const = 0;
 
             //- Return the turbulent kinetic energy
             virtual tmp<volScalarField> k() const = 0;

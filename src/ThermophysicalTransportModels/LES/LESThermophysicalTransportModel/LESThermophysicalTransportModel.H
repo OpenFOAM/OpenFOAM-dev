@@ -140,53 +140,20 @@ public:
             return coeffDict_;
         }
 
-        //- Thermal diffusivity for temperature of mixture [W/m/K]
-        virtual tmp<volScalarField> kappa() const
-        {
-            return this->thermo().kappa();
-        }
-
-        //- Thermal diffusivity for temperature of mixture
-        //  for patch [W/m/K]
-        virtual tmp<scalarField> kappa(const label patchi) const
-        {
-            return this->thermo().kappa(patchi);
-        }
-
         //- Effective thermal turbulent diffusivity for temperature
         //  of mixture [W/m/K]
-        virtual tmp<volScalarField> kappaEff() const
-        {
-            return volScalarField::New
-            (
-                "kappaEff",
-                this->thermo().kappa()
-            );
-        }
+        virtual tmp<volScalarField> kappaEff() const = 0;
 
         //- Effective thermal turbulent diffusivity for temperature
         //  of mixture for patch [W/m/K]
-        virtual tmp<scalarField> kappaEff(const label patchi) const
-        {
-            return kappa(patchi);
-        }
+        virtual tmp<scalarField> kappaEff(const label patchi) const = 0;
 
         //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
-        virtual tmp<volScalarField> alphaEff() const
-        {
-            return volScalarField::New
-            (
-                "alphaEff",
-                this->thermo().alphahe()
-            );
-        }
+        virtual tmp<volScalarField> alphaEff() const = 0;
 
         //- Effective thermal turbulent diffusivity of mixture
         //  for patch [kg/m/s]
-        virtual tmp<scalarField> alphaEff(const label patchi) const
-        {
-            return this->thermo().alphahe(patchi);
-        }
+        virtual tmp<scalarField> alphaEff(const label patchi) const = 0;
 
         //- Correct the LES transport
         virtual void correct();

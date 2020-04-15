@@ -140,19 +140,6 @@ public:
             return coeffDict_;
         }
 
-        //- Thermal diffusivity for temperature of mixture [W/m/K]
-        virtual tmp<volScalarField> kappa() const
-        {
-            return this->thermo().kappa();
-        }
-
-        //- Thermal diffusivity for temperature of mixture
-        //  for patch [W/m/K]
-        virtual tmp<scalarField> kappa(const label patchi) const
-        {
-            return this->thermo().kappa(patchi);
-        }
-
         //- Effective thermal turbulent diffusivity for temperature
         //  of mixture [W/m/K]
         virtual tmp<volScalarField> kappaEff() const
@@ -168,7 +155,7 @@ public:
         //  of mixture for patch [W/m/K]
         virtual tmp<scalarField> kappaEff(const label patchi) const
         {
-            return kappa(patchi);
+            return this->thermo().kappa(patchi);
         }
 
         //- Effective thermal turbulent diffusivity of mixture [kg/m/s]

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ Foam::heatTransferModels::Gunn::K(const scalar residualAlpha) const
 
     return
         6*max(pair_.dispersed(), residualAlpha)
-       *pair_.continuous().kappa()
+       *pair_.continuous().thermo().kappa()
        *Nu/sqr(pair_.dispersed().d());
 }
 

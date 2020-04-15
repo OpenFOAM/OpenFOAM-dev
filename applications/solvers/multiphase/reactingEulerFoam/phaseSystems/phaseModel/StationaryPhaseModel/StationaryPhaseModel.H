@@ -133,38 +133,10 @@ public:
             virtual void divU(tmp<volScalarField> divU);
 
 
-        // Turbulence
-
-            //- Return the turbulent dynamic viscosity
-            virtual tmp<volScalarField> mut() const;
-
-            //- Return the effective dynamic viscosity
-            virtual tmp<volScalarField> muEff() const;
-
-            //- Return the turbulent kinematic viscosity
-            virtual tmp<volScalarField> nut() const;
-
-            //- Return the effective kinematic viscosity
-            virtual tmp<volScalarField> nuEff() const;
-
-            //- Effective thermal turbulent diffusivity for temperature
-            //  of mixture for patch [W/m/K]
-            using BasePhaseModel::kappaEff;
-
-            //- Return the effective thermal conductivity
-            virtual tmp<volScalarField> kappaEff() const;
+        // Momentum transport
 
             //- Return the effective thermal conductivity on a patch
             virtual tmp<scalarField> kappaEff(const label patchi) const;
-
-            //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
-            using BasePhaseModel::alphaEff;
-
-            //- Return the effective thermal diffusivity
-            virtual tmp<volScalarField> alphaEff() const;
-
-            //- Return the effective thermal conductivity on a patch
-            virtual tmp<scalarField> alphaEff(const label patchi) const;
 
             //- Return the turbulent kinetic energy
             virtual tmp<volScalarField> k() const;
@@ -172,6 +144,12 @@ public:
             //- Return the phase-pressure'
             //  (derivative of phase-pressure w.r.t. phase-fraction)
             virtual tmp<volScalarField> pPrime() const;
+
+
+        // Thermophysical transport
+
+            //- Return the source term for the energy equation
+            virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
 };
 
 

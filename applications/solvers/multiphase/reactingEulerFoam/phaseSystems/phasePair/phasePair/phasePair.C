@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,7 +132,7 @@ Foam::tmp<Foam::volScalarField> Foam::phasePair::Pr() const
          continuous().nu()
         *continuous().thermo().Cpv()
         *continuous().rho()
-        /continuous().kappa();
+        /continuous().thermo().kappa();
 }
 
 

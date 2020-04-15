@@ -149,13 +149,7 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::YiEqn(volScalarField& Yi)
     (
         fvm::ddt(alpha, rho, Yi)
       + fvm::div(alphaRhoPhi, Yi, "div(" + alphaRhoPhi.name() + ",Yi)")
-
-      - fvm::laplacian
-        (
-            fvc::interpolate(alpha)
-           *fvc::interpolate(this->alphaEff()),
-            Yi
-        )
+      + this->divj(Yi)
      ==
         alpha*this->R(Yi)
 

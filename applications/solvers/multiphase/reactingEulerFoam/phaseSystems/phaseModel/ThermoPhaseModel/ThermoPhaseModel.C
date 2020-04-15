@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,109 +138,6 @@ Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::nu
 ) const
 {
     return thermo_->nu(patchi);
-}
-
-
-template<class BasePhaseModel, class ThermoType>
-Foam::tmp<Foam::volScalarField>
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::kappa() const
-{
-    return thermo_->kappa();
-}
-
-
-template<class BasePhaseModel, class ThermoType>
-Foam::tmp<Foam::scalarField>
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::kappa
-(
-    const label patchi
-) const
-{
-    return thermo_->kappa(patchi);
-}
-
-
-template<class BasePhaseModel, class ThermoType>
-Foam::tmp<Foam::volScalarField>
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::alphahe() const
-{
-    return thermo_->alphahe();
-}
-
-
-template<class BasePhaseModel, class ThermoType>
-Foam::tmp<Foam::scalarField>
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::alphahe
-(
-    const label patchi
-) const
-{
-    return thermo_->alphahe(patchi);
-}
-
-
-template<class BasePhaseModel, class ThermoType>
-Foam::tmp<Foam::volScalarField>
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::kappaEff
-(
-    const volScalarField& alphat
-) const
-{
-    return thermo_->kappaEff(alphat);
-}
-
-
-template<class BasePhaseModel, class ThermoType>
-Foam::tmp<Foam::scalarField>
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::kappaEff
-(
-    const scalarField& alphat,
-    const label patchi
-) const
-{
-    return thermo_->kappaEff(alphat, patchi);
-}
-
-
-template<class BasePhaseModel, class ThermoType>
-Foam::tmp<Foam::volScalarField>
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::alpha() const
-{
-    return thermo_->alpha();
-}
-
-
-template<class BasePhaseModel, class ThermoType>
-Foam::tmp<Foam::scalarField>
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::alpha
-(
-    const label patchi
-) const
-{
-    return thermo_->alpha(patchi);
-}
-
-
-template<class BasePhaseModel, class ThermoType>
-Foam::tmp<Foam::volScalarField>
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::alphaEff
-(
-    const volScalarField& alphat
-) const
-{
-    return thermo_->alphaEff(alphat);
-}
-
-
-template<class BasePhaseModel, class ThermoType>
-Foam::tmp<Foam::scalarField>
-Foam::ThermoPhaseModel<BasePhaseModel, ThermoType>::alphaEff
-(
-    const scalarField& alphat,
-    const label patchi
-) const
-{
-    return thermo_->alphaEff(alphat, patchi);
 }
 
 

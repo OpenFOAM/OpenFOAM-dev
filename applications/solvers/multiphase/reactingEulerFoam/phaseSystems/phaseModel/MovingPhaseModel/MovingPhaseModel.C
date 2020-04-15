@@ -444,66 +444,10 @@ void Foam::MovingPhaseModel<BasePhaseModel>::divU(tmp<volScalarField> divU)
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
-Foam::MovingPhaseModel<BasePhaseModel>::mut() const
-{
-    return turbulence_->mut();
-}
-
-
-template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
-Foam::MovingPhaseModel<BasePhaseModel>::muEff() const
-{
-    return turbulence_->muEff();
-}
-
-
-template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
-Foam::MovingPhaseModel<BasePhaseModel>::nut() const
-{
-    return turbulence_->nut();
-}
-
-
-template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
-Foam::MovingPhaseModel<BasePhaseModel>::nuEff() const
-{
-    return turbulence_->nuEff();
-}
-
-
-template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
-Foam::MovingPhaseModel<BasePhaseModel>::kappaEff() const
-{
-    return thermophysicalTransport_->kappaEff();
-}
-
-
-template<class BasePhaseModel>
 Foam::tmp<Foam::scalarField>
 Foam::MovingPhaseModel<BasePhaseModel>::kappaEff(const label patchi) const
 {
     return thermophysicalTransport_->kappaEff(patchi);
-}
-
-
-template<class BasePhaseModel>
-Foam::tmp<Foam::volScalarField>
-Foam::MovingPhaseModel<BasePhaseModel>::alphaEff() const
-{
-    return thermophysicalTransport_->alphaEff();
-}
-
-
-template<class BasePhaseModel>
-Foam::tmp<Foam::scalarField>
-Foam::MovingPhaseModel<BasePhaseModel>::alphaEff(const label patchi) const
-{
-    return thermophysicalTransport_->alphaEff(patchi);
 }
 
 
@@ -520,6 +464,22 @@ Foam::tmp<Foam::volScalarField>
 Foam::MovingPhaseModel<BasePhaseModel>::pPrime() const
 {
     return turbulence_->pPrime();
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::MovingPhaseModel<BasePhaseModel>::divq(volScalarField& he) const
+{
+    return thermophysicalTransport_->divq(he);
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::MovingPhaseModel<BasePhaseModel>::divj(volScalarField& Yi) const
+{
+    return thermophysicalTransport_->divj(Yi);
 }
 
 

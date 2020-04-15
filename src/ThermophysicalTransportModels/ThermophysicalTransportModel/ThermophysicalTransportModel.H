@@ -125,6 +125,12 @@ public:
             return momentumTransport_.transport();
         }
 
+        //- Access function to phase fraction
+        const alphaField& alpha() const
+        {
+            return momentumTransport_.alpha();
+        }
+
 
     // Member Operators
 

@@ -117,13 +117,7 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
 
       + fvc::ddt(alpha, this->rho(), K) + fvc::div(alphaRhoPhi, K)
       - contErr*K
-
-      - fvm::laplacian
-        (
-            fvc::interpolate(alpha)
-           *fvc::interpolate(this->alphaEff()),
-            he
-        )
+      + this->divq(he)
      ==
         alpha*this->Qdot()
     );
