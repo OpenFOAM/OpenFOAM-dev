@@ -78,33 +78,27 @@ Foam::functionObjects::wallHeatFlux::calcWallHeatFlux
     volScalarField::Boundary& wallHeatFluxBf =
         twallHeatFlux.ref().boundaryFieldRef();
 
-    const volScalarField::Boundary& heBf =
-        he.boundaryField();
+    const volScalarField::Boundary& heBf = he.boundaryField();
+    const volScalarField::Boundary& alphaBf = alpha.boundaryField();
 
-    const volScalarField::Boundary& alphaBf =
-        alpha.boundaryField();
-
-    forAll(wallHeatFluxBf, patchi)
+    forAllConstIter(labelHashSet, patchSet_, iter)
     {
-        if (!wallHeatFluxBf[patchi].coupled())
-        {
-            wallHeatFluxBf[patchi] = alphaBf[patchi]*heBf[patchi].snGrad();
-        }
+        const label patchi = iter.key();
+
+        wallHeatFluxBf[patchi] = alphaBf[patchi]*heBf[patchi].snGrad();
     }
 
     if (foundObject<volScalarField>("qr"))
     {
         const volScalarField& qr = lookupObject<volScalarField>("qr");
 
-        const volScalarField::Boundary& radHeatFluxBf =
-            qr.boundaryField();
+        const volScalarField::Boundary& radHeatFluxBf = qr.boundaryField();
 
-        forAll(wallHeatFluxBf, patchi)
+        forAllConstIter(labelHashSet, patchSet_, iter)
         {
-            if (!wallHeatFluxBf[patchi].coupled())
-            {
-                wallHeatFluxBf[patchi] -= radHeatFluxBf[patchi];
-            }
+            const label patchi = iter.key();
+
+            wallHeatFluxBf[patchi] -= radHeatFluxBf[patchi];
         }
     }
 
