@@ -140,18 +140,6 @@ public:
             return coeffDict_;
         }
 
-        //- Thermal diffusivity for enthalpy of mixture [kg/m/s]
-        virtual tmp<volScalarField> alpha() const
-        {
-            return this->thermo().alpha();
-        }
-
-        //- Thermal diffusivity for enthalpy of mixture for patch [kg/m/s]
-        virtual tmp<scalarField> alpha(const label patchi) const
-        {
-            return this->thermo().alpha(patchi);
-        }
-
         //- Thermal diffusivity for temperature of mixture [W/m/K]
         virtual tmp<volScalarField> kappa() const
         {
