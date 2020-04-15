@@ -41,7 +41,7 @@ boundary
 (
     cone
     {
-        type patch;
+        type wall;
         faces
         (
             (1 5 4 0)
