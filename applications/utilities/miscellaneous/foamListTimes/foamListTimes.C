@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,7 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
+    entry::disableFunctionEntries = true;
     writeInfoHeader = false;
 
     argList::addNote("List times using timeSelector");
@@ -64,6 +65,12 @@ int main(int argc, char *argv[])
         "rm",
         "remove selected time directories"
     );
+    argList::addBoolOption
+    (
+        "withFunctionObjects",
+        "execute functionObjects"
+    );
+
     #include "setRootCase.H"
 
     label nProcs = 0;
