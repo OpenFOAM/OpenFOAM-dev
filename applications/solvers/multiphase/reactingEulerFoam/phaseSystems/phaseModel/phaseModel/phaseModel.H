@@ -234,12 +234,6 @@ public:
             //- Return the thermophysical model
             virtual const rhoThermo& thermo() const = 0;
 
-            //- Cast to the thermophysical model
-            operator const rhoThermo&() const
-            {
-                return thermo();
-            }
-
             //- Access the thermophysical model
             virtual rhoThermo& thermoRef() = 0;
 
@@ -328,19 +322,7 @@ public:
             virtual tmp<volScalarField> K() const = 0;
 
 
-        // Transport properties
-
-            //- Return the laminar dynamic viscosity
-            virtual tmp<volScalarField> mu() const = 0;
-
-            //- Return the laminar dynamic viscosity on a patch
-            virtual tmp<scalarField> mu(const label patchi) const = 0;
-
-            //- Return the laminar kinematic viscosity
-            virtual tmp<volScalarField> nu() const = 0;
-
-            //- Return the laminar kinematic viscosity on a patch
-            virtual tmp<scalarField> nu(const label patchi) const = 0;
+        // Transport
 
             //- Effective thermal turbulent diffusivity for temperature
             //  of mixture for patch [W/m/K]

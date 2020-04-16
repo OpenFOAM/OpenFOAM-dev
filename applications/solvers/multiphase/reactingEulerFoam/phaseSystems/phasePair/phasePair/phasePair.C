@@ -122,14 +122,14 @@ Foam::tmp<Foam::volVectorField> Foam::phasePair::Ur() const
 
 Foam::tmp<Foam::volScalarField> Foam::phasePair::Re() const
 {
-    return magUr()*dispersed().d()/continuous().nu();
+    return magUr()*dispersed().d()/continuous().thermo().nu();
 }
 
 
 Foam::tmp<Foam::volScalarField> Foam::phasePair::Pr() const
 {
     return
-         continuous().nu()
+         continuous().thermo().nu()
         *continuous().thermo().Cpv()
         *continuous().rho()
         /continuous().thermo().kappa();
@@ -178,10 +178,10 @@ Foam::tmp<Foam::volScalarField> Foam::phasePair::Mo() const
 {
     return
         mag(g())
-       *continuous().nu()
+       *continuous().thermo().nu()
        *pow3
         (
-            continuous().nu()
+            continuous().thermo().nu()
            *continuous().rho()
            /sigma()
         );

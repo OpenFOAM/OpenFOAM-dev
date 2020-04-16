@@ -164,12 +164,6 @@ public:
             return thermo_();
         }
 
-        //- Cast to the thermophysical model
-        operator const rhoThermo&() const
-        {
-            return thermo();
-        }
-
         //- Return non-const access to the thermophysical model
         //  for correction
         rhoThermo& thermo()

@@ -95,7 +95,7 @@ Foam::diameterModels::breakupModels::LaakkonenAlopaeusAittamaa::setBreakupRate
                     continuousPhase.rho()*pow(fi.dSph(), 5.0/3.0)
                    *pow(popBal_.continuousTurbulence().epsilon(), 2.0/3.0)
                 )
-              + C3_*continuousPhase.mu()
+              + C3_*continuousPhase.thermo().mu()
                /(
                     sqrt(continuousPhase.rho()*fi.phase().rho())
                    *cbrt(popBal_.continuousTurbulence().epsilon())

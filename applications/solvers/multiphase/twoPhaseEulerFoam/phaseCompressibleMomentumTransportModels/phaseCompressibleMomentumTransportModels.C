@@ -23,8 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "PhaseCompressibleMomentumTransportModel.H"
-#include "phaseModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "twoPhaseSystem.H"
 #include "addToRunTimeSelectionTable.H"
 #include "makeMomentumTransportModel.H"

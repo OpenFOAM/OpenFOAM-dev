@@ -45,8 +45,23 @@ namespace Foam
 // Forward declarations
 class fvMesh;
 
+// Transport properties traits class to provide the thermo model
+template<class TransportType>
+class TransportTraits
+{
+public:
+
+    typedef TransportType thermoModel;
+
+    static const thermoModel& thermo(const TransportType& tt)
+    {
+        return tt;
+    }
+};
+
+
 /*---------------------------------------------------------------------------*\
-                Class compressibleMomentumTransportModel Declaration
+             Class compressibleMomentumTransportModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class compressibleMomentumTransportModel

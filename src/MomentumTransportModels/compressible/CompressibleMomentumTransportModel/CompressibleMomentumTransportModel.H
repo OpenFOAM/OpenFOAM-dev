@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-               Class CompressibleMomentumTransportModel Declaration
+              Class CompressibleMomentumTransportModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class TransportModel>
@@ -65,6 +65,7 @@ public:
     typedef geometricOneField alphaField;
     typedef volScalarField rhoField;
     typedef TransportModel transportModel;
+    typedef typename TransportTraits<transportModel>::thermoModel thermoModel;
 
 
     // Constructors
@@ -101,29 +102,34 @@ public:
 
     // Member Functions
 
+        //- Access function to incompressible transport model
+        virtual const thermoModel& thermo() const
+        {
+            return TransportTraits<TransportModel>::thermo(this->transport_);
+        }
+
         //- Return the laminar dynamic viscosity
         virtual tmp<volScalarField> mu() const
         {
-            return this->transport_.mu();
+            return thermo().mu();
         }
 
         //- Return the laminar dynamic viscosity on patch
         virtual tmp<scalarField> mu(const label patchi) const
         {
-            return this->transport_.mu(patchi);
+            return thermo().mu(patchi);
         }
 
         //- Return the laminar viscosity
         virtual tmp<volScalarField> nu() const
         {
-            return this->transport_.mu()/this->rho_;
+            return thermo().mu()/this->rho_;
         }
 
         //- Return the laminar viscosity on patchi
         virtual tmp<scalarField> nu(const label patchi) const
         {
-            return
-                this->transport_.mu(patchi)/this->rho_.boundaryField()[patchi];
+            return thermo().mu(patchi)/this->rho_.boundaryField()[patchi];
         }
 
         //- Return the turbulence dynamic viscosity

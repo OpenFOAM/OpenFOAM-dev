@@ -55,8 +55,9 @@ class ThermophysicalTransportModel
 
 public:
 
-    typedef typename MomentumTransportModel::alphaField alphaField;
     typedef MomentumTransportModel momentumTransportModel;
+    typedef typename momentumTransportModel::alphaField alphaField;
+    typedef typename MomentumTransportModel::thermoModel thermoModel;
 
 
 protected:
@@ -120,9 +121,9 @@ public:
         }
 
         //- Access function to incompressible transport model
-        virtual const fluidThermo& thermo() const
+        virtual const thermoModel& thermo() const
         {
-            return momentumTransport_.transport();
+            return momentumTransport_.thermo();
         }
 
         //- Access function to phase fraction

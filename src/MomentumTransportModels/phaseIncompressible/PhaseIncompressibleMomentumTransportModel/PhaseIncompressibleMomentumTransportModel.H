@@ -102,6 +102,18 @@ public:
 
     // Member Functions
 
+        //- Return the laminar viscosity
+        virtual tmp<volScalarField> nu() const
+        {
+            return this->transport_.nu();
+        }
+
+        //- Return the laminar viscosity on patchi
+        virtual tmp<scalarField> nu(const label patchi) const
+        {
+            return this->transport_.nu(patchi);
+        }
+
         //- Return the phase-pressure'
         // (derivative of phase-pressure w.r.t. phase-fraction)
         virtual tmp<volScalarField> pPrime() const;

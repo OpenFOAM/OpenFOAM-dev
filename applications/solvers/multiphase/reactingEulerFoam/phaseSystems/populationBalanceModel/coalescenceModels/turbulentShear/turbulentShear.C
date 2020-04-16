@@ -77,7 +77,7 @@ addToCoalescenceRate
 
     const volScalarField& epsilon = popBal_.continuousTurbulence().epsilon();
     const volScalarField& rho = popBal_.continuousPhase().rho();
-    const volScalarField& mu = popBal_.continuousPhase().mu();
+    const volScalarField& mu = popBal_.continuousPhase().thermo().mu();
 
     coalescenceRate += C_*sqrt(epsilon*rho/mu)*pow3(fi.d() + fj.d());
 }

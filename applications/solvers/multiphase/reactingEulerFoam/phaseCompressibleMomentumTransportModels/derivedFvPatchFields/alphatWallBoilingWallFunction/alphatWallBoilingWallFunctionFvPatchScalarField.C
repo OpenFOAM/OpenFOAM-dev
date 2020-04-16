@@ -26,7 +26,7 @@ License
 #include "alphatWallBoilingWallFunctionFvPatchScalarField.H"
 #include "phaseSystem.H"
 #include "compressibleMomentumTransportModel.H"
-#include "PhaseCompressibleMomentumTransportModel.H"
+#include "phaseCompressibleMomentumTransportModel.H"
 #include "saturationModel.H"
 #include "rhoReactionThermo.H"
 #include "addToRunTimeSelectionTable.H"

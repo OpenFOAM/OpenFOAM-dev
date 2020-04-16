@@ -199,7 +199,7 @@ tmp<volScalarField> LaheyKEpsilon<BasicMomentumTransportModel>::bubbleG() const
         Cp_
        *(
             pow3(magUr)
-          + pow(drag.CdRe()*liquid.nu()/gas.d(), 4.0/3.0)
+          + pow(drag.CdRe()*liquid.thermo().nu()/gas.d(), 4.0/3.0)
            *pow(magUr, 5.0/3.0)
         )
        *gas

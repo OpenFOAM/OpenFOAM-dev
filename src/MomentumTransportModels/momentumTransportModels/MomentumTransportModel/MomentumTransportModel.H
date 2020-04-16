@@ -146,18 +146,6 @@ public:
             return transport_;
         }
 
-        //- Return the laminar viscosity
-        virtual tmp<volScalarField> nu() const
-        {
-            return transport_.nu();
-        }
-
-        //- Return the laminar viscosity on patchi
-        virtual tmp<scalarField> nu(const label patchi) const
-        {
-            return transport_.nu(patchi);
-        }
-
 
     // Member Operators
 

@@ -40,9 +40,29 @@ Description
 
 namespace Foam
 {
-      typedef PhaseCompressibleMomentumTransportModel<phaseModel>
-          phaseCompressibleMomentumTransportModel;
-}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+typedef PhaseCompressibleMomentumTransportModel<phaseModel>
+    phaseCompressibleMomentumTransportModel;
+
+// template specialisation for TransportTraits<phaseModel>
+template<>
+class TransportTraits<phaseModel>
+{
+public:
+
+    typedef fluidThermo thermoModel;
+
+    static const thermoModel& thermo(const phaseModel& pm)
+    {
+        return pm.thermo();
+    }
+};
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

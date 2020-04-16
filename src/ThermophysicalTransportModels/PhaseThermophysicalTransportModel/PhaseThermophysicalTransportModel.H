@@ -54,8 +54,9 @@ class PhaseThermophysicalTransportModel
 
 public:
 
-    typedef volScalarField alphaField;
     typedef MomentumTransportModel momentumTransportModel;
+    typedef typename momentumTransportModel::alphaField alphaField;
+    typedef typename MomentumTransportModel::thermoModel thermoModel;
 
 
     // Constructors
@@ -79,9 +80,6 @@ public:
     //- Destructor
     virtual ~PhaseThermophysicalTransportModel()
     {}
-
-
-    // Member Functions
 };
 
 
