@@ -29,34 +29,13 @@ Description
     dissipation, omega for both low and high Reynolds number turbulence models.
 
     The near-wall omega may be either blended between the viscous region and
-    logarithmic region values using:
-
-        \f[
-            \omega = sqrt(\omega_{vis}^2 + \omega_{log}^2)
-        \f]
-
-    where
-
-    \vartable
-        \omega_{vis} | omega in viscous region
-        \omega_{log} | omega in logarithmic region
-    \endvartable
-
-    see eq.(15) of:
-    \verbatim
-        Menter, F., Esch, T.
-        "Elements of Industrial Heat Transfer Prediction"
-        16th Brazilian Congress of Mechanical Engineering (COBEM),
-        Nov. 2001
-    \endverbatim
-
-    or switched between these values based on the laminar-to-turbulent y+ value
-    derived from kappa and E specified in the corresponding nutWallFunction.
-    Recent tests have shown that the standard switching method provides more
-    accurate results for 10 < y+ < 30 when used with high Reynolds number
-    wall-functions and both methods provide accurate results when used with
-    continuous wall-functions.  Based on this the standard switching method is
-    used by default.
+    logarithmic region values or switched between these values based on the
+    laminar-to-turbulent y+ value derived from kappa and E specified in the
+    corresponding nutWallFunction.  Recent tests have shown that the standard
+    switching method provides more accurate results for 10 < y+ < 30 when used
+    with high Reynolds number wall-functions and both methods provide accurate
+    results when used with continuous wall-functions.  Based on this the
+    standard switching method is used by default.
 
 Usage
     \table
