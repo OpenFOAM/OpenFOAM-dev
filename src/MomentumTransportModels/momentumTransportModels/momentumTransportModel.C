@@ -61,9 +61,9 @@ Foam::IOdictionary Foam::momentumTransportModel::readModelDict
     }
     else
     {
-        IOobject momentumTransport
+        IOobject turbulenceProperties
         (
-            IOobject::groupName("momentumTransport", group),
+            IOobject::groupName("turbulenceProperties", group),
             obr.time().constant(),
             obr,
             IOobject::MUST_READ_IF_MODIFIED,
@@ -71,9 +71,9 @@ Foam::IOdictionary Foam::momentumTransportModel::readModelDict
             registerObject
         );
 
-        if (momentumTransport.typeHeaderOk<IOdictionary>(true))
+        if (turbulenceProperties.typeHeaderOk<IOdictionary>(true))
         {
-            return momentumTransport;
+            return turbulenceProperties;
         }
         else
         {
