@@ -23,11 +23,11 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "thermophysicalTransportModels.H"
+#include "fluidThermoThermophysicalTransportModels.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-makeThermophysicalTransportModel
+makeThermophysicalTransportModels
 (
     ThermophysicalTransportModel,
     fluidThermoCompressibleMomentumTransportModel
@@ -39,23 +39,23 @@ makeThermophysicalTransportModel
 // -------------------------------------------------------------------------- //
 
 #include "Fourier.H"
-makeThermophysicalTransportLaminarModel(Fourier);
+makeLaminarThermophysicalTransportModel(Fourier);
 
 
 // -------------------------------------------------------------------------- //
 // RAS models
 // -------------------------------------------------------------------------- //
 
-#include "RASeddyDiffusivity.H"
-makeThermophysicalTransportRASModel(eddyDiffusivity);
+#include "eddyDiffusivity.H"
+makeRASLESThermophysicalTransportModel(RAS, eddyDiffusivity);
 
 
 // -------------------------------------------------------------------------- //
 // LES models
 // -------------------------------------------------------------------------- //
 
-#include "LESeddyDiffusivity.H"
-makeThermophysicalTransportLESModel(eddyDiffusivity);
+#include "eddyDiffusivity.H"
+makeRASLESThermophysicalTransportModel(LES, eddyDiffusivity);
 
 
 // ************************************************************************* //

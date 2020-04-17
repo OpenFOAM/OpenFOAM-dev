@@ -23,20 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "RASeddyDiffusivity.H"
+#include "eddyDiffusivity.H"
 #include "fvmLaplacian.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace RASThermophysicalTransportModels
+namespace turbulenceThermophysicalTransportModels
 {
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-template<class BasicThermophysicalTransportModel>
-void eddyDiffusivity<BasicThermophysicalTransportModel>::correctAlphat()
+template<class TurbulenceThermophysicalTransportModel>
+void eddyDiffusivity<TurbulenceThermophysicalTransportModel>::correctAlphat()
 {
     alphat_ =
         this->momentumTransport().rho()
@@ -47,13 +47,13 @@ void eddyDiffusivity<BasicThermophysicalTransportModel>::correctAlphat()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class BasicThermophysicalTransportModel>
-eddyDiffusivity<BasicThermophysicalTransportModel>::eddyDiffusivity
+template<class TurbulenceThermophysicalTransportModel>
+eddyDiffusivity<TurbulenceThermophysicalTransportModel>::eddyDiffusivity
 (
     const momentumTransportModel& momentumTransport
 )
 :
-    RASThermophysicalTransportModel<BasicThermophysicalTransportModel>
+    TurbulenceThermophysicalTransportModel
     (
         typeName,
         momentumTransport
@@ -90,16 +90,10 @@ eddyDiffusivity<BasicThermophysicalTransportModel>::eddyDiffusivity
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class BasicThermophysicalTransportModel>
-bool eddyDiffusivity<BasicThermophysicalTransportModel>::read()
+template<class TurbulenceThermophysicalTransportModel>
+bool eddyDiffusivity<TurbulenceThermophysicalTransportModel>::read()
 {
-    if
-    (
-        RASThermophysicalTransportModel
-        <
-            BasicThermophysicalTransportModel
-        >::read()
-    )
+    if (TurbulenceThermophysicalTransportModel::read())
     {
         Prt_.readIfPresent(this->coeffDict());
 
@@ -112,8 +106,9 @@ bool eddyDiffusivity<BasicThermophysicalTransportModel>::read()
 }
 
 
-template<class BasicThermophysicalTransportModel>
-tmp<volVectorField>eddyDiffusivity<BasicThermophysicalTransportModel>::q() const
+template<class TurbulenceThermophysicalTransportModel>
+tmp<volVectorField>
+eddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
 {
     return volVectorField::New
     (
@@ -127,9 +122,9 @@ tmp<volVectorField>eddyDiffusivity<BasicThermophysicalTransportModel>::q() const
 }
 
 
-template<class BasicThermophysicalTransportModel>
+template<class TurbulenceThermophysicalTransportModel>
 tmp<fvScalarMatrix>
-eddyDiffusivity<BasicThermophysicalTransportModel>::divq
+eddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
 (
     volScalarField& he
 ) const
@@ -138,8 +133,9 @@ eddyDiffusivity<BasicThermophysicalTransportModel>::divq
 }
 
 
-template<class BasicThermophysicalTransportModel>
-tmp<volVectorField>eddyDiffusivity<BasicThermophysicalTransportModel>::j
+template<class TurbulenceThermophysicalTransportModel>
+tmp<volVectorField>
+eddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
 (
     const volScalarField& Yi
 ) const
@@ -156,9 +152,9 @@ tmp<volVectorField>eddyDiffusivity<BasicThermophysicalTransportModel>::j
 }
 
 
-template<class BasicThermophysicalTransportModel>
+template<class TurbulenceThermophysicalTransportModel>
 tmp<fvScalarMatrix>
-eddyDiffusivity<BasicThermophysicalTransportModel>::divj
+eddyDiffusivity<TurbulenceThermophysicalTransportModel>::divj
 (
     volScalarField& Yi
 ) const
@@ -167,20 +163,17 @@ eddyDiffusivity<BasicThermophysicalTransportModel>::divj
 }
 
 
-template<class BasicThermophysicalTransportModel>
-void eddyDiffusivity<BasicThermophysicalTransportModel>::correct()
+template<class TurbulenceThermophysicalTransportModel>
+void eddyDiffusivity<TurbulenceThermophysicalTransportModel>::correct()
 {
-    RASThermophysicalTransportModel
-    <
-        BasicThermophysicalTransportModel
-    >::correct();
+    TurbulenceThermophysicalTransportModel::correct();
     correctAlphat();
 }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace RASThermophysicalTransportModels
+} // End namespace turbulenceThermophysicalTransportModels
 } // End namespace Foam
 
 // ************************************************************************* //

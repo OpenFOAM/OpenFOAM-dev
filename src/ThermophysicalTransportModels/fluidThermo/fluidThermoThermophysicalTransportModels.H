@@ -40,8 +40,8 @@ makeThermophysicalTransportModelTypes
 );
 
 
-#define makeThermophysicalTransportLaminarModel(Type)                          \
-    makeTemplatedThermophysicalTransportModel                                  \
+#define makeLaminarThermophysicalTransportModel(Type)                          \
+    makeThermophysicalTransportModel                                           \
     (                                                                          \
         ThermophysicalTransportModel,                                          \
         fluidThermoCompressibleMomentumTransportModel,                         \
@@ -49,8 +49,17 @@ makeThermophysicalTransportModelTypes
         Type                                                                   \
     )
 
-#define makeThermophysicalTransportRASModel(Type)                              \
-    makeTemplatedThermophysicalTransportModel                                  \
+#define makeRASLESThermophysicalTransportModel(SType, Type)                    \
+    makeTurbulenceThermophysicalTransportModel                                 \
+    (                                                                          \
+        ThermophysicalTransportModel,                                          \
+        fluidThermoCompressibleMomentumTransportModel,                         \
+        SType,                                                                 \
+        Type                                                                   \
+    )
+
+#define makeRASThermophysicalTransportModel(Type)                              \
+    makeThermophysicalTransportModel                                           \
     (                                                                          \
         ThermophysicalTransportModel,                                          \
         fluidThermoCompressibleMomentumTransportModel,                         \
@@ -58,8 +67,8 @@ makeThermophysicalTransportModelTypes
         Type                                                                   \
     )
 
-#define makeThermophysicalTransportLESModel(Type)                              \
-    makeTemplatedThermophysicalTransportModel                                  \
+#define makeLESThermophysicalTransportModel(Type)                              \
+    makeThermophysicalTransportModel                                           \
     (                                                                          \
         ThermophysicalTransportModel,                                          \
         fluidThermoCompressibleMomentumTransportModel,                         \

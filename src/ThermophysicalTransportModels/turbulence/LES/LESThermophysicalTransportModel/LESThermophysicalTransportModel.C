@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LESThermophysicalTransportModel.H"
-#include "LESeddyDiffusivity.H"
+#include "eddyDiffusivity.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
@@ -127,16 +127,21 @@ Foam::LESThermophysicalTransportModel
     }
     else
     {
+        typedef
+            turbulenceThermophysicalTransportModels::eddyDiffusivity
+            <
+                LESThermophysicalTransportModel
+                <
+                    BasicThermophysicalTransportModel
+                >
+            > LESeddyDiffusivity;
+
         Info<< "Selecting default LES thermophysical transport model "
-            << LESThermophysicalTransportModels::eddyDiffusivity
-               <BasicThermophysicalTransportModel>::typeName << endl;
+            <<  LESeddyDiffusivity::typeName << endl;
 
         return autoPtr<LESThermophysicalTransportModel>
         (
-            new LESThermophysicalTransportModels::eddyDiffusivity
-            <
-                BasicThermophysicalTransportModel
-            >(momentumTransport)
+            new LESeddyDiffusivity(momentumTransport)
         );
     }
 }

@@ -22,39 +22,35 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::RASThermophysicalTransportModels::eddyDiffusivity
+    Foam::turbulenceThermophysicalTransportModels::eddyDiffusivity
 
 Description
-    Eddy-diffusivity based gradient heat flux model for RAS flow.
+    Eddy-diffusivity based gradient heat flux model for RAS or LES
+    of turbulent flow.
 
 SourceFiles
-    RASeddyDiffusivity.C
+    eddyDiffusivity.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef RASeddyDiffusivity_H
-#define RASeddyDiffusivity_H
-
-#include "RASThermophysicalTransportModel.H"
+#ifndef eddyDiffusivity_H
+#define eddyDiffusivity_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace RASThermophysicalTransportModels
+namespace turbulenceThermophysicalTransportModels
 {
 
-/*---------------------------------------------------------------------------* \
-                           Class eddyDiffusivity Declaration
+/*---------------------------------------------------------------------------*\
+                       Class eddyDiffusivity Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class BasicThermophysicalTransportModel>
+template<class TurbulenceThermophysicalTransportModel>
 class eddyDiffusivity
 :
-    public RASThermophysicalTransportModel
-    <
-        BasicThermophysicalTransportModel
-    >
+    public TurbulenceThermophysicalTransportModel
 {
 
 protected:
@@ -77,10 +73,11 @@ protected:
 
 public:
 
-    typedef typename BasicThermophysicalTransportModel::alphaField
+    typedef typename TurbulenceThermophysicalTransportModel::alphaField
         alphaField;
 
-    typedef typename BasicThermophysicalTransportModel::momentumTransportModel
+    typedef typename
+        TurbulenceThermophysicalTransportModel::momentumTransportModel
         momentumTransportModel;
 
 
@@ -170,13 +167,13 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace RASThermophysicalTransportModels
+} // End namespace turbulenceThermophysicalTransportModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "RASeddyDiffusivity.C"
+    #include "eddyDiffusivity.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

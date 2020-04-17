@@ -42,15 +42,15 @@ makeThermophysicalTransportModelTypes
 );
 
 
-makeThermophysicalTransportModel
+makeThermophysicalTransportModels
 (
     PhaseThermophysicalTransportModel,
     phaseCompressibleMomentumTransportModel
 );
 
 
-#define makeThermophysicalTransportLaminarModel(Type)                          \
-    makeTemplatedThermophysicalTransportModel                                  \
+#define makeLaminarThermophysicalTransportModel(Type)                          \
+    makeThermophysicalTransportModel                                           \
     (                                                                          \
         PhaseThermophysicalTransportModel,                                     \
         phaseCompressibleMomentumTransportModel,                               \
@@ -58,8 +58,17 @@ makeThermophysicalTransportModel
         Type                                                                   \
     )
 
-#define makeThermophysicalTransportRASModel(Type)                              \
-    makeTemplatedThermophysicalTransportModel                                  \
+#define makeRASLESThermophysicalTransportModel(SType, Type)                    \
+    makeTurbulenceThermophysicalTransportModel                                 \
+    (                                                                          \
+        PhaseThermophysicalTransportModel,                                     \
+        phaseCompressibleMomentumTransportModel,                               \
+        SType,                                                                 \
+        Type                                                                   \
+    )
+
+#define makeRASThermophysicalTransportModel(Type)                              \
+    makeThermophysicalTransportModel                                           \
     (                                                                          \
         PhaseThermophysicalTransportModel,                                     \
         phaseCompressibleMomentumTransportModel,                               \
@@ -67,8 +76,8 @@ makeThermophysicalTransportModel
         Type                                                                   \
     )
 
-#define makeThermophysicalTransportLESModel(Type)                              \
-    makeTemplatedThermophysicalTransportModel                                  \
+#define makeLESThermophysicalTransportModel(Type)                              \
+    makeThermophysicalTransportModel                                           \
     (                                                                          \
         PhaseThermophysicalTransportModel,                                     \
         phaseCompressibleMomentumTransportModel,                               \
@@ -82,23 +91,23 @@ makeThermophysicalTransportModel
 // -------------------------------------------------------------------------- //
 
 #include "Fourier.H"
-makeThermophysicalTransportLaminarModel(Fourier);
+makeLaminarThermophysicalTransportModel(Fourier);
 
 
 // -------------------------------------------------------------------------- //
 // RAS models
 // -------------------------------------------------------------------------- //
 
-#include "RASeddyDiffusivity.H"
-makeThermophysicalTransportRASModel(eddyDiffusivity);
+#include "eddyDiffusivity.H"
+makeRASLESThermophysicalTransportModel(RAS, eddyDiffusivity);
 
 
 // -------------------------------------------------------------------------- //
 // LES models
 // -------------------------------------------------------------------------- //
 
-#include "LESeddyDiffusivity.H"
-makeThermophysicalTransportLESModel(eddyDiffusivity);
+#include "eddyDiffusivity.H"
+makeRASLESThermophysicalTransportModel(LES, eddyDiffusivity);
 
 
 // ************************************************************************* //
