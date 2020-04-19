@@ -14,7 +14,27 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Uinlet          (250 0 0);
+speed           250;
+angleOfAttack   0; // degs
+
+angle           #calc "degToRad($angleOfAttack)";
+liftDir         #codeStream
+{
+    codeInclude #{ #include "vector.H" #};
+    code #{ os << vector(-::sin($angle), 0, ::cos($angle)); #};
+};
+
+dragDir         #codeStream
+{
+    codeInclude #{ #include "vector.H" #};
+    code #{ os << vector(::cos($angle), 0, ::sin($angle)); #};
+};
+
+Uinlet         #codeStream
+{
+    codeInclude #{ #include "vector.H" #};
+    code #{ os << $speed*vector(::cos($angle), 0, ::sin($angle)); #};
+};
 
 dimensions      [0 1 -1 0 0 0 0];
 

@@ -17,22 +17,23 @@ FoamFile
 
 domain
 {
-    xMin -4;
-    xMax  4;
-    zMin -2;
-    zMax  2;
+    xMax  100;
+    zMax  50;
+
+    xMin #neg $xMax;
+    zMin #neg $zMax;
 
     // Number of cells
-    zCells  80; // aerofoil to far field
-    xUCells 30; // upstream
-    xMCells 30; // middle
-    xDCells 40; // downstream
+    zCells  60; // aerofoil to far field
+    xUCells 60; // upstream
+    xMCells 25; // middle
+    xDCells 50; // downstream
 
     // Mesh grading
-    zGrading    40;  // aerofoil to far field
-    xUGrading   5;   // towards centre upstream
-    leadGrading 0.2; // towards leading edge
-    xDGrading   10;  // downstream
+    zGrading    30000;  // aerofoil to far field
+    xUGrading   10;     // towards centre upstream
+    leadGrading 0.005;  // towards leading edge
+    xDGrading   400;    // downstream
 }
 
 aerofoil
@@ -43,8 +44,9 @@ aerofoil
     zTrail  0;
     xUpper  0.3;
     zUpper  0.06;
-    xLower  0.3;
-    zLower -0.06;
+
+    xLower  $xUpper;
+    zLower  #neg $zUpper;
 }
 
 geometry

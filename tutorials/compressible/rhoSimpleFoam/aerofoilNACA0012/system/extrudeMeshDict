@@ -21,7 +21,7 @@ sourcePatches (back);
 exposedPatchName front;
 
 extrudeModel  plane;
-thickness     0.1;
+thickness     1;
 
 flipNormals false;
 mergeFaces false;

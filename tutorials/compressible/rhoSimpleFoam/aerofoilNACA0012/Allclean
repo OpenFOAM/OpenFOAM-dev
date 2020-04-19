@@ -9,6 +9,7 @@ rm -f constant/geometry/NACA0012.obj.gz > /dev/null 2>&1
 
 cleanCase
 
+rm 0/Ma > /dev/null 2>&1
 rm constant/geometry/boundaryLayer.obj > /dev/null 2>&1
 
 #------------------------------------------------------------------------------
