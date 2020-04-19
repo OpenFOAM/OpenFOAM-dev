@@ -26,37 +26,39 @@ License
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #define makeThermophysicalTransportModelTypes(                                 \
-    BaseModel, MomentumTransportModel)                                         \
+    BaseModel, MomentumTransportModel, ThermoModel)                            \
                                                                                \
     namespace Foam                                                             \
     {                                                                          \
-        typedef BaseModel<MomentumTransportModel>                              \
-            BaseModel##MomentumTransportModel;                                 \
+        typedef BaseModel<MomentumTransportModel, ThermoModel>                 \
+            ThermoModel##MomentumTransportModel##BaseModel;                    \
                                                                                \
         typedef laminarThermophysicalTransportModel                            \
         <                                                                      \
-             BaseModel##MomentumTransportModel                                 \
-        > laminar##BaseModel##MomentumTransportModel;                          \
+             ThermoModel##MomentumTransportModel##BaseModel                    \
+        > laminar##ThermoModel##MomentumTransportModel##BaseModel;             \
                                                                                \
         typedef RASThermophysicalTransportModel                                \
         <                                                                      \
-            BaseModel##MomentumTransportModel                                  \
-        > RAS##BaseModel##MomentumTransportModel;                              \
+            ThermoModel##MomentumTransportModel##BaseModel                     \
+        > RAS##ThermoModel##MomentumTransportModel##BaseModel;                 \
                                                                                \
         typedef LESThermophysicalTransportModel                                \
         <                                                                      \
-            BaseModel##MomentumTransportModel                                  \
-        > LES##BaseModel##MomentumTransportModel;                              \
+            ThermoModel##MomentumTransportModel##BaseModel                     \
+        > LES##ThermoModel##MomentumTransportModel##BaseModel;                 \
     }
 
 
-#define makeThermophysicalTransportModels(BaseModel, MomentumTransportModel)   \
+#define makeThermophysicalTransportModels(                                     \
+    BaseModel, MomentumTransportModel, ThermoModel)                            \
                                                                                \
     namespace Foam                                                             \
     {                                                                          \
         typedef ThermophysicalTransportModel                                   \
         <                                                                      \
-            MomentumTransportModel                                             \
+            MomentumTransportModel,                                            \
+            ThermoModel                                                        \
         > ThermophysicalTransportModel##MomentumTransportModel;                \
                                                                                \
         defineTemplateRunTimeSelectionTable                                    \
@@ -68,74 +70,77 @@ License
                                                                                \
         defineNamedTemplateTypeNameAndDebug                                    \
         (                                                                      \
-            laminar##BaseModel##MomentumTransportModel,                        \
+            laminar##ThermoModel##MomentumTransportModel##BaseModel,           \
             0                                                                  \
         );                                                                     \
                                                                                \
         defineTemplateRunTimeSelectionTable                                    \
         (                                                                      \
-            laminar##BaseModel##MomentumTransportModel,                        \
+            laminar##ThermoModel##MomentumTransportModel##BaseModel,           \
             dictionary                                                         \
         );                                                                     \
                                                                                \
         addToRunTimeSelectionTable                                             \
         (                                                                      \
             ThermophysicalTransportModel##MomentumTransportModel,              \
-            laminar##BaseModel##MomentumTransportModel,                        \
+            laminar##ThermoModel##MomentumTransportModel##BaseModel,           \
             dictionary                                                         \
         );                                                                     \
                                                                                \
                                                                                \
         defineNamedTemplateTypeNameAndDebug                                    \
         (                                                                      \
-            RAS##BaseModel##MomentumTransportModel,                            \
+            RAS##ThermoModel##MomentumTransportModel##BaseModel,               \
             0                                                                  \
         );                                                                     \
                                                                                \
         defineTemplateRunTimeSelectionTable                                    \
         (                                                                      \
-            RAS##BaseModel##MomentumTransportModel,                            \
+            RAS##ThermoModel##MomentumTransportModel##BaseModel,               \
             dictionary                                                         \
         );                                                                     \
                                                                                \
         addToRunTimeSelectionTable                                             \
         (                                                                      \
             ThermophysicalTransportModel##MomentumTransportModel,              \
-            RAS##BaseModel##MomentumTransportModel,                            \
+            RAS##ThermoModel##MomentumTransportModel##BaseModel,               \
             dictionary                                                         \
         );                                                                     \
                                                                                \
                                                                                \
         defineNamedTemplateTypeNameAndDebug                                    \
         (                                                                      \
-            LES##BaseModel##MomentumTransportModel,\
+            LES##ThermoModel##MomentumTransportModel##BaseModel,               \
             0                                                                  \
         );                                                                     \
                                                                                \
         defineTemplateRunTimeSelectionTable                                    \
         (                                                                      \
-            LES##BaseModel##MomentumTransportModel,\
+            LES##ThermoModel##MomentumTransportModel##BaseModel,               \
             dictionary                                                         \
         );                                                                     \
                                                                                \
         addToRunTimeSelectionTable                                             \
         (                                                                      \
             ThermophysicalTransportModel##MomentumTransportModel,              \
-            LES##BaseModel##MomentumTransportModel,\
+            LES##ThermoModel##MomentumTransportModel##BaseModel,               \
             dictionary                                                         \
         );                                                                     \
     }
 
 
 #define makeThermophysicalTransportModel(                                      \
-    BaseModel, MomentumTransportModel, SType, Type)                            \
+    BaseModel, MomentumTransportModel, ThermoModel, SType, Type)               \
+                                                                               \
+    typedef Foam::SType##ThermophysicalTransportModels::Type                   \
+    <                                                                          \
+        Foam::BaseModel<Foam::MomentumTransportModel, Foam::ThermoModel>       \
+    > Type##SType##ThermoModel##ThermoModel##MomentumTransportModel##BaseModel;\
                                                                                \
     defineNamedTemplateTypeNameAndDebug                                        \
     (                                                                          \
-        Foam::SType##ThermophysicalTransportModels::Type                       \
-        <                                                                      \
-            Foam::BaseModel<Foam::MomentumTransportModel>                      \
-        >,                                                                     \
+        Type##SType##ThermoModel##ThermoModel                                  \
+        ##MomentumTransportModel##BaseModel,                                   \
         0                                                                      \
     );                                                                         \
                                                                                \
@@ -143,42 +148,15 @@ License
     {                                                                          \
         namespace SType##ThermophysicalTransportModels                         \
         {                                                                      \
-            typedef Type<BaseModel<MomentumTransportModel>>                    \
-                Type##SType##BaseModel##MomentumTransportModel;                \
+            typedef Type<BaseModel<MomentumTransportModel, ThermoModel>>       \
+                Type##SType##ThermoModel##ThermoModel                          \
+                ##MomentumTransportModel##BaseModel;                           \
                                                                                \
             addToRunTimeSelectionTable                                         \
             (                                                                  \
-                SType##BaseModel##MomentumTransportModel,                      \
-                Type##SType##BaseModel##MomentumTransportModel,                \
-                dictionary                                                     \
-            );                                                                 \
-        }                                                                      \
-    }
-
-
-#define makeThermophysicalTransportModel(                                      \
-    BaseModel, MomentumTransportModel, SType, Type)                            \
-                                                                               \
-    defineNamedTemplateTypeNameAndDebug                                        \
-    (                                                                          \
-        Foam::SType##ThermophysicalTransportModels::Type                       \
-        <                                                                      \
-            Foam::BaseModel<Foam::MomentumTransportModel>                      \
-        >,                                                                     \
-        0                                                                      \
-    );                                                                         \
-                                                                               \
-    namespace Foam                                                             \
-    {                                                                          \
-        namespace SType##ThermophysicalTransportModels                         \
-        {                                                                      \
-            typedef Type<BaseModel<MomentumTransportModel>>                    \
-                Type##SType##BaseModel##MomentumTransportModel;                \
-                                                                               \
-            addToRunTimeSelectionTable                                         \
-            (                                                                  \
-                SType##BaseModel##MomentumTransportModel,                      \
-                Type##SType##BaseModel##MomentumTransportModel,                \
+                SType##ThermoModel##MomentumTransportModel##BaseModel,         \
+                Type##SType##ThermoModel##ThermoModel                          \
+                ##MomentumTransportModel##BaseModel,                           \
                 dictionary                                                     \
             );                                                                 \
         }                                                                      \
@@ -186,17 +164,20 @@ License
 
 
 #define makeTurbulenceThermophysicalTransportModel(                            \
-    BaseModel, MomentumTransportModel, SType, Type)                            \
+    BaseModel, MomentumTransportModel, ThermoModel, SType, Type)               \
+                                                                               \
+    typedef Foam::turbulenceThermophysicalTransportModels::Type                \
+    <                                                                          \
+        Foam::SType##ThermophysicalTransportModel                              \
+        <                                                                      \
+            Foam::BaseModel<Foam::MomentumTransportModel, Foam::ThermoModel>   \
+        >                                                                      \
+    > Type##SType##ThermoModel##ThermoModel##MomentumTransportModel##BaseModel;\
                                                                                \
     defineNamedTemplateTypeNameAndDebug                                        \
     (                                                                          \
-        Foam::turbulenceThermophysicalTransportModels::Type                    \
-        <                                                                      \
-            Foam::SType##ThermophysicalTransportModel                          \
-            <                                                                  \
-                Foam::BaseModel<Foam::MomentumTransportModel>                  \
-            >                                                                  \
-        >,                                                                     \
+        Type##SType##ThermoModel##ThermoModel                                  \
+        ##MomentumTransportModel##BaseModel,                                   \
         0                                                                      \
     );                                                                         \
                                                                                \
@@ -208,14 +189,14 @@ License
             <                                                                  \
                 SType##ThermophysicalTransportModel                            \
                 <                                                              \
-                    BaseModel<MomentumTransportModel>                          \
+                    BaseModel<MomentumTransportModel, ThermoModel>             \
                 >                                                              \
-            > Type##SType##BaseModel##MomentumTransportModel;                  \
+            > Type##SType##ThermoModel##MomentumTransportModel##BaseModel;     \
                                                                                \
             addToRunTimeSelectionTable                                         \
             (                                                                  \
-                SType##BaseModel##MomentumTransportModel,                      \
-                Type##SType##BaseModel##MomentumTransportModel,                \
+                SType##ThermoModel##MomentumTransportModel##BaseModel,         \
+                Type##SType##ThermoModel##MomentumTransportModel##BaseModel,   \
                 dictionary                                                     \
             );                                                                 \
         }                                                                      \

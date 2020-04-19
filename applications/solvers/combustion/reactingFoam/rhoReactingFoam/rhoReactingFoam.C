@@ -35,7 +35,7 @@ Description
 #include "rhoReactionThermo.H"
 #include "CombustionModel.H"
 #include "fluidThermoMomentumTransportModel.H"
-#include "fluidThermoTransportModel.H"
+#include "rhoReactionThermophysicalTransportModel.H"
 #include "multivariateScheme.H"
 #include "pimpleControl.H"
 #include "pressureControl.H"

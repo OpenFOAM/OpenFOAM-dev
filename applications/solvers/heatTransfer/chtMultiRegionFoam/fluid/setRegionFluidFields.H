@@ -28,7 +28,7 @@
     surfaceScalarField& phi = phiFluid[i];
 
     compressible::momentumTransportModel& turbulence = turbulenceFluid[i];
-    compressible::thermophysicalTransportModel& thermophysicalTransport =
+    fluidThermophysicalTransportModel& thermophysicalTransport =
         thermophysicalTransportFluid[i];
 
     volScalarField& K = KFluid[i];

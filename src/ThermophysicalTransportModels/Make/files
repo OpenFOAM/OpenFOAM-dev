@@ -12,6 +12,6 @@ $(BCs)/convectiveHeatTransfer/convectiveHeatTransferFvPatchScalarField.C
 $(BCs)/alphatWallFunctions/alphatWallFunction/alphatWallFunctionFvPatchScalarField.C
 $(BCs)/alphatWallFunctions/alphatJayatillekeWallFunction/alphatJayatillekeWallFunctionFvPatchScalarField.C
 
-fluidThermo/fluidThermoThermophysicalTransportModels.C
+fluidThermo/fluidThermophysicalTransportModels.C
 
 LIB = $(FOAM_LIBBIN)/libthermophysicalTransportModels

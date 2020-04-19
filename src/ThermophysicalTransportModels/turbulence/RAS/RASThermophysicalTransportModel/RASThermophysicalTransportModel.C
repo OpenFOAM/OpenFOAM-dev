@@ -52,10 +52,11 @@ Foam::RASThermophysicalTransportModel
 >::RASThermophysicalTransportModel
 (
     const word& type,
-    const momentumTransportModel& momentumTransport
+    const momentumTransportModel& momentumTransport,
+    const thermoModel& thermo
 )
 :
-    BasicThermophysicalTransportModel(momentumTransport),
+    BasicThermophysicalTransportModel(momentumTransport, thermo),
     RASDict_(this->subOrEmptyDict("RAS")),
     printCoeffs_(RASDict_.lookupOrDefault<Switch>("printCoeffs", false)),
     coeffDict_(RASDict_.optionalSubDict(type + "Coeffs"))
@@ -77,7 +78,8 @@ Foam::RASThermophysicalTransportModel
     BasicThermophysicalTransportModel
 >::New
 (
-    const momentumTransportModel& momentumTransport
+    const momentumTransportModel& momentumTransport,
+    const thermoModel& thermo
 )
 {
     IOobject header
@@ -118,7 +120,7 @@ Foam::RASThermophysicalTransportModel
 
         return autoPtr<RASThermophysicalTransportModel>
         (
-            cstrIter()(momentumTransport)
+            cstrIter()(momentumTransport, thermo)
         );
     }
     else
@@ -137,7 +139,7 @@ Foam::RASThermophysicalTransportModel
 
         return autoPtr<RASThermophysicalTransportModel>
         (
-            new RASeddyDiffusivity(momentumTransport)
+            new RASeddyDiffusivity(momentumTransport, thermo)
         );
     }
 }

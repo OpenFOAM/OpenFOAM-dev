@@ -80,6 +80,9 @@ public:
     typedef typename BasicThermophysicalTransportModel::momentumTransportModel
         momentumTransportModel;
 
+    typedef typename BasicThermophysicalTransportModel::thermoModel
+        thermoModel;
+
 
     //- Runtime type information
     TypeName("LES");
@@ -93,9 +96,10 @@ public:
             LESThermophysicalTransportModel,
             dictionary,
             (
-                const momentumTransportModel& momentumTransport
+                const momentumTransportModel& momentumTransport,
+                const thermoModel& thermo
             ),
-            (momentumTransport)
+            (momentumTransport, thermo)
         );
 
 
@@ -105,7 +109,8 @@ public:
         LESThermophysicalTransportModel
         (
             const word& type,
-            const momentumTransportModel& momentumTransport
+            const momentumTransportModel& momentumTransport,
+            const thermoModel& thermo
         );
 
         //- Disallow default bitwise copy construction
@@ -120,7 +125,8 @@ public:
         //- Return a reference to the selected LES model
         static autoPtr<LESThermophysicalTransportModel> New
         (
-            const momentumTransportModel& momentumTransport
+            const momentumTransportModel& momentumTransport,
+            const thermoModel& thermo
         );
 
 

@@ -34,7 +34,7 @@ Description
 #include "dynamicFvMesh.H"
 #include "psiThermo.H"
 #include "fluidThermoMomentumTransportModel.H"
-#include "fluidThermoTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "fixedRhoFvPatchScalarField.H"
 #include "directionInterpolate.H"
 #include "localEulerDdtScheme.H"

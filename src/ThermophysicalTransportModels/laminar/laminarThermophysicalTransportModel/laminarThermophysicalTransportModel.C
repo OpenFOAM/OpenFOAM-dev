@@ -52,10 +52,11 @@ Foam::laminarThermophysicalTransportModel
 >::laminarThermophysicalTransportModel
 (
     const word& type,
-    const momentumTransportModel& momentumTransport
+    const momentumTransportModel& momentumTransport,
+    const thermoModel& thermo
 )
 :
-    BasicThermophysicalTransportModel(momentumTransport),
+    BasicThermophysicalTransportModel(momentumTransport, thermo),
     laminarDict_(this->subOrEmptyDict("laminar")),
     printCoeffs_(laminarDict_.lookupOrDefault<Switch>("printCoeffs", false)),
     coeffDict_(laminarDict_.optionalSubDict(type + "Coeffs"))
@@ -77,7 +78,8 @@ Foam::laminarThermophysicalTransportModel
     BasicThermophysicalTransportModel
 >::New
 (
-    const momentumTransportModel& momentumTransport
+    const momentumTransportModel& momentumTransport,
+    const thermoModel& thermo
 )
 {
     IOobject header
@@ -118,7 +120,7 @@ Foam::laminarThermophysicalTransportModel
 
         return autoPtr<laminarThermophysicalTransportModel>
         (
-            cstrIter()(momentumTransport)
+            cstrIter()(momentumTransport, thermo)
         );
     }
     else
@@ -132,7 +134,7 @@ Foam::laminarThermophysicalTransportModel
             new laminarThermophysicalTransportModels::Fourier
             <
                 BasicThermophysicalTransportModel
-            >(momentumTransport)
+            >(momentumTransport, thermo)
         );
     }
 }

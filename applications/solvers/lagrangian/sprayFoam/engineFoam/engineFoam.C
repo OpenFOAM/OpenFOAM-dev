@@ -34,7 +34,7 @@ Description
 #include "engineTime.H"
 #include "engineMesh.H"
 #include "fluidThermoMomentumTransportModel.H"
-#include "fluidThermoTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "basicSprayCloud.H"
 #include "psiReactionThermo.H"
 #include "CombustionModel.H"

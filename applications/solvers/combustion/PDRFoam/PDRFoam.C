@@ -70,7 +70,7 @@ Description
 #include "fvCFD.H"
 #include "psiuReactionThermo.H"
 #include "fluidThermoMomentumTransportModel.H"
-#include "fluidThermoTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "laminarFlameSpeed.H"
 #include "XiModel.H"
 #include "PDRDragModel.H"

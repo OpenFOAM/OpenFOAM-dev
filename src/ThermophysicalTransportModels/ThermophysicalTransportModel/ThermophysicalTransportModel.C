@@ -29,28 +29,31 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class MomentumTransportModel>
-Foam::ThermophysicalTransportModel<MomentumTransportModel>::
+template<class MomentumTransportModel, class ThermoModel>
+Foam::ThermophysicalTransportModel<MomentumTransportModel, ThermoModel>::
 ThermophysicalTransportModel
 (
-    const momentumTransportModel& momentumTransport
+    const momentumTransportModel& momentumTransport,
+    const thermoModel& thermo
 )
 :
     thermophysicalTransportModel(momentumTransport),
-    momentumTransport_(momentumTransport)
+    momentumTransport_(momentumTransport),
+    thermo_(thermo)
 {}
 
 
 // * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
 
-template<class MomentumTransportModel>
+template<class MomentumTransportModel, class ThermoModel>
 Foam::autoPtr
 <
-    Foam::ThermophysicalTransportModel<MomentumTransportModel>
+    Foam::ThermophysicalTransportModel<MomentumTransportModel, ThermoModel>
 >
-Foam::ThermophysicalTransportModel<MomentumTransportModel>::New
+Foam::ThermophysicalTransportModel<MomentumTransportModel, ThermoModel>::New
 (
-    const momentumTransportModel& momentumTransport
+    const momentumTransportModel& momentumTransport,
+    const thermoModel& thermo
 )
 {
     const word modelType
@@ -75,7 +78,7 @@ Foam::ThermophysicalTransportModel<MomentumTransportModel>::New
 
     return autoPtr<ThermophysicalTransportModel>
     (
-        cstrIter()(momentumTransport)
+        cstrIter()(momentumTransport, thermo)
     );
 }
 

@@ -39,8 +39,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fluidThermoTransportModel_H
-#define fluidThermoTransportModel_H
+#ifndef fluidThermophysicalTransportModel_H
+#define fluidThermophysicalTransportModel_H
 
 #include "laminarThermophysicalTransportModel.H"
 #include "RASThermophysicalTransportModel.H"
@@ -51,26 +51,26 @@ Description
 
 namespace Foam
 {
-    namespace compressible
-    {
-        typedef ThermophysicalTransportModel<momentumTransportModel>
-            thermophysicalTransportModel;
+    typedef ThermophysicalTransportModel
+    <
+        compressible::momentumTransportModel,
+        fluidThermo
+    > fluidThermophysicalTransportModel;
 
-        typedef laminarThermophysicalTransportModel
-        <
-            thermophysicalTransportModel
-        > laminarThermophysicalTransportModel;
+    typedef laminarThermophysicalTransportModel
+    <
+        fluidThermophysicalTransportModel
+    > laminarFluidThermophysicalTransportModel;
 
-        typedef RASThermophysicalTransportModel
-        <
-            thermophysicalTransportModel
-        > RASThermophysicalTransportModel;
+    typedef RASThermophysicalTransportModel
+    <
+        fluidThermophysicalTransportModel
+    > RASFluidThermophysicalTransportModel;
 
-        typedef LESThermophysicalTransportModel
-        <
-            thermophysicalTransportModel
-        > LESThermophysicalTransportModel;
-    }
+    typedef LESThermophysicalTransportModel
+    <
+        fluidThermophysicalTransportModel
+    > LESFluidThermophysicalTransportModel;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

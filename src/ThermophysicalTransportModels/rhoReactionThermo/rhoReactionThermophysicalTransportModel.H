@@ -22,28 +22,56 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Typedef
-    Foam::phaseThermophysicalTransportModel
+    Foam::compressible::thermophysicalTransportModel
+
+Typedef
+    Foam::compressible::laminarThermophysicalTransportModel
+
+Typedef
+    Foam::compressible::RASThermophysicalTransportModel
+
+Typedef
+    Foam::compressible::LESThermophysicalTransportModel
 
 Description
-    Typedef for phaseThermophysicalTransportModel
+    Typedefs for laminar, RAS and LES thermophysical transport models
+    for rhoReactionThermo flow.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef phaseThermophysicalTransportModel_H
-#define phaseThermophysicalTransportModel_H
+#ifndef rhoReactionThermophysicalTransportModel_H
+#define rhoReactionThermophysicalTransportModel_H
 
-#include "PhaseThermophysicalTransportModel.H"
-#include "phaseCompressibleMomentumTransportModel.H"
+#include "rhoReactionThermo.H"
+#include "laminarThermophysicalTransportModel.H"
+#include "RASThermophysicalTransportModel.H"
+#include "LESThermophysicalTransportModel.H"
+#include "fluidThermoMomentumTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    typedef PhaseThermophysicalTransportModel
+    typedef ThermophysicalTransportModel
     <
-        phaseCompressibleMomentumTransportModel,
-        fluidThermo
-    > phaseThermophysicalTransportModel;
+        compressible::momentumTransportModel,
+        rhoReactionThermo
+    > rhoReactionThermophysicalTransportModel;
+
+    typedef laminarThermophysicalTransportModel
+    <
+        rhoReactionThermophysicalTransportModel
+    > laminarRhoReactionThermophysicalTransportModel;
+
+    typedef RASThermophysicalTransportModel
+    <
+        rhoReactionThermophysicalTransportModel
+    > RASRhoReactionThermophysicalTransportModel;
+
+    typedef LESThermophysicalTransportModel
+    <
+        rhoReactionThermophysicalTransportModel
+    > LESRhoReactionThermophysicalTransportModel;
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

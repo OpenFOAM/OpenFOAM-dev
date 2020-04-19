@@ -38,7 +38,7 @@ Description
 #include "dynamicFvMesh.H"
 #include "fluidThermo.H"
 #include "fluidThermoMomentumTransportModel.H"
-#include "fluidThermoTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "radiationModel.H"
 #include "pimpleControl.H"
 #include "pressureControl.H"

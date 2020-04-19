@@ -80,6 +80,9 @@ public:
         TurbulenceThermophysicalTransportModel::momentumTransportModel
         momentumTransportModel;
 
+    typedef typename TurbulenceThermophysicalTransportModel::thermoModel
+        thermoModel;
+
 
     //- Runtime type information
     TypeName("eddyDiffusivity");
@@ -88,7 +91,11 @@ public:
     // Constructors
 
         //- Construct from components
-        eddyDiffusivity(const momentumTransportModel& momentumTransport);
+        eddyDiffusivity
+        (
+            const momentumTransportModel& momentumTransport,
+            const thermoModel& thermo
+        );
 
 
     //- Destructor

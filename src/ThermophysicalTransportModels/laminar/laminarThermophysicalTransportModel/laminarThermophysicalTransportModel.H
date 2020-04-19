@@ -80,6 +80,9 @@ public:
     typedef typename BasicThermophysicalTransportModel::momentumTransportModel
         momentumTransportModel;
 
+    typedef typename BasicThermophysicalTransportModel::thermoModel
+        thermoModel;
+
 
     //- Runtime type information
     TypeName("laminar");
@@ -93,9 +96,10 @@ public:
             laminarThermophysicalTransportModel,
             dictionary,
             (
-                const momentumTransportModel& momentumTransport
+                const momentumTransportModel& momentumTransport,
+                const thermoModel& thermo
             ),
-            (momentumTransport)
+            (momentumTransport, thermo)
         );
 
 
@@ -105,7 +109,8 @@ public:
         laminarThermophysicalTransportModel
         (
             const word& type,
-            const momentumTransportModel& momentumTransport
+            const momentumTransportModel& momentumTransport,
+            const thermoModel& thermo
         );
 
         //- Disallow default bitwise copy construction
@@ -120,7 +125,8 @@ public:
         //- Return a reference to the selected laminar model
         static autoPtr<laminarThermophysicalTransportModel> New
         (
-            const momentumTransportModel& momentumTransport
+            const momentumTransportModel& momentumTransport,
+            const thermoModel& thermo
         );
 
 

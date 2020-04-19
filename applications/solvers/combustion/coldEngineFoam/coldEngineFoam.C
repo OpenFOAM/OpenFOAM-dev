@@ -34,7 +34,7 @@ Description
 #include "engineMesh.H"
 #include "psiThermo.H"
 #include "fluidThermoMomentumTransportModel.H"
-#include "fluidThermoTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "OFstream.H"
 #include "fvOptions.H"
 #include "pimpleControl.H"

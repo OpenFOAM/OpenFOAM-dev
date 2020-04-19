@@ -53,7 +53,7 @@ Description
 #include "engineMesh.H"
 #include "psiuReactionThermo.H"
 #include "fluidThermoMomentumTransportModel.H"
-#include "fluidThermoTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "laminarFlameSpeed.H"
 #include "ignition.H"
 #include "Switch.H"

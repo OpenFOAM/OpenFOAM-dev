@@ -1,0 +1,3 @@
+rhoReactionThermophysicalTransportModels.C
+
+LIB = $(FOAM_LIBBIN)/librhoReactionThermophysicalTransportModels

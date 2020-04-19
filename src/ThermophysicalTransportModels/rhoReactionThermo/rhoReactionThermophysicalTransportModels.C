@@ -23,53 +23,40 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "PhaseThermophysicalTransportModel.H"
+#include "rhoReactionThermophysicalTransportModels.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class MomentumTransportModel, class ThermoModel>
-Foam::PhaseThermophysicalTransportModel<MomentumTransportModel, ThermoModel>::
-PhaseThermophysicalTransportModel
+makeThermophysicalTransportModels
 (
-    const momentumTransportModel& momentumTransport,
-    const thermoModel& thermo
-)
-:
-    ThermophysicalTransportModel<MomentumTransportModel, ThermoModel>
-    (
-        momentumTransport,
-        thermo
-    )
-{}
+    ThermophysicalTransportModel,
+    fluidThermoCompressibleMomentumTransportModel,
+    rhoReactionThermo
+);
 
 
-// * * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * //
+// -------------------------------------------------------------------------- //
+// Laminar models
+// -------------------------------------------------------------------------- //
 
-template<class MomentumTransportModel, class ThermoModel>
-Foam::autoPtr
-<
-    Foam::PhaseThermophysicalTransportModel<MomentumTransportModel, ThermoModel>
->
-Foam::PhaseThermophysicalTransportModel<MomentumTransportModel, ThermoModel>::
-New
-(
-    const momentumTransportModel& momentumTransport,
-    const thermoModel& thermo
-)
-{
-    return autoPtr<PhaseThermophysicalTransportModel>
-    (
-        static_cast<PhaseThermophysicalTransportModel*>
-        (
-            ThermophysicalTransportModel<MomentumTransportModel, ThermoModel>::
-            New
-            (
-                momentumTransport,
-                thermo
-            ).ptr()
-        )
-    );
-}
+#include "Fourier.H"
+makeLaminarThermophysicalTransportModel(Fourier);
+
+
+// -------------------------------------------------------------------------- //
+// RAS models
+// -------------------------------------------------------------------------- //
+
+#include "eddyDiffusivity.H"
+makeRASLESThermophysicalTransportModel(RAS, eddyDiffusivity);
+
+
+// -------------------------------------------------------------------------- //
+// LES models
+// -------------------------------------------------------------------------- //
+
+#include "eddyDiffusivity.H"
+makeRASLESThermophysicalTransportModel(LES, eddyDiffusivity);
 
 
 // ************************************************************************* //

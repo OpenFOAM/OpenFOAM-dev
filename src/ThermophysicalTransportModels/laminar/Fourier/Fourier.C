@@ -38,13 +38,15 @@ namespace laminarThermophysicalTransportModels
 template<class BasicThermophysicalTransportModel>
 Fourier<BasicThermophysicalTransportModel>::Fourier
 (
-    const momentumTransportModel& momentumTransport
+    const momentumTransportModel& momentumTransport,
+    const thermoModel& thermo
 )
 :
     laminarThermophysicalTransportModel<BasicThermophysicalTransportModel>
     (
         typeName,
-        momentumTransport
+        momentumTransport,
+        thermo
     )
 {}
 

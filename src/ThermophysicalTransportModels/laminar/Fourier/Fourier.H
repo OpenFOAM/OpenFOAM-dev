@@ -65,6 +65,9 @@ public:
     typedef typename BasicThermophysicalTransportModel::momentumTransportModel
         momentumTransportModel;
 
+    typedef typename BasicThermophysicalTransportModel::thermoModel
+        thermoModel;
+
 
     //- Runtime type information
     TypeName("Fourier");
@@ -75,7 +78,8 @@ public:
         //- Construct from components
         Fourier
         (
-            const momentumTransportModel& momentumTransport
+            const momentumTransportModel& momentumTransport,
+            const thermoModel& thermo
         );
 
 

@@ -177,7 +177,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
     ),
     thermophysicalTransport_
     (
-        phaseThermophysicalTransportModel::New(turbulence_)
+        phaseThermophysicalTransportModel::New(turbulence_, this->thermo())
     ),
     continuityError_
     (

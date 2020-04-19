@@ -46,17 +46,17 @@ namespace Foam
             Class PhaseThermophysicalTransportModel Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class MomentumTransportModel>
+template<class MomentumTransportModel, class ThermoModel>
 class PhaseThermophysicalTransportModel
 :
-    public ThermophysicalTransportModel<MomentumTransportModel>
+    public ThermophysicalTransportModel<MomentumTransportModel, ThermoModel>
 {
 
 public:
 
     typedef MomentumTransportModel momentumTransportModel;
+    typedef ThermoModel thermoModel;
     typedef typename momentumTransportModel::alphaField alphaField;
-    typedef typename MomentumTransportModel::thermoModel thermoModel;
 
 
     // Constructors
@@ -64,7 +64,8 @@ public:
         //- Construct
         PhaseThermophysicalTransportModel
         (
-            const momentumTransportModel& momentumTransport
+            const momentumTransportModel& momentumTransport,
+            const thermoModel& thermo
         );
 
 
@@ -73,7 +74,8 @@ public:
         //- Return a reference to the selected turbulence model
         static autoPtr<PhaseThermophysicalTransportModel> New
         (
-            const momentumTransportModel& momentumTransport
+            const momentumTransportModel& momentumTransport,
+            const thermoModel& thermo
         );
 
 

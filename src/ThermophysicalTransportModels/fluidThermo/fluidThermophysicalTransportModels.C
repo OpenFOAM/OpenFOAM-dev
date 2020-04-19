@@ -23,14 +23,15 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "fluidThermoThermophysicalTransportModels.H"
+#include "fluidThermophysicalTransportModels.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 makeThermophysicalTransportModels
 (
     ThermophysicalTransportModel,
-    fluidThermoCompressibleMomentumTransportModel
+    fluidThermoCompressibleMomentumTransportModel,
+    fluidThermo
 );
 
 

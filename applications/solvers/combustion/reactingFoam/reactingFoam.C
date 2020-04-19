@@ -31,7 +31,7 @@ Description
 
 #include "fvCFD.H"
 #include "fluidThermoMomentumTransportModel.H"
-#include "fluidThermoTransportModel.H"
+#include "fluidThermophysicalTransportModel.H"
 #include "psiReactionThermo.H"
 #include "CombustionModel.H"
 #include "multivariateScheme.H"

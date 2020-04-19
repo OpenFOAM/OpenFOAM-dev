@@ -52,14 +52,11 @@ Foam::LESThermophysicalTransportModel
 >::LESThermophysicalTransportModel
 (
     const word& type,
-    const momentumTransportModel& momentumTransport
+    const momentumTransportModel& momentumTransport,
+    const thermoModel& thermo
 )
 :
-    BasicThermophysicalTransportModel
-    (
-        momentumTransport
-    ),
-
+    BasicThermophysicalTransportModel(momentumTransport, thermo),
     LESDict_(this->subOrEmptyDict("LES")),
     printCoeffs_(LESDict_.lookupOrDefault<Switch>("printCoeffs", false)),
     coeffDict_(LESDict_.optionalSubDict(type + "Coeffs"))
@@ -81,7 +78,8 @@ Foam::LESThermophysicalTransportModel
     BasicThermophysicalTransportModel
 >::New
 (
-    const momentumTransportModel& momentumTransport
+    const momentumTransportModel& momentumTransport,
+    const thermoModel& thermo
 )
 {
     IOobject header
@@ -122,7 +120,7 @@ Foam::LESThermophysicalTransportModel
 
         return autoPtr<LESThermophysicalTransportModel>
         (
-            cstrIter()(momentumTransport)
+            cstrIter()(momentumTransport, thermo)
         );
     }
     else
@@ -141,7 +139,7 @@ Foam::LESThermophysicalTransportModel
 
         return autoPtr<LESThermophysicalTransportModel>
         (
-            new LESeddyDiffusivity(momentumTransport)
+            new LESeddyDiffusivity(momentumTransport, thermo)
         );
     }
 }

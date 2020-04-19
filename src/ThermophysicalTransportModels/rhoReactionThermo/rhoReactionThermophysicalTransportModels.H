@@ -23,40 +23,27 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "PhaseThermophysicalTransportModel.H"
-
-#include "phaseCompressibleMomentumTransportModel.H"
-#include "addToRunTimeSelectionTable.H"
+#include "rhoReactionThermophysicalTransportModel.H"
+#include "fluidThermoMomentumTransportModels.H"
 #include "makeThermophysicalTransportModel.H"
-
-#include "laminarThermophysicalTransportModel.H"
-#include "RASThermophysicalTransportModel.H"
-#include "LESThermophysicalTransportModel.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 makeThermophysicalTransportModelTypes
 (
-    PhaseThermophysicalTransportModel,
-    phaseCompressibleMomentumTransportModel,
-    fluidThermo
-);
-
-
-makeThermophysicalTransportModels
-(
-    PhaseThermophysicalTransportModel,
-    phaseCompressibleMomentumTransportModel,
-    fluidThermo
+    ThermophysicalTransportModel,
+    fluidThermoCompressibleMomentumTransportModel,
+    rhoReactionThermo
 );
 
 
 #define makeLaminarThermophysicalTransportModel(Type)                          \
     makeThermophysicalTransportModel                                           \
     (                                                                          \
-        PhaseThermophysicalTransportModel,                                     \
-        phaseCompressibleMomentumTransportModel,                               \
-        fluidThermo,                                                           \
+        ThermophysicalTransportModel,                                          \
+        fluidThermoCompressibleMomentumTransportModel,                         \
+        rhoReactionThermo,                                                     \
         laminar,                                                               \
         Type                                                                   \
     )
@@ -64,9 +51,9 @@ makeThermophysicalTransportModels
 #define makeRASLESThermophysicalTransportModel(SType, Type)                    \
     makeTurbulenceThermophysicalTransportModel                                 \
     (                                                                          \
-        PhaseThermophysicalTransportModel,                                     \
-        phaseCompressibleMomentumTransportModel,                               \
-        fluidThermo,                                                           \
+        ThermophysicalTransportModel,                                          \
+        fluidThermoCompressibleMomentumTransportModel,                         \
+        rhoReactionThermo,                                                     \
         SType,                                                                 \
         Type                                                                   \
     )
@@ -74,9 +61,9 @@ makeThermophysicalTransportModels
 #define makeRASThermophysicalTransportModel(Type)                              \
     makeThermophysicalTransportModel                                           \
     (                                                                          \
-        PhaseThermophysicalTransportModel,                                     \
-        phaseCompressibleMomentumTransportModel,                               \
-        fluidThermo,                                                           \
+        ThermophysicalTransportModel,                                          \
+        fluidThermoCompressibleMomentumTransportModel,                         \
+        rhoReactionThermo,                                                     \
         RAS,                                                                   \
         Type                                                                   \
     )
@@ -84,36 +71,12 @@ makeThermophysicalTransportModels
 #define makeLESThermophysicalTransportModel(Type)                              \
     makeThermophysicalTransportModel                                           \
     (                                                                          \
-        PhaseThermophysicalTransportModel,                                     \
-        phaseCompressibleMomentumTransportModel,                               \
-        fluidThermo,                                                           \
+        ThermophysicalTransportModel,                                          \
+        fluidThermoCompressibleMomentumTransportModel,                         \
+        rhoReactionThermo,                                                     \
         LES,                                                                   \
         Type                                                                   \
     )
-
-
-// -------------------------------------------------------------------------- //
-// Laminar models
-// -------------------------------------------------------------------------- //
-
-#include "Fourier.H"
-makeLaminarThermophysicalTransportModel(Fourier);
-
-
-// -------------------------------------------------------------------------- //
-// RAS models
-// -------------------------------------------------------------------------- //
-
-#include "eddyDiffusivity.H"
-makeRASLESThermophysicalTransportModel(RAS, eddyDiffusivity);
-
-
-// -------------------------------------------------------------------------- //
-// LES models
-// -------------------------------------------------------------------------- //
-
-#include "eddyDiffusivity.H"
-makeRASLESThermophysicalTransportModel(LES, eddyDiffusivity);
 
 
 // ************************************************************************* //

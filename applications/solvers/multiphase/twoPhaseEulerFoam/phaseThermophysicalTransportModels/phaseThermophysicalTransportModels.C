@@ -38,14 +38,16 @@ License
 makeThermophysicalTransportModelTypes
 (
     PhaseThermophysicalTransportModel,
-    phaseCompressibleMomentumTransportModel
+    phaseCompressibleMomentumTransportModel,
+    fluidThermo
 );
 
 
 makeThermophysicalTransportModels
 (
     PhaseThermophysicalTransportModel,
-    phaseCompressibleMomentumTransportModel
+    phaseCompressibleMomentumTransportModel,
+    fluidThermo
 );
 
 
@@ -54,6 +56,7 @@ makeThermophysicalTransportModels
     (                                                                          \
         PhaseThermophysicalTransportModel,                                     \
         phaseCompressibleMomentumTransportModel,                               \
+        fluidThermo,                                                           \
         laminar,                                                               \
         Type                                                                   \
     )
@@ -63,6 +66,7 @@ makeThermophysicalTransportModels
     (                                                                          \
         PhaseThermophysicalTransportModel,                                     \
         phaseCompressibleMomentumTransportModel,                               \
+        fluidThermo,                                                           \
         SType,                                                                 \
         Type                                                                   \
     )
@@ -72,6 +76,7 @@ makeThermophysicalTransportModels
     (                                                                          \
         PhaseThermophysicalTransportModel,                                     \
         phaseCompressibleMomentumTransportModel,                               \
+        fluidThermo,                                                           \
         RAS,                                                                   \
         Type                                                                   \
     )
@@ -81,6 +86,7 @@ makeThermophysicalTransportModels
     (                                                                          \
         PhaseThermophysicalTransportModel,                                     \
         phaseCompressibleMomentumTransportModel,                               \
+        fluidThermo,                                                           \
         LES,                                                                   \
         Type                                                                   \
     )

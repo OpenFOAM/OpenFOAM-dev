@@ -47,7 +47,7 @@ namespace Foam
                Class ThermophysicalTransportModel Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class MomentumTransportModel>
+template<class MomentumTransportModel, class ThermoModel>
 class ThermophysicalTransportModel
 :
     public thermophysicalTransportModel
@@ -56,8 +56,8 @@ class ThermophysicalTransportModel
 public:
 
     typedef MomentumTransportModel momentumTransportModel;
+    typedef ThermoModel thermoModel;
     typedef typename momentumTransportModel::alphaField alphaField;
-    typedef typename MomentumTransportModel::thermoModel thermoModel;
 
 
 protected:
@@ -65,6 +65,7 @@ protected:
     // Protected data
 
         const momentumTransportModel& momentumTransport_;
+        const thermoModel& thermo_;
 
 
 public:
@@ -77,9 +78,10 @@ public:
             ThermophysicalTransportModel,
             dictionary,
             (
-                const momentumTransportModel& momentumTransport
+                const momentumTransportModel& momentumTransport,
+                const thermoModel& thermo
             ),
-            (momentumTransport)
+            (momentumTransport, thermo)
         );
 
 
@@ -88,7 +90,8 @@ public:
         //- Construct
         ThermophysicalTransportModel
         (
-            const momentumTransportModel& momentumTransport
+            const momentumTransportModel& momentumTransport,
+            const thermoModel& thermo
         );
 
         //- Disallow default bitwise copy construction
@@ -103,7 +106,8 @@ public:
         //- Return a reference to the selected thermophysical transport model
         static autoPtr<ThermophysicalTransportModel> New
         (
-            const momentumTransportModel& transport
+            const momentumTransportModel& transport,
+            const thermoModel& thermo
         );
 
 
@@ -123,7 +127,7 @@ public:
         //- Access function to incompressible transport model
         virtual const thermoModel& thermo() const
         {
-            return momentumTransport_.thermo();
+            return thermo_;
         }
 
         //- Access function to phase fraction

@@ -23,20 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "fluidThermophysicalTransportModel.H"
 #include "fluidThermoMomentumTransportModels.H"
-#include "addToRunTimeSelectionTable.H"
 #include "makeThermophysicalTransportModel.H"
-
-#include "laminarThermophysicalTransportModel.H"
-#include "RASThermophysicalTransportModel.H"
-#include "LESThermophysicalTransportModel.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 makeThermophysicalTransportModelTypes
 (
     ThermophysicalTransportModel,
-    fluidThermoCompressibleMomentumTransportModel
+    fluidThermoCompressibleMomentumTransportModel,
+    fluidThermo
 );
 
 
@@ -45,6 +43,7 @@ makeThermophysicalTransportModelTypes
     (                                                                          \
         ThermophysicalTransportModel,                                          \
         fluidThermoCompressibleMomentumTransportModel,                         \
+        fluidThermo,                                                           \
         laminar,                                                               \
         Type                                                                   \
     )
@@ -54,6 +53,7 @@ makeThermophysicalTransportModelTypes
     (                                                                          \
         ThermophysicalTransportModel,                                          \
         fluidThermoCompressibleMomentumTransportModel,                         \
+        fluidThermo,                                                           \
         SType,                                                                 \
         Type                                                                   \
     )
@@ -63,6 +63,7 @@ makeThermophysicalTransportModelTypes
     (                                                                          \
         ThermophysicalTransportModel,                                          \
         fluidThermoCompressibleMomentumTransportModel,                         \
+        fluidThermo,                                                           \
         RAS,                                                                   \
         Type                                                                   \
     )
@@ -72,6 +73,7 @@ makeThermophysicalTransportModelTypes
     (                                                                          \
         ThermophysicalTransportModel,                                          \
         fluidThermoCompressibleMomentumTransportModel,                         \
+        fluidThermo,                                                           \
         LES,                                                                   \
         Type                                                                   \
     )

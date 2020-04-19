@@ -50,13 +50,15 @@ void eddyDiffusivity<TurbulenceThermophysicalTransportModel>::correctAlphat()
 template<class TurbulenceThermophysicalTransportModel>
 eddyDiffusivity<TurbulenceThermophysicalTransportModel>::eddyDiffusivity
 (
-    const momentumTransportModel& momentumTransport
+    const momentumTransportModel& momentumTransport,
+    const thermoModel& thermo
 )
 :
     TurbulenceThermophysicalTransportModel
     (
         typeName,
-        momentumTransport
+        momentumTransport,
+        thermo
     ),
 
     Prt_

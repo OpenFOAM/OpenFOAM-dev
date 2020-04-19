@@ -58,12 +58,13 @@ autoPtr<compressible::RASModel> turbulence
 );
 
 Info<< "Creating thermophysical transport model\n" << endl;
-autoPtr<compressible::RASThermophysicalTransportModel>
+autoPtr<RASFluidThermophysicalTransportModel>
 thermophysicalTransport
 (
-    compressible::RASThermophysicalTransportModel::New
+    RASFluidThermophysicalTransportModel::New
     (
-        turbulence()
+        turbulence(),
+        thermo
     )
 );
 
