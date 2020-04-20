@@ -57,7 +57,7 @@ wmake $targetType transportModels
 twoPhaseModels/Allwmake $targetType $*
 thermophysicalModels/Allwmake $targetType $*
 MomentumTransportModels/Allwmake $targetType $*
-wmake $targetType ThermophysicalTransportModels
+ThermophysicalTransportModels/Allwmake $targetType $*
 wmake $targetType radiationModels
 wmake $targetType combustionModels
 regionModels/Allwmake $targetType $*
