@@ -25,6 +25,7 @@ License
 
 #include "PhaseThermophysicalTransportModel.H"
 #include "phaseCompressibleMomentumTransportModel.H"
+#include "rhoReactionThermo.H"
 #include "makeThermophysicalTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -38,7 +39,7 @@ makeThermophysicalTransportModelTypes
 (
     PhaseThermophysicalTransportModel,
     phaseCompressibleMomentumTransportModel,
-    rhoThermo
+    rhoReactionThermo
 );
 
 
@@ -46,7 +47,7 @@ makeThermophysicalTransportModels
 (
     PhaseThermophysicalTransportModel,
     phaseCompressibleMomentumTransportModel,
-    rhoThermo
+    rhoReactionThermo
 );
 
 
@@ -55,7 +56,7 @@ makeThermophysicalTransportModels
     (                                                                          \
         PhaseThermophysicalTransportModel,                                     \
         phaseCompressibleMomentumTransportModel,                               \
-        rhoThermo,                                                             \
+        rhoReactionThermo,                                                     \
         laminar,                                                               \
         Type                                                                   \
     )
@@ -65,7 +66,7 @@ makeThermophysicalTransportModels
     (                                                                          \
         PhaseThermophysicalTransportModel,                                     \
         phaseCompressibleMomentumTransportModel,                               \
-        rhoThermo,                                                             \
+        rhoReactionThermo,                                                     \
         SType,                                                                 \
         Type                                                                   \
     )
@@ -75,7 +76,7 @@ makeThermophysicalTransportModels
     (                                                                          \
         PhaseThermophysicalTransportModel,                                     \
         phaseCompressibleMomentumTransportModel,                               \
-        rhoThermo,                                                             \
+        rhoReactionThermo,                                                     \
         RAS,                                                                   \
         Type                                                                   \
     )
@@ -85,7 +86,7 @@ makeThermophysicalTransportModels
     (                                                                          \
         PhaseThermophysicalTransportModel,                                     \
         phaseCompressibleMomentumTransportModel,                               \
-        rhoThermo,                                                             \
+        rhoReactionThermo,                                                     \
         LES,                                                                   \
         Type                                                                   \
     )

@@ -39,8 +39,6 @@ SourceFiles
 #ifndef ThermoPhaseModel_H
 #define ThermoPhaseModel_H
 
-#include "phaseModel.H"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -52,7 +50,7 @@ class rhoThermo;
                       Class ThermoPhaseModel Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class BasePhaseModel, class ThermoType>
+template<class BasePhaseModel, class ThermoModel>
 class ThermoPhaseModel
 :
     public BasePhaseModel
@@ -62,10 +60,13 @@ protected:
     // Protected data
 
         //- Thermophysical model
-        autoPtr<ThermoType> thermo_;
+        autoPtr<ThermoModel> thermo_;
 
 
 public:
+
+    typedef ThermoModel thermoModel;
+
 
     // Constructors
 

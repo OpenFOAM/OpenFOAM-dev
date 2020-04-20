@@ -25,8 +25,6 @@ License
 
 #include "MovingPhaseModel.H"
 #include "phaseSystem.H"
-#include "phaseCompressibleMomentumTransportModel.H"
-#include "phaseThermophysicalTransportModel.H"
 #include "fixedValueFvPatchFields.H"
 #include "slipFvPatchFields.H"
 #include "partialSlipFvPatchFields.H"
@@ -37,8 +35,6 @@ License
 #include "fvcDdt.H"
 #include "fvcDiv.H"
 #include "fvcFlux.H"
-#include "surfaceInterpolate.H"
-#include "fvMatrix.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
@@ -177,7 +173,11 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
     ),
     thermophysicalTransport_
     (
-        phaseThermophysicalTransportModel::New(turbulence_, this->thermo())
+        PhaseThermophysicalTransportModel
+        <
+            phaseCompressibleMomentumTransportModel,
+            typename BasePhaseModel::thermoModel
+        >::New(turbulence_, this->thermo_)
     ),
     continuityError_
     (
