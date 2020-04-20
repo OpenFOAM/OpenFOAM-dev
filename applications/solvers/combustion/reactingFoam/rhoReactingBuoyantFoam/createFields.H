@@ -63,9 +63,14 @@ autoPtr<compressible::momentumTransportModel> turbulence
 );
 
 Info<< "Creating thermophysical transport model\n" << endl;
-autoPtr<fluidThermophysicalTransportModel> thermophysicalTransport
+autoPtr<rhoReactionThermophysicalTransportModel>
+thermophysicalTransport
 (
-    fluidThermophysicalTransportModel::New(turbulence(), thermo)
+    rhoReactionThermophysicalTransportModel::New
+    (
+        turbulence(),
+        thermo
+    )
 );
 
 Info<< "Creating reaction model\n" << endl;

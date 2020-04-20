@@ -1,0 +1,3 @@
+psiReactionThermophysicalTransportModels.C
+
+LIB = $(FOAM_LIBBIN)/libpsiReactionThermophysicalTransportModels

@@ -33,7 +33,7 @@ Description
 
 #include "fvCFD.H"
 #include "fluidThermoMomentumTransportModel.H"
-#include "fluidThermophysicalTransportModel.H"
+#include "rhoReactionThermophysicalTransportModel.H"
 #include "rhoReactionThermo.H"
 #include "CombustionModel.H"
 #include "fixedGradientFvPatchFields.H"

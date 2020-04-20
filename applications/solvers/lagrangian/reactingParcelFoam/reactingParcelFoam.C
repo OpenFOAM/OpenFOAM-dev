@@ -32,7 +32,7 @@ Description
 
 #include "fvCFD.H"
 #include "fluidThermoMomentumTransportModel.H"
-#include "fluidThermophysicalTransportModel.H"
+#include "rhoReactionThermophysicalTransportModel.H"
 #include "basicReactingMultiphaseCloud.H"
 #include "surfaceFilmModel.H"
 #include "rhoReactionThermo.H"
