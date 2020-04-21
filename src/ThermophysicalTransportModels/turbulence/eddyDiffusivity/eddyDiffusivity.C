@@ -54,6 +54,25 @@ eddyDiffusivity<TurbulenceThermophysicalTransportModel>::eddyDiffusivity
     const thermoModel& thermo
 )
 :
+    eddyDiffusivity
+    (
+        typeName,
+        momentumTransport,
+        thermo,
+        false
+    )
+{}
+
+
+template<class TurbulenceThermophysicalTransportModel>
+eddyDiffusivity<TurbulenceThermophysicalTransportModel>::eddyDiffusivity
+(
+    const word& type,
+    const momentumTransportModel& momentumTransport,
+    const thermoModel& thermo,
+    const bool allowDefaultPrt
+)
+:
     TurbulenceThermophysicalTransportModel
     (
         typeName,
@@ -63,11 +82,18 @@ eddyDiffusivity<TurbulenceThermophysicalTransportModel>::eddyDiffusivity
 
     Prt_
     (
-        dimensioned<scalar>::lookupOrAddToDict
+        allowDefaultPrt
+      ? dimensioned<scalar>::lookupOrAddToDict
         (
             "Prt",
             this->coeffDict_,
             1
+        )
+      : dimensioned<scalar>
+        (
+            "Prt",
+            dimless,
+            this->coeffDict_
         )
     ),
 

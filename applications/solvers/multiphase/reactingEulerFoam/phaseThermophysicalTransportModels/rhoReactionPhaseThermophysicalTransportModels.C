@@ -107,6 +107,9 @@ makeLaminarThermophysicalTransportModel(Fourier);
 #include "eddyDiffusivity.H"
 makeRASLESThermophysicalTransportModel(RAS, eddyDiffusivity);
 
+#include "nonUnityLewisEddyDiffusivity.H"
+makeRASLESThermophysicalTransportModel(RAS, nonUnityLewisEddyDiffusivity);
+
 
 // -------------------------------------------------------------------------- //
 // LES models
@@ -114,6 +117,9 @@ makeRASLESThermophysicalTransportModel(RAS, eddyDiffusivity);
 
 #include "eddyDiffusivity.H"
 makeRASLESThermophysicalTransportModel(LES, eddyDiffusivity);
+
+#include "nonUnityLewisEddyDiffusivity.H"
+makeRASLESThermophysicalTransportModel(LES, nonUnityLewisEddyDiffusivity);
 
 
 // ************************************************************************* //

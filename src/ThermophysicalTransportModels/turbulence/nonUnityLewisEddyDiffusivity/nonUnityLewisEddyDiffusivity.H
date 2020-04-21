@@ -22,12 +22,12 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::turbulenceThermophysicalTransportModels::eddyDiffusivity
+    Foam::turbulenceThermophysicalTransportModels::nonUnityLewisEddyDiffusivity
 
 Description
-    Eddy-diffusivity based gradient heat flux model for RAS or LES
-    of turbulent flow. Specie fluxes are computed assuming a unity turbulent
-    Lewis number.
+    Non-unity-Lewis-Eddy-diffusivity based gradient heat flux model for RAS or
+    LES of turbulent flow. Allows independent specification of turbulent
+    Prandtl and Schmidt numbers.
 
 Usage
     \verbatim
@@ -35,16 +35,19 @@ Usage
     {
         model           eddyDiffusivity;
         Prt             0.85;
+        Sct             0.7;
     }
     \endverbatim
 
 SourceFiles
-    eddyDiffusivity.C
+    nonUnityLewisEddyDiffusivity.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef eddyDiffusivity_H
-#define eddyDiffusivity_H
+#include "eddyDiffusivity.H"
+
+#ifndef nonUnityLewisEddyDiffusivity_H
+#define nonUnityLewisEddyDiffusivity_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,13 +57,13 @@ namespace turbulenceThermophysicalTransportModels
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class eddyDiffusivity Declaration
+                   Class nonUnityLewisEddyDiffusivity Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class TurbulenceThermophysicalTransportModel>
-class eddyDiffusivity
+class nonUnityLewisEddyDiffusivity
 :
-    public TurbulenceThermophysicalTransportModel
+    public eddyDiffusivity<TurbulenceThermophysicalTransportModel>
 {
 
 protected:
@@ -69,18 +72,8 @@ protected:
 
         // Model coefficients
 
-            //- Turbulent Prandtl number []
-            dimensionedScalar Prt_;
-
-        // Fields
-
-            //- Turbulent thermal diffusivity of enthalpy [kg/m/s]
-            volScalarField alphat_;
-
-
-    // Protected Member Functions
-
-        virtual void correctAlphat();
+            //- Turbulent Schmidt number []
+            dimensionedScalar Sct_;
 
 
 public:
@@ -97,32 +90,21 @@ public:
 
 
     //- Runtime type information
-    TypeName("eddyDiffusivity");
+    TypeName("nonUnityLewisEddyDiffusivity");
 
 
     // Constructors
 
         //- Construct from a momentum transport model and a thermo model
-        eddyDiffusivity
+        nonUnityLewisEddyDiffusivity
         (
             const momentumTransportModel& momentumTransport,
             const thermoModel& thermo
         );
 
-        //- Construct from a type name, a momentum transport model and a thermo
-        //  model, and whether to default the turbulent Prandtl number to one
-        //  if it is not specified
-        eddyDiffusivity
-        (
-            const word& type,
-            const momentumTransportModel& momentumTransport,
-            const thermoModel& thermo,
-            const bool allowDefaultPrt
-        );
-
 
     //- Destructor
-    virtual ~eddyDiffusivity()
+    virtual ~nonUnityLewisEddyDiffusivity()
     {}
 
 
@@ -130,53 +112,6 @@ public:
 
         //- Read thermophysicalTransport dictionary
         virtual bool read();
-
-        //- Turbulent thermal diffusivity for enthalpy [kg/m/s]
-        virtual tmp<volScalarField> alphat() const
-        {
-            return alphat_;
-        }
-
-        //- Turbulent thermal diffusivity for enthalpy for a patch [kg/m/s]
-        virtual tmp<scalarField> alphat(const label patchi) const
-        {
-            return alphat()().boundaryField()[patchi];
-        }
-
-        //- Effective thermal turbulent diffusivity for temperature
-        //  of mixture [W/m/K]
-        virtual tmp<volScalarField> kappaEff() const
-        {
-            return this->thermo().kappaEff(alphat());
-        }
-
-        //- Effective thermal turbulent diffusivity for temperature
-        //  of mixture for patch [W/m/K]
-        virtual tmp<scalarField> kappaEff(const label patchi) const
-        {
-            return this->thermo().kappaEff
-            (
-                alphat(patchi),
-                patchi
-            );
-        }
-
-        //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
-        virtual tmp<volScalarField> alphaEff() const
-        {
-            return this->thermo().alphaEff(alphat());
-        }
-
-        //- Effective thermal turbulent diffusivity of mixture
-        //  for patch [kg/m/s]
-        virtual tmp<scalarField> alphaEff(const label patchi) const
-        {
-            return this->thermo().alphaEff
-            (
-                alphat(patchi),
-                patchi
-            );
-        }
 
         //- Return the heat flux
         virtual tmp<volVectorField> q() const;
@@ -189,9 +124,6 @@ public:
 
         //- Return the source term for the given specie mass-fraction equation
         virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
-
-        //- Correct the eddyDiffusivity viscosity
-        virtual void correct();
 };
 
 
@@ -203,7 +135,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "eddyDiffusivity.C"
+    #include "nonUnityLewisEddyDiffusivity.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

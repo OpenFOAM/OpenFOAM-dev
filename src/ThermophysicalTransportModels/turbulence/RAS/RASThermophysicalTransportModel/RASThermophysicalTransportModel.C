@@ -139,7 +139,13 @@ Foam::RASThermophysicalTransportModel
 
         return autoPtr<RASThermophysicalTransportModel>
         (
-            new RASeddyDiffusivity(momentumTransport, thermo)
+            new RASeddyDiffusivity
+            (
+                RASeddyDiffusivity::typeName,
+                momentumTransport,
+                thermo,
+                true
+            )
         );
     }
 }

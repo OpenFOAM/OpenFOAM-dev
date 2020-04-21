@@ -139,7 +139,13 @@ Foam::LESThermophysicalTransportModel
 
         return autoPtr<LESThermophysicalTransportModel>
         (
-            new LESeddyDiffusivity(momentumTransport, thermo)
+            new LESeddyDiffusivity
+            (
+                LESeddyDiffusivity::typeName,
+                momentumTransport,
+                thermo,
+                true
+            )
         );
     }
 }
