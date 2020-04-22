@@ -227,7 +227,6 @@ public:
         virtual bool write() = 0;
 
         //- Called when Time::run() determines that the time-loop exits.
-        //  By default it simply calls execute().
         virtual bool end();
 
         //- Called by Time::setDeltaT(). Allows the functionObject to override
