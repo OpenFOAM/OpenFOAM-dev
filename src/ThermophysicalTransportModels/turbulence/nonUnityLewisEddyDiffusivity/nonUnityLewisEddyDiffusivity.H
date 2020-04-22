@@ -27,7 +27,8 @@ Class
 Description
     Non-unity-Lewis-Eddy-diffusivity based gradient heat flux model for RAS or
     LES of turbulent flow. Allows independent specification of turbulent
-    Prandtl and Schmidt numbers.
+    Prandtl and Schmidt numbers. The laminar Lewis number is still assumed to
+    equal one.
 
 Usage
     \verbatim
@@ -113,17 +114,36 @@ public:
         //- Read thermophysicalTransport dictionary
         virtual bool read();
 
+        //- Effective mass diffusivity for a given specie mass-fraction [kg/m/s]
+        virtual tmp<volScalarField> DEff(const volScalarField& Yi) const
+        {
+            return volScalarField::New
+            (
+                "DEff",
+                this->thermo().alphaEff(this->Prt_/Sct_*this->alphat())
+            );
+        }
+
+        //- Effective mass diffusivity for a given specie mass-fraction
+        //  for patch [kg/m/s]
+        virtual tmp<scalarField> DEff
+        (
+            const volScalarField& Yi,
+            const label patchi
+        ) const
+        {
+            return this->thermo().alphaEff
+            (
+                this->Prt_.value()/Sct_.value()*this->alphat(patchi),
+                patchi
+            );
+        }
+
         //- Return the heat flux
         virtual tmp<volVectorField> q() const;
 
         //- Return the source term for the energy equation
         virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
-
-        //- Return the specie flux for the given specie mass-fraction
-        virtual tmp<volVectorField> j(const volScalarField& Yi) const;
-
-        //- Return the source term for the given specie mass-fraction equation
-        virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
 };
 
 

@@ -116,6 +116,17 @@ public:
         //  for patch [kg/m/s]
         virtual tmp<scalarField> alphaEff(const label patchi) const = 0;
 
+        //- Effective mass diffusivity for a given specie mass-fraction [kg/m/s]
+        virtual tmp<volScalarField> DEff(const volScalarField& Yi) const = 0;
+
+        //- Effective mass diffusivity for a given specie mass-fraction
+        //  for patch [kg/m/s]
+        virtual tmp<scalarField> DEff
+        (
+            const volScalarField& Yi,
+            const label patchi
+        ) const = 0;
+
         //- Return the heat flux
         virtual tmp<volVectorField> q() const = 0;
 

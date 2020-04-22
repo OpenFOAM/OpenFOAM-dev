@@ -95,17 +95,17 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
 
         const PtrList<volScalarField>& Y = composition.Y();
 
-        volScalarField alphaEffMinusDEff
+        volScalarField alphatMinusDt
         (
-            "alphaEffMinusDEff",
-            this->alphaEff()*(1 - this->Prt_/Sct_)
+            "alphatMinusDt",
+            this->alphat()*(1 - this->Prt_/Sct_)
         );
 
         forAll(Y, i)
         {
             tmpq.ref() +=
                 this->alpha()
-               *alphaEffMinusDEff
+               *alphatMinusDt
                *composition.HE(i, this->thermo().p(), this->thermo().T())
                *fvc::grad(Y[i]);
         }
@@ -131,10 +131,10 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
 
         const PtrList<volScalarField>& Y = composition.Y();
 
-        volScalarField alphaEffMinusDEff
+        volScalarField alphatMinusDt
         (
-            "alphaEffMinusDEff",
-            this->alphaEff()*(1 - this->Prt_/Sct_)
+            "alphatMinusDt",
+            this->alphat()*(1 - this->Prt_/Sct_)
         );
 
         forAll(Y, i)
@@ -143,7 +143,7 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
                 fvc::laplacian
                 (
                     this->alpha()
-                   *alphaEffMinusDEff
+                   *alphatMinusDt
                    *composition.HE(i, this->thermo().p(), this->thermo().T()),
                     Y[i]
                 );
@@ -151,32 +151,6 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
     }
 
     return tmpDivq;
-}
-
-
-template<class TurbulenceThermophysicalTransportModel>
-tmp<volVectorField>
-nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
-(
-    const volScalarField& Yi
-) const
-{
-    return
-        this->Prt_/Sct_
-       *eddyDiffusivity<TurbulenceThermophysicalTransportModel>::j(Yi);
-}
-
-
-template<class TurbulenceThermophysicalTransportModel>
-tmp<fvScalarMatrix>
-nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divj
-(
-    volScalarField& Yi
-) const
-{
-    return
-        this->Prt_/Sct_
-       *eddyDiffusivity<TurbulenceThermophysicalTransportModel>::divj(Yi);
 }
 
 

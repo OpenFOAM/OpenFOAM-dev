@@ -175,7 +175,7 @@ eddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
             "j(" + Yi.name() + ')',
             this->momentumTransport().alphaRhoPhi().group()
         ),
-       -this->alphaEff()*this->alpha()*fvc::grad(Yi)
+       -this->DEff(Yi)*this->alpha()*fvc::grad(Yi)
     );
 }
 
@@ -187,7 +187,7 @@ eddyDiffusivity<TurbulenceThermophysicalTransportModel>::divj
     volScalarField& Yi
 ) const
 {
-    return -fvm::laplacian(this->alpha()*this->alphaEff(), Yi);
+    return -fvm::laplacian(this->alpha()*this->DEff(Yi), Yi);
 }
 
 

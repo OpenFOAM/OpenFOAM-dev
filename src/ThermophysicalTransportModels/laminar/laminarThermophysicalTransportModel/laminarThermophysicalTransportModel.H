@@ -181,6 +181,27 @@ public:
             return this->thermo().alphahe(patchi);
         }
 
+        //- Effective mass diffusivity for a given specie mass-fraction [kg/m/s]
+        virtual tmp<volScalarField> DEff(const volScalarField& Yi) const
+        {
+            return volScalarField::New
+            (
+                "DEff",
+                alphaEff()
+            );
+        }
+
+        //- Effective mass diffusivity for a given specie mass-fraction
+        //  for patch [kg/m/s]
+        virtual tmp<scalarField> DEff
+        (
+            const volScalarField& Yi,
+            const label patchi
+        ) const
+        {
+            return alphaEff(patchi);
+        }
+
         //- Correct the laminar transport
         virtual void correct();
 
