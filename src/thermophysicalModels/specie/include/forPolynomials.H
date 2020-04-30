@@ -30,8 +30,7 @@ License
 
 #include "icoPolynomial.H"
 
-#include "eConstThermo.H"
-#include "hConstThermo.H"
+#include "hPolynomialThermo.H"
 
 #include "sensibleEnthalpy.H"
 #include "sensibleInternalEnergy.H"
@@ -45,17 +44,15 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define forPolynomialEqns(Mu, He, Cp, Macro, Args...)                          \
-    forThermo(Mu, He, Cp, icoPolynomial, specie, Macro, Args);
+#define forPolynomialEquations(Mu, He, Cp, Args...)                            \
+    forThermo(Mu, He, Cp, icoPolynomial, specie, Args);
 
-#define forPolynomialEnergiesAndThermos(Mu, Macro, Args...)                    \
-    forPolynomialEqns(Mu, sensibleEnthalpy, hConstThermo, Macro, Args);        \
-    forPolynomialEqns(Mu, sensibleInternalEnergy, eConstThermo, Macro, Args);  \
-    forPolynomialEqns(Mu, sensibleInternalEnergy, hConstThermo, Macro, Args)
+#define forPolynomialEnergiesAndThermos(Mu, Args...)                           \
+    forPolynomialEquations(Mu, sensibleEnthalpy, hPolynomialThermo, Args);     \
+    forPolynomialEquations(Mu, sensibleInternalEnergy, hPolynomialThermo, Args)
 
-#define forPolynomialTransports(Macro, Args...)                                \
-    forPolynomialEnergiesAndThermos(logPolynomialTransport, Macro, Args);      \
-    forPolynomialEnergiesAndThermos(polynomialTransport, Macro, Args)
+#define forPolynomialTransports(Args...)                                       \
+    forPolynomialEnergiesAndThermos(polynomialTransport, Args)
 
 #define forPolynomials(Macro, Args...)                                         \
     forPolynomialTransports(Macro, Args)

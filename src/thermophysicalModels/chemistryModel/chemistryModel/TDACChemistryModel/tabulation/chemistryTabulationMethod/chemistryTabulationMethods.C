@@ -31,6 +31,7 @@ License
 
 #include "forCommonGases.H"
 #include "forCommonLiquids.H"
+#include "forPolynomials.H"
 #include "makeChemistryTabulationMethod.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -49,6 +50,11 @@ namespace Foam
 
     forCommonLiquids(makeChemistryTabulationMethod, none, rhoReactionThermo);
     forCommonLiquids(makeChemistryTabulationMethod, ISAT, rhoReactionThermo);
+
+    forPolynomials(defineChemistryTabulationMethod, rhoReactionThermo);
+
+    forPolynomials(makeChemistryTabulationMethod, none, rhoReactionThermo);
+    forPolynomials(makeChemistryTabulationMethod, ISAT, rhoReactionThermo);
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

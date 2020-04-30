@@ -35,6 +35,7 @@ License
 
 #include "forCommonGases.H"
 #include "forCommonLiquids.H"
+#include "forPolynomials.H"
 #include "makeChemistryReductionMethod.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -65,6 +66,15 @@ namespace Foam
     forCommonLiquids(makeChemistryReductionMethod, DRGEP, rhoReactionThermo);
     forCommonLiquids(makeChemistryReductionMethod, EFA, rhoReactionThermo);
     forCommonLiquids(makeChemistryReductionMethod, PFA, rhoReactionThermo);
+
+    forPolynomials(defineChemistryReductionMethod, rhoReactionThermo);
+
+    forPolynomials(makeChemistryReductionMethod, none, rhoReactionThermo);
+    forPolynomials(makeChemistryReductionMethod, DAC, rhoReactionThermo);
+    forPolynomials(makeChemistryReductionMethod, DRG, rhoReactionThermo);
+    forPolynomials(makeChemistryReductionMethod, DRGEP, rhoReactionThermo);
+    forPolynomials(makeChemistryReductionMethod, EFA, rhoReactionThermo);
+    forPolynomials(makeChemistryReductionMethod, PFA, rhoReactionThermo);
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

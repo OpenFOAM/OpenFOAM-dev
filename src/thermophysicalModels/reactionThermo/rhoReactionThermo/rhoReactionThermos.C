@@ -30,7 +30,6 @@ License
 #include "rhoReactionThermo.H"
 #include "heRhoThermo.H"
 
-#include "forCommonGases.H"
 #include "forGases.H"
 #include "forLiquids.H"
 #include "forPolynomials.H"

@@ -35,6 +35,7 @@ License
 
 #include "forCommonGases.H"
 #include "forCommonLiquids.H"
+#include "forPolynomials.H"
 #include "makeChemistrySolver.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -93,6 +94,12 @@ namespace Foam
     );
     forCommonLiquids(makeChemistrySolvers, EulerImplicit, rhoReactionThermo);
     forCommonLiquids(makeChemistrySolvers, ode, rhoReactionThermo);
+
+    forPolynomials(defineChemistrySolvers, rhoReactionThermo);
+
+    forPolynomials(makeChemistrySolvers, noChemistrySolver, rhoReactionThermo);
+    forPolynomials(makeChemistrySolvers, EulerImplicit, rhoReactionThermo);
+    forPolynomials(makeChemistrySolvers, ode, rhoReactionThermo);
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

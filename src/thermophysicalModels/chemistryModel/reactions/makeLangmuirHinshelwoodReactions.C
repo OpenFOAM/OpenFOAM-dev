@@ -28,6 +28,7 @@ License
 #include "LangmuirHinshelwoodReactionRate.H"
 
 #include "forCommonGases.H"
+#include "forCommonLiquids.H"
 #include "forPolynomials.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -35,6 +36,7 @@ License
 namespace Foam
 {
     forCommonGases(makeIRReactions, LangmuirHinshelwoodReactionRate);
+    forCommonLiquids(makeIRReactions, LangmuirHinshelwoodReactionRate);
     forPolynomials(makeIRReactions, LangmuirHinshelwoodReactionRate);
 }
 
