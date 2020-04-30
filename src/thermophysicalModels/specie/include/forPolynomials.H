@@ -52,6 +52,7 @@ License
     forPolynomialEquations(Mu, sensibleInternalEnergy, hPolynomialThermo, Args)
 
 #define forPolynomialTransports(Args...)                                       \
+    forPolynomialEnergiesAndThermos(logPolynomialTransport, Args);             \
     forPolynomialEnergiesAndThermos(polynomialTransport, Args)
 
 #define forPolynomials(Macro, Args...)                                         \
