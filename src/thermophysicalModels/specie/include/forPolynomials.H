@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +23,43 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "CombustionModel.H"
+#ifndef forPolynomials_H
+#define forPolynomials_H
 
-#include "psiReactionThermo.H"
-#include "rhoReactionThermo.H"
+#include "specie.H"
 
-#include "makeCombustionModel.H"
+#include "icoPolynomial.H"
+
+#include "eConstThermo.H"
+#include "hConstThermo.H"
+
+#include "sensibleEnthalpy.H"
+#include "sensibleInternalEnergy.H"
+
+#include "logPolynomialTransport.H"
+#include "polynomialTransport.H"
+
+#include "thermo.H"
+
+#include "forThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    defineCombustionModel(psiReactionThermo);
-    defineCombustionModel(rhoReactionThermo);
-}
+#define forPolynomialEqns(Mu, He, Cp, Macro, Args...)                          \
+    forThermo(Mu, He, Cp, icoPolynomial, specie, Macro, Args);
+
+#define forPolynomialEnergiesAndThermos(Mu, Macro, Args...)                    \
+    forPolynomialEqns(Mu, sensibleEnthalpy, hConstThermo, Macro, Args);        \
+    forPolynomialEqns(Mu, sensibleInternalEnergy, eConstThermo, Macro, Args);  \
+    forPolynomialEqns(Mu, sensibleInternalEnergy, hConstThermo, Macro, Args)
+
+#define forPolynomialTransports(Macro, Args...)                                \
+    forPolynomialEnergiesAndThermos(logPolynomialTransport, Macro, Args);      \
+    forPolynomialEnergiesAndThermos(polynomialTransport, Macro, Args)
+
+#define forPolynomials(Macro, Args...)                                         \
+    forPolynomialTransports(Macro, Args)
+
+#endif
 
 // ************************************************************************* //

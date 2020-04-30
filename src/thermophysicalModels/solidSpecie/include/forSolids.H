@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,90 +21,48 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Typedefs
-    Foam::solidThermoPhysicsTypes
-
-Description
-    Type definitions for solid-thermo-physics models
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef solidThermoPhysicsTypes_H
-#define solidThermoPhysicsTypes_H
+#ifndef forSolids_H
+#define forSolids_H
 
 #include "specie.H"
+
 #include "rhoConst.H"
+
 #include "hConstThermo.H"
 #include "hPolynomialThermo.H"
 #include "hPowerThermo.H"
+
+#include "sensibleEnthalpy.H"
+
 #include "constIsoSolidTransport.H"
 #include "constAnIsoSolidTransport.H"
 #include "exponentialSolidTransport.H"
 #include "polynomialSolidTransport.H"
 
-#include "sensibleEnthalpy.H"
 #include "thermo.H"
 
+#include "forThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    typedef
-        constIsoSolidTransport
-        <
-            species::thermo
-            <
-                hConstThermo
-                <
-                    rhoConst<specie>
-                >,
-                sensibleEnthalpy
-            >
-        > hConstSolidThermoPhysics;
+#define forSolidEquations(Mu, He, Cp, Macro, Args...)                          \
+    forThermo(Mu, He, Cp, rhoConst, specie, Macro, Args)
 
-    typedef
-        exponentialSolidTransport
-        <
-            species::thermo
-            <
-                hPowerThermo
-                <
-                    rhoConst<specie>
-                >,
-                sensibleEnthalpy
-            >
-        > hPowerSolidThermoPhysics;
+#define forSolidEnergiesAndThermos(Mu, Macro, Args...)                         \
+    forSolidEquations(Mu, sensibleEnthalpy, hConstThermo, Macro, Args);        \
+    forSolidEquations(Mu, sensibleEnthalpy, hPolynomialThermo, Macro, Args);   \
+    forSolidEquations(Mu, sensibleEnthalpy, hPowerThermo, Macro, Args)
 
-    typedef
-        polynomialSolidTransport
-        <
-            species::thermo
-            <
-                hPolynomialThermo
-                <
-                    rhoConst<specie>,
-                    8
-                >,
-                sensibleEnthalpy
-            >,
-            8
-        > hTransportThermoPoly8SolidThermoPhysics;
+#define forSolidTransports(Macro, Args...)                                     \
+    forSolidEnergiesAndThermos(constIsoSolidTransport, Macro, Args);           \
+    forSolidEnergiesAndThermos(constAnIsoSolidTransport, Macro, Args);         \
+    forSolidEnergiesAndThermos(exponentialSolidTransport, Macro, Args);        \
+    forSolidEnergiesAndThermos(polynomialSolidTransport, Macro, Args)
 
-     typedef
-        constIsoSolidTransport
-        <
-            species::thermo
-            <
-                hPowerThermo
-                <
-                    rhoConst<specie>
-                >,
-                sensibleEnthalpy
-            >
-        > hExpKappaConstSolidThermoPhysics;
-}
-
+#define forSolids(Macro, Args...)                                              \
+    forSolidTransports(Macro, Args)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

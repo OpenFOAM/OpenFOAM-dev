@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,16 +38,6 @@ Description
 #include "ReversibleReaction.H"
 #include "NonEquilibriumReversibleReaction.H"
 
-#include "thermo.H"
-
-#include "sutherlandTransport.H"
-#include "janafThermo.H"
-#include "perfectGas.H"
-
-#include "polynomialTransport.H"
-#include "hPolynomialThermo.H"
-#include "icoPolynomial.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -57,108 +47,125 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeReactionName(Thermo, ReactionType, ReactionRate)                   \
-    typedef Reaction<Thermo> Reaction##Thermo;                                 \
+#define defineReaction(nullArg, ThermoPhysics)                                 \
                                                                                \
-    typedef ReactionType<Thermo, ReactionRate>                                 \
-        ReactionType##Thermo##ReactionRate;                                    \
+    typedef Reaction<ThermoPhysics> Reaction##ThermoPhysics;                   \
+                                                                               \
+    defineTemplateTypeNameAndDebug(Reaction##ThermoPhysics, 0);                \
+                                                                               \
+    defineTemplateRunTimeSelectionTable(Reaction##ThermoPhysics, dictionary)   \
+    defineTemplateRunTimeSelectionTable                                        \
+    (                                                                          \
+        Reaction##ThermoPhysics,                                               \
+        objectRegistry                                                         \
+    )
+
+
+#define makeReaction(ReactionType, ReactionRate, ThermoPhysics)                \
+                                                                               \
+    typedef ReactionType<ThermoPhysics, ReactionRate>                          \
+        ReactionType##ThermoPhysics##ReactionRate;                             \
+    typedef Reaction<ThermoPhysics>                                            \
+        ReactionType##ThermoPhysics##ReactionRate##Base;                       \
                                                                                \
     template<>                                                                 \
-    const word ReactionType##Thermo##ReactionRate::typeName                    \
+    const word ReactionType##ThermoPhysics##ReactionRate::typeName             \
     (                                                                          \
         ReactionType::typeName_()                                              \
       + ReactionRate::type().capitalise()                                      \
-    );
-
-
-#define makeReaction(Thermo, ReactionType, ReactionRate)                       \
-    makeReactionName(Thermo, ReactionType, ReactionRate)                       \
+    );                                                                         \
                                                                                \
     addToRunTimeSelectionTable                                                 \
     (                                                                          \
-        Reaction##Thermo,                                                      \
-        ReactionType##Thermo##ReactionRate,                                    \
+        ReactionType##ThermoPhysics##ReactionRate##Base,                       \
+        ReactionType##ThermoPhysics##ReactionRate,                             \
         dictionary                                                             \
-    );
+    )
 
 
-#define makeGeneralReaction(Thermo, ReactionType, ReactionRate)                \
-    makeReactionName(Thermo, ReactionType, ReactionRate)                       \
+#define makeGeneralReaction(ReactionType, ReactionRate, ThermoPhysics)         \
+                                                                               \
+    typedef ReactionType<ThermoPhysics, ReactionRate>                          \
+        ReactionType##ThermoPhysics##ReactionRate;                             \
+    typedef Reaction<ThermoPhysics>                                            \
+        ReactionType##ThermoPhysics##ReactionRate##Base;                       \
+                                                                               \
+    template<>                                                                 \
+    const word ReactionType##ThermoPhysics##ReactionRate::typeName             \
+    (                                                                          \
+        ReactionType::typeName_()                                              \
+      + ReactionRate::type().capitalise()                                      \
+    );                                                                         \
                                                                                \
     addToRunTimeSelectionTable                                                 \
     (                                                                          \
-        Reaction##Thermo,                                                      \
-        ReactionType##Thermo##ReactionRate,                                    \
+        ReactionType##ThermoPhysics##ReactionRate##Base,                       \
+        ReactionType##ThermoPhysics##ReactionRate,                             \
         objectRegistry                                                         \
     );
 
 
 #define makePressureDependentReaction\
 (                                                                              \
-    Thermo,                                                                    \
-    Reaction,                                                                  \
+    ReactionType,                                                              \
     PressureDependentReactionRate,                                             \
     ReactionRate,                                                              \
-    FallOffFunction                                                            \
+    FallOffFunction,                                                           \
+    ThermoPhysics                                                              \
 )                                                                              \
+                                                                               \
     typedef PressureDependentReactionRate<ReactionRate, FallOffFunction>       \
         PressureDependentReactionRate##ReactionRate##FallOffFunction;          \
                                                                                \
     makeReaction                                                               \
     (                                                                          \
-        Thermo,                                                                \
-        Reaction,                                                              \
-        PressureDependentReactionRate##ReactionRate##FallOffFunction           \
+        ReactionType,                                                          \
+        PressureDependentReactionRate##ReactionRate##FallOffFunction,          \
+        ThermoPhysics                                                          \
     )
 
 
-#define makeIRReactions(Thermo, ReactionRate)                                  \
-    makeReaction(Thermo, IrreversibleReaction, ReactionRate)                   \
-    makeReaction(Thermo, ReversibleReaction, ReactionRate)
+#define makeIReactions(ReactionRate, ThermoPhysics)                            \
+                                                                               \
+    makeReaction(IrreversibleReaction, ReactionRate, ThermoPhysics)
 
 
-#define makeIRNReactions(Thermo, ReactionRate)                                 \
-    makeIRReactions(Thermo, ReactionRate)                                      \
-    makeReaction(Thermo, NonEquilibriumReversibleReaction, ReactionRate)
+#define makeIRReactions(ReactionRate, ThermoPhysics)                           \
+                                                                               \
+    makeIReactions(ReactionRate, ThermoPhysics);                               \
+    makeReaction(ReversibleReaction, ReactionRate, ThermoPhysics)
 
 
-#define makePressureDependentReactions(Thermo, ReactionRate, FallOffFunction)  \
+#define makeIRNReactions(ReactionRate, ThermoPhysics)                          \
+                                                                               \
+    makeIRReactions(ReactionRate, ThermoPhysics);                              \
+    makeReaction(NonEquilibriumReversibleReaction, ReactionRate, ThermoPhysics)
+
+
+#define makeIRRPressureDependentReactions\
+(                                                                              \
+    PressureDependentReactionRate,                                             \
+    ReactionRate,                                                              \
+    FallOffFunction,                                                           \
+    ThermoPhysics                                                              \
+)                                                                              \
+                                                                               \
     makePressureDependentReaction                                              \
     (                                                                          \
-        Thermo,                                                                \
         IrreversibleReaction,                                                  \
-        FallOffReactionRate,                                                   \
+        PressureDependentReactionRate,                                         \
         ReactionRate,                                                          \
-        FallOffFunction                                                        \
-    )                                                                          \
-                                                                               \
+        FallOffFunction,                                                       \
+        ThermoPhysics                                                          \
+    );                                                                         \
     makePressureDependentReaction                                              \
     (                                                                          \
-        Thermo,                                                                \
         ReversibleReaction,                                                    \
-        FallOffReactionRate,                                                   \
+        PressureDependentReactionRate,                                         \
         ReactionRate,                                                          \
-        FallOffFunction                                                        \
-    )                                                                          \
-                                                                               \
-    makePressureDependentReaction                                              \
-    (                                                                          \
-        Thermo,                                                                \
-        IrreversibleReaction,                                                  \
-        ChemicallyActivatedReactionRate,                                       \
-        ReactionRate,                                                          \
-        FallOffFunction                                                        \
-    )                                                                          \
-                                                                               \
-    makePressureDependentReaction                                              \
-    (                                                                          \
-        Thermo,                                                                \
-        ReversibleReaction,                                                    \
-        ChemicallyActivatedReactionRate,                                       \
-        ReactionRate,                                                          \
-        FallOffFunction                                                        \
+        FallOffFunction,                                                       \
+        ThermoPhysics                                                          \
     )
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

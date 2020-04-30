@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,13 @@ SourceFiles
 #include "speciesTable.H"
 #include "specieElement.H"
 #include "atomicWeights.H"
-#include "reactionTypes.H"
+
+#include "specie.H"
+#include "perfectGas.H"
+#include "janafThermo.H"
+#include "sensibleEnthalpy.H"
+#include "sutherlandTransport.H"
+#include "thermo.H"
 
 #include <FlexLexer.h>
 
@@ -54,6 +60,8 @@ SourceFiles
 
 namespace Foam
 {
+
+
 
 typedef HashTable<List<specieElement>> speciesCompositionTable;
 
@@ -76,6 +84,21 @@ public:
             liquid,
             gas
         };
+
+    // Public typedefs
+
+        typedef
+            sutherlandTransport
+            <
+                species::thermo
+                <
+                    janafThermo
+                    <
+                        perfectGas<specie>
+                    >,
+                    sensibleEnthalpy
+                >
+            > thermoPhysics;
 
 
 private:
@@ -173,13 +196,13 @@ private:
         HashTable<phase> speciePhase_;
 
         //- Table of the thermodynamic data given in the CHEMKIN file
-        HashPtrTable<gasHThermoPhysics> speciesThermo_;
+        HashPtrTable<thermoPhysics> speciesThermo_;
 
         //- Table of species composition
         speciesCompositionTable speciesComposition_;
 
         //- List of the reactions
-        ReactionList<gasHThermoPhysics> reactions_;
+        ReactionList<thermoPhysics> reactions_;
 
         //- Transport properties dictionary
         dictionary transportDict_;
@@ -351,13 +374,13 @@ public:
         }
 
         //- Table of the thermodynamic data given in the CHEMKIN file
-        const HashPtrTable<gasHThermoPhysics>& speciesThermo() const
+        const HashPtrTable<thermoPhysics>& speciesThermo() const
         {
             return speciesThermo_;
         }
 
         //- List of the reactions
-        const ReactionList<gasHThermoPhysics>& reactions() const
+        const ReactionList<thermoPhysics>& reactions() const
         {
             return reactions_;
         }

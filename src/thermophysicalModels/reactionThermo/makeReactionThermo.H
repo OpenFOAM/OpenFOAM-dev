@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,13 +26,13 @@ License
 #ifndef makeReactionThermo_H
 #define makeReactionThermo_H
 
-#include "addToRunTimeSelectionTable.H"
 #include "makeThermo.H"
 #include "SpecieMixture.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineThermoPhysicsReactionThermo(BaseReactionThermo,CThermo,Mixture,ThermoPhys) \
+#define defineReactionThermo(BaseReactionThermo, CThermo, Mixture, ThermoPhys) \
                                                                                \
     typedef CThermo                                                            \
     <                                                                          \
@@ -49,14 +49,18 @@ License
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
         CThermo##Mixture##ThermoPhys,                                          \
-        (#CThermo"<" + Mixture<ThermoPhys>::typeName() + ">").c_str(),         \
+        (                                                                      \
+            word(CThermo##Mixture##ThermoPhys::typeName_()) + "<"              \
+          + Mixture<ThermoPhys>::typeName() + ">"                              \
+        ).c_str(),                                                             \
         0                                                                      \
     )
 
 
-#define makeThermoPhysicsReactionThermos(BaseThermo,BaseReactionThermo,CThermo,Mixture,ThermoPhys) \
+#define makeReactionThermos(                                                   \
+    BaseThermo, BaseReactionThermo, CThermo, Mixture, ThermoPhys)              \
                                                                                \
-    defineThermoPhysicsReactionThermo                                          \
+    defineReactionThermo                                                       \
     (                                                                          \
         BaseReactionThermo,                                                    \
         CThermo,                                                               \
@@ -64,15 +68,15 @@ License
         ThermoPhys                                                             \
     );                                                                         \
                                                                                \
-    addThermoPhysicsThermo(basicThermo, CThermo##Mixture##ThermoPhys);         \
-    addThermoPhysicsThermo(fluidThermo, CThermo##Mixture##ThermoPhys);         \
-    addThermoPhysicsThermo(BaseThermo, CThermo##Mixture##ThermoPhys);          \
-    addThermoPhysicsThermo(BaseReactionThermo, CThermo##Mixture##ThermoPhys)
+    addThermo(basicThermo, CThermo##Mixture##ThermoPhys);                      \
+    addThermo(fluidThermo, CThermo##Mixture##ThermoPhys);                      \
+    addThermo(BaseThermo, CThermo##Mixture##ThermoPhys);                       \
+    addThermo(BaseReactionThermo, CThermo##Mixture##ThermoPhys)
 
 
-#define makeThermoPhysicsReactionThermo(BaseReactionThermo,CThermo,Mixture,ThermoPhys) \
+#define makeReactionThermo(BaseReactionThermo, CThermo, Mixture, ThermoPhys)   \
                                                                                \
-    defineThermoPhysicsReactionThermo                                          \
+    defineReactionThermo                                                       \
     (                                                                          \
         BaseReactionThermo,                                                    \
         CThermo,                                                               \
@@ -80,34 +84,8 @@ License
         ThermoPhys                                                             \
     );                                                                         \
                                                                                \
-    addThermoPhysicsThermo(BaseReactionThermo, CThermo##Mixture##ThermoPhys)
+    addThermo(BaseReactionThermo, CThermo##Mixture##ThermoPhys)
 
-
-#define makeReactionThermos(BaseThermo,BaseReactionThermo,CThermo,Mixture,Transport,Type,Thermo,EqnOfState,Specie) \
-                                                                               \
-    typedefThermoPhysics(Transport,Type,Thermo,EqnOfState,Specie);             \
-                                                                               \
-    makeThermoPhysicsReactionThermos                                           \
-    (                                                                          \
-        BaseThermo,                                                            \
-        BaseReactionThermo,                                                    \
-        CThermo,                                                               \
-        Mixture,                                                               \
-        Transport##Type##Thermo##EqnOfState##Specie                            \
-    )
-
-
-#define makeReactionThermo(BaseReactionThermo,CThermo,Mixture,Transport,Type,Thermo,EqnOfState,Specie) \
-                                                                               \
-    typedefThermoPhysics(Transport,Type,Thermo,EqnOfState,Specie);             \
-                                                                               \
-    makeThermoPhysicsReactionThermo                                            \
-    (                                                                          \
-        BaseReactionThermo,                                                    \
-        CThermo,                                                               \
-        Mixture,                                                               \
-        Transport##Type##Thermo##EqnOfState##Specie                            \
-    )
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

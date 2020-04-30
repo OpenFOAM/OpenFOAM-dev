@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,73 +22,66 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 InClass
-    Foam::solidThermo
+    Foam::fluidThermo
 
 Description
-    Macros for creating solid thermo packages
+    Macros for creating basic fluid thermo packages
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef makeHeSolidThermo_H
-#define makeHeSolidThermo_H
+#ifndef makeThermo_H
+#define makeThermo_H
 
-#include "basicThermo.H"
+#include "fluidThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineSolidThermo(BaseThermo, CThermo, Mixture, ThermoPhys)            \
-                                                                               \
-    typedef                                                                    \
-        heThermo                                                               \
-        <                                                                      \
-            BaseThermo,                                                        \
-            Mixture<ThermoPhys>                                                \
-        > heThermo##Mixture##ThermoPhys;                                       \
+#define defineThermo(BaseThermo, CThermo, Mixture, ThermoPhys)                 \
                                                                                \
     typedef                                                                    \
         CThermo                                                                \
         <                                                                      \
             BaseThermo,                                                        \
             Mixture<ThermoPhys>                                                \
-        > CThermo##Mixture##ThermoPhys;                                        \
+        >                                                                      \
+        CThermo##Mixture##ThermoPhys;                                          \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
         CThermo##Mixture##ThermoPhys,                                          \
         (                                                                      \
-            #CThermo"<"#Mixture"<"                                             \
-          + ThermoPhys::typeName()                                             \
-          + ">>"                                                               \
+            word(CThermo##Mixture##ThermoPhys::typeName_()) + "<"              \
+          + Mixture<ThermoPhys>::typeName() + ">"                              \
         ).c_str(),                                                             \
         0                                                                      \
     )
 
 
-#define addSolidThermo(BaseThermo, CThermoMixtureThermoPhys, Table)            \
+#define addThermo(BaseThermo, CThermoMixtureThermoPhys)                        \
                                                                                \
     addToRunTimeSelectionTable                                                 \
     (                                                                          \
         BaseThermo,                                                            \
         CThermoMixtureThermoPhys,                                              \
-        Table                                                                  \
+        fvMesh                                                                 \
     )
 
 
-#define makeSolidThermo(BaseThermo, CThermo, Mixture, ThermoPhys)              \
+#define makeThermo(BaseThermo, CThermo, Mixture, ThermoPhys)                   \
                                                                                \
-    defineSolidThermo(BaseThermo, CThermo, Mixture, ThermoPhys);               \
+    defineThermo(BaseThermo, CThermo, Mixture, ThermoPhys);                    \
                                                                                \
-    addSolidThermo(BaseThermo, CThermo##Mixture##ThermoPhys, fvMesh
+    addThermo(BaseThermo, CThermo##Mixture##ThermoPhys)
 
 
-#define makeSolidThermos(BaseThermo, CThermo, Mixture, ThermoPhys)             \
+#define makeThermos(BaseThermo, CThermo, Mixture, ThermoPhys)                  \
                                                                                \
-    defineSolidThermo(BaseThermo, CThermo, Mixture, ThermoPhys);               \
+    defineThermo(BaseThermo, CThermo, Mixture, ThermoPhys);                    \
                                                                                \
-    addSolidThermo(basicThermo, CThermo##Mixture##ThermoPhys, fvMesh);         \
-    addSolidThermo(BaseThermo, CThermo##Mixture##ThermoPhys, fvMesh);          \
-    addSolidThermo(BaseThermo, CThermo##Mixture##ThermoPhys, dictionary)
+    addThermo(basicThermo, CThermo##Mixture##ThermoPhys);                      \
+    addThermo(fluidThermo, CThermo##Mixture##ThermoPhys);                      \
+    addThermo(BaseThermo, CThermo##Mixture##ThermoPhys)
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

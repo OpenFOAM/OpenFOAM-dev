@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "reactionTypes.H"
 #include "makeReaction.H"
 
 #include "ArrheniusReactionRate.H"
@@ -31,92 +30,204 @@ License
 #include "LandauTellerReactionRate.H"
 #include "thirdBodyArrheniusReactionRate.H"
 
-#include "ChemicallyActivatedReactionRate.H"
 #include "JanevReactionRate.H"
 #include "powerSeriesReactionRate.H"
 
+#include "ChemicallyActivatedReactionRate.H"
 #include "FallOffReactionRate.H"
+
 #include "LindemannFallOffFunction.H"
 #include "SRIFallOffFunction.H"
 #include "TroeFallOffFunction.H"
 
+#include "LangmuirHinshelwoodReactionRate.H"
+
+#include "MichaelisMentenReactionRate.H"
+
+#include "forCommonGases.H"
+#include "forCommonLiquids.H"
+#include "forPolynomials.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeReactions(Thermo, Reaction)                                        \
-                                                                               \
-    defineTemplateTypeNameAndDebug(Reaction, 0);                               \
-    defineTemplateRunTimeSelectionTable(Reaction, dictionary);                 \
-    defineTemplateRunTimeSelectionTable(Reaction, objectRegistry);             \
-                                                                               \
-    makeIRNReactions(Thermo, ArrheniusReactionRate)                            \
-    makeIRNReactions(Thermo, infiniteReactionRate)                             \
-    makeIRNReactions(Thermo, LandauTellerReactionRate)                         \
-    makeIRNReactions(Thermo, thirdBodyArrheniusReactionRate)                   \
-                                                                               \
-    makeIRReactions(Thermo, JanevReactionRate)                                 \
-    makeIRReactions(Thermo, powerSeriesReactionRate)                           \
-                                                                               \
-    makePressureDependentReactions                                             \
-    (                                                                          \
-       Thermo,                                                                 \
-       ArrheniusReactionRate,                                                  \
-       LindemannFallOffFunction                                                \
-    )                                                                          \
-                                                                               \
-    makePressureDependentReactions                                             \
-    (                                                                          \
-       Thermo,                                                                 \
-       ArrheniusReactionRate,                                                  \
-       TroeFallOffFunction                                                     \
-    )                                                                          \
-                                                                               \
-    makePressureDependentReactions                                             \
-    (                                                                          \
-       Thermo,                                                                 \
-       ArrheniusReactionRate,                                                  \
-       SRIFallOffFunction                                                      \
-    )
-
+template<>
+const char* const Foam::Tuple2<Foam::word, Foam::scalar>::typeName
+(
+    "Tuple2<word,scalar>"
+);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    // sensible enthalpy based reactions
-    makeReactions(constGasHThermoPhysics, constGasHReaction)
-    makeReactions(gasHThermoPhysics, gasHReaction)
-    makeReactions
-    (
-        constIncompressibleGasHThermoPhysics,
-        constIncompressibleGasHReaction
-    )
-    makeReactions(incompressibleGasHThermoPhysics, incompressibleGasHReaction)
-    makeReactions(icoPoly8HThermoPhysics, icoPoly8HReaction)
-    makeReactions(constFluidHThermoPhysics, constFluidHReaction)
-    makeReactions
-    (
-        constAdiabaticFluidHThermoPhysics,
-        constAdiabaticFluidHReaction
-    )
-    makeReactions(constHThermoPhysics, constHReaction)
+    forCommonGases(defineReaction, nullArg);
+    forCommonLiquids(defineReaction, nullArg);
+    forPolynomials(defineReaction, nullArg);
 
-    makeReactions(constGasEThermoPhysics, constGasEReaction)
-    makeReactions(gasEThermoPhysics, gasEReaction)
-    makeReactions
+
+    // Irreversible/reversible/non-equilibrium-reversible reactions
+
+    forCommonGases(makeIRNReactions, ArrheniusReactionRate);
+    forCommonLiquids(makeIRNReactions, ArrheniusReactionRate);
+    forPolynomials(makeIRNReactions, ArrheniusReactionRate);
+
+    forCommonGases(makeIRNReactions, infiniteReactionRate);
+    forCommonLiquids(makeIRNReactions, infiniteReactionRate);
+    forPolynomials(makeIRNReactions, infiniteReactionRate);
+
+    forCommonGases(makeIRNReactions, LandauTellerReactionRate);
+    forCommonLiquids(makeIRNReactions, LandauTellerReactionRate);
+    forPolynomials(makeIRNReactions, LandauTellerReactionRate);
+
+    forCommonGases(makeIRNReactions, thirdBodyArrheniusReactionRate);
+    forCommonLiquids(makeIRNReactions, thirdBodyArrheniusReactionRate);
+    forPolynomials(makeIRNReactions, thirdBodyArrheniusReactionRate);
+
+
+    // Irreversible/reversible reactions
+
+    forCommonGases(makeIRReactions, JanevReactionRate);
+    forCommonLiquids(makeIRReactions, JanevReactionRate);
+    forPolynomials(makeIRReactions, JanevReactionRate);
+
+    forCommonGases(makeIRReactions, powerSeriesReactionRate);
+    forCommonLiquids(makeIRReactions, powerSeriesReactionRate);
+    forPolynomials(makeIRReactions, powerSeriesReactionRate);
+
+
+    // Pressure dependent reactions
+
+    forCommonGases
     (
-        constIncompressibleGasEThermoPhysics,
-        constIncompressibleGasEReaction
-    )
-    makeReactions(incompressibleGasEThermoPhysics, incompressibleGasEReaction)
-    makeReactions(icoPoly8EThermoPhysics, icoPoly8EReaction)
-    makeReactions(constFluidEThermoPhysics, constFluidEReaction)
-    makeReactions
+        makeIRRPressureDependentReactions,
+        FallOffReactionRate,
+        ArrheniusReactionRate,
+        LindemannFallOffFunction
+    );
+    forCommonLiquids
     (
-        constAdiabaticFluidEThermoPhysics,
-        constAdiabaticFluidEReaction
-    )
-    makeReactions(constEThermoPhysics, constEReaction)
+        makeIRRPressureDependentReactions,
+        FallOffReactionRate,
+        ArrheniusReactionRate,
+        LindemannFallOffFunction
+    );
+    forPolynomials
+    (
+        makeIRRPressureDependentReactions,
+        FallOffReactionRate,
+        ArrheniusReactionRate,
+        LindemannFallOffFunction
+    );
+
+    forCommonGases
+    (
+        makeIRRPressureDependentReactions,
+        FallOffReactionRate,
+        ArrheniusReactionRate,
+        TroeFallOffFunction
+    );
+    forCommonLiquids
+    (
+        makeIRRPressureDependentReactions,
+        FallOffReactionRate,
+        ArrheniusReactionRate,
+        TroeFallOffFunction
+    );
+    forPolynomials
+    (
+        makeIRRPressureDependentReactions,
+        FallOffReactionRate,
+        ArrheniusReactionRate,
+        TroeFallOffFunction
+    );
+
+    forCommonGases
+    (
+        makeIRRPressureDependentReactions,
+        FallOffReactionRate,
+        ArrheniusReactionRate,
+        SRIFallOffFunction
+    );
+    forCommonLiquids
+    (
+        makeIRRPressureDependentReactions,
+        FallOffReactionRate,
+        ArrheniusReactionRate,
+        SRIFallOffFunction
+    );
+    forPolynomials
+    (
+        makeIRRPressureDependentReactions,
+        FallOffReactionRate,
+        ArrheniusReactionRate,
+        SRIFallOffFunction
+    );
+
+    forCommonGases
+    (
+        makeIRRPressureDependentReactions,
+        ChemicallyActivatedReactionRate,
+        ArrheniusReactionRate,
+        LindemannFallOffFunction
+    );
+    forCommonLiquids
+    (
+        makeIRRPressureDependentReactions,
+        ChemicallyActivatedReactionRate,
+        ArrheniusReactionRate,
+        LindemannFallOffFunction
+    );
+    forPolynomials
+    (
+        makeIRRPressureDependentReactions,
+        ChemicallyActivatedReactionRate,
+        ArrheniusReactionRate,
+        LindemannFallOffFunction
+    );
+
+    forCommonGases
+    (
+        makeIRRPressureDependentReactions,
+        ChemicallyActivatedReactionRate,
+        ArrheniusReactionRate,
+        TroeFallOffFunction
+    );
+    forCommonLiquids
+    (
+        makeIRRPressureDependentReactions,
+        ChemicallyActivatedReactionRate,
+        ArrheniusReactionRate,
+        TroeFallOffFunction
+    );
+    forPolynomials
+    (
+        makeIRRPressureDependentReactions,
+        ChemicallyActivatedReactionRate,
+        ArrheniusReactionRate,
+        TroeFallOffFunction
+    );
+
+    forCommonGases
+    (
+        makeIRRPressureDependentReactions,
+        ChemicallyActivatedReactionRate,
+        ArrheniusReactionRate,
+        SRIFallOffFunction
+    );
+    forCommonLiquids
+    (
+        makeIRRPressureDependentReactions,
+        ChemicallyActivatedReactionRate,
+        ArrheniusReactionRate,
+        SRIFallOffFunction
+    );
+    forPolynomials
+    (
+        makeIRRPressureDependentReactions,
+        ChemicallyActivatedReactionRate,
+        ArrheniusReactionRate,
+        SRIFallOffFunction
+    );
 }
 
 // ************************************************************************* //

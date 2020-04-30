@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef makeCombustionTypes_H
-#define makeCombustionTypes_H
+#ifndef makeChemistryTabulationMethod_H
+#define makeChemistryTabulationMethod_H
 
 #include "addToRunTimeSelectionTable.H"
 
@@ -35,66 +35,57 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeCombustion(Comp)                                                   \
+#define defineChemistryTabulationMethod(ReactionThermo, ThermoPhysics)         \
                                                                                \
-    typedef CombustionModel<Comp> CombustionModel##Comp;                       \
+    typedef chemistryTabulationMethod<ReactionThermo, ThermoPhysics>           \
+        chemistryTabulationMethod##ReactionThermo##ThermoPhysics;              \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        CombustionModel##Comp,                                                 \
+        chemistryTabulationMethod##ReactionThermo##ThermoPhysics,              \
         (                                                                      \
-            word(CombustionModel##Comp::typeName_()) + "<" + Comp::typeName    \
-          + ">"                                                                \
+            word                                                               \
+            (                                                                  \
+                chemistryTabulationMethod##ReactionThermo##ThermoPhysics::     \
+                typeName_()                                                    \
+            )                                                                  \
+          + "<" + word(ReactionThermo::typeName_())                            \
+          + "," + ThermoPhysics::typeName() + ">"                              \
         ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \
     defineTemplateRunTimeSelectionTable                                        \
     (                                                                          \
-        CombustionModel##Comp,                                                 \
+        chemistryTabulationMethod##ReactionThermo##ThermoPhysics,              \
         dictionary                                                             \
-    );
+    );                                                                         \
 
-
-#define makeCombustionTypesThermo(CombModel, Comp, Thermo)                     \
+#define makeChemistryTabulationMethod(Method, ReactionThermo, ThermoPhysics)   \
                                                                                \
-    typedef combustionModels::CombModel<Comp, Thermo>                          \
-        CombModel##Comp##Thermo;                                               \
+    typedef chemistryTabulationMethods::Method<ReactionThermo, ThermoPhysics>  \
+        chemistryTabulationMethod##Method##ReactionThermo##ThermoPhysics;      \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        CombModel##Comp##Thermo,                                               \
+        chemistryTabulationMethod##Method##ReactionThermo##ThermoPhysics,      \
         (                                                                      \
-            word(CombModel##Comp##Thermo::typeName_()) + "<" + Comp::typeName  \
-          + "," + Thermo::typeName() + ">"                                     \
+            word                                                               \
+            (                                                                  \
+                chemistryTabulationMethod##Method##ReactionThermo##\
+ThermoPhysics::typeName_()                                                     \
+            )                                                                  \
+         + "<" + word(ReactionThermo::typeName_())                             \
+         + "," + ThermoPhysics::typeName() + ">"                               \
         ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \
-    CombustionModel<Comp>::                                                    \
-        add##dictionary##ConstructorToTable<CombModel##Comp##Thermo>           \
-        add##CombModel##Comp##Thermo##dictionary##ConstructorTo##\
-CombustionModel##Comp##Table_;
-
-
-#define makeCombustionTypes(CombModel, Comp)                                   \
-                                                                               \
-    typedef combustionModels::CombModel<Comp> CombModel##Comp;                 \
-                                                                               \
-    defineTemplateTypeNameAndDebugWithName                                     \
-    (                                                                          \
-        CombModel##Comp,                                                       \
-        (                                                                      \
-            word(CombModel##Comp::typeName_()) + "<" + Comp::typeName + ">"    \
-        ).c_str(),                                                             \
-        0                                                                      \
-    );                                                                         \
-                                                                               \
-    CombustionModel<Comp>::                                                    \
-        add##dictionary##ConstructorToTable<CombModel##Comp>                   \
-        add##CombModel##Comp##dictionary##ConstructorTo##CombustionModel##Comp\
-##Table_;
-
+    chemistryTabulationMethod<ReactionThermo, ThermoPhysics>::                 \
+        adddictionaryConstructorToTable                                        \
+        <chemistryTabulationMethod##Method##ReactionThermo##ThermoPhysics>     \
+        add##chemistryTabulationMethod##Method##ReactionThermo##ThermoPhysics##\
+dictionaryConstructorToTable_;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

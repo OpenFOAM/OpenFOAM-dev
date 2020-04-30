@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,78 +23,30 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "makeCombustionTypes.H"
+#include "infinitelyFastChemistry.H"
 
-#include "thermoPhysicsTypes.H"
 #include "psiReactionThermo.H"
 #include "rhoReactionThermo.H"
-#include "infinitelyFastChemistry.H"
+
+#include "forCommonGases.H"
+#include "makeThermoCombustionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Combustion models based on sensibleEnthalpy
-
-makeCombustionTypesThermo
-(
-    infinitelyFastChemistry,
-    psiReactionThermo,
-    gasHThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    infinitelyFastChemistry,
-    psiReactionThermo,
-    constGasHThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    infinitelyFastChemistry,
-    rhoReactionThermo,
-    gasHThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    infinitelyFastChemistry,
-    rhoReactionThermo,
-    constGasHThermoPhysics
-);
-
-// Combustion models based on sensibleInternalEnergy
-
-makeCombustionTypesThermo
-(
-    infinitelyFastChemistry,
-    psiReactionThermo,
-    gasEThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    infinitelyFastChemistry,
-    psiReactionThermo,
-    constGasEThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    infinitelyFastChemistry,
-    rhoReactionThermo,
-    gasEThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    infinitelyFastChemistry,
-    rhoReactionThermo,
-    constGasEThermoPhysics
-);
-
+    forCommonGases
+    (
+        makeThermoCombustionModel,
+        infinitelyFastChemistry,
+        psiReactionThermo
+    );
+    forCommonGases
+    (
+        makeThermoCombustionModel,
+        infinitelyFastChemistry,
+        rhoReactionThermo
+    );
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

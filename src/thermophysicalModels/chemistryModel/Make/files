@@ -1,12 +1,12 @@
 chemistryModel/basicChemistryModel/basicChemistryModel.C
 chemistryModel/BasicChemistryModel/BasicChemistryModels.C
 
-chemistryModel/TDACChemistryModel/reduction/makeChemistryReductionMethods.C
-chemistryModel/TDACChemistryModel/tabulation/makeChemistryTabulationMethods.C
-
-chemistrySolver/chemistrySolver/makeChemistrySolvers.C
+chemistrySolver/chemistrySolver/chemistrySolvers.C
+chemistryModel/TDACChemistryModel/reduction/chemistryReductionMethod/chemistryReductionMethods.C
+chemistryModel/TDACChemistryModel/tabulation/chemistryTabulationMethod/chemistryTabulationMethods.C
 
 reactions/makeReactions.C
+
 reactions/makeLangmuirHinshelwoodReactions.C
 reactions/makeMichaelisMentenReactions.C
 reactions/fluxLimitedLangmuirHinshelwood/makefluxLimitedLangmuirHinshelwoodReactions.C

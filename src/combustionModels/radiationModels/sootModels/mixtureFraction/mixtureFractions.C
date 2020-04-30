@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,69 +24,17 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "mixtureFraction.H"
-#include "thermoPhysicsTypes.H"
-#include "psiReactionThermo.H"
-#include "rhoReactionThermo.H"
+
+#include "forCommonGases.H"
+#include "makeThermoSootModel.H"
+
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeMixtureSootTypesThermo(SootModelType, ReactionThermo, Thermo)      \
-                                                                               \
-    typedef radiationModels::sootModels::SootModelType<ReactionThermo, Thermo> \
-        SootModelType##ReactionThermo##Thermo;                                 \
-                                                                               \
-    defineTemplateTypeNameAndDebugWithName                                     \
-    (                                                                          \
-        SootModelType##ReactionThermo##Thermo,                                 \
-        (                                                                      \
-            word(SootModelType##ReactionThermo##Thermo::typeName_()) +         \
-            "<"#ReactionThermo","#Thermo">"                                    \
-        ).c_str(),                                                             \
-        0                                                                      \
-    );                                                                         \
-                                                                               \
-    namespace radiationModels                                                  \
-    {                                                                          \
-        addToRunTimeSelectionTable                                             \
-        (                                                                      \
-            sootModel,                                                         \
-            SootModelType##ReactionThermo##Thermo,                             \
-            dictionary                                                         \
-        );                                                                     \
-    }
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
 namespace Foam
 {
-    makeMixtureSootTypesThermo
-    (
-        mixtureFraction,
-        psiReactionThermo,
-        gasHThermoPhysics
-    );
-
-    makeMixtureSootTypesThermo
-    (
-        mixtureFraction,
-        psiReactionThermo,
-        gasEThermoPhysics
-    );
-
-    makeMixtureSootTypesThermo
-    (
-        mixtureFraction,
-        rhoReactionThermo,
-        gasHThermoPhysics
-    );
-
-    makeMixtureSootTypesThermo
-    (
-        mixtureFraction,
-        rhoReactionThermo,
-        gasEThermoPhysics
-    );
+    forCommonGases(makeThermoSootModel, mixtureFraction);
 }
 
 // ************************************************************************* //

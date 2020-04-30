@@ -23,43 +23,77 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "thermalBaffle1DFvPatchScalarFields.H"
+#include "thermalBaffle1DFvPatchScalarField.H"
+
+#include "forSolids.H"
+
 #include "addToRunTimeSelectionTable.H"
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+namespace Foam
+{
+
+typedef
+    constIsoSolidTransport
+    <
+        species::thermo
+        <
+            hConstThermo
+            <
+                rhoConst<specie>
+            >,
+            sensibleEnthalpy
+        >
+    > hConstSolidThermoPhysics;
+
+typedef
+    compressible::thermalBaffle1DFvPatchScalarField<hConstSolidThermoPhysics>
+    thermalBaffle1DHConstSolidThermoPhysicsFvPatchScalarField;
 
 defineTemplateTypeNameAndDebugWithName
 (
-    Foam::compressible::constSolid_thermalBaffle1DFvPatchScalarField,
+    thermalBaffle1DHConstSolidThermoPhysicsFvPatchScalarField,
     "compressible::thermalBaffle1D<hConstSolidThermoPhysics>",
     0
 );
 
+addToPatchFieldRunTimeSelection
+(
+    fvPatchScalarField,
+    thermalBaffle1DHConstSolidThermoPhysicsFvPatchScalarField
+);
+
+typedef
+    exponentialSolidTransport
+    <
+        species::thermo
+        <
+            hPowerThermo
+            <
+                rhoConst<specie>
+            >,
+            sensibleEnthalpy
+        >
+    > hPowerSolidThermoPhysics;
+
+typedef
+    compressible::thermalBaffle1DFvPatchScalarField<hPowerSolidThermoPhysics>
+    thermalBaffle1DHPowerSolidThermoPhysicsFvPatchScalarField;
+
 defineTemplateTypeNameAndDebugWithName
 (
-    Foam::compressible::expoSolid_thermalBaffle1DFvPatchScalarField,
+    thermalBaffle1DHPowerSolidThermoPhysicsFvPatchScalarField,
     "compressible::thermalBaffle1D<hPowerSolidThermoPhysics>",
     0
 );
 
-namespace Foam
-{
-namespace compressible
-{
-    addToPatchFieldRunTimeSelection
-    (
-        fvPatchScalarField,
-        constSolid_thermalBaffle1DFvPatchScalarField
-    );
+addToPatchFieldRunTimeSelection
+(
+    fvPatchScalarField,
+    thermalBaffle1DHPowerSolidThermoPhysicsFvPatchScalarField
+);
 
-    addToPatchFieldRunTimeSelection
-    (
-        fvPatchScalarField,
-        expoSolid_thermalBaffle1DFvPatchScalarField
-    );
 }
-}
-
 
 // ************************************************************************* //

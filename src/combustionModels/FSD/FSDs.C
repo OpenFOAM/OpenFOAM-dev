@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,76 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "makeCombustionTypes.H"
+#include "FSD.H"
 
-#include "thermoPhysicsTypes.H"
 #include "psiReactionThermo.H"
 #include "rhoReactionThermo.H"
-#include "FSD.H"
+
+#include "forCommonGases.H"
+#include "makeThermoCombustionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Combustion models based on sensibleEnthalpy
-makeCombustionTypesThermo
-(
-    FSD,
-    psiReactionThermo,
-    gasHThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    FSD,
-    psiReactionThermo,
-    constGasHThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    FSD,
-    rhoReactionThermo,
-    gasHThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    FSD,
-    rhoReactionThermo,
-    constGasHThermoPhysics
-);
-
-// Combustion models based on sensibleInternalEnergy
-makeCombustionTypesThermo
-(
-    FSD,
-    psiReactionThermo,
-    gasEThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    FSD,
-    psiReactionThermo,
-    constGasEThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    FSD,
-    rhoReactionThermo,
-    gasEThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    FSD,
-    rhoReactionThermo,
-    constGasEThermoPhysics
-);
-
+    forCommonGases(makeThermoCombustionModel, FSD, psiReactionThermo);
+    forCommonGases(makeThermoCombustionModel, FSD, rhoReactionThermo);
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

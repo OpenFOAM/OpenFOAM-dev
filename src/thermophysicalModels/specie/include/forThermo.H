@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,36 +23,25 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef thermalBaffle1DFvPatchScalarFields_H
-#define thermalBaffle1DFvPatchScalarFields_H
+#ifndef forThermo_H
+#define forThermo_H
 
-#include "thermalBaffle1DFvPatchScalarField.H"
-#include "solidThermoPhysicsTypes.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-namespace compressible
-{
+#include "typedefThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    typedef thermalBaffle1DFvPatchScalarField
-    <
-        hConstSolidThermoPhysics
-    >constSolid_thermalBaffle1DFvPatchScalarField;
-
-    typedef thermalBaffle1DFvPatchScalarField
-    <
-        hPowerSolidThermoPhysics
-    >expoSolid_thermalBaffle1DFvPatchScalarField;
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-}
-} // End namespace Foam
+#define forThermo(Transport, Energy, Thermo, Equation, Specie, Macro, Args...) \
+                                                                               \
+    typedefThermo                                                              \
+    (                                                                          \
+        Transport,                                                             \
+        Energy,                                                                \
+        Thermo,                                                                \
+        Equation,                                                              \
+        Specie                                                                 \
+    );                                                                         \
+                                                                               \
+    Macro(Args, Transport##Energy##Thermo##Equation##Specie)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,26 @@ License
 #include "specie.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class Thermo>
+inline Foam::WLFTransport<Thermo>::WLFTransport
+(
+    const Thermo& t,
+    const scalar mu0,
+    const scalar Tr,
+    const scalar C1,
+    const scalar C2,
+    const scalar Pr
+)
+:
+    Thermo(t),
+    mu0_(mu0),
+    Tr_(Tr),
+    C1_(C1),
+    C2_(C2),
+    rPr_(scalar(1)/Pr)
+{}
+
 
 template<class Thermo>
 inline Foam::WLFTransport<Thermo>::WLFTransport

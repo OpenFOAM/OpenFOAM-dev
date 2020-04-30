@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,26 +24,16 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "makeReaction.H"
-#include "reactionTypes.H"
+
 #include "MichaelisMentenReactionRate.H"
+
+#include "forCommonLiquids.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    makeReaction
-    (
-        constFluidHThermoPhysics,
-        IrreversibleReaction,
-        MichaelisMentenReactionRate
-    )
-
-    makeReaction
-    (
-        constFluidEThermoPhysics,
-        IrreversibleReaction,
-        MichaelisMentenReactionRate
-    )
+    forCommonLiquids(makeIReactions, MichaelisMentenReactionRate);
 }
 
 // ************************************************************************* //

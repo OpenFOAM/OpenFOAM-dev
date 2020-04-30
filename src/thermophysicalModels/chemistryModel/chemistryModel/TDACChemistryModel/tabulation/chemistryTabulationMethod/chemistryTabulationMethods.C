@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +23,32 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "CombustionModel.H"
+#include "noChemistryTabulation.H"
+#include "ISAT.H"
 
 #include "psiReactionThermo.H"
 #include "rhoReactionThermo.H"
 
-#include "makeCombustionModel.H"
+#include "forCommonGases.H"
+#include "forCommonLiquids.H"
+#include "makeChemistryTabulationMethod.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineCombustionModel(psiReactionThermo);
-    defineCombustionModel(rhoReactionThermo);
+    forCommonGases(defineChemistryTabulationMethod, psiReactionThermo);
+    forCommonGases(defineChemistryTabulationMethod, rhoReactionThermo);
+
+    forCommonGases(makeChemistryTabulationMethod, none, psiReactionThermo);
+    forCommonGases(makeChemistryTabulationMethod, none, rhoReactionThermo);
+    forCommonGases(makeChemistryTabulationMethod, ISAT, psiReactionThermo);
+    forCommonGases(makeChemistryTabulationMethod, ISAT, rhoReactionThermo);
+
+    forCommonLiquids(defineChemistryTabulationMethod, rhoReactionThermo);
+
+    forCommonLiquids(makeChemistryTabulationMethod, none, rhoReactionThermo);
+    forCommonLiquids(makeChemistryTabulationMethod, ISAT, rhoReactionThermo);
 }
 
-// ************************************************************************* //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

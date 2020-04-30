@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,6 +108,20 @@ class WLFTransport
 
         //- Reciprocal Prandtl Number []
         scalar rPr_;
+
+
+    // Private Constructors
+
+        //- Construct from components
+        inline WLFTransport
+        (
+            const Thermo& t,
+            const scalar mu0,
+            const scalar Tr,
+            const scalar C1,
+            const scalar C2,
+            const scalar Pr
+        );
 
 
     // Private Member Functions

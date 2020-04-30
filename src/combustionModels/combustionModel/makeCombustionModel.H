@@ -23,9 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef makeChemistryModel_H
-#define makeChemistryModel_H
+#ifndef makeCombustionModel_H
+#define makeCombustionModel_H
 
+#include "CombustionModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -35,9 +36,30 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineChemistryModel(Model, ReactionThermo)                            \
+#define defineCombustionModel(ReactionThermo)                                  \
                                                                                \
-    typedef Model<ReactionThermo> Model##ReactionThermo;                       \
+    typedef CombustionModel<ReactionThermo> CombustionModel##ReactionThermo;   \
+                                                                               \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        CombustionModel##ReactionThermo,                                       \
+        (                                                                      \
+            word(CombustionModel##ReactionThermo::typeName_()) + "<"           \
+         + ReactionThermo::typeName + ">"                                      \
+        ).c_str(),                                                             \
+        0                                                                      \
+    );                                                                         \
+                                                                               \
+    defineTemplateRunTimeSelectionTable                                        \
+    (                                                                          \
+        CombustionModel##ReactionThermo,                                       \
+        dictionary                                                             \
+    );
+
+#define makeCombustionModel(Model, ReactionThermo)                             \
+                                                                               \
+    typedef combustionModels::Model<ReactionThermo> Model##ReactionThermo;     \
+    typedef CombustionModel<ReactionThermo> Model##ReactionThermo##Base;       \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
@@ -49,11 +71,12 @@ namespace Foam
         0                                                                      \
     );                                                                         \
                                                                                \
-    defineTemplateRunTimeSelectionTable                                        \
+    addToRunTimeSelectionTable                                                 \
     (                                                                          \
+        Model##ReactionThermo##Base,                                           \
         Model##ReactionThermo,                                                 \
-        thermo                                                                 \
-    );
+        dictionary                                                             \
+    )
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

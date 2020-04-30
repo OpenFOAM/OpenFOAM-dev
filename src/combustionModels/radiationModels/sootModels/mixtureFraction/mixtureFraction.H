@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,9 +41,9 @@ Description
 
     For example in the radiationProperties dictionary set:
 
-    sootModel mixtureFraction<psiReactionThermo,gasHThermoPhysics>;
+    sootModel mixtureFraction;
 
-    mixtureFractionSootCoeffs
+    mixtureFractionCoeffs
     {
         nuSoot              0.015;
         Wsoot               12;
@@ -73,7 +73,7 @@ namespace sootModels
                      Class mixtureFraction Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ReactionThermo, class ThermoType>
+template<class ThermoType>
 class mixtureFraction
 :
     public sootModel

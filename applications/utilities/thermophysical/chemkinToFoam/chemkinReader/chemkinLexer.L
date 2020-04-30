@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -315,8 +315,8 @@ List<specieElement> currentSpecieComposition(5);
 scalar currentLowT = 0;
 scalar currentHighT = 0;
 scalar currentCommonT = 0;
-gasHThermoPhysics::coeffArray highCpCoeffs(scalarList(7));
-gasHThermoPhysics::coeffArray lowCpCoeffs(scalarList(7));
+chemkinReader::thermoPhysics::coeffArray highCpCoeffs(scalarList(7));
+chemkinReader::thermoPhysics::coeffArray lowCpCoeffs(scalarList(7));
 
 specieCoeffs currentSpecieCoeff;
 
@@ -633,7 +633,7 @@ bool finishReaction = false;
 
 <readThermoLineLabel4>{thermoLineLabel4} {
 
-        HashPtrTable<gasHThermoPhysics>::iterator specieThermoIter
+        HashPtrTable<chemkinReader::thermoPhysics>::iterator specieThermoIter
         (
             speciesThermo_.find(currentSpecieName)
         );
@@ -646,7 +646,7 @@ bool finishReaction = false;
         speciesThermo_.insert
         (
             currentSpecieName,
-            new gasHThermoPhysics
+            new chemkinReader::thermoPhysics
             (
                 janafThermo<perfectGas<specie>>
                 (
@@ -671,15 +671,15 @@ bool finishReaction = false;
     }
 
 <readThermoSpecieName>{end} {
-        Reaction<gasHThermoPhysics>::TlowDefault = max
+        Reaction<chemkinReader::thermoPhysics>::TlowDefault = max
         (
-            Reaction<gasHThermoPhysics>::TlowDefault,
+            Reaction<chemkinReader::thermoPhysics>::TlowDefault,
             currentLowT
         );
 
-        Reaction<gasHThermoPhysics>::ThighDefault = min
+        Reaction<chemkinReader::thermoPhysics>::ThighDefault = min
         (
-            Reaction<gasHThermoPhysics>::ThighDefault,
+            Reaction<chemkinReader::thermoPhysics>::ThighDefault,
             currentHighT
         );
 

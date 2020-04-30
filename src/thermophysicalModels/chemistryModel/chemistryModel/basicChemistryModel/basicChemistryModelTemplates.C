@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,9 +54,9 @@ Foam::autoPtr<ChemistryModel> Foam::basicChemistryModel::New
             << "longer supported. Please create a chemistryType dictionary"
             << "instead." << endl << endl << "For example, the entry:" << endl
             << "    chemistrySolver ode<StandardChemistryModel<"
-            << "rhoChemistryModel,sutherlandspecie<janaf<perfectGas>,"
-            << "sensibleInternalEnergy>>" << endl << endl << "becomes:" << endl
-            << "    chemistryType" << endl << "    {" << endl
+            << "rhoChemistryModel,sutherland<specie<janaf<perfectGas>,"
+            << "sensibleInternalEnergy>>>>" << endl << endl << "becomes:"
+            << endl << "    chemistryType" << endl << "    {" << endl
             << "        solver ode;" << endl << "        method standard;"
             << endl << "    }" << exit(FatalError);
     }

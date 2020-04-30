@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef makeChemistryModel_H
-#define makeChemistryModel_H
+#ifndef makeChemistrySolver_H
+#define makeChemistrySolver_H
 
 #include "addToRunTimeSelectionTable.H"
 
@@ -35,25 +35,44 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineChemistryModel(Model, ReactionThermo)                            \
+#define defineChemistrySolver(Model, ReactionThermo, ThermoPhysics)            \
                                                                                \
-    typedef Model<ReactionThermo> Model##ReactionThermo;                       \
+    typedef Model<ReactionThermo, ThermoPhysics>                               \
+        Model##ReactionThermo##ThermoPhysics;                                  \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        Model##ReactionThermo,                                                 \
+        Model##ReactionThermo##ThermoPhysics,                                  \
         (                                                                      \
-            word(Model##ReactionThermo::typeName_()) + "<"                     \
-          + ReactionThermo::typeName + ">"                                     \
+            word(Model##ReactionThermo##ThermoPhysics::typeName_()) + "<"      \
+          + ReactionThermo::typeName + "," + ThermoPhysics::typeName() + ">"   \
+        ).c_str(),                                                             \
+        0                                                                      \
+    );
+
+
+#define makeChemistrySolver(Solver, Model, ReactionThermo, ThermoPhysics)      \
+                                                                               \
+    typedef Solver<Model<ReactionThermo, ThermoPhysics>>                       \
+        Solver##Model##ReactionThermo##ThermoPhysics;                          \
+                                                                               \
+    defineTemplateTypeNameAndDebugWithName                                     \
+    (                                                                          \
+        Solver##Model##ReactionThermo##ThermoPhysics,                          \
+        (                                                                      \
+            word(Solver##Model##ReactionThermo##ThermoPhysics::typeName_())    \
+          + "<" + word(Model<ReactionThermo, ThermoPhysics>::typeName_())      \
+          + "<" + word(ReactionThermo::typeName_()) + ","                      \
+          + ThermoPhysics::typeName() + ">>"                                   \
         ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \
-    defineTemplateRunTimeSelectionTable                                        \
-    (                                                                          \
-        Model##ReactionThermo,                                                 \
-        thermo                                                                 \
-    );
+    BasicChemistryModel<ReactionThermo>::                                      \
+        addthermoConstructorToTable                                            \
+        <Solver##Model##ReactionThermo##ThermoPhysics>                         \
+        add##Solver##Model##ReactionThermo##ThermoPhysics##\
+thermoConstructorToTable_;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,13 +24,14 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "mixtureFraction.H"
+#include "psiReactionThermo.H"
+#include "rhoReactionThermo.H"
 #include "singleStepCombustion.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ThermoType>
-Foam::radiationModels::sootModels::mixtureFraction<ReactionThermo, ThermoType>::
-mixtureFraction
+template<class ThermoType>
+Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::mixtureFraction
 (
     const dictionary& dict,
     const fvMesh& mesh,
@@ -60,20 +61,25 @@ mixtureFraction
     ),
     mapFieldMax_(1)
 {
-    const combustionModels::singleStepCombustion<ReactionThermo, ThermoType>&
-    combustion
-    (
-        mesh.lookupObject
-        <
-            combustionModels::singleStepCombustion<ReactionThermo, ThermoType>
-        >
-        (
-            combustionModel::combustionPropertiesName
-        )
-    );
+    const word& combustionName = combustionModel::combustionPropertiesName;
 
-    const multiComponentMixture<ThermoType>& mixture(combustion.mixture());
-    const Reaction<ThermoType>& reaction = combustion.reaction();
+    typedef
+        combustionModels::singleStepCombustion<psiReactionThermo, ThermoType>
+        psiCombustionType;
+
+    typedef
+        combustionModels::singleStepCombustion<rhoReactionThermo, ThermoType>
+        rhoCombustionType;
+
+    const multiComponentMixture<ThermoType>& mixture =
+        mesh.foundObject<psiCombustionType>(combustionName)
+      ? mesh.lookupObject<psiCombustionType>(combustionName).mixture()
+      : mesh.lookupObject<rhoCombustionType>(combustionName).mixture();
+
+    const Reaction<ThermoType>& reaction =
+        mesh.foundObject<psiCombustionType>(combustionName)
+      ? mesh.lookupObject<psiCombustionType>(combustionName).reaction()
+      : mesh.lookupObject<rhoCombustionType>(combustionName).reaction();
 
     scalar totalMol = 0;
     forAll(reaction.rhs(), i)
@@ -124,18 +130,16 @@ mixtureFraction
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ThermoType>
-Foam::radiationModels::sootModels::mixtureFraction<ReactionThermo, ThermoType>::
+template<class ThermoType>
+Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::
 ~mixtureFraction()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ThermoType>
-void
-Foam::radiationModels::sootModels::mixtureFraction<ReactionThermo, ThermoType>::
-correct()
+template<class ThermoType>
+void Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::correct()
 {
     const volScalarField& mapField =
         mesh_.lookupObject<volScalarField>(mappingFieldName_);

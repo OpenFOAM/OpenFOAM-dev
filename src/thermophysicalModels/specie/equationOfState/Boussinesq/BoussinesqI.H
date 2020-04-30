@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -166,20 +166,6 @@ inline Foam::scalar Foam::Boussinesq<Specie>::CpMCv
 
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-template<class Specie>
-inline void Foam::Boussinesq<Specie>::operator=
-(
-    const Boussinesq<Specie>& b
-)
-{
-    Specie::operator=(b);
-
-    rho0_ = b.rho0_;
-    T0_ = b.T0_;
-    beta_ = b.beta_;
-}
-
 
 template<class Specie>
 inline void Foam::Boussinesq<Specie>::operator+=

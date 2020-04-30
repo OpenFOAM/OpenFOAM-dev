@@ -19,7 +19,7 @@ thermoType
 {
     type            hePsiThermo;
     mixture         pureMixture;
-    transport       sutherland;
+    transport       const;
     thermo          hConst;
     equationOfState perfectGas;
     specie          specie;
@@ -30,17 +30,17 @@ mixture
 {
     specie
     {
-        molWeight       28.9;
+        molWeight   28.9;
     }
     thermodynamics
     {
-        Cp              1007;
-        Hf              0;
+        Cp          1005;
+        Hf          0;
     }
     transport
     {
-        As              1.4792e-06;
-        Ts              116;
+        mu          1.82e-05;
+        Pr          0.71;
     }
 }
 

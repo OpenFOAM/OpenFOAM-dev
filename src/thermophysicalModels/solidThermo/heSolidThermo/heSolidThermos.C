@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,25 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "makeHeSolidThermo.H"
 #include "solidPressureThermo.H"
 #include "heSolidThermo.H"
-
-#include "specie.H"
-#include "rhoConst.H"
-#include "hConstThermo.H"
-#include "hPowerThermo.H"
-#include "hPolynomialThermo.H"
-#include "constIsoSolidTransport.H"
-#include "constAnIsoSolidTransport.H"
-#include "exponentialSolidTransport.H"
-#include "polynomialSolidTransport.H"
 #include "pureMixture.H"
-#include "sensibleEnthalpy.H"
-#include "sensibleInternalEnergy.H"
-#include "thermo.H"
 
-#include "solidThermoPhysicsTypes.H"
+#include "forSolids.H"
+#include "makeHeSolidThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,49 +37,7 @@ namespace Foam
 
 /* * * * * * * * * * * * * * * * * Enthalpy-based * * * * * * * * * * * * * */
 
-makeSolidThermo
-(
-    solidPressureThermo,
-    heSolidThermo,
-    pureMixture,
-    constIsoSolidTransport,
-    sensibleEnthalpy,
-    hConstThermo,
-    rhoConst,
-    specie
-);
-
-makeSolidThermo
-(
-    solidPressureThermo,
-    heSolidThermo,
-    pureMixture,
-    constAnIsoSolidTransport,
-    sensibleEnthalpy,
-    hConstThermo,
-    rhoConst,
-    specie
-);
-
-makeSolidThermo
-(
-    solidPressureThermo,
-    heSolidThermo,
-    pureMixture,
-    exponentialSolidTransport,
-    sensibleEnthalpy,
-    hPowerThermo,
-    rhoConst,
-    specie
-);
-
-makeSolidThermoPhysicsType
-(
-    solidPressureThermo,
-    heSolidThermo,
-    pureMixture,
-    hTransportThermoPoly8SolidThermoPhysics
-);
+forSolids(makeSolidThermos, solidPressureThermo, heSolidThermo, pureMixture);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

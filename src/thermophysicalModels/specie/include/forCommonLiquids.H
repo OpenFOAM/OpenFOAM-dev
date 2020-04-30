@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,38 +23,48 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "egrMixture.H"
-#include "homogeneousMixture.H"
-#include "inhomogeneousMixture.H"
-#include "veryInhomogeneousMixture.H"
+#ifndef forCommonLiquids_H
+#define forCommonLiquids_H
 
-#include "psiThermo.H"
-#include "psiuReactionThermo.H"
-#include "heheuPsiThermo.H"
+#include "specie.H"
 
-#include "forAbsoluteGases.H"
-#include "makeReactionThermo.H"
+#include "adiabaticPerfectFluid.H"
+#include "perfectFluid.H"
+#include "rhoConst.H"
+#include "rPolynomial.H"
+
+#include "eConstThermo.H"
+#include "hConstThermo.H"
+
+#include "sensibleEnthalpy.H"
+#include "sensibleInternalEnergy.H"
+
+#include "constTransport.H"
+#include "WLFTransport.H"
+
+#include "thermo.H"
+
+#include "forThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makePsiuReactionThermos(Mixture, ThermoPhysics)                        \
-    makeReactionThermos                                                        \
-    (                                                                          \
-        psiThermo,                                                             \
-        psiuReactionThermo,                                                    \
-        heheuPsiThermo,                                                        \
-        Mixture,                                                               \
-        ThermoPhysics                                                          \
-    )
+#define forCommonLiquidEqns(Mu, He, Cp, Macro, Args...)                        \
+    forThermo(Mu, He, Cp, rhoConst, specie, Macro, Args);                      \
+    forThermo(Mu, He, Cp, rPolynomial, specie, Macro, Args)
+
+#define forCommonLiquidEnergiesAndThermos(Mu, Macro, Args...)                  \
+    forCommonLiquidEqns(Mu, sensibleEnthalpy, hConstThermo, Macro, Args);      \
+    forCommonLiquidEqns(Mu, sensibleInternalEnergy, eConstThermo, Macro, Args);\
+    forCommonLiquidEqns(Mu, sensibleInternalEnergy, hConstThermo, Macro, Args)
+
+#define forCommonLiquidTransports(Macro, Args...)                              \
+    forCommonLiquidEnergiesAndThermos(constTransport, Macro, Args);
+
+#define forCommonLiquids(Macro, Args...)                                       \
+    forCommonLiquidTransports(Macro, Args)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    forAbsoluteGases(makePsiuReactionThermos, egrMixture);
-    forAbsoluteGases(makePsiuReactionThermos, homogeneousMixture);
-    forAbsoluteGases(makePsiuReactionThermos, inhomogeneousMixture);
-    forAbsoluteGases(makePsiuReactionThermos, veryInhomogeneousMixture);
-}
+#endif
 
 // ************************************************************************* //

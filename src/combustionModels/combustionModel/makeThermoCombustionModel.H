@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,9 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef makeChemistryModel_H
-#define makeChemistryModel_H
+#ifndef makeThermoCombustionModel_H
+#define makeThermoCombustionModel_H
 
+#include "CombustionModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -35,25 +36,29 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineChemistryModel(Model, ReactionThermo)                            \
+#define makeThermoCombustionModel(Model, ReactionThermo, ThermoPhys)           \
                                                                                \
-    typedef Model<ReactionThermo> Model##ReactionThermo;                       \
+    typedef combustionModels::Model<ReactionThermo, ThermoPhys>                \
+        Model##ReactionThermo##ThermoPhys;                                     \
+    typedef CombustionModel<ReactionThermo>                                    \
+        Model##ReactionThermo##ThermoPhys##Base;                               \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        Model##ReactionThermo,                                                 \
+        Model##ReactionThermo##ThermoPhys,                                     \
         (                                                                      \
-            word(Model##ReactionThermo::typeName_()) + "<"                     \
-          + ReactionThermo::typeName + ">"                                     \
+            word(Model##ReactionThermo##ThermoPhys::typeName_()) + "<"         \
+          + ReactionThermo::typeName + "," + ThermoPhys::typeName() + ">"      \
         ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \
-    defineTemplateRunTimeSelectionTable                                        \
+    addToRunTimeSelectionTable                                                 \
     (                                                                          \
-        Model##ReactionThermo,                                                 \
-        thermo                                                                 \
-    );
+        Model##ReactionThermo##ThermoPhys##Base,                               \
+        Model##ReactionThermo##ThermoPhys,                                     \
+        dictionary                                                             \
+    )
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

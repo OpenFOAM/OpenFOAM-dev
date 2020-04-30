@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,8 @@ int main(int argc, char *argv[])
 
     speciesTable species;
     chemkinReader cr(species, args[1], args[3], args[2], newFormat);
-    const HashPtrTable<gasHThermoPhysics>& speciesThermo = cr.speciesThermo();
+    const HashPtrTable<chemkinReader::thermoPhysics>& speciesThermo =
+        cr.speciesThermo();
 
     dictionary thermoDict;
     thermoDict.add("species", cr.species());
@@ -82,7 +83,12 @@ int main(int argc, char *argv[])
     // pending complete integration into the thermodynamics structure
 
     // Add elements
-    forAllConstIter(HashPtrTable<gasHThermoPhysics>, speciesThermo, iter)
+    forAllConstIter
+    (
+        HashPtrTable<chemkinReader::thermoPhysics>,
+        speciesThermo,
+        iter
+    )
     {
         const word specieName(iter.key());
 

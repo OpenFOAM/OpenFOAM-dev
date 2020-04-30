@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,198 +24,17 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "psiThermo.H"
-#include "makeThermo.H"
-
-#include "specie.H"
-#include "perfectGas.H"
-#include "PengRobinsonGas.H"
-#include "hConstThermo.H"
-#include "eConstThermo.H"
-#include "janafThermo.H"
-#include "sensibleEnthalpy.H"
-#include "sensibleInternalEnergy.H"
-#include "thermo.H"
-
-#include "constTransport.H"
-#include "sutherlandTransport.H"
-
-#include "hPolynomialThermo.H"
-#include "polynomialTransport.H"
-
 #include "hePsiThermo.H"
 #include "pureMixture.H"
 
-#include "thermoPhysicsTypes.H"
+#include "forGases.H"
+#include "makeThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-/* * * * * * * * * * * * * * * * * Enthalpy-based * * * * * * * * * * * * * */
-
-makeThermos
-(
-    psiThermo,
-    hePsiThermo,
-    pureMixture,
-    constTransport,
-    sensibleEnthalpy,
-    hConstThermo,
-    perfectGas,
-    specie
-);
-
-makeThermos
-(
-    psiThermo,
-    hePsiThermo,
-    pureMixture,
-    sutherlandTransport,
-    sensibleEnthalpy,
-    hConstThermo,
-    perfectGas,
-    specie
-);
-
-makeThermos
-(
-    psiThermo,
-    hePsiThermo,
-    pureMixture,
-    sutherlandTransport,
-    sensibleEnthalpy,
-    janafThermo,
-    perfectGas,
-    specie
-);
-
-makeThermos
-(
-    psiThermo,
-    hePsiThermo,
-    pureMixture,
-    sutherlandTransport,
-    sensibleEnthalpy,
-    hConstThermo,
-    PengRobinsonGas,
-    specie
-);
-
-makeThermos
-(
-    psiThermo,
-    hePsiThermo,
-    pureMixture,
-    polynomialTransport,
-    sensibleEnthalpy,
-    hPolynomialThermo,
-    PengRobinsonGas,
-    specie
-);
-
-makeThermos
-(
-    psiThermo,
-    hePsiThermo,
-    pureMixture,
-    polynomialTransport,
-    sensibleEnthalpy,
-    janafThermo,
-    PengRobinsonGas,
-    specie
-);
-
-makeThermos
-(
-    psiThermo,
-    hePsiThermo,
-    pureMixture,
-    sutherlandTransport,
-    sensibleEnthalpy,
-    janafThermo,
-    PengRobinsonGas,
-    specie
-);
-
-
-/* * * * * * * * * * * * * * Internal-energy-based * * * * * * * * * * * * * */
-
-makeThermos
-(
-    psiThermo,
-    hePsiThermo,
-    pureMixture,
-    constTransport,
-    sensibleInternalEnergy,
-    eConstThermo,
-    perfectGas,
-    specie
-);
-
-makeThermos
-(
-    psiThermo,
-    hePsiThermo,
-    pureMixture,
-    sutherlandTransport,
-    sensibleInternalEnergy,
-    eConstThermo,
-    perfectGas,
-    specie
-);
-
-makeThermos
-(
-    psiThermo,
-    hePsiThermo,
-    pureMixture,
-    constTransport,
-    sensibleInternalEnergy,
-    hConstThermo,
-    perfectGas,
-    specie
-);
-
-makeThermos
-(
-    psiThermo,
-    hePsiThermo,
-    pureMixture,
-    sutherlandTransport,
-    sensibleInternalEnergy,
-    hConstThermo,
-    perfectGas,
-    specie
-);
-
-makeThermos
-(
-    psiThermo,
-    hePsiThermo,
-    pureMixture,
-    sutherlandTransport,
-    sensibleInternalEnergy,
-    janafThermo,
-    perfectGas,
-    specie
-);
-
-makeThermos
-(
-    psiThermo,
-    hePsiThermo,
-    pureMixture,
-    sutherlandTransport,
-    sensibleInternalEnergy,
-    janafThermo,
-    PengRobinsonGas,
-    specie
-);
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
+    forGases(makeThermos, psiThermo, hePsiThermo, pureMixture);
+}
 
 // ************************************************************************* //

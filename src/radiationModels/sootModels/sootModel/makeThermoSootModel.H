@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,35 +23,31 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef makeSootTypes_H
-#define makeSootTypes_H
+#ifndef makeThermoSootModel_H
+#define makeThermoSootModel_H
 
+#include "sootModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeSootTypesThermo(SootModelType, Thermo)                             \
+#define makeThermoSootModel(Model, ThermoPhys)                                 \
                                                                                \
-    typedef radiationModels::sootModels::SootModelType<Thermo>                 \
-        SootModelType##Thermo;                                                 \
+    typedef radiationModels::sootModels::Model<ThermoPhys> Model##ThermoPhys;  \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        SootModelType##Thermo,                                                 \
+        Model##ThermoPhys,                                                     \
         (                                                                      \
-            word(SootModelType##Thermo::typeName_()) + "<"#Thermo">"           \
+            word(Model##ThermoPhys::typeName_()) + "<"                         \
+          + ThermoPhys::typeName() + ">"                                       \
         ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \
     namespace radiationModels                                                  \
     {                                                                          \
-        addToRunTimeSelectionTable                                             \
-        (                                                                      \
-            sootModel,                                                         \
-            SootModelType##Thermo,                                             \
-            dictionary                                                         \
-        );                                                                     \
+        addToRunTimeSelectionTable(sootModel, Model##ThermoPhys, dictionary);  \
     }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

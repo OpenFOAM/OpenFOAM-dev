@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,20 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "makeCombustionTypes.H"
-
+#include "zoneCombustion.H"
 #include "psiReactionThermo.H"
 #include "rhoReactionThermo.H"
-#include "zoneCombustion.H"
+
+#include "makeCombustionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-makeCombustionTypes(zoneCombustion, psiReactionThermo);
-makeCombustionTypes(zoneCombustion, rhoReactionThermo);
-
+    makeCombustionModel(zoneCombustion, psiReactionThermo);
+    makeCombustionModel(zoneCombustion, rhoReactionThermo);
 }
 
 // ************************************************************************* //

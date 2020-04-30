@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,25 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
 scalarList W(const rhoReactionThermo& thermo)
 {
-    const PtrList<ThermoType>& specieData =
-        dynamicCast<const multiComponentMixture<ThermoType>>(thermo)
-       .speciesData();
+    const basicSpecieMixture& composition = thermo.composition();
 
-    scalarList W(specieData.size());
+    scalarList W(composition.Y().size());
 
-    forAll(specieData, i)
+    forAll(W, i)
     {
-        W[i] = specieData[i].W();
+        W[i] = composition.Wi(i);
     }
 
     return W;
 }
 
 
-template<class ThermoType>
 scalar h0
 (
     const rhoReactionThermo& thermo,
@@ -50,67 +46,16 @@ scalar h0
     const scalar T
 )
 {
-    const PtrList<ThermoType>& specieData =
-        dynamic_cast<const multiComponentMixture<ThermoType>&>(thermo)
-       .speciesData();
+    const basicSpecieMixture& composition = thermo.composition();
 
     scalar h0 = 0;
+
     forAll(Y, i)
     {
-        h0 += Y[i]*specieData[i].Hs(p, T);
+        h0 += Y[i]*composition.Hs(i, p, T);
     }
 
     return h0;
-}
-
-
-scalarList W(const rhoReactionThermo& thermo)
-{
-    if (isA<multiComponentMixture<gasHThermoPhysics>>(thermo))
-    {
-        return W<gasHThermoPhysics>(thermo);
-    }
-    else if (isA<multiComponentMixture<constFluidHThermoPhysics>>(thermo))
-    {
-        return W<constFluidHThermoPhysics>(thermo);
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Thermodynamics type " << thermo.type()
-            << " not supported by chemFoam"
-            << exit(FatalError);
-
-        return scalarList::null();
-    }
-}
-
-
-scalar h0
-(
-    const rhoReactionThermo& thermo,
-    const scalarList& Y,
-    const scalar p,
-    const scalar T
-)
-{
-    if (isA<multiComponentMixture<gasHThermoPhysics>>(thermo))
-    {
-        return h0<gasHThermoPhysics>(thermo, Y, p, T);
-    }
-    else if (isA<multiComponentMixture<constFluidHThermoPhysics>>(thermo))
-    {
-        return h0<constFluidHThermoPhysics>(thermo, Y, p, T);
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Thermodynamics type " << thermo.type()
-            << " not supported by chemFoam"
-            << exit(FatalError);
-
-        return 0;
-    }
 }
 
 

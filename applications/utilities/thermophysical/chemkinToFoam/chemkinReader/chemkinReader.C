@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,9 +172,9 @@ void Foam::chemkinReader::addReactionType
         {
             reactions_.append
             (
-                new IrreversibleReaction<gasHThermoPhysics, ReactionRateType>
+                new IrreversibleReaction<thermoPhysics, ReactionRateType>
                 (
-                    ReactionProxy<gasHThermoPhysics>
+                    ReactionProxy<thermoPhysics>
                     (
                         speciesTable_,
                         lhs.shrink(),
@@ -191,9 +191,9 @@ void Foam::chemkinReader::addReactionType
         {
             reactions_.append
             (
-                new ReversibleReaction<gasHThermoPhysics, ReactionRateType>
+                new ReversibleReaction<thermoPhysics, ReactionRateType>
                 (
-                    ReactionProxy<gasHThermoPhysics>
+                    ReactionProxy<thermoPhysics>
                     (
                         speciesTable_,
                         lhs.shrink(),
@@ -480,11 +480,11 @@ void Foam::chemkinReader::addReaction
                 (
                     new NonEquilibriumReversibleReaction
                     <
-                        gasHThermoPhysics,
+                        thermoPhysics,
                         ArrheniusReactionRate
                     >
                     (
-                        ReactionProxy<gasHThermoPhysics>
+                        ReactionProxy<thermoPhysics>
                         (
                             speciesTable_,
                             lhs.shrink(),
@@ -535,11 +535,11 @@ void Foam::chemkinReader::addReaction
                 (
                     new NonEquilibriumReversibleReaction
                     <
-                        gasHThermoPhysics,
+                        thermoPhysics,
                         thirdBodyArrheniusReactionRate
                     >
                     (
-                        ReactionProxy<gasHThermoPhysics>
+                        ReactionProxy<thermoPhysics>
                         (
                             speciesTable_,
                             lhs.shrink(),
@@ -640,11 +640,11 @@ void Foam::chemkinReader::addReaction
                 (
                     new NonEquilibriumReversibleReaction
                     <
-                        gasHThermoPhysics,
+                        thermoPhysics,
                         LandauTellerReactionRate
                     >
                     (
-                        ReactionProxy<gasHThermoPhysics>
+                        ReactionProxy<thermoPhysics>
                         (
                             speciesTable_,
                             lhs.shrink(),
@@ -776,8 +776,8 @@ void Foam::chemkinReader::read
     const fileName& transportFileName
 )
 {
-    Reaction<gasHThermoPhysics>::TlowDefault = 0;
-    Reaction<gasHThermoPhysics>::ThighDefault = great;
+    Reaction<thermoPhysics>::TlowDefault = 0;
+    Reaction<thermoPhysics>::ThighDefault = great;
 
     transportDict_.read(IFstream(transportFileName)());
 

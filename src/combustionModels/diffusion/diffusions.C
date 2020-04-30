@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,78 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "makeCombustionTypes.H"
+#include "diffusion.H"
 
-#include "thermoPhysicsTypes.H"
 #include "psiReactionThermo.H"
 #include "rhoReactionThermo.H"
-#include "diffusion.H"
+
+#include "forCommonGases.H"
+#include "makeThermoCombustionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-// Combustion models based on sensibleEnthalpy
-makeCombustionTypesThermo
-(
-    diffusion,
-    psiReactionThermo,
-    gasHThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    diffusion,
-    psiReactionThermo,
-    constGasHThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    diffusion,
-    rhoReactionThermo,
-    gasHThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    diffusion,
-    rhoReactionThermo,
-    constGasHThermoPhysics
-);
-
-
-// Combustion models based on sensibleInternalEnergy
-
-makeCombustionTypesThermo
-(
-    diffusion,
-    psiReactionThermo,
-    gasEThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    diffusion,
-    psiReactionThermo,
-    constGasEThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    diffusion,
-    rhoReactionThermo,
-    gasEThermoPhysics
-);
-
-makeCombustionTypesThermo
-(
-    diffusion,
-    rhoReactionThermo,
-    constGasEThermoPhysics
-);
-
+    forCommonGases(makeThermoCombustionModel, diffusion, psiReactionThermo);
+    forCommonGases(makeThermoCombustionModel, diffusion, rhoReactionThermo);
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
