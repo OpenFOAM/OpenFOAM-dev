@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,44 +22,44 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::thermophysicalFunctions::table
+    Foam::thermophysicalFunctions::nonUniformTable
 
 Description
-    Tabulated property function that linearly interpolates between
-    the table values.
+    Non-uniform tabulated property function that linearly interpolates between
+    the values.
+
+    To speed-up the search of the non-uniform table a uniform jump-table is
+    created on construction which is used for fast indirect addressing into
+    the table.
 
 Usage
-    \table
+    \nonUniformTable
         Property    | Description
-        Tlow        | Lower temperature limit of the table
-        Thigh       | Upper temperature limit of the table
-        values      | Property values, assumed uniformly distributed
-    \endtable
+        values      | List of (temperature property) value pairs
+    \endnonUniformTable
 
     Example for the density of water between 280 and 350K
     \verbatim
     rho
     {
-        type    table;
-
-        Tlow    280;
-        Thigh   350;
+        type    nonUniformTable;
 
         values
         (
-            999.87
-            991.53
-            973.7
+            (280 999.87)
+            (300 995.1)
+            (350 973.7)
         );
     }
     \endverbatim
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef tableThermophysicalFunction_H
-#define tableThermophysicalFunction_H
+#ifndef nonUniformTableThermophysicalFunction_H
+#define nonUniformTableThermophysicalFunction_H
 
 #include "thermophysicalFunction.H"
+#include "Tuple2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,10 +69,10 @@ namespace thermophysicalFunctions
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class table Declaration
+                           Class nonUniformTable Declaration
 \*---------------------------------------------------------------------------*/
 
-class table
+class nonUniformTable
 :
     public thermophysicalFunction
 {
@@ -81,32 +81,40 @@ class table
         //- Name of dictionary from which this function is instantiated
         fileName dictName_;
 
-        //- Lowest temperature in the table
+        //- Lowest temperature in the nonUniformTable
         scalar Tlow_;
 
-        //- Highest temperature in the table
+        //- Highest temperature in the nonUniformTable
         scalar Thigh_;
 
         //- Table values
-        List<scalar> values_;
+        List<Tuple2<scalar, scalar>> values_;
 
         //- Temperature increment derived from Tlow_, Thigh_ and values_.size()
         scalar deltaT_;
+
+        List<label> jumpTable_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("table");
+    TypeName("nonUniformTable");
 
 
     // Constructors
 
         //- Construct from dictionary
-        table(const dictionary& dict);
+        nonUniformTable(const dictionary& dict);
 
 
     // Member Functions
+
+        //- Return the non-uniform table of values
+        const List<Tuple2<scalar, scalar>>& values() const
+        {
+            return values_;
+        }
 
         //- Evaluate the function and return the result
         scalar f(scalar p, scalar T) const;
