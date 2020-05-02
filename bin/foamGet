@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -91,7 +91,7 @@ pruneFiles () {
     _vers="$(find ~/.OpenFOAM/ \
              -maxdepth 1 -mindepth 1 \
              -type d -name "[[:digit:]]*" \
-             -o -name "dev" | \
+             -o -name "dev" 2> /dev/null | \
              grep -v $WM_PROJECT_VERSION | \
              awk -F "/" '{print $NF}')"
     [ "$_vers" ] && \
