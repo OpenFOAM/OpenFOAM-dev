@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -218,7 +218,7 @@ template<class Thermo, template<class> class Type>
 inline Foam::scalar
 Foam::species::thermo<Thermo, Type>::hc() const
 {
-    return this->Hc()*this->W();
+    return this->Hf()*this->W();
 }
 
 
@@ -461,15 +461,17 @@ Foam::species::thermo<Thermo, Type>::dKcdTbyKc
     const scalar T
 ) const
 {
-    const scalar nm = this->Y()/this->W();
+    const scalar dKcdTbyKc =
+        (this->S(Pstd, T) + this->Gstd(T)/T)*this->Y()/(RR*T);
 
+    const scalar nm = this->Y()/this->W();
     if (equal(nm, small))
     {
-        return -this->dGdT(Pstd, T)*this->Y()/RR;
+        return dKcdTbyKc;
     }
     else
     {
-        return -(nm/T + this->dGdT(Pstd, T)*this->Y()/RR);
+        return dKcdTbyKc - nm/T;
     }
 }
 

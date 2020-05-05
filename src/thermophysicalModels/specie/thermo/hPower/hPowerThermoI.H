@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,7 +131,7 @@ inline Foam::scalar Foam::hPowerThermo<EquationOfState>::Ha
     const scalar T
 ) const
 {
-    return Hs(p, T) + Hc();
+    return Hs(p, T) + Hf();
 }
 
 
@@ -149,7 +149,7 @@ inline Foam::scalar Foam::hPowerThermo<EquationOfState>::Hs
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hPowerThermo<EquationOfState>::Hc() const
+inline Foam::scalar Foam::hPowerThermo<EquationOfState>::Hf() const
 {
     return Hf_;
 }
@@ -176,21 +176,8 @@ inline Foam::scalar Foam::hPowerThermo<EquationOfState>::Gstd
 {
     return
         c0_*(pow(T, n0_ + 1) - pow(Tstd, n0_ + 1))/(pow(Tref_, n0_)*(n0_ + 1))
-      + Hc()
+      + Hf()
       - c0_*(pow(T, n0_) - pow(Tstd, n0_))*T/(pow(Tref_, n0_)*n0_);
-}
-
-
-template<class EquationOfState>
-inline Foam::scalar Foam::hPowerThermo<EquationOfState>::dGdT
-(
-    const scalar p,
-    const scalar T
-) const
-{
-    // To be implemented
-    NotImplemented;
-    return 0;
 }
 
 

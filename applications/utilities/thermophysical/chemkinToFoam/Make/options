@@ -4,6 +4,4 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude
 
 EXE_LIBS = \
-    -lreactionThermophysicalModels \
-    -lfluidThermophysicalModels \
     -lchemistryModel

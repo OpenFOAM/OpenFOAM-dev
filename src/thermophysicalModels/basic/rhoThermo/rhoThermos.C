@@ -30,6 +30,7 @@ License
 #include "forGases.H"
 #include "forLiquids.H"
 #include "forPolynomials.H"
+#include "forTabulated.H"
 #include "makeThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -39,6 +40,7 @@ namespace Foam
     forGases(makeThermos, rhoThermo, heRhoThermo, pureMixture);
     forLiquids(makeThermos, rhoThermo, heRhoThermo, pureMixture);
     forPolynomials(makeThermos, rhoThermo, heRhoThermo, pureMixture);
+    forTabulated(makeThermos, rhoThermo, heRhoThermo, pureMixture);
 }
 
 // ************************************************************************* //

@@ -311,7 +311,7 @@ public:
                 const label patchi
             ) const;
 
-            //- Chemical enthalpy [J/kg]
+            //- Enthalpy of formation [J/kg]
             virtual tmp<volScalarField> hc() const;
 
             //- Temperature from enthalpy/internal energy for cell-set

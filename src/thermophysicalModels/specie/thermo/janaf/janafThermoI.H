@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,12 +203,12 @@ inline Foam::scalar Foam::janafThermo<EquationOfState>::Hs
     const scalar T
 ) const
 {
-    return Ha(p, T) - Hc();
+    return Ha(p, T) - Hf();
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::janafThermo<EquationOfState>::Hc() const
+inline Foam::scalar Foam::janafThermo<EquationOfState>::Hf() const
 {
     const coeffArray& a = lowCpCoeffs_;
     return
@@ -253,18 +253,6 @@ inline Foam::scalar Foam::janafThermo<EquationOfState>::Gstd
         )*T
       + a[5]
     );
-}
-
-
-template<class EquationOfState>
-inline Foam::scalar Foam::janafThermo<EquationOfState>::dGdT
-(
-    const scalar p,
-    const scalar T
-) const
-{
-    const coeffArray& a = coeffs(T);
-    return -((a[0] + a[5]/T)/T + a[1]/2 + T*(a[2]/3 + T*(a[3]/4 + T*a[4]/5)));
 }
 
 

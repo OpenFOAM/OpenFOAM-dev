@@ -85,8 +85,8 @@ public:
             //- Molecular weight of the given specie [kg/kmol]
             virtual scalar Wi(const label speciei) const = 0;
 
-            //- Chemical enthalpy [J/kg]
-            virtual scalar Hc(const label speciei) const = 0;
+            //- Enthalpy of formation [J/kg]
+            virtual scalar Hf(const label speciei) const = 0;
 
 
         // Per specie thermo properties

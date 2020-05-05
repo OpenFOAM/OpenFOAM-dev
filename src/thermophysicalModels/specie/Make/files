@@ -2,4 +2,24 @@ atomicWeights/atomicWeights.C
 specie/specie.C
 reaction/specieCoeffs/specieCoeffs.C
 
+thermophysicalFunctions/thermophysicalFunction/thermophysicalFunction.C
+
+thermophysicalFunctions/none/noneThermophysicalFunction.C
+thermophysicalFunctions/constant/constantThermophysicalFunction.C
+thermophysicalFunctions/table/tableThermophysicalFunction.C
+thermophysicalFunctions/nonUniformTable/nonUniformTableThermophysicalFunction.C
+thermophysicalFunctions/integratedNonUniformTable/integratedNonUniformTableThermophysicalFunction.C
+thermophysicalFunctions/APIfunctions/APIdiffCoef/APIdiffCoefThermophysicalFunction.C
+
+NSRDS = thermophysicalFunctions/NSRDS
+$(NSRDS)/NSRDS0/NSRDS0ThermophysicalFunction.C
+$(NSRDS)/NSRDS1/NSRDS1ThermophysicalFunction.C
+$(NSRDS)/NSRDS2/NSRDS2ThermophysicalFunction.C
+$(NSRDS)/NSRDS3/NSRDS3ThermophysicalFunction.C
+$(NSRDS)/NSRDS4/NSRDS4ThermophysicalFunction.C
+$(NSRDS)/NSRDS5/NSRDS5ThermophysicalFunction.C
+$(NSRDS)/NSRDS6/NSRDS6ThermophysicalFunction.C
+$(NSRDS)/NSRDS7/NSRDS7ThermophysicalFunction.C
+$(NSRDS)/NSRDS14/NSRDS14ThermophysicalFunction.C
+
 LIB = $(FOAM_LIBBIN)/libspecie

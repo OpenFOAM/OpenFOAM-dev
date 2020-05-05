@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,9 +114,9 @@ Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::Hs
 
 template<class ThermophysicalProperties>
 inline Foam::scalar
-Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::Hc() const
+Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::Hf() const
 {
-    return propertiesPtr_->Hc();
+    return propertiesPtr_->Hf();
 }
 
 

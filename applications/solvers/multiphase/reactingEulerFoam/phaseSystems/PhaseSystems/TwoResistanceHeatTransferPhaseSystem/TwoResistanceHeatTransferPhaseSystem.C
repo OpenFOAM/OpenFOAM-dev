@@ -198,7 +198,7 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHef
                         dimensionedScalar
                         (
                             dimEnergy/dimMass,
-                            composition1.Hc(composition1.species()[member])
+                            composition1.Hf(composition1.species()[member])
                         );
                 }
                 volScalarField hefi2(hef2), hci2(hc2);
@@ -217,7 +217,7 @@ void Foam::TwoResistanceHeatTransferPhaseSystem<BasePhaseSystem>::addDmidtHef
                         dimensionedScalar
                         (
                             dimEnergy/dimMass,
-                            composition2.Hc(composition2.species()[member])
+                            composition2.Hf(composition2.species()[member])
                         );
                 }
 

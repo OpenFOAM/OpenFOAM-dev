@@ -135,9 +135,9 @@ Foam::scalar Foam::SpecieMixture<MixtureType>::Wi(const label speciei) const
 
 
 template<class MixtureType>
-Foam::scalar Foam::SpecieMixture<MixtureType>::Hc(const label speciei) const
+Foam::scalar Foam::SpecieMixture<MixtureType>::Hf(const label speciei) const
 {
-    return this->getLocalThermo(speciei).Hc();
+    return this->getLocalThermo(speciei).Hf();
 }
 
 
