@@ -114,7 +114,7 @@ Foam::RASModels::phasePressureModel::epsilon() const
 
 
 Foam::tmp<Foam::volSymmTensorField>
-Foam::RASModels::phasePressureModel::R() const
+Foam::RASModels::phasePressureModel::sigma() const
 {
     return tmp<volSymmTensorField>
     (

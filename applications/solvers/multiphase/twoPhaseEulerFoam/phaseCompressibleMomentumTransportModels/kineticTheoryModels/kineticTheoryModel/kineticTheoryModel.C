@@ -241,7 +241,7 @@ Foam::RASModels::kineticTheoryModel::epsilon() const
 
 
 Foam::tmp<Foam::volSymmTensorField>
-Foam::RASModels::kineticTheoryModel::R() const
+Foam::RASModels::kineticTheoryModel::sigma() const
 {
     return volSymmTensorField::New
     (

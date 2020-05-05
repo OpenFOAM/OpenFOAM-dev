@@ -148,8 +148,8 @@ public:
         //- Return the turbulence kinetic energy dissipation rate
         virtual tmp<volScalarField> epsilon() const;
 
-        //- Return the Reynolds stress tensor
-        virtual tmp<volSymmTensorField> R() const;
+        //- Return the stress tensor [m^2/s^2]
+        virtual tmp<volSymmTensorField> sigma() const;
 
         //- Return the phase-pressure'
         // (derivative of phase-pressure w.r.t. phase-fraction)
