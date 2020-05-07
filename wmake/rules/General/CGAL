@@ -1,15 +1,14 @@
 CGAL_INC = \
+    -std=c++14 \
     -DCGAL_NO_DEPRECATED_CODE \
-    -I$(CGAL_ARCH_PATH)/include \
-    -I$(MPFR_ARCH_PATH)/include \
-    -I$(GMP_ARCH_PATH)/include \
-    -I$(BOOST_ARCH_PATH)/include \
-    -I/usr/include
+    -DCGAL_HEADER_ONLY \
+    $(if $(GMP_ARCH_PATH),-I$(GMP_ARCH_PATH)/include,) \
+    $(if $(MPFR_ARCH_PATH),-I$(MPFR_ARCH_PATH)/include,) \
+    $(if $(BOOST_ARCH_PATH),-I$(BOOST_ARCH_PATH)/include,) \
+    $(if $(CGAL_ARCH_PATH),-I$(CGAL_ARCH_PATH)/include,-I/usr/include)
 
 CGAL_LIBS = \
-    -L$(MPFR_ARCH_PATH)/lib$(WM_COMPILER_LIB_ARCH) \
-    -L$(GMP_ARCH_PATH)/lib$(WM_COMPILER_LIB_ARCH) \
-    -L$(BOOST_ARCH_PATH)/lib \
-    -L$(CGAL_ARCH_PATH)/lib$(WM_COMPILER_LIB_ARCH) \
-    -lCGAL \
+    $(if $(GMP_ARCH_PATH),-L$(GMP_ARCH_PATH)/lib$(WM_COMPILER_LIB_ARCH),) \
+    -lgmp \
+    $(if $(MPFR_ARCH_PATH),-L$(MPFR_ARCH_PATH)/lib$(WM_COMPILER_LIB_ARCH),) \
     -lmpfr

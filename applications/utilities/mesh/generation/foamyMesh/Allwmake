@@ -4,6 +4,24 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Parse arguments for library compilation
 . $WM_PROJECT_DIR/wmake/scripts/AllwmakeParseArguments
 
+# Get BOOST_ARCH_PATH, CGAL_ARCH_PATH
+if settings=`$WM_PROJECT_DIR/bin/foamEtcFile config.sh/CGAL`
+then
+    . $settings
+    if [ -n "$BOOST_ARCH_PATH" ]
+    then
+        echo "    using BOOST_ARCH_PATH=$BOOST_ARCH_PATH"
+    fi
+    if [ -n "$CGAL_ARCH_PATH" ]
+    then
+        echo "    using CGAL_ARCH_PATH=$CGAL_ARCH_PATH"
+    fi
+else
+    echo
+    echo "    Error: no config.sh/CGAL settings"
+    echo
+fi
+
 wmake $targetType conformalVoronoiMesh
 wmake $targetType conformalVoronoi2DMesh
 

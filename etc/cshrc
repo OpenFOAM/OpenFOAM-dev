@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -216,10 +216,6 @@ _foamSource $WM_PROJECT_DIR/etc/config.csh/aliases
 _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/mpi`
 _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/paraview`
 _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/ensight`
-
-if ( ($?FOAMY_HEX_MESH) ) then
-    _foamSource `$WM_PROJECT_DIR/bin/foamEtcFile config.csh/CGAL`
-endif
 
 
 # Clean environment paths again. Only remove duplicates

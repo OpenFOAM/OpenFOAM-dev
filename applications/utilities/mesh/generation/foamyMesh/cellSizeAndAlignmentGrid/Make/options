@@ -6,7 +6,6 @@ CGAL_INEXACT = -DCGAL_INEXACT
 
 include $(GENERAL_RULES)/CGAL
 
-
 EXE_INC =  \
     ${ROUNDING_MATH} \
     ${EXE_NDEBUG} \
