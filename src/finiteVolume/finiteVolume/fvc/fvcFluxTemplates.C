@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,15 +45,28 @@ flux
 (
     const surfaceScalarField& phi,
     const GeometricField<Type, fvPatchField, volMesh>& vf,
-    const word& name
+    Istream& schemeData
 )
 {
     return fv::convectionScheme<Type>::New
     (
         vf.mesh(),
         phi,
-        vf.mesh().divScheme(name)
+        schemeData
     )().flux(phi, vf);
+}
+
+
+template<class Type>
+tmp<GeometricField<Type, fvsPatchField, surfaceMesh>>
+flux
+(
+    const surfaceScalarField& phi,
+    const GeometricField<Type, fvPatchField, volMesh>& vf,
+    const word& name
+)
+{
+    return fvc::flux(phi, vf, vf.mesh().divScheme(name));
 }
 
 

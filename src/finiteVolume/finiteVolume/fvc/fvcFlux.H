@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,6 +61,14 @@ namespace fvc
     (
         const surfaceScalarField&,
         const tmp<GeometricField<Type, fvPatchField, volMesh>>&
+    );
+
+    template<class Type>
+    tmp<GeometricField<Type, fvsPatchField, surfaceMesh>> flux
+    (
+        const surfaceScalarField&,
+        const GeometricField<Type, fvPatchField, volMesh>&,
+        Istream& schemeData
     );
 
     template<class Type>
