@@ -14,8 +14,8 @@ bool MULESCorr(alphaControls.lookupOrDefault<Switch>("MULESCorr", false));
 //    alphaControls.lookupOrDefault<Switch>("alphaApplyPrevCorr", false)
 //);
 
-// Isotropic compression coefficient
-scalar icAlpha
+// compression coefficient
+scalar cAlpha
 (
-    alphaControls.lookupOrDefault<scalar>("icAlpha", 0)
+    alphaControls.lookupOrDefault<scalar>("cAlpha", 0)
 );

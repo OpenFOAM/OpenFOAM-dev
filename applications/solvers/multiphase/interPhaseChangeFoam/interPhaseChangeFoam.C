@@ -140,7 +140,6 @@ int main(int argc, char *argv[])
                 dimensionedScalar(dimMass/dimTime, 0)
             );
 
-            #include "alphaControls.H"
             #include "alphaEqnSubCycle.H"
 
             mixture.correct();

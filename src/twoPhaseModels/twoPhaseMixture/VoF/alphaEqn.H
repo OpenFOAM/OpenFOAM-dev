@@ -56,14 +56,7 @@
     scalar cnCoeff = 1.0/(1.0 + ocCoeff);
 
     // Standard face-flux compression coefficient
-    surfaceScalarField phic(mixture.cAlpha()*mag(phi/mesh.magSf()));
-
-    // Add the optional isotropic compression contribution
-    if (icAlpha > 0)
-    {
-        phic *= (1.0 - icAlpha);
-        phic += (mixture.cAlpha()*icAlpha)*fvc::interpolate(mag(U));
-    }
+    surfaceScalarField phic(cAlpha*mag(phi/mesh.magSf()));
 
     // Add the optional shear compression contribution
     if (scAlpha > 0)

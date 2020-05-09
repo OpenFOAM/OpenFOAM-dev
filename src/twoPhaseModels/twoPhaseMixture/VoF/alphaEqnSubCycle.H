@@ -1,3 +1,5 @@
+#include "alphaControls.H"
+
 if (nAlphaSubCycles > 1)
 {
     dimensionedScalar totalDeltaT = runTime.deltaT();

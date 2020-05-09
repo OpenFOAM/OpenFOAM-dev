@@ -60,9 +60,6 @@ class interfaceProperties
         //- Keep a reference to the transportProperties dictionary
         const dictionary& transportPropertiesDict_;
 
-        //- Compression coefficient
-        scalar cAlpha_;
-
         //- Surface tension
         autoPtr<surfaceTensionModel> sigmaPtr_;
 
@@ -107,11 +104,6 @@ public:
 
 
     // Member Functions
-
-        scalar cAlpha() const
-        {
-            return cAlpha_;
-        }
 
         const dimensionedScalar& deltaN() const
         {

@@ -1,3 +1,5 @@
+#include "alphaControls.H"
+
 {
     surfaceScalarField alphaPhi
     (
