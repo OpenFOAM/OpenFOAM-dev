@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,23 +35,19 @@ using namespace Foam;
 
 int main(int argc, char *argv[])
 {
-    wordHashSet setA(0);
+    wordHashSet setA{ "kjhk", "kjhk"};
+
     HashTable<label, word> tableA;
-
-    HashTable<nil> tableB;
-    Map<label> mapA;
-
-    setA.insert("kjhk");
-    setA.insert("kjhk2");
-
     tableA.insert("value1", 1);
     tableA.insert("value2", 2);
     tableA.insert("value3", 3);
 
+    HashTable<nil> tableB;
     tableB.insert("value4", nil());
     tableB.insert("value5", nil());
     tableB.insert("value6", nil());
 
+    Map<label> mapA;
     mapA.set(1, 1);
     mapA.set(2, 2);
     mapA.set(3, 3);
