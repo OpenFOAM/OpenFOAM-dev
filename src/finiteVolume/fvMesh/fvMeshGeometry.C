@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ void Foam::fvMesh::makeSf() const
     (
         IOobject
         (
-            "S",
+            "Sf",
             pointsInstance(),
             meshSubDir,
             *this,
@@ -86,10 +86,7 @@ void Foam::fvMesh::makeMagSf() const
             << abort(FatalError);
     }
 
-    // Note: Added stabilisation for faces with exactly zero area.
-    // These should be caught on mesh checking but at least this stops
-    // the code from producing Nans.
-    magSfPtr_ = new surfaceScalarField
+    magSfPtr_ = new slicedSurfaceScalarField
     (
         IOobject
         (
@@ -101,7 +98,9 @@ void Foam::fvMesh::makeMagSf() const
             IOobject::NO_WRITE,
             false
         ),
-        mag(Sf()) + dimensionedScalar(dimArea, vSmall)
+        *this,
+        dimArea,
+        magFaceAreas()
     );
 }
 

@@ -174,6 +174,9 @@ class primitiveMesh
             //- Face areas
             mutable vectorField* faceAreasPtr_;
 
+            //- Face area magnitudes
+            mutable scalarField* magFaceAreasPtr_;
+
 
         // Topological calculations
 
@@ -242,15 +245,18 @@ protected:
 
             //- Calculate face centres and areas
             void calcFaceCentresAndAreas() const;
+
             void makeFaceCentresAndAreas
             (
                 const pointField& p,
                 vectorField& fCtrs,
-                vectorField& fAreas
+                vectorField& fAreas,
+                scalarField& magfAreas
             ) const;
 
             //- Calculate cell centres and volumes
             void calcCellCentresAndVols() const;
+
             void makeCellCentresAndVols
             (
                 const vectorField& fCtrs,
@@ -579,6 +585,7 @@ public:
                 const vectorField& faceCentres() const;
                 const scalarField& cellVolumes() const;
                 const vectorField& faceAreas() const;
+                const scalarField& magFaceAreas() const;
 
 
             // Mesh motion

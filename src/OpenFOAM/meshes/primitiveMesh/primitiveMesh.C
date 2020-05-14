@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,8 @@ Foam::primitiveMesh::primitiveMesh()
     cellCentresPtr_(nullptr),
     faceCentresPtr_(nullptr),
     cellVolumesPtr_(nullptr),
-    faceAreasPtr_(nullptr)
+    faceAreasPtr_(nullptr),
+    magFaceAreasPtr_(nullptr)
 {}
 
 
@@ -109,7 +110,8 @@ Foam::primitiveMesh::primitiveMesh
     cellCentresPtr_(nullptr),
     faceCentresPtr_(nullptr),
     cellVolumesPtr_(nullptr),
-    faceAreasPtr_(nullptr)
+    faceAreasPtr_(nullptr),
+    magFaceAreasPtr_(nullptr)
 {}
 
 

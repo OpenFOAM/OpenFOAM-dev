@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -784,8 +784,9 @@ bool Foam::polyMesh::checkMeshMotion
 
     vectorField fCtrs(nFaces());
     vectorField fAreas(nFaces());
+    scalarField magfAreas(nFaces());
 
-    makeFaceCentresAndAreas(newPoints, fCtrs, fAreas);
+    makeFaceCentresAndAreas(newPoints, fCtrs, fAreas, magfAreas);
 
     // Check cell volumes and calculate new cell centres
     vectorField cellCtrs(nCells());

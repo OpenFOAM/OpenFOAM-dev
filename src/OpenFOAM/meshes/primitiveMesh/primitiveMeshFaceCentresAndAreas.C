@@ -46,7 +46,7 @@ void Foam::primitiveMesh::calcFaceCentresAndAreas() const
 
     // It is an error to attempt to recalculate faceCentres
     // if the pointer is already set
-    if (faceCentresPtr_ || faceAreasPtr_)
+    if (faceCentresPtr_ || faceAreasPtr_ || magFaceAreasPtr_)
     {
         FatalErrorInFunction
             << "Face centres or face areas already calculated"
@@ -59,7 +59,10 @@ void Foam::primitiveMesh::calcFaceCentresAndAreas() const
     faceAreasPtr_ = new vectorField(nFaces());
     vectorField& fAreas = *faceAreasPtr_;
 
-    makeFaceCentresAndAreas(points(), fCtrs, fAreas);
+    magFaceAreasPtr_ = new scalarField(nFaces());
+    scalarField& magfAreas = *magFaceAreasPtr_;
+
+    makeFaceCentresAndAreas(points(), fCtrs, fAreas, magfAreas);
 
     if (debug)
     {
@@ -74,7 +77,8 @@ void Foam::primitiveMesh::makeFaceCentresAndAreas
 (
     const pointField& p,
     vectorField& fCtrs,
-    vectorField& fAreas
+    vectorField& fAreas,
+    scalarField& magfAreas
 ) const
 {
     const faceList& fs = faces();
@@ -147,6 +151,8 @@ void Foam::primitiveMesh::makeFaceCentresAndAreas
             }
             fAreas[facei] = 0.5*sumA;
         }
+
+        magfAreas[facei] = max(mag(fAreas[facei]), vSmall);
     }
 }
 
@@ -172,6 +178,17 @@ const Foam::vectorField& Foam::primitiveMesh::faceAreas() const
     }
 
     return *faceAreasPtr_;
+}
+
+
+const Foam::scalarField& Foam::primitiveMesh::magFaceAreas() const
+{
+    if (!magFaceAreasPtr_)
+    {
+        calcFaceCentresAndAreas();
+    }
+
+    return *magFaceAreasPtr_;
 }
 
 
