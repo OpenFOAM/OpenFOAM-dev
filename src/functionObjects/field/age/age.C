@@ -95,7 +95,8 @@ Foam::functionObjects::age::age
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict)
+    fvMeshFunctionObject(name, runTime, dict),
+    fvOptions_(mesh_)
 {
     read(dict);
 }
@@ -117,6 +118,11 @@ bool Foam::functionObjects::age::read(const dictionary& dict)
     schemesField_ = dict.lookupOrDefault<word>("schemesField", typeName);
     diffusion_ = dict.lookupOrDefault<Switch>("diffusion", false);
     tolerance_ = dict.lookupOrDefault<scalar>("tolerance", 1e-5);
+
+    if (dict.found("fvOptions"))
+    {
+        fvOptions_.reset(dict.subDict("fvOptions"));
+    }
 
     return true;
 }
@@ -186,7 +192,7 @@ bool Foam::functionObjects::age::execute()
         {
             fvScalarMatrix ageEqn
             (
-                fvm::div(phi, age, divScheme) == rho
+                fvm::div(phi, age, divScheme) == rho + fvOptions_(rho, age)
             );
 
             if (diffusion_)
@@ -195,6 +201,8 @@ bool Foam::functionObjects::age::execute()
             }
 
             ageEqn.relax(relaxCoeff);
+
+            fvOptions_.constrain(ageEqn);
 
             if (converged(i, ageEqn.solve(schemesField_).initialResidual()))
             {
@@ -223,7 +231,8 @@ bool Foam::functionObjects::age::execute()
         {
             fvScalarMatrix ageEqn
             (
-                fvm::div(phi, age, divScheme) == dimensionedScalar(1)
+                fvm::div(phi, age, divScheme)
+             == dimensionedScalar(1) + fvOptions_(age)
             );
 
             if (diffusion_)
@@ -232,6 +241,8 @@ bool Foam::functionObjects::age::execute()
             }
 
             ageEqn.relax(relaxCoeff);
+
+            fvOptions_.constrain(ageEqn);
 
             if (converged(i, ageEqn.solve(schemesField_).initialResidual()))
             {
