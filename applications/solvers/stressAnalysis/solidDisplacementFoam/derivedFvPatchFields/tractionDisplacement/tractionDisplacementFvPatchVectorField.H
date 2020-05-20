@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,6 +37,7 @@ SourceFiles
 #define tractionDisplacementFvPatchVectorField_H
 
 #include "fixedGradientFvPatchFields.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,7 +55,14 @@ class tractionDisplacementFvPatchVectorField
     // Private Data
 
         vectorField traction_;
-        scalarField pressure_;
+        autoPtr<Function1<scalar>> pressure_;
+
+protected:
+
+        //- Update the coefficients associated with the patch field
+        //  for the given pressure
+        template<class Type>
+        void updateCoeffs(const Type& pressure);
 
 
 public:
@@ -139,16 +147,6 @@ public:
                 return traction_;
             }
 
-            virtual const scalarField& pressure() const
-            {
-                return pressure_;
-            }
-
-            virtual scalarField& pressure()
-            {
-                return pressure_;
-            }
-
 
         // Mapping functions
 
@@ -172,6 +170,12 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "tractionDisplacementFvPatchVectorFieldTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

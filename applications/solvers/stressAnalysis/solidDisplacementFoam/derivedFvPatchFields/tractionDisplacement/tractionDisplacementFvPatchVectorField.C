@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "tractionDisplacementFvPatchVectorField.H"
-#include "solidDisplacementThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -38,7 +37,24 @@ tractionDisplacementFvPatchVectorField
 :
     fixedGradientFvPatchVectorField(p, iF),
     traction_(p.size(), Zero),
-    pressure_(p.size(), 0.0)
+    pressure_()
+{
+    fvPatchVectorField::operator=(patchInternalField());
+    gradient() = Zero;
+}
+
+
+Foam::tractionDisplacementFvPatchVectorField::
+tractionDisplacementFvPatchVectorField
+(
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedGradientFvPatchVectorField(p, iF),
+    traction_("traction", dict, p.size()),
+    pressure_(Function1<scalar>::New("pressure", dict))
 {
     fvPatchVectorField::operator=(patchInternalField());
     gradient() = Zero;
@@ -56,25 +72,8 @@ tractionDisplacementFvPatchVectorField
 :
     fixedGradientFvPatchVectorField(tdpvf, p, iF, mapper),
     traction_(mapper(tdpvf.traction_)),
-    pressure_(mapper(tdpvf.pressure_))
+    pressure_(tdpvf.pressure_, false)
 {}
-
-
-Foam::tractionDisplacementFvPatchVectorField::
-tractionDisplacementFvPatchVectorField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedGradientFvPatchVectorField(p, iF),
-    traction_("traction", dict, p.size()),
-    pressure_("pressure", dict, p.size())
-{
-    fvPatchVectorField::operator=(patchInternalField());
-    gradient() = Zero;
-}
 
 
 Foam::tractionDisplacementFvPatchVectorField::
@@ -85,7 +84,7 @@ tractionDisplacementFvPatchVectorField
 :
     fixedGradientFvPatchVectorField(tdpvf),
     traction_(tdpvf.traction_),
-    pressure_(tdpvf.pressure_)
+    pressure_(tdpvf.pressure_, false)
 {}
 
 
@@ -98,7 +97,7 @@ tractionDisplacementFvPatchVectorField
 :
     fixedGradientFvPatchVectorField(tdpvf, iF),
     traction_(tdpvf.traction_),
-    pressure_(tdpvf.pressure_)
+    pressure_(tdpvf.pressure_, false)
 {}
 
 
@@ -111,7 +110,6 @@ void Foam::tractionDisplacementFvPatchVectorField::autoMap
 {
     fixedGradientFvPatchVectorField::autoMap(m);
     m(traction_, traction_);
-    m(pressure_, pressure_);
 }
 
 
@@ -127,7 +125,6 @@ void Foam::tractionDisplacementFvPatchVectorField::rmap
         refCast<const tractionDisplacementFvPatchVectorField>(ptf);
 
     traction_.rmap(dmptf.traction_, addr);
-    pressure_.rmap(dmptf.pressure_, addr);
 }
 
 
@@ -138,53 +135,7 @@ void Foam::tractionDisplacementFvPatchVectorField::updateCoeffs()
         return;
     }
 
-    const label patchi = patch().index();
-
-    const solidDisplacementThermo& thermo =
-        db().lookupObject<solidDisplacementThermo>
-        (
-            solidDisplacementThermo::dictName
-        );
-
-    const scalarField& E = thermo.E(patchi);
-    const scalarField& nu = thermo.nu(patchi);
-
-    const scalarField mu(E/(2.0*(1.0 + nu)));
-    const scalarField lambda
-    (
-        thermo.planeStress()
-      ? nu*E/((1 + nu)*(1 - nu))
-      : nu*E/((1 + nu)*(1 - 2*nu))
-    );
-    const scalarField threeK
-    (
-        thermo.planeStress()
-      ? E/(1 - nu)
-      : E/(1 - 2*nu)
-    );
-
-    const scalarField twoMuLambda(2*mu + lambda);
-
-    const vectorField n(patch().nf());
-
-    const fvPatchField<symmTensor>& sigmaD =
-        patch().lookupPatchField<volSymmTensorField, symmTensor>("sigmaD");
-
-    gradient() =
-    (
-        (traction_ - pressure_*n)
-      + twoMuLambda*fvPatchField<vector>::snGrad() - (n & sigmaD)
-    )/twoMuLambda;
-
-    if (thermo.thermalStress())
-    {
-        const scalarField& alphav = thermo.alphav(patchi);
-
-        gradient() +=
-            n*threeK*alphav*thermo.T().boundaryField()[patchi]/twoMuLambda;
-    }
-
-    fixedGradientFvPatchVectorField::updateCoeffs();
+    this->updateCoeffs(pressure_->value(this->db().time().timeOutputValue()));
 }
 
 
@@ -192,7 +143,7 @@ void Foam::tractionDisplacementFvPatchVectorField::write(Ostream& os) const
 {
     fvPatchVectorField::write(os);
     writeEntry(os, "traction", traction_);
-    writeEntry(os, "pressure", pressure_);
+    writeEntry(os, pressure_());
     writeEntry(os, "value", *this);
 }
 
