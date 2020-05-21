@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,10 +76,10 @@ Foam::distributionModels::RosinRammler::~RosinRammler()
 
 Foam::scalar Foam::distributionModels::RosinRammler::sample() const
 {
-    scalar K = 1.0 - exp(-pow((maxValue_ - minValue_)/d_, n_));
-    scalar y = rndGen_.sample01<scalar>();
-    scalar x = minValue_ + d_*::pow(-log(1.0 - y*K), 1.0/n_);
-    return x;
+    const scalar minValueByDPowN = pow(minValue_/d_, n_);
+    const scalar K = 1 - exp(- pow(maxValue_/d_, n_) + minValueByDPowN);
+    const scalar y = rndGen_.sample01<scalar>();
+    return d_*pow(minValueByDPowN - log(1 - K*y), 1/n_);
 }
 
 

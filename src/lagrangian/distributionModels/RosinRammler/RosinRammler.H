@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,11 +28,10 @@ Description
     Rosin-Rammler distributionModel
 
    \f[
-       cumulative model =
-           (1.0 - exp( -(( x - d0)/d)^n )
-         / (1.0 - exp( -((d1 - d0)/d)^n )
+       CDF(x) =
+            (1 - exp(-(x/d)^n + (d_0/d)^n)
+           /(1 - exp(-(d_1/d)^n + (d_0/d)^n)
    \f]
-
 
 SourceFiles
     RosinRammler.C
@@ -69,7 +68,10 @@ class RosinRammler
 
         // Model coefficients
 
+            //- Scale parameter
             scalar d_;
+
+            //- Shape parameter
             scalar n_;
 
 
