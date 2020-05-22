@@ -34,7 +34,7 @@ Usage
     \verbatim
     LES
     {
-        model           eddyDiffusivity;
+        model           nonUnityLewisEddyDiffusivity;
         Prt             0.85;
         Sct             0.7;
     }
