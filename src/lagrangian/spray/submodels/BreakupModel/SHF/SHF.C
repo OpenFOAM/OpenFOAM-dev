@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,9 +156,21 @@ bool Foam::SHF<CloudType>::update
 
     scalar weGasCorr = weGas/(1.0 + weCorrCoeff_*ohnesorge);
 
-    // droplet deformation characteristic time
+    // update the droplet characteristic time
+    tc += dt;
 
-    scalar tChar = d/Urmag*sqrt(rho/rhoc);
+    // droplet deformation characteristic rate
+    scalar rChar = Urmag/d*sqrt(rhoc/rho);
+
+    // return if the characteristic deformation rate is too low for the
+    // following modelling to be calculable
+    if (tc*rChar < small)
+    {
+        return false;
+    }
+
+    // droplet deformation characteristic time
+    scalar tChar = 1/rChar;
 
     scalar tFirst = cInit_*tChar;
 
@@ -170,9 +182,6 @@ bool Foam::SHF<CloudType>::update
     bool shear = false;
     bool success = false;
 
-
-    // update the droplet characteristic time
-    tc += dt;
 
     if (weGas > weConst_)
     {
