@@ -1,1 +1,5 @@
-scalar accFac(stressControl.lookup<scalar>("accelerationFactor"));
+const scalar accFac
+(
+    mesh.solutionDict().subDict("stressAnalysis")
+   .lookup<scalar>("accelerationFactor")
+);
