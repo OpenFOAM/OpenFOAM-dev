@@ -19,7 +19,7 @@ solvers
 {
     "rho.*"
     {
-        solver nthn;
+        solver          diagonal;
     }
 
     "p.*"
