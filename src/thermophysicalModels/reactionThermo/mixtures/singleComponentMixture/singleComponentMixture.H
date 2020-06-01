@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,7 @@ public:
         void read(const dictionary&);
 
         //- Return thermo based on index
-        inline const ThermoType& getLocalThermo(const label speciei) const
+        inline const ThermoType& specieThermo(const label speciei) const
         {
             #ifdef FULLDEBUG
             if (speciei != 0)
