@@ -135,6 +135,8 @@ public:
 
         // Evaluation functions
 
+            using fixedValueFvPatchScalarField::updateCoeffs;
+
             //- Update the coefficients associated with the patch field
             //  using the given patch reference pressure and kinetic energy
             //  fields

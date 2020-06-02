@@ -342,6 +342,8 @@ public:
         //  which have special treatment
         void correct();
 
+        using volScalarField::read;
+
         //- Read phaseProperties dictionary
         virtual bool read(const dictionary& phaseProperties);
 };
