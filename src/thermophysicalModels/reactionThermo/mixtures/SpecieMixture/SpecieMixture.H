@@ -104,16 +104,13 @@ public:
 
     // Member Functions
 
-        // Per specie properties
+        // Specie properties
 
             //- Molecular weight of the given specie [kg/kmol]
             virtual scalar Wi(const label speciei) const;
 
             //- Enthalpy of formation [J/kg]
             virtual scalar Hf(const label speciei) const;
-
-
-        // Per specie thermo properties
 
             //- Density [kg/m^3]
             virtual scalar rho

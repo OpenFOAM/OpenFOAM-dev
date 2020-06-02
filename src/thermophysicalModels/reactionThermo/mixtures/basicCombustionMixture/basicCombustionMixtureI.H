@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,33 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
+inline bool Foam::basicCombustionMixture::contains
+(
+    const word& specieName
+) const
+{
+    return species_.found(specieName);
+}
+
+
+inline Foam::volScalarField& Foam::basicCombustionMixture::Y
+(
+    const word& specieName
+)
+{
+    return Y_[species_[specieName]];
+}
+
+
+inline const Foam::volScalarField& Foam::basicCombustionMixture::Y
+(
+    const word& specieName
+) const
+{
+    return Y_[species_[specieName]];
+}
+
 
 inline Foam::scalar Foam::basicCombustionMixture::fres
 (

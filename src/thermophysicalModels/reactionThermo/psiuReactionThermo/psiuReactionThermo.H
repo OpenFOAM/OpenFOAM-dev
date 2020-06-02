@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,8 @@ SourceFiles
 #ifndef psiuReactionThermo_H
 #define psiuReactionThermo_H
 
-#include "psiReactionThermo.H"
+#include "psiThermo.H"
+#include "basicCombustionMixture.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,12 +45,12 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class psiuReactionThermo Declaration
+                       Class psiuReactionThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 class psiuReactionThermo
 :
-    public psiReactionThermo
+    public psiThermo
 {
 
 protected:
@@ -105,6 +106,12 @@ public:
 
         //- Update properties
         virtual void correct() = 0;
+
+        //- Return the composition of the combustion mixture
+        virtual basicCombustionMixture& composition() = 0;
+
+        //- Return the composition of the combustion mixture
+        virtual const basicCombustionMixture& composition() const = 0;
 
 
         // Access to thermodynamic state variables.

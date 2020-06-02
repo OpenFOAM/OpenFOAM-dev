@@ -5,7 +5,7 @@
     rhoReactionThermo& thermo = thermoFluid[i];
     thermo.validate(args.executable(), "h", "e");
 
-    basicMultiComponentMixture& composition = thermo.composition();
+    basicSpecieMixture& composition = thermo.composition();
     PtrList<volScalarField>& Y = composition.Y();
 
     label inertIndex = -1;

@@ -25,8 +25,8 @@ Class
     Foam::basicSpecieMixture
 
 Description
-    Specialization of basicMultiComponentMixture for a mixture consisting
-    of a number for molecular species.
+    Specialization of basicMixture for a mixture consisting of a number for
+    molecular species.
 
 SourceFiles
     basicSpecieMixture.C
@@ -36,7 +36,10 @@ SourceFiles
 #ifndef basicSpecieMixture_H
 #define basicSpecieMixture_H
 
-#include "basicMultiComponentMixture.H"
+#include "volFields.H"
+#include "PtrList.H"
+#include "basicMixture.H"
+#include "speciesTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,8 +52,22 @@ namespace Foam
 
 class basicSpecieMixture
 :
-    public basicMultiComponentMixture
+    public basicMixture
 {
+
+protected:
+
+    // Protected data
+
+        //- Table of specie names
+        speciesTable species_;
+
+        //- List of specie active flags
+        mutable List<bool> active_;
+
+        //- Species mass fractions
+        PtrList<volScalarField> Y_;
+
 
 public:
 
@@ -80,7 +97,44 @@ public:
 
     // Member Functions
 
-        // Per specie properties
+        //- Return the table of species
+        inline const speciesTable& species() const;
+
+        //- Does the mixture include this specie?
+        inline bool contains(const word& specieName) const;
+
+        //- Return true for active species
+        inline bool active(label speciei) const;
+
+        //- Return the bool list of active species
+        inline const List<bool>& active() const;
+
+        //- Set speciei active
+        inline void setActive(label speciei) const;
+
+        //- Set speciei inactive
+        inline void setInactive(label speciei) const;
+
+        //- Return the mass-fraction fields
+        inline PtrList<volScalarField>& Y();
+
+        //- Return the const mass-fraction fields
+        inline const PtrList<volScalarField>& Y() const;
+
+        //- Return the mass-fraction field for a specie given by index
+        inline volScalarField& Y(const label i);
+
+        //- Return the const mass-fraction field for a specie given by index
+        inline const volScalarField& Y(const label i) const;
+
+        //- Return the mass-fraction field for a specie given by name
+        inline volScalarField& Y(const word& specieName);
+
+        //- Return the const mass-fraction field for a specie given by name
+        inline const volScalarField& Y(const word& specieName) const;
+
+
+        // Specie properties
 
             //- Molecular weight of the given specie [kg/kmol]
             virtual scalar Wi(const label speciei) const = 0;
@@ -89,7 +143,7 @@ public:
             virtual scalar Hf(const label speciei) const = 0;
 
 
-        // Per specie thermo properties
+        // Specie thermo properties
 
             //- Density [kg/m^3]
             virtual scalar rho
@@ -188,7 +242,7 @@ public:
             ) const = 0;
 
 
-        // Per specie transport properties
+        // Specie transport properties
 
             //- Dynamic viscosity [kg/m/s]
             virtual scalar mu
@@ -243,6 +297,10 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "basicSpecieMixtureI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

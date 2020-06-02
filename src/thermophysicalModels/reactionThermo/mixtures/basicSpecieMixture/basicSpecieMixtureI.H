@@ -23,69 +23,64 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-inline const Foam::speciesTable&
-Foam::basicMultiComponentMixture::species() const
+inline const Foam::speciesTable& Foam::basicSpecieMixture::species() const
 {
     return species_;
 }
 
 
-inline bool Foam::basicMultiComponentMixture::contains
-(
-    const word& specieName
-) const
+inline bool Foam::basicSpecieMixture::contains(const word& specieName) const
 {
     return species_.found(specieName);
 }
 
 
-inline bool Foam::basicMultiComponentMixture::active(label speciei) const
+inline bool Foam::basicSpecieMixture::active(label speciei) const
 {
     return active_[speciei];
 }
 
 
-inline const Foam::List<bool>& Foam::basicMultiComponentMixture::active() const
+inline const Foam::List<bool>& Foam::basicSpecieMixture::active() const
 {
     return active_;
 }
 
 
-inline void Foam::basicMultiComponentMixture::setActive(label speciei) const
+inline void Foam::basicSpecieMixture::setActive(label speciei) const
 {
     active_[speciei] = true;
     const_cast<volScalarField&>(Y_[speciei]).writeOpt() = IOobject::AUTO_WRITE;
 }
 
 
-inline void Foam::basicMultiComponentMixture::setInactive(label speciei) const
+inline void Foam::basicSpecieMixture::setInactive(label speciei) const
 {
     active_[speciei] = false;
     const_cast<volScalarField&>(Y_[speciei]).writeOpt() = IOobject::NO_WRITE;
 }
 
 
-inline Foam::PtrList<Foam::volScalarField>&
-Foam::basicMultiComponentMixture::Y()
+inline Foam::PtrList<Foam::volScalarField>& Foam::basicSpecieMixture::Y()
 {
     return Y_;
 }
 
 
 inline const Foam::PtrList<Foam::volScalarField>&
-Foam::basicMultiComponentMixture::Y() const
+Foam::basicSpecieMixture::Y() const
 {
     return Y_;
 }
 
 
-inline Foam::volScalarField& Foam::basicMultiComponentMixture::Y(const label i)
+inline Foam::volScalarField& Foam::basicSpecieMixture::Y(const label i)
 {
     return Y_[i];
 }
 
 
-inline const Foam::volScalarField& Foam::basicMultiComponentMixture::Y
+inline const Foam::volScalarField& Foam::basicSpecieMixture::Y
 (
     const label i
 ) const
@@ -94,7 +89,7 @@ inline const Foam::volScalarField& Foam::basicMultiComponentMixture::Y
 }
 
 
-inline Foam::volScalarField& Foam::basicMultiComponentMixture::Y
+inline Foam::volScalarField& Foam::basicSpecieMixture::Y
 (
     const word& specieName
 )
@@ -103,7 +98,7 @@ inline Foam::volScalarField& Foam::basicMultiComponentMixture::Y
 }
 
 
-inline const Foam::volScalarField& Foam::basicMultiComponentMixture::Y
+inline const Foam::volScalarField& Foam::basicSpecieMixture::Y
 (
     const word& specieName
 ) const

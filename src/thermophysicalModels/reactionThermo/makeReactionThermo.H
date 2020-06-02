@@ -28,7 +28,6 @@ License
 
 #include "makeThermo.H"
 #include "SpecieMixture.H"
-#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

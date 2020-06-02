@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -353,7 +353,7 @@ void Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::computeA
         {
             s2c = this->chemistry_.simplifiedToCompleteIndex()[i];
         }
-        Rcq[i] = rhoi*Rphiq[s2c]/this->chemistry_.specieThermo()[s2c].W();
+        Rcq[i] = rhoi*Rphiq[s2c]/this->chemistry_.specieThermos()[s2c].W();
     }
     Rcq[speciesNumber] = Rphiq[Rphiq.size() - nAdditionalEqns_];
     Rcq[speciesNumber + 1] = Rphiq[Rphiq.size() - nAdditionalEqns_ + 1];
@@ -393,16 +393,16 @@ void Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::computeA
                 sj = this->chemistry_.simplifiedToCompleteIndex()[j];
             }
             A(i, j) *=
-              -dt*this->chemistry_.specieThermo()[si].W()
-               /this->chemistry_.specieThermo()[sj].W();
+              -dt*this->chemistry_.specieThermos()[si].W()
+               /this->chemistry_.specieThermos()[sj].W();
         }
 
         A(i, i) += 1;
         // Columns for pressure and temperature
         A(i, speciesNumber) *=
-            -dt*this->chemistry_.specieThermo()[si].W()/rhoi;
+            -dt*this->chemistry_.specieThermos()[si].W()/rhoi;
         A(i, speciesNumber + 1) *=
-            -dt*this->chemistry_.specieThermo()[si].W()/rhoi;
+            -dt*this->chemistry_.specieThermos()[si].W()/rhoi;
     }
 
     // For the temperature and pressure lines, ddc(dTdt)
@@ -416,9 +416,9 @@ void Foam::chemistryTabulationMethods::ISAT<CompType, ThermoType>::computeA
         }
 
         A(speciesNumber, i) *=
-            -dt*rhoi/this->chemistry_.specieThermo()[si].W();
+            -dt*rhoi/this->chemistry_.specieThermos()[si].W();
         A(speciesNumber + 1, i) *=
-            -dt*rhoi/this->chemistry_.specieThermo()[si].W();
+            -dt*rhoi/this->chemistry_.specieThermos()[si].W();
     }
 
     A(speciesNumber, speciesNumber) = -dt*A(speciesNumber, speciesNumber) + 1;

@@ -7,7 +7,7 @@ autoPtr<psiuReactionThermo> pThermo
 psiuReactionThermo& thermo = pThermo();
 thermo.validate(args.executable(), "ha", "ea");
 
-basicSpecieMixture& composition = thermo.composition();
+basicCombustionMixture& composition = thermo.composition();
 
 volScalarField rho
 (

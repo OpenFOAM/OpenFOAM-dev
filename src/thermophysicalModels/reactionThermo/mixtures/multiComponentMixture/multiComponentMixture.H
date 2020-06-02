@@ -55,8 +55,8 @@ class multiComponentMixture
 {
     // Private Data
 
-        //- Species data
-        PtrList<ThermoType> speciesData_;
+        //- List of specie thermo
+        PtrList<ThermoType> specieThermos_;
 
         typedef HashTable<List<specieElement>> speciesCompositionTable;
 
@@ -119,9 +119,9 @@ public:
         }
 
         //- Return the raw specie thermodynamic data
-        const PtrList<ThermoType>& speciesData() const
+        const PtrList<ThermoType>& specieThermos() const
         {
-            return speciesData_;
+            return specieThermos_;
         }
 
         //- Return the table of species composition
@@ -159,7 +159,7 @@ public:
         //- Return thermo based on index
         inline const ThermoType& specieThermo(const label speciei) const
         {
-            return speciesData_[speciei];
+            return specieThermos_[speciei];
         }
 };
 

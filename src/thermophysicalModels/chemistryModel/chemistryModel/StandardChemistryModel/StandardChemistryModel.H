@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ protected:
         const PtrList<volScalarField>& Y_;
 
         //- Thermodynamic data of the species
-        const PtrList<ThermoType>& specieThermo_;
+        const PtrList<ThermoType>& specieThermos_;
 
         //- Reactions
         const ReactionList<ThermoType> reactions_;
@@ -136,7 +136,7 @@ public:
         inline const PtrList<Reaction<ThermoType>>& reactions() const;
 
         //- Thermodynamic data of the species
-        inline const PtrList<ThermoType>& specieThermo() const;
+        inline const PtrList<ThermoType>& specieThermos() const;
 
         //- The number of species
         virtual inline label nSpecie() const;

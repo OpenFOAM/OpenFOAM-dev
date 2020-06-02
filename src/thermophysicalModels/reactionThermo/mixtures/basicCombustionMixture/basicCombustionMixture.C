@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,8 +43,30 @@ Foam::basicCombustionMixture::basicCombustionMixture
     const word& phaseName
 )
 :
-    basicSpecieMixture(thermoDict, specieNames, mesh, phaseName)
-{}
+    basicMixture(thermoDict, mesh, phaseName),
+    species_(specieNames),
+    Y_(species_.size())
+{
+    forAll(species_, i)
+    {
+        Y_.set
+        (
+            i,
+            new volScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName(species_[i], phaseName),
+                    mesh.time().timeName(),
+                    mesh,
+                    IOobject::MUST_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                mesh
+            )
+        );
+    }
+}
 
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,18 +34,18 @@ Foam::multiComponentMixture<ThermoType>::readSpeciesData
     const dictionary& thermoDict
 ) const
 {
-    PtrList<ThermoType> speciesData(species_.size());
+    PtrList<ThermoType> specieThermos(species_.size());
 
     forAll(species_, i)
     {
-        speciesData.set
+        specieThermos.set
         (
             i,
             new ThermoType(thermoDict.subDict(species_[i]))
         );
     }
 
-    return speciesData;
+    return specieThermos;
 }
 
 
@@ -146,10 +146,10 @@ Foam::multiComponentMixture<ThermoType>::multiComponentMixture
         mesh,
         phaseName
     ),
-    speciesData_(readSpeciesData(thermoDict)),
+    specieThermos_(readSpeciesData(thermoDict)),
     speciesComposition_(readSpeciesComposition(thermoDict, species())),
-    mixture_("mixture", speciesData_[0]),
-    mixtureVol_("volMixture", speciesData_[0])
+    mixture_("mixture", specieThermos_[0]),
+    mixtureVol_("volMixture", specieThermos_[0])
 {
     correctMassFractions();
 }
@@ -163,11 +163,11 @@ const ThermoType& Foam::multiComponentMixture<ThermoType>::cellMixture
     const label celli
 ) const
 {
-    mixture_ = Y_[0][celli]*speciesData_[0];
+    mixture_ = Y_[0][celli]*specieThermos_[0];
 
     for (label n=1; n<Y_.size(); n++)
     {
-        mixture_ += Y_[n][celli]*speciesData_[n];
+        mixture_ += Y_[n][celli]*specieThermos_[n];
     }
 
     return mixture_;
@@ -181,11 +181,11 @@ const ThermoType& Foam::multiComponentMixture<ThermoType>::patchFaceMixture
     const label facei
 ) const
 {
-    mixture_ = Y_[0].boundaryField()[patchi][facei]*speciesData_[0];
+    mixture_ = Y_[0].boundaryField()[patchi][facei]*specieThermos_[0];
 
     for (label n=1; n<Y_.size(); n++)
     {
-        mixture_ += Y_[n].boundaryField()[patchi][facei]*speciesData_[n];
+        mixture_ += Y_[n].boundaryField()[patchi][facei]*specieThermos_[n];
     }
 
     return mixture_;
@@ -201,18 +201,18 @@ const ThermoType& Foam::multiComponentMixture<ThermoType>::cellVolMixture
 ) const
 {
     scalar rhoInv = 0.0;
-    forAll(speciesData_, i)
+    forAll(specieThermos_, i)
     {
-        rhoInv += Y_[i][celli]/speciesData_[i].rho(p, T);
+        rhoInv += Y_[i][celli]/specieThermos_[i].rho(p, T);
     }
 
     mixtureVol_ =
-        Y_[0][celli]/speciesData_[0].rho(p, T)/rhoInv*speciesData_[0];
+        Y_[0][celli]/specieThermos_[0].rho(p, T)/rhoInv*specieThermos_[0];
 
     for (label n=1; n<Y_.size(); n++)
     {
         mixtureVol_ +=
-            Y_[n][celli]/speciesData_[n].rho(p, T)/rhoInv*speciesData_[n];
+            Y_[n][celli]/specieThermos_[n].rho(p, T)/rhoInv*specieThermos_[n];
     }
 
     return mixtureVol_;
@@ -230,21 +230,21 @@ patchFaceVolMixture
 ) const
 {
     scalar rhoInv = 0.0;
-    forAll(speciesData_, i)
+    forAll(specieThermos_, i)
     {
         rhoInv +=
-            Y_[i].boundaryField()[patchi][facei]/speciesData_[i].rho(p, T);
+            Y_[i].boundaryField()[patchi][facei]/specieThermos_[i].rho(p, T);
     }
 
     mixtureVol_ =
-        Y_[0].boundaryField()[patchi][facei]/speciesData_[0].rho(p, T)/rhoInv
-      * speciesData_[0];
+        Y_[0].boundaryField()[patchi][facei]/specieThermos_[0].rho(p, T)/rhoInv
+      * specieThermos_[0];
 
     for (label n=1; n<Y_.size(); n++)
     {
         mixtureVol_ +=
-            Y_[n].boundaryField()[patchi][facei]/speciesData_[n].rho(p,T)
-          / rhoInv*speciesData_[n];
+            Y_[n].boundaryField()[patchi][facei]/specieThermos_[n].rho(p,T)
+          / rhoInv*specieThermos_[n];
     }
 
     return mixtureVol_;
@@ -259,7 +259,7 @@ void Foam::multiComponentMixture<ThermoType>::read
 {
     forAll(species_, i)
     {
-        speciesData_[i] = ThermoType(thermoDict.subDict(species_[i]));
+        specieThermos_[i] = ThermoType(thermoDict.subDict(species_[i]));
     }
 }
 

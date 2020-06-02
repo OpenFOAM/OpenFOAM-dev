@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,11 +111,11 @@ void Foam::EulerImplicit<ChemistryModel>::solve
     const scalar cTot = sum(c);
     typename ChemistryModel::thermoType mixture
     (
-        (this->specieThermo_[0].W()*c[0])*this->specieThermo_[0]
+        (this->specieThermos_[0].W()*c[0])*this->specieThermos_[0]
     );
     for (label i=1; i<nSpecie; i++)
     {
-        mixture += (this->specieThermo_[i].W()*c[i])*this->specieThermo_[i];
+        mixture += (this->specieThermos_[i].W()*c[i])*this->specieThermos_[i];
     }
     const scalar ha = mixture.Ha(p, T);
     const scalar deltaTEst = min(deltaT, subDeltaT);
@@ -189,10 +189,10 @@ void Foam::EulerImplicit<ChemistryModel>::solve
     }
 
     // Update the temperature
-    mixture = (this->specieThermo_[0].W()*c[0])*this->specieThermo_[0];
+    mixture = (this->specieThermos_[0].W()*c[0])*this->specieThermos_[0];
     for (label i=1; i<nSpecie; i++)
     {
-        mixture += (this->specieThermo_[i].W()*c[i])*this->specieThermo_[i];
+        mixture += (this->specieThermos_[i].W()*c[i])*this->specieThermos_[i];
     }
     T = mixture.THa(ha, p, T);
 }

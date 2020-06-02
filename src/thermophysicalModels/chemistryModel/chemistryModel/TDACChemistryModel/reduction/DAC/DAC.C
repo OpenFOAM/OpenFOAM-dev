@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -238,7 +238,7 @@ Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::DAC
                 }
             }
             scalar curMm =
-                this->chemistry_.specieThermo()[fuelSpeciesID_[i]].W();
+                this->chemistry_.specieThermos()[fuelSpeciesID_[i]].W();
             Mmtot += fuelSpeciesProp_[i]/curMm;
         }
 
@@ -248,7 +248,7 @@ Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::DAC
         forAll(fuelSpecies_, i)
         {
             label curID = fuelSpeciesID_[i];
-            scalar curMm = this->chemistry_.specieThermo()[curID].W();
+            scalar curMm = this->chemistry_.specieThermos()[curID].W();
 
             nbC += fuelSpeciesProp_[i]*Mmtot/curMm*sC_[curID];
             nbO += fuelSpeciesProp_[i]*Mmtot/curMm*sO_[curID];

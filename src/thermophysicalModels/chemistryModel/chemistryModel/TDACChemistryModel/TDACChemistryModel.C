@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -351,7 +351,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::derivatives
     scalar rho = 0;
     for (label i=0; i<this->c_.size(); i++)
     {
-        const scalar W = this->specieThermo_[i].W();
+        const scalar W = this->specieThermos_[i].W();
         rho += W*this->c_[i];
     }
 
@@ -359,7 +359,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::derivatives
     for (label i=0; i<this->c_.size(); i++)
     {
         // cp function returns [J/kmol/K]
-        cp += this->c_[i]*this->specieThermo_[i].cp(p, T);
+        cp += this->c_[i]*this->specieThermos_[i].cp(p, T);
     }
     cp /= rho;
 
@@ -380,7 +380,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::derivatives
         }
 
         // ha function returns [J/kmol]
-        const scalar hi = this->specieThermo_[si].ha(p, T);
+        const scalar hi = this->specieThermos_[si].ha(p, T);
         dT += hi*dcdt[i];
     }
     dT /= rho*cp;
@@ -434,8 +434,8 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
     scalarField cpi(this->c_.size());
     forAll(hi, i)
     {
-        hi[i] = this->specieThermo_[i].ha(p, T);
-        cpi[i] = this->specieThermo_[i].cp(p, T);
+        hi[i] = this->specieThermos_[i].ha(p, T);
+        cpi[i] = this->specieThermos_[i].cp(p, T);
     }
 
     scalar omegaI = 0;
@@ -485,7 +485,7 @@ void Foam::TDACChemistryModel<ReactionThermo, ThermoType>::jacobian
     {
         cpMean += this->c_[i]*cpi[i]; // J/(m^3 K)
         // Already multiplied by rho
-        dcpdTMean += this->c_[i]*this->specieThermo_[i].dcpdT(p, T);
+        dcpdTMean += this->c_[i]*this->specieThermos_[i].dcpdT(p, T);
     }
 
     scalar dTdt = 0;
@@ -608,7 +608,7 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
 
         for (label i=0; i<this->nSpecie_; i++)
         {
-            c[i] = rhoi*this->Y_[i][celli]/this->specieThermo_[i].W();
+            c[i] = rhoi*this->Y_[i][celli]/this->specieThermos_[i].W();
             c0[i] = c[i];
             phiq[i] = this->Y()[i][celli];
         }
@@ -636,7 +636,7 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
             // Retrieved solution stored in Rphiq
             for (label i=0; i<this->nSpecie(); i++)
             {
-                c[i] = rhoi*Rphiq[i]/this->specieThermo_[i].W();
+                c[i] = rhoi*Rphiq[i]/this->specieThermos_[i].W();
             }
 
             searchISATCpuTime_ += clockTime_.timeIncrement();
@@ -702,7 +702,7 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
             {
                 forAll(c, i)
                 {
-                    Rphiq[i] = c[i]/rhoi*this->specieThermo_[i].W();
+                    Rphiq[i] = c[i]/rhoi*this->specieThermos_[i].W();
                 }
                 if (tabulation_->variableTimeStep())
                 {
@@ -746,7 +746,7 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
         for (label i=0; i<this->nSpecie_; i++)
         {
             this->RR_[i][celli] =
-                (c[i] - c0[i])*this->specieThermo_[i].W()/deltaT[celli];
+                (c[i] - c0[i])*this->specieThermos_[i].W()/deltaT[celli];
         }
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::basicCombustionMixture
 
 Description
-    Specialization of the basicSpecieMixture for combustion.
+    Specialization of the basicMixture for combustion.
 
 SourceFiles
     basicCombustionMixture.C
@@ -35,7 +35,10 @@ SourceFiles
 #ifndef basicCombustionMixture_H
 #define basicCombustionMixture_H
 
-#include "basicSpecieMixture.H"
+#include "volFields.H"
+#include "PtrList.H"
+#include "basicMixture.H"
+#include "speciesTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,8 +51,19 @@ namespace Foam
 
 class basicCombustionMixture
 :
-    public basicSpecieMixture
+    public basicMixture
 {
+
+protected:
+
+    // Protected data
+
+        //- Table of specie names
+        speciesTable species_;
+
+        //- Species mass fractions
+        PtrList<volScalarField> Y_;
+
 
 public:
 
@@ -79,6 +93,15 @@ public:
 
 
     // Member Functions
+
+        //- Does the mixture include this specie?
+        inline bool contains(const word& specieName) const;
+
+        //- Return the mass-fraction field for a specie given by name
+        inline volScalarField& Y(const word& specieName);
+
+        //- Return the const mass-fraction field for a specie given by name
+        inline const volScalarField& Y(const word& specieName) const;
 
         inline scalar fres(const scalar ft, const scalar stoicRatio) const;
 
