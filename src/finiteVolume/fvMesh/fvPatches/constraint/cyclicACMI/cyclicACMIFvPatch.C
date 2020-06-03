@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,28 +52,28 @@ void Foam::cyclicACMIFvPatch::updateAreas() const
 
         // owner couple
         const_cast<vectorField&>(Sf()) = patch().faceAreas();
-        const_cast<scalarField&>(magSf()) = mag(patch().faceAreas());
+        const_cast<scalarField&>(magSf()) = patch().magFaceAreas();
 
         // owner non-overlapping
         const fvPatch& nonOverlapPatch = nonOverlapFvPatch();
         const_cast<vectorField&>(nonOverlapPatch.Sf()) =
             nonOverlapPatch.patch().faceAreas();
         const_cast<scalarField&>(nonOverlapPatch.magSf()) =
-            mag(nonOverlapPatch.patch().faceAreas());
+            nonOverlapPatch.patch().magFaceAreas();
 
         // neighbour couple
         const cyclicACMIFvPatch& nbrACMI = neighbFvPatch();
         const_cast<vectorField&>(nbrACMI.Sf()) =
             nbrACMI.patch().faceAreas();
         const_cast<scalarField&>(nbrACMI.magSf()) =
-            mag(nbrACMI.patch().faceAreas());
+            nbrACMI.patch().magFaceAreas();
 
         // neighbour non-overlapping
         const fvPatch& nbrNonOverlapPatch = nbrACMI.nonOverlapFvPatch();
         const_cast<vectorField&>(nbrNonOverlapPatch.Sf()) =
             nbrNonOverlapPatch.patch().faceAreas();
         const_cast<scalarField&>(nbrNonOverlapPatch.magSf()) =
-            mag(nbrNonOverlapPatch.patch().faceAreas());
+            nbrNonOverlapPatch.patch().magFaceAreas();
 
         // set the updated flag
         cyclicACMIPatch().setUpdated(false);

@@ -73,6 +73,7 @@ void Foam::cyclicACMIPolyPatch::resetAMI() const
         // Trigger re-building of faceAreas
         (void)boundaryMesh().mesh().faceAreas();
 
+
         // Calculate the AMI using partial face-area-weighted. This leaves
         // the weights as fractions of local areas (sum(weights) = 1 means
         // face is fully covered)
@@ -92,12 +93,16 @@ void Foam::cyclicACMIPolyPatch::resetAMI() const
         if (srcMask_.size())
         {
             vectorField::subField Sf = faceAreas();
+            scalarField::subField magSf = magFaceAreas();
             vectorField::subField noSf = nonOverlapPatch.faceAreas();
+            scalarField::subField noMagSf = nonOverlapPatch.magFaceAreas();
 
             forAll(Sf, facei)
             {
                 Sf[facei] *= srcMask_[facei];
+                magSf[facei] = mag(Sf[facei]);
                 noSf[facei] *= 1.0 - srcMask_[facei];
+                noMagSf[facei] = mag(noSf[facei]);
             }
         }
         // Adapt slave side areas
@@ -108,12 +113,16 @@ void Foam::cyclicACMIPolyPatch::resetAMI() const
             const polyPatch& pp = cp.nonOverlapPatch();
 
             vectorField::subField Sf = cp.faceAreas();
+            scalarField::subField magSf = cp.magFaceAreas();
             vectorField::subField noSf = pp.faceAreas();
+            scalarField::subField noMagSf = pp.magFaceAreas();
 
             forAll(Sf, facei)
             {
                 Sf[facei] *= tgtMask_[facei];
+                magSf[facei] = mag(Sf[facei]);
                 noSf[facei] *= 1.0 - tgtMask_[facei];
+                noMagSf[facei] = mag(noSf[facei]);
             }
         }
 
@@ -403,8 +412,8 @@ Foam::label Foam::cyclicACMIPolyPatch::nonOverlapPatchID() const
 
         if (size() == noPp.size())
         {
-            const scalarField magSf(mag(faceAreas()));
-            const scalarField noMagSf(mag(noPp.faceAreas()));
+            const scalarField magSf(magFaceAreas());
+            const scalarField noMagSf(noPp.magFaceAreas());
 
             forAll(magSf, facei)
             {

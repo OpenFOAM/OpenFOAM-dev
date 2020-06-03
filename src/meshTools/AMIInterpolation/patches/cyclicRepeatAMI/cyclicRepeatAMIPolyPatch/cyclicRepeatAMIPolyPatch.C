@@ -127,8 +127,8 @@ void Foam::cyclicRepeatAMIPolyPatch::resetAMI() const
     // patch from its neighbour
     label n = 0;
     {
-        const scalarField thisMagAreas(mag(this->faceAreas()));
-        const scalarField nbrMagAreas(mag(nbrPatch().faceAreas()));
+        const scalarField thisMagAreas(this->magFaceAreas());
+        const scalarField nbrMagAreas(nbrPatch().magFaceAreas());
 
         vector thisCentre =
             gSum(this->faceCentres()*thisMagAreas)/gSum(thisMagAreas);
