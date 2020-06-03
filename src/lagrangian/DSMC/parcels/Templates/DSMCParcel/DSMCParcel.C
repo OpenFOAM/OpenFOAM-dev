@@ -108,7 +108,7 @@ void Foam::DSMCParcel<ParcelType>::hitWallPatch
 
     const label wppLocalFace = wpp.whichFace(this->face());
 
-    const scalar fA = mag(wpp.faceAreas()[wppLocalFace]);
+    const scalar fA = wpp.magFaceAreas()[wppLocalFace];
 
     const scalar deltaT = cloud.pMesh().time().deltaTValue();
 

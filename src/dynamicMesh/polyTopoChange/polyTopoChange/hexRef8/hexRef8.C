@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -4670,7 +4670,7 @@ void Foam::hexRef8::checkMesh() const
         scalarField neiFaceAreas(mesh_.nFaces()-mesh_.nInternalFaces());
         forAll(neiFaceAreas, i)
         {
-            neiFaceAreas[i] = mag(mesh_.faceAreas()[i+mesh_.nInternalFaces()]);
+            neiFaceAreas[i] = mesh_.magFaceAreas()[i+mesh_.nInternalFaces()];
         }
 
         // Replace data on coupled patches with their neighbour ones.
@@ -4680,7 +4680,7 @@ void Foam::hexRef8::checkMesh() const
         {
             label facei = i+mesh_.nInternalFaces();
 
-            const scalar magArea = mag(mesh_.faceAreas()[facei]);
+            const scalar magArea = mesh_.magFaceAreas()[facei];
 
             if (mag(magArea - neiFaceAreas[i]) > smallDim)
             {

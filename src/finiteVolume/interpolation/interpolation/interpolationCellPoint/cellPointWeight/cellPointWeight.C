@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,7 +150,7 @@ void Foam::cellPointWeight::findTriangle
         mesh.faceOwner()[facei]
     );
 
-    const scalar faceAreaSqr = magSqr(mesh.faceAreas()[facei]);
+    const scalar faceAreaSqr = sqr(mesh.magFaceAreas()[facei]);
 
     forAll(faceTets, tetI)
     {

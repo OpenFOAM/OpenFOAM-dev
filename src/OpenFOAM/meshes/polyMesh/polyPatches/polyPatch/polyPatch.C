@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -290,6 +290,12 @@ const Foam::vectorField::subField Foam::polyPatch::faceCentres() const
 const Foam::vectorField::subField Foam::polyPatch::faceAreas() const
 {
     return patchSlice(boundaryMesh().mesh().faceAreas());
+}
+
+
+const Foam::scalarField::subField Foam::polyPatch::magFaceAreas() const
+{
+    return patchSlice(boundaryMesh().mesh().magFaceAreas());
 }
 
 

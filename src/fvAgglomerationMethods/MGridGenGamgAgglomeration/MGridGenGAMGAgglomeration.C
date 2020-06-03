@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -183,7 +183,7 @@ Foam::MGridGenGAMGAgglomeration::MGridGenGAMGAgglomeration
     // Start geometric agglomeration from the cell volumes and areas of the mesh
     scalarField* VPtr = const_cast<scalarField*>(&fvMesh_.cellVolumes());
 
-    scalarField magFaceAreas(sqrt(3.0)*mag(fvMesh_.faceAreas()));
+    scalarField magFaceAreas(sqrt(3.0)*fvMesh_.magFaceAreas());
     SubField<scalar> magSf(magFaceAreas, fvMesh_.nInternalFaces());
 
     scalarField* magSfPtr = const_cast<scalarField*>

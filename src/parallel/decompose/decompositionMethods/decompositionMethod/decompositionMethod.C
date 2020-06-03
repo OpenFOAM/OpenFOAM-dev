@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -599,9 +599,9 @@ void Foam::decompositionMethod::calcCellCells
         label neiIndex = offsets[nei] + nFacesPerCell[nei]++;
 
         m[ownIndex] = globalAgglom.toGlobal(nei);
-        w[ownIndex] = mag(mesh.faceAreas()[faceI]);
+        w[ownIndex] = mesh.magFaceAreas()[faceI];
         m[neiIndex] = globalAgglom.toGlobal(own);
-        w[ownIndex] = mag(mesh.faceAreas()[faceI]);
+        w[ownIndex] = mesh.magFaceAreas()[faceI];
     }
 
     // For boundary faces is offsetted coupled neighbour
@@ -628,7 +628,7 @@ void Foam::decompositionMethod::calcCellCells
                 {
                     label ownIndex = offsets[own] + nFacesPerCell[own]++;
                     m[ownIndex] = globalNei;
-                    w[ownIndex] = mag(mesh.faceAreas()[faceI]);
+                    w[ownIndex] = mesh.magFaceAreas()[faceI];
                 }
 
                 faceI++;

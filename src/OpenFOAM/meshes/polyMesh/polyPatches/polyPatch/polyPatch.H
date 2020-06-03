@@ -356,8 +356,11 @@ public:
             //- Return face centres
             const vectorField::subField faceCentres() const;
 
-            //- Return face normals
+            //- Return face areas
             const vectorField::subField faceAreas() const;
+
+            //- Return face area magnitudes
+            const scalarField::subField magFaceAreas() const;
 
             //- Return face cell centres
             tmp<vectorField> faceCellCentres() const;

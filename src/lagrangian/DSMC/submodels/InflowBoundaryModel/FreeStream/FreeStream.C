@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,14 +204,14 @@ void Foam::FreeStream<CloudType>::inflow()
 
             scalarField sCosTheta
             (
-                (boundaryU[patchi] & -patch.faceAreas()/mag(patch.faceAreas()))
+                (boundaryU[patchi] & -patch.faceAreas()/patch.magFaceAreas())
               / mostProbableSpeed
             );
 
             // From Bird eqn 4.22
 
             pFA[i] +=
-                mag(patch.faceAreas())*numberDensities_[i]*deltaT
+                patch.magFaceAreas()*numberDensities_[i]*deltaT
                *mostProbableSpeed
                *(
                    exp(-sqr(sCosTheta)) + sqrtPi*sCosTheta*(1 + erf(sCosTheta))
@@ -232,7 +232,7 @@ void Foam::FreeStream<CloudType>::inflow()
 
             const vector& fC = patch.faceCentres()[pFI];
 
-            scalar fA = mag(patch.faceAreas()[pFI]);
+            scalar fA = patch.magFaceAreas()[pFI];
 
             List<tetIndices> faceTets = polyMeshTetDecomposition::faceTetIndices
             (

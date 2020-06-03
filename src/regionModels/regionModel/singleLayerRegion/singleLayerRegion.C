@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ Foam::regionModels::singleLayerRegion::singleLayerRegion
         nBoundaryFaces += fCells.size();
 
         UIndirectList<vector>(nHat_, fCells) = pp.faceNormals();
-        UIndirectList<scalar>(magSf_, fCells) = mag(pp.faceAreas());
+        UIndirectList<scalar>(magSf_, fCells) = pp.magFaceAreas();
     }
     nHat_.correctBoundaryConditions();
 

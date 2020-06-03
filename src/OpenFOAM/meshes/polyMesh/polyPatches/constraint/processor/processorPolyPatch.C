@@ -228,7 +228,7 @@ void Foam::processorPolyPatch::calcGeometry(PstreamBuffers& pBufs)
         // Calculate normals from areas and check
         forAll(faceNormals, facei)
         {
-            scalar magSf = mag(faceAreas()[facei]);
+            scalar magSf = magFaceAreas()[facei];
             scalar nbrMagSf = mag(neighbFaceAreas_[facei]);
             scalar avSf = (magSf + nbrMagSf)/2.0;
 
