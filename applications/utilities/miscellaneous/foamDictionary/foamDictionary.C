@@ -33,9 +33,6 @@ Description
 
 Usage
     \b foamDictionary [OPTION] dictionary
-      - \par -case \<dir\>
-        Select a case directory
-
       - \par -parallel
         Specify case as a parallel job
 
@@ -330,6 +327,7 @@ void remove(dictionary& dict, const dictionary& removeDict)
 
 int main(int argc, char *argv[])
 {
+    argList::removeOption("case");
     writeInfoHeader = false;
 
     argList::addNote("manipulates dictionaries");
