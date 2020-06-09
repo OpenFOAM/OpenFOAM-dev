@@ -40,6 +40,8 @@
 #------------------------------------------------------------------------------
 
 boost_version=boost-system
+#boost_version=boost-1.55.0
+#boost_version=boost-1.72.0
 
 cgal_version=cgal-system
 #cgal_version=CGAL-4.10
