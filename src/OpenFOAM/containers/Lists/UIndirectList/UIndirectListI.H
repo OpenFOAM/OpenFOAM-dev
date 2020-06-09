@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,6 +78,20 @@ template<class T>
 inline const T& Foam::UIndirectList<T>::last() const
 {
     return completeList_[addressing_.last()];
+}
+
+
+template<class T>
+inline Foam::label Foam::UIndirectList<T>::fcIndex(const label i) const
+{
+    return addressing_.fcIndex(i);
+}
+
+
+template<class T>
+inline Foam::label Foam::UIndirectList<T>::rcIndex(const label i) const
+{
+    return addressing_.rcIndex(i);
 }
 
 

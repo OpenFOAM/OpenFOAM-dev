@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,6 +97,14 @@ public:
 
             //- Return the last element of the list.
             inline const T& last() const;
+
+            //- Return the forward circular index, i.e. the next index
+            //  which returns to the first at the end of the list
+            inline label fcIndex(const label i) const;
+
+            //- Return the reverse circular index, i.e. the previous index
+            //  which returns to the last at the beginning of the list
+            inline label rcIndex(const label i) const;
 
             //- Return the complete list
             inline const UList<T>& completeList() const;
