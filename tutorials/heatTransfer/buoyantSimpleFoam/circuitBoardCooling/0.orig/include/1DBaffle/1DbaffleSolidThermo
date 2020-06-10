@@ -17,7 +17,7 @@ transport
 thermodynamics
 {
     Hf              0;
-    Cp              10;
+    Cv              10;
 }
 equationOfState
 {

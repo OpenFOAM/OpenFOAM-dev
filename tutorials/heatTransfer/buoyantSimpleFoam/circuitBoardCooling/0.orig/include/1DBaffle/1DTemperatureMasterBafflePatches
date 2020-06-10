@@ -8,7 +8,7 @@
 
 T
 {
-    type   compressible::thermalBaffle1D<hConstSolidThermoPhysics>;
+    type   compressible::thermalBaffle1D<eConstSolidThermoPhysics>;
 
     thickness       uniform 0.005;  // thickness [m]
     Qs              uniform 100;    // heat flux [W/m^2]

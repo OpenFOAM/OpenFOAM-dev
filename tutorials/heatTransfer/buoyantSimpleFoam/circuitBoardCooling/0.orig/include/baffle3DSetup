@@ -20,7 +20,7 @@ thickness           0.02;
 
 Kappa               0.01;
 
-Cp                  15;
+Cv                  15;
 
 rho                 80;
 
