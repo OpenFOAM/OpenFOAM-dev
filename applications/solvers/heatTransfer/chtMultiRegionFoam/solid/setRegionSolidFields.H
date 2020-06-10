@@ -3,18 +3,18 @@ solidThermo& thermo = thermos[i];
 tmp<volScalarField> trho = thermo.rho();
 const volScalarField& rho = trho();
 
-tmp<volScalarField> tcp = thermo.Cp();
-const volScalarField& cp = tcp();
+tmp<volScalarField> tCv = thermo.Cv();
+const volScalarField& Cv = tCv();
 
 tmp<volSymmTensorField> taniAlpha;
 if (!thermo.isotropic())
 {
     volSymmTensorField& aniAlpha = aniAlphas[i];
-    tmp<volVectorField> tkappaByCp = thermo.Kappa()/cp;
+    tmp<volVectorField> tkappaByCv = thermo.Kappa()/Cv;
     const coordinateSystem& coodSys = coordinates[i];
 
     aniAlpha.primitiveFieldRef() =
-        coodSys.R().transformVector(tkappaByCp());
+        coodSys.R().transformVector(tkappaByCv());
     aniAlpha.correctBoundaryConditions();
 
     taniAlpha = tmp<volSymmTensorField>
@@ -24,7 +24,7 @@ if (!thermo.isotropic())
 }
 
 
-volScalarField& h = thermo.he();
+volScalarField& e = thermo.he();
 
 const volScalarField& betav = betavSolid[i];
 

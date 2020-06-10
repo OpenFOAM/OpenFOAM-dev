@@ -16,7 +16,7 @@ FoamFile
 
 solvers
 {
-    h
+    e
     {
         solver           PCG;
         preconditioner   DIC;
@@ -24,9 +24,9 @@ solvers
         relTol           0.1;
     }
 
-    hFinal
+    eFinal
     {
-        $h;
+        $e;
         tolerance        1e-06;
         relTol           0;
     }
@@ -41,7 +41,7 @@ relaxationFactors
 {
     equations
     {
-        h               0.7;
+        e               0.7;
     }
 }
 

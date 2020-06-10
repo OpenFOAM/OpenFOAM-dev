@@ -30,11 +30,11 @@ License
 
 #include "rhoConst.H"
 
-#include "hConstThermo.H"
-#include "hPolynomialThermo.H"
-#include "hPowerThermo.H"
+#include "eConstThermo.H"
+#include "ePolynomialThermo.H"
+#include "ePowerThermo.H"
 
-#include "sensibleEnthalpy.H"
+#include "sensibleInternalEnergy.H"
 
 #include "constIsoSolidTransport.H"
 #include "constAnIsoSolidTransport.H"
@@ -51,9 +51,10 @@ License
     forThermo(Mu, He, Cp, rhoConst, specie, Macro, Args)
 
 #define forSolidEnergiesAndThermos(Mu, Macro, Args...)                         \
-    forSolidEquations(Mu, sensibleEnthalpy, hConstThermo, Macro, Args);        \
-    forSolidEquations(Mu, sensibleEnthalpy, hPolynomialThermo, Macro, Args);   \
-    forSolidEquations(Mu, sensibleEnthalpy, hPowerThermo, Macro, Args)
+    forSolidEquations(Mu, sensibleInternalEnergy, eConstThermo, Macro, Args);  \
+    forSolidEquations                                                          \
+        (Mu, sensibleInternalEnergy, ePolynomialThermo, Macro, Args);          \
+    forSolidEquations(Mu, sensibleInternalEnergy, ePowerThermo, Macro, Args)
 
 #define forSolidTransports(Macro, Args...)                                     \
     forSolidEnergiesAndThermos(constIsoSolidTransport, Macro, Args);           \

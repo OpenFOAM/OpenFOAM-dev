@@ -37,7 +37,7 @@ fixedPower
 
     sources
     {
-        h
+        e
         {
             explicit    $power;
             implicit    0;

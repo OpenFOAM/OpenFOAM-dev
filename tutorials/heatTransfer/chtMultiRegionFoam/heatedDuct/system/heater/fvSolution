@@ -17,7 +17,7 @@ FoamFile
 
 solvers
 {
-    h
+    e
     {
         solver           GAMG;
         smoother         symGaussSeidel;
@@ -25,9 +25,9 @@ solvers
         relTol           0.1;
     }
 
-    hFinal
+    eFinal
     {
-        $h;
+        $e;
         relTol           0;
     }
 }

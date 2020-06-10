@@ -24,9 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "thermalBaffle1DFvPatchScalarField.H"
-
 #include "forSolids.H"
-
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -39,22 +37,22 @@ typedef
     <
         species::thermo
         <
-            hConstThermo
+            eConstThermo
             <
                 rhoConst<specie>
             >,
-            sensibleEnthalpy
+            sensibleInternalEnergy
         >
-    > hConstSolidThermoPhysics;
+    > eConstSolidThermoPhysics;
 
 typedef
-    compressible::thermalBaffle1DFvPatchScalarField<hConstSolidThermoPhysics>
+    compressible::thermalBaffle1DFvPatchScalarField<eConstSolidThermoPhysics>
     thermalBaffle1DHConstSolidThermoPhysicsFvPatchScalarField;
 
 defineTemplateTypeNameAndDebugWithName
 (
     thermalBaffle1DHConstSolidThermoPhysicsFvPatchScalarField,
-    "compressible::thermalBaffle1D<hConstSolidThermoPhysics>",
+    "compressible::thermalBaffle1D<eConstSolidThermoPhysics>",
     0
 );
 
@@ -69,22 +67,22 @@ typedef
     <
         species::thermo
         <
-            hPowerThermo
+            ePowerThermo
             <
                 rhoConst<specie>
             >,
-            sensibleEnthalpy
+            sensibleInternalEnergy
         >
-    > hPowerSolidThermoPhysics;
+    > ePowerSolidThermoPhysics;
 
 typedef
-    compressible::thermalBaffle1DFvPatchScalarField<hPowerSolidThermoPhysics>
+    compressible::thermalBaffle1DFvPatchScalarField<ePowerSolidThermoPhysics>
     thermalBaffle1DHPowerSolidThermoPhysicsFvPatchScalarField;
 
 defineTemplateTypeNameAndDebugWithName
 (
     thermalBaffle1DHPowerSolidThermoPhysicsFvPatchScalarField,
-    "compressible::thermalBaffle1D<hPowerSolidThermoPhysics>",
+    "compressible::thermalBaffle1D<ePowerSolidThermoPhysics>",
     0
 );
 

@@ -141,7 +141,8 @@ inline Foam::scalar Foam::eConstThermo<EquationOfState>::S
     const scalar T
 ) const
 {
-    return Cp(p, T)*log(T/Tstd) + EquationOfState::S(p, T);
+    return Cp(p, T)*log(T/Tstd)
+      + EquationOfState::S(p, T); // Requires EquationOfState::S for Cv
 }
 
 
@@ -153,7 +154,7 @@ inline Foam::scalar Foam::eConstThermo<EquationOfState>::Gstd
 {
     return
         Cv_*(T - Tref_) + Esref_ + Hf() + Pstd/EquationOfState::rho(Pstd, T)
-      - Cp(Pstd, T)*T*log(T/Tstd);
+      - S(Pstd, T)*T;
 }
 
 
@@ -164,7 +165,7 @@ inline Foam::scalar Foam::eConstThermo<EquationOfState>::dCpdT
     const scalar T
 ) const
 {
-    return 0;
+    return 0; // EquationOfState::dCpdT
 }
 
 

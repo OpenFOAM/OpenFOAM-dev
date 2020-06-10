@@ -34,8 +34,8 @@ forAll(solidRegions, i)
             coordinateSystem::New(solidRegions[i], thermos[i])
         );
 
-        tmp<volVectorField> tkappaByCp =
-            thermos[i].Kappa()/thermos[i].Cp();
+        tmp<volVectorField> tkappaByCv =
+            thermos[i].Kappa()/thermos[i].Cv();
 
         aniAlphas.set
         (
@@ -54,7 +54,7 @@ forAll(solidRegions, i)
                 dimensionedSymmTensor
                 (
                     "zero",
-                    tkappaByCp().dimensions(),
+                    tkappaByCv().dimensions(),
                     Zero
                 ),
                 zeroGradientFvPatchSymmTensorField::typeName
@@ -62,7 +62,7 @@ forAll(solidRegions, i)
         );
 
         aniAlphas[i].primitiveFieldRef() =
-            coordinates[i].R().transformVector(tkappaByCp());
+            coordinates[i].R().transformVector(tkappaByCv());
         aniAlphas[i].correctBoundaryConditions();
 
     }

@@ -1,25 +1,25 @@
 {
     while (pimple.correctNonOrthogonal())
     {
-        fvScalarMatrix hEqn
+        fvScalarMatrix eEqn
         (
-            fvm::ddt(betav*rho, h)
+            fvm::ddt(betav*rho, e)
           - (
                 thermo.isotropic()
-              ? fvm::laplacian(betav*thermo.alpha(), h, "laplacian(alpha,h)")
-              : fvm::laplacian(betav*taniAlpha(), h, "laplacian(alpha,h)")
+              ? fvm::laplacian(betav*thermo.alpha(), e, "laplacian(alpha,e)")
+              : fvm::laplacian(betav*taniAlpha(), e, "laplacian(alpha,e)")
             )
           ==
-            fvOptions(rho, h)
+            fvOptions(rho, e)
         );
 
-        hEqn.relax();
+        eEqn.relax();
 
-        fvOptions.constrain(hEqn);
+        fvOptions.constrain(eEqn);
 
-        hEqn.solve();
+        eEqn.solve();
 
-        fvOptions.correct(h);
+        fvOptions.correct(e);
     }
 }
 
