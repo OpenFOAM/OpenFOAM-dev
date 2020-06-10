@@ -101,7 +101,7 @@ inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::S
     const scalar T
 ) const
 {
-    return Cp_.intfByTdT(p, T) + EquationOfState::S(p, T) + Sf_;
+    return Cp_.intfByTdT(p, T) + EquationOfState::Sp(p, T) + Sf_;
 }
 
 

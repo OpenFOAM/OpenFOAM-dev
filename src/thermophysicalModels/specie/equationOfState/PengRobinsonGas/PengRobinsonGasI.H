@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,7 +203,7 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::Cv(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::PengRobinsonGas<Specie>::S
+inline Foam::scalar Foam::PengRobinsonGas<Specie>::Sp
 (
     scalar p,
     scalar T
@@ -226,6 +226,18 @@ inline Foam::scalar Foam::PengRobinsonGas<Specie>::S
                *log((Z + 2.414*B)/(Z - 0.414*B))
             )
         );
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::PengRobinsonGas<Specie>::Sv
+(
+    scalar p,
+    scalar T
+) const
+{
+    NotImplemented;
+    return 0;
 }
 
 

@@ -125,8 +125,7 @@ inline Foam::scalar Foam::ePolynomialThermo<EquationOfState, PolySize>::S
     const scalar T
 ) const
 {
-    return sCoeffs_.value(T)
-      + EquationOfState::S(p, T); // Requires EquationOfState::S for Cv
+    return sCoeffs_.value(T) + EquationOfState::Sv(p, T);
 }
 
 
@@ -149,6 +148,7 @@ inline Foam::scalar Foam::ePolynomialThermo<EquationOfState, PolySize>::dCpdT
     const scalar T
 ) const
 {
+    NotImplemented;
     return CvCoeffs_.derivative(T); // + EquationOfState::dCpdT
 }
 

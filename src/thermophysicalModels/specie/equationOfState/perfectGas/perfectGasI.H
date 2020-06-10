@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,9 +103,17 @@ inline Foam::scalar Foam::perfectGas<Specie>::Cv(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::perfectGas<Specie>::S(scalar p, scalar T) const
+inline Foam::scalar Foam::perfectGas<Specie>::Sp(scalar p, scalar T) const
 {
     return -this->R()*log(p/Pstd);
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::perfectGas<Specie>::Sv(scalar p, scalar T) const
+{
+    NotImplemented;
+    return 0;
 }
 
 

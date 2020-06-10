@@ -164,7 +164,7 @@ inline Foam::scalar Foam::ePowerThermo<EquationOfState>::S
 {
     return
         c0_*(pow(T, n0_) - pow(Tstd, n0_))/(pow(Tref_, n0_)*n0_)
-      + EquationOfState::S(p, T); // Requires EquationOfState::S for Cv
+      + EquationOfState::Sv(p, T);
 }
 
 
@@ -188,7 +188,6 @@ inline Foam::scalar Foam::ePowerThermo<EquationOfState>::dCpdT
     const scalar T
 ) const
 {
-    // To be implemented
     NotImplemented;
     return 0; // + EquationOfState::dCpdT
 }

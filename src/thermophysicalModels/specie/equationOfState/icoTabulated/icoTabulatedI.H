@@ -133,7 +133,18 @@ inline Foam::scalar Foam::icoTabulated<Specie>::Cv
 
 
 template<class Specie>
-inline Foam::scalar Foam::icoTabulated<Specie>::S
+inline Foam::scalar Foam::icoTabulated<Specie>::Sp
+(
+    scalar p,
+    scalar T
+) const
+{
+    return 0;
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::icoTabulated<Specie>::Sv
 (
     scalar p,
     scalar T

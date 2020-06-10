@@ -164,7 +164,7 @@ inline Foam::scalar Foam::hPowerThermo<EquationOfState>::S
 {
     return
         c0_*(pow(T, n0_) - pow(Tstd, n0_))/(pow(Tref_, n0_)*n0_)
-      + EquationOfState::S(p, T);
+      + EquationOfState::Sp(p, T);
 }
 
 

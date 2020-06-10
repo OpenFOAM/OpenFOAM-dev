@@ -141,8 +141,7 @@ inline Foam::scalar Foam::eConstThermo<EquationOfState>::S
     const scalar T
 ) const
 {
-    return Cp(p, T)*log(T/Tstd)
-      + EquationOfState::S(p, T); // Requires EquationOfState::S for Cv
+    return Cp(p, T)*log(T/Tstd) + EquationOfState::Sv(p, T);
 }
 
 
@@ -165,6 +164,7 @@ inline Foam::scalar Foam::eConstThermo<EquationOfState>::dCpdT
     const scalar T
 ) const
 {
+    NotImplemented;
     return 0; // EquationOfState::dCpdT
 }
 

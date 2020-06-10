@@ -122,12 +122,24 @@ inline Foam::scalar Foam::Boussinesq<Specie>::Cv(scalar p, scalar T) const
 
 
 template<class Specie>
-inline Foam::scalar Foam::Boussinesq<Specie>::S
+inline Foam::scalar Foam::Boussinesq<Specie>::Sp
 (
     scalar p,
     scalar T
 ) const
 {
+    return 0;
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::Boussinesq<Specie>::Sv
+(
+    scalar p,
+    scalar T
+) const
+{
+    NotImplemented;
     return 0;
 }
 

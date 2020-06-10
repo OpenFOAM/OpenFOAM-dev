@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,18 @@ inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::Cv
 
 
 template<class Specie, int PolySize>
-inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::S
+inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::Sp
+(
+    scalar p,
+    scalar T
+) const
+{
+    return 0;
+}
+
+
+template<class Specie, int PolySize>
+inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::Sv
 (
     scalar p,
     scalar T
