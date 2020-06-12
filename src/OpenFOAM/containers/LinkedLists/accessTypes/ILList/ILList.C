@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,8 @@ License
 
 template<class LListBase, class T>
 Foam::ILList<LListBase, T>::ILList(const ILList<LListBase, T>& lst)
+:
+    UILList<LListBase, T>()
 {
     for
     (
@@ -44,6 +46,8 @@ Foam::ILList<LListBase, T>::ILList(const ILList<LListBase, T>& lst)
 
 template<class LListBase, class T>
 Foam::ILList<LListBase, T>::ILList(ILList<LListBase, T>&& lst)
+:
+    UILList<LListBase, T>()
 {
     transfer(lst);
 }
