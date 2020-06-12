@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ template<class CloudType>
 Foam::PackingModel<CloudType>::PackingModel(const PackingModel<CloudType>& cm)
 :
     CloudSubModelBase<CloudType>(cm),
-    particleStressModel_(cm.particleStressModel_)
+    particleStressModel_(cm.particleStressModel_, false)
 {}
 
 

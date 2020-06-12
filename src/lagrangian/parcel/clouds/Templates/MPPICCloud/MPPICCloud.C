@@ -62,6 +62,17 @@ void Foam::MPPICCloud<CloudType>::setModels()
 }
 
 
+template<class CloudType>
+void Foam::MPPICCloud<CloudType>::cloudReset(MPPICCloud<CloudType>& c)
+{
+    CloudType::cloudReset(c);
+
+    packingModel_.reset(c.packingModel_.ptr());
+    dampingModel_.reset(c.dampingModel_.ptr());
+    isotropyModel_.reset(c.isotropyModel_.ptr());
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class CloudType>
@@ -166,7 +177,8 @@ void Foam::MPPICCloud<CloudType>::storeState()
 template<class CloudType>
 void Foam::MPPICCloud<CloudType>::restoreState()
 {
-    this->cloudReset(cloudCopyPtr_());
+    cloudReset(cloudCopyPtr_());
+
     cloudCopyPtr_.clear();
 }
 
@@ -191,98 +203,104 @@ void Foam::MPPICCloud<CloudType>::motion
     typename parcelType::trackingData& td
 )
 {
-    // Momentum
-    // ~~~~~~~~
+    // Assign parcel ID-s
+    label i = 0;
+    forAllIter(typename MPPICCloud<CloudType>, *this, iter)
+    {
+        iter().id() = labelPair(Pstream::myProcNo(), i ++);
+    }
 
-    // force calculation and tracking
-    td.part() = parcelType::trackingData::tpPredictTrack;
+    // Create a copy of all parcels and sources to use as a predictor
+    autoPtr<MPPICCloud<CloudType>> predictorCloudPtr
+    (
+        static_cast<MPPICCloud<CloudType>*>
+        (
+            clone(this->name() + "Predictor").ptr()
+        )
+    );
+    MPPICCloud<CloudType>& predictorCloud = predictorCloudPtr();
+
+    // Predictor move
+    predictorCloud.CloudType::move(predictorCloud, td);
+
+    // Calculate correction velocities
+    const scalar trackTime = td.trackTime();
+    td.updateAverages(predictorCloud);
+    predictorCloud.dampingModel().cacheFields(true);
+    predictorCloud.packingModel().cacheFields(true);
+    vectorField UCorr(this->size(), Zero);
+    List<DynamicList<vector>> UCorrProc(Pstream::nProcs());
+    List<DynamicList<label>> IDProc(Pstream::nProcs());
+    forAllIter(typename MPPICCloud<CloudType>, predictorCloud, iter)
+    {
+        const labelPair& id = iter().id();
+
+        const vector dU =
+            predictorCloud.packingModel().velocityCorrection(iter(), trackTime)
+          + predictorCloud.dampingModel().velocityCorrection(iter(), trackTime);
+
+        if (id.first() == Pstream::myProcNo())
+        {
+            UCorr[id.second()] = dU;
+        }
+        else
+        {
+            UCorrProc[id.first()].append(dU);
+            IDProc[id.first()].append(id.second());
+        }
+    }
+    predictorCloud.dampingModel().cacheFields(false);
+    predictorCloud.packingModel().cacheFields(false);
+
+    // Distribute the correction velocities
+    PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
+    if (Pstream::parRun())
+    {
+        forAll(UCorrProc, proci)
+        {
+            if (proci == Pstream::myProcNo()) continue;
+
+            UOPstream os(proci, pBufs);
+
+            os  << UCorrProc[proci] << IDProc[proci];
+        }
+
+        pBufs.finishedSends();
+
+        forAll(UCorrProc, proci)
+        {
+            if (proci == Pstream::myProcNo()) continue;
+
+            UIPstream is(proci, pBufs);
+
+            is  >> UCorrProc[proci] >> IDProc[proci];
+        }
+    }
+    forAll(UCorrProc, proci)
+    {
+        if (proci == Pstream::myProcNo()) continue;
+
+        forAll(UCorrProc[proci], i)
+        {
+            UCorr[IDProc[proci][i]] = UCorrProc[proci][i];
+        }
+    }
+
+    // Apply the correction velocities to the parcels
+    forAllIter(typename MPPICCloud<CloudType>, *this, iter)
+    {
+        iter().U() += UCorr[iter().id().second()];
+    }
+
+    // Corrector
     CloudType::move(cloud, td);
 
+    // Apply isotropy model
+    td.updateAverages(cloud);
+    isotropyModel_->calculate();
 
-    // Preliminary
-    // ~~~~~~~~~~~
-
-    // switch forces off so they are not applied in corrector steps
-    this->forces().setCalcNonCoupled(false);
-    this->forces().setCalcCoupled(false);
-
-
-    // Damping
-    // ~~~~~~~
-
-    if (!isType<DampingModels::NoDamping<CloudType>>(dampingModel_()))
-    {
-        if (this->mesh().moving())
-        {
-            FatalErrorInFunction
-                << "MPPIC damping modelling does not support moving meshes."
-                << exit(FatalError);
-        }
-
-        // update averages
-        td.updateAverages(cloud);
-
-        // memory allocation and eulerian calculations
-        dampingModel_->cacheFields(true);
-
-        // calculate the damping velocity corrections without moving the parcels
-        td.part() = parcelType::trackingData::tpDampingNoTrack;
-        CloudType::move(cloud, td);
-
-        // correct the parcel positions and velocities
-        td.part() = parcelType::trackingData::tpCorrectTrack;
-        CloudType::move(cloud, td);
-
-        // finalise and free memory
-        dampingModel_->cacheFields(false);
-    }
-
-
-    // Packing
-    // ~~~~~~~
-
-    if (!isType<PackingModels::NoPacking<CloudType>>(packingModel_()))
-    {
-        if (this->mesh().moving())
-        {
-            FatalErrorInFunction
-                << "MPPIC packing modelling does not support moving meshes."
-                << exit(FatalError);
-        }
-
-        // same procedure as for damping
-        td.updateAverages(cloud);
-        packingModel_->cacheFields(true);
-        td.part() = parcelType::trackingData::tpPackingNoTrack;
-        CloudType::move(cloud, td);
-        td.part() = parcelType::trackingData::tpCorrectTrack;
-        CloudType::move(cloud, td);
-        packingModel_->cacheFields(false);
-    }
-
-
-    // Isotropy
-    // ~~~~~~~~
-
-    if (!isType<IsotropyModels::NoIsotropy<CloudType>>(isotropyModel_()))
-    {
-        // update averages
-        td.updateAverages(cloud);
-
-        // apply isotropy model
-        isotropyModel_->calculate();
-    }
-
-
-    // Final
-    // ~~~~~
-
-    // update cell occupancy
+    // Update cell occupancy
     this->updateCellOccupancy();
-
-    // switch forces back on
-    this->forces().setCalcNonCoupled(true);
-    this->forces().setCalcCoupled(this->solution().coupled());
 }
 
 

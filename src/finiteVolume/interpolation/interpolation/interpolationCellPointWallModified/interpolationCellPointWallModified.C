@@ -331,4 +331,15 @@ interpolationCellPointWallModified
 {}
 
 
+template<class Type>
+Foam::interpolationCellPointWallModified<Type>::
+interpolationCellPointWallModified
+(
+    const interpolationCellPointWallModified<Type>& i
+)
+:
+    interpolationCellPoint<Type>(i)
+{}
+
+
 // ************************************************************************* //

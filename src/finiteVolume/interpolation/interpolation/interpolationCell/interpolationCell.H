@@ -65,6 +65,19 @@ public:
             const VolField<Type>& psi
         );
 
+        //- Copy construct
+        interpolationCell(const interpolationCell<Type>& i);
+
+        //- Clone
+        virtual autoPtr<interpolation<Type>> clone() const
+        {
+            return autoPtr<interpolation<Type>>
+            (
+                new interpolationCell<Type>(*this)
+            );
+        }
+
+
 
     // Member Functions
 

@@ -70,6 +70,12 @@ public:
             const VolField<Type>& psi
         );
 
+        //- Copy construct
+        interpolationVolPointInterpolation
+        (
+            const interpolationVolPointInterpolation<Type>& i
+        );
+
         //- Construct from components
         interpolationVolPointInterpolation
         (

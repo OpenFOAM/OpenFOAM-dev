@@ -34,72 +34,8 @@ Foam::MPPICParcel<ParcelType>::MPPICParcel
 )
 :
     ParcelType(p),
-    UCorrect_(p.UCorrect_)
+    id_(p.id_)
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class ParcelType>
-template<class TrackCloudType>
-bool Foam::MPPICParcel<ParcelType>::move
-(
-    TrackCloudType& cloud,
-    trackingData& td
-)
-{
-    typename TrackCloudType::parcelType& p =
-        static_cast<typename TrackCloudType::parcelType&>(*this);
-
-    switch (td.part())
-    {
-        case trackingData::tpPredictTrack:
-        {
-            ParcelType::move(cloud, td);
-
-            break;
-        }
-        case trackingData::tpDampingNoTrack:
-        {
-            p.UCorrect() =
-                cloud.dampingModel().velocityCorrection(p, td.trackTime());
-
-            td.keepParticle = true;
-            td.sendToProc = -1;
-
-            break;
-        }
-        case trackingData::tpPackingNoTrack:
-        {
-            p.UCorrect() =
-                cloud.packingModel().velocityCorrection(p, td.trackTime());
-
-            td.keepParticle = true;
-            td.sendToProc = -1;
-
-            break;
-        }
-        case trackingData::tpCorrectTrack:
-        {
-            const scalar f = p.stepFraction();
-            const scalar a = p.age();
-
-            Swap(p.U(), p.UCorrect());
-
-            ParcelType::move(cloud, td);
-
-            Swap(p.U(), p.UCorrect());
-
-            p.U() += (p.stepFraction() - f)*p.UCorrect();
-
-            p.age() = a;
-
-            break;
-        }
-    }
-
-    return td.keepParticle;
-}
 
 
 // * * * * * * * * * * * * * * IOStream operators  * * * * * * * * * * * * * //

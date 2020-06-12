@@ -84,6 +84,21 @@ public:
         (
             const VolField<Type>& psi
         );
+
+        //- Copy construct
+        interpolationCellPointWallModified
+        (
+            const interpolationCellPointWallModified<Type>& i
+        );
+
+        //- Clone
+        virtual autoPtr<interpolation<Type>> clone() const
+        {
+            return autoPtr<interpolation<Type>>
+            (
+                new interpolationCellPointWallModified<Type>(*this)
+            );
+        }
 };
 
 

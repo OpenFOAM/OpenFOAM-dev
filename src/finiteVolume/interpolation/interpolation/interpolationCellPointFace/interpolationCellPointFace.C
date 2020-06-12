@@ -45,6 +45,18 @@ Foam::interpolationCellPointFace<Type>::interpolationCellPointFace
 {}
 
 
+template<class Type>
+Foam::interpolationCellPointFace<Type>::interpolationCellPointFace
+(
+    const interpolationCellPointFace<Type>& i
+)
+:
+    fieldInterpolation<Type, interpolationCellPointFace<Type>>(i),
+    interpolationVolPointInterpolation<Type>(i),
+    psis_(i.psis_.clone())
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>

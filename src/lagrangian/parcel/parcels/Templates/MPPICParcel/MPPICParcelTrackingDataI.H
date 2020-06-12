@@ -132,8 +132,7 @@ inline Foam::MPPICParcel<ParcelType>::trackingData::trackingData
             cloud.solution().dict(),
             cloud.mesh()
         )
-    ),
-    part_(tpPredictTrack)
+    )
 {}
 
 
@@ -241,22 +240,6 @@ inline void Foam::MPPICParcel<ParcelType>::trackingData::updateAverages
         weightAverage.add(p.coordinates(), tetIs, p.nParticle()*f);
     }
     frequencyAverage_->average(weightAverage);
-}
-
-
-template<class ParcelType>
-inline typename Foam::MPPICParcel<ParcelType>::trackingData::trackPart
-Foam::MPPICParcel<ParcelType>::trackingData::part() const
-{
-    return part_;
-}
-
-
-template<class ParcelType>
-inline typename Foam::MPPICParcel<ParcelType>::trackingData::trackPart&
-Foam::MPPICParcel<ParcelType>::trackingData::part()
-{
-    return part_;
 }
 
 

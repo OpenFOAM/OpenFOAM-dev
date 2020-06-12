@@ -93,18 +93,6 @@ public:
     :
         public ParcelType::trackingData
     {
-
-    public:
-
-        enum trackPart
-        {
-            tpPredictTrack,
-            tpDampingNoTrack,
-            tpPackingNoTrack,
-            tpCorrectTrack,
-        };
-
-
     private:
 
         // Private Data
@@ -114,7 +102,7 @@ public:
                 //- Volume average
                 autoPtr<AveragingMethod<scalar>> volumeAverage_;
 
-                //- Radius average [ volume^(1/3) ]
+                //- Radius average
                 autoPtr<AveragingMethod<scalar>> radiusAverage_;
 
                 //- Density average
@@ -123,7 +111,7 @@ public:
                 //- Velocity average
                 autoPtr<AveragingMethod<vector>> uAverage_;
 
-                //- Magnitude velocity sqyuared average
+                //- Magnitude velocity squared average
                 autoPtr<AveragingMethod<scalar>> uSqrAverage_;
 
                 //- Frequency average
@@ -131,10 +119,6 @@ public:
 
                 //- Mass average
                 autoPtr<AveragingMethod<scalar>> massAverage_;
-
-
-            //- Which part of the integration algorithm is taking place
-            trackPart part_;
 
 
     public:
@@ -149,15 +133,6 @@ public:
         //- Update the MPPIC averages
         template<class TrackCloudType>
         inline void updateAverages(const TrackCloudType& cloud);
-
-
-        //- Access
-
-            //- Const access to the tracking part
-            inline trackPart part() const;
-
-            //- Non const access to the tracking part
-            inline trackPart& part();
     };
 
 
@@ -165,8 +140,10 @@ protected:
 
     // Protected data
 
-        //- Velocity correction due to collisions [m/s]
-        vector UCorrect_;
+        //- Processor and particle ID at the start of a tracking step. Allows
+        //  values calculated at the end of the step to be mapped back to the
+        //  starting state, in order to initialise a second corrector step.
+        labelPair id_;
 
 
 public:
@@ -174,11 +151,7 @@ public:
     // Static Data Members
 
         //- String representation of properties
-        AddToPropertyList
-        (
-            ParcelType,
-            "(UCorrectx UCorrecty UCorrectz)"
-        );
+        AddToPropertyList(ParcelType, "");
 
 
     // Constructors
@@ -227,18 +200,11 @@ public:
 
         // Access
 
-            //- Return const access to correction velocity
-            inline const vector& UCorrect() const;
+            //- Return const access to the identifier
+            inline const labelPair& id() const;
 
-            //- Return access to correction velocity
-            inline vector& UCorrect();
-
-
-        // Tracking
-
-            //- Move the parcel
-            template<class TrackCloudType>
-            bool move(TrackCloudType& cloud, trackingData& td);
+            //- Return access to the identifier
+            inline labelPair& id();
 
 
     // Friend Functions

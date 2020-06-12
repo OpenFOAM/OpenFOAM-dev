@@ -38,6 +38,16 @@ Foam::interpolationCell<Type>::interpolationCell
 {}
 
 
+template<class Type>
+Foam::interpolationCell<Type>::interpolationCell
+(
+    const interpolationCell<Type>& i
+)
+:
+    fieldInterpolation<Type, interpolationCell<Type>>(i)
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>

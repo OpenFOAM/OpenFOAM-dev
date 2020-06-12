@@ -46,17 +46,17 @@ template<class ParcelType>
 Foam::MPPICParcel<ParcelType>::MPPICParcel(Istream& is, bool readFields)
 :
     ParcelType(is, readFields),
-    UCorrect_(Zero)
+    id_(-1, -1)
 {
     if (readFields)
     {
         if (is.format() == IOstream::ASCII)
         {
-            is >> UCorrect_;
+            is >> id_;
         }
         else
         {
-            is.read(reinterpret_cast<char*>(&UCorrect_), sizeofFields_);
+            is.read(reinterpret_cast<char*>(&id_), sizeofFields_);
         }
     }
 
@@ -72,27 +72,7 @@ template<class ParcelType>
 template<class CloudType>
 void Foam::MPPICParcel<ParcelType>::readFields(CloudType& c)
 {
-    bool valid = c.size();
-
     ParcelType::readFields(c);
-
-    IOField<vector> UCorrect
-    (
-        c.fieldIOobject("UCorrect", IOobject::MUST_READ),
-        valid
-    );
-    c.checkFieldIOobject(c, UCorrect);
-
-    label i = 0;
-
-    forAllIter(typename CloudType, c, iter)
-    {
-        MPPICParcel<ParcelType>& p = iter();
-
-        p.UCorrect_ = UCorrect[i];
-
-        i++;
-    }
 }
 
 
@@ -101,24 +81,6 @@ template<class CloudType>
 void Foam::MPPICParcel<ParcelType>::writeFields(const CloudType& c)
 {
     ParcelType::writeFields(c);
-
-    label np = c.size();
-
-    IOField<vector>
-        UCorrect(c.fieldIOobject("UCorrect", IOobject::NO_READ), np);
-
-    label i = 0;
-
-    forAllConstIter(typename CloudType, c, iter)
-    {
-        const MPPICParcel<ParcelType>& p = iter();
-
-        UCorrect[i] = p.UCorrect();
-
-        i++;
-    }
-
-    UCorrect.write(np > 0);
 }
 
 
@@ -134,14 +96,14 @@ Foam::Ostream& Foam::operator<<
     if (os.format() == IOstream::ASCII)
     {
         os  << static_cast<const ParcelType&>(p)
-            << token::SPACE << p.UCorrect();
+            << token::SPACE << p.id();
     }
     else
     {
         os  << static_cast<const ParcelType&>(p);
         os.write
         (
-            reinterpret_cast<const char*>(&p.UCorrect_),
+            reinterpret_cast<const char*>(&p.id_),
             MPPICParcel<ParcelType>::sizeofFields_
         );
     }

@@ -76,8 +76,18 @@ Foam::PackingModels::Implicit<CloudType>::Implicit
 :
     PackingModel<CloudType>(cm),
     alpha_(cm.alpha_),
-    phiCorrect_(cm.phiCorrect_()),
-    uCorrect_(cm.uCorrect_()),
+    phiCorrect_
+    (
+        cm.phiCorrect_.valid()
+      ? cm.phiCorrect_().clone()
+      : tmp<surfaceScalarField>(nullptr)
+    ),
+    uCorrect_
+    (
+        cm.uCorrect_.valid()
+      ? cm.uCorrect_().clone()
+      : tmp<volVectorField>(nullptr)
+    ),
     applyLimiting_(cm.applyLimiting_),
     applyGravity_(cm.applyGravity_),
     alphaMin_(cm.alphaMin_),

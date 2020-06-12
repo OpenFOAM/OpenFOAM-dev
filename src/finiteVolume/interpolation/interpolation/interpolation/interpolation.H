@@ -110,6 +110,13 @@ public:
             const VolField<Type>& psi
         );
 
+        //- Copy constructor
+        interpolation(const interpolation<Type>& i);
+
+        //- Clone
+        virtual autoPtr<interpolation<Type>> clone() const = 0;
+
+
 
     //- Destructor
     virtual ~interpolation()

@@ -53,11 +53,8 @@ Foam::PackingModels::Explicit<CloudType>::Explicit
 )
 :
     PackingModel<CloudType>(cm),
-    stressAverage_(cm.stressAverage_->clone()),
-    correctionLimiting_
-    (
-        cm.correctionLimiting_->clone()
-    )
+    stressAverage_(cm.stressAverage_, false),
+    correctionLimiting_(cm.correctionLimiting_, false)
 {}
 
 

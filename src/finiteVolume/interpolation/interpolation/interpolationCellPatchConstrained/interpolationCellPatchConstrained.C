@@ -38,6 +38,16 @@ Foam::interpolationCellPatchConstrained<Type>::interpolationCellPatchConstrained
 {}
 
 
+template<class Type>
+Foam::interpolationCellPatchConstrained<Type>::interpolationCellPatchConstrained
+(
+    const interpolationCellPatchConstrained<Type>& i
+)
+:
+    fieldInterpolation<Type, interpolationCellPatchConstrained<Type>>(i)
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>

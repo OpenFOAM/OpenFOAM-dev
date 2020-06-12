@@ -48,7 +48,7 @@ Foam::DampingModels::Relaxation<CloudType>::Relaxation
 :
     DampingModel<CloudType>(cm),
     uAverage_(nullptr),
-    oneByTimeScaleAverage_(cm.oneByTimeScaleAverage_->clone())
+    oneByTimeScaleAverage_(cm.oneByTimeScaleAverage_, false)
 {}
 
 

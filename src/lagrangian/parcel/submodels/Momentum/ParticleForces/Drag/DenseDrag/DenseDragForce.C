@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,8 +53,8 @@ Foam::DenseDragForce<CloudType>::DenseDragForce
 :
     ParticleForce<CloudType>(df),
     alphacName_(df.alphacName_),
-    alphacPtr_(nullptr),
-    alphacInterpPtr_(nullptr)
+    alphacPtr_(df.alphacPtr_, false),
+    alphacInterpPtr_(df.alphacInterpPtr_, false)
 {}
 
 

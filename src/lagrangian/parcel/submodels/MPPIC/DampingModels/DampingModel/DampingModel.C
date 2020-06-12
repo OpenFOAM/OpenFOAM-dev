@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2022 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ template<class CloudType>
 Foam::DampingModel<CloudType>::DampingModel(const DampingModel<CloudType>& cm)
 :
     CloudSubModelBase<CloudType>(cm),
-    timeScaleModel_(cm.timeScaleModel_)
+    timeScaleModel_(cm.timeScaleModel_, false)
 {}
 
 

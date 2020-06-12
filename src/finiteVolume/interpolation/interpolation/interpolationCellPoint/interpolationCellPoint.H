@@ -65,12 +65,27 @@ public:
             const VolField<Type>& psi
         );
 
+        //- Copy construct
+        interpolationCellPoint
+        (
+            const interpolationCellPoint<Type>& i
+        );
+
         //- Construct from components
         interpolationCellPoint
         (
             const VolField<Type>& psi,
             tmp<PointField<Type>> psip
         );
+
+        //- Clone
+        virtual autoPtr<interpolation<Type>> clone() const
+        {
+            return autoPtr<interpolation<Type>>
+            (
+                new interpolationCellPoint<Type>(*this)
+            );
+        }
 
 
     // Member Functions

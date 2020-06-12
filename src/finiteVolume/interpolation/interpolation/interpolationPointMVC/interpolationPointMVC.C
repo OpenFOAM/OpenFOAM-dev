@@ -39,4 +39,15 @@ Foam::interpolationPointMVC<Type>::interpolationPointMVC
 {}
 
 
+template<class Type>
+Foam::interpolationPointMVC<Type>::interpolationPointMVC
+(
+    const interpolationPointMVC<Type>& i
+)
+:
+    fieldInterpolation<Type, interpolationPointMVC<Type>>(i),
+    interpolationVolPointInterpolation<Type>(i)
+{}
+
+
 // ************************************************************************* //

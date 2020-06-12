@@ -28,7 +28,7 @@ License
 #include "polyMesh.H"
 #include "calculatedPointPatchFields.H"
 
-// * * * * * * * * * * * * * * * * Constructor * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::interpolation<Type>::interpolation
@@ -38,6 +38,14 @@ Foam::interpolation<Type>::interpolation
 :
     psi_(psi),
     mesh_(psi.mesh())
+{}
+
+
+template<class Type>
+Foam::interpolation<Type>::interpolation(const interpolation<Type>& i)
+:
+    psi_(i.psi_),
+    mesh_(i.mesh_)
 {}
 
 

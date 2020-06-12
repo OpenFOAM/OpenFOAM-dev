@@ -51,6 +51,17 @@ template<class Type>
 Foam::interpolationVolPointInterpolation<Type>::
 interpolationVolPointInterpolation
 (
+    const interpolationVolPointInterpolation<Type>& i
+)
+:
+    psip_(i.psip_.clone())
+{}
+
+
+template<class Type>
+Foam::interpolationVolPointInterpolation<Type>::
+interpolationVolPointInterpolation
+(
     const VolField<Type>& psi,
     tmp<PointField<Type>> psip
 )
