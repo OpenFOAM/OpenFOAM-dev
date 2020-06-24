@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -153,7 +153,7 @@ public:
                 const driftModel& model
             );
 
-            //- Add drift contribution to secondary property source
+            //- Add nucleation contribution to secondary property source
             virtual void addNucleation
             (
                 const volScalarField& Su,
