@@ -33,7 +33,7 @@
        /((2*maxCo)*mesh.V())
     );
 
-    // Update tho boundary values of the reciprocal time-step
+    // Update the boundary values of the reciprocal time-step
     rDeltaT.correctBoundaryConditions();
 
     Info<< "Flow time scale min/max = "
