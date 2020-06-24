@@ -1,0 +1,16 @@
+SUFFIXES += .c
+
+cWARN        = -Wall
+
+cc          = gcc
+
+include $(DEFAULT_RULES)/c$(WM_COMPILE_OPTION)
+
+cFLAGS      = $(GFLAGS) $(cWARN) $(cOPT) $(cDBUG) $(LIB_HEADER_DIRS) -fPIC
+
+ctoo        = $(WM_SCHEDULER) $(cc) $(cFLAGS) -c $< -o $@
+
+LINK_LIBS   = $(cDBUG)
+
+LINKLIBSO   = $(cc) -fuse-ld=bfd -shared
+LINKEXE     = $(cc) -fuse-ld=bfd -Xlinker --add-needed -Xlinker -z -Xlinker nodefs
