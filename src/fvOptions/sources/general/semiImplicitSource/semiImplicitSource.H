@@ -143,7 +143,7 @@ private:
         PtrList<Function1<scalar>> fieldSp_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Add divergence terms to an equation
         template <class Type>

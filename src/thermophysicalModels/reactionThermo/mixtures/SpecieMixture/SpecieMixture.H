@@ -58,7 +58,7 @@ class SpecieMixture
     public MixtureType
 {
 
-    // Private member functions
+    // Private Member Functions
 
         //- Return a volScalarField of the given property
         tmp<volScalarField> volScalarFieldProperty

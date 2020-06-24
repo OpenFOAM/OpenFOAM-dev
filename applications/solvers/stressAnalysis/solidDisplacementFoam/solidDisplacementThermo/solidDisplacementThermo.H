@@ -74,7 +74,7 @@ class solidDisplacementThermo
         volScalarField alphav_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         void readProperty(volScalarField& prop) const;
 

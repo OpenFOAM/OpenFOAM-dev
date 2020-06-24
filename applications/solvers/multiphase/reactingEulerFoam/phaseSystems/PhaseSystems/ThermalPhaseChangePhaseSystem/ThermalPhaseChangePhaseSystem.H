@@ -108,7 +108,7 @@ class ThermalPhaseChangePhaseSystem
         PtrList<volScalarField> dmdt0s_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Return the total mass transfer rate for a pair
         tmp<volScalarField> totalDmdtf(const phasePairKey& key) const;
