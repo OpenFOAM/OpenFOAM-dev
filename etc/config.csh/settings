@@ -89,7 +89,7 @@ case Linux:
         setenv WM_CFLAGS '-fPIC'
         setenv WM_CXXFLAGS '-fPIC -std=c++0x'
         setenv WM_LDFLAGS ''
-        ;;
+        breaksw
 
     case ppc64:
         setenv WM_ARCH linuxPPC64
