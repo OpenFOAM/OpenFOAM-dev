@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -177,12 +177,6 @@ private:
 
         //- Return the virtual mass coefficient for the phase pair
         virtual tmp<volScalarField> Vm(const phasePairKey& key) const;
-
-        //- Add the mass-transfer-based momentum transfer to the equations
-        void addMassTransferMomentumTransfer
-        (
-            phaseSystem::momentumTransferTable& eqns
-        ) const;
 
 
 protected:
