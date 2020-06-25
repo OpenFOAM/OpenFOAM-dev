@@ -141,9 +141,12 @@ while (pimple.correct())
                 new surfaceScalarField
                 (
                     IOobject::groupName("phiHbyA", phase.name()),
-                    fvc::flux(HbyAs[phase.index()])
-                  - phigFs[phase.index()]
-                  - ddtCorrByAs[phase.index()]
+                    MRF.relative
+                    (
+                        fvc::flux(HbyAs[phase.index()])
+                      - phigFs[phase.index()]
+                      - ddtCorrByAs[phase.index()]
+                    )
                 )
             );
         }
@@ -203,8 +206,6 @@ while (pimple.correct())
             }
         }
     }
-
-    MRF.makeRelative(phiHbyA);
 
     // Construct pressure "diffusivity"
     surfaceScalarField rAUf
