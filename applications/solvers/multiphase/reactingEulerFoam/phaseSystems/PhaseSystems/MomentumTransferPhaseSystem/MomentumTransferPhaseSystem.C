@@ -492,10 +492,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::AFfs() const
         }
     }
 
-    if (this->fillFields_)
-    {
-        this->fillFields("AFf", dimDensity/dimTime, AFfs);
-    }
+    this->fillFields("AFf", dimDensity/dimTime, AFfs);
 
     return AFfs;
 }
