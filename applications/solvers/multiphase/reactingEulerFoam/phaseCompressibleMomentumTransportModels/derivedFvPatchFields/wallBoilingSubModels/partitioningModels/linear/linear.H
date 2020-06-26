@@ -85,6 +85,15 @@ public:
         //- Construct from a dictionary
         linear(const dictionary& dict);
 
+        //- Copy construct
+        linear(const linear& model);
+
+        //- Construct and return a clone
+        virtual autoPtr<partitioningModel> clone() const
+        {
+            return autoPtr<partitioningModel>(new linear(*this));
+        }
+
 
     //- Destructor
     virtual ~linear();

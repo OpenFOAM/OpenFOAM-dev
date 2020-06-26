@@ -77,8 +77,11 @@ public:
         //- Construct null
         partitioningModel();
 
-        //- Disallow default bitwise copy construction
-        partitioningModel(const partitioningModel&) = delete;
+        //- Copy construct
+        partitioningModel(const partitioningModel&);
+
+        //- Construct and return a clone
+        virtual autoPtr<partitioningModel> clone() const = 0;
 
 
     // Selectors

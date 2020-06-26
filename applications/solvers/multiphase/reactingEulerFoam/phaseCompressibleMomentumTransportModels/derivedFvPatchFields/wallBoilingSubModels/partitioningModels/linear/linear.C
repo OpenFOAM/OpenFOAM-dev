@@ -57,6 +57,15 @@ linear::linear(const dictionary& dict)
 {}
 
 
+Foam::wallBoilingModels::partitioningModels::
+linear::linear(const linear& model)
+:
+    partitioningModel(model),
+    alphaLiquid1_(model.alphaLiquid1_),
+    alphaLiquid0_(model.alphaLiquid0_)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::wallBoilingModels::partitioningModels::

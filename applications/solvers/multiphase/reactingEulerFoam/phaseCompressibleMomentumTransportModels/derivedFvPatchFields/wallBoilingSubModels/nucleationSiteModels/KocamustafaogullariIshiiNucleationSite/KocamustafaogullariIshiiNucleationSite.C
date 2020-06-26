@@ -60,6 +60,17 @@ KocamustafaogullariIshiiNucleationSite::KocamustafaogullariIshiiNucleationSite
 {}
 
 
+Foam::wallBoilingModels::nucleationSiteModels::
+KocamustafaogullariIshiiNucleationSite::KocamustafaogullariIshiiNucleationSite
+(
+    const KocamustafaogullariIshiiNucleationSite& model
+)
+:
+    nucleationSiteModel(),
+    Cn_(model.Cn_)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::wallBoilingModels::nucleationSiteModels::

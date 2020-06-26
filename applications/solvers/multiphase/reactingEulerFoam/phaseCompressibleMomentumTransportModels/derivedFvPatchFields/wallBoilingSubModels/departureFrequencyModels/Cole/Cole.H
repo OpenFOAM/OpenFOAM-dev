@@ -73,6 +73,15 @@ public:
         //- Construct from a dictionary
         Cole(const dictionary& dict);
 
+        //- Copy construct
+        Cole(const Cole& model);
+
+        //- Construct and return a clone
+        virtual autoPtr<departureFrequencyModel> clone() const
+        {
+            return autoPtr<departureFrequencyModel>(new Cole(*this));
+        }
+
 
     //- Destructor
     virtual ~Cole();

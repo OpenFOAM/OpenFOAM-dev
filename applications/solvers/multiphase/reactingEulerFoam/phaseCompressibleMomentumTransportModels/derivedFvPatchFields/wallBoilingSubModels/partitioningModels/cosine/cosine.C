@@ -57,6 +57,15 @@ cosine::cosine(const dictionary& dict)
 {}
 
 
+Foam::wallBoilingModels::partitioningModels::
+cosine::cosine(const cosine& model)
+:
+    partitioningModel(model),
+    alphaLiquid1_(model.alphaLiquid1_),
+    alphaLiquid0_(model.alphaLiquid0_)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::wallBoilingModels::partitioningModels::

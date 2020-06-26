@@ -60,6 +60,18 @@ Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::LemmertChawla
 {}
 
 
+Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::LemmertChawla
+(
+    const LemmertChawla& model
+)
+:
+    nucleationSiteModel(),
+    Cn_(model.Cn_),
+    NRef_(model.NRef_),
+    deltaTRef_(model.deltaTRef_)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::wallBoilingModels::nucleationSiteModels::LemmertChawla::~LemmertChawla()

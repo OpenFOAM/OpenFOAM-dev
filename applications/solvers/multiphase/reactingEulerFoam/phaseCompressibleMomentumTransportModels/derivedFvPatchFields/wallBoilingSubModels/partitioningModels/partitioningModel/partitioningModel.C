@@ -43,6 +43,13 @@ Foam::wallBoilingModels::partitioningModel::partitioningModel()
 {}
 
 
+Foam::wallBoilingModels::partitioningModel::partitioningModel
+(
+    const partitioningModel& model
+)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::wallBoilingModels::partitioningModel::~partitioningModel()

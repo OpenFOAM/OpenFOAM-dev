@@ -58,6 +58,13 @@ Cole::Cole(const dictionary& dict)
 {}
 
 
+Foam::wallBoilingModels::departureFrequencyModels::
+Cole::Cole(const Cole& model)
+:
+    departureFrequencyModel(model)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::wallBoilingModels::departureFrequencyModels::

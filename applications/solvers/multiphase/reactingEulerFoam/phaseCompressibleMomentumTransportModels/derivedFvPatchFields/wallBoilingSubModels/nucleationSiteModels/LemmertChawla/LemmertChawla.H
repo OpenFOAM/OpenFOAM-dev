@@ -89,6 +89,15 @@ public:
         //- Construct from a dictionary
         LemmertChawla(const dictionary& dict);
 
+        //- Copy construct
+        LemmertChawla(const LemmertChawla& model);
+
+        //- Construct and return a clone
+        virtual autoPtr<nucleationSiteModel> clone() const
+        {
+            return autoPtr<nucleationSiteModel>(new LemmertChawla(*this));
+        }
+
 
     //- Destructor
     virtual ~LemmertChawla();

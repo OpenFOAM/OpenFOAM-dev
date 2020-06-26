@@ -79,8 +79,11 @@ public:
         //- Construct null
         departureDiameterModel();
 
-        //- Disallow default bitwise copy construction
-        departureDiameterModel(const departureDiameterModel&) = delete;
+        //- Copy constructor
+        departureDiameterModel(const departureDiameterModel&);
+
+        //- Construct and return a clone
+        virtual autoPtr<departureDiameterModel> clone() const = 0;
 
 
     // Selectors

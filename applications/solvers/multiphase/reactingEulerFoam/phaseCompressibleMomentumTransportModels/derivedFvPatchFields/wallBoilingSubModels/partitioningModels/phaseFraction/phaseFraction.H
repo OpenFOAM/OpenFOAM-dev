@@ -66,6 +66,15 @@ public:
         //- Construct from a dictionary
         phaseFraction(const dictionary& dict);
 
+        //- Copy construct
+        phaseFraction(const phaseFraction& model);
+
+        //- Construct and return a clone
+        virtual autoPtr<partitioningModel> clone() const
+        {
+            return autoPtr<partitioningModel>(new phaseFraction(*this));
+        }
+
 
     //- Destructor
     virtual ~phaseFraction();

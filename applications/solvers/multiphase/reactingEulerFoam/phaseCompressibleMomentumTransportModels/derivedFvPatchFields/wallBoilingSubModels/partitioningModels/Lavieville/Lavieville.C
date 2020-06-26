@@ -56,6 +56,14 @@ Lavieville::Lavieville(const dictionary& dict)
 {}
 
 
+Foam::wallBoilingModels::partitioningModels::
+Lavieville::Lavieville(const Lavieville& model)
+:
+    partitioningModel(model),
+    alphaCrit_(model.alphaCrit_)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::wallBoilingModels::partitioningModels::

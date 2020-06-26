@@ -61,6 +61,19 @@ TolubinskiKostanchuk::TolubinskiKostanchuk
 {}
 
 
+Foam::wallBoilingModels::departureDiameterModels::
+TolubinskiKostanchuk::TolubinskiKostanchuk
+(
+    const TolubinskiKostanchuk& model
+)
+:
+    departureDiameterModel(),
+    dRef_(model.dRef_),
+    dMax_(model.dMax_),
+    dMin_(model.dMin_)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::wallBoilingModels::departureDiameterModels::
