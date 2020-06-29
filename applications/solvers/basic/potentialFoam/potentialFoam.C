@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,17 +110,18 @@ int main(int argc, char *argv[])
         }
     }
 
-    MRF.makeAbsolute(phi);
-
     Info<< "Continuity error = "
         << mag(fvc::div(phi))().weightedAverage(mesh.V()).value()
         << endl;
 
-    U = fvc::reconstruct(phi);
+    U = fvc::reconstruct(MRF.absolute(phi));
     U.correctBoundaryConditions();
 
     Info<< "Interpolated velocity error = "
-        << (sqrt(sum(sqr(fvc::flux(U) - phi)))/sum(mesh.magSf())).value()
+        << (
+                sqrt(sum(sqr(fvc::flux(U) - MRF.absolute(phi))))
+               /sum(mesh.magSf())
+           ).value()
         << endl;
 
     // Write U and phi
