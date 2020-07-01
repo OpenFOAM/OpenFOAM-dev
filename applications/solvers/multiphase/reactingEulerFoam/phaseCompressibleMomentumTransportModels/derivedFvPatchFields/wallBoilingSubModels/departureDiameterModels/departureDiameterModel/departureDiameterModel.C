@@ -43,6 +43,13 @@ Foam::wallBoilingModels::departureDiameterModel::departureDiameterModel()
 {}
 
 
+Foam::wallBoilingModels::departureDiameterModel::departureDiameterModel
+(
+    const departureDiameterModel&
+)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::wallBoilingModels::departureDiameterModel::~departureDiameterModel()

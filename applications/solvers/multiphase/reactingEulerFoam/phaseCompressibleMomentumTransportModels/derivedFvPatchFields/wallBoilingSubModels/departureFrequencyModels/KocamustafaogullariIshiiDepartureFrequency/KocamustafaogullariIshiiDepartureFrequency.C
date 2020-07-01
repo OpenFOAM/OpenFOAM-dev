@@ -61,6 +61,18 @@ KocamustafaogullariIshiiDepartureFrequency(const dictionary& dict)
 {}
 
 
+Foam::wallBoilingModels::departureFrequencyModels::
+KocamustafaogullariIshiiDepartureFrequency::
+KocamustafaogullariIshiiDepartureFrequency
+(
+    const KocamustafaogullariIshiiDepartureFrequency& model
+)
+:
+    departureFrequencyModel(model),
+    Cf_(model.Cf_)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::wallBoilingModels::departureFrequencyModels::

@@ -80,6 +80,21 @@ public:
         //- Construct from a dictionary
         KocamustafaogullariIshiiDepartureDiameter(const dictionary& dict);
 
+        //- Copy construct
+        KocamustafaogullariIshiiDepartureDiameter
+        (
+            const KocamustafaogullariIshiiDepartureDiameter& model
+        );
+
+        //- Construct and return a clone
+        virtual autoPtr<departureDiameterModel> clone() const
+        {
+            return autoPtr<departureDiameterModel>
+            (
+                new KocamustafaogullariIshiiDepartureDiameter(*this)
+            );
+        }
+
 
     //- Destructor
     virtual ~KocamustafaogullariIshiiDepartureDiameter();

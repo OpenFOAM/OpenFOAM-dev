@@ -43,6 +43,13 @@ Foam::wallBoilingModels::departureFrequencyModel::departureFrequencyModel()
 {}
 
 
+Foam::wallBoilingModels::departureFrequencyModel::departureFrequencyModel
+(
+    const departureFrequencyModel& model
+)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::wallBoilingModels::departureFrequencyModel::~departureFrequencyModel()

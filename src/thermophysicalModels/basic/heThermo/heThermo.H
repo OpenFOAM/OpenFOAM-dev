@@ -208,6 +208,31 @@ public:
                 const label patchi
             ) const;
 
+            //- Sensible enthalpy [J/kg/K]
+            virtual tmp<volScalarField> hs() const;
+
+            //- Sensible enthalpy
+            //  for given pressure and temperature [J/kg]
+            virtual tmp<volScalarField> hs
+            (
+                const volScalarField& p,
+                const volScalarField& T
+            ) const;
+
+            //- Sensible enthalpy for patch [J/kg/K]
+            virtual tmp<scalarField> hs
+            (
+                const scalarField& T,
+                const label patchi
+            ) const;
+
+            //- Sensible enthalpy for cell-set [J/kg]
+            virtual tmp<scalarField> hs
+            (
+                const scalarField& T,
+                const labelList& cells
+            ) const;
+
             //- Absolute enthalpy [J/kg/K]
             virtual tmp<volScalarField> ha() const;
 

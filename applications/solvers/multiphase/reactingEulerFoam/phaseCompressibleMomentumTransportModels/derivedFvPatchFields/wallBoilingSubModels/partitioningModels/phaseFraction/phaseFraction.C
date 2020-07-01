@@ -55,6 +55,13 @@ phaseFraction::phaseFraction(const dictionary& dict)
 {}
 
 
+Foam::wallBoilingModels::partitioningModels::
+phaseFraction::phaseFraction(const phaseFraction& model)
+:
+    partitioningModel(model)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::wallBoilingModels::partitioningModels::

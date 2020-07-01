@@ -43,6 +43,13 @@ Foam::wallBoilingModels::nucleationSiteModel::nucleationSiteModel()
 {}
 
 
+Foam::wallBoilingModels::nucleationSiteModel::nucleationSiteModel
+(
+    const nucleationSiteModel& model
+)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::wallBoilingModels::nucleationSiteModel::~nucleationSiteModel()

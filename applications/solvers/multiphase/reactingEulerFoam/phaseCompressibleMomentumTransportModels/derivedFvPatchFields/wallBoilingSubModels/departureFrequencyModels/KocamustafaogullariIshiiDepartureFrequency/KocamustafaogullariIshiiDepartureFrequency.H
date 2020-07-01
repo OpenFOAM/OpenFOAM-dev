@@ -80,6 +80,21 @@ public:
         //- Construct from a dictionary
         KocamustafaogullariIshiiDepartureFrequency(const dictionary& dict);
 
+        //- Copy construct
+        KocamustafaogullariIshiiDepartureFrequency
+        (
+            const KocamustafaogullariIshiiDepartureFrequency& model
+        );
+
+        //- Construct and return a clone
+        virtual autoPtr<departureFrequencyModel> clone() const
+        {
+            return autoPtr<departureFrequencyModel>
+            (
+                new KocamustafaogullariIshiiDepartureFrequency(*this)
+            );
+        }
+
 
     //- Destructor
     virtual ~KocamustafaogullariIshiiDepartureFrequency();

@@ -82,6 +82,15 @@ public:
         //- Construct from a dictionary
         Lavieville(const dictionary& dict);
 
+        //- Copy construct
+        Lavieville(const Lavieville& model);
+
+        //- Construct and return a clone
+        virtual autoPtr<partitioningModel> clone() const
+        {
+            return autoPtr<partitioningModel>(new Lavieville(*this));
+        }
+
 
     //- Destructor
     virtual ~Lavieville();

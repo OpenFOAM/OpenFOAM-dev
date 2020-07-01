@@ -168,30 +168,6 @@ public:
                 const volScalarField& T
             ) const;
 
-            //- Absolute enthalpy [J/kg]
-            virtual scalar Ha
-            (
-                const label speciei,
-                const scalar p,
-                const scalar T
-            ) const;
-
-            //- Enthalpy/Internal energy [J/kg]
-            virtual tmp<scalarField> Ha
-            (
-                const label speciei,
-                const scalarField& p,
-                const scalarField& T
-            ) const;
-
-            //- Absolute enthalpy [J/kg]
-            virtual tmp<volScalarField> Ha
-            (
-                const label speciei,
-                const volScalarField& p,
-                const volScalarField& T
-            ) const;
-
             //- Sensible enthalpy [J/kg]
             virtual scalar Hs
             (
@@ -201,7 +177,39 @@ public:
             ) const;
 
             //- Sensible enthalpy [J/kg]
+            virtual tmp<scalarField> Hs
+            (
+                const label speciei,
+                const scalarField& p,
+                const scalarField& T
+            ) const;
+
+            //- Sensible enthalpy [J/kg]
             virtual tmp<volScalarField> Hs
+            (
+                const label speciei,
+                const volScalarField& p,
+                const volScalarField& T
+            ) const;
+
+            //- Absolute enthalpy [J/kg]
+            virtual scalar Ha
+            (
+                const label speciei,
+                const scalar p,
+                const scalar T
+            ) const;
+
+            //- Absolute enthalpy [J/kg]
+            virtual tmp<scalarField> Ha
+            (
+                const label speciei,
+                const scalarField& p,
+                const scalarField& T
+            ) const;
+
+            //- Absolute enthalpy [J/kg]
+            virtual tmp<volScalarField> Ha
             (
                 const label speciei,
                 const volScalarField& p,

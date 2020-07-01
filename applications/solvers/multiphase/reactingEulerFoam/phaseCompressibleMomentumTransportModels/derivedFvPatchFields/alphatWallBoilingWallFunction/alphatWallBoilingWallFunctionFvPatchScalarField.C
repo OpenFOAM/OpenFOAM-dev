@@ -208,14 +208,14 @@ alphatWallBoilingWallFunctionFvPatchScalarField
         mapper
     ),
     phaseType_(psf.phaseType_),
-    AbyV_(psf.AbyV_),
+    AbyV_(mapper(psf.AbyV_)),
     alphatConv_(mapper(psf.alphatConv_)),
     dDep_(mapper(psf.dDep_)),
     qq_(mapper(psf.qq_)),
-    partitioningModel_(psf.partitioningModel_),
-    nucleationSiteModel_(psf.nucleationSiteModel_),
-    departureDiamModel_(psf.departureDiamModel_),
-    departureFreqModel_(psf.departureFreqModel_)
+    partitioningModel_(psf.partitioningModel_, false),
+    nucleationSiteModel_(psf.nucleationSiteModel_, false),
+    departureDiamModel_(psf.departureDiamModel_, false),
+    departureFreqModel_(psf.departureFreqModel_, false)
 {}
 
 
@@ -231,10 +231,10 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     alphatConv_(psf.alphatConv_),
     dDep_(psf.dDep_),
     qq_(psf.qq_),
-    partitioningModel_(psf.partitioningModel_),
-    nucleationSiteModel_(psf.nucleationSiteModel_),
-    departureDiamModel_(psf.departureDiamModel_),
-    departureFreqModel_(psf.departureFreqModel_)
+    partitioningModel_(psf.partitioningModel_, false),
+    nucleationSiteModel_(psf.nucleationSiteModel_, false),
+    departureDiamModel_(psf.departureDiamModel_, false),
+    departureFreqModel_(psf.departureFreqModel_, false)
 {}
 
 
@@ -251,28 +251,52 @@ alphatWallBoilingWallFunctionFvPatchScalarField
     alphatConv_(psf.alphatConv_),
     dDep_(psf.dDep_),
     qq_(psf.qq_),
-    partitioningModel_(psf.partitioningModel_),
-    nucleationSiteModel_(psf.nucleationSiteModel_),
-    departureDiamModel_(psf.departureDiamModel_),
-    departureFreqModel_(psf.departureFreqModel_)
+    partitioningModel_(psf.partitioningModel_, false),
+    nucleationSiteModel_(psf.nucleationSiteModel_, false),
+    departureDiamModel_(psf.departureDiamModel_, false),
+    departureFreqModel_(psf.departureFreqModel_, false)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void alphatWallBoilingWallFunctionFvPatchScalarField::autoMap
+(
+    const fvPatchFieldMapper& m
+)
+{
+    alphatPhaseChangeWallFunctionFvPatchScalarField::autoMap(m);
+
+    m(AbyV_, AbyV_);
+    m(alphatConv_, alphatConv_);
+    m(dDep_, dDep_);
+    m(qq_, qq_);
+}
+
+
+void alphatWallBoilingWallFunctionFvPatchScalarField::rmap
+(
+    const fvPatchScalarField& ptf,
+    const labelList& addr
+)
+{
+    alphatPhaseChangeWallFunctionFvPatchScalarField::rmap(ptf, addr);
+
+    const alphatWallBoilingWallFunctionFvPatchScalarField& tiptf =
+        refCast<const alphatWallBoilingWallFunctionFvPatchScalarField>(ptf);
+
+    AbyV_.rmap(tiptf.AbyV_, addr);
+    alphatConv_.rmap(tiptf.alphatConv_, addr);
+    dDep_.rmap(tiptf.dDep_, addr);
+    qq_.rmap(tiptf.qq_, addr);
+}
+
 
 void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 {
     if (updated())
     {
         return;
-    }
-
-    // Check that partitioningModel has been constructed
-    if (!partitioningModel_.valid())
-    {
-        FatalErrorInFunction
-            << "partitioningModel has not been constructed!"
-            << abort(FatalError);
     }
 
     // Lookup the fluid model
@@ -287,20 +311,15 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
     {
         case vaporPhase:
         {
-            const phaseModel& vapor
-            (
-                fluid.phases()[internalField().group()]
-            );
+            const phaseModel& vapor = fluid.phases()[internalField().group()];
 
-            // Vapor Liquid phase fraction at the wall
-            const scalarField vaporw(vapor.boundaryField()[patchi]);
+            // Vapor phase fraction at the wall
+            const scalarField& vaporw = vapor.boundaryField()[patchi];
 
+            // Partitioning
             // NOTE! Assumes 1-thisPhase for liquid fraction in
             // multiphase simulations
-            const scalarField fLiquid
-            (
-                partitioningModel_->fLiquid(1-vaporw)
-            );
+            const scalarField fLiquid(partitioningModel_->fLiquid(1 - vaporw));
 
             operator==
             (
@@ -310,47 +329,16 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
         }
         case liquidPhase:
         {
+            const phaseModel& liquid = fluid.phases()[internalField().group()];
+            const phaseModel& vapor = fluid.phases()[otherPhaseName_];
 
-            // Check that nucleationSiteModel has been constructed
-            if (!nucleationSiteModel_.valid())
-            {
-                FatalErrorInFunction
-                    << "nucleationSiteModel has not been constructed!"
-                    << abort(FatalError);
-            }
-
-            // Check that departureDiameterModel has been constructed
-            if (!departureDiamModel_.valid())
-            {
-                FatalErrorInFunction
-                    << "departureDiameterModel has not been constructed!"
-                    << abort(FatalError);
-            }
-
-            // Check that nucleationSiteModel has been constructed
-            if (!departureFreqModel_.valid())
-            {
-                FatalErrorInFunction
-                    << "departureFrequencyModel has not been constructed!"
-                    << abort(FatalError);
-            }
-
-            const phaseModel& liquid
-            (
-                fluid.phases()[internalField().group()]
-            );
-
-            const phaseModel& vapor(fluid.phases()[otherPhaseName_]);
+            const phasePair pair(vapor, liquid);
 
             if
             (
                 db().foundObject<saturationModel>
                 (
-                    IOobject::groupName
-                    (
-                        "saturationModel",
-                        phasePair(vapor,liquid).name()
-                    )
+                    IOobject::groupName("saturationModel", pair.name())
                 )
             )
             {
@@ -387,8 +375,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                 const rhoThermo& lThermo = liquid.thermo();
                 const rhoThermo& vThermo = vapor.thermo();
 
-                const tmp<scalarField> talphaw = lThermo.alpha(patchi);
-                const scalarField& alphaw = talphaw();
+                const scalarField& alphaw = lThermo.alpha(patchi);
 
                 const tmp<volScalarField> tk = turbModel.k();
                 const volScalarField& k = tk();
@@ -404,6 +391,12 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
                 const fvPatchScalarField& rhoVaporw =
                     vaporTurbModel.rho().boundaryField()[patchi];
+
+                const fvPatchScalarField& hew =
+                    lThermo.he().boundaryField()[patchi];
+
+                const fvPatchScalarField& pw =
+                    lThermo.p().boundaryField()[patchi];
 
                 const fvPatchScalarField& Tw =
                     lThermo.T().boundaryField()[patchi];
@@ -430,26 +423,13 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                 const saturationModel& satModel =
                     db().lookupObject<saturationModel>
                     (
-                        IOobject::groupName
-                        (
-                            "saturationModel",
-                            phasePair(vapor,liquid).name()
-                        )
+                        IOobject::groupName("saturationModel", pair.name())
                     );
-
-                const tmp<volScalarField> tTsat =
-                    satModel.Tsat(lThermo.p());
-
+                const tmp<volScalarField> tTsat = satModel.Tsat(lThermo.p());
                 const volScalarField& Tsat = tTsat();
                 const fvPatchScalarField& Tsatw(Tsat.boundaryField()[patchi]);
-                const scalarField Tsatc(Tsatw.patchInternalField());
 
-                const fvPatchScalarField& pw =
-                    lThermo.p().boundaryField()[patchi];
-
-                const fvPatchScalarField& hew =
-                    lThermo.he().boundaryField()[patchi];
-
+                // Latent heat
                 scalarField liquidHaw(lThermo.ha(Tc, patchi));
 
                 scalarField vaporHaw(vThermo.ha(Tsatw, patchi));
@@ -487,6 +467,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                 // Liquid phase fraction at the wall
                 const scalarField liquidw(liquid.boundaryField()[patchi]);
 
+                // Partitioning
                 const scalarField fLiquid(partitioningModel_->fLiquid(liquidw));
 
                 // Convective thermal diffusivity
@@ -569,7 +550,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
 
                     const scalarField Al
                     (
-                        fLiquid*4.8*exp( min(-Ja/80, log(vGreat)))
+                        fLiquid*4.8*exp(min(-Ja/80, log(vGreat)))
                     );
 
                     scalarField A2(min(pi*sqr(dDep_)*N*Al/4, scalar(1)));
@@ -694,8 +675,7 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             }
             else
             {
-                Info<< "Saturation model for phase pair "
-                    << phasePair(vapor,liquid).name()
+                Info<< "Saturation model for phase pair " << pair.name()
                     << " not found. Wall boiling disabled." << endl;
 
                 operator== (alphatConv_);

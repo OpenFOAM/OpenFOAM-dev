@@ -205,6 +205,34 @@ dmdtLf(const phasePairKey& phasePair) const
 }
 
 
+void alphatPhaseChangeWallFunctionFvPatchScalarField::autoMap
+(
+    const fvPatchFieldMapper& m
+)
+{
+    alphatPhaseJayatillekeWallFunctionFvPatchScalarField::autoMap(m);
+
+    m(dmdtf_, dmdtf_);
+    m(dmdtLf_, dmdtLf_);
+}
+
+
+void alphatPhaseChangeWallFunctionFvPatchScalarField::rmap
+(
+    const fvPatchScalarField& ptf,
+    const labelList& addr
+)
+{
+    alphatPhaseJayatillekeWallFunctionFvPatchScalarField::rmap(ptf, addr);
+
+    const alphatPhaseChangeWallFunctionFvPatchScalarField& tiptf =
+        refCast<const alphatPhaseChangeWallFunctionFvPatchScalarField>(ptf);
+
+    dmdtf_.rmap(tiptf.dmdtf_, addr);
+    dmdtLf_.rmap(tiptf.dmdtLf_, addr);
+}
+
+
 void alphatPhaseChangeWallFunctionFvPatchScalarField::write(Ostream& os) const
 {
     alphatPhaseJayatillekeWallFunctionFvPatchScalarField::write(os);

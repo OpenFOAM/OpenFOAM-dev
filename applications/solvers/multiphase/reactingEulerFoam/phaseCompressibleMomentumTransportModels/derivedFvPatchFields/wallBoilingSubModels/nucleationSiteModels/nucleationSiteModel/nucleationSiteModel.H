@@ -79,8 +79,11 @@ public:
         //- Construct null
         nucleationSiteModel();
 
-        //- Disallow default bitwise copy construction
-        nucleationSiteModel(const nucleationSiteModel&) = delete;
+        //- Copy construct
+        nucleationSiteModel(const nucleationSiteModel& model);
+
+        //- Construct and return a clone
+        virtual autoPtr<nucleationSiteModel> clone() const = 0;
 
 
     // Selectors

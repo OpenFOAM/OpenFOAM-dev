@@ -85,6 +85,18 @@ public:
         //- Construct from a dictionary
         TolubinskiKostanchuk(const dictionary& dict);
 
+        //- Copy construct
+        TolubinskiKostanchuk(const TolubinskiKostanchuk& model);
+
+        //- Construct and return a clone
+        virtual autoPtr<departureDiameterModel> clone() const
+        {
+            return autoPtr<departureDiameterModel>
+            (
+                new TolubinskiKostanchuk(*this)
+            );
+        }
+
 
     //- Destructor
     virtual ~TolubinskiKostanchuk();

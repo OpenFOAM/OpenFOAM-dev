@@ -84,6 +84,15 @@ public:
         //- Construct from a dictionary
         cosine(const dictionary& dict);
 
+        //- Copy construct
+        cosine(const cosine& model);
+
+        //- Construct and return a clone
+        virtual autoPtr<partitioningModel> clone() const
+        {
+            return autoPtr<partitioningModel>(new cosine(*this));
+        }
+
 
     //- Destructor
     virtual ~cosine();

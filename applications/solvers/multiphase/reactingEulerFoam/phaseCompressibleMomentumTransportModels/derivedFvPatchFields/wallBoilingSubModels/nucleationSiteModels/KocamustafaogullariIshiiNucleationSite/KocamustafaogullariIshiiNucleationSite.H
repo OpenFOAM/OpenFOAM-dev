@@ -78,6 +78,21 @@ public:
         //- Construct from a dictionary
         KocamustafaogullariIshiiNucleationSite(const dictionary& dict);
 
+        //- Copy construct
+        KocamustafaogullariIshiiNucleationSite
+        (
+            const KocamustafaogullariIshiiNucleationSite& model
+        );
+
+        //- Construct and return a clone
+        virtual autoPtr<nucleationSiteModel> clone() const
+        {
+            return autoPtr<nucleationSiteModel>
+            (
+                new KocamustafaogullariIshiiNucleationSite(*this)
+            );
+        }
+
 
     //- Destructor
     virtual ~KocamustafaogullariIshiiNucleationSite();

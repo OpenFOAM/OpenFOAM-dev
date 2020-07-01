@@ -64,6 +64,18 @@ KocamustafaogullariIshiiDepartureDiameter
 {}
 
 
+Foam::wallBoilingModels::departureDiameterModels::
+KocamustafaogullariIshiiDepartureDiameter::
+KocamustafaogullariIshiiDepartureDiameter
+(
+    const KocamustafaogullariIshiiDepartureDiameter& model
+)
+:
+    departureDiameterModel(),
+    phi_(model.phi_)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::wallBoilingModels::departureDiameterModels::

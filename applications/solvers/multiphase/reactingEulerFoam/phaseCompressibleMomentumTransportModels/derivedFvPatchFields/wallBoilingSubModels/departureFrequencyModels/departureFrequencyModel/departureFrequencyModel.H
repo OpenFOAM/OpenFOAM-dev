@@ -79,8 +79,11 @@ public:
         //- Construct null
         departureFrequencyModel();
 
-        //- Disallow default bitwise copy construction
-        departureFrequencyModel(const departureFrequencyModel&) = delete;
+        //- Copy construct
+        departureFrequencyModel(const departureFrequencyModel& model);
+
+        //- Construct and return a clone
+        virtual autoPtr<departureFrequencyModel> clone() const = 0;
 
 
     // Selectors
