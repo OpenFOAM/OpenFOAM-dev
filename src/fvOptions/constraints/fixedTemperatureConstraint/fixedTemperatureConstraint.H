@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,8 @@ Usage
 
         // For lookup option
         // T            <Tname>;      // optional temperature field name
+
+        phase           gas; // optional
     }
     \endverbatim
 
@@ -104,6 +106,9 @@ protected:
 
         //- Temperature field name
         word TName_;
+
+        //- Optional phase name
+        word phase_;
 
 
 public:
