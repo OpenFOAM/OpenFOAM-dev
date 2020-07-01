@@ -1,0 +1,111 @@
+#!/bin/sh
+
+usage () {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat <<USAGE
+
+Usage: ${0##*/} [OPTIONS]
+options:
+  -d | -distort        distort the mesh
+  -h | -help           help
+  -p | -pBC <type>     set BC for p on the atmosphere patch
+  -U | -UBC <type>     set BC for U on the atmosphere patch
+
+CFD simulation to demonstrate boundary conditions at a patch with mixed inflow
+and outflow. The user can set the boundary condition on the atmosphere patch
+with options:
++ p: totalPressure (default) or fixedValue
++ U: pressureInletOutletVelocity (default) or zeroGradient
+
+USAGE
+    exit 1
+}
+
+distort () {
+    wmake distortMesh
+    runApplication distortMesh
+    rm 0/meshPhi;
+    mv 0/polyMesh/points constant/polyMesh
+    rm -rf 0/polyMesh
+}
+
+setAtmosphereBC () {
+    _field="$1"
+    _BC="$2"
+
+    echo "Setting $_field BC on atmosphere patch to $_BC"
+
+    foamDictionary \
+        -entry boundaryField.atmosphere.type \
+        -set "$_BC" \
+        "0/$_field" > /dev/null 2>&1
+}
+
+# VARIABLES
+distort=""
+pBC=""
+UBC=""
+
+# OPTIONS
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -d | -distort)
+        distort="yes"
+        shift
+        ;;
+    -h | -help)
+        usage
+        ;;
+    -p | -pBC)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        pBC="$2"
+        shift 2
+        ;;
+    -U | -UBC)
+        [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+        UBC="$2"
+        shift 2
+        ;;
+    -*)
+        usage "Invalid option '$1'"
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+case "$pBC" in
+    totalPressure|fixedValue|"") ;;
+    *)
+      usage "Invalid boundary condition '$pBC' for p."\
+            "Valid options: 'totalPressure', 'fixedValue'."
+      ;;
+esac
+
+case "$UBC" in
+    pressureInletOutletVelocity|zeroGradient|"") ;;
+    *)
+      usage "Invalid boundary condition '$UBC' for U."\
+            "Valid options: 'pressureInletOutletVelocity', 'zeroGradient'."
+      ;;
+esac
+
+# Run from this directory
+cd "${0%/*}" || exit 1
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+runApplication blockMesh
+[ "$distort" ] && distort
+runApplication extrudeMesh
+
+[ "$pBC" ] && setAtmosphereBC p "$pBC"
+[ "$UBC" ] && setAtmosphereBC U "$UBC"
+
+runApplication "$(getApplication)"
+
+#------------------------------------------------------------------------------
