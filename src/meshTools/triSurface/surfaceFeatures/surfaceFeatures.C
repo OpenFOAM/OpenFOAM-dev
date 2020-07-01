@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1540,10 +1540,7 @@ void Foam::selectCutEdges
 
         // If edge does not intersect the plane, delete.
         const scalar intersect = cutPlane.lineIntersect(line);
-
-        const point featPoint = intersect*(p1 - p0) + p0;
-
-        if (!line.insideBoundBox(featPoint))
+        if (intersect < 0 || intersect > 1)
         {
             edgeStat[edgei] = surfaceFeatures::NONE;
         }
