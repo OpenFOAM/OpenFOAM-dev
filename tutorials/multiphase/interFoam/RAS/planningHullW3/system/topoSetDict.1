@@ -1,0 +1,93 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    {
+        name    c1;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box (-4.0 -3.0 -2) (4.0 0 3.0);
+        }
+    }
+    {
+        name    c2;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box (-3.0 -2.0 -1.4) (3.5 0 1.7);
+        }
+    }
+    {
+        name    c3;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box (-2.5 -0.8 -0.6) (3.0 0 0.8);
+        }
+    }
+    {
+        name    c4;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box (-2.0 -0.6 -0.4) (2.5 0 0.5);
+        }
+    }
+    {
+        name    c5;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box (-1.0 -0.4 -0.2) (2.2 0.0 0.4);
+        }
+    }
+    {
+        name    c6;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box (-0.8 -0.4 -0.1) (2.1 0.0 0.35);
+        }
+    }
+
+    {
+        name    c7;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        sourceInfo
+        {
+            box (-0.2 -0.25 -0.05) (2.05 0.0 0.3);
+        }
+    }
+);
+
+// ************************************************************************* //

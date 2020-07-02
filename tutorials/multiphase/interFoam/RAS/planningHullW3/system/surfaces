@@ -1,0 +1,41 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+
+surfaces
+{
+    type            surfaces;
+    libs            ("libsampling.so");
+    writeControl    runTime;
+    writeInterval   0.02;
+
+    surfaceFormat   vtk;
+    writeFormat     binary;
+    fields          (alpha.water);
+
+    interpolationScheme cellPoint;
+
+    surfaces
+    (
+        iso-alpha
+        {
+            type            isoSurface;
+            isoField        alpha.water;
+            isoValue        0.5;
+            interpolate     true;
+        }
+
+        hull
+        {
+            type            patch;
+            patches         (hull);
+            interpolate     true;
+        }
+    );
+}
+
+// ************************************************************************* //

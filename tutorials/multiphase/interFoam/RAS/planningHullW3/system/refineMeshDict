@@ -1,0 +1,43 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    location        "system";
+    object          refineMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+set             c7;
+
+coordinateSystem global;
+
+globalCoeffs
+{
+    tan1            ( 1 0 0 );
+    tan2            ( 0 1 0 );
+}
+
+patchLocalCoeffs
+{
+    patch           outside;
+    tan1            ( 1 0 0 );
+}
+
+directions      ( tan1 tan2 );
+
+useHexTopology  no;
+
+geometricCut    yes;
+
+writeMesh       no;
+
+
+// ************************************************************************* //

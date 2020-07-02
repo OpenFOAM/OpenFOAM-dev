@@ -1,0 +1,221 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#inputSyntax slash;
+
+backgroundMesh
+{
+    xMin    -14;
+    xMax      6;
+    yMin     -5;
+    yMax      0;
+    zMin     -7;
+    zMid1  -2.4;
+    zMid2  -0.6;
+    zMid3  -0.05;
+    zMid4   0.1;
+    zMid5   0.4;
+    zMax      3;
+
+    xCells   20;
+    yCells   4;
+
+    zCells1  10;
+    zCells2  8;
+    zCells3  32;
+    zCells4  48;
+    zCells5  40;
+    zCells6  8;
+}
+
+
+convertToMeters 1;
+
+vertices
+(
+    ($!backgroundMesh/xMin $!backgroundMesh/yMin $!backgroundMesh/zMin) // 0
+    ($!backgroundMesh/xMax $!backgroundMesh/yMin $!backgroundMesh/zMin) // 1
+    ($!backgroundMesh/xMax $!backgroundMesh/yMax $!backgroundMesh/zMin) // 2
+    ($!backgroundMesh/xMin $!backgroundMesh/yMax $!backgroundMesh/zMin) // 3
+
+    ($!backgroundMesh/xMin $!backgroundMesh/yMin $!backgroundMesh/zMid1) // 4
+    ($!backgroundMesh/xMax $!backgroundMesh/yMin $!backgroundMesh/zMid1) // 5
+    ($!backgroundMesh/xMax $!backgroundMesh/yMax $!backgroundMesh/zMid1) // 6
+    ($!backgroundMesh/xMin $!backgroundMesh/yMax $!backgroundMesh/zMid1) // 7
+
+    ($!backgroundMesh/xMin $!backgroundMesh/yMin $!backgroundMesh/zMid2) // 8
+    ($!backgroundMesh/xMax $!backgroundMesh/yMin $!backgroundMesh/zMid2) // 9
+    ($!backgroundMesh/xMax $!backgroundMesh/yMax $!backgroundMesh/zMid2) // 10
+    ($!backgroundMesh/xMin $!backgroundMesh/yMax $!backgroundMesh/zMid2) // 11
+
+    ($!backgroundMesh/xMin $!backgroundMesh/yMin $!backgroundMesh/zMid3) // 12
+    ($!backgroundMesh/xMax $!backgroundMesh/yMin $!backgroundMesh/zMid3) // 13
+    ($!backgroundMesh/xMax $!backgroundMesh/yMax $!backgroundMesh/zMid3) // 14
+    ($!backgroundMesh/xMin $!backgroundMesh/yMax $!backgroundMesh/zMid3) // 15
+
+    ($!backgroundMesh/xMin $!backgroundMesh/yMin $!backgroundMesh/zMid4) // 16
+    ($!backgroundMesh/xMax $!backgroundMesh/yMin $!backgroundMesh/zMid4) // 17
+    ($!backgroundMesh/xMax $!backgroundMesh/yMax $!backgroundMesh/zMid4) // 18
+    ($!backgroundMesh/xMin $!backgroundMesh/yMax $!backgroundMesh/zMid4) // 19
+
+    ($!backgroundMesh/xMin $!backgroundMesh/yMin $!backgroundMesh/zMid5) // 20
+    ($!backgroundMesh/xMax $!backgroundMesh/yMin $!backgroundMesh/zMid5) // 21
+    ($!backgroundMesh/xMax $!backgroundMesh/yMax $!backgroundMesh/zMid5) // 22
+    ($!backgroundMesh/xMin $!backgroundMesh/yMax $!backgroundMesh/zMid5) // 23
+
+    ($!backgroundMesh/xMin $!backgroundMesh/yMin $!backgroundMesh/zMax) // 24
+    ($!backgroundMesh/xMax $!backgroundMesh/yMin $!backgroundMesh/zMax) // 25
+    ($!backgroundMesh/xMax $!backgroundMesh/yMax $!backgroundMesh/zMax) // 26
+    ($!backgroundMesh/xMin $!backgroundMesh/yMax $!backgroundMesh/zMax) // 27
+);
+
+blocks
+(
+    // Block 1
+    hex (0 1 2 3 4 5 6 7)
+    (
+        $!backgroundMesh/xCells
+        $!backgroundMesh/yCells
+        $!backgroundMesh/zCells1
+    )
+    simpleGrading (1 0.5 0.2)
+
+    // Block 2
+    hex (4 5 6 7 8 9 10 11)
+    (
+        $!backgroundMesh/xCells
+        $!backgroundMesh/yCells
+        $!backgroundMesh/zCells2
+    )
+    simpleGrading (1 0.5 1)
+
+    // Block 3
+    hex (8 9 10 11 12 13 14 15)
+    (
+        $!backgroundMesh/xCells
+        $!backgroundMesh/yCells
+        $!backgroundMesh/zCells3
+    )
+    simpleGrading (1 0.5 0.1)
+
+    // Block 4
+    hex (12 13 14 15 16 17 18 19)
+    (
+        $!backgroundMesh/xCells
+        $!backgroundMesh/yCells
+        $!backgroundMesh/zCells4
+    )
+    simpleGrading (1 0.5 1)
+
+    // Block 5
+    hex (16 17 18 19 20 21 22 23)
+    (
+        $!backgroundMesh/xCells
+        $!backgroundMesh/yCells
+        $!backgroundMesh/zCells5
+    )
+    simpleGrading (1 0.5 2)
+
+    // Block 6
+    hex (20 21 22 23 24 25 26 27)
+    (
+        $!backgroundMesh/xCells
+        $!backgroundMesh/yCells
+        $!backgroundMesh/zCells6
+    )
+    simpleGrading (1 0.5 20)
+);
+
+edges
+(
+);
+
+boundary
+(
+    atmosphere
+    {
+        type patch;
+        faces
+        (
+            (24 25 26 27)
+        );
+    }
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (1 2 6 5)
+            (5 6 10 9)
+            (9 10 14 13)
+            (13 14 18 17)
+            (17 18 22 21)
+            (21 22 26 25)
+        );
+    }
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (0 4 7 3)
+            (4 8 11 7)
+            (8 12 15 11)
+            (12 16 19 15)
+            (16 20 23 19)
+            (20 24 27 23)
+        );
+    }
+    bottom
+    {
+        type symmetryPlane;
+        faces
+        (
+            (0 3 2 1)
+        );
+    }
+    side
+    {
+        type symmetryPlane;
+        faces
+        (
+            (0 1 5 4)
+            (4 5 9 8)
+            (8 9 13 12)
+            (12 13 17 16)
+            (16 17 21 20)
+            (20 21 25 24)
+        );
+    }
+    midPlane
+    {
+        type symmetryPlane;
+        faces
+        (
+            (3 7 6 2)
+            (7 11 10 6)
+            (11 15 14 10)
+            (15 19 18 14)
+            (19 23 22 18)
+            (23 27 26 22)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

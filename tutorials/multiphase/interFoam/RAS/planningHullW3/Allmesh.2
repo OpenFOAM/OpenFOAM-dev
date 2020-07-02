@@ -1,0 +1,29 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # Run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+runApplication surfaceTransformPoints -translate '(-0.586 0 -0.156)' \
+               constant/triSurface/w3_orig.stl constant/triSurface/w3.stl
+runApplication -a surfaceTransformPoints -rollPitchYaw '(0 -3.485 0)' \
+               constant/triSurface/w3.stl constant/triSurface/w3.stl
+runApplication -a surfaceTransformPoints -translate '(0.586 0 0.156)' \
+               constant/triSurface/w3.stl constant/triSurface/w3.stl
+
+runApplication surfaceFeatures
+
+runApplication blockMesh -dict system/blockMeshDict.2
+
+for i in 1 2 3 4
+do
+    runApplication -a foamDictionary system/refineMeshDict -entry set -set c${i}
+    runApplication -a topoSet -dict system/topoSetDict.2
+    runApplication -a refineMesh -dict system/refineMeshDict -overwrite
+done
+
+runApplication snappyHexMesh -dict system/snappyHexMeshDict.2 -overwrite
+
+runApplication renumberMesh -noFields -overwrite
+
+#------------------------------------------------------------------------------

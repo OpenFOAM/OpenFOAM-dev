@@ -1,0 +1,49 @@
+Overview
+========
++ W3 example case of hydrodynamics of a planing hull
+
+Mesh
+====
++ The example includes two different approaches for meshing the case
++ The first approach uses no cell refinement in the vertical direction
++ The second approach includes local cell refinement, producing a smaller mesh
++ Cell refinement can cause disturbances of the interface
++ Where refinement is present, PLIC-based schemes perform much better,
+  producing far less interface disturbance than the standard interface
+  compression scheme.
++ The first approach has the advantage of avoiding interface disturbances but
+  for the potential cost of a larger mesh than with local refinement
+
+Experimental results (ref. 1)
+=============================
++ Velocity = 4.598 m/s
++ Trim angle = 3.485 deg
++ Drag = 50.691 N
+
+Numerical results mesh 1
+========================
+Without local refinement
++ Velocity = 4.598 m/s
++ Trim angle = 2.794 deg
++ Drag = 48.616 N
+
+Numerical results mesh 2
+========================
+With local refinement
++ Velocity = 4.598 m/s
++ Trim angle = 3.027 deg
++ Drag = 47.987 N
+
+Acknowledgment
+==============
++ Thanks to Raffaele Ponzini, Ph.D. Eng. from CINECA, for kindly sharing the
+  W3 hull geometry and for his valuable insight into the science of ship hulls
+
+References
+==========
+1. Begovic, E. and Bertorello, C., 2012. Resistance assessment of warped
+hullform. Ocean Engineering, 56, pp.28-42
+
+2. Ponzini, R., Salvadore, F., Begovic, E. and Bertorello, C., 2020.
+Automatic CFD Analysis Of Planing Hulls By Means Of A New Web-Based Application:
+Usage, Experimental Data Comparison And Opportunities

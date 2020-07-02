@@ -1,0 +1,75 @@
+#!/bin/sh
+
+usage () {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat <<USAGE
+Usage: ${0##*/} [OPTIONS]
+
+Options:
+  -i | -interface      no refinment in vertical direction of the mesh
+  -l | -local          mesh with local refinment
+  -h | -help           help
+
+Ship hull simulation to demonstrate two different meshing strategies that can be
+used with PLIC type schemes.
+
+USAGE
+    exit 1
+}
+
+meshType=0
+
+# OPTIONS
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+    -i | -interface)
+        meshType=1
+        break
+        ;;
+    -l | -local)
+        meshType=2
+        break
+        ;;
+    -h | -help)
+        usage
+        ;;
+    -*)
+        usage "Invalid option '$1'"
+        ;;
+    *)
+        usage "Invalid option '$1'"
+        break
+        ;;
+    esac
+done
+
+
+# Run from this directory
+cd "${0%/*}" || exit 1
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+if [ $meshType -eq 0 ] || [ $meshType -eq 1 ]; then
+{
+    ./Allmesh.1
+}
+elif [$meshType -eq 2 ]; then
+{
+    ./Allmesh.2
+}
+fi
+
+runApplication setFields
+
+runApplication decomposePar
+
+runParallel $(getApplication)
+
+runApplication reconstructPar
+
+runApplication foamSequenceVTKFiles
+
+#------------------------------------------------------------------------------
