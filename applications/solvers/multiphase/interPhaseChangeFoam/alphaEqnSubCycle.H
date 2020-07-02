@@ -1,30 +1,33 @@
-#include "alphaControls.H"
-
+if (nAlphaSubCycles > 1)
 {
-    // Standard face-flux compression coefficient
-    surfaceScalarField phic(cAlpha*mag(phi/mesh.magSf()));
-
-    if (nAlphaSubCycles > 1)
-    {
-        dimensionedScalar totalDeltaT = runTime.deltaT();
-        surfaceScalarField rhoPhiSum("rhoPhiSum", rhoPhi);
-
-        for
+    dimensionedScalar totalDeltaT = runTime.deltaT();
+    surfaceScalarField rhoPhiSum
+    (
+        IOobject
         (
-            subCycle<volScalarField> alphaSubCycle(alpha1, nAlphaSubCycles);
-            !(++alphaSubCycle).end();
-        )
-        {
-            #include "alphaEqn.H"
-            rhoPhiSum += (runTime.deltaT()/totalDeltaT)*rhoPhi;
-        }
+            "rhoPhiSum",
+            runTime.timeName(),
+            mesh
+        ),
+        mesh,
+        dimensionedScalar(rhoPhi.dimensions(), 0)
+    );
 
-        rhoPhi = rhoPhiSum;
-    }
-    else
+    for
+    (
+        subCycle<volScalarField> alphaSubCycle(alpha1, nAlphaSubCycles);
+        !(++alphaSubCycle).end();
+    )
     {
         #include "alphaEqn.H"
+        rhoPhiSum += (runTime.deltaT()/totalDeltaT)*rhoPhi;
     }
 
-    rho == alpha1*rho1 + alpha2*rho2;
+    rhoPhi = rhoPhiSum;
 }
+else
+{
+    #include "alphaEqn.H"
+}
+
+rho == alpha1*rho1 + alpha2*rho2;

@@ -21,7 +21,6 @@ solvers
     {
         nAlphaCorr      1;
         nAlphaSubCycles 3;
-        cAlpha          1.5;
     }
 
     ".*(rho|rhoFinal)"

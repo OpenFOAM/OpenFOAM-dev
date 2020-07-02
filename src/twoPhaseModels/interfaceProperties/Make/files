@@ -1,5 +1,4 @@
 interfaceProperties.C
-interfaceCompression/interfaceCompression.C
 
 surfaceTensionModels/surfaceTensionModel/surfaceTensionModel.C
 surfaceTensionModels/surfaceTensionModel/newSurfaceTensionModel.C

@@ -1,5 +1,3 @@
-#include "alphaControls.H"
-
 tmp<surfaceScalarField> talphaPhi1(alphaPhi10);
 
 if (nAlphaSubCycles > 1)

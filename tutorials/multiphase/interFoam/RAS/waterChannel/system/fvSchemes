@@ -30,8 +30,7 @@ divSchemes
     default             none;
 
     div(rhoPhi,U)       Gauss linearUpwind grad(U);
-    div(phi,alpha)      Gauss vanLeer;
-    div(phirb,alpha)    Gauss linear;
+    div(phi,alpha)  Gauss interfaceCompression vanLeer 1;
 
     "div\(phi,(k|omega)\)"      Gauss upwind;
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;

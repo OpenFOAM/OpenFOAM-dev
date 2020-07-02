@@ -21,7 +21,6 @@ solvers
     {
         nAlphaCorr      1;
         nAlphaSubCycles 1;
-        cAlpha          1;
 
         MULESCorr       yes;
         nLimiterIter    3;

@@ -1,6 +1,5 @@
 {
-    word alphaScheme("div(phi,alpha)");
-    word alpharScheme("div(phirb,alpha)");
+    #include "alphaScheme.H"
 
     // Set the off-centering coefficient according to ddt scheme
     scalar ocCoeff = 0;
@@ -55,38 +54,16 @@
     // Set the time blending factor, 1 for Euler
     scalar cnCoeff = 1.0/(1.0 + ocCoeff);
 
-    // Standard face-flux compression coefficient
-    surfaceScalarField phic(cAlpha*mag(phi/mesh.magSf()));
-
-    // Add the optional shear compression contribution
-    if (scAlpha > 0)
-    {
-        phic +=
-            scAlpha*mag(mesh.delta() & fvc::interpolate(symm(fvc::grad(U))));
-    }
-
-
-    surfaceScalarField::Boundary& phicBf =
-        phic.boundaryFieldRef();
-
-    // Do not compress interface at non-coupled boundary faces
-    // (inlets, outlets etc.)
-    forAll(phic.boundaryField(), patchi)
-    {
-        fvsPatchScalarField& phicp = phicBf[patchi];
-
-        if (!phicp.coupled())
-        {
-            phicp == 0;
-        }
-    }
-
     tmp<surfaceScalarField> phiCN(phi);
 
     // Calculate the Crank-Nicolson off-centred volumetric flux
     if (ocCoeff > 0)
     {
-        phiCN = cnCoeff*phi + (1.0 - cnCoeff)*phi.oldTime();
+        phiCN = surfaceScalarField::New
+        (
+            "phiCN",
+            cnCoeff*phi + (1.0 - cnCoeff)*phi.oldTime()
+        );
     }
 
     if (MULESCorr)
@@ -147,26 +124,18 @@
         mixture.correct();
     }
 
-
     for (int aCorr=0; aCorr<nAlphaCorr; aCorr++)
     {
         #include "alphaSuSp.H"
 
-        surfaceScalarField phir(phic*mixture.nHatf());
-
+        // Split operator
         tmp<surfaceScalarField> talphaPhi1Un
         (
             fvc::flux
             (
                 phiCN(),
-                cnCoeff*alpha1 + (1.0 - cnCoeff)*alpha1.oldTime(),
-                alphaScheme
-            )
-          + fvc::flux
-            (
-               -fvc::flux(-phir, alpha2, alpharScheme),
-                alpha1,
-                alpharScheme
+                (cnCoeff*alpha1 + (1.0 - cnCoeff)*alpha1.oldTime())(),
+                compressionScheme.rewind()
             )
         );
 

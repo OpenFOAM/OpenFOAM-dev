@@ -138,6 +138,7 @@ int main(int argc, char *argv[])
 
             divU = fvc::div(fvc::absolute(phi, U));
 
+            #include "alphaControls.H"
             #include "compressibleAlphaEqnSubCycle.H"
 
             turbulence.correctPhasePhi();

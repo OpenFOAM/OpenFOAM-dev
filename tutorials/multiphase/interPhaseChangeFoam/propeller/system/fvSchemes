@@ -30,8 +30,7 @@ divSchemes
 {
     default             none;
 
-    div(phi,alpha)      Gauss vanLeer;
-    div(phirb,alpha)    Gauss linear;
+    div(phi,alpha)  Gauss interfaceCompression vanLeer 1;
     div(rhoPhi,U)       Gauss linearUpwind grad(U);
     div(phi,k)          Gauss upwind;
     div(phi,epsilon)    Gauss upwind;

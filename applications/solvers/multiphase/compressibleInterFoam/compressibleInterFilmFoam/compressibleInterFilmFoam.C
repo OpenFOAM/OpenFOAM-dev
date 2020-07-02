@@ -105,6 +105,7 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
+            #include "alphaControls.H"
             #include "compressibleAlphaEqnSubCycle.H"
 
             turbulence.correctPhasePhi();

@@ -29,8 +29,7 @@ gradSchemes
 divSchemes
 {
     div(rhoPhi,U)   Gauss linearUpwind grad(U);
-    div(phi,alpha)  Gauss vanLeer;
-    div(phirb,alpha) Gauss linear;
+    div(phi,alpha)  Gauss interfaceCompression vanLeer 1;
     div(phi,k)      Gauss linearUpwind limitedGrad;
     div(phi,omega)  Gauss linearUpwind limitedGrad;
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;

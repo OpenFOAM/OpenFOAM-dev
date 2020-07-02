@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,19 +23,62 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "PhiScheme.H"
 #include "interfaceCompression.H"
+#include "linear.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    makePhiSurfaceInterpolationScheme
-    (
-        interfaceCompression,
-        interfaceCompressionLimiter,
-        scalar
-    )
+    defineTypeNameAndDebug(interfaceCompressionNew, 0);
+
+    surfaceInterpolationScheme<scalar>::
+        addMeshFluxConstructorToTable<interfaceCompressionNew>
+        addinterfaceCompressionScalarMeshFluxConstructorToTable_;
 }
+
+
+Foam::tmp<Foam::surfaceScalarField>
+Foam::interfaceCompressionNew::interpolate
+(
+    const volScalarField& vf
+) const
+{
+    const surfaceScalarField& nHatf =
+        mesh().lookupObject<const surfaceScalarField>
+        (
+            "nHatf"
+        );
+
+    const surfaceScalarField vff
+    (
+        linear<scalar>(mesh()).interpolate(vf)
+    );
+
+    surfaceScalarField vfc
+    (
+        cAlpha_*sign(phi_)*vff*(1 - vff)*nHatf/mesh().magSf()
+    );
+
+    surfaceScalarField::Boundary& vfcBf = vfc.boundaryFieldRef();
+
+    // Do not compress interface at non-coupled boundary faces
+    // (inlets, outlets etc.)
+    forAll(vfc.boundaryField(), patchi)
+    {
+        fvsPatchScalarField& vfcp = vfcBf[patchi];
+
+        if (!vfcp.coupled())
+        {
+            vfcp == 0;
+        }
+    }
+
+    tmp<surfaceScalarField> tvff(tScheme_().interpolate(vf) + vfc);
+    tvff.ref().maxMin(0, 1);
+
+    return tvff;
+}
+
 
 // ************************************************************************* //

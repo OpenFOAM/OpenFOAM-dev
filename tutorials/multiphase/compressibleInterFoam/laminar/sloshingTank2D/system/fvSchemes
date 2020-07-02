@@ -27,8 +27,7 @@ gradSchemes
 
 divSchemes
 {
-    div(phi,alpha)  Gauss vanLeer;
-    div(phirb,alpha) Gauss linear;
+    div(phi,alpha)  Gauss interfaceCompression vanLeer 1;
 
     div(rhoPhi,U)  Gauss vanLeerV;
     div(rhoPhi,T)  Gauss vanLeer;

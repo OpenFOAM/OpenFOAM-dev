@@ -1,8 +1,5 @@
 {
-    word alphaScheme("div(phi,alpha)");
-    word alpharScheme("div(phirb,alpha)");
-
-    surfaceScalarField phir("phir", phic*mixture.nHatf());
+    #include "alphaScheme.H"
 
     Pair<tmp<volScalarField>> vDotAlphal = mixture.vDotAlphal();
     const volScalarField& vDotcAlphal = vDotAlphal[0]();
@@ -49,13 +46,7 @@
             (
                 phi,
                 alpha1,
-                alphaScheme
-            )
-          + fvc::flux
-            (
-                -fvc::flux(-phir, alpha2, alpharScheme),
-                alpha1,
-                alpharScheme
+                compressionScheme.rewind()
             )
         );
 
