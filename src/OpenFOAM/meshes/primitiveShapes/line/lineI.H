@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -254,23 +254,6 @@ Foam::scalar Foam::line<Point, PointRef>::nearestDist
     }
 
     return Foam::mag(thisPt - edgePt);
-}
-
-
-template<class Point, class PointRef>
-bool Foam::line<Point, PointRef>::insideBoundBox(const Point& p) const
-{
-    if
-    (
-        ( p.x() < min(a_.x(), b_.x()) || p.x() > max(a_.x(), b_.x()) )
-     || ( p.y() < min(a_.y(), b_.y()) || p.y() > max(a_.y(), b_.y()) )
-     || ( p.z() < min(a_.z(), b_.z()) || p.z() > max(a_.z(), b_.z()) )
-    )
-    {
-        return false;
-    }
-
-    return true;
 }
 
 
