@@ -21,9 +21,9 @@ thermoType
     mixture         multiComponentMixture;
     transport       sutherland;
     thermo          janaf;
-    equationOfState incompressiblePerfectGas;
+    equationOfState perfectGas;
     specie          specie;
-    energy          sensibleInternalEnergy;
+    energy          sensibleEnthalpy;
 }
 
 inertSpecie N2;

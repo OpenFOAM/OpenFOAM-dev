@@ -22,9 +22,7 @@ O2
         molWeight       31.9988;
     }
     equationOfState
-    {
-        pRef            1e6;
-    }
+    {}
     thermodynamics
     {
         Tlow            200;
@@ -47,9 +45,7 @@ H2O
         molWeight       18.0153;
     }
     equationOfState
-    {
-        pRef            1e6;
-    }
+    {}
     thermodynamics
     {
         Tlow            200;
@@ -72,9 +68,7 @@ CH4
         molWeight       16.0428;
     }
     equationOfState
-    {
-        pRef            1e6;
-    }
+    {}
     thermodynamics
     {
         Tlow            200;
@@ -97,9 +91,7 @@ CO2
         molWeight       44.01;
     }
     equationOfState
-    {
-        pRef            1e6;
-    }
+    {}
     thermodynamics
     {
         Tlow            200;
@@ -122,9 +114,7 @@ N2
         molWeight       28.0134;
     }
     equationOfState
-    {
-        pRef            1e6;
-    }
+    {}
     thermodynamics
     {
         Tlow            200;
