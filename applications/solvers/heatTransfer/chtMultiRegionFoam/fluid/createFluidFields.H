@@ -5,6 +5,7 @@ PtrList<volVectorField> UFluid(fluidRegions.size());
 PtrList<surfaceScalarField> phiFluid(fluidRegions.size());
 PtrList<uniformDimensionedVectorField> gFluid(fluidRegions.size());
 PtrList<uniformDimensionedScalarField> hRefFluid(fluidRegions.size());
+PtrList<uniformDimensionedScalarField> pRefFluid(fluidRegions.size());
 PtrList<volScalarField> ghFluid(fluidRegions.size());
 PtrList<surfaceScalarField> ghfFluid(fluidRegions.size());
 PtrList<compressible::momentumTransportModel>
@@ -123,6 +124,24 @@ forAll(fluidRegions, i)
         )
     );
 
+    Info<< "    Adding to pRefFluid\n" << endl;
+    pRefFluid.set
+    (
+        i,
+        new uniformDimensionedScalarField
+        (
+            IOobject
+            (
+                "pRef",
+                runTime.constant(),
+                fluidRegions[i],
+                IOobject::READ_IF_PRESENT,
+                IOobject::NO_WRITE
+            ),
+            dimensionedScalar(dimPressure, 0)
+        )
+    );
+
     dimensionedScalar ghRef(- mag(gFluid[i])*hRefFluid[i]);
 
     Info<< "    Adding to ghFluid\n" << endl;
@@ -200,7 +219,7 @@ forAll(fluidRegions, i)
     );
 
     // Force p_rgh to be consistent with p
-    p_rghFluid[i] = thermoFluid[i].p() - rhoFluid[i]*ghFluid[i];
+    p_rghFluid[i] = thermoFluid[i].p() - rhoFluid[i]*ghFluid[i] - pRefFluid[i];
 
     fluidRegions[i].setFluxRequired(p_rghFluid[i].name());
 

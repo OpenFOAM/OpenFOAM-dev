@@ -23,19 +23,19 @@ boundaryField
     floor
     {
         type            fixedFluxPressure;
-        value           uniform 0;
+        value           $internalField;
     }
 
     ceiling
     {
         type            fixedFluxPressure;
-        value           uniform 0;
+        value           $internalField;
     }
 
     fixedWalls
     {
         type            fixedFluxPressure;
-        value           uniform 0;
+        value           $internalField;
     }
 }
 

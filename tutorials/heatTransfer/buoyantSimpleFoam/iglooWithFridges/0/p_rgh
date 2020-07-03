@@ -26,7 +26,7 @@ boundaryField
     wall
     {
         type            fixedFluxPressure;
-        value           uniform 0;
+        value           $internalField;
     }
 }
 

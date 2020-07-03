@@ -17,7 +17,7 @@ FoamFile
 
 dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform 101325;
+internalField   uniform 0;
 
 boundaryField
 {
@@ -27,31 +27,31 @@ boundaryField
     floor
     {
         type            fixedFluxPressure;
-        gradient        uniform 0;
-        value           uniform 101325;
+        value           $internalField;
     }
+
     ceiling
     {
         type            fixedFluxPressure;
-        gradient        uniform 0;
-        value           uniform 101325;
+        value           $internalField;
     }
+
     inlet
     {
         type            fixedFluxPressure;
-        gradient        uniform 0;
-        value           uniform 101325;
+        value           $internalField;
     }
+
     outlet
     {
         type            fixedValue;
-        value           uniform 101325;
+        value           $internalField;
     }
+
     fixedWalls
     {
         type            empty;
     }
-
 }
 
 

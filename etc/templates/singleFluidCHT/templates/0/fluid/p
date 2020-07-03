@@ -25,13 +25,13 @@ boundaryField
     outlet
     {
         type            calculated;
-        value           uniform $pInitial;
+        value           $internalField;
     }
 
     inlet
     {
         type            calculated;
-        value           uniform $pInitial;
+        value           $internalField;
     }
 
     wall

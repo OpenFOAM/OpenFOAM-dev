@@ -9,36 +9,15 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volScalarField;
-    location    "0";
-    object      p_rgh;
+    class       uniformDimensionedScalarField;
+    location    "constant";
+    object      pRef;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#include "$FOAM_CASE/constant/initialConditions"
+
 dimensions      [1 -1 -2 0 0 0 0];
-
-internalField   uniform 0;
-
-boundaryField
-{
-    walls
-    {
-        type            fixedFluxPressure;
-    }
-    inlet
-    {
-        type            fixedFluxPressure;
-    }
-    outlet
-    {
-        type            fixedValue;
-        value           $internalField;
-    }
-    blades
-    {
-        type            fixedFluxPressure;
-    }
-}
-
+value           $pInitial;
 
 // ************************************************************************* //

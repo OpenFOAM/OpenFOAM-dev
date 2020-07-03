@@ -16,32 +16,32 @@ FoamFile
 
 dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform 100000;
+internalField   uniform 1e5;
 
 boundaryField
 {
     floor
     {
         type            calculated;
-        value           uniform 100000;
+        value           $internalField;
     }
 
     ceiling
     {
         type            calculated;
-        value           uniform 100000;
+        value           $internalField;
     }
 
     fixedWalls
     {
         type            calculated;
-        value           uniform 100000;
+        value           $internalField;
     }
 
     box
     {
         type            calculated;
-        value           uniform 100000;
+        value           $internalField;
     }
 }
 

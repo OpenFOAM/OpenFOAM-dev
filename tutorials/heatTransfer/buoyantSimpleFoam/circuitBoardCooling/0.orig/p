@@ -17,7 +17,7 @@ FoamFile
 
 dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform 101325;
+internalField   uniform 1e5;
 
 boundaryField
 {
@@ -27,28 +27,31 @@ boundaryField
     floor
     {
         type            calculated;
-        value           uniform 101325;
+        value           $internalField;
     }
+
     ceiling
     {
         type            calculated;
-        value           uniform 101325;
+        value           $internalField;
     }
+
     inlet
     {
         type            calculated;
-        value           uniform 101325;
+        value           $internalField;
     }
+
     outlet
     {
         type            calculated;
-        value           uniform 101325;
+        value           $internalField;
     }
+
     fixedWalls
     {
         type            empty;
     }
-
 }
 
 

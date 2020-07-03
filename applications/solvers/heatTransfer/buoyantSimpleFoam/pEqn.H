@@ -77,7 +77,7 @@ else
 
 phi = phiHbyA + p_rghEqn.flux();
 
-p = p_rgh + rho*gh;
+p = p_rgh + rho*gh + pRef;
 
 #include "incompressible/continuityErrs.H"
 
@@ -98,7 +98,7 @@ if (closedVolume && !thermo.incompressible())
 {
     p += (initialMass - fvc::domainIntegrate(thermo.rho()))
         /fvc::domainIntegrate(psi);
-    p_rgh = p - rho*gh;
+    p_rgh = p - rho*gh - pRef;
     p.correctBoundaryConditions();
 }
 

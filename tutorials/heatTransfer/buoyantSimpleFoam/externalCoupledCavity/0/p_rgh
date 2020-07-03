@@ -17,32 +17,32 @@ FoamFile
 
 dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform 1e5;
+internalField   uniform 0;
 
 boundaryField
 {
     frontAndBack
     {
         type            fixedFluxPressure;
-        value           uniform 1e5;
+        value           $internalField;
     }
 
     topAndBottom
     {
         type            fixedFluxPressure;
-        value           uniform 1e5;
+        value           $internalField;
     }
 
     hot
     {
         type            fixedFluxPressure;
-        value           uniform 1e5;
+        value           $internalField;
     }
 
     cold
     {
         type            fixedFluxPressure;
-        value           uniform 1e5;
+        value           $internalField;
     }
 }
 
