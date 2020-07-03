@@ -391,6 +391,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
 {
     // Local references
     volScalarField alpha(max(alpha_, scalar(0)));
+    const phaseSystem& fluid = phase_.fluid();
     const phaseModel& continuousPhase = this->continuousPhase();
     const volScalarField& rho = phase_.rho();
     const surfaceScalarField& alphaRhoPhi = alphaRhoPhi_;
@@ -437,10 +438,17 @@ void Foam::RASModels::kineticTheoryModel::correct()
         );
 
         // Drag
-        const dragModel& drag =
-            phase_.fluid().lookupSubModel<dragModel>(phase_, continuousPhase);
-
-        volScalarField beta(drag.K());
+        volScalarField beta
+        (
+            fluid.foundSubModel<dragModel>(phase_, continuousPhase)
+          ? fluid.lookupSubModel<dragModel>(phase_, continuousPhase).K()
+          : volScalarField::New
+            (
+                "beta",
+                phase_.mesh(),
+                dimensionedScalar(dragModel::dimK, 0)
+            )
+        );
 
         // Eq. 3.25, p. 50 Js = J1 - J2
         volScalarField J1("J1", 3*beta);
