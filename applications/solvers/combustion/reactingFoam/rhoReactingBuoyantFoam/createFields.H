@@ -82,6 +82,7 @@ autoPtr<CombustionModel<rhoReactionThermo>> reaction
 #include "readGravitationalAcceleration.H"
 #include "readhRef.H"
 #include "gh.H"
+#include "readpRef.H"
 
 Info<< "Reading field p_rgh\n" << endl;
 volScalarField p_rgh
@@ -98,7 +99,7 @@ volScalarField p_rgh
 );
 
 // Force p_rgh to be consistent with p
-p_rgh = p - rho*gh;
+p_rgh = p - rho*gh - pRef;
 
 pressureControl pressureControl
 (
