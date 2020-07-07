@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -291,7 +291,7 @@ void Foam::CV2D::calcDual
 
     dualFaces.setSize(number_of_vertices());
     label dualFacei = 0;
-    labelList faceVerts(maxNvert);
+    DynamicList<label> faceVerts(maxNvert);
 
     for
     (
@@ -304,7 +304,8 @@ void Foam::CV2D::calcDual
         {
             Face_circulator fcStart = incident_faces(vit);
             Face_circulator fc = fcStart;
-            label verti = 0;
+
+            faceVerts.clear();
 
             do
             {
@@ -319,14 +320,13 @@ void Foam::CV2D::calcDual
                     }
 
                     // Look up the index of the triangle
-                    faceVerts[verti++] = fc->faceIndex();
+                    faceVerts.append(fc->faceIndex());
                 }
             } while (++fc != fcStart);
 
             if (faceVerts.size() > 2)
             {
-                dualFaces[dualFacei++] =
-                    face(labelList::subList(faceVerts, verti));
+                dualFaces[dualFacei++] = face(faceVerts);
             }
             else
             {
