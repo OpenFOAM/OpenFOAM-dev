@@ -119,8 +119,46 @@ public:
     };
 
 
-    //- Use base tracking data
-    typedef typename ParcelType::trackingData trackingData;
+    //- Class to hold temporary data during tracking
+    class trackingData
+    :
+        public ParcelType::trackingData
+    {
+    public:
+
+        enum trackPart
+        {
+            tpVelocityHalfStep,
+            tpLinearTrack,
+            tpRotationalTrack
+        };
+
+
+    private:
+
+        // Private Data
+
+            //- Which part of the integration algorithm is taking place
+            trackPart part_;
+
+
+    public:
+
+        // Constructors
+
+            //- Construct from components
+            template <class TrackCloudType>
+            inline trackingData(const TrackCloudType& cloud);
+
+
+        // Member Functions
+
+            //- Return the part of the tracking operation taking place
+            inline trackPart part() const;
+
+            //- Access to the part of the tracking operation taking place
+            inline trackPart& part();
+    };
 
 
 protected:
@@ -331,6 +369,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "CollidingParcelI.H"
+#include "CollidingParcelTrackingDataI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

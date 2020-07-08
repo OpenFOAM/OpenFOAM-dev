@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,8 +27,7 @@ template<class ParcelType>
 template<class TrackCloudType>
 inline Foam::KinematicParcel<ParcelType>::trackingData::trackingData
 (
-    const TrackCloudType& cloud,
-    trackPart part
+    const TrackCloudType& cloud
 )
 :
     ParcelType::trackingData(cloud),
@@ -59,8 +58,7 @@ inline Foam::KinematicParcel<ParcelType>::trackingData::trackingData
     rhoc_(Zero),
     Uc_(Zero),
     muc_(Zero),
-    g_(cloud.g().value()),
-    part_(part)
+    g_(cloud.g().value())
 {}
 
 
@@ -137,22 +135,6 @@ template<class ParcelType>
 inline Foam::scalar& Foam::KinematicParcel<ParcelType>::trackingData::muc()
 {
     return muc_;
-}
-
-
-template<class ParcelType>
-inline typename Foam::KinematicParcel<ParcelType>::trackingData::trackPart
-Foam::KinematicParcel<ParcelType>::trackingData::part() const
-{
-    return part_;
-}
-
-
-template<class ParcelType>
-inline typename Foam::KinematicParcel<ParcelType>::trackingData::trackPart&
-Foam::KinematicParcel<ParcelType>::trackingData::part()
-{
-    return part_;
 }
 
 

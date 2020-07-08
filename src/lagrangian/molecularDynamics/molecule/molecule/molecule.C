@@ -77,7 +77,7 @@ bool Foam::molecule::move
 
     const constantProperties& constProps(cloud.constProps(id_));
 
-    if (td.part() == 0)
+    if (td.part() == trackingData::tpVelocityHalfStep0)
     {
         // First leapfrog velocity adjust part, required before tracking+force
         // part
@@ -86,7 +86,7 @@ bool Foam::molecule::move
 
         pi_ += 0.5*trackTime*tau_;
     }
-    else if (td.part() == 1)
+    else if (td.part() == trackingData::tpLinearTrack)
     {
         // Leapfrog tracking part
 
@@ -96,7 +96,7 @@ bool Foam::molecule::move
             trackToAndHitFace(f*trackTime*v_, f, cloud, td);
         }
     }
-    else if (td.part() == 2)
+    else if (td.part() == trackingData::tpRotationalTrack)
     {
         // Leapfrog orientation adjustment, carried out before force calculation
         // but after tracking stage, i.e. rotation carried once linear motion
@@ -137,7 +137,7 @@ bool Foam::molecule::move
 
         setSitePositions(constProps);
     }
-    else if (td.part() == 3)
+    else if (td.part() == trackingData::tpVelocityHalfStep1)
     {
         // Second leapfrog velocity adjust part, required after tracking+force
         // part

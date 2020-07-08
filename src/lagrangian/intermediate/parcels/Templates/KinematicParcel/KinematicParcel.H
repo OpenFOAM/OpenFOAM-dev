@@ -50,8 +50,6 @@ SourceFiles
 #include "interpolation.H"
 #include "demandDrivenEntry.H"
 
-// #include "ParticleForceList.H" // TODO
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -155,16 +153,6 @@ public:
     :
         public ParcelType::trackingData
     {
-    public:
-
-        enum trackPart
-        {
-            tpVelocityHalfStep,
-            tpLinearTrack,
-            tpRotationalTrack
-        };
-
-
     private:
 
         // Private Data
@@ -196,10 +184,6 @@ public:
             //- Local gravitational or other body-force acceleration
             const vector& g_;
 
-            // label specifying which part of the integration
-            // algorithm is taking place
-            trackPart part_;
-
 
     public:
 
@@ -207,11 +191,7 @@ public:
 
             //- Construct from components
             template <class TrackCloudType>
-            inline trackingData
-            (
-                const TrackCloudType& cloud,
-                trackPart part = tpLinearTrack
-            );
+            inline trackingData(const TrackCloudType& cloud);
 
 
         // Member Functions
@@ -248,12 +228,6 @@ public:
 
             // Return const access to the gravitational acceleration vector
             inline const vector& g() const;
-
-            //- Return the part of the tracking operation taking place
-            inline trackPart part() const;
-
-            //- Return access to the part of the tracking operation taking place
-            inline trackPart& part();
     };
 
 

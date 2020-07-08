@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,7 +90,7 @@ public:
 
         enum trackPart
         {
-            tpLinearTrack,
+            tpPredictTrack,
             tpDampingNoTrack,
             tpPackingNoTrack,
             tpCorrectTrack,
@@ -125,7 +125,7 @@ public:
                 autoPtr<AveragingMethod<scalar>> massAverage_;
 
 
-            //- Label specifying the current part of the tracking process
+            //- Which part of the integration algorithm is taking place
             trackPart part_;
 
 
@@ -135,11 +135,7 @@ public:
 
             //- Construct from components
             template<class TrackCloudType>
-            inline trackingData
-            (
-                const TrackCloudType& cloud,
-                trackPart part = tpLinearTrack
-            );
+            inline trackingData(const TrackCloudType& cloud);
 
 
         //- Update the MPPIC averages
@@ -149,10 +145,10 @@ public:
 
         //- Access
 
-            //- Const access to the tracking part label
+            //- Const access to the tracking part
             inline trackPart part() const;
 
-            //- Non const access to the tracking part label
+            //- Non const access to the tracking part
             inline trackPart& part();
     };
 

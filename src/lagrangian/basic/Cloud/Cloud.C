@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,17 +174,11 @@ void Foam::Cloud<ParticleType>::move
 
     // List of lists of particles to be transferred for all of the
     // neighbour processors
-    List<IDLList<ParticleType>> particleTransferLists
-    (
-        neighbourProcs.size()
-    );
+    List<IDLList<ParticleType>> particleTransferLists(neighbourProcs.size());
 
     // List of destination processorPatches indices for all of the
     // neighbour processors
-    List<DynamicList<label>> patchIndexTransferLists
-    (
-        neighbourProcs.size()
-    );
+    List<DynamicList<label>> patchIndexTransferLists(neighbourProcs.size());
 
     // Allocate transfer buffers
     PstreamBuffers pBufs(Pstream::commsTypes::nonBlocking);
@@ -195,6 +189,7 @@ void Foam::Cloud<ParticleType>::move
     // While there are particles to transfer
     while (true)
     {
+        // Clear the transfer lists
         particleTransferLists = IDLList<ParticleType>();
         forAll(patchIndexTransferLists, i)
         {

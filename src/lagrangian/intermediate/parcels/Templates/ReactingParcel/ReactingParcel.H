@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,17 +135,11 @@ public:
 
     public:
 
-        typedef typename ParcelType::trackingData::trackPart trackPart;
-
         // Constructors
 
             //- Construct from components
             template<class TrackCloudType>
-            inline trackingData
-            (
-                const TrackCloudType& cloud,
-                trackPart part = ParcelType::trackingData::tpLinearTrack
-            );
+            inline trackingData(const TrackCloudType& cloud);
 
 
         // Member Functions

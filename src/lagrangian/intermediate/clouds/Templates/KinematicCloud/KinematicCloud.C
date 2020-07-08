@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -217,7 +217,6 @@ void Foam::KinematicCloud<CloudType>::evolveCloud
 
         injectors_.injectSteadyState(cloud, td, solution_.trackTime());
 
-        td.part() = parcelType::trackingData::tpLinearTrack;
         CloudType::move(cloud, td, solution_.trackTime());
     }
 }
@@ -689,7 +688,6 @@ void Foam::KinematicCloud<CloudType>::motion
     typename parcelType::trackingData& td
 )
 {
-    td.part() = parcelType::trackingData::tpLinearTrack;
     CloudType::move(cloud, td, solution_.trackTime());
 
     updateCellOccupancy();

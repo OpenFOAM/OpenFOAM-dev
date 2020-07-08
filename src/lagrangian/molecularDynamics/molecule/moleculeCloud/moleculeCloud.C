@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1113,19 +1113,21 @@ Foam::moleculeCloud::moleculeCloud
 
 void Foam::moleculeCloud::evolve()
 {
-    molecule::trackingData td0(*this, 0);
-    Cloud<molecule>::move(*this, td0, mesh_.time().deltaTValue());
+    molecule::trackingData td(*this);
 
-    molecule::trackingData td1(*this, 1);
-    Cloud<molecule>::move(*this, td1, mesh_.time().deltaTValue());
+    td.part() = molecule::trackingData::tpVelocityHalfStep0;
+    Cloud<molecule>::move(*this, td, mesh_.time().deltaTValue());
 
-    molecule::trackingData td2(*this, 2);
-    Cloud<molecule>::move(*this, td2, mesh_.time().deltaTValue());
+    td.part() = molecule::trackingData::tpLinearTrack;
+    Cloud<molecule>::move(*this, td, mesh_.time().deltaTValue());
+
+    td.part() = molecule::trackingData::tpRotationalTrack;
+    Cloud<molecule>::move(*this, td, mesh_.time().deltaTValue());
 
     calculateForce();
 
-    molecule::trackingData td3(*this, 3);
-    Cloud<molecule>::move(*this, td3, mesh_.time().deltaTValue());
+    td.part() = molecule::trackingData::tpVelocityHalfStep1;
+    Cloud<molecule>::move(*this, td, mesh_.time().deltaTValue());
 }
 
 
