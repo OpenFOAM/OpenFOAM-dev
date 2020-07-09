@@ -119,6 +119,161 @@ void Foam::phaseSystem::generatePairs
 }
 
 
+Foam::tmp<Foam::volScalarField> Foam::phaseSystem::sumAlphaMoving() const
+{
+    tmp<volScalarField> sumAlphaMoving
+    (
+        volScalarField::New
+        (
+            "sumAlphaMoving",
+            movingPhaseModels_[0],
+            calculatedFvPatchScalarField::typeName
+        )
+    );
+
+    for
+    (
+        label movingPhasei=1;
+        movingPhasei<movingPhaseModels_.size();
+        movingPhasei++
+    )
+    {
+        sumAlphaMoving.ref() += movingPhaseModels_[movingPhasei];
+    }
+
+    return sumAlphaMoving;
+}
+
+
+void Foam::phaseSystem::setMixtureU(const volVectorField& Um)
+{
+    phaseSystem::phaseModelList& phases = phaseModels_;
+
+    PtrList<volVectorField> U0s(phases.size());
+
+    forAll(phases, i)
+    {
+        if (!phases[i].stationary())
+        {
+            U0s.set
+            (
+                i,
+                volVectorField::New
+                (
+                    IOobject::groupName("U0", phases[i].name()),
+                    phases[i].URef()
+                )
+            );
+        }
+    }
+
+    forAll(phases, i)
+    {
+        if (!phases[i].stationary())
+        {
+            phases[i].URef() = Um;
+
+            forAll(phases, j)
+            {
+                if (i != j && !phases[j].stationary())
+                {
+                    phases[i].URef() += phases[j]*(U0s[i] - U0s[j]);
+                }
+            }
+        }
+    }
+
+    if (!stationaryPhaseModels_.empty())
+    {
+        const volScalarField sumAlphaMoving(this->sumAlphaMoving());
+
+        forAll(phases, i)
+        {
+            if (!phases[i].stationary())
+            {
+                phases[i].URef() /= sumAlphaMoving;
+            }
+        }
+    }
+}
+
+
+void Foam::phaseSystem::setMixturePhi
+(
+    const PtrList<surfaceScalarField>& alphafs,
+    const surfaceScalarField& phim
+)
+{
+    phaseSystem::phaseModelList& phases = phaseModels_;
+
+    PtrList<surfaceScalarField> phi0s(phases.size());
+
+    forAll(phases, i)
+    {
+        if (!phases[i].stationary())
+        {
+            phi0s.set
+            (
+                i,
+                surfaceScalarField::New
+                (
+                    IOobject::groupName("phi0", phases[i].name()),
+                    phases[i].phiRef()
+                )
+            );
+        }
+    }
+
+    forAll(phases, i)
+    {
+        if (!phases[i].stationary())
+        {
+            phases[i].phiRef() = phim;
+
+            forAll(phases, j)
+            {
+                if (i != j && !phases[j].stationary())
+                {
+                    phases[i].phiRef() += alphafs[j]*(phi0s[i] - phi0s[j]);
+                }
+            }
+        }
+    }
+
+    if (!stationaryPhaseModels_.empty())
+    {
+        surfaceScalarField sumAlphafMoving
+        (
+            surfaceScalarField::New
+            (
+                "sumAlphafMoving",
+                alphafs[movingPhaseModels_[0].index()],
+                calculatedFvsPatchScalarField::typeName
+            )
+        );
+
+        for
+        (
+            label movingPhasei=1;
+            movingPhasei<movingPhaseModels_.size();
+            movingPhasei++
+        )
+        {
+            sumAlphafMoving +=
+                alphafs[movingPhaseModels_[movingPhasei].index()];
+        }
+
+        forAll(phases, i)
+        {
+            if (!phases[i].stationary())
+            {
+                phases[i].phiRef() /= sumAlphafMoving;
+            }
+        }
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::phaseSystem::phaseSystem
@@ -256,28 +411,10 @@ Foam::tmp<Foam::volScalarField> Foam::phaseSystem::rho() const
     {
         return rho;
     }
-
-    volScalarField sumAlphaMoving
-    (
-        volScalarField::New
-        (
-            "sumAlphaMoving",
-            movingPhaseModels_[0],
-            calculatedFvPatchScalarField::typeName
-        )
-    );
-
-    for
-    (
-        label movingPhasei=1;
-        movingPhasei<movingPhaseModels_.size();
-        movingPhasei++
-    )
+    else
     {
-        sumAlphaMoving += movingPhaseModels_[movingPhasei];
+        return rho/sumAlphaMoving();
     }
-
-    return rho/sumAlphaMoving;
 }
 
 
@@ -301,28 +438,10 @@ Foam::tmp<Foam::volVectorField> Foam::phaseSystem::U() const
     {
         return U;
     }
-
-    volScalarField sumAlphaMoving
-    (
-        volScalarField::New
-        (
-            "sumAlphaMoving",
-            movingPhaseModels_[0],
-            calculatedFvPatchScalarField::typeName
-        )
-    );
-
-    for
-    (
-        label movingPhasei=1;
-        movingPhasei<movingPhaseModels_.size();
-        movingPhasei++
-    )
+    else
     {
-        sumAlphaMoving += movingPhaseModels_[movingPhasei];
+        return U/sumAlphaMoving();
     }
-
-    return U/sumAlphaMoving;
 }
 
 

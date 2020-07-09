@@ -258,14 +258,19 @@ public:
         //- Solve the drag system for the velocities and fluxes
         virtual void partialElimination
         (
-            const PtrList<volScalarField>& rAUs
+            const PtrList<volScalarField>& rAUs,
+            const PtrList<volVectorField>& KdUByAs,
+            const PtrList<surfaceScalarField>& alphafs,
+            const PtrList<surfaceScalarField>& phiKdPhis
         );
 
         //- As partialElimination, but for the face-based algorithm. Only solves
         //  for the fluxes.
         virtual void partialEliminationf
         (
-            const PtrList<surfaceScalarField>& rAUfs
+            const PtrList<surfaceScalarField>& rAUfs,
+            const PtrList<surfaceScalarField>& alphafs,
+            const PtrList<surfaceScalarField>& phiKdPhifs
         );
 
         //- Return the flux corrections for the cell-based algorithm. These

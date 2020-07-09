@@ -244,6 +244,21 @@ protected:
             const bool correctFixedFluxBCs = true
         );
 
+        //- Return the sum of the phase fractions of the moving phases
+        tmp<volScalarField> sumAlphaMoving() const;
+
+        //- Re-normalise the velocity of the phases
+        //  around the specified mixture mean
+        void setMixtureU(const volVectorField& Um);
+
+        //- Re-normalise the flux of the phases
+        //  around the specified mixture mean
+        void setMixturePhi
+        (
+            const PtrList<surfaceScalarField>& alphafs,
+            const surfaceScalarField& phim
+        );
+
 
 public:
 
@@ -485,13 +500,18 @@ public:
             //- Solve the drag system for the new velocities and fluxes
             virtual void partialElimination
             (
-                const PtrList<volScalarField>& rAUs
+                const PtrList<volScalarField>& rAUs,
+                const PtrList<volVectorField>& KdUByAs,
+                const PtrList<surfaceScalarField>& alphafs,
+                const PtrList<surfaceScalarField>& phiKdPhis
             ) = 0;
 
             //- Solve the drag system for the new fluxes
             virtual void partialEliminationf
             (
-                const PtrList<surfaceScalarField>& rAUfs
+                const PtrList<surfaceScalarField>& rAUfs,
+                const PtrList<surfaceScalarField>& alphafs,
+                const PtrList<surfaceScalarField>& phiKdPhifs
             ) = 0;
 
             //- Return the flux corrections for the cell-based algorithm

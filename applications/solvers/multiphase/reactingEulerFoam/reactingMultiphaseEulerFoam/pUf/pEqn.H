@@ -128,32 +128,26 @@ while (pimple.correct())
             new surfaceScalarField
             (
                 IOobject::groupName("phiHbyA", phase.name()),
-                MRF.relative
-                (
-                    rAUfs[phase.index()]
-                   *(
-                        fvc::flux(UEqns[phase.index()].H())
-                      + alphaRho0fs[phase.index()]
-                       *byDt(MRF.absolute(phase.phi()().oldTime()))
-                    )
-                  - phigFs[phase.index()]
+                rAUfs[phase.index()]
+               *(
+                   fvc::flux(UEqns[phase.index()].H())
+                 + alphaRho0fs[phase.index()]
+                  *byDt(MRF.absolute(phase.phi()().oldTime()))
                 )
+              - phigFs[phase.index()]
             )
         );
     }
     fluid.fillFields("phiHbyA", dimForce/dimDensity/dimVelocity, phiHbyAs);
 
-    // Add explicit drag forces and fluxes if not doing partial elimination
-    if (!partialElimination)
-    {
-        PtrList<surfaceScalarField> phiKdPhifs(fluid.phiKdPhifs(rAUfs));
+    // Add explicit drag forces and fluxes
+    PtrList<surfaceScalarField> phiKdPhifs(fluid.phiKdPhifs(rAUfs));
 
-        forAll(phases, phasei)
+    forAll(phases, phasei)
+    {
+        if (phiKdPhifs.set(phasei))
         {
-            if (phiKdPhifs.set(phasei))
-            {
-                phiHbyAs[phasei] -= phiKdPhifs[phasei];
-            }
+            phiHbyAs[phasei] -= phiKdPhifs[phasei];
         }
     }
 
@@ -177,19 +171,7 @@ while (pimple.correct())
         phiHbyA += alphafs[phasei]*phiHbyAs[phasei];
     }
 
-    // Add explicit drag fluxes if doing partial elimination
-    if (partialElimination)
-    {
-        PtrList<surfaceScalarField> phiKdPhifs(fluid.phiKdPhifs(rAUfs));
-
-        forAll(phases, phasei)
-        {
-            if (phiKdPhifs.set(phasei))
-            {
-                phiHbyA -= alphafs[phasei]*phiKdPhifs[phasei];
-            }
-        }
-    }
+    MRF.makeRelative(phiHbyA);
 
     // Construct pressure "diffusivity"
     surfaceScalarField rAUf
@@ -354,21 +336,28 @@ while (pimple.correct())
 
             if (partialElimination)
             {
-                fluid.partialEliminationf(rAUfs);
+                fluid.partialEliminationf(rAUfs, alphafs, phiKdPhifs);
+
+                forAll(fluid.movingPhases(), movingPhasei)
+                {
+                    phaseModel& phase = fluid.movingPhases()[movingPhasei];
+
+                    phase.URef() = fvc::reconstruct(MRF.absolute(phase.phi()));
+                    phase.URef().correctBoundaryConditions();
+                    fvOptions.correct(phase.URef());
+                }
             }
-
-            // Optionally relax pressure for velocity correction
-            p_rgh.relax();
-
-            mSfGradp = pEqnIncomp.flux()/rAUf;
-
-            forAll(fluid.movingPhases(), movingPhasei)
+            else
             {
-                phaseModel& phase = fluid.movingPhases()[movingPhasei];
+                forAll(fluid.movingPhases(), movingPhasei)
+                {
+                    phaseModel& phase = fluid.movingPhases()[movingPhasei];
 
-                phase.URef() = fvc::reconstruct(MRF.absolute(phase.phi()));
-                phase.URef().correctBoundaryConditions();
-                fvOptions.correct(phase.URef());
+                    phase.URef() = fvc::reconstruct(phase.phi());
+                    MRF.makeRelative(phase.phiRef());
+                    phase.URef().correctBoundaryConditions();
+                    fvOptions.correct(phase.URef());
+                }
             }
         }
     }

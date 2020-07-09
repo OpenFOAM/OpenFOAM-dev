@@ -1189,230 +1189,288 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::ddtCorrByAs
 template<class BasePhaseSystem>
 void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::partialElimination
 (
-    const PtrList<volScalarField>& rAUs
+    const PtrList<volScalarField>& rAUs,
+    const PtrList<volVectorField>& KdUByAs,
+    const PtrList<surfaceScalarField>& alphafs,
+    const PtrList<surfaceScalarField>& phiKdPhis
 )
 {
     Info<< "Inverting drag systems: ";
 
     phaseSystem::phaseModelList& phases = this->phaseModels_;
 
-    // Create drag coefficient matrices
-    PtrList<PtrList<volScalarField>> KdByAs(phases.size());
-    PtrList<PtrList<surfaceScalarField>> phiKds(phases.size());
+    // Calculate the mean velocity from the current velocity
+    // of the moving phases
+    volVectorField Um(this->movingPhases()[0]*this->movingPhases()[0].U());
 
-    forAll(phases, phasei)
+    for
+    (
+        label movingPhasei=1;
+        movingPhasei<this->movingPhases().size();
+        movingPhasei++
+    )
     {
-        KdByAs.set
-        (
-            phasei,
-            new PtrList<volScalarField>(phases.size())
-        );
-
-        phiKds.set
-        (
-            phasei,
-            new PtrList<surfaceScalarField>(phases.size())
-        );
+        Um.ref() +=
+            this->movingPhases()[movingPhasei]
+           *this->movingPhases()[movingPhasei].U();
     }
 
-    forAllConstIter(KdTable, Kds_, KdIter)
-    {
-        const volScalarField& K(*KdIter());
-        const phasePair& pair(this->phasePairs_[KdIter.key()]);
-
-        const label phase1i = pair.phase1().index();
-        const label phase2i = pair.phase2().index();
-
-        addField
-        (
-            pair.phase2(),
-            "KdByA",
-           -rAUs[phase1i]*K,
-            KdByAs[phase1i]
-        );
-        addField
-        (
-            pair.phase1(),
-            "KdByA",
-           -rAUs[phase2i]*K,
-            KdByAs[phase2i]
-        );
-
-        addField
-        (
-            pair.phase2(),
-            "phiKd",
-            fvc::interpolate(KdByAs[phase1i][phase2i]),
-            phiKds[phase1i]
-        );
-        addField
-        (
-            pair.phase1(),
-            "phiKd",
-            fvc::interpolate(KdByAs[phase2i][phase1i]),
-            phiKds[phase2i]
-        );
-    }
-
-    forAll(phases, phasei)
-    {
-        this->fillFields("KdByAs", dimless, KdByAs[phasei]);
-        this->fillFields("phiKds", dimless, phiKds[phasei]);
-
-        KdByAs[phasei][phasei] = 1;
-        phiKds[phasei][phasei] = 1;
-    }
-
-    // Decompose
-    for (label i = 0; i < phases.size(); ++ i)
-    {
-        for (label j = i + 1; j < phases.size(); ++ j)
-        {
-            KdByAs[i][j] /= KdByAs[i][i];
-            phiKds[i][j] /= phiKds[i][i];
-            for (label k = i + 1; k < phases.size(); ++ k)
-            {
-                KdByAs[j][k] -= KdByAs[j][i]*KdByAs[i][k];
-                phiKds[j][k] -= phiKds[j][i]*phiKds[i][k];
-            }
-        }
-    }
-    {
-        volScalarField detKdByAs(KdByAs[0][0]);
-        surfaceScalarField detPhiKdfs(phiKds[0][0]);
-        for (label i = 1; i < phases.size(); ++ i)
-        {
-            detKdByAs *= KdByAs[i][i];
-            detPhiKdfs *= phiKds[i][i];
-        }
-        Info<< "Min cell/face det = " << gMin(detKdByAs.primitiveField())
-            << "/" << gMin(detPhiKdfs.primitiveField()) << endl;
-    }
-
-    // Solve for the velocities and fluxes
-    for (label i = 1; i < phases.size(); ++ i)
+    // Remove the drag contributions from the velocity and flux of the phases
+    // in preparation for the partial elimination of these terms
+    forAll(phases, i)
     {
         if (!phases[i].stationary())
         {
-            for (label j = 0; j < i; j ++)
-            {
-                phases[i].URef() -= KdByAs[i][j]*phases[j].U();
-                phases[i].phiRef() -= phiKds[i][j]*phases[j].phi();
-            }
+            phases[i].URef() += KdUByAs[i];
+            phases[i].phiRef() += phiKdPhis[i];
         }
     }
-    for (label i = phases.size() - 1; i >= 0; i --)
+
     {
-        if (!phases[i].stationary())
+        // Create drag coefficient matrices
+        PtrList<PtrList<volScalarField>> KdByAs(phases.size());
+        PtrList<PtrList<surfaceScalarField>> phiKds(phases.size());
+
+        forAll(phases, i)
         {
-            for (label j = phases.size() - 1; j > i; j --)
+            KdByAs.set
+            (
+                i,
+                new PtrList<volScalarField>(phases.size())
+            );
+
+            phiKds.set
+            (
+                i,
+                new PtrList<surfaceScalarField>(phases.size())
+            );
+        }
+
+        forAllConstIter(KdTable, Kds_, KdIter)
+        {
+            const volScalarField& K(*KdIter());
+            const phasePair& pair(this->phasePairs_[KdIter.key()]);
+
+            const label phase1i = pair.phase1().index();
+            const label phase2i = pair.phase2().index();
+
+            addField
+            (
+                pair.phase2(),
+                "KdByA",
+                -rAUs[phase1i]*K,
+                KdByAs[phase1i]
+            );
+            addField
+            (
+                pair.phase1(),
+                "KdByA",
+                -rAUs[phase2i]*K,
+                KdByAs[phase2i]
+            );
+
+            addField
+            (
+                pair.phase2(),
+                "phiKd",
+                fvc::interpolate(KdByAs[phase1i][phase2i]),
+                phiKds[phase1i]
+            );
+            addField
+            (
+                pair.phase1(),
+                "phiKd",
+                fvc::interpolate(KdByAs[phase2i][phase1i]),
+                phiKds[phase2i]
+            );
+        }
+
+        forAll(phases, i)
+        {
+            this->fillFields("KdByAs", dimless, KdByAs[i]);
+            this->fillFields("phiKds", dimless, phiKds[i]);
+
+            KdByAs[i][i] = 1;
+            phiKds[i][i] = 1;
+        }
+
+        // Decompose
+        for (label i = 0; i < phases.size(); i++)
+        {
+            for (label j = i + 1; j < phases.size(); j++)
             {
-                phases[i].URef() -= KdByAs[i][j]*phases[j].U();
-                phases[i].phiRef() -= phiKds[i][j]*phases[j].phi();
+                KdByAs[i][j] /= KdByAs[i][i];
+                phiKds[i][j] /= phiKds[i][i];
+                for (label k = i + 1; k < phases.size(); ++ k)
+                {
+                    KdByAs[j][k] -= KdByAs[j][i]*KdByAs[i][k];
+                    phiKds[j][k] -= phiKds[j][i]*phiKds[i][k];
+                }
             }
-            phases[i].URef() /= KdByAs[i][i];
-            phases[i].phiRef() /= phiKds[i][i];
+        }
+
+        {
+            volScalarField detKdByAs(KdByAs[0][0]);
+            surfaceScalarField detPhiKdfs(phiKds[0][0]);
+
+            for (label i = 1; i < phases.size(); i++)
+            {
+                detKdByAs *= KdByAs[i][i];
+                detPhiKdfs *= phiKds[i][i];
+            }
+
+            Info<< "Min cell/face det = " << gMin(detKdByAs.primitiveField())
+                << "/" << gMin(detPhiKdfs.primitiveField()) << endl;
+        }
+
+        // Solve for the velocities and fluxes
+        for (label i = 1; i < phases.size(); i++)
+        {
+            if (!phases[i].stationary())
+            {
+                for (label j = 0; j < i; j ++)
+                {
+                    phases[i].URef() -= KdByAs[i][j]*phases[j].U();
+                    phases[i].phiRef() -= phiKds[i][j]*phases[j].phi();
+                }
+            }
+        }
+        for (label i = phases.size() - 1; i >= 0; i--)
+        {
+            if (!phases[i].stationary())
+            {
+                for (label j = phases.size() - 1; j > i; j--)
+                {
+                    phases[i].URef() -= KdByAs[i][j]*phases[j].U();
+                    phases[i].phiRef() -= phiKds[i][j]*phases[j].phi();
+                }
+                phases[i].URef() /= KdByAs[i][i];
+                phases[i].phiRef() /= phiKds[i][i];
+            }
         }
     }
+
+    this->setMixtureU(Um);
+    this->setMixturePhi(alphafs, this->phi());
 }
 
 
 template<class BasePhaseSystem>
 void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::partialEliminationf
 (
-    const PtrList<surfaceScalarField>& rAUfs
+    const PtrList<surfaceScalarField>& rAUfs,
+    const PtrList<surfaceScalarField>& alphafs,
+    const PtrList<surfaceScalarField>& phiKdPhifs
 )
 {
     Info<< "Inverting drag system: ";
 
     phaseSystem::phaseModelList& phases = this->phaseModels_;
 
-    // Create drag coefficient matrix
-    PtrList<PtrList<surfaceScalarField>> phiKdfs(phases.size());
-
-    forAll(phases, phasei)
-    {
-        phiKdfs.set
-        (
-            phasei,
-            new PtrList<surfaceScalarField>(phases.size())
-        );
-    }
-
-    forAllConstIter(KdfTable, Kdfs_, KdfIter)
-    {
-        const surfaceScalarField& K(*KdfIter());
-        const phasePair& pair(this->phasePairs_[KdfIter.key()]);
-
-        const label phase1i = pair.phase1().index();
-        const label phase2i = pair.phase2().index();
-
-        addField
-        (
-            pair.phase2(),
-            "phiKdf",
-           -rAUfs[phase1i]*K,
-            phiKdfs[phase1i]
-        );
-        addField
-        (
-            pair.phase1(),
-            "phiKdf",
-           -rAUfs[phase2i]*K,
-            phiKdfs[phase2i]
-        );
-    }
-
-    forAll(phases, phasei)
-    {
-        this->fillFields("phiKdf", dimless, phiKdfs[phasei]);
-
-        phiKdfs[phasei][phasei] = 1;
-    }
-
-    // Decompose
-    for (label i = 0; i < phases.size(); ++ i)
-    {
-        for (label j = i + 1; j < phases.size(); ++ j)
-        {
-            phiKdfs[i][j] /= phiKdfs[i][i];
-            for (label k = i + 1; k < phases.size(); ++ k)
-            {
-                phiKdfs[j][k] -= phiKdfs[j][i]*phiKdfs[i][k];
-            }
-        }
-    }
-    {
-        surfaceScalarField detPhiKdfs(phiKdfs[0][0]);
-        for (label i = 1; i < phases.size(); ++ i)
-        {
-            detPhiKdfs *= phiKdfs[i][i];
-        }
-        Info<< "Min face det = " << gMin(detPhiKdfs.primitiveField()) << endl;
-    }
-
-    // Solve for the fluxes
-    for (label i = 1; i < phases.size(); ++ i)
+    // Remove the drag contributions from the flux of the phases
+    // in preparation for the partial elimination of these terms
+    forAll(phases, i)
     {
         if (!phases[i].stationary())
         {
-            for (label j = 0; j < i; j ++)
-            {
-                phases[i].phiRef() -= phiKdfs[i][j]*phases[j].phi();
-            }
+            phases[i].phiRef() += phiKdPhifs[i];
         }
     }
-    for (label i = phases.size() - 1; i >= 0; i --)
+
     {
-        if (!phases[i].stationary())
+        // Create drag coefficient matrix
+        PtrList<PtrList<surfaceScalarField>> phiKdfs(phases.size());
+
+        forAll(phases, phasei)
         {
-            for (label j = phases.size() - 1; j > i; j --)
+            phiKdfs.set
+            (
+                phasei,
+                new PtrList<surfaceScalarField>(phases.size())
+            );
+        }
+
+        forAllConstIter(KdfTable, Kdfs_, KdfIter)
+        {
+            const surfaceScalarField& K(*KdfIter());
+            const phasePair& pair(this->phasePairs_[KdfIter.key()]);
+
+            const label phase1i = pair.phase1().index();
+            const label phase2i = pair.phase2().index();
+
+            addField
+            (
+                pair.phase2(),
+                "phiKdf",
+                -rAUfs[phase1i]*K,
+                phiKdfs[phase1i]
+            );
+            addField
+            (
+                pair.phase1(),
+                "phiKdf",
+                -rAUfs[phase2i]*K,
+                phiKdfs[phase2i]
+            );
+        }
+
+        forAll(phases, phasei)
+        {
+            this->fillFields("phiKdf", dimless, phiKdfs[phasei]);
+
+            phiKdfs[phasei][phasei] = 1;
+        }
+
+        // Decompose
+        for (label i = 0; i < phases.size(); i++)
+        {
+            for (label j = i + 1; j < phases.size(); j++)
             {
-                phases[i].phiRef() -= phiKdfs[i][j]*phases[j].phi();
+                phiKdfs[i][j] /= phiKdfs[i][i];
+                for (label k = i + 1; k < phases.size(); ++ k)
+                {
+                    phiKdfs[j][k] -= phiKdfs[j][i]*phiKdfs[i][k];
+                }
             }
-            phases[i].phiRef() /= phiKdfs[i][i];
+        }
+
+        {
+            surfaceScalarField detPhiKdfs(phiKdfs[0][0]);
+
+            for (label i = 1; i < phases.size(); i++)
+            {
+                detPhiKdfs *= phiKdfs[i][i];
+            }
+
+            Info<< "Min face det = "
+                << gMin(detPhiKdfs.primitiveField()) << endl;
+        }
+
+        // Solve for the fluxes
+        for (label i = 1; i < phases.size(); i++)
+        {
+            if (!phases[i].stationary())
+            {
+                for (label j = 0; j < i; j ++)
+                {
+                    phases[i].phiRef() -= phiKdfs[i][j]*phases[j].phi();
+                }
+            }
+        }
+        for (label i = phases.size() - 1; i >= 0; i--)
+        {
+            if (!phases[i].stationary())
+            {
+                for (label j = phases.size() - 1; j > i; j--)
+                {
+                    phases[i].phiRef() -= phiKdfs[i][j]*phases[j].phi();
+                }
+                phases[i].phiRef() /= phiKdfs[i][i];
+            }
         }
     }
+
+    this->setMixturePhi(alphafs, this->phi());
 }
 
 
