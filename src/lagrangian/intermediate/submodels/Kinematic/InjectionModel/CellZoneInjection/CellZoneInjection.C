@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,13 +73,14 @@ void Foam::CellZoneInjection<CloudType>::setPositions
             polyMeshTetDecomposition::cellTetIndices(mesh, celli);
 
         // Construct cell tet volume fractions
-        scalarList cTetVFrac(cellTetIs.size(), 0.0);
-        for (label tetI = 1; tetI < cellTetIs.size() - 1; tetI++)
+        scalarField cTetVFrac(cellTetIs.size());
+        cTetVFrac[0] = cellTetIs[0].tet(mesh).mag();
+        for (label tetI = 1; tetI < cellTetIs.size(); tetI++)
         {
             cTetVFrac[tetI] =
-                cTetVFrac[tetI-1] + cellTetIs[tetI].tet(mesh).mag()/V[celli];
+                cTetVFrac[tetI-1] + cellTetIs[tetI].tet(mesh).mag();
         }
-        cTetVFrac.last() = 1.0;
+        cTetVFrac /= cTetVFrac.last();
 
         // Set new particle position and cellId
         for (label pI = 0; pI < addParticles; pI++)
