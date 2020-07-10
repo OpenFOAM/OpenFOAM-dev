@@ -69,6 +69,10 @@ protected:
         //- Phase model 2
         phaseModel& phase2_;
 
+        using phaseSystem::Kd;
+        using phaseSystem::Kdf;
+        using phaseSystem::Vm;
+
 
 public:
 
@@ -111,9 +115,6 @@ public:
 
         using phaseSystem::sigma;
         using phaseSystem::dmdts;
-        using phaseSystem::Kd;
-        using phaseSystem::Kdf;
-        using phaseSystem::Vm;
 
         //- Return phase model 1
         const phaseModel& phase1() const;

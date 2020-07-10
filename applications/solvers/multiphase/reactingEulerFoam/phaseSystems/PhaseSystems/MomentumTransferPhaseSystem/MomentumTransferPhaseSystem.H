@@ -178,6 +178,15 @@ protected:
             phaseSystem::momentumTransferTable& eqns
         );
 
+        //- Return the drag coefficient for the phase pair
+        virtual tmp<volScalarField> Kd(const phasePairKey& key) const;
+
+        //- Return the face drag coefficient for the phase pair
+        virtual tmp<surfaceScalarField> Kdf(const phasePairKey& key) const;
+
+        //- Return the virtual mass coefficient for the phase pair
+        virtual tmp<volScalarField> Vm(const phasePairKey& key) const;
+
 
 public:
 
@@ -192,15 +201,6 @@ public:
 
 
     // Member Functions
-
-        //- Return the drag coefficient for the phase pair
-        virtual tmp<volScalarField> Kd(const phasePairKey& key) const;
-
-        //- Return the face drag coefficient for the phase pair
-        virtual tmp<surfaceScalarField> Kdf(const phasePairKey& key) const;
-
-        //- Return the virtual mass coefficient for the phase pair
-        virtual tmp<volScalarField> Vm(const phasePairKey& key) const;
 
         //- Return the momentum transfer matrices for the cell-based algorithm.
         //  This includes implicit and explicit forces that add into the cell

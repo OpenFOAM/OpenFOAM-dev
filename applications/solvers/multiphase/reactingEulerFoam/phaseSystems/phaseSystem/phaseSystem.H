@@ -260,6 +260,21 @@ protected:
         );
 
 
+        // Functions required by twoPhaseSystem
+
+            //- Return the drag coefficient for phase pair
+            virtual tmp<volScalarField> Kd(const phasePairKey& key) const = 0;
+
+            //- Return the virtual mass coefficient for phase pair
+            virtual tmp<volScalarField> Vm(const phasePairKey& key) const = 0;
+
+            //- Return the face drag coefficient for phase pair
+            virtual tmp<surfaceScalarField> Kdf
+            (
+                const phasePairKey& key
+            ) const = 0;
+
+
 public:
 
     //- Runtime type information
@@ -442,18 +457,6 @@ public:
 
 
         // Transfers
-
-            //- Return the drag coefficient for phase pair
-            virtual tmp<volScalarField> Kd(const phasePairKey& key) const = 0;
-
-            //- Return the virtual mass coefficient for phase pair
-            virtual tmp<volScalarField> Vm(const phasePairKey& key) const = 0;
-
-            //- Return the face drag coefficient for phase pair
-            virtual tmp<surfaceScalarField> Kdf
-            (
-                const phasePairKey& key
-            ) const = 0;
 
             //- Return the momentum transfer matrices for the cell-based
             //  algorithm

@@ -391,6 +391,8 @@ tmp<volScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::Ct2() const
     const phaseSystem& fluid = gas.fluid();
     const transportModel& liquid = fluid.otherPhase(gas);
 
+    const dragModel& drag = fluid.lookupSubModel<dragModel>(gas, liquid);
+
     const volScalarField& alphag = this->alpha_;
 
     volScalarField magUr(mag(liquidTurbulence.U() - this->U()));
@@ -398,7 +400,7 @@ tmp<volScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::Ct2() const
     volScalarField beta
     (
         (6*this->Cmu_/(4*sqrt(3.0/2.0)))
-       *fluid.Kd(phasePairKey(gas.name(), liquid.name()))/liquid.rho()
+       *drag.K()/liquid.rho()
        *(liquidTurbulence.k_/liquidTurbulence.epsilon_)
     );
     volScalarField Ct0((3 + beta)/(1 + beta + 2*gas.rho()/liquid.rho()));
