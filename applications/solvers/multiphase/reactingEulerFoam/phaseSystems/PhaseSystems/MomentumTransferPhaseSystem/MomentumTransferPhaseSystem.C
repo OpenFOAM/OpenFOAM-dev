@@ -1210,7 +1210,7 @@ void Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::partialElimination
         movingPhasei++
     )
     {
-        Um.ref() +=
+        Um +=
             this->movingPhases()[movingPhasei]
            *this->movingPhases()[movingPhasei].U();
     }

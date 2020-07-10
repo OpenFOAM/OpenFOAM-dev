@@ -145,55 +145,22 @@ Foam::tmp<Foam::volScalarField> Foam::phaseSystem::sumAlphaMoving() const
 }
 
 
-void Foam::phaseSystem::setMixtureU(const volVectorField& Um)
+void Foam::phaseSystem::setMixtureU(const volVectorField& Um0)
 {
-    phaseSystem::phaseModelList& phases = phaseModels_;
+    // Calculate the mean velocity difference with respect to Um0
+    // from the current velocity of the moving phases
+    volVectorField dUm(Um0);
 
-    PtrList<volVectorField> U0s(phases.size());
-
-    forAll(phases, i)
+    forAll(movingPhaseModels_, movingPhasei)
     {
-        if (!phases[i].stationary())
-        {
-            U0s.set
-            (
-                i,
-                volVectorField::New
-                (
-                    IOobject::groupName("U0", phases[i].name()),
-                    phases[i].URef()
-                )
-            );
-        }
+        dUm -=
+            movingPhaseModels_[movingPhasei]
+           *movingPhaseModels_[movingPhasei].U();
     }
 
-    forAll(phases, i)
+    forAll(movingPhaseModels_, movingPhasei)
     {
-        if (!phases[i].stationary())
-        {
-            phases[i].URef() = Um;
-
-            forAll(phases, j)
-            {
-                if (i != j && !phases[j].stationary())
-                {
-                    phases[i].URef() += phases[j]*(U0s[i] - U0s[j]);
-                }
-            }
-        }
-    }
-
-    if (!stationaryPhaseModels_.empty())
-    {
-        const volScalarField sumAlphaMoving(this->sumAlphaMoving());
-
-        forAll(phases, i)
-        {
-            if (!phases[i].stationary())
-            {
-                phases[i].URef() /= sumAlphaMoving;
-            }
-        }
+        movingPhaseModels_[movingPhasei].URef() += dUm;
     }
 }
 
@@ -201,75 +168,23 @@ void Foam::phaseSystem::setMixtureU(const volVectorField& Um)
 void Foam::phaseSystem::setMixturePhi
 (
     const PtrList<surfaceScalarField>& alphafs,
-    const surfaceScalarField& phim
+    const surfaceScalarField& phim0
 )
 {
-    phaseSystem::phaseModelList& phases = phaseModels_;
+    // Calculate the mean flux difference with respect to phim0
+    // from the current flux of the moving phases
+    surfaceScalarField dphim(phim0);
 
-    PtrList<surfaceScalarField> phi0s(phases.size());
-
-    forAll(phases, i)
+    forAll(movingPhaseModels_, movingPhasei)
     {
-        if (!phases[i].stationary())
-        {
-            phi0s.set
-            (
-                i,
-                surfaceScalarField::New
-                (
-                    IOobject::groupName("phi0", phases[i].name()),
-                    phases[i].phiRef()
-                )
-            );
-        }
+        dphim -=
+            alphafs[movingPhaseModels_[movingPhasei].index()]
+           *movingPhaseModels_[movingPhasei].phi();
     }
 
-    forAll(phases, i)
+    forAll(movingPhaseModels_, movingPhasei)
     {
-        if (!phases[i].stationary())
-        {
-            phases[i].phiRef() = phim;
-
-            forAll(phases, j)
-            {
-                if (i != j && !phases[j].stationary())
-                {
-                    phases[i].phiRef() += alphafs[j]*(phi0s[i] - phi0s[j]);
-                }
-            }
-        }
-    }
-
-    if (!stationaryPhaseModels_.empty())
-    {
-        surfaceScalarField sumAlphafMoving
-        (
-            surfaceScalarField::New
-            (
-                "sumAlphafMoving",
-                alphafs[movingPhaseModels_[0].index()],
-                calculatedFvsPatchScalarField::typeName
-            )
-        );
-
-        for
-        (
-            label movingPhasei=1;
-            movingPhasei<movingPhaseModels_.size();
-            movingPhasei++
-        )
-        {
-            sumAlphafMoving +=
-                alphafs[movingPhaseModels_[movingPhasei].index()];
-        }
-
-        forAll(phases, i)
-        {
-            if (!phases[i].stationary())
-            {
-                phases[i].phiRef() /= sumAlphafMoving;
-            }
-        }
+        movingPhaseModels_[movingPhasei].phiRef() += dphim;
     }
 }
 
