@@ -103,12 +103,6 @@ private:
             const phaseModel& alpha2
         ) const;
 
-        //- Return the drag coefficient for phase pair
-        virtual tmp<volScalarField> Kd(const phasePairKey& key) const = 0;
-
-        //- Return the virtual mass coefficient for phase pair
-        virtual tmp<volScalarField> Vm(const phasePairKey& key) const = 0;
-
 
 protected:
 

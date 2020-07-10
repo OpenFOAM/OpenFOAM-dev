@@ -1,3 +1,0 @@
-twoPhaseCompressibleMomentumTransportModels.C
-
-LIB = $(FOAM_LIBBIN)/libtwoPhaseReactingMomentumTransportModels

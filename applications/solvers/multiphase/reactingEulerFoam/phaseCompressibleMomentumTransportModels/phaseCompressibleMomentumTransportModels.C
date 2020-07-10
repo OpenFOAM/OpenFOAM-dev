@@ -72,17 +72,35 @@ makeLaminarModel(generalizedNewtonian);
 #include "kEpsilon.H"
 makeRASModel(kEpsilon);
 
+#include "LaheyKEpsilon.H"
+makeRASModel(LaheyKEpsilon);
+
 #include "kOmegaSST.H"
 makeRASModel(kOmegaSST);
 
 #include "kOmegaSSTSato.H"
 makeRASModel(kOmegaSSTSato);
 
+#include "continuousGasKEpsilon.H"
+makeRASModel(continuousGasKEpsilon);
+
+#include "mixtureKEpsilon.H"
+makeRASModel(mixtureKEpsilon);
+
 #include "Smagorinsky.H"
 makeLESModel(Smagorinsky);
 
 #include "kEqn.H"
 makeLESModel(kEqn);
+
+#include "SmagorinskyZhang.H"
+makeLESModel(SmagorinskyZhang);
+
+#include "NicenoKEqn.H"
+makeLESModel(NicenoKEqn);
+
+#include "continuousGasKEqn.H"
+makeLESModel(continuousGasKEqn);
 
 #include "kineticTheoryModel.H"
 makeMomentumTransportModel

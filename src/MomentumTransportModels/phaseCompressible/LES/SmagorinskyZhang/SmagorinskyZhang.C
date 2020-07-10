@@ -107,8 +107,7 @@ SmagorinskyZhang<BasicMomentumTransportModel>::gasTurbulence() const
         const volVectorField& U = this->U_;
 
         const transportModel& liquid = this->transport();
-        const twoPhaseSystem& fluid =
-            refCast<const twoPhaseSystem>(liquid.fluid());
+        const phaseSystem& fluid = liquid.fluid();
         const transportModel& gas = fluid.otherPhase(liquid);
 
         gasTurbulencePtr_ =

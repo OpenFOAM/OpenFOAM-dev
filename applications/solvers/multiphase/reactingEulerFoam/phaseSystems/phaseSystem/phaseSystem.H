@@ -319,6 +319,10 @@ public:
             //- Return the phase pairs
             inline const phasePairTable& phasePairs() const;
 
+            //- Return the phase not given as an argument in a two-phase system
+            //  An error is generated if the system is not two-phase
+            inline const phaseModel& otherPhase(const phaseModel& phase) const;
+
             //- Return the mixture flux
             inline const surfaceScalarField& phi() const;
 
@@ -438,6 +442,18 @@ public:
 
 
         // Transfers
+
+            //- Return the drag coefficient for phase pair
+            virtual tmp<volScalarField> Kd(const phasePairKey& key) const = 0;
+
+            //- Return the virtual mass coefficient for phase pair
+            virtual tmp<volScalarField> Vm(const phasePairKey& key) const = 0;
+
+            //- Return the face drag coefficient for phase pair
+            virtual tmp<surfaceScalarField> Kdf
+            (
+                const phasePairKey& key
+            ) const = 0;
 
             //- Return the momentum transfer matrices for the cell-based
             //  algorithm

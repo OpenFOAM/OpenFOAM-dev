@@ -1,11 +1,3 @@
-diameterModels/IATE/IATE.C
-diameterModels/IATE/IATEsources/IATEsource/IATEsource.C
-diameterModels/IATE/IATEsources/wakeEntrainmentCoalescence/wakeEntrainmentCoalescence.C
-diameterModels/IATE/IATEsources/turbulentBreakUp/turbulentBreakUp.C
-diameterModels/IATE/IATEsources/randomCoalescence/randomCoalescence.C
-diameterModels/IATE/IATEsources/phaseChange/phaseChange.C
-diameterModels/IATE/IATEsources/wallBoiling/wallBoiling.C
-
 twoPhaseSystem.C
 newTwoPhaseSystem.C
 twoPhaseSystems.C

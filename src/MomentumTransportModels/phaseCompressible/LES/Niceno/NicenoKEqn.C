@@ -25,7 +25,7 @@ License
 
 #include "NicenoKEqn.H"
 #include "fvOptions.H"
-#include "twoPhaseSystem.H"
+#include "phaseSystem.H"
 #include "dragModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -131,8 +131,7 @@ NicenoKEqn<BasicMomentumTransportModel>::gasTurbulence() const
         const volVectorField& U = this->U_;
 
         const transportModel& liquid = this->transport();
-        const twoPhaseSystem& fluid =
-            refCast<const twoPhaseSystem>(liquid.fluid());
+        const phaseSystem& fluid = liquid.fluid();
         const transportModel& gas = fluid.otherPhase(liquid);
 
         gasTurbulencePtr_ =
@@ -176,8 +175,7 @@ tmp<volScalarField> NicenoKEqn<BasicMomentumTransportModel>::bubbleG() const
         gasTurbulence = this->gasTurbulence();
 
     const transportModel& liquid = this->transport();
-    const twoPhaseSystem& fluid =
-        refCast<const twoPhaseSystem>(liquid.fluid());
+    const phaseSystem& fluid = liquid.fluid();
     const transportModel& gas = fluid.otherPhase(liquid);
 
     const dragModel& drag = fluid.lookupSubModel<dragModel>(gas, liquid);

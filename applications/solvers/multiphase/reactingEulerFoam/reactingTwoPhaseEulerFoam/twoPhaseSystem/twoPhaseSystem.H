@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,19 +53,6 @@ class twoPhaseSystem
 :
     public phaseSystem
 {
-private:
-
-    // Private Member Functions
-
-        //- Return the drag coefficient for phase pair
-        virtual tmp<volScalarField> Kd(const phasePairKey& key) const = 0;
-
-        //- Return the face drag coefficient for phase pair
-        virtual tmp<surfaceScalarField> Kdf(const phasePairKey& key) const = 0;
-
-        //- Return the virtual mass coefficient for phase pair
-        virtual tmp<volScalarField> Vm(const phasePairKey& key) const = 0;
-
 
 protected:
 
@@ -124,6 +111,9 @@ public:
 
         using phaseSystem::sigma;
         using phaseSystem::dmdts;
+        using phaseSystem::Kd;
+        using phaseSystem::Kdf;
+        using phaseSystem::Vm;
 
         //- Return phase model 1
         const phaseModel& phase1() const;

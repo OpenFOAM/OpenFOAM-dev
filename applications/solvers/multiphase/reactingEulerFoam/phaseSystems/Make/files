@@ -16,6 +16,14 @@ diameterModels/isothermalDiameter/isothermalDiameter.C
 diameterModels/linearTsubDiameter/linearTsubDiameter.C
 diameterModels/velocityGroup/velocityGroup.C
 
+diameterModels/IATE/IATE.C
+diameterModels/IATE/IATEsources/IATEsource/IATEsource.C
+diameterModels/IATE/IATEsources/wakeEntrainmentCoalescence/IATEwakeEntrainmentCoalescence.C
+diameterModels/IATE/IATEsources/turbulentBreakUp/IATEturbulentBreakUp.C
+diameterModels/IATE/IATEsources/randomCoalescence/IATErandomCoalescence.C
+diameterModels/IATE/IATEsources/phaseChange/IATEphaseChange.C
+diameterModels/IATE/IATEsources/wallBoiling/IATEwallBoiling.C
+
 sizeGroup = diameterModels/velocityGroup/sizeGroup
 $(sizeGroup)/sizeGroup.C
 

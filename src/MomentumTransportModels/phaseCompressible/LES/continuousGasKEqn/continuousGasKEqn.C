@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "continuousGasKEqn.H"
-#include "twoPhaseSystem.H"
+#include "phaseSystem.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -104,8 +104,7 @@ continuousGasKEqn<BasicMomentumTransportModel>::liquidTurbulence() const
         const volVectorField& U = this->U_;
 
         const transportModel& gas = this->transport();
-        const twoPhaseSystem& fluid =
-            refCast<const twoPhaseSystem>(gas.fluid());
+        const phaseSystem& fluid = gas.fluid();
         const transportModel& liquid = fluid.otherPhase(gas);
 
         liquidTurbulencePtr_ =

@@ -25,7 +25,7 @@ License
 
 #include "continuousGasKEpsilon.H"
 #include "fvOptions.H"
-#include "twoPhaseSystem.H"
+#include "phaseSystem.H"
 #include "dragModel.H"
 #include "virtualMassModel.H"
 
@@ -118,7 +118,7 @@ void continuousGasKEpsilon<BasicMomentumTransportModel>::correctNut()
 
     const momentumTransportModel& liquidTurbulence = this->liquidTurbulence();
     const transportModel& gas = this->transport();
-    const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(gas.fluid());
+    const phaseSystem& fluid = gas.fluid();
     const transportModel& liquid = fluid.otherPhase(gas);
 
     const virtualMassModel& virtualMass =
@@ -154,8 +154,7 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::liquidTurbulence() const
         const volVectorField& U = this->U_;
 
         const transportModel& gas = this->transport();
-        const twoPhaseSystem& fluid =
-            refCast<const twoPhaseSystem>(gas.fluid());
+        const phaseSystem& fluid = gas.fluid();
         const transportModel& liquid = fluid.otherPhase(gas);
 
         liquidTurbulencePtr_ =
@@ -205,7 +204,7 @@ tmp<Foam::volScalarField>
 continuousGasKEpsilon<BasicMomentumTransportModel>::rhoEff() const
 {
     const transportModel& gas = this->transport();
-    const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(gas.fluid());
+    const phaseSystem& fluid = gas.fluid();
     const transportModel& liquid = fluid.otherPhase(gas);
 
     const virtualMassModel& virtualMass =

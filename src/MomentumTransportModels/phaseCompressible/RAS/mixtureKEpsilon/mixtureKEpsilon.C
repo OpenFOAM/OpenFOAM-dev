@@ -26,7 +26,7 @@ License
 #include "mixtureKEpsilon.H"
 #include "fvOptions.H"
 #include "bound.H"
-#include "twoPhaseSystem.H"
+#include "phaseSystem.H"
 #include "dragModel.H"
 #include "virtualMassModel.H"
 #include "fixedValueFvPatchFields.H"
@@ -357,8 +357,7 @@ mixtureKEpsilon<BasicMomentumTransportModel>::liquidTurbulence() const
         const volVectorField& U = this->U_;
 
         const transportModel& gas = this->transport();
-        const twoPhaseSystem& fluid =
-            refCast<const twoPhaseSystem>(gas.fluid());
+        const phaseSystem& fluid = gas.fluid();
         const transportModel& liquid = fluid.otherPhase(gas);
 
         liquidTurbulencePtr_ =
@@ -389,7 +388,7 @@ tmp<volScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::Ct2() const
         this->liquidTurbulence();
 
     const transportModel& gas = this->transport();
-    const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(gas.fluid());
+    const phaseSystem& fluid = gas.fluid();
     const transportModel& liquid = fluid.otherPhase(gas);
 
     const volScalarField& alphag = this->alpha_;
@@ -399,7 +398,7 @@ tmp<volScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::Ct2() const
     volScalarField beta
     (
         (6*this->Cmu_/(4*sqrt(3.0/2.0)))
-       *fluid.Kd()/liquid.rho()
+       *fluid.Kd(phasePairKey(gas.name(), liquid.name()))/liquid.rho()
        *(liquidTurbulence.k_/liquidTurbulence.epsilon_)
     );
     volScalarField Ct0((3 + beta)/(1 + beta + 2*gas.rho()/liquid.rho()));
@@ -414,7 +413,7 @@ tmp<volScalarField>
 mixtureKEpsilon<BasicMomentumTransportModel>::rholEff() const
 {
     const transportModel& gas = this->transport();
-    const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(gas.fluid());
+    const phaseSystem& fluid = gas.fluid();
     return fluid.otherPhase(gas).rho();
 }
 
@@ -424,7 +423,7 @@ tmp<volScalarField>
 mixtureKEpsilon<BasicMomentumTransportModel>::rhogEff() const
 {
     const transportModel& gas = this->transport();
-    const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(gas.fluid());
+    const phaseSystem& fluid = gas.fluid();
     const virtualMassModel& virtualMass =
         fluid.lookupSubModel<virtualMassModel>(gas, fluid.otherPhase(gas));
     return gas.rho() + virtualMass.Cvm()*fluid.otherPhase(gas).rho();
@@ -501,7 +500,7 @@ mixtureKEpsilon<BasicMomentumTransportModel>::bubbleG() const
         this->liquidTurbulence();
 
     const transportModel& gas = this->transport();
-    const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(gas.fluid());
+    const phaseSystem& fluid = gas.fluid();
     const transportModel& liquid = fluid.otherPhase(gas);
 
     const dragModel& drag = fluid.lookupSubModel<dragModel>(gas, liquid);
@@ -552,10 +551,10 @@ template<class BasicMomentumTransportModel>
 void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
 {
     const transportModel& gas = this->transport();
-    const twoPhaseSystem& fluid = refCast<const twoPhaseSystem>(gas.fluid());
+    const phaseSystem& fluid = gas.fluid();
 
     // Only solve the mixture turbulence for the gas-phase
-    if (&gas != &fluid.phase1())
+    if (&gas != &fluid.phases()[0])
     {
         // This is the liquid phase but check the model for the gas-phase
         // is consistent
