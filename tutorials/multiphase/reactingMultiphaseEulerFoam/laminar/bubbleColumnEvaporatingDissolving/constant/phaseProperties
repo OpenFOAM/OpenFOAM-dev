@@ -1,0 +1,238 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type    interfaceCompositionPhaseChangeMultiphaseSystem;
+
+phases (gas liquid);
+
+gas
+{
+    type            multiComponentPhaseModel;
+    diameterModel   isothermal;
+    isothermalCoeffs
+    {
+        d0              3e-3;
+        p0              1e5;
+    }
+
+    residualAlpha   1e-6;
+}
+
+liquid
+{
+    type            multiComponentPhaseModel;
+    diameterModel constant;
+    constantCoeffs
+    {
+        d               1e-4;
+    }
+
+    residualAlpha   1e-6;
+}
+
+blending
+{
+    default
+    {
+        type            linear;
+        minFullyContinuousAlpha.gas 0.7;
+        minPartlyContinuousAlpha.gas 0.3;
+        minFullyContinuousAlpha.liquid 0.7;
+        minPartlyContinuousAlpha.liquid 0.3;
+    }
+
+    heatTransfer
+    {
+        type            linear;
+        minFullyContinuousAlpha.gas 1;
+        minPartlyContinuousAlpha.gas 0;
+        minFullyContinuousAlpha.liquid 1;
+        minPartlyContinuousAlpha.liquid 0;
+    }
+
+    diffusiveMassTransfer
+    {
+        $heatTransfer;
+    }
+}
+
+surfaceTension
+(
+    (gas and liquid)
+    {
+        type            constant;
+        sigma           0.07;
+    }
+);
+
+aspectRatio
+(
+    (gas in liquid)
+    {
+        type            constant;
+        E0              1.0;
+    }
+
+    (liquid in gas)
+    {
+        type            constant;
+        E0              1.0;
+    }
+);
+
+drag
+(
+    (gas in liquid)
+    {
+        type            SchillerNaumann;
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+
+    (liquid in gas)
+    {
+        type            SchillerNaumann;
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+);
+
+virtualMass
+(
+    (gas in liquid)
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+
+    (liquid in gas)
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+);
+
+interfaceComposition.gas
+(
+    (gas and liquid)
+    {
+        type saturated;
+        species ( water );
+        Le 1.0;
+        saturationPressure
+        {
+            type ArdenBuck;
+        }
+    }
+);
+
+interfaceComposition.liquid
+(
+    (liquid and gas)
+    {
+        type Henry;
+        species ( air );
+        k ( 1.492e-2 );
+        Le 1.0;
+    }
+);
+
+heatTransfer.gas
+(
+    (gas in liquid)
+    {
+        type spherical;
+        residualAlpha 1e-4;
+    }
+
+    (liquid in gas)
+    {
+        type RanzMarshall;
+        residualAlpha 1e-4;
+    }
+);
+
+heatTransfer.liquid
+(
+    (gas in liquid)
+    {
+        type RanzMarshall;
+        residualAlpha 1e-4;
+    }
+
+    (liquid in gas)
+    {
+        type spherical;
+        residualAlpha 1e-4;
+    }
+);
+
+diffusiveMassTransfer.gas
+(
+    (gas in liquid)
+    {
+        type spherical;
+        Le 1.0;
+    }
+
+    (liquid in gas)
+    {
+        type Frossling;
+        Le 1.0;
+    }
+);
+
+diffusiveMassTransfer.liquid
+(
+    (gas in liquid)
+    {
+        type Frossling;
+        Le 1.0;
+    }
+
+    (liquid in gas)
+    {
+        type spherical;
+        Le 1.0;
+    }
+);
+
+phaseTransfer
+();
+
+lift
+();
+
+wallLubrication
+();
+
+turbulentDispersion
+();
+
+interfaceCompression
+();
+
+// Minimum allowable pressure
+pMin            10000;
+
+// ************************************************************************* //

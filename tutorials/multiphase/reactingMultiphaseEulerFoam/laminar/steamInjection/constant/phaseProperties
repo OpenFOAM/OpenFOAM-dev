@@ -1,0 +1,145 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type thermalPhaseChangeMultiphaseSystem;
+
+phases (steam water);
+
+phaseChange on;
+
+steam
+{
+    type            purePhaseModel;
+    diameterModel   isothermal;
+    isothermalCoeffs
+    {
+        d0              3e-3;
+        p0              1e5;
+    }
+
+    residualAlpha   1e-3;
+}
+
+water
+{
+    type            purePhaseModel;
+    diameterModel   constant;
+    constantCoeffs
+    {
+        d               1e-4;
+    }
+
+    residualAlpha   1e-3;
+}
+
+blending
+{
+    default
+    {
+        type            none;
+        continuousPhase water;
+    }
+}
+
+surfaceTension
+(
+    (steam and water)
+    {
+        type            constant;
+        sigma           0.07;
+    }
+);
+
+saturation
+(
+    (steam and water)
+    {
+        type constant;
+        pSat 1e5;
+        Tsat 372.76;
+    }
+);
+
+aspectRatio
+(
+    (steam in water)
+    {
+        type            constant;
+        E0              1.0;
+    }
+);
+
+drag
+(
+    (steam in water)
+    {
+        type            SchillerNaumann;
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+);
+
+virtualMass
+(
+    (steam in water)
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+);
+
+heatTransfer.steam
+(
+    (steam in water)
+    {
+        type spherical;
+        residualAlpha 1e-4;
+    }
+);
+
+heatTransfer.water
+(
+    (steam in water)
+    {
+        type RanzMarshall;
+        residualAlpha 1e-4;
+    }
+);
+
+phaseTransfer
+();
+
+lift
+();
+
+wallLubrication
+();
+
+turbulentDispersion
+();
+
+interfaceCompression
+();
+
+// Minimum allowable pressure
+pMin            10000;
+
+
+// ************************************************************************* //

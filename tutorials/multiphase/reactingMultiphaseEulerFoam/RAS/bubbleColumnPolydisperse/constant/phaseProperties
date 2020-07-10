@@ -1,0 +1,233 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type populationBalanceMultiphaseSystem;
+
+phases (air water);
+
+populationBalances (bubbles);
+
+air
+{
+    type            purePhaseModel;
+    diameterModel   velocityGroup;
+    velocityGroupCoeffs
+    {
+        populationBalance    bubbles;
+
+        shapeModel           spherical;
+
+        sizeGroups
+        (
+            f0{dSph  1.00e-3; value 0;}
+            f1{dSph  1.08e-3; value 0;}
+            f2{dSph  1.16e-3; value 0;}
+            f3{dSph  1.25e-3; value 0;}
+            f4{dSph  1.36e-3; value 0;}
+            f5{dSph  1.46e-3; value 0;}
+            f6{dSph  1.58e-3; value 0;}
+            f7{dSph  1.71e-3; value 0;}
+            f8{dSph  1.85e-3; value 0;}
+            f9{dSph  2.00e-3; value 0;}
+            f10{dSph  2.16e-3; value 0;}
+            f11{dSph  2.33e-3; value 0;}
+            f12{dSph  2.51e-3; value 0;}
+            f13{dSph  2.72e-3; value 0.25;}
+            f14{dSph  2.93e-3; value 0.5;}
+            f15{dSph  3.17e-3; value 0.25 ;}
+            f16{dSph  3.42e-3; value 0;}
+            f17{dSph  3.70e-3; value 0;}
+            f18{dSph  4.00e-3; value 0;}
+            f19{dSph  4.32e-3; value 0;}
+            f20{dSph  4.66e-3; value 0;}
+            f21{dSph  5.03e-3; value 0;}
+        );
+    }
+
+    residualAlpha   1e-6;
+}
+
+water
+{
+    type            purePhaseModel;
+    diameterModel   constant;
+    constantCoeffs
+    {
+        d               1e-4;
+    }
+
+    residualAlpha   1e-6;
+}
+
+populationBalanceCoeffs
+{
+    bubbles
+    {
+        continuousPhase water;
+
+        coalescenceModels
+        (
+            LehrMilliesMewes{}
+        );
+
+        binaryBreakupModels
+        (
+            LehrMilliesMewes{}
+        );
+
+        breakupModels
+        ();
+
+        driftModels
+        (
+            densityChange{}
+        );
+
+        nucleationModels
+        ();
+    }
+}
+
+blending
+{
+    default
+    {
+        type            linear;
+        minFullyContinuousAlpha.air 0.7;
+        minPartlyContinuousAlpha.air 0.3;
+        minFullyContinuousAlpha.water 0.7;
+        minPartlyContinuousAlpha.water 0.3;
+    }
+
+    drag
+    {
+        type            linear;
+        minFullyContinuousAlpha.air 0.7;
+        minPartlyContinuousAlpha.air 0.5;
+        minFullyContinuousAlpha.water 0.7;
+        minPartlyContinuousAlpha.water 0.5;
+    }
+}
+
+surfaceTension
+(
+    (air and water)
+    {
+        type            constant;
+        sigma           0.07;
+    }
+);
+
+aspectRatio
+(
+    (air in water)
+    {
+        type            constant;
+        E0              1.0;
+    }
+
+    (water in air)
+    {
+        type            constant;
+        E0              1.0;
+    }
+);
+
+drag
+(
+    (air in water)
+    {
+        type            SchillerNaumann;
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+
+    (water in air)
+    {
+        type            SchillerNaumann;
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+
+    (air and water)
+    {
+        type            segregated;
+        m               0.5;
+        n               8;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+);
+
+virtualMass
+(
+    (air in water)
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+
+    (water in air)
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+);
+
+heatTransfer
+(
+    (air in water)
+    {
+        type            RanzMarshall;
+        residualAlpha   1e-4;
+    }
+
+    (water in air)
+    {
+        type            RanzMarshall;
+        residualAlpha   1e-4;
+    }
+);
+
+phaseTransfer
+();
+
+lift
+();
+
+wallLubrication
+();
+
+turbulentDispersion
+();
+
+interfaceCompression
+();
+
+// Minimum allowable pressure
+pMin            10000;
+
+
+// ************************************************************************* //

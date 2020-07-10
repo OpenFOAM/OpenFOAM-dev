@@ -1,0 +1,79 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvOptions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+options
+{
+    massSource
+    {
+        type            semiImplicitSource;
+
+        timeStart       1;
+        duration        500;
+
+        selectionMode   points;
+        points
+        (
+            (0.075 0.2 0.05)
+        );
+
+        volumeMode      absolute;
+
+        sources
+        {
+            thermo:rho.steam
+            {
+                explicit    1.0e-3; // kg/s
+                implicit    0;
+            }
+
+            U.steam
+            {
+                explicit    (0 1e-1 0); // kg*m/s^2
+                implicit    0;
+            }
+
+            h.steam
+            {
+                explicit    3700; // kg*m^2/s^3
+                implicit    0;
+            }
+        }
+    }
+
+    limitTsteam
+    {
+        type            limitTemperature;
+        active          yes;
+        selectionMode   all;
+        min             270;
+        max             2000;
+        phase           steam;
+    }
+
+    limitTwater
+    {
+        type            limitTemperature;
+        active          yes;
+        selectionMode   all;
+        min             270;
+        max             2000;
+        phase           water;
+    }
+}
+
+
+// ************************************************************************* //

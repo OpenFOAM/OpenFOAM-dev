@@ -1,0 +1,27 @@
+#!/bin/sh
+
+if ! which gnuplot > /dev/null 2>&1
+then
+    echo 'gnuplot not found - skipping graph creation' >&2
+    exit 1
+fi
+
+gnuplot<<EOF
+    set terminal postscript eps color enhanced font "Helvetica,20"
+    set output '../void_fraction.eps'
+
+    set xlabel 'Radial coordinate r/R (-)'
+    set ylabel 'Void fraction (-)'
+    set key at graph 0.65,0.95
+
+    set xrange [0:1]
+    set yrange [0:0.15]
+
+    file = system("ls ../postProcessing/singleGraph/$(foamListTimes -case .. | tail -1)/*.xy")
+
+    plot file u (\$1/0.01905):2 w lp lt 1 t 'Simulation', \
+    './exptData/alpha.gas' u 1:2 w p lt rgb "black" pt 4 t 'Experiment'
+
+EOF
+
+#------------------------------------------------------------------------------

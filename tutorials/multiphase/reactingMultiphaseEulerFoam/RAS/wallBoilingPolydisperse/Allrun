@@ -1,0 +1,27 @@
+#!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
+
+# Source tutorial run functions
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+application=`getApplication`
+
+runApplication blockMesh
+runApplication extrudeMesh
+runApplication topoSet
+runApplication decomposePar
+
+runParallel $application
+
+if ! isTest $@
+then
+    foamDictionary system/controlDict -entry endTime -set 4
+    foamDictionary system/controlDict -entry startTime -set 0.5
+    runParallel -a foamDictionary -expand 0.5/T.liquid -entry boundaryField.wall.q -set "uniform 73900"
+    runParallel -a foamDictionary -expand 0.5/U.liquid -entry boundaryField.inlet.type -set "fixedValue"
+    runParallel -a $application
+fi
+
+runApplication -a reconstructPar -latestTime
+
+#------------------------------------------------------------------------------

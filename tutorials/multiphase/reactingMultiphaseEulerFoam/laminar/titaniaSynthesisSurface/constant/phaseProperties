@@ -1,0 +1,229 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type populationBalanceMultiphaseSystem;
+
+phases (particles vapor);
+
+populationBalances (aggregates);
+
+particles
+{
+    type            multiComponentPhaseModel;
+
+    diameterModel   velocityGroup;
+
+    velocityGroupCoeffs
+    {
+        populationBalance   aggregates;
+
+        shapeModel          fractal;
+
+        fractalCoeffs
+        {
+            sinteringModel  KochFriedlander;
+
+            KochFriedlanderCoeffs
+            {
+                Cs 8.3e24;
+                n  4.0;
+                m  1.0;
+                Ta 3700.0;
+            }
+        }
+
+        sizeGroups
+        (
+            f01{dSph 4.000E-10; value 1.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f02{dSph 5.769E-10; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f03{dSph 8.320E-10; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f04{dSph 1.200E-09; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f05{dSph 1.731E-09; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f06{dSph 2.496E-09; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f07{dSph 3.600E-09; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f08{dSph 5.192E-09; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f09{dSph 7.488E-09; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f10{dSph 1.080E-08; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f11{dSph 1.558E-08; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f12{dSph 2.246E-08; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f13{dSph 3.240E-08; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f14{dSph 4.673E-08; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f15{dSph 6.739E-08; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f16{dSph 9.720E-08; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f17{dSph 1.402E-07; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f18{dSph 2.022E-07; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f19{dSph 2.916E-07; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f20{dSph 4.206E-07; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f21{dSph 6.066E-07; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f22{dSph 8.748E-07; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f23{dSph 1.262E-06; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f24{dSph 1.820E-06; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f25{dSph 2.624E-06; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f26{dSph 3.785E-06; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f27{dSph 5.459E-06; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f28{dSph 7.873E-06; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+            f29{dSph 1.136E-05; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
+        );
+
+        storeA              on;
+    }
+
+    Sct             1.0;
+
+    residualAlpha   1e-15;
+}
+
+vapor
+{
+    type            reactingPhaseModel;
+
+    diameterModel   constant;
+    constantCoeffs
+    {
+        d           1;
+    }
+
+    Sct             1.0;
+
+    residualAlpha   1e-5;
+}
+
+populationBalanceCoeffs
+{
+    aggregates
+    {
+        continuousPhase vapor;
+
+        coalescenceModels
+        (
+            DahnekeInterpolation{}
+        );
+
+        binaryBreakupModels
+        ();
+
+        breakupModels
+        ();
+
+        driftModels
+        (
+            phaseChange
+            {
+                pairs               ((particles and vapor));
+                dmdtf               phaseTransfer:dmidtf;
+                specie              TiO2_s;
+                surfaceGrowthType   ParkRogak;
+            }
+        );
+
+        nucleationModels
+        (
+            reactionDriven
+            {
+                nucleationDiameter  4E-10;
+                velocityGroup       particles;
+                reactingPhase       vapor;
+                dmdtf               phaseTransfer:dmidtf;
+                specie              TiO2;
+            }
+        );
+    }
+}
+
+blending
+{
+    default
+    {
+        type            none;
+        continuousPhase vapor;
+    }
+}
+
+interfaceCompression
+();
+
+surfaceTension
+();
+
+aspectRatio
+();
+
+drag
+(
+    (particles in vapor)
+    {
+        type            timeScaleFiltered;
+        minRelaxTime    1e-4;
+
+        dragModel
+        {
+            type            aerosolDrag;
+
+            swarmCorrection
+            {
+                type    none;
+            }
+        }
+    }
+);
+
+virtualMass
+();
+
+heatTransfer
+(
+    (particles in vapor)
+    {
+        type            timeScaleFiltered;
+        minRelaxTime    1e-4;
+
+        heatTransferModel
+        {
+            type            constantNu;
+            Nu              1;
+        }
+    }
+);
+
+phaseTransfer
+(
+    (particles in vapor)
+    {
+        type reactionDriven;
+        reactingPhase vapor;
+        targetPhase particles;
+        species (TiO2 TiO2_s);
+    }
+);
+
+lift
+();
+
+wallLubrication
+();
+
+turbulentDispersion
+();
+
+interfaceCompression
+();
+
+// Minimum allowable pressure
+pMin            10000;
+
+
+// ************************************************************************* //

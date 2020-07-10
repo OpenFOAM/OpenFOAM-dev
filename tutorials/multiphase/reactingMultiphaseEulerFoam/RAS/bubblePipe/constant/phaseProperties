@@ -1,0 +1,148 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type    basicMultiphaseSystem;
+
+phases (gas liquid);
+
+gas
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   constant;
+    constantCoeffs
+    {
+        d               0.0034;
+    }
+
+    residualAlpha   1e-6;
+}
+
+liquid
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   constant;
+    constantCoeffs
+    {
+        d               0.00045;
+    }
+    Sc              0.7;
+
+    residualAlpha   1e-6;
+}
+
+drag
+(
+    (gas in liquid)
+    {
+        type            IshiiZuber;
+
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+);
+
+virtualMass
+(
+    (gas in liquid)
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+);
+
+heatTransfer
+(
+    (gas in liquid)
+    {
+        type RanzMarshall;
+    }
+);
+
+lift
+(
+    (gas in liquid)
+    {
+        type wallDamped;
+
+        lift
+        {
+            type Tomiyama;
+            Cl 0.288;
+        }
+
+        wallDamping
+        {
+            type    cosine;
+            Cd      1.0;
+            zeroInNearWallCells yes;
+        }
+    }
+);
+
+wallLubrication
+(
+   (gas in liquid)
+    {
+        type            Antal;
+        Cw1             -0.01;
+        Cw2             0.05;
+    }
+);
+
+turbulentDispersion
+(
+    (gas in liquid)
+    {
+        type                Burns;
+        sigma               0.7;
+    }
+);
+
+blending
+{
+    default
+    {
+        type            none;
+        continuousPhase liquid;
+    }
+}
+
+aspectRatio
+();
+
+surfaceTension
+(
+    (gas and liquid)
+    {
+        type            constant;
+        sigma           0.071;
+    }
+);
+
+phaseTransfer
+();
+
+interfaceCompression
+();
+
+// Minimum allowable pressure
+pMin            10000;
+
+
+// ************************************************************************* //
