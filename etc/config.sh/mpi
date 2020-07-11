@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -252,7 +252,7 @@ INTELMPI)
     fi
 
     _foamAddPath    $MPI_ARCH_PATH/bin64
-    _foamAddLib     $MPI_ARCH_PATH/lib64
+    _foamAddLib     $MPI_ARCH_PATH/lib/release
     ;;
 *)
     export FOAM_MPI=dummy
