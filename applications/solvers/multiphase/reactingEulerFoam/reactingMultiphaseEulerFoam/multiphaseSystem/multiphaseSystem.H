@@ -53,8 +53,6 @@ class multiphaseSystem
 :
     public phaseSystem
 {
-private:
-
     // Private Typedefs
 
         typedef HashTable<scalar, phasePairKey, phasePairKey::hash>
@@ -67,7 +65,7 @@ private:
         //  for oil, etc...
         volScalarField alphas_;
 
-        //-
+        //- Interface compression coefficients
         cAlphaTable cAlphas_;
 
         //- Stabilisation for normalisation of the interface normal

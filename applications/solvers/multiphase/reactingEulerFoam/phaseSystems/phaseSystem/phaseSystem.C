@@ -210,7 +210,20 @@ Foam::phaseSystem::phaseSystem
 
     mesh_(mesh),
 
-    phaseModels_(lookup("phases"), phaseModel::iNew(*this)),
+    referencePhaseName_
+    (
+        // Temporary hack for backward compatibility with
+        // reactingTwoPhaseEulerFoam
+        lookup<word>("type").find("TwoPhase") != string::npos
+      ? lookup<wordList>("phases")[1]
+      : lookupOrDefault("referencePhase", word::null)
+    ),
+
+    phaseModels_
+    (
+        lookup("phases"),
+        phaseModel::iNew(*this, referencePhaseName_)
+    ),
 
     phi_(calcPhi(phaseModels_)),
 
@@ -295,6 +308,23 @@ Foam::phaseSystem::phaseSystem
 
     // Update motion fields
     correctKinematics();
+
+    // Set the optional reference phase fraction from the other phases
+    if (referencePhaseName_ != word::null)
+    {
+        phaseModel* referencePhasePtr = &phases()[referencePhaseName_];
+        volScalarField& referenceAlpha = *referencePhasePtr;
+
+        referenceAlpha = 1;
+
+        forAll(phaseModels_, phasei)
+        {
+            if (&phaseModels_[phasei] != referencePhasePtr)
+            {
+                referenceAlpha -= phaseModels_[phasei];
+            }
+        }
+    }
 }
 
 

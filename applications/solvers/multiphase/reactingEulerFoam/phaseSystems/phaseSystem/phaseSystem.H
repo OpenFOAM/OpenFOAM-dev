@@ -138,6 +138,10 @@ protected:
         //- Reference to the mesh
         const fvMesh& mesh_;
 
+        //- Name of optional reference phase which is not solved for
+        // but obtained from the sum of the other phases
+        word referencePhaseName_;
+
         //- Phase models
         phaseModelList phaseModels_;
 

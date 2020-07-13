@@ -117,10 +117,11 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
 (
     const phaseSystem& fluid,
     const word& phaseName,
+    const bool referencePhase,
     const label index
 )
 :
-    BasePhaseModel(fluid, phaseName, index),
+    BasePhaseModel(fluid, phaseName, referencePhase, index),
     U_
     (
         IOobject

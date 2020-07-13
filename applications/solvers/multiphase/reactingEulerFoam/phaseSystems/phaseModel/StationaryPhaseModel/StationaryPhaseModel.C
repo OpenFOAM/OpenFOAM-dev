@@ -32,10 +32,11 @@ Foam::StationaryPhaseModel<BasePhaseModel>::StationaryPhaseModel
 (
     const phaseSystem& fluid,
     const word& phaseName,
+    const bool referencePhase,
     const label index
 )
 :
-    BasePhaseModel(fluid, phaseName, index)
+    BasePhaseModel(fluid, phaseName, referencePhase, index)
 {}
 
 

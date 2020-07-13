@@ -42,10 +42,11 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::MultiComponentPhaseModel
 (
     const phaseSystem& fluid,
     const word& phaseName,
+    const bool referencePhase,
     const label index
 )
 :
-    BasePhaseModel(fluid, phaseName, index),
+    BasePhaseModel(fluid, phaseName, referencePhase, index),
     residualAlpha_
     (
         "residualAlpha",

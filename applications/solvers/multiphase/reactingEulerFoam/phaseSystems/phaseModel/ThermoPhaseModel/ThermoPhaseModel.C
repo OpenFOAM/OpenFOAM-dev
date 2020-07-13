@@ -33,10 +33,11 @@ Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::ThermoPhaseModel
 (
     const phaseSystem& fluid,
     const word& phaseName,
+    const bool referencePhase,
     const label index
 )
 :
-    BasePhaseModel(fluid, phaseName, index),
+    BasePhaseModel(fluid, phaseName, referencePhase, index),
     thermo_(ThermoModel::New(fluid.mesh(), this->name()))
 {
     thermo_->validate

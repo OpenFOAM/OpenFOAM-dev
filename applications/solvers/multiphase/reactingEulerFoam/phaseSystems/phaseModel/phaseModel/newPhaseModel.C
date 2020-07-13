@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,6 +32,7 @@ Foam::autoPtr<Foam::phaseModel> Foam::phaseModel::New
 (
     const phaseSystem& fluid,
     const word& phaseName,
+    const bool referencePhase,
     const label index
 )
 {
@@ -53,7 +54,7 @@ Foam::autoPtr<Foam::phaseModel> Foam::phaseModel::New
             << exit(FatalError);
     }
 
-    return cstrIter()(fluid, phaseName, index);
+    return cstrIter()(fluid, phaseName, referencePhase, index);
 }
 
 // ************************************************************************* //

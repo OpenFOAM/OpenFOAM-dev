@@ -19,6 +19,8 @@ type basicMultiphaseSystem;
 
 phases (air water);
 
+referencePhase water;
+
 air
 {
     type            purePhaseModel;

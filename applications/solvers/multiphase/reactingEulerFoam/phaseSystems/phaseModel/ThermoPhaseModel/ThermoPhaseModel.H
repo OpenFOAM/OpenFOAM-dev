@@ -74,6 +74,7 @@ public:
         (
             const phaseSystem& fluid,
             const word& phaseName,
+            const bool referencePhase,
             const label index
         );
 

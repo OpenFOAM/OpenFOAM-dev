@@ -42,21 +42,38 @@ Foam::phaseModel::phaseModel
 (
     const phaseSystem& fluid,
     const word& phaseName,
+    const bool referencePhase,
     const label index
 )
 :
     volScalarField
     (
-        IOobject
+        referencePhase
+      ? volScalarField
         (
-            IOobject::groupName("alpha", phaseName),
-            fluid.mesh().time().timeName(),
+            IOobject
+            (
+                IOobject::groupName("alpha", phaseName),
+                fluid.mesh().time().timeName(),
+                fluid.mesh(),
+                IOobject::NO_READ,
+                IOobject::AUTO_WRITE
+            ),
             fluid.mesh(),
-            IOobject::READ_IF_PRESENT,
-            IOobject::AUTO_WRITE
-        ),
-        fluid.mesh(),
-        dimensionedScalar(dimless, 0)
+            dimensionedScalar(dimless, 0)
+        )
+      : volScalarField
+        (
+            IOobject
+            (
+                IOobject::groupName("alpha", phaseName),
+                fluid.mesh().time().timeName(),
+                fluid.mesh(),
+                IOobject::MUST_READ,
+                IOobject::AUTO_WRITE
+            ),
+            fluid.mesh()
+        )
     ),
 
     fluid_(fluid),

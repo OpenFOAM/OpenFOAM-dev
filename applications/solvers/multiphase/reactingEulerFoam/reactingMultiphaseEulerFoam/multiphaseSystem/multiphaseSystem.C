@@ -365,9 +365,9 @@ void Foam::multiphaseSystem::solve
     // i.e. the moving phases less the optional reference phase
     phaseModelPartialList solvePhases;
 
-    if (found("referencePhase"))
+    if (referencePhaseName_ != word::null)
     {
-        referencePhasePtr = &phases()[lookup<word>("referencePhase")];
+        referencePhasePtr = &phases()[referencePhaseName_];
 
         solvePhases.setSize(movingPhases().size() - 1);
         label solvePhasesi = 0;
@@ -422,6 +422,23 @@ void Foam::multiphaseSystem::solve
         }
     }
 
+    // Calculate the void fraction
+    volScalarField alphaVoid
+    (
+        IOobject
+        (
+            "alphaVoid",
+            mesh_.time().timeName(),
+            mesh_
+        ),
+        mesh_,
+        dimensionedScalar(dimless, 1)
+    );
+    forAll(stationaryPhases(), stationaryPhasei)
+    {
+        alphaVoid -= stationaryPhases()[stationaryPhasei];
+    }
+
     for (int acorr=0; acorr<nAlphaCorr; acorr++)
     {
         tmp<volScalarField> trSubDeltaT;
@@ -448,23 +465,6 @@ void Foam::multiphaseSystem::solve
             !(++alphaSubCycle).end();
         )
         {
-            // Calculate the void fraction
-            volScalarField alphaVoid
-            (
-                IOobject
-                (
-                    "alphaVoid",
-                    mesh_.time().timeName(),
-                    mesh_
-                ),
-                mesh_,
-                dimensionedScalar(dimless, 1)
-            );
-            forAll(stationaryPhases(), stationaryPhasei)
-            {
-                alphaVoid -= stationaryPhases()[stationaryPhasei];
-            }
-
             // Generate face-alphas
             PtrList<surfaceScalarField> alphafs(phases().size());
             if (solvePhases.size() > 1)
@@ -729,23 +729,10 @@ void Foam::multiphaseSystem::solve
                 }
             }
 
-            if (referencePhasePtr)
-            {
-                phaseModel& referencePhase = *referencePhasePtr;
-
-                volScalarField& referenceAlpha = referencePhase;
-                referenceAlpha = alphaVoid;
-
-                forAll(solvePhases, solvePhasei)
-                {
-                    referenceAlpha -= solvePhases[solvePhasei];
-                }
-            }
-
             // Report the phase fractions and the phase fraction sum
-            forAll(phases(), phasei)
+            forAll(solvePhases, solvePhasei)
             {
-                phaseModel& phase = phases()[phasei];
+                phaseModel& phase = solvePhases[solvePhasei];
 
                 Info<< phase.name() << " fraction, min, max = "
                     << phase.weightedAverage(mesh_.V()).value()
@@ -754,33 +741,36 @@ void Foam::multiphaseSystem::solve
                     << endl;
             }
 
-            volScalarField sumAlphaMoving
-            (
-                IOobject
+            if (!referencePhasePtr)
+            {
+                volScalarField sumAlphaMoving
                 (
-                    "sumAlphaMoving",
-                    mesh_.time().timeName(),
-                    mesh_
-                ),
-                mesh_,
-                dimensionedScalar(dimless, 0)
-            );
-            forAll(movingPhases(), movingPhasei)
-            {
-                sumAlphaMoving += movingPhases()[movingPhasei];
-            }
+                    IOobject
+                    (
+                        "sumAlphaMoving",
+                        mesh_.time().timeName(),
+                        mesh_
+                    ),
+                    mesh_,
+                    dimensionedScalar(dimless, 0)
+                );
+                forAll(movingPhases(), movingPhasei)
+                {
+                    sumAlphaMoving += movingPhases()[movingPhasei];
+                }
 
-            Info<< "Phase-sum volume fraction, min, max = "
-                << (sumAlphaMoving + 1 - alphaVoid)()
-                  .weightedAverage(mesh_.V()).value()
-                << ' ' << min(sumAlphaMoving + 1 - alphaVoid).value()
-                << ' ' << max(sumAlphaMoving + 1 - alphaVoid).value()
-                << endl;
+                Info<< "Phase-sum volume fraction, min, max = "
+                    << (sumAlphaMoving + 1 - alphaVoid)()
+                      .weightedAverage(mesh_.V()).value()
+                    << ' ' << min(sumAlphaMoving + 1 - alphaVoid).value()
+                    << ' ' << max(sumAlphaMoving + 1 - alphaVoid).value()
+                    << endl;
 
-            // Correct the sum of the phase fractions to avoid drift
-            forAll(movingPhases(), movingPhasei)
-            {
-                movingPhases()[movingPhasei] *= alphaVoid/sumAlphaMoving;
+                // Correct the sum of the phase fractions to avoid drift
+                forAll(movingPhases(), movingPhasei)
+                {
+                    movingPhases()[movingPhasei] *= alphaVoid/sumAlphaMoving;
+                }
             }
         }
 
@@ -820,6 +810,14 @@ void Foam::multiphaseSystem::solve
         referencePhase.correctInflowOutflow(referencePhase.alphaPhiRef());
         referencePhase.alphaRhoPhiRef() =
             fvc::interpolate(referencePhase.rho())*referencePhase.alphaPhi();
+
+        volScalarField& referenceAlpha = referencePhase;
+        referenceAlpha = alphaVoid;
+
+        forAll(solvePhases, solvePhasei)
+        {
+            referenceAlpha -= solvePhases[solvePhasei];
+        }
     }
 
     calcAlphas();

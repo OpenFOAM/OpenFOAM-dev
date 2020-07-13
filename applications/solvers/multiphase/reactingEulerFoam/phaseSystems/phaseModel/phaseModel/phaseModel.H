@@ -95,9 +95,10 @@ public:
             (
                 const phaseSystem& fluid,
                 const word& phaseName,
+                const bool referencePhase,
                 const label index
             ),
-            (fluid, phaseName, index)
+            (fluid, phaseName, referencePhase, index)
         );
 
 
@@ -107,6 +108,7 @@ public:
         (
             const phaseSystem& fluid,
             const word& phaseName,
+            const bool referencePhase,
             const label index
         );
 
@@ -120,6 +122,7 @@ public:
         (
             const phaseSystem& fluid,
             const word& phaseName,
+            const bool referencePhase,
             const label index
         );
 
@@ -128,25 +131,37 @@ public:
         class iNew
         {
             const phaseSystem& fluid_;
+            const word& referencePhaseName_;
             mutable label indexCounter_;
 
         public:
 
             iNew
             (
-                const phaseSystem& fluid
+                const phaseSystem& fluid,
+                const word& referencePhaseName
             )
             :
                 fluid_(fluid),
+                referencePhaseName_(referencePhaseName),
                 indexCounter_(-1)
             {}
 
             autoPtr<phaseModel> operator()(Istream& is) const
             {
                 indexCounter_++;
+
+                const word phaseName(is);
+
                 return autoPtr<phaseModel>
                 (
-                    phaseModel::New(fluid_, word(is), indexCounter_)
+                    phaseModel::New
+                    (
+                        fluid_,
+                        phaseName,
+                        phaseName == referencePhaseName_,
+                        indexCounter_
+                    )
                 );
             }
         };
