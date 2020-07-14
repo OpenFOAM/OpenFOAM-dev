@@ -61,10 +61,6 @@ class multiphaseSystem
 
     // Private Data
 
-        //- The indexed phase-fraction field; e.g., 1 for water, 2 for air, 3
-        //  for oil, etc...
-        volScalarField alphas_;
-
         //- Interface compression coefficients
         cAlphaTable cAlphas_;
 
@@ -73,8 +69,6 @@ class multiphaseSystem
 
 
     // Private Member Functions
-
-        void calcAlphas();
 
         tmp<surfaceVectorField> nHatfv
         (

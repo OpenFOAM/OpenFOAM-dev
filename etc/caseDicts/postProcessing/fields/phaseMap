@@ -1,0 +1,19 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Writes the phase-fraction map field alpha.map with incremental value ranges
+    for each phase e.g., with values 0-1 for water, 1-2 for air, 2-3 for oil
+
+\*---------------------------------------------------------------------------*/
+
+type            phaseMap;
+libs            ("libreactingEulerFoamFunctionObjects.so");
+
+writeControl    writeTime;
+
+// ************************************************************************* //

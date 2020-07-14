@@ -53,19 +53,6 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::multiphaseSystem::calcAlphas()
-{
-    scalar level = 0.0;
-    alphas_ == 0.0;
-
-    forAll(phases(), i)
-    {
-        alphas_ += level*phases()[i];
-        level += 1.0;
-    }
-}
-
-
 Foam::tmp<Foam::surfaceVectorField> Foam::multiphaseSystem::nHatfv
 (
     const volScalarField& alpha1,
@@ -238,20 +225,6 @@ Foam::multiphaseSystem::multiphaseSystem
 )
 :
     phaseSystem(mesh),
-
-    alphas_
-    (
-        IOobject
-        (
-            "alphas",
-            mesh_.time().timeName(),
-            mesh,
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh,
-        dimensionedScalar(dimless, 0)
-    ),
 
     cAlphas_(lookup("interfaceCompression")),
 
@@ -819,8 +792,6 @@ void Foam::multiphaseSystem::solve
             referenceAlpha -= solvePhases[solvePhasei];
         }
     }
-
-    calcAlphas();
 }
 
 
