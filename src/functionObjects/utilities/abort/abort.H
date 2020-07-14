@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,10 +28,45 @@ Description
     Watches for presence of the named file in the $FOAM_CASE directory
     and aborts the calculation if it is present.
 
+    The default name of the trigger file is \c $FOAM_CASE/<name> where \c
+    <name> is the name of the functionObject entry and the default action is \c
+    nextWrite.
+
     Currently the following action types are supported:
     - noWriteNow
     - writeNow
     - nextWrite
+
+    Examples of function object specification:
+    \verbatim
+    abort
+    {
+        type abort;
+        libs ("libutilityFunctionObjects.so");
+    }
+    \endverbatim
+    will stop the run at the next write after the file "abort" is created in the
+    case directory.
+
+    \verbatim
+    abort
+    {
+        type abort;
+        libs ("libutilityFunctionObjects.so");
+        file "$FOAM_CASE/stop";
+        action writeNow;
+    }
+    \endverbatim
+    will write the fields and stop the run when the file "stop" is created in
+    the case directory.
+
+Usage
+    \table
+        Property | Description            | Required | Default value
+        type     | type name: abort       | yes      |
+        file     | Trigger file path name | no       | $FOAM_CASE/<name>
+        action   | Action executed        | no       | nextWrite
+    \endtable
 
 SourceFiles
     abort.C
