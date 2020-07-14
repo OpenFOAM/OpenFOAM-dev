@@ -27,7 +27,7 @@ Class
 Description
     This functionObject writes the phase-fraction map field alpha.map with
     incremental value ranges for each phase
-    e.g., with values 0-1 for water, 1-2 for air, 2-3 for oil etc.
+    e.g., with values 0 for water, 1 for air, 2 for oil etc.
 
     Example of function object specification:
     \verbatim
