@@ -60,10 +60,7 @@ Foam::twoPhaseSystem::twoPhaseSystem
     phaseSystem(mesh),
     phase1_(phaseModels_[0]),
     phase2_(phaseModels_[1])
-{
-    volScalarField& alpha1 = phase1_;
-    mesh.setFluxRequired(alpha1.name());
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

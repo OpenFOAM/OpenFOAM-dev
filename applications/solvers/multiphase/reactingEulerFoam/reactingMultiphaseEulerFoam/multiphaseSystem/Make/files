@@ -1,6 +1,0 @@
-alphaContactAngle/alphaContactAngleFvPatchScalarField.C
-multiphaseSystem.C
-newMultiphaseSystem.C
-multiphaseSystems.C
-
-LIB = $(FOAM_LIBBIN)/libreactingMultiphaseSystem

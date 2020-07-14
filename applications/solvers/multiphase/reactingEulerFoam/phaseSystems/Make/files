@@ -7,6 +7,8 @@ phasePair/phasePair/phasePair.C
 phasePair/orderedPhasePair/orderedPhasePair.C
 
 phaseSystem/phaseSystem.C
+phaseSystem/phaseSystemNew.C
+phaseSystem/phaseSystemSolve.C
 
 diameterModels/diameterModel/diameterModel.C
 diameterModels/diameterModel/newDiameterModel.C
@@ -84,5 +86,7 @@ BlendedInterfacialModel/blendingMethods/blendingMethod/newBlendingMethod.C
 BlendedInterfacialModel/blendingMethods/noBlending/noBlending.C
 BlendedInterfacialModel/blendingMethods/linear/linear.C
 BlendedInterfacialModel/blendingMethods/hyperbolic/hyperbolic.C
+
+alphaContactAngle/alphaContactAngleFvPatchScalarField.C
 
 LIB = $(FOAM_LIBBIN)/libreactingPhaseSystem

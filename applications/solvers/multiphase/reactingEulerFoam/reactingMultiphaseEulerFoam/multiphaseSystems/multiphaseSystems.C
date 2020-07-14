@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,10 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "addToRunTimeSelectionTable.H"
-
 #include "phaseSystem.H"
-#include "multiphaseSystem.H"
 #include "MomentumTransferPhaseSystem.H"
 #include "OneResistanceHeatTransferPhaseSystem.H"
 #include "TwoResistanceHeatTransferPhaseSystem.H"
@@ -34,6 +31,8 @@ License
 #include "InterfaceCompositionPhaseChangePhaseSystem.H"
 #include "PopulationBalancePhaseSystem.H"
 #include "ThermalPhaseChangePhaseSystem.H"
+
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,14 +43,14 @@ namespace Foam
         <
             OneResistanceHeatTransferPhaseSystem
             <
-                MomentumTransferPhaseSystem<multiphaseSystem>
+                MomentumTransferPhaseSystem<phaseSystem>
             >
         >
         basicMultiphaseSystem;
 
     addNamedToRunTimeSelectionTable
     (
-        multiphaseSystem,
+        phaseSystem,
         basicMultiphaseSystem,
         dictionary,
         basicMultiphaseSystem
@@ -64,7 +63,7 @@ namespace Foam
             <
                 TwoResistanceHeatTransferPhaseSystem
                 <
-                    MomentumTransferPhaseSystem<multiphaseSystem>
+                    MomentumTransferPhaseSystem<phaseSystem>
                 >
             >
         >
@@ -72,7 +71,7 @@ namespace Foam
 
     addNamedToRunTimeSelectionTable
     (
-        multiphaseSystem,
+        phaseSystem,
         interfaceCompositionPhaseChangeMultiphaseSystem,
         dictionary,
         interfaceCompositionPhaseChangeMultiphaseSystem
@@ -85,7 +84,7 @@ namespace Foam
             <
                 TwoResistanceHeatTransferPhaseSystem
                 <
-                    MomentumTransferPhaseSystem<multiphaseSystem>
+                    MomentumTransferPhaseSystem<phaseSystem>
                 >
             >
         >
@@ -93,7 +92,7 @@ namespace Foam
 
     addNamedToRunTimeSelectionTable
     (
-        multiphaseSystem,
+        phaseSystem,
         thermalPhaseChangeMultiphaseSystem,
         dictionary,
         thermalPhaseChangeMultiphaseSystem
@@ -106,7 +105,7 @@ namespace Foam
             <
                 OneResistanceHeatTransferPhaseSystem
                 <
-                    MomentumTransferPhaseSystem<multiphaseSystem>
+                    MomentumTransferPhaseSystem<phaseSystem>
                 >
             >
         >
@@ -114,7 +113,7 @@ namespace Foam
 
     addNamedToRunTimeSelectionTable
     (
-        multiphaseSystem,
+        phaseSystem,
         populationBalanceMultiphaseSystem,
         dictionary,
         populationBalanceMultiphaseSystem
@@ -129,7 +128,7 @@ namespace Foam
                 <
                     TwoResistanceHeatTransferPhaseSystem
                     <
-                        MomentumTransferPhaseSystem<multiphaseSystem>
+                        MomentumTransferPhaseSystem<phaseSystem>
                     >
                 >
             >
@@ -138,7 +137,7 @@ namespace Foam
 
     addNamedToRunTimeSelectionTable
     (
-        multiphaseSystem,
+        phaseSystem,
         thermalPhaseChangePopulationBalanceMultiphaseSystem,
         dictionary,
         thermalPhaseChangePopulationBalanceMultiphaseSystem

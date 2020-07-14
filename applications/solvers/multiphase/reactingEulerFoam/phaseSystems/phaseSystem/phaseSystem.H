@@ -132,6 +132,9 @@ protected:
             >
             aspectRatioModelTable;
 
+        typedef HashTable<scalar, phasePairKey, phasePairKey::hash>
+            cAlphaTable;
+
 
     // Protected data
 
@@ -172,6 +175,12 @@ protected:
         //- Blending methods
         blendingMethodTable blendingMethods_;
 
+        //- Interface compression coefficients
+        cAlphaTable cAlphas_;
+
+        //- Stabilisation for normalisation of the interface normal
+        const dimensionedScalar deltaN_;
+
 
         // Sub Models
 
@@ -180,6 +189,12 @@ protected:
 
             //- Aspect ratio models
             aspectRatioModelTable aspectRatioModels_;
+
+
+        //- Flag to indicate that returned lists of fields are "complete"; i.e.,
+        //  that an absence of force is returned as a constructed list of zeros,
+        //  rather than a null pointer
+        static const bool fillFields_ = false;
 
 
     // Protected member functions
@@ -264,6 +279,47 @@ protected:
         );
 
 
+        // Functions required for interface compression
+
+        //- Normal to interface between two phases
+        //  Used for interface compression
+        tmp<surfaceVectorField> nHatfv
+        (
+            const volScalarField& alpha1,
+            const volScalarField& alpha2
+        ) const;
+
+        //- Normal to interface between two phases dotted with face areas
+        //  Used for interface compression
+        tmp<surfaceScalarField> nHatf
+        (
+            const volScalarField& alpha1,
+            const volScalarField& alpha2
+        ) const;
+
+        //- Correction for the boundary condition on the unit normal nHat on
+        //  walls to produce the correct contact angle.
+        //
+        //  The dynamic contact angle is calculated from the component of the
+        //  velocity on the direction of the interface, parallel to the wall.
+        //  Used for interface compression
+        void correctContactAngle
+        (
+            const phaseModel& alpha1,
+            const phaseModel& alpha2,
+            surfaceVectorField::Boundary& nHatb
+        ) const;
+
+
+        //- Curvature of interface between two phases
+        //  Used for interface compression
+        tmp<volScalarField> K
+        (
+            const phaseModel& alpha1,
+            const phaseModel& alpha2
+        ) const;
+
+
         // Functions required by twoPhaseSystem
 
             //- Return the drag coefficient for phase pair
@@ -288,10 +344,32 @@ public:
     static const word propertiesName;
 
 
+    // Declare runtime construction
+
+        declareRunTimeSelectionTable
+        (
+            autoPtr,
+            phaseSystem,
+            dictionary,
+            (
+                const fvMesh& mesh
+            ),
+            (mesh)
+        );
+
+
     // Constructors
 
         //- Construct from fvMesh
         phaseSystem(const fvMesh& mesh);
+
+
+    // Selectors
+
+        static autoPtr<phaseSystem> New
+        (
+            const fvMesh& mesh
+        );
 
 
     //- Destructor
@@ -450,6 +528,10 @@ public:
                 label patchi
             ) const;
 
+            //- Indicator of the proximity of the interface
+            //  Field values are 1 near and 0 away for the interface.
+            tmp<volScalarField> nearInterface() const;
+
             //- Return the mass transfer rate for an interface
             virtual tmp<volScalarField> dmdtf(const phasePairKey& key) const;
 
@@ -549,6 +631,12 @@ public:
 
             //- Return the specie transfer matrices
             virtual autoPtr<specieTransferTable> specieTransfer() const = 0;
+
+            //- Return the surface tension force
+            tmp<surfaceScalarField> surfaceTension
+            (
+                const phaseModel& phase
+            ) const;
 
 
         // Evolution

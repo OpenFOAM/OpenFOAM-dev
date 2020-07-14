@@ -4,12 +4,12 @@
 
 Info<< "Creating phaseSystem\n" << endl;
 
-autoPtr<multiphaseSystem> fluidPtr
+autoPtr<phaseSystem> fluidPtr
 (
-    multiphaseSystem::New(mesh)
+    phaseSystem::New(mesh)
 );
-multiphaseSystem& fluid = fluidPtr();
-multiphaseSystem::phaseModelList& phases = fluid.phases();
+phaseSystem& fluid = fluidPtr();
+phaseSystem::phaseModelList& phases = fluid.phases();
 
 dimensionedScalar pMin
 (

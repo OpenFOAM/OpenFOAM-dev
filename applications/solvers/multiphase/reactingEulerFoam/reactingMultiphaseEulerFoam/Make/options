@@ -1,6 +1,5 @@
 EXE_INC = \
     -I../include \
-    -ImultiphaseSystem/lnInclude \
     -I../phaseSystems/lnInclude \
     -I../interfacialModels/lnInclude \
     -I../interfacialCompositionModels/lnInclude \
@@ -14,7 +13,7 @@ EXE_INC = \
 
 EXE_LIBS = \
     -lreactingPhaseSystem \
-    -lreactingMultiphaseSystem \
+    -lreactingMultiphaseSystems \
     -lreactingEulerianInterfacialModels \
     -lreactingEulerianInterfacialCompositionModels \
     -lphaseReactingMomentumTransportModels \
