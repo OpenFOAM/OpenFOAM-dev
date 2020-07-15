@@ -68,6 +68,9 @@ do
         UBC="$2"
         shift 2
         ;;
+    -test)
+        shift
+        ;;
     -*)
         usage "Invalid option '$1'"
         ;;
