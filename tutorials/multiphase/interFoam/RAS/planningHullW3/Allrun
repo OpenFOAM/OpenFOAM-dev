@@ -35,6 +35,8 @@ do
     -h | -help)
         usage
         ;;
+    -test)
+        ;;
     -*)
         usage "Invalid option '$1'"
         ;;
