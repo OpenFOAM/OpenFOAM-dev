@@ -58,7 +58,7 @@ functions
     numberConcentration
     {
         type                sizeDistribution;
-        functionObjectLibs  ("libreactingEulerFoamFunctionObjects.so");
+        functionObjectLibs  ("libmultiphaseEulerFoamFunctionObjects.so");
 
         writeControl        outputTime;
         writeInterval       1;

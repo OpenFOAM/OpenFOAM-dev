@@ -39,7 +39,7 @@ Description
     numberDensity
     {
         type           sizeDistribution;
-        libs ("libreactingEulerFoamFunctionObjects.so");
+        libs ("libmultiphaseEulerFoamFunctionObjects.so");
         ...
         populationBalance   bubbles;
         regionType          cellZone;

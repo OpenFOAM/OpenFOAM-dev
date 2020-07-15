@@ -41,7 +41,7 @@ Description
     {
         type            phaseForces;
 
-        libs ("libreactingEulerFoamFunctionObjects.so");
+        libs ("libmultiphaseEulerFoamFunctionObjects.so");
 
         phase           water;
     }

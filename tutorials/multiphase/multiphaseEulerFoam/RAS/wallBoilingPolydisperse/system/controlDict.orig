@@ -56,7 +56,7 @@ functions
     volumeDensity.diameter.bubbles
     {
         type            sizeDistribution;
-        functionObjectLibs ( "libreactingEulerFoamFunctionObjects.so" );
+        functionObjectLibs ( "libmultiphaseEulerFoamFunctionObjects.so" );
         writeControl    runTime;
         writeInterval   0.5;
         log             yes;
@@ -69,7 +69,7 @@ functions
     volumeDensity_bulk.diameter.bubbles
     {
         type            sizeDistribution;
-        functionObjectLibs ( "libreactingEulerFoamFunctionObjects.so" );
+        functionObjectLibs ( "libmultiphaseEulerFoamFunctionObjects.so" );
         writeControl    runTime;
         writeInterval   0.5;
         log             yes;
@@ -82,7 +82,7 @@ functions
     volumeDensity_wall.diameter.bubbles
     {
         type            sizeDistribution;
-        functionObjectLibs ( "libreactingEulerFoamFunctionObjects.so" );
+        functionObjectLibs ( "libmultiphaseEulerFoamFunctionObjects.so" );
         writeControl    runTime;
         writeInterval   0.5;
         log             yes;
