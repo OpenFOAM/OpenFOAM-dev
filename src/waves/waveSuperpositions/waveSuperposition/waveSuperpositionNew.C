@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,34 +23,54 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "sixDoFSolver.H"
+#include "waveSuperposition.H"
+#include "Time.H"
 
-// * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::sixDoFSolver> Foam::sixDoFSolver::New
+const Foam::waveSuperposition& Foam::waveSuperposition::New
 (
-    const dictionary& dict,
-    sixDoFRigidBodyMotion& body
+    const objectRegistry& db
 )
 {
-    word sixDoFSolverType(dict.lookup("type"));
+    if (db.foundObject<waveSuperposition>(dictName))
+    {
+        return db.lookupObject<waveSuperposition>(dictName);
+    }
 
-    Info<< "Selecting sixDoFSolver " << sixDoFSolverType << endl;
+    const IOdictionary dict
+    (
+        IOobject
+        (
+            dictName,
+            db.time().constant(),
+            db,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE,
+            false
+        )
+    );
 
-    dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(sixDoFSolverType);
+    const word type =
+        dict.lookupOrDefault<word>("type", waveSuperposition::typeName);
 
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
+    objectRegistryConstructorTable::iterator cstrIter =
+        objectRegistryConstructorTablePtr_->find(type);
+
+    if (cstrIter == objectRegistryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown sixDoFSolverType type "
-            << sixDoFSolverType << endl << endl
-            << "Valid sixDoFSolver types are : " << endl
-            << dictionaryConstructorTablePtr_->sortedToc()
+            << "Unknown " << waveSuperposition::typeName << " " << type
+            << nl << nl << "Valid types are:" << nl
+            << objectRegistryConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
 
-    return cstrIter()(dict, body);
+    waveSuperposition* ptr = cstrIter()(db).ptr();
+
+    ptr->store();
+
+    return *ptr;
 }
 
 

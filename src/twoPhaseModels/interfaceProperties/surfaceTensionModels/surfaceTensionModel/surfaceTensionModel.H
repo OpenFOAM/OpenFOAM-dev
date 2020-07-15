@@ -48,7 +48,7 @@ Usage
 
 SourceFiles
     surfaceTensionModel.C
-    newSurfaceTensionModel.C
+    surfaceTensionModelNew.C
 
 \*---------------------------------------------------------------------------*/
 

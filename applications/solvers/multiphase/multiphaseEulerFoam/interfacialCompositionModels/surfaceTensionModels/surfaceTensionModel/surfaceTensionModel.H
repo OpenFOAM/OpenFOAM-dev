@@ -28,7 +28,7 @@ Description
 
 SourceFiles
     surfaceTensionModel.C
-    newAspectRatioModel.C
+    aspectRatioModelNew.C
 
 \*---------------------------------------------------------------------------*/
 

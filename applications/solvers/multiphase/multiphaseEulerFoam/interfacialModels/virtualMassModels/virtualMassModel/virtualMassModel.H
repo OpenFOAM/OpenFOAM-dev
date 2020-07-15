@@ -28,7 +28,7 @@ Description
 
 SourceFiles
     virtualMassModel.C
-    newVirtualMassModel.C
+    virtualMassModelNew.C
 
 \*---------------------------------------------------------------------------*/
 

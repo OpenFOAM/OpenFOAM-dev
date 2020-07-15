@@ -28,7 +28,7 @@ Description
 
 SourceFiles
     aspectRatioModel.C
-    newAspectRatioModel.C
+    aspectRatioModelNew.C
 
 \*---------------------------------------------------------------------------*/
 

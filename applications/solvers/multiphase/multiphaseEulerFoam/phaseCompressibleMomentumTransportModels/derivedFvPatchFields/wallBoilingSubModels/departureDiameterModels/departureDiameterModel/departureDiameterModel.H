@@ -29,7 +29,7 @@ Description
 
 SourceFiles
     departureDiameterModel.C
-    newDepartureDiameterModel.C
+    departureDiameterModelNew.C
 
 \*---------------------------------------------------------------------------*/
 

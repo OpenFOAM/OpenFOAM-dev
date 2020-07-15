@@ -29,7 +29,7 @@ Description
 
 SourceFiles
     diameterModel.C
-    newDiameterModel.C
+    diameterModelNew.C
 
 \*---------------------------------------------------------------------------*/
 

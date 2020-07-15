@@ -48,7 +48,7 @@ rigidBodyMotion/rigidBodyMotion.C
 rigidBodyMotion/rigidBodyMotionIO.C
 
 rigidBodySolvers/rigidBodySolver/rigidBodySolver.C
-rigidBodySolvers/rigidBodySolver/newRigidBodySolver.C
+rigidBodySolvers/rigidBodySolver/rigidBodySolverNew.C
 rigidBodySolvers/symplectic/symplectic.C
 rigidBodySolvers/Newmark/Newmark.C
 rigidBodySolvers/CrankNicolson/CrankNicolson.C

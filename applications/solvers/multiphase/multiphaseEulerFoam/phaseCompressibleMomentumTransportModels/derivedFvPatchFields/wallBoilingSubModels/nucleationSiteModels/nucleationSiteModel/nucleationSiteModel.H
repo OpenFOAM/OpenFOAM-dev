@@ -29,7 +29,7 @@ Description
 
 SourceFiles
     nucleationSiteModel.C
-    newNucleationSiteModel.C
+    nucleationSiteModelNew.C
 
 \*---------------------------------------------------------------------------*/
 

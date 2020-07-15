@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,54 +23,54 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "waveSuperposition.H"
-#include "Time.H"
+#include "phaseChangeTwoPhaseMixture.H"
+#include "incompressibleTwoPhaseMixture.H"
 
-// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-const Foam::waveSuperposition& Foam::waveSuperposition::New
+Foam::autoPtr<Foam::phaseChangeTwoPhaseMixture>
+Foam::phaseChangeTwoPhaseMixture::New
 (
-    const objectRegistry& db
+    const volVectorField& U,
+    const surfaceScalarField& phi
 )
 {
-    if (db.foundObject<waveSuperposition>(dictName))
-    {
-        return db.lookupObject<waveSuperposition>(dictName);
-    }
-
-    const IOdictionary dict
+    IOdictionary transportPropertiesDict
     (
         IOobject
         (
-            dictName,
-            db.time().constant(),
-            db,
+            "transportProperties",
+            U.time().constant(),
+            U.db(),
             IOobject::MUST_READ,
             IOobject::NO_WRITE,
             false
         )
     );
 
-    const word type =
-        dict.lookupOrDefault<word>("type", waveSuperposition::typeName);
+    word phaseChangeTwoPhaseMixtureTypeName
+    (
+        transportPropertiesDict.lookup("phaseChangeTwoPhaseMixture")
+    );
 
-    objectRegistryConstructorTable::iterator cstrIter =
-        objectRegistryConstructorTablePtr_->find(type);
+    Info<< "Selecting phaseChange model "
+        << phaseChangeTwoPhaseMixtureTypeName << endl;
 
-    if (cstrIter == objectRegistryConstructorTablePtr_->end())
+    componentsConstructorTable::iterator cstrIter =
+        componentsConstructorTablePtr_
+            ->find(phaseChangeTwoPhaseMixtureTypeName);
+
+    if (cstrIter == componentsConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown " << waveSuperposition::typeName << " " << type
-            << nl << nl << "Valid types are:" << nl
-            << objectRegistryConstructorTablePtr_->sortedToc()
+            << "Unknown phaseChangeTwoPhaseMixture type "
+            << phaseChangeTwoPhaseMixtureTypeName << endl << endl
+            << "Valid  phaseChangeTwoPhaseMixtures are : " << endl
+            << componentsConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
 
-    waveSuperposition* ptr = cstrIter()(db).ptr();
-
-    ptr->store();
-
-    return *ptr;
+    return autoPtr<phaseChangeTwoPhaseMixture>(cstrIter()(U, phi));
 }
 
 

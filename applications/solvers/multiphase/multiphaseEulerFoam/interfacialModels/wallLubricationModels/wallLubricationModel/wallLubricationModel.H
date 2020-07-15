@@ -28,7 +28,7 @@ Description
 
 SourceFiles
     wallLubricationModel.C
-    newWallLubricationModel.C
+    wallLubricationModelNew.C
 
 \*---------------------------------------------------------------------------*/
 

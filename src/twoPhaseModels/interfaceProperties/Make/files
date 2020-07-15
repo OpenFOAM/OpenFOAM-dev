@@ -1,7 +1,7 @@
 interfaceProperties.C
 
 surfaceTensionModels/surfaceTensionModel/surfaceTensionModel.C
-surfaceTensionModels/surfaceTensionModel/newSurfaceTensionModel.C
+surfaceTensionModels/surfaceTensionModel/surfaceTensionModelNew.C
 surfaceTensionModels/constant/constantSurfaceTension.C
 surfaceTensionModels/temperatureDependent/temperatureDependentSurfaceTension.C
 

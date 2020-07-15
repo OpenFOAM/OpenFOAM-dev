@@ -1,5 +1,5 @@
 phaseChangeTwoPhaseMixture/phaseChangeTwoPhaseMixture.C
-phaseChangeTwoPhaseMixture/newPhaseChangeTwoPhaseMixture.C
+phaseChangeTwoPhaseMixture/phaseChangeTwoPhaseMixtureNew.C
 Kunz/Kunz.C
 Merkle/Merkle.C
 SchnerrSauer/SchnerrSauer.C

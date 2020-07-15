@@ -28,7 +28,7 @@ Description
 
 SourceFiles
     turbulentDispersionModel.C
-    newTurbulentDispersionModel.C
+    turbulentDispersionModelNew.C
 
 \*---------------------------------------------------------------------------*/
 

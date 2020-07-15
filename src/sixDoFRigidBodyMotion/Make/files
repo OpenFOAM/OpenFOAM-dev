@@ -27,7 +27,7 @@ $(constraints)/point/sixDoFRigidBodyMotionPointConstraint.C
 sixDoFRigidBodyMotionSolver/sixDoFRigidBodyMotionSolver.C
 
 sixDoFSolvers/sixDoFSolver/sixDoFSolver.C
-sixDoFSolvers/sixDoFSolver/newSixDoFSolver.C
+sixDoFSolvers/sixDoFSolver/sixDoFSolverNew.C
 sixDoFSolvers/symplectic/symplectic.C
 sixDoFSolvers/CrankNicolson/CrankNicolson.C
 sixDoFSolvers/Newmark/Newmark.C

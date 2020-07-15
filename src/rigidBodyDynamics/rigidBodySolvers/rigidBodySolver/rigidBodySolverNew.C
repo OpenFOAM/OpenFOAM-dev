@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,45 +23,34 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "waveModel.H"
+#include "rigidBodySolver.H"
 
-// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::waveModel> Foam::waveModel::New
+Foam::autoPtr<Foam::RBD::rigidBodySolver> Foam::RBD::rigidBodySolver::New
 (
-    const objectRegistry& db,
+    rigidBodyMotion& body,
     const dictionary& dict
 )
 {
-    return waveModel::New(dict.lookup("type"), db, dict);
-}
+    word rigidBodySolverType(dict.lookup("type"));
 
+    Info<< "Selecting rigidBodySolver " << rigidBodySolverType << endl;
 
-Foam::autoPtr<Foam::waveModel> Foam::waveModel::New
-(
-    const word& type,
-    const objectRegistry& db,
-    const dictionary& dict
-)
-{
-    if (debug)
-    {
-        Info<< "Selecting " << waveModel::typeName << " " << type << endl;
-    }
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(rigidBodySolverType);
 
-    objectRegistryConstructorTable::iterator cstrIter =
-        objectRegistryConstructorTablePtr_->find(type);
-
-    if (cstrIter == objectRegistryConstructorTablePtr_->end())
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown " << waveModel::typeName << " " << type << nl << nl
-            << "Valid model types are:" << nl
-            << objectRegistryConstructorTablePtr_->sortedToc()
+            << "Unknown rigidBodySolverType type "
+            << rigidBodySolverType << endl << endl
+            << "Valid rigidBodySolver types are : " << endl
+            << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
 
-    return cstrIter()(db, dict);
+    return cstrIter()(body, dict);
 }
 
 

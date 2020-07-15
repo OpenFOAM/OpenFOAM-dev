@@ -28,7 +28,7 @@ Description
 
 SourceFiles
     swarmCorrection.C
-    newSwarmCorrection.C
+    swarmCorrectionNew.C
 
 \*---------------------------------------------------------------------------*/
 

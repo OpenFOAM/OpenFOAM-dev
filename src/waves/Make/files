@@ -1,12 +1,12 @@
 waveModels/waveModel/waveModel.C
-waveModels/waveModel/newWaveModel.C
+waveModels/waveModel/waveModelNew.C
 waveModels/Airy/Airy.C
 waveModels/Stokes2/Stokes2.C
 waveModels/Stokes5/Stokes5.C
 waveModels/solitary/solitary.C
 
 waveSuperpositions/waveSuperposition/waveSuperposition.C
-waveSuperpositions/waveSuperposition/newWaveSuperposition.C
+waveSuperpositions/waveSuperposition/waveSuperpositionNew.C
 waveSuperpositions/waveAtmBoundaryLayerSuperposition/waveAtmBoundaryLayerSuperposition.C
 
 derivedFvPatchFields/waveAlpha/waveAlphaFvPatchScalarField.C

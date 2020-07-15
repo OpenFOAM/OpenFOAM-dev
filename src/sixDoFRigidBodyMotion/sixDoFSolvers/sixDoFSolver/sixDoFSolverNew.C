@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,34 +23,34 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "rigidBodySolver.H"
+#include "sixDoFSolver.H"
 
 // * * * * * * * * * * * * * * * * Selector  * * * * * * * * * * * * * * * * //
 
-Foam::autoPtr<Foam::RBD::rigidBodySolver> Foam::RBD::rigidBodySolver::New
+Foam::autoPtr<Foam::sixDoFSolver> Foam::sixDoFSolver::New
 (
-    rigidBodyMotion& body,
-    const dictionary& dict
+    const dictionary& dict,
+    sixDoFRigidBodyMotion& body
 )
 {
-    word rigidBodySolverType(dict.lookup("type"));
+    word sixDoFSolverType(dict.lookup("type"));
 
-    Info<< "Selecting rigidBodySolver " << rigidBodySolverType << endl;
+    Info<< "Selecting sixDoFSolver " << sixDoFSolverType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(rigidBodySolverType);
+        dictionaryConstructorTablePtr_->find(sixDoFSolverType);
 
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown rigidBodySolverType type "
-            << rigidBodySolverType << endl << endl
-            << "Valid rigidBodySolver types are : " << endl
+            << "Unknown sixDoFSolverType type "
+            << sixDoFSolverType << endl << endl
+            << "Valid sixDoFSolver types are : " << endl
             << dictionaryConstructorTablePtr_->sortedToc()
             << exit(FatalError);
     }
 
-    return cstrIter()(body, dict);
+    return cstrIter()(dict, body);
 }
 
 

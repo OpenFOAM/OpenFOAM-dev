@@ -28,7 +28,7 @@ Description
 
 SourceFiles
     saturationModel.C
-    newSaturationModel.C
+    saturationModelNew.C
 
 \*---------------------------------------------------------------------------*/
 
