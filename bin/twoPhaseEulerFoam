@@ -23,7 +23,7 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     buoyantBoussinesqPimpleFoam
+#     twoPhaseEulerFoam
 #
 # Description
 #     Script to inform the user that the twoPhaseEulerFoam solver

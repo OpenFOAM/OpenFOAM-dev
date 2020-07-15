@@ -3186,7 +3186,7 @@ _reactingFoam_ ()
 }
 complete -o filenames -o nospace -F _reactingFoam_ reactingFoam
 
-_reactingMultiphaseEulerFoam_ ()
+_multiphaseEulerFoam_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
     local prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -3209,7 +3209,7 @@ _reactingMultiphaseEulerFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o filenames -o nospace -F _reactingMultiphaseEulerFoam_ reactingMultiphaseEulerFoam
+complete -o filenames -o nospace -F _multiphaseEulerFoam_ multiphaseEulerFoam
 
 _reactingParcelFoam_ ()
 {
