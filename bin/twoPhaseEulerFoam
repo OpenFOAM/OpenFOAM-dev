@@ -31,7 +31,7 @@
 #
 #------------------------------------------------------------------------------
 
-echo "The twoPhaseEulerFoam solver has been replaced"
-echo "by the more general reactingTwoPhaseEulerFoam solver."
+echo "The twoPhaseEulerFoam solver has been replaced" \
+     "by the more general reactingTwoPhaseEulerFoam solver."
 
 #------------------------------------------------------------------------------
