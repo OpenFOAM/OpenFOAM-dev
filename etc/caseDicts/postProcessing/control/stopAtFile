@@ -1,0 +1,18 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Stops the run when the file "stop" is created in the case directory.
+
+\*---------------------------------------------------------------------------*/
+
+type stopAtFile;
+libs ("libutilityFunctionObjects.so");
+
+file "$FOAM_CASE/stop";
+
+// ************************************************************************* //

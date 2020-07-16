@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,59 +22,23 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::abort
+    Foam::functionObjects::stopAt
 
 Description
-    Watches for presence of the named file in the $FOAM_CASE directory
-    and aborts the calculation if it is present.
+    Abstract base class for stop conditions.
 
-    The default name of the trigger file is \c $FOAM_CASE/<name> where \c
-    <name> is the name of the functionObject entry and the default action is \c
-    nextWrite.
-
-    Currently the following action types are supported:
+    Currently the following actions are supported:
     - noWriteNow
     - writeNow
     - nextWrite
 
-    Examples of function object specification:
-    \verbatim
-    abort
-    {
-        type abort;
-        libs ("libutilityFunctionObjects.so");
-    }
-    \endverbatim
-    will stop the run at the next write after the file "abort" is created in the
-    case directory.
-
-    \verbatim
-    abort
-    {
-        type abort;
-        libs ("libutilityFunctionObjects.so");
-        file "$FOAM_CASE/stop";
-        action writeNow;
-    }
-    \endverbatim
-    will write the fields and stop the run when the file "stop" is created in
-    the case directory.
-
-Usage
-    \table
-        Property | Description            | Required | Default value
-        type     | type name: abort       | yes      |
-        file     | Trigger file path name | no       | $FOAM_CASE/<name>
-        action   | Action executed        | no       | nextWrite
-    \endtable
-
 SourceFiles
-    abort.C
+    stopAt.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_abort_H
-#define functionObjects_abort_H
+#ifndef functionObjects_stopAt_H
+#define functionObjects_stopAt_H
 
 #include "functionObject.H"
 #include "NamedEnum.H"
@@ -87,16 +51,14 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class abort Declaration
+                            Class stopAt Declaration
 \*---------------------------------------------------------------------------*/
 
-class abort
+class stopAt
 :
     public functionObject
 {
 public:
-
-    // Public data
 
         //- Enumeration defining the type of action
         enum class actionType
@@ -106,15 +68,13 @@ public:
             nextWrite      //!< stop the next time data are written
         };
 
-private:
 
-    // Private Data
+protected:
+
+    // Protected data
 
         //- Reference to the Time
         const Time& time_;
-
-        //- The fully-qualified name of the abort file
-        fileName abortFile_;
 
         //- Action type names
         static const NamedEnum<actionType, 3> actionTypeNames_;
@@ -122,23 +82,26 @@ private:
         //- The type of action
         actionType action_;
 
+        //- Set true when the stop action has executed
+        bool stopped_;
 
-    // Private Member Functions
 
-        //- Remove abort file.
-        void removeFile() const;
+    // Protected Member Functions
+
+        //- Return true when the stop condition is achieved
+        virtual bool condition() const = 0;
 
 
 public:
 
     //- Runtime type information
-    TypeName("abort");
+    TypeName("stopAt");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        abort
+        stopAt
         (
             const word& name,
             const Time& runTime,
@@ -146,11 +109,11 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        abort(const abort&) = delete;
+        stopAt(const stopAt&) = delete;
 
 
     //- Destructor
-    virtual ~abort();
+    virtual ~stopAt();
 
 
     // Member Functions
@@ -158,10 +121,10 @@ public:
         //- Read the dictionary settings
         virtual bool read(const dictionary&);
 
-        //- Execute, check existence of abort file and take action
+        //- Execute, check existence of stopAt file and take action
         virtual bool execute();
 
-        //- Execute, check existence of abort file and take action
+        //- Execute, check existence of stopAt file and take action
         virtual bool write();
 
         //- Execute at the final time-loop, used for cleanup
@@ -171,7 +134,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const abort&) = delete;
+        void operator=(const stopAt&) = delete;
 };
 
 
