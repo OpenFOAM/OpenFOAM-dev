@@ -52,7 +52,7 @@ subModels
     particleForces
     {
         sphereDrag;
-//        gravity;
+        // gravity;
     }
 
     injectionModels
@@ -71,7 +71,7 @@ subModels
             parcelsPerSecond 1000;
             flowRateProfile  constant 1;
 
-//          nParticle        100; // Required for fixed parcelBasisType
+            // nParticle        100; // Required for fixed parcelBasisType
             sizeDistribution
             {
                 type         fixedValue;

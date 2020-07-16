@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     icoUncoupledKinematicParcelFoam;
+application     particleFoam;
 
 startFrom       startTime;
 
@@ -23,13 +23,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         5;
+endTime         0.25;
 
 deltaT          5e-5;
 
 writeControl    runTime;
 
-writeInterval   0.02;
+writeInterval   0.05;
 
 purgeWrite      0;
 

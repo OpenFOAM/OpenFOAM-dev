@@ -1925,7 +1925,7 @@ _icoUncoupledKinematicParcelDyMFoam_ ()
 }
 complete -o filenames -o nospace -F _icoUncoupledKinematicParcelDyMFoam_ icoUncoupledKinematicParcelDyMFoam
 
-_icoUncoupledKinematicParcelFoam_ ()
+_particleFoam_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
     local prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -1948,7 +1948,7 @@ _icoUncoupledKinematicParcelFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o filenames -o nospace -F _icoUncoupledKinematicParcelFoam_ icoUncoupledKinematicParcelFoam
+complete -o filenames -o nospace -F _particleFoam_ particleFoam
 
 _ideasUnvToFoam_ ()
 {
@@ -5366,7 +5366,7 @@ _uncoupledKinematicParcelDyMFoam_ ()
 }
 complete -o filenames -o nospace -F _uncoupledKinematicParcelDyMFoam_ uncoupledKinematicParcelDyMFoam
 
-_uncoupledKinematicParcelFoam_ ()
+_rhoParticleFoam_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
     local prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -5389,7 +5389,7 @@ _uncoupledKinematicParcelFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o filenames -o nospace -F _uncoupledKinematicParcelFoam_ uncoupledKinematicParcelFoam
+complete -o filenames -o nospace -F _rhoParticleFoam_ rhoParticleFoam
 
 _viewFactorsGen_ ()
 {

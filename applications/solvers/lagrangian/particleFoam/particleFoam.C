@@ -22,20 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    uncoupledKinematicParcelFoam
+    rhoParticleFoam
 
 Description
-    Transient solver for the passive transport of a particle cloud.
+    Transient solver for the passive transport of a single kinematic
+    particle cloud, with optional mesh motion and mesh topology changes.
 
-    Uses a pre- calculated velocity field to evolve the cloud.
+    Uses a pre-calculated velocity field to evolve the cloud.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
-#include "psiThermo.H"
-#include "fluidThermoMomentumTransportModel.H"
-#include "basicKinematicCloud.H"
+#include "singlePhaseTransportModel.H"
+#include "kinematicMomentumTransportModel.H"
+#include "basicKinematicCollidingCloud.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -55,7 +56,7 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     #include "createDynamicFvMesh.H"
     #include "createFields.H"
-    #include "compressibleCourantNo.H"
+    #include "CourantNo.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,7 +75,11 @@ int main(int argc, char *argv[])
             U.correctBoundaryConditions();
         }
 
+        laminarTransport.correct();
+
         Info<< "Evolving " << kinematicCloud.name() << endl;
+        mu = laminarTransport.nu()*rhoInfValue;
+
         kinematicCloud.evolve();
 
         runTime.write();
