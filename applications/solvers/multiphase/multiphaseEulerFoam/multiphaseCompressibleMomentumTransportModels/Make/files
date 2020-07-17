@@ -1,4 +1,4 @@
-phaseCompressibleMomentumTransportModels.C
+multiphaseCompressibleMomentumTransportModels.C
 
 
 phasePressureModel/phasePressureModel.C
@@ -70,4 +70,4 @@ derivedFvPatchFields/JohnsonJacksonParticleSlip/JohnsonJacksonParticleSlipFvPatc
 derivedFvPatchFields/JohnsonJacksonParticleTheta/JohnsonJacksonParticleThetaFvPatchScalarField.C
 
 
-LIB = $(FOAM_LIBBIN)/libphaseReactingMomentumTransportModels
+LIB = $(FOAM_LIBBIN)/libmultiphaseMomentumTransportModels

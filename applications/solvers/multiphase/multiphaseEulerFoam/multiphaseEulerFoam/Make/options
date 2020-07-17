@@ -12,12 +12,12 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude
 
 EXE_LIBS = \
-    -lreactingPhaseSystem \
-    -lreactingMultiphaseSystems \
-    -lreactingEulerianInterfacialModels \
-    -lreactingEulerianInterfacialCompositionModels \
-    -lphaseReactingMomentumTransportModels \
-    -lphaseReactingThermophysicalTransportModels \
+    -lphaseSystem \
+    -lmultiphaseSystems \
+    -leulerianInterfacialModels \
+    -leulerianInterfacialCompositionModels \
+    -lmultiphaseMomentumTransportModels \
+    -lmultiphaseThermophysicalTransportModels \
     -lthermophysicalTransportModels \
     -lfiniteVolume \
     -lfvOptions \

@@ -82,4 +82,4 @@ phaseTransferModels/phaseTransferModel/phaseTransferModelNew.C
 phaseTransferModels/deposition/deposition.C
 phaseTransferModels/reactionDriven/reactionDriven.C
 
-LIB = $(FOAM_LIBBIN)/libreactingEulerianInterfacialModels
+LIB = $(FOAM_LIBBIN)/libeulerianInterfacialModels

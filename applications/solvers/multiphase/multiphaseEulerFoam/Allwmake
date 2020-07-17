@@ -7,8 +7,8 @@ cd ${0%/*} || exit 1    # Run from this directory
 wmake $targetType phaseSystems
 wmake $targetType interfacialModels
 wmake $targetType interfacialCompositionModels
-wmake $targetType phaseCompressibleMomentumTransportModels
-wmake $targetType phaseThermophysicalTransportModels
+wmake $targetType multiphaseCompressibleMomentumTransportModels
+wmake $targetType multiphaseThermophysicalTransportModels
 multiphaseEulerFoam/Allwmake $targetType $*
 reactingTwoPhaseEulerFoam/Allwmake $targetType $*
 wmake $targetType functionObjects

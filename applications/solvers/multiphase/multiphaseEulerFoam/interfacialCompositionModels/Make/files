@@ -22,4 +22,4 @@ saturationModels/polynomial/polynomial.C
 saturationModels/function1/function1.C
 saturationModels/constantSaturationConditions/constantSaturationConditions.C
 
-LIB = $(FOAM_LIBBIN)/libreactingEulerianInterfacialCompositionModels
+LIB = $(FOAM_LIBBIN)/libeulerianInterfacialCompositionModels

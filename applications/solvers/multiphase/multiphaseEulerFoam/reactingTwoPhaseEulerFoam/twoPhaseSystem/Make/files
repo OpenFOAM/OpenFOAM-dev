@@ -2,4 +2,4 @@ twoPhaseSystem.C
 twoPhaseSystemNew.C
 twoPhaseSystems.C
 
-LIB = $(FOAM_LIBBIN)/libreactingTwoPhaseSystem
+LIB = $(FOAM_LIBBIN)/libtwoPhaseSystem
