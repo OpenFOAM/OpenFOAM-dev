@@ -8,4 +8,4 @@ mass transfer terms are handled correctly. The cases can also be used to study
 the influence of certain parameters on the form of the size distribution, before
 running a simulation with spatial transport. Further test cases are contained in
 
-test/multiphase/reactingTwoPhaseEulerFoam/populationBalanceModeling
+test/multiphase/reactingMultiphaseEulerFoam/populationBalanceModeling

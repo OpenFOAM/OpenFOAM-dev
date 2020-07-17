@@ -1,3 +1,0 @@
-reactingTwoPhaseEulerFoam.C
-
-EXE = $(FOAM_APPBIN)/reactingTwoPhaseEulerFoam
