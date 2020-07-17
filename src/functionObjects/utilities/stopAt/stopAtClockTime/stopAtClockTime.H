@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,16 +22,13 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::stopAtFile
+    Foam::functionObjects::stopAtClockTime
 
 Description
-    Stops the run when the specified file is created in the case directory
+    Stops the run when the specified clock time in second has been reached
     and optionally write results before stopping.
 
-    The default name of the trigger file is \c $FOAM_CASE/<name> where \c
-    <name> is the name of the functionObject entry.
-
-    Currently the following action types are supported:
+    The following actions are supported:
     - noWriteNow
     - writeNow
     - nextWrite (default)
@@ -40,40 +37,30 @@ Description
     \verbatim
     stop
     {
-        type    stopAtFile;
-        libs    ("libutilityFunctionObjects.so");
+        type        stopAtClockTime;
+        libs        ("libutilityFunctionObjects.so");
+        stopTime    10;
+        action      writeNow;
     }
     \endverbatim
     will stop the run at the next write after the file "stop" is created in the
     case directory.
 
-    \verbatim
-    stop
-    {
-        type    stopAtFile;
-        libs    ("libutilityFunctionObjects.so");
-        file    "$FOAM_CASE/stop";
-        action  writeNow;
-    }
-    \endverbatim
-    will write the fields and stop the run when the file "stop" is created in
-    the case directory.
-
 Usage
     \table
-        Property | Description            | Required | Default value
-        type     | type name: stopAtFile  | yes      |
-        file     | Trigger file path name | no       | $FOAM_CASE/<name>
-        action   | Action executed        | no       | nextWrite
+        Property | Description              | Required | Default value
+        type     | type name: stopAtClockTime | yes    |
+        stopTime | Maximum elapsed time [s] | yes      |
+        action   | Action executed          | no       | nextWrite
     \endtable
 
 SourceFiles
-    stopAtFile.C
+    stopAtClockTime.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_stopAtFile_H
-#define functionObjects_stopAtFile_H
+#ifndef functionObjects_stopAtClockTime_H
+#define functionObjects_stopAtClockTime_H
 
 #include "stopAt.H"
 
@@ -85,23 +72,20 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class stopAtFile Declaration
+                      Class stopAtClockTime Declaration
 \*---------------------------------------------------------------------------*/
 
-class stopAtFile
+class stopAtClockTime
 :
     public stopAt
 {
     // Private Data
 
-        //- The fully-qualified name of the stopAtFile file
-        fileName stopAtFileFile_;
+        //-
+        time_t stopTime_;
 
 
     // Private Member Functions
-
-        //- Remove stopAtFile file.
-        void removeFile() const;
 
         //- Return true when the stop condition is achieved
         virtual bool condition() const;
@@ -110,13 +94,13 @@ class stopAtFile
 public:
 
     //- Runtime type information
-    TypeName("stopAtFile");
+    TypeName("stopAtClockTime");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        stopAtFile
+        stopAtClockTime
         (
             const word& name,
             const Time& runTime,
@@ -124,11 +108,11 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        stopAtFile(const stopAtFile&) = delete;
+        stopAtClockTime(const stopAtClockTime&) = delete;
 
 
     //- Destructor
-    virtual ~stopAtFile();
+    virtual ~stopAtClockTime();
 
 
     // Member Functions
@@ -136,14 +120,11 @@ public:
         //- Read the dictionary settings
         virtual bool read(const dictionary&);
 
-        //- Execute at the final time-loop, used for cleanup
-        virtual bool end();
-
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const stopAtFile&) = delete;
+        void operator=(const stopAtClockTime&) = delete;
 };
 
 

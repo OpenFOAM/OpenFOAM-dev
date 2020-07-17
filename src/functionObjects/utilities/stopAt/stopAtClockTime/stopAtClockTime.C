@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,10 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "stopAtFile.H"
-#include "dictionary.H"
-#include "OSspecific.H"
-#include "PstreamReduceOps.H"
+#include "stopAtClockTime.H"
+#include "Time.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -35,12 +33,12 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(stopAtFile, 0);
+    defineTypeNameAndDebug(stopAtClockTime, 0);
 
     addToRunTimeSelectionTable
     (
         functionObject,
-        stopAtFile,
+        stopAtClockTime,
         dictionary
     );
 }
@@ -49,28 +47,15 @@ namespace functionObjects
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::functionObjects::stopAtFile::removeFile() const
+bool Foam::functionObjects::stopAtClockTime::condition() const
 {
-    bool fileExists = isFile(stopAtFileFile_);
-    reduce(fileExists, orOp<bool>());
-
-    if (fileExists && Pstream::master())
-    {
-        // Cleanup ABORT file (on master only)
-        rm(stopAtFileFile_);
-    }
-}
-
-
-bool Foam::functionObjects::stopAtFile::condition() const
-{
-    return isFile(stopAtFileFile_);
+    return time_.elapsedClockTime() > stopTime_;
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::stopAtFile::stopAtFile
+Foam::functionObjects::stopAtClockTime::stopAtClockTime
 (
     const word& name,
     const Time& runTime,
@@ -78,40 +63,25 @@ Foam::functionObjects::stopAtFile::stopAtFile
 )
 :
     stopAt(name, runTime, dict),
-    stopAtFileFile_("$FOAM_CASE/" + name)
+    stopTime_(0)
 {
-    stopAtFileFile_.expand();
     read(dict);
-
-    // Remove any old files from previous runs
-    removeFile();
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::stopAtFile::~stopAtFile()
+Foam::functionObjects::stopAtClockTime::~stopAtClockTime()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::functionObjects::stopAtFile::read(const dictionary& dict)
+bool Foam::functionObjects::stopAtClockTime::read(const dictionary& dict)
 {
     stopAt::read(dict);
+    dict.lookup("stopTime") >> stopTime_;
 
-    if (dict.readIfPresent("file", stopAtFileFile_))
-    {
-        stopAtFileFile_.expand();
-    }
-
-    return true;
-}
-
-
-bool Foam::functionObjects::stopAtFile::end()
-{
-    removeFile();
     return true;
 }
 

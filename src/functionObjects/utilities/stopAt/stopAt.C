@@ -69,9 +69,7 @@ Foam::functionObjects::stopAt::stopAt
     time_(runTime),
     action_(actionType::nextWrite),
     stopped_(false)
-{
-    read(dict);
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

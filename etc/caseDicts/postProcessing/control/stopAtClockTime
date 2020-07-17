@@ -6,14 +6,15 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Stops the run when the file "stop" is created in the case directory.
+    Stops the run when the specified clock time in second has been reached
+    and optionally write results before stopping.
 
 \*---------------------------------------------------------------------------*/
 
-type    stopAtFile;
-libs    ("libutilityFunctionObjects.so");
+type        stopAtClockTime;
+libs        ("libutilityFunctionObjects.so");
 
-file    "$FOAM_CASE/stop";
-action  nextWrite;
+stopTime    <max_clock_time_s>;
+action      nextWrite;
 
 // ************************************************************************* //

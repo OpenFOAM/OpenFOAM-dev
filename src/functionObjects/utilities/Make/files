@@ -5,6 +5,7 @@ setTimeStep/setTimeStepFunctionObject.C
 systemCall/systemCall.C
 stopAt/stopAt.C
 stopAt/stopAtFile/stopAtFile.C
+stopAt/stopAtClockTime/stopAtClockTime.C
 removeRegisteredObject/removeRegisteredObject.C
 writeDictionary/writeDictionary.C
 writeObjects/writeObjects.C
