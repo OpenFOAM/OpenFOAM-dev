@@ -36,6 +36,7 @@ do
         usage
         ;;
     -test)
+        shift
         ;;
     -*)
         usage "Invalid option '$1'"
