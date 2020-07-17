@@ -24,17 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "stringOps.H"
-#include "typeInfo.H"
 #include "OSspecific.H"
 #include "etcFiles.H"
-#include "OStringStream.H"
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//! \cond fileScope
-//  Find the type/position of the ":-" or ":+" alternative values
-//
+// Find the type/position of the ":-" or ":+" alternative values
 static inline int findParameterAlternative
 (
     const std::string& s,
@@ -49,18 +44,18 @@ static inline int findParameterAlternative
         {
             if (pos < endPos)
             {
-                // in-range: check for '+' or '-' following the ':'
+                // Nn-range: check for '+' or '-' following the ':'
                 const int altType = s[pos+1];
                 if (altType == '+' || altType == '-')
                 {
                     return altType;
                 }
 
-                ++pos;    // unknown/unsupported - continue at next position
+                ++pos;    // Unknown/unsupported - continue at next position
             }
             else
             {
-                // out-of-range: abort
+                // Out-of-range: abort
                 pos = std::string::npos;
             }
         }
@@ -68,7 +63,6 @@ static inline int findParameterAlternative
 
     return 0;
 }
-//! \endcond
 
 
 Foam::string Foam::stringOps::expand
@@ -115,7 +109,7 @@ Foam::string& Foam::stringOps::inplaceExpand
                 endVar = s.find('}', begVar);
                 delim = 1;
 
-                // check for ${parameter:-word} or ${parameter:+word}
+                // Check for ${parameter:-word} or ${parameter:+word}
                 if (endVar != string::npos)
                 {
                     altPos = begVar;
@@ -126,17 +120,17 @@ Foam::string& Foam::stringOps::inplaceExpand
             {
                 string::iterator iter = s.begin() + begVar + 1;
 
-                // more generous in accepting keywords than for env variables
+                // Accept all dictionary and environment variable characters
                 while
                 (
                     iter != s.end()
                  &&
                     (
                         isalnum(*iter)
-                     || *iter == '/' // for dictionary slash syntax
-                     || *iter == '!' // for dictionary slash systax
-                     || *iter == '.' // for dictionary dot systax
-                     || *iter == ':' // for dictionary dot systax
+                     || *iter == '/' // For dictionary slash syntax
+                     || *iter == '!' // For dictionary slash systax
+                     || *iter == '.' // For dictionary dot systax
+                     || *iter == ':' // For dictionary dot systax
                      || *iter == '_'
                     )
                 )
@@ -148,12 +142,12 @@ Foam::string& Foam::stringOps::inplaceExpand
 
             if (endVar == string::npos)
             {
-                // likely parsed '${...' without closing '}' - abort
+                // Likely parsed '${...' without closing '}' - abort
                 break;
             }
             else if (endVar == begVar)
             {
-                // parsed '${}' or $badChar  - skip over
+                // Parsed '${}' or $badChar  - skip over
                 begVar = endVar + 1;
             }
             else
@@ -174,7 +168,7 @@ Foam::string& Foam::stringOps::inplaceExpand
                 std::string altValue;
                 if (altPos != string::npos)
                 {
-                    // had ":-" or ":+" alternative value
+                    // Had ":-" or ":+" alternative value
                     altValue = s.substr
                     (
                         altPos + 2,
@@ -190,7 +184,7 @@ Foam::string& Foam::stringOps::inplaceExpand
                 {
                     if (altPos != string::npos && altType == '+')
                     {
-                        // was found, use ":+" alternative
+                        // Was found, use ":+" alternative
                         s.std::string::replace
                         (
                             begVar,
@@ -201,7 +195,7 @@ Foam::string& Foam::stringOps::inplaceExpand
                     }
                     else
                     {
-                        // was found, use value
+                        // Was found, use value
                         s.std::string::replace
                         (
                             begVar,
@@ -213,7 +207,7 @@ Foam::string& Foam::stringOps::inplaceExpand
                 }
                 else if (altPos != string::npos && altType == '-')
                 {
-                    // was not found, use ":-" alternative
+                    // Was not found, use ":-" alternative
                     s.std::string::replace
                     (
                         begVar,
@@ -224,7 +218,7 @@ Foam::string& Foam::stringOps::inplaceExpand
                 }
                 else
                 {
-                    // substitute with nothing, also for ":+" alternative
+                    // Substitute with nothing, also for ":+" alternative
                     s.std::string::erase(begVar, endVar - begVar + 1);
                 }
             }
@@ -259,35 +253,42 @@ Foam::string Foam::stringOps::getVariable
     const bool allowEmpty
 )
 {
-    string value;
+    const entry* ePtr = dict.lookupScopedEntryPtr(name, true, false);
 
-    const entry* ePtr = dict.lookupScopedEntryPtr
-    (
-        name,
-        true,
-        false
-    );
     if (ePtr)
     {
         OStringStream buf;
+
         // Force floating point numbers to be printed with at least
         // some decimal digits.
         buf << scientific;
+
         buf.precision(IOstream::defaultPrecision());
 
-        // fail for non-primitiveEntry
-        dynamicCast<const primitiveEntry>
-        (
-            *ePtr
-        ).write(buf, true);
+        // Fail for non-primitiveEntry
+        dynamicCast<const primitiveEntry>(*ePtr).write(buf, true);
 
-        value = buf.str();
+        return buf.str();
     }
     else if (allowEnvVars)
     {
-        value = getEnv(name);
+        string::const_iterator iter = name.begin();
 
-        if (!allowEmpty && value.empty())
+        // Search for the sub-set of characters in name which are allowed
+        // in environment variables
+        string::size_type begVar = 0;
+        string::size_type endVar = begVar;
+        while (iter != name.end() && (isalnum(*iter) || *iter == '_'))
+        {
+            ++iter;
+            ++endVar;
+        }
+
+        const word varName(name.substr(begVar, endVar - begVar), false);
+
+        string varValue = getEnv(varName);
+
+        if (!allowEmpty && varValue.empty())
         {
             FatalIOErrorInFunction
             (
@@ -295,6 +296,10 @@ Foam::string Foam::stringOps::getVariable
             )   << "Cannot find dictionary or environment variable "
                 << name << exit(FatalIOError);
         }
+
+        varValue += name.substr(endVar, name.size() - endVar);
+
+        return varValue;
     }
     else
     {
@@ -303,9 +308,9 @@ Foam::string Foam::stringOps::getVariable
             dict
         )   << "Cannot find dictionary variable "
             << name << exit(FatalIOError);
-    }
 
-    return value;
+        return string::null;
+    }
 }
 
 
@@ -394,7 +399,7 @@ Foam::string& Foam::stringOps::inplaceExpand
             {
                 string::iterator iter = s.begin() + begVar + 1;
 
-                // more generous in accepting keywords than for env variables
+                // Accept all dictionary and environment variable characters
                 string::size_type endVar = begVar;
                 while
                 (
@@ -402,10 +407,10 @@ Foam::string& Foam::stringOps::inplaceExpand
                  &&
                     (
                         isalnum(*iter)
-                     || *iter == '/' // for dictionary slash syntax
-                     || *iter == '!' // for dictionary slash systax
-                     || *iter == '.' // for dictionary dot systax
-                     || *iter == ':' // for dictionary dot systax
+                     || *iter == '/' // For dictionary slash syntax
+                     || *iter == '!' // For dictionary slash systax
+                     || *iter == '.' // For dictionary dot systax
+                     || *iter == ':' // For dictionary dot systax
                      || *iter == '_'
                     )
                 )
@@ -534,17 +539,17 @@ Foam::string& Foam::stringOps::inplaceExpand
             {
                 string::iterator iter = s.begin() + begVar + 1;
 
-                // more generous in accepting keywords than for env variables
+                // Accept all dictionary and environment variable characters
                 while
                 (
                     iter != s.end()
                  &&
                     (
                         isalnum(*iter)
-                     || *iter == '/' // for dictionary slash syntax
-                     || *iter == '!' // for dictionary slash systax
-                     || *iter == '.' // for dictionary dot systax
-                     || *iter == ':' // for dictionary dot systax
+                     || *iter == '/' // For dictionary slash syntax
+                     || *iter == '!' // For dictionary slash systax
+                     || *iter == '.' // For dictionary dot systax
+                     || *iter == ':' // For dictionary dot systax
                      || *iter == '_'
                     )
                 )
@@ -556,12 +561,12 @@ Foam::string& Foam::stringOps::inplaceExpand
 
             if (endVar == string::npos)
             {
-                // likely parsed '${...' without closing '}' - abort
+                // Likely parsed '${...' without closing '}' - abort
                 break;
             }
             else if (endVar == begVar)
             {
-                // parsed '${}' or $badChar  - skip over
+                // Parsed '${}' or $badChar  - skip over
                 begVar = endVar + 1;
             }
             else
@@ -577,15 +582,15 @@ Foam::string& Foam::stringOps::inplaceExpand
                 );
 
 
-                // lookup in the dictionary
+                // Lookup in the dictionary
                 const entry* ePtr = dict.lookupScopedEntryPtr
                 (
                     varName,
                     true,
-                    false   // wildcards disabled. See primitiveEntry
+                    false   // Wildcards disabled. See primitiveEntry
                 );
 
-                // if defined - copy its entries
+                // If defined - copy its entries
                 if (ePtr)
                 {
                     OStringStream buf;
@@ -599,7 +604,7 @@ Foam::string& Foam::stringOps::inplaceExpand
                     }
                     else
                     {
-                        // fail for other types
+                        // Fail for other types
                         dynamicCast<const primitiveEntry>
                         (
                             *ePtr
@@ -616,7 +621,7 @@ Foam::string& Foam::stringOps::inplaceExpand
                 }
                 else
                 {
-                    // not defined - leave original string untouched
+                    // Not defined - leave original string untouched
                     begVar = endVar + 1;
                 }
             }
@@ -673,7 +678,7 @@ Foam::string& Foam::stringOps::inplaceExpand
                 endVar = s.find('}', begVar);
                 delim = 1;
 
-                // check for ${parameter:-word} or ${parameter:+word}
+                // Check for ${parameter:-word} or ${parameter:+word}
                 if (endVar != string::npos)
                 {
                     altPos = begVar;
@@ -698,12 +703,12 @@ Foam::string& Foam::stringOps::inplaceExpand
 
             if (endVar == string::npos)
             {
-                // likely parsed '${...' without closing '}' - abort
+                // Likely parsed '${...' without closing '}' - abort
                 break;
             }
             else if (endVar == begVar)
             {
-                // parsed '${}' or $badChar  - skip over
+                // Parsed '${}' or $badChar  - skip over
                 begVar = endVar + 1;
             }
             else
@@ -724,7 +729,7 @@ Foam::string& Foam::stringOps::inplaceExpand
                 std::string altValue;
                 if (altPos != string::npos)
                 {
-                    // had ":-" or ":+" alternative value
+                    // Had ":-" or ":+" alternative value
                     altValue = s.substr
                     (
                         altPos + 2,
@@ -737,7 +742,7 @@ Foam::string& Foam::stringOps::inplaceExpand
                 {
                     if (altPos != string::npos && altType == '+')
                     {
-                        // was found, use ":+" alternative
+                        // Was found, use ":+" alternative
                         s.std::string::replace
                         (
                             begVar,
@@ -748,7 +753,7 @@ Foam::string& Foam::stringOps::inplaceExpand
                     }
                     else
                     {
-                        // was found, use value
+                        // Was found, use value
                         s.std::string::replace
                         (
                             begVar,
@@ -760,10 +765,10 @@ Foam::string& Foam::stringOps::inplaceExpand
                 }
                 else if (altPos != string::npos)
                 {
-                    // use ":-" or ":+" alternative values
+                    // Use ":-" or ":+" alternative values
                     if (altType == '-')
                     {
-                        // was not found, use ":-" alternative
+                        // Was not found, use ":-" alternative
                         s.std::string::replace
                         (
                             begVar,
@@ -774,7 +779,7 @@ Foam::string& Foam::stringOps::inplaceExpand
                     }
                     else
                     {
-                        // was not found, ":+" alternative implies
+                        // Was not found, ":+" alternative implies
                         // substitute with nothing
                         s.std::string::erase(begVar, endVar - begVar + 1);
                     }
