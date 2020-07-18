@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,39 +61,36 @@ namespace functionEntries
 
 Foam::string Foam::functionEntries::calcEntry::calc
 (
-    const dictionary& parentDict,
+    const dictionary& dict,
     Istream& is
 )
 {
     Info<< "Using #calcEntry at line " << is.lineNumber()
-        << " in file " <<  parentDict.name() << endl;
+        << " in file " <<  dict.name() << endl;
 
     dynamicCode::checkSecurity
     (
         "functionEntries::calcEntry::execute(..)",
-        parentDict
+        dict
     );
 
     // Read string
     string s(is);
-    // Make sure we stop this entry
-    // is.putBack(token(token::END_STATEMENT, is.lineNumber()));
 
     // Construct codeDict for codeStream
-    // must reference parent for stringOps::expand to work nicely.
-    dictionary codeSubDict;
-    codeSubDict.add("code", "os << (" + s + ");");
-    dictionary codeDict(parentDict, codeSubDict);
+    // Must reference parent dictionary for stringOps::expand to work
+    dictionary codeDict(dict.parent(), dict);
+    codeDict.add("code", "os << (" + s + ");");
 
     codeStream::streamingFunctionType function = codeStream::getFunction
     (
-        parentDict,
+        dict,
         codeDict
     );
 
     // Use function to write stream
     OStringStream os(is.format());
-    (*function)(os, parentDict);
+    (*function)(os, dict);
 
     // Return the string containing the results of the calculation
     return os.str();
@@ -104,22 +101,22 @@ Foam::string Foam::functionEntries::calcEntry::calc
 
 bool Foam::functionEntries::calcEntry::execute
 (
-    dictionary& parentDict,
+    dictionary& dict,
     Istream& is
 )
 {
-    return insert(parentDict, calc(parentDict, is));
+    return insert(dict, calc(dict, is));
 }
 
 
 bool Foam::functionEntries::calcEntry::execute
 (
-    const dictionary& parentDict,
+    const dictionary& dict,
     primitiveEntry& thisEntry,
     Istream& is
 )
 {
-    return insert(parentDict, thisEntry, calc(parentDict, is));
+    return insert(dict, thisEntry, calc(dict, is));
 }
 
 

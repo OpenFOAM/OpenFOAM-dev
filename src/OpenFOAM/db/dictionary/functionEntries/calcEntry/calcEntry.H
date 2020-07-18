@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ class calcEntry
         //- Perform the calculation and return the resulting string
         static string calc
         (
-            const dictionary& parentDict,
+            const dictionary& dict,
             Istream& is
         );
 
@@ -96,12 +96,12 @@ public:
     // Member Functions
 
         //- Execute the functionEntry in a sub-dict context
-        static bool execute(dictionary& parentDict, Istream&);
+        static bool execute(dictionary& dict, Istream&);
 
         //- Execute the functionEntry in a primitiveEntry context
         static bool execute
         (
-            const dictionary& parentDict,
+            const dictionary& dict,
             primitiveEntry&,
             Istream&
         );
