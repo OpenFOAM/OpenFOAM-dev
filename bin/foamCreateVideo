@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -27,7 +27,7 @@
 #
 # Description
 #     Creates a video file from PNG images
-#     - requires avconv or mencoder
+#     - requires mencoder or ffmpeg
 #
 #------------------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ options:
   -help  | -h         print the usage
   -image | -i <name>  name of image sequence (default = image)
   -out   | -o <name>  name of output video file (default = video)
-  -start | -s <frame> specify the start frame number for avconv
+  -start | -s <frame> specify the start frame number for ffmpeg
   -webm  | -w         WebM output video file format
 
 Creates a video file from a sequence of PNG images
@@ -50,7 +50,7 @@ Creates a video file from a sequence of PNG images
 - The default file name, using MPEG-4 compression, is video.mp4
 - By default the video codec is high resolution
 
-Requires avconv or mencoder for MPEG-4 output, avconv for WebM output
+Requires mencoder or ffmpeg for MPEG-4 output, ffmpeg for WebM output
 
 USAGE
 }
@@ -68,6 +68,7 @@ image=image
 video=video
 fps=10
 fmt=mp4
+start=
 
 while [ "$#" -gt 0 ]
 do
@@ -95,9 +96,17 @@ do
       video=$2
       shift 2
       ;;
+   -s | -start)
+      [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+      start=$2
+      echo "Selected start frame, requires ffmpeg..."
+      [ "$start" -eq "$start" ] 2> /dev/null || \
+          error "'$1' option requires an integer argument"
+      shift 2
+      ;;
    -w | -webm)
       fmt=webm
-      echo "Selected $fmt format, requires avconv..."
+      echo "Selected $fmt format, requires ffmpeg..."
       shift
       ;;
    -*)
@@ -109,6 +118,49 @@ do
     esac
 done
 
+ffmpegCreateVideo () {
+    _dir="$1"
+    _image="$2"
+    _fps="$3"
+    _out="$4"
+    _fmt="$5"
+    _start="$6"
+    _pwd="$(pwd)"
+
+    [ "$_start" ] && _start="-start_number $_start"
+
+    cd "$_dir" || return 1
+
+    #shellcheck disable=SC2086
+    ffmpeg \
+        -framerate "$_fps" \
+        $_start \
+        -i "$_image".%04d.png \
+        -vf "format=yuv420p,pad=ceil(iw/2)*2:ceil(ih/2)*2" \
+        "$_pwd/$_out.$_fmt"
+
+    return 0
+}
+
+mencoderCreateVideo () {
+    _dir="$1"
+    _image="$2"
+    _fps="$3"
+    _out="$4"
+
+    mencoder \
+        "mf://$_dir/$_image.*.png" \
+        -mf fps="$_fps" \
+        -o "$_out.$_fmt" \
+        -ovc x264
+
+    return 0
+}
+
+isInstalled () {
+    command -v "$1" >/dev/null 2>&1
+}
+
 #
 # MAIN
 #
@@ -116,33 +168,10 @@ done
 [ -f "$(find "$dir" -name "$image.*.png" | sort | head -1)" ] || \
     error "Cannot find first file in image sequence"
 
-if [ "$fmt" = "webm" ] ; then
-    if command -v avconv >/dev/null 2>&1 ; then
-        echo "Creating image with avconv..."
-        avconv \
-            -framerate "$fps" \
-            -i "${dir}/${image}.%04d.png" \
-            -c:v libvpx -crf 15 -b:v 1M \
-            "$video.$fmt"
-    else
-        error "Please install avconv"
-    fi
-else
-    if command -v avconv >/dev/null 2>&1 ; then
-        echo "Creating image with avconv..."
-        avconv \
-            -framerate "$fps" \
-            -i "${dir}/${image}.%04d.png" \
-            -c:v libx264 -pix_fmt yuv420p \
-            "$video.$fmt"
-    elif command -v mencoder >/dev/null 2>&1 ; then
-        echo "Creating image with mencoder..."
-        mencoder \
-            "mf://$dir/$image.*.png" \
-            -mf fps="$fps" \
-            -o "$video.$fmt" \
-            -ovc x264
-    else
-        error "Please install avconv or mencoder"
-    fi
-fi
+! [ "$fmt" = "webm" ] && ! [ "$start" ] && isInstalled mencoder && \
+    mencoderCreateVideo "$dir" "$image" "$fps" "$video" && \
+    exit 0
+
+isInstalled ffmpeg && \
+    ffmpegCreateVideo "$dir" "$image" "$fps" "$video" "$fmt" "$start" || \
+        echo "ffmpeg not installed."
