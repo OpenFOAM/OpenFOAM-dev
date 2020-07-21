@@ -13,7 +13,6 @@ runApplication transformPoints -scale '(1.6666 1 1)'
 runApplication mirrorMesh -dict mirrorMeshDict.x -overwrite
 rm log.mirrorMesh
 runApplication mirrorMesh -dict mirrorMeshDict.y -overwrite
-rm log.mirrorMesh
 
 runApplication topoSet
 runApplication createPatch -overwrite
