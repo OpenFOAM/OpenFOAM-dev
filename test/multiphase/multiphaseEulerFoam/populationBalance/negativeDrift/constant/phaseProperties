@@ -1,0 +1,149 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type populationBalanceMultiphaseSystem;
+
+phases (air water);
+
+referencePhase water;
+
+populationBalances (bubbles);
+
+air
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   velocityGroup;
+    velocityGroupCoeffs
+    {
+        populationBalance   bubbles;
+
+        shapeModel          spherical;
+
+        sizeGroups
+        (
+            f0 {dSph 1.240700982; value 0;}
+            f1 {dSph 1.302736031; value 0;}
+            f2 {dSph 1.364771080; value 0;}
+            f3 {dSph 1.426806129; value 0;}
+            f4 {dSph 1.488841178; value 0;}
+            f5 {dSph 1.550876227; value 0;}
+            f6 {dSph 1.612911276; value 0;}
+            f7 {dSph 1.674946325; value 0;}
+            f8 {dSph 1.736981375; value 0;}
+            f9 {dSph 1.799016424; value 0;}
+            f10{dSph 1.861051473; value 0;}
+            f11{dSph 1.923086522; value 0;}
+            f12{dSph 1.985121571; value 0;}
+            f13{dSph 2.047156620; value 0;}
+            f14{dSph 2.109191669; value 0;}
+            f15{dSph 2.171226718; value 0;}
+            f16{dSph 2.233261767; value 0;}
+            f17{dSph 2.295296816; value 0;}
+            f18{dSph 2.357331865; value 0;}
+            f19{dSph 2.419366915; value 0;}
+            f20{dSph 2.481401964; value 0.2064732;}
+            f21{dSph 2.543437013; value 0.2336032;}
+            f22{dSph 2.605472062; value 0.2635129;}
+            f23{dSph 2.667507111; value 0.2964107;}
+            f24{dSph 2.729542160; value 0;}
+        );
+    }
+
+    residualAlpha   1e-6;
+}
+
+water
+{
+    type            pureIsothermalPhaseModel;
+    diameterModel   constant;
+    constantCoeffs
+    {
+        d               1e-4;
+    }
+
+    residualAlpha   1e-6;
+}
+
+populationBalanceCoeffs
+{
+    bubbles
+    {
+        continuousPhase water;
+
+        coalescenceModels
+        ();
+
+        binaryBreakupModels
+        ();
+
+        breakupModels
+        ();
+
+        driftModels
+        (
+            constant{}
+        );
+
+        nucleationModels
+        ();
+    }
+}
+
+blending
+{
+    default
+    {
+        type            none;
+        continuousPhase water;
+    }
+}
+
+surfaceTension
+();
+
+interfaceCompression
+();
+
+aspectRatio
+();
+
+drag
+();
+
+virtualMass
+();
+
+heatTransfer
+();
+
+phaseTransfer
+();
+
+lift
+();
+
+wallLubrication
+();
+
+turbulentDispersion
+();
+
+// Minimum allowable pressure
+pMin            10000;
+
+
+// ************************************************************************* //

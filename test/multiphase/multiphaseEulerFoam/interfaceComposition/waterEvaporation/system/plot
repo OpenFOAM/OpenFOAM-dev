@@ -1,0 +1,36 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+
+libs            ("libsampling.so");
+
+type            probes;
+
+writeControl    timeStep;
+writeInterval   1;
+
+fields
+(
+    air.gas
+    alpha.gas
+    alpha.liquid
+    H2O.gas
+    p
+    T.gas
+    T.liquid
+    Tf.gasAndLiquid
+    dMass.gas
+    dMass.liquid
+    dMass
+    dEnergy.gas
+    dEnergy.liquid
+    dEnergy
+);
+
+probeLocations  ((0 0 0));
+
+// ************************************************************************* //

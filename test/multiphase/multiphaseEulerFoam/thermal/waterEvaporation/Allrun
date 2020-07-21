@@ -1,0 +1,122 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+gHes="e.steam h.steam"
+lHes="e.water h.water"
+
+setThermoAndEnergy()
+{
+    he=${1%.*}
+    phase=${1#*.}
+
+    foamDictionary -entry thermoType.thermo -set ${he}Const \
+        constant/thermophysicalProperties.$phase
+
+    case $he in
+        e ) energy="sensibleInternalEnergy";;
+        h ) energy="sensibleEnthalpy";;
+        * ) exit 1;;
+    esac
+
+    foamDictionary -entry thermoType.energy -set $energy \
+        constant/thermophysicalProperties.$phase
+}
+
+runApplication blockMesh
+
+for gHe in $gHes
+do
+    setThermoAndEnergy $gHe
+    for lHe in $lHes
+    do
+        setThermoAndEnergy $lHe
+        runApplication -s ${gHe}_${lHe} $(getApplication)
+        mv postProcessing postProcessing_${gHe}_${lHe}
+    done
+done
+
+gnuplot << EOF
+
+set terminal eps enhanced size 5.83,8.27
+set output 'postProcessing.eps'
+
+set lmargin at screen 0.15
+set rmargin at screen 0.84
+
+gHes = '$gHes'
+lHes = '$lHes'
+
+gHe0 = word(gHes, 1)
+lHe0 = word(lHes, 1)
+
+set multiplot layout 4,1
+
+set xlabel "Time (s)"
+
+set ytics nomirror
+set y2tics
+set ylabel 'Steam volume fraction'
+set y2label 'Water volume fraction'
+
+plot \
+    'postProcessing_'.gHe0.'_'.lHe0.'/plot/0/alpha.steam' w l lc 1 t 'Steam', \
+    for [gHe in gHes] for [lHe in lHes] \
+    'postProcessing_'.gHe.'_'.lHe.'/plot/0/alpha.steam' w l lc 1 notitle, \
+    'postProcessing_'.gHe0.'_'.lHe0.'/plot/0/alpha.water' w l axes x1y2 lc 2 t 'Water', \
+    for [gHe in gHes] for [lHe in lHes] \
+    'postProcessing_'.gHe.'_'.lHe.'/plot/0/alpha.water' w l axes x1y2 lc 2 notitle
+
+set ytics mirror
+unset y2tics
+set ylabel 'Temperature (K)'
+unset y2label
+
+plot \
+    'postProcessing_'.gHe0.'_'.lHe0.'/plot/0/T.steam' w l lc 1 t 'Steam', \
+    for [gHe in gHes] for [lHe in lHes] \
+    'postProcessing_'.gHe.'_'.lHe.'/plot/0/T.steam' w l lc 1 notitle, \
+    'postProcessing_'.gHe0.'_'.lHe0.'/plot/0/T.water' w l lc 2 t 'Water', \
+    for [gHe in gHes] for [lHe in lHes] \
+    'postProcessing_'.gHe.'_'.lHe.'/plot/0/T.water' w l lc 2 notitle, \
+    'postProcessing_'.gHe0.'_'.lHe0.'/plot/0/Tf.steamAndWater' w l lc 3 t 'Interface', \
+    for [gHe in gHes] for [lHe in lHes] \
+    'postProcessing_'.gHe.'_'.lHe.'/plot/0/Tf.steamAndWater' w l lc 3 notitle
+
+set ytics nomirror
+set y2tics
+set ylabel "Mass (kg/m^3)"
+set y2label "Energy (J/m^3)"
+
+plot \
+    'postProcessing_'.gHe0.'_'.lHe0.'/plot/0/dMass.steam' w l lc 1 t 'Steam Mass Change', \
+    for [gHe in gHes] for [lHe in lHes] \
+    'postProcessing_'.gHe.'_'.lHe.'/plot/0/dMass.steam' w l lc 1 notitle, \
+    'postProcessing_'.gHe0.'_'.lHe0.'/plot/0/dMass.water' w l lc 2 t 'Water Mass Change', \
+    for [gHe in gHes] for [lHe in lHes] \
+    'postProcessing_'.gHe.'_'.lHe.'/plot/0/dMass.water' w l lc 2 notitle, \
+    'postProcessing_'.gHe0.'_'.lHe0.'/plot/0/dEnergy.steam' w l axes x1y2 lc 3 t 'Steam Energy Change', \
+    for [gHe in gHes] for [lHe in lHes] \
+    'postProcessing_'.gHe.'_'.lHe.'/plot/0/dEnergy.steam' w l axes x1y2 lc 3 notitle, \
+    'postProcessing_'.gHe0.'_'.lHe0.'/plot/0/dEnergy.water' w l axes x1y2 lc 4 t 'Water Energy Change', \
+    for [gHe in gHes] for [lHe in lHes] \
+    'postProcessing_'.gHe.'_'.lHe.'/plot/0/dEnergy.water' w l axes x1y2 lc 4 notitle
+
+set ytics nomirror
+set y2tics
+set ylabel "Mass (kg/m^3)"
+set y2label "Energy (J/m^3)"
+
+plot \
+    'postProcessing_'.gHe0.'_'.lHe0.'/plot/0/dMass' w l lc 1 t 'Mass Error', \
+    for [gHe in gHes] for [lHe in lHes] \
+    'postProcessing_'.gHe.'_'.lHe.'/plot/0/dMass' w l lc 1 notitle, \
+    'postProcessing_'.gHe0.'_'.lHe0.'/plot/0/dEnergy' w l axes x1y2 lc 2 t 'Energy Error', \
+    for [gHe in gHes] for [lHe in lHes] \
+    'postProcessing_'.gHe.'_'.lHe.'/plot/0/dEnergy' w l axes x1y2 lc 2 notitle
+
+unset multiplot
+
+EOF

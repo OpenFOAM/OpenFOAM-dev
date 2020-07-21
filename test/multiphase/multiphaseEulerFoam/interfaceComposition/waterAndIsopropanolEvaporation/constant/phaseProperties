@@ -1,0 +1,193 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type    interfaceCompositionPhaseChangeMultiphaseSystem;
+
+phases (gas liquid);
+
+nInterfaceCorrectors 1;
+
+gas
+{
+    type            multiComponentPhaseModel;
+    diameterModel   constant;
+    d               1e-3;
+    residualAlpha   1e-6;
+    Sct             0.7;
+}
+
+liquid
+{
+    type            multiComponentPhaseModel;
+    diameterModel   constant;
+    d               5e-4;
+    residualAlpha   1e-6;
+    Sct             1;
+}
+
+blending
+{
+    default
+    {
+        type            none;
+        continuousPhase gas;
+    }
+}
+
+surfaceTension
+(
+    (gas and liquid)
+    {
+        type            constant;
+        sigma           0.07;
+    }
+);
+
+aspectRatio
+(
+    (gas in liquid)
+    {
+        type            constant;
+        E0              1.0;
+    }
+
+    (liquid in gas)
+    {
+        type            constant;
+        E0              1.0;
+    }
+);
+
+drag
+(
+);
+
+virtualMass
+(
+);
+
+interfaceComposition.gas
+(
+    (gas and liquid)
+    {
+        type nonRandomTwoLiquid;
+        species (H2O C3H8O);
+        Le 1.0;
+        H2O
+        {
+             alpha 0.3;
+             beta 0.0;
+             interaction
+             {
+                 type Antoine;
+                 A 6.8284;
+                 B -1283.46;
+                 C 0;
+             }
+             type saturated;
+             species (H2O);
+             Le 1.0;
+             saturationPressure
+             {
+                 type ArdenBuck;
+             }
+        }
+        C3H8O
+        {
+             alpha 0.3;
+             beta 0.0;
+             interaction
+             {
+                 type Antoine;
+                 A -1.3115;
+                 B 426.398;
+                 C 0;
+             }
+             type saturated;
+             species (C3H8O);
+             Le 1.0;
+             saturationPressure
+             {
+                 type Antoine;
+                 A 22.7057916;
+                 B -3125.59117503;
+                 C -75.814;
+             }
+        }
+    }
+);
+
+interfaceComposition.liquid
+(
+);
+
+heatTransfer.gas
+(
+    (liquid in gas)
+    {
+        type RanzMarshall;
+        residualAlpha 1e-4;
+    }
+);
+
+heatTransfer.liquid
+(
+    (liquid in gas)
+    {
+        type spherical;
+        residualAlpha 1e-4;
+    }
+);
+
+diffusiveMassTransfer.gas
+(
+    (liquid in gas)
+    {
+        type Frossling;
+        Le 1.0;
+    }
+);
+
+diffusiveMassTransfer.liquid
+(
+    (liquid in gas)
+    {
+        type spherical;
+        Le 1.0;
+    }
+);
+
+phaseTransfer
+(
+);
+
+lift
+(
+);
+
+wallLubrication
+(
+);
+
+turbulentDispersion
+(
+);
+
+// Minimum allowable pressure
+pMin            10000;
+
+// ************************************************************************* //

@@ -1,0 +1,161 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1
+
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+gYs="air.gas H2O.gas none.gas"
+gHes="e.gas h.gas"
+lHes="e.liquid h.liquid"
+
+setInertY()
+{
+    y=${1%.*}
+    phase=${1#*.}
+
+    case $y in
+        none ) arg="-remove";;
+        * ) arg="-set $y";;
+    esac
+
+    foamDictionary -entry inertSpecie $arg constant/thermophysicalProperties.$phase
+}
+
+setThermoAndEnergy()
+{
+    he=${1%.*}
+    phase=${1#*.}
+
+    case $phase in
+        gas ) thermo="janaf";;
+        liquid ) thermo="${he}Const";;
+        * ) exit 1;;
+    esac
+
+    foamDictionary -entry thermoType.thermo -set $thermo \
+        constant/thermophysicalProperties.$phase
+
+    case $he in
+        e ) energy="sensibleInternalEnergy";;
+        h ) energy="sensibleEnthalpy";;
+        * ) exit 1;;
+    esac
+
+    foamDictionary -entry thermoType.energy -set $energy \
+        constant/thermophysicalProperties.$phase
+}
+
+runApplication blockMesh
+
+for gY in $gYs
+do
+    setInertY $gY
+    for gHe in $gHes
+    do
+        setThermoAndEnergy $gHe
+        for lHe in $lHes
+        do
+            setThermoAndEnergy $lHe
+            runApplication -s ${gY}_${gHe}_${lHe} $(getApplication)
+            mv postProcessing postProcessing_${gY}_${gHe}_${lHe}
+        done
+    done
+done
+
+gnuplot << EOF
+
+set terminal eps enhanced size 5.83,8.27
+set output 'postProcessing.eps'
+
+set lmargin at screen 0.15
+set rmargin at screen 0.84
+
+gYs = '$gYs'
+gHes = '$gHes'
+lHes = '$lHes'
+
+gY0 = word(gYs, 1)
+gHe0 = word(gHes, 1)
+lHe0 = word(lHes, 1)
+
+set multiplot layout 5,1
+
+set xlabel "Time (s)"
+
+set ytics nomirror
+set y2tics
+set ylabel 'Gas volume fraction'
+set y2label 'Liquid volume fraction'
+
+plot \
+    'postProcessing_'.gY0.'_'.gHe0.'_'.lHe0.'/plot/0/alpha.gas' w l lc 1 t 'Gas', \
+    for [gY in gYs] for [ gHe in gHes ] for [ lHe in lHes ] \
+    'postProcessing_'.gY.'_'.gHe.'_'.lHe.'/plot/0/alpha.gas' w l lc 1 notitle, \
+    'postProcessing_'.gY0.'_'.gHe0.'_'.lHe0.'/plot/0/alpha.liquid' w l axes x1y2 lc 2 t 'Liquid', \
+    for [gY in gYs] for [ gHe in gHes ] for [ lHe in lHes ] \
+    'postProcessing_'.gY.'_'.gHe.'_'.lHe.'/plot/0/alpha.liquid' w l axes x1y2 lc 2 notitle
+
+set ytics mirror
+unset y2tics
+set ylabel 'Temperature (K)'
+unset y2label
+
+plot \
+    'postProcessing_'.gY0.'_'.gHe0.'_'.lHe0.'/plot/0/T.gas' w l lc 1 t 'Gas', \
+    for [gY in gYs] for [ gHe in gHes ] for [ lHe in lHes ] \
+    'postProcessing_'.gY.'_'.gHe.'_'.lHe.'/plot/0/T.gas' w l lc 1 notitle, \
+    'postProcessing_'.gY0.'_'.gHe0.'_'.lHe0.'/plot/0/T.liquid' w l lc 2 t 'Liquid', \
+    for [gY in gYs] for [ gHe in gHes ] for [ lHe in lHes ] \
+    'postProcessing_'.gY.'_'.gHe.'_'.lHe.'/plot/0/T.liquid' w l lc 2 notitle, \
+    'postProcessing_'.gY0.'_'.gHe0.'_'.lHe0.'/plot/0/Tf.gasAndLiquid' w l lc 3 t 'Interface', \
+    for [gY in gYs] for [ gHe in gHes ] for [ lHe in lHes ] \
+    'postProcessing_'.gY.'_'.gHe.'_'.lHe.'/plot/0/Tf.gasAndLiquid' w l lc 3 notitle
+
+set ytics nomirror
+set y2tics
+set ylabel "Vapour mass fraction"
+set y2label "Air mass fraction"
+
+plot \
+    'postProcessing_'.gY0.'_'.gHe0.'_'.lHe0.'/plot/0/H2O.gas' w l lc 1 t 'H2O', \
+    for [gY in gYs] for [ gHe in gHes ] for [ lHe in lHes ] \
+    'postProcessing_'.gY.'_'.gHe.'_'.lHe.'/plot/0/H2O.gas' w l lc 1 notitle, \
+    'postProcessing_'.gY0.'_'.gHe0.'_'.lHe0.'/plot/0/air.gas' w l axes x1y2 lc 2 t 'Air', \
+    for [gY in gYs] for [ gHe in gHes ] for [ lHe in lHes ] \
+    'postProcessing_'.gY.'_'.gHe.'_'.lHe.'/plot/0/air.gas' w l axes x1y2 lc 2 notitle
+
+set ytics nomirror
+set y2tics
+set ylabel "Mass (kg/m^3)"
+set y2label "Energy (J/m^3)"
+
+plot \
+    'postProcessing_'.gY0.'_'.gHe0.'_'.lHe0.'/plot/0/dMass.gas' w l lc 1 t 'Gas Mass Change', \
+    for [gY in gYs] for [ gHe in gHes ] for [ lHe in lHes ] \
+    'postProcessing_'.gY.'_'.gHe.'_'.lHe.'/plot/0/dMass.gas' w l lc 1 notitle, \
+    'postProcessing_'.gY0.'_'.gHe0.'_'.lHe0.'/plot/0/dMass.liquid' w l lc 2 t 'Liquid Mass Change', \
+    for [gY in gYs] for [ gHe in gHes ] for [ lHe in lHes ] \
+    'postProcessing_'.gY.'_'.gHe.'_'.lHe.'/plot/0/dMass.liquid' w l lc 2 notitle, \
+    'postProcessing_'.gY0.'_'.gHe0.'_'.lHe0.'/plot/0/dEnergy.gas' w l axes x1y2 lc 3 t 'Gas Energy Change', \
+    for [gY in gYs] for [ gHe in gHes ] for [ lHe in lHes ] \
+    'postProcessing_'.gY.'_'.gHe.'_'.lHe.'/plot/0/dEnergy.gas' w l axes x1y2 lc 3 notitle, \
+    'postProcessing_'.gY0.'_'.gHe0.'_'.lHe0.'/plot/0/dEnergy.liquid' w l axes x1y2 lc 4 t 'Liquid Energy Change', \
+    for [gY in gYs] for [ gHe in gHes ] for [ lHe in lHes ] \
+    'postProcessing_'.gY.'_'.gHe.'_'.lHe.'/plot/0/dEnergy.liquid' w l axes x1y2 lc 4 notitle
+
+set ytics nomirror
+set y2tics
+set ylabel "Mass (kg/m^3)"
+set y2label "Energy (J/m^3)"
+
+plot \
+    'postProcessing_'.gY0.'_'.gHe0.'_'.lHe0.'/plot/0/dMass' w l lc 1 t 'Mass Error', \
+    for [gY in gYs] for [ gHe in gHes ] for [ lHe in lHes ] \
+    'postProcessing_'.gY.'_'.gHe.'_'.lHe.'/plot/0/dMass' w l lc 1 notitle, \
+    'postProcessing_'.gY0.'_'.gHe0.'_'.lHe0.'/plot/0/dEnergy' w l axes x1y2 lc 2 t 'Energy Error', \
+    for [gY in gYs] for [ gHe in gHes ] for [ lHe in lHes ] \
+    'postProcessing_'.gY.'_'.gHe.'_'.lHe.'/plot/0/dEnergy' w l axes x1y2 lc 2 notitle
+
+unset multiplot
+
+EOF

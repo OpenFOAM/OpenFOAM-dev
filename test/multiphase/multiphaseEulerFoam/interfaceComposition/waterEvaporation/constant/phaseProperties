@@ -1,0 +1,150 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type    interfaceCompositionPhaseChangeMultiphaseSystem;
+
+phases (gas liquid);
+
+nInterfaceCorrectors 1;
+
+gas
+{
+    type            multiComponentPhaseModel;
+    diameterModel   constant;
+    d               1e-3;
+    residualAlpha   1e-6;
+    Sct             0.7;
+}
+
+liquid
+{
+    type            purePhaseModel;
+    diameterModel   constant;
+    d               5e-4;
+    residualAlpha   1e-6;
+}
+
+blending
+{
+    default
+    {
+        type            none;
+        continuousPhase gas;
+    }
+}
+
+surfaceTension
+(
+    (gas and liquid)
+    {
+        type            constant;
+        sigma           0.07;
+    }
+);
+
+aspectRatio
+(
+    (gas in liquid)
+    {
+        type            constant;
+        E0              1.0;
+    }
+
+    (liquid in gas)
+    {
+        type            constant;
+        E0              1.0;
+    }
+);
+
+drag
+(
+);
+
+virtualMass
+(
+);
+
+interfaceComposition.gas
+(
+    (gas and liquid)
+    {
+        type saturated;
+        species ( H2O );
+        Le 1.0;
+        saturationPressure
+        {
+            type ArdenBuck;
+        }
+    }
+);
+
+interfaceComposition.liquid
+(
+);
+
+heatTransfer.gas
+(
+    (liquid in gas)
+    {
+        type RanzMarshall;
+        residualAlpha 1e-4;
+    }
+);
+
+heatTransfer.liquid
+(
+    (liquid in gas)
+    {
+        type spherical;
+        residualAlpha 1e-4;
+    }
+);
+
+diffusiveMassTransfer.gas
+(
+    (liquid in gas)
+    {
+        type Frossling;
+        Le 1.0;
+    }
+);
+
+diffusiveMassTransfer.liquid
+(
+);
+
+phaseTransfer
+(
+);
+
+lift
+(
+);
+
+wallLubrication
+(
+);
+
+turbulentDispersion
+(
+);
+
+// Minimum allowable pressure
+pMin            10000;
+
+// ************************************************************************* //
