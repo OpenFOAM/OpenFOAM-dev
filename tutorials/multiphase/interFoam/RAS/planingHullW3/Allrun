@@ -73,6 +73,4 @@ runParallel $(getApplication)
 
 runApplication reconstructPar
 
-runApplication foamSequenceVTKFiles
-
 #------------------------------------------------------------------------------
