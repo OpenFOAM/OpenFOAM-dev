@@ -92,17 +92,20 @@ Foam::functionObjects::particles::particles
     (
         mesh_.lookupObject<volVectorField>(dict.lookupOrDefault<word>("U", "U"))
     ),
-    kinematicCloudName_
+    cloudName_
     (
-        dict.lookupOrDefault<word>("kinematicCloud", "kinematicCloud")
+        dict.lookupOrDefault<word>("cloud", "cloud")
     ),
-    kinematicCloud_
+    cloudPtr_
     (
-        kinematicCloudName_,
-        rho_,
-        U_,
-        mu_,
-        g_
+        parcelCloud::New
+        (
+            cloudName_,
+            rho_,
+            U_,
+            mu_,
+            g_
+        )
     )
 {}
 
@@ -129,7 +132,8 @@ bool Foam::functionObjects::particles::read
 bool Foam::functionObjects::particles::execute()
 {
     mu_ = rhoValue_*laminarTransport_.nu();
-    kinematicCloud_.evolve();
+
+    cloudPtr_->evolve();
 
     return true;
 }

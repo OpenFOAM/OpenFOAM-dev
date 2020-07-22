@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,6 @@ SourceFiles
 #define DSMCCloud_H
 
 #include "Cloud.H"
-#include "DSMCBaseCloud.H"
 #include "IOdictionary.H"
 #include "autoPtr.H"
 #include "Random.H"
@@ -63,6 +62,13 @@ template<class CloudType>
 class InflowBoundaryModel;
 
 /*---------------------------------------------------------------------------*\
+                      Class DSMCCloudName Declaration
+\*---------------------------------------------------------------------------*/
+
+TemplateName(DSMCCloud);
+
+
+/*---------------------------------------------------------------------------*\
                          Class DSMCCloud Declaration
 \*---------------------------------------------------------------------------*/
 
@@ -70,7 +76,7 @@ template<class ParcelType>
 class DSMCCloud
 :
     public Cloud<ParcelType>,
-    public DSMCBaseCloud
+    public DSMCCloudName
 {
     // Private Data
 

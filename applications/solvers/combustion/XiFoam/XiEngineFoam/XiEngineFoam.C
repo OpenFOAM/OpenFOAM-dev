@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
     #include "createFieldRefs.H"
     #include "createRhoUf.H"
     #include "initContinuityErrs.H"
-    #include "readEngineTimeControls.H"
+    #include "createEngineTimeControls.H"
     #include "compressibleCourantNo.H"
     #include "setInitialDeltaT.H"
     #include "startSummary.H"

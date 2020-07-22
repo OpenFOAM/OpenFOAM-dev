@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cloudInfo.H"
-#include "kinematicCloud.H"
+#include "parcelCloud.H"
 #include "dictionary.H"
 #include "PstreamReduceOps.H"
 #include "addToRunTimeSelectionTable.H"
@@ -122,8 +122,7 @@ bool Foam::functionObjects::cloudInfo::write()
     {
         const word& cloudName = names()[i];
 
-        const kinematicCloud& cloud =
-            obr_.lookupObject<kinematicCloud>(cloudName);
+        const parcelCloud& cloud = obr_.lookupObject<parcelCloud>(cloudName);
 
         label nParcels = returnReduce(cloud.nParcels(), sumOp<label>());
         scalar massInSystem =

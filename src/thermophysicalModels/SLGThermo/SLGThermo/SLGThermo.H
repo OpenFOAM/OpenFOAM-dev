@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,10 +67,10 @@ class SLGThermo
     // Private Data
 
         //- Thermo package
-        fluidThermo& thermo_;
+        const fluidThermo& thermo_;
 
         //- Reference to the multi-component carrier phase thermo
-        basicSpecieMixture* carrier_;
+        const basicSpecieMixture* carrier_;
 
         //- Additional liquid properties data
         autoPtr<liquidMixtureProperties> liquids_;
@@ -87,7 +87,7 @@ public:
     // Constructors
 
         //- Construct from mesh
-        SLGThermo(const fvMesh& mesh, fluidThermo& thermo);
+        SLGThermo(const fvMesh& mesh, const fluidThermo& thermo);
 
 
     //- Destructor

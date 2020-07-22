@@ -1,0 +1,130 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      limestoneCloudProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type        thermoCloud;
+
+solution
+{
+    active          true;
+    coupled         true;
+    transient       yes;
+    cellValueSourceCorrection on;
+    maxCo           0.3;
+
+    sourceTerms
+    {
+        schemes
+        {
+            U               explicit 1;
+            h               explicit 1;
+            radiation       explicit 1;
+        }
+    }
+
+    interpolationSchemes
+    {
+        rho             cell;
+        thermo:mu       cell;
+        U               cellPoint;
+        Cp              cell;
+        kappa           cell;
+        T               cell;
+        G               cell;
+    }
+
+    integrationSchemes
+    {
+        U               Euler;
+        T               analytical;
+    }
+}
+
+constantProperties
+{
+    parcelTypeId    2;
+
+    rho0            2500;
+    T0              300;
+    Cp0             900;
+
+    epsilon0        1;
+    f0              0.5;
+}
+
+subModels
+{
+    particleForces
+    {
+        sphereDrag;
+        gravity;
+    }
+
+    injectionModels
+    {
+        model1
+        {
+            type            manualInjection;
+            massTotal       0.0001;
+            parcelBasisType mass;
+            SOI             0;
+            positionsFile   "limestoneCloudPositions";
+            U0              (0 0 0);
+            sizeDistribution
+            {
+                type        RosinRammler;
+                RosinRammlerDistribution
+                {
+                    minValue        5e-06;
+                    maxValue        0.000565;
+                    d               4.8e-05;
+                    n               0.5;
+                }
+            }
+        }
+    }
+
+    dispersionModel stochasticDispersionRAS;
+
+    patchInteractionModel standardWallInteraction;
+
+    heatTransferModel RanzMarshall;
+
+    stochasticCollisionModel none;
+
+    surfaceFilmModel none;
+
+    radiation       on;
+
+    standardWallInteractionCoeffs
+    {
+        type            rebound;
+        e               1;
+        mu              0;
+    }
+
+    RanzMarshallCoeffs
+    {
+        BirdCorrection  false;
+    }
+}
+
+
+cloudFunctions
+{}
+
+
+// ************************************************************************* //

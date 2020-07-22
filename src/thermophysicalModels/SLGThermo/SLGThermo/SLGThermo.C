@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::SLGThermo::SLGThermo(const fvMesh& mesh, fluidThermo& thermo)
+Foam::SLGThermo::SLGThermo(const fvMesh& mesh, const fluidThermo& thermo)
 :
     regIOobject
     (
@@ -55,8 +55,8 @@ Foam::SLGThermo::SLGThermo(const fvMesh& mesh, fluidThermo& thermo)
 
     if (isA<basicSpecieMixture>(thermo))
     {
-        basicSpecieMixture& mcThermo =
-            dynamic_cast<basicSpecieMixture&>(thermo);
+        const basicSpecieMixture& mcThermo =
+            refCast<const basicSpecieMixture>(thermo);
         carrier_ = &mcThermo;
 
         Info<< "    multi-component carrier - " << mcThermo.species().size()

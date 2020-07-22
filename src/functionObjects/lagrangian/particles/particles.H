@@ -32,13 +32,12 @@ Description
     flow solver such as pisoFoam or pimpleFoam and tracks the particles or
     parcels without affecting the flow-field.
 
-    The kinematicCloud requires the density of the fluid which is looked-up
-    from constant/transportProperties dictionary and the acceleration due to
-    gravity which is read from the constant/g file if present or defaults to
-    zero.
+    The cloud requires the density of the fluid which is looked-up from
+    constant/transportProperties dictionary and the acceleration due to gravity
+    which is read from the constant/g file if present or defaults to zero.
 
-    The kinematicCloud properties are read from the
-    constant/kinematicCloudProperties dictionary in the usual manner.
+    The cloud properties are read from the constant/<cloudName>Properties
+    dictionary in the usual manner.
 
     Example of function object specification:
     \verbatim
@@ -52,9 +51,9 @@ Description
 Usage
     \table
         Property | Description                     | Required   | Default value
-        type     | Type name: particles | yes  |
-        U        | Name of the velocity field       | no        | U
-        kinematicCloud | Name of the kinematicCloud | no        | kinematicCloud
+        type     | Type name: particles            | yes        |
+        U        | Name of the velocity field      | no         | U
+        cloud    | Name of the cloud               | no         | cloud
     \endtable
 
 See also
@@ -69,7 +68,7 @@ SourceFiles
 #define functionObjects_particles_H
 
 #include "fvMeshFunctionObject.H"
-#include "basicKinematicCollidingCloud.H"
+#include "parcelCloud.H"
 #include "volFieldsFwd.H"
 #include "uniformDimensionedFields.H"
 
@@ -102,20 +101,20 @@ class particles
         //- Uniform density value
         dimensionedScalar rhoValue_;
 
-        //- Density field needed to construct kinematicCloud
+        //- Density field needed to construct the cloud
         volScalarField rho_;
 
-        //- Dynamic viscosity field needed to construct kinematicCloud
+        //- Dynamic viscosity field needed to construct the cloud
         volScalarField mu_;
 
         //- Reference to the velocity field
         const volVectorField& U_;
 
         //- Name of the cloud
-        word kinematicCloudName_;
+        word cloudName_;
 
-        //- The kinematic cloud
-        basicKinematicCollidingCloud kinematicCloud_;
+        //- The cloud
+        autoPtr<parcelCloud> cloudPtr_;
 
 
 public:

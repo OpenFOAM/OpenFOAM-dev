@@ -1,0 +1,3 @@
+reactingParticleFoam.C
+
+EXE = $(FOAM_APPBIN)/reactingParticleFoam

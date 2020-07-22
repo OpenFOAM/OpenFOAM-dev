@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -474,7 +474,6 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
 )
 :
     Cloud<ParcelType>(mesh, cloudName, false),
-    DSMCBaseCloud(),
     cloudName_(cloudName),
     mesh_(mesh),
     particleProperties_
@@ -706,9 +705,8 @@ Foam::DSMCCloud<ParcelType>::DSMCCloud
     const fvMesh& mesh,
     const IOdictionary& dsmcInitialiseDict
 )
-    :
+:
     Cloud<ParcelType>(mesh, cloudName, false),
-    DSMCBaseCloud(),
     cloudName_(cloudName),
     mesh_(mesh),
     particleProperties_

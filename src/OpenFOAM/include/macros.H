@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,6 +52,10 @@ Description
 
 //- Map 'name' to 'Name' via the predefined macro CAPITALIZE_name
 #define CAPITALIZE(name) CAPITALIZE_##name
+
+//- Convert macro expression to a string
+#define STR_(x) #x
+#define STR(x) STR_(x)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

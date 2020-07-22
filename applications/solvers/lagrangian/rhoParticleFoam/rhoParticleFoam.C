@@ -35,19 +35,12 @@ Description
 #include "dynamicFvMesh.H"
 #include "psiThermo.H"
 #include "fluidThermoMomentumTransportModel.H"
-#include "basicKinematicCloud.H"
+#include "parcelCloudList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
-    argList::addOption
-    (
-        "cloudName",
-        "name",
-        "specify alternative cloud name. default is 'kinematicCloud'"
-    );
-
     #define NO_CONTROL
     #include "postProcess.H"
 
@@ -65,7 +58,7 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        kinematicCloud.storeGlobalPositions();
+        clouds.storeGlobalPositions();
 
         mesh.update();
 
@@ -74,8 +67,7 @@ int main(int argc, char *argv[])
             U.correctBoundaryConditions();
         }
 
-        Info<< "Evolving " << kinematicCloud.name() << endl;
-        kinematicCloud.evolve();
+        clouds.evolve();
 
         runTime.write();
 

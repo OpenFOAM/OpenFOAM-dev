@@ -1,0 +1,177 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      cloudProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type        reactingCloud;
+
+solution
+{
+    active          true;
+    coupled         true;
+    transient       yes;
+    cellValueSourceCorrection on;
+    maxCo           0.3;
+
+    sourceTerms
+    {
+        schemes
+        {
+            rho             explicit 1;
+            U               explicit 1;
+            Yi              explicit 1;
+            h               explicit 1;
+            radiation       explicit 1;
+        }
+    }
+
+    interpolationSchemes
+    {
+        rho             cell;
+        U               cellPoint;
+        thermo:mu       cell;
+        T               cell;
+        Cp              cell;
+        kappa           cell;
+        p               cell;
+    }
+
+    integrationSchemes
+    {
+        U               Euler;
+        T               analytical;
+    }
+}
+
+
+constantProperties
+{
+    rho0            1000;
+    T0              350;
+    Cp0             4100;
+
+    constantVolume  false;
+}
+
+
+subModels
+{
+    particleForces
+    {
+        sphereDrag;
+        gravity;
+    }
+
+    injectionModels
+    {
+        model1
+        {
+            type            patchInjection;
+            SOI             0.01;
+            massTotal       8;
+            parcelBasisType mass;
+            patchName       inletCentral;
+            duration        10000;
+            parcelsPerSecond 1e5;
+            U0              (40 0 0);
+            flowRateProfile constant 1;
+            sizeDistribution
+            {
+                type        general;
+                generalDistribution
+                {
+                    distribution
+                    (
+                        (10e-06      0.0025)
+                        (15e-06      0.0528)
+                        (20e-06      0.2795)
+                        (25e-06      1.0918)
+                        (30e-06      2.3988)
+                        (35e-06      4.4227)
+                        (40e-06      6.3888)
+                        (45e-06      8.6721)
+                        (50e-06      10.3153)
+                        (55e-06      11.6259)
+                        (60e-06      12.0030)
+                        (65e-06      10.4175)
+                        (70e-06      10.8427)
+                        (75e-06      8.0016)
+                        (80e-06      6.1333)
+                        (85e-06      3.8827)
+                        (90e-06      3.4688)
+                    );
+                }
+            }
+        }
+    }
+
+    dispersionModel stochasticDispersionRAS;
+
+    patchInteractionModel standardWallInteraction;
+
+    heatTransferModel RanzMarshall;
+
+    compositionModel singlePhaseMixture;
+
+    phaseChangeModel liquidEvaporation;
+
+    stochasticCollisionModel none;
+
+    surfaceFilmModel none;
+
+    radiation       off;
+
+    standardWallInteractionCoeffs
+    {
+        type            rebound;
+    }
+
+    RanzMarshallCoeffs
+    {
+        BirdCorrection  off;
+    }
+
+    singlePhaseMixtureCoeffs
+    {
+        phases
+        (
+            liquid
+            {
+                H2O         1;
+            }
+        );
+    }
+
+    liquidEvaporationCoeffs
+    {
+        enthalpyTransfer enthalpyDifference;
+
+        activeLiquids   ( H2O );
+    }
+}
+
+
+cloudFunctions
+{
+    patchPostProcessing1
+    {
+        type            patchPostProcessing;
+        maxStoredParcels 100;
+        patches         ( outlet );
+    }
+}
+
+
+// ************************************************************************* //

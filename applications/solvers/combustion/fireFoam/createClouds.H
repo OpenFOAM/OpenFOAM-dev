@@ -1,9 +1,2 @@
-Info<< "\nConstructing reacting cloud" << endl;
-basicReactingCloud parcels
-(
-    "reactingCloud1",
-    rho,
-    U,
-    g,
-    slgThermo
-);
+Info<< "\nConstructing clouds" << endl;
+parcelCloudList parcels(rho, U, g, slgThermo);

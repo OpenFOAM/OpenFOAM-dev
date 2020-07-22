@@ -13,7 +13,6 @@ fieldValues/surfaceFieldValue/surfaceFieldValue.C
 
 nearWallFields/nearWallFields.C
 nearWallFields/findCellParticle.C
-nearWallFields/findCellParticleCloud.C
 
 processorField/processorField.C
 readFields/readFields.C

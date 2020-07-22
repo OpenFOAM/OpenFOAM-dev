@@ -1,0 +1,191 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      cloudProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type        MPPICCloud;
+
+solution
+{
+    active          true;
+    coupled         true;
+    transient       yes;
+    cellValueSourceCorrection off;
+
+    interpolationSchemes
+    {
+        rho.air         cell;
+        U.air           cellPoint;
+        mu.air          cell;
+        alpha.air       cell;
+    }
+
+    averagingMethod dual;
+
+    integrationSchemes
+    {
+        U               Euler;
+    }
+
+    sourceTerms
+    {
+        schemes
+        {
+            U     semiImplicit 1;
+        }
+    }
+}
+
+constantProperties
+{
+    rho0            2526;
+}
+
+subModels
+{
+    particleForces
+    {
+        ErgunWenYuDrag
+        {
+            alphac alpha.air;
+        }
+        // gravity;
+    }
+
+    injectionModels
+    {
+        model1
+        {
+            type            manualInjection;
+            massTotal       0;
+            parcelBasisType fixed;
+            nParticle       750;
+            SOI             0;
+            positionsFile   "cloudPositions";
+            U0              (0 0 0);
+            sizeDistribution
+            {
+                type        fixedValue;
+                fixedValueDistribution
+                {
+                    value   0.0003;
+                }
+            }
+        }
+    }
+
+    dispersionModel none;
+
+    patchInteractionModel localInteraction;
+
+    localInteractionCoeffs
+    {
+        patches
+        (
+            sides
+            {
+                type rebound;
+                e    1;
+                mu   0;
+            }
+            top
+            {
+                type rebound;
+                e    1;
+                mu   0;
+            }
+            bottom
+            {
+                type rebound;
+                e    1;
+                mu   0;
+            }
+        );
+    }
+
+    heatTransferModel none;
+
+    surfaceFilmModel none;
+
+    packingModel implicit;
+
+    explicitCoeffs
+    {
+        particleStressModel
+        {
+            type HarrisCrighton;
+            alphaPacked 0.6;
+            pSolid 10.0;
+            beta 2.0;
+            eps 1.0e-7;
+        }
+        correctionLimitingMethod
+        {
+            type absolute;
+            e 0.9;
+        }
+    }
+
+    implicitCoeffs
+    {
+        alphaMin 0.0001;
+        rhoMin 1.0;
+        applyLimiting true;
+        applyGravity true;
+        particleStressModel
+        {
+            type HarrisCrighton;
+            alphaPacked 0.6;
+            pSolid 10.0;
+            beta 2.0;
+            eps 1.0e-2;
+        }
+    }
+
+    dampingModel none; // relaxation;
+
+    relaxationCoeffs
+    {
+        timeScaleModel
+        {
+            type nonEquilibrium;
+            alphaPacked 0.6;
+            e 0.9;
+        }
+    }
+
+    isotropyModel stochastic;
+
+    stochasticCoeffs
+    {
+        timeScaleModel
+        {
+            type isotropic;
+            alphaPacked 0.6;
+            e 0.9;
+        }
+    }
+
+    stochasticCollisionModel none;
+
+    radiation off;
+}
+
+
+cloudFunctions
+{}
+
+
+// ************************************************************************* //

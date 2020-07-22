@@ -1,0 +1,130 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      cloudProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type        collidingCloud;
+
+solution
+{
+    active          true;
+    coupled         false;
+    transient       yes;
+    cellValueSourceCorrection off;
+    maxCo           0.3;
+
+    sourceTerms
+    {
+        schemes
+        {
+        }
+    }
+
+    interpolationSchemes
+    {
+        rho             cell;
+        U               cellPoint;
+        mu              cell;
+    }
+
+    integrationSchemes
+    {
+        U               Euler;
+    }
+}
+
+
+constantProperties
+{
+    rho0            964;
+    youngsModulus   6e8;
+    poissonsRatio   0.35;
+}
+
+
+subModels
+{
+    particleForces
+    {
+        sphereDrag;
+        gravity;
+    }
+
+    injectionModels
+    {}
+
+    dispersionModel none;
+
+    patchInteractionModel none;
+
+    surfaceFilmModel none;
+
+    stochasticCollisionModel none;
+
+    collisionModel pairCollision;
+
+    pairCollisionCoeffs
+    {
+        // Maximum possible particle diameter expected at any time
+        maxInteractionDistance  0.006;
+
+        writeReferredParticleCloud no;
+
+        pairModel pairSpringSliderDashpot;
+
+        pairSpringSliderDashpotCoeffs
+        {
+            useEquivalentSize   no;
+            alpha               0.12;
+            b                   1.5;
+            mu                  0.52;
+            cohesionEnergyDensity 0;
+            collisionResolutionSteps 12;
+        };
+
+        wallModel    wallLocalSpringSliderDashpot;
+
+        wallLocalSpringSliderDashpotCoeffs
+        {
+            useEquivalentSize no;
+            collisionResolutionSteps 12;
+            walls
+            {
+                youngsModulus   1e10;
+                poissonsRatio   0.23;
+                alpha           0.12;
+                b               1.5;
+                mu              0.43;
+                cohesionEnergyDensity 0;
+            }
+            frontAndBack
+            {
+                youngsModulus   1e10;
+                poissonsRatio   0.23;
+                alpha           0.12;
+                b               1.5;
+                mu              0.1;
+                cohesionEnergyDensity 0;
+            }
+        };
+    }
+}
+
+
+cloudFunctions
+{}
+
+
+// ************************************************************************* //

@@ -33,7 +33,7 @@ using namespace Foam::constant::mathematical;
 
 namespace Foam
 {
-    defineTemplateTypeNameAndDebug(Cloud<molecule>, 0);
+    defineTypeNameAndDebug(moleculeCloud, 0);
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //

@@ -1,0 +1,116 @@
+PARCELS=parcels
+BASEPARCELS=$(PARCELS)/baseClasses
+DERIVEDPARCELS=$(PARCELS)/derived
+
+CLOUDS=clouds
+BASECLOUDS=$(CLOUDS)/baseClasses
+DERIVEDCLOUDS=$(CLOUDS)/derived
+
+/* parcel cloud */
+parcelCloud/parcelCloudBase.C
+parcelCloud/parcelCloud.C
+parcelCloud/parcelCloudNew.C
+parcelCloudList/parcelCloudList.C
+
+/* cloud names */
+$(CLOUDS)/Templates/MomentumCloud/MomentumCloudName.C
+$(CLOUDS)/Templates/CollidingCloud/CollidingCloudName.C
+$(CLOUDS)/Templates/MPPICCloud/MPPICCloudName.C
+$(CLOUDS)/Templates/ThermoCloud/ThermoCloudName.C
+$(CLOUDS)/Templates/ReactingCloud/ReactingCloudName.C
+$(CLOUDS)/Templates/ReactingMultiphaseCloud/ReactingMultiphaseCloudName.C
+$(CLOUDS)/Templates/SprayCloud/SprayCloudName.C
+
+/* clouds */
+$(DERIVEDCLOUDS)/momentumCloud/momentumCloud.C
+$(DERIVEDCLOUDS)/collidingCloud/collidingCloud.C
+$(DERIVEDCLOUDS)/mppicCloud/mppicCloud.C
+$(DERIVEDCLOUDS)/thermoCloud/thermoCloud.C
+$(DERIVEDCLOUDS)/reactingCloud/reactingCloud.C
+$(DERIVEDCLOUDS)/reactingMultiphaseCloud/reactingMultiphaseCloud.C
+$(DERIVEDCLOUDS)/sprayCloud/sprayCloud.C
+
+/* parcel names */
+$(PARCELS)/Templates/MomentumParcel/MomentumParcelName.C
+$(PARCELS)/Templates/CollidingParcel/CollidingParcelName.C
+$(PARCELS)/Templates/MPPICParcel/MPPICParcelName.C
+$(PARCELS)/Templates/ReactingMultiphaseParcel/ReactingMultiphaseParcelName.C
+$(PARCELS)/Templates/ReactingParcel/ReactingParcelName.C
+$(PARCELS)/Templates/SprayParcel/SprayParcelName.C
+$(PARCELS)/Templates/ThermoParcel/ThermoParcelName.C
+
+/* sub-models */
+$(DERIVEDPARCELS)/momentumParcel/makeMomentumParcelSubmodels.C
+$(DERIVEDPARCELS)/collidingParcel/makeCollidingParcelSubmodels.C
+$(DERIVEDPARCELS)/mppicParcel/makeMppicParcelSubmodels.C
+$(DERIVEDPARCELS)/thermoParcel/makeThermoParcelSubmodels.C
+$(DERIVEDPARCELS)/reactingParcel/makeReactingParcelSubmodels.C
+$(DERIVEDPARCELS)/reactingMultiphaseParcel/makeReactingMultiphaseParcelSubmodels.C
+$(DERIVEDPARCELS)/sprayParcel/makeSprayParcelSubmodels.C
+
+/* bolt-on models */
+RADIATION=submodels/addOns/radiation
+$(RADIATION)/absorptionEmission/cloudAbsorptionEmission/cloudAbsorptionEmission.C
+$(RADIATION)/scatter/cloudScatter/cloudScatter.C
+
+PATCHINTERACTION=submodels/Momentum/PatchInteractionModel
+$(PATCHINTERACTION)/LocalInteraction/patchInteractionData.C
+$(PATCHINTERACTION)/LocalInteraction/patchInteractionDataList.C
+
+MOMENTUMINJECTION=submodels/Momentum/InjectionModel
+$(MOMENTUMINJECTION)/MomentumLookupTableInjection/momentumParcelInjectionData.C
+$(MOMENTUMINJECTION)/MomentumLookupTableInjection/momentumParcelInjectionDataIO.C
+$(MOMENTUMINJECTION)/MomentumLookupTableInjection/momentumParcelInjectionDataIOList.C
+$(MOMENTUMINJECTION)/PatchInjection/patchInjectionBase.C
+
+THERMOINJECTION=submodels/Thermodynamic/InjectionModel
+$(THERMOINJECTION)/ThermoLookupTableInjection/thermoParcelInjectionData.C
+$(THERMOINJECTION)/ThermoLookupTableInjection/thermoParcelInjectionDataIO.C
+$(THERMOINJECTION)/ThermoLookupTableInjection/thermoParcelInjectionDataIOList.C
+
+REACTINGINJECTION=submodels/Reacting/InjectionModel
+$(REACTINGINJECTION)/ReactingLookupTableInjection/reactingParcelInjectionData.C
+$(REACTINGINJECTION)/ReactingLookupTableInjection/reactingParcelInjectionDataIO.C
+$(REACTINGINJECTION)/ReactingLookupTableInjection/reactingParcelInjectionDataIOList.C
+
+REACTINGMPINJECTION=submodels/ReactingMultiphase/InjectionModel
+$(REACTINGMPINJECTION)/ReactingMultiphaseLookupTableInjection/reactingMultiphaseParcelInjectionData.C
+$(REACTINGMPINJECTION)/ReactingMultiphaseLookupTableInjection/reactingMultiphaseParcelInjectionDataIO.C
+$(REACTINGMPINJECTION)/ReactingMultiphaseLookupTableInjection/reactingMultiphaseParcelInjectionDataIOList.C
+
+MPPICPARTICLESTRESS=submodels/MPPIC/ParticleStressModels
+$(MPPICPARTICLESTRESS)/ParticleStressModel/ParticleStressModel.C
+$(MPPICPARTICLESTRESS)/HarrisCrighton/HarrisCrighton.C
+$(MPPICPARTICLESTRESS)/Lun/Lun.C
+$(MPPICPARTICLESTRESS)/exponential/exponential.C
+
+MPPICCORRECTIONLIMITING=submodels/MPPIC/CorrectionLimitingMethods
+$(MPPICCORRECTIONLIMITING)/CorrectionLimitingMethod/CorrectionLimitingMethod.C
+$(MPPICCORRECTIONLIMITING)/noCorrectionLimiting/noCorrectionLimiting.C
+$(MPPICCORRECTIONLIMITING)/absolute/absolute.C
+$(MPPICCORRECTIONLIMITING)/relative/relative.C
+
+MPPICTIMESCALE=submodels/MPPIC/TimeScaleModels
+$(MPPICTIMESCALE)/TimeScaleModel/TimeScaleModel.C
+$(MPPICTIMESCALE)/equilibrium/equilibrium.C
+$(MPPICTIMESCALE)/nonEquilibrium/nonEquilibrium.C
+$(MPPICTIMESCALE)/isotropic/isotropic.C
+
+/* integration schemes */
+integrationScheme/integrationScheme/integrationScheme.C
+integrationScheme/integrationScheme/integrationSchemeNew.C
+integrationScheme/Euler/Euler.C
+integrationScheme/analytical/analytical.C
+
+/* phase properties */
+phaseProperties/phaseProperties/phaseProperties.C
+phaseProperties/phaseProperties/phasePropertiesIO.C
+phaseProperties/phasePropertiesList/phasePropertiesList.C
+
+/* additional helper classes */
+clouds/Templates/MomentumCloud/cloudSolution/cloudSolution.C
+
+/* averaging methods */
+submodels/MPPIC/AveragingMethods/makeAveragingMethods.C
+
+LIB = $(FOAM_LIBBIN)/liblagrangianParcel

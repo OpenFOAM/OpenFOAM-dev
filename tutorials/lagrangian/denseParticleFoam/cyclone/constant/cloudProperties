@@ -1,0 +1,186 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      cloudProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type        MPPICCloud;
+
+solution
+{
+    active          true;
+    coupled         true;
+    transient       yes;
+    cellValueSourceCorrection off;
+
+    maxCo           1.0;
+
+    interpolationSchemes
+    {
+        rho.air         cell;
+        U.air           cellPoint;
+        mu.air          cell;
+        alpha.air       cell;
+    }
+
+    averagingMethod dual;
+
+    integrationSchemes
+    {
+        U               Euler;
+    }
+
+    sourceTerms
+    {
+        schemes
+        {
+            U           semiImplicit 1;
+        }
+    }
+}
+
+constantProperties
+{
+    rho0            1000;
+}
+
+subModels
+{
+    particleForces
+    {
+        ErgunWenYuDrag
+        {
+            alphac alpha.air;
+        }
+        gravity;
+    }
+
+    injectionModels
+    {
+        model1
+        {
+            type            patchInjection;
+            massTotal       40;
+            SOI             1;
+            parcelBasisType mass;
+            patchName       inlet;
+            duration        4;
+            parcelsPerSecond 100644;
+            U0              (-10 0 0);
+            flowRateProfile constant 1;
+            sizeDistribution
+            {
+                type        normal;
+                normalDistribution
+                {
+                    expectation 100e-6;
+                    variance 25e-6;
+                    minValue 20e-6;
+                    maxValue 180e-6;
+                }
+            }
+        }
+    }
+
+    dispersionModel none;
+
+    patchInteractionModel localInteraction;
+
+    localInteractionCoeffs
+    {
+        patches
+        (
+            walls
+            {
+                type rebound;
+                e    0.97;
+                mu   0.09;
+            }
+            inlet
+            {
+                type rebound;
+                e    0.97;
+                mu   0.09;
+            }
+            outlet
+            {
+                type escape;
+            }
+        );
+    }
+
+    heatTransferModel none;
+
+    surfaceFilmModel none;
+
+    packingModel implicit;
+
+    explicitCoeffs
+    {
+        particleStressModel
+        {
+            type HarrisCrighton;
+            alphaPacked 0.6;
+            pSolid 10.0;
+            beta 2.0;
+            eps 1.0e-7;
+        }
+        correctionLimitingMethod
+        {
+            type absolute;
+            e 0.9;
+        }
+    }
+
+    implicitCoeffs
+    {
+        alphaMin 0.0001;
+        rhoMin 1.0;
+        applyLimiting true;
+        applyGravity false;
+        particleStressModel
+        {
+            type HarrisCrighton;
+            alphaPacked 0.6;
+            pSolid 5.0;
+            beta 2.0;
+            eps 1.0e-2;
+        }
+    }
+
+    dampingModel none;
+
+    isotropyModel stochastic;
+
+    stochasticCoeffs
+    {
+        timeScaleModel
+        {
+            type isotropic;
+            alphaPacked 0.6;
+            e 0.9;
+        }
+    }
+
+    stochasticCollisionModel none;
+
+    radiation off;
+}
+
+
+cloudFunctions
+{}
+
+
+// ************************************************************************* //

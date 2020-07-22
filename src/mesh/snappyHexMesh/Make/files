@@ -21,7 +21,6 @@ refinementSurfaces/surfaceZonesInfo.C
 refinementSurfaces/refinementSurfaces.C
 shellSurfaces/shellSurfaces.C
 trackedParticle/trackedParticle.C
-trackedParticle/trackedParticleCloud.C
 
 externalDisplacementMeshMover/displacementMeshMoverMotionSolver.C
 externalDisplacementMeshMover/externalDisplacementMeshMover.C

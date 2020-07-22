@@ -124,6 +124,10 @@ public:
     };
 
 
+    //- Runtime type information
+    TypeName("solidParticle");
+
+
     // Constructors
 
         //- Construct from components

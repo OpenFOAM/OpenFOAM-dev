@@ -1,0 +1,13 @@
+PARCELS=parcels
+DERIVEDPARCELS=$(PARCELS)/derived
+
+/* sub-models */
+$(DERIVEDPARCELS)/momentumParcel/makeMomentumParcelSubmodels.C
+$(DERIVEDPARCELS)/collidingParcel/makeCollidingParcelSubmodels.C
+$(DERIVEDPARCELS)/mppicParcel/makeMppicParcelSubmodels.C
+$(DERIVEDPARCELS)/thermoParcel/makeThermoParcelSubmodels.C
+$(DERIVEDPARCELS)/reactingParcel/makeReactingParcelSubmodels.C
+$(DERIVEDPARCELS)/reactingMultiphaseParcel/makeReactingMultiphaseParcelSubmodels.C
+$(DERIVEDPARCELS)/sprayParcel/makeSprayParcelSubmodels.C
+
+LIB = $(FOAM_LIBBIN)/liblagrangianParcelTurbulence

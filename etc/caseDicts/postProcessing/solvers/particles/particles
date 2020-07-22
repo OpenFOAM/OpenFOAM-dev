@@ -8,9 +8,8 @@
 Description
     Tracks a cloud of particles driven by the flow of the continuous phase.
 
-    The cloud is specified by a kinematicCloudProperties file in the constant
-    directory.  A template file is provided in:
-    $FOAM_ETC/caseDicts/solvers/lagrangian
+    The cloud is specified by a cloudProperties file in the constant directory.
+    A template file is provided in: $FOAM_ETC/caseDicts/solvers/lagrangian
 
 \*---------------------------------------------------------------------------*/
 

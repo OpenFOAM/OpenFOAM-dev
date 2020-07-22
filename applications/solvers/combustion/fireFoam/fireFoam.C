@@ -33,7 +33,7 @@ Description
 #include "fvCFD.H"
 #include "fluidThermoMomentumTransportModel.H"
 #include "psiReactionThermophysicalTransportModel.H"
-#include "basicReactingCloud.H"
+#include "parcelCloudList.H"
 #include "surfaceFilmModel.H"
 #include "radiationModel.H"
 #include "SLGThermo.H"

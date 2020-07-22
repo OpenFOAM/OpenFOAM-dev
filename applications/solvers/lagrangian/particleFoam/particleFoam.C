@@ -36,19 +36,12 @@ Description
 #include "dynamicFvMesh.H"
 #include "singlePhaseTransportModel.H"
 #include "kinematicMomentumTransportModel.H"
-#include "basicKinematicCollidingCloud.H"
+#include "parcelCloudList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
-    argList::addOption
-    (
-        "cloudName",
-        "name",
-        "specify alternative cloud name. default is 'kinematicCloud'"
-    );
-
     #define NO_CONTROL
     #include "postProcess.H"
 
@@ -66,7 +59,7 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        kinematicCloud.storeGlobalPositions();
+        clouds.storeGlobalPositions();
 
         mesh.update();
 
@@ -76,11 +69,9 @@ int main(int argc, char *argv[])
         }
 
         laminarTransport.correct();
-
-        Info<< "Evolving " << kinematicCloud.name() << endl;
         mu = laminarTransport.nu()*rhoInfValue;
 
-        kinematicCloud.evolve();
+        clouds.evolve();
 
         runTime.write();
 

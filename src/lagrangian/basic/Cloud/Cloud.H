@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,9 +107,6 @@ public:
 
     typedef typename IDLList<ParticleType>::iterator iterator;
     typedef typename IDLList<ParticleType>::const_iterator const_iterator;
-
-    //-Runtime type information
-    TypeName("Cloud");
 
 
     // Static data

@@ -7,11 +7,9 @@ cd ${0%/*} || exit 1    # Run from this directory
 wmake $targetType distributionModels
 wmake $targetType basic
 wmake $targetType solidParticle
-wmake $targetType intermediate
-wmake $targetType turbulence
-wmake $targetType spray
+wmake $targetType parcel
+wmake $targetType parcelTurbulence
 wmake $targetType DSMC
-wmake $targetType coalCombustion
 
 molecularDynamics/Allwmake $targetType $*
 
