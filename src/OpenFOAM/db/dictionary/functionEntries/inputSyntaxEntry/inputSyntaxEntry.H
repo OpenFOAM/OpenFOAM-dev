@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,12 +35,13 @@ Description
     The possible input syntax:
       - \par slash      use '/' as the scope operator
                             '../' to go to the parent dictionary
-                        and '!' to go to the top-level dictionary
+                            '!' to go to the top-level dictionary
+
       - \par dot        use '.' as the scope operator
                             '..' to go to the parent dictionary
-                        and ':' to go to the top-level dictionary
+                            ':' to go to the top-level dictionary
 
-    The default dictionary syntax is \c dot but can be changed to \c slash in
+    The default dictionary syntax is \c slash but can be changed to \c dot in
     etc/controlDict
     \verbatim
         OptimisationSwitches
@@ -48,7 +49,7 @@ Description
             .
             .
             .
-            inputSyntax slash;
+            inputSyntax dot;
         }
     \endverbatim
 

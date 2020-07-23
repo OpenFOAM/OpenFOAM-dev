@@ -81,7 +81,7 @@ OptimisationSwitches
     stopAtWriteNowSignal        -1;
 
     // Default dictionary scoping syntax
-    inputSyntax dot;
+    inputSyntax slash;
 }
 
 

@@ -14,7 +14,6 @@ FoamFile
     object      k;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-#inputSyntax slash;
 
 dimensions      [0 2 -2 0 0 0 0];
 

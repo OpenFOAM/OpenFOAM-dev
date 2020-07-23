@@ -13,7 +13,6 @@ FoamFile
     object      blockMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-#inputSyntax slash;
 
 // Example configuration:
 // - Cylindrical mesh along z-axis (0 < z < 10)

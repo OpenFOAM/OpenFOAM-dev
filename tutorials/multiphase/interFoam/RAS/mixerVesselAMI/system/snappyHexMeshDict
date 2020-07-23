@@ -13,7 +13,6 @@ FoamFile
     object      snappyHexMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-#inputSyntax slash;
 
 // Which of the steps to run
 castellatedMesh true;

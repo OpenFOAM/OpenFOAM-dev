@@ -27,20 +27,20 @@ convertToMeters 1;
 vertices
 (
     (                      0                   0 -1)
-    ($:backgroundMesh.length                   0 -1)
-    (                      0 $:backgroundMesh.rA -1)
-    ($:backgroundMesh.length $:backgroundMesh.rA -1)
+    ($!backgroundMesh/length                   0 -1)
+    (                      0 $!backgroundMesh/rA -1)
+    ($!backgroundMesh/length $!backgroundMesh/rA -1)
 
     (                      0                   0  0)
-    ($:backgroundMesh.length                   0  0)
-    (                      0 $:backgroundMesh.rA  0)
-    ($:backgroundMesh.length $:backgroundMesh.rA  0)
+    ($!backgroundMesh/length                   0  0)
+    (                      0 $!backgroundMesh/rA  0)
+    ($!backgroundMesh/length $!backgroundMesh/rA  0)
 );
 
 blocks
 (
     hex (0 1 3 2 4 5 7 6)
-    ($:backgroundMesh.lengthCells $:backgroundMesh.rAcells 1)
+    ($!backgroundMesh/lengthCells $!backgroundMesh/rAcells 1)
     simpleGrading (1 0.5 1)
 
 );

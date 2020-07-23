@@ -14,7 +14,6 @@ FoamFile
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-#inputSyntax slash;
 
 #include "$FOAM_CASE/system/blockMeshDict"
 

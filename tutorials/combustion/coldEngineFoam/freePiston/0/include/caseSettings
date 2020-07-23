@@ -13,7 +13,6 @@ FoamFile
     object      caseSettings;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-#inputSyntax slash;
 
 internalField
 {

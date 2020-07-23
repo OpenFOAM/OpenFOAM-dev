@@ -14,7 +14,6 @@ FoamFile
     object      dynamicMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-#inputSyntax slash;
 
 #include "${FOAM_CASE}/constant/caseSettings"
 

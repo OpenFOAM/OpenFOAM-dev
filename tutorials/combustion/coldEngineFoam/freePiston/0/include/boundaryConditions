@@ -13,7 +13,6 @@ FoamFile
     object      boundaryConditions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-#inputSyntax slash;
 
 wall
 {
