@@ -5,7 +5,7 @@ c++WARN     = -Wall -Wextra -Wold-style-cast -Wnon-virtual-dtor -Wno-unused-para
 # Suppress some warnings for flex++ and CGAL
 c++LESSWARN = -Wno-old-style-cast -Wno-unused-local-typedefs -Wno-tautological-undefined-compare -Wno-shift-negative-value
 
-CC          = clang++ -std=c++11 -m64
+CC          = clang++ -std=c++14 -m64
 
 include $(DEFAULT_RULES)/c++$(WM_COMPILE_OPTION)
 

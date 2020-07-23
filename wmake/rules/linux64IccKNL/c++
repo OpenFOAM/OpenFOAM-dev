@@ -6,7 +6,7 @@ c++WARN     = -Wall -Wextra -Wnon-virtual-dtor -Wno-unused-parameter -Wno-invali
 # Suppress some warnings for flex++ and CGAL
 c++LESSWARN = -diag-disable 1224,2026,2305
 
-CC          = icpc -std=c++11 -xmic-avx512 -DvectorMachine -fp-trap=common -fp-model precise -fp-speculation=safe
+CC          = icpc -std=c++14 -xmic-avx512 -DvectorMachine -fp-trap=common -fp-model precise -fp-speculation=safe
 
 include $(DEFAULT_RULES)/c++$(WM_COMPILE_OPTION)
 
