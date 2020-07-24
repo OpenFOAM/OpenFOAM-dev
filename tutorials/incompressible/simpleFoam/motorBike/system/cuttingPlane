@@ -23,11 +23,8 @@ cuttingPlane
         {
             type            cuttingPlane;
             planeType       pointAndNormal;
-            pointAndNormalDict
-            {
-                point   (0 0 0);
-                normal  (0 1 0);
-            }
+            point           (0 0 0);
+            normal          (0 1 0);
             interpolate     true;
         }
     );

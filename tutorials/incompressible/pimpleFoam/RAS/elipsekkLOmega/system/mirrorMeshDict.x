@@ -17,11 +17,8 @@ FoamFile
 
 planeType       pointAndNormal;
 
-pointAndNormalDict
-{
-    point   (0 0 0);
-    normal  (-1 0 0);
-}
+point           (0 0 0);
+normal          (-1 0 0);
 
 planeTolerance  1e-06;
 
