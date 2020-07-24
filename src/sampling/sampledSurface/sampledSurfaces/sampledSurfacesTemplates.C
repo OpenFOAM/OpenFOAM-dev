@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,7 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::sampledSurfaces::writeSurface
+void Foam::functionObjects::sampledSurfaces::writeSurface
 (
     const Field<Type>& values,
     const label surfI,
@@ -107,7 +107,7 @@ void Foam::sampledSurfaces::writeSurface
 
 
 template<class Type>
-void Foam::sampledSurfaces::sampleAndWrite
+void Foam::functionObjects::sampledSurfaces::sampleAndWrite
 (
     const GeometricField<Type, fvPatchField, volMesh>& vField
 )
@@ -148,7 +148,7 @@ void Foam::sampledSurfaces::sampleAndWrite
 
 
 template<class Type>
-void Foam::sampledSurfaces::sampleAndWrite
+void Foam::functionObjects::sampledSurfaces::sampleAndWrite
 (
     const GeometricField<Type, fvsPatchField, surfaceMesh>& sField
 )
@@ -166,7 +166,10 @@ void Foam::sampledSurfaces::sampleAndWrite
 
 
 template<class GeoField>
-void Foam::sampledSurfaces::sampleAndWrite(const IOobjectList& objects)
+void Foam::functionObjects::sampledSurfaces::sampleAndWrite
+(
+    const IOobjectList& objects
+)
 {
     wordList names;
     if (loadFromFiles_)

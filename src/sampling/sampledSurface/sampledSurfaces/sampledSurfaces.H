@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sampledSurfaces
+    Foam::functionObjects::sampledSurfaces
 
 Description
     Set of surfaces to sample
@@ -65,21 +65,15 @@ Usage
     \endtable
 
 See also
-    Foam::sampledSurfaces::distanceSurface
-    Foam::sampledSurfaces::isoSurface
-    Foam::sampledSurfaces::cuttingPlane
-    Foam::sampledSurfaces::patch
-    Foam::sampledSurfaces::plane
-    Foam::sampledSurfaces::triSurfaceMesh
-    Foam::sampledSurfaces::thresholdCellFaces
+    Foam::sampledSurfaces
 
 SourceFiles
     sampledSurfaces.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef sampledSurfaces_H
-#define sampledSurfaces_H
+#ifndef functionObjects_sampledSurfaces_H
+#define functionObjects_sampledSurfaces_H
 
 #include "functionObject.H"
 #include "sampledSurface.H"
@@ -98,6 +92,9 @@ namespace Foam
 class Time;
 class fvMesh;
 class dictionary;
+
+namespace functionObjects
+{
 
 /*---------------------------------------------------------------------------*\
                        Class sampledSurfaces Declaration
@@ -286,6 +283,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
