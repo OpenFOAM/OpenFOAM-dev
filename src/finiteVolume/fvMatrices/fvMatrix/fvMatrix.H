@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -479,8 +479,12 @@ public:
         void operator*=(const volScalarField::Internal&);
         void operator*=(const tmp<volScalarField::Internal>&);
         void operator*=(const tmp<volScalarField>&);
-
         void operator*=(const dimensioned<scalar>&);
+
+        void operator/=(const volScalarField::Internal&);
+        void operator/=(const tmp<volScalarField::Internal>&);
+        void operator/=(const tmp<volScalarField>&);
+        void operator/=(const dimensioned<scalar>&);
 
 
     // Friend operators
@@ -1045,6 +1049,121 @@ tmp<fvMatrix<Type>> operator*
 (
     const dimensioned<scalar>&,
     const tmp<fvMatrix<Type>>&
+);
+
+template<class Type>
+tmp<fvMatrix<Type>> operator*
+(
+    const volScalarField::Internal&,
+    const fvMatrix<Type>&
+);
+
+template<class Type>
+tmp<fvMatrix<Type>> operator*
+(
+    const tmp<volScalarField::Internal>&,
+    const fvMatrix<Type>&
+);
+
+template<class Type>
+tmp<fvMatrix<Type>> operator*
+(
+    const tmp<volScalarField>&,
+    const fvMatrix<Type>&
+);
+
+template<class Type>
+tmp<fvMatrix<Type>> operator*
+(
+    const volScalarField::Internal&,
+    const tmp<fvMatrix<Type>>&
+);
+
+template<class Type>
+tmp<fvMatrix<Type>> operator*
+(
+    const tmp<volScalarField::Internal>&,
+    const tmp<fvMatrix<Type>>&
+);
+
+template<class Type>
+tmp<fvMatrix<Type>> operator*
+(
+    const tmp<volScalarField>&,
+    const tmp<fvMatrix<Type>>&
+);
+
+
+template<class Type>
+tmp<fvMatrix<Type>> operator*
+(
+    const dimensioned<scalar>&,
+    const fvMatrix<Type>&
+);
+
+template<class Type>
+tmp<fvMatrix<Type>> operator*
+(
+    const dimensioned<scalar>&,
+    const tmp<fvMatrix<Type>>&
+);
+
+
+template<class Type>
+tmp<fvMatrix<Type>> operator/
+(
+    const fvMatrix<Type>&,
+    const volScalarField::Internal&
+);
+
+template<class Type>
+tmp<fvMatrix<Type>> operator/
+(
+    const fvMatrix<Type>&,
+    const tmp<volScalarField::Internal>&
+);
+
+template<class Type>
+tmp<fvMatrix<Type>> operator/
+(
+    const fvMatrix<Type>&,
+    const tmp<volScalarField>&
+);
+
+template<class Type>
+tmp<fvMatrix<Type>> operator/
+(
+    const tmp<fvMatrix<Type>>&,
+    const volScalarField::Internal&
+);
+
+template<class Type>
+tmp<fvMatrix<Type>> operator/
+(
+    const tmp<fvMatrix<Type>>&,
+    const tmp<volScalarField::Internal>&
+);
+
+template<class Type>
+tmp<fvMatrix<Type>> operator/
+(
+    const tmp<fvMatrix<Type>>&,
+    const tmp<volScalarField>&
+);
+
+
+template<class Type>
+tmp<fvMatrix<Type>> operator/
+(
+    const fvMatrix<Type>&,
+    const dimensioned<scalar>&
+);
+
+template<class Type>
+tmp<fvMatrix<Type>> operator/
+(
+    const tmp<fvMatrix<Type>>&,
+    const dimensioned<scalar>&
 );
 
 

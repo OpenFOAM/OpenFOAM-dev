@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1230,6 +1230,77 @@ void Foam::fvMatrix<Type>::operator*=
 }
 
 
+template<class Type>
+void Foam::fvMatrix<Type>::operator/=
+(
+    const volScalarField::Internal& dsf
+)
+{
+    dimensions_ /= dsf.dimensions();
+    lduMatrix::operator/=(dsf.field());
+    source_ /= dsf.field();
+
+    forAll(boundaryCoeffs_, patchi)
+    {
+        scalarField pisf
+        (
+            dsf.mesh().boundary()[patchi].patchInternalField(dsf.field())
+        );
+
+        internalCoeffs_[patchi] /= pisf;
+        boundaryCoeffs_[patchi] /= pisf;
+    }
+
+    if (faceFluxCorrectionPtr_)
+    {
+        FatalErrorInFunction
+            << "cannot scale a matrix containing a faceFluxCorrection"
+            << abort(FatalError);
+    }
+}
+
+
+template<class Type>
+void Foam::fvMatrix<Type>::operator/=
+(
+    const tmp<volScalarField::Internal>& tdsf
+)
+{
+    operator/=(tdsf());
+    tdsf.clear();
+}
+
+
+template<class Type>
+void Foam::fvMatrix<Type>::operator/=
+(
+    const tmp<volScalarField>& tvsf
+)
+{
+    operator/=(tvsf());
+    tvsf.clear();
+}
+
+
+template<class Type>
+void Foam::fvMatrix<Type>::operator/=
+(
+    const dimensioned<scalar>& ds
+)
+{
+    dimensions_ /= ds.dimensions();
+    lduMatrix::operator/=(ds.value());
+    source_ /= ds.value();
+    internalCoeffs_ /= ds.value();
+    boundaryCoeffs_ /= ds.value();
+
+    if (faceFluxCorrectionPtr_)
+    {
+        *faceFluxCorrectionPtr_ /= ds.value();
+    }
+}
+
+
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
 template<class Type>
@@ -2178,6 +2249,103 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::operator*
 {
     tmp<fvMatrix<Type>> tC(tA.ptr());
     tC.ref() *= ds;
+    return tC;
+}
+
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type>> Foam::operator/
+(
+    const fvMatrix<Type>& A,
+    const volScalarField::Internal& dsf
+)
+{
+    tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
+    tC.ref() /= dsf;
+    return tC;
+}
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type>> Foam::operator/
+(
+    const fvMatrix<Type>& A,
+    const tmp<volScalarField::Internal>& tdsf
+)
+{
+    tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
+    tC.ref() /= tdsf;
+    return tC;
+}
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type>> Foam::operator/
+(
+    const fvMatrix<Type>& A,
+    const tmp<volScalarField>& tvsf
+)
+{
+    tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
+    tC.ref() /= tvsf;
+    return tC;
+}
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type>> Foam::operator/
+(
+    const tmp<fvMatrix<Type>>& tA,
+    const volScalarField::Internal& dsf
+)
+{
+    tmp<fvMatrix<Type>> tC(tA.ptr());
+    tC.ref() /= dsf;
+    return tC;
+}
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type>> Foam::operator/
+(
+    const tmp<fvMatrix<Type>>& tA,
+    const tmp<volScalarField::Internal>& tdsf
+)
+{
+    tmp<fvMatrix<Type>> tC(tA.ptr());
+    tC.ref() /= tdsf;
+    return tC;
+}
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type>> Foam::operator/
+(
+    const tmp<fvMatrix<Type>>& tA,
+    const tmp<volScalarField>& tvsf
+)
+{
+    tmp<fvMatrix<Type>> tC(tA.ptr());
+    tC.ref() /= tvsf;
+    return tC;
+}
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type>> Foam::operator/
+(
+    const fvMatrix<Type>& A,
+    const dimensioned<scalar>& ds
+)
+{
+    tmp<fvMatrix<Type>> tC(new fvMatrix<Type>(A));
+    tC.ref() /= ds;
+    return tC;
+}
+
+template<class Type>
+Foam::tmp<Foam::fvMatrix<Type>> Foam::operator/
+(
+    const tmp<fvMatrix<Type>>& tA,
+    const dimensioned<scalar>& ds
+)
+{
+    tmp<fvMatrix<Type>> tC(tA.ptr());
+    tC.ref() /= ds;
     return tC;
 }
 
