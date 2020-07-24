@@ -14,8 +14,8 @@ runParallel $application
 
 if ! isTest $@
 then
-    foamDictionary system/controlDict -entry endTime -set 4
-    foamDictionary system/controlDict -entry startTime -set 0.5
+    runApplication -a foamDictionary system/controlDict -entry endTime -set 4
+    runApplication -a foamDictionary system/controlDict -entry startTime -set 0.5
     runParallel -a foamDictionary 0.5/T.liquid -entry boundaryField.wall.q -set "uniform 73900"
     runParallel -a foamDictionary 0.5/U.liquid -entry boundaryField.inlet.type -set "fixedValue"
     runParallel -a $application

@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -80,7 +80,7 @@ logReportDir()
 
     cd $1 || return 1
 
-    logs=`find . -name "log.*"`
+    logs=`find . -name "log.*" ! -name "log.foamDictionary"`
     [ -n "$logs" ] || return 0
 
     retVal=0

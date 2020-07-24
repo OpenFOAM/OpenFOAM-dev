@@ -9,9 +9,9 @@ runApplication blockMesh
 runApplication decomposePar -copyZero
 
 # Run snappy without layers
-foamDictionary system/snappyHexMeshDict -entry castellatedMesh -set on
-foamDictionary system/snappyHexMeshDict -entry snap -set on
-foamDictionary system/snappyHexMeshDict -entry addLayers -set off
+runApplication -a foamDictionary system/snappyHexMeshDict -entry castellatedMesh -set on
+runApplication -a foamDictionary system/snappyHexMeshDict -entry snap -set on
+runApplication -a foamDictionary system/snappyHexMeshDict -entry addLayers -set off
 runParallel snappyHexMesh -overwrite
 
 # Convert the face zones into mapped wall baffles and split
@@ -20,9 +20,9 @@ runParallel mergeOrSplitBaffles -split -overwrite
 rm -rf processor*/constant/polyMesh/pointLevel
 
 # Run snappy again to create layers
-foamDictionary system/snappyHexMeshDict -entry castellatedMesh -set off
-foamDictionary system/snappyHexMeshDict -entry snap -set off
-foamDictionary system/snappyHexMeshDict -entry addLayers -set on
+runApplication -a foamDictionary system/snappyHexMeshDict -entry castellatedMesh -set off
+runApplication -a foamDictionary system/snappyHexMeshDict -entry snap -set off
+runApplication -a foamDictionary system/snappyHexMeshDict -entry addLayers -set on
 runParallel -a snappyHexMesh -overwrite
 
 # Split the mesh into regions

@@ -12,7 +12,7 @@ setThermoAndEnergy()
     he=${1%.*}
     phase=${1#*.}
 
-    foamDictionary -entry thermoType.thermo -set ${he}Const \
+    runApplication -a foamDictionary -entry thermoType.thermo -set ${he}Const \
         constant/thermophysicalProperties.$phase
 
     case $he in
@@ -21,7 +21,7 @@ setThermoAndEnergy()
         * ) exit 1;;
     esac
 
-    foamDictionary -entry thermoType.energy -set $energy \
+    runApplication -a foamDictionary -entry thermoType.energy -set $energy \
         constant/thermophysicalProperties.$phase
 }
 

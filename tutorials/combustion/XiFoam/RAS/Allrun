@@ -28,9 +28,9 @@ cloneCase moriyoshiHomogeneous moriyoshiHomogeneousHydrogen
 
     if ! isTest $@
     then
-        foamDictionary system/controlDict -entry deltaT -set 1e-05
-        foamDictionary system/controlDict -entry endTime -set 0.015
-        foamDictionary system/controlDict -entry writeInterval -set 50
+        runApplication -a foamDictionary system/controlDict -entry deltaT -set 1e-05
+        runApplication -a foamDictionary system/controlDict -entry endTime -set 0.015
+        runApplication -a foamDictionary system/controlDict -entry writeInterval -set 50
 
         runApplication -a XiFoam
     fi

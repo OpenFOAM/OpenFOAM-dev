@@ -17,7 +17,7 @@ runApplication blockMesh -dict system/blockMeshDict.2
 
 for i in 1 2 3 4
 do
-    foamDictionary system/refineMeshDict -entry set -set c${i}
+    runApplication -a foamDictionary system/refineMeshDict -entry set -set c${i}
     runApplication -a topoSet -dict system/topoSetDict.2
     runApplication -a refineMesh -dict system/refineMeshDict -overwrite
 done

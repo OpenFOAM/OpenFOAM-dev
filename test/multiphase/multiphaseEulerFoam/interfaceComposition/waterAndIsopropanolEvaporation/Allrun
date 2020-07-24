@@ -14,7 +14,8 @@ setInertY()
     y=${1%.*}
     phase=${1#*.}
     [ $y != "none" ] && arg="-set $y" || arg="-remove"
-    foamDictionary -entry inertSpecie $arg constant/thermophysicalProperties.$phase
+    runApplication -a foamDictionary -entry inertSpecie $arg \
+        constant/thermophysicalProperties.$phase
 }
 
 for gY in $gYs

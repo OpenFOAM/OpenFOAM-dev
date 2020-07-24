@@ -18,7 +18,8 @@ setInertY()
         * ) arg="-set $y";;
     esac
 
-    foamDictionary -entry inertSpecie $arg constant/thermophysicalProperties.$phase
+    runApplication -a foamDictionary -entry inertSpecie $arg \
+        constant/thermophysicalProperties.$phase
 }
 
 setThermoAndEnergy()
@@ -32,7 +33,7 @@ setThermoAndEnergy()
         * ) exit 1;;
     esac
 
-    foamDictionary -entry thermoType.thermo -set $thermo \
+    runApplication -a foamDictionary -entry thermoType.thermo -set $thermo \
         constant/thermophysicalProperties.$phase
 
     case $he in
@@ -41,7 +42,7 @@ setThermoAndEnergy()
         * ) exit 1;;
     esac
 
-    foamDictionary -entry thermoType.energy -set $energy \
+    runApplication -a foamDictionary -entry thermoType.energy -set $energy \
         constant/thermophysicalProperties.$phase
 }
 
