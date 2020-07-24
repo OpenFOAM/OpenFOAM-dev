@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,31 @@ Class
 Description
     A sampledSurface defined by a plane using the iso-surface algorithm
     to 'cut' the mesh.
+
+    Example:
+    \verbatim
+    {
+        type        cuttingPlane;
+        planeType   pointAndNormal;
+        basePoint   (0 0 0);
+        normalVector (0 0 1);
+        filter      full;
+        interpolate yes;
+    }
+    \endverbatim
+
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        planeType    | the method of specification of the plane | yes |
+        filter       | the level of filtering to perform on the iso-surface \\
+                                               | no          | full
+        interpolate  | interpolate values to the surface points | no | no
+    \endtable
+
+See also
+    Foam::plane
+    Foam::isoSurface
 
 SourceFiles
     sampledCuttingPlane.C

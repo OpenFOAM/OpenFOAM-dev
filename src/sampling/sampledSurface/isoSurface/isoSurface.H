@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,22 @@ Class
     Foam::isoSurface
 
 Description
-    Marching tet iso surface algorithm with optional filtering to keep only
-    points originating from mesh edges.
+    Marching tet iso surface algorithm with filtering to remove unnecessary
+    topology.
+
+    Three levels of filtering are possible:
+
+    - none:
+        Don't filter; the full intersection between the iso surface and the
+        tetrahedral decomposition of the mesh is generated
+
+    - partial:
+        Remove points from vertex to cell-centre edges and merge triangles that
+        form a contiguous cut through a single cell
+
+    - full:
+        As partial, but also remove points from face-diagonals and merge edges
+        that originate from the same face
 
 SourceFiles
     isoSurface.C
@@ -63,12 +77,9 @@ public:
 
         enum class filterType
         {
-            none,       // No filtering
-            partial,    // Remove points from vertex to cell-centre edges and
-                        // merge triangles that form a contiguous cut through a
-                        // single cell
-            full        // Also remove points from face-diagonals and merge
-                        // edges that originate from the same face
+            none,
+            partial,
+            full
         };
 
         static const NamedEnum<filterType, 3> filterTypeNames_;

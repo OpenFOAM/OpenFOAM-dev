@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,39 +26,57 @@ Class
 
 Description
     A sampledSurface from a triSurfaceMesh. It samples on the points/triangles
-    of the triSurface.
+    of the triSurface. It either samples cells or (non-coupled) boundary faces.
 
-    - it either samples cells or (non-coupled) boundary faces
+    There are 6 possible modes:
 
-    - 6 different modes:
-        - source=cells, interpolate=false:
-            finds per triangle centre the nearest cell centre and uses its value
-        - source=cells, interpolate=true
-            finds per triangle centre the nearest cell centre.
-            Per surface point checks if this nearest cell is the one containing
-            point; otherwise projects the point onto the nearest point on
-            the boundary of the cell (to make sure interpolateCellPoint
-            gets a valid location)
+    - source=cells, interpolate=false:
+        Finds per triangle centre the nearest cell centre and uses its value.
 
-        - source=insideCells, interpolate=false:
-            finds per triangle centre the cell containing it and uses its value.
-            Trims triangles outside mesh.
-        - source=insideCells, interpolate=true
-            Per surface point interpolate cell containing it.
+    - source=cells, interpolate=true
+        Finds per triangle centre the nearest cell centre. Per surface point
+        checks if this nearest cell is the one containing point; otherwise
+        projects the point onto the nearest point on the boundary of the cell
+        (to make sure interpolateCellPoint gets a valid location)
 
-        - source=boundaryFaces, interpolate=false:
-            finds per triangle centre the nearest point on the boundary
-            (uncoupled faces only) and uses the value (or 0 if the nearest
-            is on an empty boundary)
-        - source=boundaryFaces, interpolate=true:
-            finds per triangle centre the nearest point on the boundary
-            (uncoupled faces only).
-            Per surface point projects the point onto this boundary face
-            (to make sure interpolateCellPoint gets a valid location)
+    - source=insideCells, interpolate=false:
+        Finds per triangle centre the cell containing it and uses its value.
+        Trims triangles outside mesh.
 
-    - since it finds a nearest per triangle each triangle is guaranteed
-    to be on one processor only. So after stitching (by sampledSurfaces)
-    the original surface should be complete.
+    - source=insideCells, interpolate=true
+        Per surface point interpolate cell containing it.
+
+    - source=boundaryFaces, interpolate=false:
+        Finds per triangle centre the nearest point on the boundary (uncoupled
+        faces only) and uses the value (or 0 if the nearest is on an empty
+        boundary).
+
+    - source=boundaryFaces, interpolate=true:
+        Finds per triangle centre the nearest point on the boundary (uncoupled
+        faces only). Per surface point projects the point onto this boundary
+        face (to make sure interpolateCellPoint gets a valid location)
+
+    Since it finds a nearest per triangle each triangle is guaranteed to be on
+    one processor only. So after stitching (by sampledSurfaces) the original
+    surface should be complete.
+
+    Example:
+    \verbatim
+    {
+        type        triSurfaceMesh;
+        surface     "surface.stl";
+        source      cells;
+        interpolate yes;
+    }
+    \endverbatim
+
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        surface      | the surface file (within constant/triSurface) | yes |
+        source       | see above               | yes         | no
+        interpolate  | see above               | no          | no
+    \endtable
 
 SourceFiles
     sampledTriSurfaceMesh.C

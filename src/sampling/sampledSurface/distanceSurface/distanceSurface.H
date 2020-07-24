@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,35 @@ Class
 
 Description
     A sampledSurface defined by a distance to a surface.
+
+    Example:
+    \verbatim
+    {
+        type        distanceSurface;
+        surfaceType searchableBox;
+        min         (-1 -1 -1);
+        max         (1 1 1);
+        distance    0.1;
+        signed      yes;
+        filter      full;
+        interpolate yes;
+    }
+    \endverbatim
+
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        surfaceType  | the type of surface to sample from | yes |
+        distance     | the distance from which to sample the surface | yes |
+        signed       | sample only on one side of the surface, specified by \\
+                       the sign of the distance | yes |
+        filter       | the level of filtering to perform on the iso-surface \\
+                                               | no          | full
+        interpolate  | interpolate values to the surface points | no | no
+    \endtable
+
+See also
+    Foam::isoSurface
 
 SourceFiles
     distanceSurface.C

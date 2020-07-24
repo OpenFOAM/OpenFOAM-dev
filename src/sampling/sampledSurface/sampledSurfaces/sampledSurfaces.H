@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,53 @@ Class
     Foam::sampledSurfaces
 
 Description
-    Set of surfaces to sample.
+    Set of surfaces to sample
 
-    The write() method is used to sample and write files.
+    Example of function object specification:
+    \verbatim
+    surfaces1
+    {
+        type            surfaces;
+        libs            ("libsampling.so");
+
+        writeControl    writeTime;
+
+        fields          (p U);
+
+        surfaceFormat   vtk;
+        interpolationScheme cellPoint;
+
+        surfaces
+        (
+            p1e5
+            {
+                type            isoSurface;
+                isoField        p;
+                isoValue        1e5;
+                interpolate     yes;
+            }
+        );
+    }
+    \endverbatim
+
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        type         | type name: surfaces     | yes         |
+        surfaceFormat | the format in which to write the surface file | yes   |
+        interpolationScheme | the method by which values are interpolated \\
+                              from the mesh to the surface | yes
+        surfaces     | the list of surfaces    | yes         |
+    \endtable
+
+See also
+    Foam::sampledSurfaces::distanceSurface
+    Foam::sampledSurfaces::isoSurface
+    Foam::sampledSurfaces::cuttingPlane
+    Foam::sampledSurfaces::patch
+    Foam::sampledSurfaces::plane
+    Foam::sampledSurfaces::triSurfaceMesh
+    Foam::sampledSurfaces::thresholdCellFaces
 
 SourceFiles
     sampledSurfaces.C

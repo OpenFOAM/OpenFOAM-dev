@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,24 @@ Class
 
 Description
     A sampledSurface on patches. Non-triangulated by default.
+
+    Example:
+    \verbatim
+    {
+        type        patch;
+        patches     (walls);
+        triangulate no;
+        interpolate yes;
+    }
+    \endverbatim
+
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        patches      | the names of patches on which to sample | yes |
+        triangulate  | triangulate the output  | no          | no
+        interpolate  | interpolate values to the surface points | no | no
+    \endtable
 
 SourceFiles
     sampledPatch.C

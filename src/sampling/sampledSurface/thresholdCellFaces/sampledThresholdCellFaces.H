@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,28 @@ Class
 Description
     A sampledSurface defined by the cell faces corresponding to a threshold
     value.
+
+    Example:
+    \verbatim
+    {
+        type        thresholdCellFaces;
+        field       p;
+        lowerLimit  5;
+        upperLimit  10;
+        interpolate yes;
+    }
+    \endverbatim
+
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        field        | the field to threshold  | yes         |
+        lowerLimit   | the limit below which cells are omitted \\
+                     | if no upperLimit | -vGreat
+        upperLimit   | the limit above which cells are omitted \\
+                     | if no lowerLimit | +vGreat
+        interpolate  | interpolate values to the surface points | no | no
+    \endtable
 
 SourceFiles
     sampledThresholdCellFaces.C

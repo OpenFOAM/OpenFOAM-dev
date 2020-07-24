@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,8 +26,30 @@ Class
 
 Description
     A sampledSurface defined by a surface of iso value.
-    To be used in sampleSurfaces / functionObjects. Recalculates iso surface
-    only if time changes.
+
+    Example:
+    \verbatim
+    {
+        type        isoSurface;
+        isoField    p;
+        isoValue    1e5;
+        filter      full;
+        interpolate yes;
+    }
+    \endverbatim
+
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        isoField     | the field to get an iso-surface of | yes |
+        isoValue     | the iso-surface value   | yes         |
+        filter       | the level of filtering to perform on the iso-surface \\
+                                               | no          | full
+        interpolate  | interpolate values to the surface points | no | no
+    \endtable
+
+See also
+    Foam::isoSurface
 
 SourceFiles
     sampledIsoSurface.C

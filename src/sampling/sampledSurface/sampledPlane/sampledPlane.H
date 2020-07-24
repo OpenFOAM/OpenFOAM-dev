@@ -26,10 +26,29 @@ Class
 
 Description
     A sampledSurface defined by a plane which 'cuts' the mesh using the
-    cuttingPlane algorithm.  The plane is triangulated by default.
+    cuttingPlane algorithm. The plane is triangulated by default.
 
-Note
-    Does not actually cut until update() called.
+    Example:
+    \verbatim
+    {
+        type        plane;
+        planeType   pointAndNormal;
+        basePoint   (0 0 0);
+        normalVector (0 0 1);
+        interpolate yes;
+    }
+    \endverbatim
+
+Usage
+    \table
+        Property     | Description             | Required    | Default value
+        planeType    | the method of specification of the plane | yes |
+        triangulate  | triangulate the output  | no          | yes
+        interpolate  | interpolate values to the surface points | no | no
+    \endtable
+
+See also
+    Foam::plane
 
 SourceFiles
     sampledPlane.C
