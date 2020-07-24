@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,7 +160,7 @@ Foam::plane::plane(const dictionary& dict)
 
     if (planeType == "planeEquation")
     {
-        const dictionary& subDict = dict.subDict("planeEquationDict");
+        const dictionary& subDict = dict.optionalSubDict("planeEquationDict");
         scalarList C(4);
 
         C[0] = subDict.lookup<scalar>("a");
@@ -173,7 +173,7 @@ Foam::plane::plane(const dictionary& dict)
     }
     else if (planeType == "embeddedPoints")
     {
-        const dictionary& subDict = dict.subDict("embeddedPointsDict");
+        const dictionary& subDict = dict.optionalSubDict("embeddedPointsDict");
 
         point point1(subDict.lookup("point1"));
         point point2(subDict.lookup("point2"));
@@ -183,7 +183,7 @@ Foam::plane::plane(const dictionary& dict)
     }
     else if (planeType == "pointAndNormal")
     {
-        const dictionary& subDict = dict.subDict("pointAndNormalDict");
+        const dictionary& subDict = dict.optionalSubDict("pointAndNormalDict");
 
         point_ =
             subDict.found("basePoint")
