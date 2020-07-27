@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,8 +27,8 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class BasicPsiThermo, class MixtureType>
-void Foam::heRhoThermo<BasicPsiThermo, MixtureType>::calculate()
+template<class BasicRhoThermo, class MixtureType>
+void Foam::heRhoThermo<BasicRhoThermo, MixtureType>::calculate()
 {
     const scalarField& hCells = this->he();
     const scalarField& pCells = this->p_;
@@ -125,14 +125,14 @@ void Foam::heRhoThermo<BasicPsiThermo, MixtureType>::calculate()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class BasicPsiThermo, class MixtureType>
-Foam::heRhoThermo<BasicPsiThermo, MixtureType>::heRhoThermo
+template<class BasicRhoThermo, class MixtureType>
+Foam::heRhoThermo<BasicRhoThermo, MixtureType>::heRhoThermo
 (
     const fvMesh& mesh,
     const word& phaseName
 )
 :
-    heThermo<BasicPsiThermo, MixtureType>(mesh, phaseName)
+    heThermo<BasicRhoThermo, MixtureType>(mesh, phaseName)
 {
     calculate();
 }
@@ -140,15 +140,15 @@ Foam::heRhoThermo<BasicPsiThermo, MixtureType>::heRhoThermo
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class BasicPsiThermo, class MixtureType>
-Foam::heRhoThermo<BasicPsiThermo, MixtureType>::~heRhoThermo()
+template<class BasicRhoThermo, class MixtureType>
+Foam::heRhoThermo<BasicRhoThermo, MixtureType>::~heRhoThermo()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class BasicPsiThermo, class MixtureType>
-void Foam::heRhoThermo<BasicPsiThermo, MixtureType>::correct()
+template<class BasicRhoThermo, class MixtureType>
+void Foam::heRhoThermo<BasicRhoThermo, MixtureType>::correct()
 {
     if (debug)
     {
