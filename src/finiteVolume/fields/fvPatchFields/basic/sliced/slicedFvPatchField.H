@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,25 +81,8 @@ public:
         slicedFvPatchField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&
-        );
-
-        //- Construct from patch, internal field and dictionary
-        slicedFvPatchField
-        (
-            const fvPatch&,
             const DimensionedField<Type, volMesh>&,
-            const dictionary&
-        );
-
-        //- Construct by mapping the given slicedFvPatchField<Type>
-        //  onto a new patch
-        slicedFvPatchField
-        (
-            const slicedFvPatchField<Type>&,
-            const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
-            const fvPatchFieldMapper&
+            const fvPatchField<Type>&
         );
 
         //- Copy constructor

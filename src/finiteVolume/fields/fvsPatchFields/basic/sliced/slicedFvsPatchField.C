@@ -46,39 +46,14 @@ template<class Type>
 Foam::slicedFvsPatchField<Type>::slicedFvsPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, surfaceMesh>& iF
+    const DimensionedField<Type, surfaceMesh>& iF,
+    const fvsPatchField<Type>& pf
 )
 :
     fvsPatchField<Type>(p, iF, Field<Type>())
-{}
-
-
-template<class Type>
-Foam::slicedFvsPatchField<Type>::slicedFvsPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, surfaceMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvsPatchField<Type>(p, iF, Field<Type>("value", dict, p.size()))
 {
-    NotImplemented;
-}
-
-
-template<class Type>
-Foam::slicedFvsPatchField<Type>::slicedFvsPatchField
-(
-    const slicedFvsPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, surfaceMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fvsPatchField<Type>(ptf, p, iF, mapper)
-{
-    NotImplemented;
+    // Set the fvsPatchField values to the given fvsPatchField
+    UList<Type>::shallowCopy(pf);
 }
 
 

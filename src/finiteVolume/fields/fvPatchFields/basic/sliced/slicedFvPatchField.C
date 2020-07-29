@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,39 +46,14 @@ template<class Type>
 Foam::slicedFvPatchField<Type>::slicedFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchField<Type>& pf
 )
 :
     fvPatchField<Type>(p, iF, Field<Type>())
-{}
-
-
-template<class Type>
-Foam::slicedFvPatchField<Type>::slicedFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvPatchField<Type>(p, iF, dict, false)
 {
-    NotImplemented;
-}
-
-
-template<class Type>
-Foam::slicedFvPatchField<Type>::slicedFvPatchField
-(
-    const slicedFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fvPatchField<Type>(ptf, p, iF, mapper)
-{
-    NotImplemented;
+    // Set the fvPatchField values to the given fvPatchField
+    UList<Type>::shallowCopy(pf);
 }
 
 
