@@ -612,8 +612,8 @@ Foam::scalar Foam::TDACChemistryModel<ReactionThermo, ThermoType>::solve
             c0[i] = c[i];
             phiq[i] = this->Y()[i][celli];
         }
-        phiq[this->nSpecie()]=Ti;
-        phiq[this->nSpecie() + 1]=pi;
+        phiq[this->nSpecie()] = Ti;
+        phiq[this->nSpecie() + 1] = pi;
         if (tabulation_->variableTimeStep())
         {
             phiq[this->nSpecie() + 2] = deltaT[celli];

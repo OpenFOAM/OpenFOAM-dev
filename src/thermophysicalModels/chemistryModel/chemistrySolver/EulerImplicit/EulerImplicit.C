@@ -25,8 +25,6 @@ License
 
 #include "EulerImplicit.H"
 #include "addToRunTimeSelectionTable.H"
-#include "simpleMatrix.H"
-#include "Reaction.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -39,8 +37,10 @@ Foam::EulerImplicit<ChemistryModel>::EulerImplicit
     chemistrySolver<ChemistryModel>(thermo),
     coeffsDict_(this->subDict("EulerImplicitCoeffs")),
     cTauChem_(coeffsDict_.lookup<scalar>("cTauChem")),
-    eqRateLimiter_(coeffsDict_.lookup("equilibriumRateLimiter")),
-    cTp_(this->nEqns())
+    cTp_(this->nEqns()),
+    R_(this->nEqns()),
+    J_(this->nEqns()),
+    E_(this->nEqns() - 2)
 {}
 
 
@@ -54,41 +54,6 @@ Foam::EulerImplicit<ChemistryModel>::~EulerImplicit()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ChemistryModel>
-void Foam::EulerImplicit<ChemistryModel>::updateRRInReactionI
-(
-    const label index,
-    const scalar pr,
-    const scalar pf,
-    const scalar corr,
-    const label lRef,
-    const label rRef,
-    const scalar p,
-    const scalar T,
-    simpleMatrix<scalar>& RR
-) const
-{
-    const Reaction<typename ChemistryModel::thermoType>& R =
-        this->reactions_[index];
-
-    forAll(R.lhs(), s)
-    {
-        const label si = R.lhs()[s].index;
-        const scalar sl = R.lhs()[s].stoichCoeff;
-        RR[si][rRef] -= sl*pr*corr;
-        RR[si][lRef] += sl*pf*corr;
-    }
-
-    forAll(R.rhs(), s)
-    {
-        const label si = R.rhs()[s].index;
-        const scalar sr = R.rhs()[s].stoichCoeff;
-        RR[si][lRef] -= sr*pf*corr;
-        RR[si][rRef] += sr*pr*corr;
-    }
-}
-
-
-template<class ChemistryModel>
 void Foam::EulerImplicit<ChemistryModel>::solve
 (
     scalar& p,
@@ -100,101 +65,71 @@ void Foam::EulerImplicit<ChemistryModel>::solve
 ) const
 {
     const label nSpecie = this->nSpecie();
-    simpleMatrix<scalar> RR(nSpecie, 0, 0);
 
-    for (label i=0; i<nSpecie; i++)
+    // Map the composition, temperature and pressure into cTp
+    for (int i=0; i<nSpecie; i++)
     {
-        c[i] = max(0, c[i]);
+        cTp_[i] = max(0, c[i]);
     }
+    cTp_[nSpecie] = T;
+    cTp_[nSpecie + 1] = p;
 
-    // Calculate the absolute enthalpy
-    const scalar cTot = sum(c);
-    typename ChemistryModel::thermoType mixture
-    (
-        (this->specieThermos_[0].W()*c[0])*this->specieThermos_[0]
-    );
-    for (label i=1; i<nSpecie; i++)
-    {
-        mixture += (this->specieThermos_[i].W()*c[i])*this->specieThermos_[i];
-    }
-    const scalar ha = mixture.Ha(p, T);
-    const scalar deltaTEst = min(deltaT, subDeltaT);
-
-    forAll(this->reactions(), i)
-    {
-        scalar pf, cf, pr, cr;
-        label lRef, rRef;
-
-        const scalar omegai
-        (
-            this->omegaI(i, p, T, c, li, pf, cf, lRef, pr, cr, rRef)
-        );
-
-        scalar corr = 1;
-        if (eqRateLimiter_)
-        {
-            if (omegai < 0)
-            {
-                corr = 1/(1 + pr*deltaTEst);
-            }
-            else
-            {
-                corr = 1/(1 + pf*deltaTEst);
-            }
-        }
-
-        updateRRInReactionI(i, pr, pf, corr, lRef, rRef, p, T, RR);
-    }
+    // Calculate the reaction rate and Jacobian
+    this->jacobian(0, cTp_, li, R_, J_);
 
     // Calculate the stable/accurate time-step
     scalar tMin = great;
+    const scalar cTot = sum(c);
 
     for (label i=0; i<nSpecie; i++)
     {
-        scalar d = 0;
-        for (label j=0; j<nSpecie; j++)
+        if (R_[i] < -small)
         {
-            d -= RR(i, j)*c[j];
-        }
-
-        if (d < -small)
-        {
-            tMin = min(tMin, -(c[i] + small)/d);
+            tMin = min(tMin, -(cTp_[i] + small)/R_[i]);
         }
         else
         {
-            d = max(d, small);
-            const scalar cm = max(cTot - c[i], 1e-5);
-            tMin = min(tMin, cm/d);
+            tMin = min
+            (
+                tMin,
+                max(cTot - cTp_[i], 1e-5)/max(R_[i], small)
+            );
         }
     }
 
     subDeltaT = cTauChem_*tMin;
     deltaT = min(deltaT, subDeltaT);
 
-    // Add the diagonal and source contributions from the time-derivative
+    // Assemble the Euler implicit matrix for the composition
+    scalarField& source = E_.source();
     for (label i=0; i<nSpecie; i++)
     {
-        RR(i, i) += 1/deltaT;
-        RR.source()[i] = c[i]/deltaT;
+        E_(i, i) = 1/deltaT - J_(i, i);
+        source[i] = R_[i] + E_(i, i)*cTp_[i];
+
+        for (label j=0; j<nSpecie; j++)
+        {
+            if (i != j)
+            {
+                E_(i, j) = -J_(i, j);
+                source[i] += E_(i, j)*cTp_[j];
+            }
+        }
     }
 
     // Solve for the new composition
-    c = RR.LUsolve();
+    scalarField::subField(cTp_, nSpecie) = E_.LUsolve();
 
-    // Limit the composition
+    // Limit the composition and transfer back into c
     for (label i=0; i<nSpecie; i++)
     {
-        c[i] = max(0, c[i]);
+        c[i] = max(0, cTp_[i]);
     }
 
-    // Update the temperature
-    mixture = (this->specieThermos_[0].W()*c[0])*this->specieThermos_[0];
-    for (label i=1; i<nSpecie; i++)
-    {
-        mixture += (this->specieThermos_[i].W()*c[i])*this->specieThermos_[i];
-    }
-    T = mixture.THa(ha, p, T);
+    // Euler explicit integrate the temperature.
+    // Separating the integration of temperature from composition
+    // is significantly more stable for exothermic systems
+    T += deltaT*R_[nSpecie];
 }
 
 

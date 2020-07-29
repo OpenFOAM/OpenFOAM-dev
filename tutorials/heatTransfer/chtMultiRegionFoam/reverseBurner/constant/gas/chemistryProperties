@@ -33,7 +33,6 @@ odeCoeffs
 EulerImplicitCoeffs
 {
     cTauChem        1;
-    equilibriumRateLimiter off;
 }
 
 #include "reactions"

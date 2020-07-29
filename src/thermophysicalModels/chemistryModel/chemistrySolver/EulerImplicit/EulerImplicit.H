@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,11 @@ Class
 Description
     An Euler implicit solver for chemistry
 
+    Euler implicit integration based on the reaction rate Jacobian is used to
+    solver for the composition and Euler explicit integration for the
+    temperature.  Separating the integration of temperature from composition
+    in this manner is significantly more stable for exothermic systems
+
 SourceFiles
     EulerImplicit.C
 
@@ -36,15 +41,12 @@ SourceFiles
 #define EulerImplicit_H
 
 #include "chemistrySolver.H"
-#include "Switch.H"
+#include "simpleMatrix.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-template <class Type>
-class simpleMatrix;
 
 /*---------------------------------------------------------------------------*\
                        Class EulerImplicit Declaration
@@ -60,17 +62,20 @@ class EulerImplicit
         //- Coefficients dictionary
         dictionary coeffsDict_;
 
+        //- Chemistry timescale coefficient
+        scalar cTauChem_;
 
-        // Model constants
-
-            //- Chemistry timescale
-            scalar cTauChem_;
-
-            //- Equilibrium rate limiter flag (on/off)
-            Switch eqRateLimiter_;
-
-        // Solver data
+        //- Field encapsulating the composition, temperature and pressure
         mutable scalarField cTp_;
+
+        //- Reaction rate field
+        mutable scalarField R_;
+
+        //- Reaction Jacobian
+        mutable scalarSquareMatrix J_;
+
+        //- Euler implicit integration matrix for composition
+        mutable simpleMatrix<scalar> E_;
 
 
 public:
@@ -90,19 +95,6 @@ public:
 
 
     // Member Functions
-
-    void updateRRInReactionI
-    (
-        const label index,
-        const scalar pr,
-        const scalar pf,
-        const scalar corr,
-        const label lRef,
-        const label rRef,
-        const scalar p,
-        const scalar T,
-        simpleMatrix<scalar>& RR
-    ) const;
 
         //- Update the concentrations and return the chemical time
         virtual void solve

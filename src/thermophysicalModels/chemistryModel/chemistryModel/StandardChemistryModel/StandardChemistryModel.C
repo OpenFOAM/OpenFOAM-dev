@@ -153,7 +153,7 @@ Foam::scalar Foam::StandardChemistryModel<ReactionThermo, ThermoType>::omegaI
 template<class ReactionThermo, class ThermoType>
 void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::derivatives
 (
-    const scalar time,
+    const scalar t,
     const scalarField& c,
     const label li,
     scalarField& dcdt
@@ -186,15 +186,15 @@ void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::derivatives
     }
     cp /= rho;
 
-    scalar dT = 0;
+    scalar dTdt = 0;
     for (label i = 0; i < nSpecie_; i++)
     {
         const scalar hi = specieThermos_[i].ha(p, T);
-        dT += hi*dcdt[i];
+        dTdt += hi*dcdt[i];
     }
-    dT /= rho*cp;
+    dTdt /= rho*cp;
 
-    dcdt[nSpecie_] = -dT;
+    dcdt[nSpecie_] = -dTdt;
 
     // dp/dt = ...
     dcdt[nSpecie_ + 1] = 0;
@@ -256,6 +256,11 @@ void Foam::StandardChemistryModel<ReactionThermo, ThermoType>::jacobian
         dTdt += hi[i]*dcdt[i]; // J/(m^3 s)
     }
     dTdt /= -cpMean; // K/s
+
+    dcdt[nSpecie_] = dTdt;
+
+    // dp/dt = ...
+    dcdt[nSpecie_ + 1] = 0;
 
     for (label i = 0; i < nSpecie_; i++)
     {

@@ -27,7 +27,6 @@ initialChemicalTimeStep 1e-7;
 EulerImplicitCoeffs
 {
     cTauChem        10;
-    equilibriumRateLimiter no;
 }
 
 odeCoeffs

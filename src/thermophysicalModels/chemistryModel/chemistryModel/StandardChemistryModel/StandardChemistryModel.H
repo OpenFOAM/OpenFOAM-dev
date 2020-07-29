@@ -71,9 +71,6 @@ class StandardChemistryModel
 
 protected:
 
-    typedef ThermoType thermoType;
-
-
     // Protected data
 
         //- Reference to the field of specie mass fractions
