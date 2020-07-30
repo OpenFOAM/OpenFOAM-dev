@@ -45,7 +45,7 @@ Description
     number-conservative solution.
 
     The implementation allows to split the population balance over multiple
-    velocity fields using the capability of reactingMultiphaseEulerFoam to solve
+    velocity fields using the capability of multiphaseEulerFoam to solve
     for n momentum equations. It is also possible to define multiple population
     balances, e.g. bubbles and droplets simultaneously.
 

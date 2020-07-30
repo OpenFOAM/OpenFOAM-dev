@@ -72,7 +72,7 @@ Usage
     }
     \endverbatim
 
-    Example specification for reactingMultiphaseEulerFoam:
+    Example specification for multiphaseEulerFoam:
     \verbatim
     phaseScalarTransport1
     {
