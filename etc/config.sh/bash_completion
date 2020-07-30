@@ -5509,7 +5509,7 @@ _foamInfo_ ()
 
     [ "$COMP_CWORD" = 1 ] || \
     case "$prev" in
-        -browser|-keyword)
+        -browser)
             opts="" ; extra="" ;;
        *) ;;
     esac
