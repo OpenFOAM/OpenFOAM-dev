@@ -1,0 +1,379 @@
+#!/bin/bash
+#------------------------------------------------------------------------------
+# =========                 |
+# \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\    /   O peration     | Website:  https://openfoam.org
+#   \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+#    \\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Script
+#     foamGenerateBashCompletion
+#
+# Description
+#     Generate the bash_completion file
+#
+#------------------------------------------------------------------------------
+
+usage() {
+    cat<<USAGE
+
+Usage: ${0##*/}
+
+USAGE
+}
+
+error() {
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
+}
+
+case "$1" in
+(-h | -help)
+    usage && exit 0
+    ;;
+-*)
+    error "$1 is not a valid option/filename"
+    ;;
+esac
+
+#------------------------------------------------------------------------------
+
+banner () {
+    cat<<EOF
+#----------------------------------*-sh-*--------------------------------------
+# =========                 |
+# \\\\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+#  \\\\    /   O peration     | Website:  https://openfoam.org
+#   \\\\  /    A nd           | Copyright (C) 2017-$(date +%Y) OpenFOAM Foundation
+#    \\\\/     M anipulation  |
+#------------------------------------------------------------------------------
+# License
+#     This file is part of OpenFOAM.
+#
+#     OpenFOAM is free software: you can redistribute it and/or modify it
+#     under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+#     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+#     for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
+#
+# File
+#     etc/config.sh/bash_completion
+#
+# Description
+#     Bash [TAB] completion file from OpenFOAM
+#     Sourced from /etc/bashrc
+#
+#------------------------------------------------------------------------------
+
+EOF
+}
+
+declareLocals () {
+    cat <<EOF
+    local cur="\${COMP_WORDS[COMP_CWORD]}"
+    local prev="\${COMP_WORDS[COMP_CWORD-1]}"
+    local line=\${COMP_LINE}
+    local used=\$(echo "\$line" | grep -oE "\-[a-zA-Z]+ ")
+EOF
+}
+
+caseStart () {
+    cat <<EOF
+    [ "\$COMP_CWORD" = 1 ] || \\
+    case "\$prev" in
+EOF
+}
+
+caseEnd () {
+    cat <<EOF
+    esac
+    COMPREPLY=( \$(compgen -W "\${opts}" \$extra -- \${cur}) )
+EOF
+}
+
+# shellcheck disable=SC2154
+_foamGet () {
+    cat <<EOF
+_foamGet_ ()
+{
+$(declareLocals)
+
+    _searchDirs () {
+        _dirs="\\
+            \${HOME}/.OpenFOAM/\$WM_PROJECT_VERSION \\
+            \${HOME}/.OpenFOAM"
+        [ -n "\$WM_PROJECT_SITE" ] && _dirs=" \\
+                \$WM_PROJECT_SITE/\$WM_PROJECT_VERSION/etc \\
+                \$WM_PROJECT_SITE/etc"
+        _dirs+=" \\
+            \$WM_PROJECT_INST_DIR/site/\$WM_PROJECT_VERSION/etc \\
+            \$WM_PROJECT_INST_DIR/site/etc \\
+            \$FOAM_ETC/caseDicts"
+
+        _files=""
+        for _d in \$_dirs
+        do
+            [ -d "\$_d" ] && \\
+                _files="\$_files \$(find "\$_d" -type f ! -name "*.*" -exec basename {} \;)"
+        done
+        echo "\${_files}" | xargs -n 1 | sort -u
+    }
+
+    opts="-case -ext -help -no-ext -target"
+    for o in \$used ; do opts="\${opts/\$o/}" ; done
+    extra=""
+    opts="\${opts} \$(_searchDirs)"
+
+$(caseStart)
+        -case|-target)
+            opts="" ; extra="-d" ;;
+        -ext)
+            opts="" ; extra="" ;;
+       -*) ;;
+        *)
+            case "\${COMP_WORDS[COMP_CWORD-2]}" in
+                -case|-ext|-target) ;;
+                *) opts=""; extra="" ;;
+            esac
+            ;;
+$(caseEnd)
+}
+complete -o filenames -o nospace -F _foamGet_ foamGet
+
+EOF
+}
+
+# shellcheck disable=SC2154
+_foamCloneCase () {
+    cat <<EOF
+_foamCloneCase_ ()
+{
+$(declareLocals)
+
+    opts="-add -help -latestTime -no-orig -no-scripts -processor -template"
+    for o in \$used ; do opts="\${opts/\$o/}" ; done
+    extra="-d"
+
+$(caseStart)
+$(caseEnd)
+}
+complete -o filenames -o nospace -F _foamCloneCase_ foamCloneCase
+
+EOF
+}
+
+#------------------------------------------------------------------------------
+
+file=$WM_PROJECT_DIR/etc/config.sh/bash_completion
+
+apps="$(ls "$FOAM_APPBIN") \
+      $(find "$WM_PROJECT_DIR/bin" -maxdepth 1 -type f | sort) \
+      $(find "$WM_PROJECT_DIR/wmake" -maxdepth 1 -type f | sort)"
+
+specialApps="foamGet foamCloneCase"
+
+banner > "$file"
+
+for app in $apps
+do
+    appName="${app##*/}"
+
+    echo "Configuring $appName"
+
+    # If a special configurations is defined for this app, use it and continue
+    echo "$specialApps" | \
+        grep -qsw "$appName" && "_$appName" >> "$file" && continue
+
+    # Get arguments. Anything on the usage line in <> or [] brackets.
+    argList=$($app -help | \
+           grep ^Usage | \
+           awk -F '[]>]' '{for(i=1;i<=NF;++i) print $i}' | \
+           awk -F ' [<[]' '{print $2}')
+
+    # Categorise arguments ...
+
+    # File arguments. Entries without "output", ending in "file".
+    inputFileArgs=$(echo "$argList" | while read -r line
+                    do
+                        echo "$line" | grep -v output | grep -E "file$"
+                    done)
+    nInputFileArgs=$(echo "$inputFileArgs" | sed '/^$/d' | wc -l)
+
+    # Directory arguments. Entries without "output", including "case" or "dir*".
+    inputDirArgs=$(echo "$argList" | while read -r line
+                   do
+                       echo "$line" | grep -v output | grep -Ei "(case|dir).*"
+                   done)
+    nInputDirArgs=$(echo "$inputDirArgs" | sed '/^$/d' | wc -l)
+
+    # Options. Anything in the between "options" and the next empty line.
+    optList=$($app -help | \
+              sed -n '/^options/,/^$/p' | \
+              grep -E "^[\t ]*-" | \
+              tr -s " ")
+
+    # Categorise options ...
+
+    arglessOpts="" # options without arguments
+    dirOpts=""     # options with directory arguments
+    fileOpts=""    # options with file arguments
+    handlerOpts="" # file handler options -fileHandler
+    rangesOpts=""  # ranges options -time
+    argOpts=""     # options with unspecified arguments
+
+    while read -r line
+    do
+        # Get the option
+        opt=$(echo "$line" | cut -d " " -f1 | tr -d " ")
+
+        # Get the adjacent string in <> brackets
+        next=$(echo "$line" | \
+            sed 's/ \<.*\>.*//g' | \
+            awk -F '>' '{print $1}' | \
+            awk -F ' <' '{print $2}' |
+            tr -d \) | \
+            tr -d \()
+
+        # Categorise by the the last word in the string
+        case "${next##* }" in
+            "")      arglessOpts="$arglessOpts $opt" ;;
+            dir)     dirOpts="$dirOpts $opt" ;;
+            file)    fileOpts="$fileOpts $opt";;
+            handler) handlerOpts="$handlerOpts $opt";;
+            ranges)  rangesOpts="$rangesOpts $opt";;
+            *)       argOpts="$argOpts $opt";;
+        esac
+    done<<< "$optList"
+
+    # Combine options into a single list
+    # shellcheck disable=SC2086
+    allOpts=$(printf '%s\n' \
+        $arglessOpts $dirOpts $fileOpts $handlerOpts $rangesOpts $argOpts | \
+        sort)
+
+    # Write the completion function ...
+    # shellcheck disable=SC2086
+    {
+        echo "_${appName}_ ()"
+        echo "{"
+        declareLocals
+        echo ""
+
+        # shellcheck disable=SC2027,SC2086
+        echo "    opts=\""$allOpts"\""
+        echo "    for o in \$used ; do opts=\"\${opts/\$o/}\" ; done"
+
+        if [ ! "$nInputFileArgs" = 0 ]
+        then
+            echo "    extra=\"-d -f\""
+        elif [ ! "$nInputDirArgs" = 0 ]
+        then
+             echo "    extra=\"-d\""
+        else
+             echo "    extra=\"\""
+        fi
+
+        echo ""
+        caseStart
+
+        if [ -n "$dirOpts" ]
+        then
+            printf "        %s)\n" "$(echo $dirOpts | tr " " "|")"
+            echo "            opts=\"\" ; extra=\"-d\" ;;"
+        fi
+
+        if [ -n "$fileOpts" ]
+        then
+            printf "        %s)\n" "$(echo $fileOpts | tr " " "|")"
+            echo "            opts=\"\" ; extra=\"-d -f\" ;;"
+        fi
+
+        if [ -n "$handlerOpts" ]
+        then
+            printf "        %s)\n" "$(echo $handlerOpts | tr " " "|")"
+            echo "            opts=\"uncollated collated masterUncollated\" ; extra=\"\" ;;"
+        fi
+
+        if [ -n "$rangesOpts" ]
+        then
+            printf "        %s)\n" "$(echo $rangesOpts | tr " " "|")"
+            echo "            opts=\"\$(foamListTimes -withZero 2> /dev/null)\" ; extra=\"\" ;;"
+        fi
+
+        if [ -n "$argOpts" ]
+        then
+            printf "        %s)\n" "$(echo $argOpts | tr " " "|")"
+            echo "            opts=\"\" ; extra=\"\" ;;"
+        fi
+
+        # Set argOpts to all options with arguments
+        argOpts="$argOpts $dirOpts $fileOpts $handlerOpts $rangesOpts"
+
+        # Get the max of nInputFileArgs and nInputDirArgs
+        nMaxFileDirArgs=$nInputFileArgs
+        [ "$nInputDirArgs" -gt "$nMaxFileDirArgs" ] && \
+            nMaxFileDirArgs=$nInputDirArgs
+
+        # Stop optional arguments once mandatory arguments are entered
+        case "$nMaxFileDirArgs" in
+            0) echo "       *) ;;"  ;;
+            1)
+                echo "       -*) ;;"
+                echo "        *)"
+                if [ -z "${argOpts// }" ]
+                then
+                    echo "            opts=\"\"; extra=\"\""
+                else
+                    echo "            case \"\${COMP_WORDS[COMP_CWORD-2]}\" in"
+                    printf "                %s) ;;\n" \
+                        "$(echo $argOpts | tr " " "|")"
+                    echo "                *) opts=\"\"; extra=\"\" ;;"
+                    echo "            esac"
+                fi
+                echo "            ;;"
+                ;;
+            *)
+                echo "       -*) ;;"
+                echo "        *) opts=\"\";;"
+                ;;
+        esac
+
+        caseEnd
+        echo "}"
+
+        echo "complete -o filenames -o nospace -F _${appName}_ ${appName}"
+        echo ""
+
+    } >> "$file"
+done
+
+cat<<\EOF >> "$file"
+#------------------------------------------------------------------------------
+EOF
+
+
+#------------------------------------------------------------------------------
