@@ -28,8 +28,8 @@ Description
     This function object calculates and outputs volume-averaged information
     about the size distribution of the dispersed phase, such as the number
     density function or its moments. It is designed to be used exclusively with
-    the population balance modeling functionality of the reactingEulerFoam
-    solvers. It can be applied to a specific cellZone or the entire domain. The
+    the population balance modeling functionality of the multiphaseEulerFoam
+    solver. It can be applied to a specific cellZone or the entire domain. The
     function type determines whether the density function and its moments are
     based on the number of dispersed phase elements in a size group or their
     total volume.

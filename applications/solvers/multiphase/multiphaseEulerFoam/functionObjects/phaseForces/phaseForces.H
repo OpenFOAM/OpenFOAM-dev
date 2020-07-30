@@ -28,7 +28,7 @@ Description
     This functionObject calculates and outputs the blended interfacial forces
     acting on a given phase, i.e. drag, virtual mass, lift, wall-lubrication and
     turbulent dispersion. Note that it works only in run-time processing mode
-    and in combination with the reactingEulerFoam solvers.
+    and in combination with the multiphaseEulerFoam solver.
 
     For a simulation involving more than two phases, the accumulated force is
     calculated by looping over all phasePairs involving that phase. The fields

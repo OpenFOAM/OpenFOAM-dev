@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    reactingMultiphaseEulerFoam
+    multiphaseEulerFoam
 
 Description
     Solver for a system of any number of compressible fluid phases with a
