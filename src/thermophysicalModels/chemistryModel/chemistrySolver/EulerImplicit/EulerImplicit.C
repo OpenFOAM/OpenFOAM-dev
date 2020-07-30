@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "EulerImplicit.H"
+#include "SubField.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
