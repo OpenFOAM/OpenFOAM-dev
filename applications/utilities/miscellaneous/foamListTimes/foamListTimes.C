@@ -70,8 +70,15 @@ int main(int argc, char *argv[])
         "withFunctionObjects",
         "execute functionObjects"
     );
+    argList::addBoolOption
+    (
+        "withFunctionEntries",
+        "execute functionEntries"
+    );
 
     #include "setRootCase.H"
+
+    entry::disableFunctionEntries = !args.optionFound("withFunctionEntries");
 
     label nProcs = 0;
 
