@@ -449,6 +449,7 @@ public:
                 //- Construct from base list and position index
                 inline iteratorBase(const PackedList*, const label);
 
+                //- Default copy constructor
                 iteratorBase(const iteratorBase&) = default;
 
 
