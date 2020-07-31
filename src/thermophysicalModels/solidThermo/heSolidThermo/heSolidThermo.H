@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,9 +56,6 @@ class heSolidThermo
         //- Calculate the thermo variables
         void calculate();
 
-        //- Construct as copy (not implemented)
-        heSolidThermo(const heSolidThermo<BasicSolidThermo, MixtureType>&);
-
 
 public:
 
@@ -82,6 +79,12 @@ public:
             const dictionary&,
             const word& phaseName
         );
+
+        //- Disallow default bitwise copy construction
+        heSolidThermo
+        (
+            const heSolidThermo<BasicSolidThermo, MixtureType>&
+        ) = delete;
 
 
     //- Destructor
@@ -110,6 +113,15 @@ public:
 
             //- Anisotropic thermal conductivity [W/m/K]
             virtual tmp<vectorField> Kappa(const label patchi) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=
+        (
+            const heSolidThermo<BasicSolidThermo, MixtureType>&
+        ) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -191,9 +191,6 @@ class blockMesh
         void createCells() const;
         void createPatches() const;
 
-        //- As copy (not implemented)
-        blockMesh(const blockMesh&);
-
 
 public:
 
@@ -212,6 +209,9 @@ public:
 
         //- Construct from IOdictionary
         blockMesh(const IOdictionary&, const word& regionName);
+
+        //- Disallow default bitwise copy construction
+        blockMesh(const blockMesh&) = delete;
 
 
     //- Destructor
@@ -286,6 +286,12 @@ public:
 
             //- Writes edges of blockMesh in OBJ format.
             void writeTopology(Ostream&) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const blockMesh&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -173,11 +173,6 @@ class SCOPE
         //  evaluated from the given equivalence ratio
         tmp<volScalarField> Ma(const volScalarField& phi) const;
 
-        //- Construct as copy (not implemented)
-        SCOPE(const SCOPE&);
-
-        void operator=(const SCOPE&);
-
 
 public:
 
@@ -193,6 +188,9 @@ public:
             const psiuReactionThermo&
         );
 
+        //- Disallow default bitwise copy construction
+        SCOPE(const SCOPE&) = delete;
+
 
     //- Destructor
     ~SCOPE();
@@ -203,8 +201,14 @@ public:
         //- Return the Markstein number
         tmp<volScalarField> Ma() const;
 
+
+    // Member Operators
+
         //- Return the laminar flame speed [m/s]
         tmp<volScalarField> operator()() const;
+
+        //- Disallow default bitwise assignment
+        void operator=(const SCOPE&) = delete;
 };
 
 

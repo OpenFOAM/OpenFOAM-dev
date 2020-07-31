@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,6 @@ namespace Foam
 
 class laminarFlameSpeed
 {
-
 protected:
 
     // Protected data
@@ -70,15 +69,6 @@ protected:
 
         //- Equivalence ratio of a homogeneous mixture
         scalar equivalenceRatio_;
-
-
-private:
-
-    // Private Member Functions
-
-        //- Construct as copy (not implemented)
-        laminarFlameSpeed(const laminarFlameSpeed&);
-        void operator=(const laminarFlameSpeed&);
 
 
 public:
@@ -111,6 +101,9 @@ public:
             const psiuReactionThermo&
         );
 
+        //- Disallow default bitwise copy construction
+        laminarFlameSpeed(const laminarFlameSpeed&) = delete;
+
 
     // Selector
 
@@ -124,10 +117,13 @@ public:
     virtual ~laminarFlameSpeed();
 
 
-    // Member Functions
+    // Member Operators
 
         //- Return the laminar flame speed [m/s]
         virtual tmp<volScalarField> operator()() const = 0;
+
+        //- Disallow default bitwise assignment
+        void operator=(const laminarFlameSpeed&) = delete;
 };
 
 

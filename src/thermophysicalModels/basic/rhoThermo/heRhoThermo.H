@@ -57,9 +57,6 @@ class heRhoThermo
         //- Calculate the thermo variables
         void calculate();
 
-        //- Construct as copy (not implemented)
-        heRhoThermo(const heRhoThermo<BasicRhoThermo, MixtureType>&);
-
 
 public:
 
@@ -76,6 +73,9 @@ public:
             const word& phaseName
         );
 
+        //- Disallow default bitwise copy construction
+        heRhoThermo(const heRhoThermo<BasicRhoThermo, MixtureType>&) = delete;
+
 
     //- Destructor
     virtual ~heRhoThermo();
@@ -85,6 +85,15 @@ public:
 
         //- Update properties
         virtual void correct();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=
+        (
+            const heRhoThermo<BasicRhoThermo, MixtureType>&
+        ) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,16 +52,9 @@ class constant
 :
     public laminarFlameSpeed
 {
-    // Const laminar flame speed
+    // Private Data
 
         dimensionedScalar Su_;
-
-
-    // Private Member Functions
-
-        //- Construct as copy (not implemented)
-        constant(const constant&);
-        void operator=(const constant&);
 
 
 public:
@@ -79,15 +72,21 @@ public:
             const psiuReactionThermo&
         );
 
+        //- Disallow default bitwise copy construction
+        constant(const constant&) = delete;
+
 
     //- Destructor
     virtual ~constant();
 
 
-    // Member Functions
+    // Member Operators
 
         //- Return the laminar flame speed [m/s]
         tmp<volScalarField> operator()() const;
+
+        //- Disallow default bitwise assignment
+        void operator=(const constant&) = delete;
 };
 
 

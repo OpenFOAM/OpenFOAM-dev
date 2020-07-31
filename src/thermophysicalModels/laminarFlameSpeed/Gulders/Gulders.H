@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,16 +93,12 @@ class Gulders
             const volScalarField& phi
         ) const;
 
-        //- Construct as copy (not implemented)
-        Gulders(const Gulders&);
-
-        void operator=(const Gulders&);
-
 
 public:
 
     //- Runtime type information
     TypeName("Gulders");
+
 
     // Constructors
 
@@ -113,15 +109,21 @@ public:
             const psiuReactionThermo&
         );
 
+        //- Disallow default bitwise copy construction
+        Gulders(const Gulders&) = delete;
+
 
     //- Destructor
     virtual ~Gulders();
 
 
-    // Member Functions
+    // Member Operators
 
         //- Return the laminar flame speed [m/s]
         tmp<volScalarField> operator()() const;
+
+        //- Disallow default bitwise assignment
+        void operator=(const Gulders&) = delete;
 };
 
 

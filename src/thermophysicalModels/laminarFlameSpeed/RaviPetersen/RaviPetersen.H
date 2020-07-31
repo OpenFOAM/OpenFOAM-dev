@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,15 +160,11 @@ class RaviPetersen
         ) const;
 
 
-        //- Construct as copy (not implemented)
-        RaviPetersen(const RaviPetersen&);
-        void operator=(const RaviPetersen&);
-
-
 public:
 
     //- Runtime type information
     TypeName("RaviPetersen");
+
 
     // Constructors
 
@@ -179,15 +175,21 @@ public:
             const psiuReactionThermo&
         );
 
+        //- Disallow default bitwise copy construction
+        RaviPetersen(const RaviPetersen&) = delete;
+
 
     //- Destructor
     virtual ~RaviPetersen();
 
 
-    // Member Functions
+    // Member Operators
 
         //- Return the laminar flame speed [m/s]
         tmp<volScalarField> operator()() const;
+
+        //- Disallow default bitwise assignment
+        void operator=(const RaviPetersen&) = delete;
 };
 
 

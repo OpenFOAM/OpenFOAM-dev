@@ -73,9 +73,6 @@ class veryInhomogeneousMixture
         //- Regress variable
         volScalarField& b_;
 
-        //- Construct as copy (not implemented)
-        veryInhomogeneousMixture(const veryInhomogeneousMixture<ThermoType>&);
-
 
 public:
 
@@ -93,6 +90,11 @@ public:
             const word&
         );
 
+        //- Disallow default bitwise copy construction
+        veryInhomogeneousMixture
+        (
+            const veryInhomogeneousMixture<ThermoType>&
+        ) = delete;
 
     //- Destructor
     virtual ~veryInhomogeneousMixture()
@@ -171,6 +173,12 @@ public:
 
         //- Return thermo based on index
         const ThermoType& specieThermo(const label speciei) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const veryInhomogeneousMixture<ThermoType>&) = delete;
 };
 
 

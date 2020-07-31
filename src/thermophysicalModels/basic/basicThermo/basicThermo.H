@@ -78,9 +78,6 @@ protected:
 
     // Protected Member Functions
 
-        //- Construct as copy (not implemented)
-        basicThermo(const basicThermo&);
-
         volScalarField& lookupOrConstruct
         (
             const fvMesh& mesh,
@@ -129,6 +126,9 @@ public:
             const dictionary&,
             const word& phaseName
         );
+
+        //- Disallow default bitwise copy construction
+        basicThermo(const basicThermo&) = delete;
 
 
     // Selectors
@@ -457,6 +457,12 @@ public:
 
         //- Read thermophysical properties dictionary
         virtual bool read();
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const basicThermo&) = delete;
 };
 
 

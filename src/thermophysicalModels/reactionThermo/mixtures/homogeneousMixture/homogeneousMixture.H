@@ -61,9 +61,6 @@ class homogeneousMixture
 
         mutable ThermoType mixture_;
 
-        //- Construct as copy (not implemented)
-        homogeneousMixture(const homogeneousMixture<ThermoType>&);
-
         //- Regress variable
         volScalarField& b_;
 
@@ -78,6 +75,9 @@ public:
 
         //- Construct from dictionary, mesh and phase name
         homogeneousMixture(const dictionary&, const fvMesh&, const word&);
+
+        //- Disallow default bitwise copy construction
+        homogeneousMixture(const homogeneousMixture<ThermoType>&) = delete;
 
 
     //- Destructor
@@ -134,6 +134,12 @@ public:
 
         //- Return thermo based on index
         const ThermoType& specieThermo(const label speciei) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const homogeneousMixture<ThermoType>&) = delete;
 };
 
 

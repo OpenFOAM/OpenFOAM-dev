@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,12 +63,6 @@ protected:
         volScalarField mu_;
 
 
-    // Protected Member Functions
-
-        //- Construct as copy (not implemented)
-        psiThermo(const psiThermo&);
-
-
 public:
 
     //- Runtime type information
@@ -94,6 +88,9 @@ public:
             const fvMesh&,
             const word& phaseName
         );
+
+        //- Disallow default bitwise copy construction
+        psiThermo(const psiThermo&) = delete;
 
 
     //- Selector
@@ -134,6 +131,12 @@ public:
 
             //- Dynamic viscosity of mixture for patch [kg/m/s]
             virtual tmp<scalarField> mu(const label patchi) const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const psiThermo&) = delete;
 };
 
 
