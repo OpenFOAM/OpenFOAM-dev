@@ -1,5 +1,6 @@
 if (pimple.frozenFlow())
 {
+    #include "createMvConvection.H"
     #include "EEqn.H"
 }
 else
@@ -10,6 +11,7 @@ else
     }
 
     #include "UEqn.H"
+    #include "createMvConvection.H"
     #include "YEqn.H"
     #include "EEqn.H"
 

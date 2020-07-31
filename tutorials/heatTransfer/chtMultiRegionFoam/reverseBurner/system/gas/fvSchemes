@@ -30,7 +30,6 @@ divSchemes
     default         none;
 
     div(phi,U)      Gauss linearUpwind grad(U);
-    div(phi,h)      Gauss linearUpwind limitedGrad;
     div(phi,Yi_h)   Gauss limitedLinear 1;
     div(phi,k)      Gauss linearUpwind limitedGrad;
     div(phi,epsilon) Gauss linearUpwind limitedGrad;

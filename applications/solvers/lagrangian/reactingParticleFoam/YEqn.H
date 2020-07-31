@@ -1,17 +1,36 @@
-tmp<fv::convectionScheme<scalar>> mvConvection
-(
-    fv::convectionScheme<scalar>::New
+tmp<fv::convectionScheme<scalar>> mvConvection(nullptr);
+
+if (Y.size())
+{
+    mvConvection = tmp<fv::convectionScheme<scalar>>
     (
-        mesh,
-        fields,
-        phi,
-        mesh.divScheme("div(phi,Yi_h)")
-    )
-);
+        fv::convectionScheme<scalar>::New
+        (
+            mesh,
+            fields,
+            phi,
+            mesh.divScheme("div(phi,Yi_h)")
+        )
+    );
+}
 
 {
     combustion->correct();
-    volScalarField Yt(0.0*Y[0]);
+
+    tmp<volScalarField> Yt(nullptr);
+
+    if (Y.size())
+    {
+        Yt = tmp<volScalarField>
+        (
+            new volScalarField
+            (
+                IOobject("Yt", runTime.timeName(), mesh),
+                mesh,
+                dimensionedScalar(dimless, 0)
+            )
+        );
+    }
 
     forAll(Y, i)
     {
@@ -40,10 +59,13 @@ tmp<fv::convectionScheme<scalar>> mvConvection
             fvOptions.correct(Yi);
 
             Yi.max(0.0);
-            Yt += Yi;
+            Yt.ref() += Yi;
         }
     }
 
-    Y[inertIndex] = scalar(1) - Yt;
-    Y[inertIndex].max(0.0);
+    if (Y.size())
+    {
+        Y[inertIndex] = scalar(1) - Yt;
+        Y[inertIndex].max(0.0);
+    }
 }
