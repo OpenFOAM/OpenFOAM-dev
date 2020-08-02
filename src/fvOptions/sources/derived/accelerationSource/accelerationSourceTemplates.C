@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,10 +40,12 @@ void Foam::fv::accelerationSource::add
     const vector dU = velocity_->value(t) - velocity_->value(t - dt);
     const vector a = dU/mesh_.time().deltaTValue();
 
-    forAll(cells_, i)
+    const labelList& cells = this->cells();
+
+    forAll(cells, i)
     {
-        const label c = cells_[i];
-        eqn.source()[c] -= V[c]*alphaRho[c]*a;
+        const label celli = cells[i];
+        eqn.source()[celli] -= V[celli]*alphaRho[celli]*a;
     }
 }
 

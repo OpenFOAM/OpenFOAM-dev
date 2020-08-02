@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,12 +72,12 @@ void Foam::fv::radialActuationDiskSource::addSup
     vectorField& Usource = eqn.source();
     const vectorField& U = eqn.psi();
 
-    if (V_ > vSmall)
+    if (V() > vSmall)
     {
         addRadialActuationDiskAxialInertialResistance
         (
             Usource,
-            cells_,
+            cells(),
             cellsV,
             geometricOneField(),
             U
@@ -97,12 +97,12 @@ void Foam::fv::radialActuationDiskSource::addSup
     vectorField& Usource = eqn.source();
     const vectorField& U = eqn.psi();
 
-    if (V_ > vSmall)
+    if (V() > vSmall)
     {
         addRadialActuationDiskAxialInertialResistance
         (
             Usource,
-            cells_,
+            cells(),
             cellsV,
             rho,
             U

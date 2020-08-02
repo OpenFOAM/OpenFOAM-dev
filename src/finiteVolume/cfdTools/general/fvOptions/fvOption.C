@@ -323,4 +323,14 @@ void Foam::fv::option::correct(volTensorField& field)
 {}
 
 
+void Foam::fv::option::updateMesh(const mapPolyMesh& mpm)
+{}
+
+
+bool Foam::fv::option::movePoints()
+{
+    return true;
+}
+
+
 // ************************************************************************* //

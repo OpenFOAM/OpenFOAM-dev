@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,6 +56,7 @@ namespace Foam
 {
 
 class fvMesh;
+class mapPolyMesh;
 
 namespace fv
 {
@@ -379,6 +380,15 @@ public:
                 virtual void correct(volSphericalTensorField& field);
                 virtual void correct(volSymmTensorField& field);
                 virtual void correct(volTensorField& field);
+
+
+        // Mesh changes
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
+
+            //- Update for mesh motion
+            virtual bool movePoints();
 
 
         // IO

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "fvOptions.H"
 #include "fvMesh.H"
-#include "Time.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -93,33 +92,27 @@ Foam::fv::options::options
     const fvMesh& mesh
 )
 :
-    IOdictionary(createIOobject(mesh)),
-    optionList(mesh, *this)
-{}
-
-
-Foam::fv::options& Foam::fv::options::New(const fvMesh& mesh)
+    MeshObject<fvMesh, Foam::UpdateableMeshObject, options>
+    (
+        mesh,
+        createIOobject(mesh)
+    ),
+    optionList(mesh)
 {
-    if (mesh.thisDb().foundObject<options>(typeName))
-    {
-        return const_cast<options&>
-        (
-            mesh.lookupObject<options>(typeName)
-        );
-    }
-    else
-    {
-        if (debug)
-        {
-            InfoInFunction
-                << "Constructing " << typeName
-                << " for region " << mesh.name() << endl;
-        }
+    dictionary::name() = IOobject::objectPath();
+    readHeaderOk(IOstream::ASCII, typeName);
 
-        options* objectPtr = new options(mesh);
-        regIOobject::store(objectPtr);
-        return *objectPtr;
-    }
+    // Add file watch on the fvOptions dictionary for MUST_READ_IF_MODIFIED
+    addWatch();
+
+    optionList::reset(*this);
+}
+
+
+bool Foam::fv::options::readData(Istream& is)
+{
+    is >> *this;
+    return !is.bad();
 }
 
 
@@ -134,6 +127,25 @@ bool Foam::fv::options::read()
     {
         return false;
     }
+}
+
+
+bool Foam::fv::options::writeData(Ostream& os) const
+{
+    dictionary::write(os, false);
+    return os.good();
+}
+
+
+void Foam::fv::options::updateMesh(const mapPolyMesh& mpm)
+{
+    optionList::updateMesh(mpm);
+}
+
+
+bool Foam::fv::options::movePoints()
+{
+    return optionList::movePoints();
 }
 
 

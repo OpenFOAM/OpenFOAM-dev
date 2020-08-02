@@ -97,7 +97,7 @@ void Foam::fv::semiImplicitSource::addSupType
     );
 
     // Explicit source function for the field
-    UIndirectList<Type>(Su, cells_) = fieldSu_[fieldi].value<Type>(t)/VDash_;
+    UIndirectList<Type>(Su, cells()) = fieldSu_[fieldi].value<Type>(t)/VDash_;
 
     volScalarField::Internal Sp
     (
@@ -120,7 +120,7 @@ void Foam::fv::semiImplicitSource::addSupType
     );
 
     // Implicit source function for the field
-    UIndirectList<scalar>(Sp, cells_) = fieldSp_[fieldi].value(t)/VDash_;
+    UIndirectList<scalar>(Sp, cells()) = fieldSp_[fieldi].value(t)/VDash_;
 
     eqn += Su + fvm::SuSp(Sp, psi);
 }
@@ -380,7 +380,7 @@ bool Foam::fv::semiImplicitSource::read(const dictionary& dict)
         // Set volume normalisation
         if (volumeMode_ == volumeMode::absolute)
         {
-            VDash_ = V_;
+            VDash_ = V();
         }
 
         applied_.setSize(nFields, false);

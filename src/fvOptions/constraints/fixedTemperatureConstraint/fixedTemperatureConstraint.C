@@ -128,8 +128,8 @@ void Foam::fv::fixedTemperatureConstraint::constrain
         case tmUniform:
         {
             const scalar t = mesh_.time().value();
-            scalarField Tuni(cells_.size(), Tuniform_->value(t));
-            eqn.setValues(cells_, thermo.he(Tuni, cells_));
+            scalarField Tuni(cells().size(), Tuniform_->value(t));
+            eqn.setValues(cells(), thermo.he(Tuni, cells()));
 
             break;
         }
@@ -138,8 +138,8 @@ void Foam::fv::fixedTemperatureConstraint::constrain
             const volScalarField& T =
                 mesh().lookupObject<volScalarField>(TName_);
 
-            scalarField Tlkp(T, cells_);
-            eqn.setValues(cells_, thermo.he(Tlkp, cells_));
+            scalarField Tlkp(T, cells());
+            eqn.setValues(cells(), thermo.he(Tlkp, cells()));
 
             break;
         }

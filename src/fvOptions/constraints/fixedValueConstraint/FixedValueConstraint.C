@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ void Foam::fv::FixedValueConstraint<Type>::constrain
         << pTraits<Type>::typeName
         << ">::constrain for source " << name_ << endl;
 
-    eqn.setValues(cells_, List<Type>(cells_.size(), fieldValues_[fieldi]));
+    eqn.setValues(cells(), List<Type>(cells().size(), fieldValues_[fieldi]));
 }
 
 

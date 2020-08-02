@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,13 +57,15 @@ const Foam::dictionary& Foam::fv::optionList::optionsDict
 
 bool Foam::fv::optionList::readOptions(const dictionary& dict)
 {
+    const dictionary& optionsDict(this->optionsDict(dict));
+
     checkTimeIndex_ = mesh_.time().timeIndex() + 2;
 
     bool allOk = true;
     forAll(*this, i)
     {
         option& bs = this->operator[](i);
-        bool ok = bs.read(dict.subDict(bs.name()));
+        bool ok = bs.read(optionsDict.subDict(bs.name()));
         allOk = (allOk && ok);
     }
     return allOk;
@@ -91,7 +93,7 @@ Foam::fv::optionList::optionList(const fvMesh& mesh, const dictionary& dict)
     mesh_(mesh),
     checkTimeIndex_(mesh_.time().startTimeIndex() + 2)
 {
-    reset(optionsDict(dict));
+    reset(dict);
 }
 
 
@@ -107,9 +109,11 @@ Foam::fv::optionList::optionList(const fvMesh& mesh)
 
 void Foam::fv::optionList::reset(const dictionary& dict)
 {
+    const dictionary& optionsDict(this->optionsDict(dict));
+
     // Count number of active fvOptions
     label count = 0;
-    forAllConstIter(dictionary, dict, iter)
+    forAllConstIter(dictionary, optionsDict, iter)
     {
         if (iter().isDict())
         {
@@ -119,7 +123,7 @@ void Foam::fv::optionList::reset(const dictionary& dict)
 
     this->setSize(count);
     label i = 0;
-    forAllConstIter(dictionary, dict, iter)
+    forAllConstIter(dictionary, optionsDict, iter)
     {
         if (iter().isDict())
         {
@@ -156,7 +160,7 @@ bool Foam::fv::optionList::appliesToField(const word& fieldName) const
 
 bool Foam::fv::optionList::read(const dictionary& dict)
 {
-    return readOptions(optionsDict(dict));
+    return readOptions(dict);
 }
 
 
@@ -173,6 +177,28 @@ bool Foam::fv::optionList::writeData(Ostream& os) const
 
     // Check state of IOstream
     return os.good();
+}
+
+
+void Foam::fv::optionList::updateMesh(const mapPolyMesh& mpm)
+{
+    forAll(*this, i)
+    {
+        this->operator[](i).updateMesh(mpm);
+    }
+}
+
+
+bool Foam::fv::optionList::movePoints()
+{
+    bool allOk = true;
+
+    forAll(*this, i)
+    {
+        allOk = allOk && this->operator[](i).movePoints();
+    }
+
+    return allOk;
 }
 
 

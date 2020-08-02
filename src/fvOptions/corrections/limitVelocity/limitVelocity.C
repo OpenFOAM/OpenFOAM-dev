@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,9 +86,11 @@ void Foam::fv::limitVelocity::correct(volVectorField& U)
 
     vectorField& Uif = U.primitiveFieldRef();
 
-    forAll(cells_, i)
+    const labelList& cells = this->cells();
+
+    forAll(cells, i)
     {
-        const label celli = cells_[i];
+        const label celli = cells[i];
 
         const scalar magSqrUi = magSqr(Uif[celli]);
 
@@ -99,7 +101,7 @@ void Foam::fv::limitVelocity::correct(volVectorField& U)
     }
 
     // handle boundaries in the case of 'all'
-    if (selectionMode_ == smAll)
+    if (selectionMode() == smAll)
     {
         volVectorField::Boundary& Ubf = U.boundaryFieldRef();
 

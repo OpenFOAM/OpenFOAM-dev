@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "MeshObject.H"
-#include "objectRegistry.H"
-#include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -33,6 +31,18 @@ template<class Mesh, template<class> class MeshObjectType, class Type>
 Foam::MeshObject<Mesh, MeshObjectType, Type>::MeshObject(const Mesh& mesh)
 :
     MeshObjectType<Mesh>(Type::typeName, mesh.thisDb()),
+    mesh_(mesh)
+{}
+
+
+template<class Mesh, template<class> class MeshObjectType, class Type>
+Foam::MeshObject<Mesh, MeshObjectType, Type>::MeshObject
+(
+    const Mesh& mesh,
+    const IOobject& io
+)
+:
+    MeshObjectType<Mesh>(Type::typeName, io),
     mesh_(mesh)
 {}
 
@@ -77,11 +87,11 @@ const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
 
 
 template<class Mesh, template<class> class MeshObjectType, class Type>
-template<class Data1>
+template<class... Args>
 const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
 (
     const Mesh& mesh,
-    const Data1& d
+    const Args&... args
 )
 {
     if
@@ -106,130 +116,7 @@ const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
                 << " for region " << mesh.name() << endl;
         }
 
-        Type* objectPtr = new Type(mesh, d);
-
-        regIOobject::store(static_cast<MeshObjectType<Mesh>*>(objectPtr));
-
-        return *objectPtr;
-    }
-}
-
-
-template<class Mesh, template<class> class MeshObjectType, class Type>
-template<class Data1, class Data2>
-const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
-(
-    const Mesh& mesh,
-    const Data1& d1,
-    const Data2& d2
-)
-{
-    if
-    (
-        mesh.thisDb().objectRegistry::template foundObject<Type>
-        (
-            Type::typeName
-        )
-    )
-    {
-        return mesh.thisDb().objectRegistry::template lookupObject<Type>
-        (
-            Type::typeName
-        );
-    }
-    else
-    {
-        if (meshObject::debug)
-        {
-           Pout<< "MeshObject::New(const " << Mesh::typeName
-                << "&, const Data[1-2]&) : constructing " << Type::typeName
-                << " for region " << mesh.name() << endl;
-        }
-
-        Type* objectPtr = new Type(mesh, d1, d2);
-
-        // Make sure to register the top level regIOobject for if Type itself
-        // is a regIOobject
-        regIOobject::store(static_cast<MeshObjectType<Mesh>*>(objectPtr));
-
-        return *objectPtr;
-    }
-}
-
-
-template<class Mesh, template<class> class MeshObjectType, class Type>
-template<class Data1, class Data2, class Data3>
-const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
-(
-    const Mesh& mesh,
-    const Data1& d1,
-    const Data2& d2,
-    const Data3& d3
-)
-{
-    if
-    (
-        mesh.thisDb().objectRegistry::template foundObject<Type>
-        (
-            Type::typeName
-        )
-    )
-    {
-        return mesh.thisDb().objectRegistry::template lookupObject<Type>
-        (
-            Type::typeName
-        );
-    }
-    else
-    {
-        if (meshObject::debug)
-        {
-           Pout<< "MeshObject::New(const " << Mesh::typeName
-                << "&, const Data[1-3]&) : constructing " << Type::typeName
-                << " for region " << mesh.name() << endl;
-        }
-        Type* objectPtr = new Type(mesh, d1, d2, d3);
-
-        regIOobject::store(static_cast<MeshObjectType<Mesh>*>(objectPtr));
-
-        return *objectPtr;
-    }
-}
-
-
-template<class Mesh, template<class> class MeshObjectType, class Type>
-template<class Data1, class Data2, class Data3, class Data4>
-const Type& Foam::MeshObject<Mesh, MeshObjectType, Type>::New
-(
-    const Mesh& mesh,
-    const Data1& d1,
-    const Data2& d2,
-    const Data3& d3,
-    const Data4& d4
-)
-{
-    if
-    (
-        mesh.thisDb().objectRegistry::template foundObject<Type>
-        (
-            Type::typeName
-        )
-    )
-    {
-        return mesh.thisDb().objectRegistry::template lookupObject<Type>
-        (
-            Type::typeName
-        );
-    }
-    else
-    {
-        if (meshObject::debug)
-        {
-            Pout<< "MeshObject::New(const " << Mesh::typeName
-                << "&, const Data[1-4]&) : constructing " << Type::typeName
-                << " for region " << mesh.name() << endl;
-        }
-        Type* objectPtr = new Type(mesh, d1, d2, d3, d4);
+        Type* objectPtr = new Type(mesh, args...);
 
         regIOobject::store(static_cast<MeshObjectType<Mesh>*>(objectPtr));
 

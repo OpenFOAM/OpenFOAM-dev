@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -237,7 +237,7 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
        *(CpfMean/faceZoneArea_)*mag(totalphi);
 
     const volScalarField& T = mesh_.lookupObject<volScalarField>(TName_);
-    const scalarField TCells(T, cells_);
+    const scalarField TCells(T, cells());
     scalar Tref = 0;
     if (Qt > 0)
     {
@@ -250,7 +250,7 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
         reduce(Tref, minOp<scalar>());
     }
 
-    scalarField deltaTCells(cells_.size(), 0);
+    scalarField deltaTCells(cells().size(), 0);
     forAll(deltaTCells, i)
     {
         if (Qt > 0)
@@ -266,9 +266,12 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
     const volVectorField& U = mesh_.lookupObject<volVectorField>(UName_);
     const scalarField& V = mesh_.V();
     scalar sumWeight = 0;
-    forAll(cells_, i)
+
+    const labelList& cells = this->cells();
+
+    forAll(cells, i)
     {
-        sumWeight += V[cells_[i]]*mag(U[cells_[i]])*deltaTCells[i];
+        sumWeight += V[cells[i]]*mag(U[cells[i]])*deltaTCells[i];
     }
     reduce(sumWeight, sumOp<scalar>());
 
@@ -276,10 +279,10 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
     {
         scalarField& heSource = eqn.source();
 
-        forAll(cells_, i)
+        forAll(cells, i)
         {
-            heSource[cells_[i]] -=
-                Qt*V[cells_[i]]*mag(U[cells_[i]])*deltaTCells[i]/sumWeight;
+            heSource[cells[i]] -=
+                Qt*V[cells[i]]*mag(U[cells[i]])*deltaTCells[i]/sumWeight;
         }
     }
 

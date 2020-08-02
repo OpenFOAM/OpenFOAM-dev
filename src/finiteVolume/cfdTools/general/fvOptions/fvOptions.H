@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,8 +36,7 @@ SourceFiles
 #define fvOptions_H
 
 #include "fvOptionList.H"
-#include "IOdictionary.H"
-#include "autoPtr.H"
+#include "MeshObject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,7 +51,8 @@ namespace fv
 
 class options
 :
-    public IOdictionary,
+    public MeshObject<fvMesh, UpdateableMeshObject, options>,
+    public dictionary,
     public optionList
 {
     // Private Member Functions
@@ -63,8 +63,8 @@ class options
 
 public:
 
-    // Declare name of the class and its debug switch
-    ClassName("fvOptions");
+    //- Runtime type information
+    TypeName("fvOptions");
 
 
     // Constructors
@@ -75,9 +75,17 @@ public:
         //- Disallow default bitwise copy construction
         options(const options&) = delete;
 
+        // using MeshObject<fvMesh, UpdateableMeshObject, options>::New;
+
         //- Construct fvOptions and register to datbase if not present
         //  otherwise lookup and return
-        static options& New(const fvMesh& mesh);
+        static options& New(const fvMesh& mesh)
+        {
+            return const_cast<options&>
+            (
+                MeshObject<fvMesh, UpdateableMeshObject, options>::New(mesh)
+            );
+        }
 
 
     //- Destructor
@@ -87,11 +95,36 @@ public:
 
     // Member Functions
 
-        //- Inherit read from optionList
-        using optionList::read;
+        //- Declare fvOptions to be a global dictionary
+        virtual bool global() const
+        {
+            return true;
+        }
+
+        //- Return complete path + object name if the file exists
+        //  either in the case/processor or case otherwise null
+        virtual fileName filePath() const
+        {
+            return globalFilePath(type());
+        }
+
+        //- ReadData function required for regIOobject read operation
+        virtual bool readData(Istream&);
 
         //- Read dictionary
         virtual bool read();
+
+        //- WriteData function required for regIOobject write operation
+        virtual bool writeData(Ostream&) const;
+
+
+        // Mesh changes
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
+
+            //- Update for mesh motion
+            virtual bool movePoints();
 
 
     // Member Operators
@@ -104,6 +137,19 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace fv
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//- Template function for obtaining global status
+template<>
+inline bool typeGlobal<fv::options>()
+{
+    return true;
+}
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

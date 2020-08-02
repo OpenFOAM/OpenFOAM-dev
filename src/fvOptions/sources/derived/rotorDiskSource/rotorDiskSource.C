@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,7 +138,7 @@ void Foam::fv::rotorDiskSource::setFaceArea(vector& axis, const bool correct)
 
     // Calculate cell addressing for selected cells
     labelList cellAddr(mesh_.nCells(), -1);
-    UIndirectList<label>(cellAddr, cells_) = identity(cells_.size());
+    UIndirectList<label>(cellAddr, cells()) = identity(cells().size());
     labelList nbrFaceCellAddr(mesh_.nFaces() - nInternalFaces, -1);
     forAll(pbm, patchi)
     {
@@ -249,7 +249,7 @@ void Foam::fv::rotorDiskSource::setFaceArea(vector& axis, const bool correct)
             mesh_,
             dimensionedScalar(dimArea, 0)
         );
-        UIndirectList<scalar>(area.primitiveField(), cells_) = area_;
+        UIndirectList<scalar>(area.primitiveField(), cells()) = area_;
 
         Info<< type() << ": " << name_ << " writing field " << area.name()
             << endl;
@@ -277,9 +277,12 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
             scalar sumV = 0.0;
             const scalarField& V = mesh_.V();
             const vectorField& C = mesh_.C();
-            forAll(cells_, i)
+
+            const labelList& cells = this->cells();
+
+            forAll(cells, i)
             {
-                const label celli = cells_[i];
+                const label celli = cells[i];
                 sumV += V[celli];
                 origin += V[celli]*C[celli];
             }
@@ -290,9 +293,9 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
             // Determine first radial vector
             vector dx1(Zero);
             scalar magR = -great;
-            forAll(cells_, i)
+            forAll(cells, i)
             {
-                const label celli = cells_[i];
+                const label celli = cells[i];
                 vector test = C[celli] - origin;
                 if (mag(test) > magR)
                 {
@@ -304,9 +307,9 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
             magR = mag(dx1);
 
             // Determine second radial vector and cross to determine axis
-            forAll(cells_, i)
+            forAll(cells, i)
             {
-                const label celli = cells_[i];
+                const label celli = cells[i];
                 vector dx2 = C[celli] - origin;
                 if (mag(dx2) > 0.5*magR)
                 {
@@ -340,7 +343,7 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
                     mesh_,
                     axis,
                     origin,
-                    cells_
+                    cells
                 )
             );
 
@@ -363,7 +366,7 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
                     mesh_,
                     axis,
                     origin,
-                    cells_
+                    cells()
                 )
             );
 
@@ -398,11 +401,13 @@ void Foam::fv::rotorDiskSource::constructGeometry()
 {
     const vectorField& C = mesh_.C();
 
-    forAll(cells_, i)
+    const labelList& cells = this->cells();
+
+    forAll(cells, i)
     {
         if (area_[i] > rootVSmall)
         {
-            const label celli = cells_[i];
+            const label celli = cells[i];
 
             // Position in (planar) rotor co-ordinate system
             x_[i] = coordSys_.localPosition(C[celli]);
@@ -481,10 +486,10 @@ Foam::fv::rotorDiskSource::rotorDiskSource
     inletVelocity_(Zero),
     tipEffect_(1.0),
     flap_(),
-    x_(cells_.size(), Zero),
-    R_(cells_.size(), I),
-    invR_(cells_.size(), I),
-    area_(cells_.size(), 0.0),
+    x_(cells().size(), Zero),
+    R_(cells().size(), I),
+    invR_(cells().size(), I),
+    area_(cells().size(), 0.0),
     coordSys_(false),
     cylindrical_(),
     rMax_(0.0),

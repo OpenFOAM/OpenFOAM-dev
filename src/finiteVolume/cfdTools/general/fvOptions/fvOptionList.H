@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,9 +79,6 @@ protected:
 
     // Protected Member Functions
 
-        //- Return the "options" sub-dictionary if present otherwise return dict
-        const dictionary& optionsDict(const dictionary& dict) const;
-
         //- Read options dictionary
         bool readOptions(const dictionary& dict);
 
@@ -96,6 +93,14 @@ protected:
             const word& fieldName,
             const dimensionSet& ds
         );
+
+
+private:
+
+    // Private Member Functions
+
+        //- Return the "options" sub-dictionary if present otherwise return dict
+        const dictionary& optionsDict(const dictionary& dict) const;
 
 
 public:
@@ -238,6 +243,15 @@ public:
             //- Apply correction to field
             template<class Type>
             void correct(GeometricField<Type, fvPatchField, volMesh>& field);
+
+
+        // Mesh changes
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
+
+            //- Update for mesh motion
+            virtual bool movePoints();
 
 
         // IO

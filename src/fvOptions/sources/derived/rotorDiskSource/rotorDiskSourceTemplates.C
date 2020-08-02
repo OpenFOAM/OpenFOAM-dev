@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,11 +51,13 @@ void Foam::fv::rotorDiskSource::calculate
     scalar AOAmax = -great;
     scalar powerEff = 0;
 
-    forAll(cells_, i)
+    const labelList& cells = this->cells();
+
+    forAll(cells, i)
     {
         if (area_[i] > rootVSmall)
         {
-            const label celli = cells_[i];
+            const label celli = cells[i];
 
             const scalar radius = x_[i].x();
 
@@ -185,15 +187,16 @@ void Foam::fv::rotorDiskSource::writeField
 
         Field<Type>& field = tfield.ref().primitiveFieldRef();
 
-        if (cells_.size() != values.size())
+        if (cells().size() != values.size())
         {
             FatalErrorInFunction << abort(FatalError);
         }
 
-        forAll(cells_, i)
+        const labelList& cells = this->cells();
+
+        forAll(cells, i)
         {
-            const label celli = cells_[i];
-            field[celli] = values[i];
+            field[cells[i]] = values[i];
         }
 
         tfield().write();

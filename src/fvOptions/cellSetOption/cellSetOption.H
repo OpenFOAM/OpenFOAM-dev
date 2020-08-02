@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ public:
             selectionModeTypeNames_;
 
 
-protected:
+private:
 
     // Protected data
 
@@ -109,10 +109,10 @@ protected:
         List<point> points_;
 
         //- Set of cells to apply source to
-        labelList cells_;
+        mutable labelList cells_;
 
         //- Sum of cell volumes
-        scalar V_;
+        mutable scalar V_;
 
 
     // Protected functions
@@ -186,6 +186,15 @@ public:
 
             //- Is the source active?
             virtual bool isActive();
+
+
+        // Mesh changes
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
+
+            //- Update for mesh motion
+            virtual bool movePoints();
 
 
         // IO

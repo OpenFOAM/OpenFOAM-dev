@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -219,18 +219,24 @@ bool Foam::fv::cellSetOption::isActive()
 {
     if (option::isActive() && inTimeLimits(mesh_.time().value()))
     {
-        // Update the cell set if the mesh is changing
-        if (mesh_.changing())
-        {
-            setCellSet();
-        }
-
         return true;
     }
     else
     {
         return false;
     }
+}
+
+
+void Foam::fv::cellSetOption::updateMesh(const mapPolyMesh&)
+{
+    setCellSet();
+}
+
+
+bool Foam::fv::cellSetOption::movePoints()
+{
+    return true;
 }
 
 
