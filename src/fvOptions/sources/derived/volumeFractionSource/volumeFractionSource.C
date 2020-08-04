@@ -125,7 +125,7 @@ void Foam::fv::volumeFractionSource::addDivSup
 (
     fvMatrix<Type>& eqn,
     const label fieldi
-)
+) const
 {
     const surfaceScalarField& phi =
         mesh().lookupObject<surfaceScalarField>(phiName_);
@@ -140,7 +140,7 @@ void Foam::fv::volumeFractionSource::addUDivSup
 (
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     const surfaceScalarField& phi =
         mesh().lookupObject<surfaceScalarField>(phiName_);
@@ -157,7 +157,7 @@ void Foam::fv::volumeFractionSource::addRhoDivSup
 (
     fvMatrix<scalar>& eqn,
     const label fieldi
-)
+) const
 {
     const surfaceScalarField& phi =
         mesh().lookupObject<surfaceScalarField>(phiName_);
@@ -174,7 +174,7 @@ void Foam::fv::volumeFractionSource::addLaplacianSup
     const AlphaFieldType& alpha,
     fvMatrix<Type>& eqn,
     const label fieldi
-)
+) const
 {
     const volScalarField B(1 - this->alpha());
 
@@ -220,7 +220,7 @@ void Foam::fv::volumeFractionSource::addSup
 (
     fvMatrix<scalar>& eqn,
     const label fieldi
-)
+) const
 {
     if (fieldNames_[fieldi] == rhoName_)
     {
@@ -238,7 +238,7 @@ void Foam::fv::volumeFractionSource::addSup
 (
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     if (fieldNames_[fieldi] == UName_)
     {
@@ -256,7 +256,7 @@ void Foam::fv::volumeFractionSource::addSup
 (
     fvMatrix<sphericalTensor>& eqn,
     const label fieldi
-)
+) const
 {
     addDivSup(eqn, fieldi);
     addLaplacianSup(geometricOneField(), eqn, fieldi);
@@ -267,7 +267,7 @@ void Foam::fv::volumeFractionSource::addSup
 (
     fvMatrix<symmTensor>& eqn,
     const label fieldi
-)
+) const
 {
     addDivSup(eqn, fieldi);
     addLaplacianSup(geometricOneField(), eqn, fieldi);
@@ -278,7 +278,7 @@ void Foam::fv::volumeFractionSource::addSup
 (
     fvMatrix<tensor>& eqn,
     const label fieldi
-)
+) const
 {
     addDivSup(eqn, fieldi);
     addLaplacianSup(geometricOneField(), eqn, fieldi);
@@ -290,7 +290,7 @@ void Foam::fv::volumeFractionSource::addSup
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
     const label fieldi
-)
+) const
 {
     if (fieldNames_[fieldi] == rhoName_)
     {
@@ -309,7 +309,7 @@ void Foam::fv::volumeFractionSource::addSup
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     if (fieldNames_[fieldi] == UName_)
     {
@@ -328,7 +328,7 @@ void Foam::fv::volumeFractionSource::addSup
     const volScalarField& rho,
     fvMatrix<sphericalTensor>& eqn,
     const label fieldi
-)
+) const
 {
     addDivSup(eqn, fieldi);
     addLaplacianSup(geometricOneField(), eqn, fieldi);
@@ -340,7 +340,7 @@ void Foam::fv::volumeFractionSource::addSup
     const volScalarField& rho,
     fvMatrix<symmTensor>& eqn,
     const label fieldi
-)
+) const
 {
     addDivSup(eqn, fieldi);
     addLaplacianSup(geometricOneField(), eqn, fieldi);
@@ -352,7 +352,7 @@ void Foam::fv::volumeFractionSource::addSup
     const volScalarField& rho,
     fvMatrix<tensor>& eqn,
     const label fieldi
-)
+) const
 {
     addDivSup(eqn, fieldi);
     addLaplacianSup(geometricOneField(), eqn, fieldi);
@@ -365,7 +365,7 @@ void Foam::fv::volumeFractionSource::addSup
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
     const label fieldi
-)
+) const
 {
     if (fieldNames_[fieldi] == rhoName_)
     {
@@ -385,7 +385,7 @@ void Foam::fv::volumeFractionSource::addSup
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     if (fieldNames_[fieldi] == UName_)
     {
@@ -405,7 +405,7 @@ void Foam::fv::volumeFractionSource::addSup
     const volScalarField& rho,
     fvMatrix<sphericalTensor>& eqn,
     const label fieldi
-)
+) const
 {
     addDivSup(eqn, fieldi);
     addLaplacianSup(alpha, eqn, fieldi);
@@ -418,7 +418,7 @@ void Foam::fv::volumeFractionSource::addSup
     const volScalarField& rho,
     fvMatrix<symmTensor>& eqn,
     const label fieldi
-)
+) const
 {
     addDivSup(eqn, fieldi);
     addLaplacianSup(alpha, eqn, fieldi);
@@ -431,7 +431,7 @@ void Foam::fv::volumeFractionSource::addSup
     const volScalarField& rho,
     fvMatrix<tensor>& eqn,
     const label fieldi
-)
+) const
 {
     addDivSup(eqn, fieldi);
     addLaplacianSup(alpha, eqn, fieldi);

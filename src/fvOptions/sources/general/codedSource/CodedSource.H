@@ -191,20 +191,21 @@ public:
         //- Dynamically compiled fvOption
         option& redirectFvOption() const;
 
+
         // Evaluation
 
             //- Correct field
             virtual void correct
             (
                 GeometricField<Type, fvPatchField, volMesh>&
-            );
+            ) const;
 
             //- Explicit and implicit matrix contributions
             virtual void addSup
             (
                 fvMatrix<Type>& eqn,
                 const label fieldi
-            );
+            ) const;
 
             //- Explicit and implicit matrix contributions
             //  to compressible equation
@@ -213,14 +214,14 @@ public:
                 const volScalarField& rho,
                 fvMatrix<Type>& eqn,
                 const label fieldi
-            );
+            ) const;
 
             //- Set value
             virtual void constrain
             (
                 fvMatrix<Type>& eqn,
                 const label fieldi
-            );
+            ) const;
 
 
         // IO

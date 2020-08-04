@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,10 +77,10 @@ protected:
         vector Ubar_;
 
         //- Pressure gradient before correction
-        scalar gradP0_;
+        mutable scalar gradP0_;
 
         //- Change in pressure gradient
-        scalar dGradP_;
+        mutable scalar dGradP_;
 
         //- Flow direction
         vector flowDir_;
@@ -89,7 +89,7 @@ protected:
         scalar relaxation_;
 
         //- Matrix 1/A coefficients field pointer
-        autoPtr<volScalarField> rAPtr_;
+        mutable autoPtr<volScalarField> rAPtr_;
 
 
     // Protected Member Functions
@@ -102,7 +102,7 @@ protected:
         void writeProps(const scalar gradP) const;
 
         //- Correct driving force for a constant mass flow rate
-        void update(fvMatrix<vector>& eqn);
+        void update(fvMatrix<vector>& eqn) const;
 
 
 public:
@@ -131,14 +131,14 @@ public:
         // Evaluate
 
             //- Correct the pressure gradient
-            virtual void correct(volVectorField& U);
+            virtual void correct(volVectorField& U) const;
 
             //- Add explicit contribution to momentum equation
             virtual void addSup
             (
                 fvMatrix<vector>& eqn,
                 const label fieldi
-            );
+            ) const;
 
             //- Add explicit contribution to compressible momentum equation
             virtual void addSup
@@ -146,14 +146,14 @@ public:
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
                 const label fieldi
-            );
+            ) const;
 
             //- Set 1/A coefficient
             virtual void constrain
             (
                 fvMatrix<vector>& eqn,
                 const label fieldi
-            );
+            ) const;
 
 
         // IO

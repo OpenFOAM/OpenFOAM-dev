@@ -48,7 +48,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::VoFSolidificationMeltingSource::update()
+void Foam::fv::VoFSolidificationMeltingSource::update() const
 {
     if (curTimeIndex_ == mesh_.time().timeIndex())
     {
@@ -156,7 +156,7 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
 (
     fvMatrix<scalar>& eqn,
     const label fieldi
-)
+) const
 {
     apply(geometricOneField(), eqn);
 }
@@ -167,7 +167,7 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
     const label fieldi
-)
+) const
 {
     apply(rho, eqn);
 }
@@ -177,7 +177,7 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
 (
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     if (debug)
     {
@@ -209,7 +209,7 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     // Momentum source uses a Boussinesq approximation - redirect
     addSup(eqn, fieldi);

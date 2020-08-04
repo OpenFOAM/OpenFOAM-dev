@@ -477,7 +477,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
         // 'thermal' conductivity (Table 3.3, p. 49)
         kappa_ = conductivityModel_->kappa(alpha, Theta_, gs0_, rho, da, e_);
 
-        fv::options& fvOptions(fv::options::New(mesh_));
+        const fv::options& fvOptions(fv::options::New(mesh_));
 
         // Construct the granular temperature equation (Eq. 3.20, p. 44)
         // NB. note that there are two typos in Eq. 3.20:

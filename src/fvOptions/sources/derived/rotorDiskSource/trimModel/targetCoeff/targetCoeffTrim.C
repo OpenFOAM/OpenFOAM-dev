@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,7 +101,7 @@ void Foam::targetCoeffTrim::correctTrim
     const RhoFieldType& rho,
     const vectorField& U,
     vectorField& force
-)
+) const
 {
     if (rotor_.mesh().time().timeIndex() % calcFrequency_ == 0)
     {
@@ -276,7 +276,7 @@ void Foam::targetCoeffTrim::correct
 (
     const vectorField& U,
     vectorField& force
-)
+) const
 {
     correctTrim(geometricOneField(), U, force);
 }
@@ -287,7 +287,7 @@ void Foam::targetCoeffTrim::correct
     const volScalarField rho,
     const vectorField& U,
     vectorField& force
-)
+) const
 {
     correctTrim(rho, U, force);
 }

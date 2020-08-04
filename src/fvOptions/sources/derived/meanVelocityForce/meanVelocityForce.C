@@ -147,7 +147,7 @@ Foam::scalar Foam::fv::meanVelocityForce::magUbarAve
 }
 
 
-void Foam::fv::meanVelocityForce::correct(volVectorField& U)
+void Foam::fv::meanVelocityForce::correct(volVectorField& U) const
 {
     const scalarField& rAU = rAPtr_();
 
@@ -195,7 +195,7 @@ void Foam::fv::meanVelocityForce::addSup
 (
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     volVectorField::Internal Su
     (
@@ -224,7 +224,7 @@ void Foam::fv::meanVelocityForce::addSup
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     this->addSup(eqn, fieldi);
 }
@@ -234,7 +234,7 @@ void Foam::fv::meanVelocityForce::constrain
 (
     fvMatrix<vector>& eqn,
     const label
-)
+) const
 {
     if (rAPtr_.empty())
     {

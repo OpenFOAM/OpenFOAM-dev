@@ -75,17 +75,7 @@ public:
         //- Disallow default bitwise copy construction
         options(const options&) = delete;
 
-        // using MeshObject<fvMesh, UpdateableMeshObject, options>::New;
-
-        //- Construct fvOptions and register to datbase if not present
-        //  otherwise lookup and return
-        static options& New(const fvMesh& mesh)
-        {
-            return const_cast<options&>
-            (
-                MeshObject<fvMesh, UpdateableMeshObject, options>::New(mesh)
-            );
-        }
+        using MeshObject<fvMesh, UpdateableMeshObject, options>::New;
 
 
     //- Destructor

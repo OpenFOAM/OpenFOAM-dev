@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,7 +104,7 @@ protected:
         vector target_;
 
         //- Pitch angles (collective, roll, pitch) [rad]
-        vector theta_;
+        mutable vector theta_;
 
         //- Maximum number of iterations in trim routine
         label nIter_;
@@ -141,7 +141,7 @@ protected:
             const RhoFieldType& rho,
             const vectorField& U,
             vectorField& force
-        );
+        ) const;
 
 
 public:
@@ -169,7 +169,7 @@ public:
         (
             const vectorField& U,
             vectorField& force
-        );
+        ) const;
 
         //- Correct the model for compressible flow
         virtual void correct
@@ -177,7 +177,7 @@ public:
             const volScalarField rho,
             const vectorField& U,
             vectorField& force
-        );
+        ) const;
 };
 
 

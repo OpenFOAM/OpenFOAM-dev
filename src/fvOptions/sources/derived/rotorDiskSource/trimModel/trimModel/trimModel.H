@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,7 +124,7 @@ public:
         (
             const vectorField& U,
             vectorField& force
-        ) = 0;
+        ) const = 0;
 
         //- Correct the model for compressible flow
         virtual void correct
@@ -132,7 +132,7 @@ public:
             const volScalarField rho,
             const vectorField& U,
             vectorField& force
-        ) = 0;
+        ) const = 0;
 };
 
 

@@ -80,7 +80,7 @@ void Foam::fv::explicitPorositySource::addSup
 (
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
     porosityPtr_->addResistance(porosityEqn);
@@ -93,7 +93,7 @@ void Foam::fv::explicitPorositySource::addSup
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
     porosityPtr_->addResistance(porosityEqn);
@@ -107,7 +107,7 @@ void Foam::fv::explicitPorositySource::addSup
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
     porosityPtr_->addResistance(porosityEqn);

@@ -131,7 +131,7 @@ ${typeName}FvOption${SourceType}::
 void ${typeName}FvOption${SourceType}::correct
 (
     GeometricField<${TemplateType}, fvPatchField, volMesh>& fld
-)
+) const
 {
     if (${verbose:-false})
     {
@@ -148,7 +148,7 @@ void ${typeName}FvOption${SourceType}::addSup
 (
     fvMatrix<${TemplateType}>& eqn,
     const label fieldi
-)
+) const
 {
     if (${verbose:-false})
     {
@@ -166,7 +166,7 @@ void ${typeName}FvOption${SourceType}::addSup
     const volScalarField& rho,
     fvMatrix<${TemplateType}>& eqn,
     const label fieldi
-)
+) const
 {
     if (${verbose:-false})
     {
@@ -183,7 +183,7 @@ void ${typeName}FvOption${SourceType}::constrain
 (
     fvMatrix<${TemplateType}>& eqn,
     const label fieldi
-)
+) const
 {
     if (${verbose:-false})
     {

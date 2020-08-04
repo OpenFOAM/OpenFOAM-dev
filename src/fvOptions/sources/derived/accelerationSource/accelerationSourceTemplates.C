@@ -31,7 +31,7 @@ void Foam::fv::accelerationSource::add
     const AlphaRhoFieldType& alphaRho,
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     const DimensionedField<scalar, volMesh>& V = mesh_.V();
 

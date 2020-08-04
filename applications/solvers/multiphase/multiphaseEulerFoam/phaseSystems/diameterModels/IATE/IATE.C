@@ -144,7 +144,7 @@ void Foam::diameterModels::IATE::correct()
         R += sources_[j].R(alphaAv, kappai_);
     }
 
-    fv::options& fvOptions(fv::options::New(phase().mesh()));
+    const fv::options& fvOptions(fv::options::New(phase().mesh()));
 
     // Construct the interfacial curvature equation
     fvScalarMatrix kappaiEqn

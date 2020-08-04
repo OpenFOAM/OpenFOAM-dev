@@ -227,7 +227,7 @@ void kEpsilon<BasicMomentumTransportModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
-    fv::options& fvOptions(fv::options::New(this->mesh_));
+    const fv::options& fvOptions(fv::options::New(this->mesh_));
 
     eddyViscosity<RASModel<BasicMomentumTransportModel>>::correct();
 

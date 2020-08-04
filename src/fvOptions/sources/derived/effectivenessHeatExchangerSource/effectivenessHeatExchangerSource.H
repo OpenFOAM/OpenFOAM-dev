@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -201,7 +201,7 @@ private:
         void initialise();
 
         //- Calculate total area of faceZone across processors
-        void calculateTotalArea(scalar& area);
+        void calculateTotalArea(scalar& area) const;
 
 
 public:
@@ -242,7 +242,7 @@ public:
             (
                 fvMatrix<scalar>& eqn,
                 const label fieldi
-            )
+            ) const
             {
                 NotImplemented;
             }
@@ -256,7 +256,7 @@ public:
                 const volScalarField& rho,
                 fvMatrix<scalar>& eqn,
                 const label fieldi
-            );
+            ) const;
 
 
         // IO

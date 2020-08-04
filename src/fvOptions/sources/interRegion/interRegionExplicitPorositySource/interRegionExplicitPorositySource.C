@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ namespace fv
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
-void Foam::fv::interRegionExplicitPorositySource::initialise()
+void Foam::fv::interRegionExplicitPorositySource::initialise() const
 {
     if (!firstIter_)
     {
@@ -135,7 +135,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
 (
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     initialise();
 
@@ -189,7 +189,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     initialise();
 

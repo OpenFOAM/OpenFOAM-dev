@@ -161,7 +161,7 @@ inline const Foam::IOMRFZoneList& Foam::phaseSystem::MRF() const
 }
 
 
-inline Foam::fv::options& Foam::phaseSystem::fvOptions() const
+inline const Foam::fv::options& Foam::phaseSystem::fvOptions() const
 {
     return fv::options::New(mesh_);
 }

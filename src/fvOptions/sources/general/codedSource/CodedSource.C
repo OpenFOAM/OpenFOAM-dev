@@ -158,7 +158,7 @@ template<class Type>
 void Foam::fv::CodedSource<Type>::correct
 (
     GeometricField<Type, fvPatchField, volMesh>& field
-)
+) const
 {
     if (debug)
     {
@@ -176,7 +176,7 @@ void Foam::fv::CodedSource<Type>::addSup
 (
     fvMatrix<Type>& eqn,
     const label fieldi
-)
+) const
 {
     if (debug)
     {
@@ -195,7 +195,7 @@ void Foam::fv::CodedSource<Type>::addSup
     const volScalarField& rho,
     fvMatrix<Type>& eqn,
     const label fieldi
-)
+) const
 {
     if (debug)
     {
@@ -213,7 +213,7 @@ void Foam::fv::CodedSource<Type>::constrain
 (
     fvMatrix<Type>& eqn,
     const label fieldi
-)
+) const
 {
     if (debug)
     {

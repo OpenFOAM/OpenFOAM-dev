@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,13 +203,13 @@ private:
         scalar beta_;
 
         //- Phase fraction indicator field
-        volScalarField alpha1_;
+        mutable volScalarField alpha1_;
 
         //- Current time index (used for updating)
-        label curTimeIndex_;
+        mutable label curTimeIndex_;
 
         //- Temperature change cached for source calculation when alpha1 updated
-        scalarField deltaT_;
+        mutable scalarField deltaT_;
 
 
     // Private Member Functions
@@ -221,11 +221,11 @@ private:
         vector g() const;
 
         //- Update the model
-        void update(const volScalarField& Cp);
+        void update(const volScalarField& Cp) const;
 
         //- Helper function to apply to the energy equation
         template<class RhoFieldType>
-        void apply(const RhoFieldType& rho, fvMatrix<scalar>& eqn);
+        void apply(const RhoFieldType& rho, fvMatrix<scalar>& eqn) const;
 
 
 public:
@@ -257,10 +257,18 @@ public:
         // Add explicit and implicit contributions
 
             //- Add explicit contribution to enthalpy equation
-            virtual void addSup(fvMatrix<scalar>& eqn, const label fieldi);
+            virtual void addSup
+            (
+                fvMatrix<scalar>& eqn,
+                const label fieldi
+            ) const;
 
             //- Add implicit contribution to momentum equation
-            virtual void addSup(fvMatrix<vector>& eqn, const label fieldi);
+            virtual void addSup
+            (
+                fvMatrix<vector>& eqn,
+                const label fieldi
+            ) const;
 
 
         // Add explicit and implicit contributions to compressible equation
@@ -271,7 +279,7 @@ public:
                 const volScalarField& rho,
                 fvMatrix<scalar>& eqn,
                 const label fieldi
-            );
+            ) const;
 
             //- Add implicit contribution to compressible momentum equation
             virtual void addSup
@@ -279,7 +287,7 @@ public:
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
                 const label fieldi
-            );
+            ) const;
 
 
         // IO

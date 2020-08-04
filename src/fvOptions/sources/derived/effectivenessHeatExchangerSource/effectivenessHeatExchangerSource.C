@@ -121,7 +121,7 @@ void Foam::fv::effectivenessHeatExchangerSource::initialise()
 void Foam::fv::effectivenessHeatExchangerSource::calculateTotalArea
 (
     scalar& area
-)
+) const
 {
     area = 0;
     forAll(faceId_, i)
@@ -198,7 +198,7 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
     const label
-)
+) const
 {
     const basicThermo& thermo =
         mesh_.lookupObject<basicThermo>(basicThermo::dictName);

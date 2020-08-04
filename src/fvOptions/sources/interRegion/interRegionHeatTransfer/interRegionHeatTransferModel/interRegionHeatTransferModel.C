@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ namespace fv
 
 // * * * * * * * * * * * *  Protected member functions * * * * * * * * * * * //
 
-void Foam::fv::interRegionHeatTransferModel::setNbrModel()
+void Foam::fv::interRegionHeatTransferModel::setNbrModel() const
 {
     if (!firstIter_)
     {
@@ -84,7 +84,7 @@ void Foam::fv::interRegionHeatTransferModel::setNbrModel()
 }
 
 
-void Foam::fv::interRegionHeatTransferModel::correct()
+void Foam::fv::interRegionHeatTransferModel::correct() const
 {
     if (master_)
     {
@@ -167,7 +167,7 @@ void Foam::fv::interRegionHeatTransferModel::addSup
 (
     fvMatrix<scalar>& eqn,
     const label fieldi
-)
+) const
 {
     setNbrModel();
 
@@ -254,7 +254,7 @@ void Foam::fv::interRegionHeatTransferModel::addSup
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
     const label fieldi
-)
+) const
 {
     addSup(eqn, fieldi);
 }

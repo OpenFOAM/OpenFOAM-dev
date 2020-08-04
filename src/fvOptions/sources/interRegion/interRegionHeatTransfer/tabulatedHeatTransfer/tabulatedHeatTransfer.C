@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ namespace fv
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 const Foam::interpolation2DTable<Foam::scalar>&
-Foam::fv::tabulatedHeatTransfer::hTable()
+Foam::fv::tabulatedHeatTransfer::hTable() const
 {
     if (!hTable_.valid())
     {
@@ -57,7 +57,7 @@ Foam::fv::tabulatedHeatTransfer::hTable()
 }
 
 
-const Foam::volScalarField& Foam::fv::tabulatedHeatTransfer::AoV()
+const Foam::volScalarField& Foam::fv::tabulatedHeatTransfer::AoV() const
 {
     if (!AoV_.valid())
     {
@@ -109,7 +109,7 @@ Foam::fv::tabulatedHeatTransfer::~tabulatedHeatTransfer()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::tabulatedHeatTransfer::calculateHtc()
+void Foam::fv::tabulatedHeatTransfer::calculateHtc() const
 {
     const fvMesh& nbrMesh = mesh_.time().lookupObject<fvMesh>(nbrRegionName());
 

@@ -497,7 +497,7 @@ void kOmegaSSTLM<BasicMomentumTransportModel>::correctReThetatGammaInt()
     const tmp<volScalarField> tnu = this->nu();
     const volScalarField::Internal& nu = tnu()();
     const volScalarField::Internal& y = this->y_();
-    fv::options& fvOptions(fv::options::New(this->mesh_));
+    const fv::options& fvOptions(fv::options::New(this->mesh_));
 
     // Fields derived from the velocity gradient
     tmp<volTensorField> tgradU = fvc::grad(U);

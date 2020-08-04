@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,10 +117,10 @@ class VoFSolidificationMeltingSource
         scalar q_;
 
         //- Solid phase fraction
-        volScalarField alphaSolid_;
+        mutable volScalarField alphaSolid_;
 
         //- Current time index (used for updating)
-        label curTimeIndex_;
+        mutable label curTimeIndex_;
 
 
     // Private Member Functions
@@ -129,11 +129,11 @@ class VoFSolidificationMeltingSource
         word alphaSolidName() const;
 
         //- Update the model
-        void update();
+        void update() const;
 
         //- Helper function to apply to the energy equation
         template<class RhoFieldType>
-        void apply(const RhoFieldType& rho, fvMatrix<scalar>& eqn);
+        void apply(const RhoFieldType& rho, fvMatrix<scalar>& eqn) const;
 
 
 public:
@@ -165,10 +165,18 @@ public:
         // Add explicit and implicit contributions
 
             //- Add explicit contribution to enthalpy equation
-            virtual void addSup(fvMatrix<scalar>& eqn, const label fieldi);
+            virtual void addSup
+            (
+                fvMatrix<scalar>& eqn,
+                const label fieldi
+            ) const;
 
             //- Add implicit contribution to momentum equation
-            virtual void addSup(fvMatrix<vector>& eqn, const label fieldi);
+            virtual void addSup
+            (
+                fvMatrix<vector>& eqn,
+                const label fieldi
+            ) const;
 
 
         // Add explicit and implicit contributions to compressible equation
@@ -179,7 +187,7 @@ public:
                 const volScalarField& rho,
                 fvMatrix<scalar>& eqn,
                 const label fieldi
-            );
+            ) const;
 
             //- Add implicit contribution to compressible momentum equation
             virtual void addSup
@@ -187,7 +195,7 @@ public:
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
                 const label fieldi
-            );
+            ) const;
 
 
         // IO

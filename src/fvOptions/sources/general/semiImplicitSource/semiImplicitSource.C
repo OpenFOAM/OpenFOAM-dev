@@ -64,7 +64,7 @@ void Foam::fv::semiImplicitSource::addSupType
 (
     fvMatrix<Type>& eqn,
     const label fieldi
-)
+) const
 {
     if (debug)
     {
@@ -132,7 +132,7 @@ void Foam::fv::semiImplicitSource::addSupType
     const volScalarField& rho,
     fvMatrix<Type>& eqn,
     const label fieldi
-)
+) const
 {
     if (debug)
     {
@@ -174,7 +174,7 @@ void Foam::fv::semiImplicitSource::addSup
 (
     fvMatrix<scalar>& eqn,
     const label fieldi
-)
+) const
 {
     addSupType(eqn, fieldi);
 }
@@ -184,7 +184,7 @@ void Foam::fv::semiImplicitSource::addSup
 (
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     addSupType(eqn, fieldi);
 }
@@ -194,7 +194,7 @@ void Foam::fv::semiImplicitSource::addSup
 (
     fvMatrix<symmTensor>& eqn,
     const label fieldi
-)
+) const
 {
     addSupType(eqn, fieldi);
 }
@@ -204,7 +204,7 @@ void Foam::fv::semiImplicitSource::addSup
 (
     fvMatrix<sphericalTensor>& eqn,
     const label fieldi
-)
+) const
 {
     addSupType(eqn, fieldi);
 }
@@ -214,7 +214,7 @@ void Foam::fv::semiImplicitSource::addSup
 (
     fvMatrix<tensor>& eqn,
     const label fieldi
-)
+) const
 {
     addSupType(eqn, fieldi);
 }
@@ -225,7 +225,7 @@ void Foam::fv::semiImplicitSource::addSup
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
     const label fieldi
-)
+) const
 {
     addSupType(eqn, fieldi);
 }
@@ -236,7 +236,7 @@ void Foam::fv::semiImplicitSource::addSup
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     addSupType(eqn, fieldi);
 }
@@ -247,7 +247,7 @@ void Foam::fv::semiImplicitSource::addSup
     const volScalarField& rho,
     fvMatrix<symmTensor>& eqn,
     const label fieldi
-)
+) const
 {
     addSupType(eqn, fieldi);
 }
@@ -258,7 +258,7 @@ void Foam::fv::semiImplicitSource::addSup
     const volScalarField& rho,
     fvMatrix<sphericalTensor>& eqn,
     const label fieldi
-)
+) const
 {
     addSupType(eqn, fieldi);
 }
@@ -269,7 +269,7 @@ void Foam::fv::semiImplicitSource::addSup
     const volScalarField& rho,
     fvMatrix<tensor>& eqn,
     const label fieldi
-)
+) const
 {
     addSupType(eqn, fieldi);
 }
@@ -281,7 +281,7 @@ void Foam::fv::semiImplicitSource::addSup
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
     const label fieldi
-)
+) const
 {
     addSupType(eqn, fieldi);
 }
@@ -293,7 +293,7 @@ void Foam::fv::semiImplicitSource::addSup
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     addSupType(eqn, fieldi);
 }
@@ -305,7 +305,7 @@ void Foam::fv::semiImplicitSource::addSup
     const volScalarField& rho,
     fvMatrix<symmTensor>& eqn,
     const label fieldi
-)
+) const
 {
     addSupType(eqn, fieldi);
 }
@@ -317,7 +317,7 @@ void Foam::fv::semiImplicitSource::addSup
     const volScalarField& rho,
     fvMatrix<sphericalTensor>& eqn,
     const label fieldi
-)
+) const
 {
     addSupType(eqn, fieldi);
 }
@@ -329,7 +329,7 @@ void Foam::fv::semiImplicitSource::addSup
     const volScalarField& rho,
     fvMatrix<tensor>& eqn,
     const label fieldi
-)
+) const
 {
     addSupType(eqn, fieldi);
 }
@@ -392,5 +392,6 @@ bool Foam::fv::semiImplicitSource::read(const dictionary& dict)
         return false;
     }
 }
+
 
 // ************************************************************************* //

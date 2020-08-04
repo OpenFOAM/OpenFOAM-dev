@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,7 +105,7 @@ public:
         virtual bool read(const dictionary& dict);
 
         //- Set value on field
-        virtual void constrain(fvMatrix<Type>& eqn, const label fieldi);
+        virtual void constrain(fvMatrix<Type>& eqn, const label fieldi) const;
 };
 
 

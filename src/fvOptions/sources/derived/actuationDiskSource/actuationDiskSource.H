@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -187,7 +187,7 @@ public:
             (
                 fvMatrix<vector>& eqn,
                 const label fieldi
-            );
+            ) const;
 
             //- Source term to compressible momentum equation
             virtual void addSup
@@ -195,7 +195,7 @@ public:
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
                 const label fieldi
-            );
+            ) const;
 
 
         // IO

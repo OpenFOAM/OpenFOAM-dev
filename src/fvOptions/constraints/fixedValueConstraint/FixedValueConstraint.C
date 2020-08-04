@@ -81,7 +81,7 @@ void Foam::fv::FixedValueConstraint<Type>::constrain
 (
     fvMatrix<Type>& eqn,
     const label fieldi
-)
+) const
 {
     DebugInfo
         << "FixedValueConstraint<"

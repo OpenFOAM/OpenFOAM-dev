@@ -436,7 +436,7 @@ public:
             inline const IOMRFZoneList& MRF() const;
 
             //- Access the fvOptions
-            inline fv::options& fvOptions() const;
+            inline const fv::options& fvOptions() const;
 
 
         // Sub-model lookup

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,16 +64,16 @@ protected:
         word nbrModelName_;
 
         //- Pointer to neighbour interRegionHeatTransferModel
-        interRegionHeatTransferModel* nbrModel_;
+        mutable interRegionHeatTransferModel* nbrModel_;
 
         //- First iteration
-        bool firstIter_;
+        mutable bool firstIter_;
 
         //- Time index - used for updating htc
-        label timeIndex_;
+        mutable label timeIndex_;
 
         //- Heat transfer coefficient [W/m^2/k] times area/volume [1/m]
-        volScalarField htc_;
+        mutable volScalarField htc_;
 
         //- Flag to activate semi-implicit coupling
         bool semiImplicit_;
@@ -88,13 +88,13 @@ protected:
     // Protected member functions
 
         //- Set the neighbour interRegionHeatTransferModel
-        void setNbrModel();
+        void setNbrModel() const;
 
         //- Inherit correct from interRegionOption
         using interRegionOption::correct;
 
         //- Correct to calculate the inter-region heat transfer coefficient
-        void correct();
+        void correct() const;
 
         //- Interpolate field with nbrModel specified
         template<class Type>
@@ -175,7 +175,7 @@ public:
             (
                 fvMatrix<scalar>& eqn,
                 const label fieldi
-            );
+            ) const;
 
             //- Source term to compressible energy equation
             virtual void addSup
@@ -183,10 +183,10 @@ public:
                 const volScalarField& rho,
                 fvMatrix<scalar>& eqn,
                 const label fieldi
-            );
+            ) const;
 
             //- Calculate heat transfer coefficient
-            virtual void calculateHtc() = 0;
+            virtual void calculateHtc() const = 0;
 
 
         // IO

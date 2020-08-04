@@ -97,7 +97,7 @@ Foam::fv::variableHeatTransfer::~variableHeatTransfer()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::variableHeatTransfer::calculateHtc()
+void Foam::fv::variableHeatTransfer::calculateHtc() const
 {
     const fvMesh& nbrMesh =
         mesh_.time().lookupObject<fvMesh>(nbrRegionName());

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ void Foam::fv::isotropicDamping::add
 (
     const volScalarField::Internal& forceCoeff,
     fvMatrix<vector>& eqn
-)
+) const
 {
     eqn -= fvm::Sp(forceCoeff, eqn.psi());
     eqn += forceCoeff*value_;
@@ -76,7 +76,7 @@ void Foam::fv::isotropicDamping::addSup
 (
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     add(this->forceCoeff(), eqn);
 }
@@ -87,7 +87,7 @@ void Foam::fv::isotropicDamping::addSup
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     add(rho*forceCoeff(), eqn);
 }
@@ -99,7 +99,7 @@ void Foam::fv::isotropicDamping::addSup
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     add(alpha()*rho()*this->forceCoeff(), eqn);
 }

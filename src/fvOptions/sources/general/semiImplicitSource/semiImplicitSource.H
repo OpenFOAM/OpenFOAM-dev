@@ -147,11 +147,16 @@ private:
 
         //- Add divergence terms to an equation
         template <class Type>
-        void addSupType(fvMatrix<Type>&, const label);
+        void addSupType(fvMatrix<Type>&, const label) const;
 
         //- Add divergence terms to an equation
         template <class Type>
-        void addSupType(const volScalarField&, fvMatrix<Type>&, const label);
+        void addSupType
+        (
+            const volScalarField&,
+            fvMatrix<Type>&,
+            const label
+        ) const;
 
 
 public:
@@ -185,31 +190,31 @@ public:
                 (
                     fvMatrix<scalar>& eqn,
                     const label fieldi
-                );
+                ) const;
 
                 virtual void addSup
                 (
                     fvMatrix<vector>& eqn,
                     const label fieldi
-                );
+                ) const;
 
                 virtual void addSup
                 (
                     fvMatrix<symmTensor>& eqn,
                     const label fieldi
-                );
+                ) const;
 
                 virtual void addSup
                 (
                     fvMatrix<sphericalTensor>& eqn,
                     const label fieldi
-                );
+                ) const;
 
                 virtual void addSup
                 (
                     fvMatrix<tensor>& eqn,
                     const label fieldi
-                );
+                ) const;
 
 
             // Explicit and implicit sources for compressible equations
@@ -219,35 +224,35 @@ public:
                     const volScalarField& rho,
                     fvMatrix<scalar>& eqn,
                     const label fieldi
-                );
+                ) const;
 
                 virtual void addSup
                 (
                     const volScalarField& rho,
                     fvMatrix<vector>& eqn,
                     const label fieldi
-                );
+                ) const;
 
                 virtual void addSup
                 (
                     const volScalarField& rho,
                     fvMatrix<symmTensor>& eqn,
                     const label fieldi
-                );
+                ) const;
 
                 virtual void addSup
                 (
                     const volScalarField& rho,
                     fvMatrix<sphericalTensor>& eqn,
                     const label fieldi
-                );
+                ) const;
 
                 virtual void addSup
                 (
                     const volScalarField& rho,
                     fvMatrix<tensor>& eqn,
                     const label fieldi
-                );
+                ) const;
 
 
             // Explicit and implicit sources for phase equations
@@ -258,7 +263,7 @@ public:
                     const volScalarField& rho,
                     fvMatrix<scalar>& eqn,
                     const label fieldi
-                );
+                ) const;
 
                 virtual void addSup
                 (
@@ -266,7 +271,7 @@ public:
                     const volScalarField& rho,
                     fvMatrix<vector>& eqn,
                     const label fieldi
-                );
+                ) const;
 
                 virtual void addSup
                 (
@@ -274,7 +279,7 @@ public:
                     const volScalarField& rho,
                     fvMatrix<symmTensor>& eqn,
                     const label fieldi
-                );
+                ) const;
 
                 virtual void addSup
                 (
@@ -282,7 +287,7 @@ public:
                     const volScalarField& rho,
                     fvMatrix<sphericalTensor>& eqn,
                     const label fieldi
-                );
+                ) const;
 
                 virtual void addSup
                 (
@@ -290,7 +295,7 @@ public:
                     const volScalarField& rho,
                     fvMatrix<tensor>& eqn,
                     const label fieldi
-                );
+                ) const;
 
 
         // IO

@@ -92,7 +92,7 @@ bool Foam::fv::limitTemperature::read(const dictionary& dict)
 }
 
 
-void Foam::fv::limitTemperature::correct(volScalarField& he)
+void Foam::fv::limitTemperature::correct(volScalarField& he) const
 {
     const basicThermo& thermo =
         mesh_.lookupObject<basicThermo>

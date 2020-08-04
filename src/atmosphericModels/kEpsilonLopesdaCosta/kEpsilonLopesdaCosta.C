@@ -98,7 +98,7 @@ template<class BasicMomentumTransportModel>
 void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::
 setPorosityCoefficients()
 {
-    fv::options::optionList& fvOptions(fv::options::New(this->mesh_));
+    const fv::options::optionList& fvOptions(fv::options::New(this->mesh_));
 
     forAll(fvOptions, i)
     {
@@ -398,7 +398,7 @@ void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
-    fv::options& fvOptions(fv::options::New(this->mesh_));
+    const fv::options& fvOptions(fv::options::New(this->mesh_));
 
     eddyViscosity<RASModel<BasicMomentumTransportModel>>::correct();
 

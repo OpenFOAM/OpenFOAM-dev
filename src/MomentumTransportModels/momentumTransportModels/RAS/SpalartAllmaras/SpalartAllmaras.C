@@ -355,7 +355,7 @@ void SpalartAllmaras<BasicMomentumTransportModel>::correct()
     const alphaField& alpha = this->alpha_;
     const rhoField& rho = this->rho_;
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
-    fv::options& fvOptions(fv::options::New(this->mesh_));
+    const fv::options& fvOptions(fv::options::New(this->mesh_));
 
     eddyViscosity<RASModel<BasicMomentumTransportModel>>::correct();
 

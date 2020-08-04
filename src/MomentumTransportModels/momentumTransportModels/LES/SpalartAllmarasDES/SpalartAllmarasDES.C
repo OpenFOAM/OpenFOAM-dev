@@ -454,7 +454,7 @@ void SpalartAllmarasDES<BasicMomentumTransportModel>::correct()
     const rhoField& rho = this->rho_;
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
-    fv::options& fvOptions(fv::options::New(this->mesh_));
+    const fv::options& fvOptions(fv::options::New(this->mesh_));
 
     LESeddyViscosity<BasicMomentumTransportModel>::correct();
 

@@ -131,7 +131,10 @@ Foam::vector Foam::fv::solidificationMeltingSource::g() const
 }
 
 
-void Foam::fv::solidificationMeltingSource::update(const volScalarField& Cp)
+void Foam::fv::solidificationMeltingSource::update
+(
+    const volScalarField& Cp
+) const
 {
     if (curTimeIndex_ == mesh_.time().timeIndex())
     {
@@ -264,7 +267,7 @@ void Foam::fv::solidificationMeltingSource::addSup
 (
     fvMatrix<scalar>& eqn,
     const label fieldi
-)
+) const
 {
     apply(geometricOneField(), eqn);
 }
@@ -275,7 +278,7 @@ void Foam::fv::solidificationMeltingSource::addSup
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
     const label fieldi
-)
+) const
 {
     apply(rho, eqn);
 }
@@ -285,7 +288,7 @@ void Foam::fv::solidificationMeltingSource::addSup
 (
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     if (debug)
     {
@@ -325,7 +328,7 @@ void Foam::fv::solidificationMeltingSource::addSup
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     // Momentum source uses a Boussinesq approximation - redirect
     addSup(eqn, fieldi);

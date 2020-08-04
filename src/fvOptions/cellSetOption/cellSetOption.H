@@ -185,7 +185,7 @@ public:
         // Checks
 
             //- Is the source active?
-            virtual bool isActive();
+            virtual bool isActive() const;
 
 
         // Mesh changes

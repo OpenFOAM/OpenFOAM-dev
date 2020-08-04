@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,7 +86,7 @@ void Foam::fv::buoyancyForce::addSup
 (
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     eqn += g_;
 }
@@ -97,7 +97,7 @@ void Foam::fv::buoyancyForce::addSup
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     eqn += rho*g_;
 }

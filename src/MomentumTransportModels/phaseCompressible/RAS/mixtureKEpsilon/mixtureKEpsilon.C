@@ -596,7 +596,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     volScalarField& km = km_();
     volScalarField& epsilonm = epsilonm_();
 
-    fv::options& fvOptions(fv::options::New(this->mesh_));
+    const fv::options& fvOptions(fv::options::New(this->mesh_));
 
     eddyViscosity<RASModel<BasicMomentumTransportModel>>::correct();
 

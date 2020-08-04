@@ -80,7 +80,7 @@ bool Foam::fv::limitVelocity::read(const dictionary& dict)
 }
 
 
-void Foam::fv::limitVelocity::correct(volVectorField& U)
+void Foam::fv::limitVelocity::correct(volVectorField& U) const
 {
     const scalar maxSqrU = sqr(max_);
 

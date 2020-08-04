@@ -215,7 +215,7 @@ Foam::fv::cellSetOption::~cellSetOption()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::cellSetOption::isActive()
+bool Foam::fv::cellSetOption::isActive() const
 {
     if (option::isActive() && inTimeLimits(mesh_.time().value()))
     {

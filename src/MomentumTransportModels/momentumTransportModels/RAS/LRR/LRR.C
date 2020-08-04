@@ -272,7 +272,7 @@ void LRR<BasicMomentumTransportModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volSymmTensorField& R = this->R_;
-    fv::options& fvOptions(fv::options::New(this->mesh_));
+    const fv::options& fvOptions(fv::options::New(this->mesh_));
 
     ReynoldsStress<RASModel<BasicMomentumTransportModel>>::correct();
 

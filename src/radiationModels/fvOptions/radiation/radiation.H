@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ class radiation
     // Private Data
 
         //- The radiation model pointer
-        autoPtr<radiationModel> radiation_;
+        mutable autoPtr<radiationModel> radiation_;
 
 
 public:
@@ -100,7 +100,7 @@ public:
                 const volScalarField& rho,
                 fvMatrix<scalar>& eqn,
                 const label fieldi
-            );
+            ) const;
 
 
         // IO

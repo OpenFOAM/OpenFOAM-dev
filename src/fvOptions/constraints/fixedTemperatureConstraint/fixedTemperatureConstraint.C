@@ -115,7 +115,7 @@ void Foam::fv::fixedTemperatureConstraint::constrain
 (
     fvMatrix<scalar>& eqn,
     const label
-)
+) const
 {
     const basicThermo& thermo =
         mesh_.lookupObject<basicThermo>

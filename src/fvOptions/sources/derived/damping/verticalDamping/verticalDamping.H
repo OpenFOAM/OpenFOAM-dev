@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,7 @@ class verticalDamping
         (
             const volVectorField& alphaRhoU,
             fvMatrix<vector>& eqn
-        );
+        ) const;
 
 
 public:
@@ -168,7 +168,7 @@ public:
             (
                 fvMatrix<vector>& eqn,
                 const label fieldi
-            );
+            ) const;
 
             //- Source term to compressible momentum equation
             virtual void addSup
@@ -176,7 +176,7 @@ public:
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
                 const label fieldi
-            );
+            ) const;
 
             //- Source term to phase momentum equation
             virtual void addSup
@@ -185,7 +185,7 @@ public:
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
                 const label fieldi
-            );
+            ) const;
 };
 
 

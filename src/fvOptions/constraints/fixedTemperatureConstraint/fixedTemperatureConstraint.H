@@ -140,7 +140,11 @@ public:
     // Member Functions
 
         //- Constrain energy equation to fix the temperature
-        virtual void constrain(fvMatrix<scalar>& eqn, const label fieldi);
+        virtual void constrain
+        (
+            fvMatrix<scalar>& eqn,
+            const label fieldi
+        ) const;
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);

@@ -114,7 +114,7 @@ public:
         virtual bool read(const dictionary& dict);
 
         //- Correct the energy field
-        virtual void correct(volScalarField& he);
+        virtual void correct(volScalarField& he) const;
 
 
     // Member Operators

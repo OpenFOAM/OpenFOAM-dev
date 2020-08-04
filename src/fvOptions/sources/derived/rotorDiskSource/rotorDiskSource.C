@@ -513,7 +513,7 @@ void Foam::fv::rotorDiskSource::addSup
 (
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     volVectorField force
     (
@@ -554,7 +554,7 @@ void Foam::fv::rotorDiskSource::addSup
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     volVectorField force
     (

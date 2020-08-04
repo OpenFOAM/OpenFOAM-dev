@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,16 +62,16 @@ class tabulatedHeatTransfer
         word UNbrName_;
 
         //- 2D look up table
-        autoPtr<interpolation2DTable<scalar>> hTable_;
+        mutable autoPtr<interpolation2DTable<scalar>> hTable_;
 
         //- Area per unit volume of heat exchanger
-        autoPtr<volScalarField> AoV_;
+        mutable autoPtr<volScalarField> AoV_;
 
         //- Heat transfer coefficient table
-        const interpolation2DTable<scalar>& hTable();
+        const interpolation2DTable<scalar>& hTable() const;
 
         //- Field of area divided by volume
-        const volScalarField& AoV();
+        const volScalarField& AoV() const;
 
         //- Start time name
         const word startTimeName_;
@@ -102,7 +102,7 @@ public:
     // Public Functions
 
         //- Calculate the heat transfer coefficient
-        virtual void calculateHtc();
+        virtual void calculateHtc() const;
 
 
         // IO

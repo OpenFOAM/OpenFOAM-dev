@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,10 +85,10 @@ protected:
     // Protected data
 
         //- Run-time selectable porosity model
-        autoPtr<porosityModel> porosityPtr_;
+        mutable autoPtr<porosityModel> porosityPtr_;
 
         //- First iteration
-        bool firstIter_;
+        mutable bool firstIter_;
 
         //- Velocity field name, default = U
         word UName_;
@@ -101,7 +101,7 @@ protected:
     // Protected Member Functions
 
         //- Initialise
-        void initialise();
+        void initialise() const;
 
 
 public:
@@ -142,7 +142,7 @@ public:
             (
                 fvMatrix<vector>& eqn,
                 const label fieldi
-            );
+            ) const;
 
 
         // Add explicit and implicit contributions to compressible equation
@@ -153,7 +153,7 @@ public:
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
                 const label fieldi
-            );
+            ) const;
 
 
         // IO

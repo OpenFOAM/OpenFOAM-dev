@@ -113,7 +113,7 @@ void Foam::fv::actuationDiskSource::addSup
 (
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     const scalarField& cellsV = mesh_.V();
     vectorField& Usource = eqn.source();
@@ -138,7 +138,7 @@ void Foam::fv::actuationDiskSource::addSup
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const label fieldi
-)
+) const
 {
     const scalarField& cellsV = mesh_.V();
     vectorField& Usource = eqn.source();

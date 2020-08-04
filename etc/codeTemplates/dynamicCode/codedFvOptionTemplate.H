@@ -144,14 +144,14 @@ public:
             virtual void correct
             (
                 GeometricField<${TemplateType}, fvPatchField, volMesh>&
-            );
+            ) const;
 
             //- Explicit and implicit matrix contributions
             virtual void addSup
             (
                 fvMatrix<${TemplateType}>& eqn,
                 const label fieldi
-            );
+            ) const;
 
             //- Explicit and implicit matrix contributions for compressible
             //  equations
@@ -160,14 +160,14 @@ public:
                 const volScalarField& rho,
                 fvMatrix<${TemplateType}>& eqn,
                 const label fieldi
-            );
+            ) const;
 
             //- Set value
             virtual void constrain
             (
                 fvMatrix<${TemplateType}>& eqn,
                 const label fieldi
-            );
+            ) const;
 };
 
 

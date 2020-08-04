@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,11 +115,16 @@ class volumeFractionSource
 
         //- Add time-derivative terms to an equation
         template <class Type>
-        void addDdtSup(fvMatrix<Type>&, const label);
+        void addDdtSup(fvMatrix<Type>&, const label) const;
 
         //- Add time-derivative terms to a compressible equation
         template <class Type>
-        void addDdtSup(const volScalarField&, fvMatrix<Type>&, const label);
+        void addDdtSup
+        (
+            const volScalarField&,
+            fvMatrix<Type>&,
+            const label
+        ) const;
 
         //- Add time-derivative terms to a phase-compressible equation
         template <class Type>
@@ -129,17 +134,17 @@ class volumeFractionSource
             const volScalarField&,
             fvMatrix<Type>&,
             const label
-        );
+        ) const;
 
         //- Add divergence terms to an equation
         template <class Type>
-        void addDivSup(fvMatrix<Type>&, const label);
+        void addDivSup(fvMatrix<Type>&, const label) const;
 
         //- Add divergence terms to the momentum equation
-        void addUDivSup(fvMatrix<vector>&, const label);
+        void addUDivSup(fvMatrix<vector>&, const label) const;
 
         //- Add divergence terms to the continuity equation
-        void addRhoDivSup(fvMatrix<scalar>&, const label);
+        void addRhoDivSup(fvMatrix<scalar>&, const label) const;
 
         //- Add Laplacian terms to an equation
         template <class Type, class AlphaFieldType>
@@ -148,7 +153,7 @@ class volumeFractionSource
             const AlphaFieldType& alpha,
             fvMatrix<Type>& eqn,
             const label fieldi
-        );
+        ) const;
 
 
 public:
@@ -182,15 +187,19 @@ public:
 
             // Explicit and implicit sources
 
-                virtual void addSup(fvMatrix<scalar>&, const label);
+                virtual void addSup(fvMatrix<scalar>&, const label) const;
 
-                virtual void addSup(fvMatrix<vector>&, const label);
+                virtual void addSup(fvMatrix<vector>&, const label) const;
 
-                virtual void addSup(fvMatrix<symmTensor>&, const label);
+                virtual void addSup(fvMatrix<symmTensor>&, const label) const;
 
-                virtual void addSup(fvMatrix<sphericalTensor>&, const label);
+                virtual void addSup
+                (
+                    fvMatrix<sphericalTensor>&,
+                    const label
+                ) const;
 
-                virtual void addSup(fvMatrix<tensor>&, const label);
+                virtual void addSup(fvMatrix<tensor>&, const label) const;
 
 
             // Explicit and implicit sources for compressible equations
@@ -200,35 +209,35 @@ public:
                     const volScalarField&,
                     fvMatrix<scalar>&,
                     const label
-                );
+                ) const;
 
                 virtual void addSup
                 (
                     const volScalarField&,
                     fvMatrix<vector>&,
                     const label
-                );
+                ) const;
 
                 virtual void addSup
                 (
                     const volScalarField&,
                     fvMatrix<symmTensor>&,
                     const label
-                );
+                ) const;
 
                 virtual void addSup
                 (
                     const volScalarField&,
                     fvMatrix<sphericalTensor>&,
                     const label
-                );
+                ) const;
 
                 virtual void addSup
                 (
                     const volScalarField&,
                     fvMatrix<tensor>&,
                     const label
-                );
+                ) const;
 
 
             // Explicit and implicit sources for phase equations
@@ -239,7 +248,7 @@ public:
                     const volScalarField&,
                     fvMatrix<scalar>&,
                     const label
-                );
+                ) const;
 
                 virtual void addSup
                 (
@@ -247,7 +256,7 @@ public:
                     const volScalarField&,
                     fvMatrix<vector>&,
                     const label
-                );
+                ) const;
 
                 virtual void addSup
                 (
@@ -255,7 +264,7 @@ public:
                     const volScalarField&,
                     fvMatrix<symmTensor>&,
                     const label
-                );
+                ) const;
 
                 virtual void addSup
                 (
@@ -263,7 +272,7 @@ public:
                     const volScalarField&,
                     fvMatrix<sphericalTensor>&,
                     const label
-                );
+                ) const;
 
                 virtual void addSup
                 (
@@ -271,7 +280,7 @@ public:
                     const volScalarField&,
                     fvMatrix<tensor>&,
                     const label
-                );
+                ) const;
 
 
         // IO
