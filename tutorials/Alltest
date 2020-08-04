@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -26,10 +26,10 @@
 #     Alltest
 #
 # Description
-#     quickly tests the tutorials and writes out the scheme/solver information
+#     quickly tests the tutorials
 #
 #------------------------------------------------------------------------------
-cd ${0%/*} || exit 1    # Run from this directory
+cd "${0%/*}" || exit 1 # Run from this directory
 
 usage()
 {
@@ -40,10 +40,9 @@ usage: ${0##*/} [OPTION]
 
 options:
   -root <dir>       specify root directory to run tests from
-  -default          sets up a default scheme on all schemes
   -help             print the usage
 
-* quickly tests the tutorials and writes out the scheme/solver information
+* quickly tests the tutorials
 
 USAGE
     exit 1
@@ -51,24 +50,21 @@ USAGE
 
 #------------------------------------------------------------------------------
 
-unset DEFAULT_SCHEMES
+rootDir="./"
+testDir=../tutorialsTest
 
-ROOT="./"
 
-# parse options
+# Parse options
 while [ "$#" -gt 0 ]
 do
     case "$1" in
     -r | -root)
         [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-        ROOT="$2"
+        rootDir="$2"
         shift
         ;;
     -h | -help)
         usage
-        ;;
-    -d | -default)
-        DEFAULT_SCHEMES=true
         ;;
     -*)
         usage "unknown option: '$*'"
@@ -81,162 +77,36 @@ do
 done
 
 
-setDefaultFvSchemes()
-{
-cat<<EOF
-gradSchemes { default Gauss linear; }
-divSchemes
-{
-    default Gauss linear;
-    div(phi,fu_ft_ha) Gauss multivariateSelection
-    {
-        fu upwind;
-        ft upwind;
-        h  upwind;
-    };
-    div(phi,ft_b_ha_hau) Gauss multivariateSelection
-    {
-        fu upwind;
-        ft upwind;
-        b  upwind;
-        h  upwind;
-        hu upwind;
-    };
-}
-laplacianSchemes { default Gauss linear corrected; }
-interpolationSchemes { default linear; }
-snGradSchemes { default corrected; }
-EOF
-}
-
-#
-# VARIABLE
-#
-unset MAIN_CONTROL_DICT
-
-for i in \
-    $HOME/.$WM_PROJECT/$WM_PROJECT_VERSION \
-    $HOME/.$WM_PROJECT \
-    $WM_PROJECT_DIR/etc \
-    ;
-do
-    if [ -f "$i/controlDict" ]
-    then
-        MAIN_CONTROL_DICT="$i/controlDict"
-        break
-    fi
-done
-
-[ -f "$MAIN_CONTROL_DICT" ] || usage "main controlDict not found"
-
-
-TUTORIALS_DIR=$ROOT
-TEST_RUN_DIR=../tutorialsTest
-FV_SCHEMES=\
-" \
-    gradScheme \
-    divScheme \
-    laplacianScheme \
-    interpolationScheme \
-    snGradScheme \
-"
-SCHEMES_FILE="FvSchemes"
-SCHEMES_TEMP="FvSchemes.temp"
-SOLVERS_FILE="FvSolution"
-SOLVERS_TEMP="FvSolution.temp"
-
-
-#
-# MAIN
-#
-
-if [ -d "$TEST_RUN_DIR" ]
-then
-    rm -rf $TEST_RUN_DIR
-fi
-
-echo "Modifying ${MAIN_CONTROL_DICT}"
-if [ -e ${MAIN_CONTROL_DICT}.orig ]
-then
-    echo "File ${MAIN_CONTROL_DICT}.orig already exists"
-    echo "Did Alltest fail in some way and then run again?"
-    exit 1
-fi
-
-# Clean up on termination and on Ctrl-C
-trap 'mv ${MAIN_CONTROL_DICT}.orig ${MAIN_CONTROL_DICT} 2>/dev/null; exit $retVal' \
-    EXIT TERM INT
-cp ${MAIN_CONTROL_DICT} ${MAIN_CONTROL_DICT}.orig
-
-sed \
--e s/"\(fvSchemes[ \t]*\)\([0-9]\);"/"\1 1;"/g \
--e s/"\(solution[ \t]*\)\([0-9]\);"/"\1 1;"/g \
-${MAIN_CONTROL_DICT}.orig > ${MAIN_CONTROL_DICT}
-
+# Create a copy of the tutorials in which to run the test loop
 echo "Copying the tutorials"
-cp -a ${TUTORIALS_DIR} ${TEST_RUN_DIR}
-
-echo "Modifying the controlDicts to run only one time step"
-cd ${TEST_RUN_DIR} || exit 1
-
-for CD in `find . -name "controlDict*"`
-do
-    mv ${CD} ${CD}.orig
-    sed \
-    -e s/"\(startFrom[ \t]*\)\([a-zA-Z]*\);"/"\1 latestTime;"/g \
-    -e s/"\(stopAt[ \t]*\)\([a-zA-Z]*\);"/"\1 nextWrite;"/g \
-    -e s/"\(writeControl[ \t]*\)\([a-zA-Z]*\);"/"\1 timeStep;"/g \
-    -e s/"\(writeInterval[ \t]*\)\([0-9a-zA-Z.-]*\);"/"\1 1;"/g \
-    ${CD}.orig > ${CD}
-done
-
-if [ "$DEFAULT_SCHEMES" = true ]
+if [ -d "$testDir" ]
 then
-    echo "Modifying the fvSchemes to contain only default schemes"
-    for FV_SC in `find . -name fvSchemes`
-    do
-        for S in $FV_SCHEMES
-        do
-            mv ${FV_SC} ${FV_SC}.orig
-            sed -e /"${S}"/,/$p/d ${FV_SC}.orig > ${FV_SC}
-        done
-        setDefaultFvSchemes >> ${FV_SC}
-    done
+    rm -rf "$testDir" || exit 1
 fi
+cp -a "${rootDir}" "${testDir}" || exit 1
 
-cp -f $FOAM_TUTORIALS/Allrun .
-./Allrun || retVal=1
 
-sed -e :a -e '/\\$/N; s/\\\n//; ta' Allrun > temp
-APPLICATIONS=\
-    `grep "applications=" temp | sed 's/applications=\"\([A-Za-z \t]*\)\"/\1/g'`
-
-rm $SCHEMES_FILE > /dev/null 2>&1
-for APP in $APPLICATIONS
+# Change the control dict to make the tests quick
+echo "Modifying the controlDicts to run only one time step"
+cd ${testDir} || exit 1
+find . -name "controlDict*" | while read -r controlDict
 do
-    echo $APP >> $SCHEMES_FILE
-    echo "$APP: " | tr -d "\n" >> $SOLVERS_FILE
-    for ST in $FV_SCHEMES
-    do
-        rm $SCHEMES_TEMP $SOLVERS_TEMP > /dev/null 2>&1
-        echo "  ${ST}" >> $SCHEMES_FILE
-        for LOG in `find ${APP} -name "log.${APP}"`
-        do
-            for S in `grep ${ST} ${LOG} | cut -d" " -f4`
-            do
-                echo "    ${S}" >> $SCHEMES_TEMP
-            done
-        echo `grep solver ${LOG} | cut -d" " -f4` >> $SOLVERS_TEMP
-        done
-        if [ -f $SCHEMES_TEMP ]
-        then
-            cat $SCHEMES_TEMP | sort -u >> $SCHEMES_FILE
-        fi
-    done
-    cat $SOLVERS_TEMP | tr " " "\n" | sort -u | tr "\n" " " >> $SOLVERS_FILE
-    echo "" >> $SOLVERS_FILE
+    (
+        foamDictionary -entry startFrom -set latestTime "$controlDict"
+        foamDictionary -entry stopAt -set nextWrite "$controlDict"
+        foamDictionary -entry writeControl -set timeStep "$controlDict"
+        foamDictionary -entry writeInterval -set 1 "$controlDict"
+        foamDictionary -entry DebugSwitches \
+            -merge "{ fvSchemes 1; solution 1; }" "$controlDict"
+    ) > /dev/null
 done
 
-exit $retVal
+
+# Copy the Allrun script into the test directory
+cp -f "$FOAM_TUTORIALS"/Allrun . || exit 1
+
+
+# Run everything
+./Allrun && exit 0 || exit 1
 
 #------------------------------------------------------------------------------
