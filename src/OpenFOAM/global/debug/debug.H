@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,6 +46,8 @@ class Istream;
 class Ostream;
 class simpleRegIOobject;
 class simpleObjectRegistry;
+class word;
+template<class Enum, unsigned int nEnum> class NamedEnum;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -81,11 +83,37 @@ namespace debug
         const float defaultValue=0
     );
 
+    //- Lookup optimisation switch or add default value.
+    const word wordOptimisationSwitch
+    (
+        const char* name,
+        const word& defaultValue
+    );
+
+    //- Lookup optimisation switch or add default value.
+    template<class Enum, unsigned int nEnum>
+    Enum namedEnumOptimisationSwitch
+    (
+        const char* name,
+        const NamedEnum<Enum, nEnum>& enumNames,
+        const Enum defaultValue
+    )
+    {
+        return enumNames
+        [
+            debug::wordOptimisationSwitch
+            (
+                name,
+                enumNames[defaultValue]
+            )
+        ];
+    }
+
     //- Internal function to lookup a sub-dictionary from controlDict.
     dictionary& switchSet(const char* subDictName, dictionary*& subDictPtr);
 
     //- List debug switches
-    void listSwitches(const bool unset);
+    void listSwitches();
 
 
     // Registered debug switches
@@ -121,11 +149,8 @@ namespace debug
         //- Get access to registered dimensionedConstant switch objects
         simpleObjectRegistry& dimensionedConstantObjects();
 
-        //- List registered debug switches
-        void listRegisteredSwitches(const bool unset);
 
 } // End namespace debug
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

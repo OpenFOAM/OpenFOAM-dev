@@ -50,12 +50,11 @@ const Foam::NamedEnum<Foam::IOobject::fileCheckTypes, 4>
 // Default fileCheck type
 Foam::IOobject::fileCheckTypes Foam::IOobject::fileModificationChecking
 (
-    fileCheckTypesNames.read
+    Foam::debug::namedEnumOptimisationSwitch
     (
-        debug::optimisationSwitches().lookup
-        (
-            "fileModificationChecking"
-        )
+        "fileModificationChecking",
+        fileCheckTypesNames,
+        fileModificationChecking
     )
 );
 

@@ -1,20 +1,8 @@
-bool listOptions = false ;
+bool listOptions = false;
 
-if
-(
-    args.optionFound("listSwitches")
-)
+if (args.optionFound("listSwitches"))
 {
-    debug::listSwitches(args.optionFound("includeUnsetSwitches"));
-    listOptions = true;
-}
-
-if
-(
-    args.optionFound("listRegisteredSwitches")
-)
-{
-    debug::listRegisteredSwitches(args.optionFound("includeUnsetSwitches"));
+    debug::listSwitches();
     listOptions = true;
 }
 

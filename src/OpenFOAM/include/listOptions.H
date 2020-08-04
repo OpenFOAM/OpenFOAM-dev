@@ -1,17 +1,7 @@
 argList::addBoolOption
 (
     "listSwitches",
-    "List switches declared in libraries but not set in etc/controlDict"
-);
-argList::addBoolOption
-(
-    "listRegisteredSwitches",
-    "List switches registered for run-time modification"
-);
-argList::addBoolOption
-(
-    "listUnsetSwitches",
-    "List switches declared in libraries but not set in etc/controlDict"
+    "List all available debug, info and optimisation switches"
 );
 
 #ifdef fvPatchField_H
