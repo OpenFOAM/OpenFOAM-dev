@@ -633,15 +633,15 @@ void kkLOmega::correct()
 
     const volScalarField ktL(kt_ - ktS);
     const volScalarField ReOmega(sqr(y_)*Omega/nu());
+
     const volScalarField nutl
     (
         min
         (
             C11_*fTaul(lambdaEff, ktL, Omega)*Omega*sqr(lambdaEff)
            *sqrt(ktL)*lambdaEff/nu()
-          + C12_*BetaTS(ReOmega)*ReOmega*sqr(y_)*Omega
-        ,
-            0.5*(kl_ + ktL)/(sqrt(S2) + omegaMin_)
+          + C12_*BetaTS(ReOmega)*ReOmega*sqr(lambdaEff/Clambda_)*Omega
+        , 0.5*(kl_ + ktL)/(sqrt(S2) + omegaMin_)
         )
     );
 

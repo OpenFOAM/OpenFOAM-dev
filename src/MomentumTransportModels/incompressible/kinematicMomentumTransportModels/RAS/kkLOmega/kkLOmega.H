@@ -36,16 +36,22 @@ Description
         Journal of Fluids Engineering, 130(12), 121401.
     \endverbatim
 
-    however the paper contains several errors which must be corrected for the
-    model to operation correctly as explained in
+    corrected according to:
 
     \verbatim
         Furst, J. (2013).
         Numerical simulation of transitional flows with laminar kinetic energy.
-        Engineering MECHANICS, 20(5), 379-388.
+        Engineering Mechanics, 20(5), 379-388.
     \endverbatim
 
-    All these corrections and updates are included in this implementation.
+    and includes the improvements proposed in:
+
+    \verbatim
+        Lopez, M., and Keith Walters, D. (2016).
+        A Recommended Correction to the kT−kL−ω Transition-Sensitive
+        Eddy-Viscosity Model.
+        Journal of Fluids Engineering, 139(2), 024501.
+    \endverbatim
 
     The default model coefficients are
     \verbatim
