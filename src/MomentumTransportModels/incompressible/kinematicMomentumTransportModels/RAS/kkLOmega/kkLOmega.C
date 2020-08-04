@@ -46,7 +46,7 @@ addToRunTimeSelectionTable(RASModel, kkLOmega, dictionary);
 
 tmp<volScalarField> kkLOmega::fv(const volScalarField& Ret) const
 {
-    return(1.0 - exp(-sqrt(Ret)/Av_));
+    return(1 - exp(-sqrt(Ret)/Av_));
 }
 
 
@@ -57,7 +57,7 @@ tmp<volScalarField> kkLOmega::fINT() const
         min
         (
             kt_/(Cint_*(kl_ + kt_ + kMin_)),
-            dimensionedScalar(dimless, 1.0)
+            dimensionedScalar(dimless, 1)
         )
     );
 }
@@ -71,7 +71,7 @@ tmp<volScalarField> kkLOmega::fSS(const volScalarField& Omega) const
 
 tmp<volScalarField> kkLOmega::Cmu(const volScalarField& S) const
 {
-    return(1.0/(A0_ + As_*(S/(omega_ + omegaMin_))));
+    return(1/(A0_ + As_*(S/(omega_ + omegaMin_))));
 }
 
 
@@ -170,7 +170,7 @@ tmp<volScalarField> kkLOmega::phiBP(const volScalarField& Omega) const
               - CbpCrit_,
                 scalar(0)
             ),
-            scalar(50.0)
+            scalar(50)
         )
     );
 }
@@ -619,7 +619,7 @@ void kkLOmega::correct()
 
     const volScalarField Omega(sqrt(2.0)*mag(skew(gradU)));
 
-    const volScalarField S2(2.0*magSqr(dev(symm(gradU))));
+    const volScalarField S2(2*magSqr(dev(symm(gradU))));
 
     const volScalarField ktS(fSS(Omega)*fw*kt_);
 
@@ -640,8 +640,8 @@ void kkLOmega::correct()
         (
             C11_*fTaul(lambdaEff, ktL, Omega)*Omega*sqr(lambdaEff)
            *sqrt(ktL)*lambdaEff/nu()
-          + C12_*BetaTS(ReOmega)*ReOmega*sqr(lambdaEff/Clambda_)*Omega
-        , 0.5*(kl_ + ktL)/(sqrt(S2) + omegaMin_)
+          + C12_*BetaTS(ReOmega)*sqr(sqr(lambdaEff/Clambda_)*Omega)/nu()
+          , 0.5*(kl_ + ktL)/(sqrt(S2) + omegaMin_)
         )
     );
 
@@ -658,16 +658,16 @@ void kkLOmega::correct()
 
     const volScalarField Rbp
     (
-        CR_*(1.0 - exp(-phiBP(Omega)()/Abp_))*omega_
+        CR_*(1 - exp(-phiBP(Omega)()/Abp_))*omega_
        /(fw + fwMin)
     );
 
-    const volScalarField fNatCrit(1.0 - exp(-Cnc_*sqrt(kl_)*y_/nu()));
+    const volScalarField fNatCrit(1 - exp(-Cnc_*sqrt(kl_)*y_/nu()));
 
     // Natural source term divided by kl_
     const volScalarField Rnat
     (
-        CrNat_*(1.0 - exp(-phiNAT(ReOmega, fNatCrit)/Anat_))*Omega
+        CrNat_*(1 - exp(-phiNAT(ReOmega, fNatCrit)/Anat_))*Omega
     );
 
 
@@ -683,7 +683,7 @@ void kkLOmega::correct()
         Cw1_*Pkt*omega_/(kt_ + kMin_)
       - fvm::SuSp
         (
-            (1.0 - CwR_/(fw + fwMin))*kl_*(Rbp + Rnat)/(kt_ + kMin_)
+            (1 - CwR_/(fw + fwMin))*kl_*(Rbp + Rnat)/(kt_ + kMin_)
           , omega_
         )
       - fvm::Sp(Cw2_*sqr(fw)*omega_, omega_)
