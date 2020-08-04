@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,8 +104,8 @@ protected:
 
 public:
 
-    //- Debug switch
-    static int debug;
+    //- Type information
+    ClassName("pointMVCWeight");
 
     //- Tolerance used in calculating barycentric co-ordinates
     //  (applied to normalised values)

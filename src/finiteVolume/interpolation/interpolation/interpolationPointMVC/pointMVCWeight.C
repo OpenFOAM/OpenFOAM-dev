@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 
 namespace Foam
 {
-    defineDebugSwitchWithName(pointMVCWeight, "pointMVCWeight", 0);
+    defineTypeNameAndDebug(pointMVCWeight, 0);
 }
 
 Foam::scalar Foam::pointMVCWeight::tol(small);

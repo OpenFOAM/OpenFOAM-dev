@@ -24,12 +24,16 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cellPointWeight.H"
+#include "defineDebugSwitch.H"
 #include "polyMesh.H"
 #include "polyMeshTetDecomposition.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-int Foam::cellPointWeight::debug(debug::debugSwitch("cellPointWeight", 0));
+namespace Foam
+{
+    defineTypeNameAndDebug(cellPointWeight, 0);
+}
 
 Foam::scalar Foam::cellPointWeight::tol(small);
 

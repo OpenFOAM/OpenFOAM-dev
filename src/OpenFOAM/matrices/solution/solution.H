@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,8 +87,8 @@ public:
     //  Returns the number of settings changed
     static label upgradeSolverDict(dictionary& dict, const bool verbose=true);
 
-    //- Debug switch
-    static int debug;
+    //- Type information
+    ClassName("solution");
 
 
     // Constructors
