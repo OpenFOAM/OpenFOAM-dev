@@ -35,7 +35,7 @@ License
                                                                                \
     typedef CThermo                                                            \
     <                                                                          \
-        BaseReactionThermo,                                                    \
+        BaseReactionThermo::composite,                                         \
         SpecieMixture                                                          \
         <                                                                      \
             Mixture                                                            \
@@ -56,34 +56,29 @@ License
     )
 
 
-#define makeReactionThermos(                                                   \
-    BaseThermo, BaseReactionThermo, CThermo, Mixture, ThermoPhys)              \
+#define addReactionThermo(BaseReactionThermo, CThermo, Mixture, ThermoPhys)    \
                                                                                \
-    defineReactionThermo                                                       \
-    (                                                                          \
-        BaseReactionThermo,                                                    \
-        CThermo,                                                               \
-        Mixture,                                                               \
-        ThermoPhys                                                             \
-    );                                                                         \
-                                                                               \
-    addThermo(basicThermo, CThermo##Mixture##ThermoPhys);                      \
-    addThermo(fluidThermo, CThermo##Mixture##ThermoPhys);                      \
-    addThermo(BaseThermo, CThermo##Mixture##ThermoPhys);                       \
-    addThermo(BaseReactionThermo, CThermo##Mixture##ThermoPhys)
+    addThermo(BaseReactionThermo, CThermo, Mixture, ThermoPhys)
 
 
 #define makeReactionThermo(BaseReactionThermo, CThermo, Mixture, ThermoPhys)   \
                                                                                \
-    defineReactionThermo                                                       \
-    (                                                                          \
-        BaseReactionThermo,                                                    \
-        CThermo,                                                               \
-        Mixture,                                                               \
-        ThermoPhys                                                             \
-    );                                                                         \
+    defineReactionThermo(BaseReactionThermo, CThermo, Mixture, ThermoPhys);    \
                                                                                \
-    addThermo(BaseReactionThermo, CThermo##Mixture##ThermoPhys)
+    addReactionThermo(fluidReactionThermo, CThermo, Mixture, ThermoPhys);      \
+    addReactionThermo(BaseReactionThermo, CThermo, Mixture, ThermoPhys)
+
+
+#define makeReactionThermos(                                                   \
+    BaseThermo, BaseReactionThermo, CThermo, Mixture, ThermoPhys)              \
+                                                                               \
+    defineReactionThermo(BaseReactionThermo, CThermo, Mixture, ThermoPhys);    \
+                                                                               \
+    addReactionThermo(basicThermo, CThermo, Mixture, ThermoPhys);              \
+    addReactionThermo(fluidThermo, CThermo, Mixture, ThermoPhys);              \
+    addReactionThermo(BaseThermo, CThermo, Mixture, ThermoPhys);               \
+    addReactionThermo(fluidReactionThermo, CThermo, Mixture, ThermoPhys);      \
+    addReactionThermo(BaseReactionThermo, CThermo, Mixture, ThermoPhys)
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

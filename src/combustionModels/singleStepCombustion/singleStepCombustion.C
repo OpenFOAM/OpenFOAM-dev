@@ -35,8 +35,8 @@ namespace combustionModels
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-template<class ReactionThermo, class ThermoType>
-void singleStepCombustion<ReactionThermo, ThermoType>::calculateqFuel()
+template<class ThermoType>
+void singleStepCombustion<ThermoType>::calculateqFuel()
 {
     const Reaction<ThermoType>& reaction = reaction_();
     const scalar Wu = mixture_.specieThermos()[fuelIndex_].W();
@@ -62,8 +62,8 @@ void singleStepCombustion<ReactionThermo, ThermoType>::calculateqFuel()
 }
 
 
-template<class ReactionThermo, class ThermoType>
-void singleStepCombustion<ReactionThermo, ThermoType>:: massAndAirStoichRatios()
+template<class ThermoType>
+void singleStepCombustion<ThermoType>:: massAndAirStoichRatios()
 {
     const label O2Index = mixture_.species()["O2"];
     const scalar Wu = mixture_.specieThermos()[fuelIndex_].W();
@@ -86,8 +86,8 @@ void singleStepCombustion<ReactionThermo, ThermoType>:: massAndAirStoichRatios()
 }
 
 
-template<class ReactionThermo, class ThermoType>
-void singleStepCombustion<ReactionThermo, ThermoType>:: calculateMaxProducts()
+template<class ThermoType>
+void singleStepCombustion<ThermoType>:: calculateMaxProducts()
 {
     const Reaction<ThermoType>& reaction = reaction_();
 
@@ -137,16 +137,16 @@ void singleStepCombustion<ReactionThermo, ThermoType>:: calculateMaxProducts()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ThermoType>
-singleStepCombustion<ReactionThermo, ThermoType>::singleStepCombustion
+template<class ThermoType>
+singleStepCombustion<ThermoType>::singleStepCombustion
 (
     const word& modelType,
-    const ReactionThermo& thermo,
+    const fluidReactionThermo& thermo,
     const compressibleMomentumTransportModel& turb,
     const word& combustionProperties
 )
 :
-    ThermoCombustion<ReactionThermo>(modelType, thermo, turb),
+    combustionModel(modelType, thermo, turb, combustionProperties),
     mixture_
     (
         dynamic_cast<const multiComponentMixture<ThermoType>&>(this->thermo())
@@ -166,8 +166,8 @@ singleStepCombustion<ReactionThermo, ThermoType>::singleStepCombustion
     specieStoichCoeffs_(mixture_.species().size(), 0.0),
     Yprod0_(mixture_.species().size(), 0.0),
     fres_(Yprod0_.size()),
-    inertIndex_(mixture_.species()[thermo.lookup("inertSpecie")]),
-    fuelIndex_(mixture_.species()[thermo.lookup("fuel")]),
+    inertIndex_(mixture_.species()[thermo.properties().lookup("inertSpecie")]),
+    fuelIndex_(mixture_.species()[thermo.properties().lookup("fuel")]),
     specieProd_(Yprod0_.size(), 1),
     wFuel_
     (
@@ -200,7 +200,7 @@ singleStepCombustion<ReactionThermo, ThermoType>::singleStepCombustion
             (
                 header,
                 this->mesh(),
-                dimensionedScalar("fres" + name(fresI), dimless, 0)
+                dimensionedScalar("fres" + Foam::name(fresI), dimless, 0)
             )
         );
     }
@@ -224,15 +224,15 @@ singleStepCombustion<ReactionThermo, ThermoType>::singleStepCombustion
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ThermoType>
-singleStepCombustion<ReactionThermo, ThermoType>::~singleStepCombustion()
+template<class ThermoType>
+singleStepCombustion<ThermoType>::~singleStepCombustion()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ThermoType>
-tmp<fvScalarMatrix> singleStepCombustion<ReactionThermo, ThermoType>::R
+template<class ThermoType>
+tmp<fvScalarMatrix> singleStepCombustion<ThermoType>::R
 (
     volScalarField& Y
 ) const
@@ -259,9 +259,9 @@ tmp<fvScalarMatrix> singleStepCombustion<ReactionThermo, ThermoType>::R
 }
 
 
-template<class ReactionThermo, class ThermoType>
+template<class ThermoType>
 tmp<volScalarField>
-singleStepCombustion<ReactionThermo, ThermoType>::Qdot() const
+singleStepCombustion<ThermoType>::Qdot() const
 {
     const label fuelI = fuelIndex();
     volScalarField& YFuel =
@@ -271,10 +271,10 @@ singleStepCombustion<ReactionThermo, ThermoType>::Qdot() const
 }
 
 
-template<class ReactionThermo, class ThermoType>
-bool singleStepCombustion<ReactionThermo, ThermoType>::read()
+template<class ThermoType>
+bool singleStepCombustion<ThermoType>::read()
 {
-    if (ThermoCombustion<ReactionThermo>::read())
+    if (combustionModel::read())
     {
         return true;
     }
@@ -285,8 +285,8 @@ bool singleStepCombustion<ReactionThermo, ThermoType>::read()
 }
 
 
-template<class ReactionThermo, class ThermoType>
-void singleStepCombustion<ReactionThermo, ThermoType>::fresCorrect()
+template<class ThermoType>
+void singleStepCombustion<ThermoType>::fresCorrect()
 {
     const Reaction<ThermoType>& reaction = reaction_();
 

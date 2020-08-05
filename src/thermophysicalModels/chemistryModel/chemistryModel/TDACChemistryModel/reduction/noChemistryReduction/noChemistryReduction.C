@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,14 +27,14 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-Foam::chemistryReductionMethods::none<CompType, ThermoType>::none
+template<class ThermoType>
+Foam::chemistryReductionMethods::none<ThermoType>::none
 (
     const IOdictionary& dict,
-    TDACChemistryModel<CompType, ThermoType>& chemistry
+    TDACChemistryModel<ThermoType>& chemistry
 )
 :
-    chemistryReductionMethod<CompType, ThermoType>(dict, chemistry)
+    chemistryReductionMethod<ThermoType>(dict, chemistry)
 {
     this->active_ = false;
 }
@@ -42,16 +42,15 @@ Foam::chemistryReductionMethods::none<CompType, ThermoType>::none
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-Foam::chemistryReductionMethods::none<CompType, ThermoType>::~none()
+template<class ThermoType>
+Foam::chemistryReductionMethods::none<ThermoType>::~none()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-void Foam::chemistryReductionMethods::none<CompType, ThermoType>::
-reduceMechanism
+template<class ThermoType>
+void Foam::chemistryReductionMethods::none<ThermoType>::reduceMechanism
 (
     const scalar p,
     const scalar T,

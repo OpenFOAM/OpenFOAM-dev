@@ -28,87 +28,76 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ThermoType>
-inline Foam::label
-Foam::StandardChemistryModel<ReactionThermo, ThermoType>::nEqns() const
+template<class ThermoType>
+inline Foam::label Foam::StandardChemistryModel<ThermoType>::nEqns() const
 {
     // nEqns = number of species + temperature + pressure
     return nSpecie_ + 2;
 }
 
 
-template<class ReactionThermo, class ThermoType>
+template<class ThermoType>
 inline Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>&
-Foam::StandardChemistryModel<ReactionThermo, ThermoType>::RR()
+Foam::StandardChemistryModel<ThermoType>::RR()
 {
     return RR_;
 }
 
 
-template<class ReactionThermo, class ThermoType>
+template<class ThermoType>
 inline const Foam::PtrList<Foam::Reaction<ThermoType>>&
-Foam::StandardChemistryModel<ReactionThermo, ThermoType>::reactions() const
+Foam::StandardChemistryModel<ThermoType>::reactions() const
 {
     return reactions_;
 }
 
 
-template<class ReactionThermo, class ThermoType>
+template<class ThermoType>
 inline const Foam::PtrList<ThermoType>&
-Foam::StandardChemistryModel<ReactionThermo, ThermoType>::specieThermos() const
+Foam::StandardChemistryModel<ThermoType>::specieThermos() const
 {
     return specieThermos_;
 }
 
 
-template<class ReactionThermo, class ThermoType>
-inline Foam::label
-Foam::StandardChemistryModel<ReactionThermo, ThermoType>::nSpecie() const
+template<class ThermoType>
+inline Foam::label Foam::StandardChemistryModel<ThermoType>::nSpecie() const
 {
     return nSpecie_;
 }
 
 
-template<class ReactionThermo, class ThermoType>
-inline Foam::label
-Foam::StandardChemistryModel<ReactionThermo, ThermoType>::nReaction() const
+template<class ThermoType>
+inline Foam::label Foam::StandardChemistryModel<ThermoType>::nReaction() const
 {
     return nReaction_;
 }
 
 
-template<class ReactionThermo, class ThermoType>
-inline Foam::scalar
-Foam::StandardChemistryModel<ReactionThermo, ThermoType>::Treact() const
+template<class ThermoType>
+inline Foam::scalar Foam::StandardChemistryModel<ThermoType>::Treact() const
 {
     return Treact_;
 }
 
 
-template<class ReactionThermo, class ThermoType>
-inline Foam::scalar&
-Foam::StandardChemistryModel<ReactionThermo, ThermoType>::Treact()
+template<class ThermoType>
+inline Foam::scalar& Foam::StandardChemistryModel<ThermoType>::Treact()
 {
     return Treact_;
 }
 
 
-template<class ReactionThermo, class ThermoType>
+template<class ThermoType>
 inline const Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
-Foam::StandardChemistryModel<ReactionThermo, ThermoType>::RR
-(
-    const label i
-) const
+Foam::StandardChemistryModel<ThermoType>::RR(const label i) const
 {
     return RR_[i];
 }
 
-template<class ReactionThermo, class ThermoType>
+template<class ThermoType>
 Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
-Foam::StandardChemistryModel<ReactionThermo, ThermoType>::RR
-(
-    const label i
-)
+Foam::StandardChemistryModel<ThermoType>::RR(const label i)
 {
     return RR_[i];
 }

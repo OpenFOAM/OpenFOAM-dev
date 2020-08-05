@@ -26,11 +26,12 @@ License
 #include "ReactingPhaseModel.H"
 #include "phaseSystem.H"
 #include "fvMatrix.H"
+#include "combustionModel.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class BasePhaseModel, class ReactionType>
-Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::ReactingPhaseModel
+template<class BasePhaseModel>
+Foam::ReactingPhaseModel<BasePhaseModel>::ReactingPhaseModel
 (
     const phaseSystem& fluid,
     const word& phaseName,
@@ -39,21 +40,21 @@ Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::ReactingPhaseModel
 )
 :
     BasePhaseModel(fluid, phaseName, referencePhase, index),
-    reaction_(ReactionType::New(this->thermo_(), this->turbulence_()))
+    reaction_(combustionModel::New(this->thermo_(), this->turbulence_()))
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class BasePhaseModel, class ReactionType>
-Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::~ReactingPhaseModel()
+template<class BasePhaseModel>
+Foam::ReactingPhaseModel<BasePhaseModel>::~ReactingPhaseModel()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class BasePhaseModel, class ReactionType>
-void Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::correctReactions()
+template<class BasePhaseModel>
+void Foam::ReactingPhaseModel<BasePhaseModel>::correctReactions()
 {
     reaction_->correct();
 
@@ -61,9 +62,8 @@ void Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::correctReactions()
 }
 
 
-template<class BasePhaseModel, class ReactionType>
-Foam::tmp<Foam::fvScalarMatrix>
-Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::R
+template<class BasePhaseModel>
+Foam::tmp<Foam::fvScalarMatrix> Foam::ReactingPhaseModel<BasePhaseModel>::R
 (
     volScalarField& Yi
 ) const
@@ -72,9 +72,9 @@ Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::R
 }
 
 
-template<class BasePhaseModel, class ReactionType>
+template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
-Foam::ReactingPhaseModel<BasePhaseModel, ReactionType>::Qdot() const
+Foam::ReactingPhaseModel<BasePhaseModel>::Qdot() const
 {
     return reaction_->Qdot();
 }

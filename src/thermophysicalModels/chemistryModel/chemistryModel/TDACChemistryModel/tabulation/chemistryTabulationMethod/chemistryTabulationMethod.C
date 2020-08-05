@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,11 +28,11 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-Foam::chemistryTabulationMethod<CompType, ThermoType>::chemistryTabulationMethod
+template<class ThermoType>
+Foam::chemistryTabulationMethod<ThermoType>::chemistryTabulationMethod
 (
     const dictionary& dict,
-    TDACChemistryModel<CompType, ThermoType>& chemistry
+    TDACChemistryModel<ThermoType>& chemistry
 )
 :
     dict_(dict),
@@ -46,9 +46,8 @@ Foam::chemistryTabulationMethod<CompType, ThermoType>::chemistryTabulationMethod
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-Foam::chemistryTabulationMethod<CompType, ThermoType>::
-~chemistryTabulationMethod()
+template<class ThermoType>
+Foam::chemistryTabulationMethod<ThermoType>::~chemistryTabulationMethod()
 {}
 
 

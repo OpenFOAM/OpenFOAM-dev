@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,7 +147,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heheuPsiThermo
     const word& phaseName
 )
 :
-    heThermo<psiuReactionThermo, MixtureType>(mesh, phaseName),
+    heThermo<BasicPsiThermo, MixtureType>(mesh, phaseName),
     Tu_
     (
         IOobject
@@ -233,7 +233,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heu
         &MixtureType::cellReactants,
         &MixtureType::thermoType::HE,
         cells,
-        UIndirectList<scalar>(this->p(), cells),
+        UIndirectList<scalar>(this->p_, cells),
         Tu
     );
 }
@@ -252,7 +252,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heu
         &MixtureType::patchFaceReactants,
         &MixtureType::thermoType::HE,
         patchi,
-        this->p().boundaryField()[patchi],
+        this->p_.boundaryField()[patchi],
         Tu
     );
 }

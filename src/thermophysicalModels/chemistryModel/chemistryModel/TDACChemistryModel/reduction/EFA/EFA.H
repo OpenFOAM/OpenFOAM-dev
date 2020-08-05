@@ -47,10 +47,10 @@ namespace chemistryReductionMethods
                            Class ode Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class CompType, class ThermoType>
+template<class ThermoType>
 class EFA
 :
-    public chemistryReductionMethod<CompType, ThermoType>
+    public chemistryReductionMethod<ThermoType>
 {
     // Private Data
 
@@ -69,7 +69,7 @@ public:
         EFA
         (
             const IOdictionary& dict,
-            TDACChemistryModel<CompType, ThermoType>& chemistry
+            TDACChemistryModel<ThermoType>& chemistry
         );
 
 

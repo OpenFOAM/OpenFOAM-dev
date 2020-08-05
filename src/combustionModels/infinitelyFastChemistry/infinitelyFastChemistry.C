@@ -32,16 +32,16 @@ namespace combustionModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ThermoType>
-infinitelyFastChemistry<ReactionThermo, ThermoType>::infinitelyFastChemistry
+template<class ThermoType>
+infinitelyFastChemistry<ThermoType>::infinitelyFastChemistry
 (
     const word& modelType,
-    const ReactionThermo& thermo,
+    const fluidReactionThermo& thermo,
     const compressibleMomentumTransportModel& turb,
     const word& combustionProperties
 )
 :
-    singleStepCombustion<ReactionThermo, ThermoType>
+    singleStepCombustion<ThermoType>
     (
         modelType,
         thermo,
@@ -54,15 +54,15 @@ infinitelyFastChemistry<ReactionThermo, ThermoType>::infinitelyFastChemistry
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ThermoType>
-infinitelyFastChemistry<ReactionThermo, ThermoType>::~infinitelyFastChemistry()
+template<class ThermoType>
+infinitelyFastChemistry<ThermoType>::~infinitelyFastChemistry()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ThermoType>
-void infinitelyFastChemistry<ReactionThermo, ThermoType>::correct()
+template<class ThermoType>
+void infinitelyFastChemistry<ThermoType>::correct()
 {
     this->wFuel_ ==
         dimensionedScalar(dimMass/pow3(dimLength)/dimTime, 0);
@@ -86,10 +86,10 @@ void infinitelyFastChemistry<ReactionThermo, ThermoType>::correct()
 }
 
 
-template<class ReactionThermo, class ThermoType>
-bool infinitelyFastChemistry<ReactionThermo, ThermoType>::read()
+template<class ThermoType>
+bool infinitelyFastChemistry<ThermoType>::read()
 {
-    if (singleStepCombustion<ReactionThermo, ThermoType>::read())
+    if (singleStepCombustion<ThermoType>::read())
     {
         this->coeffs().lookup("C") >> C_ ;
         return true;

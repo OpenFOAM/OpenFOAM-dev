@@ -31,6 +31,12 @@ inline const Foam::fvMesh& Foam::combustionModel::mesh() const
 }
 
 
+inline const Foam::fluidReactionThermo& Foam::combustionModel::thermo() const
+{
+    return thermo_;
+}
+
+
 inline const Foam::compressibleMomentumTransportModel&
 Foam::combustionModel::turbulence() const
 {

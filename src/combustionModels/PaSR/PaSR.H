@@ -52,10 +52,9 @@ namespace combustionModels
                             Class PaSR Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ReactionThermo>
 class PaSR
 :
-    public laminar<ReactionThermo>
+    public laminar
 {
     // Private Data
 
@@ -78,7 +77,7 @@ public:
         PaSR
         (
             const word& modelType,
-            const ReactionThermo& thermo,
+            const fluidReactionThermo& thermo,
             const compressibleMomentumTransportModel& turb,
             const word& combustionProperties
         );
@@ -117,12 +116,6 @@ public:
 
 } // End namespace combustionModels
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "PaSR.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

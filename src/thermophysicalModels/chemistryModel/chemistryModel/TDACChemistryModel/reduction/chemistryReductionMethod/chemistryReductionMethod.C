@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,11 +28,11 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-Foam::chemistryReductionMethod<CompType, ThermoType>::chemistryReductionMethod
+template<class ThermoType>
+Foam::chemistryReductionMethod<ThermoType>::chemistryReductionMethod
 (
     const Foam::IOdictionary& dict,
-    Foam::TDACChemistryModel<CompType, ThermoType>& chemistry
+    Foam::TDACChemistryModel<ThermoType>& chemistry
 )
 :
     dict_(dict),
@@ -49,9 +49,8 @@ Foam::chemistryReductionMethod<CompType, ThermoType>::chemistryReductionMethod
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-Foam::chemistryReductionMethod<CompType, ThermoType>::
-~chemistryReductionMethod()
+template<class ThermoType>
+Foam::chemistryReductionMethod<ThermoType>::~chemistryReductionMethod()
 {}
 
 

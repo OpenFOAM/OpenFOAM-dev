@@ -84,7 +84,7 @@ const Foam::solidThermo& Foam::fv::solidEquilibriumEnergySource::thermo() const
     {
         solidThermo* thermoPtr = solidThermo::New(mesh_, phaseName_).ptr();
 
-        thermoPtr->store();
+        thermoPtr->properties().store();
     }
 
     return mesh_.lookupObject<solidThermo>(thermoName);

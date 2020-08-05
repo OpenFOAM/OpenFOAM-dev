@@ -1,7 +1,7 @@
 Info<< "Reading thermophysical properties\n" << endl;
 
-autoPtr<rhoThermo> pThermo(rhoThermo::New(mesh));
-rhoThermo& thermo = pThermo();
+autoPtr<fluidThermo> pThermo(fluidThermo::New(mesh));
+fluidThermo& thermo = pThermo();
 thermo.validate(args.executable(), "h", "e");
 
 volScalarField rho

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -210,9 +210,11 @@ Foam::laminarFlameSpeedModels::GuldersEGR::operator()() const
             psiuReactionThermo_.Tu(),
             dimensionedScalar
             (
-                psiuReactionThermo_.lookup("stoichiometricAirFuelMassRatio")
-            )/
-            (
+                "stoichiometricAirFuelMassRatio",
+                dimless,
+                psiuReactionThermo_.properties()
+            )
+           /(
                 scalar(1)/psiuReactionThermo_.composition().Y("ft")
               - scalar(1)
             ),

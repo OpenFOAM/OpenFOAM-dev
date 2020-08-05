@@ -42,7 +42,7 @@ Description
     typedef                                                                    \
         CThermo                                                                \
         <                                                                      \
-            BaseThermo,                                                        \
+            BaseThermo::composite,                                             \
             Mixture<ThermoPhys>                                                \
         >                                                                      \
         CThermo##Mixture##ThermoPhys;                                          \
@@ -58,12 +58,12 @@ Description
     )
 
 
-#define addThermo(BaseThermo, CThermoMixtureThermoPhys)                        \
+#define addThermo(BaseThermo, CThermo, Mixture, ThermoPhys)                    \
                                                                                \
     addToRunTimeSelectionTable                                                 \
     (                                                                          \
         BaseThermo,                                                            \
-        CThermoMixtureThermoPhys,                                              \
+        CThermo##Mixture##ThermoPhys,                                          \
         fvMesh                                                                 \
     )
 
@@ -72,16 +72,16 @@ Description
                                                                                \
     defineThermo(BaseThermo, CThermo, Mixture, ThermoPhys);                    \
                                                                                \
-    addThermo(BaseThermo, CThermo##Mixture##ThermoPhys)
+    addThermo(BaseThermo, CThermo, Mixture, ThermoPhys)
 
 
 #define makeThermos(BaseThermo, CThermo, Mixture, ThermoPhys)                  \
                                                                                \
     defineThermo(BaseThermo, CThermo, Mixture, ThermoPhys);                    \
                                                                                \
-    addThermo(basicThermo, CThermo##Mixture##ThermoPhys);                      \
-    addThermo(fluidThermo, CThermo##Mixture##ThermoPhys);                      \
-    addThermo(BaseThermo, CThermo##Mixture##ThermoPhys)
+    addThermo(basicThermo, CThermo, Mixture, ThermoPhys);                      \
+    addThermo(fluidThermo, CThermo, Mixture, ThermoPhys);                      \
+    addThermo(BaseThermo, CThermo, Mixture, ThermoPhys)
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

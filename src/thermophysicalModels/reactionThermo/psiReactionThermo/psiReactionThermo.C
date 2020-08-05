@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "psiReactionThermo.H"
-#include "fvMesh.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
@@ -36,13 +35,11 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::psiReactionThermo::psiReactionThermo
+Foam::psiReactionThermo::implementation::implementation
 (
     const fvMesh& mesh,
     const word& phaseName
 )
-:
-    psiThermo(mesh, phaseName)
 {}
 
 
@@ -61,6 +58,10 @@ Foam::autoPtr<Foam::psiReactionThermo> Foam::psiReactionThermo::New
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::psiReactionThermo::~psiReactionThermo()
+{}
+
+
+Foam::psiReactionThermo::implementation::~implementation()
 {}
 
 

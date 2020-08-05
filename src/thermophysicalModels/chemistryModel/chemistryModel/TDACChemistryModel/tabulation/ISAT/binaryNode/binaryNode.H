@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,26 +46,26 @@ namespace Foam
                            Class binaryNode Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class CompType, class ThermoType>
+template<class ThermoType>
 class binaryNode
 {
 
 public:
 
     //- Element on the left
-    chemPointISAT<CompType, ThermoType>* leafLeft_;
+    chemPointISAT<ThermoType>* leafLeft_;
 
     //- Element on the right
-    chemPointISAT<CompType, ThermoType>* leafRight_;
+    chemPointISAT<ThermoType>* leafRight_;
 
     //- Node which follows on the left
-    binaryNode<CompType, ThermoType>* nodeLeft_;
+    binaryNode<ThermoType>* nodeLeft_;
 
     //- Node which follows on the right
-    binaryNode<CompType, ThermoType>* nodeRight_;
+    binaryNode<ThermoType>* nodeRight_;
 
     //- Parent node
-    binaryNode<CompType, ThermoType>* parent_;
+    binaryNode<ThermoType>* parent_;
 
     //- Number of equations in addition to the species eqs.
     label nAdditionalEqns_;
@@ -105,8 +105,8 @@ public:
     //  Returnq: void (v is stored in the empty scalarField)
     void calcV
     (
-        chemPointISAT<CompType, ThermoType>*& elementLeft,
-        chemPointISAT<CompType, ThermoType>*& elementRight,
+        chemPointISAT<ThermoType>*& elementLeft,
+        chemPointISAT<ThermoType>*& elementRight,
         scalarField& v
     );
 
@@ -118,8 +118,8 @@ public:
     // part (where phi0 is).
     scalar calcA
     (
-        chemPointISAT<CompType, ThermoType>* elementLeft,
-        chemPointISAT<CompType, ThermoType>* elementRight
+        chemPointISAT<ThermoType>* elementLeft,
+        chemPointISAT<ThermoType>* elementRight
     );
 
     // Constructors
@@ -130,9 +130,9 @@ public:
         //- Construct from components
         binaryNode
         (
-            chemPointISAT<CompType, ThermoType>* elementLeft,
-            chemPointISAT<CompType, ThermoType>* elementRight,
-            binaryNode<CompType, ThermoType>* parent
+            chemPointISAT<ThermoType>* elementLeft,
+            chemPointISAT<ThermoType>* elementRight,
+            binaryNode<ThermoType>* parent
         );
 
 
@@ -140,52 +140,52 @@ public:
 
         //- Access
 
-        inline chemPointISAT<CompType, ThermoType>*& leafLeft()
-        {
-            return leafLeft_;
-        }
+            inline chemPointISAT<ThermoType>*& leafLeft()
+            {
+                return leafLeft_;
+            }
 
-        inline chemPointISAT<CompType, ThermoType>*& leafRight()
-        {
-            return leafRight_;
-        }
+            inline chemPointISAT<ThermoType>*& leafRight()
+            {
+                return leafRight_;
+            }
 
-        inline binaryNode<CompType, ThermoType>*& nodeLeft()
-        {
-            return nodeLeft_;
-        }
+            inline binaryNode<ThermoType>*& nodeLeft()
+            {
+                return nodeLeft_;
+            }
 
-        inline binaryNode<CompType, ThermoType>*& nodeRight()
-        {
-            return nodeRight_;
-        }
+            inline binaryNode<ThermoType>*& nodeRight()
+            {
+                return nodeRight_;
+            }
 
-        inline binaryNode<CompType, ThermoType>*& parent()
-        {
-            return parent_;
-        }
+            inline binaryNode<ThermoType>*& parent()
+            {
+                return parent_;
+            }
 
         //- Topology
 
-        inline const scalarField& v() const
-        {
-            return v_;
-        }
+            inline const scalarField& v() const
+            {
+                return v_;
+            }
 
-        inline scalarField& v()
-        {
-            return v_;
-        }
+            inline scalarField& v()
+            {
+                return v_;
+            }
 
-        inline const scalar& a() const
-        {
-            return a_;
-        }
+            inline const scalar& a() const
+            {
+                return a_;
+            }
 
-        inline scalar& a()
-        {
-            return a_;
-        }
+            inline scalar& a()
+            {
+                return a_;
+            }
 };
 
 

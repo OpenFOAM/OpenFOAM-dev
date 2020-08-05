@@ -43,11 +43,13 @@ SourceFiles
 namespace Foam
 {
 
+class combustionModel;
+
 /*---------------------------------------------------------------------------*\
                      Class ReactingPhaseModel Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class BasePhaseModel, class ReactionType>
+template<class BasePhaseModel>
 class ReactingPhaseModel
 :
     public BasePhaseModel
@@ -57,7 +59,7 @@ protected:
     // Protected data
 
         //- Reaction model
-        autoPtr<ReactionType> reaction_;
+        autoPtr<combustionModel> reaction_;
 
 
 public:

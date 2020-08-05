@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,11 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "basicThermo.H"
+#include "wordIOList.H"
 
-// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
 template<class Thermo, class Table>
-typename Table::iterator Foam::basicThermo::lookupThermo
+typename Table::iterator Foam::basicThermo::lookupCstrIter
 (
     const dictionary& thermoTypeDict,
     Table* tablePtr,
@@ -97,7 +98,7 @@ typename Table::iterator Foam::basicThermo::lookupThermo
 
 
 template<class Thermo, class Table>
-typename Table::iterator Foam::basicThermo::lookupThermo
+typename Table::iterator Foam::basicThermo::lookupCstrIter
 (
     const dictionary& thermoDict,
     Table* tablePtr
@@ -129,7 +130,7 @@ typename Table::iterator Foam::basicThermo::lookupThermo
               + word(thermoTypeDict.lookup("energy")) + ">>"
             );
 
-            return lookupThermo<Thermo, Table>
+            return lookupCstrIter<Thermo, Table>
             (
                 thermoTypeDict,
                 tablePtr,
@@ -164,7 +165,7 @@ typename Table::iterator Foam::basicThermo::lookupThermo
               + word(thermoTypeDict.lookup("energy")) + ">>>"
             );
 
-            return lookupThermo<Thermo, Table>
+            return lookupCstrIter<Thermo, Table>
             (
                 thermoTypeDict,
                 tablePtr,
@@ -197,6 +198,8 @@ typename Table::iterator Foam::basicThermo::lookupThermo
 }
 
 
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
+
 template<class Thermo>
 Foam::autoPtr<Thermo> Foam::basicThermo::New
 (
@@ -218,7 +221,7 @@ Foam::autoPtr<Thermo> Foam::basicThermo::New
     );
 
     typename Thermo::fvMeshConstructorTable::iterator cstrIter =
-        lookupThermo<Thermo, typename Thermo::fvMeshConstructorTable>
+        lookupCstrIter<Thermo, typename Thermo::fvMeshConstructorTable>
         (
             thermoDict,
             Thermo::fvMeshConstructorTablePtr_
@@ -237,7 +240,7 @@ Foam::autoPtr<Thermo> Foam::basicThermo::New
 )
 {
     typename Thermo::dictionaryConstructorTable::iterator cstrIter =
-        lookupThermo<Thermo, typename Thermo::dictionaryConstructorTable>
+        lookupCstrIter<Thermo, typename Thermo::dictionaryConstructorTable>
         (
             dict,
             Thermo::dictionaryConstructorTablePtr_

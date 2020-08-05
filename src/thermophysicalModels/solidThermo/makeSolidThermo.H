@@ -42,14 +42,14 @@ Description
     typedef                                                                    \
         heThermo                                                               \
         <                                                                      \
-            BaseThermo,                                                        \
+            BaseThermo::composite,                                             \
             Mixture<ThermoPhys>                                                \
         > heThermo##Mixture##ThermoPhys;                                       \
                                                                                \
     typedef                                                                    \
         CThermo                                                                \
         <                                                                      \
-            BaseThermo,                                                        \
+            BaseThermo::composite,                                             \
             Mixture<ThermoPhys>                                                \
         > CThermo##Mixture##ThermoPhys;                                        \
                                                                                \

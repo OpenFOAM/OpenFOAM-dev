@@ -1,30 +1,34 @@
 EXE_INC = \
-    -I$(LIB_SRC)/finiteVolume/lnInclude \
-    -I$(LIB_SRC)/meshTools/lnInclude \
-    -I$(LIB_SRC)/sampling/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/lnInclude \
-    -I$(LIB_SRC)/ThermophysicalTransportModels/psiReactionThermo/lnInclude \
+    -I$(LIB_SRC)/ThermophysicalTransportModels/fluidReactionThermo/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/chemistryModel/lnInclude \
     -I$(LIB_SRC)/ODE/lnInclude \
-    -I$(LIB_SRC)/combustionModels/lnInclude
+    -I$(LIB_SRC)/combustionModels/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/cfdTools \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/sampling/lnInclude \
+    -I$(LIB_SRC)/dynamicFvMesh/lnInclude
 
 EXE_LIBS = \
-    -lfiniteVolume \
-    -lfvOptions \
-    -lmeshTools \
-    -lsampling \
+    -lfluidThermophysicalModels \
+    -lspecie \
+    -lchemistryModel \
+    -lODE \
+    -lcombustionModels \
+    -lreactionThermophysicalModels \
     -lmomentumTransportModels \
     -lfluidThermoMomentumTransportModels \
     -lthermophysicalTransportModels \
-    -lpsiReactionThermophysicalTransportModels \
-    -lreactionThermophysicalModels \
-    -lspecie \
-    -lfluidThermophysicalModels \
-    -lchemistryModel \
-    -lODE \
-    -lcombustionModels
+    -lfluidReactionThermophysicalTransportModels \
+    -lfiniteVolume \
+    -ldynamicFvMesh \
+    -ltopoChangerFvMesh \
+    -lmeshTools \
+    -lsampling \
+    -lfvOptions

@@ -67,7 +67,7 @@ Foam::multiphaseMixtureThermo::multiphaseMixtureThermo
     const surfaceScalarField& phi
 )
 :
-    psiThermo(U.mesh(), word::null),
+    psiThermo::composite(U.mesh(), word::null),
     phases_(lookup("phases"), phaseModel::iNew(p_, T_)),
 
     mesh_(U.mesh()),

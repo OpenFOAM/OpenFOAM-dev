@@ -32,7 +32,7 @@ License
 template<class ChemistryModel>
 Foam::EulerImplicit<ChemistryModel>::EulerImplicit
 (
-    const typename ChemistryModel::reactionThermo& thermo
+    const fluidReactionThermo& thermo
 )
 :
     chemistrySolver<ChemistryModel>(thermo),

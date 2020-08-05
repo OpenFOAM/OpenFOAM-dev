@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,7 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and psiReactionThermo
+        //- Construct from dictionary, mesh and combustion model
         relaxation
         (
             const word modelType,
@@ -83,7 +83,7 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        relaxation(const relaxation&);
+        relaxation(const relaxation&) = delete;
 
 
     // Destructor

@@ -37,15 +37,20 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makePsiuReactionThermos(Mixture, ThermoPhysics)                        \
-    makeReactionThermos                                                        \
+#define makePsiuReactionThermos(Mixture, ThermoPhys)                           \
+                                                                               \
+    defineReactionThermo                                                       \
     (                                                                          \
-        psiThermo,                                                             \
         psiuReactionThermo,                                                    \
         heheuPsiThermo,                                                        \
         Mixture,                                                               \
-        ThermoPhysics                                                          \
-    )
+        ThermoPhys                                                             \
+    );                                                                         \
+                                                                               \
+    addThermo(basicThermo, heheuPsiThermo, Mixture, ThermoPhys);               \
+    addThermo(fluidThermo, heheuPsiThermo, Mixture, ThermoPhys);               \
+    addThermo(psiThermo, heheuPsiThermo, Mixture, ThermoPhys);                 \
+    addThermo(psiuReactionThermo, heheuPsiThermo, Mixture, ThermoPhys)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

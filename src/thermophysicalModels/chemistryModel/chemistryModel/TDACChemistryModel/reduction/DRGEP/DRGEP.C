@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,14 +28,14 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-Foam::chemistryReductionMethods::DRGEP<CompType, ThermoType>::DRGEP
+template<class ThermoType>
+Foam::chemistryReductionMethods::DRGEP<ThermoType>::DRGEP
 (
     const IOdictionary& dict,
-    TDACChemistryModel<CompType, ThermoType>& chemistry
+    TDACChemistryModel<ThermoType>& chemistry
 )
 :
-    chemistryReductionMethod<CompType, ThermoType>(dict, chemistry),
+    chemistryReductionMethod<ThermoType>(dict, chemistry),
     searchInitSet_(this->coeffsDict_.subDict("initialSet").size()),
     sC_(this->nSpecie_,0),
     sH_(this->nSpecie_,0),
@@ -104,16 +104,15 @@ Foam::chemistryReductionMethods::DRGEP<CompType, ThermoType>::DRGEP
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-Foam::chemistryReductionMethods::DRGEP<CompType, ThermoType>::~DRGEP()
+template<class ThermoType>
+Foam::chemistryReductionMethods::DRGEP<ThermoType>::~DRGEP()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-void Foam::chemistryReductionMethods::DRGEP<CompType, ThermoType>::
-reduceMechanism
+template<class ThermoType>
+void Foam::chemistryReductionMethods::DRGEP<ThermoType>::reduceMechanism
 (
     const scalar p,
     const scalar T,

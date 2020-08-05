@@ -26,19 +26,31 @@ License
 #include "laminar.H"
 #include "fvmSup.H"
 #include "localEulerDdtScheme.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace combustionModels
+{
+    defineTypeNameAndDebug(laminar, 0);
+    addToRunTimeSelectionTable(combustionModel, laminar, dictionary);
+}
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-Foam::combustionModels::laminar<ReactionThermo>::laminar
+Foam::combustionModels::laminar::laminar
 (
     const word& modelType,
-    const ReactionThermo& thermo,
+    const fluidReactionThermo& thermo,
     const compressibleMomentumTransportModel& turb,
     const word& combustionProperties
 )
 :
-    ChemistryCombustion<ReactionThermo>
+    chemistryCombustion
     (
         modelType,
         thermo,
@@ -63,23 +75,19 @@ Foam::combustionModels::laminar<ReactionThermo>::laminar
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-Foam::combustionModels::laminar<ReactionThermo>::~laminar()
+Foam::combustionModels::laminar::~laminar()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-Foam::tmp<Foam::volScalarField>
-Foam::combustionModels::laminar<ReactionThermo>::tc() const
+Foam::tmp<Foam::volScalarField> Foam::combustionModels::laminar::tc() const
 {
     return this->chemistryPtr_->tc();
 }
 
 
-template<class ReactionThermo>
-void Foam::combustionModels::laminar<ReactionThermo>::correct()
+void Foam::combustionModels::laminar::correct()
 {
     if (integrateReactionRate_)
     {
@@ -117,9 +125,8 @@ void Foam::combustionModels::laminar<ReactionThermo>::correct()
 }
 
 
-template<class ReactionThermo>
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::combustionModels::laminar<ReactionThermo>::R(volScalarField& Y) const
+Foam::combustionModels::laminar::R(volScalarField& Y) const
 {
     tmp<fvScalarMatrix> tSu(new fvScalarMatrix(Y, dimMass/dimTime));
     fvScalarMatrix& Su = tSu.ref();
@@ -131,18 +138,15 @@ Foam::combustionModels::laminar<ReactionThermo>::R(volScalarField& Y) const
 }
 
 
-template<class ReactionThermo>
-Foam::tmp<Foam::volScalarField>
-Foam::combustionModels::laminar<ReactionThermo>::Qdot() const
+Foam::tmp<Foam::volScalarField> Foam::combustionModels::laminar::Qdot() const
 {
     return this->chemistryPtr_->Qdot();
 }
 
 
-template<class ReactionThermo>
-bool Foam::combustionModels::laminar<ReactionThermo>::read()
+bool Foam::combustionModels::laminar::read()
 {
-    if (ChemistryCombustion<ReactionThermo>::read())
+    if (chemistryCombustion::read())
     {
         integrateReactionRate_ =
             this->coeffs().lookupOrDefault("integrateReactionRate", true);

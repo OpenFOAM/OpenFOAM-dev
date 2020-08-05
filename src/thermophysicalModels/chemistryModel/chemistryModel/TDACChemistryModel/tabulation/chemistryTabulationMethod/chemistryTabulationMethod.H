@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,14 +47,14 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
+template<class ThermoType>
 class TDACChemistryModel;
 
 /*---------------------------------------------------------------------------*\
                            Class chemistryTabulationMethod Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class CompType, class ThermoType>
+template<class ThermoType>
 class chemistryTabulationMethod
 {
 
@@ -70,7 +70,7 @@ protected:
     //- Switch to select performance logging
     Switch log_;
 
-    TDACChemistryModel<CompType, ThermoType>& chemistry_;
+    TDACChemistryModel<ThermoType>& chemistry_;
 
     scalar tolerance_;
 
@@ -89,7 +89,7 @@ public:
         dictionary,
         (
             const dictionary& dict,
-            TDACChemistryModel<CompType, ThermoType>& chemistry
+            TDACChemistryModel<ThermoType>& chemistry
         ),
         (dict, chemistry)
     );
@@ -101,7 +101,7 @@ public:
         chemistryTabulationMethod
         (
             const dictionary& dict,
-            TDACChemistryModel<CompType, ThermoType>& chemistry
+            TDACChemistryModel<ThermoType>& chemistry
         );
 
 
@@ -110,7 +110,7 @@ public:
         static autoPtr<chemistryTabulationMethod> New
         (
             const IOdictionary& dict,
-            TDACChemistryModel<CompType, ThermoType>& chemistry
+            TDACChemistryModel<ThermoType>& chemistry
         );
 
 

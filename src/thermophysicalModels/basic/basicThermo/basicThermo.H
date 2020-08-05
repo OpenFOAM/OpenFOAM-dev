@@ -25,7 +25,32 @@ Class
     Foam::basicThermo
 
 Description
-    Abstract base-class for fluid and solid thermodynamic properties
+    Base-class for fluid and solid thermodynamic properties.
+
+    The basicThermo class is the pure virtual interface, plus static data and
+    functions, including the selection table. It is default-constructable and
+    holds no non-static data.
+
+    The basicThermo::implementation class contains the class data, non-default
+    construction and other implementation details.
+
+    This structure allows for arbitrary mixing of the interfaces. Derived
+    levels should implement a similar separation of interface and
+    implementation. All interface classes should be default-constructable, and
+    should be inherited virtually into whatever interfaces are required.
+    Implementation classes should virtually inherit from their corresponding
+    interface class and *not* a lower level implementation class.
+
+    In derived levels that are complete enough to act as the base of a
+    thermodynamic instantiation, an additional *::composite sub class should be
+    defined, which (non-virtually) inherits from all the *::implementation
+    classes that it needs. This way, the composite class composes an interface
+    for which diamond patterns are resolved by virtual inheritance, whilst also
+    obtaining a single copy of all the implementation classes it needs to form
+    a complete implementation. The use of virtual inheritance does not result
+    in additional constructor calls propagating further down the hierarchy
+    (into heThermo and similar) because all virtually inherited interface
+    classes are default constructable.
 
 SourceFiles
     basicThermo.C
@@ -51,38 +76,42 @@ namespace Foam
 \*---------------------------------------------------------------------------*/
 
 class basicThermo
-:
-    public IOdictionary
 {
-
 protected:
 
-    // Protected data
+    // Protected Static Member Functions
 
-        //- Phase-name
-        const word& phaseName_;
-
-
-        // Fields
-
-            //- Temperature [K]
-            volScalarField T_;
-
-            //- Laminar thermal diffusivity [kg/m/s]
-            volScalarField alpha_;
-
-
-        //- Should the dpdt term be included in the enthalpy equation
-        Switch dpdt_;
-
-
-    // Protected Member Functions
-
-        volScalarField& lookupOrConstruct
+        //- Lookup and the named field, or construct it as MUST-READ if it is
+        //  not found, and return a reference
+        static volScalarField& lookupOrConstruct
         (
             const fvMesh& mesh,
             const char* name
-        ) const;
+        );
+
+        //- Get the constructor iterator for the given thermo dictionary and
+        //  entries and constructor iterator table
+        template<class Thermo, class Table>
+        static typename Table::iterator lookupCstrIter
+        (
+            const dictionary& thermoTypeDict,
+            Table* tablePtr,
+            const int nCmpt,
+            const char* cmptNames[],
+            const word& thermoTypeName
+        );
+
+        //- Get the constructor iterator for the given thermo dictionary and
+        //  constructor iterator table
+        template<class Thermo, class Table>
+        static typename Table::iterator lookupCstrIter
+        (
+            const dictionary& thermoDict,
+            Table* tablePtr
+        );
+
+
+    // Protected Member Functions
 
         //- Return the enthalpy/internal energy field boundary types
         //  by interrogating the temperature field boundary types
@@ -94,6 +123,18 @@ protected:
 
 
 public:
+
+    // Public Classes
+
+        //- Forward declare the implementation class
+        class implementation;
+
+
+    // Static Member data
+
+        //- Name of the thermophysical properties dictionary
+        static const word dictName;
+
 
     //- Runtime type information
     TypeName("basicThermo");
@@ -110,47 +151,26 @@ public:
     );
 
 
-    // Constructors
+    // Static Member Functions
 
-        //- Construct from mesh and phase name
-        basicThermo
+        //- Return the name of a property for a given phase
+        static word phasePropertyName(const word& name, const word& phaseName)
+        {
+            return IOobject::groupName(name, phaseName);
+        }
+
+        //- Lookup the thermo associated with the given patch field
+        static const basicThermo& lookupThermo(const fvPatchScalarField& pf);
+
+        //- Split name of thermo package into a list of the components names
+        static wordList splitThermoName
         (
-            const fvMesh&,
-            const word& phaseName
+            const word& thermoName,
+            const int nCmpt
         );
-
-        //- Construct from mesh, dictionary and phase name
-        basicThermo
-        (
-            const fvMesh&,
-            const dictionary&,
-            const word& phaseName
-        );
-
-        //- Disallow default bitwise copy construction
-        basicThermo(const basicThermo&) = delete;
 
 
     // Selectors
-
-        //- Generic lookup for thermodynamics package thermoTypeName
-        template<class Thermo, class Table>
-        static typename Table::iterator lookupThermo
-        (
-            const dictionary& thermoTypeDict,
-            Table* tablePtr,
-            const int nCmpt,
-            const char* cmptNames[],
-            const word& thermoTypeName
-        );
-
-        //- Generic lookup for each of the related thermodynamics packages
-        template<class Thermo, class Table>
-        static typename Table::iterator lookupThermo
-        (
-            const dictionary& thermoDict,
-            Table* tablePtr
-        );
 
         //- Generic New for each of the related thermodynamics packages
         template<class Thermo>
@@ -183,24 +203,21 @@ public:
 
     // Member Functions
 
-        static const word dictName;
+        //- Return the dictionary
+        virtual const IOdictionary& properties() const = 0;
 
-        static word phasePropertyName
-        (
-            const word& name,
-            const word& phaseName
-        )
-        {
-            return IOobject::groupName(name, phaseName);
-        }
+        //- Access the dictionary
+        virtual IOdictionary& properties() = 0;
 
+        //- Return the phase name
+        virtual const word& phaseName() const = 0;
+
+        //- Return the name of a property for a given phase
         word phasePropertyName(const word& name) const
         {
-            return basicThermo::phasePropertyName(name, phaseName_);
+            return phasePropertyName(name, phaseName());
         }
 
-        static const basicThermo& lookupThermo(const fvPatchScalarField& pf);
-
         //- Check that the thermodynamics package is consistent
         //  with energy forms supported by the application
         void validate
@@ -217,34 +234,6 @@ public:
             const word&,
             const word&
         ) const;
-
-        //- Check that the thermodynamics package is consistent
-        //  with energy forms supported by the application
-        void validate
-        (
-            const string& app,
-            const word&,
-            const word&,
-            const word&
-        ) const;
-
-        //- Check that the thermodynamics package is consistent
-        //  with energy forms supported by the application
-        void validate
-        (
-            const string& app,
-            const word&,
-            const word&,
-            const word&,
-            const word&
-        ) const;
-
-        //- Split name of thermo package into a list of the components names
-        static wordList splitThermoName
-        (
-            const word& thermoName,
-            const int nCmpt
-        );
 
         //- Update properties
         virtual void correct() = 0;
@@ -261,10 +250,7 @@ public:
         virtual bool isochoric() const = 0;
 
         //- Should the dpdt term be included in the enthalpy equation
-        Switch dpdt() const
-        {
-            return dpdt_;
-        }
+        virtual Switch dpdt() const = 0;
 
 
         // Access to thermodynamic state variables
@@ -377,11 +363,11 @@ public:
         // Fields derived from thermodynamic state variables
 
             //- Temperature [K]
-            virtual const volScalarField& T() const;
+            virtual const volScalarField& T() const = 0;
 
             //- Temperature [K]
             //  Non-const access allowed for transport equations
-            virtual volScalarField& T();
+            virtual volScalarField& T() = 0;
 
             //- Heat capacity at constant pressure [J/kg/K]
             virtual tmp<volScalarField> Cp() const = 0;
@@ -427,13 +413,13 @@ public:
         // Access to transport state variables
 
             //- Thermal diffusivity for enthalpy of mixture [kg/m/s]
-            virtual const volScalarField& alpha() const;
+            virtual const volScalarField& alpha() const = 0;
 
             //- Thermal diffusivity for enthalpy of mixture for patch [kg/m/s]
             virtual const scalarField& alpha
             (
                 const label patchi
-            ) const;
+            ) const = 0;
 
 
         // Fields derived from transport state variables
@@ -453,6 +439,109 @@ public:
 
             //- Thermal diffusivity for energy of mixture for patch [kg/m/s]
             virtual tmp<scalarField> alphahe(const label patchi) const = 0;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                 Class basicThermo::implementation Declaration
+\*---------------------------------------------------------------------------*/
+
+class basicThermo::implementation
+:
+    virtual public basicThermo,
+    public IOdictionary
+{
+protected:
+
+    // Protected data
+
+        //- Phase-name
+        const word& phaseName_;
+
+
+        // Fields
+
+            //- Temperature [K]
+            volScalarField T_;
+
+            //- Laminar thermal diffusivity [kg/m/s]
+            volScalarField alpha_;
+
+
+        //- Should the dpdt term be included in the enthalpy equation
+        Switch dpdt_;
+
+
+public:
+
+    // Static Member data
+
+        //- Name of the thermophysical properties dictionary
+        using basicThermo::dictName;
+
+
+    // Constructors
+
+        //- Construct from mesh and phase name
+        implementation(const fvMesh&, const word& phaseName);
+
+        //- Construct from mesh, dictionary and phase name
+        implementation(const fvMesh&, const dictionary&, const word& phaseName);
+
+        //- Disallow default bitwise copy construction
+        implementation(const implementation&) = delete;
+
+
+
+    //- Destructor
+    virtual ~implementation();
+
+
+    // Member Functions
+
+        //- Return the dictionary
+        virtual const IOdictionary& properties() const
+        {
+            return *this;
+        }
+
+        //- Access the dictionary
+        virtual IOdictionary& properties()
+        {
+            return *this;
+        }
+
+        //- Phase-name
+        virtual const word& phaseName() const
+        {
+            return phaseName_;
+        }
+
+        //- Should the dpdt term be included in the enthalpy equation
+        virtual Switch dpdt() const
+        {
+            return dpdt_;
+        }
+
+
+        // Fields derived from thermodynamic state variables
+
+            //- Temperature [K]
+            virtual const volScalarField& T() const;
+
+            //- Temperature [K]
+            //  Non-const access allowed for transport equations
+            virtual volScalarField& T();
+
+
+        // Access to transport state variables
+
+            //- Return the thermal diffusivity for enthalpy of mixture [kg/m/s]
+            virtual const volScalarField& alpha() const;
+
+            //- Return the thermal diffusivity for enthalpy of mixture for
+            //  patch [kg/m/s]
+            virtual const scalarField& alpha(const label patchi) const;
 
 
         //- Read thermophysical properties dictionary
@@ -462,9 +551,8 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const basicThermo&) = delete;
+        void operator=(const implementation&) = delete;
 };
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

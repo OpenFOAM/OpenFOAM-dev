@@ -129,10 +129,10 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
+template<class ThermoType>
 class binaryNode;
 
-template<class CompType, class ThermoType>
+template<class ThermoType>
 class TDACChemistryModel;
 
 
@@ -140,13 +140,13 @@ class TDACChemistryModel;
                        Class chemPointISAT Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class CompType, class ThermoType>
+template<class ThermoType>
 class chemPointISAT
 {
     // Private Data
 
         //- Pointer to the chemistryModel object
-        TDACChemistryModel<CompType, ThermoType>& chemistry_;
+        TDACChemistryModel<ThermoType>& chemistry_;
 
         //- Vector storing the composition, temperature and pressure
         //  and deltaT if a variable time step is set on
@@ -166,7 +166,7 @@ class chemPointISAT
         scalarField scaleFactor_;
 
         //- Reference to the node in the binary tree holding this chemPoint
-        binaryNode<CompType, ThermoType>* node_;
+        binaryNode<ThermoType>* node_;
 
         //- The size of the composition space (size of the vector phi)
         label completeSpaceSize_;
@@ -248,7 +248,7 @@ public:
         //- Construct from components
         chemPointISAT
         (
-            TDACChemistryModel<CompType, ThermoType>& chemistry,
+            TDACChemistryModel<ThermoType>& chemistry,
             const scalarField& phi,
             const scalarField& Rphi,
             const scalarSquareMatrix& A,
@@ -256,27 +256,24 @@ public:
             const scalar& tolerance,
             const label& completeSpaceSize,
             const dictionary& coeffsDict,
-            binaryNode<CompType, ThermoType>* node = nullptr
+            binaryNode<ThermoType>* node = nullptr
         );
 
         //- Construct from another chemPoint and reference to a binary node
         chemPointISAT
         (
-            const chemPointISAT<CompType, ThermoType>& p,
-            binaryNode<CompType, ThermoType>* node
+            const chemPointISAT<ThermoType>& p,
+            binaryNode<ThermoType>* node
         );
 
         //- Construct from another chemPoint
-        chemPointISAT
-        (
-            chemPointISAT<CompType, ThermoType>& p
-        );
+        chemPointISAT(chemPointISAT<ThermoType>& p);
 
 
     // Member Functions
 
         //- Access to the TDACChemistryModel
-        inline TDACChemistryModel<CompType, ThermoType>& chemistry()
+        inline TDACChemistryModel<ThermoType>& chemistry()
         {
             return chemistry_;
         }
@@ -316,7 +313,7 @@ public:
             tolerance_ = newTol;
         }
 
-        inline binaryNode<CompType, ThermoType>*& node()
+        inline binaryNode<ThermoType>*& node()
         {
             return node_;
         }

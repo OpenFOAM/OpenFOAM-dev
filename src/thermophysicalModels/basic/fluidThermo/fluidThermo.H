@@ -25,7 +25,10 @@ Class
     Foam::fluidThermo
 
 Description
-    Fundamental fluid thermodynamic properties
+    Base-class for fluid thermodynamic properties.
+
+See also
+    Foam::basicThermo
 
 SourceFiles
     fluidThermo.C
@@ -48,18 +51,15 @@ namespace Foam
 
 class fluidThermo
 :
-    public basicThermo
+    virtual public basicThermo
 {
-
-protected:
-
-        // Fields
-
-            //- Pressure [Pa]
-            volScalarField& p_;
-
-
 public:
+
+    // Public Classes
+
+        //- Forward declare the implementation class
+        class implementation;
+
 
     //- Runtime type information
     TypeName("fluidThermo");
@@ -75,30 +75,15 @@ public:
         (mesh, phaseName)
     );
 
-    // Constructors
 
-        //- Construct from mesh and phase name
-        fluidThermo
+    // Selectors
+
+        //- Standard selection based on fvMesh
+        static autoPtr<fluidThermo> New
         (
             const fvMesh&,
-            const word& phaseName
+            const word& phaseName=word::null
         );
-
-        //- Construct from mesh and phase name
-        fluidThermo
-        (
-            const fvMesh&,
-            const dictionary&,
-            const word& phaseName
-        );
-
-
-    //- Selector
-    static autoPtr<fluidThermo> New
-    (
-        const fvMesh&,
-        const word& phaseName=word::null
-    );
 
 
     //- Destructor
@@ -111,10 +96,10 @@ public:
 
             //- Pressure [Pa]
             //  Non-const access allowed for transport equations
-            virtual volScalarField& p();
+            virtual volScalarField& p() = 0;
 
             //- Pressure [Pa]
-            virtual const volScalarField& p() const;
+            virtual const volScalarField& p() const = 0;
 
             //- Add the given density correction to the density field.
             //  Used to update the density field following pressure solution
@@ -188,6 +173,61 @@ public:
                 const scalarField& alphat,
                 const label patchi
             ) const = 0;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                Class fluidThermo::implementation Declaration
+\*---------------------------------------------------------------------------*/
+
+class fluidThermo::implementation
+:
+    virtual public fluidThermo
+{
+protected:
+
+    // Protected data
+
+        // Fields
+
+            //- Pressure [Pa]
+            volScalarField& p_;
+
+
+public:
+
+    // Constructors
+
+        //- Construct from mesh and phase name
+        implementation(const fvMesh&, const word& phaseName);
+
+        //- Construct from mesh, dictionary and phase name
+        implementation(const fvMesh&, const dictionary&, const word& phaseName);
+
+        //- Disallow default bitwise copy construction
+        implementation(const implementation&) = delete;
+
+
+    //- Destructor
+    virtual ~implementation();
+
+
+    // Member Functions
+
+        // Access to thermodynamic state variables
+
+            //- Pressure [Pa]
+            //  Non-const access allowed for transport equations
+            virtual volScalarField& p();
+
+            //- Pressure [Pa]
+            virtual const volScalarField& p() const;
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const implementation&) = delete;
 };
 
 

@@ -33,16 +33,16 @@ namespace combustionModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ThermoType>
-diffusion<ReactionThermo, ThermoType>::diffusion
+template<class ThermoType>
+diffusion<ThermoType>::diffusion
 (
     const word& modelType,
-    const ReactionThermo& thermo,
+    const fluidReactionThermo& thermo,
     const compressibleMomentumTransportModel& turb,
     const word& combustionProperties
 )
 :
-    singleStepCombustion<ReactionThermo, ThermoType>
+    singleStepCombustion<ThermoType>
     (
         modelType,
         thermo,
@@ -56,15 +56,15 @@ diffusion<ReactionThermo, ThermoType>::diffusion
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ThermoType>
-diffusion<ReactionThermo, ThermoType>::~diffusion()
+template<class ThermoType>
+diffusion<ThermoType>::~diffusion()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ThermoType>
-void diffusion<ReactionThermo, ThermoType>::correct()
+template<class ThermoType>
+void diffusion<ThermoType>::correct()
 {
     this->wFuel_ ==
         dimensionedScalar(dimMass/pow3(dimLength)/dimTime, 0);
@@ -88,10 +88,10 @@ void diffusion<ReactionThermo, ThermoType>::correct()
 }
 
 
-template<class ReactionThermo, class ThermoType>
-bool diffusion<ReactionThermo, ThermoType>::read()
+template<class ThermoType>
+bool diffusion<ThermoType>::read()
 {
-    if (singleStepCombustion<ReactionThermo, ThermoType>::read())
+    if (singleStepCombustion<ThermoType>::read())
     {
         this->coeffs().lookup("C") >> C_ ;
         this->coeffs().readIfPresent("oxidant", oxidantName_);

@@ -32,10 +32,10 @@ Description
 
 #include "fvCFD.H"
 #include "fluidThermoMomentumTransportModel.H"
-#include "rhoReactionThermophysicalTransportModel.H"
+#include "fluidReactionThermophysicalTransportModel.H"
 #include "parcelCloudList.H"
-#include "rhoReactionThermo.H"
-#include "CombustionModel.H"
+#include "fluidReactionThermo.H"
+#include "combustionModel.H"
 #include "radiationModel.H"
 #include "IOporosityModelList.H"
 #include "fvOptions.H"

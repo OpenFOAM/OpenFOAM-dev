@@ -24,14 +24,11 @@
     #include "createBaseFields.H"
 
     Info<< "Reading thermophysical properties\n" << endl;
-    autoPtr<rhoReactionThermo> pThermo(rhoReactionThermo::New(mesh));
-    rhoReactionThermo& thermo = pThermo();
+    autoPtr<fluidReactionThermo> pThermo(fluidReactionThermo::New(mesh));
+    fluidReactionThermo& thermo = pThermo();
     thermo.validate(args.executable(), "h");
 
-    autoPtr<BasicChemistryModel<rhoReactionThermo>> pChemistry
-    (
-        BasicChemistryModel<rhoReactionThermo>::New(thermo)
-    );
+    autoPtr<basicChemistryModel> pChemistry(basicChemistryModel::New(thermo));
 
     volScalarField rho
     (

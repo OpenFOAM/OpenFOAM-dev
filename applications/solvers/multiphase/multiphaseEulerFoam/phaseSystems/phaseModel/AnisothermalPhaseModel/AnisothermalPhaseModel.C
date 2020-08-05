@@ -38,7 +38,8 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::filterPressureWork
     const volScalarField& alpha = *this;
 
     scalar pressureWorkAlphaLimit =
-        this->thermo_->lookupOrDefault("pressureWorkAlphaLimit", 0.0);
+        this->thermo_->properties()
+       .lookupOrDefault("pressureWorkAlphaLimit", 0.0);
 
     if (pressureWorkAlphaLimit > 0)
     {

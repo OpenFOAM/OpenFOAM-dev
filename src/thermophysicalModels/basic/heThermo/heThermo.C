@@ -206,7 +206,8 @@ Foam::heThermo<BasicThermo, MixtureType>::heThermo
         (
             BasicThermo::phasePropertyName
             (
-                MixtureType::thermoType::heName()
+                MixtureType::thermoType::heName(),
+                phaseName
             ),
             mesh.time().timeName(),
             mesh,
@@ -248,7 +249,8 @@ Foam::heThermo<BasicThermo, MixtureType>::heThermo
         (
             BasicThermo::phasePropertyName
             (
-                MixtureType::thermoType::heName()
+                MixtureType::thermoType::heName(),
+                phaseName
             ),
             mesh.time().timeName(),
             mesh,

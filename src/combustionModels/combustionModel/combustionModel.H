@@ -37,6 +37,7 @@ SourceFiles
 
 #include "IOdictionary.H"
 #include "fluidThermoMomentumTransportModel.H"
+#include "fluidReactionThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -56,7 +57,7 @@ class combustionModel
         //- Construct the base IO object
         IOobject createIOobject
         (
-            const basicThermo& thermo,
+            const fluidReactionThermo& thermo,
             const word& combustionProperties
         ) const;
 
@@ -67,6 +68,9 @@ protected:
 
         //- Reference to the mesh database
         const fvMesh& mesh_;
+
+        //- Reference to the thermo
+        const fluidReactionThermo& thermo_;
 
         //- Reference to the turbulence model
         const compressibleMomentumTransportModel& turb_;
@@ -87,30 +91,45 @@ public:
     static const word combustionPropertiesName;
 
 
+    //- Declare run-time constructor selection tables
+    declareRunTimeSelectionTable
+    (
+        autoPtr,
+        combustionModel,
+        dictionary,
+        (
+            const word& modelType,
+            const fluidReactionThermo& thermo,
+            const compressibleMomentumTransportModel& turb,
+            const word& combustionProperties
+        ),
+        (modelType, thermo, turb, combustionProperties)
+    );
+
+
     // Constructors
 
         //- Construct from components
         combustionModel
         (
             const word& modelType,
-            const basicThermo& thermo,
+            const fluidReactionThermo& thermo,
             const compressibleMomentumTransportModel& turb,
-            const word& combustionProperties=combustionPropertiesName
+            const word& combustionProperties = combustionPropertiesName
         );
 
         //- Disallow default bitwise copy construction
-        combustionModel(const combustionModel&);
+        combustionModel(const combustionModel&) = delete;
 
 
     // Selectors
 
-        //- Generic New for each of the related chemistry model
-        template<class CombustionModel>
-        static autoPtr<CombustionModel> New
+        //- Select using thermo and turbulence
+        static autoPtr<combustionModel> New
         (
-            const typename CombustionModel::reactionThermo& thermo,
+            const fluidReactionThermo& thermo,
             const compressibleMomentumTransportModel& turb,
-            const word& combustionProperties
+            const word& combustionProperties = combustionPropertiesName
         );
 
 
@@ -122,6 +141,9 @@ public:
 
         //- Return const access to the mesh database
         inline const fvMesh& mesh() const;
+
+        //- Return const access to the thermo
+        inline const fluidReactionThermo& thermo() const;
 
         //- Return access to turbulence
         inline const compressibleMomentumTransportModel& turbulence() const;
@@ -162,10 +184,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "combustionModelI.H"
-
-#ifdef NoRepository
-    #include "combustionModelTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

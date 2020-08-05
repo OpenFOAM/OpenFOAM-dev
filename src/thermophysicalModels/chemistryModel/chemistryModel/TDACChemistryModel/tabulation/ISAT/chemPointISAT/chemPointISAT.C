@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,13 +30,13 @@ License
 
 // Defined as static to be able to dynamically change it during simulations
 // (all chemPoints refer to the same object)
-template<class CompType, class ThermoType>
-Foam::scalar Foam::chemPointISAT<CompType, ThermoType>::tolerance_;
+template<class ThermoType>
+Foam::scalar Foam::chemPointISAT<ThermoType>::tolerance_;
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-void Foam::chemPointISAT<CompType, ThermoType>::qrDecompose
+template<class ThermoType>
+void Foam::chemPointISAT<ThermoType>::qrDecompose
 (
     const label nCols,
     scalarSquareMatrix& R
@@ -102,8 +102,8 @@ void Foam::chemPointISAT<CompType, ThermoType>::qrDecompose
 }
 
 
-template<class CompType, class ThermoType>
-void Foam::chemPointISAT<CompType, ThermoType>::qrUpdate
+template<class ThermoType>
+void Foam::chemPointISAT<ThermoType>::qrUpdate
 (
     scalarSquareMatrix& R,
     const label n,
@@ -156,8 +156,8 @@ void Foam::chemPointISAT<CompType, ThermoType>::qrUpdate
 }
 
 
-template<class CompType, class ThermoType>
-void Foam::chemPointISAT<CompType, ThermoType>::rotate
+template<class ThermoType>
+void Foam::chemPointISAT<ThermoType>::rotate
 (
     scalarSquareMatrix& R,
     const label i,
@@ -196,10 +196,10 @@ void Foam::chemPointISAT<CompType, ThermoType>::rotate
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-Foam::chemPointISAT<CompType, ThermoType>::chemPointISAT
+template<class ThermoType>
+Foam::chemPointISAT<ThermoType>::chemPointISAT
 (
-    TDACChemistryModel<CompType, ThermoType>& chemistry,
+    TDACChemistryModel<ThermoType>& chemistry,
     const scalarField& phi,
     const scalarField& Rphi,
     const scalarSquareMatrix& A,
@@ -207,7 +207,7 @@ Foam::chemPointISAT<CompType, ThermoType>::chemPointISAT
     const scalar& tolerance,
     const label& completeSpaceSize,
     const dictionary& coeffsDict,
-    binaryNode<CompType, ThermoType>* node
+    binaryNode<ThermoType>* node
 )
 :
     chemistry_(chemistry),
@@ -315,10 +315,10 @@ Foam::chemPointISAT<CompType, ThermoType>::chemPointISAT
 }
 
 
-template<class CompType, class ThermoType>
-Foam::chemPointISAT<CompType, ThermoType>::chemPointISAT
+template<class ThermoType>
+Foam::chemPointISAT<ThermoType>::chemPointISAT
 (
-    Foam::chemPointISAT<CompType, ThermoType>& p
+    Foam::chemPointISAT<ThermoType>& p
 )
 :
     chemistry_(p.chemistry()),
@@ -361,8 +361,8 @@ Foam::chemPointISAT<CompType, ThermoType>::chemPointISAT
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-bool Foam::chemPointISAT<CompType, ThermoType>::inEOA(const scalarField& phiq)
+template<class ThermoType>
+bool Foam::chemPointISAT<ThermoType>::inEOA(const scalarField& phiq)
 {
     scalarField dphi(phiq-phi());
     bool isMechRedActive = chemistry_.mechRed()->active();
@@ -528,8 +528,8 @@ bool Foam::chemPointISAT<CompType, ThermoType>::inEOA(const scalarField& phiq)
 }
 
 
-template<class CompType, class ThermoType>
-bool Foam::chemPointISAT<CompType, ThermoType>::checkSolution
+template<class ThermoType>
+bool Foam::chemPointISAT<ThermoType>::checkSolution
 (
     const scalarField& phiq,
     const scalarField& Rphiq
@@ -600,8 +600,8 @@ bool Foam::chemPointISAT<CompType, ThermoType>::checkSolution
 }
 
 
-template<class CompType, class ThermoType>
-bool Foam::chemPointISAT<CompType, ThermoType>::grow(const scalarField& phiq)
+template<class ThermoType>
+bool Foam::chemPointISAT<ThermoType>::grow(const scalarField& phiq)
 {
     scalarField dphi(phiq - phi());
     label dim = completeSpaceSize();
@@ -785,30 +785,29 @@ bool Foam::chemPointISAT<CompType, ThermoType>::grow(const scalarField& phiq)
 }
 
 
-template<class CompType, class ThermoType>
-void Foam::chemPointISAT<CompType, ThermoType>::increaseNumRetrieve()
+template<class ThermoType>
+void Foam::chemPointISAT<ThermoType>::increaseNumRetrieve()
 {
     this->numRetrieve_++;
 }
 
 
-template<class CompType, class ThermoType>
-void Foam::chemPointISAT<CompType, ThermoType>::resetNumRetrieve()
+template<class ThermoType>
+void Foam::chemPointISAT<ThermoType>::resetNumRetrieve()
 {
     this->numRetrieve_ = 0;
 }
 
 
-template<class CompType, class ThermoType>
-void Foam::chemPointISAT<CompType, ThermoType>::increaseNLifeTime()
+template<class ThermoType>
+void Foam::chemPointISAT<ThermoType>::increaseNLifeTime()
 {
     this->nLifeTime_++;
 }
 
 
-template<class CompType, class ThermoType>
-Foam::label Foam::chemPointISAT<CompType, ThermoType>::
-simplifiedToCompleteIndex
+template<class ThermoType>
+Foam::label Foam::chemPointISAT<ThermoType>::simplifiedToCompleteIndex
 (
     const label i
 )

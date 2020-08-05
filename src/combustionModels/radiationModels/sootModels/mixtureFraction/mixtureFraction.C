@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "mixtureFraction.H"
-#include "psiReactionThermo.H"
-#include "rhoReactionThermo.H"
 #include "singleStepCombustion.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -61,25 +59,15 @@ Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::mixtureFraction
     ),
     mapFieldMax_(1)
 {
-    const word& combustionName = combustionModel::combustionPropertiesName;
+    const combustionModels::singleStepCombustion<ThermoType>& combustion =
+        mesh.lookupObject<combustionModels::singleStepCombustion<ThermoType>>
+        (
+            combustionModel::combustionPropertiesName
+        );
 
-    typedef
-        combustionModels::singleStepCombustion<psiReactionThermo, ThermoType>
-        psiCombustionType;
+    const multiComponentMixture<ThermoType>& mixture = combustion.mixture();
 
-    typedef
-        combustionModels::singleStepCombustion<rhoReactionThermo, ThermoType>
-        rhoCombustionType;
-
-    const multiComponentMixture<ThermoType>& mixture =
-        mesh.foundObject<psiCombustionType>(combustionName)
-      ? mesh.lookupObject<psiCombustionType>(combustionName).mixture()
-      : mesh.lookupObject<rhoCombustionType>(combustionName).mixture();
-
-    const Reaction<ThermoType>& reaction =
-        mesh.foundObject<psiCombustionType>(combustionName)
-      ? mesh.lookupObject<psiCombustionType>(combustionName).reaction()
-      : mesh.lookupObject<rhoCombustionType>(combustionName).reaction();
+    const Reaction<ThermoType>& reaction = combustion.reaction();
 
     scalar totalMol = 0;
     forAll(reaction.rhs(), i)

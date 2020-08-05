@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,10 +48,10 @@ namespace chemistryReductionMethods
                             Class DRG Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class CompType, class ThermoType>
+template<class ThermoType>
 class DRG
 :
-    public chemistryReductionMethod<CompType, ThermoType>
+    public chemistryReductionMethod<ThermoType>
 {
     // Private Data
 
@@ -70,7 +70,7 @@ public:
         DRG
         (
             const IOdictionary& dict,
-            TDACChemistryModel<CompType, ThermoType>& chemistry
+            TDACChemistryModel<ThermoType>& chemistry
         );
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "rhoThermo.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
@@ -36,14 +36,17 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::rhoThermo::rhoThermo(const fvMesh& mesh, const word& phaseName)
+Foam::rhoThermo::implementation::implementation
+(
+    const fvMesh& mesh,
+    const word& phaseName
+)
 :
-    fluidThermo(mesh, phaseName),
     rho_
     (
         IOobject
         (
-            phasePropertyName("thermo:rho"),
+            phasePropertyName("thermo:rho", phaseName),
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
@@ -57,7 +60,7 @@ Foam::rhoThermo::rhoThermo(const fvMesh& mesh, const word& phaseName)
     (
         IOobject
         (
-            phasePropertyName("thermo:psi"),
+            phasePropertyName("thermo:psi", phaseName),
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
@@ -71,7 +74,7 @@ Foam::rhoThermo::rhoThermo(const fvMesh& mesh, const word& phaseName)
     (
         IOobject
         (
-            phasePropertyName("thermo:mu"),
+            phasePropertyName("thermo:mu", phaseName),
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
@@ -83,19 +86,18 @@ Foam::rhoThermo::rhoThermo(const fvMesh& mesh, const word& phaseName)
 {}
 
 
-Foam::rhoThermo::rhoThermo
+Foam::rhoThermo::implementation::implementation
 (
     const fvMesh& mesh,
     const dictionary& dict,
     const word& phaseName
 )
 :
-    fluidThermo(mesh, dict, phaseName),
     rho_
     (
         IOobject
         (
-            phasePropertyName("thermo:rho"),
+            phasePropertyName("thermo:rho", phaseName),
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
@@ -109,7 +111,7 @@ Foam::rhoThermo::rhoThermo
     (
         IOobject
         (
-            phasePropertyName("thermo:psi"),
+            phasePropertyName("thermo:psi", phaseName),
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
@@ -123,7 +125,7 @@ Foam::rhoThermo::rhoThermo
     (
         IOobject
         (
-            phasePropertyName("thermo:mu"),
+            phasePropertyName("thermo:mu", phaseName),
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
@@ -153,45 +155,55 @@ Foam::rhoThermo::~rhoThermo()
 {}
 
 
+Foam::rhoThermo::implementation::~implementation()
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::rhoThermo::rho() const
+Foam::tmp<Foam::volScalarField> Foam::rhoThermo::implementation::rho() const
 {
     return rho_;
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::rhoThermo::rho(const label patchi) const
+Foam::tmp<Foam::scalarField> Foam::rhoThermo::implementation::rho
+(
+    const label patchi
+) const
 {
     return rho_.boundaryField()[patchi];
 }
 
 
-Foam::volScalarField& Foam::rhoThermo::rho()
+Foam::volScalarField& Foam::rhoThermo::implementation::rho()
 {
     return rho_;
 }
 
 
-void Foam::rhoThermo::correctRho(const Foam::volScalarField& deltaRho)
+void Foam::rhoThermo::implementation::correctRho(const volScalarField& deltaRho)
 {
     rho_ += deltaRho;
 }
 
 
-const Foam::volScalarField& Foam::rhoThermo::psi() const
+const Foam::volScalarField& Foam::rhoThermo::implementation::psi() const
 {
     return psi_;
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::rhoThermo::mu() const
+Foam::tmp<Foam::volScalarField> Foam::rhoThermo::implementation::mu() const
 {
     return mu_;
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::rhoThermo::mu(const label patchi) const
+Foam::tmp<Foam::scalarField> Foam::rhoThermo::implementation::mu
+(
+    const label patchi
+) const
 {
     return mu_.boundaryField()[patchi];
 }

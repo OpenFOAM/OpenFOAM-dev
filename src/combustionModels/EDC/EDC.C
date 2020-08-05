@@ -24,19 +24,41 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "EDC.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+template<>
+const char* Foam::NamedEnum<Foam::combustionModels::EDCversions, 4>::names[] =
+    {"v1981", "v1996", "v2005", "v2016"};
+
+const Foam::NamedEnum<Foam::combustionModels::EDCversions, 4>
+    Foam::combustionModels::EDCversionNames;
+
+const Foam::combustionModels::EDCversions
+    Foam::combustionModels::EDCdefaultVersion =
+    Foam::combustionModels::EDCversions::v2005;
+
+namespace Foam
+{
+namespace combustionModels
+{
+    defineTypeNameAndDebug(EDC, 0);
+    addToRunTimeSelectionTable(combustionModel, EDC, dictionary);
+}
+}
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-Foam::combustionModels::EDC<ReactionThermo>::EDC
+Foam::combustionModels::EDC::EDC
 (
     const word& modelType,
-    const ReactionThermo& thermo,
+    const fluidReactionThermo& thermo,
     const compressibleMomentumTransportModel& turb,
     const word& combustionProperties
 )
 :
-    laminar<ReactionThermo>(modelType, thermo, turb, combustionProperties),
+    laminar(modelType, thermo, turb, combustionProperties),
     version_
     (
         EDCversionNames
@@ -72,15 +94,13 @@ Foam::combustionModels::EDC<ReactionThermo>::EDC
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-Foam::combustionModels::EDC<ReactionThermo>::~EDC()
+Foam::combustionModels::EDC::~EDC()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-void Foam::combustionModels::EDC<ReactionThermo>::correct()
+void Foam::combustionModels::EDC::correct()
 {
     tmp<volScalarField> tepsilon(this->turbulence().epsilon());
     const volScalarField& epsilon = tepsilon();
@@ -171,17 +191,15 @@ void Foam::combustionModels::EDC<ReactionThermo>::correct()
 }
 
 
-template<class ReactionThermo>
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::combustionModels::EDC<ReactionThermo>::R(volScalarField& Y) const
+Foam::combustionModels::EDC::R(volScalarField& Y) const
 {
-    return kappa_*laminar<ReactionThermo>::R(Y);
+    return kappa_*laminar::R(Y);
 }
 
 
-template<class ReactionThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::combustionModels::EDC<ReactionThermo>::Qdot() const
+Foam::combustionModels::EDC::Qdot() const
 {
     return volScalarField::New
     (
@@ -191,10 +209,9 @@ Foam::combustionModels::EDC<ReactionThermo>::Qdot() const
 }
 
 
-template<class ReactionThermo>
-bool Foam::combustionModels::EDC<ReactionThermo>::read()
+bool Foam::combustionModels::EDC::read()
 {
-    if (laminar<ReactionThermo>::read())
+    if (laminar::read())
     {
         version_ =
         (

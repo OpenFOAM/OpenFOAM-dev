@@ -30,6 +30,7 @@ License
 namespace Foam
 {
     defineTypeNameAndDebug(combustionModel, 0);
+    defineRunTimeSelectionTable(combustionModel, dictionary)
 }
 
 const Foam::word Foam::combustionModel::combustionPropertiesName
@@ -42,15 +43,15 @@ const Foam::word Foam::combustionModel::combustionPropertiesName
 
 Foam::IOobject Foam::combustionModel::createIOobject
 (
-    const basicThermo& thermo,
+    const fluidReactionThermo& thermo,
     const word& combustionProperties
 ) const
 {
     IOobject io
     (
         thermo.phasePropertyName(combustionProperties),
-        thermo.db().time().constant(),
-        thermo.db(),
+        thermo.T().mesh().time().constant(),
+        thermo.T().mesh(),
         IOobject::MUST_READ,
         IOobject::NO_WRITE
     );
@@ -73,13 +74,14 @@ Foam::IOobject Foam::combustionModel::createIOobject
 Foam::combustionModel::combustionModel
 (
     const word& modelType,
-    const basicThermo& thermo,
+    const fluidReactionThermo& thermo,
     const compressibleMomentumTransportModel& turb,
     const word& combustionProperties
 )
 :
     IOdictionary(createIOobject(thermo, combustionProperties)),
     mesh_(thermo.T().mesh()),
+    thermo_(thermo),
     turb_(turb),
     coeffs_(optionalSubDict(modelType + "Coeffs")),
     modelType_(modelType)

@@ -30,9 +30,6 @@ License
 #include "StandardChemistryModel.H"
 #include "TDACChemistryModel.H"
 
-#include "psiReactionThermo.H"
-#include "rhoReactionThermo.H"
-
 #include "forCommonGases.H"
 #include "forCommonLiquids.H"
 #include "forPolynomials.H"
@@ -40,33 +37,29 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineChemistrySolvers(ReactionThermo, ThermoPhysics)                  \
+#define defineChemistrySolvers(nullArg, ThermoPhysics)                         \
     defineChemistrySolver                                                      \
     (                                                                          \
         StandardChemistryModel,                                                \
-        ReactionThermo,                                                        \
         ThermoPhysics                                                          \
     );                                                                         \
     defineChemistrySolver                                                      \
     (                                                                          \
         TDACChemistryModel,                                                    \
-        ReactionThermo,                                                        \
         ThermoPhysics                                                          \
     )
 
-#define makeChemistrySolvers(Solver, ReactionThermo, ThermoPhysics)            \
+#define makeChemistrySolvers(Solver, ThermoPhysics)                            \
     makeChemistrySolver                                                        \
     (                                                                          \
         Solver,                                                                \
         StandardChemistryModel,                                                \
-        ReactionThermo,                                                        \
         ThermoPhysics                                                          \
     );                                                                         \
     makeChemistrySolver                                                        \
     (                                                                          \
         Solver,                                                                \
         TDACChemistryModel,                                                    \
-        ReactionThermo,                                                        \
         ThermoPhysics                                                          \
     )
 
@@ -74,32 +67,23 @@ License
 
 namespace Foam
 {
-    forCommonGases(defineChemistrySolvers, psiReactionThermo);
-    forCommonGases(defineChemistrySolvers, rhoReactionThermo);
+    forCommonGases(defineChemistrySolvers, nullArg);
 
-    forCommonGases(makeChemistrySolvers, noChemistrySolver, psiReactionThermo);
-    forCommonGases(makeChemistrySolvers, noChemistrySolver, rhoReactionThermo);
-    forCommonGases(makeChemistrySolvers, EulerImplicit, psiReactionThermo);
-    forCommonGases(makeChemistrySolvers, EulerImplicit, rhoReactionThermo);
-    forCommonGases(makeChemistrySolvers, ode, psiReactionThermo);
-    forCommonGases(makeChemistrySolvers, ode, rhoReactionThermo);
+    forCommonGases(makeChemistrySolvers, noChemistrySolver);
+    forCommonGases(makeChemistrySolvers, EulerImplicit);
+    forCommonGases(makeChemistrySolvers, ode);
 
-    forCommonLiquids(defineChemistrySolvers, rhoReactionThermo);
+    forCommonLiquids(defineChemistrySolvers, nullArg);
 
-    forCommonLiquids
-    (
-        makeChemistrySolvers,
-        noChemistrySolver,
-        rhoReactionThermo
-    );
-    forCommonLiquids(makeChemistrySolvers, EulerImplicit, rhoReactionThermo);
-    forCommonLiquids(makeChemistrySolvers, ode, rhoReactionThermo);
+    forCommonLiquids(makeChemistrySolvers, noChemistrySolver);
+    forCommonLiquids(makeChemistrySolvers, EulerImplicit);
+    forCommonLiquids(makeChemistrySolvers, ode);
 
-    forPolynomials(defineChemistrySolvers, rhoReactionThermo);
+    forPolynomials(defineChemistrySolvers, nullArg);
 
-    forPolynomials(makeChemistrySolvers, noChemistrySolver, rhoReactionThermo);
-    forPolynomials(makeChemistrySolvers, EulerImplicit, rhoReactionThermo);
-    forPolynomials(makeChemistrySolvers, ode, rhoReactionThermo);
+    forPolynomials(makeChemistrySolvers, noChemistrySolver);
+    forPolynomials(makeChemistrySolvers, EulerImplicit);
+    forPolynomials(makeChemistrySolvers, ode);
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

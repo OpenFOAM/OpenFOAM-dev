@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,10 +78,10 @@ namespace Foam
                       Class TDACChemistryModel Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ReactionThermo, class ThermoType>
+template<class ThermoType>
 class TDACChemistryModel
 :
-    public StandardChemistryModel<ReactionThermo, ThermoType>
+    public StandardChemistryModel<ThermoType>
 {
     // Private member data
 
@@ -97,12 +97,10 @@ class TDACChemistryModel
         List<List<specieElement>> specieComp_;
         Field<label> completeToSimplifiedIndex_;
         DynamicList<label> simplifiedToCompleteIndex_;
-        autoPtr<chemistryReductionMethod<ReactionThermo, ThermoType>>
-            mechRed_;
+        autoPtr<chemistryReductionMethod<ThermoType>> mechRed_;
 
         // Tabulation
-        autoPtr<chemistryTabulationMethod<ReactionThermo, ThermoType>>
-            tabulation_;
+        autoPtr<chemistryTabulationMethod<ThermoType>> tabulation_;
 
         // Log file for the average time spent reducing the chemistry
         autoPtr<OFstream> cpuReduceFile_;
@@ -147,10 +145,10 @@ public:
     // Constructors
 
         //- Construct from thermo
-        TDACChemistryModel(const ReactionThermo& thermo);
+        TDACChemistryModel(const fluidReactionThermo& thermo);
 
         //- Disallow default bitwise copy construction
-        TDACChemistryModel(const TDACChemistryModel&);
+        TDACChemistryModel(const TDACChemistryModel&) = delete;
 
 
     //- Destructor
@@ -265,14 +263,9 @@ public:
 
             inline List<List<specieElement>>& specieComp();
 
-            inline
-                autoPtr<chemistryReductionMethod<ReactionThermo, ThermoType>>&
-                mechRed();
+            inline autoPtr<chemistryReductionMethod<ThermoType>>& mechRed();
 
-            tmp<volScalarField> tabulationResults() const
-            {
-                return tabulationResults_;
-            }
+            inline tmp<volScalarField> tabulationResults() const;
 
             void setTabulationResultsAdd(const label celli);
 

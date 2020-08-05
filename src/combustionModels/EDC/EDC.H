@@ -128,10 +128,9 @@ const scalar EDCexp2[] = {3, 3, 2, 2};
                             Class EDC Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ReactionThermo>
 class EDC
 :
-    public laminar<ReactionThermo>
+    public laminar
 {
     // Private Data
 
@@ -161,13 +160,13 @@ public:
         EDC
         (
             const word& modelType,
-            const ReactionThermo& type,
+            const fluidReactionThermo& type,
             const compressibleMomentumTransportModel& turb,
             const word& combustionProperties
         );
 
         //- Disallow default bitwise copy construction
-        EDC(const EDC&);
+        EDC(const EDC&) = delete;
 
 
     //- Destructor
@@ -200,12 +199,6 @@ public:
 
 } // End namespace combustionModels
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "EDC.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

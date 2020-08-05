@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-scalarList W(const rhoReactionThermo& thermo)
+scalarList W(const fluidReactionThermo& thermo)
 {
     const basicSpecieMixture& composition = thermo.composition();
 
@@ -40,7 +40,7 @@ scalarList W(const rhoReactionThermo& thermo)
 
 scalar h0
 (
-    const rhoReactionThermo& thermo,
+    const fluidReactionThermo& thermo,
     const scalarList& Y,
     const scalar p,
     const scalar T

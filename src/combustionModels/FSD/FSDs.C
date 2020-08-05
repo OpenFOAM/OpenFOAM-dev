@@ -25,9 +25,6 @@ License
 
 #include "FSD.H"
 
-#include "psiReactionThermo.H"
-#include "rhoReactionThermo.H"
-
 #include "forCommonGases.H"
 #include "makeThermoCombustionModel.H"
 
@@ -35,8 +32,7 @@ License
 
 namespace Foam
 {
-    forCommonGases(makeThermoCombustionModel, FSD, psiReactionThermo);
-    forCommonGases(makeThermoCombustionModel, FSD, rhoReactionThermo);
+    forCommonGases(makeThermoCombustionModel, FSD);
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

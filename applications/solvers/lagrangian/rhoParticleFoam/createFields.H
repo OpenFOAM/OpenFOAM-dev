@@ -2,11 +2,11 @@
 
 Info<< "Reading thermophysical properties\n" << endl;
 
-autoPtr<psiThermo> pThermo
+autoPtr<fluidThermo> pThermo
 (
-    psiThermo::New(mesh)
+    fluidThermo::New(mesh)
 );
-psiThermo& thermo = pThermo();
+fluidThermo& thermo = pThermo();
 
 volScalarField rho
 (

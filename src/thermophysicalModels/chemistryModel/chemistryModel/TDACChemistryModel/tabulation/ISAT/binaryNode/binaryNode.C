@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,8 +27,8 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-Foam::binaryNode<CompType, ThermoType>::binaryNode()
+template<class ThermoType>
+Foam::binaryNode<ThermoType>::binaryNode()
 :
     leafLeft_(nullptr),
     leafRight_(nullptr),
@@ -39,12 +39,12 @@ Foam::binaryNode<CompType, ThermoType>::binaryNode()
 {}
 
 
-template<class CompType, class ThermoType>
-Foam::binaryNode<CompType, ThermoType>::binaryNode
+template<class ThermoType>
+Foam::binaryNode<ThermoType>::binaryNode
 (
-    chemPointISAT<CompType, ThermoType>* elementLeft,
-    chemPointISAT<CompType, ThermoType>* elementRight,
-    binaryNode<CompType, ThermoType>* parent
+    chemPointISAT<ThermoType>* elementLeft,
+    chemPointISAT<ThermoType>* elementRight,
+    binaryNode<ThermoType>* parent
 )
 :
     leafLeft_(elementLeft),
@@ -70,11 +70,11 @@ Foam::binaryNode<CompType, ThermoType>::binaryNode
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-void Foam::binaryNode<CompType, ThermoType>::calcV
+template<class ThermoType>
+void Foam::binaryNode<ThermoType>::calcV
 (
-    chemPointISAT<CompType, ThermoType>*& elementLeft,
-    chemPointISAT<CompType, ThermoType>*& elementRight,
+    chemPointISAT<ThermoType>*& elementLeft,
+    chemPointISAT<ThermoType>*& elementRight,
     scalarField& v
 )
 {
@@ -157,11 +157,11 @@ void Foam::binaryNode<CompType, ThermoType>::calcV
 }
 
 
-template<class CompType, class ThermoType>
-Foam::scalar Foam::binaryNode<CompType, ThermoType>::calcA
+template<class ThermoType>
+Foam::scalar Foam::binaryNode<ThermoType>::calcA
 (
-    chemPointISAT<CompType, ThermoType>* elementLeft,
-    chemPointISAT<CompType, ThermoType>* elementRight
+    chemPointISAT<ThermoType>* elementLeft,
+    chemPointISAT<ThermoType>* elementRight
 )
 {
     scalarField phih((elementLeft->phi() + elementRight->phi())/2);

@@ -25,9 +25,6 @@ License
 
 #include "infinitelyFastChemistry.H"
 
-#include "psiReactionThermo.H"
-#include "rhoReactionThermo.H"
-
 #include "forCommonGases.H"
 #include "makeThermoCombustionModel.H"
 
@@ -35,18 +32,7 @@ License
 
 namespace Foam
 {
-    forCommonGases
-    (
-        makeThermoCombustionModel,
-        infinitelyFastChemistry,
-        psiReactionThermo
-    );
-    forCommonGases
-    (
-        makeThermoCombustionModel,
-        infinitelyFastChemistry,
-        rhoReactionThermo
-    );
+    forCommonGases(makeThermoCombustionModel, infinitelyFastChemistry);
 }
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

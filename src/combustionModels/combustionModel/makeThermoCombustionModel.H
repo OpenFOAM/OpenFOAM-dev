@@ -26,7 +26,7 @@ License
 #ifndef makeThermoCombustionModel_H
 #define makeThermoCombustionModel_H
 
-#include "CombustionModel.H"
+#include "combustionModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -36,27 +36,24 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeThermoCombustionModel(Model, ReactionThermo, ThermoPhys)           \
+#define makeThermoCombustionModel(Model, ThermoPhys)                           \
                                                                                \
-    typedef combustionModels::Model<ReactionThermo, ThermoPhys>                \
-        Model##ReactionThermo##ThermoPhys;                                     \
-    typedef CombustionModel<ReactionThermo>                                    \
-        Model##ReactionThermo##ThermoPhys##Base;                               \
+    typedef combustionModels::Model<ThermoPhys> Model##ThermoPhys;             \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        Model##ReactionThermo##ThermoPhys,                                     \
+        Model##ThermoPhys,                                                     \
         (                                                                      \
-            word(Model##ReactionThermo##ThermoPhys::typeName_()) + "<"         \
-          + ReactionThermo::typeName + "," + ThermoPhys::typeName() + ">"      \
+            word(Model##ThermoPhys::typeName_())                               \
+          + "<" + ThermoPhys::typeName() + ">"                                 \
         ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \
     addToRunTimeSelectionTable                                                 \
     (                                                                          \
-        Model##ReactionThermo##ThermoPhys##Base,                               \
-        Model##ReactionThermo##ThermoPhys,                                     \
+        combustionModel,                                                       \
+        Model##ThermoPhys,                                                     \
         dictionary                                                             \
     )
 

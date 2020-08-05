@@ -28,8 +28,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "thermophysicalTransportModel.H"
-#include "psiReactionThermo.H"
-#include "rhoReactionThermo.H"
+#include "basicSpecieMixture.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

@@ -47,10 +47,10 @@ namespace chemistryReductionMethods
                        Class none Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class CompType, class ThermoType>
+template<class ThermoType>
 class none
 :
-    public chemistryReductionMethod<CompType, ThermoType>
+    public chemistryReductionMethod<ThermoType>
 {
 
 public:
@@ -65,7 +65,7 @@ public:
         none
         (
             const IOdictionary& dict,
-            TDACChemistryModel<CompType, ThermoType>& chemistry
+            TDACChemistryModel<ThermoType>& chemistry
         );
 
 

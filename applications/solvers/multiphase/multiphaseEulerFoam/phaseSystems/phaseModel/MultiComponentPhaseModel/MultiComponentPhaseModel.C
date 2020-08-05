@@ -57,7 +57,7 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::MultiComponentPhaseModel
 {
     const word inertSpecie
     (
-        this->thermo_->lookupOrDefault("inertSpecie", word::null)
+        this->thermo_->properties().lookupOrDefault("inertSpecie", word::null)
     );
 
     if (inertSpecie != word::null)

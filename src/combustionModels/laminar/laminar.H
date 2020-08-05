@@ -35,7 +35,7 @@ SourceFiles
 #ifndef laminar_H
 #define laminar_H
 
-#include "ChemistryCombustion.H"
+#include "chemistryCombustion.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,10 +48,9 @@ namespace combustionModels
                             Class laminar Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ReactionThermo>
 class laminar
 :
-    public ChemistryCombustion<ReactionThermo>
+    public chemistryCombustion
 {
     // Private Data
 
@@ -80,7 +79,7 @@ public:
         laminar
         (
             const word& modelType,
-            const ReactionThermo& thermo,
+            const fluidReactionThermo& thermo,
             const compressibleMomentumTransportModel& turb,
             const word& combustionProperties
         );
@@ -119,12 +118,6 @@ public:
 
 } // End namespace combustionModels
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "laminar.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

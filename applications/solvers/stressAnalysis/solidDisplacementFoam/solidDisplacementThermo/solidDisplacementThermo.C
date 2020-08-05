@@ -81,7 +81,7 @@ Foam::solidDisplacementThermo::solidDisplacementThermo
     const word& phaseName
 )
 :
-    solidThermo(mesh, phaseName),
+    solidThermo::composite(mesh, phaseName),
     planeStress_(lookup("planeStress")),
     thermalStress_(lookup("thermalStress")),
     Cp_

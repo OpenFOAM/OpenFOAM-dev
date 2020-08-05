@@ -32,8 +32,8 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "rhoReactionThermo.H"
-#include "BasicChemistryModel.H"
+#include "fluidReactionThermo.H"
+#include "basicChemistryModel.H"
 #include "multiComponentMixture.H"
 #include "chemistrySolver.H"
 #include "OFstream.H"

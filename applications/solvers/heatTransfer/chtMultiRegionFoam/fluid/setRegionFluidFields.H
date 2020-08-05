@@ -1,8 +1,8 @@
     const fvMesh& mesh = fluidRegions[i];
 
-    CombustionModel<rhoReactionThermo>& reaction = reactionFluid[i];
+    combustionModel& reaction = reactionFluid[i];
 
-    rhoReactionThermo& thermo = thermoFluid[i];
+    fluidReactionThermo& thermo = thermoFluid[i];
     thermo.validate(args.executable(), "h", "e");
 
     basicSpecieMixture& composition = thermo.composition();
@@ -11,10 +11,10 @@
     label inertIndex = -1;
     if (Y.size())
     {
-        const word inertSpecie(thermo.lookup("inertSpecie"));
+        const word inertSpecie(thermo.properties().lookup("inertSpecie"));
         if (!composition.species().found(inertSpecie))
         {
-            FatalIOErrorIn(args.executable().c_str(), thermo)
+            FatalIOErrorIn(args.executable().c_str(), thermo.properties())
                 << "Inert specie " << inertSpecie
                 << " not found in available species "
                 << composition.species()
@@ -28,7 +28,7 @@
     surfaceScalarField& phi = phiFluid[i];
 
     compressible::momentumTransportModel& turbulence = turbulenceFluid[i];
-    rhoReactionThermophysicalTransportModel& thermophysicalTransport =
+    fluidReactionThermophysicalTransportModel& thermophysicalTransport =
         thermophysicalTransportFluid[i];
 
     volScalarField& K = KFluid[i];

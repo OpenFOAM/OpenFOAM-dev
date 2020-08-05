@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,87 +51,95 @@ Description
 namespace Foam
 {
 
-template<class CompType, class ThermoType>
+template<class ThermoType>
 class TDACChemistryModel;
 
-template<class CompType, class ThermoType>
+template<class ThermoType>
 class binaryTree
 {
-
 public:
 
-    typedef binaryNode<CompType, ThermoType> bn;
-    typedef chemPointISAT<CompType, ThermoType> chP;
+    // Public Typedefs
+
+        typedef binaryNode<ThermoType> bn;
+        typedef chemPointISAT<ThermoType> chP;
 
 
 private:
 
-    //- Reference to the chemistryModel
-    TDACChemistryModel<CompType, ThermoType>& chemistry_;
+    // Private Data
 
-    //- Root node of the binary tree
-    bn *root_;
+        //- Reference to the chemistryModel
+        TDACChemistryModel<ThermoType>& chemistry_;
 
-    //- Maximum number of elements in the binary tree
-    label maxNLeafs_;
+        //- Root node of the binary tree
+        bn *root_;
 
-    //- Size of the BST (= number of chemPoint stored)
-    label size_;
+        //- Maximum number of elements in the binary tree
+        label maxNLeafs_;
 
-    //- Secondary retrieve search variables
-    label n2ndSearch_;
-    label max2ndSearch_;
+        //- Size of the BST (= number of chemPoint stored)
+        label size_;
 
-    //- Insert new node at the position of phi0
-    //  phi0 should be already attached to another node or the pointer to it
-    //  will be lost
-    void insertNode
-    (
-        chP*& phi0,
-        bn*& newNode
-    );
+        //- Secondary retrieve search variables
+        label n2ndSearch_;
 
-    //- Perform a search in the subtree starting from the subtree node y
-    //  This search continues to use the hyperplane to walk the tree
-    //  If covering EOA is found return true and x points to the chemPoint
-    bool inSubTree
-    (
-        const scalarField& phiq,
-        bn* y,
-        chP* x
-    );
+        //- Secondary retrieve search variables
+        label max2ndSearch_;
 
-    void deleteSubTree(binaryNode<CompType, ThermoType>* subTreeRoot);
 
-    inline void deleteSubTree()
-    {
-        deleteSubTree(root_);
-    }
+    // Private Member Functions
 
-    //- Replace the binaryNode u with v
-    void transplant(bn* u, bn* v);
+        //- Insert new node at the position of phi0. phi0 should be already
+        //  attached to another node or the pointer to it will be lost.
+        void insertNode(chP*& phi0, bn*& newNode);
 
-    chP* chemPSibling(bn* y);
-    chP* chemPSibling(chP* x);
+        //- Perform a search in the subtree starting from the subtree node y.
+        //  This search continues to use the hyperplane to walk the tree.
+        //  If covering EOA is found return true and x points to the chemPoint.
+        bool inSubTree
+        (
+            const scalarField& phiq,
+            bn* y,
+            chP* x
+        );
 
-    bn* nodeSibling(bn* y);
-    bn* nodeSibling(chP* x);
+        void deleteSubTree(binaryNode<ThermoType>* subTreeRoot);
 
-    void deleteAllNode(bn* subTreeRoot);
+        inline void deleteSubTree()
+        {
+            deleteSubTree(root_);
+        }
 
-    dictionary coeffsDict_;
+        //- Replace the binaryNode u with v
+        void transplant(bn* u, bn* v);
+
+        chP* chemPSibling(bn* y);
+
+        chP* chemPSibling(chP* x);
+
+        bn* nodeSibling(bn* y);
+
+        bn* nodeSibling(chP* x);
+
+        void deleteAllNode(bn* subTreeRoot);
+
+        dictionary coeffsDict_;
+
 
 public:
+
     //- Constructors
 
         //- Construct from dictionary and chemistryOnLineLibrary
         binaryTree
         (
-            TDACChemistryModel<CompType, ThermoType>& chemistry,
+            TDACChemistryModel<ThermoType>& chemistry,
             dictionary coeffsDict
         );
 
     //- Member functions
+
         inline label size()
         {
             return size_;
@@ -181,8 +189,6 @@ public:
             const label nCols,
             chP*& phi0
         );
-
-
 
         // Search the binaryTree until the nearest leaf of a specified
         // leaf is found.

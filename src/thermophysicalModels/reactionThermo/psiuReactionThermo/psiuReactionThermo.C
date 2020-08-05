@@ -30,19 +30,17 @@ License
 #include "gradientUnburntEnthalpyFvPatchScalarField.H"
 #include "mixedUnburntEnthalpyFvPatchScalarField.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-/* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */
-
-defineTypeNameAndDebug(psiuReactionThermo, 0);
-defineRunTimeSelectionTable(psiuReactionThermo, fvMesh);
+    defineTypeNameAndDebug(psiuReactionThermo, 0);
+    defineRunTimeSelectionTable(psiuReactionThermo, fvMesh);
+}
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-wordList psiuReactionThermo::heuBoundaryTypes()
+Foam::wordList Foam::psiuReactionThermo::heuBoundaryTypes()
 {
     const volScalarField::Boundary& tbf =
         this->Tu().boundaryField();
@@ -72,7 +70,7 @@ wordList psiuReactionThermo::heuBoundaryTypes()
     return hbt;
 }
 
-void psiuReactionThermo::heuBoundaryCorrection(volScalarField& heu)
+void Foam::psiuReactionThermo::heuBoundaryCorrection(volScalarField& heu)
 {
     volScalarField::Boundary& hbf = heu.boundaryFieldRef();
 
@@ -100,13 +98,11 @@ void psiuReactionThermo::heuBoundaryCorrection(volScalarField& heu)
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-psiuReactionThermo::psiuReactionThermo
+Foam::psiuReactionThermo::implementation::implementation
 (
     const fvMesh& mesh,
     const word& phaseName
 )
-:
-    psiThermo(mesh, phaseName)
 {}
 
 
@@ -124,12 +120,12 @@ Foam::autoPtr<Foam::psiuReactionThermo> Foam::psiuReactionThermo::New
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-psiuReactionThermo::~psiuReactionThermo()
+Foam::psiuReactionThermo::~psiuReactionThermo()
 {}
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+Foam::psiuReactionThermo::implementation::~implementation()
+{}
 
-} // End namespace Foam
 
 // ************************************************************************* //

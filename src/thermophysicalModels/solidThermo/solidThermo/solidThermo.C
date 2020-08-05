@@ -38,30 +38,29 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::solidThermo::solidThermo
+Foam::solidThermo::implementation::implementation
 (
     const fvMesh& mesh,
     const word& phaseName
 )
 :
-    basicThermo(mesh, phaseName),
     p_
     (
         IOobject
         (
-            phasePropertyName("p"),
+            phasePropertyName("p", phaseName),
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        dimensionedScalar(phasePropertyName("p"), dimPressure, NaN)
+        dimensionedScalar(phasePropertyName("p", phaseName), dimPressure, NaN)
     ),
     rho_
     (
         IOobject
         (
-            phasePropertyName("rho"),
+            phasePropertyName("rho", phaseName),
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
@@ -73,31 +72,30 @@ Foam::solidThermo::solidThermo
 {}
 
 
-Foam::solidThermo::solidThermo
+Foam::solidThermo::implementation::implementation
 (
     const fvMesh& mesh,
     const dictionary& dict,
     const word& phaseName
 )
 :
-    basicThermo(mesh, dict, phaseName),
     p_
     (
         IOobject
         (
-            phasePropertyName("p"),
+            phasePropertyName("p", phaseName),
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        dimensionedScalar(phasePropertyName("p"), dimPressure, NaN)
+        dimensionedScalar(phasePropertyName("p", phaseName), dimPressure, NaN)
     ),
     rho_
     (
         IOobject
         (
-            phasePropertyName("rho"),
+            phasePropertyName("rho", phaseName),
             mesh.time().timeName(),
             mesh,
             IOobject::NO_READ,
@@ -138,29 +136,30 @@ Foam::solidThermo::~solidThermo()
 {}
 
 
+Foam::solidThermo::implementation::~implementation()
+{}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::solidThermo::rho() const
+Foam::tmp<Foam::volScalarField> Foam::solidThermo::implementation::rho() const
 {
     return rho_;
 }
 
 
-Foam::tmp<Foam::scalarField> Foam::solidThermo::rho(const label patchi) const
+Foam::tmp<Foam::scalarField> Foam::solidThermo::implementation::rho
+(
+    const label patchi
+) const
 {
     return rho_.boundaryField()[patchi];
 }
 
 
-Foam::volScalarField& Foam::solidThermo::rho()
+Foam::volScalarField& Foam::solidThermo::implementation::rho()
 {
     return rho_;
-}
-
-
-bool Foam::solidThermo::read()
-{
-    return regIOobject::read();
 }
 
 

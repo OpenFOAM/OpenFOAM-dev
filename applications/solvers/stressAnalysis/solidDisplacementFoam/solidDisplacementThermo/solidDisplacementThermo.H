@@ -48,7 +48,7 @@ namespace Foam
 
 class solidDisplacementThermo
 :
-    public solidThermo
+    public solidThermo::composite
 {
     // Private data
 

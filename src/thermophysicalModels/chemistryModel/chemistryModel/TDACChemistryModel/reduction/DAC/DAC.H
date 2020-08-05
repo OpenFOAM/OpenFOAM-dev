@@ -101,10 +101,10 @@ namespace chemistryReductionMethods
 /*---------------------------------------------------------------------------*\
                            Class DAC Declaration
 \*---------------------------------------------------------------------------*/
-template<class CompType, class ThermoType>
+template<class ThermoType>
 class DAC
 :
-    public chemistryReductionMethod<CompType, ThermoType>
+    public chemistryReductionMethod<ThermoType>
 {
     // Private Data
 
@@ -136,7 +136,7 @@ public:
         DAC
         (
             const IOdictionary& dict,
-            TDACChemistryModel<CompType, ThermoType>& chemistry
+            TDACChemistryModel<ThermoType>& chemistry
         );
 
 

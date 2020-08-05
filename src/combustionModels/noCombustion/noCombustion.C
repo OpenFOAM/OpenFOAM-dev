@@ -25,55 +25,57 @@ License
 
 #include "noCombustion.H"
 #include "fvmSup.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace combustionModels
+{
+    defineTypeNameAndDebug(noCombustion, 0);
+    addToRunTimeSelectionTable(combustionModel, noCombustion, dictionary);
+}
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-Foam::combustionModels::noCombustion<ReactionThermo>::noCombustion
+Foam::combustionModels::noCombustion::noCombustion
 (
     const word& modelType,
-    const ReactionThermo& thermo,
+    const fluidReactionThermo& thermo,
     const compressibleMomentumTransportModel& turb,
     const word& combustionProperties
 )
 :
-    ThermoCombustion<ReactionThermo>(modelType, thermo, turb)
+    combustionModel(modelType, thermo, turb)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-Foam::combustionModels::noCombustion<ReactionThermo>::~noCombustion()
+Foam::combustionModels::noCombustion::~noCombustion()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-void Foam::combustionModels::noCombustion<ReactionThermo>::correct()
+void Foam::combustionModels::noCombustion::correct()
 {}
 
 
-template<class ReactionThermo>
-Foam::tmp<Foam::fvScalarMatrix>
-Foam::combustionModels::noCombustion<ReactionThermo>::R
+Foam::tmp<Foam::fvScalarMatrix> Foam::combustionModels::noCombustion::R
 (
     volScalarField& Y
 ) const
 {
-    tmp<fvScalarMatrix> tSu
-    (
-        new fvScalarMatrix(Y, dimMass/dimTime)
-    );
-
-    return tSu;
+    return tmp<fvScalarMatrix>(new fvScalarMatrix(Y, dimMass/dimTime));
 }
 
 
-template<class ReactionThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::combustionModels::noCombustion<ReactionThermo>::Qdot() const
+Foam::combustionModels::noCombustion::Qdot() const
 {
     return volScalarField::New
     (
@@ -84,10 +86,9 @@ Foam::combustionModels::noCombustion<ReactionThermo>::Qdot() const
 }
 
 
-template<class ReactionThermo>
-bool Foam::combustionModels::noCombustion<ReactionThermo>::read()
+bool Foam::combustionModels::noCombustion::read()
 {
-    if (ThermoCombustion<ReactionThermo>::read())
+    if (combustionModel::read())
     {
         return true;
     }

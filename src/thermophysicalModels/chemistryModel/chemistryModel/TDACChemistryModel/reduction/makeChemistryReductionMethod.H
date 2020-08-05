@@ -35,57 +35,48 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineChemistryReductionMethod(ReactionThermo, ThermoPhysics)          \
+#define defineChemistryReductionMethod(nullArg, ThermoPhysics)                 \
                                                                                \
-    typedef chemistryReductionMethod<ReactionThermo, ThermoPhysics>            \
-        chemistryReductionMethod##ReactionThermo##ThermoPhysics;               \
+    typedef chemistryReductionMethod<ThermoPhysics>                            \
+        chemistryReductionMethod##ThermoPhysics;                               \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        chemistryReductionMethod##ReactionThermo##ThermoPhysics,               \
+        chemistryReductionMethod##ThermoPhysics,                               \
         (                                                                      \
-            word                                                               \
-            (                                                                  \
-                chemistryReductionMethod##ReactionThermo##ThermoPhysics::      \
-                typeName_()                                                    \
-            )                                                                  \
-          + "<" + word(ReactionThermo::typeName_())                            \
-          + "," + ThermoPhysics::typeName() + ">"                              \
+            word(chemistryReductionMethod##ThermoPhysics::typeName_())         \
+          + "<" + ThermoPhysics::typeName() + ">"                              \
         ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \
     defineTemplateRunTimeSelectionTable                                        \
     (                                                                          \
-        chemistryReductionMethod##ReactionThermo##ThermoPhysics,               \
+        chemistryReductionMethod##ThermoPhysics,                               \
         dictionary                                                             \
-    );                                                                         \
+    )
 
-#define makeChemistryReductionMethod(Method, ReactionThermo, ThermoPhysics)    \
+#define makeChemistryReductionMethod(Method, ThermoPhysics)                    \
                                                                                \
-    typedef chemistryReductionMethods::Method<ReactionThermo, ThermoPhysics>   \
-        chemistryReductionMethod##Method##ReactionThermo##ThermoPhysics;       \
+    typedef chemistryReductionMethods::Method<ThermoPhysics>                   \
+        chemistryReductionMethod##Method##ThermoPhysics;                       \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        chemistryReductionMethod##Method##ReactionThermo##ThermoPhysics,       \
+        chemistryReductionMethod##Method##ThermoPhysics,                       \
         (                                                                      \
-            word                                                               \
-            (                                                                  \
-                chemistryReductionMethod##Method##ReactionThermo##\
-ThermoPhysics::typeName_()                                                     \
-            )                                                                  \
-         + "<" + word(ReactionThermo::typeName_())                             \
-         + "," + ThermoPhysics::typeName() + ">"                               \
+            word(chemistryReductionMethod##Method##ThermoPhysics::typeName_()) \
+         + "<" + ThermoPhysics::typeName() + ">"                               \
         ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \
-    chemistryReductionMethod<ReactionThermo, ThermoPhysics>::                  \
-        adddictionaryConstructorToTable                                        \
-        <chemistryReductionMethod##Method##ReactionThermo##ThermoPhysics>      \
-        add##chemistryReductionMethod##Method##ReactionThermo##ThermoPhysics##\
-dictionaryConstructorToTable_;
+    addToRunTimeSelectionTable                                                 \
+    (                                                                          \
+        chemistryReductionMethod##ThermoPhysics,                               \
+        chemistryReductionMethod##Method##ThermoPhysics,                       \
+        dictionary                                                             \
+    )
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

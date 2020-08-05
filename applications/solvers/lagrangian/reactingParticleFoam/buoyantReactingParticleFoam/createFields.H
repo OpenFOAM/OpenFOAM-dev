@@ -1,8 +1,8 @@
 #include "createRDeltaT.H"
 
 Info<< "Reading thermophysical properties\n" << endl;
-autoPtr<rhoReactionThermo> pThermo(rhoReactionThermo::New(mesh));
-rhoReactionThermo& thermo = pThermo();
+autoPtr<fluidReactionThermo> pThermo(fluidReactionThermo::New(mesh));
+fluidReactionThermo& thermo = pThermo();
 thermo.validate(args.executable(), "h", "e");
 
 SLGThermo slgThermo(mesh, thermo);
@@ -53,10 +53,10 @@ autoPtr<compressible::momentumTransportModel> turbulence
 );
 
 Info<< "Creating thermophysical transport model\n" << endl;
-autoPtr<rhoReactionThermophysicalTransportModel>
+autoPtr<fluidReactionThermophysicalTransportModel>
 thermophysicalTransport
 (
-    rhoReactionThermophysicalTransportModel::New
+    fluidReactionThermophysicalTransportModel::New
     (
         turbulence(),
         thermo
@@ -64,9 +64,9 @@ thermophysicalTransport
 );
 
 Info<< "Creating combustion model\n" << endl;
-autoPtr<CombustionModel<rhoReactionThermo>> combustion
+autoPtr<combustionModel> combustion
 (
-    CombustionModel<rhoReactionThermo>::New(thermo, turbulence())
+    combustionModel::New(thermo, turbulence())
 );
 
 Info<< "Creating field dpdt\n" << endl;

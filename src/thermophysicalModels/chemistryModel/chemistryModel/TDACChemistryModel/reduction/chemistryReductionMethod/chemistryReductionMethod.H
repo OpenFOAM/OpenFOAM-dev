@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,14 +44,14 @@ SourceFiles
 namespace Foam
 {
 
-template<class CompType, class ThermoType>
+template<class ThermoType>
 class TDACChemistryModel;
 
 /*---------------------------------------------------------------------------*\
                            Class chemistrySolver Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class CompType, class ThermoType>
+template<class ThermoType>
 class chemistryReductionMethod
 {
 
@@ -68,7 +68,7 @@ protected:
     //- Switch to select performance logging
     Switch log_;
 
-    TDACChemistryModel<CompType, ThermoType>& chemistry_;
+    TDACChemistryModel<ThermoType>& chemistry_;
 
     //- List of active species (active = true)
     List<bool> activeSpecies_;
@@ -97,7 +97,7 @@ public:
         dictionary,
         (
             const IOdictionary& dict,
-            TDACChemistryModel<CompType, ThermoType>& chemistry
+            TDACChemistryModel<ThermoType>& chemistry
         ),
         (dict, chemistry)
     );
@@ -109,16 +109,16 @@ public:
         chemistryReductionMethod
         (
             const IOdictionary& dict,
-            TDACChemistryModel<CompType, ThermoType>& chemistry
+            TDACChemistryModel<ThermoType>& chemistry
         );
 
 
     // Selector
 
-        static autoPtr<chemistryReductionMethod<CompType, ThermoType>> New
+        static autoPtr<chemistryReductionMethod<ThermoType>> New
         (
             const IOdictionary& dict,
-            TDACChemistryModel<CompType, ThermoType>& chemistry
+            TDACChemistryModel<ThermoType>& chemistry
         );
 
 

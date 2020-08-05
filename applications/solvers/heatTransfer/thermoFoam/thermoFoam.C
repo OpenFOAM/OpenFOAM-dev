@@ -30,7 +30,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "rhoThermo.H"
+#include "fluidThermo.H"
 #include "fluidThermoMomentumTransportModel.H"
 #include "fluidThermophysicalTransportModel.H"
 #include "LESModel.H"

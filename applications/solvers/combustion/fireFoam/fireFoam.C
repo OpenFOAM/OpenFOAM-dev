@@ -32,13 +32,13 @@ Description
 
 #include "fvCFD.H"
 #include "fluidThermoMomentumTransportModel.H"
-#include "psiReactionThermophysicalTransportModel.H"
+#include "fluidReactionThermophysicalTransportModel.H"
 #include "parcelCloudList.H"
 #include "surfaceFilmModel.H"
 #include "radiationModel.H"
 #include "SLGThermo.H"
-#include "psiReactionThermo.H"
-#include "CombustionModel.H"
+#include "fluidReactionThermo.H"
+#include "combustionModel.H"
 #include "pimpleControl.H"
 #include "fvOptions.H"
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,49 +34,54 @@ namespace combustionModels
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class ReactionThermo, class ThermoType>
+template<class ThermoType>
+const multiComponentMixture<ThermoType>&
+singleStepCombustion<ThermoType>::mixture() const
+{
+    return mixture_;
+}
+
+
+template<class ThermoType>
 inline const Foam::Reaction<ThermoType>&
-singleStepCombustion<ReactionThermo, ThermoType>::reaction() const
+singleStepCombustion<ThermoType>::reaction() const
 {
     return reaction_();
 }
 
 
-template<class ReactionThermo, class ThermoType>
-inline const dimensionedScalar
-singleStepCombustion<ReactionThermo, ThermoType>::stoicRatio() const
+template<class ThermoType>
+inline const dimensionedScalar&
+singleStepCombustion<ThermoType>::stoicRatio() const
 {
     return stoicRatio_;
 }
 
 
-template<class ReactionThermo, class ThermoType>
-inline const dimensionedScalar
-singleStepCombustion<ReactionThermo, ThermoType>::s() const
+template<class ThermoType>
+inline const dimensionedScalar& singleStepCombustion<ThermoType>::s() const
 {
     return s_;
 }
 
 
-template<class ReactionThermo, class ThermoType>
-inline const dimensionedScalar
-singleStepCombustion<ReactionThermo, ThermoType>::qFuel() const
+template<class ThermoType>
+inline const dimensionedScalar& singleStepCombustion<ThermoType>::qFuel() const
 {
     return qFuel_;
 }
 
 
-template<class ReactionThermo, class ThermoType>
+template<class ThermoType>
 inline const List<scalar>&
-singleStepCombustion<ReactionThermo, ThermoType>::specieStoichCoeffs() const
+singleStepCombustion<ThermoType>::specieStoichCoeffs() const
 {
     return specieStoichCoeffs_;
 }
 
 
-template<class ReactionThermo, class ThermoType>
-inline tmp<volScalarField>
-singleStepCombustion<ReactionThermo, ThermoType>::fres
+template<class ThermoType>
+inline tmp<volScalarField> singleStepCombustion<ThermoType>::fres
 (
     const label index
 ) const
@@ -85,33 +90,29 @@ singleStepCombustion<ReactionThermo, ThermoType>::fres
 }
 
 
-template<class ReactionThermo, class ThermoType>
-inline label
-singleStepCombustion<ReactionThermo, ThermoType>::inertIndex() const
+template<class ThermoType>
+inline label singleStepCombustion<ThermoType>::inertIndex() const
 {
     return inertIndex_;
 }
 
 
-template<class ReactionThermo, class ThermoType>
-inline label
-singleStepCombustion<ReactionThermo, ThermoType>::fuelIndex() const
+template<class ThermoType>
+inline label singleStepCombustion<ThermoType>::fuelIndex() const
 {
     return fuelIndex_;
 }
 
 
-template<class ReactionThermo, class ThermoType>
-inline const List<int>&
-singleStepCombustion<ReactionThermo, ThermoType>::specieProd() const
+template<class ThermoType>
+inline const List<int>& singleStepCombustion<ThermoType>::specieProd() const
 {
     return specieProd_;
 }
 
 
-template<class ReactionThermo, class ThermoType>
-inline const scalarList&
-singleStepCombustion<ReactionThermo, ThermoType>::Yprod0() const
+template<class ThermoType>
+inline const scalarList& singleStepCombustion<ThermoType>::Yprod0() const
 {
     return Yprod0_;
 }

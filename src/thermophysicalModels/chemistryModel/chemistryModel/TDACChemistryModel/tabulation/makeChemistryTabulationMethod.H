@@ -35,57 +35,48 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineChemistryTabulationMethod(ReactionThermo, ThermoPhysics)         \
+#define defineChemistryTabulationMethod(nullArg, ThermoPhysics)                \
                                                                                \
-    typedef chemistryTabulationMethod<ReactionThermo, ThermoPhysics>           \
-        chemistryTabulationMethod##ReactionThermo##ThermoPhysics;              \
+    typedef chemistryTabulationMethod<ThermoPhysics>                           \
+        chemistryTabulationMethod##ThermoPhysics;                              \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        chemistryTabulationMethod##ReactionThermo##ThermoPhysics,              \
+        chemistryTabulationMethod##ThermoPhysics,                              \
         (                                                                      \
-            word                                                               \
-            (                                                                  \
-                chemistryTabulationMethod##ReactionThermo##ThermoPhysics::     \
-                typeName_()                                                    \
-            )                                                                  \
-          + "<" + word(ReactionThermo::typeName_())                            \
-          + "," + ThermoPhysics::typeName() + ">"                              \
+            word(chemistryTabulationMethod##ThermoPhysics::typeName_())        \
+          + "<" + ThermoPhysics::typeName() + ">"                              \
         ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \
     defineTemplateRunTimeSelectionTable                                        \
     (                                                                          \
-        chemistryTabulationMethod##ReactionThermo##ThermoPhysics,              \
+        chemistryTabulationMethod##ThermoPhysics,                              \
         dictionary                                                             \
-    );                                                                         \
+    )
 
-#define makeChemistryTabulationMethod(Method, ReactionThermo, ThermoPhysics)   \
+#define makeChemistryTabulationMethod(Method, ThermoPhysics)                   \
                                                                                \
-    typedef chemistryTabulationMethods::Method<ReactionThermo, ThermoPhysics>  \
-        chemistryTabulationMethod##Method##ReactionThermo##ThermoPhysics;      \
+    typedef chemistryTabulationMethods::Method<ThermoPhysics>                  \
+        chemistryTabulationMethod##Method##ThermoPhysics;                      \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        chemistryTabulationMethod##Method##ReactionThermo##ThermoPhysics,      \
+        chemistryTabulationMethod##Method##ThermoPhysics,                      \
         (                                                                      \
-            word                                                               \
-            (                                                                  \
-                chemistryTabulationMethod##Method##ReactionThermo##\
-ThermoPhysics::typeName_()                                                     \
-            )                                                                  \
-         + "<" + word(ReactionThermo::typeName_())                             \
-         + "," + ThermoPhysics::typeName() + ">"                               \
+            word(chemistryTabulationMethod##Method##ThermoPhysics::typeName_())\
+         + "<" + ThermoPhysics::typeName() + ">"                               \
         ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \
-    chemistryTabulationMethod<ReactionThermo, ThermoPhysics>::                 \
-        adddictionaryConstructorToTable                                        \
-        <chemistryTabulationMethod##Method##ReactionThermo##ThermoPhysics>     \
-        add##chemistryTabulationMethod##Method##ReactionThermo##ThermoPhysics##\
-dictionaryConstructorToTable_;
+    addToRunTimeSelectionTable                                                 \
+    (                                                                          \
+        chemistryTabulationMethod##ThermoPhysics,                              \
+        chemistryTabulationMethod##Method##ThermoPhysics,                      \
+        dictionary                                                             \
+    )
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

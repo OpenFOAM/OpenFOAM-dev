@@ -35,8 +35,8 @@ SourceFiles
 #ifndef singleStepCombustion_H
 #define singleStepCombustion_H
 
+#include "combustionModel.H"
 #include "multiComponentMixture.H"
-#include "ThermoCombustion.H"
 #include "ReactionList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -50,15 +50,16 @@ namespace combustionModels
                     Class singleStepCombustion Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ReactionThermo, class ThermoType>
+template<class ThermoType>
 class singleStepCombustion
 :
-    public ThermoCombustion<ReactionThermo>
+    public combustionModel
 {
 protected:
 
     // Protected data
 
+        //- Reference to the mixture
         const multiComponentMixture<ThermoType>& mixture_;
 
         //- The single-step reaction
@@ -118,13 +119,13 @@ public:
         singleStepCombustion
         (
             const word& modelType,
-            const ReactionThermo& thermo,
+            const fluidReactionThermo& thermo,
             const compressibleMomentumTransportModel& turb,
             const word& combustionProperties
         );
 
         //- Disallow default bitwise copy construction
-        singleStepCombustion(const singleStepCombustion&);
+        singleStepCombustion(const singleStepCombustion&) = delete;
 
 
     //- Destructor
@@ -135,22 +136,20 @@ public:
 
         // Access functions
 
-    const multiComponentMixture<ThermoType>& mixture() const
-    {
-        return mixture_;
-    }
+            //- Return the mixture
+            const multiComponentMixture<ThermoType>& mixture() const;
 
             //- Return the single step reaction
             inline const Reaction<ThermoType>& reaction() const;
 
             //- Return the stoichiometric air-fuel mass ratio
-            inline const dimensionedScalar stoicRatio() const;
+            inline const dimensionedScalar& stoicRatio() const;
 
             //- Return the Stoichiometric oxygen-fuel mass ratio
-            inline const dimensionedScalar s() const;
+            inline const dimensionedScalar& s() const;
 
             //- Return the heat of combustion [J/Kg]
-            inline const dimensionedScalar qFuel() const;
+            inline const dimensionedScalar& qFuel() const;
 
             //- Return the stoichiometric coefficient for the reaction
             inline const List<scalar>& specieStoichCoeffs() const;

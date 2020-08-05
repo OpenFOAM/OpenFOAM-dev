@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,11 @@ Class
     Foam::rhoReactionThermo
 
 Description
-    Foam::rhoReactionThermo
+    Base-class for multi-component fluid thermodynamic properties based on
+    density.
+
+See also
+    Foam::basicThermo
 
 SourceFiles
     rhoReactionThermo.C
@@ -36,9 +40,7 @@ SourceFiles
 #define rhoReactionThermo_H
 
 #include "rhoThermo.H"
-#include "basicSpecieMixture.H"
-#include "autoPtr.H"
-#include "runTimeSelectionTables.H"
+#include "fluidReactionThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,10 +53,19 @@ namespace Foam
 
 class rhoReactionThermo
 :
-    public rhoThermo
+    virtual public rhoThermo,
+    virtual public fluidReactionThermo
 {
-
 public:
+
+    // Public Classes
+
+        //- Forward declare the implementation class
+        class implementation;
+
+        //- Forward declare the composite class
+        class composite;
+
 
     //- Runtime type information
     TypeName("rhoReactionThermo");
@@ -71,16 +82,6 @@ public:
     );
 
 
-    // Constructors
-
-        //- Construct from mesh and phase name
-        rhoReactionThermo
-        (
-            const fvMesh&,
-            const word& phaseName
-        );
-
-
     // Selectors
 
         //- Standard selection based on fvMesh
@@ -93,15 +94,60 @@ public:
 
     //- Destructor
     virtual ~rhoReactionThermo();
+};
 
 
-    // Member Functions
+/*---------------------------------------------------------------------------*\
+              Class rhoReactionThermo::implementation Declaration
+\*---------------------------------------------------------------------------*/
 
-        //- Return the composition of the multi-component mixture
-        virtual basicSpecieMixture& composition() = 0;
+class rhoReactionThermo::implementation
+:
+    virtual public rhoReactionThermo
+{
 
-        //- Return the composition of the multi-component mixture
-        virtual const basicSpecieMixture& composition() const = 0;
+public:
+
+    // Constructors
+
+        //- Construct from mesh and phase name
+        implementation(const fvMesh&, const word& phaseName);
+
+
+    //- Destructor
+    virtual ~implementation();
+};
+
+
+/*---------------------------------------------------------------------------*\
+                 Class rhoReactionThermo::composite Declaration
+\*---------------------------------------------------------------------------*/
+
+class rhoReactionThermo::composite
+:
+    public basicThermo::implementation,
+    public fluidThermo::implementation,
+    public rhoThermo::implementation,
+    public fluidReactionThermo::implementation,
+    public rhoReactionThermo::implementation
+{
+public:
+
+    // Constructors
+
+        //- Construct from mesh and phase name
+        composite
+        (
+            const fvMesh& mesh,
+            const word& phaseName
+        )
+        :
+            basicThermo::implementation(mesh, phaseName),
+            fluidThermo::implementation(mesh, phaseName),
+            rhoThermo::implementation(mesh, phaseName),
+            fluidReactionThermo::implementation(mesh, phaseName),
+            rhoReactionThermo::implementation(mesh, phaseName)
+        {}
 };
 
 

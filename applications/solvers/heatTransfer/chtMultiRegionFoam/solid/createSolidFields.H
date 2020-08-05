@@ -31,7 +31,7 @@ forAll(solidRegions, i)
         coordinates.set
         (
             i,
-            coordinateSystem::New(solidRegions[i], thermos[i])
+            coordinateSystem::New(solidRegions[i], thermos[i].properties())
         );
 
         tmp<volVectorField> tkappaByCv =

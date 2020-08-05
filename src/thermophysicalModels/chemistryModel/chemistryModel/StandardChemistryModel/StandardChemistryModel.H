@@ -38,7 +38,7 @@ SourceFiles
 #ifndef StandardChemistryModel_H
 #define StandardChemistryModel_H
 
-#include "BasicChemistryModel.H"
+#include "basicChemistryModel.H"
 #include "ReactionList.H"
 #include "ODESystem.H"
 #include "volFields.H"
@@ -55,10 +55,10 @@ class fvMesh;
                       Class StandardChemistryModel Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ReactionThermo, class ThermoType>
+template<class ThermoType>
 class StandardChemistryModel
 :
-    public BasicChemistryModel<ReactionThermo>,
+    public basicChemistryModel,
     public ODESystem
 {
     // Private Member Functions
@@ -117,10 +117,10 @@ public:
     // Constructors
 
         //- Construct from thermo
-        StandardChemistryModel(const ReactionThermo& thermo);
+        StandardChemistryModel(const fluidReactionThermo& thermo);
 
         //- Disallow default bitwise copy construction
-        StandardChemistryModel(const StandardChemistryModel&);
+        StandardChemistryModel(const StandardChemistryModel&) = delete;
 
 
     //- Destructor

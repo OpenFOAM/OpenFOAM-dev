@@ -67,9 +67,12 @@ Foam::SLGThermo::SLGThermo(const fvMesh& mesh, const fluidThermo& thermo)
         Info<< "    single component carrier" << endl;
     }
 
-    if (thermo.found("liquids"))
+    if (thermo.properties().found("liquids"))
     {
-        liquids_ = liquidMixtureProperties::New(thermo.subDict("liquids"));
+        liquids_ = liquidMixtureProperties::New
+        (
+            thermo.properties().subDict("liquids")
+        );
         Info<< "    liquids - " << liquids_->components().size()
             << " components" << endl;
     }
@@ -78,9 +81,12 @@ Foam::SLGThermo::SLGThermo(const fvMesh& mesh, const fluidThermo& thermo)
         Info<< "    no liquid components" << endl;
     }
 
-    if (thermo.found("solids"))
+    if (thermo.properties().found("solids"))
     {
-        solids_  = solidMixtureProperties::New(thermo.subDict("solids"));
+        solids_ = solidMixtureProperties::New
+        (
+            thermo.properties().subDict("solids")
+        );
         Info<< "    solids - " << solids_->components().size()
             << " components" << endl;
     }

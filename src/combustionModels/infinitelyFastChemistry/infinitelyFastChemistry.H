@@ -50,10 +50,10 @@ namespace combustionModels
                   Class infinitelyFastChemistry Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ReactionThermo, class ThermoType>
+template<class ThermoType>
 class infinitelyFastChemistry
 :
-    public singleStepCombustion<ReactionThermo, ThermoType>
+    public singleStepCombustion<ThermoType>
 {
     // Private Data
 
@@ -73,7 +73,7 @@ public:
         infinitelyFastChemistry
         (
             const word& modelType,
-            const ReactionThermo& thermo,
+            const fluidReactionThermo& thermo,
             const compressibleMomentumTransportModel& turb,
             const word& combustionProperties
         );

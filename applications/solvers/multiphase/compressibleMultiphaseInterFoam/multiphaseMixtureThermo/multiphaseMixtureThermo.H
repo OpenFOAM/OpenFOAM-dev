@@ -52,7 +52,7 @@ namespace Foam
 
 class multiphaseMixtureThermo
 :
-    public psiThermo
+    public psiThermo::composite
 {
 public:
 

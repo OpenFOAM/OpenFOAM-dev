@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,7 @@ SourceFiles
 #include "fvMeshFunctionObject.H"
 #include "volRegion.H"
 #include "logFiles.H"
+#include "basicChemistryModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -56,7 +57,6 @@ namespace functionObjects
                           Class specieReactionRates Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ChemistryModelType>
 class specieReactionRates
 :
     public fvMeshFunctionObject,
@@ -65,7 +65,8 @@ class specieReactionRates
 {
     // Private Member Data
 
-        const ChemistryModelType& chemistryModel_;
+        //- Reference to the chemistry model
+        const basicChemistryModel& chemistryModel_;
 
 
     // Private Member Functions

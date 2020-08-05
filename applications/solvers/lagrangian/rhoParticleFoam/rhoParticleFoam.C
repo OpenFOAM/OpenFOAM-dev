@@ -33,7 +33,7 @@ Description
 
 #include "fvCFD.H"
 #include "dynamicFvMesh.H"
-#include "psiThermo.H"
+#include "fluidThermo.H"
 #include "fluidThermoMomentumTransportModel.H"
 #include "parcelCloudList.H"
 

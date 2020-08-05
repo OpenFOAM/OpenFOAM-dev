@@ -1,6 +1,8 @@
 mixtures/basicSpecieMixture/basicSpecieMixture.C
 mixtures/basicCombustionMixture/basicCombustionMixture.C
 
+fluidReactionThermo/fluidReactionThermo.C
+
 psiReactionThermo/psiReactionThermo.C
 psiReactionThermo/psiReactionThermos.C
 

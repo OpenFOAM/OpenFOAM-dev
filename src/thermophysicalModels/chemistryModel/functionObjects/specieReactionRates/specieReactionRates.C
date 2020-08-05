@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,17 +24,30 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "specieReactionRates.H"
-#include "volFields.H"
 #include "fvcVolumeIntegrate.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace functionObjects
+{
+    defineTypeNameAndDebug(specieReactionRates, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject,
+        specieReactionRates,
+        dictionary
+    );
+}
+}
+
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-template<class ChemistryModelType>
-void Foam::functionObjects::specieReactionRates<ChemistryModelType>::
-writeFileHeader
-(
-    const label i
-)
+void Foam::functionObjects::specieReactionRates::writeFileHeader(const label i)
 {
     writeHeader(file(), "Specie reaction rates");
     volRegion::writeFileHeader(*this, file());
@@ -58,9 +71,7 @@ writeFileHeader
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ChemistryModelType>
-Foam::functionObjects::specieReactionRates<ChemistryModelType>::
-specieReactionRates
+Foam::functionObjects::specieReactionRates::specieReactionRates
 (
     const word& name,
     const Time& runTime,
@@ -72,7 +83,7 @@ specieReactionRates
     logFiles(obr_, name),
     chemistryModel_
     (
-        fvMeshFunctionObject::mesh_.lookupObject<ChemistryModelType>
+        fvMeshFunctionObject::mesh_.lookupObject<basicChemistryModel>
         (
             "chemistryProperties"
         )
@@ -84,19 +95,13 @@ specieReactionRates
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ChemistryModelType>
-Foam::functionObjects::specieReactionRates<ChemistryModelType>::
-~specieReactionRates()
+Foam::functionObjects::specieReactionRates::~specieReactionRates()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ChemistryModelType>
-bool Foam::functionObjects::specieReactionRates<ChemistryModelType>::read
-(
-    const dictionary& dict
-)
+bool Foam::functionObjects::specieReactionRates::read(const dictionary& dict)
 {
     regionFunctionObject::read(dict);
 
@@ -104,15 +109,13 @@ bool Foam::functionObjects::specieReactionRates<ChemistryModelType>::read
 }
 
 
-template<class ChemistryModelType>
-bool Foam::functionObjects::specieReactionRates<ChemistryModelType>::execute()
+bool Foam::functionObjects::specieReactionRates::execute()
 {
     return true;
 }
 
 
-template<class ChemistryModelType>
-bool Foam::functionObjects::specieReactionRates<ChemistryModelType>::write()
+bool Foam::functionObjects::specieReactionRates::write()
 {
     logFiles::write();
 
@@ -169,66 +172,6 @@ bool Foam::functionObjects::specieReactionRates<ChemistryModelType>::write()
     }
 
     return true;
-}
-
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-#include "addToRunTimeSelectionTable.H"
-#include "BasicChemistryModel.H"
-#include "psiReactionThermo.H"
-#include "rhoReactionThermo.H"
-
-namespace Foam
-{
-    typedef
-        functionObjects::specieReactionRates
-        <
-            BasicChemistryModel
-            <
-                psiReactionThermo
-            >
-        >
-        psiSpecieReactionRates;
-
-    defineTemplateTypeNameAndDebugWithName
-    (
-        psiSpecieReactionRates,
-        "psiSpecieReactionRates",
-        0
-    );
-
-    addToRunTimeSelectionTable
-    (
-        functionObject,
-        psiSpecieReactionRates,
-        dictionary
-    );
-
-
-    typedef
-        functionObjects::specieReactionRates
-        <
-            BasicChemistryModel
-            <
-                rhoReactionThermo
-            >
-        >
-        rhoSpecieReactionRates;
-
-    defineTemplateTypeNameAndDebugWithName
-    (
-        rhoSpecieReactionRates,
-        "rhoSpecieReactionRates",
-        0
-    );
-
-    addToRunTimeSelectionTable
-    (
-        functionObject,
-        rhoSpecieReactionRates,
-        dictionary
-    );
 }
 
 

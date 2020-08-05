@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,14 +24,13 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "basicChemistryModel.H"
-#include "fvMesh.H"
-#include "Time.H"
 
 /* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */
 
 namespace Foam
 {
     defineTypeNameAndDebug(basicChemistryModel, 0);
+    defineRunTimeSelectionTable(basicChemistryModel, thermo);
 }
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
@@ -42,20 +41,24 @@ void Foam::basicChemistryModel::correct()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::basicChemistryModel::basicChemistryModel(const basicThermo& thermo)
+Foam::basicChemistryModel::basicChemistryModel
+(
+    const fluidReactionThermo& thermo
+)
 :
     IOdictionary
     (
         IOobject
         (
             thermo.phasePropertyName("chemistryProperties"),
-            thermo.db().time().constant(),
-            thermo.db(),
+            thermo.T().mesh().time().constant(),
+            thermo.T().mesh(),
             IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE
         )
     ),
     mesh_(thermo.T().mesh()),
+    thermo_(thermo),
     chemistry_(lookup("chemistry")),
     deltaTChemIni_(lookup<scalar>("initialChemicalTimeStep")),
     deltaTChemMax_(lookupOrDefault("maxChemicalTimeStep", great)),

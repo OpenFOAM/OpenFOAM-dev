@@ -28,8 +28,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "thermophysicalTransportModel.H"
-#include "psiReactionThermo.H"
-#include "rhoReactionThermo.H"
+#include "fluidReactionThermo.H"
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
 
@@ -66,22 +65,7 @@ Foam::specieTransferMassFractionFvPatchScalarField::composition
 {
     const word& name = basicThermo::dictName;
 
-    if (db.foundObject<psiReactionThermo>(name))
-    {
-        return db.lookupObject<psiReactionThermo>(name).composition();
-    }
-    else if (db.foundObject<rhoReactionThermo>(name))
-    {
-        return db.lookupObject<rhoReactionThermo>(name).composition();
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Could not find a multi-component thermodynamic model."
-            << exit(FatalError);
-
-        return NullObjectRef<basicSpecieMixture>();
-    }
+    return db.lookupObject<fluidReactionThermo>(name).composition();
 }
 
 

@@ -27,14 +27,14 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::DAC
+template<class ThermoType>
+Foam::chemistryReductionMethods::DAC<ThermoType>::DAC
 (
     const IOdictionary& dict,
-    TDACChemistryModel<CompType, ThermoType>& chemistry
+    TDACChemistryModel<ThermoType>& chemistry
 )
 :
-    chemistryReductionMethod<CompType, ThermoType>(dict, chemistry),
+    chemistryReductionMethod<ThermoType>(dict, chemistry),
     searchInitSet_(this->coeffsDict_.subDict("initialSet").size()),
     zprime_(0),
     nbCLarge_(3),
@@ -260,16 +260,15 @@ Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::DAC
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::~DAC()
+template<class ThermoType>
+Foam::chemistryReductionMethods::DAC<ThermoType>::~DAC()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-
-template<class CompType, class ThermoType>
-void Foam::chemistryReductionMethods::DAC<CompType, ThermoType>::reduceMechanism
+template<class ThermoType>
+void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
 (
     const scalar p,
     const scalar T,

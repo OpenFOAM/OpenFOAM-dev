@@ -50,10 +50,10 @@ namespace combustionModels
                          Class diffusion Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ReactionThermo, class ThermoType>
+template<class ThermoType>
 class diffusion
 :
-    public singleStepCombustion<ReactionThermo, ThermoType>
+    public singleStepCombustion<ThermoType>
 {
     // Private Data
 
@@ -76,13 +76,13 @@ public:
         diffusion
         (
             const word& modelType,
-            const ReactionThermo& thermo,
+            const fluidReactionThermo& thermo,
             const compressibleMomentumTransportModel& turb,
             const word& combustionProperties
         );
 
         //- Disallow default bitwise copy construction
-        diffusion(const diffusion&);
+        diffusion(const diffusion&) = delete;
 
 
     //- Destructor

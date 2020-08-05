@@ -1,5 +1,5 @@
 chemistryModel/basicChemistryModel/basicChemistryModel.C
-chemistryModel/BasicChemistryModel/BasicChemistryModels.C
+chemistryModel/basicChemistryModel/basicChemistryModelNew.C
 
 chemistrySolver/chemistrySolver/chemistrySolvers.C
 chemistryModel/TDACChemistryModel/reduction/chemistryReductionMethod/chemistryReductionMethods.C

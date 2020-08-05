@@ -35,44 +35,44 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define defineChemistrySolver(Model, ReactionThermo, ThermoPhysics)            \
+#define defineChemistrySolver(Model, ThermoPhysics)                            \
                                                                                \
-    typedef Model<ReactionThermo, ThermoPhysics>                               \
-        Model##ReactionThermo##ThermoPhysics;                                  \
+    typedef Model<ThermoPhysics>                                               \
+        Model##ThermoPhysics;                                                  \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        Model##ReactionThermo##ThermoPhysics,                                  \
+        Model##ThermoPhysics,                                                  \
         (                                                                      \
-            word(Model##ReactionThermo##ThermoPhysics::typeName_()) + "<"      \
-          + ReactionThermo::typeName + "," + ThermoPhysics::typeName() + ">"   \
+            word(Model##ThermoPhysics::typeName_())                            \
+          + "<" + ThermoPhysics::typeName() + ">"                              \
         ).c_str(),                                                             \
         0                                                                      \
-    );
+    )
 
 
-#define makeChemistrySolver(Solver, Model, ReactionThermo, ThermoPhysics)      \
+#define makeChemistrySolver(Solver, Model, ThermoPhysics)                      \
                                                                                \
-    typedef Solver<Model<ReactionThermo, ThermoPhysics>>                       \
-        Solver##Model##ReactionThermo##ThermoPhysics;                          \
+    typedef Solver<Model<ThermoPhysics>>                                       \
+        Solver##Model##ThermoPhysics;                                          \
                                                                                \
     defineTemplateTypeNameAndDebugWithName                                     \
     (                                                                          \
-        Solver##Model##ReactionThermo##ThermoPhysics,                          \
+        Solver##Model##ThermoPhysics,                                          \
         (                                                                      \
-            word(Solver##Model##ReactionThermo##ThermoPhysics::typeName_())    \
-          + "<" + word(Model<ReactionThermo, ThermoPhysics>::typeName_())      \
-          + "<" + word(ReactionThermo::typeName_()) + ","                      \
-          + ThermoPhysics::typeName() + ">>"                                   \
+            word(Solver##Model##ThermoPhysics::typeName_())                    \
+          + "<" + word(Model<ThermoPhysics>::typeName_())                      \
+          + "<" + ThermoPhysics::typeName() + ">>"                             \
         ).c_str(),                                                             \
         0                                                                      \
     );                                                                         \
                                                                                \
-    BasicChemistryModel<ReactionThermo>::                                      \
-        addthermoConstructorToTable                                            \
-        <Solver##Model##ReactionThermo##ThermoPhysics>                         \
-        add##Solver##Model##ReactionThermo##ThermoPhysics##\
-thermoConstructorToTable_;
+    addToRunTimeSelectionTable                                                 \
+    (                                                                          \
+        basicChemistryModel,                                                   \
+        Solver##Model##ThermoPhysics,                                          \
+        thermo                                                                 \
+    )
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

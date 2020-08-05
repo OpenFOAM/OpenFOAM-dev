@@ -24,19 +24,31 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "PaSR.H"
+#include "addToRunTimeSelectionTable.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace combustionModels
+{
+    defineTypeNameAndDebug(PaSR, 0);
+    addToRunTimeSelectionTable(combustionModel, PaSR, dictionary);
+}
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-Foam::combustionModels::PaSR<ReactionThermo>::PaSR
+Foam::combustionModels::PaSR::PaSR
 (
     const word& modelType,
-    const ReactionThermo& thermo,
+    const fluidReactionThermo& thermo,
     const compressibleMomentumTransportModel& turb,
     const word& combustionProperties
 )
 :
-    laminar<ReactionThermo>(modelType, thermo, turb, combustionProperties),
+    laminar(modelType, thermo, turb, combustionProperties),
     Cmix_(this->coeffs().template lookup<scalar>("Cmix")),
     kappa_
     (
@@ -56,17 +68,15 @@ Foam::combustionModels::PaSR<ReactionThermo>::PaSR
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-Foam::combustionModels::PaSR<ReactionThermo>::~PaSR()
+Foam::combustionModels::PaSR::~PaSR()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-void Foam::combustionModels::PaSR<ReactionThermo>::correct()
+void Foam::combustionModels::PaSR::correct()
 {
-    laminar<ReactionThermo>::correct();
+    laminar::correct();
 
     tmp<volScalarField> tepsilon(this->turbulence().epsilon());
     const scalarField& epsilon = tepsilon();
@@ -97,30 +107,27 @@ void Foam::combustionModels::PaSR<ReactionThermo>::correct()
 }
 
 
-template<class ReactionThermo>
 Foam::tmp<Foam::fvScalarMatrix>
-Foam::combustionModels::PaSR<ReactionThermo>::R(volScalarField& Y) const
+Foam::combustionModels::PaSR::R(volScalarField& Y) const
 {
-    return kappa_*laminar<ReactionThermo>::R(Y);
+    return kappa_*laminar::R(Y);
 }
 
 
-template<class ReactionThermo>
 Foam::tmp<Foam::volScalarField>
-Foam::combustionModels::PaSR<ReactionThermo>::Qdot() const
+Foam::combustionModels::PaSR::Qdot() const
 {
     return volScalarField::New
     (
         this->thermo().phasePropertyName(typeName + ":Qdot"),
-        kappa_*laminar<ReactionThermo>::Qdot()
+        kappa_*laminar::Qdot()
     );
 }
 
 
-template<class ReactionThermo>
-bool Foam::combustionModels::PaSR<ReactionThermo>::read()
+bool Foam::combustionModels::PaSR::read()
 {
-    if (laminar<ReactionThermo>::read())
+    if (laminar::read())
     {
         this->coeffs().lookup("Cmix") >> Cmix_;
         return true;

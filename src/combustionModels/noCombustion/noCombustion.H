@@ -35,7 +35,7 @@ SourceFiles
 #ifndef noCombustion_H
 #define noCombustion_H
 
-#include "ThermoCombustion.H"
+#include "combustionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,10 +48,9 @@ namespace combustionModels
                         Class noCombustion Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ReactionThermo>
 class noCombustion
 :
-    public ThermoCombustion<ReactionThermo>
+    public combustionModel
 {
 public:
 
@@ -65,7 +64,7 @@ public:
         noCombustion
         (
             const word& modelType,
-            const ReactionThermo& thermo,
+            const fluidReactionThermo& thermo,
             const compressibleMomentumTransportModel& turb,
             const word& combustionProperties
         );
@@ -104,12 +103,6 @@ public:
 
 } // End namespace combustionModels
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "noCombustion.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

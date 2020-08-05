@@ -1,24 +1,27 @@
 combustionModel/combustionModel.C
-CombustionModel/CombustionModel/CombustionModels.C
+combustionModel/combustionModelNew.C
+
+chemistryCombustion/chemistryCombustion.C
 
 diffusion/diffusions.C
+
 infinitelyFastChemistry/infinitelyFastChemistrys.C
 
-PaSR/PaSRs.C
-EDC/EDCs.C
+PaSR/PaSR.C
 
-laminar/laminars.C
+EDC/EDC.C
+
+laminar/laminar.C
 
 FSD/reactionRateFlameAreaModels/consumptionSpeed/consumptionSpeed.C
 FSD/reactionRateFlameAreaModels/reactionRateFlameArea/reactionRateFlameArea.C
 FSD/reactionRateFlameAreaModels/reactionRateFlameArea/reactionRateFlameAreaNew.C
 FSD/reactionRateFlameAreaModels/relaxation/relaxation.C
-
 FSD/FSDs.C
 
-zoneCombustion/zoneCombustions.C
+zoneCombustion/zoneCombustion.C
 
-noCombustion/noCombustions.C
+noCombustion/noCombustion.C
 
 functionObjects/Qdot/Qdot.C
 

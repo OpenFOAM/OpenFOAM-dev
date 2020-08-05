@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,48 +34,44 @@ SourceFiles
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class CompType, class ThermoType>
-inline bool
-Foam::chemistryReductionMethod<CompType, ThermoType>::active() const
+template<class ThermoType>
+inline bool Foam::chemistryReductionMethod<ThermoType>::active() const
 {
     return active_;
 }
 
 
-template<class CompType, class ThermoType>
-inline bool
-Foam::chemistryReductionMethod<CompType, ThermoType>::log() const
+template<class ThermoType>
+inline bool Foam::chemistryReductionMethod<ThermoType>::log() const
 {
     return active_ && log_;
 }
 
 
-template<class CompType, class ThermoType>
+template<class ThermoType>
 inline const Foam::List<bool>&
-Foam::chemistryReductionMethod<CompType, ThermoType>::activeSpecies() const
+Foam::chemistryReductionMethod<ThermoType>::activeSpecies() const
 {
     return activeSpecies_;
 }
 
-template<class CompType, class ThermoType>
-inline Foam::label
-Foam::chemistryReductionMethod<CompType, ThermoType>::NsSimp()
+template<class ThermoType>
+inline Foam::label Foam::chemistryReductionMethod<ThermoType>::NsSimp()
 {
     return NsSimp_;
 }
 
 
-template<class CompType, class ThermoType>
-inline Foam::label
-Foam::chemistryReductionMethod<CompType, ThermoType>::nSpecie()
+template<class ThermoType>
+inline Foam::label Foam::chemistryReductionMethod<ThermoType>::nSpecie()
 {
     return nSpecie_;
 }
 
 
-template<class CompType, class ThermoType>
+template<class ThermoType>
 inline Foam::scalar
-Foam::chemistryReductionMethod<CompType, ThermoType>::tolerance() const
+Foam::chemistryReductionMethod<ThermoType>::tolerance() const
 {
     return tolerance_;
 }

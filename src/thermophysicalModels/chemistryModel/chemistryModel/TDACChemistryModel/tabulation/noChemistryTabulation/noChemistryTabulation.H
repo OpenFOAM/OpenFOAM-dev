@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,10 +44,10 @@ namespace chemistryTabulationMethods
                            Class none Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class CompType, class ThermoType>
+template<class ThermoType>
 class none
 :
-    public chemistryTabulationMethod<CompType, ThermoType>
+    public chemistryTabulationMethod<ThermoType>
 {
 public:
 
@@ -60,7 +60,7 @@ public:
         none
         (
             const dictionary& chemistryProperties,
-            TDACChemistryModel<CompType, ThermoType>& chemistry
+            TDACChemistryModel<ThermoType>& chemistry
         );
 
         //- Disallow default bitwise copy construction

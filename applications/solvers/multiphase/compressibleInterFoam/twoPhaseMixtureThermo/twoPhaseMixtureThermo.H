@@ -52,7 +52,7 @@ namespace Foam
 
 class twoPhaseMixtureThermo
 :
-    public psiThermo,
+    public psiThermo::composite,
     public twoPhaseMixture,
     public interfaceProperties
 {
