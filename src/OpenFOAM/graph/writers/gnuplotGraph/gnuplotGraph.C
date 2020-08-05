@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,11 +42,14 @@ namespace Foam
 
 void Foam::gnuplotGraph::write(const graph& g, Ostream& os) const
 {
-    os  << "#set term postscript color" << endl
-        << "set output \"" << word(g.title()) << ".ps\"" << endl
-        << "set title " << g.title() << " 0,0" << endl << "show title" << endl
-        << "set xlabel " << g.xName() << " 0,0" << endl << "show xlabel" << endl
-        << "set ylabel " << g.yName() << " 0,0" << endl << "show ylabel" << endl
+    os  << "set term postscript color" << nl
+        << "set output \"" << word(g.title()) << ".ps\"" << nl
+        << "set title " << g.title() << " offset 0,0" << nl
+        << "show title" << nl
+        << "set xlabel " << g.xName() << " offset 0,0" << nl
+        << "show xlabel" << nl
+        << "set ylabel " << g.yName() << " offset 0,0" << nl
+        << "show ylabel" << nl
         << "plot";
 
     bool firstField = true;
@@ -61,12 +64,12 @@ void Foam::gnuplotGraph::write(const graph& g, Ostream& os) const
 
         os  << "'-' title " << iter()->name() << " with lines";
     }
-    os << "; pause -1" << endl;
+    os << "; pause -1" << nl;
 
 
     forAllConstIter(graph, g, iter)
     {
-        os  << endl;
+        os  << nl;
         writeXY(g.x(), *iter(), os);
     }
 }
