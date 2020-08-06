@@ -463,7 +463,17 @@ void Foam::phaseSystem::solve
                     << endl;
             }
 
-            if (!referencePhasePtr)
+            if (referencePhasePtr)
+            {
+                volScalarField& referenceAlpha = *referencePhasePtr;
+                referenceAlpha = alphaVoid;
+
+                forAll(solvePhases, solvePhasei)
+                {
+                    referenceAlpha -= solvePhases[solvePhasei];
+                }
+            }
+            else
             {
                 volScalarField sumAlphaMoving
                 (
