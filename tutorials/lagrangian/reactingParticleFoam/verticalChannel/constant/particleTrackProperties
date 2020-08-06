@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-cloudName       reactingCloud1;
+cloudName       cloud;
 
 sampleFrequency 1;
 
