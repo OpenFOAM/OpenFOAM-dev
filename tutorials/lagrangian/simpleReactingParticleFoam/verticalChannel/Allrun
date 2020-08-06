@@ -13,4 +13,6 @@ rm -f 0/phi
 
 runApplication $(getApplication)
 
+runApplication steadyParticleTracks
+
 #------------------------------------------------------------------------------

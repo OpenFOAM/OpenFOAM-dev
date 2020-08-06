@@ -15,4 +15,7 @@ rm -f 0/phi
 # Run the solver
 runApplication $(getApplication)
 
+# Run post-processing
+runApplication steadyParticleTracks
+
 #------------------------------------------------------------------------------
