@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,7 @@ SourceFiles
 #define solidThermo_H
 
 #include "basicThermo.H"
+#include "uniformGeometricFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,6 +55,13 @@ class solidThermo
 protected:
 
     // Protected data
+
+        //- Pressure [Pa]
+        //  Note: This value should never be used. Solid thermo should only be
+        //  instantiated with thermo models that do not depend on pressure.
+        //  This uniform field takes a value of NaN, so that if any thermo
+        //  models that do depend on pressure are used then the code will exit.
+        uniformGeometricScalarField p_;
 
         //- Density field [kg/m^3]
         volScalarField rho_;

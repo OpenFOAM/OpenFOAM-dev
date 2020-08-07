@@ -36,6 +36,8 @@ SourceFiles
 #define heThermo_H
 
 #include "basicMixture.H"
+#include "volFields.H"
+#include "uniformGeometricFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -99,6 +101,20 @@ protected:
             const label patchi,
             const Args& ... args
         ) const;
+
+        //- Return an indirect list of a field for the given set of cells
+        static UIndirectList<scalar> cellSetScalarList
+        (
+            const volScalarField& psi,
+            const labelList& cells
+        );
+
+        //- Return an indirect list of a field for the given set of cells
+        static UniformField<scalar> cellSetScalarList
+        (
+            const uniformGeometricScalarField& psi,
+            const labelList&
+        );
 
         //- Correct the enthalpy/internal energy field boundaries
         void heBoundaryCorrection(volScalarField& he);

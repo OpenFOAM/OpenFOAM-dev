@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,7 @@ SourceFiles
 
 #include "regIOobject.H"
 #include "dimensionedType.H"
+#include "UniformField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -57,6 +58,15 @@ class UniformDimensionedField
 {
 
 public:
+
+    // Public Typedefs
+
+        //- Type of the non-dimensioned field
+        typedef UniformField<Type> FieldType;
+
+        //- Component type of the elements of the field
+        typedef typename UniformField<Type>::cmptType cmptType;
+
 
     //- Runtime type information
     TypeName("UniformDimensionedField");
@@ -87,8 +97,6 @@ public:
             return dimensioned<Type>::name();
         }
 
-        bool writeData(Ostream&) const;
-
         //- Is object global
         virtual bool global() const
         {
@@ -101,6 +109,15 @@ public:
         {
             return globalFilePath(type());
         }
+
+        //- Return the non-dimensioned field
+        FieldType field() const
+        {
+            return FieldType(this->value());
+        }
+
+        //- WriteData function required for regIOobject write operation
+        bool writeData(Ostream&) const;
 
 
     // Member Operators

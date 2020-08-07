@@ -29,8 +29,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef makeHeSolidThermo_H
-#define makeHeSolidThermo_H
+#ifndef makeSolidThermo_H
+#define makeSolidThermo_H
 
 #include "basicThermo.H"
 #include "addToRunTimeSelectionTable.H"

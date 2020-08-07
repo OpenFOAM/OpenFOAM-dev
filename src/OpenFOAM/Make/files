@@ -616,6 +616,9 @@ meshTools = meshes/meshTools
 $(meshTools)/matchPoints.C
 
 fields/UniformDimensionedFields/uniformDimensionedFields.C
+
+fields/UniformGeometricFields/uniformGeometricFields.C
+
 fields/cloud/cloud.C
 
 Fields = fields/Fields

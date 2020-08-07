@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,23 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::UniformField
+    Foam::UniformGeometricField
 
 Description
-    A class representing the concept of a uniform field which stores only
-    the single value and providing the operator[] to return it.
+    Dimensioned<Type> registered with the database as a registered IOobject
+    which has the functionality of a uniform field and allows values from the
+    top-level code to be passed to boundary conditions etc.
+
+SourceFiles
+    UniformGeometricField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef UniformField_H
-#define UniformField_H
+#ifndef UniformGeometricField_H
+#define UniformGeometricField_H
 
-#include "label.H"
+#include "UniformDimensionedField.H"
+#include "UniformFieldField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -41,31 +46,55 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class UniformField Declaration
+                     Class UniformGeometricField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class UniformField
+class UniformGeometricField
+:
+    public UniformDimensionedField<Type>
 {
-    // Private Data
-
-        Type value_;
-
 public:
+
+    // Public Typedefs
+
+        typedef UniformDimensionedField<Type> Internal;
+        typedef UniformField<Type> Patch;
+        typedef UniformFieldField<Type> Boundary;
+        typedef Type cmptType;
+
+
+    //- Runtime type information
+    TypeName("UniformGeometricField");
+
 
     // Constructors
 
-        //- Construct given value
-        inline UniformField(const Type& value);
+        //- Construct from components. Either reads or uses supplied value.
+        UniformGeometricField(const IOobject&, const dimensioned<Type>&);
+
+        //- Copy constructor
+        UniformGeometricField(const UniformGeometricField<Type>&);
+
+        //- Construct from Istream
+        UniformGeometricField(const IOobject&);
+
+
+    //- Destructor
+    virtual ~UniformGeometricField();
 
 
     // Member Operators
 
-        inline operator Type() const;
+        inline const UniformGeometricField<Type>& oldTime() const;
 
-        inline Type operator[](const label) const;
+        inline const Internal& operator()() const;
 
-        inline UniformField field() const;
+        inline const Internal& v() const;
+
+        inline typename Internal::FieldType primitiveField() const;
+
+        inline Boundary boundaryField() const;
 };
 
 
@@ -75,7 +104,10 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "UniformFieldI.H"
+#ifdef NoRepository
+    #include "UniformGeometricField.C"
+    #include "UniformGeometricFieldI.H"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,10 +31,10 @@ License
 template<class BasicSolidThermo, class MixtureType>
 void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
 {
-    scalarField& TCells = this->T_.primitiveFieldRef();
-
     const scalarField& hCells = this->he_;
-    const scalarField& pCells = this->p_;
+    const auto& pCells = this->p_;
+
+    scalarField& TCells = this->T_.primitiveFieldRef();
     scalarField& rhoCells = this->rho_.primitiveFieldRef();
     scalarField& alphaCells = this->alpha_.primitiveFieldRef();
 
@@ -60,8 +60,7 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
            /mixture_.Cpv(pCells[celli], TCells[celli]);
     }
 
-    volScalarField::Boundary& pBf =
-        this->p_.boundaryFieldRef();
+    const auto& pBf = this->p_.boundaryField();
 
     volScalarField::Boundary& TBf =
         this->T_.boundaryFieldRef();
@@ -77,7 +76,7 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
 
     forAll(this->T_.boundaryField(), patchi)
     {
-        fvPatchScalarField& pp = pBf[patchi];
+        const auto& pp = pBf[patchi];
         fvPatchScalarField& pT = TBf[patchi];
         fvPatchScalarField& prho = rhoBf[patchi];
         fvPatchScalarField& phe = heBf[patchi];
@@ -211,10 +210,11 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa() const
         )
     );
 
+    const auto& pCells = this->p_;
+    const scalarField& TCells = this->T_;
+
     volVectorField& Kappa = tKappa.ref();
     vectorField& KappaCells = Kappa.primitiveFieldRef();
-    const scalarField& TCells = this->T_;
-    const scalarField& pCells = this->p_;
 
     forAll(KappaCells, celli)
     {
@@ -231,9 +231,10 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa() const
 
     forAll(KappaBf, patchi)
     {
-        vectorField& Kappap = KappaBf[patchi];
+        const auto& pp = this->p_.boundaryField()[patchi];
         const scalarField& pT = this->T_.boundaryField()[patchi];
-        const scalarField& pp = this->p_.boundaryField()[patchi];
+
+        vectorField& Kappap = KappaBf[patchi];
 
         forAll(Kappap, facei)
         {
@@ -259,10 +260,10 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa
     const label patchi
 ) const
 {
-    const scalarField& pp = this->p_.boundaryField()[patchi];
+    const auto& pp = this->p_.boundaryField()[patchi];
     const scalarField& Tp = this->T_.boundaryField()[patchi];
-    tmp<vectorField> tKappa(new vectorField(pp.size()));
 
+    tmp<vectorField> tKappa(new vectorField(Tp.size()));
     vectorField& Kappap = tKappa.ref();
 
     forAll(Tp, facei)
@@ -270,11 +271,11 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa
         Kappap[facei] =
             this->patchFaceVolMixture
             (
-                pp[facei],
+                pp[patchi],
                 Tp[facei],
                 patchi,
                 facei
-            ).Kappa(pp[facei], Tp[facei]);
+            ).Kappa(pp[patchi], Tp[facei]);
     }
 
     return tKappa;

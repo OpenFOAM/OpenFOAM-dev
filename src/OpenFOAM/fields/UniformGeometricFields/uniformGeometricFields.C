@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,24 +23,23 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "solidPressureThermo.H"
-#include "heSolidThermo.H"
-#include "pureMixture.H"
-
-#include "forSolids.H"
-#include "makeHeSolidThermo.H"
+#include "uniformGeometricFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
 
-/* * * * * * * * * * * * * * * * * Enthalpy-based * * * * * * * * * * * * * */
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-forSolids(makeSolidThermos, solidPressureThermo, heSolidThermo, pureMixture);
+defineTemplateTypeNameAndDebug(uniformGeometricScalarField, 0);
+defineTemplateTypeNameAndDebug(uniformGeometricVectorField, 0);
+defineTemplateTypeNameAndDebug(uniformGeometricSphericalTensorField, 0);
+defineTemplateTypeNameAndDebug(uniformGeometricSymmTensorField, 0);
+defineTemplateTypeNameAndDebug(uniformGeometricTensorField, 0);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
 
-// ************************************************************************* //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
