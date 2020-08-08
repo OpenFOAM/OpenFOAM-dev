@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,17 +134,6 @@ public:
 
 
     // Member Functions
-
-        // Attributes
-
-            //- Return true if this patch field fixes a value.
-            //  Needed to check if a level has to be specified while solving
-            //  Poissons equations.
-            virtual bool fixesValue() const
-            {
-                return true;
-            }
-
 
         // Evaluation functions
 
