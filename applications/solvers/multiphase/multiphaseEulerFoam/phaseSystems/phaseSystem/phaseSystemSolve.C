@@ -538,7 +538,6 @@ void Foam::phaseSystem::solve
                 referencePhase.alphaPhiRef() -= phase.alphaPhi();
             }
 
-            referencePhase.correctInflowOutflow(referencePhase.alphaPhiRef());
             referencePhase.alphaRhoPhiRef() =
                 fvc::interpolate(referencePhase.rho())
                *referencePhase.alphaPhi();
