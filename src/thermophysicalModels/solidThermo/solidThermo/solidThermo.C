@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "solidThermo.H"
 #include "fvMesh.H"
 
-
 /* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */
 
 namespace Foam
@@ -46,6 +45,18 @@ Foam::solidThermo::solidThermo
 )
 :
     basicThermo(mesh, phaseName),
+    p_
+    (
+        IOobject
+        (
+            phasePropertyName("p"),
+            mesh.time().timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        dimensionedScalar(phasePropertyName("p"), dimPressure, NaN)
+    ),
     rho_
     (
         IOobject
@@ -70,6 +81,18 @@ Foam::solidThermo::solidThermo
 )
 :
     basicThermo(mesh, dict, phaseName),
+    p_
+    (
+        IOobject
+        (
+            phasePropertyName("p"),
+            mesh.time().timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        dimensionedScalar(phasePropertyName("p"), dimPressure, NaN)
+    ),
     rho_
     (
         IOobject

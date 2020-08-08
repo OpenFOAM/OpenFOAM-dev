@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,59 +23,24 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "solidPressureThermo.H"
-#include "fvMesh.H"
+#include "UniformFieldField.H"
 
-/* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-    defineTypeNameAndDebug(solidPressureThermo, 0);
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::solidPressureThermo::solidPressureThermo
-(
-    const fvMesh& mesh,
-    const word& phaseName
-)
+template<class Type>
+inline Foam::UniformFieldField<Type>::UniformFieldField(const Type& value)
 :
-    solidThermo(mesh, phaseName),
-    p_(lookupOrConstruct(mesh, "p"))
+    value_(value)
 {}
 
 
-Foam::solidPressureThermo::solidPressureThermo
+template<class Type>
+inline Foam::UniformField<Type> Foam::UniformFieldField<Type>::operator[]
 (
-    const fvMesh& mesh,
-    const dictionary& dict,
-    const word& phaseName
-)
-:
-    solidThermo(mesh, dict, phaseName),
-    p_(lookupOrConstruct(mesh, "p"))
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::solidPressureThermo::~solidPressureThermo()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::volScalarField& Foam::solidPressureThermo::p() const
+    const label
+) const
 {
-    return p_;
-}
-
-
-Foam::volScalarField& Foam::solidPressureThermo::p()
-{
-    return p_;
+    return UniformField<Type>(value_);
 }
 
 

@@ -24,7 +24,6 @@ absorptionEmissionModels/constantAbsorptionEmission/constantAbsorptionEmission.C
 absorptionEmissionModels/binary/binary.C
 absorptionEmissionModels/greyMean/greyMean.C
 absorptionEmissionModels/wideBand/wideBand.C
-absorptionEmissionModels/greyMeanSolid/greyMeanSolid.C
 
 /* Soot model */
 sootModels/sootModel/sootModel.C

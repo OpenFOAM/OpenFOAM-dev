@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::solidPressureThermo
+    Foam::UniformFieldField
 
 Description
-    Fundamental solid thermodynamic properties including pressure.
+    A class representing the concept of a field of uniform fields which stores
+    only the single value and providing the operator[] to return it.
 
 SourceFiles
-    solidPressureThermo.C
+    UniformFieldFieldI.H
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef solidPressureThermo_H
-#define solidPressureThermo_H
+#ifndef UniformFieldField_H
+#define UniformFieldField_H
 
-#include "solidThermo.H"
+#include "UniformField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,65 +44,44 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class solidPressureThermo Declaration
+                         Class UniformFieldField Declaration
 \*---------------------------------------------------------------------------*/
 
-class solidPressureThermo
-:
-    public solidThermo
+template<class Type>
+class UniformFieldField
 {
+    // Private Data
 
-protected:
-
-        // Fields
-
-            //- Pressure [Pa]
-            volScalarField& p_;
+        Type value_;
 
 
 public:
 
-    //- Runtime type information
-    TypeName("solidPressureThermo");
+    // Public typedefs
+
+        //- Component type
+        typedef typename pTraits<Type>::cmptType cmptType;
+
 
     // Constructors
 
-        //- Construct from mesh and phase name
-        solidPressureThermo
-        (
-            const fvMesh&,
-            const word& phaseName
-        );
-
-        //- Construct from mesh, dictionary and phase name
-        solidPressureThermo
-        (
-            const fvMesh&,
-            const dictionary& dict,
-            const word& phaseName
-        );
+        //- Construct given value
+        UniformFieldField(const Type& value);
 
 
-    //- Destructor
-    virtual ~solidPressureThermo();
+    // Member Operators
 
-
-    // Member Functions
-
-        // Access to thermodynamic state variables
-
-            //- Pressure [Pa]
-            //  Non-const access allowed for transport equations
-            virtual volScalarField& p();
-
-            //- Pressure [Pa]
-            virtual const volScalarField& p() const;
+        inline UniformField<Type> operator[](const label) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "UniformFieldFieldI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
