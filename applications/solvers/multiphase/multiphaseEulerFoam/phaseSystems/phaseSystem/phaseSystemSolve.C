@@ -258,25 +258,6 @@ void Foam::phaseSystem::solve
             !(++alphaSubCycle).end();
         )
         {
-            // Generate face-alphas
-            PtrList<surfaceScalarField> alphafs(phases().size());
-            if (solvePhases.size() > 1)
-            {
-                forAll(phases(), phasei)
-                {
-                    phaseModel& phase = phases()[phasei];
-                    alphafs.set
-                    (
-                        phasei,
-                        new surfaceScalarField
-                        (
-                            IOobject::groupName("alphaf", phase.name()),
-                            upwind<scalar>(mesh_, phi_).interpolate(phase)
-                        )
-                    );
-                }
-            }
-
             // Create correction fluxes
             PtrList<surfaceScalarField> alphaPhiCorrs(phases().size());
 
@@ -368,18 +349,38 @@ void Foam::phaseSystem::solve
                 (
                     geometricOneField(),
                     alpha,
-                    phi_,
+                    // phi_,
+                    phase.phi(),
                     alphaPhiCorr,
                     Sps[phase.index()],
                     Sus[phase.index()],
                     min(alphaVoid.primitiveField(), phase.alphaMax())(),
                     zeroField(),
-                    true
+                    // true
+                    false
                 );
+                alphaPhiCorr -= upwind<scalar>(mesh_, phi_).flux(phase);
             }
 
             if (solvePhases.size() > 1)
             {
+                // Generate face-alphas
+                PtrList<surfaceScalarField> alphafs(phases().size());
+
+                forAll(phases(), phasei)
+                {
+                    phaseModel& phase = phases()[phasei];
+                    alphafs.set
+                    (
+                        phasei,
+                        new surfaceScalarField
+                        (
+                            IOobject::groupName("alphaf", phase.name()),
+                            upwind<scalar>(mesh_, phi_).interpolate(phase)
+                        )
+                    );
+                }
+
                 // Limit the flux sums, fixing those of the stationary phases
                 labelHashSet fixedAlphaPhiCorrs;
                 forAll(stationaryPhases(), stationaryPhasei)
