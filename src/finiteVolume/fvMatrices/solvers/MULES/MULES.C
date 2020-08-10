@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,35 +79,27 @@ void Foam::MULES::limitSum(UPtrList<scalarField>& phiPsiCorrs)
 void Foam::MULES::limitSum
 (
     const UPtrList<const scalarField>& alphas,
-    UPtrList<scalarField>& phiPsiCorrs,
-    const labelHashSet& fixed
+    UPtrList<scalarField>& phiPsis,
+    const scalarField& phi
 )
 {
-    labelHashSet notFixed(identity(phiPsiCorrs.size()));
-    notFixed -= fixed;
-
-    forAll(phiPsiCorrs[0], facei)
+    forAll(phi, facei)
     {
-        scalar alphaNotFixed = 0, corrNotFixed = 0;
-        forAllConstIter(labelHashSet, notFixed, iter)
+        scalar alphaMoving = 0;
+        scalar phiMoving = 0;
+
+        forAll(alphas, phasei)
         {
-            alphaNotFixed += alphas[iter.key()][facei];
-            corrNotFixed += phiPsiCorrs[iter.key()][facei];
+            alphaMoving += alphas[phasei][facei];
+            phiMoving += phiPsis[phasei][facei];
         }
 
-        scalar corrFixed = 0;
-        forAllConstIter(labelHashSet, fixed, iter)
+        const scalar phiError = phiMoving - phi[facei];
+        const scalar phiiError = phiError/alphaMoving;
+
+        forAll(phiPsis, phasei)
         {
-            corrFixed += phiPsiCorrs[iter.key()][facei];
-        }
-
-        const scalar sumCorr = corrNotFixed + corrFixed;
-
-        const scalar lambda = - sumCorr/alphaNotFixed;
-
-        forAllConstIter(labelHashSet, notFixed, iter)
-        {
-            phiPsiCorrs[iter.key()][facei] += lambda*alphas[iter.key()][facei];
+            phiPsis[phasei][facei] -= phiiError*alphas[phasei][facei];
         }
     }
 }

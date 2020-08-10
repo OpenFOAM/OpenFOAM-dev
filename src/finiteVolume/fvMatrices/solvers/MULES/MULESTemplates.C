@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -724,37 +724,36 @@ void Foam::MULES::limitSum(SurfaceScalarFieldList& phiPsiCorrs)
 }
 
 
-template<class SurfaceScalarFieldList>
+template<template<class> class AlphaList, template<class> class PhiList>
 void Foam::MULES::limitSum
 (
-    const SurfaceScalarFieldList& alphas,
-    SurfaceScalarFieldList& phiPsiCorrs,
-    const labelHashSet& fixed
+    const AlphaList<surfaceScalarField>& alphas,
+    PhiList<surfaceScalarField>& phiPsis,
+    const surfaceScalarField& phi
 )
 {
     {
         UPtrList<const scalarField> alphasInternal(alphas.size());
+        UPtrList<scalarField> phiPsisInternal(phiPsis.size());
+
         forAll(alphas, phasei)
         {
             alphasInternal.set(phasei, &alphas[phasei]);
-        }
-        UPtrList<scalarField> phiPsiCorrsInternal(phiPsiCorrs.size());
-        forAll(phiPsiCorrs, phasei)
-        {
-            phiPsiCorrsInternal.set(phasei, &phiPsiCorrs[phasei]);
+            phiPsisInternal.set(phasei, &phiPsis[phasei]);
         }
 
-        limitSum(alphasInternal, phiPsiCorrsInternal, fixed);
+        limitSum(alphasInternal, phiPsisInternal, phi);
     }
 
-    const surfaceScalarField::Boundary& bfld =
-        phiPsiCorrs[0].boundaryField();
+    const surfaceScalarField::Boundary& phibf = phi.boundaryField();
 
-    forAll(bfld, patchi)
+    forAll(phibf, patchi)
     {
-        if (bfld[patchi].coupled())
+        if (phibf[patchi].coupled())
         {
             UPtrList<const scalarField> alphasPatch(alphas.size());
+            UPtrList<scalarField> phiPsisPatch(phiPsis.size());
+
             forAll(alphas, phasei)
             {
                 alphasPatch.set
@@ -762,18 +761,20 @@ void Foam::MULES::limitSum
                     phasei,
                     &alphas[phasei].boundaryField()[patchi]
                 );
-            }
-            UPtrList<scalarField> phiPsiCorrsPatch(phiPsiCorrs.size());
-            forAll(phiPsiCorrs, phasei)
-            {
-                phiPsiCorrsPatch.set
+
+                phiPsisPatch.set
                 (
                     phasei,
-                    &phiPsiCorrs[phasei].boundaryFieldRef()[patchi]
+                    &phiPsis[phasei].boundaryFieldRef()[patchi]
                 );
             }
 
-            limitSum(alphasPatch, phiPsiCorrsPatch, fixed);
+            limitSum
+            (
+                alphasPatch,
+                phiPsisPatch,
+                phi.boundaryField()[patchi]
+            );
         }
     }
 }

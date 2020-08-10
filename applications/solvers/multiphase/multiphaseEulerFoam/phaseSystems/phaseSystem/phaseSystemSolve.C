@@ -259,32 +259,14 @@ void Foam::phaseSystem::solve
         )
         {
             // Create correction fluxes
-            PtrList<surfaceScalarField> alphaPhiCorrs(phases().size());
-
-            if (solvePhases.size() > 1)
-            {
-                forAll(stationaryPhases(), stationaryPhasei)
-                {
-                    phaseModel& phase = stationaryPhases()[stationaryPhasei];
-
-                    alphaPhiCorrs.set
-                    (
-                        phase.index(),
-                        new surfaceScalarField
-                        (
-                            IOobject::groupName("alphaPhiCorr", phase.name()),
-                          - upwind<scalar>(mesh_, phi_).flux(phase)
-                        )
-                    );
-                }
-            }
+            PtrList<surfaceScalarField> alphaPhis(phases().size());
 
             forAll(fluxPhases, fluxPhasei)
             {
                 phaseModel& phase = fluxPhases[fluxPhasei];
                 volScalarField& alpha = phase;
 
-                alphaPhiCorrs.set
+                alphaPhis.set
                 (
                     phase.index(),
                     new surfaceScalarField
@@ -294,7 +276,7 @@ void Foam::phaseSystem::solve
                     )
                 );
 
-                surfaceScalarField& alphaPhiCorr = alphaPhiCorrs[phase.index()];
+                surfaceScalarField& alphaPhi = alphaPhis[phase.index()];
 
                 forAll(phases(), phasei)
                 {
@@ -327,7 +309,7 @@ void Foam::phaseSystem::solve
                         "div(phir," + alpha2.name() + ',' + alpha.name() + ')'
                     );
 
-                    alphaPhiCorr += fvc::flux
+                    alphaPhi += fvc::flux
                     (
                        -fvc::flux(-phir, alpha2, phirScheme),
                         alpha,
@@ -337,60 +319,65 @@ void Foam::phaseSystem::solve
 
                 if (alphaPhiDbyA0s.set(phase.index()))
                 {
-                    alphaPhiCorr +=
+                    alphaPhi +=
                         fvc::interpolate(max(alpha, scalar(0)))
                        *fvc::interpolate(max(1 - alpha, scalar(0)))
                        *alphaPhiDbyA0s[phase.index()];
                 }
 
-                phase.correctInflowOutflow(alphaPhiCorr);
+                phase.correctInflowOutflow(alphaPhi);
 
                 MULES::limit
                 (
                     geometricOneField(),
                     alpha,
-                    // phi_,
                     phase.phi(),
-                    alphaPhiCorr,
+                    alphaPhi,
                     Sps[phase.index()],
                     Sus[phase.index()],
                     min(alphaVoid.primitiveField(), phase.alphaMax())(),
                     zeroField(),
-                    // true
                     false
                 );
-                alphaPhiCorr -= upwind<scalar>(mesh_, phi_).flux(phase);
             }
 
             if (solvePhases.size() > 1)
             {
-                // Generate face-alphas
-                PtrList<surfaceScalarField> alphafs(phases().size());
+                // Generate face-alphas for the moving phases
+                PtrList<surfaceScalarField> alphafsMoving
+                (
+                    movingPhases().size()
+                );
 
-                forAll(phases(), phasei)
+                UPtrList<surfaceScalarField> alphaPhisMoving
+                (
+                    movingPhases().size()
+                );
+
+                forAll(movingPhases(), movingPhasei)
                 {
-                    phaseModel& phase = phases()[phasei];
-                    alphafs.set
+                    phaseModel& phase = movingPhases()[movingPhasei];
+
+                    alphafsMoving.set
                     (
-                        phasei,
+                        movingPhasei,
                         new surfaceScalarField
                         (
                             IOobject::groupName("alphaf", phase.name()),
-                            upwind<scalar>(mesh_, phi_).interpolate(phase)
+                            // upwind<scalar>(mesh_, phi_).interpolate(phase)
+                            linear<scalar>(mesh_).interpolate(phase)
                         )
+                    );
+
+                    alphaPhisMoving.set
+                    (
+                        movingPhasei,
+                        &alphaPhis[phase.index()]
                     );
                 }
 
-                // Limit the flux sums, fixing those of the stationary phases
-                labelHashSet fixedAlphaPhiCorrs;
-                forAll(stationaryPhases(), stationaryPhasei)
-                {
-                    fixedAlphaPhiCorrs.insert
-                    (
-                        stationaryPhases()[stationaryPhasei].index()
-                    );
-                }
-                MULES::limitSum(alphafs, alphaPhiCorrs, fixedAlphaPhiCorrs);
+                // Limit the flux sum
+                MULES::limitSum(alphafsMoving, alphaPhisMoving, phi_);
             }
 
             forAll(solvePhases, solvePhasei)
@@ -398,8 +385,7 @@ void Foam::phaseSystem::solve
                 phaseModel& phase = solvePhases[solvePhasei];
                 volScalarField& alpha = phase;
 
-                surfaceScalarField& alphaPhi = alphaPhiCorrs[phase.index()];
-                alphaPhi += upwind<scalar>(mesh_, phi_).flux(phase);
+                surfaceScalarField& alphaPhi = alphaPhis[phase.index()];
                 phase.correctInflowOutflow(alphaPhi);
 
                 MULES::explicitSolve

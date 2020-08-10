@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,16 +198,17 @@ void limitSum
 (
     const UPtrList<const scalarField>& alphas,
     UPtrList<scalarField>& phiPsiCorrs,
-    const labelHashSet& fixed
+    const scalarField& phi
 );
 
-template<class SurfaceScalarFieldList>
+template<template<class> class AlphaList, template<class> class PhiList>
 void limitSum
 (
-    const SurfaceScalarFieldList& alphas,
-    SurfaceScalarFieldList& phiPsiCorrs,
-    const labelHashSet& fixed
+    const AlphaList<surfaceScalarField>& alphas,
+    PhiList<surfaceScalarField>& phiPsiCorrs,
+    const surfaceScalarField& phi
 );
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
