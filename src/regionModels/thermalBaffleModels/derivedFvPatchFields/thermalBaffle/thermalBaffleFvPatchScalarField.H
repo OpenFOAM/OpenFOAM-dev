@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,8 +49,6 @@ Usage
 
         // Underlaying coupled boundary condition
         Tnbr               T;
-        kappa              fluidThermo; // or solidThermo
-        KappaName          none;
         qrNbr              qr;//or none.Name of qr field on neighbourregion
         qr                 none;// or none.Name of qr field on localregion
         value              uniform 300;
@@ -65,10 +63,10 @@ Usage
             type            heSolidThermo;
             mixture         pureMixture;
             transport       constIso;
-            thermo          hConst;
+            thermo          eConst;
             equationOfState rhoConst;
             specie          specie;
-            energy          sensibleEnthalpy;
+            energy          sensibleInternalEnergy;
         }
 
         mixture
@@ -84,7 +82,7 @@ Usage
             thermodynamics
             {
                 Hf              0;
-                Cp              15;
+                Cv              15;
             }
             density
             {
@@ -118,8 +116,6 @@ Usage
     <slavePatchName>
     {
         type                compressible::thermalBaffle;
-        kappa               fluidThermo;
-        kappaName           none;
         value               uniform 300;
     \endverbatim
 
@@ -128,16 +124,12 @@ Usage
     bottom
     {
         type                compressible::thermalBaffle;
-        kappa               solidThermo;
-        kappaName           none;
         value               uniform 300;
     }
 
     top
     {
         type                compressible::thermalBaffle;
-        kappa               solidThermo;
-        kappaName           none;
         value               uniform 300;
     }
     \endverbatim

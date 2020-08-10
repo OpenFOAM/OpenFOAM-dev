@@ -40,6 +40,7 @@ Usage
     <masterPatchName>
     {
         type   compressible::thermalBaffle1D<hConstSolidThermoPhysics>;
+
         samplePatch     <slavePatchName>;
 
         thickness       uniform 0.005;  // thickness [m]
@@ -60,23 +61,26 @@ Usage
         thermodynamics
         {
             Hf              0;
-            Cp              10;
+            Cv              10;
         }
         equationOfState
         {
             rho             10;
         }
 
-        value               uniform 300;
+        value           uniform 300;
     }
 
     <slavePatchName>
     {
         type   compressible::thermalBaffle1D<hConstSolidThermoPhysics>;
+
         samplePatch     <masterPatchName>;
 
         qr              none;
         relaxation      1;
+
+        value           uniform 300;
     }
     \endverbatim
 
