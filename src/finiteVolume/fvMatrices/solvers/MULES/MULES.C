@@ -83,23 +83,48 @@ void Foam::MULES::limitSum
     const scalarField& phi
 )
 {
+    /*
     forAll(phi, facei)
     {
-        scalar alphaMoving = 0;
-        scalar phiMoving = 0;
+        scalar alphaSum = 0;
+        scalar phiSum = 0;
 
         forAll(alphas, phasei)
         {
-            alphaMoving += alphas[phasei][facei];
-            phiMoving += phiPsis[phasei][facei];
+            alphaSum += alphas[phasei][facei];
+            phiSum += phiPsis[phasei][facei];
         }
 
-        const scalar phiError = phiMoving - phi[facei];
-        const scalar phiiError = phiError/alphaMoving;
+        const scalar phiError = phiSum - phi[facei];
+        const scalar phiiError = phiError/alphaSum;
 
         forAll(phiPsis, phasei)
         {
             phiPsis[phasei][facei] -= phiiError*alphas[phasei][facei];
+        }
+    }
+    */
+
+    forAll(phi, facei)
+    {
+        scalar magPhiSum = 0;
+        scalar phiSum = 0;
+
+        forAll(alphas, phasei)
+        {
+            magPhiSum += mag(phiPsis[phasei][facei]);
+            phiSum += phiPsis[phasei][facei];
+        }
+
+        if (magPhiSum > rootVSmall)
+        {
+            const scalar phiError = phiSum - phi[facei];
+            const scalar phiFactor = phiError/magPhiSum;
+
+            forAll(phiPsis, phasei)
+            {
+                phiPsis[phasei][facei] -= phiFactor*mag(phiPsis[phasei][facei]);
+            }
         }
     }
 }
