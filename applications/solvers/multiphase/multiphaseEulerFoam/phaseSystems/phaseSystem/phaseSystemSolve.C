@@ -364,7 +364,6 @@ void Foam::phaseSystem::solve
                         new surfaceScalarField
                         (
                             IOobject::groupName("alphaf", phase.name()),
-                            // upwind<scalar>(mesh_, phi_).interpolate(phase)
                             linear<scalar>(mesh_).interpolate(phase)
                         )
                     );
@@ -392,7 +391,8 @@ void Foam::phaseSystem::solve
                 (
                     geometricOneField(),
                     alpha,
-                    alphaPhi,
+                    // phi_, // Guarantees boundedness but less accurate
+                    alphaPhi, // More accurate but requires NVD/TVD scheme
                     Sps[phase.index()],
                     Sus[phase.index()]
                 );
