@@ -93,7 +93,7 @@ Foam::autoPtr<Foam::combustionModel> Foam::combustionModel::New
             << "Unknown " << combustionModel::typeName << " type "
             << combModelName << endl << endl;
 
-        const wordList names(dictionaryConstructorTablePtr_->toc());
+        const wordList names(dictionaryConstructorTablePtr_->sortedToc());
 
         wordList thisCmpts;
         thisCmpts.append(word::null);
@@ -103,18 +103,17 @@ Foam::autoPtr<Foam::combustionModel> Foam::combustionModel::New
         forAll(names, i)
         {
             wordList cmpts(basicThermo::splitThermoName(names[i], 1));
+
             if (cmpts.size() != 1)
             {
                 cmpts = basicThermo::splitThermoName(names[i], 6);
             }
 
-            bool isValid = true;
-            for (label i = 1; i < cmpts.size() && isValid; ++ i)
-            {
-                isValid = isValid && cmpts[i] == thisCmpts[i];
-            }
-
-            if (isValid)
+            if
+            (
+                SubList<word>(cmpts, cmpts.size() - 1, 1)
+             == SubList<word>(thisCmpts, cmpts.size() - 1, 1)
+            )
             {
                 validNames.append(cmpts[0]);
             }
@@ -124,41 +123,33 @@ Foam::autoPtr<Foam::combustionModel> Foam::combustionModel::New
             << "Valid " << combustionModel::typeName << " types for this "
             << "thermodynamic model are:" << endl << validNames << endl;
 
-        List<wordList> validCmpts1, validCmpts6;
-        validCmpts1.append(wordList(1, word::null));
-        validCmpts1[0][0] = combustionModel::typeName;
-        validCmpts6.append(wordList(6, word::null));
-        validCmpts6[0][0] = combustionModel::typeName;
-        validCmpts6[0][1] = "transport";
-        validCmpts6[0][2] = "thermo";
-        validCmpts6[0][3] = "equationOfState";
-        validCmpts6[0][4] = "specie";
-        validCmpts6[0][5] = "energy";
+        List<wordList> validCmpts;
+        validCmpts.append(wordList(6, word::null));
+        validCmpts[0][0] = combustionModel::typeName;
+        validCmpts[0][1] = "transport";
+        validCmpts[0][2] = "thermo";
+        validCmpts[0][3] = "equationOfState";
+        validCmpts[0][4] = "specie";
+        validCmpts[0][5] = "energy";
         forAll(names, i)
         {
             const wordList cmpts1(basicThermo::splitThermoName(names[i], 1));
             const wordList cmpts6(basicThermo::splitThermoName(names[i], 6));
             if (cmpts1.size() == 1)
             {
-                validCmpts1.append(cmpts1);
+                validCmpts.append(cmpts1);
+                validCmpts.last().append(wordList(5, "(any)"));
             }
             if (cmpts6.size() == 6)
             {
-                validCmpts6.append(cmpts6);
+                validCmpts.append(cmpts6);
             }
         }
 
         FatalErrorInFunction
-            << "All " << validCmpts1[0][0]
-            << " combinations are:" << endl << endl;
-        printTable(validCmpts1, FatalErrorInFunction);
-
-        FatalErrorInFunction << endl;
-
-        FatalErrorInFunction
-            << "All " << validCmpts6[0][0] << '/' << validCmpts6[0][1]
-            << "/thermoPhysics combinations are:" << endl << endl;
-        printTable(validCmpts6, FatalErrorInFunction);
+            << "All " << validCmpts[0][0]
+            << "/thermodynamics combinations are:" << endl << endl;
+        printTable(validCmpts, FatalErrorInFunction);
 
         FatalErrorInFunction << exit(FatalError);
     }
