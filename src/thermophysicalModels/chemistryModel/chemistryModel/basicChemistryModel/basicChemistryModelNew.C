@@ -98,15 +98,15 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
     if (cstrIter == thermoConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown " << typeName_() << " type " << solverName << endl
+            << "Unknown " << typeName_() << " type " << chemistryTypeDictNew
             << endl;
 
-        const wordList names(thermoConstructorTablePtr_->toc());
+        const wordList names(thermoConstructorTablePtr_->sortedToc());
 
         wordList thisCmpts;
         thisCmpts.append(word::null);
         thisCmpts.append(word::null);
-        thisCmpts.append(basicThermo::splitThermoName(thermo.thermoName(), 4));
+        thisCmpts.append(basicThermo::splitThermoName(thermo.thermoName(), 5));
 
         List<wordList> validNames;
         validNames.append(wordList(2, word::null));
@@ -116,20 +116,14 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
         {
             const wordList cmpts(basicThermo::splitThermoName(names[i], 7));
 
-            bool isValid = true;
-            for (label i = 2; i < cmpts.size() && isValid; ++ i)
-            {
-                isValid = isValid && cmpts[i] == thisCmpts[i];
-            }
-
-            if (isValid)
+            if (SubList<word>(cmpts, 5, 2) == SubList<word>(thisCmpts, 5, 2))
             {
                 validNames.append(SubList<word>(cmpts, 2));
             }
         }
 
         FatalErrorInFunction
-            << "All " << validNames[0][0] << '/' << validNames[0][1]
+            << "Valid " << validNames[0][0] << '/' << validNames[0][1]
             << " combinations for this thermodynamic model are:"
             << endl << endl;
         printTable(validNames, FatalErrorInFunction);
@@ -151,8 +145,8 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
         }
 
         FatalErrorInFunction
-            << "All " << validCmpts[0][0] << '/' << validCmpts[0][1] << '/'
-            << validCmpts[0][2] << "/thermoPhysics combinations are:"
+            << "All " << validCmpts[0][0] << '/' << validCmpts[0][1]
+            << "/thermodynamics combinations are:"
             << endl << endl;
         printTable(validCmpts, FatalErrorInFunction);
 

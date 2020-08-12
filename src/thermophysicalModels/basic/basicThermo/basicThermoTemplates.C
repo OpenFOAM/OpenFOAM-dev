@@ -51,43 +51,34 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
             << nl << nl;
 
         // Get the list of all the suitable thermo packages available
-        wordList validThermoTypeNames
-        (
-            tablePtr->sortedToc()
-        );
+        wordList validThermoTypeNames(tablePtr->sortedToc());
 
         // Build a table of the thermo packages constituent parts
-        // Note: row-0 contains the names of constituent parts
-        List<wordList> validThermoTypeNameCmpts
-        (
-            validThermoTypeNames.size() + 1
-        );
+        DynamicList<wordList> validThermoTypeNameCmpts;
 
-        validThermoTypeNameCmpts[0].setSize(nCmpt);
-        forAll(validThermoTypeNameCmpts[0], j)
+        // Set row zero to the column headers
+        validThermoTypeNameCmpts.append(wordList(nCmpt));
+        forAll(validThermoTypeNameCmpts[0], i)
         {
-            validThermoTypeNameCmpts[0][j] = cmptNames[j];
+            validThermoTypeNameCmpts[0][i] = cmptNames[i];
         }
 
-        // Split the thermo package names into their constituent parts
-        // Removing incompatible entries from the list
-        label j = 0;
+        // Split the thermo package names into their constituent parts and add
+        // them to the table, removing any incompatible entries from the list
         forAll(validThermoTypeNames, i)
         {
-            wordList names
+            const wordList names
             (
                 Thermo::splitThermoName(validThermoTypeNames[i], nCmpt)
             );
 
             if (names.size())
             {
-                validThermoTypeNameCmpts[j++] = names;
+                validThermoTypeNameCmpts.append(names);
             }
         }
-        validThermoTypeNameCmpts.setSize(j);
 
         // Print the table of available packages
-        // in terms of their constituent parts
         printTable(validThermoTypeNameCmpts, FatalError);
 
         FatalError<< exit(FatalError);
