@@ -110,7 +110,7 @@ void Foam::MULES::limitSum
         scalar magPhiSum = 0;
         scalar phiSum = 0;
 
-        forAll(alphas, phasei)
+        forAll(phiPsis, phasei)
         {
             magPhiSum += mag(phiPsis[phasei][facei]);
             phiSum += phiPsis[phasei][facei];

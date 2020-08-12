@@ -197,7 +197,7 @@ void limitSum(SurfaceScalarFieldList& phiPsiCorrs);
 void limitSum
 (
     const UPtrList<const scalarField>& alphas,
-    UPtrList<scalarField>& phiPsiCorrs,
+    UPtrList<scalarField>& phiPsis,
     const scalarField& phi
 );
 
@@ -205,7 +205,7 @@ template<template<class> class AlphaList, template<class> class PhiList>
 void limitSum
 (
     const AlphaList<surfaceScalarField>& alphas,
-    PhiList<surfaceScalarField>& phiPsiCorrs,
+    PhiList<surfaceScalarField>& phiPsis,
     const surfaceScalarField& phi
 );
 
