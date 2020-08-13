@@ -39,7 +39,7 @@ Usage
     \verbatim
     <masterPatchName>
     {
-        type   compressible::thermalBaffle1D<hConstSolidThermoPhysics>;
+        type   compressible::thermalBaffle1D<eConstSolidThermoPhysics>;
 
         samplePatch     <slavePatchName>;
 
@@ -73,7 +73,7 @@ Usage
 
     <slavePatchName>
     {
-        type   compressible::thermalBaffle1D<hConstSolidThermoPhysics>;
+        type   compressible::thermalBaffle1D<eConstSolidThermoPhysics>;
 
         samplePatch     <masterPatchName>;
 
