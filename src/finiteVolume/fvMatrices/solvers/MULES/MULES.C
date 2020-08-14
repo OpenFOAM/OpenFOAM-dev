@@ -46,13 +46,13 @@ void Foam::MULES::limitSum(UPtrList<scalarField>& phiPsiCorrs)
             }
         }
 
-        scalar sum = sumPos + sumNeg;
+        const scalar sum = sumPos + sumNeg;
 
         if (sum > 0 && sumPos > vSmall)
         {
-            scalar lambda = -sumNeg/sumPos;
+            const scalar lambda = -sumNeg/sumPos;
 
-            for (int phasei=0; phasei<phiPsiCorrs.size(); phasei++)
+            forAll (phiPsiCorrs, phasei)
             {
                 if (phiPsiCorrs[phasei][facei] > 0)
                 {
@@ -62,68 +62,14 @@ void Foam::MULES::limitSum(UPtrList<scalarField>& phiPsiCorrs)
         }
         else if (sum < 0 && sumNeg < -vSmall)
         {
-            scalar lambda = -sumPos/sumNeg;
+            const scalar lambda = -sumPos/sumNeg;
 
-            for (int phasei=0; phasei<phiPsiCorrs.size(); phasei++)
+            forAll (phiPsiCorrs, phasei)
             {
                 if (phiPsiCorrs[phasei][facei] < 0)
                 {
                     phiPsiCorrs[phasei][facei] *= lambda;
                 }
-            }
-        }
-    }
-}
-
-
-void Foam::MULES::limitSum
-(
-    const UPtrList<const scalarField>& alphas,
-    UPtrList<scalarField>& phiPsis,
-    const scalarField& phi
-)
-{
-    /*
-    forAll(phi, facei)
-    {
-        scalar alphaSum = 0;
-        scalar phiSum = 0;
-
-        forAll(alphas, phasei)
-        {
-            alphaSum += alphas[phasei][facei];
-            phiSum += phiPsis[phasei][facei];
-        }
-
-        const scalar phiError = phiSum - phi[facei];
-        const scalar phiiError = phiError/alphaSum;
-
-        forAll(phiPsis, phasei)
-        {
-            phiPsis[phasei][facei] -= phiiError*alphas[phasei][facei];
-        }
-    }
-    */
-
-    forAll(phi, facei)
-    {
-        scalar magPhiSum = 0;
-        scalar phiSum = 0;
-
-        forAll(phiPsis, phasei)
-        {
-            magPhiSum += mag(phiPsis[phasei][facei]);
-            phiSum += phiPsis[phasei][facei];
-        }
-
-        if (magPhiSum > rootVSmall)
-        {
-            const scalar phiError = phiSum - phi[facei];
-            const scalar phiFactor = phiError/magPhiSum;
-
-            forAll(phiPsis, phasei)
-            {
-                phiPsis[phasei][facei] -= phiFactor*mag(phiPsis[phasei][facei]);
             }
         }
     }

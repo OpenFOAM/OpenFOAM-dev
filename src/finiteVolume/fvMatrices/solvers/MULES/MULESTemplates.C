@@ -688,61 +688,36 @@ void Foam::MULES::limit
 }
 
 
-template<class SurfaceScalarFieldList>
-void Foam::MULES::limitSum(SurfaceScalarFieldList& phiPsiCorrs)
-{
-    {
-        UPtrList<scalarField> phiPsiCorrsInternal(phiPsiCorrs.size());
-        forAll(phiPsiCorrs, phasei)
-        {
-            phiPsiCorrsInternal.set(phasei, &phiPsiCorrs[phasei]);
-        }
-
-        limitSum(phiPsiCorrsInternal);
-    }
-
-    const surfaceScalarField::Boundary& bfld =
-        phiPsiCorrs[0].boundaryField();
-
-    forAll(bfld, patchi)
-    {
-        if (bfld[patchi].coupled())
-        {
-            UPtrList<scalarField> phiPsiCorrsPatch(phiPsiCorrs.size());
-            forAll(phiPsiCorrs, phasei)
-            {
-                phiPsiCorrsPatch.set
-                (
-                    phasei,
-                    &phiPsiCorrs[phasei].boundaryFieldRef()[patchi]
-                );
-            }
-
-            limitSum(phiPsiCorrsPatch);
-        }
-    }
-}
-
-
 template<template<class> class AlphaList, template<class> class PhiList>
 void Foam::MULES::limitSum
 (
-    const AlphaList<surfaceScalarField>& alphas,
+    const AlphaList<volScalarField>& alphas,
     PhiList<surfaceScalarField>& phiPsis,
     const surfaceScalarField& phi
 )
 {
+    PtrList<surfaceScalarField> alphaPhiUDs(phiPsis.size());
+
+    forAll(phiPsis, phasei)
     {
-        UPtrList<const scalarField> alphasInternal(alphas.size());
+        alphaPhiUDs.set
+        (
+            phasei,
+            upwind<scalar>(phi.mesh(), phi).flux(alphas[phasei])
+        );
+
+        phiPsis[phasei] -= alphaPhiUDs[phasei];
+    }
+
+    {
         UPtrList<scalarField> phiPsisInternal(phiPsis.size());
 
-        forAll(alphas, phasei)
+        forAll(phiPsisInternal, phasei)
         {
-            alphasInternal.set(phasei, &alphas[phasei]);
             phiPsisInternal.set(phasei, &phiPsis[phasei]);
         }
 
-        limitSum(alphasInternal, phiPsisInternal, phi);
+        limitSum(phiPsisInternal);
     }
 
     const surfaceScalarField::Boundary& phibf = phi.boundaryField();
@@ -751,17 +726,10 @@ void Foam::MULES::limitSum
     {
         if (phibf[patchi].coupled())
         {
-            UPtrList<const scalarField> alphasPatch(alphas.size());
             UPtrList<scalarField> phiPsisPatch(phiPsis.size());
 
-            forAll(alphas, phasei)
+            forAll(phiPsisPatch, phasei)
             {
-                alphasPatch.set
-                (
-                    phasei,
-                    &alphas[phasei].boundaryField()[patchi]
-                );
-
                 phiPsisPatch.set
                 (
                     phasei,
@@ -769,13 +737,13 @@ void Foam::MULES::limitSum
                 );
             }
 
-            limitSum
-            (
-                alphasPatch,
-                phiPsisPatch,
-                phi.boundaryField()[patchi]
-            );
+            limitSum(phiPsisPatch);
         }
+    }
+
+    forAll(phiPsis, phasei)
+    {
+        phiPsis[phasei] += alphaPhiUDs[phasei];
     }
 }
 

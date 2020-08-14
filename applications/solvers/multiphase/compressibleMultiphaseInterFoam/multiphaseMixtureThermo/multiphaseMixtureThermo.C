@@ -1196,12 +1196,15 @@ void Foam::multiphaseMixtureThermo::solveAlphas
     surfaceScalarField phic(mag(phi_/mesh_.magSf()));
     phic = min(cAlpha*phic, max(phic));
 
+    UPtrList<volScalarField> alphas(phases_.size());
     PtrList<surfaceScalarField> alphaPhis(phases_.size());
     int phasei = 0;
 
     forAllIter(PtrDictionary<phaseModel>, phases_, phase)
     {
         phaseModel& alpha = phase();
+
+        alphas.set(phasei, &alpha);
 
         alphaPhis.set
         (
@@ -1236,7 +1239,7 @@ void Foam::multiphaseMixtureThermo::solveAlphas
             );
         }
 
-        // Limit alphaPhi and return as a correction for limitSum
+        // Limit alphaPhi for each phase
         MULES::limit
         (
             1.0/mesh_.time().deltaT().value(),
@@ -1248,20 +1251,13 @@ void Foam::multiphaseMixtureThermo::solveAlphas
             zeroField(),
             oneField(),
             zeroField(),
-            true
+            false
         );
 
         phasei++;
     }
 
-    MULES::limitSum(alphaPhis);
-
-    // Convert alphaPhis from correction back to flux
-    phasei = 0;
-    forAllIter(PtrDictionary<phaseModel>, phases_, iter)
-    {
-        alphaPhis[phasei++] += upwind<scalar>(mesh_, phi_).flux(iter());
-    }
+    MULES::limitSum(alphas, alphaPhis, phi_);
 
     rhoPhi_ = dimensionedScalar(dimensionSet(1, 0, -1, 0, 0), 0);
 
@@ -1277,9 +1273,7 @@ void Foam::multiphaseMixtureThermo::solveAlphas
         dimensionedScalar(dimless, 0)
     );
 
-
     volScalarField divU(fvc::div(fvc::absolute(phi_, U_)));
-
 
     phasei = 0;
 
