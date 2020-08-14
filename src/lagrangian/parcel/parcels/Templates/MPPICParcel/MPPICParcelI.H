@@ -53,41 +53,6 @@ inline Foam::MPPICParcel<ParcelType>::MPPICParcel
 {}
 
 
-template<class ParcelType>
-inline Foam::MPPICParcel<ParcelType>::MPPICParcel
-(
-    const polyMesh& owner,
-    const barycentric& coordinates,
-    const label celli,
-    const label tetFacei,
-    const label tetPti,
-    const label typeId,
-    const scalar nParticle0,
-    const scalar d0,
-    const scalar dTarget0,
-    const vector& U0,
-    const vector& UCorrect0,
-    const typename ParcelType::constantProperties& constProps
-)
-:
-    ParcelType
-    (
-        owner,
-        coordinates,
-        celli,
-        tetFacei,
-        tetPti,
-        typeId,
-        nParticle0,
-        d0,
-        dTarget0,
-        U0,
-        constProps
-    ),
-    UCorrect_(UCorrect0)
-{}
-
-
 // * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * * //
 
 template<class ParcelType>

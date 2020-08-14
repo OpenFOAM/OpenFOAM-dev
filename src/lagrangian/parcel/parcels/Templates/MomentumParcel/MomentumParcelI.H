@@ -115,36 +115,6 @@ inline Foam::MomentumParcel<ParcelType>::MomentumParcel
 {}
 
 
-template<class ParcelType>
-inline Foam::MomentumParcel<ParcelType>::MomentumParcel
-(
-    const polyMesh& owner,
-    const barycentric& coordinates,
-    const label celli,
-    const label tetFacei,
-    const label tetPti,
-    const label typeId,
-    const scalar nParticle0,
-    const scalar d0,
-    const scalar dTarget0,
-    const vector& U0,
-    const constantProperties& constProps
-)
-:
-    ParcelType(owner, coordinates, celli, tetFacei, tetPti),
-    active_(true),
-    typeId_(typeId),
-    nParticle_(nParticle0),
-    d_(d0),
-    dTarget_(dTarget0),
-    U_(U0),
-    rho_(constProps.rho0()),
-    age_(0.0),
-    tTurb_(0.0),
-    UTurb_(Zero)
-{}
-
-
 // * * * * * * * * * constantProperties Member Functions * * * * * * * * * * //
 
 template<class ParcelType>

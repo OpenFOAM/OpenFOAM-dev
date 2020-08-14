@@ -100,47 +100,6 @@ inline Foam::ThermoParcel<ParcelType>::ThermoParcel
 {}
 
 
-template<class ParcelType>
-inline Foam::ThermoParcel<ParcelType>::ThermoParcel
-(
-    const polyMesh& mesh,
-    const barycentric& coordinates,
-    const label celli,
-    const label tetFacei,
-    const label tetPti,
-    const label typeId,
-    const scalar nParticle0,
-    const scalar d0,
-    const scalar dTarget0,
-    const vector& U0,
-    const vector& f0,
-    const vector& angularMomentum0,
-    const vector& torque0,
-    const constantProperties& constProps
-)
-:
-    ParcelType
-    (
-        mesh,
-        coordinates,
-        celli,
-        tetFacei,
-        tetPti,
-        typeId,
-        nParticle0,
-        d0,
-        dTarget0,
-        U0,
-        f0,
-        angularMomentum0,
-        torque0,
-        constProps
-    ),
-    T_(constProps.T0()),
-    Cp_(constProps.Cp0())
-{}
-
-
 // * * * * * * * * * constantProperties Member Functions * * * * * * * * * * //
 
 template<class ParcelType>

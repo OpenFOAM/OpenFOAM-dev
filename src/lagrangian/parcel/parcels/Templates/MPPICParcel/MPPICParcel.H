@@ -203,23 +203,6 @@ public:
             const label celli
         );
 
-        //- Construct from components
-        inline MPPICParcel
-        (
-            const polyMesh& mesh,
-            const barycentric& coordinates,
-            const label celli,
-            const label tetFacei,
-            const label tetPti,
-            const label typeId,
-            const scalar nParticle0,
-            const scalar d0,
-            const scalar dTarget0,
-            const vector& U0,
-            const vector& UCorrect0,
-            const typename ParcelType::constantProperties& constProps
-        );
-
         //- Construct from Istream
         MPPICParcel
         (
