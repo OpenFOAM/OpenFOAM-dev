@@ -69,7 +69,8 @@ TemplateName(SprayCloud);
 template<class CloudType>
 class SprayCloud
 :
-    public CloudType
+    public CloudType,
+    public SprayCloudName
 {
 public:
 

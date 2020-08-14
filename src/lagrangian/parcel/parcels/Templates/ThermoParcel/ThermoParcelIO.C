@@ -91,7 +91,7 @@ void Foam::ThermoParcel<ParcelType>::readFields(CloudType& c)
 
 
     label i = 0;
-    forAllIter(typename Cloud<ThermoParcel<ParcelType>>, c, iter)
+    forAllIter(typename CloudType, c, iter)
     {
         ThermoParcel<ParcelType>& p = iter();
 
@@ -114,7 +114,7 @@ void Foam::ThermoParcel<ParcelType>::writeFields(const CloudType& c)
     IOField<scalar> Cp(c.fieldIOobject("Cp", IOobject::NO_READ), np);
 
     label i = 0;
-    forAllConstIter(typename Cloud<ThermoParcel<ParcelType>>, c, iter)
+    forAllConstIter(typename CloudType, c, iter)
     {
         const ThermoParcel<ParcelType>& p = iter();
 

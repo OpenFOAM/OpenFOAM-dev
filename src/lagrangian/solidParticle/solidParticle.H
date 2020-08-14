@@ -39,6 +39,7 @@ SourceFiles
 #define solidParticle_H
 
 #include "particle.H"
+#include "Cloud.H"
 #include "IOstream.H"
 #include "autoPtr.H"
 #include "interpolationCellPoint.H"
