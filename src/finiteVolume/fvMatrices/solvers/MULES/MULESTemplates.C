@@ -691,7 +691,7 @@ void Foam::MULES::limit
 template<template<class> class AlphaList, template<class> class PhiList>
 void Foam::MULES::limitSum
 (
-    const AlphaList<volScalarField>& alphas,
+    const AlphaList<const volScalarField>& alphas,
     PhiList<surfaceScalarField>& phiPsis,
     const surfaceScalarField& phi
 )

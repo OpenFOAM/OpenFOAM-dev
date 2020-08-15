@@ -81,7 +81,7 @@ PIMPLE
     nOuterCorrectors 3;
     nCorrectors      1;
     nNonOrthogonalCorrectors 0;
-    nEnergyCorrectors 1;
+    nEnergyCorrectors 2;
     faceMomentum    yes;
 }
 

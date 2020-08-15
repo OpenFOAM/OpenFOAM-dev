@@ -553,13 +553,13 @@ void Foam::multiphaseMixture::solveAlphas
     surfaceScalarField phic(mag(phi_/mesh_.magSf()));
     phic = min(cAlpha*phic, max(phic));
 
-    UPtrList<volScalarField> alphas(phases_.size());
+    UPtrList<const volScalarField> alphas(phases_.size());
     PtrList<surfaceScalarField> alphaPhis(phases_.size());
     int phasei = 0;
 
     forAllIter(PtrDictionary<phase>, phases_, iter)
     {
-        phase& alpha = iter();
+        const phase& alpha = iter();
 
         alphas.set(phasei, &alpha);
 
