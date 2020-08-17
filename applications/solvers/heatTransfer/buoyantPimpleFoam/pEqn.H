@@ -25,6 +25,7 @@ surfaceScalarField phiHbyA
 
 MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
+Info << phiHbyA.boundaryField() << endl;
 bool adjustMass = pimple.transonic() ? false : adjustPhi(phiHbyA, U, p_rgh);
 
 surfaceScalarField phig(-rhorAUf*ghf*fvc::snGrad(rho)*mesh.magSf());
@@ -74,11 +75,6 @@ if (pimple.transonic())
 }
 else
 {
-    if (mesh.steady())
-    {
-        adjustMass = adjustPhi(phiHbyA, U, p_rgh);
-    }
-
     fvScalarMatrix p_rghDDtEqn
     (
         fvc::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
