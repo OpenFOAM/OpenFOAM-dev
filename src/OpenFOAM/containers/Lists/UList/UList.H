@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -297,7 +297,7 @@ public:
     // STL reverse_iterator
 
         //- Reverse iterator for reverse traversal of UList
-        typedef T* reverse_iterator;
+        typedef std::reverse_iterator<iterator> reverse_iterator;
 
         //- Return reverse_iterator to begin reverse traversing the UList
         inline reverse_iterator rbegin();
@@ -309,7 +309,7 @@ public:
     // STL const_reverse_iterator
 
         //- Reverse iterator for reverse traversal of constant UList
-        typedef const T* const_reverse_iterator;
+        typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
         //- Return const_reverse_iterator to begin reverse traversing the UList
         inline const_reverse_iterator crbegin() const;

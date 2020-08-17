@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -326,12 +326,11 @@ Foam::FixedList<T, Size>::begin()
     return v_;
 }
 
-
 template<class T, unsigned Size>
-inline typename Foam::FixedList<T, Size>::const_iterator
-Foam::FixedList<T, Size>::begin() const
+inline typename Foam::FixedList<T, Size>::iterator
+Foam::FixedList<T, Size>::end()
 {
-    return v_;
+    return &v_[Size];
 }
 
 
@@ -344,10 +343,18 @@ Foam::FixedList<T, Size>::cbegin() const
 
 
 template<class T, unsigned Size>
-inline typename Foam::FixedList<T, Size>::iterator
-Foam::FixedList<T, Size>::end()
+inline typename Foam::FixedList<T, Size>::const_iterator
+Foam::FixedList<T, Size>::cend() const
 {
     return &v_[Size];
+}
+
+
+template<class T, unsigned Size>
+inline typename Foam::FixedList<T, Size>::const_iterator
+Foam::FixedList<T, Size>::begin() const
+{
+    return v_;
 }
 
 
@@ -360,58 +367,50 @@ Foam::FixedList<T, Size>::end() const
 
 
 template<class T, unsigned Size>
-inline typename Foam::FixedList<T, Size>::const_iterator
-Foam::FixedList<T, Size>::cend() const
-{
-    return &v_[Size];
-}
-
-
-template<class T, unsigned Size>
-inline typename Foam::FixedList<T, Size>::iterator
+inline typename Foam::FixedList<T, Size>::reverse_iterator
 Foam::FixedList<T, Size>::rbegin()
 {
-    return &v_[Size-1];
+    return reverse_iterator(end());
 }
 
 
 template<class T, unsigned Size>
-inline typename Foam::FixedList<T, Size>::const_iterator
-Foam::FixedList<T, Size>::rbegin() const
-{
-    return &v_[Size-1];
-}
-
-
-template<class T, unsigned Size>
-inline typename Foam::FixedList<T, Size>::const_iterator
-Foam::FixedList<T, Size>::crbegin() const
-{
-    return &v_[Size-1];
-}
-
-
-template<class T, unsigned Size>
-inline typename Foam::FixedList<T, Size>::iterator
+inline typename Foam::FixedList<T, Size>::reverse_iterator
 Foam::FixedList<T, Size>::rend()
 {
-    return &v_[-1];
+    return reverse_iterator(begin());
 }
 
 
 template<class T, unsigned Size>
-inline typename Foam::FixedList<T, Size>::const_iterator
-Foam::FixedList<T, Size>::rend() const
+inline typename Foam::FixedList<T, Size>::const_reverse_iterator
+Foam::FixedList<T, Size>::crbegin() const
 {
-    return &v_[-1];
+    return const_reverse_iterator(cend());
 }
 
 
 template<class T, unsigned Size>
-inline typename Foam::FixedList<T, Size>::const_iterator
+inline typename Foam::FixedList<T, Size>::const_reverse_iterator
 Foam::FixedList<T, Size>::crend() const
 {
-    return &v_[-1];
+    return const_reverse_iterator(cbegin());
+}
+
+
+template<class T, unsigned Size>
+inline typename Foam::FixedList<T, Size>::const_reverse_iterator
+Foam::FixedList<T, Size>::rbegin() const
+{
+    return const_reverse_iterator(cend());
+}
+
+
+template<class T, unsigned Size>
+inline typename Foam::FixedList<T, Size>::const_reverse_iterator
+Foam::FixedList<T, Size>::rend() const
+{
+    return const_reverse_iterator(cbegin());
 }
 
 

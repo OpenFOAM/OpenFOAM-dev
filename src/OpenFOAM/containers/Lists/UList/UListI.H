@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -218,19 +218,6 @@ Foam::UList<T>::begin()
     return v_;
 }
 
-template<class T>
-inline typename Foam::UList<T>::const_iterator
-Foam::UList<T>::begin() const
-{
-    return v_;
-}
-
-template<class T>
-inline typename Foam::UList<T>::const_iterator
-Foam::UList<T>::cbegin() const
-{
-    return v_;
-}
 
 template<class T>
 inline typename Foam::UList<T>::iterator
@@ -239,12 +226,14 @@ Foam::UList<T>::end()
     return &v_[size_];
 }
 
+
 template<class T>
 inline typename Foam::UList<T>::const_iterator
-Foam::UList<T>::end() const
+Foam::UList<T>::cbegin() const
 {
-    return &v_[size_];
+    return v_;
 }
+
 
 template<class T>
 inline typename Foam::UList<T>::const_iterator
@@ -253,47 +242,70 @@ Foam::UList<T>::cend() const
     return &v_[size_];
 }
 
+
 template<class T>
-inline typename Foam::UList<T>::iterator
+inline typename Foam::UList<T>::const_iterator
+Foam::UList<T>::begin() const
+{
+    return v_;
+}
+
+
+template<class T>
+inline typename Foam::UList<T>::const_iterator
+Foam::UList<T>::end() const
+{
+    return &v_[size_];
+}
+
+
+template<class T>
+inline typename Foam::UList<T>::reverse_iterator
 Foam::UList<T>::rbegin()
 {
-    return &v_[size_-1];
+    return reverse_iterator(end());
 }
 
-template<class T>
-inline typename Foam::UList<T>::const_iterator
-Foam::UList<T>::rbegin() const
-{
-    return &v_[size_-1];
-}
 
 template<class T>
-inline typename Foam::UList<T>::const_iterator
-Foam::UList<T>::crbegin() const
-{
-    return &v_[size_-1];
-}
-
-template<class T>
-inline typename Foam::UList<T>::iterator
+inline typename Foam::UList<T>::reverse_iterator
 Foam::UList<T>::rend()
 {
-    return &v_[-1];
+    return reverse_iterator(begin());
 }
 
+
 template<class T>
-inline typename Foam::UList<T>::const_iterator
-Foam::UList<T>::rend() const
+inline typename Foam::UList<T>::const_reverse_iterator
+Foam::UList<T>::crbegin() const
 {
-    return &v_[-1];
+    return const_reverse_iterator(cend());
 }
 
+
 template<class T>
-inline typename Foam::UList<T>::const_iterator
+inline typename Foam::UList<T>::const_reverse_iterator
 Foam::UList<T>::crend() const
 {
-    return &v_[-1];
+    return const_reverse_iterator(cbegin());
 }
+
+
+template<class T>
+inline typename Foam::UList<T>::const_reverse_iterator
+Foam::UList<T>::rbegin() const
+{
+    return const_reverse_iterator(cend());
+}
+
+
+template<class T>
+inline typename Foam::UList<T>::const_reverse_iterator
+Foam::UList<T>::rend() const
+{
+    return const_reverse_iterator(cbegin());
+}
+
 
 template<class T>
 inline Foam::label Foam::UList<T>::size() const
