@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,12 +123,8 @@ class codeStream
         //- Helper function: parent (of parent etc.) of dictionary up to the top
         static const dictionary& topDict(const dictionary&);
 
-        //- Helper function: access IOobject for master-only-reading
-        //  functionality
-        static bool doingMasterOnlyReading(const dictionary& dict);
-
-        //- Helper function: access to dlLibraryTable of Time
-        static dlLibraryTable& libs(const dictionary& dict);
+        //- Return true for master only reading of global dictionary
+        static bool masterOnlyRead(const dictionary& dict);
 
         //- Construct, compile, load and return streaming function
         static streamingFunctionType getFunction

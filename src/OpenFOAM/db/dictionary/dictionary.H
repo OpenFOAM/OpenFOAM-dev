@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -565,6 +565,11 @@ public:
 
             //- Read dictionary from Istream, optionally keeping the header
             bool read(Istream&, const bool keepHeader=false);
+
+            //- Return true if the dictionary global,
+            //  i.e. the same on all processors.
+            //  Defaults to false, must be overridden by global IO dictionaries
+            virtual bool global() const;
 
 
         // Write
