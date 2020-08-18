@@ -119,7 +119,7 @@ bool Foam::dictionary::read(Istream& is, const bool keepHeader)
 }
 
 
-bool Foam::regIOobject::global() const
+bool Foam::dictionary::global() const
 {
     return false;
 }
