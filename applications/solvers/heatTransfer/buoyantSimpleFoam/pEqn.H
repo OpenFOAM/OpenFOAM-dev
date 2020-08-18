@@ -14,7 +14,7 @@ surfaceScalarField phiHbyA
 
 MRF.makeRelative(fvc::interpolate(rho), phiHbyA);
 
-bool closedVolume = simple.transonic() ? false : adjustPhi(phiHbyA, U, p_rgh);
+bool closedVolume = adjustPhi(phiHbyA, U, p_rgh);
 
 surfaceScalarField phig(-rhorAUf*ghf*fvc::snGrad(rho)*mesh.magSf());
 
