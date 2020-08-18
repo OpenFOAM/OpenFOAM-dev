@@ -25,6 +25,7 @@ License
 
 #include "parcelCloudList.H"
 #include "extrapolatedCalculatedFvPatchFields.H"
+#include "GlobalIOLists.H"
 #include "fvMatrices.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -49,9 +50,9 @@ void Foam::parcelCloudList::initialise
         IOobject::NO_WRITE
     );
 
-    if (cloudsIO.typeHeaderOk<IOList<word>>(false))
+    if (cloudsIO.typeHeaderOk<wordGlobalIOList>(false))
     {
-        IOList<word> cloudNames(cloudsIO);
+        wordGlobalIOList cloudNames(cloudsIO);
 
         this->setSize(cloudNames.size());
 
