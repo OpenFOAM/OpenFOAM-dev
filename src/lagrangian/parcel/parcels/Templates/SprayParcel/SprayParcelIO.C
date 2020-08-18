@@ -197,7 +197,7 @@ void Foam::SprayParcel<ParcelType>::readFields
     c.checkFieldIOobject(c, user);
 
     label i = 0;
-    forAllIter(typename Cloud<SprayParcel<ParcelType>>, c, iter)
+    forAllIter(typename CloudType, c, iter)
     {
         SprayParcel<ParcelType>& p = iter();
         p.d0_ = d0[i];
@@ -265,7 +265,7 @@ void Foam::SprayParcel<ParcelType>::writeFields
     IOField<scalar> user(c.fieldIOobject("user", IOobject::NO_READ), np);
 
     label i = 0;
-    forAllConstIter(typename Cloud<SprayParcel<ParcelType>>, c, iter)
+    forAllConstIter(typename CloudType, c, iter)
     {
         const SprayParcel<ParcelType>& p = iter();
         d0[i] = p.d0_;

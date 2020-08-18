@@ -155,69 +155,6 @@ inline Foam::SprayParcel<ParcelType>::SprayParcel
 {}
 
 
-template<class ParcelType>
-inline Foam::SprayParcel<ParcelType>::SprayParcel
-(
-    const polyMesh& mesh,
-    const barycentric& coordinates,
-    const label celli,
-    const label tetFacei,
-    const label tetPti,
-    const label typeId,
-    const scalar nParticle0,
-    const scalar d0,
-    const scalar dTarget0,
-    const vector& U0,
-    const vector& f0,
-    const vector& angularMomentum0,
-    const vector& torque0,
-    const scalarField& Y0,
-    const scalar liquidCore,
-    const scalar KHindex,
-    const scalar y,
-    const scalar yDot,
-    const scalar tc,
-    const scalar ms,
-    const scalar injector,
-    const scalar tMom,
-    const scalar user,
-    const typename ParcelType::constantProperties& constProps
-)
-:
-    ParcelType
-    (
-        mesh,
-        coordinates,
-        celli,
-        tetFacei,
-        tetPti,
-        typeId,
-        nParticle0,
-        d0,
-        dTarget0,
-        U0,
-        f0,
-        angularMomentum0,
-        torque0,
-        Y0,
-        constProps
-    ),
-    d0_(d0),
-    position0_(this->position()),
-    sigma_(constProps.sigma0()),
-    mu_(constProps.mu0()),
-    liquidCore_(liquidCore),
-    KHindex_(KHindex),
-    y_(y),
-    yDot_(yDot),
-    tc_(tc),
-    ms_(ms),
-    injector_(injector),
-    tMom_(tMom),
-    user_(user)
-{}
-
-
 // * * * * * * * * * constantProperties Member Functions * * * * * * * * * * //
 
 template<class ParcelType>

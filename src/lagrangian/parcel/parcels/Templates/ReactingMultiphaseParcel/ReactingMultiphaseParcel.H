@@ -303,29 +303,6 @@ public:
             const label celli
         );
 
-        //- Construct from components
-        inline ReactingMultiphaseParcel
-        (
-            const polyMesh& mesh,
-            const barycentric& coordinates,
-            const label celli,
-            const label tetFacei,
-            const label tetPti,
-            const label typeId,
-            const scalar nParticle0,
-            const scalar d0,
-            const scalar dTarget0,
-            const vector& U0,
-            const vector& f0,
-            const vector& angularMomentum0,
-            const vector& torque0,
-            const scalarField& Y0,
-            const scalarField& YGas0,
-            const scalarField& YLiquid0,
-            const scalarField& YSolid0,
-            const constantProperties& constProps
-        );
-
         //- Construct from Istream
         ReactingMultiphaseParcel
         (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,68 +21,54 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Typedef
-    Foam::globalIOLists
-
-Description
-    Typedefs for globalIOLists of primitive types. These are fully compatible
-    with 'normal' IOLists except have global filePath() scope.
-
 \*---------------------------------------------------------------------------*/
 
-#ifndef globalIOLists_H
-#define globalIOLists_H
-
 #include "primitiveFields.H"
-#include "GlobalIOList.H"
+#include "GlobalIOField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    typedef GlobalIOList<label> labelGlobalIOList;
-    typedef GlobalIOList<scalar> scalarGlobalIOList;
-    typedef GlobalIOList<vector> vectorGlobalIOList;
-    typedef GlobalIOList<sphericalTensor> sphericalTensorGlobalIOList;
-    typedef GlobalIOList<symmTensor> symmTensorGlobalIOList;
-    typedef GlobalIOList<tensor> tensorGlobalIOList;
+    typedef GlobalIOField<label> labelGlobalIOField;
+    typedef GlobalIOField<scalar> scalarGlobalIOField;
+    typedef GlobalIOField<vector> vectorGlobalIOField;
+    typedef GlobalIOField<sphericalTensor> sphericalTensorGlobalIOField;
+    typedef GlobalIOField<symmTensor> symmTensorGlobalIOField;
+    typedef GlobalIOField<tensor> tensorGlobalIOField;
 
     //- Template function for obtaining global status
     template<>
-    inline bool typeGlobal<labelGlobalIOList>()
+    inline bool typeGlobal<labelGlobalIOField>()
     {
         return true;
     }
     template<>
-    inline bool typeGlobal<scalarGlobalIOList>()
+    inline bool typeGlobal<scalarGlobalIOField>()
     {
         return true;
     }
     template<>
-    inline bool typeGlobal<vectorGlobalIOList>()
+    inline bool typeGlobal<vectorGlobalIOField>()
     {
         return true;
     }
     template<>
-    inline bool typeGlobal<sphericalTensorGlobalIOList>()
+    inline bool typeGlobal<sphericalTensorGlobalIOField>()
     {
         return true;
     }
     template<>
-    inline bool typeGlobal<symmTensorGlobalIOList>()
+    inline bool typeGlobal<symmTensorGlobalIOField>()
     {
         return true;
     }
     template<>
-    inline bool typeGlobal<tensorGlobalIOList>()
+    inline bool typeGlobal<tensorGlobalIOField>()
     {
         return true;
     }
-
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#endif
 
 // ************************************************************************* //

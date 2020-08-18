@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "particle.H"
 #include "IOPosition.H"
 
 #include "cyclicPolyPatch.H"

@@ -93,46 +93,6 @@ inline Foam::CollidingParcel<ParcelType>::CollidingParcel
 {}
 
 
-template<class ParcelType>
-inline Foam::CollidingParcel<ParcelType>::CollidingParcel
-(
-    const polyMesh& owner,
-    const barycentric& coordinates,
-    const label celli,
-    const label tetFacei,
-    const label tetPti,
-    const label typeId,
-    const scalar nParticle0,
-    const scalar d0,
-    const scalar dTarget0,
-    const vector& U0,
-    const vector& f0,
-    const vector& angularMomentum0,
-    const vector& torque0,
-    const typename ParcelType::constantProperties& constProps
-)
-:
-    ParcelType
-    (
-        owner,
-        coordinates,
-        celli,
-        tetFacei,
-        tetPti,
-        typeId,
-        nParticle0,
-        d0,
-        dTarget0,
-        U0,
-        constProps
-    ),
-    f_(f0),
-    angularMomentum_(angularMomentum0),
-    torque_(torque0),
-    collisionRecords_()
-{}
-
-
 // * * * * * * * * * constantProperties Member Functions * * * * * * * * * * //
 
 template<class ParcelType>

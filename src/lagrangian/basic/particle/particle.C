@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "particle.H"
+#include "mapPolyMesh.H"
 #include "transform.H"
 #include "treeDataCell.H"
 #include "cubicEqn.H"

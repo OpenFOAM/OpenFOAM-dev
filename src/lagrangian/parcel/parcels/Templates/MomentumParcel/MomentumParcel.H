@@ -335,22 +335,6 @@ public:
             const label celli
         );
 
-        //- Construct from components
-        inline MomentumParcel
-        (
-            const polyMesh& mesh,
-            const barycentric& coordinates,
-            const label celli,
-            const label tetFacei,
-            const label tetPti,
-            const label typeId,
-            const scalar nParticle0,
-            const scalar d0,
-            const scalar dTarget0,
-            const vector& U0,
-            const constantProperties& constProps
-        );
-
         //- Construct from Istream
         MomentumParcel
         (
