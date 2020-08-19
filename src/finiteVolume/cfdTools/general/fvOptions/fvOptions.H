@@ -101,6 +101,8 @@ public:
         //- ReadData function required for regIOobject read operation
         virtual bool readData(Istream&);
 
+        using optionList::read;
+
         //- Read dictionary
         virtual bool read();
 
