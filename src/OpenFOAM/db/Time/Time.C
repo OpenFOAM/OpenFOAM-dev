@@ -339,7 +339,8 @@ Foam::Time::Time
             system(),
             *this,
             IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
+            IOobject::NO_WRITE,
+            false
         )
     ),
 
@@ -373,8 +374,15 @@ Foam::Time::Time
 
     setControls();
 
-    // Add a watch on the controlDict file after runTimeModifiable_ is set
-    controlDict_.addWatch();
+    // Time objects not registered so do like objectRegistry::checkIn ourselves.
+    if (runTimeModifiable_)
+    {
+        // Monitor all files that controlDict depends on
+        fileHandler().addWatches(controlDict_, controlDict_.files());
+    }
+
+    // Clear dependent files
+    controlDict_.files().clear();
 }
 
 
@@ -406,7 +414,8 @@ Foam::Time::Time
             system(),
             *this,
             IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
+            IOobject::NO_WRITE,
+            false
         )
     ),
 
@@ -446,8 +455,15 @@ Foam::Time::Time
 
     setControls();
 
-    // Add a watch on the controlDict file after runTimeModifiable_ is set
-    controlDict_.addWatch();
+    // Time objects not registered so do like objectRegistry::checkIn ourselves.
+    if (runTimeModifiable_)
+    {
+        // Monitor all files that controlDict depends on
+        fileHandler().addWatches(controlDict_, controlDict_.files());
+    }
+
+    // Clear dependent files since not needed
+    controlDict_.files().clear();
 }
 
 
@@ -478,8 +494,9 @@ Foam::Time::Time
             controlDictName,
             system(),
             *this,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
         ),
         dict
     ),
@@ -508,14 +525,25 @@ Foam::Time::Time
 {
     libs.open(controlDict_, "libs");
 
+
     // Explicitly set read flags on objectRegistry so anything constructed
     // from it reads as well (e.g. fvSolution).
     readOpt() = IOobject::MUST_READ_IF_MODIFIED;
 
+    // Since could not construct regIOobject with setting:
+    controlDict_.readOpt() = IOobject::MUST_READ_IF_MODIFIED;
+
     setControls();
 
-    // Add a watch on the controlDict file after runTimeModifiable_ is set
-    controlDict_.addWatch();
+    // Time objects not registered so do like objectRegistry::checkIn ourselves.
+    if (runTimeModifiable_)
+    {
+        // Monitor all files that controlDict depends on
+        fileHandler().addWatches(controlDict_, controlDict_.files());
+    }
+
+    // Clear dependent files since not needed
+    controlDict_.files().clear();
 }
 
 
@@ -545,8 +573,9 @@ Foam::Time::Time
             controlDictName,
             system(),
             *this,
-            IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::NO_WRITE
+            IOobject::NO_READ,
+            IOobject::NO_WRITE,
+            false
         )
     ),
 
