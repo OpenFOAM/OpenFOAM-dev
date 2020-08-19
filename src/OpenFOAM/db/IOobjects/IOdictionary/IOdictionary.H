@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,6 @@ Description
 
 SourceFiles
     IOdictionary.C
-    IOdictionaryIO.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -67,6 +66,9 @@ public:
 
         //- Construct given an IOobject and Istream
         IOdictionary(const IOobject&, Istream&);
+
+        //- Construct given an IOobject, supply wanted typeName
+        IOdictionary(const IOobject& io, const word& wantedType);
 
         //- Copy constructor
         IOdictionary(const IOdictionary&);

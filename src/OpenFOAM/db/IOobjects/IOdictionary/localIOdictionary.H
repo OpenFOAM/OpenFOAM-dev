@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,15 +28,12 @@ Description
     localIOdictionary is derived from IOdictionary but excludes parallel
     master reading.
 
-SourceFiles
-    localIOdictionary.C
-
 \*---------------------------------------------------------------------------*/
 
 #ifndef localIOdictionary_H
 #define localIOdictionary_H
 
-#include "baseIOdictionary.H"
+#include "IOdictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,36 +41,19 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class localIOdictionary Declaration
+                       Class localIOdictionary Declaration
 \*---------------------------------------------------------------------------*/
 
 class localIOdictionary
 :
-    public baseIOdictionary
+    public IOdictionary
 {
 
 public:
 
     // Constructors
 
-        //- Construct given an IOobject
-        localIOdictionary(const IOobject& io);
-
-        //- Construct given an IOobject and dictionary
-        localIOdictionary(const IOobject& io, const dictionary& dict);
-
-        //- Construct given an IOobject and Istream
-        localIOdictionary(const IOobject& io, Istream& is);
-
-        //- Construct given an IOobject, supply wanted typeName
-        localIOdictionary(const IOobject& io, const word& wantedType);
-
-        //- Move constructor
-        localIOdictionary(localIOdictionary&&);
-
-
-    //- Destructor
-    virtual ~localIOdictionary();
+        using IOdictionary::IOdictionary;
 
 
     // Member Functions
@@ -95,9 +75,16 @@ public:
 
     // Member Operators
 
-        //- Move assignment
-        void operator=(localIOdictionary&&);
+        using IOdictionary::operator=;
 };
+
+
+//- Template function for obtaining global status
+template<>
+inline bool typeGlobal<localIOdictionary>()
+{
+    return false;
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

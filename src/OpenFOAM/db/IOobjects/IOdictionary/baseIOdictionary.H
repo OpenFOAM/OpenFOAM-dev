@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,22 +90,20 @@ public:
 
     // Member Functions
 
+        using regIOobject::name;
+
+        //- Is object global
+        virtual bool global() const = 0;
+
         //- Return complete path + object name if the file exists
         //  either in the case/processor or case otherwise null
         virtual fileName filePath() const = 0;
-
-        //- Name function is needed to disambiguate those inherited
-        //  from regIOobject and dictionary
-        const word& name() const;
 
         //- ReadData function required for regIOobject read operation
         virtual bool readData(Istream&);
 
         //- WriteData function required for regIOobject write operation
         virtual bool writeData(Ostream&) const;
-
-        //- Is object global
-        virtual bool global() const = 0;
 
 
     // Member Operators

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "unwatchedIOdictionary.H"
-#include "objectRegistry.H"
-#include "Pstream.H"
-#include "Time.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -59,36 +56,6 @@ Foam::unwatchedIOdictionary::unwatchedIOdictionary
 }
 
 
-Foam::unwatchedIOdictionary::unwatchedIOdictionary
-(
-    const IOobject& io,
-    Istream& is
-)
-:
-    baseIOdictionary(io, is)
-{
-    // Note that we do construct the dictionary null and read in
-    // afterwards
-    // so that if there is some fancy massaging due to a
-    // functionEntry in
-    // the dictionary at least the type information is already complete.
-    is  >> *this;
-
-    // For if MUST_READ_IF_MODIFIED
-    addWatch();
-}
-
-
-Foam::unwatchedIOdictionary::unwatchedIOdictionary
-(
-    unwatchedIOdictionary&& dict
-)
-:
-    baseIOdictionary(move(dict)),
-    files_(move(dict.files_))
-{}
-
-
 // * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
 
 Foam::unwatchedIOdictionary::~unwatchedIOdictionary()
@@ -111,6 +78,7 @@ Foam::label Foam::unwatchedIOdictionary::addWatch(const fileName& f)
             files_.append(f);
         }
     }
+
     return index;
 }
 
@@ -150,15 +118,6 @@ void Foam::unwatchedIOdictionary::addWatch()
 
         addWatch(f);
     }
-}
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-void Foam::unwatchedIOdictionary::operator=(unwatchedIOdictionary&& rhs)
-{
-    baseIOdictionary::operator=(move(rhs));
-    files_ = move(rhs.files_);
 }
 
 
