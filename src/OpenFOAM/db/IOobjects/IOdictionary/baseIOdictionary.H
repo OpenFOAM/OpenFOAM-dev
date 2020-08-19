@@ -71,12 +71,6 @@ public:
         //- Construct given an IOobject
         baseIOdictionary(const IOobject&);
 
-        //- Construct given an IOobject and dictionary
-        baseIOdictionary(const IOobject&, const dictionary&);
-
-        //- Construct given an IOobject and Istream
-        baseIOdictionary(const IOobject&, Istream&);
-
         //- Copy constructor
         baseIOdictionary(const baseIOdictionary&);
 

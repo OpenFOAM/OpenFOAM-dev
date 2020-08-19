@@ -27,6 +27,18 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
+Foam::IOdictionary::IOdictionary
+(
+    const IOobject& io,
+    const word& wantedType
+)
+:
+    baseIOdictionary(io)
+{
+    // Reading performed by derived type
+}
+
+
 Foam::IOdictionary::IOdictionary(const IOobject& io)
 :
     baseIOdictionary(io)
@@ -44,7 +56,7 @@ Foam::IOdictionary::IOdictionary
     const dictionary& dict
 )
 :
-    baseIOdictionary(io, dict)
+    baseIOdictionary(io)
 {
     if (!readHeaderOk(IOstream::ASCII, typeName))
     {
@@ -62,7 +74,7 @@ Foam::IOdictionary::IOdictionary
     Istream& is
 )
 :
-    baseIOdictionary(io, is)
+    baseIOdictionary(io)
 {
     // Note that we do construct the dictionary null and read in
     // afterwards
@@ -74,22 +86,6 @@ Foam::IOdictionary::IOdictionary
     // For if MUST_READ_IF_MODIFIED
     addWatch();
 }
-
-
-Foam::IOdictionary::IOdictionary
-(
-    const IOobject& io,
-    const word& wantedType
-)
-:
-    baseIOdictionary(io)
-{
-    readHeaderOk(IOstream::ASCII, wantedType);
-
-    // For if MUST_READ_IF_MODIFIED
-    addWatch();
-}
-
 
 
 Foam::IOdictionary::IOdictionary

@@ -25,8 +25,13 @@ Class
     Foam::localIOdictionary
 
 Description
-    localIOdictionary is derived from IOdictionary but excludes parallel
-    master reading.
+    localIOdictionary derived from IOdictionary with global set false to
+    disable parallel master reading.
+
+    Used to read GeometricFields.
+
+SourceFiles
+    localIOdictionary.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -53,7 +58,8 @@ public:
 
     // Constructors
 
-        using IOdictionary::IOdictionary;
+        //- Construct given an IOobject and actual type name
+        localIOdictionary(const IOobject& io, const word& actualType);
 
 
     // Member Functions
@@ -71,11 +77,6 @@ public:
             // Use default (local only) search strategy
             return localFilePath(type());
         }
-
-
-    // Member Operators
-
-        using IOdictionary::operator=;
 };
 
 

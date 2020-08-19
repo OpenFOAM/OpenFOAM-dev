@@ -44,7 +44,7 @@ Foam::unwatchedIOdictionary::unwatchedIOdictionary
     const dictionary& dict
 )
 :
-    baseIOdictionary(io, dict)
+    baseIOdictionary(io)
 {
     if (!readHeaderOk(IOstream::ASCII, typeName))
     {

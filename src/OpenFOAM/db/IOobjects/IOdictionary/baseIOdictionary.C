@@ -51,30 +51,6 @@ Foam::baseIOdictionary::baseIOdictionary(const IOobject& io)
 }
 
 
-Foam::baseIOdictionary::baseIOdictionary
-(
-    const IOobject& io,
-    const dictionary& dict
-)
-:
-    regIOobject(io)
-{
-    dictionary::name() = IOobject::objectPath();
-}
-
-
-Foam::baseIOdictionary::baseIOdictionary
-(
-    const IOobject& io,
-    Istream& is
-)
-:
-    regIOobject(io)
-{
-    dictionary::name() = IOobject::objectPath();
-}
-
-
 Foam::baseIOdictionary::baseIOdictionary(const baseIOdictionary& dict)
 :
     regIOobject(dict),

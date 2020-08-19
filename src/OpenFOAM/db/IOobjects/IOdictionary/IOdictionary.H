@@ -54,6 +54,14 @@ class IOdictionary
     public baseIOdictionary
 {
 
+protected:
+
+    // Protected constructors
+
+        //- Construct given an IOobject, supply wanted typeName
+        IOdictionary(const IOobject& io, const word& wantedType);
+
+
 public:
 
     // Constructors
@@ -66,9 +74,6 @@ public:
 
         //- Construct given an IOobject and Istream
         IOdictionary(const IOobject&, Istream&);
-
-        //- Construct given an IOobject, supply wanted typeName
-        IOdictionary(const IOobject& io, const word& wantedType);
 
         //- Copy constructor
         IOdictionary(const IOdictionary&);
