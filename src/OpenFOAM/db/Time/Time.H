@@ -40,7 +40,7 @@ SourceFiles
 
 #include "TimePaths.H"
 #include "objectRegistry.H"
-#include "unwatchedIOdictionary.H"
+#include "IOdictionary.H"
 #include "FIFOStack.H"
 #include "clock.H"
 #include "cpuTime.H"
@@ -76,8 +76,12 @@ class Time
 {
     // Private Data
 
+        //- Is runtime modification of dictionaries allowed?
+        Switch runTimeModifiable_;
+
         //- The controlDict
-        unwatchedIOdictionary controlDict_;
+        IOdictionary controlDict_;
+
 
 public:
 
@@ -179,9 +183,6 @@ private:
 
         //- Default graph format
         word graphFormat_;
-
-        //- Is runtime modification of dictionaries allowed?
-        Switch runTimeModifiable_;
 
         //- Is temporary object cache enabled
         mutable bool cacheTemporaryObjects_;
