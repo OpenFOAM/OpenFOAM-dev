@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -213,29 +213,6 @@ bool Foam::regIOobject::checkOut()
     }
 
     return false;
-}
-
-
-Foam::label Foam::regIOobject::addWatch(const fileName& f)
-{
-    label index = -1;
-
-    if
-    (
-        registered_
-     && readOpt() == MUST_READ_IF_MODIFIED
-     && time().runTimeModifiable()
-    )
-    {
-        index = fileHandler().findWatch(watchIndices_, f);
-
-        if (index == -1)
-        {
-            index = watchIndices_.size();
-            watchIndices_.append(fileHandler().addWatch(f));
-        }
-    }
-    return index;
 }
 
 

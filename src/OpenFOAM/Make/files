@@ -237,7 +237,6 @@ IOdictionary = db/IOobjects/IOdictionary
 $(IOdictionary)/baseIOdictionary.C
 $(IOdictionary)/baseIOdictionaryIO.C
 $(IOdictionary)/IOdictionary.C
-$(IOdictionary)/unwatchedIOdictionary.C
 $(IOdictionary)/localIOdictionary.C
 
 db/IOobjects/IOMap/IOMapName.C
