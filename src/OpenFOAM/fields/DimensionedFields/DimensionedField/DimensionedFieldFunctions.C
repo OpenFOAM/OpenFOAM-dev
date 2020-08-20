@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -433,8 +433,7 @@ operator op                                                                    \
     const DimensionedField<Type2, GeoMesh>& df2 = tdf2();                      \
                                                                                \
     tmp<DimensionedField<productType, GeoMesh>> tRes =                         \
-        reuseTmpTmpDimensionedField                                            \
-        <productType, Type1, Type1, Type2, GeoMesh>::New                       \
+        reuseTmpTmpDimensionedField<productType, Type1, Type2, GeoMesh>::New   \
         (                                                                      \
             tdf1,                                                              \
             tdf2,                                                              \

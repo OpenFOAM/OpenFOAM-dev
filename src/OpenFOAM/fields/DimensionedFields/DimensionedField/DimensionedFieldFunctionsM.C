@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -217,8 +217,7 @@ tmp<DimensionedField<ReturnType, GeoMesh>> Func                                \
                                                                                \
     tmp<DimensionedField<ReturnType, GeoMesh>> tRes                            \
     (                                                                          \
-        reuseTmpTmpDimensionedField                                            \
-            <ReturnType, Type1, Type1, Type2, GeoMesh>::New                    \
+        reuseTmpTmpDimensionedField<ReturnType, Type1, Type2, GeoMesh>::New    \
         (                                                                      \
             tdf1,                                                              \
             tdf2,                                                              \
@@ -477,8 +476,7 @@ tmp<DimensionedField<ReturnType, GeoMesh>> operator Op                         \
                                                                                \
     tmp<DimensionedField<ReturnType, GeoMesh>> tRes                            \
     (                                                                          \
-        reuseTmpTmpDimensionedField                                            \
-            <ReturnType, Type1, Type1, Type2, GeoMesh>::New                    \
+        reuseTmpTmpDimensionedField<ReturnType, Type1, Type2, GeoMesh>::New    \
         (                                                                      \
             tdf1,                                                              \
             tdf2,                                                              \

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,7 +120,7 @@ public:
 };
 
 
-template<class TypeR, class Type1, class Type12, class Type2, class GeoMesh>
+template<class TypeR, class Type1, class Type2, class GeoMesh>
 class reuseTmpTmpDimensionedField
 {
 public:
@@ -145,8 +145,8 @@ public:
 };
 
 
-template<class TypeR, class Type1, class Type12, class GeoMesh>
-class reuseTmpTmpDimensionedField<TypeR, Type1, Type12, TypeR, GeoMesh>
+template<class TypeR, class Type1, class GeoMesh>
+class reuseTmpTmpDimensionedField<TypeR, Type1, TypeR, GeoMesh>
 {
 public:
 
@@ -182,7 +182,7 @@ public:
 
 
 template<class TypeR, class Type2, class GeoMesh>
-class reuseTmpTmpDimensionedField<TypeR, TypeR, TypeR, Type2, GeoMesh>
+class reuseTmpTmpDimensionedField<TypeR, TypeR, Type2, GeoMesh>
 {
 public:
 
@@ -217,7 +217,7 @@ public:
 
 
 template<class TypeR, class GeoMesh>
-class reuseTmpTmpDimensionedField<TypeR, TypeR, TypeR, TypeR, GeoMesh>
+class reuseTmpTmpDimensionedField<TypeR, TypeR, TypeR, GeoMesh>
 {
 public:
 

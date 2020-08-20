@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -188,8 +188,7 @@ tmp<FieldField<Field, ReturnType>> Func                                        \
 {                                                                              \
     tmp<FieldField<Field, ReturnType>> tRes                                    \
     (                                                                          \
-        reuseTmpTmpFieldField<Field, ReturnType, Type1, Type1, Type2>::        \
-            New(tf1, tf2)                                                      \
+        reuseTmpTmpFieldField<Field, ReturnType, Type1, Type2>::New(tf1, tf2)  \
     );                                                                         \
     Func(tRes.ref(), tf1(), tf2());                                            \
     tf1.clear();                                                               \
@@ -375,8 +374,7 @@ tmp<FieldField<Field, ReturnType>> operator Op                                 \
 {                                                                              \
     tmp<FieldField<Field, ReturnType>> tRes                                    \
     (                                                                          \
-        reuseTmpTmpFieldField<Field, ReturnType, Type1, Type1, Type2>::        \
-            New(tf1, tf2)                                                      \
+        reuseTmpTmpFieldField<Field, ReturnType, Type1, Type2>::New(tf1, tf2)  \
     );                                                                         \
     OpFunc(tRes.ref(), tf1(), tf2());                                          \
     tf1.clear();                                                               \
