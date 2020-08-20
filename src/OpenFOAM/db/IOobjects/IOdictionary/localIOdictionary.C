@@ -44,6 +44,24 @@ Foam::localIOdictionary::localIOdictionary
 Foam::localIOdictionary::localIOdictionary
 (
     const IOobject& io,
+    const dictionary& dict
+)
+:
+    IOdictionary(io, typeName)
+{
+    if (!readHeaderOk(IOstream::ASCII, typeName))
+    {
+        dictionary::operator=(dict);
+    }
+
+    // For if MUST_READ_IF_MODIFIED
+    addWatch();
+}
+
+
+Foam::localIOdictionary::localIOdictionary
+(
+    const IOobject& io,
     const word& actualType
 )
 :

@@ -61,6 +61,9 @@ public:
         //- Construct given an IOobject and actual type name
         localIOdictionary(const IOobject& io);
 
+        //- Construct given an IOobject and dictionary
+        localIOdictionary(const IOobject&, const dictionary&);
+
         //- Construct given an IOobject and actual type name
         localIOdictionary(const IOobject& io, const word& actualType);
 
