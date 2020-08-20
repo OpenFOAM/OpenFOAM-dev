@@ -582,11 +582,6 @@ Foam::Time::Time
 
 Foam::Time::~Time()
 {
-    forAllReverse(controlDict_.watchIndices(), i)
-    {
-        fileHandler().removeWatch(controlDict_.watchIndices()[i]);
-    }
-
     // Destroy function objects first
     functionObjects_.clear();
 }
