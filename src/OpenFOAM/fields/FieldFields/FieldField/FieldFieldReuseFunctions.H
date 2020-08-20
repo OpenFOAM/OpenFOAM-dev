@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,14 +104,7 @@ public:
 };
 
 
-template
-<
-    template<class> class Field,
-    class TypeR,
-    class Type1,
-    class Type12,
-    class Type2
->
+template<template<class> class Field, class TypeR, class Type1, class Type2>
 class reuseTmpTmpFieldField
 {
 public:
@@ -130,8 +123,8 @@ public:
 };
 
 
-template<template<class> class Field, class TypeR, class Type1, class Type12>
-class reuseTmpTmpFieldField<Field, TypeR, Type1, Type12, TypeR>
+template<template<class> class Field, class TypeR, class Type1>
+class reuseTmpTmpFieldField<Field, TypeR, Type1, TypeR>
 {
 public:
 
@@ -157,7 +150,7 @@ public:
 
 
 template<template<class> class Field, class TypeR, class Type2>
-class reuseTmpTmpFieldField<Field, TypeR, TypeR, TypeR, Type2>
+class reuseTmpTmpFieldField<Field, TypeR, TypeR, Type2>
 {
 public:
 
@@ -183,7 +176,7 @@ public:
 
 
 template<template<class> class Field, class TypeR>
-class reuseTmpTmpFieldField<Field, TypeR, TypeR, TypeR, TypeR>
+class reuseTmpTmpFieldField<Field, TypeR, TypeR, TypeR>
 {
 public:
 

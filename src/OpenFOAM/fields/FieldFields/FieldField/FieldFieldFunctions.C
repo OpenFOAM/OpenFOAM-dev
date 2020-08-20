@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -749,8 +749,7 @@ operator op                                                                    \
     typedef typename product<Type1, Type2>::type productType;                  \
     tmp<FieldField<Field1, productType>> tRes                                  \
     (                                                                          \
-        reuseTmpTmpFieldField<Field1, productType, Type1, Type1, Type2>::New   \
-        (tf1, tf2)                                                             \
+        reuseTmpTmpFieldField<Field1, productType, Type1, Type2>::New(tf1, tf2)\
     );                                                                         \
     opFunc(tRes.ref(), tf1(), tf2());                                          \
     tf1.clear();                                                               \

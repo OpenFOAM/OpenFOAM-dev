@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -269,7 +269,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> pow
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tPow
     (
         reuseTmpTmpGeometricField
-            <scalar, scalar, scalar, scalar, PatchField, GeoMesh>::New
+        <scalar, scalar, scalar, PatchField, GeoMesh>::New
         (
             tgsf1,
             tgsf2,
@@ -608,7 +608,7 @@ tmp<GeometricField<scalar, PatchField, GeoMesh>> atan2
     tmp<GeometricField<scalar, PatchField, GeoMesh>> tAtan2
     (
         reuseTmpTmpGeometricField
-            <scalar, scalar, scalar, scalar, PatchField, GeoMesh>::New
+        <scalar, scalar, scalar, PatchField, GeoMesh>::New
         (
             tgsf1,
             tgsf2,

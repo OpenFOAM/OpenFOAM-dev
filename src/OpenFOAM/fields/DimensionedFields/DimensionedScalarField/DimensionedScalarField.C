@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -232,8 +232,7 @@ tmp<DimensionedField<scalar, GeoMesh>> pow
     }
 
     tmp<DimensionedField<scalar, GeoMesh>> tPow =
-        reuseTmpTmpDimensionedField<scalar, scalar, scalar, scalar, GeoMesh>::
-        New
+        reuseTmpTmpDimensionedField<scalar, scalar, scalar, GeoMesh>::New
         (
             tdsf1,
             tdsf2,
@@ -511,8 +510,7 @@ tmp<DimensionedField<scalar, GeoMesh>> atan2
     const DimensionedField<scalar, GeoMesh>& dsf2 = tdsf2();
 
     tmp<DimensionedField<scalar, GeoMesh>> tAtan2 =
-        reuseTmpTmpDimensionedField<scalar, scalar, scalar, scalar, GeoMesh>::
-        New
+        reuseTmpTmpDimensionedField<scalar, scalar, scalar, GeoMesh>::New
         (
             tdsf1,
             tdsf2,

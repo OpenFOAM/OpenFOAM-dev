@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -267,8 +267,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> Func                      \
     tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
     (                                                                          \
         reuseTmpTmpGeometricField                                              \
-            <ReturnType, Type1, Type1, Type2, PatchField, GeoMesh>             \
-        ::New                                                                  \
+        <ReturnType, Type1, Type2, PatchField, GeoMesh>::New                   \
         (                                                                      \
             tgf1,                                                              \
             tgf2,                                                              \
@@ -565,7 +564,7 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
     tmp<GeometricField<ReturnType, PatchField, GeoMesh>> tRes                  \
     (                                                                          \
         reuseTmpTmpGeometricField                                              \
-            <ReturnType, Type1, Type1, Type2, PatchField, GeoMesh>::New        \
+        <ReturnType, Type1, Type2, PatchField, GeoMesh>::New                   \
         (                                                                      \
             tgf1,                                                              \
             tgf2,                                                              \
