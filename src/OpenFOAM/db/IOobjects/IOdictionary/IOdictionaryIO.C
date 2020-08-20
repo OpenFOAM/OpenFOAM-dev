@@ -23,65 +23,32 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "baseIOdictionary.H"
-#include "objectRegistry.H"
-#include "Pstream.H"
-#include "Time.H"
+#include "IOdictionary.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Members Functions * * * * * * * * * * * * * //
 
-namespace Foam
+bool Foam::IOdictionary::readData(Istream& is)
 {
-    defineTypeNameAndDebug(baseIOdictionary, 0);
+    is >> *this;
 
-    bool baseIOdictionary::writeDictionaries
-    (
-        debug::infoSwitch("writeDictionaries", 0)
-    );
+    if (writeDictionaries && Pstream::master() && !is.bad())
+    {
+        Sout<< nl
+            << "--- IOdictionary " << name()
+            << ' ' << objectPath() << ":" << nl;
+        writeHeader(Sout);
+        writeData(Sout);
+        Sout<< "--- End of IOdictionary " << name() << nl << endl;
+    }
+
+    return !is.bad();
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::baseIOdictionary::baseIOdictionary(const IOobject& io)
-:
-    regIOobject(io)
+bool Foam::IOdictionary::writeData(Ostream& os) const
 {
-    dictionary::name() = IOobject::objectPath();
-}
-
-
-Foam::baseIOdictionary::baseIOdictionary(const baseIOdictionary& dict)
-:
-    regIOobject(dict),
-    dictionary(dict)
-{}
-
-
-Foam::baseIOdictionary::baseIOdictionary(baseIOdictionary&& dict)
-:
-    regIOobject(move(dict)),
-    dictionary(move(dict))
-{}
-
-
-// * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * * //
-
-Foam::baseIOdictionary::~baseIOdictionary()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
-
-void Foam::baseIOdictionary::operator=(const baseIOdictionary& rhs)
-{
-    dictionary::operator=(rhs);
-}
-
-
-void Foam::baseIOdictionary::operator=(baseIOdictionary&& rhs)
-{
-    dictionary::operator=(move(rhs));
+    dictionary::write(os, false);
+    return os.good();
 }
 
 

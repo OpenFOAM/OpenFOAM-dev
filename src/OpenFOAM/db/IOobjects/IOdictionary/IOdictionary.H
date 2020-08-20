@@ -25,20 +25,22 @@ Class
     Foam::IOdictionary
 
 Description
-    IOdictionary is derived from dictionary and IOobject to give the dictionary
-    automatic IO functionality via the objectRegistry.  To facilitate IO,
-    IOdictionary is provided with a constructor from IOobject and writeData and
-    write functions.
+    IOdictionary is derived from dictionary and IOobject to give the
+    dictionary automatic IO functionality via the objectRegistry.  To facilitate
+    IO, IOdictionary is provided with a constructor from IOobject and writeData
+    and write functions.
 
 SourceFiles
     IOdictionary.C
+    IOdictionaryIO.C
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef IOdictionary_H
 #define IOdictionary_H
 
-#include "baseIOdictionary.H"
+#include "dictionary.H"
+#include "regIOobject.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,8 +53,13 @@ namespace Foam
 
 class IOdictionary
 :
-    public baseIOdictionary
+    public regIOobject,
+    public dictionary
 {
+    // Private Data
+
+        static bool writeDictionaries;
+
 
 protected:
 
@@ -63,6 +70,9 @@ protected:
 
 
 public:
+
+    TypeName("dictionary");
+
 
     // Constructors
 
@@ -88,6 +98,8 @@ public:
 
     // Member Functions
 
+        using regIOobject::name;
+
         //- Is object global
         virtual bool global() const
         {
@@ -101,10 +113,19 @@ public:
             return globalFilePath(type());
         }
 
+        //- ReadData function required for regIOobject read operation
+        virtual bool readData(Istream&);
+
+        //- WriteData function required for regIOobject write operation
+        virtual bool writeData(Ostream&) const;
+
 
     // Member Operators
 
-        //- Move assignment
+        //- Assignment of dictionary entries only
+        void operator=(const IOdictionary&);
+
+        //- Move assignment of dictionary entries only
         void operator=(IOdictionary&&);
 };
 
