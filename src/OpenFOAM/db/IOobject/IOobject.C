@@ -27,6 +27,7 @@ License
 #include "Time.H"
 #include "IFstream.H"
 #include "registerNamedEnum.H"
+#include "OSspecific.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

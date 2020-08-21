@@ -26,6 +26,7 @@ License
 #include "sampledSurfaces.H"
 #include "PatchTools.H"
 #include "mapPolyMesh.H"
+#include "OSspecific.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

@@ -39,9 +39,6 @@ SourceFiles
 #define regIOobject_H
 
 #include "IOobject.H"
-#include "typeInfo.H"
-#include "OSspecific.H"
-#include "NamedEnum.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -24,23 +24,16 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "meshRefinement.H"
-#include "fvMesh.H"
-#include "syncTools.H"
-#include "Time.H"
 #include "refinementSurfaces.H"
-#include "pointSet.H"
 #include "faceSet.H"
-#include "indirectPrimitivePatch.H"
 #include "polyTopoChange.H"
 #include "meshTools.H"
 #include "polyModifyFace.H"
 #include "polyModifyCell.H"
 #include "polyAddFace.H"
 #include "polyRemoveFace.H"
-#include "polyAddPoint.H"
 #include "localPointRegion.H"
 #include "duplicatePoints.H"
-#include "OFstream.H"
 #include "regionSplit.H"
 #include "removeCells.H"
 #include "unitConversion.H"
@@ -48,6 +41,7 @@ License
 #include "patchFaceOrientation.H"
 #include "PatchEdgeFaceWave.H"
 #include "patchEdgeFaceRegion.H"
+#include "OSspecific.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 

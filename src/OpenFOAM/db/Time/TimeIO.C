@@ -29,6 +29,7 @@ License
 #include "dimensionedConstants.H"
 #include "IOdictionary.H"
 #include "fileOperation.H"
+#include "OSspecific.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 

@@ -27,6 +27,7 @@ License
 #include "dynamicCode.H"
 #include "dynamicCodeContext.H"
 #include "Time.H"
+#include "OSspecific.H"
 #include "addToMemberFunctionSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
