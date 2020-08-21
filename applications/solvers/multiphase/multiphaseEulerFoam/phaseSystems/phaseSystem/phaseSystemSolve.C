@@ -187,8 +187,8 @@ void Foam::phaseSystem::solve
                 new volScalarField::Internal
                 (
                     "Su",
-                    min(alpha, scalar(1))
-                    *fvc::div(fvc::absolute(phi_, phase.U()))
+                    min(alpha.v(), scalar(1))
+                   *fvc::div(fvc::absolute(phi_, phase.U()))->v()
                 )
             );
 

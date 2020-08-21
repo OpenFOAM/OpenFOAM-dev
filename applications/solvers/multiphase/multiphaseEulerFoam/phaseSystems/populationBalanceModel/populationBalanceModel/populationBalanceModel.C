@@ -318,7 +318,7 @@ birthByCoalescence
                 Pair<word>::compare(pDmdt_.find(pairij).key(), pairij)
             );
 
-            pDmdt_[pairij]->ref() += dmdtSign*fj.x()/v*Sui_*fi.phase().rho();
+            *pDmdt_[pairij] += dmdtSign*fj.x()/v*Sui_*fi.phase().rho();
         }
 
         const phasePairKey pairik
@@ -334,7 +334,7 @@ birthByCoalescence
                 Pair<word>::compare(pDmdt_.find(pairik).key(), pairik)
             );
 
-            pDmdt_[pairik]->ref() += dmdtSign*fk.x()/v*Sui_*fi.phase().rho();
+            *pDmdt_[pairik] += dmdtSign*fk.x()/v*Sui_*fi.phase().rho();
         }
 
         sizeGroups_[i].shapeModelPtr()->addCoalescence(Sui_, fj, fk);
@@ -393,7 +393,7 @@ birthByBreakup
                 Pair<word>::compare(pDmdt_.find(pair).key(), pair)
             );
 
-            pDmdt_[pair]->ref() += dmdtSign*Sui_*fi.phase().rho();
+            *pDmdt_[pair] += dmdtSign*Sui_*fi.phase().rho();
         }
 
         sizeGroups_[i].shapeModelPtr()->addBreakup(Sui_, fk);
@@ -475,7 +475,7 @@ birthByBinaryBreakup
             Pair<word>::compare(pDmdt_.find(pairij).key(), pairij)
         );
 
-        pDmdt_[pairij]->ref() += dmdtSign*Sui_*fi.phase().rho();
+        *pDmdt_[pairij] += dmdtSign*Sui_*fi.phase().rho();
     }
 
     dimensionedScalar Eta;
@@ -515,7 +515,7 @@ birthByBinaryBreakup
                 )
             );
 
-            pDmdt_[pairkj]->ref() += dmdtSign*Suk*fi.phase().rho();
+            *pDmdt_[pairkj] += dmdtSign*Suk*fi.phase().rho();
         }
 
         sizeGroups_[i].shapeModelPtr()->addBreakup(Suk, fj);
@@ -631,7 +631,7 @@ void Foam::diameterModels::populationBalanceModel::drift
                 Pair<word>::compare(pDmdt_.find(pairij).key(), pairij)
             );
 
-            pDmdt_[pairij]->ref() -= dmdtSign*Sue*fp.phase().rho();
+            *pDmdt_[pairij] -= dmdtSign*Sue*fp.phase().rho();
         }
 
         sizeGroups_[i+1].shapeModelPtr()->addDrift(Sue, fp, model);
@@ -662,7 +662,7 @@ void Foam::diameterModels::populationBalanceModel::drift
                 Pair<word>::compare(pDmdt_.find(pairih).key(), pairih)
             );
 
-            pDmdt_[pairih]->ref() -= dmdtSign*Suw*fp.phase().rho();
+            *pDmdt_[pairih] -= dmdtSign*Suw*fp.phase().rho();
         }
 
         sizeGroups_[i-1].shapeModelPtr()->addDrift(Suw, fp, model);
