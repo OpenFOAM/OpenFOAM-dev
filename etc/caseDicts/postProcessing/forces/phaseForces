@@ -1,0 +1,26 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the blended interfacial forces acting on a given phase,
+    i.e. drag, virtual mass, lift, wall-lubrication and turbulent
+    dispersion. Note that it works only in solver post processing mode and in
+    combination with multiphaseEulerFoam. For a simulation involving more than
+    two phases, the accumulated force is calculated by looping over all
+    phasePairs the phase is a part of.
+
+\*---------------------------------------------------------------------------*/
+
+type            phaseForces;
+libs            ("libmultiphaseEulerFoamFunctionObjects.so");
+
+phase           <phase_name>;
+
+executeControl  writeTime;
+writeControl    writeTime;
+
+// ************************************************************************* //
