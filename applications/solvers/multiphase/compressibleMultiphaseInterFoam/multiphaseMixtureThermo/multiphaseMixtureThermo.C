@@ -1305,7 +1305,7 @@ void Foam::multiphaseMixtureThermo::solveAlphas
             ),
             // Divergence term is handled explicitly to be
             // consistent with the explicit transport solution
-            divU*min(alpha, scalar(1))
+            divU.v()*min(alpha.v(), scalar(1))
         );
 
         {
