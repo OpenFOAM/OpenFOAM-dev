@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ void Foam::hePsiThermo<BasicPsiThermo, MixtureType>::calculate()
 
     forAll(TCells, celli)
     {
-        const typename MixtureType::thermoType& mixture_ =
+        const typename MixtureType::mixtureType& mixture_ =
             this->cellMixture(celli);
 
         TCells[celli] = mixture_.THE
@@ -87,7 +87,7 @@ void Foam::hePsiThermo<BasicPsiThermo, MixtureType>::calculate()
         {
             forAll(pT, facei)
             {
-                const typename MixtureType::thermoType& mixture_ =
+                const typename MixtureType::mixtureType& mixture_ =
                     this->patchFaceMixture(patchi, facei);
 
                 phe[facei] = mixture_.HE(pp[facei], pT[facei]);
@@ -101,7 +101,7 @@ void Foam::hePsiThermo<BasicPsiThermo, MixtureType>::calculate()
         {
             forAll(pT, facei)
             {
-                const typename MixtureType::thermoType& mixture_ =
+                const typename MixtureType::mixtureType& mixture_ =
                     this->patchFaceMixture(patchi, facei);
 
                 pT[facei] = mixture_.THE(phe[facei], pp[facei], pT[facei]);

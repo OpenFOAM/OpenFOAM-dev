@@ -147,109 +147,13 @@ Foam::multiComponentMixture<ThermoType>::multiComponentMixture
         phaseName
     ),
     specieThermos_(readSpeciesData(thermoDict)),
-    speciesComposition_(readSpeciesComposition(thermoDict, species())),
-    mixture_("mixture", specieThermos_[0]),
-    mixtureVol_("volMixture", specieThermos_[0])
+    speciesComposition_(readSpeciesComposition(thermoDict, species()))
 {
     correctMassFractions();
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class ThermoType>
-const ThermoType& Foam::multiComponentMixture<ThermoType>::cellMixture
-(
-    const label celli
-) const
-{
-    mixture_ = Y_[0][celli]*specieThermos_[0];
-
-    for (label n=1; n<Y_.size(); n++)
-    {
-        mixture_ += Y_[n][celli]*specieThermos_[n];
-    }
-
-    return mixture_;
-}
-
-
-template<class ThermoType>
-const ThermoType& Foam::multiComponentMixture<ThermoType>::patchFaceMixture
-(
-    const label patchi,
-    const label facei
-) const
-{
-    mixture_ = Y_[0].boundaryField()[patchi][facei]*specieThermos_[0];
-
-    for (label n=1; n<Y_.size(); n++)
-    {
-        mixture_ += Y_[n].boundaryField()[patchi][facei]*specieThermos_[n];
-    }
-
-    return mixture_;
-}
-
-
-template<class ThermoType>
-const ThermoType& Foam::multiComponentMixture<ThermoType>::cellVolMixture
-(
-    const scalar p,
-    const scalar T,
-    const label celli
-) const
-{
-    scalar rhoInv = 0.0;
-    forAll(specieThermos_, i)
-    {
-        rhoInv += Y_[i][celli]/specieThermos_[i].rho(p, T);
-    }
-
-    mixtureVol_ =
-        Y_[0][celli]/specieThermos_[0].rho(p, T)/rhoInv*specieThermos_[0];
-
-    for (label n=1; n<Y_.size(); n++)
-    {
-        mixtureVol_ +=
-            Y_[n][celli]/specieThermos_[n].rho(p, T)/rhoInv*specieThermos_[n];
-    }
-
-    return mixtureVol_;
-}
-
-
-template<class ThermoType>
-const ThermoType& Foam::multiComponentMixture<ThermoType>::
-patchFaceVolMixture
-(
-    const scalar p,
-    const scalar T,
-    const label patchi,
-    const label facei
-) const
-{
-    scalar rhoInv = 0.0;
-    forAll(specieThermos_, i)
-    {
-        rhoInv +=
-            Y_[i].boundaryField()[patchi][facei]/specieThermos_[i].rho(p, T);
-    }
-
-    mixtureVol_ =
-        Y_[0].boundaryField()[patchi][facei]/specieThermos_[0].rho(p, T)/rhoInv
-      * specieThermos_[0];
-
-    for (label n=1; n<Y_.size(); n++)
-    {
-        mixtureVol_ +=
-            Y_[n].boundaryField()[patchi][facei]/specieThermos_[n].rho(p,T)
-          / rhoInv*specieThermos_[n];
-    }
-
-    return mixtureVol_;
-}
-
 
 template<class ThermoType>
 void Foam::multiComponentMixture<ThermoType>::read

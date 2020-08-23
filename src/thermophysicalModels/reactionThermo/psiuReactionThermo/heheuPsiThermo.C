@@ -44,7 +44,7 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
 
     forAll(TCells, celli)
     {
-        const typename MixtureType::thermoType& mixture_ =
+        const typename MixtureType::mixtureType& mixture_ =
             this->cellMixture(celli);
 
         TCells[celli] = mixture_.THE
@@ -106,7 +106,7 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
         {
             forAll(pT, facei)
             {
-                const typename MixtureType::thermoType& mixture_ =
+                const typename MixtureType::mixtureType& mixture_ =
                     this->patchFaceMixture(patchi, facei);
 
                 phe[facei] = mixture_.HE(pp[facei], pT[facei]);
@@ -120,7 +120,7 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
         {
             forAll(pT, facei)
             {
-                const typename MixtureType::thermoType& mixture_ =
+                const typename MixtureType::mixtureType& mixture_ =
                     this->patchFaceMixture(patchi, facei);
 
                 pT[facei] = mixture_.THE(phe[facei], pp[facei], pT[facei]);
@@ -176,7 +176,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heheuPsiThermo
             dimEnergy/dimMass,
             &MixtureType::cellReactants,
             &MixtureType::patchFaceReactants,
-            &MixtureType::thermoType::HE,
+            &MixtureType::mixtureType::HE,
             this->p_,
             this->Tu_
         ),
@@ -231,7 +231,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heu
     return this->cellSetProperty
     (
         &MixtureType::cellReactants,
-        &MixtureType::thermoType::HE,
+        &MixtureType::mixtureType::HE,
         cells,
         UIndirectList<scalar>(this->p_, cells),
         Tu
@@ -250,7 +250,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::heu
     return this->patchFieldProperty
     (
         &MixtureType::patchFaceReactants,
-        &MixtureType::thermoType::HE,
+        &MixtureType::mixtureType::HE,
         patchi,
         this->p_.boundaryField()[patchi],
         Tu
@@ -268,7 +268,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::Tb() const
         dimTemperature,
         &MixtureType::cellProducts,
         &MixtureType::patchFaceProducts,
-        &MixtureType::thermoType::THE,
+        &MixtureType::mixtureType::THE,
         this->he_,
         this->p_,
         this->T_
@@ -286,7 +286,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::psiu() const
         this->psi_.dimensions(),
         &MixtureType::cellReactants,
         &MixtureType::patchFaceReactants,
-        &MixtureType::thermoType::psi,
+        &MixtureType::mixtureType::psi,
         this->p_,
         this->T_
     );
@@ -303,7 +303,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::psib() const
         this->psi_.dimensions(),
         &MixtureType::cellProducts,
         &MixtureType::patchFaceProducts,
-        &MixtureType::thermoType::psi,
+        &MixtureType::mixtureType::psi,
         this->p_,
         this->T_
     );
@@ -320,7 +320,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::muu() const
         dimDynamicViscosity,
         &MixtureType::cellReactants,
         &MixtureType::patchFaceReactants,
-        &MixtureType::thermoType::mu,
+        &MixtureType::mixtureType::mu,
         this->p_,
         this->T_
     );
@@ -337,7 +337,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::mub() const
         dimDynamicViscosity,
         &MixtureType::cellProducts,
         &MixtureType::patchFaceProducts,
-        &MixtureType::thermoType::mu,
+        &MixtureType::mixtureType::mu,
         this->p_,
         this->T_
     );

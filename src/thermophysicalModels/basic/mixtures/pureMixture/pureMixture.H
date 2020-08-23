@@ -51,16 +51,24 @@ class pureMixture
 :
     public basicMixture
 {
-    // Private Data
-
-        ThermoType mixture_;
-
 
 public:
 
     //- The type of thermodynamics this mixture is instantiated for
     typedef ThermoType thermoType;
 
+    //- The type of mixture
+    typedef ThermoType mixtureType;
+
+
+private:
+
+    // Private Data
+
+        mixtureType mixture_;
+
+
+public:
 
     // Constructors
 
@@ -79,39 +87,13 @@ public:
             return "pureMixture<" + ThermoType::typeName() + '>';
         }
 
-        const ThermoType& mixture() const
+        const mixtureType& cellMixture(const label) const
         {
             return mixture_;
         }
 
-        const ThermoType& cellMixture(const label) const
-        {
-            return mixture_;
-        }
-
-        const ThermoType& patchFaceMixture
+        const mixtureType& patchFaceMixture
         (
-            const label,
-            const label
-        ) const
-        {
-            return mixture_;
-        }
-
-        const ThermoType& cellVolMixture
-        (
-            const scalar,
-            const scalar,
-            const label
-        ) const
-        {
-            return mixture_;
-        }
-
-        const ThermoType& patchFaceVolMixture
-        (
-            const scalar,
-            const scalar,
             const label,
             const label
         ) const

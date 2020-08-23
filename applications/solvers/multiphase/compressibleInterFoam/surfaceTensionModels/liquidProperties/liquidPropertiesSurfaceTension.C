@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,8 +74,6 @@ Foam::surfaceTensionModels::liquidProperties::sigma() const
              IOobject::groupName(basicThermo::dictName, phaseName_)
         );
 
-    const Foam::liquidProperties& liquid = thermo.mixture().properties();
-
     tmp<volScalarField> tsigma
     (
         volScalarField::New
@@ -96,7 +94,10 @@ Foam::surfaceTensionModels::liquidProperties::sigma() const
 
     forAll(sigmai, celli)
     {
-        sigmai[celli] = liquid.sigma(pi[celli], Ti[celli]);
+        const heRhoThermopureMixtureliquidProperties::mixtureType& liquid =
+            thermo.cellMixture(celli);
+
+        sigmai[celli] = liquid.properties().sigma(pi[celli], Ti[celli]);
     }
 
     volScalarField::Boundary& sigmaBf = sigma.boundaryFieldRef();
@@ -111,7 +112,10 @@ Foam::surfaceTensionModels::liquidProperties::sigma() const
 
         forAll(sigmaPf, facei)
         {
-            sigmaPf[facei] = liquid.sigma(pPf[facei], TPf[facei]);
+            const heRhoThermopureMixtureliquidProperties::mixtureType& liquid =
+                thermo.patchFaceMixture(patchi, facei);
+
+            sigmaPf[facei] = liquid.properties().sigma(pPf[facei], TPf[facei]);
         }
     }
 

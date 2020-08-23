@@ -51,6 +51,18 @@ class singleComponentMixture
 :
     public basicSpecieMixture
 {
+
+public:
+
+    //- The type of thermodynamics this mixture is instantiated for
+    typedef ThermoType thermoType;
+
+    //- The type of mixture
+    typedef ThermoType mixtureType;
+
+
+private:
+
     // Private Data
 
         //- Thermo model
@@ -58,10 +70,6 @@ class singleComponentMixture
 
 
 public:
-
-    //- The type of thermodynamics this mixture is instantiated for
-    typedef ThermoType thermoType;
-
 
     // Constructors
 
@@ -84,37 +92,14 @@ public:
         }
 
         //- Get the mixture for the given cell
-        const ThermoType& cellMixture(const label celli) const
+        const mixtureType& cellMixture(const label celli) const
         {
             return thermo_;
         }
 
         //- Get the mixture for the given patch face
-        const ThermoType& patchFaceMixture
+        const mixtureType& patchFaceMixture
         (
-            const label patchi,
-            const label facei
-        ) const
-        {
-            return thermo_;
-        }
-
-        //- Get the volumetric mixture for the given cell
-        const ThermoType& cellVolMixture
-        (
-            const scalar p,
-            const scalar T,
-            const label celli
-        )
-        {
-            return thermo_;
-        }
-
-        //- Get the volumetric mixture for the given patch face
-        const ThermoType& patchFaceVolMixture
-        (
-            const scalar p,
-            const scalar T,
             const label patchi,
             const label facei
         ) const

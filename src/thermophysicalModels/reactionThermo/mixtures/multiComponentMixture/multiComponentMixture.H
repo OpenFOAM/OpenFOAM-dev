@@ -53,6 +53,15 @@ class multiComponentMixture
 :
     public basicSpecieMixture
 {
+
+public:
+
+    //- The type of thermodynamics this mixture is instantiated for
+    typedef ThermoType thermoType;
+
+
+private:
+
     // Private Data
 
         //- List of specie thermo
@@ -62,13 +71,6 @@ class multiComponentMixture
 
         //- Table of species composition
         speciesCompositionTable speciesComposition_;
-
-        //- Temporary storage for the cell/face mixture thermo data
-        mutable ThermoType mixture_;
-
-        //- Temporary storage for the volume weighted
-        //  cell/face mixture thermo data
-        mutable ThermoType mixtureVol_;
 
 
     // Private Member Functions
@@ -89,10 +91,6 @@ class multiComponentMixture
 
 public:
 
-    //- The type of thermodynamics this mixture is instantiated for
-    typedef ThermoType thermoType;
-
-
     // Constructors
 
         //- Construct from dictionary, mesh and phase name
@@ -112,12 +110,6 @@ public:
 
     // Member Functions
 
-        //- Return the instantiated type name
-        static word typeName()
-        {
-            return "multiComponentMixture<" + ThermoType::typeName() + '>';
-        }
-
         //- Return the raw specie thermodynamic data
         const PtrList<ThermoType>& specieThermos() const
         {
@@ -129,29 +121,6 @@ public:
         {
             return speciesComposition_;
         }
-
-        const ThermoType& cellMixture(const label celli) const;
-
-        const ThermoType& patchFaceMixture
-        (
-            const label patchi,
-            const label facei
-        ) const;
-
-        const ThermoType& cellVolMixture
-        (
-            const scalar p,
-            const scalar T,
-            const label celli
-        ) const;
-
-        const ThermoType& patchFaceVolMixture
-        (
-            const scalar p,
-            const scalar T,
-            const label patchi,
-            const label facei
-        ) const;
 
         //- Read dictionary
         void read(const dictionary&);
