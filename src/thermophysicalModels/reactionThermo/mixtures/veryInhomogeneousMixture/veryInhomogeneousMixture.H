@@ -57,8 +57,11 @@ public:
     //- The type of thermodynamics this mixture is instantiated for
     typedef ThermoType thermoType;
 
-    //- The type of mixture
-    typedef ThermoType mixtureType;
+    //- Mixing type for thermodynamic properties
+    typedef ThermoType thermoMixtureType;
+
+    //- Mixing type for transport properties
+    typedef ThermoType transportMixtureType;
 
 
 private:
@@ -70,11 +73,11 @@ private:
 
         dimensionedScalar stoicRatio_;
 
-        mixtureType fuel_;
-        mixtureType oxidant_;
-        mixtureType products_;
+        thermoType fuel_;
+        thermoType oxidant_;
+        thermoType products_;
 
-        mutable mixtureType mixture_;
+        mutable thermoType mixture_;
 
         //- Mixture fraction
         volScalarField& ft_;
@@ -122,14 +125,14 @@ public:
             return stoicRatio_;
         }
 
-        const mixtureType& mixture(const scalar, const scalar) const;
+        const thermoType& mixture(const scalar, const scalar) const;
 
-        const mixtureType& cellMixture(const label celli) const
+        const thermoMixtureType& cellThermoMixture(const label celli) const
         {
             return mixture(ft_[celli], fu_[celli]);
         }
 
-        const mixtureType& patchFaceMixture
+        const thermoMixtureType& patchFaceThermoMixture
         (
             const label patchi,
             const label facei
@@ -142,12 +145,48 @@ public:
             );
         }
 
-        const mixtureType& cellReactants(const label celli) const
+        const transportMixtureType& cellTransportMixture
+        (
+            const label celli
+        ) const
+        {
+            return cellThermoMixture(celli);
+        }
+
+        const transportMixtureType& patchFaceTransportMixture
+        (
+            const label patchi,
+            const label facei
+        ) const
+        {
+            return patchFaceThermoMixture(patchi, facei);
+        }
+
+        const transportMixtureType& cellTransportMixture
+        (
+            const label,
+            const thermoMixtureType& thermoMixture
+        ) const
+        {
+            return thermoMixture;
+        }
+
+        const transportMixtureType& patchFaceTransportMixture
+        (
+            const label,
+            const label,
+            const thermoMixtureType& thermoMixture
+        ) const
+        {
+            return thermoMixture;
+        }
+
+        const thermoType& cellReactants(const label celli) const
         {
             return mixture(ft_[celli], ft_[celli]);
         }
 
-        const mixtureType& patchFaceReactants
+        const thermoType& patchFaceReactants
         (
             const label patchi,
             const label facei
@@ -160,13 +199,13 @@ public:
             );
         }
 
-        const mixtureType& cellProducts(const label celli) const
+        const thermoType& cellProducts(const label celli) const
         {
             scalar ft = ft_[celli];
             return mixture(ft, fres(ft, stoicRatio().value()));
         }
 
-        const mixtureType& patchFaceProducts
+        const thermoType& patchFaceProducts
         (
             const label patchi,
             const label facei

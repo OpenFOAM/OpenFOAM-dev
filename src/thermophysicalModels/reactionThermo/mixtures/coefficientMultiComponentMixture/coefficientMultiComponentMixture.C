@@ -49,8 +49,9 @@ coefficientMultiComponentMixture
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-const ThermoType&
-Foam::coefficientMultiComponentMixture<ThermoType>::cellMixture
+const typename
+Foam::coefficientMultiComponentMixture<ThermoType>::thermoMixtureType&
+Foam::coefficientMultiComponentMixture<ThermoType>::cellThermoMixture
 (
     const label celli
 ) const
@@ -67,8 +68,9 @@ Foam::coefficientMultiComponentMixture<ThermoType>::cellMixture
 
 
 template<class ThermoType>
-const ThermoType&
-Foam::coefficientMultiComponentMixture<ThermoType>::patchFaceMixture
+const typename
+Foam::coefficientMultiComponentMixture<ThermoType>::thermoMixtureType&
+Foam::coefficientMultiComponentMixture<ThermoType>::patchFaceThermoMixture
 (
     const label patchi,
     const label facei

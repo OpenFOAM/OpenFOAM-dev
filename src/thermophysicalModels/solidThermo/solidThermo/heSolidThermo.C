@@ -40,12 +40,15 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
 
     forAll(TCells, celli)
     {
-        const typename MixtureType::mixtureType& mixture_ =
-            this->cellMixture(celli);
+        const typename MixtureType::thermoMixtureType& thermoMixture =
+            this->cellThermoMixture(celli);
 
-        rhoCells[celli] = mixture_.rho(pCells[celli], TCells[celli]);
+        const typename MixtureType::transportMixtureType& transportMixture =
+            this->cellTransportMixture(celli, thermoMixture);
 
-        TCells[celli] = mixture_.THE
+        rhoCells[celli] = thermoMixture.rho(pCells[celli], TCells[celli]);
+
+        TCells[celli] = thermoMixture.THE
         (
             hCells[celli],
             pCells[celli],
@@ -53,8 +56,8 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
         );
 
         alphaCells[celli] =
-            mixture_.kappa(pCells[celli], TCells[celli])
-           /mixture_.Cpv(pCells[celli], TCells[celli]);
+            transportMixture.kappa(pCells[celli], TCells[celli])
+           /thermoMixture.Cpv(pCells[celli], TCells[celli]);
     }
 
     const auto& pBf = this->p_.boundaryField();
@@ -83,30 +86,40 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
         {
             forAll(pT, facei)
             {
-                const typename MixtureType::mixtureType& mixture_ =
-                    this->patchFaceMixture(patchi, facei);
+                const typename MixtureType::thermoMixtureType&
+                    thermoMixture = this->patchFaceThermoMixture(patchi, facei);
 
-                phe[facei] = mixture_.HE(pp[facei], pT[facei]);
-                prho[facei] = mixture_.rho(pp[facei], pT[facei]);
+                const typename MixtureType::transportMixtureType&
+                    transportMixture =
+                    this->patchFaceTransportMixture
+                    (patchi, facei, thermoMixture);
+
+                phe[facei] = thermoMixture.HE(pp[facei], pT[facei]);
+                prho[facei] = thermoMixture.rho(pp[facei], pT[facei]);
 
                 palpha[facei] =
-                    mixture_.kappa(pp[facei], pT[facei])
-                  / mixture_.Cpv(pp[facei], pT[facei]);
+                    transportMixture.kappa(pp[facei], pT[facei])
+                   /thermoMixture.Cpv(pp[facei], pT[facei]);
             }
         }
         else
         {
             forAll(pT, facei)
             {
-                const typename MixtureType::mixtureType& mixture_ =
-                    this->patchFaceMixture(patchi, facei);
+                const typename MixtureType::thermoMixtureType&
+                    thermoMixture = this->patchFaceThermoMixture(patchi, facei);
 
-                pT[facei] = mixture_.THE(phe[facei], pp[facei] ,pT[facei]);
-                prho[facei] = mixture_.rho(pp[facei], pT[facei]);
+                const typename MixtureType::transportMixtureType&
+                    transportMixture =
+                    this->patchFaceTransportMixture
+                    (patchi, facei, thermoMixture);
+
+                pT[facei] = thermoMixture.THE(phe[facei], pp[facei] ,pT[facei]);
+                prho[facei] = thermoMixture.rho(pp[facei], pT[facei]);
 
                 palpha[facei] =
-                    mixture_.kappa(pp[facei], pT[facei])
-                  / mixture_.Cpv(pp[facei], pT[facei]);
+                    transportMixture.kappa(pp[facei], pT[facei])
+                   /thermoMixture.Cpv(pp[facei], pT[facei]);
             }
         }
     }
@@ -197,7 +210,7 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa() const
     forAll(KappaCells, celli)
     {
         Kappa[celli] =
-            this->cellMixture
+            this->cellTransportMixture
             (
                 celli
             ).Kappa(pCells[celli], TCells[celli]);
@@ -215,7 +228,7 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa() const
         forAll(Kappap, facei)
         {
             Kappap[facei] =
-                this->patchFaceMixture
+                this->patchFaceTransportMixture
                 (
                     patchi,
                     facei
@@ -243,7 +256,7 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa
     forAll(Tp, facei)
     {
         Kappap[facei] =
-            this->patchFaceMixture
+            this->patchFaceTransportMixture
             (
                 patchi,
                 facei

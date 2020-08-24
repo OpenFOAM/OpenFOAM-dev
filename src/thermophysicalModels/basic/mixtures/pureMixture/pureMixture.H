@@ -57,15 +57,18 @@ public:
     //- The type of thermodynamics this mixture is instantiated for
     typedef ThermoType thermoType;
 
-    //- The type of mixture
-    typedef ThermoType mixtureType;
+    //- Mixing type for thermodynamic properties
+    typedef ThermoType thermoMixtureType;
+
+    //- Mixing type for transport properties
+    typedef ThermoType transportMixtureType;
 
 
 private:
 
     // Private Data
 
-        mixtureType mixture_;
+        ThermoType mixture_;
 
 
 public:
@@ -87,15 +90,48 @@ public:
             return "pureMixture<" + ThermoType::typeName() + '>';
         }
 
-        const mixtureType& cellMixture(const label) const
+        const thermoMixtureType& cellThermoMixture(const label) const
         {
             return mixture_;
         }
 
-        const mixtureType& patchFaceMixture
+        const thermoMixtureType& patchFaceThermoMixture
         (
             const label,
             const label
+        ) const
+        {
+            return mixture_;
+        }
+
+        const transportMixtureType& cellTransportMixture(const label) const
+        {
+            return mixture_;
+        }
+
+        const transportMixtureType& patchFaceTransportMixture
+        (
+            const label,
+            const label
+        ) const
+        {
+            return mixture_;
+        }
+
+        const transportMixtureType& cellTransportMixture
+        (
+            const label,
+            const thermoMixtureType&
+        ) const
+        {
+            return mixture_;
+        }
+
+        const transportMixtureType& patchFaceTransportMixture
+        (
+            const label,
+            const label,
+            const thermoMixtureType&
         ) const
         {
             return mixture_;

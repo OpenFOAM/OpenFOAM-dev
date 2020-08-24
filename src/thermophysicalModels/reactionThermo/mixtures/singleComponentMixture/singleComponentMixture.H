@@ -57,8 +57,11 @@ public:
     //- The type of thermodynamics this mixture is instantiated for
     typedef ThermoType thermoType;
 
-    //- The type of mixture
-    typedef ThermoType mixtureType;
+    //- Mixing type for thermodynamic properties
+    typedef ThermoType thermoMixtureType;
+
+    //- Mixing type for transport properties
+    typedef ThermoType transportMixtureType;
 
 
 private:
@@ -66,7 +69,7 @@ private:
     // Private Data
 
         //- Thermo model
-        ThermoType thermo_;
+        ThermoType mixture_;
 
 
 public:
@@ -91,20 +94,51 @@ public:
             return "pureMixture<" + ThermoType::typeName() + '>';
         }
 
-        //- Get the mixture for the given cell
-        const mixtureType& cellMixture(const label celli) const
+        const thermoMixtureType& cellThermoMixture(const label) const
         {
-            return thermo_;
+            return mixture_;
         }
 
-        //- Get the mixture for the given patch face
-        const mixtureType& patchFaceMixture
+        const thermoMixtureType& patchFaceThermoMixture
         (
-            const label patchi,
-            const label facei
+            const label,
+            const label
         ) const
         {
-            return thermo_;
+            return mixture_;
+        }
+
+        const transportMixtureType& cellTransportMixture(const label) const
+        {
+            return mixture_;
+        }
+
+        const transportMixtureType& patchFaceTransportMixture
+        (
+            const label,
+            const label
+        ) const
+        {
+            return mixture_;
+        }
+
+        const transportMixtureType& cellTransportMixture
+        (
+            const label,
+            const thermoMixtureType&
+        ) const
+        {
+            return mixture_;
+        }
+
+        const transportMixtureType& patchFaceTransportMixture
+        (
+            const label,
+            const label,
+            const thermoMixtureType&
+        ) const
+        {
+            return mixture_;
         }
 
         //- Read dictionary
@@ -121,7 +155,7 @@ public:
                     << "mixture" << exit(FatalError);
             }
             #endif
-            return thermo_;
+            return mixture_;
         }
 };
 

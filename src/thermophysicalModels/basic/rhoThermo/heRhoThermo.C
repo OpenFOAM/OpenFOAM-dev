@@ -41,21 +41,25 @@ void Foam::heRhoThermo<BasicRhoThermo, MixtureType>::calculate()
 
     forAll(TCells, celli)
     {
-        const typename MixtureType::mixtureType& mixture_ =
-            this->cellMixture(celli);
+        const typename MixtureType::thermoMixtureType& thermoMixture =
+            this->cellThermoMixture(celli);
 
-        TCells[celli] = mixture_.THE
+        const typename MixtureType::transportMixtureType& transportMixture =
+            this->cellTransportMixture(celli, thermoMixture);
+
+        TCells[celli] = thermoMixture.THE
         (
             hCells[celli],
             pCells[celli],
             TCells[celli]
         );
 
-        psiCells[celli] = mixture_.psi(pCells[celli], TCells[celli]);
-        rhoCells[celli] = mixture_.rho(pCells[celli], TCells[celli]);
+        psiCells[celli] = thermoMixture.psi(pCells[celli], TCells[celli]);
+        rhoCells[celli] = thermoMixture.rho(pCells[celli], TCells[celli]);
 
-        muCells[celli] = mixture_.mu(pCells[celli], TCells[celli]);
-        alphaCells[celli] = mixture_.alphah(pCells[celli], TCells[celli]);
+        muCells[celli] = transportMixture.mu(pCells[celli], TCells[celli]);
+        alphaCells[celli] =
+            transportMixture.alphah(pCells[celli], TCells[celli]);
     }
 
     volScalarField::Boundary& pBf =
@@ -93,30 +97,40 @@ void Foam::heRhoThermo<BasicRhoThermo, MixtureType>::calculate()
         {
             forAll(pT, facei)
             {
-                const typename MixtureType::mixtureType& mixture_ =
-                    this->patchFaceMixture(patchi, facei);
+                const typename MixtureType::thermoMixtureType& thermoMixture =
+                    this->patchFaceThermoMixture(patchi, facei);
 
-                phe[facei] = mixture_.HE(pp[facei], pT[facei]);
+                const typename MixtureType::transportMixtureType&
+                    transportMixture =
+                    this->patchFaceTransportMixture
+                    (patchi, facei, thermoMixture);
 
-                ppsi[facei] = mixture_.psi(pp[facei], pT[facei]);
-                prho[facei] = mixture_.rho(pp[facei], pT[facei]);
-                pmu[facei] = mixture_.mu(pp[facei], pT[facei]);
-                palpha[facei] = mixture_.alphah(pp[facei], pT[facei]);
+                phe[facei] = thermoMixture.HE(pp[facei], pT[facei]);
+
+                ppsi[facei] = thermoMixture.psi(pp[facei], pT[facei]);
+                prho[facei] = thermoMixture.rho(pp[facei], pT[facei]);
+                pmu[facei] = transportMixture.mu(pp[facei], pT[facei]);
+                palpha[facei] = transportMixture.alphah(pp[facei], pT[facei]);
             }
         }
         else
         {
             forAll(pT, facei)
             {
-                const typename MixtureType::mixtureType& mixture_ =
-                    this->patchFaceMixture(patchi, facei);
+                const typename MixtureType::thermoMixtureType& thermoMixture =
+                    this->patchFaceThermoMixture(patchi, facei);
 
-                pT[facei] = mixture_.THE(phe[facei], pp[facei], pT[facei]);
+                const typename MixtureType::transportMixtureType&
+                    transportMixture =
+                    this->patchFaceTransportMixture
+                    (patchi, facei, thermoMixture);
 
-                ppsi[facei] = mixture_.psi(pp[facei], pT[facei]);
-                prho[facei] = mixture_.rho(pp[facei], pT[facei]);
-                pmu[facei] = mixture_.mu(pp[facei], pT[facei]);
-                palpha[facei] = mixture_.alphah(pp[facei], pT[facei]);
+                pT[facei] = thermoMixture.THE(phe[facei], pp[facei], pT[facei]);
+
+                ppsi[facei] = thermoMixture.psi(pp[facei], pT[facei]);
+                prho[facei] = thermoMixture.rho(pp[facei], pT[facei]);
+                pmu[facei] = transportMixture.mu(pp[facei], pT[facei]);
+                palpha[facei] = transportMixture.alphah(pp[facei], pT[facei]);
             }
         }
     }

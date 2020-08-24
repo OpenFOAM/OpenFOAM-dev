@@ -54,8 +54,11 @@ class coefficientMultiComponentMixture
 
 public:
 
-    //- The type of mixture
-    typedef ThermoType mixtureType;
+    //- Mixing type for thermodynamic properties
+    typedef ThermoType thermoMixtureType;
+
+    //- Mixing type for transport properties
+    typedef ThermoType transportMixtureType;
 
 
 private:
@@ -63,7 +66,7 @@ private:
     // Private Data
 
         //- Temporary storage for the cell/face mixture thermo data
-        mutable mixtureType mixture_;
+        mutable thermoMixtureType mixture_;
 
 
 public:
@@ -98,13 +101,49 @@ public:
             return "multiComponentMixture<" + ThermoType::typeName() + '>';
         }
 
-        const mixtureType& cellMixture(const label celli) const;
+        const thermoMixtureType& cellThermoMixture(const label celli) const;
 
-        const mixtureType& patchFaceMixture
+        const thermoMixtureType& patchFaceThermoMixture
         (
             const label patchi,
             const label facei
         ) const;
+
+        const transportMixtureType& cellTransportMixture
+        (
+            const label celli
+        ) const
+        {
+            return cellThermoMixture(celli);
+        }
+
+        const transportMixtureType& patchFaceTransportMixture
+        (
+            const label patchi,
+            const label facei
+        ) const
+        {
+            return patchFaceThermoMixture(patchi, facei);
+        }
+
+        const transportMixtureType& cellTransportMixture
+        (
+            const label,
+            const thermoMixtureType& thermoMixture
+        ) const
+        {
+            return thermoMixture;
+        }
+
+        const transportMixtureType& patchFaceTransportMixture
+        (
+            const label,
+            const label,
+            const thermoMixtureType& thermoMixture
+        ) const
+        {
+            return thermoMixture;
+        }
 };
 
 

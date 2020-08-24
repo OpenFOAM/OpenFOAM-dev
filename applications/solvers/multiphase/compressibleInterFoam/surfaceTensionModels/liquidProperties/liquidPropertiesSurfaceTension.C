@@ -94,8 +94,8 @@ Foam::surfaceTensionModels::liquidProperties::sigma() const
 
     forAll(sigmai, celli)
     {
-        const heRhoThermopureMixtureliquidProperties::mixtureType& liquid =
-            thermo.cellMixture(celli);
+        const heRhoThermopureMixtureliquidProperties::transportMixtureType&
+            liquid = thermo.cellTransportMixture(celli);
 
         sigmai[celli] = liquid.properties().sigma(pi[celli], Ti[celli]);
     }
@@ -112,8 +112,8 @@ Foam::surfaceTensionModels::liquidProperties::sigma() const
 
         forAll(sigmaPf, facei)
         {
-            const heRhoThermopureMixtureliquidProperties::mixtureType& liquid =
-                thermo.patchFaceMixture(patchi, facei);
+            const heRhoThermopureMixtureliquidProperties::transportMixtureType&
+                liquid = thermo.patchFaceTransportMixture(patchi, facei);
 
             sigmaPf[facei] = liquid.properties().sigma(pPf[facei], TPf[facei]);
         }
