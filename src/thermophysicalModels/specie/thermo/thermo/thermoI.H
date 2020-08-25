@@ -26,7 +26,7 @@ License
 #include "thermo.H"
 #include "IOmanip.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Thermo, template<class> class Type>
 inline Foam::species::thermo<Thermo, Type>::thermo
@@ -37,84 +37,6 @@ inline Foam::species::thermo<Thermo, Type>::thermo
     Thermo(sp)
 {}
 
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar Foam::species::thermo<Thermo, Type>::T
-(
-    const scalar f,
-    const scalar p,
-    const scalar T0,
-    scalar (thermo<Thermo, Type>::*F)(const scalar, const scalar) const,
-    scalar (thermo<Thermo, Type>::*dFdT)(const scalar, const scalar)
-        const,
-    scalar (thermo<Thermo, Type>::*limit)(const scalar) const,
-    const bool diagnostics
-) const
-{
-    if (T0 < 0)
-    {
-        FatalErrorInFunction
-            << "Negative initial temperature T0: " << T0
-            << abort(FatalError);
-    }
-
-    scalar Test = T0;
-    scalar Tnew = T0;
-    scalar Ttol = T0*tol_;
-    int    iter = 0;
-
-    if (diagnostics)
-    {
-        const unsigned int width = IOstream::defaultPrecision() + 8;
-
-        InfoInFunction
-            << "Energy -> temperature conversion failed to converge:" << endl;
-        Pout<< setw(width) << "iter"
-            << setw(width) << "Test"
-            << setw(width) << "e/h"
-            << setw(width) << "Cv/p"
-            << setw(width) << "Tnew"
-            << endl;
-    }
-
-    do
-    {
-        Test = Tnew;
-        Tnew =
-            (this->*limit)
-            (Test - ((this->*F)(p, Test) - f)/(this->*dFdT)(p, Test));
-
-        if (diagnostics)
-        {
-            const unsigned int width = IOstream::defaultPrecision() + 8;
-
-            Pout<< setw(width) << iter
-                << setw(width) << Test
-                << setw(width) << ((this->*F)(p, Test))
-                << setw(width) << ((this->*dFdT)(p, Test))
-                << setw(width) << Tnew
-                << endl;
-        }
-
-        if (iter++ > maxIter_)
-        {
-            if (!diagnostics)
-            {
-                T(f, p, T0, F, dFdT, limit, true);
-            }
-
-            FatalErrorInFunction
-                << "Maximum number of iterations exceeded: " << maxIter_
-                << abort(FatalError);
-        }
-
-    } while (mag(Tnew - Test) > Ttol);
-
-    return Tnew;
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Thermo, template<class> class Type>
 inline Foam::species::thermo<Thermo, Type>::thermo
@@ -361,6 +283,83 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::Kn
 }
 
 
+
+template<class Thermo, template<class> class Type>
+template<class ThermoType, class FType, class dFdTType, class LimitType>
+inline Foam::scalar Foam::species::thermo<Thermo, Type>::T
+(
+    const ThermoType& thermo,
+    const scalar f,
+    const scalar p,
+    const scalar T0,
+    FType F,
+    dFdTType dFdT,
+    LimitType limit,
+    const bool diagnostics
+)
+{
+    if (T0 < 0)
+    {
+        FatalErrorInFunction
+            << "Negative initial temperature T0: " << T0
+            << abort(FatalError);
+    }
+
+    scalar Test = T0;
+    scalar Tnew = T0;
+    scalar Ttol = T0*tol_;
+    int    iter = 0;
+
+    if (diagnostics)
+    {
+        const unsigned int width = IOstream::defaultPrecision() + 8;
+
+        InfoInFunction
+            << "Energy -> temperature conversion failed to converge:" << endl;
+        Pout<< setw(width) << "iter"
+            << setw(width) << "Test"
+            << setw(width) << "e/h"
+            << setw(width) << "Cv/p"
+            << setw(width) << "Tnew"
+            << endl;
+    }
+    do
+    {
+        Test = Tnew;
+        Tnew =
+            (thermo.*limit)
+            (Test - ((thermo.*F)(p, Test) - f)/(thermo.*dFdT)(p, Test));
+
+        if (diagnostics)
+        {
+            const unsigned int width = IOstream::defaultPrecision() + 8;
+
+            Pout<< setw(width) << iter
+                << setw(width) << Test
+                << setw(width) << ((thermo.*F)(p, Test))
+                << setw(width) << ((thermo.*dFdT)(p, Test))
+                << setw(width) << Tnew
+                << endl;
+        }
+
+        if (iter++ > maxIter_)
+        {
+            if (!diagnostics)
+            {
+                T(thermo, f, p, T0, F, dFdT, limit, true);
+            }
+
+            FatalErrorInFunction
+                << "Maximum number of iterations exceeded: " << maxIter_
+                << abort(FatalError);
+        }
+
+    } while (mag(Tnew - Test) > Ttol);
+
+    return Tnew;
+}
+
+
 template<class Thermo, template<class> class Type>
 inline Foam::scalar Foam::species::thermo<Thermo, Type>::THE
 (
@@ -383,6 +382,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::THs
 {
     return T
     (
+        *this,
         hs,
         p,
         T0,
@@ -403,6 +403,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::THa
 {
     return T
     (
+        *this,
         ha,
         p,
         T0,
@@ -423,6 +424,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::TEs
 {
     return T
     (
+        *this,
         es,
         p,
         T0,
@@ -443,6 +445,7 @@ inline Foam::scalar Foam::species::thermo<Thermo, Type>::TEa
 {
     return T
     (
+        *this,
         ea,
         p,
         T0,

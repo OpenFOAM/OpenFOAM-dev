@@ -100,23 +100,6 @@ class thermo
         static const int maxIter_;
 
 
-    // Private Member Functions
-
-        //- Return the temperature corresponding to the value of the
-        //  thermodynamic property f, given the function f = F(p, T)
-        //  and dF(p, T)/dT
-        inline scalar T
-        (
-            const scalar f,
-            const scalar p,
-            const scalar T0,
-            scalar (thermo::*F)(const scalar, const scalar) const,
-            scalar (thermo::*dFdT)(const scalar, const scalar) const,
-            scalar (thermo::*limit)(const scalar) const,
-            const bool diagnostics = false
-        ) const;
-
-
 public:
 
     //- The thermodynamics of the individual species'
@@ -273,6 +256,28 @@ public:
 
 
         // Energy->temperature  inversion functions
+
+            //- Return the temperature corresponding to the value of the
+            //  thermodynamic property f, given the function f = F(p, T)
+            //  and dF(p, T)/dT
+            template
+            <
+                class ThermoType,
+                class FType,
+                class dFdTType,
+                class LimitType
+            >
+            inline static scalar T
+            (
+                const ThermoType& thermo,
+                const scalar f,
+                const scalar p,
+                const scalar T0,
+                FType F,
+                dFdTType dFdT,
+                LimitType limit,
+                const bool diagnostics = false
+            );
 
             //- Temperature from enthalpy or internal energy
             //  given an initial temperature T0
