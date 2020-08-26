@@ -29,8 +29,6 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "constants.H"
 
-using namespace Foam::constant;
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -41,6 +39,9 @@ namespace dragModels
     addToRunTimeSelectionTable(dragModel, aerosolDrag, dictionary);
 }
 }
+
+using Foam::constant::physicoChemical::k;
+using Foam::constant::mathematical::pi;
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -56,7 +57,7 @@ Foam::dragModels::aerosolDrag::aerosolDrag
     A1_(dict.lookupOrDefault<scalar>("A1", 2.514)),
     A2_(dict.lookupOrDefault<scalar>("A2", 0.8)),
     A3_(dict.lookupOrDefault<scalar>("A3", 0.55)),
-    dm_(dimensionedScalar::lookupOrDefault("dm", dict, dimLength, 364e-12))
+    sigma_("sigma", dimLength, dict)
 {}
 
 
@@ -70,24 +71,14 @@ Foam::dragModels::aerosolDrag::~aerosolDrag()
 
 Foam::tmp<Foam::volScalarField> Foam::dragModels::aerosolDrag::CdRe() const
 {
-    const volScalarField lambda
-    (
-        physicoChemical::k
-       *pair_.continuous().thermo().T()
-       /sqrt(2.0)
-       /mathematical::pi
-       /pair_.continuous().thermo().p()
-       /sqr(dm_)
-    );
+    const volScalarField& T = pair_.continuous().thermo().T();
+    const volScalarField& p = pair_.continuous().thermo().p();
+    tmp<volScalarField> td(pair_.dispersed().d());
+    const volScalarField& d = td();
 
-    const volScalarField dp(pair_.dispersed().d());
+    const volScalarField lambda(k*T/(sqrt(2.0)*pi*p*sqr(sigma_)));
 
-    const volScalarField Cc
-    (
-        1 + lambda/dp*(A1_ + A2_*exp(-A3_*dp/lambda))
-    );
-
-    return 24/Cc;
+    return 24/(1 + lambda/d*(A1_ + A2_*exp(-A3_*d/lambda)));
 }
 
 

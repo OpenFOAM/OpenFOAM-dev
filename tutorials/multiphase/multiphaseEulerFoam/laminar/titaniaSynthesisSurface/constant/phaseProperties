@@ -173,6 +173,8 @@ drag
         {
             type            aerosolDrag;
 
+            sigma           340e-12;
+
             swarmCorrection
             {
                 type    none;
