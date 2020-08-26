@@ -100,15 +100,4 @@ inline Foam::scalar Foam::tabulatedTransport<Thermo>::kappa
 }
 
 
-template<class Thermo>
-inline Foam::scalar Foam::tabulatedTransport<Thermo>::alphah
-(
-    const scalar p,
-    const scalar T
-) const
-{
-    return kappa(p, T)/this->Cp(p, T);
-}
-
-
 // ************************************************************************* //

@@ -157,9 +157,6 @@ public:
 
             //- Liquid thermal conductivity  [W/m/K]
             inline scalar kappa(scalar p, scalar T) const;
-
-            //- Liquid thermal diffusivity of enthalpy [kg/m/s]
-            inline scalar alphah(const scalar p, const scalar T) const;
 };
 
 

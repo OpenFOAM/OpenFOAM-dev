@@ -59,7 +59,8 @@ void Foam::heRhoThermo<BasicRhoThermo, MixtureType>::calculate()
 
         muCells[celli] = transportMixture.mu(pCells[celli], TCells[celli]);
         alphaCells[celli] =
-            transportMixture.alphah(pCells[celli], TCells[celli]);
+            transportMixture.kappa(pCells[celli], TCells[celli])
+           /thermoMixture.Cp(pCells[celli], TCells[celli]);
     }
 
     volScalarField::Boundary& pBf =
@@ -110,7 +111,9 @@ void Foam::heRhoThermo<BasicRhoThermo, MixtureType>::calculate()
                 ppsi[facei] = thermoMixture.psi(pp[facei], pT[facei]);
                 prho[facei] = thermoMixture.rho(pp[facei], pT[facei]);
                 pmu[facei] = transportMixture.mu(pp[facei], pT[facei]);
-                palpha[facei] = transportMixture.alphah(pp[facei], pT[facei]);
+                palpha[facei] =
+                    transportMixture.kappa(pp[facei], pT[facei])
+                   /thermoMixture.Cp(pp[facei], pT[facei]);
             }
         }
         else
@@ -130,7 +133,9 @@ void Foam::heRhoThermo<BasicRhoThermo, MixtureType>::calculate()
                 ppsi[facei] = thermoMixture.psi(pp[facei], pT[facei]);
                 prho[facei] = thermoMixture.rho(pp[facei], pT[facei]);
                 pmu[facei] = transportMixture.mu(pp[facei], pT[facei]);
-                palpha[facei] = transportMixture.alphah(pp[facei], pT[facei]);
+                palpha[facei] =
+                    transportMixture.kappa(pp[facei], pT[facei])
+                   /thermoMixture.Cp(pp[facei], pT[facei]);
             }
         }
     }

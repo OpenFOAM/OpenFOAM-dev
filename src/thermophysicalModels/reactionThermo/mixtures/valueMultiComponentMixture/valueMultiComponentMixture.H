@@ -178,9 +178,6 @@ public:
 
             //- Thermal conductivity [W/m/K]
             scalar kappa(const scalar p, const scalar T) const;
-
-            //- Thermal diffusivity of enthalpy [kg/m/s]
-            scalar alphah(const scalar p, const scalar T) const;
     };
 
 
@@ -198,7 +195,7 @@ private:
         //- Mutable storage for the cell/face mixture thermo data
         mutable thermoMixtureType thermoMixture_;
 
-        //- Mutable storage for the cell/face mixture thermo data
+        //- Mutable storage for the cell/face mixture transport data
         mutable transportMixtureType transportMixture_;
 
 

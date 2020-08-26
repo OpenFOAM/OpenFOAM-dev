@@ -109,7 +109,8 @@ Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModel::D
     return volScalarField::New
     (
         IOobject::groupName("D", pair_.name()),
-        composition().alphah(speciei, p, T)
+        composition().kappa(speciei, p, T)
+       /composition().Cp(speciei, p, T)
        /composition().rho(speciei, p, T)
        /Le_
     );

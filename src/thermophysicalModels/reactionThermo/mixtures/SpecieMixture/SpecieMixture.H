@@ -251,22 +251,6 @@ public:
                 const volScalarField& T
             ) const;
 
-            //- Thermal conductivity [W/m/K]
-            virtual scalar alphah
-            (
-                const label speciei,
-                const scalar p,
-                const scalar T
-            ) const;
-
-            //- Thermal diffusivity of enthalpy [kg/m/s]
-            virtual tmp<volScalarField> alphah
-            (
-                const label speciei,
-                const volScalarField& p,
-                const volScalarField& T
-            ) const;
-
 
         // Field properties abstract functions provided here to avoid issues
         // with inheritance of virtual functions in heThermo

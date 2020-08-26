@@ -242,18 +242,6 @@ Foam::valueMultiComponentMixture<ThermoType>::transportMixture::kappa
 
 
 template<class ThermoType>
-Foam::scalar
-Foam::valueMultiComponentMixture<ThermoType>::transportMixture::alphah
-(
-    scalar p,
-    scalar T
-) const
-{
-    return moleWeighted(&ThermoType::alphah, p, T);
-}
-
-
-template<class ThermoType>
 const typename
 Foam::valueMultiComponentMixture<ThermoType>::thermoMixtureType&
 Foam::valueMultiComponentMixture<ThermoType>::cellThermoMixture
@@ -290,7 +278,6 @@ Foam::valueMultiComponentMixture<ThermoType>::patchFaceThermoMixture
 
     return thermoMixture_;
 }
-
 
 
 template<class ThermoType>

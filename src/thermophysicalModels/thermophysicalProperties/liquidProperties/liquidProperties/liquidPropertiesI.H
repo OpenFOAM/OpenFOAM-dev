@@ -129,12 +129,6 @@ inline Foam::scalar Foam::liquidProperties::Hf() const
 }
 
 
-inline Foam::scalar Foam::liquidProperties::alphah(scalar p, scalar T) const
-{
-    return kappa(p, T)/Cp(p, T);
-}
-
-
 template<class Func>
 inline void Foam::liquidProperties::readIfPresent
 (

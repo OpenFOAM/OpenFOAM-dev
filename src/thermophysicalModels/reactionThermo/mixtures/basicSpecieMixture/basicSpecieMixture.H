@@ -283,22 +283,6 @@ public:
                 const volScalarField& p,
                 const volScalarField& T
             ) const = 0;
-
-            //- Thermal conductivity [W/m/K]
-            virtual scalar alphah
-            (
-                const label speciei,
-                const scalar p,
-                const scalar T
-            ) const = 0;
-
-            //- Thermal diffusivity of enthalpy [kg/m/s]
-            virtual tmp<volScalarField> alphah
-            (
-                const label speciei,
-                const volScalarField& p,
-                const volScalarField& T
-            ) const = 0;
 };
 
 

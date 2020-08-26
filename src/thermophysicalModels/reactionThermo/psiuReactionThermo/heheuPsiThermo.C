@@ -61,7 +61,8 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
 
         muCells[celli] = transportMixture.mu(pCells[celli], TCells[celli]);
         alphaCells[celli] =
-            transportMixture.alphah(pCells[celli], TCells[celli]);
+            transportMixture.kappa(pCells[celli], TCells[celli])
+           /thermoMixture.Cp(pCells[celli], TCells[celli]);
 
         TuCells[celli] = this->cellReactants(celli).THE
         (
@@ -122,7 +123,9 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
 
                 ppsi[facei] = thermoMixture.psi(pp[facei], pT[facei]);
                 pmu[facei] = transportMixture.mu(pp[facei], pT[facei]);
-                palpha[facei] = transportMixture.alphah(pp[facei], pT[facei]);
+                palpha[facei] =
+                    transportMixture.kappa(pp[facei], pT[facei])
+                   /thermoMixture.Cp(pp[facei], pT[facei]);
             }
         }
         else
@@ -141,7 +144,9 @@ void Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::calculate()
 
                 ppsi[facei] = thermoMixture.psi(pp[facei], pT[facei]);
                 pmu[facei] = transportMixture.mu(pp[facei], pT[facei]);
-                palpha[facei] = transportMixture.alphah(pp[facei], pT[facei]);
+                palpha[facei] =
+                    transportMixture.kappa(pp[facei], pT[facei])
+                   /thermoMixture.Cp(pp[facei], pT[facei]);
 
                 pTu[facei] =
                     this->patchFaceReactants(patchi, facei)

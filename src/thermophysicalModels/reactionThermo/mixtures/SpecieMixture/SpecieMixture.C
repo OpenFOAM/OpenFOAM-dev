@@ -401,35 +401,4 @@ Foam::tmp<Foam::volScalarField> Foam::SpecieMixture<MixtureType>::kappa
 }
 
 
-template<class MixtureType>
-Foam::scalar Foam::SpecieMixture<MixtureType>::alphah
-(
-    const label speciei,
-    const scalar p,
-    const scalar T
-) const
-{
-    return this->specieThermo(speciei).alphah(p, T);
-}
-
-
-template<class MixtureType>
-Foam::tmp<Foam::volScalarField> Foam::SpecieMixture<MixtureType>::alphah
-(
-    const label speciei,
-    const volScalarField& p,
-    const volScalarField& T
-) const
-{
-    return volScalarFieldProperty
-    (
-        "alphah",
-        dimMass/dimLength/dimTime,
-        &MixtureType::thermoType::alphah,
-        speciei,
-        p,
-        T
-    );
-}
-
 // ************************************************************************* //

@@ -112,18 +112,6 @@ inline Foam::scalar Foam::WLFTransport<Thermo>::kappa
 }
 
 
-template<class Thermo>
-inline Foam::scalar Foam::WLFTransport<Thermo>::alphah
-(
-    const scalar p,
-    const scalar T
-) const
-{
-
-    return mu(p, T)*rPr_;
-}
-
-
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
 template<class Thermo>

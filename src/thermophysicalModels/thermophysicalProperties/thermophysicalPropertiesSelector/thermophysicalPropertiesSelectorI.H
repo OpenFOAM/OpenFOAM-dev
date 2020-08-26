@@ -204,16 +204,4 @@ Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::kappa
 }
 
 
-template<class ThermophysicalProperties>
-inline Foam::scalar
-Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::alphah
-(
-    scalar p,
-    scalar T
-) const
-{
-    return propertiesPtr_->alphah(p, T);
-}
-
-
 // ************************************************************************* //
