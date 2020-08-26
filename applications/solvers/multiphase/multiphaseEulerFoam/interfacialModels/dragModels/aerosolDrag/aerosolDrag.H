@@ -25,9 +25,42 @@ Class
     Foam::dragModels::aerosolDrag
 
 Description
-    This drag model is intended for simulations involving dispersed phase
-    with a very small diameter. It combines the Stokes drag with a
-    Cunningham correction factor.
+    Stokes drag with Cunningham slip correction. The slip correction coefficient
+    is implemented in the following form:
+
+    \f[
+        C_c = 1 + \lambda [A_1 + A_2 \exp(-A_3 d/\lambda)]/d\,.
+    \f]
+
+    The coefficients default to the values proposed by Davis (1945). The mean
+    free path is computed by
+
+    \f[
+        \lambda = \frac{kT}{\sqrt{2} \pi p \sigma^{2}}\,.
+    \f]
+
+    \vartable
+        A_1       | Coefficient [-]
+        A_2       | Coefficient [-]
+        A_3       | Coefficient [-]
+        \sigma    | Lennard-Jones parameter [m]
+    \endvartable
+
+    Reference:
+    \verbatim
+        Davies, C. N. (1945).
+        Definitive equations for the fluid resistance of spheres.
+        Proceedings of the Physical Society, 57(4), 259.
+    \endverbatim
+
+Usage
+    \table
+        Property    | Description                | Required    | Default value
+        A1          | Coefficient A1             | no          | 2.514
+        A2          | Coefficient A2             | no          | 0.8
+        A3          | Coefficient A2             | no          | 0.55
+        sigma       | Lennard-Jones parameter    | yes         | none
+    \endtable
 
 SourceFiles
     aerosolDrag.C
@@ -47,7 +80,7 @@ namespace dragModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class aerosolDrag Declaration
+                         Class aerosolDrag Declaration
 \*---------------------------------------------------------------------------*/
 
 class aerosolDrag
@@ -56,17 +89,17 @@ class aerosolDrag
 {
     // Private Data
 
-        //- Model coefficient A1
-        const scalar A1_;
+        //- Cunningham slip correction coefficient A1
+        const dimensionedScalar A1_;
 
-        //- Model coefficient A2
-        const scalar A2_;
+        //- Cunningham slip correction coefficient A2
+        const dimensionedScalar A2_;
 
-        //- Model coefficient A3
-        const scalar A3_;
+        //- Cunningham slip correction coefficient A3
+        const dimensionedScalar A3_;
 
-        //- Diameter of the continuous phase molecules, defaults to value for N2
-        const dimensionedScalar dm_;
+        //- Lennard-Jones sigma parameter
+        const dimensionedScalar sigma_;
 
 
 public:

@@ -25,8 +25,8 @@ Class
     Foam::diameterModels::coalescenceModels::ballisticCollisions
 
 Description
-    Model describing aggregation due to ballistic collisions. Utilizes physical,
-    i.e. collisional diameters.
+    Model describing coagulation due to ballistic collisions. Utilizes
+    collisional diameters.
 
 SourceFiles
     ballisticCollisions.C

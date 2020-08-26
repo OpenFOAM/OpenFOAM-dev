@@ -104,7 +104,10 @@ populationBalanceCoeffs
 
         coalescenceModels
         (
-            DahnekeInterpolation{}
+            DahnekeInterpolation
+            {
+                sigma           340e-12;
+            }
         );
 
         binaryBreakupModels
@@ -158,6 +161,8 @@ drag
         dragModel
         {
             type            aerosolDrag;
+
+            sigma           340e-12;
 
             swarmCorrection
             {
