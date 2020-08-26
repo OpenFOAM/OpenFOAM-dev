@@ -2,10 +2,7 @@
 
 Info<< "Reading thermophysical properties\n" << endl;
 
-autoPtr<fluidThermo> pThermo
-(
-    fluidThermo::New(mesh)
-);
+autoPtr<fluidThermo> pThermo(fluidThermo::New(mesh));
 fluidThermo& thermo = pThermo();
 thermo.validate(args.executable(), "h", "e");
 
