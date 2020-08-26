@@ -25,14 +25,22 @@ Class
     Foam::diameterModels::coalescenceModels::DahnekeInterpolation
 
 Description
-    Aggregation model of Dahneke (1983). Utilizes physical, i.e. collisional
-    diameters.
+    Interpolation formula of Dahneke (1983) as presented by Otto et al. (1999).
+    Utilizes collisional diameters.
 
     References:
     \verbatim
         Dahneke, B. (1983).
         Simple kinetic theory of Brownian diffusion in vapors and aerosols.
         In Theory of dispersed multiphase flow (pp. 97-133). Academic Press.
+    \endverbatim
+
+    \verbatim
+        Otto, E., Fissan, H., Park, S. H., & Lee, K. W. (1999).
+        The log-normal size distribution theory of Brownian aerosol coagulation
+        for the entire particle size range: part II—analytical solution using
+        Dahneke’s coagulation kernel.
+        Journal of aerosol science, 30(1), 17-34.
     \endverbatim
 
 SourceFiles
@@ -54,7 +62,7 @@ namespace diameterModels
 namespace coalescenceModels
 {
 
-class brownianCollisions;
+class BrownianCollisions;
 class ballisticCollisions;
 
 /*---------------------------------------------------------------------------*\
@@ -67,17 +75,17 @@ class DahnekeInterpolation
 {
     // Private Data
 
-        //- Model for coagulation due to brownian collisions
-        autoPtr<brownianCollisions> brownian_;
+        //- Model for coagulation due to Brownian collisions
+        autoPtr<BrownianCollisions> Brownian_;
 
-        //- Rate for coagulation due to brownian collisions
-        volScalarField brownianCollisionRate_;
+        //- Rate for coagulation due to Brownian collisions
+        volScalarField BrownianRate_;
 
         //- Model for coagulation due to ballistic collisions
         autoPtr<ballisticCollisions> ballistic_;
 
         //- Rate for coagulation due to ballistic collisions
-        volScalarField ballisticCollisionRate_;
+        volScalarField ballisticRate_;
 
 
 public:
@@ -100,6 +108,9 @@ public:
 
 
     // Member Functions
+
+        //- Correct diameter independent expressions
+        virtual void correct();
 
         //- Add to coalescenceRate
         virtual void addToCoalescenceRate

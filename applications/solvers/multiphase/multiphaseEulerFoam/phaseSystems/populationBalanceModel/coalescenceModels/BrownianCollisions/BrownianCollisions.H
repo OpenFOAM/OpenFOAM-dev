@@ -22,19 +22,54 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::coalescenceModels::brownianCollisions
+    Foam::diameterModels::coalescenceModels::BrownianCollisions
 
 Description
-    Model describing aggregation due to brownian motion. Utilizes physical, i.e.
-    collisional diameters.
+    Model describing coagulation due to Brownian motion. Utilizes collisional
+    diameters and the Cunningham slip correction. The slip correction
+    coefficient is implemented in the following form:
+
+    \f[
+        C_{c_i} = 1 + \lambda [A_1 + A_2 \exp(-A_3 d_i/\lambda)]/d_i\,.
+    \f]
+
+    The coefficients default to the values proposed by Davis (1945). The mean
+    free path is computed by
+
+    \f[
+        \lambda = \frac{kT}{\sqrt{2} \pi p \sigma^{2}}\,.
+    \f]
+
+    \vartable
+        A_1       | Coefficient [-]
+        A_2       | Coefficient [-]
+        A_3       | Coefficient [-]
+        \sigma    | Lennard-Jones parameter [m]
+    \endvartable
+
+    Reference:
+    \verbatim
+        Davies, C. N. (1945).
+        Definitive equations for the fluid resistance of spheres.
+        Proceedings of the Physical Society, 57(4), 259.
+    \endverbatim
+
+Usage
+    \table
+        Property    | Description                | Required    | Default value
+        A1          | Coefficient A1             | no          | 2.514
+        A2          | Coefficient A2             | no          | 0.8
+        A3          | Coefficient A2             | no          | 0.55
+        sigma       | Lennard-Jones parameter    | yes         | none
+    \endtable
 
 SourceFiles
-    brownianCollisions.C
+    BrownianCollisions.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef brownianCollisions_H
-#define brownianCollisions_H
+#ifndef BrownianCollisions_H
+#define BrownianCollisions_H
 
 #include "coalescenceModel.H"
 
@@ -48,21 +83,39 @@ namespace coalescenceModels
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class brownianCollisions Declaration
+                     Class BrownianCollisions Declaration
 \*---------------------------------------------------------------------------*/
 
-class brownianCollisions
+class BrownianCollisions
 :
     public coalescenceModel
 {
+    // Private Data
+
+        //- Cunningham slip correction coefficient A1
+        const dimensionedScalar A1_;
+
+        //- Cunningham slip correction coefficient A2
+        const dimensionedScalar A2_;
+
+        //- Cunningham slip correction coefficient A3
+        const dimensionedScalar A3_;
+
+        //- Lennard-Jones sigma parameter
+        const dimensionedScalar sigma_;
+
+        //- Mean free path
+        volScalarField lambda_;
+
+
 public:
 
     //- Runtime type information
-    TypeName("brownianCollisions");
+    TypeName("BrownianCollisions");
 
     // Constructor
 
-        brownianCollisions
+        BrownianCollisions
         (
             const populationBalanceModel& popBal,
             const dictionary& dict
@@ -70,11 +123,14 @@ public:
 
 
     //- Destructor
-    virtual ~brownianCollisions()
+    virtual ~BrownianCollisions()
     {}
 
 
     // Member Functions
+
+        //- Correct diameter independent expressions
+        virtual void correct();
 
         //- Add to coalescenceRate
         virtual void addToCoalescenceRate

@@ -25,7 +25,7 @@ Class
     Foam::diameterModels::coalescenceModels::turbulentShear
 
 Description
-    Model describing aggregation due to turbulent shear. Utilizes physical, i.e.
+    Model describing coagulation due to turbulent shear. Utilizes physical, i.e.
     collisional diameters.
 
 SourceFiles

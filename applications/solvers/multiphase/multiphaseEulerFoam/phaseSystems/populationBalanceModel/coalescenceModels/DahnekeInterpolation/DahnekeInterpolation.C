@@ -25,7 +25,7 @@ License
 
 #include "DahnekeInterpolation.H"
 #include "addToRunTimeSelectionTable.H"
-#include "brownianCollisions.H"
+#include "BrownianCollisions.H"
 #include "ballisticCollisions.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -58,20 +58,20 @@ DahnekeInterpolation
 )
 :
     coalescenceModel(popBal, dict),
-    brownian_(new brownianCollisions(popBal, dict)),
-    brownianCollisionRate_
+    Brownian_(new BrownianCollisions(popBal, dict)),
+    BrownianRate_
     (
         IOobject
         (
-            "brownianCollisionRate",
+            "BrownianCollisionRate",
             popBal_.mesh().time().timeName(),
             popBal_.mesh()
         ),
         popBal_.mesh(),
-        dimensionedScalar("brownianCollisionRate", dimVolume/dimTime, 0.0)
+        dimensionedScalar("BrownianCollisionRate", dimVolume/dimTime, Zero)
     ),
     ballistic_(new ballisticCollisions(popBal, dict)),
-    ballisticCollisionRate_
+    ballisticRate_
     (
         IOobject
         (
@@ -80,12 +80,18 @@ DahnekeInterpolation
             popBal_.mesh()
         ),
         popBal_.mesh(),
-        dimensionedScalar("ballisticCollisionRate", dimVolume/dimTime, 0.0)
+        dimensionedScalar("ballisticCollisionRate", dimVolume/dimTime, Zero)
     )
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::diameterModels::coalescenceModels::DahnekeInterpolation::correct()
+{
+    Brownian_().correct();
+}
+
 
 void
 Foam::diameterModels::coalescenceModels::DahnekeInterpolation::
@@ -96,19 +102,15 @@ addToCoalescenceRate
     const label j
 )
 {
-    brownianCollisionRate_ = Zero;
-    ballisticCollisionRate_ = Zero;
+    BrownianRate_ = Zero;
+    ballisticRate_ = Zero;
 
-    brownian_().addToCoalescenceRate(brownianCollisionRate_, i, j);
-    ballistic_().addToCoalescenceRate(ballisticCollisionRate_, i, j);
+    Brownian_().addToCoalescenceRate(BrownianRate_, i, j);
+    ballistic_().addToCoalescenceRate(ballisticRate_, i, j);
 
-    const volScalarField KnD
-    (
-        brownianCollisionRate_/(2.0*ballisticCollisionRate_)
-    );
+    const volScalarField KnD(BrownianRate_/(2*ballisticRate_));
 
-    coalescenceRate +=
-        brownianCollisionRate_*(1.0 + KnD)/(1.0 + 2.0*KnD + 2.0*sqr(KnD));
+    coalescenceRate += BrownianRate_*(1 + KnD)/(1 + 2*KnD + 2*sqr(KnD));
 }
 
 

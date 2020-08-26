@@ -79,8 +79,8 @@ addToCoalescenceRate
     const volScalarField& rhoP = fi.phase().rho();
 
     coalescenceRate +=
-        sqrt(3*k*T/rhoP)*sqr((fi.d() + fj.d()))
-       *sqrt(1.0/pow3(fi.d()) + 1.0/pow3(fj.d()));
+        sqrt(3*k*T/rhoP)*sqr(fi.d() + fj.d())
+       *sqrt(1/pow3(fi.d()) + 1/pow3(fj.d()));
 }
 
 

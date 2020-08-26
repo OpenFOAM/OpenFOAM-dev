@@ -33,7 +33,7 @@ Description
     area is taken into account by a separate source term.
 
     Kappa is transported between the size groups as a secondary property by
-    means of coalescence (coagulation/aggregation), breakup as well as drift.
+    means of coalescence (coagulation), breakup as well as drift.
 
     By assuming a monodisperse size distribution of the primary particles in the
     aggregate, the collisional diameter of a size group can then be computed by

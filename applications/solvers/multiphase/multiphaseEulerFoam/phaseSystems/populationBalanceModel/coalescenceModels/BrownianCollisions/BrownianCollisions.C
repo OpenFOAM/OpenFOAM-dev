@@ -23,9 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "brownianCollisions.H"
+#include "BrownianCollisions.H"
 #include "addToRunTimeSelectionTable.H"
 #include "fundamentalConstants.H"
+#include "mathematicalConstants.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -35,11 +36,11 @@ namespace diameterModels
 {
 namespace coalescenceModels
 {
-    defineTypeNameAndDebug(brownianCollisions, 0);
+    defineTypeNameAndDebug(BrownianCollisions, 0);
     addToRunTimeSelectionTable
     (
         coalescenceModel,
-        brownianCollisions,
+        BrownianCollisions,
         dictionary
     );
 }
@@ -47,24 +48,55 @@ namespace coalescenceModels
 }
 
 using Foam::constant::physicoChemical::k;
+using Foam::constant::mathematical::pi;
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::coalescenceModels::brownianCollisions::
-brownianCollisions
+Foam::diameterModels::coalescenceModels::BrownianCollisions::
+BrownianCollisions
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
 )
 :
-    coalescenceModel(popBal, dict)
+    coalescenceModel(popBal, dict),
+    A1_(dict.lookupOrDefault<scalar>("A1", 2.514)),
+    A2_(dict.lookupOrDefault<scalar>("A2", 0.8)),
+    A3_(dict.lookupOrDefault<scalar>("A3", 0.55)),
+    sigma_("sigma", dimLength, dict),
+    lambda_
+    (
+        IOobject
+        (
+            "lambda",
+            popBal_.time().timeName(),
+            popBal_.mesh()
+        ),
+        popBal_.mesh(),
+        dimensionedScalar
+        (
+            "lambda",
+            dimLength,
+            Zero
+        )
+    )
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+void Foam::diameterModels::coalescenceModels::BrownianCollisions::correct()
+{
+    const volScalarField& T = popBal_.continuousPhase().thermo().T();
+    const volScalarField& p = popBal_.continuousPhase().thermo().p();
+
+    lambda_ = k*T/(sqrt(2.0)*pi*p*sqr(sigma_));
+}
+
+
 void
-Foam::diameterModels::coalescenceModels::brownianCollisions::
+Foam::diameterModels::coalescenceModels::BrownianCollisions::
 addToCoalescenceRate
 (
     volScalarField& coalescenceRate,
@@ -78,9 +110,17 @@ addToCoalescenceRate
     const volScalarField& T = popBal_.continuousPhase().thermo().T();
     const volScalarField& mu = popBal_.continuousPhase().thermo().mu();
 
-    coalescenceRate +=
-        8.0*k*T/(3*mu)*(fi.d() + fj.d())
-       *(1.0/fi.d() + 1.0/fj.d());
+    const volScalarField Cci
+    (
+        1 + lambda_/fi.d()*(A1_ + A2_*exp(-A3_*fi.d()/lambda_))
+    );
+
+    const volScalarField Ccj
+    (
+        1 + lambda_/fj.d()*(A1_ + A2_*exp(-A3_*fj.d()/lambda_))
+    );
+
+    coalescenceRate += 8*k*T/(3*mu)*(fi.d() + fj.d())*(Cci/fi.d() + Ccj/fj.d());
 }
 
 
