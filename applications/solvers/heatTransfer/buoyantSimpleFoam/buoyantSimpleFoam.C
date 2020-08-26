@@ -31,7 +31,6 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "rhoThermo.H"
 #include "fluidThermoMomentumTransportModel.H"
 #include "fluidThermophysicalTransportModel.H"
 #include "radiationModel.H"
