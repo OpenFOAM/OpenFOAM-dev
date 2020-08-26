@@ -23,8 +23,6 @@ solvers
         nAlphaSubCycles 3;
         implicitPhasePressure yes;
 
-        extremaCoeff    1;
-
         solver          PBiCGStab;
         preconditioner  DIC;
 
