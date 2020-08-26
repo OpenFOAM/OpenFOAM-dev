@@ -25,7 +25,8 @@ Class
     Foam::coefficientMultiComponentMixture
 
 Description
-    Foam::coefficientMultiComponentMixture
+    Thermophysical properties mixing class which applies mass-fraction weighted
+    mixing to the thermodynamic and transport coefficients.
 
 SourceFiles
     coefficientMultiComponentMixture.C

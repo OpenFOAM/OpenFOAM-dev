@@ -25,7 +25,9 @@ Class
     Foam::valueMultiComponentMixture
 
 Description
-    Foam::valueMultiComponentMixture
+    Thermophysical properties mixing class which applies mass-fraction weighted
+    mixing to thermodynamic properties and mole-fraction weighted mixing to
+    transport properties.
 
 SourceFiles
     valueMultiComponentMixture.C
@@ -60,7 +62,7 @@ public:
         const PtrList<ThermoType>& specieThermos_;
 
         //- List of mass fractions
-        List<scalar> Y_;
+        mutable List<scalar> Y_;
 
         template<class Method, class ... Args>
         scalar massWeighted(Method psiMethod, const Args& ... args) const;
@@ -79,14 +81,16 @@ public:
 
         friend class valueMultiComponentMixture;
 
-        thermoMixture
-        (
-            const PtrList<ThermoType>& specieThermos
-        )
-        :
-            specieThermos_(specieThermos),
-            Y_(specieThermos.size())
-        {}
+        // Constructors
+
+            thermoMixture
+            (
+                const PtrList<ThermoType>& specieThermos
+            )
+            :
+                specieThermos_(specieThermos),
+                Y_(specieThermos.size())
+            {}
 
 
         // Fundamental properties
@@ -151,7 +155,7 @@ public:
         const PtrList<ThermoType>& specieThermos_;
 
         //- List of mole fractions
-        List<scalar> X_;
+        mutable List<scalar> X_;
 
         template<class Method, class ... Args>
         scalar moleWeighted(Method psiMethod, const Args& ... args) const;

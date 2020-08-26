@@ -58,9 +58,9 @@ Foam::coefficientMultiComponentMixture<ThermoType>::cellThermoMixture
 {
     mixture_ = this->Y()[0][celli]*this->specieThermos()[0];
 
-    for (label n=1; n<this->Y().size(); n++)
+    for (label i=1; i<this->Y().size(); i++)
     {
-        mixture_ += this->Y()[n][celli]*this->specieThermos()[n];
+        mixture_ += this->Y()[i][celli]*this->specieThermos()[i];
     }
 
     return mixture_;
@@ -80,11 +80,11 @@ Foam::coefficientMultiComponentMixture<ThermoType>::patchFaceThermoMixture
         this->Y()[0].boundaryField()[patchi][facei]
        *this->specieThermos()[0];
 
-    for (label n=1; n<this->Y().size(); n++)
+    for (label i=1; i<this->Y().size(); i++)
     {
         mixture_ +=
-            this->Y()[n].boundaryField()[patchi][facei]
-           *this->specieThermos()[n];
+            this->Y()[i].boundaryField()[patchi][facei]
+           *this->specieThermos()[i];
     }
 
     return mixture_;
