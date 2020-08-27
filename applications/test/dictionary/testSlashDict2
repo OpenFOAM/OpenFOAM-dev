@@ -25,4 +25,10 @@ active
     value.air       $internalField;
 }
 
+activeWater
+{
+    type            fixedValue;
+    value.water     1000;
+}
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

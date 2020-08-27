@@ -56,14 +56,23 @@ external
     value $testSlashDict2!active/value.air;
 }
 
-active2
+activeWater
 {
     $testSlashDict2!active;
+    value.water     1000;
 }
 
-active3
+activeAir
 {
     ${${FOAM_CASE}/testSlashDict2!active};
 }
+
+whichActive activeWater;
+
+active2
+{
+    ${${FOAM_CASE}/testSlashDict2!$whichActive};
+}
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
