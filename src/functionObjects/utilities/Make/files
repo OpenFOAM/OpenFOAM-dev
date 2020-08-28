@@ -1,6 +1,7 @@
 codedFunctionObject/codedFunctionObject.C
 residuals/residuals.C
 timeActivatedFileUpdate/timeActivatedFileUpdate.C
+timeStep/timeStepFunctionObject.C
 setTimeStep/setTimeStepFunctionObject.C
 systemCall/systemCall.C
 stopAt/stopAt.C
