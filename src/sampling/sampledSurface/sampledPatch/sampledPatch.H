@@ -64,7 +64,7 @@ namespace sampledSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class patch Declaration
+                            Class patch Declaration
 \*---------------------------------------------------------------------------*/
 
 class patch

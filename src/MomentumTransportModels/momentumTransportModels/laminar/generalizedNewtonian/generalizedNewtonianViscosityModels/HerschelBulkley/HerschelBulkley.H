@@ -48,7 +48,7 @@ namespace generalizedNewtonianViscosityModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class HerschelBulkley Declaration
+                       Class HerschelBulkley Declaration
 \*---------------------------------------------------------------------------*/
 
 class HerschelBulkley

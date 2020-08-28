@@ -50,7 +50,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class LESModel Declaration
+                          Class LESModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

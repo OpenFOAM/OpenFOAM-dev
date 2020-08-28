@@ -75,7 +75,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class TDACChemistryModel Declaration
+                     Class TDACChemistryModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>

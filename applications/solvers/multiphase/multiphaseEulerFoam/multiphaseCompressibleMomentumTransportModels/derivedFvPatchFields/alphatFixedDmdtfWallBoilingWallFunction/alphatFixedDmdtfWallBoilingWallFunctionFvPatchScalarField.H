@@ -50,7 +50,7 @@ namespace compressible
 {
 
 /*---------------------------------------------------------------------------*\
-   Class alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField Declaration
+  Class alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField

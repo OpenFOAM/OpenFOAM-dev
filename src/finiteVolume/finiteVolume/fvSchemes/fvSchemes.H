@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class fvSchemes Declaration
+                          Class fvSchemes Declaration
 \*---------------------------------------------------------------------------*/
 
 class fvSchemes

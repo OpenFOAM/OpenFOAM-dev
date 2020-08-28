@@ -51,7 +51,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class SlicedGeometricField Declaration
+                    Class SlicedGeometricField Declaration
 \*---------------------------------------------------------------------------*/
 
 template
@@ -185,7 +185,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-       Class SlicedGeometricField::Internal Declaration
+               Class SlicedGeometricField::Internal Declaration
 \*---------------------------------------------------------------------------*/
 
 //- The internalField of a SlicedGeometricField

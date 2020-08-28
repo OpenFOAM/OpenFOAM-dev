@@ -60,7 +60,7 @@ namespace partitioningModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class linear Declaration
+                           Class linear Declaration
 \*---------------------------------------------------------------------------*/
 
 class linear

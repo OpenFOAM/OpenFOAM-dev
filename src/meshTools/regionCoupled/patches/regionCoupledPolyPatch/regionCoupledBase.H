@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class regionCoupledBase Declaration
+                      Class regionCoupledBase Declaration
 \*---------------------------------------------------------------------------*/
 
 class regionCoupledBase

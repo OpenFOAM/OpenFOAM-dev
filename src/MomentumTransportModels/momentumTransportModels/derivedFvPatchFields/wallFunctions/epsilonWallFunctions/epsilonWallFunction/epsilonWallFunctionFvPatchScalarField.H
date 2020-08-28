@@ -74,7 +74,7 @@ namespace Foam
 class momentumTransportModel;
 
 /*---------------------------------------------------------------------------*\
-           Class epsilonWallFunctionFvPatchScalarField Declaration
+            Class epsilonWallFunctionFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class epsilonWallFunctionFvPatchScalarField

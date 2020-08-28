@@ -42,7 +42,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class orderedPhasePair Declaration
+                      Class orderedPhasePair Declaration
 \*---------------------------------------------------------------------------*/
 
 class orderedPhasePair

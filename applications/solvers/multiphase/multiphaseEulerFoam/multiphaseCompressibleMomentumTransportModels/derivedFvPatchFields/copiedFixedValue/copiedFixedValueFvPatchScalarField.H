@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-            Class copiedFixedValueFvPatchScalarField Declaration
+             Class copiedFixedValueFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class copiedFixedValueFvPatchScalarField

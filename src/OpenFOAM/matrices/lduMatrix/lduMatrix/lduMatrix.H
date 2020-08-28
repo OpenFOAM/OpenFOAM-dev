@@ -74,7 +74,7 @@ Ostream& operator<<(Ostream&, const InfoProxy<lduMatrix>&);
 
 
 /*---------------------------------------------------------------------------*\
-                           Class lduMatrix Declaration
+                          Class lduMatrix Declaration
 \*---------------------------------------------------------------------------*/
 
 class lduMatrix

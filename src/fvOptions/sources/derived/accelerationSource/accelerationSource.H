@@ -67,7 +67,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class accelerationSource Declaration
+                     Class accelerationSource Declaration
 \*---------------------------------------------------------------------------*/
 
 class accelerationSource

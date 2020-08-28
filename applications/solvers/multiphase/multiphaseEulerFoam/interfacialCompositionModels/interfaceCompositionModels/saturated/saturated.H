@@ -50,7 +50,7 @@ namespace interfaceCompositionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class saturated Declaration
+                          Class saturated Declaration
 \*---------------------------------------------------------------------------*/
 
 class saturated

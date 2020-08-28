@@ -58,7 +58,7 @@ TemplateName(PatchEdgeFaceWave);
 
 
 /*---------------------------------------------------------------------------*\
-                           Class PatchEdgeFaceWave Declaration
+                      Class PatchEdgeFaceWave Declaration
 \*---------------------------------------------------------------------------*/
 
 template

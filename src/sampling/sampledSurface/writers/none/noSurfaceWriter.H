@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class noSurfaceWriter Declaration
+                       Class noSurfaceWriter Declaration
 \*---------------------------------------------------------------------------*/
 
 class noSurfaceWriter

@@ -54,7 +54,7 @@ Ostream& operator<<(Ostream&, const CLASSNAME&);
 
 
 /*---------------------------------------------------------------------------*\
-                         Class CLASSNAME Declaration
+                          Class CLASSNAME Declaration
 \*---------------------------------------------------------------------------*/
 
 class CLASSNAME

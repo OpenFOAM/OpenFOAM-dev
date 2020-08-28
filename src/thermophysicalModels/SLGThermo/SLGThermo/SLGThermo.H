@@ -57,7 +57,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class SLGThermo Declaration
+                          Class SLGThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 class SLGThermo

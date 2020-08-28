@@ -83,7 +83,7 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class particles Declaration
+                          Class particles Declaration
 \*---------------------------------------------------------------------------*/
 
 class particles

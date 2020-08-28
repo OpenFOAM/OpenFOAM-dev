@@ -71,7 +71,7 @@ Ostream& operator<<(Ostream&, const WallCollisionRecord<Type>&);
 
 
 /*---------------------------------------------------------------------------*\
-                         Class WallCollisionRecord Declaration
+                     Class WallCollisionRecord Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class coupledFvPatch Declaration
+                       Class coupledFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class coupledFvPatch

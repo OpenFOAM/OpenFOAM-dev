@@ -60,7 +60,7 @@ template<class CloudType>
 class COxidationHurtMitchell;
 
 /*---------------------------------------------------------------------------*\
-                  Class COxidationHurtMitchell Declaration
+                   Class COxidationHurtMitchell Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

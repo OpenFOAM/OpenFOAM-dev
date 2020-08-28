@@ -59,7 +59,7 @@ namespace PackingModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class Explicit Declaration
+                          Class Explicit Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

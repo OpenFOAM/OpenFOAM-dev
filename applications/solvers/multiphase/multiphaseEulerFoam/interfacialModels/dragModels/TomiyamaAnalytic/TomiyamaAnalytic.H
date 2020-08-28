@@ -53,7 +53,7 @@ namespace dragModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class TomiyamaAnalytic Declaration
+                      Class TomiyamaAnalytic Declaration
 \*---------------------------------------------------------------------------*/
 
 class TomiyamaAnalytic

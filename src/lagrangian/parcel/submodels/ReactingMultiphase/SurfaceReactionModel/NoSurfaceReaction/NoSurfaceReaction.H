@@ -39,7 +39,7 @@ Description
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                     Class NoSurfaceReaction Declaration
+                      Class NoSurfaceReaction Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class cyclicAMILduInterfaceField Declaration
+                 Class cyclicAMILduInterfaceField Declaration
 \*---------------------------------------------------------------------------*/
 
 class cyclicAMILduInterfaceField

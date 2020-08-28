@@ -86,7 +86,7 @@ namespace saturationModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class function1 Declaration
+                          Class function1 Declaration
 \*---------------------------------------------------------------------------*/
 
 class function1

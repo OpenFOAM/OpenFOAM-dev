@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class cyclicAMIGAMGInterface Declaration
+                   Class cyclicAMIGAMGInterface Declaration
 \*---------------------------------------------------------------------------*/
 
 class cyclicAMIGAMGInterface

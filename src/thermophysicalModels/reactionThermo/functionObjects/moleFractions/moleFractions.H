@@ -70,7 +70,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class moleFractions Declaration
+                        Class moleFractions Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>

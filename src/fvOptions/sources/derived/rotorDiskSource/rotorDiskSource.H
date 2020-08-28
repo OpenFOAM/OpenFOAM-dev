@@ -117,7 +117,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class rotorDiskSource Declaration
+                       Class rotorDiskSource Declaration
 \*---------------------------------------------------------------------------*/
 
 class rotorDiskSource

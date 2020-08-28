@@ -47,7 +47,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class solidThermo Declaration
+                         Class solidThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 class solidThermo
@@ -137,7 +137,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                Class solidThermo::implementation Declaration
+                 Class solidThermo::implementation Declaration
 \*---------------------------------------------------------------------------*/
 
 class solidThermo::implementation

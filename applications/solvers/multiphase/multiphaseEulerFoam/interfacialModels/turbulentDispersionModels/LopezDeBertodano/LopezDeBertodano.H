@@ -54,7 +54,7 @@ namespace turbulentDispersionModels
 {
 
 /*---------------------------------------------------------------------------*\
-              Class LopezDeBertodano Declaration
+                      Class LopezDeBertodano Declaration
 \*---------------------------------------------------------------------------*/
 
 class LopezDeBertodano

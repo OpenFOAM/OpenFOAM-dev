@@ -46,7 +46,7 @@ namespace Foam
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                       Class SRFForce Declaration
+                          Class SRFForce Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

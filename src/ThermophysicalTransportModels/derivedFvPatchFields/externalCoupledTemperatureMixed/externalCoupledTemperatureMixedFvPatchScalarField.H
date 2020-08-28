@@ -124,7 +124,7 @@ namespace Foam
 class IFstream;
 
 /*---------------------------------------------------------------------------*\
-     Class externalCoupledTemperatureMixedFvPatchScalarField Declaration
+      Class externalCoupledTemperatureMixedFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class externalCoupledTemperatureMixedFvPatchScalarField

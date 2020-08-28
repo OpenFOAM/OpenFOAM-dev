@@ -77,7 +77,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class mixtureKEpsilon Declaration
+                       Class mixtureKEpsilon Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

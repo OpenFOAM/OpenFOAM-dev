@@ -69,7 +69,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-       Class temperatureDependentAlphaContactAngleFvPatch Declaration
+        Class temperatureDependentAlphaContactAngleFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class temperatureDependentAlphaContactAngleFvPatchScalarField

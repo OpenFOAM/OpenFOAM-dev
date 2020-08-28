@@ -51,7 +51,7 @@ template<class ThermoType>
 class TDACChemistryModel;
 
 /*---------------------------------------------------------------------------*\
-                           Class chemistryTabulationMethod Declaration
+                  Class chemistryTabulationMethod Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>

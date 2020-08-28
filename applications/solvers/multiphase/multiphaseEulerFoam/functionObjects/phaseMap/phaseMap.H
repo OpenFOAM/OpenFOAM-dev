@@ -68,7 +68,7 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class phaseMap Declaration
+                          Class phaseMap Declaration
 \*---------------------------------------------------------------------------*/
 
 class phaseMap

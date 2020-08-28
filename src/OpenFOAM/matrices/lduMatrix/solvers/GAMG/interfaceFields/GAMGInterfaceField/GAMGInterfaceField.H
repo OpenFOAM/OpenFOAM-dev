@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class GAMGInterfaceField Declaration
+                     Class GAMGInterfaceField Declaration
 \*---------------------------------------------------------------------------*/
 
 class GAMGInterfaceField

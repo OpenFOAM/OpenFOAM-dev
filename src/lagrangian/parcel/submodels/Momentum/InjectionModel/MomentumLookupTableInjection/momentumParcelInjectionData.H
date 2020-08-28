@@ -62,7 +62,7 @@ Istream& operator>>
 );
 
 /*---------------------------------------------------------------------------*\
-               Class momentumParcelInjectionData Declaration
+                 Class momentumParcelInjectionData Declaration
 \*---------------------------------------------------------------------------*/
 
 class momentumParcelInjectionData

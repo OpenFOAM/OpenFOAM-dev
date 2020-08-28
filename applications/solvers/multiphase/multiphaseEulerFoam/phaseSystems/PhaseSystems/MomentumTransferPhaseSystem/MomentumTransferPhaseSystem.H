@@ -58,7 +58,7 @@ class wallLubricationModel;
 class turbulentDispersionModel;
 
 /*---------------------------------------------------------------------------*\
-                  Class MomentumTransferPhaseSystem Declaration
+                 Class MomentumTransferPhaseSystem Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseSystem>

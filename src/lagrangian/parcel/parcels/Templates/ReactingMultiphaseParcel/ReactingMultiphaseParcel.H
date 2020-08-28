@@ -58,14 +58,14 @@ Ostream& operator<<
 );
 
 /*---------------------------------------------------------------------------*\
-              Class ReactingMultiphaseParcelName Declaration
+                Class ReactingMultiphaseParcelName Declaration
 \*---------------------------------------------------------------------------*/
 
 TemplateName(ReactingMultiphaseParcel);
 
 
 /*---------------------------------------------------------------------------*\
-                 Class ReactingMultiphaseParcel Declaration
+                  Class ReactingMultiphaseParcel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ParcelType>

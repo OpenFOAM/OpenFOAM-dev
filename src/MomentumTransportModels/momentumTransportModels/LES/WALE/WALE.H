@@ -67,7 +67,7 @@ namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class WALE Declaration
+                            Class WALE Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class NoComposition Declaration
+                        Class NoComposition Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

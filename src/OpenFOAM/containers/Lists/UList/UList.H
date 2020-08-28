@@ -67,7 +67,7 @@ typedef UList<label> labelUList;
 
 
 /*---------------------------------------------------------------------------*\
-                           Class UList Declaration
+                            Class UList Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class T>

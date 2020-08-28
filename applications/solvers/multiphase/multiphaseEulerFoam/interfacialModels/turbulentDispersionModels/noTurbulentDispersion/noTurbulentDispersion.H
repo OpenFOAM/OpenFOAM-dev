@@ -47,7 +47,7 @@ namespace turbulentDispersionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class noTurbulentDispersion Declaration
+                    Class noTurbulentDispersion Declaration
 \*---------------------------------------------------------------------------*/
 
 class noTurbulentDispersion

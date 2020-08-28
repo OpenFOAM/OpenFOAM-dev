@@ -47,7 +47,7 @@ namespace viscosityModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class HerschelBulkley Declaration
+                       Class HerschelBulkley Declaration
 \*---------------------------------------------------------------------------*/
 
 class HerschelBulkley

@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class smoluchowskiJumpTFvPatch Declaration
+                  Class smoluchowskiJumpTFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class smoluchowskiJumpTFvPatchScalarField

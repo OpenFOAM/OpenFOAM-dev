@@ -48,7 +48,7 @@ class dynamicCodeContext;
 class dlLibraryTable;
 
 /*---------------------------------------------------------------------------*\
-                       Class codedBase Declaration
+                          Class codedBase Declaration
 \*---------------------------------------------------------------------------*/
 
 class codedBase

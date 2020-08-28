@@ -48,7 +48,7 @@ namespace combustionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class zoneCombustion Declaration
+                       Class zoneCombustion Declaration
 \*---------------------------------------------------------------------------*/
 
 class zoneCombustion

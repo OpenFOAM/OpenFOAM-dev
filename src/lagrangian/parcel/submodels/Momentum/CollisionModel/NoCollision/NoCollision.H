@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class NoCollision Declaration
+                         Class NoCollision Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

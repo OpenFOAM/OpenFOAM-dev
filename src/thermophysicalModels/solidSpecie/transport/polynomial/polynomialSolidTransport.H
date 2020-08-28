@@ -98,7 +98,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                     Class polynomialSolidTransport Declaration
+                  Class polynomialSolidTransport Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Thermo, int PolySize=8>

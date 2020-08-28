@@ -55,7 +55,7 @@ namespace departureDiameterModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class TolubinskiKostanchuk Declaration
+                    Class TolubinskiKostanchuk Declaration
 \*---------------------------------------------------------------------------*/
 
 class TolubinskiKostanchuk

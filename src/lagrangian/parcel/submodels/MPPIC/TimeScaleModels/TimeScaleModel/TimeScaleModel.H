@@ -47,7 +47,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class TimeScaleModel Declaration
+                       Class TimeScaleModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class TimeScaleModel

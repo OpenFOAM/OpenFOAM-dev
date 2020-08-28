@@ -47,7 +47,7 @@ class liquidProperties;
 Ostream& operator<<(Ostream& os, const liquidProperties& l);
 
 /*---------------------------------------------------------------------------*\
-                    Class liquidProperties Declaration
+                      Class liquidProperties Declaration
 \*---------------------------------------------------------------------------*/
 
 class liquidProperties

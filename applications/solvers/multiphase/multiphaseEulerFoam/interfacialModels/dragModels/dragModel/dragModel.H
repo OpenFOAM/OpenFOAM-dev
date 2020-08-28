@@ -48,7 +48,7 @@ class phasePair;
 class swarmCorrection;
 
 /*---------------------------------------------------------------------------*\
-                           Class dragModel Declaration
+                          Class dragModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class dragModel

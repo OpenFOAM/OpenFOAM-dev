@@ -47,7 +47,7 @@ namespace Foam
 class polyMesh;
 
 /*---------------------------------------------------------------------------*\
-                           Class cellPointWeight Declaration
+                       Class cellPointWeight Declaration
 \*---------------------------------------------------------------------------*/
 
 class cellPointWeight

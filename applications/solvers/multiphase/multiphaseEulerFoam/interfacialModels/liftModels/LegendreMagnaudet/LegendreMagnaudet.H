@@ -62,7 +62,7 @@ namespace liftModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class LegendreMagnaudet Declaration
+                      Class LegendreMagnaudet Declaration
 \*---------------------------------------------------------------------------*/
 
 class LegendreMagnaudet

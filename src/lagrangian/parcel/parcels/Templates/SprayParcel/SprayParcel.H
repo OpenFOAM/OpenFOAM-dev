@@ -59,7 +59,7 @@ TemplateName(SprayParcel);
 
 
 /*---------------------------------------------------------------------------*\
-                          Class SprayParcel Declaration
+                         Class SprayParcel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ParcelType>

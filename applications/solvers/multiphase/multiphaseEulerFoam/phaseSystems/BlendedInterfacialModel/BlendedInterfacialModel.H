@@ -47,7 +47,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class BlendedInterfacialModel Declaration
+                   Class BlendedInterfacialModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ModelType>

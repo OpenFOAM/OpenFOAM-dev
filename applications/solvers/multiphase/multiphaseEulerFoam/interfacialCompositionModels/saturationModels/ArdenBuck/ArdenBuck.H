@@ -45,7 +45,7 @@ namespace saturationModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class ArdenBuck Declaration
+                          Class ArdenBuck Declaration
 \*---------------------------------------------------------------------------*/
 
 class ArdenBuck

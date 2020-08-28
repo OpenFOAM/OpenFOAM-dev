@@ -62,7 +62,7 @@ namespace wallLubricationModels
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class TomiyamaWallLubrication Declaration
+                   Class TomiyamaWallLubrication Declaration
 \*---------------------------------------------------------------------------*/
 
 class TomiyamaWallLubrication

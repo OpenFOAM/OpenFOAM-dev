@@ -75,7 +75,7 @@ Ostream& operator<<(Ostream&, const wordAndDictionary&);
 
 
 /*---------------------------------------------------------------------------*\
-                       Class wordAndDictionary Declaration
+                      Class wordAndDictionary Declaration
 \*---------------------------------------------------------------------------*/
 
 class wordAndDictionary

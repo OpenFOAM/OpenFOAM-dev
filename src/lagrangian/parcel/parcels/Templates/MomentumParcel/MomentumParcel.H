@@ -66,14 +66,14 @@ Ostream& operator<<
 );
 
 /*---------------------------------------------------------------------------*\
-                    Class MomentumParcelName Declaration
+                     Class MomentumParcelName Declaration
 \*---------------------------------------------------------------------------*/
 
 TemplateName(MomentumParcel);
 
 
 /*---------------------------------------------------------------------------*\
-                         Class MomentumParcel Declaration
+                       Class MomentumParcel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ParcelType>

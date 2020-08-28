@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class streamLineCloud Declaration
+                       Class streamLineCloud Declaration
 \*---------------------------------------------------------------------------*/
 
 class streamLineParticleCloud

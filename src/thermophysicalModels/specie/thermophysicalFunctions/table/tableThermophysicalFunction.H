@@ -69,7 +69,7 @@ namespace thermophysicalFunctions
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class table Declaration
+                            Class table Declaration
 \*---------------------------------------------------------------------------*/
 
 class table

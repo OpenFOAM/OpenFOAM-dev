@@ -109,7 +109,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                     Class logPolynomialTransport Declaration
+                   Class logPolynomialTransport Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Thermo, int PolySize=8>

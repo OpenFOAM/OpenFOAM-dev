@@ -46,7 +46,7 @@ namespace kineticTheoryModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class frictionalStressModel Declaration
+                    Class frictionalStressModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class frictionalStressModel

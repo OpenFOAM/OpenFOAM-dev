@@ -57,7 +57,7 @@ Description
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                       Class ReitzDiwakar Declaration
+                        Class ReitzDiwakar Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

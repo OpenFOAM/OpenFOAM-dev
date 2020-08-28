@@ -55,7 +55,7 @@ namespace dragModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Beetstra Declaration
+                          Class Beetstra Declaration
 \*---------------------------------------------------------------------------*/
 
 class Beetstra

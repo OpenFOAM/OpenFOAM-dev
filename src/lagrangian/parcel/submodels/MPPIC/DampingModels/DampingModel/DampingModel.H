@@ -51,7 +51,7 @@ namespace Foam
 class TimeScaleModel;
 
 /*---------------------------------------------------------------------------*\
-                         Class DampingModel Declaration
+                        Class DampingModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

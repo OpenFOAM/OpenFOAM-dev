@@ -46,7 +46,7 @@ namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class vanDriestDelta Declaration
+                       Class vanDriestDelta Declaration
 \*---------------------------------------------------------------------------*/
 
 class vanDriestDelta

@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class objectFunction1 Declaration
+                       Class objectFunction1 Declaration
 \*---------------------------------------------------------------------------*/
 
 class objectFunction1

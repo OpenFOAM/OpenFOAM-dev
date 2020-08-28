@@ -51,7 +51,7 @@ class interfaceCompositionModel;
 class diffusiveMassTransferModel;
 
 /*---------------------------------------------------------------------------*\
-                 Class InterfaceCompositionPhaseChangePhaseSystem Declaration
+         Class InterfaceCompositionPhaseChangePhaseSystem Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseSystem>

@@ -80,7 +80,7 @@ namespace generalizedNewtonianViscosityModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class BirdCarreau Declaration
+                         Class BirdCarreau Declaration
 \*---------------------------------------------------------------------------*/
 
 class BirdCarreau

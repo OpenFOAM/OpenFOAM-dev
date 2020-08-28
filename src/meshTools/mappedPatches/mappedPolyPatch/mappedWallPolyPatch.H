@@ -52,7 +52,7 @@ namespace Foam
 class polyMesh;
 
 /*---------------------------------------------------------------------------*\
-                      Class mappedWallPolyPatch Declaration
+                     Class mappedWallPolyPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class mappedWallPolyPatch

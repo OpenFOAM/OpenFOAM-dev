@@ -46,7 +46,7 @@ namespace Foam
 class phasePair;
 
 /*---------------------------------------------------------------------------*\
-                        Class heatTransferModel Declaration
+                      Class heatTransferModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class heatTransferModel

@@ -84,7 +84,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-     Class CONSTRUCT Declaration
+                          Class CONSTRUCT Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

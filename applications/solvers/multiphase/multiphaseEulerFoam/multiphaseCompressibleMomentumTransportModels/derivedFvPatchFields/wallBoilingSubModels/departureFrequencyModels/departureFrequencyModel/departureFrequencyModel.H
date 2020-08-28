@@ -50,7 +50,7 @@ namespace wallBoilingModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class departureFrequencyModel Declaration
+                   Class departureFrequencyModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class departureFrequencyModel

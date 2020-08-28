@@ -70,7 +70,7 @@ namespace sootModels
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class mixtureFraction Declaration
+                       Class mixtureFraction Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>

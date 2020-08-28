@@ -53,7 +53,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class laminarFlameSpeed Declaration
+                      Class laminarFlameSpeed Declaration
 \*---------------------------------------------------------------------------*/
 
 class laminarFlameSpeed

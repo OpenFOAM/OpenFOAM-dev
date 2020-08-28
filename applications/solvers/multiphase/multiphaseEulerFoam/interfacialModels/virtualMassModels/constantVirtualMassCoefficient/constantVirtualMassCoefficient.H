@@ -48,7 +48,7 @@ namespace virtualMassModels
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class constantVirtualMassCoefficient Declaration
+               Class constantVirtualMassCoefficient Declaration
 \*---------------------------------------------------------------------------*/
 
 class constantVirtualMassCoefficient

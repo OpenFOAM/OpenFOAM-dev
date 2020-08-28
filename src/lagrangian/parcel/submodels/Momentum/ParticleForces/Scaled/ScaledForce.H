@@ -39,7 +39,7 @@ Description
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                       Class ScaledForce Declaration
+                         Class ScaledForce Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

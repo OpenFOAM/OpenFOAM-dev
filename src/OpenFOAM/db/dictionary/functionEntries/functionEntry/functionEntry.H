@@ -58,7 +58,7 @@ namespace Foam
 class dictionary;
 
 /*---------------------------------------------------------------------------*\
-                           Class functionEntry Declaration
+                        Class functionEntry Declaration
 \*---------------------------------------------------------------------------*/
 
 class functionEntry

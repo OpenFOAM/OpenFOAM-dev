@@ -90,7 +90,7 @@ namespace Foam
 class faceSet;
 
 /*---------------------------------------------------------------------------*\
-                           Class motionSmootherAlgo Declaration
+                     Class motionSmootherAlgo Declaration
 \*---------------------------------------------------------------------------*/
 
 class motionSmootherAlgo

@@ -50,7 +50,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class processorPolyPatch Declaration
+                     Class processorPolyPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class processorPolyPatch

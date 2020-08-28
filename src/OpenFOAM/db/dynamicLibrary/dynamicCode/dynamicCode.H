@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ class OSstream;
 class SHA1Digest;
 
 /*---------------------------------------------------------------------------*\
-                        Class dynamicCode Declaration
+                         Class dynamicCode Declaration
 \*---------------------------------------------------------------------------*/
 
 class dynamicCode

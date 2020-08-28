@@ -57,7 +57,7 @@ namespace thermophysicalFunctions
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class constant Declaration
+                          Class constant Declaration
 \*---------------------------------------------------------------------------*/
 
 class constant

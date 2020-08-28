@@ -72,7 +72,7 @@ namespace fv
 
 
 /*---------------------------------------------------------------------------*\
-                   Class interRegionExplicitPorositySource Declaration
+              Class interRegionExplicitPorositySource Declaration
 \*---------------------------------------------------------------------------*/
 
 class interRegionExplicitPorositySource

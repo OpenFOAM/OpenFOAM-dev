@@ -39,7 +39,7 @@ Description
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                       Class NoAtomization Declaration
+                        Class NoAtomization Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

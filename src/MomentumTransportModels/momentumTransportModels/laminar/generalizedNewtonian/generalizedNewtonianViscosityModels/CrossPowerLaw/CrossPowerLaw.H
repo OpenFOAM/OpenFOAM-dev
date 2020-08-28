@@ -75,7 +75,7 @@ namespace generalizedNewtonianViscosityModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class CrossPowerLaw Declaration
+                        Class CrossPowerLaw Declaration
 \*---------------------------------------------------------------------------*/
 
 class CrossPowerLaw

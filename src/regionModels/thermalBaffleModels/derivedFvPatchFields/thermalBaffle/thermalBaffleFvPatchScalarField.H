@@ -162,7 +162,7 @@ namespace compressible
 {
 
 /*---------------------------------------------------------------------------*\
-        Class thermalBaffleFvPatchScalarField Declaration
+               Class thermalBaffleFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class thermalBaffleFvPatchScalarField

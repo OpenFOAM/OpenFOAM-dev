@@ -52,7 +52,7 @@ class phaseModel;
 class phasePair;
 
 /*---------------------------------------------------------------------------*\
-                        Class interfaceCompositionModel Declaration
+                  Class interfaceCompositionModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class interfaceCompositionModel

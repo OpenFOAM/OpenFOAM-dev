@@ -58,7 +58,7 @@ namespace dragModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class GidaspowSchillerNaumann Declaration
+                   Class GidaspowSchillerNaumann Declaration
 \*---------------------------------------------------------------------------*/
 
 class GidaspowSchillerNaumann

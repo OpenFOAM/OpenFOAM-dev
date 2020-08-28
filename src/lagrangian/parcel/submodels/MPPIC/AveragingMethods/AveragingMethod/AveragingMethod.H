@@ -48,7 +48,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class AveragingMethod Declaration
+                       Class AveragingMethod Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

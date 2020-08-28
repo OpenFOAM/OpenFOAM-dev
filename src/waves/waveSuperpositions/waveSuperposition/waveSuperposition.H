@@ -88,7 +88,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class waveSuperposition Declaration
+                      Class waveSuperposition Declaration
 \*---------------------------------------------------------------------------*/
 
 class waveSuperposition

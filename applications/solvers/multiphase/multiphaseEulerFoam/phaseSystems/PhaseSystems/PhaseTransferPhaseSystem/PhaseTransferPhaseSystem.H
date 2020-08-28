@@ -48,7 +48,7 @@ template<class modelType> class BlendedInterfacialModel;
 class phaseTransferModel;
 
 /*---------------------------------------------------------------------------*\
-                    Class PhaseTransferPhaseSystem Declaration
+                  Class PhaseTransferPhaseSystem Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseSystem>

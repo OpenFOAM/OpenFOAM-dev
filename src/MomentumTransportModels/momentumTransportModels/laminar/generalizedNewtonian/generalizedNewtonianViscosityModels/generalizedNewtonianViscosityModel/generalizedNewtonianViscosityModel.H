@@ -55,7 +55,7 @@ namespace laminarModels
 {
 
 /*---------------------------------------------------------------------------*\
-                Class generalizedNewtonianViscosityModel Declaration
+             Class generalizedNewtonianViscosityModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class generalizedNewtonianViscosityModel

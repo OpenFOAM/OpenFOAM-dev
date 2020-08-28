@@ -55,7 +55,7 @@ namespace diameterModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class linearTsub Declaration
+                         Class linearTsub Declaration
 \*---------------------------------------------------------------------------*/
 
 class linearTsub

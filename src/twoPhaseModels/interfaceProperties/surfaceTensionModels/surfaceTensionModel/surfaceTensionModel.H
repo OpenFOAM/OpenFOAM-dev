@@ -68,7 +68,7 @@ namespace Foam
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                           Class surfaceTensionModel Declaration
+                     Class surfaceTensionModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class surfaceTensionModel

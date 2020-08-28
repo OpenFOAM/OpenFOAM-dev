@@ -68,7 +68,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class LaheyKEpsilon Declaration
+                        Class LaheyKEpsilon Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

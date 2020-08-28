@@ -41,7 +41,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class ReynoldsStress Declaration
+                       Class ReynoldsStress Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

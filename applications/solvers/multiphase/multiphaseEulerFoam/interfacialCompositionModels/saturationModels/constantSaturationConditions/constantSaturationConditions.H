@@ -45,7 +45,7 @@ namespace saturationModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class constantSaturationConditions Declaration
+                Class constantSaturationConditions Declaration
 \*---------------------------------------------------------------------------*/
 
 class constantSaturationConditions

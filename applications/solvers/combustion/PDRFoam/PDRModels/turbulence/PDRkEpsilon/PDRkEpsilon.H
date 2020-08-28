@@ -73,7 +73,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class PDRkEpsilon Declaration
+                         Class PDRkEpsilon Declaration
 \*---------------------------------------------------------------------------*/
 
 class PDRkEpsilon

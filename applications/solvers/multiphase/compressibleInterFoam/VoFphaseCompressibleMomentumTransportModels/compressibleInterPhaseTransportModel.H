@@ -55,7 +55,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-             Class compressibleInterPhaseTransportModel Declaration
+            Class compressibleInterPhaseTransportModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class compressibleInterPhaseTransportModel

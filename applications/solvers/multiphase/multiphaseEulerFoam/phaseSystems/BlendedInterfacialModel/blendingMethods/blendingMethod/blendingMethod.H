@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class blendingMethod Declaration
+                       Class blendingMethod Declaration
 \*---------------------------------------------------------------------------*/
 
 class blendingMethod

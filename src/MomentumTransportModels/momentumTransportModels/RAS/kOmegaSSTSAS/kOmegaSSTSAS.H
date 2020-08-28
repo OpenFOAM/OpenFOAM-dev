@@ -89,7 +89,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class kOmegaSSTSAS Declaration
+                        Class kOmegaSSTSAS Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

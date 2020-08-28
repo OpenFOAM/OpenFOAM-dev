@@ -109,7 +109,7 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class phaseScalarTransport Declaration
+                    Class phaseScalarTransport Declaration
 \*---------------------------------------------------------------------------*/
 
 class phaseScalarTransport

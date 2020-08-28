@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                             Class noOp Declaration
+                            Class noOp Declaration
 \*---------------------------------------------------------------------------*/
 
 class noOp
@@ -131,7 +131,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                            Class areaOp Declaration
+                           Class areaOp Declaration
 \*---------------------------------------------------------------------------*/
 
 class areaOp
@@ -176,7 +176,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                            Class areaMagOp Declaration
+                          Class areaMagOp Declaration
 \*---------------------------------------------------------------------------*/
 
 class areaMagOp
@@ -221,7 +221,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                           Class volumeOp Declaration
+                          Class volumeOp Declaration
 \*---------------------------------------------------------------------------*/
 
 class volumeOp
@@ -309,7 +309,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                       Class areaMagIntegrateOp Declaration
+                     Class areaMagIntegrateOp Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
@@ -395,7 +395,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                            Class listOp Declaration
+                           Class listOp Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type, unsigned Size>

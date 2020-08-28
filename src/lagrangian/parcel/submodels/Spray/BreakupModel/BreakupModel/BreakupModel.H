@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class BreakupModel Declaration
+                        Class BreakupModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

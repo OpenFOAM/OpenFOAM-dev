@@ -62,14 +62,14 @@ class PhaseChangeModel;
 
 
 /*---------------------------------------------------------------------------*\
-                    Class ReactingCloudName Declaration
+                      Class ReactingCloudName Declaration
 \*---------------------------------------------------------------------------*/
 
 TemplateName(ReactingCloud);
 
 
 /*---------------------------------------------------------------------------*\
-                      Class ReactingCloud Declaration
+                        Class ReactingCloud Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

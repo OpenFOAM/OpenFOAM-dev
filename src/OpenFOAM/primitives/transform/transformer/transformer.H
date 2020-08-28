@@ -78,7 +78,7 @@ inline transformer operator&(const transformer& tr1, const transformer& tr2);
 
 
 /*---------------------------------------------------------------------------*\
-                    Class transformer Declaration
+                         Class transformer Declaration
 \*---------------------------------------------------------------------------*/
 
 class transformer

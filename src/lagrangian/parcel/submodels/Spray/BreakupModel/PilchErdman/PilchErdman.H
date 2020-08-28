@@ -65,7 +65,7 @@ Description
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                        Class PilchErdman Declaration
+                         Class PilchErdman Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

@@ -56,7 +56,7 @@ class Ergun;
 class WenYu;
 
 /*---------------------------------------------------------------------------*\
-                           Class GidaspowErgunWenYu Declaration
+                     Class GidaspowErgunWenYu Declaration
 \*---------------------------------------------------------------------------*/
 
 class GidaspowErgunWenYu

@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class valueMultiComponentMixture Declaration
+                 Class valueMultiComponentMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>

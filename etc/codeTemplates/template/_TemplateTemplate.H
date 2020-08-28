@@ -60,7 +60,7 @@ Ostream& operator<<(Ostream&, const CLASSNAME<TemplateArgument>&);
 
 
 /*---------------------------------------------------------------------------*\
-                         Class CLASSNAME Declaration
+                          Class CLASSNAME Declaration
 \*---------------------------------------------------------------------------*/
 
 template<TemplateClassArgument>

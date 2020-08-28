@@ -53,7 +53,7 @@ namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class dynamicLagrangian Declaration
+                      Class dynamicLagrangian Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

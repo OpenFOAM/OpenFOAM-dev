@@ -46,7 +46,7 @@ namespace ParticleStressModels
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class exponential Declaration
+                         Class exponential Declaration
 \*---------------------------------------------------------------------------*/
 
 class exponential

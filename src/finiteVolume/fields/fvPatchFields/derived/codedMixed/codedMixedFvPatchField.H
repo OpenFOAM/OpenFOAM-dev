@@ -99,7 +99,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-              Class codedMixedFvPatchFieldBase Declaration
+                 Class codedMixedFvPatchFieldBase Declaration
 \*---------------------------------------------------------------------------*/
 
 class codedMixedFvPatchFieldBase

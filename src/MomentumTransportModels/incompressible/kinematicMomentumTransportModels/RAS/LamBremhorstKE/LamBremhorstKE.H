@@ -56,7 +56,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class LamBremhorstKE Declaration
+                       Class LamBremhorstKE Declaration
 \*---------------------------------------------------------------------------*/
 
 class LamBremhorstKE

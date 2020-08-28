@@ -60,14 +60,14 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                    Class ThermoParcelName Declaration
+                      Class ThermoParcelName Declaration
 \*---------------------------------------------------------------------------*/
 
 TemplateName(ThermoParcel);
 
 
 /*---------------------------------------------------------------------------*\
-                       Class ThermoParcel Declaration
+                        Class ThermoParcel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ParcelType>

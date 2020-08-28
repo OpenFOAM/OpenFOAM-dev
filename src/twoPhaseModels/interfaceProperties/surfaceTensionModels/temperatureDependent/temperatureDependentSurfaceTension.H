@@ -71,7 +71,7 @@ namespace surfaceTensionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class temperatureDependent Declaration
+                    Class temperatureDependent Declaration
 \*---------------------------------------------------------------------------*/
 
 class temperatureDependent

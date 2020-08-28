@@ -65,7 +65,7 @@ Ostream& operator<<
 );
 
 /*---------------------------------------------------------------------------*\
-                    Class CollidingParcelName Declaration
+                     Class CollidingParcelName Declaration
 \*---------------------------------------------------------------------------*/
 
 TemplateName(CollidingParcel);

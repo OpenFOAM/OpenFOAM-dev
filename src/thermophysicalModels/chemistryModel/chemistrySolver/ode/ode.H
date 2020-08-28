@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class ode Declaration
+                             Class ode Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ChemistryModel>

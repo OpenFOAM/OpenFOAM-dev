@@ -54,7 +54,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class CellZoneInjection Declaration
+                      Class CellZoneInjection Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

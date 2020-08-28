@@ -51,7 +51,7 @@ template<class modelType> class BlendedInterfacialModel;
 class heatTransferModel;
 
 /*---------------------------------------------------------------------------*\
-                    Class OneResistanceHeatTransferPhaseSystem Declaration
+            Class OneResistanceHeatTransferPhaseSystem Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseSystem>

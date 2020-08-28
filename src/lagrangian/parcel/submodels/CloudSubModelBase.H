@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class CloudSubModelBase Declaration
+                      Class CloudSubModelBase Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

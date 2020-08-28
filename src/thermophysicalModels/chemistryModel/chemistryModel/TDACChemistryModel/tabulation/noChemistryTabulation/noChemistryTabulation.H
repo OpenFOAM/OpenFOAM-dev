@@ -41,7 +41,7 @@ namespace chemistryTabulationMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class none Declaration
+                            Class none Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>

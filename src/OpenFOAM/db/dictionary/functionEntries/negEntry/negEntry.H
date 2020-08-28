@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,7 @@ namespace functionEntries
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class negEntry Declaration
+                          Class negEntry Declaration
 \*---------------------------------------------------------------------------*/
 
 class negEntry

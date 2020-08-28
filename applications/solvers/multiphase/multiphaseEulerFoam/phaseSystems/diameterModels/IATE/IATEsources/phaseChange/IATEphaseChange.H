@@ -47,7 +47,7 @@ namespace IATEsources
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class phaseChange Declaration
+                         Class phaseChange Declaration
 \*---------------------------------------------------------------------------*/
 
 class phaseChange

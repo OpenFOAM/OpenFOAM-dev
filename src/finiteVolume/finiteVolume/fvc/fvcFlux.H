@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Namespace fvc functions Declaration
+                      Namespace fvc functions Declaration
 \*---------------------------------------------------------------------------*/
 
 namespace fvc

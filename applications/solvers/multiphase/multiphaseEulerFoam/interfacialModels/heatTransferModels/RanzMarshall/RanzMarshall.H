@@ -46,7 +46,7 @@ namespace heatTransferModels
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class RanzMarshall Declaration
+                        Class RanzMarshall Declaration
 \*---------------------------------------------------------------------------*/
 
 class RanzMarshall

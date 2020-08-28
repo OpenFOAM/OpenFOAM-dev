@@ -108,7 +108,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class kkLOmega Declaration
+                          Class kkLOmega Declaration
 \*---------------------------------------------------------------------------*/
 
 class kkLOmega

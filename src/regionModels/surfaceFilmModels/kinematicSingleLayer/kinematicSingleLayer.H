@@ -60,7 +60,7 @@ namespace surfaceFilmModels
 class filmThermoModel;
 
 /*---------------------------------------------------------------------------*\
-                   Class kinematicSingleLayer Declaration
+                    Class kinematicSingleLayer Declaration
 \*---------------------------------------------------------------------------*/
 
 class kinematicSingleLayer

@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class processorGAMGInterface Declaration
+                   Class processorGAMGInterface Declaration
 \*---------------------------------------------------------------------------*/
 
 class processorGAMGInterface

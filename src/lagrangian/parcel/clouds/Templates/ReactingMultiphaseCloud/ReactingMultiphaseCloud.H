@@ -63,7 +63,7 @@ class SurfaceReactionModel;
 
 
 /*---------------------------------------------------------------------------*\
-                Class ReactingMultiphaseCloudName Declaration
+                 Class ReactingMultiphaseCloudName Declaration
 \*---------------------------------------------------------------------------*/
 
 TemplateName(ReactingMultiphaseCloud);

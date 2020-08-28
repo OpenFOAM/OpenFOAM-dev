@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,7 +168,7 @@ void writeEntry(Ostream& os, const Function1<Type>& f1);
 
 
 /*---------------------------------------------------------------------------*\
-                        Class FieldFunction1 Declaration
+                       Class FieldFunction1 Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type, class Function1Type>

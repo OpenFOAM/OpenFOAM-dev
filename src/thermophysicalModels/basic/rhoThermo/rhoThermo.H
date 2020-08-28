@@ -47,7 +47,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class rhoThermo Declaration
+                          Class rhoThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 class rhoThermo
@@ -126,7 +126,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                       Class rhoThermo::implementation Declaration
+                  Class rhoThermo::implementation Declaration
 \*---------------------------------------------------------------------------*/
 
 class rhoThermo::implementation

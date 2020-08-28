@@ -41,7 +41,7 @@ Description
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                         Class ReitzKHRT Declaration
+                          Class ReitzKHRT Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

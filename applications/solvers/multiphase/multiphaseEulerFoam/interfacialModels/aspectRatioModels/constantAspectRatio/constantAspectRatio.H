@@ -45,7 +45,7 @@ namespace aspectRatioModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class constantAspectRatio Declaration
+                     Class constantAspectRatio Declaration
 \*---------------------------------------------------------------------------*/
 
 class constantAspectRatio

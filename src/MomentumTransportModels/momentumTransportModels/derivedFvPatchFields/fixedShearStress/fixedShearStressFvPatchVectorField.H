@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-            Class fixedShearStressFvPatchVectorField Declaration
+             Class fixedShearStressFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
 
 class fixedShearStressFvPatchVectorField

@@ -75,7 +75,7 @@ Istream& operator>>(Istream&, dictionary&);
 Ostream& operator<<(Ostream&, const dictionary&);
 
 /*---------------------------------------------------------------------------*\
-                        Class dictionaryName Declaration
+                       Class dictionaryName Declaration
 \*---------------------------------------------------------------------------*/
 
 class dictionaryName
@@ -153,7 +153,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                           Class dictionary Declaration
+                         Class dictionary Declaration
 \*---------------------------------------------------------------------------*/
 
 class dictionary

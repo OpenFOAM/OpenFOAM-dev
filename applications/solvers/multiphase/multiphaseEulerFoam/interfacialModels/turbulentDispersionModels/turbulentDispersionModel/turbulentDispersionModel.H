@@ -48,7 +48,7 @@ namespace Foam
 class phasePair;
 
 /*---------------------------------------------------------------------------*\
-                    Class turbulentDispersionModel Declaration
+                  Class turbulentDispersionModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class turbulentDispersionModel

@@ -46,7 +46,7 @@ namespace integrationSchemes
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Euler Declaration
+                            Class Euler Declaration
 \*---------------------------------------------------------------------------*/
 
 class Euler

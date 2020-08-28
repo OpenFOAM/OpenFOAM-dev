@@ -47,7 +47,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class HeatTransferModel Declaration
+                      Class HeatTransferModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

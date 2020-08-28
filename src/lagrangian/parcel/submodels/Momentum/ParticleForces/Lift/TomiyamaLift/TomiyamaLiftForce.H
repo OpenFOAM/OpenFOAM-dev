@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class TomiyamaLiftForce Declaration
+                      Class TomiyamaLiftForce Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

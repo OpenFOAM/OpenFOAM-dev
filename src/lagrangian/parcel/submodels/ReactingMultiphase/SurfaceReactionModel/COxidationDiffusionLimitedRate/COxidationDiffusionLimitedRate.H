@@ -50,7 +50,7 @@ template<class CloudType>
 class COxidationDiffusionLimitedRate;
 
 /*---------------------------------------------------------------------------*\
-              Class COxidationDiffusionLimitedRate Declaration
+               Class COxidationDiffusionLimitedRate Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

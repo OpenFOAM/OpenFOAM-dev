@@ -54,7 +54,7 @@ namespace dragModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class TomiyamaKataokaZunSakaguchi Declaration
+                 Class TomiyamaKataokaZunSakaguchi Declaration
 \*---------------------------------------------------------------------------*/
 
 class TomiyamaKataokaZunSakaguchi

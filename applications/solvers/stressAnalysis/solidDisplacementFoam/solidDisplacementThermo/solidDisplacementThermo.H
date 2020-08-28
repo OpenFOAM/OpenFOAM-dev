@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class solidDisplacementThermo Declaration
+                   Class solidDisplacementThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 class solidDisplacementThermo

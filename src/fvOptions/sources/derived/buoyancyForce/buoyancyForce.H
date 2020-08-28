@@ -53,7 +53,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-               Class buoyancyForce Declaration
+                        Class buoyancyForce Declaration
 \*---------------------------------------------------------------------------*/
 
 class buoyancyForce

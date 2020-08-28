@@ -45,7 +45,7 @@ namespace laminarFlameSpeedModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class GuldersEGR Declaration
+                         Class GuldersEGR Declaration
 \*---------------------------------------------------------------------------*/
 
 class GuldersEGR

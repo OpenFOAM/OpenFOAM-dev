@@ -63,7 +63,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-               Class MomentumLookupTableInjection Declaration
+                Class MomentumLookupTableInjection Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

@@ -48,7 +48,7 @@ namespace liftModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class constantLiftCoefficient Declaration
+                   Class constantLiftCoefficient Declaration
 \*---------------------------------------------------------------------------*/
 
 class constantLiftCoefficient

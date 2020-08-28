@@ -60,7 +60,7 @@ Istream& operator>>
 );
 
 /*---------------------------------------------------------------------------*\
-                 Class thermoParcelInjectionData Declaration
+                  Class thermoParcelInjectionData Declaration
 \*---------------------------------------------------------------------------*/
 
 class thermoParcelInjectionData

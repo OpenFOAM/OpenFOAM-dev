@@ -47,7 +47,7 @@ namespace Foam
 class polyMesh;
 
 /*---------------------------------------------------------------------------*\
-                      Class regionCoupledWallPolyPatch Declaration
+                 Class regionCoupledWallPolyPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class regionCoupledWallPolyPatch

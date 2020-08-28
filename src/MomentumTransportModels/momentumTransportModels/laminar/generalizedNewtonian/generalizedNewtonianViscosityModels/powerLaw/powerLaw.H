@@ -48,7 +48,7 @@ namespace generalizedNewtonianViscosityModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class powerLaw Declaration
+                          Class powerLaw Declaration
 \*---------------------------------------------------------------------------*/
 
 class powerLaw

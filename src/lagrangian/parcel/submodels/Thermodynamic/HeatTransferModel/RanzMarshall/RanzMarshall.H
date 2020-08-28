@@ -40,7 +40,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class RanzMarshall Declaration
+                        Class RanzMarshall Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

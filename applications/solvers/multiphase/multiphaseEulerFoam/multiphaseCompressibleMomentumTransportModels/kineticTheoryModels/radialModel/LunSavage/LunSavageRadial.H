@@ -46,7 +46,7 @@ namespace radialModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class LunSavage Declaration
+                          Class LunSavage Declaration
 \*---------------------------------------------------------------------------*/
 
 class LunSavage

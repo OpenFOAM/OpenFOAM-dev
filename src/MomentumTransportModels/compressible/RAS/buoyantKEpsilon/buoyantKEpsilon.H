@@ -71,7 +71,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class buoyantKEpsilon Declaration
+                       Class buoyantKEpsilon Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

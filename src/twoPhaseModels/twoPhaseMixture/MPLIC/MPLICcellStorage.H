@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class MPLICcell Declaration
+                          Class MPLICcell Declaration
 \*---------------------------------------------------------------------------*/
 
 class MPLICcellStorage

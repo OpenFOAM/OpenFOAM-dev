@@ -39,7 +39,7 @@ Description
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                       Class NoPhaseChange Declaration
+                        Class NoPhaseChange Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

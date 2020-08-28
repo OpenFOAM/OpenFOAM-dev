@@ -68,7 +68,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class solidEquilibriumEnergySource Declaration
+                Class solidEquilibriumEnergySource Declaration
 \*---------------------------------------------------------------------------*/
 
 class solidEquilibriumEnergySource

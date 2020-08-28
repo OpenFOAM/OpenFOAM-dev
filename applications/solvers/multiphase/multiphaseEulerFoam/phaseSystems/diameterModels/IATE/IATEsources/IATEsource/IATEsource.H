@@ -48,7 +48,7 @@ namespace diameterModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class IATEsource Declaration
+                         Class IATEsource Declaration
 \*---------------------------------------------------------------------------*/
 
 class IATEsource

@@ -47,7 +47,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class constantAlphaContactAngleFvPatch Declaration
+              Class constantAlphaContactAngleFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class constantAlphaContactAngleFvPatchScalarField

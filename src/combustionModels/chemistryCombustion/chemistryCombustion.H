@@ -47,7 +47,7 @@ namespace combustionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                    class chemistryCombustion Declaration
+                     class chemistryCombustion Declaration
 \*---------------------------------------------------------------------------*/
 
 class chemistryCombustion

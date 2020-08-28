@@ -48,7 +48,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class PDRDragModel Declaration
+                        Class PDRDragModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class PDRDragModel

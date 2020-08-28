@@ -85,7 +85,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                    Class Boussinesq Declaration
+                         Class Boussinesq Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Specie>

@@ -147,7 +147,7 @@ namespace compressible
 {
 
 /*---------------------------------------------------------------------------*\
-            Class alphatWallBoilingWallFunctionFvPatchScalarField Declaration
+       Class alphatWallBoilingWallFunctionFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class alphatWallBoilingWallFunctionFvPatchScalarField

@@ -58,7 +58,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class NonSphereDragForce Declaration
+                     Class NonSphereDragForce Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

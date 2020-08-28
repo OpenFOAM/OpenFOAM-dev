@@ -44,7 +44,7 @@ namespace blendingMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class linear Declaration
+                           Class linear Declaration
 \*---------------------------------------------------------------------------*/
 
 class linear

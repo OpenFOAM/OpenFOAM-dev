@@ -50,7 +50,7 @@ namespace wallBoilingModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class departureDiameterModel Declaration
+                   Class departureDiameterModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class departureDiameterModel

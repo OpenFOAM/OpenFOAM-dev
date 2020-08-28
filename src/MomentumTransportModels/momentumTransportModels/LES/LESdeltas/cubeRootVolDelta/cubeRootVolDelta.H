@@ -45,7 +45,7 @@ namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class cubeRootVolDelta Declaration
+                      Class cubeRootVolDelta Declaration
 \*---------------------------------------------------------------------------*/
 
 class cubeRootVolDelta

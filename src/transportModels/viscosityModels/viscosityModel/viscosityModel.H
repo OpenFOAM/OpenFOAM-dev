@@ -59,7 +59,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                Class viscosityModel Declaration
+                       Class viscosityModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class viscosityModel

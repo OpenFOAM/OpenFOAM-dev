@@ -103,7 +103,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                           Class rPolynomial Declaration
+                         Class rPolynomial Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Specie>

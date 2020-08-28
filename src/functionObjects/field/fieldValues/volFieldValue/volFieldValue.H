@@ -118,7 +118,7 @@ namespace fieldValues
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class volFieldValue Declaration
+                        Class volFieldValue Declaration
 \*---------------------------------------------------------------------------*/
 
 class volFieldValue

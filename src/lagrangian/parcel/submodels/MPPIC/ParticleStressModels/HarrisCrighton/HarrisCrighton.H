@@ -63,7 +63,7 @@ namespace ParticleStressModels
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class HarrisCrighton Declaration
+                       Class HarrisCrighton Declaration
 \*---------------------------------------------------------------------------*/
 
 class HarrisCrighton

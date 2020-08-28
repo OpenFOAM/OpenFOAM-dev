@@ -92,7 +92,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class VoFSolidificationMeltingSource Declaration
+               Class VoFSolidificationMeltingSource Declaration
 \*---------------------------------------------------------------------------*/
 
 class VoFSolidificationMeltingSource

@@ -73,7 +73,7 @@ namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class DeardorffDiffStress Declaration
+                     Class DeardorffDiffStress Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

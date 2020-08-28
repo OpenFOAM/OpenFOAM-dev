@@ -46,7 +46,7 @@ namespace granularPressureModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class SyamlalRogersOBrien Declaration
+                     Class SyamlalRogersOBrien Declaration
 \*---------------------------------------------------------------------------*/
 
 class SyamlalRogersOBrien

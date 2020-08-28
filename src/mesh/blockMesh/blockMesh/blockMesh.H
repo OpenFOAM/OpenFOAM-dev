@@ -56,7 +56,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class blockMesh Declaration
+                          Class blockMesh Declaration
 \*---------------------------------------------------------------------------*/
 
 class blockMesh

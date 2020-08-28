@@ -73,7 +73,7 @@ namespace compressible
 {
 
 /*---------------------------------------------------------------------------*\
- Class alphatPhaseJayatillekeWallFunctionFvPatchScalarField Declaration
+    Class alphatPhaseJayatillekeWallFunctionFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class alphatPhaseJayatillekeWallFunctionFvPatchScalarField

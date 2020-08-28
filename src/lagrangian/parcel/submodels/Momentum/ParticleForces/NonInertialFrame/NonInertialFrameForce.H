@@ -46,7 +46,7 @@ namespace Foam
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                  Class NonInertialFrameForce Declaration
+                    Class NonInertialFrameForce Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

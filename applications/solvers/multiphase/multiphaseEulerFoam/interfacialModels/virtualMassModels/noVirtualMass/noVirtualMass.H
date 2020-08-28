@@ -47,7 +47,7 @@ namespace virtualMassModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class noVirtualMass Declaration
+                        Class noVirtualMass Declaration
 \*---------------------------------------------------------------------------*/
 
 class noVirtualMass

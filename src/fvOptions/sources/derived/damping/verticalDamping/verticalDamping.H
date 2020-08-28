@@ -119,7 +119,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class verticalDamping Declaration
+                       Class verticalDamping Declaration
 \*---------------------------------------------------------------------------*/
 
 class verticalDamping

@@ -48,7 +48,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class psiReactionThermo Declaration
+                      Class psiReactionThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 class psiReactionThermo
@@ -119,7 +119,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                 Class psiReactionThermo::composite Declaration
+                Class psiReactionThermo::composite Declaration
 \*---------------------------------------------------------------------------*/
 
 class psiReactionThermo::composite

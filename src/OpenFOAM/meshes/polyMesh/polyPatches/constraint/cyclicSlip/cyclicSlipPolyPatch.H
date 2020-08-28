@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class cyclicSlipPolyPatch Declaration
+                     Class cyclicSlipPolyPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class cyclicSlipPolyPatch

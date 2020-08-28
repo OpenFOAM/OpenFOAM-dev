@@ -72,7 +72,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class basicThermo Declaration
+                         Class basicThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 class basicThermo

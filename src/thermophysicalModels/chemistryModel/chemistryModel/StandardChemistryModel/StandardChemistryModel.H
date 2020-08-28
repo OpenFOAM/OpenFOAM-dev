@@ -52,7 +52,7 @@ namespace Foam
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                      Class StandardChemistryModel Declaration
+                   Class StandardChemistryModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>

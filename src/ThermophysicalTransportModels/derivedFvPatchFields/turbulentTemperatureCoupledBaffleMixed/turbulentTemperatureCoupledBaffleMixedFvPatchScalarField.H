@@ -86,7 +86,7 @@ namespace compressible
 {
 
 /*---------------------------------------------------------------------------*\
-   Class turbulentTemperatureCoupledBaffleMixedFvPatchScalarField Declaration
+  Class turbulentTemperatureCoupledBaffleMixedFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class turbulentTemperatureCoupledBaffleMixedFvPatchScalarField

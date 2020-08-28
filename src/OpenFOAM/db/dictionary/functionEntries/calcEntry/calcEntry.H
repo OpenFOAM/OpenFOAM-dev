@@ -64,7 +64,7 @@ namespace functionEntries
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class calcEntry Declaration
+                          Class calcEntry Declaration
 \*---------------------------------------------------------------------------*/
 
 class calcEntry

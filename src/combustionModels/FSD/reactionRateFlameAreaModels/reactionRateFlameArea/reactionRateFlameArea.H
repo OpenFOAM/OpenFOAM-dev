@@ -49,7 +49,7 @@ namespace Foam
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                           Class reactionRateFlameArea Declaration
+                    Class reactionRateFlameArea Declaration
 \*---------------------------------------------------------------------------*/
 
 class reactionRateFlameArea

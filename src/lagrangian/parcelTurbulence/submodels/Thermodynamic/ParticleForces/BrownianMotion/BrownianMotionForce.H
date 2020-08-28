@@ -54,7 +54,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class BrownianMotionForce Declaration
+                     Class BrownianMotionForce Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

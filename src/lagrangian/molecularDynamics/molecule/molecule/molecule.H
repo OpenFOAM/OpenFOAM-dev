@@ -60,7 +60,7 @@ Ostream& operator<<(Ostream&, const molecule&);
 
 
 /*---------------------------------------------------------------------------*\
-                           Class molecule Declaration
+                          Class molecule Declaration
 \*---------------------------------------------------------------------------*/
 
 class molecule

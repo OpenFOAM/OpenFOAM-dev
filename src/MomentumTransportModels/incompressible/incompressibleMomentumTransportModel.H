@@ -47,7 +47,7 @@ namespace Foam
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                Class incompressibleMomentumTransportModel Declaration
+            Class incompressibleMomentumTransportModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class incompressibleMomentumTransportModel

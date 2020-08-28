@@ -69,7 +69,7 @@ namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class PrandtlDelta Declaration
+                        Class PrandtlDelta Declaration
 \*---------------------------------------------------------------------------*/
 
 class PrandtlDelta

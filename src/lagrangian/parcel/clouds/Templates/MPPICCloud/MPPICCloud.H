@@ -61,14 +61,14 @@ class IsotropyModel;
 
 
 /*---------------------------------------------------------------------------*\
-                    Class MPPICCloudName Declaration
+                       Class MPPICCloudName Declaration
 \*---------------------------------------------------------------------------*/
 
 TemplateName(MPPICCloud);
 
 
 /*---------------------------------------------------------------------------*\
-                       Class MPPICCloud Declaration
+                         Class MPPICCloud Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

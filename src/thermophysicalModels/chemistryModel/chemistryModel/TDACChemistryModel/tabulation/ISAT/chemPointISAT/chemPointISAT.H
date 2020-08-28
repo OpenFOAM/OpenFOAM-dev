@@ -137,7 +137,7 @@ class TDACChemistryModel;
 
 
 /*---------------------------------------------------------------------------*\
-                       Class chemPointISAT Declaration
+                        Class chemPointISAT Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>

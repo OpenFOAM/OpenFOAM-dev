@@ -48,7 +48,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class PlessisMasliyahDragForce Declaration
+                  Class PlessisMasliyahDragForce Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class alphaFixedPressureFvPatch Declaration
+                  Class alphaFixedPressureFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class alphaFixedPressureFvPatchScalarField

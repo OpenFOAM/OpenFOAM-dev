@@ -64,7 +64,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                           Class Cloud Declaration
+                            Class Cloud Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ParticleType>

@@ -66,7 +66,7 @@ namespace Foam
 typedef HashTable<List<specieElement>> speciesCompositionTable;
 
 /*---------------------------------------------------------------------------*\
-                       Class chemkinReader Declaration
+                        Class chemkinReader Declaration
 \*---------------------------------------------------------------------------*/
 
 class chemkinReader

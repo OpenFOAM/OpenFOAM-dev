@@ -51,7 +51,7 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class filmMomentumTransportModel Declaration
+                 Class filmMomentumTransportModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class filmMomentumTransportModel

@@ -104,7 +104,7 @@ namespace compressible
 {
 
 /*---------------------------------------------------------------------------*\
-            Class thermalBaffle1DFvPatchScalarField Declaration
+              Class thermalBaffle1DFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class solidType>

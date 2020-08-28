@@ -54,7 +54,7 @@ namespace aspectRatioModels
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class TomiyamaAspectRatio Declaration
+                     Class TomiyamaAspectRatio Declaration
 \*---------------------------------------------------------------------------*/
 
 class TomiyamaAspectRatio

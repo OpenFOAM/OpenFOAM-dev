@@ -113,7 +113,7 @@ namespace chemistryReductionMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class ode Declaration
+                             Class ode Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>

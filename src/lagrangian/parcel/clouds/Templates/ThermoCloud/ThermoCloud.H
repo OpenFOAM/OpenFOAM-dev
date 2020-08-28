@@ -60,14 +60,14 @@ class HeatTransferModel;
 
 
 /*---------------------------------------------------------------------------*\
-                     Class ThermoCloudName Declaration
+                       Class ThermoCloudName Declaration
 \*---------------------------------------------------------------------------*/
 
 TemplateName(ThermoCloud);
 
 
 /*---------------------------------------------------------------------------*\
-                        Class ThermoCloud Declaration
+                         Class ThermoCloud Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

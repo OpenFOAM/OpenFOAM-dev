@@ -60,7 +60,7 @@ namespace sampledSets
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class cellSetSampledSet Declaration
+                      Class cellSetSampledSet Declaration
 \*---------------------------------------------------------------------------*/
 
 class cellSetSampledSet

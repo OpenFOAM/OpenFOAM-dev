@@ -45,7 +45,7 @@ namespace diameterModels
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class nucleationModel Declaration
+                       Class nucleationModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class nucleationModel

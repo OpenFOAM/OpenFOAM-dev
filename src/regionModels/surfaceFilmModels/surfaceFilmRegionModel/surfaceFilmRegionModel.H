@@ -48,7 +48,7 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class surfaceFilmRegionModel Declaration
+                   Class surfaceFilmRegionModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class surfaceFilmRegionModel

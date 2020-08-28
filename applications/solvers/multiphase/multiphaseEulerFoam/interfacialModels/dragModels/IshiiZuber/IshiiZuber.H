@@ -53,7 +53,7 @@ namespace dragModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class IshiiZuber Declaration
+                         Class IshiiZuber Declaration
 \*---------------------------------------------------------------------------*/
 
 class IshiiZuber

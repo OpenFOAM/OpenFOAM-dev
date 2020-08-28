@@ -67,7 +67,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class FixedValueConstraint Declaration
+                    Class FixedValueConstraint Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

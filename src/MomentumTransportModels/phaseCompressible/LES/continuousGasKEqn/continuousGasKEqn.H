@@ -64,7 +64,7 @@ namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class continuousGasKEqn Declaration
+                      Class continuousGasKEqn Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

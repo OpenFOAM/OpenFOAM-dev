@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-     Class totalFlowRateAdvectiveDiffusiveFvPatchScalarField Declaration
+      Class totalFlowRateAdvectiveDiffusiveFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class totalFlowRateAdvectiveDiffusiveFvPatchScalarField

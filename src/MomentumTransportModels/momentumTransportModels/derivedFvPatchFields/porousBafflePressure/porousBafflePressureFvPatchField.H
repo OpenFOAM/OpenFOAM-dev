@@ -90,7 +90,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                Class porousBafflePressureFvPatchField Declaration
+              Class porousBafflePressureFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 class porousBafflePressureFvPatchField

@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class cyclicRepeatAMIPolyPatch Declaration
+                  Class cyclicRepeatAMIPolyPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class cyclicRepeatAMIPolyPatch

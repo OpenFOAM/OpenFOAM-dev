@@ -53,7 +53,7 @@ namespace Foam
 class faceZoneSet;
 
 /*---------------------------------------------------------------------------*\
-                         Class planeToFaceZone Declaration
+                       Class planeToFaceZone Declaration
 \*---------------------------------------------------------------------------*/
 
 class planeToFaceZone

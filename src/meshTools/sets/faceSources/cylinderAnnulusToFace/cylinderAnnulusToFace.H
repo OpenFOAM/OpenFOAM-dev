@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class cylinderAnnulusToFace Declaration
+                    Class cylinderAnnulusToFace Declaration
 \*---------------------------------------------------------------------------*/
 
 class cylinderAnnulusToFace

@@ -55,7 +55,7 @@ Ostream& operator<<(Ostream&, const phaseProperties&);
 
 
 /*---------------------------------------------------------------------------*\
-                      Class phaseProperties Declaration
+                       Class phaseProperties Declaration
 \*---------------------------------------------------------------------------*/
 
 class phaseProperties

@@ -57,7 +57,7 @@ namespace turbulentDispersionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                             Class Gosman Declaration
+                           Class Gosman Declaration
 \*---------------------------------------------------------------------------*/
 
 class Gosman

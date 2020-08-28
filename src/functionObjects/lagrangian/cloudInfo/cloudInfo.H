@@ -80,7 +80,7 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class cloudInfo Declaration
+                          Class cloudInfo Declaration
 \*---------------------------------------------------------------------------*/
 
 class cloudInfo

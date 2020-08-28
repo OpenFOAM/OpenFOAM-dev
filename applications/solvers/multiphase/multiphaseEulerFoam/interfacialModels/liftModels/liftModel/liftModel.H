@@ -47,7 +47,7 @@ namespace Foam
 class phasePair;
 
 /*---------------------------------------------------------------------------*\
-                           Class liftModel Declaration
+                          Class liftModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class liftModel

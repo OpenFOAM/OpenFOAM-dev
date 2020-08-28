@@ -51,7 +51,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class waveModel Declaration
+                          Class waveModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class waveModel

@@ -109,7 +109,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class isotropicDamping Declaration
+                      Class isotropicDamping Declaration
 \*---------------------------------------------------------------------------*/
 
 class isotropicDamping

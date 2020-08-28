@@ -76,7 +76,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                           Class hConstThermo Declaration
+                        Class hConstThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class EquationOfState>

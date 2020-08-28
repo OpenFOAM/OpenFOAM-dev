@@ -60,14 +60,14 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                    Class ReactingParcelName Declaration
+                     Class ReactingParcelName Declaration
 \*---------------------------------------------------------------------------*/
 
 TemplateName(ReactingParcel);
 
 
 /*---------------------------------------------------------------------------*\
-                        Class ReactingParcel Declaration
+                       Class ReactingParcel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ParcelType>

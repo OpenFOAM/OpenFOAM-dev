@@ -70,7 +70,7 @@ inline bool operator!=(const face& a, const face& b);
 inline Istream& operator>>(Istream&, face&);
 
 /*---------------------------------------------------------------------------*\
-                           Class face Declaration
+                            Class face Declaration
 \*---------------------------------------------------------------------------*/
 
 class face

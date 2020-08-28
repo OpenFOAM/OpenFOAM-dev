@@ -85,7 +85,7 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class stopAtFile Declaration
+                         Class stopAtFile Declaration
 \*---------------------------------------------------------------------------*/
 
 class stopAtFile

@@ -69,7 +69,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class LienCubicKE Declaration
+                         Class LienCubicKE Declaration
 \*---------------------------------------------------------------------------*/
 
 class LienCubicKE

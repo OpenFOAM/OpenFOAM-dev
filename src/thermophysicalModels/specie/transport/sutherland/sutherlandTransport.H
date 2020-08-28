@@ -76,7 +76,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                    Class sutherlandTransport Declaration
+                     Class sutherlandTransport Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Thermo>

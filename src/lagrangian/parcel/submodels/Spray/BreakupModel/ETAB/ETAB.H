@@ -57,7 +57,7 @@ See also
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                           Class ETAB Declaration
+                            Class ETAB Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

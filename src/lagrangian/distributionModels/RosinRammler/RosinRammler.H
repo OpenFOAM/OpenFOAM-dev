@@ -51,7 +51,7 @@ namespace distributionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class RosinRammler Declaration
+                        Class RosinRammler Declaration
 \*---------------------------------------------------------------------------*/
 
 class RosinRammler

@@ -50,7 +50,7 @@ namespace viscosityModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class BirdCarreau Declaration
+                         Class BirdCarreau Declaration
 \*---------------------------------------------------------------------------*/
 
 class BirdCarreau

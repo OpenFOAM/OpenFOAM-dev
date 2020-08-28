@@ -47,7 +47,7 @@ namespace partitioningModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class phaseFraction Declaration
+                        Class phaseFraction Declaration
 \*---------------------------------------------------------------------------*/
 
 class phaseFraction

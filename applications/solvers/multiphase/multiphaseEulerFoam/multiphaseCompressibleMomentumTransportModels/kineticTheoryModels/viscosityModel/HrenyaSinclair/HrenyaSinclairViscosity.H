@@ -46,7 +46,7 @@ namespace viscosityModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class HrenyaSinclair Declaration
+                       Class HrenyaSinclair Declaration
 \*---------------------------------------------------------------------------*/
 
 class HrenyaSinclair

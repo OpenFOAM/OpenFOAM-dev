@@ -69,7 +69,7 @@ namespace thermophysicalFunctions
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class nonUniformTable Declaration
+                       Class nonUniformTable Declaration
 \*---------------------------------------------------------------------------*/
 
 class nonUniformTable

@@ -49,7 +49,7 @@ class processorPointPatch;
 class cyclicPointPatch;
 
 /*---------------------------------------------------------------------------*\
-                  Class facePointPatch Declaration
+                       Class facePointPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class facePointPatch

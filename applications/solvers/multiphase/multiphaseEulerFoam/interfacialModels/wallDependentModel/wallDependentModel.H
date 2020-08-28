@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class wallDependentModel Declaration
+                     Class wallDependentModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class wallDependentModel

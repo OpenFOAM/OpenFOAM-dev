@@ -64,7 +64,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class phasePressureModel Declaration
+                     Class phasePressureModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class phasePressureModel

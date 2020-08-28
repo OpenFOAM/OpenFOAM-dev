@@ -62,14 +62,14 @@ template<class CloudType>
 class InflowBoundaryModel;
 
 /*---------------------------------------------------------------------------*\
-                      Class DSMCCloudName Declaration
+                        Class DSMCCloudName Declaration
 \*---------------------------------------------------------------------------*/
 
 TemplateName(DSMCCloud);
 
 
 /*---------------------------------------------------------------------------*\
-                         Class DSMCCloud Declaration
+                          Class DSMCCloud Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ParcelType>

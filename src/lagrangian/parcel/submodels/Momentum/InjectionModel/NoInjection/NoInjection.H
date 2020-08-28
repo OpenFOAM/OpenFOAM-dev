@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class NoInjection Declaration
+                         Class NoInjection Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

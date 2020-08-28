@@ -74,7 +74,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                           Class GeometricField Declaration
+                       Class GeometricField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type, template<class> class PatchField, class GeoMesh>

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ Ostream& operator<<(Ostream&, const spatialTransform&);
 
 
 /*---------------------------------------------------------------------------*\
-                         Class spatialTransform Declaration
+                      Class spatialTransform Declaration
 \*---------------------------------------------------------------------------*/
 
 class spatialTransform

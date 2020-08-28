@@ -49,7 +49,7 @@ namespace diffusiveMassTransferModels
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class sphericalDiffusiveMassTransfer Declaration
+               Class sphericalDiffusiveMassTransfer Declaration
 \*---------------------------------------------------------------------------*/
 
 class sphericalDiffusiveMassTransfer

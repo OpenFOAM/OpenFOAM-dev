@@ -53,7 +53,7 @@ namespace Foam
 }
 
 /*---------------------------------------------------------------------------*\
-                   Class vtkPVblockMeshReader Declaration
+                    Class vtkPVblockMeshReader Declaration
 \*---------------------------------------------------------------------------*/
 
 class vtkPVblockMeshReader

@@ -45,7 +45,7 @@ namespace laminarFlameSpeedModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class constant Declaration
+                          Class constant Declaration
 \*---------------------------------------------------------------------------*/
 
 class constant

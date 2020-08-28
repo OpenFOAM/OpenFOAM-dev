@@ -61,7 +61,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                Class ThermoLookupTableInjection Declaration
+                 Class ThermoLookupTableInjection Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

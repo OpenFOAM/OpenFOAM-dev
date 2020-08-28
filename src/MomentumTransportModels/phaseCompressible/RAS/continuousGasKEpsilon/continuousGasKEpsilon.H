@@ -69,7 +69,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class continuousGasKEpsilon Declaration
+                    Class continuousGasKEpsilon Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

@@ -66,7 +66,7 @@ namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class NicenoKEqn Declaration
+                         Class NicenoKEqn Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

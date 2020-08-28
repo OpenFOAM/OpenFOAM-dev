@@ -54,7 +54,7 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class specieReactionRates Declaration
+                     Class specieReactionRates Declaration
 \*---------------------------------------------------------------------------*/
 
 class specieReactionRates

@@ -53,7 +53,7 @@ namespace dragModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class TomiyamaCorrelated Declaration
+                     Class TomiyamaCorrelated Declaration
 \*---------------------------------------------------------------------------*/
 
 class TomiyamaCorrelated

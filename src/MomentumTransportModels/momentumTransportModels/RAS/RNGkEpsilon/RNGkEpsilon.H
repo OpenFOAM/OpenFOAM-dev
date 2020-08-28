@@ -76,7 +76,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class RNGkEpsilon Declaration
+                         Class RNGkEpsilon Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

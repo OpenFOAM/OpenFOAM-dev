@@ -95,7 +95,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class kOmegaSSTLM Declaration
+                         Class kOmegaSSTLM Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

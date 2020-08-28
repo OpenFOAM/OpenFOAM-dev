@@ -54,7 +54,7 @@ namespace TimeScaleModels
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class isotropic Declaration
+                          Class isotropic Declaration
 \*---------------------------------------------------------------------------*/
 
 class isotropic

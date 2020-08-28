@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class processorGAMGInterfaceField Declaration
+                 Class processorGAMGInterfaceField Declaration
 \*---------------------------------------------------------------------------*/
 
 class processorGAMGInterfaceField

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ template<class T> Istream& operator>>(Istream&, Keyed<T>&);
 template<class T> Ostream& operator<<(Ostream&, const Keyed<T>&);
 
 /*---------------------------------------------------------------------------*\
-                       Class Keyed Declaration
+                            Class Keyed Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class T>

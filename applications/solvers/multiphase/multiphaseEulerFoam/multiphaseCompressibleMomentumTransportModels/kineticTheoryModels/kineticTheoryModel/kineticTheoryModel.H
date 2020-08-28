@@ -65,7 +65,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class kineticTheoryModel Declaration
+                     Class kineticTheoryModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class kineticTheoryModel

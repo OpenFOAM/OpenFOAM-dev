@@ -49,7 +49,7 @@ namespace Foam
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                           Class LESfilter Declaration
+                          Class LESfilter Declaration
 \*---------------------------------------------------------------------------*/
 
 class LESfilter

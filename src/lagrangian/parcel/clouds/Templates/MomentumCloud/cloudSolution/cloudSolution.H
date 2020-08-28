@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class cloudSolution Declaration
+                        Class cloudSolution Declaration
 \*---------------------------------------------------------------------------*/
 
 class cloudSolution

@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class simpleFilter Declaration
+                        Class simpleFilter Declaration
 \*---------------------------------------------------------------------------*/
 
 class simpleFilter

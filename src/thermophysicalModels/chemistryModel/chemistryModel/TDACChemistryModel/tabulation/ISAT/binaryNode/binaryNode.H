@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class binaryNode Declaration
+                         Class binaryNode Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>

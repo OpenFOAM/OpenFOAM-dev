@@ -59,7 +59,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class cyclicPolyPatch Declaration
+                       Class cyclicPolyPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class cyclicPolyPatch

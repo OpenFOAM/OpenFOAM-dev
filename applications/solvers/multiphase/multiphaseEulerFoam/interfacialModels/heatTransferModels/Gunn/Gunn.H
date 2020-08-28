@@ -53,7 +53,7 @@ namespace heatTransferModels
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class Gunn Declaration
+                            Class Gunn Declaration
 \*---------------------------------------------------------------------------*/
 
 class Gunn

@@ -52,7 +52,7 @@ namespace dragModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Gibilaro Declaration
+                          Class Gibilaro Declaration
 \*---------------------------------------------------------------------------*/
 
 class Gibilaro

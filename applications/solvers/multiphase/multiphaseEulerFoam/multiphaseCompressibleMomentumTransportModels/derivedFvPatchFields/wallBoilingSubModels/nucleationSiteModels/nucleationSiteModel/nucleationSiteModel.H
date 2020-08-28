@@ -50,7 +50,7 @@ namespace wallBoilingModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class nucleationSiteModel Declaration
+                     Class nucleationSiteModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class nucleationSiteModel

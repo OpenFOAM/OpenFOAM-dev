@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                Class transportModel Declaration
+                       Class transportModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class transportModel

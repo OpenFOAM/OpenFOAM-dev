@@ -79,7 +79,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class SpalartAllmaras Declaration
+                       Class SpalartAllmaras Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

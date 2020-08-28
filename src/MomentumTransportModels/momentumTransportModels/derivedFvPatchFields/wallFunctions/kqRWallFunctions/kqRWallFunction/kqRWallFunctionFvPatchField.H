@@ -59,7 +59,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                Class kqRWallFunctionFvPatchField Declaration
+                 Class kqRWallFunctionFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

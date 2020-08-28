@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class phasePropertiesList Declaration
+                     Class phasePropertiesList Declaration
 \*---------------------------------------------------------------------------*/
 
 class phasePropertiesList

@@ -72,7 +72,7 @@ namespace laminarFlameSpeedModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class SCOPE Declaration
+                            Class SCOPE Declaration
 \*---------------------------------------------------------------------------*/
 
 class SCOPE

@@ -56,7 +56,7 @@ class blendingMethod;
 class heatTransferModel;
 
 /*---------------------------------------------------------------------------*\
-         Class TwoResistanceHeatTransferPhaseSystem Declaration
+            Class TwoResistanceHeatTransferPhaseSystem Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseSystem>

@@ -61,7 +61,7 @@ Ostream& operator<<(Ostream&, const solidParticle&);
 
 
 /*---------------------------------------------------------------------------*\
-                           Class solidParticle Declaration
+                        Class solidParticle Declaration
 \*---------------------------------------------------------------------------*/
 
 class solidParticle

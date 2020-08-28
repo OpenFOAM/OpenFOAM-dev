@@ -47,7 +47,7 @@ namespace wallLubricationModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class noWallLubrication Declaration
+                      Class noWallLubrication Declaration
 \*---------------------------------------------------------------------------*/
 
 class noWallLubrication

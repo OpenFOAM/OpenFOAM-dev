@@ -55,7 +55,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class ParticleTrap Declaration
+                        Class ParticleTrap Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

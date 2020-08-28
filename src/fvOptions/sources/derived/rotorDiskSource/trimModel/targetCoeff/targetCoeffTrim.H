@@ -82,7 +82,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class targetCoeffTrim Declaration
+                       Class targetCoeffTrim Declaration
 \*---------------------------------------------------------------------------*/
 
 class targetCoeffTrim

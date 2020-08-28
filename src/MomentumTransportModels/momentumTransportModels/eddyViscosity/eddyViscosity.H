@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class eddyViscosity Declaration
+                        Class eddyViscosity Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

@@ -52,7 +52,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-            Class fixedMultiPhaseHeatFluxFvPatchScalarField Declaration
+          Class fixedMultiPhaseHeatFluxFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class fixedMultiPhaseHeatFluxFvPatchScalarField

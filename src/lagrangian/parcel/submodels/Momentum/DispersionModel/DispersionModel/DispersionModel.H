@@ -42,7 +42,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class DispersionModel Declaration
+                       Class DispersionModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

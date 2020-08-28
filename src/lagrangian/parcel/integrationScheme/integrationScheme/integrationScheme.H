@@ -83,7 +83,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class integrationScheme Declaration
+                      Class integrationScheme Declaration
 \*---------------------------------------------------------------------------*/
 
 class integrationScheme

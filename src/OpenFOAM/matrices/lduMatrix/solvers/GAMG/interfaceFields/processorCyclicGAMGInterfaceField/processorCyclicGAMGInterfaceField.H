@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-               Class processorCyclicGAMGInterfaceField Declaration
+              Class processorCyclicGAMGInterfaceField Declaration
 \*---------------------------------------------------------------------------*/
 
 class processorCyclicGAMGInterfaceField

@@ -77,7 +77,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                           Class perfectGas Declaration
+                         Class perfectGas Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Specie>

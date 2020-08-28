@@ -52,7 +52,7 @@ namespace dragModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class segregated Declaration
+                         Class segregated Declaration
 \*---------------------------------------------------------------------------*/
 
 class segregated

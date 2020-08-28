@@ -45,7 +45,7 @@ namespace chemistryReductionMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class DRG Declaration
+                             Class DRG Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>

@@ -53,7 +53,7 @@ namespace swarmCorrections
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class TomiyamaSwarm Declaration
+                        Class TomiyamaSwarm Declaration
 \*---------------------------------------------------------------------------*/
 
 class TomiyamaSwarm

@@ -52,7 +52,7 @@ namespace dragModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class SyamlalOBrien Declaration
+                        Class SyamlalOBrien Declaration
 \*---------------------------------------------------------------------------*/
 
 class SyamlalOBrien

@@ -47,7 +47,7 @@ namespace viscosityModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class powerLaw Declaration
+                          Class powerLaw Declaration
 \*---------------------------------------------------------------------------*/
 
 class powerLaw

@@ -51,7 +51,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class laplaceFilter Declaration
+                        Class laplaceFilter Declaration
 \*---------------------------------------------------------------------------*/
 
 class laplaceFilter

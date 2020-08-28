@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ class sortLabelledTri;
 class triSurface;
 
 /*---------------------------------------------------------------------------*\
-                         Class surfAndLabel Declaration
+                        Class surfAndLabel Declaration
 \*---------------------------------------------------------------------------*/
 
 //- Hold surface and label
@@ -96,7 +96,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                           Class sortLabelledTri Declaration
+                       Class sortLabelledTri Declaration
 \*---------------------------------------------------------------------------*/
 
 class sortLabelledTri

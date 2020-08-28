@@ -49,7 +49,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                Class phaseChangeTwoPhaseMixture Declaration
+                 Class phaseChangeTwoPhaseMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 class phaseChangeTwoPhaseMixture

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,14 +72,14 @@ class polyMesh;
 class polyPatch;
 
 /*---------------------------------------------------------------------------*\
-                        Class PointEdgeWaveName Declaration
+                      Class PointEdgeWaveName Declaration
 \*---------------------------------------------------------------------------*/
 
 TemplateName(PointEdgeWave);
 
 
 /*---------------------------------------------------------------------------*\
-                           Class PointEdgeWave Declaration
+                        Class PointEdgeWave Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type, class TrackingData = int>

@@ -108,7 +108,7 @@ template<class T> class UIndirectList;
 
 
 /*---------------------------------------------------------------------------*\
-                           Class fvMatrix Declaration
+                          Class fvMatrix Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

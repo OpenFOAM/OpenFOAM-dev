@@ -59,7 +59,7 @@ namespace aspectRatioModels
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class Wellek Declaration
+                           Class Wellek Declaration
 \*---------------------------------------------------------------------------*/
 
 class Wellek

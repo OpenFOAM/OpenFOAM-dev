@@ -59,7 +59,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class tabulatedAccelerationSource Declaration
+                 Class tabulatedAccelerationSource Declaration
 \*---------------------------------------------------------------------------*/
 
 class tabulatedAccelerationSource

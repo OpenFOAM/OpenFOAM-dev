@@ -54,7 +54,7 @@ See also
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                           Class TAB Declaration
+                             Class TAB Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

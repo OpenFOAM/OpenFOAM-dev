@@ -46,7 +46,7 @@ namespace radialModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class CarnahanStarling Declaration
+                      Class CarnahanStarling Declaration
 \*---------------------------------------------------------------------------*/
 
 class CarnahanStarling

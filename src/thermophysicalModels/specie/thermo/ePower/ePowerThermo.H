@@ -86,7 +86,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                         Class ePowerThermo Declaration
+                        Class ePowerThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class EquationOfState>

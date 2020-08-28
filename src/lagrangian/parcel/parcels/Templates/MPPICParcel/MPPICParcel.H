@@ -65,14 +65,14 @@ Ostream& operator<<
 );
 
 /*---------------------------------------------------------------------------*\
-                    Class MPPICParcelName Declaration
+                       Class MPPICParcelName Declaration
 \*---------------------------------------------------------------------------*/
 
 TemplateName(MPPICParcel);
 
 
 /*---------------------------------------------------------------------------*\
-                       Class MPPICParcel Declaration
+                         Class MPPICParcel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ParcelType>

@@ -48,7 +48,7 @@ namespace turbulentDispersionModels
 {
 
 /*---------------------------------------------------------------------------*\
-            Class constantTurbulentDispersionCoefficient Declaration
+           Class constantTurbulentDispersionCoefficient Declaration
 \*---------------------------------------------------------------------------*/
 
 class constantTurbulentDispersionCoefficient

@@ -54,7 +54,7 @@ namespace TimeScaleModels
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class equilibrium Declaration
+                         Class equilibrium Declaration
 \*---------------------------------------------------------------------------*/
 
 class equilibrium

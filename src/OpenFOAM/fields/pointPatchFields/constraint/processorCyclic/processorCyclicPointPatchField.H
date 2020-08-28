@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class processorCyclicPointPatchField Declaration
+               Class processorCyclicPointPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

@@ -62,7 +62,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                   Class constAnIsoSolidTransport Declaration
+                  Class constAnIsoSolidTransport Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Thermo>

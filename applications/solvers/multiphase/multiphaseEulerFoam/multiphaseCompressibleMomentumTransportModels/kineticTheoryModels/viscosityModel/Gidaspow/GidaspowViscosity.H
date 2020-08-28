@@ -46,7 +46,7 @@ namespace viscosityModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Gidaspow Declaration
+                          Class Gidaspow Declaration
 \*---------------------------------------------------------------------------*/
 
 class Gidaspow

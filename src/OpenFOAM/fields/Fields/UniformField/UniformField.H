@@ -41,7 +41,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class UniformField Declaration
+                        Class UniformField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

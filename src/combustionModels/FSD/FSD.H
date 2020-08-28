@@ -74,7 +74,7 @@ namespace combustionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class FSD Declaration
+                             Class FSD Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>

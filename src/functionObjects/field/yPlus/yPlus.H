@@ -81,7 +81,7 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class yPlus Declaration
+                            Class yPlus Declaration
 \*---------------------------------------------------------------------------*/
 
 class yPlus

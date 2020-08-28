@@ -48,7 +48,7 @@ namespace wallBoilingModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class partitioningModel Declaration
+                      Class partitioningModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class partitioningModel

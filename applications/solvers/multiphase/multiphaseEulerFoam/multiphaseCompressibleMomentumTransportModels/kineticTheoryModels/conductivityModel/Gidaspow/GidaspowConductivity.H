@@ -46,7 +46,7 @@ namespace conductivityModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Gidaspow Declaration
+                          Class Gidaspow Declaration
 \*---------------------------------------------------------------------------*/
 
 class Gidaspow

@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class SinglePhaseMixture Declaration
+                     Class SinglePhaseMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

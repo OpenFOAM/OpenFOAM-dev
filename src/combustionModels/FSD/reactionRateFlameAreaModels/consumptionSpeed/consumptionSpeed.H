@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class consumptionSpeed Declaration
+                      Class consumptionSpeed Declaration
 \*---------------------------------------------------------------------------*/
 
 class consumptionSpeed

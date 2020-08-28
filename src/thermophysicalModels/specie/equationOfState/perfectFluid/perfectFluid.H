@@ -84,7 +84,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                           Class perfectFluid Declaration
+                        Class perfectFluid Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Specie>

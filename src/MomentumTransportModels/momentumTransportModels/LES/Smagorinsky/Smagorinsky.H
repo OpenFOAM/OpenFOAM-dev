@@ -80,7 +80,7 @@ namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Smagorinsky Declaration
+                         Class Smagorinsky Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

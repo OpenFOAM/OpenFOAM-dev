@@ -51,7 +51,7 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class totalEnthalpy Declaration
+                        Class totalEnthalpy Declaration
 \*---------------------------------------------------------------------------*/
 
 class totalEnthalpy

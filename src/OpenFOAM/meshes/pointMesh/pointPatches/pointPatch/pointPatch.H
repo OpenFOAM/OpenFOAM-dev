@@ -51,7 +51,7 @@ class pointConstraint;
 class PstreamBuffers;
 
 /*---------------------------------------------------------------------------*\
-                      Class pointPatch Declaration
+                         Class pointPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class pointPatch

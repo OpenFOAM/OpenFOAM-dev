@@ -45,7 +45,7 @@ namespace kineticTheoryModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class radialModel Declaration
+                         Class radialModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class radialModel

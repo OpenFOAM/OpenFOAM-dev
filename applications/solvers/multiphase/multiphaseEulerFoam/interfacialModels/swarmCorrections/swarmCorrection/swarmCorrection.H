@@ -47,7 +47,7 @@ namespace Foam
 class phasePair;
 
 /*---------------------------------------------------------------------------*\
-                           Class swarmCorrection Declaration
+                       Class swarmCorrection Declaration
 \*---------------------------------------------------------------------------*/
 
 class swarmCorrection

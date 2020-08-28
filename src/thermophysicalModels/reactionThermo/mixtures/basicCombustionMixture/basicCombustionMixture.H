@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class basicCombustionMixture Declaration
+                   Class basicCombustionMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 class basicCombustionMixture

@@ -91,14 +91,14 @@ class StochasticCollisionModel;
 
 
 /*---------------------------------------------------------------------------*\
-                    Class MomentumCloudName Declaration
+                      Class MomentumCloudName Declaration
 \*---------------------------------------------------------------------------*/
 
 TemplateName(MomentumCloud);
 
 
 /*---------------------------------------------------------------------------*\
-                       Class MomentumCloud Declaration
+                        Class MomentumCloud Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

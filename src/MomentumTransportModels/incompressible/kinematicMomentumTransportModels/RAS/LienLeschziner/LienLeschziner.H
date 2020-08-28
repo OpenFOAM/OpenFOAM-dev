@@ -67,7 +67,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class LienLeschziner Declaration
+                       Class LienLeschziner Declaration
 \*---------------------------------------------------------------------------*/
 
 class LienLeschziner

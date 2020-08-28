@@ -45,7 +45,7 @@ namespace diameterModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class constant Declaration
+                          Class constant Declaration
 \*---------------------------------------------------------------------------*/
 
 class constant

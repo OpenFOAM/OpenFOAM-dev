@@ -75,7 +75,7 @@ class localPointRegion;
 class snapParameters;
 
 /*---------------------------------------------------------------------------*\
-                           Class meshRefinement Declaration
+                       Class meshRefinement Declaration
 \*---------------------------------------------------------------------------*/
 
 class meshRefinement

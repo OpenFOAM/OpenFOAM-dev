@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class trimModel Declaration
+                          Class trimModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class trimModel

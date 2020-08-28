@@ -50,7 +50,7 @@ class polyPatch;
 class tetIndices;
 
 /*---------------------------------------------------------------------------*\
-                    Class CloudFunctionObject Declaration
+                     Class CloudFunctionObject Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

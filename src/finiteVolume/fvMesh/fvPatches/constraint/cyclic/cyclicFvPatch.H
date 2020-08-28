@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class cyclicFvPatch Declaration
+                        Class cyclicFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class cyclicFvPatch

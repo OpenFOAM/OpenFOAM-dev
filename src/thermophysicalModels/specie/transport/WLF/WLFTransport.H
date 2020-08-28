@@ -84,7 +84,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                    Class WLFTransport Declaration
+                        Class WLFTransport Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Thermo>

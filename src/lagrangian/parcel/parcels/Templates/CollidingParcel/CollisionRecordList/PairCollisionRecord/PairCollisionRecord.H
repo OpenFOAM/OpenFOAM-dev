@@ -78,7 +78,7 @@ Ostream& operator<<(Ostream&, const PairCollisionRecord<Type>&);
 
 
 /*---------------------------------------------------------------------------*\
-                         Class PairCollisionRecord Declaration
+                     Class PairCollisionRecord Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

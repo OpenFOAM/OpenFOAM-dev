@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class MPLICface Declaration
+                          Class MPLICface Declaration
 \*---------------------------------------------------------------------------*/
 
 class MPLICface

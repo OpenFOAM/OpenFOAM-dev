@@ -48,7 +48,7 @@ template<class ThermoType>
 class TDACChemistryModel;
 
 /*---------------------------------------------------------------------------*\
-                           Class chemistrySolver Declaration
+                       Class chemistrySolver Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>

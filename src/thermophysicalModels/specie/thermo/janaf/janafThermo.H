@@ -79,7 +79,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                           Class janafThermo Declaration
+                         Class janafThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class EquationOfState>

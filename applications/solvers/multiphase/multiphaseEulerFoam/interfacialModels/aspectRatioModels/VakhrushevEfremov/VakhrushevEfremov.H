@@ -53,7 +53,7 @@ namespace aspectRatioModels
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class VakhrushevEfremov Declaration
+                      Class VakhrushevEfremov Declaration
 \*---------------------------------------------------------------------------*/
 
 class VakhrushevEfremov

@@ -100,7 +100,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class dynamicAlphaContactAngleFvPatch Declaration
+               Class dynamicAlphaContactAngleFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class dynamicAlphaContactAngleFvPatchScalarField

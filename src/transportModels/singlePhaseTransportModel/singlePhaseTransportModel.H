@@ -50,7 +50,7 @@ namespace Foam
 class viscosityModel;
 
 /*---------------------------------------------------------------------------*\
-                Class singlePhaseTransportModel Declaration
+                  Class singlePhaseTransportModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class singlePhaseTransportModel

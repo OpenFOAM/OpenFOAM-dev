@@ -51,7 +51,7 @@ namespace chemistryTabulationMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class ISAT Declaration
+                            Class ISAT Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>

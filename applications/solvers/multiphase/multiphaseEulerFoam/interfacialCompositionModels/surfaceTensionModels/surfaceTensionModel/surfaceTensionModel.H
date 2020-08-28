@@ -47,7 +47,7 @@ namespace Foam
 class phasePair;
 
 /*---------------------------------------------------------------------------*\
-                           Class surfaceTensionModel Declaration
+                     Class surfaceTensionModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class surfaceTensionModel

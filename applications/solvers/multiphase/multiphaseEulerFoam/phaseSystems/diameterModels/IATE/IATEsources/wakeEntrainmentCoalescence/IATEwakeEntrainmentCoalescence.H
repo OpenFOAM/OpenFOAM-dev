@@ -54,7 +54,7 @@ namespace IATEsources
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class wakeEntrainmentCoalescence Declaration
+                 Class wakeEntrainmentCoalescence Declaration
 \*---------------------------------------------------------------------------*/
 
 class wakeEntrainmentCoalescence

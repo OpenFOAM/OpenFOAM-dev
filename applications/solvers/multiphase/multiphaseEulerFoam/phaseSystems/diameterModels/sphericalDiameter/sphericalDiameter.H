@@ -46,7 +46,7 @@ namespace diameterModels
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class spherical Declaration
+                          Class spherical Declaration
 \*---------------------------------------------------------------------------*/
 
 class spherical

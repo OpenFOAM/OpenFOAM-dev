@@ -61,7 +61,7 @@ Ostream& operator<<(Ostream&, const polyPatch&);
 
 
 /*---------------------------------------------------------------------------*\
-                           Class polyPatch Declaration
+                          Class polyPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class polyPatch

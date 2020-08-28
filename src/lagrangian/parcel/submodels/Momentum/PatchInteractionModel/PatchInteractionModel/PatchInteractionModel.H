@@ -50,7 +50,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class PatchInteractionModel Declaration
+                    Class PatchInteractionModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

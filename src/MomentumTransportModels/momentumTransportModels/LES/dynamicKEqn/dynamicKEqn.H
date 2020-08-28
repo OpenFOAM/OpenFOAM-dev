@@ -67,7 +67,7 @@ namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class dynamicKEqn Declaration
+                         Class dynamicKEqn Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

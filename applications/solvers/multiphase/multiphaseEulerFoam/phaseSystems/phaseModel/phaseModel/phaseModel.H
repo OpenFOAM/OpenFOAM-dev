@@ -50,7 +50,7 @@ class phaseSystem;
 class diameterModel;
 
 /*---------------------------------------------------------------------------*\
-                           Class phaseModel Declaration
+                         Class phaseModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class phaseModel

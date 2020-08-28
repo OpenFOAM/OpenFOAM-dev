@@ -58,7 +58,7 @@ namespace dragModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class AttouFerschneider Declaration
+                      Class AttouFerschneider Declaration
 \*---------------------------------------------------------------------------*/
 
 class AttouFerschneider

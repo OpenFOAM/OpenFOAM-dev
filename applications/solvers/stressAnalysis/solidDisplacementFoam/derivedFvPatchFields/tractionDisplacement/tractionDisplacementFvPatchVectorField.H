@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class tractionDisplacementFvPatch Declaration
+                 Class tractionDisplacementFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class tractionDisplacementFvPatchVectorField

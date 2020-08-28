@@ -47,7 +47,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class regionCoupledWallFvPatch Declaration
+                  Class regionCoupledWallFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class regionCoupledWallFvPatch

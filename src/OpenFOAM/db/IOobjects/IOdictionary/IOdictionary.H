@@ -48,7 +48,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class IOdictionary Declaration
+                        Class IOdictionary Declaration
 \*---------------------------------------------------------------------------*/
 
 class IOdictionary

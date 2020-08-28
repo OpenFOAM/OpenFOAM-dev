@@ -44,7 +44,7 @@ namespace DampingModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class NoDamping Declaration
+                          Class NoDamping Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

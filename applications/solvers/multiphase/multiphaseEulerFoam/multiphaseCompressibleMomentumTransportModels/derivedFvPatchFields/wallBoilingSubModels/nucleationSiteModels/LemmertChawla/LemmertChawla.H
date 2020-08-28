@@ -60,7 +60,7 @@ namespace nucleationSiteModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class LemmertChawla Declaration
+                        Class LemmertChawla Declaration
 \*---------------------------------------------------------------------------*/
 
 class LemmertChawla

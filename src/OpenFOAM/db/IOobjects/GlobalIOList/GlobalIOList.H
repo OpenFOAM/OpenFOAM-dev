@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class GlobalIOList Declaration
+                        Class GlobalIOList Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

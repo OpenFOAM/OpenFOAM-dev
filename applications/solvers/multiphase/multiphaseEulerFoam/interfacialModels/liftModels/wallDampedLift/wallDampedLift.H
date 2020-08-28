@@ -48,7 +48,7 @@ namespace liftModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class wallDamped Declaration
+                         Class wallDamped Declaration
 \*---------------------------------------------------------------------------*/
 
 class wallDamped

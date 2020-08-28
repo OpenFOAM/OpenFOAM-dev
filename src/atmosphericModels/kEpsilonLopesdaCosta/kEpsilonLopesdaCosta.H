@@ -71,7 +71,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class kEpsilonLopesdaCosta Declaration
+                    Class kEpsilonLopesdaCosta Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

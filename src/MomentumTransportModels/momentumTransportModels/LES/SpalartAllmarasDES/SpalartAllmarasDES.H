@@ -54,7 +54,7 @@ namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class SpalartAllmarasDES Declaration
+                     Class SpalartAllmarasDES Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

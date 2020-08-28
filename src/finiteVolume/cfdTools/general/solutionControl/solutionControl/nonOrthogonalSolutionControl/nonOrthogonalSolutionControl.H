@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class nonOrthogonalSolutionControl Declaration
+                Class nonOrthogonalSolutionControl Declaration
 \*---------------------------------------------------------------------------*/
 
 class nonOrthogonalSolutionControl

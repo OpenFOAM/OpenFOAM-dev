@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class regionCoupledBaseGAMGInterface Declaration
+               Class regionCoupledBaseGAMGInterface Declaration
 \*---------------------------------------------------------------------------*/
 
 class regionCoupledBaseGAMGInterface

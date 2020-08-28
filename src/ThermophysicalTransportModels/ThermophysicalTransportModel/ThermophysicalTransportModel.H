@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-               Class ThermophysicalTransportModel Declaration
+                Class ThermophysicalTransportModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class MomentumTransportModel, class ThermoModel>

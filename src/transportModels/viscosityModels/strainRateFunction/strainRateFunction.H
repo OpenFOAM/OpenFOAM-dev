@@ -61,7 +61,7 @@ namespace viscosityModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class strainRateFunction Declaration
+                     Class strainRateFunction Declaration
 \*---------------------------------------------------------------------------*/
 
 class strainRateFunction

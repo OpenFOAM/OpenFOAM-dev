@@ -40,7 +40,7 @@ Description
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                 Class ConstantRateDevolatilisation Declaration
+                Class ConstantRateDevolatilisation Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

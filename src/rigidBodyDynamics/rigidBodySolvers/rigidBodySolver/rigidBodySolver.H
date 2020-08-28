@@ -46,7 +46,7 @@ namespace RBD
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class rigidBodySolver Declaration
+                       Class rigidBodySolver Declaration
 \*---------------------------------------------------------------------------*/
 
 class rigidBodySolver

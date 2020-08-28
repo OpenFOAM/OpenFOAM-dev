@@ -54,7 +54,7 @@ namespace interfaceCompositionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class nonRandomTwoLiquid Declaration
+                     Class nonRandomTwoLiquid Declaration
 \*---------------------------------------------------------------------------*/
 
 class nonRandomTwoLiquid

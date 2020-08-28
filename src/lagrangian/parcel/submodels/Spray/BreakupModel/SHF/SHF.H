@@ -48,7 +48,7 @@ Description
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                            Class SHF Declaration
+                             Class SHF Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

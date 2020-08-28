@@ -71,7 +71,7 @@ namespace functionEntries
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class inputSyntaxEntry Declaration
+                      Class inputSyntaxEntry Declaration
 \*---------------------------------------------------------------------------*/
 
 class inputSyntaxEntry

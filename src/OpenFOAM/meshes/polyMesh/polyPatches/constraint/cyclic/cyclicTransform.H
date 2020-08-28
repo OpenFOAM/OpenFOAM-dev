@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class cyclicTransform Declaration
+                       Class cyclicTransform Declaration
 \*---------------------------------------------------------------------------*/
 
 class cyclicTransform

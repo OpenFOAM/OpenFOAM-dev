@@ -47,7 +47,7 @@ namespace viscosityModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Newtonian Declaration
+                          Class Newtonian Declaration
 \*---------------------------------------------------------------------------*/
 
 class Newtonian

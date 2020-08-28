@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ template<class T, class BaseType> Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                           Class ListCompactIO Declaration
+                        Class ListCompactIO Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class T, class BaseType>

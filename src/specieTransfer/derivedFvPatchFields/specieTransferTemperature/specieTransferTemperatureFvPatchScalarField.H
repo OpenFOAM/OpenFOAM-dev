@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-       Class specieTransferTemperatureFvPatchScalarField Declaration
+         Class specieTransferTemperatureFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class specieTransferTemperatureFvPatchScalarField

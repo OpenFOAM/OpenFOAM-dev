@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class RASModel Declaration
+                          Class RASModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

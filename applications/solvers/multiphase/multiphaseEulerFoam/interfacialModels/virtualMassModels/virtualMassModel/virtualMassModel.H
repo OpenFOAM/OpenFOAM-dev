@@ -47,7 +47,7 @@ namespace Foam
 class phasePair;
 
 /*---------------------------------------------------------------------------*\
-                         Class virtualMassModel Declaration
+                      Class virtualMassModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class virtualMassModel

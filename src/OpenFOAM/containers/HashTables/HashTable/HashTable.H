@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ Ostream& operator<<(Ostream&, const HashTable<T, Key, Hash>&);
 
 
 /*---------------------------------------------------------------------------*\
-                         Class HashTableCore Declaration
+                        Class HashTableCore Declaration
 \*---------------------------------------------------------------------------*/
 
 //- Template-invariant bits for HashTable
@@ -118,7 +118,7 @@ struct HashTableCore
 
 
 /*---------------------------------------------------------------------------*\
-                           Class HashTable Declaration
+                          Class HashTable Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class T, class Key=word, class Hash=string::hash>

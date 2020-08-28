@@ -58,7 +58,7 @@ Ostream& operator<<(Ostream&, const WallSiteData<Type>&);
 
 
 /*---------------------------------------------------------------------------*\
-                         Class WallSiteData Declaration
+                        Class WallSiteData Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

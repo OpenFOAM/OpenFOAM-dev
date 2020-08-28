@@ -52,7 +52,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class RelativeVelocity Declaration
+                      Class RelativeVelocity Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

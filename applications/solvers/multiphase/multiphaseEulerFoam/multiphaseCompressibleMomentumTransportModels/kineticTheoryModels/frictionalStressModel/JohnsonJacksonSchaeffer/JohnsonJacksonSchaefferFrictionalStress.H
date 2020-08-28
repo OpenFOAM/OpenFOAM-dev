@@ -46,7 +46,7 @@ namespace frictionalStressModels
 {
 
 /*---------------------------------------------------------------------------*\
-               Class JohnsonJacksonSchaeffer Declaration
+                   Class JohnsonJacksonSchaeffer Declaration
 \*---------------------------------------------------------------------------*/
 
 class JohnsonJacksonSchaeffer

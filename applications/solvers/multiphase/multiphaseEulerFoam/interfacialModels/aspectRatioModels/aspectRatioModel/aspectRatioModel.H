@@ -47,7 +47,7 @@ namespace Foam
 class phasePair;
 
 /*---------------------------------------------------------------------------*\
-                           Class aspectRatioModel Declaration
+                      Class aspectRatioModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class aspectRatioModel

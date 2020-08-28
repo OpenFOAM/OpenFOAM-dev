@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-               Class PhaseCompressibleMomentumTransportModel Declaration
+           Class PhaseCompressibleMomentumTransportModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class TransportModel>

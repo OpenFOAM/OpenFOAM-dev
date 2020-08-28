@@ -69,7 +69,7 @@ namespace sampledSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class thresholdCellFaces Declaration
+                     Class thresholdCellFaces Declaration
 \*---------------------------------------------------------------------------*/
 
 class thresholdCellFaces

@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class diameterModel Declaration
+                        Class diameterModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class diameterModel

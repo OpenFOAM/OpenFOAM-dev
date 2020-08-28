@@ -155,7 +155,7 @@ Ostream& operator<<(Ostream&, const mapDistribute&);
 
 
 /*---------------------------------------------------------------------------*\
-                           Class mapDistribute Declaration
+                        Class mapDistribute Declaration
 \*---------------------------------------------------------------------------*/
 
 class mapDistribute

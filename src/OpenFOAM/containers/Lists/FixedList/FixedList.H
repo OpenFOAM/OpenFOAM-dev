@@ -71,7 +71,7 @@ template<class T>
 using SLList = LList<SLListBase, T>;
 
 /*---------------------------------------------------------------------------*\
-                           Class FixedList Declaration
+                          Class FixedList Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class T, unsigned Size>

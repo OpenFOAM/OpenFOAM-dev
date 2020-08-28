@@ -46,7 +46,7 @@ namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class LESeddyViscosity Declaration
+                      Class LESeddyViscosity Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

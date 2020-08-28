@@ -79,7 +79,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                    Class incompressiblePerfectGas Declaration
+                  Class incompressiblePerfectGas Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Specie>

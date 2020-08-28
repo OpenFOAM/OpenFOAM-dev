@@ -44,7 +44,7 @@ namespace kineticTheoryModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class noneViscosity Declaration
+                        Class noneViscosity Declaration
 \*---------------------------------------------------------------------------*/
 
 class noneViscosity

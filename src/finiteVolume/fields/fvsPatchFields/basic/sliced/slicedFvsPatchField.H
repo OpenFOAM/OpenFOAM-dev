@@ -49,7 +49,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class slicedFvsPatch Declaration
+                       Class slicedFvsPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

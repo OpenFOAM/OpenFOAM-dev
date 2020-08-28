@@ -53,7 +53,7 @@ template<class Type> class Field;
 template<class Type> class SubField;
 
 /*---------------------------------------------------------------------------*\
-                           Class SubField Declaration
+                          Class SubField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

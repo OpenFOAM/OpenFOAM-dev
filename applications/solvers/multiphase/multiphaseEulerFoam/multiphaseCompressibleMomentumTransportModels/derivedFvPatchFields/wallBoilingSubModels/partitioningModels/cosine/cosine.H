@@ -59,7 +59,7 @@ namespace partitioningModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class cosine Declaration
+                           Class cosine Declaration
 \*---------------------------------------------------------------------------*/
 
 class cosine

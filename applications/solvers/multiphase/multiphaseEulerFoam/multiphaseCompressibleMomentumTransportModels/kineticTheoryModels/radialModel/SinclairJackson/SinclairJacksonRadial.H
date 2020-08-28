@@ -46,7 +46,7 @@ namespace radialModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class SinclairJackson Declaration
+                       Class SinclairJackson Declaration
 \*---------------------------------------------------------------------------*/
 
 class SinclairJackson

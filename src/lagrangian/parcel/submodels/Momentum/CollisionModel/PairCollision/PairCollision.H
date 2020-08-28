@@ -53,7 +53,7 @@ class WallModel;
 
 
 /*---------------------------------------------------------------------------*\
-                     Class PairCollision Declaration
+                        Class PairCollision Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

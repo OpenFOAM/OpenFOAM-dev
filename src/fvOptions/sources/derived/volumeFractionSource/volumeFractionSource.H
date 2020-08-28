@@ -83,7 +83,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class volumeFractionSource Declaration
+                    Class volumeFractionSource Declaration
 \*---------------------------------------------------------------------------*/
 
 class volumeFractionSource

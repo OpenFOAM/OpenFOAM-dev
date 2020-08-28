@@ -62,7 +62,7 @@ class GeometricField;
 class face;
 
 /*---------------------------------------------------------------------------*\
-                           Class pointMVCWeight Declaration
+                       Class pointMVCWeight Declaration
 \*---------------------------------------------------------------------------*/
 
 class pointMVCWeight

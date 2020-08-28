@@ -51,7 +51,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class moleculeCloud Declaration
+                        Class moleculeCloud Declaration
 \*---------------------------------------------------------------------------*/
 
 class moleculeCloud

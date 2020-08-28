@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-              Class threePhaseInterfaceProperties Declaration
+                Class threePhaseInterfaceProperties Declaration
 \*---------------------------------------------------------------------------*/
 
 class threePhaseInterfaceProperties

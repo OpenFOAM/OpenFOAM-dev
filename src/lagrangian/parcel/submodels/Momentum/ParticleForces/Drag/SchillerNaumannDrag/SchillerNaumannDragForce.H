@@ -47,7 +47,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class SchillerNaumannDragForce Declaration
+                  Class SchillerNaumannDragForce Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

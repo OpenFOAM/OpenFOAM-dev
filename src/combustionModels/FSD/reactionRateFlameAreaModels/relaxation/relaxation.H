@@ -46,7 +46,7 @@ namespace reactionRateFlameAreaModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class relaxation Declaration
+                         Class relaxation Declaration
 \*---------------------------------------------------------------------------*/
 
 class relaxation

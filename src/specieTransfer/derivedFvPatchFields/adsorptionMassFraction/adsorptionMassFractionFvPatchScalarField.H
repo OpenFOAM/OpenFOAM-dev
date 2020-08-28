@@ -94,7 +94,7 @@ namespace Foam
 class basicSpecieMixture;
 
 /*---------------------------------------------------------------------------*\
-      Class adsorptionMassFractionFvPatchScalarField Declaration
+          Class adsorptionMassFractionFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class adsorptionMassFractionFvPatchScalarField

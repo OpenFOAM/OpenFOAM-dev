@@ -106,7 +106,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class kOmegaSST Declaration
+                          Class kOmegaSST Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class MomentumTransportModel, class BasicMomentumTransportModel>

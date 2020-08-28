@@ -62,7 +62,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-               Class meanVelocityForce Declaration
+                      Class meanVelocityForce Declaration
 \*---------------------------------------------------------------------------*/
 
 class meanVelocityForce

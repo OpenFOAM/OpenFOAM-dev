@@ -48,7 +48,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class ErgunWenYuDragForce Declaration
+                     Class ErgunWenYuDragForce Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

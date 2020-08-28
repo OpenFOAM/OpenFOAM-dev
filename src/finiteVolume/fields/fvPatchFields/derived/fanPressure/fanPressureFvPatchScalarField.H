@@ -104,7 +104,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-              Class fanPressureFvPatchScalarField Declaration
+                Class fanPressureFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class fanPressureFvPatchScalarField

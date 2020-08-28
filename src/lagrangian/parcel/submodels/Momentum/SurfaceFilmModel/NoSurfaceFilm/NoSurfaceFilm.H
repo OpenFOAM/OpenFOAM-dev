@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class NoSurfaceFilm Declaration
+                        Class NoSurfaceFilm Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

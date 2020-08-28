@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class PatchPostProcessing Declaration
+                     Class PatchPostProcessing Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

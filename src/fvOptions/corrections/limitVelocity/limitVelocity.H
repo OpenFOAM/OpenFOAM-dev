@@ -58,7 +58,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class limitVelocity Declaration
+                        Class limitVelocity Declaration
 \*---------------------------------------------------------------------------*/
 
 class limitVelocity

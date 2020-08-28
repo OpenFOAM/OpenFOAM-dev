@@ -54,7 +54,7 @@ namespace AveragingMethods
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class Basic Declaration
+                            Class Basic Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

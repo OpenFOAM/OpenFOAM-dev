@@ -39,7 +39,7 @@ Description
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                       Class NoBreakup Declaration
+                          Class NoBreakup Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

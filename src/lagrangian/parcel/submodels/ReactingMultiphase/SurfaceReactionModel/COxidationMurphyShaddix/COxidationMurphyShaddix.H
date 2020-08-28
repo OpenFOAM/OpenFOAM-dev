@@ -49,7 +49,7 @@ template<class CloudType>
 class COxidationMurphyShaddix;
 
 /*---------------------------------------------------------------------------*\
-                  Class COxidationMurphyShaddix Declaration
+                   Class COxidationMurphyShaddix Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

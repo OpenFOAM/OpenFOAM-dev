@@ -64,7 +64,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class cellSetOption Declaration
+                        Class cellSetOption Declaration
 \*---------------------------------------------------------------------------*/
 
 class cellSetOption

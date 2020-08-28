@@ -45,7 +45,7 @@ namespace kineticTheoryModels
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class conductivityModel Declaration
+                      Class conductivityModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class conductivityModel

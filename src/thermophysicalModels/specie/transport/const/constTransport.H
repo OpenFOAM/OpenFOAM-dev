@@ -70,7 +70,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                           Class constTransport Declaration
+                       Class constTransport Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Thermo>

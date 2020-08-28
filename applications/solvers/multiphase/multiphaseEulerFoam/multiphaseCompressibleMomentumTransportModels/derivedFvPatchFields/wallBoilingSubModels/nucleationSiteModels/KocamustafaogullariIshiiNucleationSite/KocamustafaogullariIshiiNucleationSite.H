@@ -55,7 +55,7 @@ namespace nucleationSiteModels
 {
 
 /*---------------------------------------------------------------------------*\
-            Class KocamustafaogullariIshiiNucleationSite Declaration
+           Class KocamustafaogullariIshiiNucleationSite Declaration
 \*---------------------------------------------------------------------------*/
 
 class KocamustafaogullariIshiiNucleationSite

@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class sixDoFSolver Declaration
+                        Class sixDoFSolver Declaration
 \*---------------------------------------------------------------------------*/
 
 class sixDoFSolver

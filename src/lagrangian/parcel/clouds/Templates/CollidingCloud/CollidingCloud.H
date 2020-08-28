@@ -55,7 +55,7 @@ class CollisionModel;
 
 
 /*---------------------------------------------------------------------------*\
-                    Class CollidingCloudName Declaration
+                     Class CollidingCloudName Declaration
 \*---------------------------------------------------------------------------*/
 
 TemplateName(CollidingCloud);

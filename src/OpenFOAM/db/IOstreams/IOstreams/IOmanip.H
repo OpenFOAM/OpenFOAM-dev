@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,7 @@ inline Ostream& operator<<(Ostream& os, const Omanip<T>& m);
 
 
 /*---------------------------------------------------------------------------*\
-                        Class Smanip Declaration
+                           Class Smanip Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class T>
@@ -99,7 +99,7 @@ inline Ostream& operator<<(Ostream& os, const Smanip<T>& m)
 
 
 /*---------------------------------------------------------------------------*\
-                        Class Imanip Declaration
+                           Class Imanip Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class T>
@@ -129,7 +129,7 @@ inline Istream& operator>>(Istream& is, const Imanip<T>& m)
 
 
 /*---------------------------------------------------------------------------*\
-                        Class Omanip Declaration
+                           Class Omanip Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class T>

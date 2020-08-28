@@ -52,7 +52,7 @@ namespace Foam
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                           Class momentumTransportModel Declaration
+                   Class momentumTransportModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class momentumTransportModel

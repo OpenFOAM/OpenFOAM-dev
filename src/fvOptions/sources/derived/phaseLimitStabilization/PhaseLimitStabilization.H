@@ -67,7 +67,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                Class PhaseLimitStabilization Declaration
+                   Class PhaseLimitStabilization Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

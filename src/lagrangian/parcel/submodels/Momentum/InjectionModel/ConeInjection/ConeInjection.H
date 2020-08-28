@@ -150,7 +150,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class ConeInjection Declaration
+                        Class ConeInjection Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

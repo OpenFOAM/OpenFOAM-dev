@@ -50,7 +50,7 @@ namespace Foam
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                           Class solidParticleCloud Declaration
+                     Class solidParticleCloud Declaration
 \*---------------------------------------------------------------------------*/
 
 class solidParticleCloud

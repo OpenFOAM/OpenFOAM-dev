@@ -52,7 +52,7 @@ namespace saturationModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class Antoine Declaration
+                           Class Antoine Declaration
 \*---------------------------------------------------------------------------*/
 
 class Antoine

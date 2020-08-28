@@ -41,7 +41,7 @@ Description
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                    Class PairSpringSliderDashpot Declaration
+                   Class PairSpringSliderDashpot Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

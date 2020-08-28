@@ -55,7 +55,7 @@ namespace Foam
 
 
 /*---------------------------------------------------------------------------*\
-                     Class vtkPVFoamReader Declaration
+                       Class vtkPVFoamReader Declaration
 \*---------------------------------------------------------------------------*/
 
 class vtkPVFoamReader

@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class localIOdictionary Declaration
+                      Class localIOdictionary Declaration
 \*---------------------------------------------------------------------------*/
 
 class localIOdictionary

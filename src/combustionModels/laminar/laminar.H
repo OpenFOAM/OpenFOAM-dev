@@ -45,7 +45,7 @@ namespace combustionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class laminar Declaration
+                           Class laminar Declaration
 \*---------------------------------------------------------------------------*/
 
 class laminar

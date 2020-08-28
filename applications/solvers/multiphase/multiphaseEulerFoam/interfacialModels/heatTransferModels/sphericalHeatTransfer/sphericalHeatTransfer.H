@@ -46,7 +46,7 @@ namespace heatTransferModels
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class sphericalHeatTransfer Declaration
+                    Class sphericalHeatTransfer Declaration
 \*---------------------------------------------------------------------------*/
 
 class sphericalHeatTransfer

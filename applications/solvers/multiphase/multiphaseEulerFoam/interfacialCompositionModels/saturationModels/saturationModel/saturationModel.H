@@ -47,7 +47,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class saturationModel Declaration
+                       Class saturationModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class saturationModel

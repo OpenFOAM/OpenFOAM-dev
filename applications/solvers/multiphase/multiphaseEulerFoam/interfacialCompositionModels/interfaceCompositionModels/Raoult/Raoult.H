@@ -50,7 +50,7 @@ namespace interfaceCompositionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class Raoult Declaration
+                           Class Raoult Declaration
 \*---------------------------------------------------------------------------*/
 
 class Raoult

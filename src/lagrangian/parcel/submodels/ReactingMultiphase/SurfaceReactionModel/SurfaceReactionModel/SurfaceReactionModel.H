@@ -48,7 +48,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class SurfaceReactionModel Declaration
+                    Class SurfaceReactionModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

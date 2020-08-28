@@ -58,7 +58,7 @@ namespace turbulenceThermophysicalTransportModels
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class nonUnityLewisEddyDiffusivity Declaration
+                Class nonUnityLewisEddyDiffusivity Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class TurbulenceThermophysicalTransportModel>

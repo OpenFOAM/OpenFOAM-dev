@@ -57,7 +57,7 @@ namespace laminarModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Giesekus Declaration
+                          Class Giesekus Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

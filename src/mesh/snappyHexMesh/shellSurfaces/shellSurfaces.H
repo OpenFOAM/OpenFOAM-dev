@@ -48,7 +48,7 @@ namespace Foam
 class searchableSurfaces;
 
 /*---------------------------------------------------------------------------*\
-                           Class shellSurfaces Declaration
+                        Class shellSurfaces Declaration
 \*---------------------------------------------------------------------------*/
 
 class shellSurfaces

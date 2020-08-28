@@ -134,7 +134,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                           Class meshObject Declaration
+                         Class meshObject Declaration
 \*---------------------------------------------------------------------------*/
 
 class meshObject
@@ -210,7 +210,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                    Class GeometricMeshObject Declaration
+                     Class GeometricMeshObject Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Mesh>
@@ -233,7 +233,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                    Class MoveableMeshObject Declaration
+                     Class MoveableMeshObject Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Mesh>
@@ -283,7 +283,7 @@ public:
 
 
 /*---------------------------------------------------------------------------*\
-                    Class PatchMeshObject Declaration
+                       Class PatchMeshObject Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Mesh>

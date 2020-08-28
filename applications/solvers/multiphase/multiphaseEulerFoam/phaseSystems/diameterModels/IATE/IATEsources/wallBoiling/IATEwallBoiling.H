@@ -47,7 +47,7 @@ namespace IATEsources
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class wallBoiling Declaration
+                         Class wallBoiling Declaration
 \*---------------------------------------------------------------------------*/
 
 class wallBoiling

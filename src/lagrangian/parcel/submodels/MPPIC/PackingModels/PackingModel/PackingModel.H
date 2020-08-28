@@ -56,7 +56,7 @@ template<class Type>
 class AveragingMethod;
 
 /*---------------------------------------------------------------------------*\
-                         Class PackingModel Declaration
+                        Class PackingModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

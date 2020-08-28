@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class regionCoupledPolyPatch Declaration
+                   Class regionCoupledPolyPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class regionCoupledPolyPatch

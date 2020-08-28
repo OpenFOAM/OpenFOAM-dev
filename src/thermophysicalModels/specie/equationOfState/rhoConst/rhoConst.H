@@ -77,7 +77,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                        Class rhoConst Declaration
+                          Class rhoConst Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Specie>

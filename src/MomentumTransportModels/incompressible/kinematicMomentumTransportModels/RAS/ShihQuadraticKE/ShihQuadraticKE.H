@@ -61,7 +61,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class ShihQuadraticKE Declaration
+                       Class ShihQuadraticKE Declaration
 \*---------------------------------------------------------------------------*/
 
 class ShihQuadraticKE

@@ -55,7 +55,7 @@ namespace departureFrequencyModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class Cole Declaration
+                            Class Cole Declaration
 \*---------------------------------------------------------------------------*/
 
 class Cole

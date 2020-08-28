@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class combustionModel Declaration
+                       Class combustionModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class combustionModel

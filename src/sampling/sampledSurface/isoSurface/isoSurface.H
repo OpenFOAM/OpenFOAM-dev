@@ -66,7 +66,7 @@ class polyMesh;
 class tetMatcher;
 
 /*---------------------------------------------------------------------------*\
-                       Class isoSurface Declaration
+                         Class isoSurface Declaration
 \*---------------------------------------------------------------------------*/
 
 class isoSurface

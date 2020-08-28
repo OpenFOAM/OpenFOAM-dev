@@ -75,7 +75,7 @@ namespace sampledSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class cuttingPlane Declaration
+                        Class cuttingPlane Declaration
 \*---------------------------------------------------------------------------*/
 
 class cuttingPlane

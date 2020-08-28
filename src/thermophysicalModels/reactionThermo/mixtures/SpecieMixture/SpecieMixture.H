@@ -49,7 +49,7 @@ class fvMesh;
 
 
 /*---------------------------------------------------------------------------*\
-                     Class SpecieMixture Declaration
+                        Class SpecieMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class MixtureType>

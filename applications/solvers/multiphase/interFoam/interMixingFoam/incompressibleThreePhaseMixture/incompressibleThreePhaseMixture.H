@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class incompressibleThreePhaseMixture Declaration
+               Class incompressibleThreePhaseMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 class incompressibleThreePhaseMixture

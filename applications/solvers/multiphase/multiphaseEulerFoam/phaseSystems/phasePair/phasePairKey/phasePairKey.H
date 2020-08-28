@@ -52,7 +52,7 @@ Ostream& operator<<(Ostream&, const phasePairKey&);
 
 
 /*---------------------------------------------------------------------------*\
-                         Class phasePairKey Declaration
+                        Class phasePairKey Declaration
 \*---------------------------------------------------------------------------*/
 
 class phasePairKey

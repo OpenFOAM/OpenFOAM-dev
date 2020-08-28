@@ -56,7 +56,7 @@ Ostream& operator<<(Ostream&, const trackedParticle&);
 
 
 /*---------------------------------------------------------------------------*\
-                     Class trackedParticle Declaration
+                       Class trackedParticle Declaration
 \*---------------------------------------------------------------------------*/
 
 class trackedParticle

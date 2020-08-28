@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class passiveParticleCloud Declaration
+                    Class passiveParticleCloud Declaration
 \*---------------------------------------------------------------------------*/
 
 class passiveParticleCloud

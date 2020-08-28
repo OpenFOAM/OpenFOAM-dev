@@ -61,7 +61,7 @@ namespace diameterModels
 class IATEsource;
 
 /*---------------------------------------------------------------------------*\
-                           Class IATE Declaration
+                            Class IATE Declaration
 \*---------------------------------------------------------------------------*/
 
 class IATE

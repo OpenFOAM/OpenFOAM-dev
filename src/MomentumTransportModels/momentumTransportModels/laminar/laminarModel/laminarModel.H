@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class laminarModel Declaration
+                        Class laminarModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

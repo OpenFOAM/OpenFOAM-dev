@@ -42,7 +42,7 @@ namespace thermophysicalFunctions
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class none Declaration
+                            Class none Declaration
 \*---------------------------------------------------------------------------*/
 
 class none

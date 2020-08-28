@@ -41,7 +41,7 @@ Description
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                     Class LiquidEvaporation Declaration
+                      Class LiquidEvaporation Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

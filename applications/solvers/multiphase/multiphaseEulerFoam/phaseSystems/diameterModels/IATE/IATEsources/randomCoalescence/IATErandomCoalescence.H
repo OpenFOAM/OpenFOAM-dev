@@ -55,7 +55,7 @@ namespace IATEsources
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class randomCoalescence Declaration
+                      Class randomCoalescence Declaration
 \*---------------------------------------------------------------------------*/
 
 class randomCoalescence

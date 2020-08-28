@@ -45,7 +45,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class processorLduInterfaceField Declaration
+                 Class processorLduInterfaceField Declaration
 \*---------------------------------------------------------------------------*/
 
 class processorLduInterfaceField

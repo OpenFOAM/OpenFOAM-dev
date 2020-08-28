@@ -49,7 +49,7 @@ namespace phaseTransferModels
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class deposition Declaration
+                         Class deposition Declaration
 \*---------------------------------------------------------------------------*/
 
 class deposition

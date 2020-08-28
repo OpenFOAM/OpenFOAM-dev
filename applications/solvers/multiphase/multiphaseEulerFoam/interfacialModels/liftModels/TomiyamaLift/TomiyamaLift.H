@@ -59,7 +59,7 @@ namespace liftModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class TomiyamaLift Declaration
+                        Class TomiyamaLift Declaration
 \*---------------------------------------------------------------------------*/
 
 class TomiyamaLift

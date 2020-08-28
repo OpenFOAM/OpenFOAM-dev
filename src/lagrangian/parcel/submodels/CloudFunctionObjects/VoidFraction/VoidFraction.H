@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class VoidFraction Declaration
+                        Class VoidFraction Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

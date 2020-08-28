@@ -87,7 +87,7 @@ class Time;
 class objectRegistry;
 
 /*---------------------------------------------------------------------------*\
-                           Class IOobject Declaration
+                          Class IOobject Declaration
 \*---------------------------------------------------------------------------*/
 
 class IOobject

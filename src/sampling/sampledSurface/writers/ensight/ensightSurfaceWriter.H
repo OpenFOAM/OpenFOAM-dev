@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class ensightSurfaceWriter Declaration
+                    Class ensightSurfaceWriter Declaration
 \*---------------------------------------------------------------------------*/
 
 class ensightSurfaceWriter

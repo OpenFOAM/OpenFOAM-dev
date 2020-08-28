@@ -46,7 +46,7 @@ namespace frictionalStressModels
 {
 
 /*---------------------------------------------------------------------------*\
-               Class JohnsonJackson Declaration
+                       Class JohnsonJackson Declaration
 \*---------------------------------------------------------------------------*/
 
 class JohnsonJackson

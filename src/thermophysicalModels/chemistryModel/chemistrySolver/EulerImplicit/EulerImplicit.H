@@ -49,7 +49,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class EulerImplicit Declaration
+                        Class EulerImplicit Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ChemistryModel>

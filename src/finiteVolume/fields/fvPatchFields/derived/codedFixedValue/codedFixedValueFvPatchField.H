@@ -89,7 +89,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-              Class codedFixedValueFvPatchFieldBase Declaration
+               Class codedFixedValueFvPatchFieldBase Declaration
 \*---------------------------------------------------------------------------*/
 
 class codedFixedValueFvPatchFieldBase

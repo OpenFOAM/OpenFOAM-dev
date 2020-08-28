@@ -57,7 +57,7 @@ typedef Tuple2<Pair<vector>, Pair<scalar>> vectorPairScalarPair;
 
 
 /*---------------------------------------------------------------------------*\
-                      Class InflationInjection Declaration
+                     Class InflationInjection Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

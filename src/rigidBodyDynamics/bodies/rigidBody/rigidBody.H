@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,7 @@ inline Ostream& operator<<(Ostream&, const rigidBody&);
 
 
 /*---------------------------------------------------------------------------*\
-                         Class rigidBody Declaration
+                          Class rigidBody Declaration
 \*---------------------------------------------------------------------------*/
 
 class rigidBody

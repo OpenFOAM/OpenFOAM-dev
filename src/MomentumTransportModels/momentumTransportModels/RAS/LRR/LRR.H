@@ -91,7 +91,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class LRR Declaration
+                             Class LRR Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

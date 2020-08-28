@@ -68,7 +68,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class ThermalPhaseChangePhaseSystem Declaration
+                Class ThermalPhaseChangePhaseSystem Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasePhaseSystem>

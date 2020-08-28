@@ -53,7 +53,7 @@ namespace interfaceCompositionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class Henry Declaration
+                            Class Henry Declaration
 \*---------------------------------------------------------------------------*/
 
 class Henry

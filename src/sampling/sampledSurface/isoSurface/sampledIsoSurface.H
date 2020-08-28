@@ -71,7 +71,7 @@ namespace sampledSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class isoSurface Declaration
+                         Class isoSurface Declaration
 \*---------------------------------------------------------------------------*/
 
 class isoSurface

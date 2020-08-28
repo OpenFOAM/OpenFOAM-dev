@@ -46,7 +46,7 @@ namespace granularPressureModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Lun Declaration
+                             Class Lun Declaration
 \*---------------------------------------------------------------------------*/
 
 class Lun

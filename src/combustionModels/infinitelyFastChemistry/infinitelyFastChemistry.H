@@ -47,7 +47,7 @@ namespace combustionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class infinitelyFastChemistry Declaration
+                   Class infinitelyFastChemistry Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>

@@ -47,7 +47,7 @@ namespace Foam
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                       Class ParamagneticForce Declaration
+                      Class ParamagneticForce Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

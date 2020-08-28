@@ -57,7 +57,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class FieldActivatedInjection Declaration
+                   Class FieldActivatedInjection Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

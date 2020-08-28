@@ -69,7 +69,7 @@ namespace sampledSurfaces
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class plane Declaration
+                            Class plane Declaration
 \*---------------------------------------------------------------------------*/
 
 class plane

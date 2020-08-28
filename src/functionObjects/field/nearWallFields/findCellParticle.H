@@ -55,7 +55,7 @@ Ostream& operator<<(Ostream&, const findCellParticle&);
 
 
 /*---------------------------------------------------------------------------*\
-                     Class findCellParticle Declaration
+                      Class findCellParticle Declaration
 \*---------------------------------------------------------------------------*/
 
 class findCellParticle

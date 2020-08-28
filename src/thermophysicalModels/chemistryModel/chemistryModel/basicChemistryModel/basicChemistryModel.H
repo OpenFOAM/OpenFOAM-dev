@@ -47,7 +47,7 @@ namespace Foam
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                   class basicChemistryModel Declaration
+                     class basicChemistryModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class basicChemistryModel

@@ -78,7 +78,7 @@ namespace daughterSizeDistributionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class LaakkonenAlopaeusAittamaaDsd Declaration
+                Class LaakkonenAlopaeusAittamaaDsd Declaration
 \*---------------------------------------------------------------------------*/
 
 class LaakkonenAlopaeusAittamaaDsd

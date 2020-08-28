@@ -86,7 +86,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class SSG Declaration
+                             Class SSG Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

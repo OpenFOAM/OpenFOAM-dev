@@ -72,7 +72,7 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class stopAtClockTime Declaration
+                       Class stopAtClockTime Declaration
 \*---------------------------------------------------------------------------*/
 
 class stopAtClockTime

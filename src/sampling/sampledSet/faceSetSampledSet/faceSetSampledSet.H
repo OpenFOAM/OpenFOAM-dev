@@ -60,7 +60,7 @@ namespace sampledSets
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class faceSetSampledSet Declaration
+                      Class faceSetSampledSet Declaration
 \*---------------------------------------------------------------------------*/
 
 class faceSetSampledSet

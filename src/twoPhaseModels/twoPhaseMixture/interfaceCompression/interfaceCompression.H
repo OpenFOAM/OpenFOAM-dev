@@ -72,7 +72,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class interfaceCompression Declaration
+                    Class interfaceCompression Declaration
 \*---------------------------------------------------------------------------*/
 
 class interfaceCompressionNew

@@ -83,7 +83,7 @@ namespace compressible
 {
 
 /*---------------------------------------------------------------------------*\
-           Class convectiveHeatTransferFvPatchScalarField Declaration
+          Class convectiveHeatTransferFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class convectiveHeatTransferFvPatchScalarField

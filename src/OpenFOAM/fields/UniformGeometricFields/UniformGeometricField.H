@@ -46,7 +46,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class UniformGeometricField Declaration
+                    Class UniformGeometricField Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>

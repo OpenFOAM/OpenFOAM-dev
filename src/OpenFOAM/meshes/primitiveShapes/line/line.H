@@ -64,7 +64,7 @@ inline Ostream& operator<<(Ostream&, const line<Point, PointRef>&);
 
 
 /*---------------------------------------------------------------------------*\
-                           Class line Declaration
+                            Class line Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Point, class PointRef>

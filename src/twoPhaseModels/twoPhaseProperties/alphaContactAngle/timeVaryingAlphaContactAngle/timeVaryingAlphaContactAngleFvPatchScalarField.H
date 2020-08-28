@@ -44,7 +44,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-            Class timeVaryingAlphaContactAngleFvPatch Declaration
+             Class timeVaryingAlphaContactAngleFvPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class timeVaryingAlphaContactAngleFvPatchScalarField

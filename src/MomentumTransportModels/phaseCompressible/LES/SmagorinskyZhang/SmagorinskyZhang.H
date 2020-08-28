@@ -64,7 +64,7 @@ namespace LESModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class SmagorinskyZhang Declaration
+                      Class SmagorinskyZhang Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

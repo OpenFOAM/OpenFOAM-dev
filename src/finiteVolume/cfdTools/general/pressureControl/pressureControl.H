@@ -47,7 +47,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class pressureControl Declaration
+                       Class pressureControl Declaration
 \*---------------------------------------------------------------------------*/
 
 class pressureControl

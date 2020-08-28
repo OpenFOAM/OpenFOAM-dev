@@ -40,7 +40,7 @@ Description
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                       Class NoInteraction Declaration
+                        Class NoInteraction Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

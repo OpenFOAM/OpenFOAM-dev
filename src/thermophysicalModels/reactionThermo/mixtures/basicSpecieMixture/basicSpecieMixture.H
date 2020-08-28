@@ -47,7 +47,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class basicSpecieMixture Declaration
+                     Class basicSpecieMixture Declaration
 \*---------------------------------------------------------------------------*/
 
 class basicSpecieMixture

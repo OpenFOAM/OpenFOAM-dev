@@ -52,7 +52,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class processorPointPatch Declaration
+                     Class processorPointPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class processorPointPatch

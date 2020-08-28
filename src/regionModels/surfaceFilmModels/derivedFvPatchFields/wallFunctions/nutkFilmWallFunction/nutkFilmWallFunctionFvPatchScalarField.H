@@ -62,7 +62,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-         Class nutkFilmWallFunctionFvPatchScalarField Declaration
+           Class nutkFilmWallFunctionFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class nutkFilmWallFunctionFvPatchScalarField

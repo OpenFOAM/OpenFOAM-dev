@@ -44,7 +44,7 @@ namespace PackingModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class NoPacking Declaration
+                          Class NoPacking Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

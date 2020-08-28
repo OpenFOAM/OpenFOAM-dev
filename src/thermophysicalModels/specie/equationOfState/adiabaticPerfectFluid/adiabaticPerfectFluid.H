@@ -80,7 +80,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                           Class adiabaticPerfectFluid Declaration
+                    Class adiabaticPerfectFluid Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Specie>

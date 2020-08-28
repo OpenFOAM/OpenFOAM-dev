@@ -67,7 +67,7 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class FUNCTIONOBJECT Declaration
+                       Class FUNCTIONOBJECT Declaration
 \*---------------------------------------------------------------------------*/
 
 class FUNCTIONOBJECT

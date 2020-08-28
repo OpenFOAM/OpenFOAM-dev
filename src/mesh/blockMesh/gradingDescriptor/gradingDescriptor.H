@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ Istream& operator>>(Istream&, gradingDescriptor&);
 Ostream& operator<<(Ostream&, const gradingDescriptor&);
 
 /*---------------------------------------------------------------------------*\
-                     Class gradingDescriptor Declaration
+                      Class gradingDescriptor Declaration
 \*---------------------------------------------------------------------------*/
 
 class gradingDescriptor

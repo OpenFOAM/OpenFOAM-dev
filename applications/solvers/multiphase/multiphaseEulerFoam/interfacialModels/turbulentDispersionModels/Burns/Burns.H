@@ -57,7 +57,7 @@ namespace turbulentDispersionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                             Class Burns Declaration
+                            Class Burns Declaration
 \*---------------------------------------------------------------------------*/
 
 class Burns

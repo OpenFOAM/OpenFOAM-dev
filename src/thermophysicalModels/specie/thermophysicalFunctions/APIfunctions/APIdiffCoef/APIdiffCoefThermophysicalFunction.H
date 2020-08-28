@@ -48,7 +48,7 @@ namespace thermophysicalFunctions
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class APIdiffCoef Declaration
+                         Class APIdiffCoef Declaration
 \*---------------------------------------------------------------------------*/
 
 class APIdiffCoef

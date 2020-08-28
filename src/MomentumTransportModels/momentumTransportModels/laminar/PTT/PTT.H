@@ -57,7 +57,7 @@ namespace laminarModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class PTT Declaration
+                             Class PTT Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

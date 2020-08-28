@@ -85,7 +85,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-              Class entrainmentPressureFvPatchScalarField Declaration
+            Class entrainmentPressureFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class entrainmentPressureFvPatchScalarField

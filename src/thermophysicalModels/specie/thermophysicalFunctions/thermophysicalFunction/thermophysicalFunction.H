@@ -49,7 +49,7 @@ class thermophysicalFunction;
 Ostream& operator<<(Ostream& os, const thermophysicalFunction& l);
 
 /*---------------------------------------------------------------------------*\
-                    Class thermophysicalFunction Declaration
+                   Class thermophysicalFunction Declaration
 \*---------------------------------------------------------------------------*/
 
 class thermophysicalFunction

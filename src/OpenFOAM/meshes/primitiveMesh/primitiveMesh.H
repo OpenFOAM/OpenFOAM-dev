@@ -69,7 +69,7 @@ namespace Foam
 class PackedBoolList;
 
 /*---------------------------------------------------------------------------*\
-                      Class primitiveMesh Declaration
+                        Class primitiveMesh Declaration
 \*---------------------------------------------------------------------------*/
 
 class primitiveMesh

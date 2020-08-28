@@ -75,7 +75,7 @@ namespace RASModels
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class LaunderSharmaKE Declaration
+                       Class LaunderSharmaKE Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicMomentumTransportModel>

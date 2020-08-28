@@ -54,7 +54,7 @@ namespace IATEsources
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class turbulentBreakUp Declaration
+                      Class turbulentBreakUp Declaration
 \*---------------------------------------------------------------------------*/
 
 class turbulentBreakUp

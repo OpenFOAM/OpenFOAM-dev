@@ -47,7 +47,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class DistortedSphereDragForce Declaration
+                  Class DistortedSphereDragForce Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

@@ -45,7 +45,7 @@ namespace kineticTheoryModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class granularPressureModel Declaration
+                    Class granularPressureModel Declaration
 \*---------------------------------------------------------------------------*/
 
 class granularPressureModel

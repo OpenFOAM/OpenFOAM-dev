@@ -48,7 +48,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class mergedCyclicPolyPatch Declaration
+                    Class mergedCyclicPolyPatch Declaration
 \*---------------------------------------------------------------------------*/
 
 class mergedCyclicPolyPatch

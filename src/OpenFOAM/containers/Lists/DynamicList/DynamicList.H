@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,7 +71,7 @@ Istream& operator>>
 
 
 /*---------------------------------------------------------------------------*\
-                           Class DynamicList Declaration
+                         Class DynamicList Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class T, unsigned SizeInc=0, unsigned SizeMult=2, unsigned SizeDiv=1>

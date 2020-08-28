@@ -56,14 +56,14 @@ template<class CloudType>
 class BreakupModel;
 
 /*---------------------------------------------------------------------------*\
-                    Class SprayCloudName Declaration
+                       Class SprayCloudName Declaration
 \*---------------------------------------------------------------------------*/
 
 TemplateName(SprayCloud);
 
 
 /*---------------------------------------------------------------------------*\
-                      Class SprayCloud Declaration
+                         Class SprayCloud Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

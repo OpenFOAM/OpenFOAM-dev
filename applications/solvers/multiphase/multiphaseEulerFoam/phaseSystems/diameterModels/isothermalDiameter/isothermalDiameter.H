@@ -45,7 +45,7 @@ namespace diameterModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class isothermal Declaration
+                         Class isothermal Declaration
 \*---------------------------------------------------------------------------*/
 
 class isothermal

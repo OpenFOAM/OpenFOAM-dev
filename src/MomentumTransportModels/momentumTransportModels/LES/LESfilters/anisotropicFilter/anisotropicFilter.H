@@ -51,7 +51,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class anisotropicFilter Declaration
+                      Class anisotropicFilter Declaration
 \*---------------------------------------------------------------------------*/
 
 class anisotropicFilter

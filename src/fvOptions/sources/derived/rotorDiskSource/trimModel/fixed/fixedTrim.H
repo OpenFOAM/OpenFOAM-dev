@@ -43,7 +43,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class fixedTrim Declaration
+                          Class fixedTrim Declaration
 \*---------------------------------------------------------------------------*/
 
 class fixedTrim

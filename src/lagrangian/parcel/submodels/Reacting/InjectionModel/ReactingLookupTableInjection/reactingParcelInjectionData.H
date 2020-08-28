@@ -61,7 +61,7 @@ Istream& operator>>
 );
 
 /*---------------------------------------------------------------------------*\
-               Class reactingParcelInjectionData Declaration
+                 Class reactingParcelInjectionData Declaration
 \*---------------------------------------------------------------------------*/
 
 class reactingParcelInjectionData

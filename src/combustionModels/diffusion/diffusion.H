@@ -47,7 +47,7 @@ namespace combustionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class diffusion Declaration
+                          Class diffusion Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>

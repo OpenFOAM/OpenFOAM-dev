@@ -53,7 +53,7 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-               Class buoyancyEnergy Declaration
+                       Class buoyancyEnergy Declaration
 \*---------------------------------------------------------------------------*/
 
 class buoyancyEnergy

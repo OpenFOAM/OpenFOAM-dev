@@ -51,7 +51,7 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class shearStress Declaration
+                         Class shearStress Declaration
 \*---------------------------------------------------------------------------*/
 
 class shearStress

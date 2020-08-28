@@ -51,7 +51,7 @@ class thermophysicalProperties;
 Ostream& operator<<(Ostream& os, const thermophysicalProperties& l);
 
 /*---------------------------------------------------------------------------*\
-                    Class thermophysicalProperties Declaration
+                  Class thermophysicalProperties Declaration
 \*---------------------------------------------------------------------------*/
 
 class thermophysicalProperties

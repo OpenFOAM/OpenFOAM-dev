@@ -78,7 +78,7 @@ Ostream& operator<<
 
 
 /*---------------------------------------------------------------------------*\
-                           Class PengRobinsonGas Declaration
+                       Class PengRobinsonGas Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Specie>

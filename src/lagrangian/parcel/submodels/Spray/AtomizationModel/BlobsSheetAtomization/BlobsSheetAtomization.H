@@ -53,7 +53,7 @@ Description
 namespace Foam
 {
 /*---------------------------------------------------------------------------*\
-                   Class BlobsSheetAtomization Declaration
+                    Class BlobsSheetAtomization Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class CloudType>

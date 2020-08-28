@@ -71,7 +71,7 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-          Class nutUSpaldingWallFunctionFvPatchScalarField Declaration
+         Class nutUSpaldingWallFunctionFvPatchScalarField Declaration
 \*---------------------------------------------------------------------------*/
 
 class nutUSpaldingWallFunctionFvPatchScalarField
