@@ -77,7 +77,6 @@ $(driftModels)/phaseChange/phaseChange.C
 
 nucleationModels = populationBalanceModel/nucleationModels
 $(nucleationModels)/nucleationModel/nucleationModel.C
-$(nucleationModels)/constantNucleation/constantNucleation.C
 $(nucleationModels)/reactionDriven/reactionDriven.C
 $(nucleationModels)/wallBoiling/wallBoiling.C
 

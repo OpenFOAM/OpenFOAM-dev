@@ -95,7 +95,10 @@ populationBalanceCoeffs
 
         driftModels
         (
-            constant{}
+            constant
+            {
+                rate    -1;
+            }
         );
 
         nucleationModels
