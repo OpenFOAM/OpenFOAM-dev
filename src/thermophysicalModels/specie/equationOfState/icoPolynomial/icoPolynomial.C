@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,15 +26,10 @@ License
 #include "icoPolynomial.H"
 #include "IOstreams.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie, int PolySize>
-icoPolynomial<Specie, PolySize>::icoPolynomial(const dictionary& dict)
+Foam::icoPolynomial<Specie, PolySize>::icoPolynomial(const dictionary& dict)
 :
     Specie(dict),
     rhoCoeffs_
@@ -50,7 +45,7 @@ icoPolynomial<Specie, PolySize>::icoPolynomial(const dictionary& dict)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Specie, int PolySize>
-void icoPolynomial<Specie, PolySize>::write(Ostream& os) const
+void Foam::icoPolynomial<Specie, PolySize>::write(Ostream& os) const
 {
     Specie::write(os);
 
@@ -68,15 +63,15 @@ void icoPolynomial<Specie, PolySize>::write(Ostream& os) const
 // * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
 
 template<class Specie, int PolySize>
-Ostream& operator<<(Ostream& os, const icoPolynomial<Specie, PolySize>& ip)
+Foam::Ostream& Foam::operator<<
+(
+    Ostream& os,
+    const icoPolynomial<Specie, PolySize>& ip
+)
 {
     ip.write(os);
     return os;
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // ************************************************************************* //

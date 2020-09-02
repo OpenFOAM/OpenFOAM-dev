@@ -181,6 +181,17 @@ inline Foam::scalar Foam::janafThermo<EquationOfState>::Cp
 
 
 template<class EquationOfState>
+inline Foam::scalar Foam::janafThermo<EquationOfState>::Hs
+(
+    const scalar p,
+    const scalar T
+) const
+{
+    return Ha(p, T) - Hf();
+}
+
+
+template<class EquationOfState>
 inline Foam::scalar Foam::janafThermo<EquationOfState>::Ha
 (
     const scalar p,
@@ -193,17 +204,6 @@ inline Foam::scalar Foam::janafThermo<EquationOfState>::Ha
         ((((a[4]/5.0*T + a[3]/4.0)*T + a[2]/3.0)*T + a[1]/2.0)*T + a[0])*T
       + a[5]
     ) + EquationOfState::H(p, T);
-}
-
-
-template<class EquationOfState>
-inline Foam::scalar Foam::janafThermo<EquationOfState>::Hs
-(
-    const scalar p,
-    const scalar T
-) const
-{
-    return Ha(p, T) - Hf();
 }
 
 

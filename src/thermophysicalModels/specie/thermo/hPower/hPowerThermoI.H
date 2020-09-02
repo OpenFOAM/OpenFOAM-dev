@@ -125,17 +125,6 @@ inline Foam::scalar Foam::hPowerThermo<EquationOfState>::Cp
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hPowerThermo<EquationOfState>::Ha
-(
-    const scalar p,
-    const scalar T
-) const
-{
-    return Hs(p, T) + Hf();
-}
-
-
-template<class EquationOfState>
 inline Foam::scalar Foam::hPowerThermo<EquationOfState>::Hs
 (
     const scalar p,
@@ -145,6 +134,17 @@ inline Foam::scalar Foam::hPowerThermo<EquationOfState>::Hs
     return
         c0_*(pow(T, n0_ + 1) - pow(Tstd, n0_ + 1))/(pow(Tref_, n0_)*(n0_ + 1))
       + EquationOfState::H(p, T);
+}
+
+
+template<class EquationOfState>
+inline Foam::scalar Foam::hPowerThermo<EquationOfState>::Ha
+(
+    const scalar p,
+    const scalar T
+) const
+{
+    return Hs(p, T) + Hf();
 }
 
 

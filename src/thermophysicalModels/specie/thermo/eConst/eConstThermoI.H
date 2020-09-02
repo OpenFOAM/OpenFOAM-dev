@@ -117,13 +117,6 @@ inline Foam::scalar Foam::eConstThermo<EquationOfState>::Es
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::eConstThermo<EquationOfState>::Hf() const
-{
-    return Hf_;
-}
-
-
-template<class EquationOfState>
 inline Foam::scalar Foam::eConstThermo<EquationOfState>::Ea
 (
     const scalar p,
@@ -131,6 +124,13 @@ inline Foam::scalar Foam::eConstThermo<EquationOfState>::Ea
 ) const
 {
     return Es(p, T) + Hf();
+}
+
+
+template<class EquationOfState>
+inline Foam::scalar Foam::eConstThermo<EquationOfState>::Hf() const
+{
+    return Hf_;
 }
 
 
