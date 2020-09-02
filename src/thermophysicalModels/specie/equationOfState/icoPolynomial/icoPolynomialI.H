@@ -172,7 +172,7 @@ inline Foam::scalar Foam::icoPolynomial<Specie, PolySize>::Z
     scalar T
 ) const
 {
-    return 0;
+    return p/(rho(p, T)*this->R()*T);
 }
 
 

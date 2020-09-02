@@ -162,7 +162,7 @@ inline Foam::scalar Foam::Boussinesq<Specie>::Z
     scalar T
 ) const
 {
-    return 0;
+    return p/(rho(p, T)*this->R()*T);
 }
 
 

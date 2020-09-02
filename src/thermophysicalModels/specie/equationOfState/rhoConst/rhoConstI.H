@@ -122,7 +122,7 @@ inline Foam::scalar Foam::rhoConst<Specie>::psi(scalar p, scalar T) const
 template<class Specie>
 inline Foam::scalar Foam::rhoConst<Specie>::Z(scalar p, scalar T) const
 {
-    return 0;
+    return p/(rho(p, T)*this->R()*T);
 }
 
 

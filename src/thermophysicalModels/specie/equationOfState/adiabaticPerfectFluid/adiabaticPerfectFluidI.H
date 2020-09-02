@@ -186,9 +186,13 @@ inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::psi
 
 
 template<class Specie>
-inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::Z(scalar, scalar) const
+inline Foam::scalar Foam::adiabaticPerfectFluid<Specie>::Z
+(
+    scalar p,
+    scalar T
+) const
 {
-    return 1;
+    return p/(rho(p, T)*this->R()*T);
 }
 
 

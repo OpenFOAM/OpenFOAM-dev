@@ -134,7 +134,7 @@ inline Foam::scalar Foam::rPolynomial<Specie>::psi(scalar p, scalar T) const
 template<class Specie>
 inline Foam::scalar Foam::rPolynomial<Specie>::Z(scalar p, scalar T) const
 {
-    return 1;
+    return p/(rho(p, T)*this->R()*T);
 }
 
 
