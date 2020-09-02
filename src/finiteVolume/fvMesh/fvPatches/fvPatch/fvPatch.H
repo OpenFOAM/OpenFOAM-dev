@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,7 @@ namespace Foam
 {
 
 class fvBoundaryMesh;
+class objectRegistry;
 class surfaceInterpolation;
 
 /*---------------------------------------------------------------------------*\
@@ -182,6 +183,9 @@ public:
                 return boundaryMesh_;
             }
 
+            //- Return the local object registry
+            const objectRegistry& db() const;
+
             //- Slice list to patch
             template<class T>
             const typename List<T>::subList patchSlice(const List<T>& l) const
@@ -253,15 +257,10 @@ public:
 
             //- Lookup and return the patchField of the named field from the
             //  local objectRegistry.
-            //  N.B.  The dummy pointer arguments are used if this function is
-            //  instantiated within a templated function to avoid a bug in gcc.
-            //  See inletOutletFvPatchField.C and outletInletFvPatchField.C
             template<class GeometricField, class Type>
             const typename GeometricField::Patch& lookupPatchField
             (
-                const word& name,
-                const GeometricField* = nullptr,
-                const Type* = nullptr
+                const word& name
             ) const;
 
 

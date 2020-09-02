@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fvPatch.H"
+#include "objectRegistry.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
@@ -82,6 +83,19 @@ typename GeometricField::Patch& Foam::fvPatch::patchField
 ) const
 {
     return gf.boundaryFieldRef()[index()];
+}
+
+
+template<class GeometricField, class Type>
+const typename GeometricField::Patch& Foam::fvPatch::lookupPatchField
+(
+    const word& name
+) const
+{
+    return patchField<GeometricField, Type>
+    (
+        db().template lookupObject<GeometricField>(name)
+    );
 }
 
 
