@@ -27,7 +27,8 @@ License
 #include "addToRunTimeSelectionTable.H"
 #include "phaseSystem.H"
 #include "fvcDdt.H"
-#include "fvcGrad.H"
+#include "fvcDiv.H"
+#include "fvcSup.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -58,7 +59,6 @@ Foam::diameterModels::driftModels::densityChangeDrift::densityChangeDrift
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-
 void Foam::diameterModels::driftModels::densityChangeDrift::addToDriftRate
 (
     volScalarField& driftRate,
@@ -66,10 +66,16 @@ void Foam::diameterModels::driftModels::densityChangeDrift::addToDriftRate
 )
 {
     const sizeGroup& fi = popBal_.sizeGroups()[i];
-    volScalarField& rho = const_cast<volScalarField&>(fi.phase().rho()());
+    const phaseModel& phase = fi.phase();
+    const volScalarField& alpha = phase;
+    const volScalarField& rho = phase.thermo().rho();
 
-    driftRate -= (fvc::ddt(rho) + (fvc::grad(rho)&popBal_.U()))
-       *popBal_.sizeGroups()[i].x()/rho;
+    driftRate -=
+        fi.x()/(rho*max(alpha, phase.residualAlpha()))
+       *(
+            fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi())
+          - fvc::Sp(fvc::ddt(alpha) + fvc::div(phase.alphaPhi()), rho)
+        );
 }
 
 
