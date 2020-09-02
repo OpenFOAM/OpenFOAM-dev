@@ -80,7 +80,7 @@ Foam::diameterModels::driftModel::driftModel
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::driftModel::correct()
+void Foam::diameterModels::driftModel::precompute()
 {}
 
 

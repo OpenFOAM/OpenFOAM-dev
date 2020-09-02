@@ -46,24 +46,4 @@ Foam::diameterModels::velocityGroup::sizeGroups() const
 }
 
 
-inline const Foam::tmp<Foam::fv::convectionScheme<Foam::scalar>>&
-Foam::diameterModels::velocityGroup::mvConvection() const
-{
-    return mvConvection_;
-}
-
-
-inline const Foam::volScalarField& Foam::diameterModels::velocityGroup::
-dmdt() const
-{
-    return dmdt_;
-}
-
-
-inline Foam::volScalarField& Foam::diameterModels::velocityGroup::dmdtRef()
-{
-    return dmdt_;
-}
-
-
 // ************************************************************************* //

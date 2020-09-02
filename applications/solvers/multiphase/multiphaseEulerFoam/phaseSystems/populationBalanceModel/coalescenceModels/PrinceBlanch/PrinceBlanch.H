@@ -203,8 +203,8 @@ public:
 
     // Member Functions
 
-        //- Correct diameter independent expressions
-        virtual void correct();
+        //- Precompute diameter independent expressions
+        virtual void precompute();
 
         //- Add to coalescenceRate
         virtual void addToCoalescenceRate

@@ -29,14 +29,9 @@ divSchemes
 {
     default                         none;
 
-    "div\(phi,alpha.*)"              Gauss vanLeer;
-    "div\(phir,alpha.*,alpha.*)" Gauss vanLeer;
-    "div\(phir,alpha.*)" Gauss vanLeer;
-
+    "div\(phi,alpha.*)"             Gauss vanLeer;
     "div\(alphaRhoPhi.*,U.*\)"      Gauss limitedLinearV 1;
-    "div\(phi.*,U.*\)"              Gauss limitedLinearV 1;
-
-    "div\(alphaRhoPhi.*,(k|epsilon|omega|f).*\)"  Gauss limitedLinear 1;
+    "div\(alphaPhi.*,f.*\)"         Gauss limitedLinear 1;
 
     "div\(\(\(\(alpha.*\*thermo:rho.*\)\*nuEff.*\)\*dev2\(T\(grad\(U.*\)\)\)\)\)" Gauss linear;
 }

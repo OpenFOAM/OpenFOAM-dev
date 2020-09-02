@@ -67,7 +67,7 @@ Foam::diameterModels::driftModels::constantDrift::constantDrift
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::driftModels::constantDrift::correct()
+void Foam::diameterModels::driftModels::constantDrift::precompute()
 {
     N_ = Zero;
 

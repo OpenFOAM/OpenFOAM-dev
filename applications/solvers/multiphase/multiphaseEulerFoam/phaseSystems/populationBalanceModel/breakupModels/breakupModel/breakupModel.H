@@ -159,8 +159,8 @@ public:
             return dsd_;
         }
 
-        //- Correct diameter independent expressions
-        virtual void correct();
+        //- Precompute diameter independent expressions
+        virtual void precompute();
 
         //- Set total breakupRate
         virtual void setBreakupRate

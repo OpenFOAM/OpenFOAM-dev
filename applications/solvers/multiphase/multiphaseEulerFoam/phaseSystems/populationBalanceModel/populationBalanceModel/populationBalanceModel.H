@@ -296,7 +296,7 @@ private:
 
         void createPhasePairs();
 
-        void correct();
+        void precompute();
 
         void birthByCoalescence(const label j, const label k);
 
@@ -455,6 +455,9 @@ public:
 
         //- Solve the population balance equation
         void solve();
+
+        //- Correct derived quantities
+        void correct();
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

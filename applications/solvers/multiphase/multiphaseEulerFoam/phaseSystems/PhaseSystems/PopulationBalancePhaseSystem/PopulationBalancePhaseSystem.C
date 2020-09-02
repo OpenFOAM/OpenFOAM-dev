@@ -80,9 +80,7 @@ PopulationBalancePhaseSystem
                             this->phasePairs_[key]->name()
                         ),
                         this->mesh().time().timeName(),
-                        this->mesh(),
-                        IOobject::READ_IF_PRESENT,
-                        IOobject::AUTO_WRITE
+                        this->mesh()
                     ),
                     this->mesh(),
                     dimensionedScalar(dimDensity/dimTime, 0)
@@ -203,24 +201,6 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::specieTransfer() const
 
 
 template<class BasePhaseSystem>
-bool Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::read()
-{
-    if (BasePhaseSystem::read())
-    {
-        bool readOK = true;
-
-        // Models ...
-
-        return readOK;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
-template<class BasePhaseSystem>
 void Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::solve
 (
     const PtrList<volScalarField>& rAUs,
@@ -232,6 +212,36 @@ void Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::solve
     forAll(populationBalances_, i)
     {
         populationBalances_[i].solve();
+    }
+}
+
+
+template<class BasePhaseSystem>
+void Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::correct()
+{
+    BasePhaseSystem::correct();
+
+    forAll(populationBalances_, i)
+    {
+        populationBalances_[i].correct();
+    }
+}
+
+
+template<class BasePhaseSystem>
+bool Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::read()
+{
+    if (BasePhaseSystem::read())
+    {
+        bool readOK = true;
+
+        // Read models ...
+
+        return readOK;
+    }
+    else
+    {
+        return false;
     }
 }
 

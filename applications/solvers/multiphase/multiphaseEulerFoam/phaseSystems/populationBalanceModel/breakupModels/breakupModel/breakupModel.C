@@ -81,7 +81,7 @@ Foam::diameterModels::breakupModel::breakupModel
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::breakupModel::correct()
+void Foam::diameterModels::breakupModel::precompute()
 {}
 
 

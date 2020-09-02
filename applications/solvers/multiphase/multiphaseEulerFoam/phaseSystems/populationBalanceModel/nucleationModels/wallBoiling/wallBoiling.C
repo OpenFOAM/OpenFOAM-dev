@@ -77,7 +77,7 @@ wallBoiling
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::nucleationModels::wallBoiling::correct()
+void Foam::diameterModels::nucleationModels::wallBoiling::precompute()
 {
     const volScalarField& alphat =
         popBal_.mesh().lookupObject<volScalarField>

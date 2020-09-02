@@ -31,11 +31,8 @@ License
 #include "nucleationModel.H"
 #include "phaseSystem.H"
 #include "surfaceTensionModel.H"
-#include "fvmDdt.H"
+#include "fvm.H"
 #include "fvcDdt.H"
-#include "fvmSup.H"
-#include "fvcSup.H"
-#include "fvcDiv.H"
 #include "phaseCompressibleMomentumTransportModel.H"
 #include "shapeModel.H"
 
@@ -227,40 +224,35 @@ void Foam::diameterModels::populationBalanceModel::createPhasePairs()
 }
 
 
-void Foam::diameterModels::populationBalanceModel::correct()
+void Foam::diameterModels::populationBalanceModel::precompute()
 {
     calcDeltas();
 
-    forAll(velocityGroups_, v)
-    {
-        velocityGroups_[v].preSolve();
-    }
-
     forAll(coalescence_, model)
     {
-        coalescence_[model].correct();
+        coalescence_[model].precompute();
     }
 
     forAll(breakup_, model)
     {
-        breakup_[model].correct();
+        breakup_[model].precompute();
 
-        breakup_[model].dsdPtr()().correct();
+        breakup_[model].dsdPtr()->precompute();
     }
 
     forAll(binaryBreakup_, model)
     {
-        binaryBreakup_[model].correct();
+        binaryBreakup_[model].precompute();
     }
 
     forAll(drift_, model)
     {
-        drift_[model].correct();
+        drift_[model].precompute();
     }
 
     forAll(nucleation_, model)
     {
-        nucleation_[model].correct();
+        nucleation_[model].precompute();
     }
 }
 
@@ -705,12 +697,9 @@ void Foam::diameterModels::populationBalanceModel::sources()
         phasePairIter
     )
     {
-        pDmdt_(phasePairIter())->ref() = Zero;
+        *pDmdt_(phasePairIter()) = Zero;
     }
 
-    // Since the calculation of the rates is computationally expensive,
-    // they are calculated once for each sizeGroup pair and inserted into source
-    // terms as required
     forAll(sizeGroups_, i)
     {
         if (coalescence_.size() != 0)
@@ -788,27 +777,6 @@ void Foam::diameterModels::populationBalanceModel::sources()
             {
                 nucleationRate_() = Zero;
                 nucleation(i, nucleation_[model]);
-            }
-        }
-    }
-}
-
-
-void Foam::diameterModels::populationBalanceModel::dmdt()
-{
-    forAll(velocityGroups_, v)
-    {
-        velocityGroup& velGroup = velocityGroups_[v];
-
-        velGroup.dmdtRef() = Zero;
-
-        forAll(sizeGroups_, i)
-        {
-            if (&sizeGroups_[i].phase() == &velGroup.phase())
-            {
-                sizeGroup& fi = sizeGroups_[i];
-
-                velGroup.dmdtRef() += fi.phase().rho()*(Su_[i] - SuSp_[i]*fi);
             }
         }
     }
@@ -1266,7 +1234,7 @@ void Foam::diameterModels::populationBalanceModel::solve()
 
         if (nCorr > 0)
         {
-            correct();
+            precompute();
         }
 
         int iCorr = 0;
@@ -1283,7 +1251,6 @@ void Foam::diameterModels::populationBalanceModel::solve()
             if (updateSources())
             {
                 sources();
-                dmdt();
             }
 
             maxInitialResidual = 0;
@@ -1294,27 +1261,16 @@ void Foam::diameterModels::populationBalanceModel::solve()
                 const phaseModel& phase = fi.phase();
                 const volScalarField& alpha = phase;
                 const dimensionedScalar& residualAlpha = phase.residualAlpha();
-                const volScalarField& rho = phase.thermo().rho();
 
                 fvScalarMatrix sizeGroupEqn
                 (
-                    fvm::ddt(alpha, rho, fi)
-                  + fi.VelocityGroup().mvConvection()->fvmDiv
-                    (
-                        phase.alphaRhoPhi(),
-                        fi
-                    )
-                  + fvm::SuSp
-                    (
-                        fi.VelocityGroup().dmdt()
-                      - (fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi())),
-                        fi
-                    )
-                  ==
-                    fvc::Su(Su_[i]*rho, fi)
-                  - fvm::SuSp(SuSp_[i]*rho, fi)
-                  + fvc::ddt(residualAlpha*rho, fi)
-                  - fvm::ddt(residualAlpha*rho, fi)
+                    fvm::ddt(alpha, fi)
+                  + fvm::div(phase.alphaPhi(), fi)
+                ==
+                    Su_[i]
+                  - fvm::SuSp(SuSp_[i], fi)
+                  + fvc::ddt(residualAlpha, fi)
+                  - fvm::ddt(residualAlpha, fi)
                 );
 
                 sizeGroupEqn.relax();
@@ -1325,26 +1281,6 @@ void Foam::diameterModels::populationBalanceModel::solve()
                     maxInitialResidual
                 );
             }
-        }
-
-        if (nCorr > 0)
-        {
-            forAll(sizeGroups_, i)
-            {
-                sizeGroups_[i].correct();
-            }
-
-            forAll(velocityGroups_, i)
-            {
-                velocityGroups_[i].postSolve();
-            }
-        }
-
-        if (velocityGroups_.size() > 1)
-        {
-            calcAlphas();
-            dsm_() = calcDsm();
-            calcVelocity();
         }
 
         volScalarField fAlpha0
@@ -1363,5 +1299,17 @@ void Foam::diameterModels::populationBalanceModel::solve()
             << endl;
     }
 }
+
+
+void Foam::diameterModels::populationBalanceModel::correct()
+{
+    if (velocityGroups_.size() > 1)
+    {
+        calcAlphas();
+        dsm_() = calcDsm();
+        calcVelocity();
+    }
+}
+
 
 // ************************************************************************* //

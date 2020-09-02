@@ -196,7 +196,6 @@ void Foam::diameterModels::shapeModels::fractal::correct()
     const sizeGroup& fi = sizeGroup_;
     const phaseModel& phase = fi.phase();
     const volScalarField& alpha = phase;
-    const volScalarField& rho = phase.thermo().rho();
 
     const populationBalanceModel& popBal =
         sizeGroup_.mesh().lookupObject<populationBalanceModel>
@@ -204,32 +203,22 @@ void Foam::diameterModels::shapeModels::fractal::correct()
             sizeGroup_.VelocityGroup().popBalName()
         );
 
-    surfaceScalarField fAlphaRhoPhi
+    surfaceScalarField fAlphaPhi
     (
-        "fAlphaRhoPhi",
-        max(fvc::interpolate(fi, "fi"), SMALL)*phase.alphaRhoPhi()
+        "fAlphaPhi",
+        max(fvc::interpolate(fi, "fi"), small)*phase.alphaPhi()
     );
 
     fvScalarMatrix kappaEqn
     (
-        fvc::ddt(alpha, rho, fi)*kappa_.oldTime()
-      + alpha*rho*fi*fvm::ddt(kappa_)
-      + fvm::div(fAlphaRhoPhi, kappa_)
-      + fvm::SuSp
-        (
-            fi
-           *(
-                fi.VelocityGroup().dmdt()
-              - (fvc::ddt(alpha, rho) + fvc::div(phase.alphaRhoPhi()))
-            ),
-            kappa_
-        )
+        fvm::ddt(alpha, fi, kappa_)
+      + fvm::div(fAlphaPhi, kappa_)
       ==
       - sinteringModel_->R()
-      + fvc::Su(Su_*rho, kappa_)
-      - fvm::SuSp(popBal.SuSp(fi.i()())*fi*rho, kappa_)
-      + fvc::ddt(fi.phase().residualAlpha()*rho, kappa_)
-      - fvm::ddt(fi.phase().residualAlpha()*rho, kappa_)
+      + Su_
+      - fvm::SuSp(popBal.SuSp(fi.i()())*fi, kappa_)
+      + fvc::ddt(fi.phase().residualAlpha(), kappa_)
+      - fvm::ddt(fi.phase().residualAlpha(), kappa_)
     );
 
     kappaEqn.relax();

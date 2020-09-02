@@ -97,15 +97,18 @@ public:
         virtual autoPtr<phaseSystem::specieTransferTable>
             specieTransfer() const;
 
-        //- Read base phaseProperties dictionary
-        virtual bool read();
-
         //- Solve all population balance equations
         virtual void solve
         (
             const PtrList<volScalarField>& rAUs,
             const PtrList<surfaceScalarField>& rAUfs
         );
+
+        //- Correct derived properties
+        virtual void correct();
+
+        //- Read base phaseProperties dictionary
+        virtual bool read();
 };
 
 
