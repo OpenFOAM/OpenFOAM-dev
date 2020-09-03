@@ -87,11 +87,8 @@ int main(int argc, char *argv[])
 
     if (args.optionFound("processor"))
     {
-        // Determine the processor count directly
-        while (isDir(args.path()/(word("processor") + name(nProcs))))
-        {
-            ++nProcs;
-        }
+        // Determine the processor count
+        const label nProcs = fileHandler().nProcs(args.path());
 
         if (!nProcs)
         {
