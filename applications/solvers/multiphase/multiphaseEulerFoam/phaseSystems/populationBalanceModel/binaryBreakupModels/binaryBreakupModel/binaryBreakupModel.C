@@ -78,7 +78,7 @@ Foam::diameterModels::binaryBreakupModel::binaryBreakupModel
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::binaryBreakupModel::correct()
+void Foam::diameterModels::binaryBreakupModel::precompute()
 {}
 
 

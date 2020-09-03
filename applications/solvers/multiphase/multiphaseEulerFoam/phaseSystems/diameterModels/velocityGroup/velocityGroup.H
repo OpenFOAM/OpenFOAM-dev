@@ -110,15 +110,6 @@ class velocityGroup
         //- Sauter-mean diameter of the phase
         volScalarField& d_;
 
-        //- Multivariate convection scheme
-        tmp<fv::convectionScheme<scalar>> mvConvection_;
-
-        //- Table of fields for multivariate convection
-        multivariateSurfaceInterpolationScheme<scalar>::fieldTable fields_;
-
-        //- Mass transfer rate
-        volScalarField dmdt_;
-
 
     // Private Member Functions
 
@@ -129,8 +120,6 @@ class velocityGroup
         tmp<volScalarField> N() const;
 
         void scale();
-
-        tmp<Foam::fv::convectionScheme<Foam::scalar>> mvconvection() const;
 
 
 protected:
@@ -175,20 +164,8 @@ public:
         //- Return sizeGroups belonging to this velocityGroup
         inline const PtrList<sizeGroup>& sizeGroups() const;
 
-        //- Return const-reference to multivariate convectionScheme
-        inline const tmp<fv::convectionScheme<scalar>>& mvConvection() const;
-
-        //- Return const-reference to the mass transfer rate
-        inline const volScalarField& dmdt() const;
-
-        //- Return reference to the mass transfer rate
-        inline volScalarField& dmdtRef();
-
-        //- Corrections before populationBalanceModel::solve()
-        void preSolve();
-
-        //- Corrections after populationBalanceModel::solve()
-        void postSolve();
+        //- Correct the diameter field
+        virtual void correct();
 
         //- Read diameterProperties dictionary
         virtual bool read(const dictionary& diameterProperties);

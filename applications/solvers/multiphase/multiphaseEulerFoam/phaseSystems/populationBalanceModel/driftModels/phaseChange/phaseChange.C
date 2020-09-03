@@ -89,7 +89,7 @@ Foam::diameterModels::driftModels::phaseChange::phaseChange
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::driftModels::phaseChange::correct()
+void Foam::diameterModels::driftModels::phaseChange::precompute()
 {
     const phaseSystem& fluid = popBal_.fluid();
 

@@ -87,9 +87,9 @@ DahnekeInterpolation
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::coalescenceModels::DahnekeInterpolation::correct()
+void Foam::diameterModels::coalescenceModels::DahnekeInterpolation::precompute()
 {
-    Brownian_().correct();
+    Brownian_().precompute();
 }
 
 

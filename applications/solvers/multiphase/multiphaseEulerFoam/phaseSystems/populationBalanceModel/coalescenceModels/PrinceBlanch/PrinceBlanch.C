@@ -113,7 +113,7 @@ PrinceBlanch
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::coalescenceModels::PrinceBlanch::correct()
+void Foam::diameterModels::coalescenceModels::PrinceBlanch::precompute()
 {
     if (laminarShear_)
     {

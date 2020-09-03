@@ -51,34 +51,11 @@ Foam::diameterModels::driftModels::constantDrift::constantDrift
 )
 :
     driftModel(popBal, dict),
-    N_
-    (
-        IOobject
-        (
-            "N",
-            popBal.mesh().time().timeName(),
-            popBal.mesh()
-        ),
-        popBal.mesh(),
-        dimensionedScalar(inv(dimVolume), Zero)
-    )
+    rate_("rate", dimVolume/dimTime, dict)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::diameterModels::driftModels::constantDrift::correct()
-{
-    N_ = Zero;
-
-    forAll(popBal_.sizeGroups(), i)
-    {
-        const sizeGroup& fi = popBal_.sizeGroups()[i];
-
-        N_ += fi*fi.phase()/fi.x();
-    }
-}
-
 
 void Foam::diameterModels::driftModels::constantDrift::addToDriftRate
 (
@@ -86,11 +63,7 @@ void Foam::diameterModels::driftModels::constantDrift::addToDriftRate
     const label i
 )
 {
-    const sizeGroup& fi = popBal_.sizeGroups()[i];
-    phaseModel& phase = const_cast<phaseModel&>(fi.phase());
-    volScalarField& rho = phase.thermoRef().rho();
-
-    driftRate += (popBal_.fluid().fvOptions()(phase, rho)&rho)/(N_*rho);
+    driftRate += rate_;
 }
 
 

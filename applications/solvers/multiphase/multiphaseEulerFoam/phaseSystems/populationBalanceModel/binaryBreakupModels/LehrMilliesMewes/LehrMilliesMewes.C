@@ -104,7 +104,7 @@ addToBinaryBreakupRate
        *exp(-sqrt(2.0)/pow3(fj.dSph()/L))
        *6.0/pow(pi, 1.5)/pow3(fi.dSph()/L)
        *exp(-9.0/4.0*sqr(log(pow(2.0, 0.4)*fi.dSph()/L)))
-       /max(1.0 + erf(1.5*log(pow(2.0, 1.0/15.0)*fj.dSph()/L)), SMALL)
+       /max(1.0 + erf(1.5*log(pow(2.0, 1.0/15.0)*fj.dSph()/L)), small)
        /(T*pow3(L));
 }
 

@@ -114,7 +114,7 @@ Foam::diameterModels::daughterSizeDistributionModel::nik
 }
 
 
-void Foam::diameterModels::daughterSizeDistributionModel::correct()
+void Foam::diameterModels::daughterSizeDistributionModel::precompute()
 {
     if (nik_.size() == 0)
     {

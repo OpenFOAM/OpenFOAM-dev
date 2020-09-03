@@ -147,7 +147,7 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::LuoSvendsen
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::binaryBreakupModels::LuoSvendsen::correct()
+void Foam::diameterModels::binaryBreakupModels::LuoSvendsen::precompute()
 {
     kolmogorovLengthScale_ =
         pow025

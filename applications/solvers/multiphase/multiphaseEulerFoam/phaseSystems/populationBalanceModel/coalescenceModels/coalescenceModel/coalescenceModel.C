@@ -78,7 +78,7 @@ Foam::diameterModels::coalescenceModel::coalescenceModel
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::coalescenceModel::correct()
+void Foam::diameterModels::coalescenceModel::precompute()
 {}
 
 

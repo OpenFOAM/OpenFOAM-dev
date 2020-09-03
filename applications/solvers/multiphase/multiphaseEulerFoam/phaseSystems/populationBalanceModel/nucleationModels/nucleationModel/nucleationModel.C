@@ -80,7 +80,7 @@ Foam::diameterModels::nucleationModel::nucleationModel
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::nucleationModel::correct()
+void Foam::diameterModels::nucleationModel::precompute()
 {}
 
 

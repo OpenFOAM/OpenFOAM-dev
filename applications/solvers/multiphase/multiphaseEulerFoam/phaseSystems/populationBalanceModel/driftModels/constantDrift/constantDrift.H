@@ -24,9 +24,6 @@ License
 Class
     Foam::diameterModels::driftModels::constantDrift
 
-Description
-    Constant drift rate within all classes computed from fvOptions mass source.
-
 SourceFiles
     constant.C
 
@@ -56,8 +53,8 @@ class constantDrift
 {
     // Private Data
 
-        //- Total number concentration
-        volScalarField N_;
+        //- Drift rate
+        dimensionedScalar rate_;
 
 
 public:
@@ -80,9 +77,6 @@ public:
 
 
     // Member Functions
-
-        //- Correct diameter independent expressions
-        virtual void correct();
 
         //- Add to driftRate
         virtual void addToDriftRate

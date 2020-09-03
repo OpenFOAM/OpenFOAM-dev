@@ -135,27 +135,6 @@ void Foam::diameterModels::velocityGroup::scale()
 }
 
 
-Foam::tmp<Foam::fv::convectionScheme<Foam::scalar>>
-Foam::diameterModels::velocityGroup::mvconvection() const
-{
-    tmp<fv::convectionScheme<Foam::scalar>> mvConvection
-    (
-        fv::convectionScheme<Foam::scalar>::New
-        (
-            phase().mesh(),
-            fields_,
-            phase().alphaRhoPhi(),
-            phase().mesh().divScheme
-            (
-                "div(" + phase().alphaRhoPhi()().name() + ",f)"
-            )
-        )
-    );
-
-    return mvConvection;
-}
-
-
 // * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
@@ -226,24 +205,8 @@ Foam::diameterModels::velocityGroup::velocityGroup
         diameterProperties.lookup("sizeGroups"),
         sizeGroup::iNew(phase, *this)
     ),
-    d_(dRef()),
-    dmdt_
-    (
-        IOobject
-        (
-            IOobject::groupName("source", phase.name()),
-            phase.time().timeName(),
-            phase.mesh()
-        ),
-        phase.mesh(),
-        dimensionedScalar(dimDensity/dimTime, Zero)
-    )
+    d_(dRef())
 {
-    forAll(sizeGroups_, i)
-    {
-        fields_.add(sizeGroups_[i]);
-    }
-
     d_ = dsm();
 }
 
@@ -256,14 +219,13 @@ Foam::diameterModels::velocityGroup::~velocityGroup()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::velocityGroup::preSolve()
+void Foam::diameterModels::velocityGroup::correct()
 {
-    mvConvection_ = mvconvection();
-}
+    forAll(sizeGroups_, i)
+    {
+        sizeGroups_[i].correct();
+    }
 
-
-void Foam::diameterModels::velocityGroup::postSolve()
-{
     if
     (
         phase().mesh().solverDict(popBalName_).lookupOrDefault<Switch>

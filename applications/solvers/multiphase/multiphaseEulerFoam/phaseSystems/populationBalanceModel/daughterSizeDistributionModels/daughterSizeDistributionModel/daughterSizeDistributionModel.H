@@ -122,8 +122,8 @@ public:
         //- Return contribution to sizeGroup i due to breakup in sizeGroup k
         const dimensionedScalar& nik(const label i, const label k) const;
 
-        //- Correct field independent expressions
-        void correct();
+        //- Precompute field independent expressions
+        void precompute();
 
         //- Calculate contribution to sizeGroup i due to breakup in sizeGroup k
         virtual dimensionedScalar calcNik

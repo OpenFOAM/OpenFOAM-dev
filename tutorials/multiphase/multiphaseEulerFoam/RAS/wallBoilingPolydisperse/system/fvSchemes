@@ -38,7 +38,7 @@ divSchemes
 
     "div\(alphaRhoPhi.*,Yi\)"       Gauss linearUpwind limited;
     "div\(alphaRhoPhi.*,(h|e).*\)"  Gauss linearUpwind limited;
-    "div\(alphaRhoPhi.*,f.*\)"      Gauss upwind;
+    "div\(alphaPhi.*,f.*\)"         Gauss upwind;
     "div\(alphaRhoPhi.*,K.*\)"      Gauss linearUpwind limited;
     "div\(alphaPhi.*,p\)"           Gauss linearUpwind limited;
     "div\(phi.*,kappai.*\)"         Gauss linearUpwind limited;

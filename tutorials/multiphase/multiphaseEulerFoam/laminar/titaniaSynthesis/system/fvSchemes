@@ -41,8 +41,8 @@ divSchemes
     "div\(alphaRhoPhi.*,Y.*\)"              Gauss limitedLinear 1;
     "div\(alphaPhi.*,p\)"                   Gauss limitedLinear 1;
 
-    "div\(alphaRhoPhi.*,f.*\)"              Gauss upwind;
-    "div\(fAlphaRhoPhi.*,kappa.*\)"         Gauss linearUpwind limited;
+    "div\(alphaPhi.*,f.*\)"                 Gauss upwind;
+    "div\(fAlphaPhi.*,kappa.*\)"            Gauss linearUpwind limited;
 
     "div\(\(\(\(alpha.*\*thermo:rho.*\)\*nuEff.*\)\*dev2\(T\(grad\(U.*\)\)\)\)\)" Gauss linear;
 }

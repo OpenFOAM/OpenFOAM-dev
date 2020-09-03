@@ -86,7 +86,7 @@ BrownianCollisions
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::coalescenceModels::BrownianCollisions::correct()
+void Foam::diameterModels::coalescenceModels::BrownianCollisions::precompute()
 {
     const volScalarField& T = popBal_.continuousPhase().thermo().T();
     const volScalarField& p = popBal_.continuousPhase().thermo().p();
