@@ -35,6 +35,8 @@ template<class Type>
 const Foam::wordList Foam::fv::CodedSource<Type>::codeKeys_ =
 {
     "codeAddSup",
+    "codeAddRhoSup",
+    "codeAddAlphaRhoSup",
     "codeCorrect",
     "codeInclude",
     "codeSetValue",

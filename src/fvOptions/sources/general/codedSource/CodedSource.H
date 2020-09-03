@@ -25,30 +25,7 @@ Class
     Foam::fv::CodedSource
 
 Description
-   Constructs on-the-fly fvOption source
-
-    The hook functions take the following arguments:
-
-    codeCorrect
-    (
-        GeometricField<Type, fvPatchField, volMesh>& field
-    )
-
-    codeAddSup
-    (
-        fvMatrix<Type}>& eqn,
-        const label fieldi
-    )
-
-    constrain
-    (
-        fvMatrix<Type}>& eqn,
-        const label fieldi
-    )
-
-    where :
-        field is the field in fieldNames
-        eqn is the fvMatrix
+   Constructs on-the-fly fvOption source from user-supplied code
 
 Usage
     Example usage in controlDict:
@@ -69,7 +46,6 @@ Usage
 
             codeInclude
             #{
-
             #};
 
             codeCorrect
@@ -83,6 +59,16 @@ Usage
                 const scalarField& V = mesh_.V();
                 scalarField& heSource = eqn.source();
                 heSource -= 0.1*sqr(time.value())*V;
+            #};
+
+            codeAddRhoSup
+            #{
+                Pout<< "**codeAddRhoSup**" << endl;
+            #};
+
+            codeAddAlphaRhoSup
+            #{
+                Pout<< "**codeAddAlphaRhoSup**" << endl;
             #};
 
             codeSetValue

@@ -75,12 +75,8 @@ extern "C"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-//makeRemovablePatchTypeField
-//(
-//    fvPatch${FieldType},
-//    ${typeName}FvOption${SourceType}
-//);
 defineTypeNameAndDebug(${typeName}FvOption${SourceType}, 0);
+
 addRemovableToRunTimeSelectionTable
 (
     option,
@@ -174,7 +170,26 @@ void ${typeName}FvOption${SourceType}::addSup
     }
 
 //{{{ begin code
-    ${codeAddSup}
+    ${codeAddRhoSup}
+//}}} end code
+}
+
+
+void ${typeName}FvOption${SourceType}::addSup
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<${TemplateType}>& eqn,
+    const label fieldi
+) const
+{
+    if (${verbose:-false})
+    {
+        Info<<"${typeName}FvOption${SourceType}::addSup()\n";
+    }
+
+//{{{ begin code
+    ${codeAddAlphaRhoSup}
 //}}} end code
 }
 
