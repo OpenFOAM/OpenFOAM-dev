@@ -33,6 +33,7 @@ License
 
 #include "rhoTabulated.H"
 #include "hTabulatedThermo.H"
+#include "eTabulatedThermo.H"
 #include "tabulatedTransport.H"
 
 #include "icoTabulated.H"
@@ -51,12 +52,14 @@ License
     forThermo(Mu, He, Cp, icoTabulated, specie, Macro, Args);
 
 #define forTabulatedEnergiesAndThermos(Mu, Macro, Args...)                     \
-    forTabulatedEqns(Mu, sensibleEnthalpy, hTabulatedThermo, Macro, Args);
+    forTabulatedEqns(Mu, sensibleEnthalpy, hTabulatedThermo, Macro, Args);\
+    forTabulatedEqns(Mu, sensibleInternalEnergy, eTabulatedThermo, Macro, Args);
 
 #define forIcoTabulatedEnergiesAndThermos(Mu, Macro, Args...)                  \
     forIcoTabulatedEqns                                                        \
-        (Mu, sensibleInternalEnergy, eIcoTabulatedThermo, Macro, Args);        \
-    forIcoTabulatedEqns(Mu, sensibleEnthalpy, hIcoTabulatedThermo, Macro, Args);
+        (Mu, sensibleEnthalpy, hIcoTabulatedThermo, Macro, Args);              \
+    forIcoTabulatedEqns                                                        \
+        (Mu, sensibleInternalEnergy, eIcoTabulatedThermo, Macro, Args);
 
 #define forTabulatedTransport(Macro, Args...)                                  \
     forTabulatedEnergiesAndThermos(tabulatedTransport, Macro, Args);

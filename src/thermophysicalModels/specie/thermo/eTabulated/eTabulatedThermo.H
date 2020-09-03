@@ -22,20 +22,20 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::hTabulatedThermo
+    Foam::eTabulatedThermo
 
 Description
-    Enthalpy based thermodynamics package using non-uniform tabulated data for
-    heat capacity vs temperature.
+    Internal energy based thermodynamics package using non-uniform tabulated
+    data for heat capacity vs temperature.
 
 Usage
 
     \table
-        Property     | Description
-        Hf           | Heat of formation
-        Sf           | Standard entropy
-        Hs           | Sensible enthalpy vs pressure and temperature table
-        Cp           | Specific heat capacity vs pressure and temperature table
+        Property    | Description
+        Hf          | Heat of formation
+        Sf          | Standard entropy
+        Es          | Sensible internal energy vs pressure and temperature table
+        Cv          | Specific heat capacity vs pressure and temperature table
     \endtable
 
     Example of the specification of the thermodynamic properties:
@@ -45,7 +45,7 @@ Usage
         Hf              0;
         Sf              0;
 
-        Hs
+        Es
         {
             pLow    1e4;
             pHigh   5e5;
@@ -64,7 +64,7 @@ Usage
             );
         }
 
-        Cp
+        Cv
         {
             pLow    1e3;
             pHigh   1e6;
@@ -86,16 +86,16 @@ Usage
     \endverbatim
 
 SourceFiles
-    hTabulatedThermoI.H
-    hTabulatedThermo.C
+    eTabulatedThermoI.H
+    eTabulatedThermo.C
 
 See also
     Foam::thermophysicalFunctions::table2D
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef hTabulatedThermo_H
-#define hTabulatedThermo_H
+#ifndef eTabulatedThermo_H
+#define eTabulatedThermo_H
 
 #include "table2DThermophysicalFunction.H"
 
@@ -107,22 +107,22 @@ namespace Foam
 // Forward declaration of friend functions and operators
 
 template<class EquationOfState>
-class hTabulatedThermo;
+class eTabulatedThermo;
 
 template<class EquationOfState>
 Ostream& operator<<
 (
     Ostream&,
-    const hTabulatedThermo<EquationOfState>&
+    const eTabulatedThermo<EquationOfState>&
 );
 
 
 /*---------------------------------------------------------------------------*\
-                      Class hTabulatedThermo Declaration
+                      Class eTabulatedThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class EquationOfState>
-class hTabulatedThermo
+class eTabulatedThermo
 :
     public EquationOfState
 {
@@ -137,11 +137,11 @@ class hTabulatedThermo
         //- Standard entropy
         scalar Sf_;
 
-        //- Sensible enthalpy table [J/kg]
-        table2D Hs_;
+        //- Sensible internal energy table [J/kg]
+        table2D Es_;
 
-        //- Specific heat at constant pressure table [J/kg/K]
-        table2D Cp_;
+        //- Specific heat at constant volume table [J/kg/K]
+        table2D Cv_;
 
 
 public:
@@ -149,10 +149,10 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        hTabulatedThermo(const dictionary& dict);
+        eTabulatedThermo(const dictionary& dict);
 
         //- Construct as a named copy
-        inline hTabulatedThermo(const word&, const hTabulatedThermo&);
+        inline eTabulatedThermo(const word&, const eTabulatedThermo&);
 
 
     // Member Functions
@@ -160,7 +160,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "hTabulated<" + EquationOfState::typeName() + '>';
+            return "eTabulated<" + EquationOfState::typeName() + '>';
         }
 
         //- Limit the temperature to be in the range Tlow_ to Thigh_
@@ -170,13 +170,13 @@ public:
         // Fundamental properties
 
             //- Heat capacity at constant pressure [J/kg/K]
-            inline scalar Cp(const scalar p, const scalar T) const;
+            inline scalar Cv(const scalar p, const scalar T) const;
 
-            //- Sensible enthalpy [J/kg]
-            inline scalar Hs(const scalar p, const scalar T) const;
+            //- Sensible internal energy [J/kg]
+            inline scalar Es(const scalar p, const scalar T) const;
 
-            //- Absolute enthalpy [J/kg]
-            inline scalar Ha(const scalar p, const scalar T) const;
+            //- Absolute internal energy [J/kg]
+            inline scalar Ea(const scalar p, const scalar T) const;
 
             //- Enthalpy of formation [J/kg]
             inline scalar Hf() const;
@@ -188,13 +188,13 @@ public:
             inline scalar Gstd(const scalar T) const;
 
             //- Heat capacity at constant pressure [J/kg/K]
-            inline scalar Cv(const scalar p, const scalar T) const;
+            inline scalar Cp(const scalar p, const scalar T) const;
 
-            //- Sensible internal energy [J/kg]
-            inline scalar Es( const scalar p, const scalar T) const;
+            //- Sensible enthalpy [J/kg]
+            inline scalar Hs( const scalar p, const scalar T) const;
 
-            //- Absolute internal energy [J/kg]
-            inline scalar Ea( const scalar p, const scalar T) const;
+            //- Absolute enthalpy [J/kg]
+            inline scalar Ha(const scalar p, const scalar T) const;
 
 
         // Derivative term used for Jacobian
@@ -214,7 +214,7 @@ public:
         friend Ostream& operator<< <EquationOfState>
         (
             Ostream&,
-            const hTabulatedThermo&
+            const eTabulatedThermo&
         );
 };
 
@@ -225,10 +225,10 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "hTabulatedThermoI.H"
+#include "eTabulatedThermoI.H"
 
 #ifdef NoRepository
-    #include "hTabulatedThermo.C"
+    #include "eTabulatedThermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
