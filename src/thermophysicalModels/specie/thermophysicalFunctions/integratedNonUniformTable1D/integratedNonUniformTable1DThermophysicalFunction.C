@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "integratedNonUniformTableThermophysicalFunction.H"
+#include "integratedNonUniformTable1DThermophysicalFunction.H"
 #include "specie.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -33,12 +33,12 @@ namespace Foam
 {
 namespace thermophysicalFunctions
 {
-    defineTypeNameAndDebug(integratedNonUniformTable, 0);
+    defineTypeNameAndDebug(integratedNonUniformTable1D, 0);
 
     addToRunTimeSelectionTable
     (
         thermophysicalFunction,
-        integratedNonUniformTable,
+        integratedNonUniformTable1D,
         dictionary
     );
 }
@@ -47,14 +47,14 @@ namespace thermophysicalFunctions
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::thermophysicalFunctions::integratedNonUniformTable::
-integratedNonUniformTable
+Foam::thermophysicalFunctions::integratedNonUniformTable1D::
+integratedNonUniformTable1D
 (
     const word& name,
     const dictionary& dict
 )
 :
-    nonUniformTable(name, dict),
+    nonUniformTable1D(name, dict),
     intf_(values().size()),
     intfByT_(values().size())
 {
@@ -78,19 +78,19 @@ integratedNonUniformTable
 }
 
 
-Foam::thermophysicalFunctions::integratedNonUniformTable::
-integratedNonUniformTable
+Foam::thermophysicalFunctions::integratedNonUniformTable1D::
+integratedNonUniformTable1D
 (
     const dictionary& dict
 )
 :
-    integratedNonUniformTable("values", dict)
+    integratedNonUniformTable1D("values", dict)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::thermophysicalFunctions::integratedNonUniformTable::intfdT
+Foam::scalar Foam::thermophysicalFunctions::integratedNonUniformTable1D::intfdT
 (
     scalar p,
     scalar T
@@ -108,7 +108,8 @@ Foam::scalar Foam::thermophysicalFunctions::integratedNonUniformTable::intfdT
 }
 
 
-Foam::scalar Foam::thermophysicalFunctions::integratedNonUniformTable::intfByTdT
+Foam::scalar Foam::thermophysicalFunctions::integratedNonUniformTable1D::
+intfByTdT
 (
     scalar p,
     scalar T
@@ -125,12 +126,12 @@ Foam::scalar Foam::thermophysicalFunctions::integratedNonUniformTable::intfByTdT
 }
 
 
-void Foam::thermophysicalFunctions::integratedNonUniformTable::write
+void Foam::thermophysicalFunctions::integratedNonUniformTable1D::write
 (
     Ostream& os
 ) const
 {
-    nonUniformTable::write(os);
+    nonUniformTable1D::write(os);
 }
 
 

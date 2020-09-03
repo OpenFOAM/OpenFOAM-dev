@@ -23,28 +23,31 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "icoTabulated.H"
+#include "rhoTabulated.H"
 #include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
-Foam::icoTabulated<Specie>::icoTabulated(const dictionary& dict)
+Foam::rhoTabulated<Specie>::rhoTabulated(const dictionary& dict)
 :
     Specie(dict),
-    rho_("rho", dict.subDict("equationOfState"))
+    rho_(dict.subDict("equationOfState").subDict("rho"))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Specie>
-void Foam::icoTabulated<Specie>::write(Ostream& os) const
+void Foam::rhoTabulated<Specie>::write(Ostream& os) const
 {
     Specie::write(os);
 
     dictionary dict("equationOfState");
-    dict.add("rho", rho_.values());
+
+    dictionary rhoDict("rho");
+    rhoDict.add("values", rho_.values());
+    dict.add("rho", rhoDict);
 
     os  << indent << dict.dictName() << dict;
 }
@@ -53,7 +56,7 @@ void Foam::icoTabulated<Specie>::write(Ostream& os) const
 // * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
 
 template<class Specie>
-Foam::Ostream& Foam::operator<<(Ostream& os, const icoTabulated<Specie>& ip)
+Foam::Ostream& Foam::operator<<(Ostream& os, const rhoTabulated<Specie>& ip)
 {
     ip.write(os);
     return os;

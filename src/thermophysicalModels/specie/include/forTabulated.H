@@ -27,33 +27,45 @@ License
 #define forTabulated_H
 
 #include "specie.H"
-
-#include "icoTabulated.H"
-
-#include "hTabulatedThermo.H"
-
+#include "thermo.H"
 #include "sensibleEnthalpy.H"
 #include "sensibleInternalEnergy.H"
 
+#include "rhoTabulated.H"
+#include "hTabulatedThermo.H"
 #include "tabulatedTransport.H"
 
-#include "thermo.H"
+#include "icoTabulated.H"
+#include "hIcoTabulatedThermo.H"
+#include "eIcoTabulatedThermo.H"
+#include "icoTabulatedTransport.H"
 
 #include "forThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define forTabulatedEqns(Mu, He, Cp, Macro, Args...)                          \
+#define forTabulatedEqns(Mu, He, Cp, Macro, Args...)                           \
+    forThermo(Mu, He, Cp, rhoTabulated, specie, Macro, Args);
+
+#define forIcoTabulatedEqns(Mu, He, Cp, Macro, Args...)                        \
     forThermo(Mu, He, Cp, icoTabulated, specie, Macro, Args);
 
-#define forTabulatedEnergiesAndThermos(Mu, Macro, Args...)                    \
-    forTabulatedEqns(Mu, sensibleEnthalpy, hTabulatedThermo, Macro, Args);     \
-    forTabulatedEqns(Mu, sensibleInternalEnergy, hTabulatedThermo, Macro, Args);
+#define forTabulatedEnergiesAndThermos(Mu, Macro, Args...)                     \
+    forTabulatedEqns(Mu, sensibleEnthalpy, hTabulatedThermo, Macro, Args);
 
-#define forTabulatedTransport(Macro, Args...)                                 \
+#define forIcoTabulatedEnergiesAndThermos(Mu, Macro, Args...)                  \
+    forIcoTabulatedEqns                                                        \
+        (Mu, sensibleInternalEnergy, eIcoTabulatedThermo, Macro, Args);        \
+    forIcoTabulatedEqns(Mu, sensibleEnthalpy, hIcoTabulatedThermo, Macro, Args);
+
+#define forTabulatedTransport(Macro, Args...)                                  \
     forTabulatedEnergiesAndThermos(tabulatedTransport, Macro, Args);
 
-#define forTabulated(Macro, Args...)                                          \
+#define forIcoTabulatedTransport(Macro, Args...)                               \
+    forIcoTabulatedEnergiesAndThermos(icoTabulatedTransport, Macro, Args);
+
+#define forTabulated(Macro, Args...)                                           \
+    forIcoTabulatedTransport(Macro, Args)                                      \
     forTabulatedTransport(Macro, Args)
 
 #endif

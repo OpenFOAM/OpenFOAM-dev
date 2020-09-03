@@ -35,8 +35,8 @@ Foam::tabulatedTransport<Thermo>::tabulatedTransport
 )
 :
     Thermo(dict),
-    mu_("mu", dict.subDict("transport")),
-    kappa_("kappa", dict.subDict("transport"))
+    mu_(dict.subDict("transport").subDict("mu")),
+    kappa_(dict.subDict("transport").subDict("kappa"))
 {}
 
 
@@ -51,8 +51,15 @@ void Foam::tabulatedTransport<Thermo>::write(Ostream& os) const
     Thermo::write(os);
 
     dictionary dict("transport");
-    dict.add("mu", mu_.values());
-    dict.add("kappa", kappa_.values());
+
+    dictionary muDict("mu");
+    muDict.add("values", mu_.values());
+    dict.add("mu", muDict);
+
+    dictionary kappaDict("kappa");
+    kappaDict.add("values", kappa_.values());
+    dict.add("kappa", kappaDict);
+
     os  << indent << dict.dictName() << dict;
 
     os  << decrIndent << token::END_BLOCK << nl;

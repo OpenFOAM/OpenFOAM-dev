@@ -23,109 +23,53 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "hTabulatedThermo.H"
+#include "hIcoTabulatedThermo.H"
+#include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState>
-inline Foam::hTabulatedThermo<EquationOfState>::hTabulatedThermo
+Foam::hIcoTabulatedThermo<EquationOfState>::hIcoTabulatedThermo
 (
-    const word& name,
-    const hTabulatedThermo& pt
+    const dictionary& dict
 )
 :
-    EquationOfState(name, pt),
-    Hf_(pt.Hf_),
-    Sf_(pt.Sf_),
-    Hs_(pt.Hs_),
-    Cp_(pt.Cp_)
+    EquationOfState(dict),
+    Hf_(dict.subDict("thermodynamics").lookup<scalar>("Hf")),
+    Sf_(dict.subDict("thermodynamics").lookup<scalar>("Sf")),
+    Cp_("Cp", dict.subDict("thermodynamics"))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::limit
+void Foam::hIcoTabulatedThermo<EquationOfState>::write
 (
-    const scalar T
+    Ostream& os
 ) const
 {
-    return T;
+    EquationOfState::write(os);
+
+    dictionary dict("thermodynamics");
+    dict.add("Hf", Hf_);
+    dict.add("Sf", Sf_);
+    dict.add("Cp", Cp_.values());
+    os  << indent << dict.dictName() << dict;
 }
 
 
+// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
+
 template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Cp
+Foam::Ostream& Foam::operator<<
 (
-    const scalar p,
-    const scalar T
-) const
+    Ostream& os,
+    const hIcoTabulatedThermo<EquationOfState>& pt
+)
 {
-    return Cp_.f(p, T);
-}
-
-
-template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Hs
-(
-    const scalar p,
-    const scalar T
-) const
-{
-    return Hs_.f(p, T);
-}
-
-
-template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Ha
-(
-    const scalar p,
-    const scalar T
-) const
-{
-    return Hs(p, T) + Hf_;
-}
-
-
-template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Hf()
-const
-{
-    return Hf_;
-}
-
-
-template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::S
-(
-    const scalar p,
-    const scalar T
-) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Gstd
-(
-    const scalar T
-) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::dCpdT
-(
-    const scalar p,
-    const scalar T
-) const
-{
-    return Cp_.dfdT(p, T);
+    pt.write(os);
+    return os;
 }
 
 

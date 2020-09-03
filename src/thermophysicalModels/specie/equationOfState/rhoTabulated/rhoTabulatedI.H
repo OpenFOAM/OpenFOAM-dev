@@ -23,15 +23,15 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "icoTabulated.H"
+#include "rhoTabulated.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Specie>
-inline Foam::icoTabulated<Specie>::icoTabulated
+inline Foam::rhoTabulated<Specie>::rhoTabulated
 (
     const Specie& sp,
-    const nonUniformTable1D& rho
+    const table2D& rho
 )
 :
     Specie(sp),
@@ -42,10 +42,10 @@ inline Foam::icoTabulated<Specie>::icoTabulated
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Specie>
-inline Foam::icoTabulated<Specie>::icoTabulated
+inline Foam::rhoTabulated<Specie>::rhoTabulated
 (
     const word& name,
-    const icoTabulated<Specie>& ip
+    const rhoTabulated<Specie>& ip
 )
 :
     Specie(name, ip),
@@ -54,23 +54,23 @@ inline Foam::icoTabulated<Specie>::icoTabulated
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::icoTabulated<Specie>>
-Foam::icoTabulated<Specie>::clone() const
+inline Foam::autoPtr<Foam::rhoTabulated<Specie>>
+Foam::rhoTabulated<Specie>::clone() const
 {
-    return autoPtr<icoTabulated<Specie>>
+    return autoPtr<rhoTabulated<Specie>>
     (
-        new icoTabulated<Specie>(*this)
+        new rhoTabulated<Specie>(*this)
     );
 }
 
 
 template<class Specie>
-inline Foam::autoPtr<Foam::icoTabulated<Specie>>
-Foam::icoTabulated<Specie>::New(const dictionary& dict)
+inline Foam::autoPtr<Foam::rhoTabulated<Specie>>
+Foam::rhoTabulated<Specie>::New(const dictionary& dict)
 {
-    return autoPtr<icoTabulated<Specie>>
+    return autoPtr<rhoTabulated<Specie>>
     (
-        new icoTabulated<Specie>(dict)
+        new rhoTabulated<Specie>(dict)
     );
 }
 
@@ -78,7 +78,7 @@ Foam::icoTabulated<Specie>::New(const dictionary& dict)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Specie>
-inline Foam::scalar Foam::icoTabulated<Specie>::rho
+inline Foam::scalar Foam::rhoTabulated<Specie>::rho
 (
     scalar p,
     scalar T
@@ -89,18 +89,7 @@ inline Foam::scalar Foam::icoTabulated<Specie>::rho
 
 
 template<class Specie>
-inline Foam::scalar Foam::icoTabulated<Specie>::H
-(
-    scalar p,
-    scalar T
-) const
-{
-    return p/this->rho(p, T);
-}
-
-
-template<class Specie>
-inline Foam::scalar Foam::icoTabulated<Specie>::Cp
+inline Foam::scalar Foam::rhoTabulated<Specie>::H
 (
     scalar p,
     scalar T
@@ -111,7 +100,7 @@ inline Foam::scalar Foam::icoTabulated<Specie>::Cp
 
 
 template<class Specie>
-inline Foam::scalar Foam::icoTabulated<Specie>::E
+inline Foam::scalar Foam::rhoTabulated<Specie>::Cp
 (
     scalar p,
     scalar T
@@ -122,7 +111,7 @@ inline Foam::scalar Foam::icoTabulated<Specie>::E
 
 
 template<class Specie>
-inline Foam::scalar Foam::icoTabulated<Specie>::Cv
+inline Foam::scalar Foam::rhoTabulated<Specie>::E
 (
     scalar p,
     scalar T
@@ -133,7 +122,7 @@ inline Foam::scalar Foam::icoTabulated<Specie>::Cv
 
 
 template<class Specie>
-inline Foam::scalar Foam::icoTabulated<Specie>::Sp
+inline Foam::scalar Foam::rhoTabulated<Specie>::Cv
 (
     scalar p,
     scalar T
@@ -144,7 +133,7 @@ inline Foam::scalar Foam::icoTabulated<Specie>::Sp
 
 
 template<class Specie>
-inline Foam::scalar Foam::icoTabulated<Specie>::Sv
+inline Foam::scalar Foam::rhoTabulated<Specie>::Sp
 (
     scalar p,
     scalar T
@@ -155,7 +144,7 @@ inline Foam::scalar Foam::icoTabulated<Specie>::Sv
 
 
 template<class Specie>
-inline Foam::scalar Foam::icoTabulated<Specie>::psi
+inline Foam::scalar Foam::rhoTabulated<Specie>::Sv
 (
     scalar p,
     scalar T
@@ -166,7 +155,18 @@ inline Foam::scalar Foam::icoTabulated<Specie>::psi
 
 
 template<class Specie>
-inline Foam::scalar Foam::icoTabulated<Specie>::Z
+inline Foam::scalar Foam::rhoTabulated<Specie>::psi
+(
+    scalar p,
+    scalar T
+) const
+{
+    return rho_.dfdp(p, T);
+}
+
+
+template<class Specie>
+inline Foam::scalar Foam::rhoTabulated<Specie>::Z
 (
     scalar p,
     scalar T
@@ -177,7 +177,7 @@ inline Foam::scalar Foam::icoTabulated<Specie>::Z
 
 
 template<class Specie>
-inline Foam::scalar Foam::icoTabulated<Specie>::CpMCv
+inline Foam::scalar Foam::rhoTabulated<Specie>::CpMCv
 (
     scalar p,
     scalar T

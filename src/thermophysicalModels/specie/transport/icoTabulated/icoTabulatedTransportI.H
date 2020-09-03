@@ -23,62 +23,80 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "hTabulatedThermo.H"
-#include "IOstreams.H"
+#include "specie.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class EquationOfState>
-Foam::hTabulatedThermo<EquationOfState>::hTabulatedThermo
+template<class Thermo>
+inline Foam::icoTabulatedTransport<Thermo>::icoTabulatedTransport
 (
-    const dictionary& dict
+    const Thermo& t,
+    const nonUniformTable1D& mu,
+    const nonUniformTable1D& kappa
 )
 :
-    EquationOfState(dict),
-    Hf_(dict.subDict("thermodynamics").lookup<scalar>("Hf")),
-    Sf_(dict.subDict("thermodynamics").lookup<scalar>("Sf")),
-    Hs_(dict.subDict("thermodynamics").subDict("Hs")),
-    Cp_(dict.subDict("thermodynamics").subDict("Cp"))
+    Thermo(t),
+    mu_(mu),
+    kappa_(kappa)
 {}
+
+
+template<class Thermo>
+inline Foam::icoTabulatedTransport<Thermo>::icoTabulatedTransport
+(
+    const word& name,
+    const icoTabulatedTransport& pt
+)
+:
+    Thermo(name, pt),
+    mu_(pt.mu_),
+    kappa_(pt.kappa_)
+{}
+
+
+template<class Thermo>
+inline Foam::autoPtr<Foam::icoTabulatedTransport<Thermo>>
+Foam::icoTabulatedTransport<Thermo>::clone() const
+{
+    return autoPtr<icoTabulatedTransport<Thermo>>
+    (
+        new icoTabulatedTransport<Thermo>(*this)
+    );
+}
+
+
+template<class Thermo>
+inline Foam::autoPtr<Foam::icoTabulatedTransport<Thermo>>
+Foam::icoTabulatedTransport<Thermo>::New(const dictionary& dict)
+{
+    return autoPtr<icoTabulatedTransport<Thermo>>
+    (
+        new icoTabulatedTransport<Thermo>(dict)
+    );
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class EquationOfState>
-void Foam::hTabulatedThermo<EquationOfState>::write
+template<class Thermo>
+inline Foam::scalar Foam::icoTabulatedTransport<Thermo>::mu
 (
-    Ostream& os
+    const scalar p,
+    const scalar T
 ) const
 {
-    EquationOfState::write(os);
-
-    dictionary dict("thermodynamics");
-    dict.add("Hf", Hf_);
-    dict.add("Sf", Sf_);
-
-    dictionary HsDict("Hs");
-    HsDict.add("values", Hs_.values());
-    dict.add("Hs", HsDict);
-
-    dictionary CpDict("Cp");
-    CpDict.add("values", Cp_.values());
-    dict.add("Cp", CpDict);
-
-    os  << indent << dict.dictName() << dict;
+    return mu_.f(p, T);
 }
 
 
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
-
-template<class EquationOfState>
-Foam::Ostream& Foam::operator<<
+template<class Thermo>
+inline Foam::scalar Foam::icoTabulatedTransport<Thermo>::kappa
 (
-    Ostream& os,
-    const hTabulatedThermo<EquationOfState>& pt
-)
+    const scalar p,
+    const scalar T
+) const
 {
-    pt.write(os);
-    return os;
+    return kappa_.f(p, T);
 }
 
 

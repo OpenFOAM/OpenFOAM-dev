@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::hTabulatedThermo
+    Foam::hIcoTabulatedThermo
 
 Description
     Enthalpy based thermodynamics package using non-uniform tabulated data for
@@ -34,8 +34,7 @@ Usage
         Property     | Description
         Hf           | Heat of formation
         Sf           | Standard entropy
-        Hs           | Sensible enthalpy vs pressure and temperature table
-        Cp           | Specific heat capacity vs pressure and temperature table
+        Cp           | Specific heat at constant pressure vs temperature table
     \endtable
 
     Example of the specification of the thermodynamic properties:
@@ -44,60 +43,28 @@ Usage
     {
         Hf              0;
         Sf              0;
-
-        Hs
-        {
-            pLow    1e4;
-            pHigh   5e5;
-
-            Tlow    200;
-            Thigh   1500;
-
-            values
-            <m> <n>
-            (
-                (..........)
-                .
-                .
-                .
-                (..........)
-            );
-        }
-
         Cp
-        {
-            pLow    1e3;
-            pHigh   1e6;
-
-            Tlow    200;
-            Thigh   1500;
-
-            values
-            <m> <n>
-            (
-                (..........)
-                .
-                .
-                .
-                (..........)
-            );
-        }
+        (
+            (200     1005)
+            (350     1010)
+            (400     1020)
+        );
     }
     \endverbatim
 
 SourceFiles
-    hTabulatedThermoI.H
-    hTabulatedThermo.C
+    hIcoTabulatedThermoI.H
+    hIcoTabulatedThermo.C
 
 See also
-    Foam::thermophysicalFunctions::table2D
+    Foam::thermophysicalFunctions::nonUniformTable1D
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef hTabulatedThermo_H
-#define hTabulatedThermo_H
+#ifndef hIcoTabulatedThermo_H
+#define hIcoTabulatedThermo_H
 
-#include "table2DThermophysicalFunction.H"
+#include "integratedNonUniformTable1DThermophysicalFunction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -107,26 +74,27 @@ namespace Foam
 // Forward declaration of friend functions and operators
 
 template<class EquationOfState>
-class hTabulatedThermo;
+class hIcoTabulatedThermo;
 
 template<class EquationOfState>
 Ostream& operator<<
 (
     Ostream&,
-    const hTabulatedThermo<EquationOfState>&
+    const hIcoTabulatedThermo<EquationOfState>&
 );
 
 
 /*---------------------------------------------------------------------------*\
-                      Class hTabulatedThermo Declaration
+                      Class hIcoTabulatedThermo Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class EquationOfState>
-class hTabulatedThermo
+class hIcoTabulatedThermo
 :
     public EquationOfState
 {
-    typedef thermophysicalFunctions::table2D table2D;
+    typedef thermophysicalFunctions::integratedNonUniformTable1D
+        integratedNonUniformTable1D;
 
 
     // Private Data
@@ -137,11 +105,8 @@ class hTabulatedThermo
         //- Standard entropy
         scalar Sf_;
 
-        //- Sensible enthalpy table [J/kg]
-        table2D Hs_;
-
         //- Specific heat at constant pressure table [J/kg/K]
-        table2D Cp_;
+        integratedNonUniformTable1D Cp_;
 
 
 public:
@@ -149,10 +114,10 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        hTabulatedThermo(const dictionary& dict);
+        hIcoTabulatedThermo(const dictionary& dict);
 
         //- Construct as a named copy
-        inline hTabulatedThermo(const word&, const hTabulatedThermo&);
+        inline hIcoTabulatedThermo(const word&, const hIcoTabulatedThermo&);
 
 
     // Member Functions
@@ -160,7 +125,7 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "hTabulated<" + EquationOfState::typeName() + '>';
+            return "hIcoTabulated<" + EquationOfState::typeName() + '>';
         }
 
         //- Limit the temperature to be in the range Tlow_ to Thigh_
@@ -172,11 +137,11 @@ public:
             //- Heat capacity at constant pressure [J/kg/K]
             inline scalar Cp(const scalar p, const scalar T) const;
 
-            //- Sensible enthalpy [J/kg]
-            inline scalar Hs(const scalar p, const scalar T) const;
-
             //- Absolute enthalpy [J/kg]
             inline scalar Ha(const scalar p, const scalar T) const;
+
+            //- Sensible enthalpy [J/kg]
+            inline scalar Hs(const scalar p, const scalar T) const;
 
             //- Enthalpy of formation [J/kg]
             inline scalar Hf() const;
@@ -187,35 +152,7 @@ public:
             //- Gibbs free energy of the mixture in the standard state [J/kg]
             inline scalar Gstd(const scalar T) const;
 
-            inline scalar Cv
-            (
-                const scalar p,
-                const scalar T
-            ) const
-            {
-                NotImplemented;
-                return 0;
-            }
-
-            inline scalar Es
-            (
-                const scalar p,
-                const scalar T
-            ) const
-            {
-                NotImplemented;
-                return 0;
-            }
-
-            inline scalar Ea
-            (
-                const scalar p,
-                const scalar T
-            ) const
-            {
-                NotImplemented;
-                return 0;
-            }
+            #include "HtoEthermo.H"
 
 
         // Derivative term used for Jacobian
@@ -235,7 +172,7 @@ public:
         friend Ostream& operator<< <EquationOfState>
         (
             Ostream&,
-            const hTabulatedThermo&
+            const hIcoTabulatedThermo&
         );
 };
 
@@ -246,10 +183,10 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "hTabulatedThermoI.H"
+#include "hIcoTabulatedThermoI.H"
 
 #ifdef NoRepository
-    #include "hTabulatedThermo.C"
+    #include "hIcoTabulatedThermo.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

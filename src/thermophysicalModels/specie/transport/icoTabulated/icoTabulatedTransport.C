@@ -23,39 +23,52 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "icoTabulated.H"
+#include "icoTabulatedTransport.H"
 #include "IOstreams.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Specie>
-Foam::icoTabulated<Specie>::icoTabulated(const dictionary& dict)
+template<class Thermo>
+Foam::icoTabulatedTransport<Thermo>::icoTabulatedTransport
+(
+    const dictionary& dict
+)
 :
-    Specie(dict),
-    rho_("rho", dict.subDict("equationOfState"))
+    Thermo(dict),
+    mu_("mu", dict.subDict("transport")),
+    kappa_("kappa", dict.subDict("transport"))
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Specie>
-void Foam::icoTabulated<Specie>::write(Ostream& os) const
+template<class Thermo>
+void Foam::icoTabulatedTransport<Thermo>::write(Ostream& os) const
 {
-    Specie::write(os);
+    os  << this->name() << endl;
+    os  << token::BEGIN_BLOCK << incrIndent << nl;
 
-    dictionary dict("equationOfState");
-    dict.add("rho", rho_.values());
+    Thermo::write(os);
 
+    dictionary dict("transport");
+    dict.add("mu", mu_.values());
+    dict.add("kappa", kappa_.values());
     os  << indent << dict.dictName() << dict;
+
+    os  << decrIndent << token::END_BLOCK << nl;
 }
 
 
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
-template<class Specie>
-Foam::Ostream& Foam::operator<<(Ostream& os, const icoTabulated<Specie>& ip)
+template<class Thermo>
+Foam::Ostream& Foam::operator<<
+(
+    Ostream& os,
+    const icoTabulatedTransport<Thermo>& pt
+)
 {
-    ip.write(os);
+    pt.write(os);
     return os;
 }
 

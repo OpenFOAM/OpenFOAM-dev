@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::icoTabulated
+    Foam::rhoTabulated
 
 Description
     Incompressible of equation of state using non-uniform tabulated
@@ -31,7 +31,7 @@ Description
 Usage
     \table
         Property     | Description
-        rho          | Density vs temperature table
+        rho          | Density vs pressure and temperature table
     \endtable
 
     Example of the specification of the equation of state:
@@ -39,27 +39,39 @@ Usage
     equationOfState
     {
         rho
-        (
-            (200 1010)
-            (350 1000)
-            (400 980)
-        );
+        {
+            pLow    1e4;
+            pHigh   5e5;
+
+            Tlow    200;
+            Thigh   1500;
+
+            values
+            <m> <n>
+            (
+                (..........)
+                .
+                .
+                .
+                (..........)
+            );
+        }
     }
     \endverbatim
 
 SourceFiles
-    icoTabulatedI.H
-    icoTabulated.C
+    rhoTabulatedI.H
+    rhoTabulated.C
 
 See also
     Foam::thermophysicalFunctions::nonUniformTable1D
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef icoTabulated_H
-#define icoTabulated_H
+#ifndef rhoTabulated_H
+#define rhoTabulated_H
 
-#include "nonUniformTable1DThermophysicalFunction.H"
+#include "table2DThermophysicalFunction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,32 +81,32 @@ namespace Foam
 // Forward declaration of friend functions and operators
 
 template<class Specie>
-class icoTabulated;
+class rhoTabulated;
 
 template<class Specie>
 Ostream& operator<<
 (
     Ostream&,
-    const icoTabulated<Specie>&
+    const rhoTabulated<Specie>&
 );
 
 
 /*---------------------------------------------------------------------------*\
-                        Class icoTabulated Declaration
+                        Class rhoTabulated Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Specie>
-class icoTabulated
+class rhoTabulated
 :
     public Specie
 {
-    typedef thermophysicalFunctions::nonUniformTable1D nonUniformTable1D;
+    typedef thermophysicalFunctions::table2D table2D;
 
 
     // Private Data
 
         //- Density table [kg/m^3]
-        nonUniformTable1D rho_;
+        table2D rho_;
 
 
 public:
@@ -102,23 +114,23 @@ public:
     // Constructors
 
         //- Construct from components
-        inline icoTabulated
+        inline rhoTabulated
         (
             const Specie& sp,
-            const nonUniformTable1D& rho
+            const table2D& rho
         );
 
         //- Construct from dictionary
-        icoTabulated(const dictionary& dict);
+        rhoTabulated(const dictionary& dict);
 
         //- Construct as named copy
-        inline icoTabulated(const word& name, const icoTabulated&);
+        inline rhoTabulated(const word& name, const rhoTabulated&);
 
         //- Construct and return a clone
-        inline autoPtr<icoTabulated> clone() const;
+        inline autoPtr<rhoTabulated> clone() const;
 
         // Selector from dictionary
-        inline static autoPtr<icoTabulated> New(const dictionary& dict);
+        inline static autoPtr<rhoTabulated> New(const dictionary& dict);
 
 
     // Member Functions
@@ -126,14 +138,14 @@ public:
         //- Return the instantiated type name
         static word typeName()
         {
-            return "icoTabulated<" + word(Specie::typeName_()) + '>';
+            return "rhoTabulated<" + word(Specie::typeName_()) + '>';
         }
 
 
         // Fundamental properties
 
             //- Is the equation of state is incompressible i.e. rho != f(p)
-            static const bool incompressible = true;
+            static const bool incompressible = false;
 
             //- Is the equation of state is isochoric i.e. rho = const
             static const bool isochoric = false;
@@ -180,7 +192,7 @@ public:
         friend Ostream& operator<< <Specie>
         (
             Ostream&,
-            const icoTabulated&
+            const rhoTabulated&
         );
 };
 
@@ -191,12 +203,12 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "icoTabulatedI.H"
+#include "rhoTabulatedI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "icoTabulated.C"
+    #include "rhoTabulated.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

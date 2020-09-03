@@ -23,40 +23,36 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "icoTabulated.H"
-#include "IOstreams.H"
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Specie>
-Foam::icoTabulated<Specie>::icoTabulated(const dictionary& dict)
-:
-    Specie(dict),
-    rho_("rho", dict.subDict("equationOfState"))
-{}
-
+#include "nonUniformTable1DThermophysicalFunction.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Specie>
-void Foam::icoTabulated<Specie>::write(Ostream& os) const
+inline Foam::label Foam::thermophysicalFunctions::nonUniformTable1D::index
+(
+    scalar p,
+    scalar T
+) const
 {
-    Specie::write(os);
+    if (T < Tlow_ || T > Thigh_)
+    {
+        FatalErrorInFunction
+            << "Temperature " << T << " out of range "
+            << Tlow_ << " to " << Thigh_ << nl
+            << "    of nonUniformTable1D " << name_
+            << exit(FatalError);
+    }
 
-    dictionary dict("equationOfState");
-    dict.add("rho", rho_.values());
+    const scalar nd = (T - Tlow_)/deltaT_;
+    const label j = nd;
 
-    os  << indent << dict.dictName() << dict;
-}
+    label i = jumpTable_[j];
 
+    if (i < values_.size() - 1 && T > values_[i + 1].first())
+    {
+        i++;
+    }
 
-// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
-
-template<class Specie>
-Foam::Ostream& Foam::operator<<(Ostream& os, const icoTabulated<Specie>& ip)
-{
-    ip.write(os);
-    return os;
+    return i;
 }
 
 

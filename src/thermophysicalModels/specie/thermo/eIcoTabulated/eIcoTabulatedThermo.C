@@ -23,36 +23,53 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "nonUniformTableThermophysicalFunction.H"
+#include "eIcoTabulatedThermo.H"
+#include "IOstreams.H"
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+template<class EquationOfState>
+Foam::eIcoTabulatedThermo<EquationOfState>::eIcoTabulatedThermo
+(
+    const dictionary& dict
+)
+:
+    EquationOfState(dict),
+    Hf_(dict.subDict("thermodynamics").lookup<scalar>("Hf")),
+    Sf_(dict.subDict("thermodynamics").lookup<scalar>("Sf")),
+    Cv_("Cv", dict.subDict("thermodynamics"))
+{}
+
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline Foam::label Foam::thermophysicalFunctions::nonUniformTable::index
+template<class EquationOfState>
+void Foam::eIcoTabulatedThermo<EquationOfState>::write
 (
-    scalar p,
-    scalar T
+    Ostream& os
 ) const
 {
-    if (T < Tlow_ || T > Thigh_)
-    {
-        FatalErrorInFunction
-            << "Temperature " << T << " out of range "
-            << Tlow_ << " to " << Thigh_ << nl
-            << "    of nonUniformTable " << name_
-            << exit(FatalError);
-    }
+    EquationOfState::write(os);
 
-    const scalar nd = (T - Tlow_)/deltaT_;
-    const label j = nd;
+    dictionary dict("thermodynamics");
+    dict.add("Hf", Hf_);
+    dict.add("Sf", Sf_);
+    dict.add("Cv", Cv_.values());
+    os  << indent << dict.dictName() << dict;
+}
 
-    label i = jumpTable_[j];
 
-    if (i < values_.size() - 1 && T > values_[i + 1].first())
-    {
-        i++;
-    }
+// * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
 
-    return i;
+template<class EquationOfState>
+Foam::Ostream& Foam::operator<<
+(
+    Ostream& os,
+    const eIcoTabulatedThermo<EquationOfState>& pt
+)
+{
+    pt.write(os);
+    return os;
 }
 
 

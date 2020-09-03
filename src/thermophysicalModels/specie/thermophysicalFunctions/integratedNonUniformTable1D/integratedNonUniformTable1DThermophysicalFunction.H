@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::thermophysicalFunctions::nonUniformTable
+    Foam::thermophysicalFunctions::integratedNonUniformTable1D
 
 Description
     Non-uniform tabulated property function that linearly interpolates between
@@ -33,16 +33,16 @@ Description
     the table.
 
 Usage
-    \nonUniformTable
+    \integratedNonUniformTable1D
         Property    | Description
         values      | List of (temperature property) value pairs
-    \endnonUniformTable
+    \endintegratedNonUniformTable1D
 
     Example for the density of water between 280 and 350K
     \verbatim
     rho
     {
-        type    nonUniformTable;
+        type    integratedNonUniformTable1D;
 
         values
         (
@@ -55,11 +55,10 @@ Usage
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef nonUniformTableThermophysicalFunction_H
-#define nonUniformTableThermophysicalFunction_H
+#ifndef integratedNonUniformTable1DThermophysicalFunction_H
+#define integratedNonUniformTable1DThermophysicalFunction_H
 
-#include "thermophysicalFunction.H"
-#include "Tuple2.H"
+#include "nonUniformTable1DThermophysicalFunction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,68 +68,42 @@ namespace thermophysicalFunctions
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class nonUniformTable Declaration
+                  Class integratedNonUniformTable1D Declaration
 \*---------------------------------------------------------------------------*/
 
-class nonUniformTable
+class integratedNonUniformTable1D
 :
-    public thermophysicalFunction
+    public nonUniformTable1D
 {
     // Private member data
 
-        //- Name of dictionary from which this function is instantiated
-        word name_;
+        List<scalar> intf_;
 
-        //- Lowest temperature in the nonUniformTable
-        scalar Tlow_;
-
-        //- Highest temperature in the nonUniformTable
-        scalar Thigh_;
-
-        //- Table values
-        List<Tuple2<scalar, scalar>> values_;
-
-        //- Temperature increment derived from Tlow_, Thigh_ and values_.size()
-        scalar deltaT_;
-
-        List<label> jumpTable_;
-
-
-protected:
-
-        //- Return the lower index of the interval in the table
-        //  corresponding to the given temperature
-        inline label index(scalar p, scalar T) const;
+        List<scalar> intfByT_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("nonUniformTable");
+    TypeName("integratedNonUniformTable1D");
 
 
     // Constructors
 
         //- Construct from entry name and dictionary
-        nonUniformTable(const word& name, const dictionary& dict);
+        integratedNonUniformTable1D(const word& name, const dictionary& dict);
 
         //- Construct from dictionary
-        nonUniformTable(const dictionary& dict);
+        integratedNonUniformTable1D(const dictionary& dict);
 
 
     // Member Functions
 
-        //- Return the non-uniform table of values
-        const List<Tuple2<scalar, scalar>>& values() const
-        {
-            return values_;
-        }
+        //- Integrate the function and return the result
+        scalar intfdT(scalar p, scalar T) const;
 
-        //- Evaluate the function and return the result
-        scalar f(scalar p, scalar T) const;
-
-        //- Evaluate the derivative of the function and return the result
-        scalar dfdT(scalar p, scalar T) const;
+        //- Integrate the function divided by T and return the result
+        scalar intfByTdT(scalar p, scalar T) const;
 
         //- Write the function coefficients
         void write(Ostream& os) const;
@@ -141,10 +114,6 @@ public:
 
 } // End namespace thermophysicalFunctions
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "nonUniformTableThermophysicalFunctionI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

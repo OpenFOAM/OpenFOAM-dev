@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "tableThermophysicalFunction.H"
+#include "table1DThermophysicalFunction.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -32,15 +32,15 @@ namespace Foam
 {
 namespace thermophysicalFunctions
 {
-    defineTypeNameAndDebug(table, 0);
-    addToRunTimeSelectionTable(thermophysicalFunction, table, dictionary);
+    defineTypeNameAndDebug(table1D, 0);
+    addToRunTimeSelectionTable(thermophysicalFunction, table1D, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::thermophysicalFunctions::table::table(const dictionary& dict)
+Foam::thermophysicalFunctions::table1D::table1D(const dictionary& dict)
 :
     dictName_(dict.name()),
     Tlow_(dict.lookup<scalar>("Tlow")),
@@ -64,7 +64,7 @@ Foam::thermophysicalFunctions::table::table(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::thermophysicalFunctions::table::f(scalar p, scalar T) const
+Foam::scalar Foam::thermophysicalFunctions::table1D::f(scalar p, scalar T) const
 {
     const scalar nd = (T - Tlow_)/deltaT_;
     const label i = nd;
@@ -85,7 +85,7 @@ Foam::scalar Foam::thermophysicalFunctions::table::f(scalar p, scalar T) const
 }
 
 
-void Foam::thermophysicalFunctions::table::write(Ostream& os) const
+void Foam::thermophysicalFunctions::table1D::write(Ostream& os) const
 {
     writeEntry(os, "Tlow", Tlow_);
     writeEntry(os, "Thigh", Thigh_);

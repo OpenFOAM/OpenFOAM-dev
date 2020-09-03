@@ -31,8 +31,8 @@ template<class Thermo>
 inline Foam::tabulatedTransport<Thermo>::tabulatedTransport
 (
     const Thermo& t,
-    const nonUniformTable& mu,
-    const nonUniformTable& kappa
+    const table2D& mu,
+    const table2D& kappa
 )
 :
     Thermo(t),

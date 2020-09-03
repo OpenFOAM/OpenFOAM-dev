@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,17 +22,17 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::thermophysicalFunctions::table
+    Foam::thermophysicalFunctions::table2D
 
 Description
     Tabulated property function that linearly interpolates between
-    the table values.
+    the table2D values.
 
 Usage
     \table
         Property    | Description
-        Tlow        | Lower temperature limit of the table
-        Thigh       | Upper temperature limit of the table
+        Tlow        | Lower temperature limit of the table2D
+        Thigh       | Upper temperature limit of the table2D
         values      | Property values, assumed uniformly distributed
     \endtable
 
@@ -40,7 +40,10 @@ Usage
     \verbatim
     rho
     {
-        type    table;
+        type    table2D;
+
+        pLow    1000;
+        pHigh   1e6;
 
         Tlow    280;
         Thigh   350;
@@ -56,10 +59,11 @@ Usage
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef tableThermophysicalFunction_H
-#define tableThermophysicalFunction_H
+#ifndef table2DThermophysicalFunction_H
+#define table2DThermophysicalFunction_H
 
 #include "thermophysicalFunction.H"
+#include "scalarMatrices.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,17 +73,23 @@ namespace thermophysicalFunctions
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class table Declaration
+                            Class table2D Declaration
 \*---------------------------------------------------------------------------*/
 
-class table
+class table2D
 :
     public thermophysicalFunction
 {
     // Private member data
 
         //- Name of dictionary from which this function is instantiated
-        fileName dictName_;
+        word name_;
+
+        //- Lowest pressure in the table
+        scalar pLow_;
+
+        //- Highest pressure in the table
+        scalar pHigh_;
 
         //- Lowest temperature in the table
         scalar Tlow_;
@@ -88,28 +98,59 @@ class table
         scalar Thigh_;
 
         //- Table values
-        List<scalar> values_;
+        scalarRectangularMatrix values_;
 
-        //- Temperature increment derived from Tlow_, Thigh_ and values_.size()
+        //- pressure increment derived from pLow_, pHigh_ and values_.m()
+        scalar deltap_;
+
+        //- Temperature increment derived from Tlow_, Thigh_ and values_.n()
         scalar deltaT_;
+
+
+    // Private member functions
+
+        inline void checkRange
+        (
+            scalar p,
+            scalar ndp,
+            label ip,
+            scalar T,
+            scalar ndT,
+            label iT
+        ) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("table");
+    TypeName("table2D");
 
 
     // Constructors
 
+        //- Construct from entry name and dictionary
+        table2D(const word& name, const dictionary& dict);
+
         //- Construct from dictionary
-        table(const dictionary& dict);
+        table2D(const dictionary& dict);
 
 
     // Member Functions
 
+        //- Return the non-uniform table of values
+        const scalarRectangularMatrix& values() const
+        {
+            return values_;
+        }
+
         //- Evaluate the function and return the result
         scalar f(scalar p, scalar T) const;
+
+        //- Evaluate the derivative of the function w.r.t. p
+        scalar dfdp(scalar p, scalar T) const;
+
+        //- Evaluate the derivative of the function w.r.t. T
+        scalar dfdT(scalar p, scalar T) const;
 
         //- Write the function coefficients
         void write(Ostream& os) const;

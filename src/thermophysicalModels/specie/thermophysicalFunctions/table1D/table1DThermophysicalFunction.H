@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,43 +22,44 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::thermophysicalFunctions::integratedNonUniformTable
+    Foam::thermophysicalFunctions::table1D
 
 Description
-    Non-uniform tabulated property function that linearly interpolates between
-    the values.
-
-    To speed-up the search of the non-uniform table a uniform jump-table is
-    created on construction which is used for fast indirect addressing into
-    the table.
+    Tabulated property function that linearly interpolates between
+    the table1D values.
 
 Usage
-    \integratedNonUniformTable
+    \table
         Property    | Description
-        values      | List of (temperature property) value pairs
-    \endintegratedNonUniformTable
+        Tlow        | Lower temperature limit of the table1D
+        Thigh       | Upper temperature limit of the table1D
+        values      | Property values, assumed uniformly distributed
+    \endtable
 
     Example for the density of water between 280 and 350K
     \verbatim
     rho
     {
-        type    integratedNonUniformTable;
+        type    table1D;
+
+        Tlow    280;
+        Thigh   350;
 
         values
         (
-            (280 999.87)
-            (300 995.1)
-            (350 973.7)
+            999.87
+            991.53
+            973.7
         );
     }
     \endverbatim
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef integratedNonUniformTableThermophysicalFunction_H
-#define integratedNonUniformTableThermophysicalFunction_H
+#ifndef table1DThermophysicalFunction_H
+#define table1DThermophysicalFunction_H
 
-#include "nonUniformTableThermophysicalFunction.H"
+#include "thermophysicalFunction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -68,42 +69,47 @@ namespace thermophysicalFunctions
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class integratedNonUniformTable Declaration
+                            Class table1D Declaration
 \*---------------------------------------------------------------------------*/
 
-class integratedNonUniformTable
+class table1D
 :
-    public nonUniformTable
+    public thermophysicalFunction
 {
     // Private member data
 
-        List<scalar> intf_;
+        //- Name of dictionary from which this function is instantiated
+        fileName dictName_;
 
-        List<scalar> intfByT_;
+        //- Lowest temperature in the table
+        scalar Tlow_;
+
+        //- Highest temperature in the table
+        scalar Thigh_;
+
+        //- Table values
+        List<scalar> values_;
+
+        //- Temperature increment derived from Tlow_, Thigh_ and values_.size()
+        scalar deltaT_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("integratedNonUniformTable");
+    TypeName("table1D");
 
 
     // Constructors
 
-        //- Construct from entry name and dictionary
-        integratedNonUniformTable(const word& name, const dictionary& dict);
-
         //- Construct from dictionary
-        integratedNonUniformTable(const dictionary& dict);
+        table1D(const dictionary& dict);
 
 
     // Member Functions
 
-        //- Integrate the function and return the result
-        scalar intfdT(scalar p, scalar T) const;
-
-        //- Integrate the function divided by T and return the result
-        scalar intfByTdT(scalar p, scalar T) const;
+        //- Evaluate the function and return the result
+        scalar f(scalar p, scalar T) const;
 
         //- Write the function coefficients
         void write(Ostream& os) const;

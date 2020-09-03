@@ -23,21 +23,20 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "hTabulatedThermo.H"
+#include "hIcoTabulatedThermo.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class EquationOfState>
-inline Foam::hTabulatedThermo<EquationOfState>::hTabulatedThermo
+inline Foam::hIcoTabulatedThermo<EquationOfState>::hIcoTabulatedThermo
 (
     const word& name,
-    const hTabulatedThermo& pt
+    const hIcoTabulatedThermo& pt
 )
 :
     EquationOfState(name, pt),
     Hf_(pt.Hf_),
     Sf_(pt.Sf_),
-    Hs_(pt.Hs_),
     Cp_(pt.Cp_)
 {}
 
@@ -45,7 +44,7 @@ inline Foam::hTabulatedThermo<EquationOfState>::hTabulatedThermo
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::limit
+inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::limit
 (
     const scalar T
 ) const
@@ -55,29 +54,29 @@ inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::limit
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Cp
+inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::Cp
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Cp_.f(p, T);
+    return Cp_.f(p, T) + EquationOfState::Cp(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Hs
+inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::Hs
 (
     const scalar p,
     const scalar T
 ) const
 {
-    return Hs_.f(p, T);
+    return Cp_.intfdT(p, T) + EquationOfState::H(p, T);
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Ha
+inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::Ha
 (
     const scalar p,
     const scalar T
@@ -88,7 +87,7 @@ inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Ha
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Hf()
+inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::Hf()
 const
 {
     return Hf_;
@@ -96,30 +95,28 @@ const
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::S
+inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::S
 (
     const scalar p,
     const scalar T
 ) const
 {
-    NotImplemented;
-    return 0;
+    return Cp_.intfByTdT(p, T) + EquationOfState::Sp(p, T) + Sf_;
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Gstd
+inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::Gstd
 (
     const scalar T
 ) const
 {
-    NotImplemented;
-    return 0;
+    return Cp_.intfdT(Pstd, T) + Hf_ - (Cp_.intfByTdT(Pstd, T) + Sf_)*T;
 }
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::dCpdT
+inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::dCpdT
 (
     const scalar p,
     const scalar T

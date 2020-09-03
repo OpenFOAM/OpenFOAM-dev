@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "nonUniformTableThermophysicalFunction.H"
+#include "nonUniformTable1DThermophysicalFunction.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -32,12 +32,12 @@ namespace Foam
 {
 namespace thermophysicalFunctions
 {
-    defineTypeNameAndDebug(nonUniformTable, 0);
+    defineTypeNameAndDebug(nonUniformTable1D, 0);
 
     addToRunTimeSelectionTable
     (
         thermophysicalFunction,
-        nonUniformTable,
+        nonUniformTable1D,
         dictionary
     );
 }
@@ -52,7 +52,7 @@ const char* const Foam::Tuple2<Foam::scalar, Foam::scalar>::typeName
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::thermophysicalFunctions::nonUniformTable::nonUniformTable
+Foam::thermophysicalFunctions::nonUniformTable1D::nonUniformTable1D
 (
     const word& name,
     const dictionary& dict
@@ -102,18 +102,18 @@ Foam::thermophysicalFunctions::nonUniformTable::nonUniformTable
 }
 
 
-Foam::thermophysicalFunctions::nonUniformTable::nonUniformTable
+Foam::thermophysicalFunctions::nonUniformTable1D::nonUniformTable1D
 (
     const dictionary& dict
 )
 :
-    nonUniformTable("values", dict)
+    nonUniformTable1D("values", dict)
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::thermophysicalFunctions::nonUniformTable::f
+Foam::scalar Foam::thermophysicalFunctions::nonUniformTable1D::f
 (
     scalar p,
     scalar T
@@ -129,7 +129,7 @@ Foam::scalar Foam::thermophysicalFunctions::nonUniformTable::f
 }
 
 
-Foam::scalar Foam::thermophysicalFunctions::nonUniformTable::dfdT
+Foam::scalar Foam::thermophysicalFunctions::nonUniformTable1D::dfdT
 (
     scalar p,
     scalar T
@@ -143,7 +143,7 @@ Foam::scalar Foam::thermophysicalFunctions::nonUniformTable::dfdT
 }
 
 
-void Foam::thermophysicalFunctions::nonUniformTable::write(Ostream& os) const
+void Foam::thermophysicalFunctions::nonUniformTable1D::write(Ostream& os) const
 {
     writeEntry(os, "values", values_);
 }
