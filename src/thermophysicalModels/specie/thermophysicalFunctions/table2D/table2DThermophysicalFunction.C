@@ -123,12 +123,12 @@ Foam::scalar Foam::thermophysicalFunctions::table2D::f(scalar p, scalar T) const
     // Interpolate the values at Ti wrt p
     const scalar fpi =
         values_(ip, iT)
-      + lambdap*(values_(ip + 1, iT)- values_(ip, iT));
+      + lambdap*(values_(ip + 1, iT) - values_(ip, iT));
 
     // Interpolate the values at Ti+1 wrt p
     const scalar fpip1 =
         values_(ip, iT + 1)
-      + lambdap*(values_(ip + 1, iT + 1)- values_(ip, iT + 1));
+      + lambdap*(values_(ip + 1, iT + 1) - values_(ip, iT + 1));
 
     const scalar Ti = Tlow_ + iT*deltaT_;
     const scalar lambdaT = (T - Ti)/deltaT_;
