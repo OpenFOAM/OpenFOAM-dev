@@ -46,95 +46,63 @@ void Foam::Time::readDict()
     // Check for local switches and settings
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    // Debug switches
-    if (controlDict_.found("DebugSwitches"))
+    // Debug, info and optimisation switches
+    auto readSwitches = [&](const word& name, simpleObjectRegistry& objects)
     {
-        InfoHeader
-            << "Overriding DebugSwitches according to " << controlDict_.name()
-            << endl;
-
-        simpleObjectRegistry& objects = debug::debugObjects();
-        const dictionary& localSettings = controlDict_.subDict("DebugSwitches");
-        forAllConstIter(dictionary, localSettings, iter)
+        if (controlDict_.found(name + "Switches"))
         {
-            const word& name = iter().keyword();
+            InfoHeader
+                << "Overriding " << name << "Switches according to "
+                << controlDict_.name()
+                << endl;
 
-            simpleObjectRegistryEntry* objPtr = objects.lookupPtr(name);
-
-            if (objPtr)
+            const dictionary& localSettings =
+                controlDict_.subDict(name + "Switches");
+            forAllConstIter(dictionary, localSettings, iter)
             {
-                InfoHeader << "    " << iter() << endl;
+                const word& name = iter().keyword();
 
-                const List<simpleRegIOobject*>& objects = *objPtr;
+                simpleObjectRegistryEntry* objPtr = objects.lookupPtr(name);
 
-                if (iter().isDict())
+                if (objPtr)
                 {
-                    forAll(objects, i)
+                    InfoHeader << "    " << iter() << endl;
+
+                    const List<simpleRegIOobject*>& objects = *objPtr;
+
+                    if (iter().isDict())
                     {
-                        OStringStream os(IOstream::ASCII);
-                        os  << iter().dict();
-                        IStringStream is(os.str());
-                        objects[i]->readData(is);
+                        forAll(objects, i)
+                        {
+                            OStringStream os(IOstream::ASCII);
+                            os  << iter().dict();
+                            IStringStream is(os.str());
+                            objects[i]->readData(is);
+                        }
                     }
-                }
-                else
-                {
-                    forAll(objects, i)
+                    else
                     {
-                        objects[i]->readData(iter().stream());
+                        forAll(objects, i)
+                        {
+                            objects[i]->readData(iter().stream());
+                        }
                     }
                 }
             }
         }
-    }
+    };
+    readSwitches("Debug", debug::debugObjects());
+    readSwitches("Info", debug::infoObjects());
+    readSwitches("Optimisation", debug::optimisationObjects());
 
-    // Optimisation Switches
+
+    // Handle fileHandler override explicitly since interacts with local
+    // dictionary monitoring
     if (controlDict_.found("OptimisationSwitches"))
     {
-        InfoHeader
-            << "Overriding OptimisationSwitches according to "
-            << controlDict_.name() << endl;
+        const dictionary& localSettings =
+            controlDict_.subDict("OptimisationSwitches");
 
-        simpleObjectRegistry& objects = debug::optimisationObjects();
-        const dictionary& localSettings = controlDict_.subDict
-        (
-            "OptimisationSwitches"
-        );
-        forAllConstIter(dictionary, localSettings, iter)
-        {
-            const word& name = iter().keyword();
-
-            simpleObjectRegistryEntry* objPtr = objects.lookupPtr(name);
-
-            if (objPtr)
-            {
-                InfoHeader << "    " << iter() << endl;
-
-                const List<simpleRegIOobject*>& objects = *objPtr;
-
-                if (iter().isDict())
-                {
-                    forAll(objects, i)
-                    {
-                        OStringStream os(IOstream::ASCII);
-                        os  << iter().dict();
-                        IStringStream is(os.str());
-                        objects[i]->readData(is);
-                    }
-                }
-                else
-                {
-                    forAll(objects, i)
-                    {
-                        objects[i]->readData(iter().stream());
-                    }
-                }
-            }
-        }
-
-
-        // Handle fileHandler override explicitly since interacts with
-        // local dictionary monitoring.
         word fileHandlerName;
         if
         (
