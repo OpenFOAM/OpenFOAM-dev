@@ -25,8 +25,8 @@ Class
     Foam::hTabulatedThermo
 
 Description
-    Enthalpy based thermodynamics package using non-uniform tabulated data for
-    heat capacity vs temperature.
+    Enthalpy based thermodynamics package using uniform tabulated data for
+    enthalpy and heat capacity vs pressure and temperature.
 
 Usage
 
@@ -187,14 +187,7 @@ public:
             //- Gibbs free energy of the mixture in the standard state [J/kg]
             inline scalar Gstd(const scalar T) const;
 
-            //- Heat capacity at constant pressure [J/kg/K]
-            inline scalar Cv(const scalar p, const scalar T) const;
-
-            //- Sensible internal energy [J/kg]
-            inline scalar Es( const scalar p, const scalar T) const;
-
-            //- Absolute internal energy [J/kg]
-            inline scalar Ea( const scalar p, const scalar T) const;
+            #include "HtoEthermo.H"
 
 
         // Derivative term used for Jacobian

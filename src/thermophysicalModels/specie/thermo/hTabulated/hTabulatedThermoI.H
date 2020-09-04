@@ -119,42 +119,6 @@ inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Gstd
 
 
 template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Cv
-(
-    const scalar p,
-    const scalar T
-) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Es
-(
-    const scalar p,
-    const scalar T
-) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-template<class EquationOfState>
-inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Ea
-(
-    const scalar p,
-    const scalar T
-) const
-{
-    NotImplemented;
-    return 0;
-}
-
-
-template<class EquationOfState>
 inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::dCpdT
 (
     const scalar p,

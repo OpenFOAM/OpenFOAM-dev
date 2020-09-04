@@ -25,8 +25,15 @@ Class
     Foam::rhoTabulated
 
 Description
-    Incompressible of equation of state using non-uniform tabulated
-    density vs temperature.
+    Incompressible of equation of state using uniform tabulated
+    density vs pressure and temperature.
+
+    Thermodynamic contributions derived from tabulated density data are not
+    sufficiently accurate and hence the H, Cp, E, Cv, Sp, Sv and CpMCv are not
+    implemented.  Thus this equation of state should be used in conjunction with
+    hTabulated or eTabulated thermodynamics in which both the energy and heat
+    capacity are tabulated w.r.t. pressure and temperature avoiding the need
+    for equation of state contributions.
 
 Usage
     \table
@@ -154,21 +161,27 @@ public:
             inline scalar rho(scalar p, scalar T) const;
 
             //- Return enthalpy contribution [J/kg]
+            //  Not implemented
             inline scalar H(const scalar p, const scalar T) const;
 
             //- Return Cp contribution [J/(kg K]
+            //  Not implemented
             inline scalar Cp(scalar p, scalar T) const;
 
             //- Return internal energy contribution [J/kg]
+            //  Not implemented
             inline scalar E(const scalar p, const scalar T) const;
 
             //- Return Cv contribution [J/(kg K]
+            //  Not implemented
             inline scalar Cv(scalar p, scalar T) const;
 
             //- Return entropy contribution to the integral of Cp/T [J/kg/K]
+            //  Not implemented
             inline scalar Sp(const scalar p, const scalar T) const;
 
             //- Return entropy contribution to the integral of Cv/T [J/kg/K]
+            //  Not implemented
             inline scalar Sv(const scalar p, const scalar T) const;
 
             //- Return compressibility [s^2/m^2]
@@ -178,6 +191,7 @@ public:
             inline scalar Z(scalar p, scalar T) const;
 
             //- Return (Cp - Cv) [J/(kg K]
+            //  Not implemented
             inline scalar CpMCv(scalar p, scalar T) const;
 
 

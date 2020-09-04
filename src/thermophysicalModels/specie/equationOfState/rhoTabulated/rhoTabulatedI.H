@@ -95,6 +95,7 @@ inline Foam::scalar Foam::rhoTabulated<Specie>::H
     scalar T
 ) const
 {
+    NotImplemented;
     return 0;
 }
 
@@ -106,6 +107,7 @@ inline Foam::scalar Foam::rhoTabulated<Specie>::Cp
     scalar T
 ) const
 {
+    NotImplemented;
     return 0;
 }
 
@@ -117,6 +119,7 @@ inline Foam::scalar Foam::rhoTabulated<Specie>::E
     scalar T
 ) const
 {
+    NotImplemented;
     return 0;
 }
 
@@ -128,6 +131,7 @@ inline Foam::scalar Foam::rhoTabulated<Specie>::Cv
     scalar T
 ) const
 {
+    NotImplemented;
     return 0;
 }
 
@@ -139,6 +143,7 @@ inline Foam::scalar Foam::rhoTabulated<Specie>::Sp
     scalar T
 ) const
 {
+    NotImplemented;
     return 0;
 }
 
@@ -150,6 +155,7 @@ inline Foam::scalar Foam::rhoTabulated<Specie>::Sv
     scalar T
 ) const
 {
+    NotImplemented;
     return 0;
 }
 
@@ -183,6 +189,7 @@ inline Foam::scalar Foam::rhoTabulated<Specie>::CpMCv
     scalar T
 ) const
 {
+    NotImplemented;
     return 0;
 }
 

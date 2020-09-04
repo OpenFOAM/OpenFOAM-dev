@@ -25,8 +25,8 @@ Class
     Foam::tabulatedTransport
 
 Description
-    Transport properties package using non-uniform tabulated data for
-    viscosity and thermal conductivity vs temperature.
+    Transport properties package using uniform tabulated data for
+    viscosity and thermal conductivity vs pressure and temperature.
 
 Usage
 
