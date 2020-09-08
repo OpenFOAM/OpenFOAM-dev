@@ -11,33 +11,32 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      alpha.liquid;
+    object      alpha.gas;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 0 0 0 0 0 0];
 
-internalField   uniform 0.9433;
+internalField   uniform 0.0567;
 
 boundaryField
 {
     inlet
     {
         type            mapped;
-        fieldName       alpha.liquid;
-        setAverage      0;
-        average         0.9433;
-        interpolationScheme cell;
+        fieldName       alpha.air;
+        setAverage      yes;
+        average         0.0567;
         value           $internalField;
     }
     outlet
     {
         type            inletOutlet;
-        phi             phi.liquid;
-        inletValue      uniform 1;
-        value           uniform 1;
+        phi             phi.gas;
+        inletValue      uniform 0;
+        value           uniform 0;
     }
-    wall
+    walls
     {
         type            zeroGradient;
     }

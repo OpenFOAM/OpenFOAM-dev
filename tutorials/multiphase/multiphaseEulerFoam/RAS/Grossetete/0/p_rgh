@@ -9,36 +9,31 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       volVectorField;
+    class       volScalarField;
     location    "0";
-    object      U.gas;
+    object      p_rgh;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 1 -1 0 0 0 0];
+dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform (0.916 0 0 );
+internalField   uniform 1e5;
 
 boundaryField
 {
     inlet
     {
-        type            mapped;
-        field           U.gas;
-        setAverage      0;
-        average         (0.916 0 0 );
-        interpolationScheme cell;
-        value           $internalField;
+        type            fixedFluxPressure;
     }
     outlet
     {
-        type            pressureInletOutletVelocity;
-        phi             phi.gas;
+        type            prghPressure;
+        p               $internalField;
         value           $internalField;
     }
-    wall
+    walls
     {
-        type            slip;
+        type            fixedFluxPressure;
     }
     front
     {

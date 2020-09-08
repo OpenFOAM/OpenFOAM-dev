@@ -11,11 +11,11 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      k.liquid;
+    object      omega.liquid;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [0 2 -2 0 0 0 0];
+dimensions      [0 0 -1 0 0 0 0];
 
 internalField   uniform 0.01;
 
@@ -24,10 +24,9 @@ boundaryField
     inlet
     {
         type            mapped;
-        field           k.liquid;
-        setAverage      0;
+        field           omega.liquid;
+        setAverage      no;
         average         0;
-        interpolationScheme cell;
         value           $internalField;
     }
     outlet
@@ -37,9 +36,12 @@ boundaryField
         inletValue      $internalField;
         value           $internalField;
     }
-    wall
+    walls
     {
-        type            kqRWallFunction;
+        type            omegaWallFunction;
+        Cmu             0.09;
+        kappa           0.41;
+        E               9.8;
         value           $internalField;
     }
     front
