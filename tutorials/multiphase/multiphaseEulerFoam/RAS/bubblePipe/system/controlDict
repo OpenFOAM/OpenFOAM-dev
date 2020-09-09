@@ -1,0 +1,97 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application         multiphaseEulerFoam;
+
+startFrom           startTime;
+
+startTime           0;
+
+stopAt              endTime;
+
+endTime             4;
+
+deltaT              1e-4;
+
+writeControl        adjustableRunTime;
+
+writeInterval       0.5;
+
+purgeWrite          0;
+
+writeFormat         ascii;
+
+writePrecision      6;
+
+writeCompression    uncompressed;
+
+timeFormat          general;
+
+timePrecision       6;
+
+runTimeModifiable   yes;
+
+adjustTimeStep      yes;
+
+maxCo               0.8;
+
+maxDeltaT           1;
+
+functions
+{
+    #includeFunc    residuals(p_rgh, k.water, omega.water)
+    #includeFunc    timeStep
+    #includeFunc    writeObjects(d.air1)
+    #includeFunc    writeObjects(d.air2)
+    #includeFunc    phaseForces(phase=water)
+    #includeFunc    singleGraph
+
+    probabilityDensity.injection
+    {
+        type                sizeDistribution;
+        functionObjectLibs  ("libmultiphaseEulerFoamFunctionObjects.so");
+
+        writeControl        outputTime;
+        writeInterval       1;
+
+        populationBalance   bubbles;
+        regionType          cellZone;
+        name                injection;
+        functionType        volume;
+        coordinateType      diameter;
+        densityFunction     yes;
+        normalize           yes;
+    }
+
+    probabilityDensity.outlet
+    {
+        type                sizeDistribution;
+        functionObjectLibs  ("libmultiphaseEulerFoamFunctionObjects.so");
+
+        writeControl        outputTime;
+        writeInterval       1;
+
+        populationBalance   bubbles;
+        regionType          cellZone;
+        name                outlet;
+        functionType        volume;
+        coordinateType      diameter;
+        densityFunction     yes;
+        normalize           yes;
+    }
+}
+
+// ************************************************************************* //

@@ -1,0 +1,285 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      phaseProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type populationBalanceMultiphaseSystem;
+
+phases (air1 air2 water);
+
+populationBalances (bubbles);
+
+air1
+{
+    type            pureIsothermalPhaseModel;
+
+    diameterModel   velocityGroup;
+
+    velocityGroupCoeffs
+    {
+        populationBalance    bubbles;
+
+        shapeModel           spherical;
+
+        sizeGroups
+        (
+            f1 {dSph  1e-3; value 1.0;}
+            f2 {dSph  2e-3; value 0.0;}
+            f3 {dSph  3e-3; value 0.0;}
+            f4 {dSph  4e-3; value 0.0;}
+            f5 {dSph  5e-3; value 0.0;}
+        );
+    }
+
+    residualAlpha   1e-6;
+}
+
+air2
+{
+    type            pureIsothermalPhaseModel;
+
+    diameterModel   velocityGroup;
+
+    velocityGroupCoeffs
+    {
+        populationBalance    bubbles;
+
+        shapeModel           spherical;
+
+        sizeGroups
+        (
+            f6 {dSph  6e-3; value 1.0;}
+            f7 {dSph  7e-3; value 0.0;}
+            f8 {dSph  8e-3; value 0.0;}
+            f9 {dSph  9e-3; value 0.0;}
+            f10{dSph 10e-3; value 0.0;}
+            f11{dSph 11e-3; value 0.0;}
+            f12{dSph 12e-3; value 0.0;}
+        );
+    }
+
+    residualAlpha   1e-6;
+}
+
+water
+{
+    type            pureIsothermalPhaseModel;
+
+    diameterModel   constant;
+
+    constantCoeffs
+    {
+        d               1e-4;
+    }
+
+    residualAlpha   1e-6;
+}
+
+populationBalanceCoeffs
+{
+    bubbles
+    {
+        continuousPhase water;
+
+        coalescenceModels
+        (
+            LehrMilliesMewes{}
+        );
+
+        binaryBreakupModels
+        (
+            LehrMilliesMewes{}
+        );
+
+        breakupModels
+        ();
+
+        driftModels
+        (
+            densityChange{}
+        );
+
+        nucleationModels
+        ();
+    }
+}
+
+blending
+{
+    default
+    {
+        type            none;
+        continuousPhase water;
+    }
+}
+
+surfaceTension
+(
+    (air1 and water)
+    {
+        type            constant;
+        sigma           0.083;
+    }
+
+    (air2 and water)
+    {
+        type            constant;
+        sigma           0.083;
+    }
+);
+
+interfaceCompression
+();
+
+aspectRatio
+(
+    (air1 in water)
+    {
+        type            Wellek;
+    }
+
+    (air2 in water)
+    {
+        type            Wellek;
+    }
+);
+
+drag
+(
+    (air1 in water)
+    {
+        type            IshiiZuber;
+
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+
+    (air2 in water)
+    {
+        type            IshiiZuber;
+
+        residualRe      1e-3;
+        swarmCorrection
+        {
+            type        none;
+        }
+    }
+);
+
+virtualMass
+(
+    (air1 in water)
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+
+    (air2 in water)
+    {
+        type            constantCoefficient;
+        Cvm             0.5;
+    }
+);
+
+heatTransfer
+();
+
+phaseTransfer
+();
+
+lift
+(
+    (air1 in water)
+    {
+        type            wallDamped;
+
+        wallDamping
+        {
+            type        cosine;
+            Cd          3.0;
+        }
+
+        lift
+        {
+            type        Tomiyama;
+
+            swarmCorrection
+            {
+                type    none;
+            }
+        }
+    }
+
+    (air2 in water)
+    {
+        type            wallDamped;
+
+        wallDamping
+        {
+            type        cosine;
+            Cd          3.0;
+        }
+
+        lift
+        {
+            type        Tomiyama;
+
+            swarmCorrection
+            {
+                type    none;
+            }
+        }
+    }
+);
+
+wallLubrication
+(
+    (air1 in water)
+    {
+        type            Antal;
+        Cw1             -0.01;
+        Cw2             0.05;
+    }
+
+    (air2 in water)
+    {
+        type            Antal;
+        Cw1             -0.01;
+        Cw2             0.05;
+    }
+);
+
+turbulentDispersion
+(
+    (air1 in water)
+    {
+        type            Burns;
+        sigma           0.9;
+    }
+
+    (air2 in water)
+    {
+        type            Burns;
+        sigma           0.9;
+    }
+);
+
+// Minimum allowable pressure
+pMin            10000;
+
+
+// ************************************************************************* //
