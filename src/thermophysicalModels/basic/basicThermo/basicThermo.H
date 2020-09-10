@@ -343,6 +343,14 @@ public:
             //- Enthalpy of formation [J/kg]
             virtual tmp<volScalarField> hc() const = 0;
 
+            //- Temperature from enthalpy/internal energy
+            virtual tmp<volScalarField> THE
+            (
+                const volScalarField& h,
+                const volScalarField& p,
+                const volScalarField& T0    // starting temperature
+            ) const = 0;
+
             //- Temperature from enthalpy/internal energy for cell-set
             virtual tmp<scalarField> THE
             (

@@ -360,6 +360,18 @@ Foam::tmp<Foam::volScalarField> Foam::solidDisplacementThermo::hc() const
 }
 
 
+Foam::tmp<Foam::volScalarField> Foam::solidDisplacementThermo::THE
+(
+    const volScalarField& h,
+    const volScalarField& p,
+    const volScalarField& T0
+) const
+{
+    NotImplemented;
+    return tmp<volScalarField>(nullptr);
+}
+
+
 Foam::tmp<Foam::scalarField> Foam::solidDisplacementThermo::THE
 (
     const scalarField& he,

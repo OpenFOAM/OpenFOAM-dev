@@ -262,6 +262,18 @@ Foam::tmp<Foam::volScalarField> Foam::twoPhaseMixtureThermo::hc() const
 }
 
 
+Foam::tmp<Foam::volScalarField> Foam::twoPhaseMixtureThermo::THE
+(
+    const volScalarField& h,
+    const volScalarField& p,
+    const volScalarField& T0
+) const
+{
+    NotImplemented;
+    return T0;
+}
+
+
 Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::THE
 (
     const scalarField& h,

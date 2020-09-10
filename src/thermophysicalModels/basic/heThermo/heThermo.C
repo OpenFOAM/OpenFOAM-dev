@@ -678,6 +678,28 @@ Foam::heThermo<BasicThermo, MixtureType>::CpByCpv() const
 
 
 template<class BasicThermo, class MixtureType>
+Foam::tmp<Foam::volScalarField> Foam::heThermo<BasicThermo, MixtureType>::THE
+(
+    const volScalarField& h,
+    const volScalarField& p,
+    const volScalarField& T0
+) const
+{
+    return volScalarFieldProperty
+    (
+        "T",
+        dimTemperature,
+        &MixtureType::cellThermoMixture,
+        &MixtureType::patchFaceThermoMixture,
+        &MixtureType::thermoMixtureType::THE,
+        h,
+        p,
+        T0
+    );
+}
+
+
+template<class BasicThermo, class MixtureType>
 Foam::tmp<Foam::scalarField> Foam::heThermo<BasicThermo, MixtureType>::THE
 (
     const scalarField& h,

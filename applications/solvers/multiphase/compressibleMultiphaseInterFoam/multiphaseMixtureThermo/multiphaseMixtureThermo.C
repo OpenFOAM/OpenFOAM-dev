@@ -430,6 +430,18 @@ Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::hc() const
 }
 
 
+Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::THE
+(
+    const volScalarField& h,
+    const volScalarField& p,
+    const volScalarField& T0
+) const
+{
+    NotImplemented;
+    return T0;
+}
+
+
 Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::THE
 (
     const scalarField& h,
