@@ -134,7 +134,7 @@ namespace Foam
 // * * * * * * * * * * * * * * * Friend Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-inline Foam::RectangularMatrix<Type> outer
+inline RectangularMatrix<Type> outer
 (
     const Field<Type>& f1,
     const Field<Type>& f2
@@ -151,15 +151,6 @@ inline Foam::RectangularMatrix<Type> outer
     }
 
     return f1f2T;
-}
-
-
-// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
-
-template<class Type>
-inline void writeEntry(Ostream& os, const RectangularMatrix<Type>& rm)
-{
-    os << rm;
 }
 
 

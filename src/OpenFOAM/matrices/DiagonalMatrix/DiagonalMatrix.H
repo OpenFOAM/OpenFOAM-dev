@@ -73,8 +73,17 @@ public:
         //- Construct from size and a value
         DiagonalMatrix<Type>(const label, const Type&);
 
+        //- Construct from Istream.
+        DiagonalMatrix(Istream&);
+
 
     // Member Functions
+
+        //- Return the instantiated type name
+        static word typeName()
+        {
+            return word("DiagonalMatrix<") + pTraits<Type>::typeName + '>';
+        }
 
         //- Invert the diagonal matrix and return itself
         DiagonalMatrix<Type>& invert();

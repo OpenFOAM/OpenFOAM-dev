@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -308,6 +308,9 @@ public:
 
 
 // Global functions and operators
+
+template<class Form, class Type>
+void writeEntry(Ostream&, const Matrix<Form, Type>&);
 
 template<class Form, class Type>
 const Type& max(const Matrix<Form, Type>&);

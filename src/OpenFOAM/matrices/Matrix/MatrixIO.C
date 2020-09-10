@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,18 @@ Foam::Matrix<Form, Type>::Matrix(Istream& is)
 
 
 template<class Form, class Type>
+void Foam::writeEntry(Ostream& os, const Matrix<Form, Type>& M)
+{
+    if (token::compound::isCompound(Form::typeName()))
+    {
+        os << Form::typeName() << " ";
+    }
+
+    os << M;
+}
+
+
+template<class Form, class Type>
 Foam::Istream& Foam::operator>>(Istream& is, Matrix<Form, Type>& M)
 {
     // Anull matrix
@@ -57,7 +69,17 @@ Foam::Istream& Foam::operator>>(Istream& is, Matrix<Form, Type>& M)
         "operator>>(Istream&, Matrix<Form, Type>&) : reading first token"
     );
 
-    if (firstToken.isLabel())
+    if (firstToken.isCompound())
+    {
+        M.transfer
+        (
+            dynamicCast<token::Compound<Form>>
+            (
+                firstToken.transferCompoundToken(is)
+            )
+        );
+    }
+    else if (firstToken.isLabel())
     {
         M.mRows_ = firstToken.labelToken();
         M.nCols_ = readLabel(is);

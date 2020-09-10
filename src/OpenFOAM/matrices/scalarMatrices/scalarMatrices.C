@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,41 @@ License
 
 #include "scalarMatrices.H"
 #include "SVD.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+defineCompoundTypeName(RectangularMatrix<scalar>, scalarRectangularMatrix);
+addCompoundToRunTimeSelectionTable
+(
+    RectangularMatrix<scalar>,
+    scalarRectangularMatrix
+);
+
+defineCompoundTypeName(SquareMatrix<scalar>, scalarSquareMatrix);
+addCompoundToRunTimeSelectionTable(SquareMatrix<scalar>, scalarSquareMatrix);
+
+defineCompoundTypeName
+(
+    SymmetricSquareMatrix<scalar>,
+    scalarSymmetricSquareMatrix
+);
+addCompoundToRunTimeSelectionTable
+(
+    SymmetricSquareMatrix<scalar>,
+    scalarSymmetricSquareMatrix
+);
+
+defineCompoundTypeName(DiagonalMatrix<scalar>, scalarDiagonalMatrix);
+addCompoundToRunTimeSelectionTable
+(
+    DiagonalMatrix<scalar>,
+    scalarDiagonalMatrix
+);
+
+}
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 

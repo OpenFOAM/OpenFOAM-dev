@@ -80,6 +80,16 @@ public:
 
         //- Clone
         inline autoPtr<SymmetricSquareMatrix<Type>> clone() const;
+
+
+    // Member Functions
+
+        //- Return the instantiated type name
+        static word typeName()
+        {
+            return
+                word("SymmetricSquareMatrix<") + pTraits<Type>::typeName + '>';
+        }
 };
 
 
