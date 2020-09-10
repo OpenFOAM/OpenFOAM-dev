@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,7 +117,7 @@ const
 bool Foam::fileOperations::collatedFileOperation::appendObject
 (
     const regIOobject& io,
-    const fileName& pathName,
+    const fileName& filePath,
     IOstream::streamFormat fmt,
     IOstream::versionNumber ver,
     IOstream::compressionType cmp
@@ -132,26 +132,26 @@ bool Foam::fileOperations::collatedFileOperation::appendObject
         Pout<< "collatedFileOperation::writeObject :"
             << " For local object : " << io.name()
             << " appending processor " << proci
-            << " data to " << pathName << endl;
+            << " data to " << filePath << endl;
     }
 
     if (proci == -1)
     {
         FatalErrorInFunction
-            << "Not a valid processor path " << pathName
+            << "Not a valid processor path " << filePath
             << exit(FatalError);
     }
 
     const bool isMaster = isMasterRank(proci);
 
-    // Determine the local rank if the pathName is a per-rank one
+    // Determine the local rank if the filePath is a per-rank one
     label localProci = proci;
     {
         fileName path, procDir, local;
         label groupStart, groupSize, nProcs;
         splitProcessorPath
         (
-            pathName,
+            filePath,
             path,
             procDir,
             local,
@@ -198,7 +198,7 @@ bool Foam::fileOperations::collatedFileOperation::appendObject
 
     OFstream os
     (
-        pathName,
+        filePath,
         IOstream::BINARY,
         ver,
         IOstream::UNCOMPRESSED, // no compression
@@ -220,8 +220,8 @@ bool Foam::fileOperations::collatedFileOperation::appendObject
             << "    format      " << os.format() << ";\n"
             << "    class       " << decomposedBlockData::typeName
             << ";\n"
-            << "    location    " << pathName << ";\n"
-            << "    object      " << pathName.name() << ";\n"
+            << "    location    " << filePath << ";\n"
+            << "    object      " << filePath.name() << ";\n"
             << "}" << nl;
         IOobject::writeDivider(os) << nl;
     }
@@ -462,7 +462,7 @@ bool Foam::fileOperations::collatedFileOperation::writeObject
     if (inst.isAbsolute() || !tm.processorCase())
     {
         mkDir(io.path());
-        fileName pathName(io.objectPath());
+        fileName filePath(io.objectPath());
 
         if (debug)
         {
@@ -474,7 +474,7 @@ bool Foam::fileOperations::collatedFileOperation::writeObject
 
         masterOFstream os
         (
-            pathName,
+            filePath,
             fmt,
             ver,
             cmp,
@@ -506,7 +506,7 @@ bool Foam::fileOperations::collatedFileOperation::writeObject
         fileName path(processorsPath(io, inst, processorsDir(io)));
 
         mkDir(path);
-        fileName pathName(path/io.name());
+        fileName filePath(path/io.name());
 
         if (io.global())
         {
@@ -514,13 +514,13 @@ bool Foam::fileOperations::collatedFileOperation::writeObject
             {
                 Pout<< "collatedFileOperation::writeObject :"
                     << " For global object : " << io.name()
-                    << " falling back to master-only output to " << pathName
+                    << " falling back to master-only output to " << filePath
                     << endl;
             }
 
             masterOFstream os
             (
-                pathName,
+                filePath,
                 fmt,
                 ver,
                 cmp,
@@ -555,10 +555,10 @@ bool Foam::fileOperations::collatedFileOperation::writeObject
             {
                 Pout<< "collatedFileOperation::writeObject :"
                     << " For object : " << io.name()
-                    << " appending to " << pathName << endl;
+                    << " appending to " << filePath << endl;
             }
 
-            return appendObject(io, pathName, fmt, ver, cmp);
+            return appendObject(io, filePath, fmt, ver, cmp);
         }
         else
         {
@@ -570,7 +570,7 @@ bool Foam::fileOperations::collatedFileOperation::writeObject
             {
                 Pout<< "collatedFileOperation::writeObject :"
                     << " For object : " << io.name()
-                    << " starting collating output to " << pathName
+                    << " starting collating output to " << filePath
                     << " useThread:" << useThread << endl;
             }
 
@@ -582,7 +582,7 @@ bool Foam::fileOperations::collatedFileOperation::writeObject
             threadedCollatedOFstream os
             (
                 writer_,
-                pathName,
+                filePath,
                 fmt,
                 ver,
                 cmp,

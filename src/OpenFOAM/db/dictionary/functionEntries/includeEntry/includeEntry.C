@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,7 +130,10 @@ bool Foam::functionEntries::includeEntry::execute
         includeFileName(is.name().path(), rawFName, parentDict)
     );
 
-    autoPtr<ISstream> ifsPtr(fileHandler().NewIFstream(fName));
+    autoPtr<ISstream> ifsPtr
+    (
+        fileHandler().NewIFstream(fName, is.format(), is.version())
+    );
     ISstream& ifs = ifsPtr();
 
     if (ifs)

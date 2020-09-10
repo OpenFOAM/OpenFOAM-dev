@@ -262,12 +262,17 @@ public:
             ) const;
 
             //- Generate an ISstream that reads a file
-            virtual autoPtr<ISstream> NewIFstream(const fileName&) const;
+            virtual autoPtr<ISstream> NewIFstream
+            (
+                const fileName& filePath,
+                IOstream::streamFormat format=IOstream::ASCII,
+                IOstream::versionNumber version=IOstream::currentVersion
+            ) const;
 
             //- Generate an Ostream that writes a file
             virtual autoPtr<Ostream> NewOFstream
             (
-                const fileName& pathname,
+                const fileName& filePath,
                 IOstream::streamFormat format=IOstream::ASCII,
                 IOstream::versionNumber version=IOstream::currentVersion,
                 IOstream::compressionType compression=IOstream::UNCOMPRESSED,

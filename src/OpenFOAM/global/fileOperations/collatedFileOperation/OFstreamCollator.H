@@ -90,7 +90,7 @@ class OFstreamCollator
             (
                 const label comm,
                 const word& typeName,
-                const fileName& pathName,
+                const fileName& filePath,
                 const string& data,
                 const labelList& sizes,
                 IOstream::streamFormat format,
@@ -101,7 +101,7 @@ class OFstreamCollator
             :
                 comm_(comm),
                 typeName_(typeName),
-                pathName_(pathName),
+                pathName_(filePath),
                 data_(data),
                 sizes_(sizes),
                 slaveData_(0),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -2216,12 +2216,12 @@ bool Foam::fileOperations::masterUncollatedFileOperation::writeObject
     const bool write
 ) const
 {
-    fileName pathName(io.objectPath());
+    fileName filePath(io.objectPath());
 
     if (debug)
     {
         Pout<< "masterUncollatedFileOperation::writeObject :"
-            << " io:" << pathName << " write:" << write << endl;
+            << " io:" << filePath << " write:" << write << endl;
     }
 
     // Make sure to pick up any new times
@@ -2231,7 +2231,7 @@ bool Foam::fileOperations::masterUncollatedFileOperation::writeObject
     (
         NewOFstream
         (
-            pathName,
+            filePath,
             fmt,
             ver,
             cmp,
@@ -2376,7 +2376,9 @@ void Foam::fileOperations::masterUncollatedFileOperation::setTime
 Foam::autoPtr<Foam::ISstream>
 Foam::fileOperations::masterUncollatedFileOperation::NewIFstream
 (
-    const fileName& filePath
+    const fileName& filePath,
+    IOstream::streamFormat format,
+    IOstream::versionNumber version
 ) const
 {
     if (Pstream::parRun())
@@ -2443,7 +2445,7 @@ Foam::fileOperations::masterUncollatedFileOperation::NewIFstream
             // Read myself
             return autoPtr<ISstream>
             (
-                new IFstream(filePaths[Pstream::masterNo()])
+                new IFstream(filePaths[Pstream::masterNo()], format, version)
             );
         }
         else
@@ -2477,7 +2479,7 @@ Foam::fileOperations::masterUncollatedFileOperation::NewIFstream
     else
     {
         // Read myself
-        return autoPtr<ISstream>(new IFstream(filePath));
+        return autoPtr<ISstream>(new IFstream(filePath, format, version));
     }
 }
 
@@ -2485,10 +2487,10 @@ Foam::fileOperations::masterUncollatedFileOperation::NewIFstream
 Foam::autoPtr<Foam::Ostream>
 Foam::fileOperations::masterUncollatedFileOperation::NewOFstream
 (
-    const fileName& pathName,
-    IOstream::streamFormat fmt,
-    IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
+    const fileName& filePath,
+    IOstream::streamFormat format,
+    IOstream::versionNumber version,
+    IOstream::compressionType compression,
     const bool write
 ) const
 {
@@ -2496,10 +2498,10 @@ Foam::fileOperations::masterUncollatedFileOperation::NewOFstream
     (
         new masterOFstream
         (
-            pathName,
-            fmt,
-            ver,
-            cmp,
+            filePath,
+            format,
+            version,
+            compression,
             false,      // append
             write
         )

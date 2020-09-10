@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -690,24 +690,29 @@ bool Foam::fileOperations::uncollatedFileOperation::read
 Foam::autoPtr<Foam::ISstream>
 Foam::fileOperations::uncollatedFileOperation::NewIFstream
 (
-    const fileName& filePath
+    const fileName& filePath,
+    IOstream::streamFormat format,
+    IOstream::versionNumber version
 ) const
 {
-    return autoPtr<ISstream>(new IFstream(filePath));
+    return autoPtr<ISstream>(new IFstream(filePath, format, version));
 }
 
 
 Foam::autoPtr<Foam::Ostream>
 Foam::fileOperations::uncollatedFileOperation::NewOFstream
 (
-    const fileName& pathName,
-    IOstream::streamFormat fmt,
-    IOstream::versionNumber ver,
-    IOstream::compressionType cmp,
+    const fileName& filePath,
+    IOstream::streamFormat format,
+    IOstream::versionNumber version,
+    IOstream::compressionType compression,
     const bool write
 ) const
 {
-    return autoPtr<Ostream>(new OFstream(pathName, fmt, ver, cmp));
+    return autoPtr<Ostream>
+    (
+        new OFstream(filePath, format, version, compression)
+    );
 }
 
 
