@@ -87,7 +87,7 @@ inline void Foam::thermophysicalFunctions::table2D::checkRange
     label iT
 ) const
 {
-    if (ndp < 0 || ip > values_.n() - 2)
+    if (ndp < 0 || ip > values_.m() - 2)
     {
         FatalErrorInFunction
             << "Pressure " << p << " out of range "
