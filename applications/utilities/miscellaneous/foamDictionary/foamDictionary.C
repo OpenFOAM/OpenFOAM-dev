@@ -475,6 +475,18 @@ int main(int argc, char *argv[])
     {
         IOobject::writeBanner(Info)
             <<"//\n// " << dictPath << "\n//\n";
+
+        // Change the format to ASCII
+        if (dict.found(IOobject::foamFile))
+        {
+            dict.subDict(IOobject::foamFile).add
+            (
+                "format",
+                IOstream::ASCII,
+                true
+            );
+        }
+
         dict.dictionary::write(Info, false);
         IOobject::writeDivider(Info);
 
