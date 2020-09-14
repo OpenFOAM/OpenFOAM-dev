@@ -43,7 +43,6 @@ SourceFiles
 
 #include "masterUncollatedFileOperation.H"
 #include "OFstreamCollator.H"
-#include "fileOperationInitialise.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

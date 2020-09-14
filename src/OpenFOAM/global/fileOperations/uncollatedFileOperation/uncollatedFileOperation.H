@@ -33,7 +33,6 @@ Description
 #define fileOperations_uncollatedFileOperation_H
 
 #include "fileOperation.H"
-#include "OSspecific.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -197,14 +196,6 @@ public:
 
             //- Remove a directory and its contents
             virtual bool rmDir(const fileName&) const;
-
-//            //- Open a shared library. Return handle to library. Print error
-//            //  message if library cannot be loaded (check = true)
-//            virtual void* dlOpen
-//            (
-//                const fileName& lib,
-//                const bool check = true
-//            ) const;
 
 
         // (reg)IOobject functionality

@@ -24,19 +24,15 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "masterUncollatedFileOperation.H"
-#include "addToRunTimeSelectionTable.H"
-#include "Pstream.H"
 #include "Time.H"
-#include "instant.H"
-#include "IFstream.H"
 #include "masterOFstream.H"
 #include "decomposedBlockData.H"
 #include "registerSwitch.H"
 #include "dummyISstream.H"
 #include "SubList.H"
-#include "unthreadedInitialise.H"
 #include "PackedBoolList.H"
 #include "gzstream.h"
+#include "addToRunTimeSelectionTable.H"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
@@ -2116,6 +2112,10 @@ bool Foam::fileOperations::masterUncollatedFileOperation::read
 {
     bool ok = true;
 
+    // Initialise format to the defaultFormat
+    // but reset to ASCII if defaultFormat and file format are ASCII
+    IOstream::streamFormat format = defaultFormat;
+
     if (io.global())
     {
         if (debug)
@@ -2138,16 +2138,34 @@ bool Foam::fileOperations::masterUncollatedFileOperation::read
             bool oldParRun = UPstream::parRun();
             UPstream::parRun() = false;
 
-            ok = io.readData(io.readStream(typeName));
+            // Open file and read header
+            Istream& is = io.readStream(typeName);
+
+            // Set format to ASCII if defaultFormat and file format are ASCII
+            if (defaultFormat == IOstream::ASCII)
+            {
+                format = is.format();
+            }
+
+            // Read the data from the file
+            ok = io.readData(is);
+
+            // Close the file
             io.close();
 
             UPstream::parRun() = oldParRun;
         }
 
-        Pstream::scatter(ok);   //, Pstream::msgType(), comm_);
-        Pstream::scatter(io.headerClassName()); //, Pstream::msgType(), comm_);
-        Pstream::scatter(io.note());    //, Pstream::msgType(), comm_);
+        Pstream::scatter(ok);
+        Pstream::scatter(io.headerClassName());
+        Pstream::scatter(io.note());
 
+        if (defaultFormat == IOstream::ASCII)
+        {
+            std::underlying_type_t<IOstream::streamFormat> formatValue(format);
+            Pstream::scatter(formatValue);
+            format = IOstream::streamFormat(formatValue);
+        }
 
         // scatter operation for regIOobjects
 
@@ -2169,8 +2187,8 @@ bool Foam::fileOperations::masterUncollatedFileOperation::read
                 myComm.above(),
                 0,
                 Pstream::msgType(),
-                Pstream::worldComm, // comm_,
-                defaultFormat
+                Pstream::worldComm,
+                format
             );
             ok = io.readData(fromAbove);
         }
@@ -2184,8 +2202,8 @@ bool Foam::fileOperations::masterUncollatedFileOperation::read
                 myComm.below()[belowI],
                 0,
                 Pstream::msgType(),
-                Pstream::worldComm, // comm_,
-                defaultFormat
+                Pstream::worldComm,
+                format
             );
             bool okWrite = io.writeData(toBelow);
             ok = ok && okWrite;

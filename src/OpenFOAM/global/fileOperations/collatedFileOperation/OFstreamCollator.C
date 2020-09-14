@@ -27,6 +27,7 @@ License
 #include "OFstream.H"
 #include "decomposedBlockData.H"
 #include "masterUncollatedFileOperation.H"
+#include "OSspecific.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 

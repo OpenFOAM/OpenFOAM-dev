@@ -59,11 +59,10 @@ Description
 #define fileOperations_masterUncollatedFileOperation_H
 
 #include "fileOperation.H"
-#include "OSspecific.H"
 #include "HashPtrTable.H"
-#include "Switch.H"
 #include "unthreadedInitialise.H"
 #include "boolList.H"
+#include "OSspecific.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

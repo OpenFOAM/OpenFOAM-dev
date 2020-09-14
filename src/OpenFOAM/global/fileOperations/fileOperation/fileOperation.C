@@ -24,15 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fileOperation.H"
-#include "uncollatedFileOperation.H"
-#include "regIOobject.H"
-#include "argList.H"
-#include "HashSet.H"
-#include "objectRegistry.H"
 #include "decomposedBlockData.H"
 #include "polyMesh.H"
-#include "registerSwitch.H"
 #include "Time.H"
+#include "OSspecific.H"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
