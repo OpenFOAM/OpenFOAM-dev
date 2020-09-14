@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,16 +25,13 @@ License
 
 #include "regIOobject.H"
 #include "IFstream.H"
-#include "Time.H"
-#include "Pstream.H"
-#include "HashSet.H"
-#include "fileOperation.H"
+#include "dictionary.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 bool Foam::regIOobject::readHeaderOk
 (
-    const IOstream::streamFormat format,
+    const IOstream::streamFormat defaultFormat,
     const word& typeName
 )
 {
@@ -74,7 +71,7 @@ bool Foam::regIOobject::readHeaderOk
      || isHeaderOk
     )
     {
-        return fileHandler().read(*this, masterOnly, format, typeName);
+        return fileHandler().read(*this, masterOnly, defaultFormat, typeName);
     }
     else
     {

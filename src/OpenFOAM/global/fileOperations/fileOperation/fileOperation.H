@@ -367,11 +367,12 @@ public:
             ) const = 0;
 
             //- Top-level read
+            //  Format set to ASCII if defaultFormat and file format are ASCII
             virtual bool read
             (
                 regIOobject&,
                 const bool masterOnly,
-                const IOstream::streamFormat format,
+                const IOstream::streamFormat defaultFormat,
                 const word& typeName
             ) const = 0;
 

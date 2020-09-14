@@ -100,7 +100,7 @@ Foam::fv::options::options
     optionList(mesh)
 {
     dictionary::name() = IOobject::objectPath();
-    readHeaderOk(IOstream::BINARY, typeName);
+    readHeaderOk(IOstream::ASCII, typeName);
 
     // Add file watch on the fvOptions dictionary for MUST_READ_IF_MODIFIED
     addWatch();

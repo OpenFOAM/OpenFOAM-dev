@@ -610,11 +610,16 @@ bool Foam::fileOperations::uncollatedFileOperation::read
 (
     regIOobject& io,
     const bool masterOnly,
-    const IOstream::streamFormat format,
+    const IOstream::streamFormat defaultFormat,
     const word& typeName
 ) const
 {
     bool ok = true;
+
+    // Initialise format to the defaultFormat
+    // but reset to ASCII if defaultFormat and file format are ASCII
+    IOstream::streamFormat format = defaultFormat;
+
     if (Pstream::master() || !masterOnly)
     {
         if (debug)
@@ -624,8 +629,19 @@ bool Foam::fileOperations::uncollatedFileOperation::read
                 << " from file " << endl;
         }
 
-        // Read file
-        ok = io.readData(io.readStream(typeName));
+        // Open file and read header
+        Istream& is = io.readStream(typeName);
+
+        // Set format to ASCII if defaultFormat and file format are ASCII
+        if (defaultFormat == IOstream::ASCII)
+        {
+            format = is.format();
+        }
+
+        // Read the data from the file
+        ok = io.readData(is);
+
+        // Close the file
         io.close();
 
         if (debug)
@@ -642,6 +658,13 @@ bool Foam::fileOperations::uncollatedFileOperation::read
         // transferred as well as contents.
         Pstream::scatter(io.headerClassName());
         Pstream::scatter(io.note());
+
+        if (defaultFormat == IOstream::ASCII)
+        {
+            std::underlying_type_t<IOstream::streamFormat> formatValue(format);
+            Pstream::scatter(formatValue);
+            format = IOstream::streamFormat(formatValue);
+        }
 
         // Get my communication order
         const List<Pstream::commsStruct>& comms =

@@ -83,10 +83,11 @@ class regIOobject
 
 protected:
 
-        //- Helper: check readOpt flags and read if necessary
+        //- Read header, check readOpt flags and read data if necessary.
+        //  Format is set to ASCII if defaultFormat and file format are ASCII
         bool readHeaderOk
         (
-            const IOstream::streamFormat PstreamFormat,
+            const IOstream::streamFormat defaultFormat,
             const word& typeName
         );
 

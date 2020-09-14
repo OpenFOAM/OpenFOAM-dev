@@ -2110,7 +2110,7 @@ bool Foam::fileOperations::masterUncollatedFileOperation::read
 (
     regIOobject& io,
     const bool masterOnly,
-    const IOstream::streamFormat format,
+    const IOstream::streamFormat defaultFormat,
     const word& typeName
 ) const
 {
@@ -2170,7 +2170,7 @@ bool Foam::fileOperations::masterUncollatedFileOperation::read
                 0,
                 Pstream::msgType(),
                 Pstream::worldComm, // comm_,
-                format
+                defaultFormat
             );
             ok = io.readData(fromAbove);
         }
@@ -2185,7 +2185,7 @@ bool Foam::fileOperations::masterUncollatedFileOperation::read
                 0,
                 Pstream::msgType(),
                 Pstream::worldComm, // comm_,
-                format
+                defaultFormat
             );
             bool okWrite = io.writeData(toBelow);
             ok = ok && okWrite;
