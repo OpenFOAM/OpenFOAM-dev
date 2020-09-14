@@ -8,4 +8,4 @@ vtkPVFoamMeshZone.C
 vtkPVFoamUpdateInfo.C
 vtkPVFoamUtils.C
 
-LIB = $(FOAM_LIBBIN)/libvtkPVFoam
+LIB = $(PV_PLUGIN_PATH)/libvtkPVFoam

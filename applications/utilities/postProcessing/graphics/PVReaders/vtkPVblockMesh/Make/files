@@ -2,4 +2,4 @@ vtkPVblockMesh.C
 vtkPVblockMeshConvert.C
 vtkPVblockMeshUtils.C
 
-LIB = $(FOAM_LIBBIN)/libvtkPVblockMesh
+LIB = $(PV_PLUGIN_PATH)/libvtkPVblockMesh
