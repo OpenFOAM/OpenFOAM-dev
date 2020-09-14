@@ -63,7 +63,7 @@ Foam::IOdictionary::IOdictionary(const IOobject& io)
 {
     dictionary::name() = IOobject::objectPath();
 
-    readHeaderOk(IOstream::ASCII, typeName);
+    readHeaderOk(IOstream::BINARY, typeName);
 
     // For if MUST_READ_IF_MODIFIED
     addWatch();
@@ -80,7 +80,7 @@ Foam::IOdictionary::IOdictionary
 {
     dictionary::name() = IOobject::objectPath();
 
-    if (!readHeaderOk(IOstream::ASCII, typeName))
+    if (!readHeaderOk(IOstream::BINARY, typeName))
     {
         dictionary::operator=(dict);
     }

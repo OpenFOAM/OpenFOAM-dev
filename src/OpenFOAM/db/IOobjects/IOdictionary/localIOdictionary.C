@@ -34,7 +34,7 @@ Foam::localIOdictionary::localIOdictionary
 :
     IOdictionary(io, typeName)
 {
-    readHeaderOk(IOstream::ASCII, typeName);
+    readHeaderOk(IOstream::BINARY, typeName);
 
     // For if MUST_READ_IF_MODIFIED
     addWatch();
@@ -49,7 +49,7 @@ Foam::localIOdictionary::localIOdictionary
 :
     IOdictionary(io, typeName)
 {
-    if (!readHeaderOk(IOstream::ASCII, typeName))
+    if (!readHeaderOk(IOstream::BINARY, typeName))
     {
         dictionary::operator=(dict);
     }
@@ -67,7 +67,7 @@ Foam::localIOdictionary::localIOdictionary
 :
     IOdictionary(io, actualType)
 {
-    readHeaderOk(IOstream::ASCII, actualType);
+    readHeaderOk(IOstream::BINARY, actualType);
 
     // For if MUST_READ_IF_MODIFIED
     addWatch();

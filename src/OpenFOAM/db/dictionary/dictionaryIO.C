@@ -192,7 +192,7 @@ void Foam::dictionary::write(Ostream& os, bool subDict) const
         os  << e;
 
         // Add extra new line between entries for "top-level" dictionaries
-        if (!subDict && parent() == dictionary::null && e != *last())
+        if (!subDict && parent() == dictionary::null && (&e != last()))
         {
             os  << nl;
         }
