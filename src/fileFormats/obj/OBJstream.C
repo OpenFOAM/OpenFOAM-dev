@@ -58,13 +58,13 @@ void Foam::OBJstream::writeAndCheck(const char c)
 
 Foam::OBJstream::OBJstream
 (
-    const fileName& pathname,
+    const fileName& filePath,
     streamFormat format,
     versionNumber version,
     compressionType compression
 )
 :
-    OFstream(pathname, format, version, compression),
+    OFstream(filePath, format, version, compression),
     startOfLine_(true),
     nVertices_(0)
 {}

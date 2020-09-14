@@ -56,7 +56,7 @@ class threadedCollatedOFstream
 
         OFstreamCollator& writer_;
 
-        const fileName pathName_;
+        const fileName filePath_;
 
         const IOstream::compressionType compression_;
 

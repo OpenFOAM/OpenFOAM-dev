@@ -74,10 +74,10 @@ public:
 
     // Constructors
 
-        //- Construct from pathname
+        //- Construct from filePath
         OBJstream
         (
-            const fileName& pathname,
+            const fileName& filePath,
             streamFormat format=ASCII,
             versionNumber version=currentVersion,
             compressionType compression=UNCOMPRESSED

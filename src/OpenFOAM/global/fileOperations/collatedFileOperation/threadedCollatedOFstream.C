@@ -41,7 +41,7 @@ Foam::threadedCollatedOFstream::threadedCollatedOFstream
 :
     OStringStream(format, version),
     writer_(writer),
-    pathName_(filePath),
+    filePath_(filePath),
     compression_(compression),
     useThread_(useThread)
 {}
@@ -54,7 +54,7 @@ Foam::threadedCollatedOFstream::~threadedCollatedOFstream()
     writer_.write
     (
         decomposedBlockData::typeName,
-        pathName_,
+        filePath_,
         str(),
         IOstream::BINARY,
         version(),

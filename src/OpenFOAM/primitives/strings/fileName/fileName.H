@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -247,7 +247,7 @@ public:
 };
 
 
-//- Assemble words and fileNames as pathnames by adding a '/' separator
+//- Assemble words and fileNames as filePaths by adding a '/' separator
 fileName operator/(const string&, const string&);
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,19 +38,19 @@ Description
 
 using namespace Foam;
 
-void printCleaning(fileName& pathName)
+void printCleaning(fileName& filePath)
 {
-    Info<< "fileName = " << pathName << nl
-        << "  path() = " << pathName.path() << nl
-        << "  name() = " << pathName.name() << nl
-        << "  joined = " << pathName.path()/pathName.name() << nl << nl;
+    Info<< "fileName = " << filePath << nl
+        << "  path() = " << filePath.path() << nl
+        << "  name() = " << filePath.name() << nl
+        << "  joined = " << filePath.path()/filePath.name() << nl << nl;
 
-    pathName.clean();
+    filePath.clean();
 
-    Info<< "cleaned  = " << pathName << nl
-        << "  path() = " << pathName.path() << nl
-        << "  name() = " << pathName.name() << nl
-        << "  joined = " << pathName.path()/pathName.name() << nl << nl;
+    Info<< "cleaned  = " << filePath << nl
+        << "  path() = " << filePath.path() << nl
+        << "  name() = " << filePath.name() << nl
+        << "  joined = " << filePath.path()/filePath.name() << nl << nl;
 
     IOobject::writeDivider(Info);
 }
@@ -74,8 +74,8 @@ int main(int argc, char *argv[])
         args.printUsage();
     }
 
-    fileName pathName;
-    if (args.optionReadIfPresent("case", pathName))
+    fileName filePath;
+    if (args.optionReadIfPresent("case", filePath))
     {
         Info<< nl
             << "-case" << nl
@@ -86,18 +86,18 @@ int main(int argc, char *argv[])
             << "FOAM_CASENAME=" << getEnv("FOAM_CASENAME") << nl
             << endl;
 
-        printCleaning(pathName);
+        printCleaning(filePath);
     }
 
     for (label argI=1; argI < args.size(); ++argI)
     {
-        pathName = args[argI];
-        printCleaning(pathName);
+        filePath = args[argI];
+        printCleaning(filePath);
     }
 
     if (args.optionFound("istream"))
     {
-        args.optionLookup("istream")() >> pathName;
+        args.optionLookup("istream")() >> filePath;
 
         Info<< nl
             << "-case" << nl
@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
             << "FOAM_CASENAME=" << getEnv("FOAM_CASENAME") << nl
             << endl;
 
-        printCleaning(pathName);
+        printCleaning(filePath);
     }
 
     Info<< "\nEnd\n" << endl;

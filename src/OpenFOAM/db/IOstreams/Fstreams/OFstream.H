@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,10 +62,10 @@ class OFstreamAllocator
 
     // Constructors
 
-        //- Construct from pathname
+        //- Construct from filePath
         OFstreamAllocator
         (
-            const fileName& pathname,
+            const fileName& filePath,
             IOstream::compressionType compression=IOstream::UNCOMPRESSED,
             const bool append = false
         );
@@ -87,7 +87,7 @@ class OFstream
 {
     // Private Data
 
-        fileName pathname_;
+        fileName filePath_;
 
 
 public:
@@ -98,10 +98,10 @@ public:
 
     // Constructors
 
-        //- Construct from pathname
+        //- Construct from filePath
         OFstream
         (
-            const fileName& pathname,
+            const fileName& filePath,
             streamFormat format=ASCII,
             versionNumber version=currentVersion,
             compressionType compression=UNCOMPRESSED,
@@ -120,13 +120,13 @@ public:
             //- Return the name of the stream
             const fileName& name() const
             {
-                return pathname_;
+                return filePath_;
             }
 
             //- Return non-const access to the name of the stream
             fileName& name()
             {
-                return pathname_;
+                return filePath_;
             }
 
 

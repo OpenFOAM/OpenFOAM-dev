@@ -68,10 +68,10 @@ public:
 
     // Constructors
 
-        //- Construct from pathname
+        //- Construct from filePath
         ensightFile
         (
-            const fileName& pathname,
+            const fileName& filePath,
             IOstream::streamFormat format=IOstream::BINARY
         );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -215,7 +215,7 @@ void* Foam::OFstreamCollator::writeAll(void *threadarg)
             (
                 ptr->comm_,
                 ptr->typeName_,
-                ptr->pathName_,
+                ptr->filePath_,
                 ptr->data_,
                 ptr->sizes_,
                 slaveData,
@@ -226,8 +226,8 @@ void* Foam::OFstreamCollator::writeAll(void *threadarg)
             );
             if (!ok)
             {
-                FatalIOErrorInFunction(ptr->pathName_)
-                    << "Failed writing " << ptr->pathName_
+                FatalIOErrorInFunction(ptr->filePath_)
+                    << "Failed writing " << ptr->filePath_
                     << exit(FatalIOError);
             }
 

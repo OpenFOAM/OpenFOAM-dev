@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,8 +66,8 @@ class IFstreamAllocator
 
     // Constructors
 
-        //- Construct from pathname
-        IFstreamAllocator(const fileName& pathname);
+        //- Construct from filePath
+        IFstreamAllocator(const fileName& filePath);
 
 
     //- Destructor
@@ -86,7 +86,7 @@ class IFstream
 {
     // Private Data
 
-        fileName pathname_;
+        fileName filePath_;
 
 public:
 
@@ -96,10 +96,10 @@ public:
 
     // Constructors
 
-        //- Construct from pathname
+        //- Construct from filePath
         IFstream
         (
-            const fileName& pathname,
+            const fileName& filePath,
             streamFormat format=ASCII,
             versionNumber version=currentVersion
         );
@@ -116,13 +116,13 @@ public:
             //- Return the name of the stream
             const fileName& name() const
             {
-                return pathname_;
+                return filePath_;
             }
 
             //- Return non-const access to the name of the stream
             fileName& name()
             {
-                return pathname_;
+                return filePath_;
             }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,12 +37,12 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-Foam::IFstreamAllocator::IFstreamAllocator(const fileName& pathname)
+Foam::IFstreamAllocator::IFstreamAllocator(const fileName& filePath)
 :
     ifPtr_(nullptr),
     compression_(IOstream::UNCOMPRESSED)
 {
-    if (pathname.empty())
+    if (filePath.empty())
     {
         if (IFstream::debug)
         {
@@ -50,32 +50,32 @@ Foam::IFstreamAllocator::IFstreamAllocator(const fileName& pathname)
         }
     }
 
-    ifPtr_ = new ifstream(pathname.c_str());
+    ifPtr_ = new ifstream(filePath.c_str());
 
     // If the file is compressed, decompress it before reading.
     if (!ifPtr_->good())
     {
-        if (isFile(pathname + ".gz", false, false))
+        if (isFile(filePath + ".gz", false, false))
         {
             delete ifPtr_;
 
             if (IFstream::debug)
             {
-                InfoInFunction << "Decompressing " << pathname + ".gz" << endl;
+                InfoInFunction << "Decompressing " << filePath + ".gz" << endl;
             }
 
-            ifPtr_ = new igzstream((pathname + ".gz").c_str());
+            ifPtr_ = new igzstream((filePath + ".gz").c_str());
 
             if (ifPtr_->good())
             {
                 compression_ = IOstream::COMPRESSED;
             }
         }
-        else if (isFile(pathname + ".orig", false, false))
+        else if (isFile(filePath + ".orig", false, false))
         {
             delete ifPtr_;
 
-            ifPtr_ = new ifstream((pathname + ".orig").c_str());
+            ifPtr_ = new ifstream((filePath + ".orig").c_str());
         }
     }
 }
@@ -91,12 +91,12 @@ Foam::IFstreamAllocator::~IFstreamAllocator()
 
 Foam::IFstream::IFstream
 (
-    const fileName& pathname,
+    const fileName& filePath,
     streamFormat format,
     versionNumber version
 )
 :
-    IFstreamAllocator(pathname),
+    IFstreamAllocator(filePath),
     ISstream
     (
         *ifPtr_,
@@ -105,7 +105,7 @@ Foam::IFstream::IFstream
         version,
         IFstreamAllocator::compression_
     ),
-    pathname_(pathname)
+    filePath_(filePath)
 {
     setClosed();
 
@@ -175,7 +175,7 @@ Foam::IFstream& Foam::IFstream::operator()() const
     if (!good())
     {
         // also checks variants
-        if (isFile(pathname_, true, true))
+        if (isFile(filePath_, true, true))
         {
             check("IFstream::operator()");
             FatalIOError.exit();
@@ -183,7 +183,7 @@ Foam::IFstream& Foam::IFstream::operator()() const
         else
         {
             FatalIOErrorInFunction(*this)
-                << "file " << pathname_ << " does not exist"
+                << "file " << filePath_ << " does not exist"
                 << exit(FatalIOError);
         }
     }

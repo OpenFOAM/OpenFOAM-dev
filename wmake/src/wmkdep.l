@@ -3,7 +3,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,11 +94,11 @@ const char* currentPath = NULL;
 
 void nextFile(const char* fileName);
 int lookUp(struct HashEntry** hashTable, const char* p);
-void addFile(char* pathName);
-void openFile(const char* pathName);
+void addFile(char* filePath);
+void openFile(const char* filePath);
 char* strRep(char* str, struct searchReplace* sr);
-char* substitutePath(char* pathName);
-void printFile(FILE* file, const char* pathName);
+char* substitutePath(char* filePath);
+void printFile(FILE* file, const char* filePath);
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
@@ -285,17 +285,17 @@ int main(int argc, char* argv[])
 /* Add a directory name to the file name */
 char* addDirectoryName(const char* dirName, const char* fileName)
 {
-    char* pathName = (char*)malloc(strlen(dirName) + strlen(fileName) + 2);
-    strcpy(pathName, dirName);
+    char* filePath = (char*)malloc(strlen(dirName) + strlen(fileName) + 2);
+    strcpy(filePath, dirName);
 
     if (dirName[strlen(dirName)-1] != '/')
     {
-        strcat(pathName, "/");
+        strcat(filePath, "/");
     }
 
-    strcat(pathName, fileName);
+    strcat(filePath, fileName);
 
-    return pathName;
+    return filePath;
 }
 
 
@@ -317,17 +317,17 @@ void nextFile(const char* fileName)
         int i;
         for (i = 0; i < nDirectories; i++)
         {
-            char* pathName = addDirectoryName(directories[i], fileName);
+            char* filePath = addDirectoryName(directories[i], fileName);
 
-            if (access(pathName, R_OK ) != -1)
+            if (access(filePath, R_OK ) != -1)
             {
-                addFile(pathName);
+                addFile(filePath);
                 currentPath = directories[i];
 
                 return;
             }
 
-            free(pathName);
+            free(filePath);
         }
 
         if (nDirectories == 0)
@@ -393,7 +393,7 @@ int lookUp(struct HashEntry** hashTable, const char* p)
 
 
 /* Add file to list */
-void addFile(char* pathName)
+void addFile(char* filePath)
 {
     if (nFiles == maxNfiles - 1)
     {
@@ -401,20 +401,20 @@ void addFile(char* pathName)
         files = (char**)realloc(files, sizeof(char*)*maxNfiles);
     }
 
-    files[nFiles++] = pathName;
+    files[nFiles++] = filePath;
 }
 
 
 /* Open file and set yyin */
-void openFile(const char* pathName)
+void openFile(const char* filePath)
 {
-    if (!(yyin = fopen(pathName, "r")))
+    if (!(yyin = fopen(filePath, "r")))
     {
         fprintf
         (
             stderr,
             "could not open file %s for source file %s due to %s\n",
-            pathName, sourceFile, strerror(errno)
+            filePath, sourceFile, strerror(errno)
         );
     }
 }
@@ -455,25 +455,25 @@ char* strRep(char* str, struct searchReplace* sr)
 
 
 /* Substitute path components with command-line replacements */
-char* substitutePath(char* pathName)
+char* substitutePath(char* filePath)
 {
     if (nReplacements)
     {
         int i;
         for (i = 0; i < nReplacements; i++)
         {
-            pathName = strRep(pathName, &replacements[i]);
+            filePath = strRep(filePath, &replacements[i]);
         }
     }
 
-    return pathName;
+    return filePath;
 }
 
 
 /* Print file path to the dependencies file */
-void printFile(FILE* file, const char* pathName)
+void printFile(FILE* file, const char* filePath)
 {
-    fprintf(file, "%s \\\n", pathName);
+    fprintf(file, "%s \\\n", filePath);
 }
 
 

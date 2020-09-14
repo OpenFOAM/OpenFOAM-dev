@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ class masterOFstream
 {
     // Private Data
 
-        const fileName pathName_;
+        const fileName filePath_;
 
         const IOstream::compressionType compression_;
 
@@ -75,7 +75,7 @@ public:
         //- Construct and set stream status
         masterOFstream
         (
-            const fileName& pathname,
+            const fileName& filePath,
             streamFormat format=ASCII,
             versionNumber version=currentVersion,
             compressionType compression=UNCOMPRESSED,

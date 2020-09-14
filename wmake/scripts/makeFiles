@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -63,11 +63,11 @@ echo >> Make/files
 for file in `find . -name "*.[cCylLfF]" -type f -print`
 do
     fileName=`echo ${file##*/}`
-    pathName=`echo ${file%/*} | sed 's%^\.%%' | sed 's%^/%%' | $dirToString`
+    filePath=`echo ${file%/*} | sed 's%^\.%%' | sed 's%^/%%' | $dirToString`
 
-    if [ -n "$pathName" ]
+    if [ -n "$filePath" ]
     then
-        echo '$('$pathName')/'$fileName >> Make/files
+        echo '$('$filePath')/'$fileName >> Make/files
     else
         echo $fileName >> Make/files
     fi

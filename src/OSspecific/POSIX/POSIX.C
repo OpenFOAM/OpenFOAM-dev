@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -287,11 +287,11 @@ bool Foam::chDir(const fileName& dir)
 }
 
 
-bool Foam::mkDir(const fileName& pathName, mode_t mode)
+bool Foam::mkDir(const fileName& filePath, mode_t mode)
 {
     if (POSIX::debug)
     {
-        Pout<< FUNCTION_NAME << " : pathName:" << pathName << " mode:" << mode
+        Pout<< FUNCTION_NAME << " : filePath:" << filePath << " mode:" << mode
             << endl;
         if ((POSIX::debug & 2) && !Pstream::master())
         {
@@ -300,13 +300,13 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
     }
 
     // Empty names are meaningless
-    if (pathName.empty())
+    if (filePath.empty())
     {
         return false;
     }
 
     // Construct instance path directory if does not exist
-    if (::mkdir(pathName.c_str(), mode) == 0)
+    if (::mkdir(filePath.c_str(), mode) == 0)
     {
         // Directory made OK so return true
         return true;
@@ -318,7 +318,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
             case EPERM:
             {
                 FatalErrorInFunction
-                    << "The filesystem containing " << pathName
+                    << "The filesystem containing " << filePath
                     << " does not support the creation of directories."
                     << exit(FatalError);
 
@@ -334,7 +334,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
             case EFAULT:
             {
                 FatalErrorInFunction
-                    << "" << pathName
+                    << "" << filePath
                     << " points outside your accessible address space."
                     << exit(FatalError);
 
@@ -346,7 +346,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
                 FatalErrorInFunction
                     << "The parent directory does not allow write "
                        "permission to the process,"<< nl
-                    << "or one of the directories in " << pathName
+                    << "or one of the directories in " << filePath
                     << " did not allow search (execute) permission."
                     << exit(FatalError);
 
@@ -356,7 +356,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
             case ENAMETOOLONG:
             {
                 FatalErrorInFunction
-                    << "" << pathName << " is too long."
+                    << "" << filePath << " is too long."
                     << exit(FatalError);
 
                 return false;
@@ -365,14 +365,14 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
             case ENOENT:
             {
                 // Part of the path does not exist so try to create it
-                if (pathName.path().size() && mkDir(pathName.path(), mode))
+                if (filePath.path().size() && mkDir(filePath.path(), mode))
                 {
-                    return mkDir(pathName, mode);
+                    return mkDir(filePath, mode);
                 }
                 else
                 {
                     FatalErrorInFunction
-                        << "Couldn't create directory " << pathName
+                        << "Couldn't create directory " << filePath
                         << exit(FatalError);
 
                     return false;
@@ -382,7 +382,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
             case ENOTDIR:
             {
                 FatalErrorInFunction
-                    << "A component used as a directory in " << pathName
+                    << "A component used as a directory in " << filePath
                     << " is not, in fact, a directory."
                     << exit(FatalError);
 
@@ -393,7 +393,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
             {
                 FatalErrorInFunction
                     << "Insufficient kernel memory was available to make "
-                       "directory " << pathName << '.'
+                       "directory " << filePath << '.'
                     << exit(FatalError);
 
                 return false;
@@ -402,7 +402,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
             case EROFS:
             {
                 FatalErrorInFunction
-                    << "" << pathName
+                    << "" << filePath
                     << " refers to a file on a read-only filesystem."
                     << exit(FatalError);
 
@@ -413,7 +413,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
             {
                 FatalErrorInFunction
                     << "Too many symbolic links were encountered in resolving "
-                    << pathName << '.'
+                    << filePath << '.'
                     << exit(FatalError);
 
                 return false;
@@ -422,7 +422,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
             case ENOSPC:
             {
                 FatalErrorInFunction
-                    << "The device containing " << pathName
+                    << "The device containing " << filePath
                     << " has no room for the new directory or "
                     << "the user's disk quota is exhausted."
                     << exit(FatalError);
@@ -433,7 +433,7 @@ bool Foam::mkDir(const fileName& pathName, mode_t mode)
             default:
             {
                 FatalErrorInFunction
-                    << "Couldn't create directory " << pathName
+                    << "Couldn't create directory " << filePath
                     << exit(FatalError);
 
                 return false;

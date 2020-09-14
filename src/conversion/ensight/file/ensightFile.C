@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,11 +83,11 @@ Foam::label Foam::ensightFile::subDirWidth()
 
 Foam::ensightFile::ensightFile
 (
-    const fileName& pathname,
+    const fileName& filePath,
     IOstream::streamFormat format
 )
 :
-    OFstream(pathname, format)
+    OFstream(filePath, format)
 {
     // ascii formatting specs
     setf

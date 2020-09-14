@@ -77,7 +77,7 @@ class OFstreamCollator
 
             const label comm_;
             const word typeName_;
-            const fileName pathName_;
+            const fileName filePath_;
             const string data_;
             const labelList sizes_;
             PtrList<List<char>> slaveData_;
@@ -101,7 +101,7 @@ class OFstreamCollator
             :
                 comm_(comm),
                 typeName_(typeName),
-                pathName_(filePath),
+                filePath_(filePath),
                 data_(data),
                 sizes_(sizes),
                 slaveData_(0),

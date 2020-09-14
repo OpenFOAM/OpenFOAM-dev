@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,16 +50,16 @@ int main()
     wrdList[3] = "hello3";
     wrdList[4] = "hello4.hmm";
 
-    fileName pathName(wrdList);
+    fileName filePath(wrdList);
 
-    Info<< "pathName = " << pathName << nl
-        << "pathName.name()     = >" << pathName.name() << "<\n"
-        << "pathName.path()     = "  << pathName.path() << nl
-        << "pathName.ext()      = >" << pathName.ext() << "<\n"
-        << "pathName.name(true) = >" << pathName.name(true) << "<\n";
+    Info<< "filePath = " << filePath << nl
+        << "filePath.name()     = >" << filePath.name() << "<\n"
+        << "filePath.path()     = "  << filePath.path() << nl
+        << "filePath.ext()      = >" << filePath.ext() << "<\n"
+        << "filePath.name(true) = >" << filePath.name(true) << "<\n";
 
-    Info<< "pathName.components() = " << pathName.components() << nl
-        << "pathName.component(2) = " << pathName.component(2) << nl
+    Info<< "filePath.components() = " << filePath.components() << nl
+        << "filePath.component(2) = " << filePath.component(2) << nl
         << endl;
 
     // try with different combination

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,11 +29,11 @@ License
 
 Foam::ensightGeoFile::ensightGeoFile
 (
-    const fileName& pathname,
+    const fileName& filePath,
     IOstream::streamFormat format
 )
 :
-    ensightFile(pathname, format)
+    ensightFile(filePath, format)
 {
     writeBinaryHeader();
     write("Ensight Geometry File");  newline();
