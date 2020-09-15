@@ -202,6 +202,16 @@ public:
                 const label fieldi
             ) const;
 
+            //- Explicit and implicit matrix contributions
+            //  to phase equation
+            virtual void addSup
+            (
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                fvMatrix<Type>& eqn,
+                const label fieldi
+            ) const;
+
             //- Set value
             virtual void constrain
             (
