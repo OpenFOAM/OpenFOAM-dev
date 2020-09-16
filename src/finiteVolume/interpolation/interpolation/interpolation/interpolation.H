@@ -54,18 +54,15 @@ class polyMesh;
 template<class Type>
 class interpolation
 {
-
 protected:
 
     // Protected data
 
+        //- The vol field to interpolate
         const GeometricField<Type, fvPatchField, volMesh>& psi_;
 
-        const polyMesh& pMesh_;
-        const vectorField& pMeshPoints_;
-        const faceList& pMeshFaces_;
-        const vectorField& pMeshFaceCentres_;
-        const vectorField& pMeshFaceAreas_;
+        //- Reference to the mesh
+        const polyMesh& mesh_;
 
 
 public:
@@ -135,25 +132,73 @@ public:
             const label facei = -1
         ) const = 0;
 
+        //- As above, but for a field
+        virtual tmp<Field<Type>> interpolate
+        (
+            const vectorField& position,
+            const labelField& celli,
+            const labelField& facei = NullObjectRef<labelField>()
+        ) const = 0;
+
         //- Interpolate field to the given coordinates in the tetrahedron
-        //  defined by the given indices.  Calls interpolate function
-        //  above here execpt where overridden by derived
+        //  defined by the given indices. Calls interpolate function
+        //  above here except where overridden by derived
         //  interpolation types.
         virtual Type interpolate
         (
             const barycentric& coordinates,
             const tetIndices& tetIs,
             const label facei = -1
-        ) const
-        {
-            return
-                interpolate
-                (
-                    tetIs.tet(pMesh_).barycentricToPoint(coordinates),
-                    tetIs.cell(),
-                    facei
-                );
-        }
+        ) const;
+
+        //- As above, but for a field
+        virtual tmp<Field<Type>> interpolate
+        (
+            const Field<barycentric>& coordinates,
+            const labelField& celli,
+            const labelField& tetFacei,
+            const labelField& tetPti,
+            const labelField& facei = NullObjectRef<labelField>()
+        ) const = 0;
+};
+
+
+/*---------------------------------------------------------------------------*\
+                     Class fieldInterpolation Declaration
+\*---------------------------------------------------------------------------*/
+
+template<class Type, class InterpolationType>
+class fieldInterpolation
+:
+    public interpolation<Type>
+{
+public:
+
+    // Constructors
+
+        //- Inherit base class constructors
+        using interpolation<Type>::interpolation;
+
+
+    // Member Functions
+
+        //- Interpolate field to the given points in the given cells
+        virtual tmp<Field<Type>> interpolate
+        (
+            const vectorField& position,
+            const labelField& celli,
+            const labelField& facei = NullObjectRef<labelField>()
+        ) const;
+
+        //- Interpolate field to the given coordinates in the given tetrahedra
+        virtual tmp<Field<Type>> interpolate
+        (
+            const Field<barycentric>& coordinates,
+            const labelField& celli,
+            const labelField& tetFacei,
+            const labelField& tetPti,
+            const labelField& facei = NullObjectRef<labelField>()
+        ) const;
 };
 
 

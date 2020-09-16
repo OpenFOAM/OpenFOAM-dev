@@ -48,7 +48,7 @@ class fvMesh;
 template<class Type>
 class interpolationCell
 :
-    public interpolation<Type>
+    public fieldInterpolation<Type, interpolationCell<Type>>
 {
 
 public:

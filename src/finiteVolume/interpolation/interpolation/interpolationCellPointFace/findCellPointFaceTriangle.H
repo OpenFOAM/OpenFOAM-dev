@@ -21,8 +21,8 @@ bool interpolationCellPointFace<Type>::findTriangle
 {
     bool foundTriangle = false;
     vector tetPoints[3];
-    const labelList& facePoints = this->pMeshFaces_[nFace];
-    tetPoints[2] = this->pMeshFaceCentres_[nFace];
+    const labelList& facePoints = this->mesh_.faces()[nFace];
+    tetPoints[2] = this->mesh_.faceCentres()[nFace];
 
     label pointi = 0;
 
@@ -35,8 +35,8 @@ bool interpolationCellPointFace<Type>::findTriangle
         tetPointLabels[0] = facePoints[pointi];
         tetPointLabels[1] = facePoints[nextPointLabel];
 
-        tetPoints[0] = this->pMeshPoints_[tetPointLabels[0]];
-        tetPoints[1] = this->pMeshPoints_[tetPointLabels[1]];
+        tetPoints[0] = this->mesh_.points()[tetPointLabels[0]];
+        tetPoints[1] = this->mesh_.points()[tetPointLabels[1]];
 
         vector fc = (tetPoints[0] + tetPoints[1] + tetPoints[2])/3.0;
 

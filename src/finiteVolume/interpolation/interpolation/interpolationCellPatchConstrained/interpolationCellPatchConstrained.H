@@ -50,7 +50,7 @@ class fvMesh;
 template<class Type>
 class interpolationCellPatchConstrained
 :
-    public interpolation<Type>
+    public fieldInterpolation<Type, interpolationCellPatchConstrained<Type>>
 {
 
 public:

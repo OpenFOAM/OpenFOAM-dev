@@ -46,7 +46,7 @@ namespace Foam
 template<class Type>
 class interpolationCellPointFace
 :
-    public interpolation<Type>
+    public fieldInterpolation<Type, interpolationCellPointFace<Type>>
 {
     // Private Data
 
@@ -94,6 +94,9 @@ public:
 
 
     // Member Functions
+
+        //- Inherit interpolate from interpolation
+        using interpolation<Type>::interpolate;
 
         //- Interpolate field to the given point in the given cell
         Type interpolate

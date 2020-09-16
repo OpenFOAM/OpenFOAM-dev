@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ Foam::interpolationCellPointFace<Type>::interpolationCellPointFace
     const GeometricField<Type, fvPatchField, volMesh>& psi
 )
 :
-    interpolation<Type>(psi),
+    fieldInterpolation<Type, interpolationCellPointFace<Type>>(psi),
     psip_
     (
         volPointInterpolation::New(psi.mesh()).interpolate
@@ -73,8 +73,8 @@ Type Foam::interpolationCellPointFace<Type>::interpolate
     // only use face information when the position is on a face
     if (facei < 0)
     {
-        const vector& cellCentre = this->pMesh_.cellCentres()[celli];
-        const labelList& cellFaces = this->pMesh_.cells()[celli];
+        const vector& cellCentre = this->mesh_.cellCentres()[celli];
+        const labelList& cellFaces = this->mesh_.cells()[celli];
 
         vector projection = position - cellCentre;
         tetPoints[3] = cellCentre;
@@ -92,10 +92,10 @@ Type Foam::interpolationCellPointFace<Type>::interpolate
         {
             label nFace = cellFaces[facei];
 
-            vector normal = this->pMeshFaceAreas_[nFace];
+            vector normal = this->mesh_.faceAreas()[nFace];
             normal /= mag(normal);
 
-            const vector& faceCentreTmp = this->pMeshFaceCentres_[nFace];
+            const vector& faceCentreTmp = this->mesh_.faceCentres()[nFace];
 
             scalar multiplierNumerator = (faceCentreTmp - cellCentre) & normal;
             scalar multiplierDenominator = projection & normal;
@@ -167,7 +167,7 @@ Type Foam::interpolationCellPointFace<Type>::interpolate
             while (facei < cellFaces.size() && !foundTet)
             {
                 label nFace = cellFaces[facei];
-                if (nFace < this->pMeshFaceAreas_.size())
+                if (nFace < this->mesh_.faceAreas().size())
                 {
                     foundTet = findTet
                     (
@@ -221,7 +221,7 @@ Type Foam::interpolationCellPointFace<Type>::interpolate
             else
             {
                 label patchi =
-                    this->pMesh_.boundaryMesh().whichPatch(closestFace);
+                    this->mesh_.boundaryMesh().whichPatch(closestFace);
 
                 // If the boundary patch is not empty use the face value
                 // else use the cell value
@@ -229,7 +229,7 @@ Type Foam::interpolationCellPointFace<Type>::interpolate
                 {
                     ts[2] = this->psi_.boundaryField()[patchi]
                     [
-                        this->pMesh_.boundaryMesh()[patchi].whichFace
+                        this->mesh_.boundaryMesh()[patchi].whichFace
                         (
                             closestFace
                         )
@@ -265,7 +265,7 @@ Type Foam::interpolationCellPointFace<Type>::interpolate
             else
             {
                 label patchi =
-                    this->pMesh_.boundaryMesh().whichPatch(closestFace);
+                    this->mesh_.boundaryMesh().whichPatch(closestFace);
 
                 // If the boundary patch is not empty use the face value
                 // else use the cell value
@@ -273,7 +273,7 @@ Type Foam::interpolationCellPointFace<Type>::interpolate
                 {
                     t = this->psi_.boundaryField()[patchi]
                     [
-                        this->pMesh_.boundaryMesh()[patchi].whichFace
+                        this->mesh_.boundaryMesh()[patchi].whichFace
                         (
                             closestFace
                         )
@@ -312,14 +312,14 @@ Type Foam::interpolationCellPointFace<Type>::interpolate
             }
             else
             {
-                label patchi = this->pMesh_.boundaryMesh().whichPatch(facei);
+                label patchi = this->mesh_.boundaryMesh().whichPatch(facei);
 
                 // If the boundary patch is not empty use the face value
                 // else use the cell value
                 if (this->psi_.boundaryField()[patchi].size())
                 {
                     t += phi[2]*this->psi_.boundaryField()[patchi]
-                        [this->pMesh_.boundaryMesh()[patchi].whichFace(facei)];
+                        [this->mesh_.boundaryMesh()[patchi].whichFace(facei)];
                 }
                 else
                 {
@@ -336,14 +336,14 @@ Type Foam::interpolationCellPointFace<Type>::interpolate
             }
             else
             {
-                label patchi = this->pMesh_.boundaryMesh().whichPatch(facei);
+                label patchi = this->mesh_.boundaryMesh().whichPatch(facei);
 
                 // If the boundary patch is not empty use the face value
                 // else use the cell value
                 if (this->psi_.boundaryField()[patchi].size())
                 {
                     t = this->psi_.boundaryField()[patchi]
-                        [this->pMesh_.boundaryMesh()[patchi].whichFace(facei)];
+                        [this->mesh_.boundaryMesh()[patchi].whichFace(facei)];
                 }
                 else
                 {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ inline Type Foam::interpolationCellPoint<Type>::interpolate
     const label facei
 ) const
 {
-    return interpolate(cellPointWeight(this->pMesh_, position, celli, facei));
+    return interpolate(cellPointWeight(this->mesh_, position, celli, facei));
 }
 
 
@@ -79,7 +79,7 @@ inline Type Foam::interpolationCellPoint<Type>::interpolate
         }
     }
 
-    const triFace triIs = tetIs.faceTriIs(this->pMesh_);
+    const triFace triIs = tetIs.faceTriIs(this->mesh_);
 
     return
         this->psi_[tetIs.cell()]*coordinates[0]

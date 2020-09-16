@@ -48,7 +48,7 @@ namespace Foam
 template<class Type>
 class interpolationPointMVC
 :
-    public interpolation<Type>
+    public fieldInterpolation<Type, interpolationPointMVC<Type>>
 {
 protected:
 

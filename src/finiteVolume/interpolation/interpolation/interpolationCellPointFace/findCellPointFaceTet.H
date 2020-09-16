@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,8 +53,8 @@ bool interpolationCellPointFace<Type>::findTet
 {
     bool foundTet = false;
 
-    const labelList& thisFacePoints = this->pMeshFaces_[nFace];
-    tetPoints[2] = this->pMeshFaceCentres_[nFace];
+    const labelList& thisFacePoints = this->mesh_.faces()[nFace];
+    tetPoints[2] = this->mesh_.faceCentres()[nFace];
 
     label pointi = 0;
 
@@ -65,8 +65,8 @@ bool interpolationCellPointFace<Type>::findTet
         tetPointLabels[0] = thisFacePoints[pointi];
         tetPointLabels[1] = thisFacePoints[nextPointLabel];
 
-        tetPoints[0] = this->pMeshPoints_[tetPointLabels[0]];
-        tetPoints[1] = this->pMeshPoints_[tetPointLabels[1]];
+        tetPoints[0] = this->mesh_.points()[tetPointLabels[0]];
+        tetPoints[1] = this->mesh_.points()[tetPointLabels[1]];
 
         bool inside = true;
         scalar dist = 0.0;
