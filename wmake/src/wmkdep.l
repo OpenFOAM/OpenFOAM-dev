@@ -146,6 +146,7 @@ int main(int argc, char* argv[])
     {
         sourcePath = (char*)malloc(basePos - sourceFile + 1);
         strncpy(sourcePath, sourceFile, basePos - sourceFile);
+        sourcePath[basePos - sourceFile] = '\0';
     }
 
     if (basePos == NULL)
