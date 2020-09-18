@@ -345,7 +345,7 @@ void Foam::Time::readDict()
     {
         IOstream::defaultPrecision
         (
-            controlDict_.lookup<uint>("writePrecision")
+            controlDict_.lookup<unsigned int>("writePrecision")
         );
 
         Sout.precision(IOstream::defaultPrecision());
