@@ -56,7 +56,7 @@ Usage
         Adds the entry (should not exist yet)
 
       - \par -set \<value\>
-        Adds or replaces the entry
+        Adds or replaces the entry or applies a list of substitutions
 
       - \par -merge \<value\>
         Merges the entry
@@ -325,6 +325,100 @@ void remove(dictionary& dict, const dictionary& removeDict)
 }
 
 
+void substitute(dictionary& dict, string substitutions)
+{
+    // Add '()' delimiters to the substitutions if not present
+    const string whitespace(" \t");
+    string::size_type first = substitutions.find_first_not_of(whitespace);
+    if (substitutions[first] != '(')
+    {
+        substitutions = '(' + substitutions + ')';
+    }
+
+    word funcName;
+    int argLevel = 0;
+    List<Tuple2<word, string>> namedArgs;
+    bool namedArg = false;
+    word argName;
+
+    word::size_type start = 0;
+    word::size_type i = 0;
+
+    for
+    (
+        word::const_iterator iter = substitutions.begin();
+        iter != substitutions.end();
+        ++iter
+    )
+    {
+        char c = *iter;
+
+        if (c == '(')
+        {
+            if (argLevel == 0)
+            {
+                funcName = substitutions(start, i - start);
+                start = i+1;
+            }
+            ++argLevel;
+        }
+        else if (c == ',' || c == ')')
+        {
+            if (argLevel == 1)
+            {
+                if (namedArg)
+                {
+                    namedArgs.append
+                    (
+                        Tuple2<word, string>
+                        (
+                            argName,
+                            substitutions(start, i - start)
+                        )
+                    );
+                    namedArg = false;
+                }
+                else
+                {
+                    FatalIOErrorInFunction(dict)
+                        << "Unnamed substitution" << exit(FatalIOError);
+                }
+                start = i+1;
+            }
+
+            if (c == ')')
+            {
+                if (argLevel == 1)
+                {
+                    break;
+                }
+                --argLevel;
+            }
+        }
+        else if (c == '=')
+        {
+            argName = substitutions(start, i - start);
+            string::stripInvalid<variable>(argName);
+            start = i+1;
+            namedArg = true;
+        }
+
+        ++i;
+    }
+
+    forAll(namedArgs, i)
+    {
+        const Pair<word> dAk(dictAndKeyword(scope(namedArgs[i].first())));
+        const dictionary& subDict(lookupScopedDict(dict, dAk.first()));
+        IStringStream entryStream
+        (
+            dAk.second() + ' ' + namedArgs[i].second() + ';'
+        );
+        const_cast<dictionary&>(subDict).set(entry::New(entryStream).ptr());
+    }
+}
+
+
 int main(int argc, char *argv[])
 {
     argList::removeOption("case");
@@ -345,7 +439,7 @@ int main(int argc, char *argv[])
     (
         "set",
         "value",
-        "Set entry value or add new entry"
+        "Set entry value, add new entry or apply list of substitutions"
     );
     argList::addOption
     (
@@ -520,7 +614,7 @@ int main(int argc, char *argv[])
             const bool overwrite = args.optionFound("set");
             const bool merge = args.optionFound("merge");
 
-            Pair<word> dAk(dictAndKeyword(scopedName));
+            const Pair<word> dAk(dictAndKeyword(scopedName));
             const dictionary& d(lookupScopedDict(dict, dAk.first()));
 
             entry* ePtr = nullptr;
@@ -567,23 +661,11 @@ int main(int argc, char *argv[])
                 const_cast<dictionary&>(d).add(ePtr, merge);
             }
             changed = true;
-
-            // Print the changed entry
-            // const entry* entPtr = dict.lookupScopedEntryPtr
-            // (
-            //     scopedName,
-            //     false,
-            //     true            // Support wildcards
-            // );
-            // if (entPtr)
-            // {
-            //     Info<< *entPtr;
-            // }
         }
         else if (args.optionFound("remove"))
         {
             // Extract dictionary name and keyword
-            Pair<word> dAk(dictAndKeyword(scopedName));
+            const Pair<word> dAk(dictAndKeyword(scopedName));
 
             const dictionary& d(lookupScopedDict(dict, dAk.first()));
             const_cast<dictionary&>(d).remove(dAk.second());
@@ -594,7 +676,7 @@ int main(int argc, char *argv[])
             // Optionally remove a second dictionary
             if (args.optionFound("diff"))
             {
-                Pair<word> dAk(dictAndKeyword(scopedName));
+                const Pair<word> dAk(dictAndKeyword(scopedName));
 
                 const dictionary& d(lookupScopedDict(dict, dAk.first()));
                 const dictionary& d2(lookupScopedDict(diffDict, dAk.first()));
@@ -674,6 +756,12 @@ int main(int argc, char *argv[])
                     << exit(FatalIOError, 2);
             }
         }
+    }
+    else if (args.optionFound("set"))
+    {
+        const string substitutions(args.optionRead<string>("set"));
+        substitute(dict, substitutions);
+        changed = true;
     }
     else if (args.optionFound("keywords"))
     {
