@@ -579,8 +579,12 @@ public:
                 return
                 (
                     diagPtr_
-                 && !(lowerPtr_ && lowerPtr_->size())
-                 && !(upperPtr_ && upperPtr_->size())
+                 && Pstream::parRun()
+                    ?
+                        !lowerPtr_ && !upperPtr_
+                    :
+                        !(lowerPtr_ && lowerPtr_->size())
+                     && !(upperPtr_ && upperPtr_->size())
                 );
             }
 
@@ -589,8 +593,12 @@ public:
                 return
                 (
                     diagPtr_
-                 && !(lowerPtr_ && lowerPtr_->size())
-                 && (upperPtr_ && upperPtr_->size())
+                 && Pstream::parRun()
+                    ?
+                        !lowerPtr_ && upperPtr_
+                    :
+                        !(lowerPtr_ && lowerPtr_->size())
+                     && (upperPtr_ && upperPtr_->size())
                 );
             }
 
@@ -599,8 +607,12 @@ public:
                 return
                 (
                     diagPtr_
-                 && (lowerPtr_ && lowerPtr_->size())
-                 && (upperPtr_ && upperPtr_->size())
+                 && Pstream::parRun()
+                    ?
+                        lowerPtr_ && upperPtr_
+                    :
+                        (lowerPtr_ && lowerPtr_->size())
+                     && (upperPtr_ && upperPtr_->size())
                 );
             }
 
