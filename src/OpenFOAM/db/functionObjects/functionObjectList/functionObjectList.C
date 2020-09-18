@@ -292,7 +292,8 @@ bool Foam::functionObjectList::readFunctionObject
         }
         else if (c == '=')
         {
-            argName = string::validate<word>(funcCall(start, i - start));
+            argName = funcCall(start, i - start);
+            string::stripInvalid<variable>(argName);
             start = i+1;
             namedArg = true;
         }
@@ -381,11 +382,13 @@ bool Foam::functionObjectList::readFunctionObject
          && namedArgs[i].first() != "objects"
         )
         {
+            const Pair<word> dAk(dictAndKeyword(namedArgs[i].first()));
+            dictionary& subDict(funcDict.scopedDict(dAk.first()));
             IStringStream entryStream
             (
-                namedArgs[i].first() + ' ' + namedArgs[i].second() + ';'
+                dAk.second() + ' ' + namedArgs[i].second() + ';'
             );
-            funcDict.set(entry::New(entryStream).ptr());
+            subDict.set(entry::New(entryStream).ptr());
         }
     }
 

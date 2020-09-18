@@ -203,7 +203,7 @@ IOstream::streamFormat readDict(dictionary& dict, const fileName& dictFileName)
 
 
 //- Convert keyword syntax to "dot" if the dictionary is "dot" syntax
-word scope(const fileName& entryName)
+word dotToSlash(const fileName& entryName)
 {
     if
     (
@@ -227,67 +227,11 @@ word scope(const fileName& entryName)
 }
 
 
-//- Extracts dict name and keyword
-Pair<word> dictAndKeyword(const word& scopedName)
-{
-    string::size_type i = scopedName.find_last_of
-    (
-        functionEntries::inputSyntaxEntry::scopeChar()
-    );
-
-    if (i != string::npos)
-    {
-        return Pair<word>
-        (
-            scopedName.substr(0, i),
-            scopedName.substr(i+1, string::npos)
-        );
-    }
-    else
-    {
-        return Pair<word>("", scopedName);
-    }
-}
-
-
-const dictionary& lookupScopedDict
-(
-    const dictionary& dict,
-    const word& subDictName
-)
-{
-    if (subDictName == "")
-    {
-        return dict;
-    }
-    else
-    {
-        const entry* entPtr = dict.lookupScopedEntryPtr
-        (
-            subDictName,
-            false,
-            false
-        );
-        if (!entPtr || !entPtr->isDict())
-        {
-            FatalIOErrorInFunction(dict)
-                << "keyword " << subDictName
-                << " is undefined in dictionary "
-                << dict.name() << " or is not a dictionary"
-                << endl
-                << "Valid keywords are " << dict.keys()
-                << exit(FatalIOError);
-        }
-        return entPtr->dict();
-    }
-}
-
-
 void remove(dictionary& dict, const dictionary& removeDict)
 {
     forAllConstIter(dictionary, removeDict, iter)
     {
-        const entry* entPtr = dict.lookupEntryPtr
+        entry* entPtr = dict.lookupEntryPtr
         (
             iter().keyword(),
             false,
@@ -300,11 +244,7 @@ void remove(dictionary& dict, const dictionary& removeDict)
             {
                 if (iter().isDict())
                 {
-                    remove
-                    (
-                        const_cast<dictionary&>(entPtr->dict()),
-                        iter().dict()
-                    );
+                    remove(entPtr->dict(), iter().dict());
 
                     // Check if dictionary is empty
                     if (!entPtr->dict().size())
@@ -408,13 +348,13 @@ void substitute(dictionary& dict, string substitutions)
 
     forAll(namedArgs, i)
     {
-        const Pair<word> dAk(dictAndKeyword(scope(namedArgs[i].first())));
-        const dictionary& subDict(lookupScopedDict(dict, dAk.first()));
+        const Pair<word> dAk(dictAndKeyword(dotToSlash(namedArgs[i].first())));
+        dictionary& subDict(dict.scopedDict(dAk.first()));
         IStringStream entryStream
         (
             dAk.second() + ' ' + namedArgs[i].second() + ';'
         );
-        const_cast<dictionary&>(subDict).set(entry::New(entryStream).ptr());
+        subDict.set(entry::New(entryStream).ptr());
     }
 }
 
@@ -601,7 +541,7 @@ int main(int argc, char *argv[])
     word entryName;
     if (args.optionReadIfPresent("entry", entryName))
     {
-        const word scopedName(scope(entryName));
+        const word scopedName(dotToSlash(entryName));
 
         string newValue;
         if
@@ -615,7 +555,7 @@ int main(int argc, char *argv[])
             const bool merge = args.optionFound("merge");
 
             const Pair<word> dAk(dictAndKeyword(scopedName));
-            const dictionary& d(lookupScopedDict(dict, dAk.first()));
+            dictionary& subDict(dict.scopedDict(dAk.first()));
 
             entry* ePtr = nullptr;
 
@@ -654,11 +594,11 @@ int main(int argc, char *argv[])
             if (overwrite)
             {
                 Info << "New entry " << *ePtr << endl;
-                const_cast<dictionary&>(d).set(ePtr);
+                subDict.set(ePtr);
             }
             else
             {
-                const_cast<dictionary&>(d).add(ePtr, merge);
+                subDict.add(ePtr, merge);
             }
             changed = true;
         }
@@ -667,8 +607,8 @@ int main(int argc, char *argv[])
             // Extract dictionary name and keyword
             const Pair<word> dAk(dictAndKeyword(scopedName));
 
-            const dictionary& d(lookupScopedDict(dict, dAk.first()));
-            const_cast<dictionary&>(d).remove(dAk.second());
+            dictionary& subDict(dict.scopedDict(dAk.first()));
+            subDict.remove(dAk.second());
             changed = true;
         }
         else
@@ -678,27 +618,23 @@ int main(int argc, char *argv[])
             {
                 const Pair<word> dAk(dictAndKeyword(scopedName));
 
-                const dictionary& d(lookupScopedDict(dict, dAk.first()));
-                const dictionary& d2(lookupScopedDict(diffDict, dAk.first()));
+                dictionary& subDict(dict.scopedDict(dAk.first()));
+                const dictionary& subDict2(diffDict.scopedDict(dAk.first()));
 
-                const entry* ePtr =
-                    d.lookupEntryPtr(dAk.second(), false, true);
+                entry* ePtr =
+                    subDict.lookupEntryPtr(dAk.second(), false, true);
                 const entry* e2Ptr =
-                    d2.lookupEntryPtr(dAk.second(), false, true);
+                    subDict2.lookupEntryPtr(dAk.second(), false, true);
 
                 if (ePtr && e2Ptr)
                 {
                     if (*ePtr == *e2Ptr)
                     {
-                        const_cast<dictionary&>(d).remove(dAk.second());
+                        subDict.remove(dAk.second());
                     }
                     else if (ePtr->isDict() && e2Ptr->isDict())
                     {
-                        remove
-                        (
-                            const_cast<dictionary&>(ePtr->dict()),
-                            e2Ptr->dict()
-                        );
+                        remove(ePtr->dict(), e2Ptr->dict());
                     }
                 }
             }

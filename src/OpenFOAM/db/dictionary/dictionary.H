@@ -58,8 +58,7 @@ SourceFiles
 #include "HashTable.H"
 #include "wordList.H"
 #include "className.H"
-
-#include "VectorSpace.H"
+#include "Pair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -465,6 +464,16 @@ public:
             //  otherwise return this dictionary
             const dictionary& optionalSubDict(const word&) const;
 
+            //- Find and return a sub-dictionary by scoped lookup
+            //  i.e. the keyword may contain scope characters.
+            //  If the keyword is null this dictionary is returned
+            const dictionary& scopedDict(const word&) const;
+
+            //- Find and return a sub-dictionary by scoped lookup
+            //  i.e. the keyword may contain scope characters.
+            //  If the keyword is null this dictionary is returned
+            dictionary& scopedDict(const word&);
+
             //- Return the table of contents
             wordList toc() const;
 
@@ -624,6 +633,9 @@ dictionary operator|(const dictionary& dict1, const dictionary& dict2);
 
 
 // Global Functions
+
+//- Extracts dict name and keyword
+Pair<word> dictAndKeyword(const word& scopedName);
 
 //- Write a dictionary entry
 void writeEntry(Ostream& os, const dictionary& dict);

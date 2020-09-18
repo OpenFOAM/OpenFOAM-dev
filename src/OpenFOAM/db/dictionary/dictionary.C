@@ -82,10 +82,8 @@ const Foam::entry* Foam::dictionary::lookupDotScopedSubEntryPtr
                 // Go to parent
                 if (&dictPtr->parent_ == &dictionary::null)
                 {
-                    FatalIOErrorInFunction
-                    (
-                        *this
-                    )   << "No parent of current dictionary"
+                    FatalIOErrorInFunction(*this)
+                        << "No parent of current dictionary"
                         << " when searching for "
                         << keyword.substr(begVar, keyword.size() - begVar)
                         << exit(FatalIOError);
@@ -208,10 +206,8 @@ const Foam::entry* Foam::dictionary::lookupSlashScopedSubEntryPtr
             // Go to parent
             if (&parent_ == &dictionary::null)
             {
-                FatalIOErrorInFunction
-                (
-                    *this
-                )   << "No parent of current dictionary"
+                FatalIOErrorInFunction(*this)
+                    << "No parent of current dictionary"
                     << " when searching for "
                     << keyword.substr(slashPos, keyword.size() - slashPos)
                     << exit(FatalIOError);
@@ -339,10 +335,8 @@ const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
 
             if (fName == topDict().name())
             {
-                FatalIOErrorInFunction
-                (
-                    *this
-                )   << "Attempt to re-read current dictionary " << fName
+                FatalIOErrorInFunction(*this)
+                    << "Attempt to re-read current dictionary " << fName
                     << " for keyword "
                     << keyword
                     << exit(FatalIOError);
@@ -362,10 +356,8 @@ const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
 
             if (!ifs || !ifs.good())
             {
-                FatalIOErrorInFunction
-                (
-                    *this
-                )   << "dictionary file " << fName
+                FatalIOErrorInFunction(*this)
+                    << "dictionary file " << fName
                     << " cannot be found for keyword "
                     << keyword
                     << exit(FatalIOError);
@@ -382,10 +374,8 @@ const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
 
             if (!hmm)
             {
-                FatalIOErrorInFunction
-                (
-                    dict
-                )   << "keyword " << localKeyword
+                FatalIOErrorInFunction(dict)
+                    << "keyword " << localKeyword
                     << " is undefined in dictionary "
                     << dict.name()
                     << exit(FatalIOError);
@@ -796,10 +786,8 @@ const Foam::entry& Foam::dictionary::lookupEntry
 
     if (entryPtr == nullptr)
     {
-        FatalIOErrorInFunction
-        (
-            *this
-        )   << "keyword " << keyword << " is undefined in dictionary "
+        FatalIOErrorInFunction(*this)
+            << "keyword " << keyword << " is undefined in dictionary "
             << name()
             << exit(FatalIOError);
     }
@@ -937,10 +925,8 @@ const Foam::dictionary& Foam::dictionary::subDict(const word& keyword) const
 
     if (entryPtr == nullptr)
     {
-        FatalIOErrorInFunction
-        (
-            *this
-        )   << "keyword " << keyword << " is undefined in dictionary "
+        FatalIOErrorInFunction(*this)
+            << "keyword " << keyword << " is undefined in dictionary "
             << name()
             << exit(FatalIOError);
     }
@@ -954,10 +940,8 @@ Foam::dictionary& Foam::dictionary::subDict(const word& keyword)
 
     if (entryPtr == nullptr)
     {
-        FatalIOErrorInFunction
-        (
-            *this
-        )   << "keyword " << keyword << " is undefined in dictionary "
+        FatalIOErrorInFunction(*this)
+            << "keyword " << keyword << " is undefined in dictionary "
             << name()
             << exit(FatalIOError);
     }
@@ -977,10 +961,8 @@ Foam::dictionary Foam::dictionary::subOrEmptyDict
     {
         if (mustRead)
         {
-            FatalIOErrorInFunction
-            (
-                *this
-            )   << "keyword " << keyword << " is undefined in dictionary "
+            FatalIOErrorInFunction(*this)
+                << "keyword " << keyword << " is undefined in dictionary "
                 << name()
                 << exit(FatalIOError);
             return entryPtr->dict();
@@ -1012,6 +994,44 @@ const Foam::dictionary& Foam::dictionary::optionalSubDict
     {
         return *this;
     }
+}
+
+
+const Foam::dictionary& Foam::dictionary::scopedDict(const word& keyword) const
+{
+    if (keyword == "")
+    {
+        return *this;
+    }
+    else
+    {
+        const entry* entPtr = lookupScopedEntryPtr
+        (
+            keyword,
+            false,
+            false
+        );
+        if (!entPtr || !entPtr->isDict())
+        {
+            FatalIOErrorInFunction(*this)
+                << "keyword " << keyword
+                << " is undefined in dictionary "
+                << name() << " or is not a dictionary"
+                << endl
+                << "Valid keywords are " << keys()
+                << exit(FatalIOError);
+        }
+        return entPtr->dict();
+    }
+}
+
+
+Foam::dictionary& Foam::dictionary::scopedDict(const word& keyword)
+{
+    return const_cast<dictionary&>
+    (
+        const_cast<const dictionary*>(this)->scopedDict(keyword)
+    );
 }
 
 
@@ -1271,10 +1291,8 @@ bool Foam::dictionary::changeKeyword
 
     if (iter()->keyword().isPattern())
     {
-        FatalIOErrorInFunction
-        (
-            *this
-        )   << "Old keyword "<< oldKeyword
+        FatalIOErrorInFunction(*this)
+            << "Old keyword "<< oldKeyword
             << " is a pattern."
             << "Pattern replacement not yet implemented."
             << exit(FatalIOError);
@@ -1533,6 +1551,30 @@ Foam::dictionary Foam::operator|
     dictionary sum(dict1);
     sum |= dict2;
     return sum;
+}
+
+
+// * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
+
+Foam::Pair<Foam::word> Foam::dictAndKeyword(const word& scopedName)
+{
+    string::size_type i = scopedName.find_last_of
+    (
+        functionEntries::inputSyntaxEntry::scopeChar()
+    );
+
+    if (i != string::npos)
+    {
+        return Pair<word>
+        (
+            scopedName.substr(0, i),
+            scopedName.substr(i+1, string::npos)
+        );
+    }
+    else
+    {
+        return Pair<word>("", scopedName);
+    }
 }
 
 
