@@ -53,12 +53,11 @@ SourceFiles
 #include "entry.H"
 #include "IDLList.H"
 #include "DLList.H"
-#include "fileName.H"
-#include "ITstream.H"
 #include "HashTable.H"
-#include "wordList.H"
-#include "className.H"
+#include "ITstream.H"
+#include "wordReList.H"
 #include "Pair.H"
+#include "className.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -633,6 +632,15 @@ dictionary operator|(const dictionary& dict1, const dictionary& dict2);
 
 
 // Global Functions
+
+//- Parse dictionary substitution argument list
+void dictArgList
+(
+    const string& funcArgs,
+    word& funcName,
+    wordReList& args,
+    List<Tuple2<word, string>>& namedArgs
+);
 
 //- Extracts dict name and keyword
 Pair<word> dictAndKeyword(const word& scopedName);

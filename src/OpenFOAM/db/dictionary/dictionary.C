@@ -1556,6 +1556,89 @@ Foam::dictionary Foam::operator|
 
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
+void Foam::dictArgList
+(
+    const string& funcArgs,
+    word& funcName,
+    wordReList& args,
+    List<Tuple2<word, string>>& namedArgs
+)
+{
+    funcName = funcArgs;
+
+    int argLevel = 0;
+    bool namedArg = false;
+    word argName;
+
+    word::size_type start = 0;
+    word::size_type i = 0;
+
+    for
+    (
+        word::const_iterator iter = funcArgs.begin();
+        iter != funcArgs.end();
+        ++iter
+    )
+    {
+        char c = *iter;
+
+        if (c == '(')
+        {
+            if (argLevel == 0)
+            {
+                funcName = funcArgs(start, i - start);
+                start = i+1;
+            }
+            ++argLevel;
+        }
+        else if (c == ',' || c == ')')
+        {
+            if (argLevel == 1)
+            {
+                if (namedArg)
+                {
+                    namedArgs.append
+                    (
+                        Tuple2<word, string>
+                        (
+                            argName,
+                            funcArgs(start, i - start)
+                        )
+                    );
+                    namedArg = false;
+                }
+                else
+                {
+                    args.append(wordRe(funcArgs(start, i - start)));
+                }
+                start = i+1;
+            }
+
+            if (c == ')')
+            {
+                if (argLevel == 1)
+                {
+                    break;
+                }
+                --argLevel;
+            }
+        }
+        else if (c == '=')
+        {
+            argName = funcArgs(start, i - start);
+            string::stripInvalid<variable>(argName);
+            start = i+1;
+            namedArg = true;
+        }
+
+        ++i;
+    }
+
+    // Strip whitespace from the function name
+    string::stripInvalid<word>(funcName);
+}
+
+
 Foam::Pair<Foam::word> Foam::dictAndKeyword(const word& scopedName)
 {
     string::size_type i = scopedName.find_last_of

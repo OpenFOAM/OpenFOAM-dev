@@ -222,7 +222,7 @@ public:
         );
 
         //- Read the specified functionObject configuration dictionary
-        //  parsing the optional arguments included in the string 'funcCall',
+        //  parsing the optional arguments included in the string 'funcArgs',
         //  inserting 'field' or 'fields' entries as required and merging the
         //  resulting functionObject dictionary into 'functionsDict'.
         //  Any fields required to execute the functionObject are added to
@@ -242,7 +242,7 @@ public:
         //          fields (p U);
         static bool readFunctionObject
         (
-            const string& funcCall,
+            const string& funcArgs,
             dictionary& functionsDict,
             const string& context,
             HashSet<word>& requiredFields,

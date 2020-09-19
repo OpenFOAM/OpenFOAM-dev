@@ -276,75 +276,10 @@ void substitute(dictionary& dict, string substitutions)
     }
 
     word funcName;
-    int argLevel = 0;
+    wordReList args;
     List<Tuple2<word, string>> namedArgs;
-    bool namedArg = false;
-    word argName;
 
-    word::size_type start = 0;
-    word::size_type i = 0;
-
-    for
-    (
-        word::const_iterator iter = substitutions.begin();
-        iter != substitutions.end();
-        ++iter
-    )
-    {
-        char c = *iter;
-
-        if (c == '(')
-        {
-            if (argLevel == 0)
-            {
-                funcName = substitutions(start, i - start);
-                start = i+1;
-            }
-            ++argLevel;
-        }
-        else if (c == ',' || c == ')')
-        {
-            if (argLevel == 1)
-            {
-                if (namedArg)
-                {
-                    namedArgs.append
-                    (
-                        Tuple2<word, string>
-                        (
-                            argName,
-                            substitutions(start, i - start)
-                        )
-                    );
-                    namedArg = false;
-                }
-                else
-                {
-                    FatalIOErrorInFunction(dict)
-                        << "Unnamed substitution" << exit(FatalIOError);
-                }
-                start = i+1;
-            }
-
-            if (c == ')')
-            {
-                if (argLevel == 1)
-                {
-                    break;
-                }
-                --argLevel;
-            }
-        }
-        else if (c == '=')
-        {
-            argName = substitutions(start, i - start);
-            string::stripInvalid<variable>(argName);
-            start = i+1;
-            namedArg = true;
-        }
-
-        ++i;
-    }
+    dictArgList(substitutions, funcName, args, namedArgs);
 
     forAll(namedArgs, i)
     {
