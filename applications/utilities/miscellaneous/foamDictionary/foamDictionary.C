@@ -269,8 +269,8 @@ void substitute(dictionary& dict, string substitutions)
 {
     // Add '()' delimiters to the substitutions if not present
     const string whitespace(" \t");
-    string::size_type first = substitutions.find_first_not_of(whitespace);
-    if (substitutions[first] != '(')
+    string::size_type last = substitutions.find_last_not_of(whitespace);
+    if (substitutions[last] != ')')
     {
         substitutions = '(' + substitutions + ')';
     }
