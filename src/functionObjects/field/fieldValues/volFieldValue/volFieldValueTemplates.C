@@ -191,29 +191,28 @@ bool Foam::functionObjects::fieldValues::volFieldValue::writeValues
             // Add to result dictionary, over-writing any previous entry
             resultDict_.add(fieldName, result, true);
 
-            if (writeFields_)
-            {
-                IOField<Type>
-                (
-                    IOobject
-                    (
-                        fieldName + '_' + regionTypeNames_[regionType_]
-                      + '-' + volRegion::regionName_,
-                        obr_.time().timeName(),
-                        obr_,
-                        IOobject::NO_READ,
-                        IOobject::NO_WRITE
-                    ),
-                    (weightField*values).ref()
-                ).write();
-            }
-
-
             file()<< tab << result;
 
             Log << "    " << operationTypeNames_[operation_]
                 << "(" << volRegion::regionName_ << ") of " << fieldName
                 <<  " = " << result << endl;
+        }
+
+        if (writeFields_)
+        {
+            IOField<Type>
+            (
+                IOobject
+                (
+                    fieldName + '_' + regionTypeNames_[regionType_]
+                  + '-' + volRegion::regionName_,
+                    obr_.time().timeName(),
+                    obr_,
+                    IOobject::NO_READ,
+                    IOobject::NO_WRITE
+                ),
+                (weightField*values).ref()
+            ).write();
         }
     }
 
