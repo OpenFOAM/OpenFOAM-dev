@@ -3,6 +3,6 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/solidThermo/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude
 
-EXE_LIBS = \
+LIB_LIBS = \
     -lfiniteVolume \
     -lsolidThermo
