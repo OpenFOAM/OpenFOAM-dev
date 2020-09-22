@@ -82,9 +82,8 @@ Foam::functionObjects::wallShearStress::calcShearStress
 
         const vectorField& Sfp = mesh_.Sf().boundaryField()[patchi];
         const scalarField& magSfp = mesh_.magSf().boundaryField()[patchi];
-        const symmTensorField& taup = tau.boundaryField()[patchi];
 
-        wallShearStressBf[patchi] = (-Sfp/magSfp) & taup;
+        wallShearStressBf[patchi] = (-Sfp/magSfp) & tau.boundaryField()[patchi];
     }
 
     return twallShearStress;

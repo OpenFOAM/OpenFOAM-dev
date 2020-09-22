@@ -27,7 +27,7 @@ License
 #include "thermophysicalTransportModel.H"
 #include "solidThermo.H"
 #include "surfaceInterpolate.H"
-#include "fvcSnGrad.H"
+#include "fvcGrad.H"
 #include "wallPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -59,11 +59,7 @@ void Foam::functionObjects::wallHeatFlux::writeFileHeader(const label i)
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::functionObjects::wallHeatFlux::calcWallHeatFlux
-(
-    const volScalarField& alpha,
-    const volScalarField& he
-)
+Foam::functionObjects::wallHeatFlux::calcWallHeatFlux(const volVectorField& q)
 {
     tmp<volScalarField> twallHeatFlux
     (
@@ -78,14 +74,16 @@ Foam::functionObjects::wallHeatFlux::calcWallHeatFlux
     volScalarField::Boundary& wallHeatFluxBf =
         twallHeatFlux.ref().boundaryFieldRef();
 
-    const volScalarField::Boundary& heBf = he.boundaryField();
-    const volScalarField::Boundary& alphaBf = alpha.boundaryField();
+    const volVectorField::Boundary& qBf = q.boundaryField();
 
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
         const label patchi = iter.key();
 
-        wallHeatFluxBf[patchi] = alphaBf[patchi]*heBf[patchi].snGrad();
+        const vectorField& Sfp = mesh_.Sf().boundaryField()[patchi];
+        const scalarField& magSfp = mesh_.magSf().boundaryField()[patchi];
+
+        wallHeatFluxBf[patchi] = (-Sfp/magSfp) & qBf[patchi];
     }
 
     if (foundObject<volScalarField>("qr"))
@@ -211,7 +209,7 @@ bool Foam::functionObjects::wallHeatFlux::execute()
         return store
         (
             name,
-            calcWallHeatFlux(ttm.alphaEff(), ttm.thermo().he())
+            calcWallHeatFlux(ttm.q())
         );
     }
     else if (foundObject<solidThermo>(solidThermo::dictName))
@@ -219,7 +217,11 @@ bool Foam::functionObjects::wallHeatFlux::execute()
         const solidThermo& thermo =
             lookupObject<solidThermo>(solidThermo::dictName);
 
-        return store(name, calcWallHeatFlux(thermo.alpha(), thermo.he()));
+        return store
+        (
+            name,
+            calcWallHeatFlux(-thermo.alpha()*fvc::grad(thermo.he()))
+        );
     }
     else
     {
