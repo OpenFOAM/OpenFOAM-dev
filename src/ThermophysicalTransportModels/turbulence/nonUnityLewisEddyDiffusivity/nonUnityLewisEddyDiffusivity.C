@@ -24,7 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nonUnityLewisEddyDiffusivity.H"
+#include "fvcDiv.H"
 #include "fvcLaplacian.H"
+#include "fvcSnGrad.H"
+#include "fvmSup.H"
+#include "surfaceInterpolate.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,7 +47,7 @@ nonUnityLewisEddyDiffusivity
     const thermoModel& thermo
 )
 :
-    eddyDiffusivity<TurbulenceThermophysicalTransportModel>
+    unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>
     (
         typeName,
         momentumTransport,
@@ -69,7 +73,11 @@ template<class TurbulenceThermophysicalTransportModel>
 bool
 nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::read()
 {
-    if (eddyDiffusivity<TurbulenceThermophysicalTransportModel>::read())
+    if
+    (
+        unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>
+        ::read()
+    )
     {
         Sct_.readIfPresent(this->coeffDict());
 
@@ -86,26 +94,28 @@ template<class TurbulenceThermophysicalTransportModel>
 tmp<volVectorField>
 nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
 {
-    tmp<volVectorField> tmpq =
-        eddyDiffusivity<TurbulenceThermophysicalTransportModel>::q();
-
-    if (mag(this->Prt_ - Sct_).value() > small)
-    {
-        const basicSpecieMixture& composition = this->thermo().composition();
-
-        const PtrList<volScalarField>& Y = composition.Y();
-
-        volScalarField alphatMinusDt
+    tmp<volVectorField> tmpq
+    (
+        volVectorField::New
         (
-            "alphatMinusDt",
-            this->alphat()*(1 - this->Prt_/Sct_)
-        );
+            IOobject::groupName
+            (
+                "q",
+                this->momentumTransport().alphaRhoPhi().group()
+            ),
+           -(this->alpha()*this->kappaEff()*fvc::grad(this->thermo().T()))
+        )
+    );
 
+    const basicSpecieMixture& composition = this->thermo().composition();
+    const PtrList<volScalarField>& Y = composition.Y();
+
+    if (Y.size())
+    {
         forAll(Y, i)
         {
-            tmpq.ref() +=
-                this->alpha()
-               *alphatMinusDt
+            tmpq.ref() -=
+                this->alpha()*DEff(Y[i])
                *composition.HE(i, this->thermo().p(), this->thermo().T())
                *fvc::grad(Y[i]);
         }
@@ -122,32 +132,70 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
     volScalarField& he
 ) const
 {
-    tmp<fvScalarMatrix> tmpDivq =
-        eddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq(he);
-
-    if (mag(this->Prt_ - Sct_).value() > small)
-    {
-        const basicSpecieMixture& composition = this->thermo().composition();
-
-        const PtrList<volScalarField>& Y = composition.Y();
-
-        volScalarField alphatMinusDt
+    tmp<fvScalarMatrix> tmpDivq
+    (
+        fvm::Su
         (
-            "alphatMinusDt",
-            this->alphat()*(1 - this->Prt_/Sct_)
+            -fvc::laplacian(this->alpha()*this->kappaEff(), this->thermo().T()),
+            he
+        )
+    );
+
+    const basicSpecieMixture& composition = this->thermo().composition();
+    const PtrList<volScalarField>& Y = composition.Y();
+
+    if (!Y.size())
+    {
+        tmpDivq.ref() -=
+            correction(fvm::laplacian(this->alpha()*this->alphaEff(), he));
+    }
+    else
+    {
+        tmpDivq.ref() -= fvm::laplacian(this->alpha()*this->alphaEff(), he);
+
+        volScalarField heNew
+        (
+            volScalarField::New
+            (
+                "he",
+                he.mesh(),
+                dimensionedScalar(he.dimensions(), 0)
+            )
+        );
+
+        surfaceScalarField hGradY
+        (
+            surfaceScalarField::New
+            (
+                "hGradY",
+                he.mesh(),
+                dimensionedScalar(he.dimensions()/dimLength, 0)
+            )
         );
 
         forAll(Y, i)
         {
-            tmpDivq.ref() +=
-                fvc::laplacian
+            const volScalarField hi
+            (
+                composition.HE(i, this->thermo().p(), this->thermo().T())
+            );
+
+            heNew += Y[i]*hi;
+            hGradY += fvc::interpolate(hi)*fvc::snGrad(Y[i]);
+        }
+
+        tmpDivq.ref() +=
+            fvc::laplacian(this->alpha()*this->alphaEff(), heNew);
+
+        tmpDivq.ref() -=
+            fvc::div
+            (
+                fvc::interpolate
                 (
                     this->alpha()
-                   *alphatMinusDt
-                   *composition.HE(i, this->thermo().p(), this->thermo().T()),
-                    Y[i]
-                );
-        }
+                   *this->thermo().alphaEff((this->Prt_/Sct_)*this->alphat())
+                )*hGradY*he.mesh().magSf()
+            );
     }
 
     return tmpDivq;

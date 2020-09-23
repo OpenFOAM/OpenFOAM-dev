@@ -22,23 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::laminarThermophysicalTransportModels::Fourier
+    Foam::laminarThermophysicalTransportModels::unityLewisFourier
 
 Description
-    Fourier's temperature gradient heat flux model
-    for single specie laminar flow.
-
-    The heat flux source is implemented as an implicit energy correction to the
-    temperature gradient based flux source.  At convergence the energy
-    correction is 0.
+    unityLewisFourier's energy gradient heat flux model for laminar flow.
+    Specie fluxes are computed assuming a unity turbulent Lewis number.
 
 SourceFiles
-    Fourier.C
+    unityLewisFourier.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Fourier_H
-#define Fourier_H
+#ifndef unityLewisFourier_H
+#define unityLewisFourier_H
 
 #include "laminarThermophysicalTransportModel.H"
 
@@ -50,11 +46,11 @@ namespace laminarThermophysicalTransportModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class Fourier Declaration
+                           Class unityLewisFourier Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicThermophysicalTransportModel>
-class Fourier
+class unityLewisFourier
 :
     public laminarThermophysicalTransportModel
     <
@@ -75,13 +71,13 @@ public:
 
 
     //- Runtime type information
-    TypeName("Fourier");
+    TypeName("unityLewisFourier");
 
 
     // Constructors
 
         //- Construct from components
-        Fourier
+        unityLewisFourier
         (
             const momentumTransportModel& momentumTransport,
             const thermoModel& thermo
@@ -89,7 +85,7 @@ public:
 
 
     //- Destructor
-    virtual ~Fourier()
+    virtual ~unityLewisFourier()
     {}
 
 
@@ -102,7 +98,14 @@ public:
         virtual bool read();
 
         //- Effective mass diffusivity for a given specie mass-fraction [kg/m/s]
-        virtual tmp<volScalarField> DEff(const volScalarField& Yi) const;
+        virtual tmp<volScalarField> DEff(const volScalarField& Yi) const
+        {
+            return volScalarField::New
+            (
+                "DEff",
+                this->alphaEff()
+            );
+        }
 
         //- Effective mass diffusivity for a given specie mass-fraction
         //  for patch [kg/m/s]
@@ -110,7 +113,10 @@ public:
         (
             const volScalarField& Yi,
             const label patchi
-        ) const;
+        ) const
+        {
+            return this->alphaEff(patchi);
+        }
 
         //- Return the heat flux
         virtual tmp<volVectorField> q() const;
@@ -124,7 +130,7 @@ public:
         //- Return the source term for the given specie mass-fraction equation
         virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
 
-        //- Correct the Fourier viscosity
+        //- Correct the unityLewisFourier viscosity
         virtual void correct();
 };
 
@@ -137,7 +143,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "Fourier.C"
+    #include "unityLewisFourier.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

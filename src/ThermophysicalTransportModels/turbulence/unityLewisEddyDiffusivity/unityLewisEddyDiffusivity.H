@@ -22,37 +22,29 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::turbulenceThermophysicalTransportModels::nonUnityLewisEddyDiffusivity
+    Foam::turbulenceThermophysicalTransportModels::unityLewisEddyDiffusivity
 
 Description
-    Non-unity-Lewis-Eddy-diffusivity based temperature gradient heat flux model
-    for RAS or LES of turbulent flow. Allows independent specification of
-    turbulent Prandtl and Schmidt numbers.  Unity laminar Lewis number is
-    assumed.
-
-    The heat flux source is implemented as an implicit energy correction to the
-    temperature gradient based flux source.  At convergence the energy
-    correction is 0.
+    Eddy-diffusivity based energy gradient heat flux model for RAS or LES
+    of turbulent flow.  Specie fluxes are computed assuming a unity turbulent
+    Lewis number.
 
 Usage
     \verbatim
     LES
     {
-        model           nonUnityLewisEddyDiffusivity;
+        model           unityLewisEddyDiffusivity;
         Prt             0.85;
-        Sct             0.7;
     }
     \endverbatim
 
 SourceFiles
-    nonUnityLewisEddyDiffusivity.C
+    unityLewisEddyDiffusivity.C
 
 \*---------------------------------------------------------------------------*/
 
-#include "unityLewisEddyDiffusivity.H"
-
-#ifndef nonUnityLewisEddyDiffusivity_H
-#define nonUnityLewisEddyDiffusivity_H
+#ifndef unityLewisEddyDiffusivity_H
+#define unityLewisEddyDiffusivity_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -62,13 +54,13 @@ namespace turbulenceThermophysicalTransportModels
 {
 
 /*---------------------------------------------------------------------------*\
-                Class nonUnityLewisEddyDiffusivity Declaration
+                       Class unityLewisEddyDiffusivity Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class TurbulenceThermophysicalTransportModel>
-class nonUnityLewisEddyDiffusivity
+class unityLewisEddyDiffusivity
 :
-    public unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>
+    public TurbulenceThermophysicalTransportModel
 {
 
 protected:
@@ -77,8 +69,18 @@ protected:
 
         // Model coefficients
 
-            //- Turbulent Schmidt number []
-            dimensionedScalar Sct_;
+            //- Turbulent Prandtl number []
+            dimensionedScalar Prt_;
+
+        // Fields
+
+            //- Turbulent thermal diffusivity of enthalpy [kg/m/s]
+            volScalarField alphat_;
+
+
+    // Protected Member Functions
+
+        virtual void correctAlphat();
 
 
 public:
@@ -95,21 +97,32 @@ public:
 
 
     //- Runtime type information
-    TypeName("nonUnityLewisEddyDiffusivity");
+    TypeName("unityLewisEddyDiffusivity");
 
 
     // Constructors
 
         //- Construct from a momentum transport model and a thermo model
-        nonUnityLewisEddyDiffusivity
+        unityLewisEddyDiffusivity
         (
             const momentumTransportModel& momentumTransport,
             const thermoModel& thermo
         );
 
+        //- Construct from a type name, a momentum transport model and a thermo
+        //  model, and whether to default the turbulent Prandtl number to one
+        //  if it is not specified
+        unityLewisEddyDiffusivity
+        (
+            const word& type,
+            const momentumTransportModel& momentumTransport,
+            const thermoModel& thermo,
+            const bool allowDefaultPrt
+        );
+
 
     //- Destructor
-    virtual ~nonUnityLewisEddyDiffusivity()
+    virtual ~unityLewisEddyDiffusivity()
     {}
 
 
@@ -118,13 +131,60 @@ public:
         //- Read thermophysicalTransport dictionary
         virtual bool read();
 
+        //- Turbulent thermal diffusivity for enthalpy [kg/m/s]
+        virtual tmp<volScalarField> alphat() const
+        {
+            return alphat_;
+        }
+
+        //- Turbulent thermal diffusivity for enthalpy for a patch [kg/m/s]
+        virtual tmp<scalarField> alphat(const label patchi) const
+        {
+            return alphat()().boundaryField()[patchi];
+        }
+
+        //- Effective thermal turbulent diffusivity for temperature
+        //  of mixture [W/m/K]
+        virtual tmp<volScalarField> kappaEff() const
+        {
+            return this->thermo().kappaEff(alphat());
+        }
+
+        //- Effective thermal turbulent diffusivity for temperature
+        //  of mixture for patch [W/m/K]
+        virtual tmp<scalarField> kappaEff(const label patchi) const
+        {
+            return this->thermo().kappaEff
+            (
+                alphat(patchi),
+                patchi
+            );
+        }
+
+        //- Effective thermal turbulent diffusivity of mixture [kg/m/s]
+        virtual tmp<volScalarField> alphaEff() const
+        {
+            return this->thermo().alphaEff(alphat());
+        }
+
+        //- Effective thermal turbulent diffusivity of mixture
+        //  for patch [kg/m/s]
+        virtual tmp<scalarField> alphaEff(const label patchi) const
+        {
+            return this->thermo().alphaEff
+            (
+                alphat(patchi),
+                patchi
+            );
+        }
+
         //- Effective mass diffusivity for a given specie mass-fraction [kg/m/s]
         virtual tmp<volScalarField> DEff(const volScalarField& Yi) const
         {
             return volScalarField::New
             (
                 "DEff",
-                this->thermo().alphaEff((this->Prt_/Sct_)*this->alphat())
+                alphaEff()
             );
         }
 
@@ -136,11 +196,7 @@ public:
             const label patchi
         ) const
         {
-            return this->thermo().alphaEff
-            (
-                this->Prt_.value()/Sct_.value()*this->alphat(patchi),
-                patchi
-            );
+            return alphaEff(patchi);
         }
 
         //- Return the heat flux
@@ -148,6 +204,15 @@ public:
 
         //- Return the source term for the energy equation
         virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
+
+        //- Return the specie flux for the given specie mass-fraction
+        virtual tmp<volVectorField> j(const volScalarField& Yi) const;
+
+        //- Return the source term for the given specie mass-fraction equation
+        virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
+
+        //- Correct the unityLewisEddyDiffusivity viscosity
+        virtual void correct();
 };
 
 
@@ -159,7 +224,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "nonUnityLewisEddyDiffusivity.C"
+    #include "unityLewisEddyDiffusivity.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

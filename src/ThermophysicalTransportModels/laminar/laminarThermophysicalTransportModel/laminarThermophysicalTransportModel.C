@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "laminarThermophysicalTransportModel.H"
-#include "Fourier.H"
+#include "unityLewisFourier.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
@@ -126,12 +126,12 @@ Foam::laminarThermophysicalTransportModel
     else
     {
         Info<< "Selecting default laminar thermophysical transport model "
-            << laminarThermophysicalTransportModels::Fourier<
+            << laminarThermophysicalTransportModels::unityLewisFourier<
                BasicThermophysicalTransportModel>::typeName << endl;
 
         return autoPtr<laminarThermophysicalTransportModel>
         (
-            new laminarThermophysicalTransportModels::Fourier
+            new laminarThermophysicalTransportModels::unityLewisFourier
             <
                 BasicThermophysicalTransportModel
             >(momentumTransport, thermo)

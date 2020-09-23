@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "RASThermophysicalTransportModel.H"
-#include "eddyDiffusivity.H"
+#include "unityLewisEddyDiffusivity.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
@@ -126,22 +126,22 @@ Foam::RASThermophysicalTransportModel
     else
     {
         typedef
-            turbulenceThermophysicalTransportModels::eddyDiffusivity
+            turbulenceThermophysicalTransportModels::unityLewisEddyDiffusivity
             <
                 RASThermophysicalTransportModel
                 <
                     BasicThermophysicalTransportModel
                 >
-            > RASeddyDiffusivity;
+            > RASunityLewisEddyDiffusivity;
 
         Info<< "Selecting default RAS thermophysical transport model "
-            <<  RASeddyDiffusivity::typeName << endl;
+            <<  RASunityLewisEddyDiffusivity::typeName << endl;
 
         return autoPtr<RASThermophysicalTransportModel>
         (
-            new RASeddyDiffusivity
+            new RASunityLewisEddyDiffusivity
             (
-                RASeddyDiffusivity::typeName,
+                RASunityLewisEddyDiffusivity::typeName,
                 momentumTransport,
                 thermo,
                 true

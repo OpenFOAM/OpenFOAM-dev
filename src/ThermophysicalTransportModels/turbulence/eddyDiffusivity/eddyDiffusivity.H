@@ -25,9 +25,12 @@ Class
     Foam::turbulenceThermophysicalTransportModels::eddyDiffusivity
 
 Description
-    Eddy-diffusivity based gradient heat flux model for RAS or LES
-    of turbulent flow. Specie fluxes are computed assuming a unity turbulent
-    Lewis number.
+    Eddy-diffusivity based temperature gradient heat flux model
+    for single specie RAS or LES of turbulent flow.
+
+    The heat flux source is implemented as an implicit energy correction to the
+    temperature gradient based flux source.  At convergence the energy
+    correction is 0.
 
 Usage
     \verbatim
@@ -109,17 +112,6 @@ public:
             const thermoModel& thermo
         );
 
-        //- Construct from a type name, a momentum transport model and a thermo
-        //  model, and whether to default the turbulent Prandtl number to one
-        //  if it is not specified
-        eddyDiffusivity
-        (
-            const word& type,
-            const momentumTransportModel& momentumTransport,
-            const thermoModel& thermo,
-            const bool allowDefaultPrt
-        );
-
 
     //- Destructor
     virtual ~eddyDiffusivity()
@@ -179,14 +171,7 @@ public:
         }
 
         //- Effective mass diffusivity for a given specie mass-fraction [kg/m/s]
-        virtual tmp<volScalarField> DEff(const volScalarField& Yi) const
-        {
-            return volScalarField::New
-            (
-                "DEff",
-                alphaEff()
-            );
-        }
+        virtual tmp<volScalarField> DEff(const volScalarField& Yi) const;
 
         //- Effective mass diffusivity for a given specie mass-fraction
         //  for patch [kg/m/s]
@@ -194,10 +179,7 @@ public:
         (
             const volScalarField& Yi,
             const label patchi
-        ) const
-        {
-            return alphaEff(patchi);
-        }
+        ) const;
 
         //- Return the heat flux
         virtual tmp<volVectorField> q() const;

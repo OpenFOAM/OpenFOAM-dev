@@ -182,14 +182,7 @@ public:
         }
 
         //- Effective mass diffusivity for a given specie mass-fraction [kg/m/s]
-        virtual tmp<volScalarField> DEff(const volScalarField& Yi) const
-        {
-            return volScalarField::New
-            (
-                "DEff",
-                alphaEff()
-            );
-        }
+        virtual tmp<volScalarField> DEff(const volScalarField& Yi) const = 0;
 
         //- Effective mass diffusivity for a given specie mass-fraction
         //  for patch [kg/m/s]
@@ -197,10 +190,7 @@ public:
         (
             const volScalarField& Yi,
             const label patchi
-        ) const
-        {
-            return alphaEff(patchi);
-        }
+        ) const = 0;
 
         //- Correct the laminar transport
         virtual void correct();

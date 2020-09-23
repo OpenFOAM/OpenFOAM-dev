@@ -23,9 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "eddyDiffusivity.H"
+#include "unityLewisEddyDiffusivity.H"
 #include "fvmLaplacian.H"
-#include "fvcLaplacian.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -37,7 +36,8 @@ namespace turbulenceThermophysicalTransportModels
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class TurbulenceThermophysicalTransportModel>
-void eddyDiffusivity<TurbulenceThermophysicalTransportModel>::correctAlphat()
+void unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::
+correctAlphat()
 {
     alphat_ =
         this->momentumTransport().rho()
@@ -49,20 +49,56 @@ void eddyDiffusivity<TurbulenceThermophysicalTransportModel>::correctAlphat()
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class TurbulenceThermophysicalTransportModel>
-eddyDiffusivity<TurbulenceThermophysicalTransportModel>::eddyDiffusivity
+unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::
+unityLewisEddyDiffusivity
 (
     const momentumTransportModel& momentumTransport,
     const thermoModel& thermo
 )
 :
-    TurbulenceThermophysicalTransportModel
+    unityLewisEddyDiffusivity
     (
         typeName,
+        momentumTransport,
+        thermo,
+        false
+    )
+{}
+
+
+template<class TurbulenceThermophysicalTransportModel>
+unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::
+unityLewisEddyDiffusivity
+(
+    const word& type,
+    const momentumTransportModel& momentumTransport,
+    const thermoModel& thermo,
+    const bool allowDefaultPrt
+)
+:
+    TurbulenceThermophysicalTransportModel
+    (
+        type,
         momentumTransport,
         thermo
     ),
 
-    Prt_(dimensioned<scalar>("Prt", dimless, this->coeffDict_)),
+    Prt_
+    (
+        allowDefaultPrt
+      ? dimensioned<scalar>::lookupOrAddToDict
+        (
+            "Prt",
+            this->coeffDict_,
+            1
+        )
+      : dimensioned<scalar>
+        (
+            "Prt",
+            dimless,
+            this->coeffDict_
+        )
+    ),
 
     alphat_
     (
@@ -86,11 +122,11 @@ eddyDiffusivity<TurbulenceThermophysicalTransportModel>::eddyDiffusivity
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class TurbulenceThermophysicalTransportModel>
-bool eddyDiffusivity<TurbulenceThermophysicalTransportModel>::read()
+bool unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::read()
 {
     if (TurbulenceThermophysicalTransportModel::read())
     {
-        Prt_.read(this->coeffDict());
+        Prt_.readIfPresent(this->coeffDict());
 
         return true;
     }
@@ -102,43 +138,8 @@ bool eddyDiffusivity<TurbulenceThermophysicalTransportModel>::read()
 
 
 template<class TurbulenceThermophysicalTransportModel>
-tmp<volScalarField>
-eddyDiffusivity<TurbulenceThermophysicalTransportModel>::DEff
-(
-    const volScalarField& Yi
-) const
-{
-    FatalErrorInFunction
-        << type() << " supports single component systems only, " << nl
-        << "    for multi-component transport select"
-           " nonUnityLewisEddyDiffusivity or unityLewisEddyDiffusivity"
-        << exit(FatalError);
-
-    return tmp<volScalarField>(nullptr);
-}
-
-
-template<class TurbulenceThermophysicalTransportModel>
-tmp<scalarField>
-eddyDiffusivity<TurbulenceThermophysicalTransportModel>::DEff
-(
-    const volScalarField& Yi,
-    const label patchi
-) const
-{
-    FatalErrorInFunction
-        << type() << " supports single component systems only, " << nl
-        << "    for multi-component transport select"
-           " nonUnityLewisEddyDiffusivity or unityLewisEddyDiffusivity"
-        << exit(FatalError);
-
-    return tmp<scalarField>(nullptr);
-}
-
-
-template<class TurbulenceThermophysicalTransportModel>
 tmp<volVectorField>
-eddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
+unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
 {
     return volVectorField::New
     (
@@ -147,62 +148,55 @@ eddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
             "q",
             this->momentumTransport().alphaRhoPhi().group()
         ),
-       -(this->alpha()*this->kappaEff()*fvc::grad(this->thermo().T()))
+       -this->alphaEff()*this->alpha()*fvc::grad(this->thermo().he())
     );
 }
 
 
 template<class TurbulenceThermophysicalTransportModel>
 tmp<fvScalarMatrix>
-eddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
+unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
 (
     volScalarField& he
 ) const
 {
-    // Return heat flux source as an implicit energy correction
-    // to the temperature gradient flux
-    return
-        -correction(fvm::laplacian(this->alpha()*this->alphaEff(), he))
-        -fvc::laplacian(this->alpha()*this->kappaEff(), this->thermo().T());
+    return -fvm::laplacian(this->alpha()*this->alphaEff(), he);
 }
 
 
 template<class TurbulenceThermophysicalTransportModel>
 tmp<volVectorField>
-eddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
+unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
 (
     const volScalarField& Yi
 ) const
 {
-    FatalErrorInFunction
-        << type() << " supports single component systems only, " << nl
-        << "    for multi-component transport select"
-           " nonUnityLewisEddyDiffusivity or unityLewisEddyDiffusivity"
-        << exit(FatalError);
-
-    return tmp<volVectorField>(nullptr);
+    return volVectorField::New
+    (
+        IOobject::groupName
+        (
+            "j(" + Yi.name() + ')',
+            this->momentumTransport().alphaRhoPhi().group()
+        ),
+       -this->DEff(Yi)*this->alpha()*fvc::grad(Yi)
+    );
 }
 
 
 template<class TurbulenceThermophysicalTransportModel>
 tmp<fvScalarMatrix>
-eddyDiffusivity<TurbulenceThermophysicalTransportModel>::divj
+unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divj
 (
     volScalarField& Yi
 ) const
 {
-    FatalErrorInFunction
-        << type() << " supports single component systems only, " << nl
-        << "    for multi-component transport select"
-           " nonUnityLewisEddyDiffusivity or unityLewisEddyDiffusivity"
-        << exit(FatalError);
-
-    return tmp<fvScalarMatrix>(nullptr);
+    return -fvm::laplacian(this->alpha()*this->DEff(Yi), Yi);
 }
 
 
 template<class TurbulenceThermophysicalTransportModel>
-void eddyDiffusivity<TurbulenceThermophysicalTransportModel>::correct()
+void unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::
+correct()
 {
     TurbulenceThermophysicalTransportModel::correct();
     correctAlphat();
