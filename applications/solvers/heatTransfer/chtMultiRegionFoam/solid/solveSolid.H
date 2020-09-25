@@ -3,12 +3,8 @@
     {
         fvScalarMatrix eEqn
         (
-            fvm::ddt(betav*rho, e)
-          - (
-                thermo.isotropic()
-              ? fvm::laplacian(betav*thermo.alpha(), e, "laplacian(alpha,e)")
-              : fvm::laplacian(betav*taniAlpha(), e, "laplacian(alpha,e)")
-            )
+            fvm::ddt(rho, e)
+          + thermo.divq(e)
           ==
             fvOptions(rho, e)
         );

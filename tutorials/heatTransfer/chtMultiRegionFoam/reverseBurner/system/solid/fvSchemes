@@ -31,8 +31,7 @@ divSchemes
 
 laplacianSchemes
 {
-    default             none;
-    laplacian(alpha,e)  Gauss linear corrected;
+    default             Gauss linear corrected;
 }
 
 interpolationSchemes

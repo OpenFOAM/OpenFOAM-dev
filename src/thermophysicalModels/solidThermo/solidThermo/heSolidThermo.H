@@ -56,6 +56,9 @@ class heSolidThermo
         //- Calculate the thermo variables
         void calculate();
 
+        //- Return the anisotropic Kappa in the local coordinate system
+        tmp<volSymmTensorField> KappaLocal() const;
+
 
 public:
 
@@ -96,23 +99,23 @@ public:
         //- Update properties
         virtual void correct();
 
+        //- Return true if thermal conductivity is isotropic
+        virtual bool isotropic() const
+        {
+            return MixtureType::thermoType::isotropic;
+        }
 
-        // Derived thermal properties
+        //- Anisotropic thermal conductivity [W/m/K]
+        virtual tmp<volVectorField> Kappa() const;
 
-            //- Anisotropic thermal conductivity [W/m/K]
-            virtual tmp<volVectorField> Kappa() const;
+        //- Anisotropic thermal conductivity [W/m/K]
+        virtual tmp<vectorField> Kappa(const label patchi) const;
 
-            //- Return true if thermal conductivity is isotropic
-            virtual bool isotropic() const
-            {
-                return MixtureType::thermoType::isotropic;
-            }
+        //- Return the heat flux
+        virtual tmp<surfaceScalarField> q() const;
 
-
-        // Per patch calculation
-
-            //- Anisotropic thermal conductivity [W/m/K]
-            virtual tmp<vectorField> Kappa(const label patchi) const;
+        //- Return the source term for the energy equation
+        virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
 
 
     // Member Operators

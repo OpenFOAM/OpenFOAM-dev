@@ -104,6 +104,52 @@ Foam::functionObjects::wallHeatFlux::calcWallHeatFlux(const volVectorField& q)
 }
 
 
+Foam::tmp<Foam::volScalarField>
+Foam::functionObjects::wallHeatFlux::calcWallHeatFlux
+(
+    const surfaceScalarField& q
+)
+{
+    tmp<volScalarField> twallHeatFlux
+    (
+        volScalarField::New
+        (
+            type(),
+            mesh_,
+            dimensionedScalar(dimMass/pow3(dimTime), 0)
+        )
+    );
+
+    volScalarField::Boundary& wallHeatFluxBf =
+        twallHeatFlux.ref().boundaryFieldRef();
+
+    const surfaceScalarField::Boundary& qBf = q.boundaryField();
+
+    forAllConstIter(labelHashSet, patchSet_, iter)
+    {
+        const label patchi = iter.key();
+
+        wallHeatFluxBf[patchi] = -qBf[patchi];
+    }
+
+    if (foundObject<volScalarField>("qr"))
+    {
+        const volScalarField& qr = lookupObject<volScalarField>("qr");
+
+        const volScalarField::Boundary& radHeatFluxBf = qr.boundaryField();
+
+        forAllConstIter(labelHashSet, patchSet_, iter)
+        {
+            const label patchi = iter.key();
+
+            wallHeatFluxBf[patchi] -= radHeatFluxBf[patchi];
+        }
+    }
+
+    return twallHeatFlux;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::functionObjects::wallHeatFlux::wallHeatFlux
@@ -206,22 +252,14 @@ bool Foam::functionObjects::wallHeatFlux::execute()
                 thermophysicalTransportModel::typeName
             );
 
-        return store
-        (
-            name,
-            calcWallHeatFlux(ttm.q())
-        );
+        return store(name, calcWallHeatFlux(ttm.q()));
     }
     else if (foundObject<solidThermo>(solidThermo::dictName))
     {
         const solidThermo& thermo =
             lookupObject<solidThermo>(solidThermo::dictName);
 
-        return store
-        (
-            name,
-            calcWallHeatFlux(-thermo.alpha()*fvc::grad(thermo.he()))
-        );
+        return store(name, calcWallHeatFlux(thermo.q()));
     }
     else
     {

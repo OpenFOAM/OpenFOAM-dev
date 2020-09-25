@@ -24,7 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "heSolidThermo.H"
-#include "volFields.H"
+#include "fvmLaplacian.H"
+#include "fvcLaplacian.H"
+#include "coordinateSystem.H"
+#include "zeroGradientFvPatchFields.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -264,6 +267,83 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::Kappa
     }
 
     return tKappa;
+}
+
+
+template<class BasicSolidThermo, class MixtureType>
+Foam::tmp<Foam::volSymmTensorField>
+Foam::heSolidThermo<BasicSolidThermo, MixtureType>::KappaLocal() const
+{
+    const fvMesh& mesh = this->T_.mesh();
+
+    tmp<volSymmTensorField> tKappaLocal;
+
+    if (!isotropic())
+    {
+        coordinateSystem coordinates
+        (
+            coordinateSystem::New(mesh, this->properties())
+        );
+
+        const tmp<volVectorField> tKappa(Kappa());
+
+        tKappaLocal =
+        (
+            volSymmTensorField::New
+            (
+                "KappaLocal",
+                mesh,
+                dimensionedSymmTensor(tKappa().dimensions(), Zero),
+                zeroGradientFvPatchSymmTensorField::typeName
+            )
+        );
+        volSymmTensorField& KappaLocal = tKappaLocal.ref();
+
+        KappaLocal.primitiveFieldRef() =
+            coordinates.R().transformVector(tKappa());
+        KappaLocal.correctBoundaryConditions();
+    }
+
+    return tKappaLocal;
+}
+
+
+template<class BasicSolidThermo, class MixtureType>
+Foam::tmp<Foam::surfaceScalarField>
+Foam::heSolidThermo<BasicSolidThermo, MixtureType>::q() const
+{
+    return
+      - (
+            isotropic()
+          ? fvm::laplacian(this->kappa(), this->T_)().flux()
+          : fvm::laplacian(KappaLocal(), this->T_)().flux()
+        );
+}
+
+
+template<class BasicSolidThermo, class MixtureType>
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::heSolidThermo<BasicSolidThermo, MixtureType>::divq
+(
+    volScalarField& e
+) const
+{
+    return
+      - (
+            isotropic()
+          ?   fvc::laplacian(this->kappa(), this->T_)
+            + correction(fvm::laplacian(this->alpha(), e))
+          :   fvc::laplacian(KappaLocal(), this->T_)
+            + correction
+              (
+                  fvm::laplacian
+                  (
+                      KappaLocal()/this->Cv(),
+                      e,
+                      "laplacian(" + this->alpha().name() + ",e)"
+                  )
+              )
+        );
 }
 
 
