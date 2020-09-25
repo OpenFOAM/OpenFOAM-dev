@@ -138,17 +138,18 @@ bool unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::read()
 
 
 template<class TurbulenceThermophysicalTransportModel>
-tmp<volVectorField>
+tmp<surfaceScalarField>
 unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
 {
-    return volVectorField::New
+    return surfaceScalarField::New
     (
         IOobject::groupName
         (
             "q",
             this->momentumTransport().alphaRhoPhi().group()
         ),
-       -this->alphaEff()*this->alpha()*fvc::grad(this->thermo().he())
+       -fvc::interpolate(this->alphaEff()*this->alpha())
+       *fvc::snGrad(this->thermo().he())
     );
 }
 
@@ -165,20 +166,20 @@ unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
 
 
 template<class TurbulenceThermophysicalTransportModel>
-tmp<volVectorField>
+tmp<surfaceScalarField>
 unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
 (
     const volScalarField& Yi
 ) const
 {
-    return volVectorField::New
+    return surfaceScalarField::New
     (
         IOobject::groupName
         (
             "j(" + Yi.name() + ')',
             this->momentumTransport().alphaRhoPhi().group()
         ),
-       -this->DEff(Yi)*this->alpha()*fvc::grad(Yi)
+       -fvc::interpolate(this->DEff(Yi)*this->alpha())*fvc::snGrad(Yi)
     );
 }
 

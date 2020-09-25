@@ -109,9 +109,6 @@ protected:
         virtual void writeFileHeader(const label i);
 
         //- Calculate the heat-flux
-        tmp<volScalarField> calcWallHeatFlux(const volVectorField& q);
-
-        //- Calculate the heat-flux
         tmp<volScalarField> calcWallHeatFlux(const surfaceScalarField& q);
 
 

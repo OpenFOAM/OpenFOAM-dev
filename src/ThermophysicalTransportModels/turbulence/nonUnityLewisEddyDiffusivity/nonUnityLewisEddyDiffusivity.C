@@ -91,19 +91,20 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::read()
 
 
 template<class TurbulenceThermophysicalTransportModel>
-tmp<volVectorField>
+tmp<surfaceScalarField>
 nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
 {
-    tmp<volVectorField> tmpq
+    tmp<surfaceScalarField> tmpq
     (
-        volVectorField::New
+        surfaceScalarField::New
         (
             IOobject::groupName
             (
                 "q",
                 this->momentumTransport().alphaRhoPhi().group()
             ),
-           -(this->alpha()*this->kappaEff()*fvc::grad(this->thermo().T()))
+           -fvc::interpolate(this->alpha()*this->kappaEff())
+           *fvc::snGrad(this->thermo().T())
         )
     );
 
@@ -115,9 +116,12 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
         forAll(Y, i)
         {
             tmpq.ref() -=
-                this->alpha()*DEff(Y[i])
-               *composition.HE(i, this->thermo().p(), this->thermo().T())
-               *fvc::grad(Y[i]);
+                fvc::interpolate
+                (
+                    this->alpha()*DEff(Y[i])
+                   *composition.HE(i, this->thermo().p(), this->thermo().T())
+                )
+               *fvc::snGrad(Y[i]);
         }
     }
 

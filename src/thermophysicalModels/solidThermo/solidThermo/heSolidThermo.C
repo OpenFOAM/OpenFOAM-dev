@@ -325,6 +325,9 @@ template<class BasicSolidThermo, class MixtureType>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::heSolidThermo<BasicSolidThermo, MixtureType>::q() const
 {
+    const fvMesh& mesh = this->T_.mesh();
+    mesh.setFluxRequired(this->T_.name());
+
     return
       - (
             isotropic()

@@ -113,13 +113,13 @@ public:
         ) const;
 
         //- Return the heat flux
-        virtual tmp<volVectorField> q() const;
+        virtual tmp<surfaceScalarField> q() const;
 
         //- Return the source term for the energy equation
         virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
 
         //- Return the specie flux for the given specie mass-fraction
-        virtual tmp<volVectorField> j(const volScalarField& Yi) const;
+        virtual tmp<surfaceScalarField> j(const volScalarField& Yi) const;
 
         //- Return the source term for the given specie mass-fraction equation
         virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;

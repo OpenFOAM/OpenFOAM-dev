@@ -137,17 +137,18 @@ eddyDiffusivity<TurbulenceThermophysicalTransportModel>::DEff
 
 
 template<class TurbulenceThermophysicalTransportModel>
-tmp<volVectorField>
+tmp<surfaceScalarField>
 eddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
 {
-    return volVectorField::New
+    return surfaceScalarField::New
     (
         IOobject::groupName
         (
             "q",
             this->momentumTransport().alphaRhoPhi().group()
         ),
-       -(this->alpha()*this->kappaEff()*fvc::grad(this->thermo().T()))
+       -fvc::interpolate(this->alpha()*this->kappaEff())
+       *fvc::snGrad(this->thermo().T())
     );
 }
 
@@ -168,7 +169,7 @@ eddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
 
 
 template<class TurbulenceThermophysicalTransportModel>
-tmp<volVectorField>
+tmp<surfaceScalarField>
 eddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
 (
     const volScalarField& Yi
@@ -180,7 +181,7 @@ eddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
            " nonUnityLewisEddyDiffusivity or unityLewisEddyDiffusivity"
         << exit(FatalError);
 
-    return tmp<volVectorField>(nullptr);
+    return tmp<surfaceScalarField>(nullptr);
 }
 
 

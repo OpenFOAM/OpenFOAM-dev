@@ -25,6 +25,8 @@ License
 
 #include "unityLewisFourier.H"
 #include "fvmLaplacian.H"
+#include "fvcSnGrad.H"
+#include "surfaceInterpolate.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,17 +71,18 @@ bool unityLewisFourier<BasicThermophysicalTransportModel>::read()
 
 
 template<class BasicThermophysicalTransportModel>
-tmp<volVectorField>
+tmp<surfaceScalarField>
 unityLewisFourier<BasicThermophysicalTransportModel>::q() const
 {
-    return volVectorField::New
+    return surfaceScalarField::New
     (
         IOobject::groupName
         (
             "q",
             this->momentumTransport().alphaRhoPhi().group()
         ),
-       -this->thermo().alpha()*this->alpha()*fvc::grad(this->thermo().he())
+       -fvc::interpolate(this->thermo().alpha()*this->alpha())
+       *fvc::snGrad(this->thermo().he())
     );
 }
 
@@ -94,19 +97,20 @@ divq(volScalarField& he) const
 
 
 template<class BasicThermophysicalTransportModel>
-tmp<volVectorField>unityLewisFourier<BasicThermophysicalTransportModel>::j
+tmp<surfaceScalarField>unityLewisFourier<BasicThermophysicalTransportModel>::j
 (
     const volScalarField& Yi
 ) const
 {
-    return volVectorField::New
+    return surfaceScalarField::New
     (
         IOobject::groupName
         (
             "j(" + Yi.name() + ')',
             this->momentumTransport().alphaRhoPhi().group()
         ),
-       -this->thermo().alpha()*this->alpha()*fvc::grad(Yi)
+       -fvc::interpolate(this->thermo().alpha()*this->alpha())
+       *fvc::snGrad(Yi)
     );
 }
 

@@ -105,18 +105,18 @@ Fourier<TurbulenceThermophysicalTransportModel>::DEff
 
 
 template<class BasicThermophysicalTransportModel>
-tmp<volVectorField>Fourier<BasicThermophysicalTransportModel>::q() const
+tmp<surfaceScalarField> Fourier<BasicThermophysicalTransportModel>::q() const
 {
     const thermoModel& thermo = this->thermo();
 
-    return volVectorField::New
+    return surfaceScalarField::New
     (
         IOobject::groupName
         (
             "q",
             this->momentumTransport().alphaRhoPhi().group()
         ),
-       -(this->alpha()*thermo.kappa())*fvc::grad(thermo.T())
+        -fvc::interpolate(this->alpha()*thermo.kappa())*fvc::snGrad(thermo.T())
     );
 }
 
@@ -136,7 +136,7 @@ Fourier<BasicThermophysicalTransportModel>::divq(volScalarField& he) const
 
 
 template<class BasicThermophysicalTransportModel>
-tmp<volVectorField>Fourier<BasicThermophysicalTransportModel>::j
+tmp<surfaceScalarField> Fourier<BasicThermophysicalTransportModel>::j
 (
     const volScalarField& Yi
 ) const
@@ -147,7 +147,7 @@ tmp<volVectorField>Fourier<BasicThermophysicalTransportModel>::j
            " unityLewisFourier"
         << exit(FatalError);
 
-    return tmp<volVectorField>(nullptr);
+    return tmp<surfaceScalarField>(nullptr);
 }
 
 

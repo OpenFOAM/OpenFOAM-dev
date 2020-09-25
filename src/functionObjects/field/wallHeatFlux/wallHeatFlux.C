@@ -59,52 +59,6 @@ void Foam::functionObjects::wallHeatFlux::writeFileHeader(const label i)
 
 
 Foam::tmp<Foam::volScalarField>
-Foam::functionObjects::wallHeatFlux::calcWallHeatFlux(const volVectorField& q)
-{
-    tmp<volScalarField> twallHeatFlux
-    (
-        volScalarField::New
-        (
-            type(),
-            mesh_,
-            dimensionedScalar(dimMass/pow3(dimTime), 0)
-        )
-    );
-
-    volScalarField::Boundary& wallHeatFluxBf =
-        twallHeatFlux.ref().boundaryFieldRef();
-
-    const volVectorField::Boundary& qBf = q.boundaryField();
-
-    forAllConstIter(labelHashSet, patchSet_, iter)
-    {
-        const label patchi = iter.key();
-
-        const vectorField& Sfp = mesh_.Sf().boundaryField()[patchi];
-        const scalarField& magSfp = mesh_.magSf().boundaryField()[patchi];
-
-        wallHeatFluxBf[patchi] = (-Sfp/magSfp) & qBf[patchi];
-    }
-
-    if (foundObject<volScalarField>("qr"))
-    {
-        const volScalarField& qr = lookupObject<volScalarField>("qr");
-
-        const volScalarField::Boundary& radHeatFluxBf = qr.boundaryField();
-
-        forAllConstIter(labelHashSet, patchSet_, iter)
-        {
-            const label patchi = iter.key();
-
-            wallHeatFluxBf[patchi] -= radHeatFluxBf[patchi];
-        }
-    }
-
-    return twallHeatFlux;
-}
-
-
-Foam::tmp<Foam::volScalarField>
 Foam::functionObjects::wallHeatFlux::calcWallHeatFlux
 (
     const surfaceScalarField& q
