@@ -6,7 +6,6 @@ const volScalarField& E(thermo.E());
 const volScalarField& nu(thermo.nu());
 
 const volScalarField Cp(thermo.Cp());
-const volScalarField kappa(thermo.kappa());
 
 Info<< "Calculating Lame's coefficients\n" << endl;
 

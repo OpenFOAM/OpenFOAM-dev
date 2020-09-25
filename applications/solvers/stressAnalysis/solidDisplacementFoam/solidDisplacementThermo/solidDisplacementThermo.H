@@ -368,6 +368,12 @@ public:
                 const label patchi
             ) const;
 
+            //- Return the heat flux
+            virtual tmp<surfaceScalarField> q() const;
+
+            //- Return the source term for the energy equation
+            virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
+
 
         //- Update properties
         virtual void correct();

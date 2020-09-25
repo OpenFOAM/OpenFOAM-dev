@@ -25,6 +25,9 @@ License
 
 #include "solidDisplacementThermo.H"
 #include "fvMesh.H"
+#include "fvmLaplacian.H"
+#include "fvcSnGrad.H"
+#include "surfaceInterpolate.H"
 
 /* * * * * * * * * * * * * * * private static data * * * * * * * * * * * * * */
 
@@ -561,6 +564,20 @@ void Foam::solidDisplacementThermo::correct()
 bool Foam::solidDisplacementThermo::read()
 {
     return regIOobject::read();
+}
+
+
+Foam::tmp<Foam::surfaceScalarField>
+Foam::solidDisplacementThermo::q() const
+{
+    return -fvc::interpolate(kappa_)*fvc::snGrad(T());
+}
+
+
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::solidDisplacementThermo::divq(volScalarField& T) const
+{
+    return -fvm::laplacian(kappa_, T);
 }
 
 
