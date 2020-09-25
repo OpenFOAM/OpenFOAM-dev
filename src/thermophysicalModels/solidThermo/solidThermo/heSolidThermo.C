@@ -27,7 +27,6 @@ License
 #include "fvmLaplacian.H"
 #include "fvcLaplacian.H"
 #include "coordinateSystem.H"
-#include "zeroGradientFvPatchFields.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -282,6 +281,7 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::KappaLocal() const
     );
 
     const tmp<volVectorField> tKappa(Kappa());
+    const volVectorField& Kappa = tKappa();
 
     tmp<volSymmTensorField> tKappaLocal
     (
@@ -289,15 +289,18 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::KappaLocal() const
         (
             "KappaLocal",
             mesh,
-            dimensionedSymmTensor(tKappa().dimensions(), Zero),
-            zeroGradientFvPatchSymmTensorField::typeName
+            dimensionedSymmTensor(Kappa.dimensions(), Zero)
         )
     );
     volSymmTensorField& KappaLocal = tKappaLocal.ref();
 
-    KappaLocal.primitiveFieldRef() =
-        coordinates.R().transformVector(tKappa());
-    KappaLocal.correctBoundaryConditions();
+    KappaLocal.primitiveFieldRef() = coordinates.R().transformVector(Kappa);
+
+    forAll(KappaLocal.boundaryField(), patchi)
+    {
+        KappaLocal.boundaryFieldRef()[patchi] =
+            coordinates.R().transformVector(Kappa.boundaryField()[patchi]);
+    }
 
     return tKappaLocal;
 }
