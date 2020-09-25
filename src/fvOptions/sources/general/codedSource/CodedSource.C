@@ -39,6 +39,7 @@ const Foam::wordList Foam::fv::CodedSource<Type>::codeKeys_ =
     "codeAddAlphaRhoSup",
     "codeCorrect",
     "codeInclude",
+    "codeOptions",
     "codeSetValue",
     "localCode"
 };

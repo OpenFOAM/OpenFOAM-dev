@@ -45,7 +45,8 @@ template<>
 const Foam::wordList Foam::CodedBase<Foam::Function1s::coded>::codeKeys_ =
 {
     "code",
-    "codeInclude"
+    "codeInclude",
+    "codeOptions"
 };
 
 

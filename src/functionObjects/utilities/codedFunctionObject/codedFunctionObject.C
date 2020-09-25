@@ -42,6 +42,7 @@ const Foam::wordList Foam::CodedBase<Foam::functionObject>::codeKeys_ =
     "codeEnd",
     "codeExecute",
     "codeInclude",
+    "codeOptions",
     "codeRead",
     "codeWrite",
     "localCode"
