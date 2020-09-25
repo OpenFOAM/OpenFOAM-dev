@@ -276,35 +276,48 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::KappaLocal() const
 {
     const fvMesh& mesh = this->T_.mesh();
 
-    tmp<volSymmTensorField> tKappaLocal;
+    const coordinateSystem coordinates
+    (
+        coordinateSystem::New(mesh, this->properties())
+    );
 
-    if (!isotropic())
-    {
-        coordinateSystem coordinates
+    const tmp<volVectorField> tKappa(Kappa());
+
+    tmp<volSymmTensorField> tKappaLocal
+    (
+        volSymmTensorField::New
         (
-            coordinateSystem::New(mesh, this->properties())
-        );
+            "KappaLocal",
+            mesh,
+            dimensionedSymmTensor(tKappa().dimensions(), Zero),
+            zeroGradientFvPatchSymmTensorField::typeName
+        )
+    );
+    volSymmTensorField& KappaLocal = tKappaLocal.ref();
 
-        const tmp<volVectorField> tKappa(Kappa());
-
-        tKappaLocal =
-        (
-            volSymmTensorField::New
-            (
-                "KappaLocal",
-                mesh,
-                dimensionedSymmTensor(tKappa().dimensions(), Zero),
-                zeroGradientFvPatchSymmTensorField::typeName
-            )
-        );
-        volSymmTensorField& KappaLocal = tKappaLocal.ref();
-
-        KappaLocal.primitiveFieldRef() =
-            coordinates.R().transformVector(tKappa());
-        KappaLocal.correctBoundaryConditions();
-    }
+    KappaLocal.primitiveFieldRef() =
+        coordinates.R().transformVector(tKappa());
+    KappaLocal.correctBoundaryConditions();
 
     return tKappaLocal;
+}
+
+
+template<class BasicSolidThermo, class MixtureType>
+Foam::tmp<Foam::symmTensorField>
+Foam::heSolidThermo<BasicSolidThermo, MixtureType>::KappaLocal
+(
+    const label patchi
+) const
+{
+    const fvMesh& mesh = this->T_.mesh();
+
+    const coordinateSystem coordinates
+    (
+        coordinateSystem::New(mesh, this->properties())
+    );
+
+    return coordinates.R().transformVector(Kappa(patchi));
 }
 
 

@@ -35,8 +35,7 @@ Foam::temperatureCoupledBase::temperatureCoupledBase
     const fvPatch& patch
 )
 :
-    patch_(patch),
-    alphaAniName_(word::null)
+    patch_(patch)
 {}
 
 
@@ -46,8 +45,7 @@ Foam::temperatureCoupledBase::temperatureCoupledBase
     const dictionary& dict
 )
 :
-    patch_(patch),
-    alphaAniName_(dict.lookupOrDefault<word>("alphaAni", word::null))
+    patch_(patch)
 {}
 
 
@@ -57,8 +55,7 @@ Foam::temperatureCoupledBase::temperatureCoupledBase
     const temperatureCoupledBase& base
 )
 :
-    patch_(patch),
-    alphaAniName_(base.alphaAniName_)
+    patch_(patch)
 {}
 
 
@@ -110,15 +107,9 @@ Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
         const solidThermo& thermo =
             mesh.lookupObject<solidThermo>(basicThermo::dictName);
 
-        if (alphaAniName_ != word::null)
+        if (!thermo.isotropic())
         {
-            const symmTensorField& alphaAni =
-                patch_.lookupPatchField<volSymmTensorField, scalar>
-                (
-                    alphaAniName_
-                );
-
-            const symmTensorField kappa(alphaAni*thermo.Cp(Tp, patchi));
+            const symmTensorField kappa(thermo.KappaLocal(patchi));
             const vectorField n(patch_.nf());
 
             return n & kappa & n;
@@ -140,12 +131,7 @@ Foam::tmp<Foam::scalarField> Foam::temperatureCoupledBase::kappa
 
 
 void Foam::temperatureCoupledBase::write(Ostream& os) const
-{
-    if (alphaAniName_ != word::null)
-    {
-        writeEntry(os, "alphaAni", alphaAniName_);
-    }
-}
+{}
 
 
 // ************************************************************************* //

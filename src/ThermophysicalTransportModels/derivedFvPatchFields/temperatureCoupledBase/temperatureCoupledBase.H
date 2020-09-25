@@ -70,10 +70,6 @@ class temperatureCoupledBase
         //- Underlying patch
         const fvPatch& patch_;
 
-        //- Name of the optional anisotropic alpha for solid conductivity
-        //  This field is read and used if available
-        const word alphaAniName_;
-
 
 public:
 

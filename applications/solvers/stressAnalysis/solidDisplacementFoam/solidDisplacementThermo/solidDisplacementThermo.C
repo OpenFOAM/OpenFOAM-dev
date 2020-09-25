@@ -557,6 +557,16 @@ Foam::tmp<Foam::vectorField> Foam::solidDisplacementThermo::Kappa
 }
 
 
+Foam::tmp<Foam::symmTensorField> Foam::solidDisplacementThermo::KappaLocal
+(
+    const label patchi
+) const
+{
+    NotImplemented;
+    return tmp<symmTensorField>(nullptr);
+}
+
+
 void Foam::solidDisplacementThermo::correct()
 {}
 

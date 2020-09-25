@@ -133,6 +133,10 @@ public:
         //- Anisotropic thermal conductivity for patch [W/m/K]
         virtual tmp<vectorField> Kappa(const label patchi) const = 0;
 
+        //- Anisotropic thermal conductivity for patch
+        //  in the local coordinate system [W/m/K]
+        virtual tmp<symmTensorField> KappaLocal(const label patchi) const = 0;
+
         //- Return the heat flux
         virtual tmp<surfaceScalarField> q() const = 0;
 
@@ -206,6 +210,10 @@ public:
 
         //- Anisotropic thermal conductivity for patch [W/m/K]
         virtual tmp<vectorField> Kappa(const label patchi) const = 0;
+
+        //- Anisotropic thermal conductivity for patch
+        //  in the local coordinate system [W/m/K]
+        virtual tmp<symmTensorField> KappaLocal(const label patchi) const = 0;
 
         //- Return the heat flux
         virtual tmp<surfaceScalarField> q() const = 0;
