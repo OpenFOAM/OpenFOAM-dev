@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,12 +33,7 @@ namespace Foam
 {
     defineTypeNameAndDebug(axesRotation, 0);
     addToRunTimeSelectionTable(coordinateRotation, axesRotation, dictionary);
-    addToRunTimeSelectionTable
-    (
-        coordinateRotation,
-        axesRotation,
-        objectRegistry
-    );
+    addToRunTimeSelectionTable(coordinateRotation, axesRotation, points);
 }
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -105,13 +100,6 @@ void Foam::axesRotation::calcTransform
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::axesRotation::axesRotation()
-:
-    R_(sphericalTensor::I),
-    Rtr_(R_)
-{}
-
-
 Foam::axesRotation::axesRotation
 (
     const vector& axis,
@@ -123,6 +111,13 @@ Foam::axesRotation::axesRotation
 {
     calcTransform(axis, dir, e3e1);
 }
+
+
+Foam::axesRotation::axesRotation(const tensor& R)
+:
+    R_(R),
+    Rtr_(R_.T())
+{}
 
 
 Foam::axesRotation::axesRotation
@@ -140,31 +135,14 @@ Foam::axesRotation::axesRotation
 Foam::axesRotation::axesRotation
 (
     const dictionary& dict,
-    const objectRegistry& obr
+    const UList<vector>& points
 )
 :
-    R_(sphericalTensor::I),
-    Rtr_(R_)
-{
-    operator=(dict);
-}
-
-
-Foam::axesRotation::axesRotation(const tensor& R)
-:
-    R_(R),
-    Rtr_(R_.T())
+    axesRotation(dict)
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-const Foam::tensorField& Foam::axesRotation::Tr() const
-{
-    NotImplemented;
-    return NullObjectRef<tensorField>();
-}
-
 
 Foam::tmp<Foam::vectorField> Foam::axesRotation::transform
 (
@@ -215,17 +193,6 @@ Foam::tensor Foam::axesRotation::transformTensor
 }
 
 
-Foam::tmp<Foam::tensorField> Foam::axesRotation::transformTensor
-(
-    const tensorField& st,
-    const labelList& cellMap
-) const
-{
-    NotImplemented;
-    return tmp<tensorField>(nullptr);
-}
-
-
 Foam::tmp<Foam::symmTensorField> Foam::axesRotation::transformVector
 (
     const vectorField& st
@@ -248,6 +215,14 @@ Foam::symmTensor Foam::axesRotation::transformVector
 ) const
 {
     return transformPrincipal(R_, st);
+}
+
+
+void Foam::axesRotation::write(Ostream& os) const
+{
+     writeEntry(os, "e1", e1());
+     writeEntry(os, "e2", e2());
+     writeEntry(os, "e3", e3());
 }
 
 
@@ -293,14 +268,6 @@ void Foam::axesRotation::operator=(const dictionary& dict)
     }
 
     calcTransform(axis1, axis2, order);
-}
-
-
-void Foam::axesRotation::write(Ostream& os) const
-{
-     writeEntry(os, "e1", e1());
-     writeEntry(os, "e2", e2());
-     writeEntry(os, "e3", e3());
 }
 
 

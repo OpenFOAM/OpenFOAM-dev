@@ -100,25 +100,22 @@ public:
 
     // Constructors
 
-        //- Construct null
-        axesRotation();
-
         //- Construct from 2 axes
         axesRotation(const vector& axis, const vector& dir);
-
-        //- Construct from dictionary
-        axesRotation(const dictionary&);
 
         //- Construct from components
         axesRotation(const tensor& R);
 
-        //- Construct from dictionary and mesh
-        axesRotation(const dictionary&, const objectRegistry&);
+        //- Construct from dictionary
+        axesRotation(const dictionary&);
 
-        //- Return clone
-        autoPtr<axesRotation> clone() const
+        //- Construct from dictionary and list of points
+        axesRotation(const dictionary&, const UList<vector>& points);
+
+        //- Construct and return a clone
+        virtual autoPtr<coordinateRotation> clone() const
         {
-            return autoPtr<axesRotation>(new axesRotation(*this));
+            return autoPtr<coordinateRotation>(new axesRotation(*this));
         }
 
 
@@ -129,27 +126,14 @@ public:
 
     // Member Functions
 
-        //- Reset rotation to an identity rotation
-        virtual void clear()
-        {
-            R_ = sphericalTensor::I;
-            Rtr_ = sphericalTensor::I;
-        }
-
-        //- Update the rotation for a list of cells
-        virtual void updateCells(const polyMesh&, const labelList&)
+        //- Update the rotation for a list of points
+        virtual void updatePoints(const UList<vector>& points)
         {}
 
         //- Return local-to-global transformation tensor
         virtual const tensor& R() const
         {
             return R_;
-        }
-
-        //- Return global-to-local transformation tensor
-        virtual const tensor& Rtr() const
-        {
-            return Rtr_;
         }
 
         //- Return local Cartesian x-axis in global coordinates
@@ -170,9 +154,6 @@ public:
             return Rtr_.z();
         }
 
-        //- Return transformation tensor field
-        virtual const tensorField& Tr() const;
-
         //- Transform vectorField using transformation tensor field
         virtual tmp<vectorField> transform(const vectorField& st) const;
 
@@ -190,13 +171,6 @@ public:
 
         //- Transform tensor using transformation tensorField
         virtual tensor transformTensor(const tensor& st) const;
-
-        //- Transform tensor sub-field using transformation tensorField
-        virtual tmp<tensorField> transformTensor
-        (
-            const tensorField& st,
-            const labelList& cellMap
-        ) const;
 
         //- Transform vectorField using transformation tensorField and return
         //  symmetric tensorField

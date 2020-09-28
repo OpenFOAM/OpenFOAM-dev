@@ -73,6 +73,12 @@ class coordinateSystems
 :
     public IOPtrList<coordinateSystem>
 {
+    // Private member functions
+
+        //- Find and return indices for all matches
+        labelList findIndices(const keyType& key) const;
+
+
 public:
 
     //- Runtime type information
@@ -82,20 +88,6 @@ public:
 
         //- Read construct from IOobject
         explicit coordinateSystems(const IOobject&);
-
-        //- Construct from IOobject and a PtrList
-        coordinateSystems
-        (
-            const IOobject&,
-            const PtrList<coordinateSystem>&
-        );
-
-        //- Construct from IOobject and transferring the PtrList contents
-        coordinateSystems
-        (
-            const IOobject&,
-            PtrList<coordinateSystem>&&
-        );
 
         //- Disallow default bitwise copy construction
         coordinateSystems(const coordinateSystems&) = delete;
@@ -108,9 +100,6 @@ public:
 
 
     // Member Functions
-
-        //- Find and return indices for all matches
-        labelList findIndices(const keyType& key) const;
 
         //- Find and return index for the first match, return -1 if not found
         label findIndex(const keyType& key) const;

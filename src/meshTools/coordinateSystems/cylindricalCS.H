@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,9 +56,7 @@ class cylindricalCS
         bool inDegrees_;
 
 
-protected:
-
-    // Protected Member Functions
+    // Private Member Functions
 
 
         //- Convert from local coordinate system to the global Cartesian system
@@ -88,26 +86,11 @@ protected:
 
 public:
 
+    //- Runtime type information
+    TypeName("cylindrical");
+
 
     // Constructors
-
-        //- Construct null
-        cylindricalCS(const bool inDegrees=true);
-
-        //- Construct copy
-        cylindricalCS
-        (
-            const coordinateSystem&,
-            const bool inDegrees=true
-        );
-
-        //- Construct copy with a different name
-        cylindricalCS
-        (
-            const word& name,
-            const coordinateSystem&,
-            const bool inDegrees=true
-        );
 
         //- Construct from origin and rotation
         cylindricalCS
@@ -131,21 +114,9 @@ public:
         //- Construct from dictionary and name
         cylindricalCS(const word&, const dictionary&);
 
-        //- Construct from dictionary and objectRegistry
-        cylindricalCS(const objectRegistry&, const dictionary&);
-
 
     //- Destructor
     virtual ~cylindricalCS();
-
-
-    // Member Functions
-
-        //- Are angles in degrees?
-        bool  inDegrees() const;
-
-        //- Non-const access to inDegrees
-        bool& inDegrees();
 };
 
 

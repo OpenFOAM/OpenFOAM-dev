@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,43 +98,26 @@ public:
 
     // Constructors
 
-        //- Construct null
-        EulerCoordinateRotation();
-
-        //- Construct from rotation vector
-        EulerCoordinateRotation
-        (
-            const vector& phiThetaPsi,
-            const bool inDegrees=true
-        );
-
-        //- Construct from components of rotation vector
-        EulerCoordinateRotation
-        (
-            const scalar phiAngle,
-            const scalar thetaAngle,
-            const scalar psiAngle,
-            const bool inDegrees=true
-        );
-
         //- Construct from dictionary
         EulerCoordinateRotation(const dictionary&);
 
-        //- Construct from dictionary and mesh
-        EulerCoordinateRotation(const dictionary&, const objectRegistry&);
+        //- Construct from dictionary and list of points
+        EulerCoordinateRotation(const dictionary&, const UList<vector>& points);
+
+        //- Construct and return a clone
+        virtual autoPtr<coordinateRotation> clone() const
+        {
+            return autoPtr<coordinateRotation>
+            (
+                new EulerCoordinateRotation(*this)
+            );
+        }
 
 
     // Member Functions
 
-        //- Reset rotation to an identity rotation
-        virtual void clear()
-        {
-            R_ = sphericalTensor::I;
-            Rtr_ = sphericalTensor::I;
-        }
-
-        //- Update the rotation for a list of cells
-        virtual void updateCells(const polyMesh&, const labelList&)
+        //- Update the rotation for a list of points
+        virtual void updatePoints(const UList<vector>& points)
         {}
 
         //- Return local-to-global transformation tensor
@@ -142,12 +125,6 @@ public:
         {
             return R_;
         }
-
-        //- Return global-to-local transformation tensor
-        virtual const tensor& Rtr() const
-        {
-            return Rtr_;
-        };
 
         //- Return local Cartesian x-axis in global coordinates
         virtual const vector e1() const
@@ -167,9 +144,6 @@ public:
             return Rtr_.z();
         }
 
-        //- Return transformation tensor field
-        virtual const tensorField& Tr() const;
-
         //- Transform vectorField using transformation tensor field
         virtual tmp<vectorField> transform(const vectorField& st) const;
 
@@ -187,13 +161,6 @@ public:
 
         //- Transform tensor using transformation tensorField
         virtual tensor transformTensor(const tensor& st) const;
-
-        //- Transform tensor sub-field using transformation tensorField
-        virtual tmp<tensorField> transformTensor
-        (
-            const tensorField& st,
-            const labelList& cellMap
-        ) const;
 
         //- Transform vectorField using transformation tensorField and return
         // symmetrical tensorField

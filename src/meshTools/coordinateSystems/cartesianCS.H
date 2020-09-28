@@ -51,10 +51,7 @@ class cartesianCS
 :
     public coordinateSystem
 {
-protected:
-
-    // Protected Member Functions
-
+    // Private Member Functions
 
         //- Convert from local coordinate system to the global Cartesian system
         //  with optional translation for the origin
@@ -89,22 +86,6 @@ public:
 
     // Constructors
 
-        //- Construct null
-        cartesianCS();
-
-        //- Construct copy
-        cartesianCS
-        (
-            const coordinateSystem&
-        );
-
-        //- Construct copy with a different name
-        cartesianCS
-        (
-            const word& name,
-            const coordinateSystem&
-        );
-
         //- Construct from origin and rotation
         cartesianCS
         (
@@ -126,13 +107,8 @@ public:
         cartesianCS(const word&, const dictionary&);
 
 
-        //- Construct from dictionary and objectRegistry
-        cartesianCS(const objectRegistry&, const dictionary&);
-
-
     //- Destructor
     virtual ~cartesianCS();
-
 };
 
 

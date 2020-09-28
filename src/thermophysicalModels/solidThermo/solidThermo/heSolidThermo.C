@@ -294,12 +294,14 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::KappaLocal() const
     );
     volSymmTensorField& KappaLocal = tKappaLocal.ref();
 
-    KappaLocal.primitiveFieldRef() = coordinates.R().transformVector(Kappa);
+    KappaLocal.primitiveFieldRef() =
+        coordinates.R(mesh.C()).transformVector(Kappa);
 
     forAll(KappaLocal.boundaryField(), patchi)
     {
         KappaLocal.boundaryFieldRef()[patchi] =
-            coordinates.R().transformVector(Kappa.boundaryField()[patchi]);
+            coordinates.R(mesh.boundary()[patchi].Cf())
+           .transformVector(Kappa.boundaryField()[patchi]);
     }
 
     return tKappaLocal;
@@ -320,7 +322,9 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::KappaLocal
         coordinateSystem::New(mesh, this->properties())
     );
 
-    return coordinates.R().transformVector(Kappa(patchi));
+    return
+        coordinates.R(mesh.boundary()[patchi].Cf())
+       .transformVector(Kappa(patchi));
 }
 
 

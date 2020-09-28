@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,27 +25,16 @@ License
 
 #include "cylindrical.H"
 #include "axesRotation.H"
-#include "addToRunTimeSelectionTable.H"
 #include "polyMesh.H"
-#include "tensorIOField.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
     defineTypeNameAndDebug(cylindrical, 0);
-    addToRunTimeSelectionTable
-    (
-        coordinateRotation,
-        cylindrical,
-        dictionary
-    );
-    addToRunTimeSelectionTable
-    (
-        coordinateRotation,
-        cylindrical,
-        objectRegistry
-    );
+    addToRunTimeSelectionTable(coordinateRotation, cylindrical, dictionary);
+    addToRunTimeSelectionTable(coordinateRotation, cylindrical, points);
 }
 
 
@@ -58,7 +47,7 @@ Foam::tensor Foam::cylindrical::R(const vector& dir) const
 
     if (mag(r) < small)
     {
-        // If the cell centre is on the axis choose any radial direction
+        // If the point is on the axis choose any radial direction
         return axesRotation(e3, perpendicular(e3)).R();
     }
     else
@@ -68,35 +57,17 @@ Foam::tensor Foam::cylindrical::R(const vector& dir) const
 }
 
 
-void Foam::cylindrical::init
-(
-    const objectRegistry& obr,
-    const List<label>& cells
-)
+void Foam::cylindrical::init(const UList<vector>& points)
 {
-    const polyMesh& mesh = refCast<const polyMesh>(obr);
-
-    Rptr_.reset(new tensorField(cells.size()));
-
-    updateCells(mesh, cells);
-}
-
-
-void Foam::cylindrical::init(const objectRegistry& obr)
-{
-    const polyMesh& mesh = refCast<const polyMesh>(obr);
-
-    Rptr_.reset(new tensorField(mesh.nCells()));
-
-    const vectorField& cc = mesh.cellCentres();
-
+    Rptr_.reset(new tensorField(points.size()));
     tensorField& R = Rptr_();
-    forAll(cc, celli)
+
+    forAll(points, i)
     {
-        vector dir = cc[celli] - origin_;
+        vector dir = points[i] - origin_;
         dir /= mag(dir) + vSmall;
 
-        R[celli] = this->R(dir);
+        R[i] = this->R(dir);
     }
 }
 
@@ -105,55 +76,16 @@ void Foam::cylindrical::init(const objectRegistry& obr)
 
 Foam::cylindrical::cylindrical
 (
-    const dictionary& dict,
-    const objectRegistry& obr
-)
-:
-    Rptr_(),
-    origin_(point::zero),
-    e3_(Zero)
-{
-    // If origin is specified in the coordinateSystem
-    if (dict.parent().found("origin"))
-    {
-        dict.parent().lookup("origin") >> origin_;
-    }
-
-    // rotation axis
-    dict.lookup("e3") >> e3_;
-
-    init(obr);
-}
-
-
-Foam::cylindrical::cylindrical
-(
-    const objectRegistry& obr,
-    const vector& axis,
-    const point& origin
-)
-:
-    Rptr_(),
-    origin_(origin),
-    e3_(axis)
-{
-    init(obr);
-}
-
-
-Foam::cylindrical::cylindrical
-(
-    const objectRegistry& obr,
     const vector& axis,
     const point& origin,
-    const List<label>& cells
+    const UList<vector>& points
 )
 :
     Rptr_(),
     origin_(origin),
     e3_(axis)
 {
-    init(obr, cells);
+    init(points);
 }
 
 
@@ -163,50 +95,47 @@ Foam::cylindrical::cylindrical(const dictionary& dict)
     origin_(),
     e3_()
 {
-    FatalErrorInFunction
-        << " cylindrical can not be constructed from dictionary "
-        << " use the constructor : "
-           "("
-           "    const dictionary&, const objectRegistry&"
-           ")"
-        << exit(FatalIOError);
+    // If origin is specified in the coordinateSystem
+    if (dict.parent().found("origin"))
+    {
+        dict.parent().lookup("origin") >> origin_;
+    }
+
+    // Rotation axis
+    dict.lookup("e3") >> e3_;
 }
 
 
-Foam::cylindrical::cylindrical(const tensorField& R)
+Foam::cylindrical::cylindrical
+(
+    const dictionary& dict,
+    const UList<vector>& points
+)
 :
-    Rptr_(),
-    origin_(Zero),
-    e3_(Zero)
+    cylindrical(dict)
 {
-    Rptr_() = R;
+    init(points);
 }
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void Foam::cylindrical::clear()
+void Foam::cylindrical::updatePoints(const UList<vector>& points)
 {
-    if (!Rptr_.empty())
+    if (Rptr_.valid())
     {
-        Rptr_.clear();
+        Rptr_().setSize(points.size());
     }
-}
+    else
+    {
+        Rptr_.reset(new tensorField(points.size()));
+    }
 
-
-void Foam::cylindrical::updateCells
-(
-    const polyMesh& mesh,
-    const labelList& cells
-)
-{
-    const vectorField& cc = mesh.cellCentres();
     tensorField& R = Rptr_();
 
-    forAll(cells, i)
+    forAll(points, i)
     {
-        label celli = cells[i];
-        vector dir = cc[celli] - origin_;
+        vector dir = points[i] - origin_;
         dir /= mag(dir) + vSmall;
 
         R[i] = this->R(dir);
@@ -252,6 +181,13 @@ Foam::tmp<Foam::vectorField> Foam::cylindrical::invTransform
     const vectorField& vf
 ) const
 {
+    if (Rptr_->size() != vf.size())
+    {
+        FatalErrorInFunction
+            << "vectorField st has different size to tensorField "
+            << abort(FatalError);
+    }
+
     return (Rptr_().T() & vf);
 }
 
@@ -294,34 +230,7 @@ Foam::tensor Foam::cylindrical::transformTensor
 ) const
 {
     NotImplemented;
-
     return Zero;
-}
-
-
-Foam::tmp<Foam::tensorField> Foam::cylindrical::transformTensor
-(
-    const tensorField& tf,
-    const labelList& cellMap
-) const
-{
-    if (cellMap.size() != tf.size())
-    {
-        FatalErrorInFunction
-            << "tensorField tf has different size to tensorField Tr"
-            << abort(FatalError);
-    }
-
-    const tensorField& R = Rptr_();
-    const tensorField Rtr(R.T());
-    tmp<tensorField> tt(new tensorField(cellMap.size()));
-    tensorField& t = tt.ref();
-    forAll(cellMap, i)
-    {
-        t[i] = R[i] & tf[i] & Rtr[i];
-    }
-
-    return tt;
 }
 
 

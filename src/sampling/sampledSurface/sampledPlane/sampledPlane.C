@@ -57,10 +57,13 @@ Foam::sampledSurfaces::plane::plane
     // allow lookup from global coordinate systems
     if (dict.found("coordinateSystem"))
     {
-        coordinateSystem cs(mesh, dict.subDict("coordinateSystem"));
+        autoPtr<coordinateSystem> cs
+        (
+            coordinateSystem::New(mesh, dict.subDict("coordinateSystem"))
+        );
 
-        point  base = cs.globalPosition(planeDesc().refPoint());
-        vector norm = cs.globalVector(planeDesc().normal());
+        point  base = cs->globalPosition(planeDesc().refPoint());
+        vector norm = cs->globalVector(planeDesc().normal());
 
         // Assign the plane description
         static_cast<Foam::plane&>(*this) = Foam::plane(base, norm);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,10 +175,13 @@ void Foam::porosityModels::fixedCoeff::calcTransformModelData()
                 beta_[zoneI][i].zz() = betaXYZ_.value().z();
             }
 
-            const coordinateRotation& R = coordSys_.R(mesh_, cells);
+            const coordinateRotation& R = coordSys_.R
+            (
+                UIndirectList<vector>(mesh_.C(), cells)()
+            );
 
-            alpha_[zoneI] = R.transformTensor(alpha_[zoneI], cells);
-            beta_[zoneI] = R.transformTensor(beta_[zoneI], cells);
+            alpha_[zoneI] = R.transformTensor(alpha_[zoneI]);
+            beta_[zoneI] = R.transformTensor(beta_[zoneI]);
         }
     }
 }

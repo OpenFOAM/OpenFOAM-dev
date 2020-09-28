@@ -27,10 +27,10 @@ Class
 Description
     A local coordinate rotation.
 
-    The cell based rotational field can be created in two ways:
+    The rotational field can be created in two ways:
       -# Each rotational tensor is defined with two vectors (\c dir and \c e3)
-         where <tt>dir =  cellC - origin</tt> and \c e3 is the rotation axis.
-          Per each cell an axesRotation type of rotation is created
+         where <tt>dir = point - origin</tt> and \c e3 is the rotation axis.
+          Per each point an axesRotation type of rotation is created
           (cylindrical coordinates). For example:
           \verbatim
           cylindrical
@@ -85,15 +85,8 @@ class cylindrical
         //  corresponding to the given vector
         tensor R(const vector& dir) const;
 
-        //- Initialise transformation tensor field for cell set
-        void init
-        (
-            const objectRegistry& obr,
-            const List<label>& cells
-        );
-
-        //- Initialise transformation tensor field for all cells
-        void init(const objectRegistry& obr);
+        //- Initialise transformation tensor field for given points
+        void init(const UList<vector>& points);
 
 
 public:
@@ -103,36 +96,24 @@ public:
 
     // Constructors
 
-        //- Construct from dictionary and objectRegistry
-        cylindrical(const dictionary&, const objectRegistry&);
-
-        //- Construct from components for all cells
+        //- Construct from components for list of points
         cylindrical
         (
-            const objectRegistry&,
-            const vector& axis,
-            const point& origin
-        );
-
-        //- Construct from components for list of cells
-        cylindrical
-        (
-            const objectRegistry&,
             const vector& axis,
             const point& origin,
-            const List<label>& cells
+            const UList<vector>& points
         );
 
         //- Construct from dictionary
         cylindrical(const dictionary&);
 
-        //- Construct from tensor Field
-        cylindrical(const tensorField&);
+        //- Construct from dictionary
+        cylindrical(const dictionary&, const UList<vector>& points);
 
         //- Return clone
-        autoPtr<cylindrical> clone() const
+        virtual autoPtr<coordinateRotation> clone() const
         {
-            return autoPtr<cylindrical>(new cylindrical(*this));
+            return autoPtr<coordinateRotation>(new cylindrical(*this));
         }
 
 
@@ -143,24 +124,14 @@ public:
 
     // Member Functions
 
-        //- Reset rotation to an identity rotation
-        virtual void clear();
-
-        //- Update the rotation for a list of cells
-        virtual void updateCells(const polyMesh& mesh, const labelList& cells);
+        //- Update the rotation for a list of points
+        virtual void updatePoints(const UList<vector>& points);
 
         //- Return local-to-global transformation tensor
         virtual const tensor& R() const
         {
             NotImplemented;
             return tensor::zero;
-        }
-
-        //- Return global-to-local transformation tensor
-        virtual const tensor& Rtr() const
-        {
-             NotImplemented;
-             return tensor::zero;
         }
 
         //- Return local Cartesian x-axis in global coordinates
@@ -181,11 +152,6 @@ public:
         virtual const vector e3() const
         {
             return e3_;
-        }
-
-        virtual const tensorField& Tr() const
-        {
-            return Rptr_();
         }
 
         //- Transform vectorField using transformation tensor field
@@ -217,13 +183,6 @@ public:
 
         //- Transform tensor using transformation tensorField
         virtual tensor transformTensor(const tensor& t) const;
-
-        //- Transform tensor sub-field using transformation tensorField
-        virtual tmp<tensorField> transformTensor
-        (
-            const tensorField& tf,
-            const labelList& cellMap
-        ) const;
 
         //- Transform vectorField using transformation tensorField and return
         // symmetrical tensorField

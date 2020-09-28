@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,9 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "coordinateSystems.H"
-#include "IOPtrList.H"
 #include "Time.H"
-#include "stringListOps.H"
+
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -44,29 +43,8 @@ Foam::coordinateSystems::coordinateSystems(const IOobject& io)
 {}
 
 
-Foam::coordinateSystems::coordinateSystems
-(
-    const IOobject& io,
-    const PtrList<coordinateSystem>& lst
-)
-:
-    IOPtrList<coordinateSystem>(io, lst)
-{}
-
-
-Foam::coordinateSystems::coordinateSystems
-(
-    const IOobject& io,
-    PtrList<coordinateSystem>&& lst
-)
-:
-    IOPtrList<coordinateSystem>(io, move(lst))
-{}
-
-
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-// Read construct from registry, or return previously registered
 const Foam::coordinateSystems& Foam::coordinateSystems::New
 (
     const objectRegistry& obr
@@ -127,8 +105,9 @@ Foam::label Foam::coordinateSystems::findIndex(const keyType& key) const
 {
     if (key.isPattern())
     {
-        labelList indices = findIndices(key);
-        // return first element
+        const labelList indices = findIndices(key);
+
+        // Return first element
         if (!indices.empty())
         {
             return indices[0];

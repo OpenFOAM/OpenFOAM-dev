@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,39 +27,6 @@ License
 #include "objectRegistry.H"
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
-
-Foam::autoPtr<Foam::coordinateRotation> Foam::coordinateRotation::New
-(
-    const dictionary& dict, const objectRegistry& obr
-)
-{
-    if (debug)
-    {
-        Pout<< "coordinateRotation::New(const dictionary&) : "
-            << "constructing coordinateRotation"
-            << endl;
-    }
-
-    word rotType = dict.lookup("type");
-
-    objectRegistryConstructorTable::iterator cstrIter =
-        objectRegistryConstructorTablePtr_->find(rotType);
-
-    if (cstrIter == dictionaryConstructorTablePtr_->end())
-    {
-        FatalIOErrorInFunction
-        (
-            dict
-        )   << "Unknown coordinateRotation type "
-            << rotType << nl << nl
-            << "Valid coordinateRotation types are :" <<  nl
-            << dictionaryConstructorTablePtr_->sortedToc()
-            << exit(FatalIOError);
-    }
-
-    return autoPtr<coordinateRotation>(cstrIter()(dict, obr));
-}
-
 
 Foam::autoPtr<Foam::coordinateRotation> Foam::coordinateRotation::New
 (
@@ -92,5 +59,41 @@ Foam::autoPtr<Foam::coordinateRotation> Foam::coordinateRotation::New
 
     return autoPtr<coordinateRotation>(cstrIter()(dict));
 }
+
+
+Foam::autoPtr<Foam::coordinateRotation> Foam::coordinateRotation::New
+(
+    const dictionary& dict,
+    const UList<vector>& points
+)
+{
+    if (debug)
+    {
+        Pout<< "coordinateRotation::New"
+               "(const dictionary&,const UList<vector>&) : "
+            << "constructing coordinateRotation"
+            << endl;
+    }
+
+    word rotType = dict.lookup("type");
+
+    pointsConstructorTable::iterator cstrIter =
+        pointsConstructorTablePtr_->find(rotType);
+
+    if (cstrIter == pointsConstructorTablePtr_->end())
+    {
+        FatalIOErrorInFunction
+        (
+            dict
+        )   << "Unknown coordinateRotation type "
+            << rotType << nl << nl
+            << "Valid coordinateRotation types are :" <<  nl
+            << pointsConstructorTablePtr_->sortedToc()
+            << exit(FatalIOError);
+    }
+
+    return autoPtr<coordinateRotation>(cstrIter()(dict, points));
+}
+
 
 // ************************************************************************* //

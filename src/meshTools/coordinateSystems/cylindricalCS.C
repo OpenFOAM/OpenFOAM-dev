@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,107 +29,16 @@ License
 #include "mathematicalConstants.H"
 #include "addToRunTimeSelectionTable.H"
 
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::cylindricalCS::cylindricalCS(const bool inDegrees)
-:
-    coordinateSystem(),
-    inDegrees_(inDegrees)
-{}
-
-
-Foam::cylindricalCS::cylindricalCS
-(
-    const coordinateSystem& cs,
-    const bool inDegrees
-)
-:
-    coordinateSystem(cs),
-    inDegrees_(inDegrees)
-{}
-
-
-Foam::cylindricalCS::cylindricalCS
-(
-    const word& name,
-    const coordinateSystem& cs,
-    const bool inDegrees
-)
-:
-    coordinateSystem(name, cs),
-    inDegrees_(inDegrees)
-{}
-
-
-Foam::cylindricalCS::cylindricalCS
-(
-    const word& name,
-    const point& origin,
-    const coordinateRotation& cr,
-    const bool inDegrees
-)
-:
-    coordinateSystem(name, origin, cr),
-    inDegrees_(inDegrees)
-{}
-
-
-Foam::cylindricalCS::cylindricalCS
-(
-    const word& name,
-    const point& origin,
-    const vector& axis,
-    const vector& dirn,
-    const bool inDegrees
-)
-:
-    coordinateSystem(name, origin, axis, dirn),
-    inDegrees_(inDegrees)
-{}
-
-
-Foam::cylindricalCS::cylindricalCS
-(
-    const word& name,
-    const dictionary& dict
-)
-:
-    coordinateSystem(name, dict),
-    inDegrees_(dict.lookupOrDefault("degrees", true))
-{}
-
-
-Foam::cylindricalCS::cylindricalCS
-(
-    const objectRegistry& obr,
-    const dictionary& dict
-)
-:
-    coordinateSystem(obr, dict),
-    inDegrees_(dict.lookupOrDefault("degrees", true))
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::cylindricalCS::~cylindricalCS()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::cylindricalCS::inDegrees() const
+namespace Foam
 {
-    return inDegrees_;
+    defineTypeNameAndDebug(cylindricalCS, 0);
+    addToRunTimeSelectionTable(coordinateSystem, cylindricalCS, dictionary);
 }
 
 
-bool& Foam::cylindricalCS::inDegrees()
-{
-    return inDegrees_;
-}
-
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::vector Foam::cylindricalCS::localToGlobal
 (
@@ -161,7 +70,6 @@ Foam::tmp<Foam::vectorField> Foam::cylindricalCS::localToGlobal
         local.component(vector::Y)
        *(inDegrees_ ? constant::mathematical::pi/180.0 : 1.0)
     );
-
 
     vectorField lc(local.size());
     lc.replace(vector::X, local.component(vector::X)*cos(theta));
@@ -230,6 +138,52 @@ Foam::tmp<Foam::vectorField> Foam::cylindricalCS::globalToLocal
 
     return tresult;
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::cylindricalCS::cylindricalCS
+(
+    const word& name,
+    const point& origin,
+    const coordinateRotation& cr,
+    const bool inDegrees
+)
+:
+    coordinateSystem(name, origin, cr),
+    inDegrees_(inDegrees)
+{}
+
+
+Foam::cylindricalCS::cylindricalCS
+(
+    const word& name,
+    const point& origin,
+    const vector& axis,
+    const vector& dirn,
+    const bool inDegrees
+)
+:
+    coordinateSystem(name, origin, axis, dirn),
+    inDegrees_(inDegrees)
+{}
+
+
+Foam::cylindricalCS::cylindricalCS
+(
+    const word& name,
+    const dictionary& dict
+)
+:
+    coordinateSystem(name, dict),
+    inDegrees_(dict.lookupOrDefault("degrees", true))
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::cylindricalCS::~cylindricalCS()
+{}
 
 
 // ************************************************************************* //

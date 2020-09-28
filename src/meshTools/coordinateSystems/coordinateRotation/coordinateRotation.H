@@ -86,20 +86,6 @@ public:
 
 
     // Declare run-time constructor selection table
-    // for constructors with dictionary and objectRegistry
-    declareRunTimeSelectionTable
-    (
-        autoPtr,
-        coordinateRotation,
-        objectRegistry,
-        (
-            const dictionary& dict, const objectRegistry& obr
-        ),
-        (dict, obr)
-    );
-
-
-    // Declare run-time constructor selection table
     // for constructors with dictionary
     declareRunTimeSelectionTable
     (
@@ -112,13 +98,32 @@ public:
         (dict)
     );
 
+    // Declare run-time constructor selection table
+    // for constructors with dictionary and list of points
+    declareRunTimeSelectionTable
+    (
+        autoPtr,
+        coordinateRotation,
+        points,
+        (
+            const dictionary& dict, const UList<vector>& points
+        ),
+        (dict, points)
+    );
+
+
+    // Constructors
+
+        //- Construct and return a clone
+        virtual autoPtr<coordinateRotation> clone() const = 0;
+
 
     // Selectors
 
-        //- Select constructed from dictionary and objectRegistry
+        //- Select constructed from dictionary and list of points
         static autoPtr<coordinateRotation> New
         (
-            const dictionary& dict, const objectRegistry& obr
+            const dictionary& dict, const UList<vector>& points
         );
 
         //- Select constructed from dictionary
@@ -135,21 +140,11 @@ public:
 
     // Member Functions
 
-        //- Reset rotation to an identity rotation
-        virtual void clear() = 0;
-
-        //- Update the rotation for a list of cells
-        virtual void updateCells
-        (
-            const polyMesh& mesh,
-            const labelList& cells
-        ) = 0;
+        //- Update the rotation for a list of points
+        virtual void updatePoints(const UList<vector>& points) = 0;
 
         //- Return local-to-global transformation tensor
         virtual const tensor& R() const = 0;
-
-        //- Return global-to-local transformation tensor
-        virtual const tensor& Rtr() const = 0;
 
         //- Return local Cartesian x-axis
         virtual const vector e1() const = 0;
@@ -159,9 +154,6 @@ public:
 
         //- Return local Cartesian z-axis
         virtual const vector e3() const = 0;
-
-        //- Return local-to-global transformation tensor
-        virtual const tensorField& Tr() const = 0;
 
         //- Return true if the rotation tensor is uniform
         virtual bool uniform() const
@@ -185,13 +177,6 @@ public:
         virtual tmp<tensorField> transformTensor
         (
             const tensorField& st
-        ) const = 0;
-
-        //- Transform tensor sub-field using transformation tensorField
-        virtual tmp<tensorField> transformTensor
-        (
-            const tensorField& st,
-            const labelList& cellMap
         ) const = 0;
 
         //- Transform tensor using transformation tensorField

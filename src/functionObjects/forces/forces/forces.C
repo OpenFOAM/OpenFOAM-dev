@@ -547,7 +547,7 @@ Foam::functionObjects::forces::forces
     fDName_(""),
     rhoRef_(vGreat),
     pRef_(0),
-    coordSys_(),
+    coordSys_("coordSys", vector::zero),
     localSystem_(false),
     porosity_(false),
     nBin_(1),
@@ -582,7 +582,7 @@ Foam::functionObjects::forces::forces
     fDName_(""),
     rhoRef_(vGreat),
     pRef_(0),
-    coordSys_(),
+    coordSys_("coordSys", vector::zero),
     localSystem_(false),
     porosity_(false),
     nBin_(1),
@@ -642,13 +642,16 @@ bool Foam::functionObjects::forces::read(const dictionary& dict)
         pRef_ = dict.lookupOrDefault<scalar>("pRef", 0.0);
     }
 
-    coordSys_.clear();
-
     // Centre of rotation for moment calculations
     // specified directly, from coordinate system, or implicitly (0 0 0)
-    if (!dict.readIfPresent<point>("CofR", coordSys_.origin()))
+    if (dict.found("CofR"))
     {
-        coordSys_ = coordinateSystem(obr_, dict);
+        coordSys_ = coordinateSystem("coordSys", vector(dict.lookup("CofR")));
+        localSystem_ = false;
+    }
+    else
+    {
+        coordSys_ = coordinateSystem("coordSys", dict);
         localSystem_ = true;
     }
 

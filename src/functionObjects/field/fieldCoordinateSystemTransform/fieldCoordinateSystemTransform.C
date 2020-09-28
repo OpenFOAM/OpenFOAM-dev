@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,7 @@ fieldCoordinateSystemTransform
 :
     fvMeshFunctionObject(name, runTime, dict),
     fieldSet_(),
-    coordSys_(mesh_, dict.subDict("coordinateSystem"))
+    coordSys_(coordinateSystem::New(mesh_, dict.subDict("coordinateSystem"))())
 {
     read(dict);
 

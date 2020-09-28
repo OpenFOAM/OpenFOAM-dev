@@ -24,11 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "rotorDiskSource.H"
-#include "addToRunTimeSelectionTable.H"
 #include "trimModel.H"
 #include "fvMatrices.H"
 #include "geometricOneField.H"
 #include "syncTools.H"
+#include "axesRotation.H"
+#include "addToRunTimeSelectionTable.H"
 
 using namespace Foam::constant;
 
@@ -42,8 +43,8 @@ namespace Foam
         addToRunTimeSelectionTable(option, rotorDiskSource, dictionary);
     }
 
-    template<> const char* NamedEnum<fv::rotorDiskSource::geometryModeType, 2>::
-        names[] =
+    template<> const char*
+    NamedEnum<fv::rotorDiskSource::geometryModeType, 2>::names[] =
     {
         "auto",
         "specified"
@@ -52,8 +53,8 @@ namespace Foam
     const NamedEnum<fv::rotorDiskSource::geometryModeType, 2>
         fv::rotorDiskSource::geometryModeTypeNames_;
 
-    template<> const char* NamedEnum<fv::rotorDiskSource::inletFlowType, 3>::
-        names[] =
+    template<> const char*
+    NamedEnum<fv::rotorDiskSource::inletFlowType, 3>::names[] =
     {
         "fixed",
         "surfaceNormal",
@@ -338,13 +339,7 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
 
             cylindrical_.reset
             (
-                new cylindrical
-                (
-                    mesh_,
-                    axis,
-                    origin,
-                    cells
-                )
+                new cylindrical(axis, origin, UIndirectList<vector>(C, cells)())
             );
 
             // Set the face areas and apply correction to calculated axis
@@ -363,10 +358,9 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
             (
                 new cylindrical
                 (
-                    mesh_,
                     axis,
                     origin,
-                    cells()
+                    UIndirectList<vector>(mesh_.C(), this->cells())()
                 )
             );
 
@@ -475,7 +469,6 @@ Foam::fv::rotorDiskSource::rotorDiskSource
     const word& modelType,
     const dictionary& dict,
     const fvMesh& mesh
-
 )
 :
     cellSetOption(name, modelType, dict, mesh),
@@ -490,7 +483,7 @@ Foam::fv::rotorDiskSource::rotorDiskSource
     R_(cells().size(), I),
     invR_(cells().size(), I),
     area_(cells().size(), 0.0),
-    coordSys_(false),
+    coordSys_("rotorCoordSys", vector::zero, axesRotation(sphericalTensor::I)),
     cylindrical_(),
     rMax_(0.0),
     trim_(trimModel::New(*this, coeffs_)),

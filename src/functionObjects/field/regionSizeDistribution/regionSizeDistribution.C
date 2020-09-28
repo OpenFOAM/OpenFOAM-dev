@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -362,7 +362,7 @@ bool Foam::functionObjects::regionSizeDistribution::read(const dictionary& dict)
 
     if (dict.found("coordinateSystem"))
     {
-        coordSysPtr_.reset(new coordinateSystem(obr_, dict));
+        coordSysPtr_ = coordinateSystem::New(obr_, dict);
 
         Info<< "Transforming all vectorFields with coordinate system "
             << coordSysPtr_().name() << endl;

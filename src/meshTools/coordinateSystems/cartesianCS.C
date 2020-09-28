@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,84 +38,7 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::cartesianCS::cartesianCS()
-:
-    coordinateSystem()
-{}
-
-
-Foam::cartesianCS::cartesianCS
-(
-    const coordinateSystem& cs
-)
-:
-    coordinateSystem(cs)
-{}
-
-
-Foam::cartesianCS::cartesianCS
-(
-    const word& name,
-    const coordinateSystem& cs
-)
-:
-    coordinateSystem(name, cs)
-{}
-
-
-Foam::cartesianCS::cartesianCS
-(
-    const word& name,
-    const point& origin,
-    const coordinateRotation& cr
-)
-:
-    coordinateSystem(name, origin, cr)
-{}
-
-
-Foam::cartesianCS::cartesianCS
-(
-    const word& name,
-    const point& origin,
-    const vector& axis,
-    const vector& dirn
-)
-:
-    coordinateSystem(name, origin, axis, dirn)
-{}
-
-
-Foam::cartesianCS::cartesianCS
-(
-    const word& name,
-    const dictionary& dict
-)
-:
-    coordinateSystem(name, dict)
-{}
-
-
-Foam::cartesianCS::cartesianCS
-(
-    const objectRegistry& obr,
-    const dictionary& dict
-)
-:
-    coordinateSystem(obr, dict)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::cartesianCS::~cartesianCS()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 Foam::vector Foam::cartesianCS::localToGlobal
 (
@@ -155,6 +78,47 @@ Foam::tmp<Foam::vectorField> Foam::cartesianCS::globalToLocal
 {
     return coordinateSystem::globalToLocal(global, translate);
 }
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::cartesianCS::cartesianCS
+(
+    const word& name,
+    const point& origin,
+    const coordinateRotation& cr
+)
+:
+    coordinateSystem(name, origin, cr)
+{}
+
+
+Foam::cartesianCS::cartesianCS
+(
+    const word& name,
+    const point& origin,
+    const vector& axis,
+    const vector& dirn
+)
+:
+    coordinateSystem(name, origin, axis, dirn)
+{}
+
+
+Foam::cartesianCS::cartesianCS
+(
+    const word& name,
+    const dictionary& dict
+)
+:
+    coordinateSystem(name, dict)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::cartesianCS::~cartesianCS()
+{}
 
 
 // ************************************************************************* //

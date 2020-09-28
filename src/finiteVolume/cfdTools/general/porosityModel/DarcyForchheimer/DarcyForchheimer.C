@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,10 +123,13 @@ void Foam::porosityModels::DarcyForchheimer::calcTransformModelData()
                 F_[zoneI][i].zz() = 0.5*fXYZ_.value().z();
             }
 
-            const coordinateRotation& R = coordSys_.R(mesh_, cells);
+            const coordinateRotation& R = coordSys_.R
+            (
+                UIndirectList<vector>(mesh_.C(), cells)()
+            );
 
-            D_[zoneI] = R.transformTensor(D_[zoneI], cells);
-            F_[zoneI] = R.transformTensor(F_[zoneI], cells);
+            D_[zoneI] = R.transformTensor(D_[zoneI]);
+            F_[zoneI] = R.transformTensor(F_[zoneI]);
         }
     }
 

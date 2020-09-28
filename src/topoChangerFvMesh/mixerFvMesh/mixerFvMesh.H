@@ -36,7 +36,7 @@ SourceFiles
 #define mixerFvMesh_H
 
 #include "topoChangerFvMesh.H"
-#include "cylindricalCS.H"
+#include "coordinateSystem.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
