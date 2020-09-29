@@ -101,13 +101,17 @@ void Foam::CodedBase<CodedType>::writeCode(Ostream& os) const
 {
     writeEntry(os, "name", codeName_);
 
-    forAll(codeKeys_, i)
+    wordList codeAndBuildKeys(codeKeys_);
+    codeAndBuildKeys.append("codeOptions");
+    codeAndBuildKeys.append("codeLibs");
+
+    forAll(codeAndBuildKeys, i)
     {
-        if (dict_.found(codeKeys_[i]))
+        if (dict_.found(codeAndBuildKeys[i]))
         {
-            writeKeyword(os, codeKeys_[i]);
-            os.write(verbatimString(dict_[codeKeys_[i]]))
-            << token::END_STATEMENT << nl;
+            writeKeyword(os, codeAndBuildKeys[i]);
+            os.write(verbatimString(dict_[codeAndBuildKeys[i]]))
+                << token::END_STATEMENT << nl;
         }
     }
 }
