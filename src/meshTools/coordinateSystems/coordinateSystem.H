@@ -160,12 +160,11 @@ public:
         //- Construct from dictionary with a given name
         coordinateSystem(const word& name, const dictionary&);
 
-
-    //- Return clone
-    autoPtr<coordinateSystem> clone() const
-    {
-        return autoPtr<coordinateSystem>(new coordinateSystem(*this));
-    }
+        //- Construct and return a clone
+        virtual autoPtr<coordinateSystem> clone() const
+        {
+            return autoPtr<coordinateSystem>(new coordinateSystem(*this));
+        }
 
 
     // Declare run-time constructor selection table

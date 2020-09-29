@@ -114,6 +114,12 @@ public:
         //- Construct from dictionary and name
         cylindricalCS(const word&, const dictionary&);
 
+        //- Construct and return a clone
+        virtual autoPtr<coordinateSystem> clone() const
+        {
+            return autoPtr<coordinateSystem>(new cylindricalCS(*this));
+        }
+
 
     //- Destructor
     virtual ~cylindricalCS();

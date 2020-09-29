@@ -106,6 +106,12 @@ public:
         //- Construct from dictionary
         cartesianCS(const word&, const dictionary&);
 
+        //- Construct and return a clone
+        virtual autoPtr<coordinateSystem> clone() const
+        {
+            return autoPtr<coordinateSystem>(new cartesianCS(*this));
+        }
+
 
     //- Destructor
     virtual ~cartesianCS();
