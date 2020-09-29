@@ -37,7 +37,6 @@ Foam::CodedBase<Foam::codedMixedFvPatchFieldBase>::codeKeys_ =
 {
     "code",
     "codeInclude",
-    "codeOptions",
     "localCode"
 };
 
