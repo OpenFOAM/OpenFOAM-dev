@@ -24,23 +24,23 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cartesianCS.H"
-
-#include "one.H"
-#include "mathematicalConstants.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    defineTypeNameAndDebug(cartesianCS, 0);
-    addToRunTimeSelectionTable(coordinateSystem, cartesianCS, dictionary);
+namespace coordinateSystems
+{
+    defineTypeNameAndDebug(cartesian, 0);
+    addToRunTimeSelectionTable(coordinateSystem, cartesian, dictionary);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::vector Foam::cartesianCS::localToGlobal
+Foam::vector Foam::coordinateSystems::cartesian::localToGlobal
 (
     const vector& local,
     bool translate
@@ -50,7 +50,7 @@ Foam::vector Foam::cartesianCS::localToGlobal
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::cartesianCS::localToGlobal
+Foam::tmp<Foam::vectorField> Foam::coordinateSystems::cartesian::localToGlobal
 (
     const vectorField& local,
     bool translate
@@ -60,7 +60,7 @@ Foam::tmp<Foam::vectorField> Foam::cartesianCS::localToGlobal
 }
 
 
-Foam::vector Foam::cartesianCS::globalToLocal
+Foam::vector Foam::coordinateSystems::cartesian::globalToLocal
 (
     const vector& global,
     bool translate
@@ -70,7 +70,7 @@ Foam::vector Foam::cartesianCS::globalToLocal
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::cartesianCS::globalToLocal
+Foam::tmp<Foam::vectorField> Foam::coordinateSystems::cartesian::globalToLocal
 (
     const vectorField& global,
     bool translate
@@ -82,7 +82,7 @@ Foam::tmp<Foam::vectorField> Foam::cartesianCS::globalToLocal
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::cartesianCS::cartesianCS
+Foam::coordinateSystems::cartesian::cartesian
 (
     const word& name,
     const point& origin,
@@ -93,7 +93,7 @@ Foam::cartesianCS::cartesianCS
 {}
 
 
-Foam::cartesianCS::cartesianCS
+Foam::coordinateSystems::cartesian::cartesian
 (
     const word& name,
     const point& origin,
@@ -105,7 +105,7 @@ Foam::cartesianCS::cartesianCS
 {}
 
 
-Foam::cartesianCS::cartesianCS
+Foam::coordinateSystems::cartesian::cartesian
 (
     const word& name,
     const dictionary& dict
@@ -117,7 +117,7 @@ Foam::cartesianCS::cartesianCS
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::cartesianCS::~cartesianCS()
+Foam::coordinateSystems::cartesian::~cartesian()
 {}
 
 

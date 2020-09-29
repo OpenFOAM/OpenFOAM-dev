@@ -195,7 +195,14 @@ void Foam::ParticleCollector<CloudType>::initConcentricCircles()
     faces_.setSize(nFace);
     area_.setSize(nFace);
 
-    coordSys_ = cylindricalCS("coordSys", origin, normal_[0], refDir, false);
+    coordSys_ = coordinateSystems::cylindrical
+    (
+        "coordSys",
+        origin,
+        normal_[0],
+        refDir,
+        false
+    );
 
     List<label> ptIDs(identity(nPointPerRadius));
 

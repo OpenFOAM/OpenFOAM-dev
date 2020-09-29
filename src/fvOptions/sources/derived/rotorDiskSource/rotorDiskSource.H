@@ -194,7 +194,7 @@ protected:
         List<scalar> area_;
 
         //- Rotor local cylindrical co-ordinate system (r, theta, z)
-        cylindricalCS coordSys_;
+        coordinateSystems::cylindrical coordSys_;
 
          //- Rotor transformation co-ordinate system
         autoPtr<cylindrical> cylindrical_;
@@ -278,7 +278,7 @@ public:
             inline const List<point>& x() const;
 
             //- Return the rotor co-ordinate system (r, theta, z)
-            inline const cylindricalCS& coordSys() const;
+            inline const coordinateSystems::cylindrical& coordSys() const;
 
 
         // Evaluation

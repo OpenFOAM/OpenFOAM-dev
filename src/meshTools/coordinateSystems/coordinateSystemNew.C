@@ -33,37 +33,39 @@ Foam::autoPtr<Foam::coordinateSystem> Foam::coordinateSystem::New
     const dictionary& dict
 )
 {
-    const dictionary& coordDict = dict.subDict(typeName_());
+    const entry* entryPtr = dict.lookupEntryPtr(typeName_(), false, false);
 
-    const entry* entryPtr = coordDict.lookupEntryPtr(typeName_(), false, false);
-
-    // non-dictionary entry is a lookup into global coordinateSystems
+    // Non-dictionary entry is a lookup into global coordinateSystems
     if (entryPtr && !entryPtr->isDict())
     {
-        keyType key(entryPtr->stream());
+        const word name(entryPtr->stream());
 
-        const coordinateSystems& lst = coordinateSystems::New(obr);
-        const label index = lst.findIndex(key);
+        const coordinateSystems::coordinateSystems& css =
+            coordinateSystems::coordinateSystems::New(obr);
 
-        if (debug)
+        if (css.found(name))
         {
-            InfoInFunction
-                << "Using global coordinate system: "
-                << key << "=" << index << endl;
-        }
+            if (debug)
+            {
+                InfoInFunction
+                    << "Using global coordinate system: " << name << endl;
+            }
 
-        if (index < 0)
+            return css[name].clone();
+        }
+        else
         {
             FatalErrorInFunction
-                << "could not find coordinate system: " << key << nl
-                << "available coordinate systems: " << lst.toc() << nl << nl
+                << "could not find coordinate system: " << name << nl
+                << "available coordinate systems: " << css.toc() << nl << nl
                 << exit(FatalError);
-        }
 
-        return lst[index].clone();
+            return autoPtr<coordinateSystem>(nullptr);
+        }
     }
     else
     {
+        const dictionary& coordDict = dict.subDict(typeName_());
         const word coordType = coordDict.lookup("type");
 
         dictionaryConstructorTable::iterator cstrIter =
@@ -110,18 +112,6 @@ Foam::autoPtr<Foam::coordinateSystem> Foam::coordinateSystem::New
     }
 
     return autoPtr<coordinateSystem>(cstrIter()(name, dict));
-}
-
-
-Foam::autoPtr<Foam::coordinateSystem> Foam::coordinateSystem::New
-(
-    Istream& is
-)
-{
-    const word name(is);
-    const dictionary dict(is);
-
-    return autoPtr<coordinateSystem>(coordinateSystem::New(name, dict));
 }
 
 

@@ -26,7 +26,6 @@ License
 #include "ParticleTracks.H"
 #include "Pstream.H"
 #include "ListListOps.H"
-#include "IOPtrList.H"
 
 // * * * * * * * * * * * * * protected Member Functions  * * * * * * * * * * //
 

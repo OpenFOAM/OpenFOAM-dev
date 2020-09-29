@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "cylindricalCS.H"
-
-#include "one.H"
 #include "mathematicalConstants.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -33,14 +31,17 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(cylindricalCS, 0);
-    addToRunTimeSelectionTable(coordinateSystem, cylindricalCS, dictionary);
+namespace coordinateSystems
+{
+    defineTypeNameAndDebug(cylindrical, 0);
+    addToRunTimeSelectionTable(coordinateSystem, cylindrical, dictionary);
+}
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::vector Foam::cylindricalCS::localToGlobal
+Foam::vector Foam::coordinateSystems::cylindrical::localToGlobal
 (
     const vector& local,
     bool translate
@@ -59,7 +60,7 @@ Foam::vector Foam::cylindricalCS::localToGlobal
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::cylindricalCS::localToGlobal
+Foam::tmp<Foam::vectorField> Foam::coordinateSystems::cylindrical::localToGlobal
 (
     const vectorField& local,
     bool translate
@@ -80,7 +81,7 @@ Foam::tmp<Foam::vectorField> Foam::cylindricalCS::localToGlobal
 }
 
 
-Foam::vector Foam::cylindricalCS::globalToLocal
+Foam::vector Foam::coordinateSystems::cylindrical::globalToLocal
 (
     const vector& global,
     bool translate
@@ -104,7 +105,7 @@ Foam::vector Foam::cylindricalCS::globalToLocal
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::cylindricalCS::globalToLocal
+Foam::tmp<Foam::vectorField> Foam::coordinateSystems::cylindrical::globalToLocal
 (
     const vectorField& global,
     bool translate
@@ -142,7 +143,7 @@ Foam::tmp<Foam::vectorField> Foam::cylindricalCS::globalToLocal
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::cylindricalCS::cylindricalCS
+Foam::coordinateSystems::cylindrical::cylindrical
 (
     const word& name,
     const point& origin,
@@ -155,7 +156,7 @@ Foam::cylindricalCS::cylindricalCS
 {}
 
 
-Foam::cylindricalCS::cylindricalCS
+Foam::coordinateSystems::cylindrical::cylindrical
 (
     const word& name,
     const point& origin,
@@ -169,7 +170,7 @@ Foam::cylindricalCS::cylindricalCS
 {}
 
 
-Foam::cylindricalCS::cylindricalCS
+Foam::coordinateSystems::cylindrical::cylindrical
 (
     const word& name,
     const dictionary& dict
@@ -182,7 +183,7 @@ Foam::cylindricalCS::cylindricalCS
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::cylindricalCS::~cylindricalCS()
+Foam::coordinateSystems::cylindrical::~cylindrical()
 {}
 
 

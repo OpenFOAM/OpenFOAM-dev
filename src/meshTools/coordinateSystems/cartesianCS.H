@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::cartesianCS
+    Foam::coordinateSystems::cartesian
 
 Description
     Cylindrical coordinate system
@@ -36,18 +36,19 @@ SourceFiles
 #define cartesianCS_H
 
 #include "coordinateSystem.H"
-#include "typeInfo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace coordinateSystems
+{
 
 /*---------------------------------------------------------------------------*\
-                         Class cartesianCS Declaration
+                         Class cartesian Declaration
 \*---------------------------------------------------------------------------*/
 
-class cartesianCS
+class cartesian
 :
     public coordinateSystem
 {
@@ -87,7 +88,7 @@ public:
     // Constructors
 
         //- Construct from origin and rotation
-        cartesianCS
+        cartesian
         (
             const word& name,
             const point& origin,
@@ -95,7 +96,7 @@ public:
         );
 
         //- Construct from origin and 2 axes
-        cartesianCS
+        cartesian
         (
             const word& name,
             const point& origin,
@@ -104,23 +105,24 @@ public:
         );
 
         //- Construct from dictionary
-        cartesianCS(const word&, const dictionary&);
+        cartesian(const word&, const dictionary&);
 
         //- Construct and return a clone
         virtual autoPtr<coordinateSystem> clone() const
         {
-            return autoPtr<coordinateSystem>(new cartesianCS(*this));
+            return autoPtr<coordinateSystem>(new cartesian(*this));
         }
 
 
     //- Destructor
-    virtual ~cartesianCS();
+    virtual ~cartesian();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+} // End namespace coordinateSystems
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

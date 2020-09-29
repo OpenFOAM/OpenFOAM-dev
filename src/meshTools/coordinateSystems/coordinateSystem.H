@@ -197,9 +197,6 @@ public:
             const dictionary& dict
         );
 
-        //- Select constructed from Istream
-        static autoPtr<coordinateSystem> New(Istream& is);
-
 
     //- Destructor
     virtual ~coordinateSystem();
@@ -211,6 +208,12 @@ public:
 
             //- Return name
             const word& name() const
+            {
+                return name_;
+            }
+
+            //- Return keyword
+            const word& keyword() const
             {
                 return name_;
             }

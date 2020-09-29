@@ -26,140 +26,64 @@ License
 #include "coordinateSystems.H"
 #include "Time.H"
 
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace coordinateSystems
+{
     defineTypeNameAndDebug(coordinateSystems, 0);
-    defineTemplateTypeNameAndDebug(IOPtrList<coordinateSystem>, 0);
 }
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::coordinateSystems::coordinateSystems(const IOobject& io)
-:
-    IOPtrList<coordinateSystem>(io)
-{}
-
-
-// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
-
-const Foam::coordinateSystems& Foam::coordinateSystems::New
+Foam::coordinateSystems::coordinateSystems::coordinateSystems
 (
     const objectRegistry& obr
 )
-{
-    if (obr.foundObject<coordinateSystems>(typeName))
-    {
-        return obr.lookupObject<coordinateSystems>(typeName);
-    }
-    else
-    {
-        return obr.store
+:
+    MeshObject<objectRegistry, GeometricMeshObject, coordinateSystems>
+    (
+        obr,
+        IOobject
         (
-            new coordinateSystems
-            (
-                IOobject
-                (
-                    typeName,
-                    obr.time().constant(),
-                    obr,
-                    IOobject::READ_IF_PRESENT,
-                    IOobject::NO_WRITE
-                )
-            )
-        );
-    }
+            typeName,
+            obr.time().constant(),
+            obr,
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE
+        )
+    ),
+    PtrDictionary<coordinateSystem>()
+{
+    readHeaderOk(IOstream::ASCII, typeName);
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::labelList Foam::coordinateSystems::findIndices(const keyType& key) const
+bool Foam::coordinateSystems::coordinateSystems::readData(Istream& is)
 {
-    labelList indices;
-    if (key.isPattern())
+    const dictionary coordinateSystemsDict(is);
+
+    forAllConstIter(dictionary, coordinateSystemsDict, iter)
     {
-        indices = findStrings(key, toc());
-    }
-    else
-    {
-        indices.setSize(size());
-        label nFound = 0;
-        forAll(*this, i)
+        if (iter().isDict())
         {
-            if (key == operator[](i).name())
-            {
-                indices[nFound++] = i;
-            }
-        }
-        indices.setSize(nFound);
-    }
+            const word& name = iter().keyword();
+            const dictionary& dict = iter().dict();
 
-    return indices;
-}
-
-
-Foam::label Foam::coordinateSystems::findIndex(const keyType& key) const
-{
-    if (key.isPattern())
-    {
-        const labelList indices = findIndices(key);
-
-        // Return first element
-        if (!indices.empty())
-        {
-            return indices[0];
-        }
-    }
-    else
-    {
-        forAll(*this, i)
-        {
-            if (key == operator[](i).name())
-            {
-                return i;
-            }
+            this->insert
+            (
+                name,
+                coordinateSystem::New(name, dict).ptr()
+            );
         }
     }
 
-    return -1;
-}
-
-
-bool Foam::coordinateSystems::found(const keyType& key) const
-{
-    return findIndex(key) != -1;
-}
-
-
-Foam::wordList Foam::coordinateSystems::toc() const
-{
-    wordList keywords(size());
-
-    forAll(*this, i)
-    {
-        keywords[i] = operator[](i).name();
-    }
-
-    return keywords;
-}
-
-
-bool Foam::coordinateSystems::writeData(Ostream& os) const
-{
-    os << nl << size() << nl << token::BEGIN_LIST;
-
-    forAll(*this, i)
-    {
-        os << nl;
-        operator[](i).writeDict(os, true);
-    }
-
-    os << token::END_LIST << nl;
-
-    return os.good();
+    return !is.bad();
 }
 
 

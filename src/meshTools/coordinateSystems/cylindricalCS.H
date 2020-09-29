@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::cylindricalCS
+    Foam::coordinateSystems::cylindrical
 
 Description
     Cylindrical coordinate system
@@ -41,12 +41,14 @@ SourceFiles
 
 namespace Foam
 {
+namespace coordinateSystems
+{
 
 /*---------------------------------------------------------------------------*\
-                        Class cylindricalCS Declaration
+                        Class cylindrical Declaration
 \*---------------------------------------------------------------------------*/
 
-class cylindricalCS
+class cylindrical
 :
     public coordinateSystem
 {
@@ -93,7 +95,7 @@ public:
     // Constructors
 
         //- Construct from origin and rotation
-        cylindricalCS
+        cylindrical
         (
             const word& name,
             const point& origin,
@@ -102,7 +104,7 @@ public:
         );
 
         //- Construct from origin and 2 axes
-        cylindricalCS
+        cylindrical
         (
             const word& name,
             const point& origin,
@@ -112,23 +114,24 @@ public:
         );
 
         //- Construct from dictionary and name
-        cylindricalCS(const word&, const dictionary&);
+        cylindrical(const word&, const dictionary&);
 
         //- Construct and return a clone
         virtual autoPtr<coordinateSystem> clone() const
         {
-            return autoPtr<coordinateSystem>(new cylindricalCS(*this));
+            return autoPtr<coordinateSystem>(new cylindrical(*this));
         }
 
 
     //- Destructor
-    virtual ~cylindricalCS();
+    virtual ~cylindrical();
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
+} // End namespace coordinateSystems
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

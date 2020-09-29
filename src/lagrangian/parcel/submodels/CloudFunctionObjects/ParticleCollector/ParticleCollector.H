@@ -158,7 +158,7 @@ private:
             List<scalar> radius_;
 
             //- Cylindrical co-ordinate system
-            cylindricalCS coordSys_;
+            coordinateSystems::cylindrical coordSys_;
 
 
         //- Face areas

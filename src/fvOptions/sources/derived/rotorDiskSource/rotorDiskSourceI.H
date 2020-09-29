@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,8 @@ const Foam::List<Foam::point>& Foam::fv::rotorDiskSource::x() const
 }
 
 
-const Foam::cylindricalCS& Foam::fv::rotorDiskSource::coordSys() const
+const Foam::coordinateSystems::cylindrical&
+Foam::fv::rotorDiskSource::coordSys() const
 {
     return coordSys_;
 }

@@ -377,7 +377,14 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
         }
     }
 
-    coordSys_ = cylindricalCS("rotorCoordSys", origin, axis, refDir, false);
+    coordSys_ = coordinateSystems::cylindrical
+    (
+        "rotorCoordSys",
+        origin,
+        axis,
+        refDir,
+        false
+    );
 
     const scalar sumArea = gSum(area_);
     const scalar diameter = Foam::sqrt(4.0*sumArea/mathematical::pi);
