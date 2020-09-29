@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,9 +40,6 @@ Usage
 
       - \par -scaleOut \<scale\>
         Specify a scaling factor when writing files.
-
-      - \par -dict \<dictionary\>
-        Specify an alternative dictionary for constant/coordinateSystems.
 
       - \par -from \<coordinateSystem\>
         Specify a coordinate System when reading files.
@@ -96,7 +93,6 @@ int main(int argc, char *argv[])
         "factor",
         "geometry scaling factor on output"
     );
-    #include "addDictOption.H"
     argList::addOption
     (
         "from",
@@ -141,109 +137,24 @@ int main(int argc, char *argv[])
     }
 
 
-    // get the coordinate transformations
+    // Get the coordinate transformations
     autoPtr<coordinateSystem> fromCsys;
     autoPtr<coordinateSystem> toCsys;
 
     if (args.optionFound("from") || args.optionFound("to"))
     {
-        autoPtr<IOobject> csDictIoPtr;
-
-        const word dictName("coordinateSystems::typeName");
-
-        // Note: cannot use setSystemRunTimeDictionaryIO.H since dictionary
-        //       is in constant
-
-        fileName dictPath = "";
-        if (args.optionFound("dict"))
-        {
-            dictPath = args["dict"];
-            if (isDir(dictPath))
-            {
-                dictPath = dictPath / dictName;
-            }
-        }
-
-        if (dictPath.size())
-        {
-            csDictIoPtr.set
-            (
-                new IOobject
-                (
-                    dictPath,
-                    runTime,
-                    IOobject::MUST_READ,
-                    IOobject::NO_WRITE,
-                    false
-                )
-            );
-        }
-        else
-        {
-            csDictIoPtr.set
-            (
-                new IOobject
-                (
-                    dictName,
-                    runTime.constant(),
-                    runTime,
-                    IOobject::MUST_READ,
-                    IOobject::NO_WRITE,
-                    false
-                )
-            );
-        }
-
-
-        if (!csDictIoPtr->typeHeaderOk<coordinateSystems>(false))
-        {
-            FatalErrorInFunction
-                << "Cannot open coordinateSystems file\n    "
-                << csDictIoPtr->objectPath() << nl
-                << exit(FatalError);
-        }
-
-        coordinateSystems csLst(csDictIoPtr());
+        coordinateSystems::coordinateSystems csLst(runTime);
 
         if (args.optionFound("from"))
         {
             const word csName = args["from"];
-
-            const label csIndex = csLst.findIndex(csName);
-            if (csIndex < 0)
-            {
-                FatalErrorInFunction
-                    << "Cannot find -from " << csName << nl
-                    << "available coordinateSystems: " << csLst.toc() << nl
-                    << exit(FatalError);
-            }
-
-            fromCsys.reset(new coordinateSystem(csLst[csIndex]));
+            fromCsys = csLst[csName].clone();
         }
 
         if (args.optionFound("to"))
         {
             const word csName = args["to"];
-
-            const label csIndex = csLst.findIndex(csName);
-            if (csIndex < 0)
-            {
-                FatalErrorInFunction
-                    << "Cannot find -to " << csName << nl
-                    << "available coordinateSystems: " << csLst.toc() << nl
-                    << exit(FatalError);
-            }
-
-            toCsys.reset(new coordinateSystem(csLst[csIndex]));
-        }
-
-
-        // maybe fix this later
-        if (fromCsys.valid() && toCsys.valid())
-        {
-            FatalErrorInFunction
-                << "Only allowed  '-from' or '-to' option at the moment."
-                << exit(FatalError);
+            toCsys = csLst[csName].clone();
         }
     }
 
