@@ -68,6 +68,9 @@ public:
 
     // Member Functions
 
+        //- Inherit interpolate from interpolation
+        using interpolation<Type>::interpolate;
+
         //- Interpolate field to the given point in the given cell
         Type interpolate
         (
