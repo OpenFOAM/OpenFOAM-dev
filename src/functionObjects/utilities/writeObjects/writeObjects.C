@@ -115,12 +115,12 @@ void Foam::functionObjects::writeObjects::writeObject
     }
     else
     {
-        if (obj.name()[0] == '(')
+        if (obj.db().cacheTemporaryObject(obj.name()))
         {
-            // If the object is a temporary field expression prepend with "expr"
+            // If the object is a temporary field expression wrap with tmp<...>
             const word name(obj.name());
             regIOobject& objRef = const_cast<regIOobject&>(obj);
-            objRef.IOobject::rename("expr" + name);
+            objRef.IOobject::rename("tmp<" + name + ">");
             writeObjectsBase::writeObject(obj);
             objRef.IOobject::rename(name);
         }
