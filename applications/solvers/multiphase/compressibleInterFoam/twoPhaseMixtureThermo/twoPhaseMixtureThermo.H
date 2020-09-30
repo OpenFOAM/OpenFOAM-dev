@@ -37,7 +37,6 @@ SourceFiles
 #define twoPhaseMixtureThermo_H
 
 #include "rhoThermo.H"
-#include "psiThermo.H"
 #include "twoPhaseMixture.H"
 #include "interfaceProperties.H"
 
@@ -52,7 +51,7 @@ namespace Foam
 
 class twoPhaseMixtureThermo
 :
-    public psiThermo::composite,
+    public rhoThermo::composite,
     public twoPhaseMixture,
     public interfaceProperties
 {
@@ -63,6 +62,9 @@ class twoPhaseMixtureThermo
 
         //- Thermo-package of phase 2
         autoPtr<rhoThermo> thermo2_;
+
+        volScalarField Alpha1_;
+        volScalarField Alpha2_;
 
 
 public:
