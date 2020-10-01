@@ -39,7 +39,6 @@ SourceFiles
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "rhoThermo.H"
-#include "psiThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,7 +51,7 @@ namespace Foam
 
 class multiphaseMixtureThermo
 :
-    public psiThermo::composite
+    public rhoThermo::composite
 {
 public:
 
@@ -229,6 +228,9 @@ public:
             return rhoPhi_;
         }
 
+        //- Correct the thermodynamics of each phase
+        virtual void correctThermo();
+
         //- Update properties
         virtual void correct();
 
@@ -365,12 +367,6 @@ public:
 
 
         // Fields derived from thermodynamic state variables
-
-            //- Density [kg/m^3]
-            virtual tmp<volScalarField> rho() const;
-
-            //- Density for patch [kg/m^3]
-            virtual tmp<scalarField> rho(const label patchi) const;
 
             //- Heat capacity at constant pressure [J/kg/K]
             virtual tmp<volScalarField> Cp() const;

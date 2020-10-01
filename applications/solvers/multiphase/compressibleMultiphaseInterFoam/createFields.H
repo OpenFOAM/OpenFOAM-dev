@@ -31,17 +31,7 @@ volVectorField U
 Info<< "Constructing multiphaseMixtureThermo\n" << endl;
 multiphaseMixtureThermo mixture(U, phi);
 
-volScalarField rho
-(
-    IOobject
-    (
-        "rho",
-        runTime.timeName(),
-        mesh,
-        IOobject::READ_IF_PRESENT
-    ),
-    mixture.rho()
-);
+const volScalarField& rho = mixture.rho();
 
 dimensionedScalar pMin("pMin", dimPressure, mixture);
 

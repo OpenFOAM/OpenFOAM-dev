@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,6 +50,17 @@ Foam::phaseModel::phaseModel
     p_(p),
     T_(T),
     thermo_(nullptr),
+    Alpha_
+    (
+        IOobject
+        (
+            IOobject::groupName("Alpha", phaseName),
+            p.mesh().time().timeName(),
+            p.mesh()
+        ),
+        p.mesh(),
+        dimensionedScalar(dimless, 0)
+    ),
     dgdt_
     (
         IOobject

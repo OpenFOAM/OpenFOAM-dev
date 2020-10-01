@@ -61,6 +61,7 @@ class phaseModel
         const volScalarField& p_;
         const volScalarField& T_;
         autoPtr<rhoThermo> thermo_;
+        volScalarField Alpha_;
         volScalarField dgdt_;
 
 
@@ -127,6 +128,18 @@ public:
         rhoThermo& thermo()
         {
             return thermo_();
+        }
+
+        //- Return const-access to phase mass-fraction
+        const volScalarField& Alpha() const
+        {
+            return Alpha_;
+        }
+
+        //- Return access to phase mass-fraction
+        volScalarField& Alpha()
+        {
+            return Alpha_;
         }
 
         //- Return const-access to phase divergence

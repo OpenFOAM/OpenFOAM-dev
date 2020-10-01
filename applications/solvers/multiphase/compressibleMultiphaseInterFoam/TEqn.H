@@ -13,5 +13,6 @@
     TEqn.relax();
     TEqn.solve();
 
+    mixture.correctThermo();
     mixture.correct();
 }

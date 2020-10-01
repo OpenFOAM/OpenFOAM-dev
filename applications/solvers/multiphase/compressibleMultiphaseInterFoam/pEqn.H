@@ -68,7 +68,7 @@
             phase
         )
         {
-            tmp<fvScalarMatrix> hmm
+            tmp<fvScalarMatrix> p_rghEqnCompi
             (
                 (max(phase(), scalar(0))/phase().thermo().rho())
                *p_rghEqnComps[phasei]
@@ -76,11 +76,11 @@
 
             if (phasei == 0)
             {
-                p_rghEqnComp = hmm;
+                p_rghEqnComp = p_rghEqnCompi;
             }
             else
             {
-                p_rghEqnComp.ref() += hmm;
+                p_rghEqnComp.ref() += p_rghEqnCompi;
             }
 
             phasei++;
@@ -90,6 +90,9 @@
 
         if (pimple.finalNonOrthogonalIter())
         {
+            p = max(p_rgh + mixture.rho()*gh, pMin);
+            p_rgh = p - rho*gh;
+
             phasei = 0;
             forAllIter
             (
@@ -113,11 +116,9 @@
         }
     }
 
-    p = max(p_rgh + mixture.rho()*gh, pMin);
-
     // Update densities from change in p_rgh
     mixture.correctRho(p_rgh - p_rgh_0);
-    rho = mixture.rho();
+    mixture.correct();
 
     // Correct p_rgh for consistency with p and the updated densities
     p_rgh = p - rho*gh;
