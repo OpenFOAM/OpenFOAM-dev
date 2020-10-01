@@ -63,7 +63,10 @@ class twoPhaseMixtureThermo
         //- Thermo-package of phase 2
         autoPtr<rhoThermo> thermo2_;
 
+        //- Mass-fraction of phase 1
         volScalarField Alpha1_;
+
+        //- Mass-fraction of phase 2
         volScalarField Alpha2_;
 
 

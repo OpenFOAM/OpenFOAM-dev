@@ -54,8 +54,6 @@ else
     #include "alphaEqn.H"
 }
 
-// rho == alpha1*rho1 + alpha2*rho2;
-
 const surfaceScalarField& alphaPhi1 = talphaPhi1();
 surfaceScalarField alphaPhi2("alphaPhi2", phi - alphaPhi1);
 
