@@ -24,9 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "twoPhaseMixtureThermo.H"
-#include "gradientEnergyFvPatchScalarField.H"
-#include "mixedEnergyFvPatchScalarField.H"
-#include "collatedFileOperation.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -367,7 +364,7 @@ Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::Cv
 
 Foam::tmp<Foam::volScalarField> Foam::twoPhaseMixtureThermo::gamma() const
 {
-    return alpha1()*thermo1_->gamma() + alpha2()*thermo2_->gamma();
+    return Cp()/Cv();
 }
 
 
@@ -377,9 +374,7 @@ Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::gamma
     const label patchi
 ) const
 {
-    return
-        alpha1().boundaryField()[patchi]*thermo1_->gamma(T, patchi)
-      + alpha2().boundaryField()[patchi]*thermo2_->gamma(T, patchi);
+    return Cp(T, patchi)/Cv(T, patchi);
 }
 
 
@@ -403,9 +398,7 @@ Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::Cpv
 
 Foam::tmp<Foam::volScalarField> Foam::twoPhaseMixtureThermo::CpByCpv() const
 {
-    return
-        Alpha1_*thermo1_->CpByCpv()
-      + Alpha2_*thermo2_->CpByCpv();
+    return Alpha1_*thermo1_->CpByCpv() + Alpha2_*thermo2_->CpByCpv();
 }
 
 
@@ -474,9 +467,7 @@ Foam::tmp<Foam::scalarField> Foam::twoPhaseMixtureThermo::kappa
 
 Foam::tmp<Foam::volScalarField> Foam::twoPhaseMixtureThermo::alphahe() const
 {
-    return
-        alpha1()*thermo1_->alphahe()
-      + alpha2()*thermo2_->alphahe();
+    return alpha1()*thermo1_->alphahe() + alpha2()*thermo2_->alphahe();
 }
 
 
