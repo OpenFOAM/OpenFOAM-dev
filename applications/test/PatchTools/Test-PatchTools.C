@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,11 +29,9 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "PatchTools.H"
 #include "argList.H"
 #include "fvMesh.H"
-#include "volFields.H"
-#include "Time.H"
+#include "PatchTools.H"
 #include "OBJstream.H"
 
 using namespace Foam;

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Application
-    Test-nonUniformTable
+    Test-nonUniformTable1D
 
 Description
     Tests the lookup of values of a linear function from and non-uniform
@@ -30,7 +30,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "nonUniformTableThermophysicalFunction.H"
+#include "nonUniformTable1DThermophysicalFunction.H"
 #include "IFstream.H"
 
 using namespace Foam;
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 {
     dictionary dict(IFstream("thermoDict")());
 
-    thermophysicalFunctions::nonUniformTable table(dict);
+    thermophysicalFunctions::nonUniformTable1D table(dict);
 
     const label n = 1000;
     const scalar T0 = table.values().first().first();
