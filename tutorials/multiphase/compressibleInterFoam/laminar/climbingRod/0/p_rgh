@@ -30,6 +30,7 @@ boundaryField
     {
         type            totalPressure;
         p0              $internalField;
+        rho             thermo:rho;
     }
 
     #includeEtc "caseDicts/setConstraintTypes"

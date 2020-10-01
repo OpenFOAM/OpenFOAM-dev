@@ -34,26 +34,7 @@ Info<< "Constructing twoPhaseMixtureThermo\n" << endl;
 twoPhaseMixtureThermo mixture(U, phi);
 
 volScalarField& alpha1(mixture.alpha1());
-volScalarField& alpha2(mixture.alpha2());
-
-Info<< "Reading thermophysical properties\n" << endl;
-
-const volScalarField& rho1 = mixture.thermo1().rho();
-const volScalarField& rho2 = mixture.thermo2().rho();
-
-volScalarField rho
-(
-    IOobject
-    (
-        "rho",
-        runTime.timeName(),
-        mesh,
-        IOobject::READ_IF_PRESENT,
-        IOobject::AUTO_WRITE
-    ),
-    alpha1*rho1 + alpha2*rho2
-);
-
+const volScalarField& rho = mixture.rho();
 
 dimensionedScalar pMin
 (

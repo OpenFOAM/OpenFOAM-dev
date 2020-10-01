@@ -34,7 +34,7 @@ divSchemes
     div(rhoPhi,K)  Gauss linear;
     div((phi+meshPhi),p)  Gauss linear;
 
-    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
+    div(((thermo:rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes
