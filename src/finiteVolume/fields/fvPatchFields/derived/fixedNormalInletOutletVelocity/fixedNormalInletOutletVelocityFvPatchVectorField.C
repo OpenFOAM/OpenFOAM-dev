@@ -104,7 +104,7 @@ fixedNormalInletOutletVelocityFvPatchVectorField
     directionMixedFvPatchVectorField(pivpvf, iF),
     phiName_(pivpvf.phiName_),
     fixTangentialInflow_(pivpvf.fixTangentialInflow_),
-    normalVelocity_(pivpvf.normalVelocity().clone())
+    normalVelocity_(pivpvf.normalVelocity().clone(iF))
 {}
 
 
