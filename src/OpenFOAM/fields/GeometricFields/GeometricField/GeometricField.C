@@ -449,7 +449,7 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::GeometricField
     timeIndex_(gf.timeIndex()),
     field0Ptr_(nullptr),
     fieldPrevIterPtr_(nullptr),
-    boundaryField_(move(gf.boundaryField_))
+    boundaryField_(*this, gf.boundaryField_)
 {
     if (debug)
     {

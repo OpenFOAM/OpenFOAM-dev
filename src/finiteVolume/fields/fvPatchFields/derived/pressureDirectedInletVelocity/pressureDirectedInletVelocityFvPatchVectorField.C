@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,19 +74,6 @@ pressureDirectedInletVelocityFvPatchVectorField
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     inletDir_("inletDirection", dict, p.size())
-{}
-
-
-Foam::pressureDirectedInletVelocityFvPatchVectorField::
-pressureDirectedInletVelocityFvPatchVectorField
-(
-    const pressureDirectedInletVelocityFvPatchVectorField& pivpvf
-)
-:
-    fixedValueFvPatchVectorField(pivpvf),
-    phiName_(pivpvf.phiName_),
-    rhoName_(pivpvf.rhoName_),
-    inletDir_(pivpvf.inletDir_)
 {}
 
 

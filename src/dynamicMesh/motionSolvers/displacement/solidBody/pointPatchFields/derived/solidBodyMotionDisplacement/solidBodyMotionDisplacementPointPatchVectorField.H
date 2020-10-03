@@ -92,23 +92,11 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         solidBodyMotionDisplacementPointPatchVectorField
         (
             const solidBodyMotionDisplacementPointPatchVectorField&
-        );
-
-        //- Construct and return a clone
-        virtual autoPtr<pointPatchField<vector>> clone() const
-        {
-            return autoPtr<pointPatchField<vector>>
-            (
-                new solidBodyMotionDisplacementPointPatchVectorField
-                (
-                    *this
-                )
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         solidBodyMotionDisplacementPointPatchVectorField

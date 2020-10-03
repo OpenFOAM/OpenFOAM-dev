@@ -63,15 +63,6 @@ public:
         //- Inherit parent constructors
         using cyclicAMIFvsPatchField<Type>::cyclicAMIFvsPatchField;
 
-        //- Construct and return a clone
-        virtual tmp<fvsPatchField<Type>> clone() const
-        {
-            return tmp<fvsPatchField<Type>>
-            (
-                new cyclicRepeatAMIFvsPatchField<Type>(*this)
-            );
-        }
-
         //- Construct and return a clone setting internal field reference
         virtual tmp<fvsPatchField<Type>> clone
         (

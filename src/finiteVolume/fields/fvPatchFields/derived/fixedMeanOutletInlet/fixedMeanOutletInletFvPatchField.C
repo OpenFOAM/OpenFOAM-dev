@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,17 +75,6 @@ Foam::fixedMeanOutletInletFvPatchField<Type>::fixedMeanOutletInletFvPatchField
 )
 :
     outletInletFvPatchField<Type>(ptf, p, iF, mapper),
-    meanValue_(ptf.meanValue_, false)
-{}
-
-
-template<class Type>
-Foam::fixedMeanOutletInletFvPatchField<Type>::fixedMeanOutletInletFvPatchField
-(
-    const fixedMeanOutletInletFvPatchField<Type>& ptf
-)
-:
-    outletInletFvPatchField<Type>(ptf),
     meanValue_(ptf.meanValue_, false)
 {}
 

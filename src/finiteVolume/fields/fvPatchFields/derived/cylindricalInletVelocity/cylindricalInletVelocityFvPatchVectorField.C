@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,21 +80,6 @@ cylindricalInletVelocityFvPatchVectorField
     axialVelocity_(Function1<scalar>::New("axialVelocity", dict)),
     radialVelocity_(Function1<scalar>::New("radialVelocity", dict)),
     rpm_(Function1<scalar>::New("rpm", dict))
-{}
-
-
-Foam::cylindricalInletVelocityFvPatchVectorField::
-cylindricalInletVelocityFvPatchVectorField
-(
-    const cylindricalInletVelocityFvPatchVectorField& ptf
-)
-:
-    fixedValueFvPatchField<vector>(ptf),
-    origin_(ptf.origin_),
-    axis_(ptf.axis_),
-    axialVelocity_(ptf.axialVelocity_, false),
-    radialVelocity_(ptf.radialVelocity_, false),
-    rpm_(ptf.rpm_, false)
 {}
 
 

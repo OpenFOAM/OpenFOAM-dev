@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,8 +31,8 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::outletPhaseMeanVelocityFvPatchVectorField
-::outletPhaseMeanVelocityFvPatchVectorField
+Foam::outletPhaseMeanVelocityFvPatchVectorField::
+outletPhaseMeanVelocityFvPatchVectorField
 (
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF
@@ -48,8 +48,8 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 }
 
 
-Foam::outletPhaseMeanVelocityFvPatchVectorField
-::outletPhaseMeanVelocityFvPatchVectorField
+Foam::outletPhaseMeanVelocityFvPatchVectorField::
+outletPhaseMeanVelocityFvPatchVectorField
 (
     const outletPhaseMeanVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
@@ -63,8 +63,8 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 {}
 
 
-Foam::outletPhaseMeanVelocityFvPatchVectorField
-::outletPhaseMeanVelocityFvPatchVectorField
+Foam::outletPhaseMeanVelocityFvPatchVectorField::
+outletPhaseMeanVelocityFvPatchVectorField
 (
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
@@ -93,20 +93,8 @@ Foam::outletPhaseMeanVelocityFvPatchVectorField
 }
 
 
-Foam::outletPhaseMeanVelocityFvPatchVectorField
-::outletPhaseMeanVelocityFvPatchVectorField
-(
-    const outletPhaseMeanVelocityFvPatchVectorField& ptf
-)
-:
-    mixedFvPatchField<vector>(ptf),
-    UnMean_(ptf.UnMean_, false),
-    alphaName_(ptf.alphaName_)
-{}
-
-
-Foam::outletPhaseMeanVelocityFvPatchVectorField
-::outletPhaseMeanVelocityFvPatchVectorField
+Foam::outletPhaseMeanVelocityFvPatchVectorField::
+outletPhaseMeanVelocityFvPatchVectorField
 (
     const outletPhaseMeanVelocityFvPatchVectorField& ptf,
     const DimensionedField<vector, volMesh>& iF

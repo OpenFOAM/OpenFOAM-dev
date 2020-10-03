@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,17 +64,6 @@ Foam::mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
 :
     fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
     mappedPatchFieldBase<Type>(this->mapper(p, iF), *this, ptf)
-{}
-
-
-template<class Type>
-Foam::mappedFixedValueFvPatchField<Type>::mappedFixedValueFvPatchField
-(
-    const mappedFixedValueFvPatchField<Type>& ptf
-)
-:
-    fixedValueFvPatchField<Type>(ptf),
-    mappedPatchFieldBase<Type>(ptf)
 {}
 
 

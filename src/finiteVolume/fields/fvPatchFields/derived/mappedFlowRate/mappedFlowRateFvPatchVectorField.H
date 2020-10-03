@@ -122,20 +122,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         mappedFlowRateFvPatchVectorField
         (
             const mappedFlowRateFvPatchVectorField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchVectorField> clone() const
-        {
-            return tmp<fvPatchVectorField>
-            (
-                new mappedFlowRateFvPatchVectorField(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         mappedFlowRateFvPatchVectorField

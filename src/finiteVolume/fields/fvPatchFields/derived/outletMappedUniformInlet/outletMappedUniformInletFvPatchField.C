@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,20 +72,6 @@ outletMappedUniformInletFvPatchField
     outletPatchName_(ptf.outletPatchName_),
     phiName_(ptf.phiName_)
 {}
-
-
-template<class Type>
-Foam::outletMappedUniformInletFvPatchField<Type>::
-outletMappedUniformInletFvPatchField
-(
-    const outletMappedUniformInletFvPatchField<Type>& ptf
-)
-:
-    fixedValueFvPatchField<Type>(ptf),
-    outletPatchName_(ptf.outletPatchName_),
-    phiName_(ptf.phiName_)
-{}
-
 
 
 template<class Type>

@@ -81,19 +81,6 @@ fixedMultiPhaseHeatFluxFvPatchScalarField
 Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::
 fixedMultiPhaseHeatFluxFvPatchScalarField
 (
-    const fixedMultiPhaseHeatFluxFvPatchScalarField& psf
-)
-:
-    fixedValueFvPatchScalarField(psf),
-    q_(psf.q_),
-    relax_(psf.relax_),
-    Tmin_(psf.Tmin_)
-{}
-
-
-Foam::fixedMultiPhaseHeatFluxFvPatchScalarField::
-fixedMultiPhaseHeatFluxFvPatchScalarField
-(
     const fixedMultiPhaseHeatFluxFvPatchScalarField& psf,
     const DimensionedField<scalar, volMesh>& iF
 )

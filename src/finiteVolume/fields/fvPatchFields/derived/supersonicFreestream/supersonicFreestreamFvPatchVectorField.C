@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -116,23 +116,6 @@ supersonicFreestreamFvPatchVectorField
     pInf_(ptf.pInf_),
     TInf_(ptf.TInf_),
     gamma_(ptf.gamma_)
-{}
-
-
-Foam::supersonicFreestreamFvPatchVectorField::
-supersonicFreestreamFvPatchVectorField
-(
-    const supersonicFreestreamFvPatchVectorField& sfspvf
-)
-:
-    mixedFvPatchVectorField(sfspvf),
-    TName_(sfspvf.TName_),
-    pName_(sfspvf.pName_),
-    psiName_(sfspvf.psiName_),
-    UInf_(sfspvf.UInf_),
-    pInf_(sfspvf.pInf_),
-    TInf_(sfspvf.TInf_),
-    gamma_(sfspvf.gamma_)
 {}
 
 

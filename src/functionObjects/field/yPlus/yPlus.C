@@ -79,18 +79,19 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::yPlus::calcYPlus
 
     volScalarField::Boundary& yPlusBf = tyPlus.ref().boundaryFieldRef();
 
-    volScalarField::Boundary d = nearWallDist(mesh_).y();
+    const nearWallDist nwd(mesh_);
+    const volScalarField::Boundary& d = nwd.y();
 
-    const volScalarField::Boundary nutBf =
-        turbModel.nut()().boundaryField();
+    const tmp<volScalarField> tnut = turbModel.nut();
+    const volScalarField::Boundary& nutBf = tnut().boundaryField();
 
-    const volScalarField::Boundary nuEffBf =
-        turbModel.nuEff()().boundaryField();
+    const tmp<volScalarField> tnuEff = turbModel.nuEff();
+    const volScalarField::Boundary& nuEffBf = tnuEff().boundaryField();
 
-    const volScalarField::Boundary nuBf =
-        turbModel.nu()().boundaryField();
+    const tmp<volScalarField> tnu = turbModel.nu();
+    const volScalarField::Boundary& nuBf = tnu().boundaryField();
 
-    const fvPatchList& patches = mesh_.boundary();
+        const fvPatchList& patches = mesh_.boundary();
 
     forAll(patches, patchi)
     {

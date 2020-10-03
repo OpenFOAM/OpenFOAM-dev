@@ -72,17 +72,6 @@ entrainmentPressureFvPatchScalarField
 Foam::entrainmentPressureFvPatchScalarField::
 entrainmentPressureFvPatchScalarField
 (
-    const entrainmentPressureFvPatchScalarField& tppsf
-)
-:
-    dynamicPressureFvPatchScalarField(tppsf),
-    phiName_(tppsf.phiName_)
-{}
-
-
-Foam::entrainmentPressureFvPatchScalarField::
-entrainmentPressureFvPatchScalarField
-(
     const entrainmentPressureFvPatchScalarField& tppsf,
     const DimensionedField<scalar, volMesh>& iF
 )

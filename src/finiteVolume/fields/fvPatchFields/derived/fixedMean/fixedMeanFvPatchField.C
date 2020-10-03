@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,17 +63,6 @@ Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
-    meanValue_(ptf.meanValue_, false)
-{}
-
-
-template<class Type>
-Foam::fixedMeanFvPatchField<Type>::fixedMeanFvPatchField
-(
-    const fixedMeanFvPatchField<Type>& ptf
-)
-:
-    fixedValueFvPatchField<Type>(ptf),
     meanValue_(ptf.meanValue_, false)
 {}
 

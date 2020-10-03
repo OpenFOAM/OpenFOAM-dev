@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,16 +76,6 @@ Foam::freestreamFvPatchField<Type>::freestreamFvPatchField
 )
 :
     inletOutletFvPatchField<Type>(ptf, p, iF, mapper)
-{}
-
-
-template<class Type>
-Foam::freestreamFvPatchField<Type>::freestreamFvPatchField
-(
-    const freestreamFvPatchField<Type>& ptf
-)
-:
-    inletOutletFvPatchField<Type>(ptf)
 {}
 
 

@@ -53,6 +53,7 @@ turbulentMixingLengthFrequencyInletFvPatchScalarField
     this->valueFraction() = 0.0;
 }
 
+
 turbulentMixingLengthFrequencyInletFvPatchScalarField::
 turbulentMixingLengthFrequencyInletFvPatchScalarField
 (
@@ -66,6 +67,7 @@ turbulentMixingLengthFrequencyInletFvPatchScalarField
     mixingLength_(ptf.mixingLength_),
     kName_(ptf.kName_)
 {}
+
 
 turbulentMixingLengthFrequencyInletFvPatchScalarField::
 turbulentMixingLengthFrequencyInletFvPatchScalarField
@@ -88,16 +90,6 @@ turbulentMixingLengthFrequencyInletFvPatchScalarField
     this->valueFraction() = 0.0;
 }
 
-turbulentMixingLengthFrequencyInletFvPatchScalarField::
-turbulentMixingLengthFrequencyInletFvPatchScalarField
-(
-    const turbulentMixingLengthFrequencyInletFvPatchScalarField& ptf
-)
-:
-    inletOutletFvPatchScalarField(ptf),
-    mixingLength_(ptf.mixingLength_),
-    kName_(ptf.kName_)
-{}
 
 turbulentMixingLengthFrequencyInletFvPatchScalarField::
 turbulentMixingLengthFrequencyInletFvPatchScalarField

@@ -144,11 +144,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         nutWallFunctionFvPatchScalarField
         (
             const nutWallFunctionFvPatchScalarField&
-        );
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         nutWallFunctionFvPatchScalarField

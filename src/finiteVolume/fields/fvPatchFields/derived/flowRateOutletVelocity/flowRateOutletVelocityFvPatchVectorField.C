@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,20 +102,6 @@ flowRateOutletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
-    flowRate_(ptf.flowRate_, false),
-    volumetric_(ptf.volumetric_),
-    rhoName_(ptf.rhoName_),
-    rhoOutlet_(ptf.rhoOutlet_)
-{}
-
-
-Foam::flowRateOutletVelocityFvPatchVectorField::
-flowRateOutletVelocityFvPatchVectorField
-(
-    const flowRateOutletVelocityFvPatchVectorField& ptf
-)
-:
-    fixedValueFvPatchField<vector>(ptf),
     flowRate_(ptf.flowRate_, false),
     volumetric_(ptf.volumetric_),
     rhoName_(ptf.rhoName_),

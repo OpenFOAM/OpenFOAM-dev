@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,20 +98,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         mixedEnergyCalculatedTemperatureFvPatchScalarField
         (
             const mixedEnergyCalculatedTemperatureFvPatchScalarField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchScalarField> clone() const
-        {
-            return tmp<fvPatchScalarField>
-            (
-                new mixedEnergyCalculatedTemperatureFvPatchScalarField(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         mixedEnergyCalculatedTemperatureFvPatchScalarField

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,18 +70,6 @@ interstitialInletVelocityFvPatchVectorField
     fixedValueFvPatchVectorField(p, iF, dict),
     inletVelocity_("inletVelocity", dict, p.size()),
     alphaName_(dict.lookupOrDefault<word>("alpha", "alpha"))
-{}
-
-
-Foam::interstitialInletVelocityFvPatchVectorField::
-interstitialInletVelocityFvPatchVectorField
-(
-    const interstitialInletVelocityFvPatchVectorField& ptf
-)
-:
-    fixedValueFvPatchVectorField(ptf),
-    inletVelocity_(ptf.inletVelocity_),
-    alphaName_(ptf.alphaName_)
 {}
 
 

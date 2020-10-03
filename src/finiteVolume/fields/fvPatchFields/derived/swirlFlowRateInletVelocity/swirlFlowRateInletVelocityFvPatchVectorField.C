@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,22 +95,6 @@ swirlFlowRateInletVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchField<vector>(ptf, p, iF, mapper),
-    phiName_(ptf.phiName_),
-    rhoName_(ptf.rhoName_),
-    origin_(ptf.origin_),
-    axis_(ptf.axis_),
-    flowRate_(ptf.flowRate_, false),
-    rpm_(ptf.rpm_, false)
-{}
-
-
-Foam::swirlFlowRateInletVelocityFvPatchVectorField::
-swirlFlowRateInletVelocityFvPatchVectorField
-(
-    const swirlFlowRateInletVelocityFvPatchVectorField& ptf
-)
-:
-    fixedValueFvPatchField<vector>(ptf),
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
     origin_(ptf.origin_),

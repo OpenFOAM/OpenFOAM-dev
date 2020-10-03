@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,17 +110,6 @@ Foam::processorCyclicFvPatchField<Type>::processorCyclicFvPatchField
             << exit(FatalIOError);
     }
 }
-
-
-template<class Type>
-Foam::processorCyclicFvPatchField<Type>::processorCyclicFvPatchField
-(
-    const processorCyclicFvPatchField<Type>& ptf
-)
-:
-    processorFvPatchField<Type>(ptf),
-    procPatch_(refCast<const processorCyclicFvPatch>(ptf.patch()))
-{}
 
 
 template<class Type>

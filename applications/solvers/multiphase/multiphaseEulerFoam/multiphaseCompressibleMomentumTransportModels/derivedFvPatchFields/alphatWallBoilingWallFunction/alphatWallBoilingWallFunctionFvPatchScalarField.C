@@ -223,25 +223,6 @@ alphatWallBoilingWallFunctionFvPatchScalarField
 alphatWallBoilingWallFunctionFvPatchScalarField::
 alphatWallBoilingWallFunctionFvPatchScalarField
 (
-    const alphatWallBoilingWallFunctionFvPatchScalarField& psf
-)
-:
-    alphatPhaseChangeWallFunctionFvPatchScalarField(psf),
-    phaseType_(psf.phaseType_),
-    AbyV_(psf.AbyV_),
-    alphatConv_(psf.alphatConv_),
-    dDep_(psf.dDep_),
-    qq_(psf.qq_),
-    partitioningModel_(psf.partitioningModel_, false),
-    nucleationSiteModel_(psf.nucleationSiteModel_, false),
-    departureDiamModel_(psf.departureDiamModel_, false),
-    departureFreqModel_(psf.departureFreqModel_, false)
-{}
-
-
-alphatWallBoilingWallFunctionFvPatchScalarField::
-alphatWallBoilingWallFunctionFvPatchScalarField
-(
     const alphatWallBoilingWallFunctionFvPatchScalarField& psf,
     const DimensionedField<scalar, volMesh>& iF
 )

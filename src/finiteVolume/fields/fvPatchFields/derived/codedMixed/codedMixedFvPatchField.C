@@ -137,18 +137,6 @@ Foam::codedMixedFvPatchField<Type>::codedMixedFvPatchField
 template<class Type>
 Foam::codedMixedFvPatchField<Type>::codedMixedFvPatchField
 (
-    const codedMixedFvPatchField<Type>& ptf
-)
-:
-    mixedFvPatchField<Type>(ptf),
-    CodedBase<codedMixedFvPatchFieldBase>(ptf),
-    redirectPatchFieldPtr_()
-{}
-
-
-template<class Type>
-Foam::codedMixedFvPatchField<Type>::codedMixedFvPatchField
-(
     const codedMixedFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
 )

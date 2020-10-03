@@ -187,20 +187,6 @@ Foam::fanPressureJumpFvPatchScalarField::fanPressureJumpFvPatchScalarField
 
 Foam::fanPressureJumpFvPatchScalarField::fanPressureJumpFvPatchScalarField
 (
-    const fanPressureJumpFvPatchScalarField& ptf
-)
-:
-    fixedJumpFvPatchScalarField(ptf),
-    fanCurve_(ptf.fanCurve_, false),
-    jumpTable_(ptf.jumpTable_, false),
-    reverse_(ptf.reverse_),
-    phiName_(ptf.phiName_),
-    rhoName_(ptf.rhoName_)
-{}
-
-
-Foam::fanPressureJumpFvPatchScalarField::fanPressureJumpFvPatchScalarField
-(
     const fanPressureJumpFvPatchScalarField& ptf,
     const DimensionedField<scalar, volMesh>& iF
 )

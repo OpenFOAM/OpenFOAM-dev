@@ -73,17 +73,6 @@ rotatingTotalPressureFvPatchScalarField
 Foam::rotatingTotalPressureFvPatchScalarField::
 rotatingTotalPressureFvPatchScalarField
 (
-    const rotatingTotalPressureFvPatchScalarField& rtppsf
-)
-:
-    totalPressureFvPatchScalarField(rtppsf),
-    omega_(rtppsf.omega_, false)
-{}
-
-
-Foam::rotatingTotalPressureFvPatchScalarField::
-rotatingTotalPressureFvPatchScalarField
-(
     const rotatingTotalPressureFvPatchScalarField& rtppsf,
     const DimensionedField<scalar, volMesh>& iF
 )

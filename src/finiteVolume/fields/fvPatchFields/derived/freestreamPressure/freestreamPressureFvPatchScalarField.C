@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,18 +86,6 @@ freestreamPressureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(psf, p, iF, mapper),
-    UName_(psf.UName_),
-    supersonic_(psf.supersonic_)
-{}
-
-
-Foam::freestreamPressureFvPatchScalarField::
-freestreamPressureFvPatchScalarField
-(
-    const freestreamPressureFvPatchScalarField& psf
-)
-:
-    mixedFvPatchScalarField(psf),
     UName_(psf.UName_),
     supersonic_(psf.supersonic_)
 {}

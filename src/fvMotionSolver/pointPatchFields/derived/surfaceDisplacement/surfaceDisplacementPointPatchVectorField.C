@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -353,22 +353,6 @@ surfaceDisplacementPointPatchVectorField
 )
 :
     fixedValuePointPatchVectorField(ppf, p, iF, mapper),
-    velocity_(ppf.velocity_),
-    surfacesDict_(ppf.surfacesDict_),
-    projectMode_(ppf.projectMode_),
-    projectDir_(ppf.projectDir_),
-    wedgePlane_(ppf.wedgePlane_),
-    frozenPointsZone_(ppf.frozenPointsZone_)
-{}
-
-
-surfaceDisplacementPointPatchVectorField::
-surfaceDisplacementPointPatchVectorField
-(
-    const surfaceDisplacementPointPatchVectorField& ppf
-)
-:
-    fixedValuePointPatchVectorField(ppf),
     velocity_(ppf.velocity_),
     surfacesDict_(ppf.surfacesDict_),
     projectMode_(ppf.projectMode_),

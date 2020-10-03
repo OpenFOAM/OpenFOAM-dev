@@ -85,9 +85,6 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type>> clone() const = 0;
-
         //- Construct as copy setting internal field reference
         coupledPointPatchField
         (

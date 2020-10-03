@@ -145,20 +145,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         fixedNormalInletOutletVelocityFvPatchVectorField
         (
             const fixedNormalInletOutletVelocityFvPatchVectorField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchVectorField> clone() const
-        {
-            return tmp<fvPatchVectorField>
-            (
-                new fixedNormalInletOutletVelocityFvPatchVectorField(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         fixedNormalInletOutletVelocityFvPatchVectorField

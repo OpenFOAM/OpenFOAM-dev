@@ -96,24 +96,11 @@ public:
             slipFvPatchField<Type>(ptf, p, iF, mapper)
         {}
 
-
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         surfaceSlipDisplacementFvPatchField
         (
             const surfaceSlipDisplacementFvPatchField<Type>& ptf
-        )
-        :
-            slipFvPatchField<Type>(ptf)
-        {}
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const
-        {
-            return tmp<fvPatchField<Type>>
-            (
-                new surfaceSlipDisplacementFvPatchField<Type>(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         surfaceSlipDisplacementFvPatchField

@@ -289,21 +289,6 @@ epsilonWallFunctionFvPatchScalarField
 Foam::epsilonWallFunctionFvPatchScalarField::
 epsilonWallFunctionFvPatchScalarField
 (
-    const epsilonWallFunctionFvPatchScalarField& ewfpsf
-)
-:
-    fixedValueFvPatchField<scalar>(ewfpsf),
-    G_(),
-    epsilon_(),
-    initialised_(false),
-    master_(-1),
-    cornerWeights_()
-{}
-
-
-Foam::epsilonWallFunctionFvPatchScalarField::
-epsilonWallFunctionFvPatchScalarField
-(
     const epsilonWallFunctionFvPatchScalarField& ewfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

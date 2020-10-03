@@ -86,17 +86,6 @@ Foam::fixedJumpAMIFvPatchField<Type>::fixedJumpAMIFvPatchField
 template<class Type>
 Foam::fixedJumpAMIFvPatchField<Type>::fixedJumpAMIFvPatchField
 (
-    const fixedJumpAMIFvPatchField<Type>& ptf
-)
-:
-    jumpCyclicAMIFvPatchField<Type>(ptf),
-    jump_(ptf.jump_)
-{}
-
-
-template<class Type>
-Foam::fixedJumpAMIFvPatchField<Type>::fixedJumpAMIFvPatchField
-(
     const fixedJumpAMIFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
 )

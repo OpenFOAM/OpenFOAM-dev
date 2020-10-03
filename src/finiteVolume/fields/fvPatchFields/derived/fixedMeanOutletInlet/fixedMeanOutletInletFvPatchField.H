@@ -120,20 +120,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         fixedMeanOutletInletFvPatchField
         (
             const fixedMeanOutletInletFvPatchField<Type>&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const
-        {
-            return tmp<fvPatchField<Type>>
-            (
-                new fixedMeanOutletInletFvPatchField<Type>(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         fixedMeanOutletInletFvPatchField

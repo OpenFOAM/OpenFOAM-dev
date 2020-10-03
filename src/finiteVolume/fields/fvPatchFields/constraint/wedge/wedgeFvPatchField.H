@@ -98,20 +98,8 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
-        wedgeFvPatchField
-        (
-            const wedgeFvPatchField<Type>&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const
-        {
-            return tmp<fvPatchField<Type>>
-            (
-                new wedgeFvPatchField<Type>(*this)
-            );
-        }
+        //- Disallow copy without setting internal field reference
+        wedgeFvPatchField(const wedgeFvPatchField<Type>&) = delete;
 
         //- Copy constructor setting internal field reference
         wedgeFvPatchField

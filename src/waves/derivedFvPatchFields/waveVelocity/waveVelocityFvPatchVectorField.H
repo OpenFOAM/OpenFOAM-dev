@@ -156,20 +156,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         waveVelocityFvPatchVectorField
         (
             const waveVelocityFvPatchVectorField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchVectorField> clone() const
-        {
-            return tmp<fvPatchVectorField>
-            (
-                new waveVelocityFvPatchVectorField(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         waveVelocityFvPatchVectorField

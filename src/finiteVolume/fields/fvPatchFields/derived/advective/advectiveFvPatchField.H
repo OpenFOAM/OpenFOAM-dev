@@ -143,20 +143,8 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
-        advectiveFvPatchField
-        (
-            const advectiveFvPatchField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const
-        {
-            return tmp<fvPatchField<Type>>
-            (
-                new advectiveFvPatchField<Type>(*this)
-            );
-        }
+        //- Disallow copy without setting internal field reference
+        advectiveFvPatchField(const advectiveFvPatchField&) = delete;
 
         //- Copy constructor setting internal field reference
         advectiveFvPatchField

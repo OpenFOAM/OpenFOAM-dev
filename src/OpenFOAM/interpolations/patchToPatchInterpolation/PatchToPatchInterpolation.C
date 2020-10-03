@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -140,8 +140,8 @@ PatchToPatchInterpolation<FromPatch, ToPatch>::~PatchToPatchInterpolation()
 
 template<class FromPatch, class ToPatch>
 const scalarField&
-PatchToPatchInterpolation<FromPatch, ToPatch>
-::pointDistanceToIntersection() const
+PatchToPatchInterpolation<FromPatch, ToPatch>::
+pointDistanceToIntersection() const
 {
     if (!pointDistancePtr_)
     {
@@ -154,8 +154,8 @@ PatchToPatchInterpolation<FromPatch, ToPatch>
 
 template<class FromPatch, class ToPatch>
 const scalarField&
-PatchToPatchInterpolation<FromPatch, ToPatch>
-::faceDistanceToIntersection() const
+PatchToPatchInterpolation<FromPatch, ToPatch>::
+faceDistanceToIntersection() const
 {
     if (!faceDistancePtr_)
     {
@@ -181,7 +181,7 @@ bool PatchToPatchInterpolation<FromPatch, ToPatch>::movePoints()
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    #include "CalcPatchToPatchWeights.C"
-    #include "PatchToPatchInterpolate.C"
+#include "CalcPatchToPatchWeights.C"
+#include "PatchToPatchInterpolate.C"
 
 // ************************************************************************* //

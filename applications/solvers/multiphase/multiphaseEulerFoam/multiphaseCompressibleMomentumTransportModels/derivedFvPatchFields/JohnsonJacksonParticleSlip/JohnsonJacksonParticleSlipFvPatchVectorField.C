@@ -104,17 +104,6 @@ JohnsonJacksonParticleSlipFvPatchVectorField
 Foam::JohnsonJacksonParticleSlipFvPatchVectorField::
 JohnsonJacksonParticleSlipFvPatchVectorField
 (
-    const JohnsonJacksonParticleSlipFvPatchVectorField& ptf
-)
-:
-    partialSlipFvPatchVectorField(ptf),
-    specularityCoefficient_(ptf.specularityCoefficient_)
-{}
-
-
-Foam::JohnsonJacksonParticleSlipFvPatchVectorField::
-JohnsonJacksonParticleSlipFvPatchVectorField
-(
     const JohnsonJacksonParticleSlipFvPatchVectorField& ptf,
     const DimensionedField<vector, volMesh>& iF
 )

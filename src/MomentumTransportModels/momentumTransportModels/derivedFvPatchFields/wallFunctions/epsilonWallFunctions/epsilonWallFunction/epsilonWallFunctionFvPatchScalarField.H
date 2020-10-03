@@ -179,20 +179,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         epsilonWallFunctionFvPatchScalarField
         (
             const epsilonWallFunctionFvPatchScalarField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchScalarField> clone() const
-        {
-            return tmp<fvPatchScalarField>
-            (
-                new epsilonWallFunctionFvPatchScalarField(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         epsilonWallFunctionFvPatchScalarField

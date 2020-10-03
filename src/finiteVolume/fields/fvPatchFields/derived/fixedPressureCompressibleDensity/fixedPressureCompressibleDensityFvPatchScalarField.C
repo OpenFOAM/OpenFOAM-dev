@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,17 +67,6 @@ fixedPressureCompressibleDensityFvPatchScalarField
 :
     fixedValueFvPatchField<scalar>(p, iF, dict),
     pName_(dict.lookupOrDefault<word>("p", "p"))
-{}
-
-
-Foam::fixedPressureCompressibleDensityFvPatchScalarField::
-fixedPressureCompressibleDensityFvPatchScalarField
-(
-    const fixedPressureCompressibleDensityFvPatchScalarField& ptf
-)
-:
-    fixedValueFvPatchField<scalar>(ptf),
-    pName_(ptf.pName_)
 {}
 
 

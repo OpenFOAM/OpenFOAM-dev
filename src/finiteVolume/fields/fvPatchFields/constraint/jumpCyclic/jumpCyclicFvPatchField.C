@@ -69,16 +69,6 @@ Foam::jumpCyclicFvPatchField<Type>::jumpCyclicFvPatchField
 template<class Type>
 Foam::jumpCyclicFvPatchField<Type>::jumpCyclicFvPatchField
 (
-    const jumpCyclicFvPatchField<Type>& ptf
-)
-:
-    cyclicFvPatchField<Type>(ptf)
-{}
-
-
-template<class Type>
-Foam::jumpCyclicFvPatchField<Type>::jumpCyclicFvPatchField
-(
     const jumpCyclicFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
 )

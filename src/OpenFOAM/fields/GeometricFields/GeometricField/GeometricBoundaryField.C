@@ -359,42 +359,6 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 Foam::GeometricField<Type, PatchField, GeoMesh>::Boundary::
 Boundary
 (
-    const typename GeometricField<Type, PatchField, GeoMesh>::
-    Boundary& btf
-)
-:
-    FieldField<PatchField, Type>(btf),
-    bmesh_(btf.bmesh_)
-{
-    if (debug)
-    {
-        InfoInFunction << endl;
-    }
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-Foam::GeometricField<Type, PatchField, GeoMesh>::Boundary::
-Boundary
-(
-    typename GeometricField<Type, PatchField, GeoMesh>::
-    Boundary&& btf
-)
-:
-    FieldField<PatchField, Type>(move(btf)),
-    bmesh_(btf.bmesh_)
-{
-    if (debug)
-    {
-        InfoInFunction << endl;
-    }
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-Foam::GeometricField<Type, PatchField, GeoMesh>::Boundary::
-Boundary
-(
     const BoundaryMesh& bmesh,
     const DimensionedField<Type, GeoMesh>& field,
     const dictionary& dict

@@ -96,18 +96,6 @@ Foam::cyclicFvPatchField<Type>::cyclicFvPatchField
 template<class Type>
 Foam::cyclicFvPatchField<Type>::cyclicFvPatchField
 (
-    const cyclicFvPatchField<Type>& ptf
-)
-:
-    coupledFvPatchField<Type>(ptf),
-    cyclicLduInterfaceField(),
-    cyclicPatch_(ptf.cyclicPatch_)
-{}
-
-
-template<class Type>
-Foam::cyclicFvPatchField<Type>::cyclicFvPatchField
-(
     const cyclicFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
 )

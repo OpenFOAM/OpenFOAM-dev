@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,20 +125,8 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
-        uniformJumpFvPatchField
-        (
-            const uniformJumpFvPatchField<Type>&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const
-        {
-            return tmp<fvPatchField<Type>>
-            (
-                new uniformJumpFvPatchField<Type>(*this)
-            );
-        }
+        //- Disallow copy without setting internal field reference
+        uniformJumpFvPatchField(const uniformJumpFvPatchField<Type>&) = delete;
 
         //- Copy constructor setting internal field reference
         uniformJumpFvPatchField

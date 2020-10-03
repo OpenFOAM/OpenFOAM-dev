@@ -85,20 +85,11 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         ${typeName}FixedValuePointPatch${FieldType}
         (
             const ${typeName}FixedValuePointPatch${FieldType}&
-        );
-
-        //- Construct and return a clone
-        virtual autoPtr<pointPatchField<${TemplateType}>> clone() const
-        {
-            return autoPtr<pointPatchField<${TemplateType}>>
-            (
-                new ${typeName}FixedValuePointPatch${FieldType}(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         ${typeName}FixedValuePointPatch${FieldType}

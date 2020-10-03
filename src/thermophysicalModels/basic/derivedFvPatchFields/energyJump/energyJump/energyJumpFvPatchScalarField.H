@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,20 +88,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         energyJumpFvPatchScalarField
         (
             const energyJumpFvPatchScalarField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<scalar>> clone() const
-        {
-            return tmp<fvPatchField<scalar>>
-            (
-                new energyJumpFvPatchScalarField(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         energyJumpFvPatchScalarField

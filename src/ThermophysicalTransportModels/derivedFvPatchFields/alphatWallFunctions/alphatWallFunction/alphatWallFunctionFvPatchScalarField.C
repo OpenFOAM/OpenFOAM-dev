@@ -74,16 +74,6 @@ alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 
 alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 (
-    const alphatWallFunctionFvPatchScalarField& awfpsf
-)
-:
-    fixedValueFvPatchScalarField(awfpsf),
-    Prt_(awfpsf.Prt_)
-{}
-
-
-alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
-(
     const alphatWallFunctionFvPatchScalarField& awfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

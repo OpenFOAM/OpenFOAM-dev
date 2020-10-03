@@ -80,15 +80,6 @@ Foam::freestreamVelocityFvPatchVectorField::freestreamVelocityFvPatchVectorField
 
 Foam::freestreamVelocityFvPatchVectorField::freestreamVelocityFvPatchVectorField
 (
-    const freestreamVelocityFvPatchVectorField& wbppsf
-)
-:
-    mixedFvPatchVectorField(wbppsf)
-{}
-
-
-Foam::freestreamVelocityFvPatchVectorField::freestreamVelocityFvPatchVectorField
-(
     const freestreamVelocityFvPatchVectorField& wbppsf,
     const DimensionedField<vector, volMesh>& iF
 )

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,16 +76,6 @@ Foam::pressureFvPatchScalarField::pressureFvPatchScalarField
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper),
     p_(mapper(ptf.p_))
-{}
-
-
-Foam::pressureFvPatchScalarField::pressureFvPatchScalarField
-(
-    const pressureFvPatchScalarField& ptf
-)
-:
-    fixedValueFvPatchScalarField(ptf),
-    p_(ptf.p_)
 {}
 
 

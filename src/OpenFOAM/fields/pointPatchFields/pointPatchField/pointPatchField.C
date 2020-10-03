@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,19 +69,6 @@ Foam::pointPatchField<Type>::pointPatchField
 :
     patch_(p),
     internalField_(iF),
-    updated_(false),
-    patchType_(ptf.patchType_)
-{}
-
-
-template<class Type>
-Foam::pointPatchField<Type>::pointPatchField
-(
-    const pointPatchField<Type>& ptf
-)
-:
-    patch_(ptf.patch_),
-    internalField_(ptf.internalField_),
     updated_(false),
     patchType_(ptf.patchType_)
 {}

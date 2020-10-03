@@ -118,21 +118,6 @@ Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 
 Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 (
-    const nutWallFunctionFvPatchScalarField& wfpsf
-)
-:
-    fixedValueFvPatchScalarField(wfpsf),
-    Cmu_(wfpsf.Cmu_),
-    kappa_(wfpsf.kappa_),
-    E_(wfpsf.E_),
-    yPlusLam_(wfpsf.yPlusLam_)
-{
-    checkType();
-}
-
-
-Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
-(
     const nutWallFunctionFvPatchScalarField& wfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

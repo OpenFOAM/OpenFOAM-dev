@@ -174,17 +174,6 @@ nutkRoughWallFunctionFvPatchScalarField::nutkRoughWallFunctionFvPatchScalarField
 
 nutkRoughWallFunctionFvPatchScalarField::nutkRoughWallFunctionFvPatchScalarField
 (
-    const nutkRoughWallFunctionFvPatchScalarField& rwfpsf
-)
-:
-    nutkWallFunctionFvPatchScalarField(rwfpsf),
-    Ks_(rwfpsf.Ks_),
-    Cs_(rwfpsf.Cs_)
-{}
-
-
-nutkRoughWallFunctionFvPatchScalarField::nutkRoughWallFunctionFvPatchScalarField
-(
     const nutkRoughWallFunctionFvPatchScalarField& rwfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

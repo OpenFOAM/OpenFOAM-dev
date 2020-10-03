@@ -137,18 +137,6 @@ alphatPhaseJayatillekeWallFunctionFvPatchScalarField
 {}
 
 
-
-alphatPhaseJayatillekeWallFunctionFvPatchScalarField::
-alphatPhaseJayatillekeWallFunctionFvPatchScalarField
-(
-    const alphatPhaseJayatillekeWallFunctionFvPatchScalarField& awfpsf
-)
-:
-    fixedValueFvPatchScalarField(awfpsf),
-    Prt_(awfpsf.Prt_)
-{}
-
-
 alphatPhaseJayatillekeWallFunctionFvPatchScalarField::
 alphatPhaseJayatillekeWallFunctionFvPatchScalarField
 (

@@ -129,17 +129,6 @@ nutkAtmRoughWallFunctionFvPatchScalarField
 nutkAtmRoughWallFunctionFvPatchScalarField::
 nutkAtmRoughWallFunctionFvPatchScalarField
 (
-    const nutkAtmRoughWallFunctionFvPatchScalarField& rwfpsf
-)
-:
-    nutkWallFunctionFvPatchScalarField(rwfpsf),
-    z0_(rwfpsf.z0_)
-{}
-
-
-nutkAtmRoughWallFunctionFvPatchScalarField::
-nutkAtmRoughWallFunctionFvPatchScalarField
-(
     const nutkAtmRoughWallFunctionFvPatchScalarField& rwfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

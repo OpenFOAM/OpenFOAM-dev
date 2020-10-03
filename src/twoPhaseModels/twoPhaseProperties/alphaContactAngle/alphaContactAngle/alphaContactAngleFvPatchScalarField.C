@@ -108,16 +108,6 @@ Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 
 Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 (
-    const alphaContactAngleFvPatchScalarField& acpsf
-)
-:
-    fixedGradientFvPatchScalarField(acpsf),
-    limit_(acpsf.limit_)
-{}
-
-
-Foam::alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
-(
     const alphaContactAngleFvPatchScalarField& acpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

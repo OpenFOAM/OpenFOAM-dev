@@ -105,19 +105,6 @@ alphatPhaseChangeWallFunctionFvPatchScalarField
 alphatPhaseChangeWallFunctionFvPatchScalarField::
 alphatPhaseChangeWallFunctionFvPatchScalarField
 (
-    const alphatPhaseChangeWallFunctionFvPatchScalarField& awfpsf
-)
-:
-    alphatPhaseJayatillekeWallFunctionFvPatchScalarField(awfpsf),
-    otherPhaseName_(awfpsf.otherPhaseName_),
-    relax_(awfpsf.relax_),
-    dmdtf_(awfpsf.dmdtf_)
-{}
-
-
-alphatPhaseChangeWallFunctionFvPatchScalarField::
-alphatPhaseChangeWallFunctionFvPatchScalarField
-(
     const alphatPhaseChangeWallFunctionFvPatchScalarField& awfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

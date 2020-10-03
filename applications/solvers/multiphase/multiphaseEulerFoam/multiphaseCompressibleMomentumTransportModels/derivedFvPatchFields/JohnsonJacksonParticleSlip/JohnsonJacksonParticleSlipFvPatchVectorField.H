@@ -104,20 +104,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         JohnsonJacksonParticleSlipFvPatchVectorField
         (
             const JohnsonJacksonParticleSlipFvPatchVectorField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchVectorField> clone() const
-        {
-            return tmp<fvPatchVectorField>
-            (
-                new JohnsonJacksonParticleSlipFvPatchVectorField(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         JohnsonJacksonParticleSlipFvPatchVectorField

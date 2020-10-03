@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,16 +71,6 @@ Foam::slipFvPatchField<Type>::slipFvPatchField
 )
 :
     basicSymmetryFvPatchField<Type>(ptf, iF)
-{}
-
-
-template<class Type>
-Foam::slipFvPatchField<Type>::slipFvPatchField
-(
-    const slipFvPatchField<Type>& ptf
-)
-:
-    basicSymmetryFvPatchField<Type>(ptf)
 {}
 
 

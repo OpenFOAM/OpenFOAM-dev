@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,19 +102,6 @@ waveSurfacePressureFvPatchScalarField
     phiName_(ptf.phiName_),
     zetaName_(ptf.zetaName_),
     rhoName_(ptf.rhoName_)
-{}
-
-
-Foam::waveSurfacePressureFvPatchScalarField::
-waveSurfacePressureFvPatchScalarField
-(
-    const waveSurfacePressureFvPatchScalarField& wspsf
-)
-:
-    fixedValueFvPatchScalarField(wspsf),
-    phiName_(wspsf.phiName_),
-    zetaName_(wspsf.zetaName_),
-    rhoName_(wspsf.rhoName_)
 {}
 
 

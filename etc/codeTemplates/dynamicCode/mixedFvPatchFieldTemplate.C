@@ -140,22 +140,6 @@ ${typeName}MixedValueFvPatch${FieldType}
 ${typeName}MixedValueFvPatch${FieldType}::
 ${typeName}MixedValueFvPatch${FieldType}
 (
-    const ${typeName}MixedValueFvPatch${FieldType}& ptf
-)
-:
-    mixedFvPatchField<${TemplateType}>(ptf)
-{
-    if (${verbose:-false})
-    {
-        Info<<"construct ${typeName} sha1: ${SHA1sum}"
-            " as copy\n";
-    }
-}
-
-
-${typeName}MixedValueFvPatch${FieldType}::
-${typeName}MixedValueFvPatch${FieldType}
-(
     const ${typeName}MixedValueFvPatch${FieldType}& ptf,
     const DimensionedField<${TemplateType}, volMesh>& iF
 )

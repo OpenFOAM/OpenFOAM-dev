@@ -102,23 +102,11 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         uniformFixedValuePointPatchField
         (
             const uniformFixedValuePointPatchField<Type>&
-        );
-
-        //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type>> clone() const
-        {
-            return autoPtr<pointPatchField<Type>>
-            (
-                new uniformFixedValuePointPatchField<Type>
-                (
-                    *this
-                )
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         uniformFixedValuePointPatchField

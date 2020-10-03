@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,19 +85,6 @@ Foam::waveInletOutletFvPatchField<Type>::waveInletOutletFvPatchField
 )
 :
     mixedFvPatchField<Type>(ptf, p, iF, mapper),
-    inletValueAbove_(ptf.inletValueAbove_, false),
-    inletValueBelow_(ptf.inletValueBelow_, false),
-    phiName_(ptf.phiName_)
-{}
-
-
-template<class Type>
-Foam::waveInletOutletFvPatchField<Type>::waveInletOutletFvPatchField
-(
-    const waveInletOutletFvPatchField<Type>& ptf
-)
-:
-    mixedFvPatchField<Type>(ptf),
     inletValueAbove_(ptf.inletValueAbove_, false),
     inletValueBelow_(ptf.inletValueBelow_, false),
     phiName_(ptf.phiName_)

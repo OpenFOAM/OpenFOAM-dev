@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,16 +81,6 @@ Foam::symmetryFvsPatchField<Type>::symmetryFvsPatchField
             << exit(FatalError);
     }
 }
-
-
-template<class Type>
-Foam::symmetryFvsPatchField<Type>::symmetryFvsPatchField
-(
-    const symmetryFvsPatchField<Type>& ptf
-)
-:
-    fvsPatchField<Type>(ptf)
-{}
 
 
 template<class Type>

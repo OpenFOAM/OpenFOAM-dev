@@ -75,17 +75,6 @@ semiPermeableBaffleMassFractionFvPatchScalarField
 Foam::semiPermeableBaffleMassFractionFvPatchScalarField::
 semiPermeableBaffleMassFractionFvPatchScalarField
 (
-    const semiPermeableBaffleMassFractionFvPatchScalarField& ptf
-)
-:
-    mappedPatchBase(ptf.patch().patch(), ptf),
-    specieTransferMassFractionFvPatchScalarField(ptf)
-{}
-
-
-Foam::semiPermeableBaffleMassFractionFvPatchScalarField::
-semiPermeableBaffleMassFractionFvPatchScalarField
-(
     const semiPermeableBaffleMassFractionFvPatchScalarField& ptf,
     const DimensionedField<scalar, volMesh>& iF
 )

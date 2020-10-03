@@ -94,18 +94,6 @@ turbulentMixingLengthDissipationRateInletFvPatchScalarField
 turbulentMixingLengthDissipationRateInletFvPatchScalarField::
 turbulentMixingLengthDissipationRateInletFvPatchScalarField
 (
-    const turbulentMixingLengthDissipationRateInletFvPatchScalarField& ptf
-)
-:
-    inletOutletFvPatchScalarField(ptf),
-    mixingLength_(ptf.mixingLength_),
-    kName_(ptf.kName_)
-{}
-
-
-turbulentMixingLengthDissipationRateInletFvPatchScalarField::
-turbulentMixingLengthDissipationRateInletFvPatchScalarField
-(
     const turbulentMixingLengthDissipationRateInletFvPatchScalarField& ptf,
     const DimensionedField<scalar, volMesh>& iF
 )

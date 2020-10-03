@@ -77,18 +77,6 @@ temperatureDependentAlphaContactAngleFvPatchScalarField
 Foam::temperatureDependentAlphaContactAngleFvPatchScalarField::
 temperatureDependentAlphaContactAngleFvPatchScalarField
 (
-    const temperatureDependentAlphaContactAngleFvPatchScalarField& psf
-)
-:
-    alphaContactAngleFvPatchScalarField(psf),
-    TName_(psf.TName_),
-    theta0_(psf.theta0_, false)
-{}
-
-
-Foam::temperatureDependentAlphaContactAngleFvPatchScalarField::
-temperatureDependentAlphaContactAngleFvPatchScalarField
-(
     const temperatureDependentAlphaContactAngleFvPatchScalarField& psf,
     const DimensionedField<scalar, volMesh>& iF
 )

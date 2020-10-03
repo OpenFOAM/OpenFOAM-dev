@@ -89,20 +89,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         energyJumpAMIFvPatchScalarField
         (
             const energyJumpAMIFvPatchScalarField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<scalar>> clone() const
-        {
-            return tmp<fvPatchField<scalar>>
-            (
-                new energyJumpAMIFvPatchScalarField(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         energyJumpAMIFvPatchScalarField

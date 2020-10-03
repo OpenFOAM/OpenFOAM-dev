@@ -115,15 +115,6 @@ nutkWallFunctionFvPatchScalarField::nutkWallFunctionFvPatchScalarField
 
 nutkWallFunctionFvPatchScalarField::nutkWallFunctionFvPatchScalarField
 (
-    const nutkWallFunctionFvPatchScalarField& wfpsf
-)
-:
-    nutWallFunctionFvPatchScalarField(wfpsf)
-{}
-
-
-nutkWallFunctionFvPatchScalarField::nutkWallFunctionFvPatchScalarField
-(
     const nutkWallFunctionFvPatchScalarField& wfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

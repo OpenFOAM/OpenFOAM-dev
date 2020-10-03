@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,20 +123,6 @@ Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
 template<class Type>
 Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
 (
-    const advectiveFvPatchField& ptpsf
-)
-:
-    mixedFvPatchField<Type>(ptpsf),
-    phiName_(ptpsf.phiName_),
-    rhoName_(ptpsf.rhoName_),
-    fieldInf_(ptpsf.fieldInf_),
-    lInf_(ptpsf.lInf_)
-{}
-
-
-template<class Type>
-Foam::advectiveFvPatchField<Type>::advectiveFvPatchField
-(
     const advectiveFvPatchField& ptpsf,
     const DimensionedField<Type, volMesh>& iF
 )
@@ -159,7 +145,7 @@ Foam::advectiveFvPatchField<Type>::advectionSpeed() const
         this->db().objectRegistry::template lookupObject<surfaceScalarField>
         (phiName_);
 
-    fvsPatchField<scalar> phip =
+    const fvsPatchField<scalar>& phip =
         this->patch().template lookupPatchField<surfaceScalarField, scalar>
         (
             phiName_

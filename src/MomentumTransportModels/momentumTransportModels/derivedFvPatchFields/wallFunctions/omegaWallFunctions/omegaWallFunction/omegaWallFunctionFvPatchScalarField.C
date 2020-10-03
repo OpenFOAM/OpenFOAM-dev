@@ -333,22 +333,6 @@ omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
 
 omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
 (
-    const omegaWallFunctionFvPatchScalarField& owfpsf
-)
-:
-    fixedValueFvPatchField<scalar>(owfpsf),
-    beta1_(owfpsf.beta1_),
-    blended_(owfpsf.blended_),
-    G_(),
-    omega_(),
-    initialised_(false),
-    master_(-1),
-    cornerWeights_()
-{}
-
-
-omegaWallFunctionFvPatchScalarField::omegaWallFunctionFvPatchScalarField
-(
     const omegaWallFunctionFvPatchScalarField& owfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

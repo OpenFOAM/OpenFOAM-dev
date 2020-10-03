@@ -107,20 +107,8 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
-        cyclicFvPatchField
-        (
-            const cyclicFvPatchField<Type>&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const
-        {
-            return tmp<fvPatchField<Type>>
-            (
-                new cyclicFvPatchField<Type>(*this)
-            );
-        }
+        //- Disallow copy without setting internal field reference
+        cyclicFvPatchField(const cyclicFvPatchField<Type>&) = delete;
 
         //- Copy constructor setting internal field reference
         cyclicFvPatchField

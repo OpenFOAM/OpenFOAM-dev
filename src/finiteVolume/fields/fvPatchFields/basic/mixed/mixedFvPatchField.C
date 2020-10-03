@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,19 +83,6 @@ Foam::mixedFvPatchField<Type>::mixedFvPatchField
             << " patch fields." << endl;
     }
 }
-
-
-template<class Type>
-Foam::mixedFvPatchField<Type>::mixedFvPatchField
-(
-    const mixedFvPatchField<Type>& ptf
-)
-:
-    fvPatchField<Type>(ptf),
-    refValue_(ptf.refValue_),
-    refGrad_(ptf.refGrad_),
-    valueFraction_(ptf.valueFraction_)
-{}
 
 
 template<class Type>

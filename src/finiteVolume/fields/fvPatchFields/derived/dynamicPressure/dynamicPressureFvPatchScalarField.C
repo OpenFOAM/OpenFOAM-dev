@@ -98,19 +98,6 @@ Foam::dynamicPressureFvPatchScalarField::dynamicPressureFvPatchScalarField
 
 Foam::dynamicPressureFvPatchScalarField::dynamicPressureFvPatchScalarField
 (
-    const dynamicPressureFvPatchScalarField& tppsf
-)
-:
-    fixedValueFvPatchScalarField(tppsf),
-    rhoName_(tppsf.rhoName_),
-    psiName_(tppsf.psiName_),
-    gamma_(tppsf.gamma_),
-    p0_(tppsf.p0_)
-{}
-
-
-Foam::dynamicPressureFvPatchScalarField::dynamicPressureFvPatchScalarField
-(
     const dynamicPressureFvPatchScalarField& tppsf,
     const DimensionedField<scalar, volMesh>& iF
 )

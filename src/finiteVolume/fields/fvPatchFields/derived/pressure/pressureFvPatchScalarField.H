@@ -115,20 +115,8 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
-        pressureFvPatchScalarField
-        (
-            const pressureFvPatchScalarField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchScalarField> clone() const
-        {
-            return tmp<fvPatchScalarField >
-            (
-                new pressureFvPatchScalarField(*this)
-            );
-        }
+        //- Disallow copy without setting internal field reference
+        pressureFvPatchScalarField(const pressureFvPatchScalarField&) = delete;
 
         //- Copy constructor setting internal field reference
         pressureFvPatchScalarField

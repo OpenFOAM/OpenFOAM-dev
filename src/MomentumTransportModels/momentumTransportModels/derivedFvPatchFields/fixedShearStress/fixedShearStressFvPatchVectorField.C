@@ -72,16 +72,6 @@ Foam::fixedShearStressFvPatchVectorField::fixedShearStressFvPatchVectorField
 
 Foam::fixedShearStressFvPatchVectorField::fixedShearStressFvPatchVectorField
 (
-    const fixedShearStressFvPatchVectorField& ptf
-)
-:
-    fixedValueFvPatchVectorField(ptf),
-    tau0_(ptf.tau0_)
-{}
-
-
-Foam::fixedShearStressFvPatchVectorField::fixedShearStressFvPatchVectorField
-(
     const fixedShearStressFvPatchVectorField& ptf,
     const DimensionedField<vector, volMesh>& iF
 )

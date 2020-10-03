@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,17 +78,6 @@ Foam::uniformJumpAMIFvPatchField<Type>::uniformJumpAMIFvPatchField
         this->evaluate(Pstream::commsTypes::blocking);
     }
 }
-
-
-template<class Type>
-Foam::uniformJumpAMIFvPatchField<Type>::uniformJumpAMIFvPatchField
-(
-    const uniformJumpAMIFvPatchField<Type>& ptf
-)
-:
-    fixedJumpAMIFvPatchField<Type>(ptf),
-    jumpTable_(ptf.jumpTable_, false)
-{}
 
 
 template<class Type>

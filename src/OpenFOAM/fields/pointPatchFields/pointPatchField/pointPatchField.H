@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,11 +181,15 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Copy constructor
-        pointPatchField(const pointPatchField<Type>&);
+        //- Disallow copy without setting internal field reference
+        pointPatchField(const pointPatchField<Type>&) = delete;
 
-        //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type>> clone() const = 0;
+        //- Disallow clone without setting internal field reference
+        autoPtr<pointPatchField<Type>> clone() const
+        {
+            NotImplemented;
+            return tmp<pointPatchField<Type>>(nullptr);
+        }
 
         //- Construct as copy setting internal field reference
         pointPatchField

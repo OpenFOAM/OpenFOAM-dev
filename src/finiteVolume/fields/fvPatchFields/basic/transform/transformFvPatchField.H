@@ -85,14 +85,8 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
-        transformFvPatchField
-        (
-            const transformFvPatchField<Type>&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const = 0;
+        //- Disallow copy without setting internal field reference
+        transformFvPatchField(const transformFvPatchField<Type>&) = delete;
 
         //- Copy constructor setting internal field reference
         transformFvPatchField

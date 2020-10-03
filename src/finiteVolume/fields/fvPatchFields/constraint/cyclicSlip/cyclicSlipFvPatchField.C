@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,16 +60,6 @@ Foam::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 )
 :
     cyclicFvPatchField<Type>(p, iF, dict)
-{}
-
-
-template<class Type>
-Foam::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
-(
-    const cyclicSlipFvPatchField<Type>& ptf
-)
-:
-    cyclicFvPatchField<Type>(ptf)
 {}
 
 

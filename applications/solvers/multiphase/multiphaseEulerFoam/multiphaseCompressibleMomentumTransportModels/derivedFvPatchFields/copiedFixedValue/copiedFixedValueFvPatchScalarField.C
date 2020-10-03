@@ -68,16 +68,6 @@ Foam::copiedFixedValueFvPatchScalarField::copiedFixedValueFvPatchScalarField
 
 Foam::copiedFixedValueFvPatchScalarField::copiedFixedValueFvPatchScalarField
 (
-    const copiedFixedValueFvPatchScalarField& awfpsf
-)
-:
-    fixedValueFvPatchScalarField(awfpsf),
-    sourceFieldName_(awfpsf.sourceFieldName_)
-{}
-
-
-Foam::copiedFixedValueFvPatchScalarField::copiedFixedValueFvPatchScalarField
-(
     const copiedFixedValueFvPatchScalarField& awfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

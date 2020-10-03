@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,18 +84,6 @@ uniformFixedValuePointPatchField
     const scalar t = this->db().time().timeOutputValue();
     fixedValuePointPatchField<Type>::operator=(uniformValue_->value(t));
 }
-
-
-template<class Type>
-Foam::uniformFixedValuePointPatchField<Type>::
-uniformFixedValuePointPatchField
-(
-    const uniformFixedValuePointPatchField<Type>& ptf
-)
-:
-    fixedValuePointPatchField<Type>(ptf),
-    uniformValue_(ptf.uniformValue_, false)
-{}
 
 
 template<class Type>

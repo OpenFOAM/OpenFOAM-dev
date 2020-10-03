@@ -544,28 +544,6 @@ template<class Type>
 Foam::externalCoupledMixedFvPatchField<Type>::
 externalCoupledMixedFvPatchField
 (
-    const externalCoupledMixedFvPatchField& ecmpf
-)
-:
-    mixedFvPatchField<Type>(ecmpf),
-    commsDir_(ecmpf.commsDir_),
-    fName_(ecmpf.fName_),
-    waitInterval_(ecmpf.waitInterval_),
-    timeOut_(ecmpf.timeOut_),
-    calcFrequency_(ecmpf.calcFrequency_),
-    initByExternal_(ecmpf.initByExternal_),
-    log_(ecmpf.log_),
-    master_(ecmpf.master_),
-    offsets_(ecmpf.offsets_),
-    initialised_(ecmpf.initialised_),
-    coupledPatchIDs_(ecmpf.coupledPatchIDs_)
-{}
-
-
-template<class Type>
-Foam::externalCoupledMixedFvPatchField<Type>::
-externalCoupledMixedFvPatchField
-(
     const externalCoupledMixedFvPatchField& ecmpf,
     const DimensionedField<Type, volMesh>& iF
 )

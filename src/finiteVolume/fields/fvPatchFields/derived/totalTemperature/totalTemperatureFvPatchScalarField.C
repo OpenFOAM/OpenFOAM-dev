@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,20 +89,6 @@ Foam::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
         fvPatchField<scalar>::operator=(T0_);
     }
 }
-
-
-Foam::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
-(
-    const totalTemperatureFvPatchScalarField& tppsf
-)
-:
-    fixedValueFvPatchScalarField(tppsf),
-    UName_(tppsf.UName_),
-    phiName_(tppsf.phiName_),
-    psiName_(tppsf.psiName_),
-    gamma_(tppsf.gamma_),
-    T0_(tppsf.T0_)
-{}
 
 
 Foam::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField

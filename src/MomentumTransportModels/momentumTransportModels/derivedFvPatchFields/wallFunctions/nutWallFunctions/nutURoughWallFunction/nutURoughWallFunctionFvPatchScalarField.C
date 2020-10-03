@@ -262,17 +262,6 @@ nutURoughWallFunctionFvPatchScalarField::nutURoughWallFunctionFvPatchScalarField
 
 nutURoughWallFunctionFvPatchScalarField::nutURoughWallFunctionFvPatchScalarField
 (
-    const nutURoughWallFunctionFvPatchScalarField& rwfpsf
-)
-:
-    nutUWallFunctionFvPatchScalarField(rwfpsf),
-    Ks_(rwfpsf.Ks_),
-    Cs_(rwfpsf.Cs_)
-{}
-
-
-nutURoughWallFunctionFvPatchScalarField::nutURoughWallFunctionFvPatchScalarField
-(
     const nutURoughWallFunctionFvPatchScalarField& rwfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

@@ -194,17 +194,6 @@ nutkFilmWallFunctionFvPatchScalarField::nutkFilmWallFunctionFvPatchScalarField
 
 nutkFilmWallFunctionFvPatchScalarField::nutkFilmWallFunctionFvPatchScalarField
 (
-    const nutkFilmWallFunctionFvPatchScalarField& wfpsf
-)
-:
-    nutkWallFunctionFvPatchScalarField(wfpsf),
-    B_(wfpsf.B_),
-    yPlusCrit_(wfpsf.yPlusCrit_)
-{}
-
-
-nutkFilmWallFunctionFvPatchScalarField::nutkFilmWallFunctionFvPatchScalarField
-(
     const nutkFilmWallFunctionFvPatchScalarField& wfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

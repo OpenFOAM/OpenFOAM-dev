@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,8 +29,8 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
-::variableHeightFlowRateInletVelocityFvPatchVectorField
+Foam::variableHeightFlowRateInletVelocityFvPatchVectorField::
+variableHeightFlowRateInletVelocityFvPatchVectorField
 (
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF
@@ -42,8 +42,8 @@ Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
 {}
 
 
-Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
-::variableHeightFlowRateInletVelocityFvPatchVectorField
+Foam::variableHeightFlowRateInletVelocityFvPatchVectorField::
+variableHeightFlowRateInletVelocityFvPatchVectorField
 (
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
@@ -56,8 +56,8 @@ Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
 {}
 
 
-Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
-::variableHeightFlowRateInletVelocityFvPatchVectorField
+Foam::variableHeightFlowRateInletVelocityFvPatchVectorField::
+variableHeightFlowRateInletVelocityFvPatchVectorField
 (
     const variableHeightFlowRateInletVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
@@ -71,20 +71,8 @@ Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
 {}
 
 
-Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
-::variableHeightFlowRateInletVelocityFvPatchVectorField
-(
-    const variableHeightFlowRateInletVelocityFvPatchVectorField& ptf
-)
-:
-    fixedValueFvPatchField<vector>(ptf),
-    flowRate_(ptf.flowRate_, false),
-    alphaName_(ptf.alphaName_)
-{}
-
-
-Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
-::variableHeightFlowRateInletVelocityFvPatchVectorField
+Foam::variableHeightFlowRateInletVelocityFvPatchVectorField::
+variableHeightFlowRateInletVelocityFvPatchVectorField
 (
     const variableHeightFlowRateInletVelocityFvPatchVectorField& ptf,
     const DimensionedField<vector, volMesh>& iF
@@ -98,8 +86,8 @@ Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::variableHeightFlowRateInletVelocityFvPatchVectorField
-::updateCoeffs()
+void Foam::variableHeightFlowRateInletVelocityFvPatchVectorField::
+updateCoeffs()
 {
     if (updated())
     {

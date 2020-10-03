@@ -97,20 +97,8 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
-        symmetryFvPatchField
-        (
-            const symmetryFvPatchField<Type>&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const
-        {
-            return tmp<fvPatchField<Type>>
-            (
-                new symmetryFvPatchField<Type>(*this)
-            );
-        }
+        //- Disallow copy without setting internal field reference
+        symmetryFvPatchField(const symmetryFvPatchField<Type>&) = delete;
 
         //- Copy constructor setting internal field reference
         symmetryFvPatchField

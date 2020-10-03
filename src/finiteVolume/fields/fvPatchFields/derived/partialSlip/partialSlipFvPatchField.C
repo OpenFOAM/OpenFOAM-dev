@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,17 +67,6 @@ Foam::partialSlipFvPatchField<Type>::partialSlipFvPatchField
 {
     evaluate();
 }
-
-
-template<class Type>
-Foam::partialSlipFvPatchField<Type>::partialSlipFvPatchField
-(
-    const partialSlipFvPatchField<Type>& ptf
-)
-:
-    transformFvPatchField<Type>(ptf),
-    valueFraction_(ptf.valueFraction_)
-{}
 
 
 template<class Type>

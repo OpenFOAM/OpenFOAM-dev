@@ -85,20 +85,8 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
-        cyclicSlipFvsPatchField
-        (
-            const cyclicSlipFvsPatchField<Type>&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvsPatchField<Type>> clone() const
-        {
-            return tmp<fvsPatchField<Type>>
-            (
-                new cyclicSlipFvsPatchField<Type>(*this)
-            );
-        }
+        //- Disallow copy without setting internal field reference
+        cyclicSlipFvsPatchField(const cyclicSlipFvsPatchField<Type>&) = delete;
 
         //- Copy constructor setting internal field reference
         cyclicSlipFvsPatchField

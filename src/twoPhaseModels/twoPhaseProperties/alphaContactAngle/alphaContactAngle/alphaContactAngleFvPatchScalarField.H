@@ -119,11 +119,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         alphaContactAngleFvPatchScalarField
         (
             const alphaContactAngleFvPatchScalarField&
-        );
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         alphaContactAngleFvPatchScalarField

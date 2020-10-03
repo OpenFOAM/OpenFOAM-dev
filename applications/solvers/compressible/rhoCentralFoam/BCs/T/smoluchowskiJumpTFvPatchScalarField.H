@@ -107,15 +107,6 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct and return a clone
-        virtual tmp<fvPatchScalarField> clone() const
-        {
-            return tmp<fvPatchScalarField>
-            (
-                new smoluchowskiJumpTFvPatchScalarField(*this)
-            );
-        }
-
         //- Construct as copy setting internal field reference
         smoluchowskiJumpTFvPatchScalarField
         (

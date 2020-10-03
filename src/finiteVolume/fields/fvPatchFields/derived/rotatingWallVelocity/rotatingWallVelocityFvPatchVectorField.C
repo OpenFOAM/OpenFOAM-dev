@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,19 +85,6 @@ rotatingWallVelocityFvPatchVectorField
     origin_(ptf.origin_),
     axis_(ptf.axis_),
     omega_(ptf.omega_, false)
-{}
-
-
-Foam::rotatingWallVelocityFvPatchVectorField::
-rotatingWallVelocityFvPatchVectorField
-(
-    const rotatingWallVelocityFvPatchVectorField& rwvpvf
-)
-:
-    fixedValueFvPatchField<vector>(rwvpvf),
-    origin_(rwvpvf.origin_),
-    axis_(rwvpvf.axis_),
-    omega_(rwvpvf.omega_, false)
 {}
 
 

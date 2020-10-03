@@ -97,21 +97,6 @@ alphatFilmWallFunctionFvPatchScalarField
 alphatFilmWallFunctionFvPatchScalarField::
 alphatFilmWallFunctionFvPatchScalarField
 (
-    const alphatFilmWallFunctionFvPatchScalarField& fwfpsf
-)
-:
-    fixedValueFvPatchScalarField(fwfpsf),
-    B_(fwfpsf.B_),
-    yPlusCrit_(fwfpsf.yPlusCrit_),
-    Cmu_(fwfpsf.Cmu_),
-    kappa_(fwfpsf.kappa_),
-    Prt_(fwfpsf.Prt_)
-{}
-
-
-alphatFilmWallFunctionFvPatchScalarField::
-alphatFilmWallFunctionFvPatchScalarField
-(
     const alphatFilmWallFunctionFvPatchScalarField& fwfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

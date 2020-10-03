@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,9 +117,7 @@ void Foam::regionModels::regionModel1D::initialise()
     boundaryFaceCells_.setSize(localPyrolysisFacei);
 
     surfaceScalarField& nMagSf = nMagSfPtr_();
-
-    surfaceScalarField::Boundary nMagSfBf =
-        nMagSf.boundaryFieldRef();
+    surfaceScalarField::Boundary& nMagSfBf = nMagSf.boundaryFieldRef();
 
     localPyrolysisFacei = 0;
 

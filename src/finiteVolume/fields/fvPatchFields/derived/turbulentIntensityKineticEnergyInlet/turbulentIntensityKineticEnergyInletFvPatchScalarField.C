@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,17 +93,6 @@ turbulentIntensityKineticEnergyInletFvPatchScalarField
     this->refGrad() = 0.0;
     this->valueFraction() = 0.0;
 }
-
-Foam::turbulentIntensityKineticEnergyInletFvPatchScalarField::
-turbulentIntensityKineticEnergyInletFvPatchScalarField
-(
-    const turbulentIntensityKineticEnergyInletFvPatchScalarField& ptf
-)
-:
-    inletOutletFvPatchScalarField(ptf),
-    intensity_(ptf.intensity_),
-    UName_(ptf.UName_)
-{}
 
 
 Foam::turbulentIntensityKineticEnergyInletFvPatchScalarField::

@@ -96,15 +96,6 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const
-        {
-            return tmp<fvPatchField<Type>>
-            (
-                new directionMixedFvPatchField<Type>(*this)
-            );
-        }
-
         //- Construct as copy setting internal field reference
         directionMixedFvPatchField
         (

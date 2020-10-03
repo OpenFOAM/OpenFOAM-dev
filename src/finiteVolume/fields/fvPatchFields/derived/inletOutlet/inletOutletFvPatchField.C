@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,17 +85,6 @@ Foam::inletOutletFvPatchField<Type>::inletOutletFvPatchField
     this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 }
-
-
-template<class Type>
-Foam::inletOutletFvPatchField<Type>::inletOutletFvPatchField
-(
-    const inletOutletFvPatchField<Type>& ptf
-)
-:
-    mixedFvPatchField<Type>(ptf),
-    phiName_(ptf.phiName_)
-{}
 
 
 template<class Type>

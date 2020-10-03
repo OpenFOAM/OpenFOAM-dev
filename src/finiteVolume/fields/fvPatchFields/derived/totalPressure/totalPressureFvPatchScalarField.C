@@ -72,17 +72,6 @@ Foam::totalPressureFvPatchScalarField::totalPressureFvPatchScalarField
 
 Foam::totalPressureFvPatchScalarField::totalPressureFvPatchScalarField
 (
-    const totalPressureFvPatchScalarField& tppsf
-)
-:
-    dynamicPressureFvPatchScalarField(tppsf),
-    UName_(tppsf.UName_),
-    phiName_(tppsf.phiName_)
-{}
-
-
-Foam::totalPressureFvPatchScalarField::totalPressureFvPatchScalarField
-(
     const totalPressureFvPatchScalarField& tppsf,
     const DimensionedField<scalar, volMesh>& iF
 )

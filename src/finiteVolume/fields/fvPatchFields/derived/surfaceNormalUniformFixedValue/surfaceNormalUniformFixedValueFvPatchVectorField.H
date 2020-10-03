@@ -115,20 +115,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         surfaceNormalUniformFixedValueFvPatchVectorField
         (
             const surfaceNormalUniformFixedValueFvPatchVectorField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchVectorField> clone() const
-        {
-            return tmp<fvPatchVectorField>
-            (
-                new surfaceNormalUniformFixedValueFvPatchVectorField(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         surfaceNormalUniformFixedValueFvPatchVectorField

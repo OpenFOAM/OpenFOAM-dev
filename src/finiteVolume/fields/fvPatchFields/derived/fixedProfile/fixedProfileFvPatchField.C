@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,19 +101,6 @@ Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField
     // Evaluate profile since value not mapped
     this->evaluate();
 }
-
-
-template<class Type>
-Foam::fixedProfileFvPatchField<Type>::fixedProfileFvPatchField
-(
-    const fixedProfileFvPatchField<Type>& ptf
-)
-:
-    fixedValueFvPatchField<Type>(ptf),
-    profile_(ptf.profile_, false),
-    origin_(ptf.origin_),
-    direction_(ptf.direction_)
-{}
 
 
 template<class Type>

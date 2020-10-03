@@ -144,31 +144,6 @@ Foam::processorFvPatchField<Type>::processorFvPatchField
 template<class Type>
 Foam::processorFvPatchField<Type>::processorFvPatchField
 (
-    const processorFvPatchField<Type>& ptf
-)
-:
-    processorLduInterfaceField(),
-    coupledFvPatchField<Type>(ptf),
-    procPatch_(refCast<const processorFvPatch>(ptf.patch())),
-    sendBuf_(move(ptf.sendBuf_)),
-    receiveBuf_(move(ptf.receiveBuf_)),
-    outstandingSendRequest_(-1),
-    outstandingRecvRequest_(-1),
-    scalarSendBuf_(move(ptf.scalarSendBuf_)),
-    scalarReceiveBuf_(move(ptf.scalarReceiveBuf_))
-{
-    if (debug && !ptf.ready())
-    {
-        FatalErrorInFunction
-            << "On patch " << procPatch_.name() << " outstanding request."
-            << abort(FatalError);
-    }
-}
-
-
-template<class Type>
-Foam::processorFvPatchField<Type>::processorFvPatchField
-(
     const processorFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
 )

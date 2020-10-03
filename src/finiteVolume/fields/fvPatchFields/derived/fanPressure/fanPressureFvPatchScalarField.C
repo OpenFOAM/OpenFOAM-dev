@@ -94,17 +94,6 @@ Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
 
 Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
 (
-    const fanPressureFvPatchScalarField& pfopsf
-)
-:
-    totalPressureFvPatchScalarField(pfopsf),
-    fanCurve_(pfopsf.fanCurve_, false),
-    direction_(pfopsf.direction_)
-{}
-
-
-Foam::fanPressureFvPatchScalarField::fanPressureFvPatchScalarField
-(
     const fanPressureFvPatchScalarField& pfopsf,
     const DimensionedField<scalar, volMesh>& iF
 )

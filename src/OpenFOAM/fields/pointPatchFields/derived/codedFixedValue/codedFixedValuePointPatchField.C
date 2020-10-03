@@ -139,18 +139,6 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
 template<class Type>
 Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
 (
-    const codedFixedValuePointPatchField<Type>& ptf
-)
-:
-    fixedValuePointPatchField<Type>(ptf),
-    CodedBase<codedFixedValuePointPatchFieldBase>(ptf),
-    redirectPatchFieldPtr_()
-{}
-
-
-template<class Type>
-Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
-(
     const codedFixedValuePointPatchField<Type>& ptf,
     const DimensionedField<Type, pointMesh>& iF
 )

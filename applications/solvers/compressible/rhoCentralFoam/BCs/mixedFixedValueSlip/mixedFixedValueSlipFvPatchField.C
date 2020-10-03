@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,18 +67,6 @@ Foam::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
     transformFvPatchField<Type>(ptf, p, iF, mapper),
     refValue_(mapper(ptf.refValue_)),
     valueFraction_(mapper(ptf.valueFraction_))
-{}
-
-
-template<class Type>
-Foam::mixedFixedValueSlipFvPatchField<Type>::mixedFixedValueSlipFvPatchField
-(
-    const mixedFixedValueSlipFvPatchField<Type>& ptf
-)
-:
-    transformFvPatchField<Type>(ptf),
-    refValue_(ptf.refValue_),
-    valueFraction_(ptf.valueFraction_)
 {}
 
 

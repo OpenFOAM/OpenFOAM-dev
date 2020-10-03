@@ -128,17 +128,8 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
-        processorFvPatchField(const processorFvPatchField<Type>&);
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const
-        {
-            return tmp<fvPatchField<Type>>
-            (
-                new processorFvPatchField<Type>(*this)
-            );
-        }
+        //- Disallow copy without setting internal field reference
+        processorFvPatchField(const processorFvPatchField<Type>&) = delete;
 
         //- Copy constructor setting internal field reference
         processorFvPatchField

@@ -139,22 +139,6 @@ ${typeName}FixedValuePointPatch${FieldType}
 ${typeName}FixedValuePointPatch${FieldType}::
 ${typeName}FixedValuePointPatch${FieldType}
 (
-    const ${typeName}FixedValuePointPatch${FieldType}& ptf
-)
-:
-    fixedValuePointPatchField<${TemplateType}>(ptf)
-{
-    if (${verbose:-false})
-    {
-        Info<<"construct ${typeName} sha1: ${SHA1sum}"
-            " as copy\n";
-    }
-}
-
-
-${typeName}FixedValuePointPatch${FieldType}::
-${typeName}FixedValuePointPatch${FieldType}
-(
     const ${typeName}FixedValuePointPatch${FieldType}& ptf,
     const DimensionedField<${TemplateType}, pointMesh>& iF
 )

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,16 +103,6 @@ Foam::fixedFluxPressureFvPatchScalarField::fixedFluxPressureFvPatchScalarField
         mapper(*this, ptf);
     }
 }
-
-
-Foam::fixedFluxPressureFvPatchScalarField::fixedFluxPressureFvPatchScalarField
-(
-    const fixedFluxPressureFvPatchScalarField& wbppsf
-)
-:
-    fixedGradientFvPatchScalarField(wbppsf),
-    curTimeIndex_(-1)
-{}
 
 
 Foam::fixedFluxPressureFvPatchScalarField::fixedFluxPressureFvPatchScalarField

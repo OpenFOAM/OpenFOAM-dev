@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,19 +72,6 @@ inclinedFilmNusseltInletVelocityFvPatchVectorField
     GammaMean_(Function1<scalar>::New("GammaMean", dict)),
     a_(Function1<scalar>::New("a", dict)),
     omega_(Function1<scalar>::New("omega", dict))
-{}
-
-
-Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::
-inclinedFilmNusseltInletVelocityFvPatchVectorField
-(
-    const inclinedFilmNusseltInletVelocityFvPatchVectorField& fmfrpvf
-)
-:
-    fixedValueFvPatchVectorField(fmfrpvf),
-    GammaMean_(fmfrpvf.GammaMean_().clone().ptr()),
-    a_(fmfrpvf.a_().clone().ptr()),
-    omega_(fmfrpvf.omega_().clone().ptr())
 {}
 
 

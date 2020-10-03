@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -134,15 +134,6 @@ public:
             const DimensionedField<vector, volMesh>&,
             const fvPatchFieldMapper&
         );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchVectorField> clone() const
-        {
-            return tmp<fvPatchVectorField>
-            (
-                new fluxCorrectedVelocityFvPatchVectorField(*this)
-            );
-        }
 
         //- Construct as copy setting internal field reference
         fluxCorrectedVelocityFvPatchVectorField

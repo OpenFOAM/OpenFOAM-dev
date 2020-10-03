@@ -113,20 +113,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         kLowReWallFunctionFvPatchScalarField
         (
             const kLowReWallFunctionFvPatchScalarField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchScalarField> clone() const
-        {
-            return tmp<fvPatchScalarField>
-            (
-                new kLowReWallFunctionFvPatchScalarField(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         kLowReWallFunctionFvPatchScalarField

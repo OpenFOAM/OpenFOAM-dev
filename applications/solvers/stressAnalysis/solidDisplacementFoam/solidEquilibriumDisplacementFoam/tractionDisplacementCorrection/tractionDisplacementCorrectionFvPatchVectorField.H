@@ -90,20 +90,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct as copy setting internal field reference
+        //- Disallow copy without setting internal field reference
         tractionDisplacementCorrectionFvPatchVectorField
         (
             const tractionDisplacementCorrectionFvPatchVectorField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchVectorField> clone() const
-        {
-            return tmp<fvPatchVectorField>
-            (
-                new tractionDisplacementCorrectionFvPatchVectorField(*this)
-            );
-        }
+        ) = delete;
 
         //- Construct as copy setting internal field reference
         tractionDisplacementCorrectionFvPatchVectorField

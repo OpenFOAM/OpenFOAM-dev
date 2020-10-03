@@ -63,18 +63,6 @@ public:
         //- Inherit parent constructors
         using cyclicAMIPointPatchField<Type>::cyclicAMIPointPatchField;
 
-        //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type>> clone() const
-        {
-            return autoPtr<pointPatchField<Type>>
-            (
-                new cyclicRepeatAMIPointPatchField<Type>
-                (
-                    *this
-                )
-            );
-        }
-
         //- Construct and return a clone setting internal field reference
         virtual autoPtr<pointPatchField<Type>> clone
         (

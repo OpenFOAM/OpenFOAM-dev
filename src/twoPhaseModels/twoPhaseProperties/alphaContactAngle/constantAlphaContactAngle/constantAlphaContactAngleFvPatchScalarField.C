@@ -74,17 +74,6 @@ constantAlphaContactAngleFvPatchScalarField
 Foam::constantAlphaContactAngleFvPatchScalarField::
 constantAlphaContactAngleFvPatchScalarField
 (
-    const constantAlphaContactAngleFvPatchScalarField& gcpsf
-)
-:
-    alphaContactAngleFvPatchScalarField(gcpsf),
-    theta0_(gcpsf.theta0_)
-{}
-
-
-Foam::constantAlphaContactAngleFvPatchScalarField::
-constantAlphaContactAngleFvPatchScalarField
-(
     const constantAlphaContactAngleFvPatchScalarField& gcpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

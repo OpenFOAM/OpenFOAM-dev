@@ -73,35 +73,6 @@ Foam::slicedFvsPatchField<Type>::slicedFvsPatchField
 
 template<class Type>
 Foam::tmp<Foam::fvsPatchField<Type>>
-Foam::slicedFvsPatchField<Type>::clone() const
-{
-    return tmp<fvsPatchField<Type>>
-    (
-        new slicedFvsPatchField<Type>(*this)
-    );
-}
-
-
-template<class Type>
-Foam::slicedFvsPatchField<Type>::slicedFvsPatchField
-(
-    const slicedFvsPatchField<Type>& ptf
-)
-:
-    fvsPatchField<Type>
-    (
-        ptf.patch(),
-        ptf.internalField(),
-        Field<Type>()
-    )
-{
-    // Transfer the slice from the argument
-    UList<Type>::shallowCopy(ptf);
-}
-
-
-template<class Type>
-Foam::tmp<Foam::fvsPatchField<Type>>
 Foam::slicedFvsPatchField<Type>::clone
 (
     const DimensionedField<Type, surfaceMesh>& iF

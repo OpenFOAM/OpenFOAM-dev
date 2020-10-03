@@ -73,16 +73,6 @@ kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
 
 kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
 (
-    const kLowReWallFunctionFvPatchScalarField& kwfpsf
-)
-:
-    fixedValueFvPatchField<scalar>(kwfpsf),
-    Ceps2_(kwfpsf.Ceps2_)
-{}
-
-
-kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
-(
     const kLowReWallFunctionFvPatchScalarField& kwfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

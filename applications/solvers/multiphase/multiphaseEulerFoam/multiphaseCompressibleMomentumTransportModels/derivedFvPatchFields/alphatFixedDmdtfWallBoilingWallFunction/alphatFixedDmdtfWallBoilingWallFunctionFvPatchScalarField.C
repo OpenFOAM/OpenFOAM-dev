@@ -84,17 +84,6 @@ alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
 alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField::
 alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
 (
-    const alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField& psf
-)
-:
-    alphatPhaseChangeWallFunctionFvPatchScalarField(psf),
-    fixedDmdtf_(psf.fixedDmdtf_)
-{}
-
-
-alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField::
-alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField
-(
     const alphatFixedDmdtfWallBoilingWallFunctionFvPatchScalarField& psf,
     const DimensionedField<scalar, volMesh>& iF
 )

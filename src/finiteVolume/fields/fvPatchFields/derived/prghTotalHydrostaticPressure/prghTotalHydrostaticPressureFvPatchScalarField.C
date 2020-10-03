@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,20 +73,6 @@ prghTotalHydrostaticPressureFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper),
-    UName_(ptf.UName_),
-    phiName_(ptf.phiName_),
-    rhoName_(ptf.rhoName_),
-    ph_rghName_(ptf.ph_rghName_)
-{}
-
-
-Foam::prghTotalHydrostaticPressureFvPatchScalarField::
-prghTotalHydrostaticPressureFvPatchScalarField
-(
-    const prghTotalHydrostaticPressureFvPatchScalarField& ptf
-)
-:
-    fixedValueFvPatchScalarField(ptf),
     UName_(ptf.UName_),
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),

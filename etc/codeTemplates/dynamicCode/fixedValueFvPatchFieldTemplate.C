@@ -140,22 +140,6 @@ ${typeName}FixedValueFvPatch${FieldType}
 ${typeName}FixedValueFvPatch${FieldType}::
 ${typeName}FixedValueFvPatch${FieldType}
 (
-    const ${typeName}FixedValueFvPatch${FieldType}& ptf
-)
-:
-    fixedValueFvPatchField<${TemplateType}>(ptf)
-{
-    if (${verbose:-false})
-    {
-        Info<<"construct ${typeName} sha1: ${SHA1sum}"
-            " as copy\n";
-    }
-}
-
-
-${typeName}FixedValueFvPatch${FieldType}::
-${typeName}FixedValueFvPatch${FieldType}
-(
     const ${typeName}FixedValueFvPatch${FieldType}& ptf,
     const DimensionedField<${TemplateType}, volMesh>& iF
 )

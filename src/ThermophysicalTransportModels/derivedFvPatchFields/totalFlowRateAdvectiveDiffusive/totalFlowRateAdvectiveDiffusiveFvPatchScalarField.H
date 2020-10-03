@@ -99,21 +99,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         totalFlowRateAdvectiveDiffusiveFvPatchScalarField
         (
             const totalFlowRateAdvectiveDiffusiveFvPatchScalarField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<scalar>> clone() const
-        {
-            return tmp<fvPatchField<scalar>>
-            (
-                new
-                totalFlowRateAdvectiveDiffusiveFvPatchScalarField(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         totalFlowRateAdvectiveDiffusiveFvPatchScalarField

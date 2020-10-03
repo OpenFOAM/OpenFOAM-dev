@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,29 +118,6 @@ Foam::plenumPressureFvPatchScalarField::plenumPressureFvPatchScalarField
     timeScale_(ptf.timeScale_),
     phiName_(ptf.phiName_),
     UName_(ptf.UName_)
-{}
-
-
-Foam::plenumPressureFvPatchScalarField::plenumPressureFvPatchScalarField
-(
-    const plenumPressureFvPatchScalarField& tppsf
-)
-:
-    fixedValueFvPatchScalarField(tppsf),
-    gamma_(tppsf.gamma_),
-    R_(tppsf.R_),
-    supplyMassFlowRate_(tppsf.supplyMassFlowRate_),
-    supplyTotalTemperature_(tppsf.supplyTotalTemperature_),
-    plenumVolume_(tppsf.plenumVolume_),
-    plenumDensity_(tppsf.plenumDensity_),
-    plenumTemperature_(tppsf.plenumTemperature_),
-    rho_(tppsf.rho_),
-    hasRho_(tppsf.hasRho_),
-    inletAreaRatio_(tppsf.inletAreaRatio_),
-    inletDischargeCoefficient_(tppsf.inletDischargeCoefficient_),
-    timeScale_(tppsf.timeScale_),
-    phiName_(tppsf.phiName_),
-    UName_(tppsf.UName_)
 {}
 
 

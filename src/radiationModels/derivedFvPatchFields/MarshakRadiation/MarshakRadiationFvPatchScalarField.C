@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,22 +95,6 @@ Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
 
     fvPatchScalarField::operator=(refValue());
 }
-
-
-Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
-(
-    const MarshakRadiationFvPatchScalarField& ptf
-)
-:
-    mixedFvPatchScalarField(ptf),
-    radiationCoupledBase
-    (
-        ptf.patch(),
-        ptf.emissivityMethod(),
-        ptf.emissivity_
-    ),
-    TName_(ptf.TName_)
-{}
 
 
 Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField

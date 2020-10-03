@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,15 +76,6 @@ public:
 
         //- Inherit parent constructors
         using cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField;
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const
-        {
-            return tmp<fvPatchField<Type>>
-            (
-                new cyclicACMIFvPatchField<Type>(*this)
-            );
-        }
 
         //- Construct and return a clone setting internal field reference
         virtual tmp<fvPatchField<Type>> clone

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,27 +106,6 @@ activeBaffleVelocityFvPatchVectorField
 {
     fvPatchVectorField::operator=(Zero);
 }
-
-
-Foam::activeBaffleVelocityFvPatchVectorField::
-activeBaffleVelocityFvPatchVectorField
-(
-    const activeBaffleVelocityFvPatchVectorField& ptf
-)
-:
-    fixedValueFvPatchVectorField(ptf),
-    pName_(ptf.pName_),
-    cyclicPatchName_(ptf.cyclicPatchName_),
-    cyclicPatchLabel_(ptf.cyclicPatchLabel_),
-    orientation_(ptf.orientation_),
-    initWallSf_(ptf.initWallSf_),
-    initCyclicSf_(ptf.initCyclicSf_),
-    nbrCyclicSf_(ptf.nbrCyclicSf_),
-    openFraction_(ptf.openFraction_),
-    openingTime_(ptf.openingTime_),
-    maxOpenFractionDelta_(ptf.maxOpenFractionDelta_),
-    curTimeIndex_(-1)
-{}
 
 
 Foam::activeBaffleVelocityFvPatchVectorField::

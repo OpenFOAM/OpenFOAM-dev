@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,21 +85,6 @@ Foam::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
     ranGen_(label(0)),
     fluctuationScale_(ptf.fluctuationScale_),
     referenceField_(mapper(ptf.referenceField_)),
-    alpha_(ptf.alpha_),
-    curTimeIndex_(-1)
-{}
-
-
-template<class Type>
-Foam::turbulentInletFvPatchField<Type>::turbulentInletFvPatchField
-(
-    const turbulentInletFvPatchField<Type>& ptf
-)
-:
-    fixedValueFvPatchField<Type>(ptf),
-    ranGen_(ptf.ranGen_),
-    fluctuationScale_(ptf.fluctuationScale_),
-    referenceField_(ptf.referenceField_),
     alpha_(ptf.alpha_),
     curTimeIndex_(-1)
 {}

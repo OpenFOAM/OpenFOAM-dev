@@ -73,15 +73,6 @@ fWallFunctionFvPatchScalarField::fWallFunctionFvPatchScalarField
 
 fWallFunctionFvPatchScalarField::fWallFunctionFvPatchScalarField
 (
-    const fWallFunctionFvPatchScalarField& v2wfpsf
-)
-:
-    fixedValueFvPatchField<scalar>(v2wfpsf)
-{}
-
-
-fWallFunctionFvPatchScalarField::fWallFunctionFvPatchScalarField
-(
     const fWallFunctionFvPatchScalarField& v2wfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

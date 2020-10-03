@@ -96,20 +96,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         extrapolatedCalculatedFvPatchField
         (
             const extrapolatedCalculatedFvPatchField<Type>&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const
-        {
-            return tmp<fvPatchField<Type>>
-            (
-                new extrapolatedCalculatedFvPatchField<Type>(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         extrapolatedCalculatedFvPatchField

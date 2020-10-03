@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,8 +31,8 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::variableHeightFlowRateFvPatchScalarField
-::variableHeightFlowRateFvPatchScalarField
+Foam::variableHeightFlowRateFvPatchScalarField::
+variableHeightFlowRateFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF
@@ -49,8 +49,8 @@ Foam::variableHeightFlowRateFvPatchScalarField
 }
 
 
-Foam::variableHeightFlowRateFvPatchScalarField
-::variableHeightFlowRateFvPatchScalarField
+Foam::variableHeightFlowRateFvPatchScalarField::
+variableHeightFlowRateFvPatchScalarField
 (
     const variableHeightFlowRateFvPatchScalarField& ptf,
     const fvPatch& p,
@@ -65,8 +65,8 @@ Foam::variableHeightFlowRateFvPatchScalarField
 {}
 
 
-Foam::variableHeightFlowRateFvPatchScalarField
-::variableHeightFlowRateFvPatchScalarField
+Foam::variableHeightFlowRateFvPatchScalarField::
+variableHeightFlowRateFvPatchScalarField
 (
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -97,21 +97,8 @@ Foam::variableHeightFlowRateFvPatchScalarField
 }
 
 
-Foam::variableHeightFlowRateFvPatchScalarField
-    ::variableHeightFlowRateFvPatchScalarField
-(
-    const variableHeightFlowRateFvPatchScalarField& ptf
-)
-:
-    mixedFvPatchScalarField(ptf),
-    phiName_(ptf.phiName_),
-    lowerBound_(ptf.lowerBound_),
-    upperBound_(ptf.upperBound_)
-{}
-
-
-Foam::variableHeightFlowRateFvPatchScalarField
-    ::variableHeightFlowRateFvPatchScalarField
+Foam::variableHeightFlowRateFvPatchScalarField::
+variableHeightFlowRateFvPatchScalarField
 (
     const variableHeightFlowRateFvPatchScalarField& ptf,
     const DimensionedField<scalar, volMesh>& iF
@@ -192,5 +179,6 @@ namespace Foam
         variableHeightFlowRateFvPatchScalarField
     );
 }
+
 
 // ************************************************************************* //

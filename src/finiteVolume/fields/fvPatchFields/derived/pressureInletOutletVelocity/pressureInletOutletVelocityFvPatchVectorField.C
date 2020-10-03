@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,18 +84,6 @@ pressureInletOutletVelocityFvPatchVectorField
     directionMixedFvPatchVectorField(ptf, p, iF, mapper),
     phiName_(ptf.phiName_),
     tangentialVelocity_(ptf.tangentialVelocity_, false)
-{}
-
-
-Foam::pressureInletOutletVelocityFvPatchVectorField::
-pressureInletOutletVelocityFvPatchVectorField
-(
-    const pressureInletOutletVelocityFvPatchVectorField& pivpvf
-)
-:
-    directionMixedFvPatchVectorField(pivpvf),
-    phiName_(pivpvf.phiName_),
-    tangentialVelocity_(pivpvf.tangentialVelocity_, false)
 {}
 
 

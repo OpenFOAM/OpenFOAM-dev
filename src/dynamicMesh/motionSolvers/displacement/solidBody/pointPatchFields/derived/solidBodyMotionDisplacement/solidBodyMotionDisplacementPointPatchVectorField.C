@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,17 +90,6 @@ solidBodyMotionDisplacementPointPatchVectorField
        -localPoints0()
     );
 }
-
-
-solidBodyMotionDisplacementPointPatchVectorField::
-solidBodyMotionDisplacementPointPatchVectorField
-(
-    const solidBodyMotionDisplacementPointPatchVectorField& ptf
-)
-:
-    fixedValuePointPatchVectorField(ptf),
-    SBMFPtr_(ptf.SBMFPtr_().clone().ptr())
-{}
 
 
 solidBodyMotionDisplacementPointPatchVectorField::

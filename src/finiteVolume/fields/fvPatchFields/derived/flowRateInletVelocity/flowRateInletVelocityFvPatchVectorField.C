@@ -121,22 +121,6 @@ flowRateInletVelocityFvPatchVectorField
 Foam::flowRateInletVelocityFvPatchVectorField::
 flowRateInletVelocityFvPatchVectorField
 (
-    const flowRateInletVelocityFvPatchVectorField& ptf
-)
-:
-    fixedValueFvPatchField<vector>(ptf),
-    flowRate_(ptf.flowRate_, false),
-    volumetric_(ptf.volumetric_),
-    rhoName_(ptf.rhoName_),
-    rhoInlet_(ptf.rhoInlet_),
-    alphaName_(ptf.alphaName_),
-    extrapolateProfile_(ptf.extrapolateProfile_)
-{}
-
-
-Foam::flowRateInletVelocityFvPatchVectorField::
-flowRateInletVelocityFvPatchVectorField
-(
     const flowRateInletVelocityFvPatchVectorField& ptf,
     const DimensionedField<vector, volMesh>& iF
 )

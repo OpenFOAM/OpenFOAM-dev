@@ -127,20 +127,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         fixedPressureCompressibleDensityFvPatchScalarField
         (
             const fixedPressureCompressibleDensityFvPatchScalarField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchScalarField> clone() const
-        {
-            return tmp<fvPatchScalarField>
-            (
-                new fixedPressureCompressibleDensityFvPatchScalarField(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         fixedPressureCompressibleDensityFvPatchScalarField

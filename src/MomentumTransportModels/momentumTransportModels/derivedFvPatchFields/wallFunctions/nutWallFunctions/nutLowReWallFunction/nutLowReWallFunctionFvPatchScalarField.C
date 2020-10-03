@@ -79,15 +79,6 @@ nutLowReWallFunctionFvPatchScalarField::nutLowReWallFunctionFvPatchScalarField
 
 nutLowReWallFunctionFvPatchScalarField::nutLowReWallFunctionFvPatchScalarField
 (
-    const nutLowReWallFunctionFvPatchScalarField& nlrwfpsf
-)
-:
-    nutWallFunctionFvPatchScalarField(nlrwfpsf)
-{}
-
-
-nutLowReWallFunctionFvPatchScalarField::nutLowReWallFunctionFvPatchScalarField
-(
     const nutLowReWallFunctionFvPatchScalarField& nlrwfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

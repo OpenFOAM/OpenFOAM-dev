@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,20 +99,6 @@ inletOutletTotalTemperatureFvPatchScalarField
     this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 }
-
-
-Foam::inletOutletTotalTemperatureFvPatchScalarField::
-inletOutletTotalTemperatureFvPatchScalarField
-(
-    const inletOutletTotalTemperatureFvPatchScalarField& tppsf
-)
-:
-    inletOutletFvPatchScalarField(tppsf),
-    UName_(tppsf.UName_),
-    psiName_(tppsf.psiName_),
-    gamma_(tppsf.gamma_),
-    T0_(tppsf.T0_)
-{}
 
 
 Foam::inletOutletTotalTemperatureFvPatchScalarField::

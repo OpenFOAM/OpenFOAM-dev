@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -71,18 +71,6 @@ Foam::mappedFlowRateFvPatchVectorField::mappedFlowRateFvPatchVectorField
     nbrPhiName_(dict.lookupOrDefault<word>("nbrPhi", "phi")),
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho"))
-{}
-
-
-Foam::mappedFlowRateFvPatchVectorField::mappedFlowRateFvPatchVectorField
-(
-    const mappedFlowRateFvPatchVectorField& ptf
-)
-:
-    fixedValueFvPatchField<vector>(ptf),
-    nbrPhiName_(ptf.nbrPhiName_),
-    phiName_(ptf.phiName_),
-    rhoName_(ptf.rhoName_)
 {}
 
 

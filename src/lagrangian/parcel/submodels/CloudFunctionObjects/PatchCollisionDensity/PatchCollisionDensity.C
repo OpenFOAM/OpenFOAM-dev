@@ -127,8 +127,16 @@ Foam::PatchCollisionDensity<CloudType>::PatchCollisionDensity
 :
     CloudFunctionObject<CloudType>(ppm),
     minSpeed_(ppm.minSpeed_),
-    collisionDensity_(ppm.collisionDensity_),
-    collisionDensity0_(ppm.collisionDensity0_),
+    collisionDensity_
+    (
+        volScalarField::Internal::null(),
+        ppm.collisionDensity_
+    ),
+    collisionDensity0_
+    (
+        volScalarField::Internal::null(),
+        ppm.collisionDensity0_
+    ),
     time0_(ppm.time0_)
 {}
 

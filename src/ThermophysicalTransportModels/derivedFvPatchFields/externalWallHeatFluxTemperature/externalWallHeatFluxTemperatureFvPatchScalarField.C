@@ -211,29 +211,6 @@ externalWallHeatFluxTemperatureFvPatchScalarField
 Foam::externalWallHeatFluxTemperatureFvPatchScalarField::
 externalWallHeatFluxTemperatureFvPatchScalarField
 (
-    const externalWallHeatFluxTemperatureFvPatchScalarField& tppsf
-)
-:
-    mixedFvPatchScalarField(tppsf),
-    temperatureCoupledBase(tppsf),
-    mode_(tppsf.mode_),
-    Q_(tppsf.Q_),
-    q_(tppsf.q_),
-    h_(tppsf.h_),
-    Ta_(tppsf.Ta_, false),
-    relaxation_(tppsf.relaxation_),
-    emissivity_(tppsf.emissivity_),
-    qrPrevious_(tppsf.qrPrevious_),
-    qrRelaxation_(tppsf.qrRelaxation_),
-    qrName_(tppsf.qrName_),
-    thicknessLayers_(tppsf.thicknessLayers_),
-    kappaLayers_(tppsf.kappaLayers_)
-{}
-
-
-Foam::externalWallHeatFluxTemperatureFvPatchScalarField::
-externalWallHeatFluxTemperatureFvPatchScalarField
-(
     const externalWallHeatFluxTemperatureFvPatchScalarField& tppsf,
     const DimensionedField<scalar, volMesh>& iF
 )

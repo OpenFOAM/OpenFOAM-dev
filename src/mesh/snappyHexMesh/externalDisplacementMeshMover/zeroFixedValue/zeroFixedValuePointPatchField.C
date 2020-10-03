@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,17 +69,6 @@ zeroFixedValuePointPatchField
     // For safety re-evaluate
     fixedValuePointPatchField<Type>::operator=(Zero);
 }
-
-
-template<class Type>
-Foam::zeroFixedValuePointPatchField<Type>::
-zeroFixedValuePointPatchField
-(
-    const zeroFixedValuePointPatchField<Type>& ptf
-)
-:
-    fixedValuePointPatchField<Type>(ptf)
-{}
 
 
 template<class Type>

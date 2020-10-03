@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,18 +81,6 @@ pressureInletOutletParSlipVelocityFvPatchVectorField
     refGrad() = Zero;
     valueFraction() = 0.0;
 }
-
-
-Foam::pressureInletOutletParSlipVelocityFvPatchVectorField::
-pressureInletOutletParSlipVelocityFvPatchVectorField
-(
-    const pressureInletOutletParSlipVelocityFvPatchVectorField& pivpvf
-)
-:
-    mixedFvPatchVectorField(pivpvf),
-    phiName_(pivpvf.phiName_),
-    rhoName_(pivpvf.rhoName_)
-{}
 
 
 Foam::pressureInletOutletParSlipVelocityFvPatchVectorField::

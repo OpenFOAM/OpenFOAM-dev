@@ -133,23 +133,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         turbulentMixingLengthFrequencyInletFvPatchScalarField
         (
             const turbulentMixingLengthFrequencyInletFvPatchScalarField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchScalarField> clone() const
-        {
-            return tmp<fvPatchScalarField>
-            (
-                new turbulentMixingLengthFrequencyInletFvPatchScalarField
-                (
-                    *this
-                )
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         turbulentMixingLengthFrequencyInletFvPatchScalarField

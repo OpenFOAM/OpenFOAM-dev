@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,28 +102,6 @@ Foam::syringePressureFvPatchScalarField::syringePressureFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(sppsf, iF),
-    Ap_(sppsf.Ap_),
-    Sp_(sppsf.Sp_),
-    VsI_(sppsf.VsI_),
-    tas_(sppsf.tas_),
-    tae_(sppsf.tae_),
-    tds_(sppsf.tds_),
-    tde_(sppsf.tde_),
-    psI_(sppsf.psI_),
-    psi_(sppsf.psi_),
-    ams_(sppsf.ams_),
-    ams0_(sppsf.ams0_),
-    phiName_(sppsf.phiName_),
-    curTimeIndex_(-1)
-{}
-
-
-Foam::syringePressureFvPatchScalarField::syringePressureFvPatchScalarField
-(
-    const syringePressureFvPatchScalarField& sppsf
-)
-:
-    fixedValueFvPatchScalarField(sppsf),
     Ap_(sppsf.Ap_),
     Sp_(sppsf.Sp_),
     VsI_(sppsf.VsI_),

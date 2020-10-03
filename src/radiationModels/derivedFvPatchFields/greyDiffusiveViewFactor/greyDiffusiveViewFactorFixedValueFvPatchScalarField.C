@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,23 +90,6 @@ greyDiffusiveViewFactorFixedValueFvPatchScalarField
          fvPatchScalarField::operator=(0.0);
     }
 }
-
-
-Foam::greyDiffusiveViewFactorFixedValueFvPatchScalarField::
-greyDiffusiveViewFactorFixedValueFvPatchScalarField
-(
-    const greyDiffusiveViewFactorFixedValueFvPatchScalarField& ptf
-)
-:
-    fixedValueFvPatchScalarField(ptf),
-    radiationCoupledBase
-    (
-        ptf.patch(),
-        ptf.emissivityMethod(),
-        ptf.emissivity_
-    ),
-    qro_(ptf.qro_)
-{}
 
 
 Foam::greyDiffusiveViewFactorFixedValueFvPatchScalarField::

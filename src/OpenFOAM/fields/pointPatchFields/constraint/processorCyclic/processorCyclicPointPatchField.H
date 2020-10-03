@@ -93,18 +93,6 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type>> clone() const
-        {
-            return autoPtr<pointPatchField<Type>>
-            (
-                new processorCyclicPointPatchField<Type>
-                (
-                    *this
-                )
-            );
-        }
-
         //- Construct as copy setting internal field reference
         processorCyclicPointPatchField
         (

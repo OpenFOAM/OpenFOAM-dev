@@ -85,18 +85,6 @@ specieTransferTemperatureFvPatchScalarField
 Foam::specieTransferTemperatureFvPatchScalarField::
 specieTransferTemperatureFvPatchScalarField
 (
-    const specieTransferTemperatureFvPatchScalarField& ptf
-)
-:
-    mixedEnergyCalculatedTemperatureFvPatchScalarField(ptf),
-    phiName_(ptf.phiName_),
-    UName_(ptf.UName_)
-{}
-
-
-Foam::specieTransferTemperatureFvPatchScalarField::
-specieTransferTemperatureFvPatchScalarField
-(
     const specieTransferTemperatureFvPatchScalarField& ptf,
     const DimensionedField<scalar, volMesh>& iF
 )

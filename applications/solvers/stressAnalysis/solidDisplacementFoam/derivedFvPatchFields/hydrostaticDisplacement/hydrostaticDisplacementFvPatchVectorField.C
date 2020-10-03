@@ -77,19 +77,6 @@ hydrostaticDisplacementFvPatchVectorField
 Foam::hydrostaticDisplacementFvPatchVectorField::
 hydrostaticDisplacementFvPatchVectorField
 (
-    const hydrostaticDisplacementFvPatchVectorField& tdpvf
-)
-:
-    tractionDisplacementFvPatchVectorField(tdpvf),
-    rhoLiquid_(tdpvf.rhoLiquid_),
-    liquidSurfacePressure_(tdpvf.liquidSurfacePressure_),
-    liquidSurfacePoint_(tdpvf.liquidSurfacePoint_)
-{}
-
-
-Foam::hydrostaticDisplacementFvPatchVectorField::
-hydrostaticDisplacementFvPatchVectorField
-(
     const hydrostaticDisplacementFvPatchVectorField& tdpvf,
     const DimensionedField<vector, volMesh>& iF
 )

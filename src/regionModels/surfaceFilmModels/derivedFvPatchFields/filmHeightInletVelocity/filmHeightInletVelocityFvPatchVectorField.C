@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,19 +72,6 @@ filmHeightInletVelocityFvPatchVectorField
     phiName_(dict.lookupOrDefault<word>("phi", "phi")),
     rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
     deltafName_(dict.lookupOrDefault<word>("delta", "delta"))
-{}
-
-
-Foam::filmHeightInletVelocityFvPatchVectorField::
-filmHeightInletVelocityFvPatchVectorField
-(
-    const filmHeightInletVelocityFvPatchVectorField& fhivpvf
-)
-:
-    fixedValueFvPatchVectorField(fhivpvf),
-    phiName_(fhivpvf.phiName_),
-    rhoName_(fhivpvf.rhoName_),
-    deltafName_(fhivpvf.deltafName_)
 {}
 
 

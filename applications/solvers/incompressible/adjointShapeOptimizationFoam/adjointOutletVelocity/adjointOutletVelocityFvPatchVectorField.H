@@ -83,15 +83,6 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Construct and return a clone
-        virtual tmp<fvPatchVectorField> clone() const
-        {
-            return tmp<fvPatchVectorField>
-            (
-                new adjointOutletVelocityFvPatchVectorField(*this)
-            );
-        }
-
         //- Construct as copy setting internal field reference
         adjointOutletVelocityFvPatchVectorField
         (

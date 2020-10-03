@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -494,23 +494,6 @@ Foam::genericFvPatchField<Type>::genericFvPatchField
         );
     }
 }
-
-
-template<class Type>
-Foam::genericFvPatchField<Type>::genericFvPatchField
-(
-    const genericFvPatchField<Type>& ptf
-)
-:
-    genericPatchField(ptf),
-    calculatedFvPatchField<Type>(ptf),
-    dict_(ptf.dict_),
-    scalarFields_(ptf.scalarFields_),
-    vectorFields_(ptf.vectorFields_),
-    sphericalTensorFields_(ptf.sphericalTensorFields_),
-    symmTensorFields_(ptf.symmTensorFields_),
-    tensorFields_(ptf.tensorFields_)
-{}
 
 
 template<class Type>

@@ -155,18 +155,6 @@ nutUTabulatedWallFunctionFvPatchScalarField
 nutUTabulatedWallFunctionFvPatchScalarField::
 nutUTabulatedWallFunctionFvPatchScalarField
 (
-    const nutUTabulatedWallFunctionFvPatchScalarField& wfpsf
-)
-:
-    nutWallFunctionFvPatchScalarField(wfpsf),
-    uPlusTableName_(wfpsf.uPlusTableName_),
-    uPlusTable_(wfpsf.uPlusTable_)
-{}
-
-
-nutUTabulatedWallFunctionFvPatchScalarField::
-nutUTabulatedWallFunctionFvPatchScalarField
-(
     const nutUTabulatedWallFunctionFvPatchScalarField& wfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

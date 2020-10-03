@@ -143,22 +143,6 @@ specieTransferMassFractionFvPatchScalarField
 Foam::specieTransferMassFractionFvPatchScalarField::
 specieTransferMassFractionFvPatchScalarField
 (
-    const specieTransferMassFractionFvPatchScalarField& ptf
-)
-:
-    mixedFvPatchScalarField(ptf),
-    phiName_(ptf.phiName_),
-    UName_(ptf.UName_),
-    phiYp_(ptf.size(), 0),
-    timeIndex_(-1),
-    c_(ptf.c_),
-    property_(ptf.property_)
-{}
-
-
-Foam::specieTransferMassFractionFvPatchScalarField::
-specieTransferMassFractionFvPatchScalarField
-(
     const specieTransferMassFractionFvPatchScalarField& ptf,
     const DimensionedField<scalar, volMesh>& iF
 )

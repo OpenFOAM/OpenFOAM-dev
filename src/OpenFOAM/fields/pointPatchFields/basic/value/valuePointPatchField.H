@@ -90,18 +90,6 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type>> clone() const
-        {
-            return autoPtr<pointPatchField<Type>>
-            (
-                new valuePointPatchField<Type>
-                (
-                    *this
-                )
-            );
-        }
-
         //- Construct as copy setting internal field reference
         valuePointPatchField
         (
@@ -109,8 +97,8 @@ public:
             const DimensionedField<Type, pointMesh>&
         );
 
-        //- Copy constructor
-        valuePointPatchField(const valuePointPatchField<Type>&) = default;
+        //- Disallow copy without setting internal field reference
+        valuePointPatchField(const valuePointPatchField<Type>&) = delete;
 
         //- Construct and return a clone setting internal field reference
         virtual autoPtr<pointPatchField<Type>> clone

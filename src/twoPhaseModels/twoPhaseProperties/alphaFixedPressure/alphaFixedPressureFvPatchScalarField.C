@@ -86,17 +86,6 @@ alphaFixedPressureFvPatchScalarField
 Foam::alphaFixedPressureFvPatchScalarField::
 alphaFixedPressureFvPatchScalarField
 (
-    const alphaFixedPressureFvPatchScalarField& tppsf
-)
-:
-    fixedValueFvPatchScalarField(tppsf),
-    p_(tppsf.p_)
-{}
-
-
-Foam::alphaFixedPressureFvPatchScalarField::
-alphaFixedPressureFvPatchScalarField
-(
     const alphaFixedPressureFvPatchScalarField& tppsf,
     const DimensionedField<scalar, volMesh>& iF
 )

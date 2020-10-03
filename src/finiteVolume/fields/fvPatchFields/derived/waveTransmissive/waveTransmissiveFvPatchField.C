@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,18 +78,6 @@ Foam::waveTransmissiveFvPatchField<Type>::waveTransmissiveFvPatchField
 template<class Type>
 Foam::waveTransmissiveFvPatchField<Type>::waveTransmissiveFvPatchField
 (
-    const waveTransmissiveFvPatchField& ptpsf
-)
-:
-    advectiveFvPatchField<Type>(ptpsf),
-    psiName_(ptpsf.psiName_),
-    gamma_(ptpsf.gamma_)
-{}
-
-
-template<class Type>
-Foam::waveTransmissiveFvPatchField<Type>::waveTransmissiveFvPatchField
-(
     const waveTransmissiveFvPatchField& ptpsf,
     const DimensionedField<Type, volMesh>& iF
 )
@@ -114,9 +102,11 @@ Foam::waveTransmissiveFvPatchField<Type>::advectionSpeed() const
     const surfaceScalarField& phi =
         this->db().template lookupObject<surfaceScalarField>(this->phiName_);
 
-    fvsPatchField<scalar> phip =
+    scalarField phip
+    (
         this->patch().template
-            lookupPatchField<surfaceScalarField, scalar>(this->phiName_);
+            lookupPatchField<surfaceScalarField, scalar>(this->phiName_)
+    );
 
     if (phi.dimensions() == dimDensity*dimVelocity*dimArea)
     {

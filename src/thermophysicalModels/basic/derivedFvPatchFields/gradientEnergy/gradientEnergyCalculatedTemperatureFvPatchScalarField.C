@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -77,17 +77,6 @@ gradientEnergyCalculatedTemperatureFvPatchScalarField
 :
     calculatedFvPatchScalarField(ptf, p, iF, mapper),
     heGradient_(mapper(ptf.heGradient_))
-{}
-
-
-Foam::gradientEnergyCalculatedTemperatureFvPatchScalarField::
-gradientEnergyCalculatedTemperatureFvPatchScalarField
-(
-    const gradientEnergyCalculatedTemperatureFvPatchScalarField& ptf
-)
-:
-    calculatedFvPatchScalarField(ptf),
-    heGradient_(ptf.heGradient_)
 {}
 
 

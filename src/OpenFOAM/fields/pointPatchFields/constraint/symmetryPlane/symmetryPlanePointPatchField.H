@@ -90,18 +90,6 @@ public:
             const pointPatchFieldMapper&
         );
 
-        //- Construct and return a clone
-        virtual autoPtr<pointPatchField<Type>> clone() const
-        {
-            return autoPtr<pointPatchField<Type>>
-            (
-                new symmetryPlanePointPatchField<Type>
-                (
-                    *this
-                )
-            );
-        }
-
         //- Construct as copy setting internal field reference
         symmetryPlanePointPatchField
         (

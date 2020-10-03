@@ -85,20 +85,6 @@ Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
 
 Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
 (
-    const porousBafflePressureFvPatchField& ptf
-)
-:
-    fixedJumpFvPatchField<scalar>(ptf),
-    phiName_(ptf.phiName_),
-    rhoName_(ptf.rhoName_),
-    D_(ptf.D_),
-    I_(ptf.I_),
-    length_(ptf.length_)
-{}
-
-
-Foam::porousBafflePressureFvPatchField::porousBafflePressureFvPatchField
-(
     const porousBafflePressureFvPatchField& ptf,
     const DimensionedField<scalar, volMesh>& iF
 )

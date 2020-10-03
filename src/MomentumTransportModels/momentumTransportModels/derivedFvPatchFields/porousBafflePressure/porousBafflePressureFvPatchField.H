@@ -148,20 +148,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         porousBafflePressureFvPatchField
         (
             const porousBafflePressureFvPatchField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<scalar>> clone() const
-        {
-            return tmp<fvPatchField<scalar>>
-            (
-                new porousBafflePressureFvPatchField(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         porousBafflePressureFvPatchField

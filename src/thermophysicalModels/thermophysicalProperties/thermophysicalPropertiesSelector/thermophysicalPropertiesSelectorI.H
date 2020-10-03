@@ -27,8 +27,8 @@ License
 
 template<class ThermophysicalProperties>
 inline const ThermophysicalProperties&
-Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>
-::properties() const
+Foam::thermophysicalPropertiesSelector<ThermophysicalProperties>::
+properties() const
 {
     return propertiesPtr_();
 }

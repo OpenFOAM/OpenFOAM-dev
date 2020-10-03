@@ -128,17 +128,6 @@ alphatJayatillekeWallFunctionFvPatchScalarField
 alphatJayatillekeWallFunctionFvPatchScalarField::
 alphatJayatillekeWallFunctionFvPatchScalarField
 (
-    const alphatJayatillekeWallFunctionFvPatchScalarField& awfpsf
-)
-:
-    fixedValueFvPatchScalarField(awfpsf),
-    Prt_(awfpsf.Prt_)
-{}
-
-
-alphatJayatillekeWallFunctionFvPatchScalarField::
-alphatJayatillekeWallFunctionFvPatchScalarField
-(
     const alphatJayatillekeWallFunctionFvPatchScalarField& awfpsf,
     const DimensionedField<scalar, volMesh>& iF
 )

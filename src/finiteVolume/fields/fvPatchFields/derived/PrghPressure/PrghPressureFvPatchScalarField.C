@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,17 +67,6 @@ PrghPressureFvPatchScalarField
 )
 :
     PressureFvPatchScalarField(ptf, p, iF, mapper)
-{}
-
-
-template<class PressureFvPatchScalarField>
-Foam::PrghPressureFvPatchScalarField<PressureFvPatchScalarField>::
-PrghPressureFvPatchScalarField
-(
-    const PrghPressureFvPatchScalarField& ptf
-)
-:
-    PressureFvPatchScalarField(ptf)
 {}
 
 

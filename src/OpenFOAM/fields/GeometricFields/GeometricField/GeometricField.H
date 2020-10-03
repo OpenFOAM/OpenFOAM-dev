@@ -130,12 +130,7 @@ public:
             //- Construct from a BoundaryMesh,
             //  reference to the internal field
             //  and a patch field type
-            Boundary
-            (
-                const BoundaryMesh&,
-                const Internal&,
-                const word&
-            );
+            Boundary(const BoundaryMesh&, const Internal&, const word&);
 
             //- Construct from a BoundaryMesh,
             //  reference to the internal field
@@ -160,49 +155,24 @@ public:
             );
 
             //- Construct as copy setting the reference to the internal field
-            Boundary
-            (
-                const Internal&,
-                const Boundary&
-            );
+            Boundary(const Internal&, const Boundary&);
 
-            //- Copy constructor
-            //  Dangerous because Field may be set to a field which gets deleted
-            //  Need new type of BoundaryField, one which is part of a geometric
-            //  field for which snGrad etc. may be called and a free standing
-            //  BoundaryField for which such operations are unavailable.
-            Boundary
-            (
-                const Boundary&
-            );
+            //- Copy constructor deleted
+            //  as it would not set the internalField reference correctly
+            Boundary(const Boundary&) = delete;
 
-            //- Move constructor
-            //  Dangerous because Field may be set to a field which gets deleted
-            //  Need new type of BoundaryField, one which is part of a geometric
-            //  field for which snGrad etc. may be called and a free standing
-            //  BoundaryField for which such operations are unavailable.
-            Boundary
-            (
-                Boundary&&
-            );
+            //- Move constructor deleted
+            //  as it would not set the internalField reference correctly
+            Boundary(Boundary&&) = delete;
 
             //- Construct from dictionary
-            Boundary
-            (
-                const BoundaryMesh&,
-                const Internal&,
-                const dictionary&
-            );
+            Boundary(const BoundaryMesh&, const Internal&, const dictionary&);
 
 
         // Member Functions
 
             //- Read the boundary field
-            void readField
-            (
-                const Internal& field,
-                const dictionary& dict
-            );
+            void readField(const Internal& field, const dictionary& dict);
 
             //- Update the boundary condition coefficients
             void updateCoeffs();
@@ -379,22 +349,13 @@ public:
         );
 
         //- Copy constructor
-        GeometricField
-        (
-            const GeometricField<Type, PatchField, GeoMesh>&
-        );
+        GeometricField(const GeometricField<Type, PatchField, GeoMesh>&);
 
         //- Move constructor
-        GeometricField
-        (
-            GeometricField<Type, PatchField, GeoMesh>&&
-        );
+        GeometricField(GeometricField<Type, PatchField, GeoMesh>&&);
 
         //- Construct as copy of tmp<GeometricField> deleting argument
-        GeometricField
-        (
-            const tmp<GeometricField<Type, PatchField, GeoMesh>>&
-        );
+        GeometricField(const tmp<GeometricField<Type, PatchField, GeoMesh>>&);
 
         //- Construct as copy resetting IO parameters
         GeometricField

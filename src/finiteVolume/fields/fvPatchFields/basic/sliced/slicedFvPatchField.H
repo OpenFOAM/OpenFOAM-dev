@@ -85,11 +85,8 @@ public:
             const fvPatchField<Type>&
         );
 
-        //- Copy constructor
-        slicedFvPatchField(const slicedFvPatchField<Type>&);
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchField<Type>> clone() const;
+        //- Disallow copy without setting internal field reference
+        slicedFvPatchField(const slicedFvPatchField<Type>&) = delete;
 
         //- Copy constructor setting internal field reference
         slicedFvPatchField

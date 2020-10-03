@@ -71,16 +71,6 @@ adsorptionMassFractionFvPatchScalarField
 Foam::adsorptionMassFractionFvPatchScalarField::
 adsorptionMassFractionFvPatchScalarField
 (
-    const adsorptionMassFractionFvPatchScalarField& ptf
-)
-:
-    specieTransferMassFractionFvPatchScalarField(ptf)
-{}
-
-
-Foam::adsorptionMassFractionFvPatchScalarField::
-adsorptionMassFractionFvPatchScalarField
-(
     const adsorptionMassFractionFvPatchScalarField& ptf,
     const DimensionedField<scalar, volMesh>& iF
 )

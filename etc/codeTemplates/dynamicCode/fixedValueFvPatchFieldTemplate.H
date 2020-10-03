@@ -85,20 +85,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         ${typeName}FixedValueFvPatch${FieldType}
         (
             const ${typeName}FixedValueFvPatch${FieldType}&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatch${FieldType} > clone() const
-        {
-            return tmp<fvPatch${FieldType} >
-            (
-                new ${typeName}FixedValueFvPatch${FieldType}(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         ${typeName}FixedValueFvPatch${FieldType}

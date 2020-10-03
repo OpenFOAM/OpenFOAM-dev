@@ -239,20 +239,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         alphatWallBoilingWallFunctionFvPatchScalarField
         (
             const alphatWallBoilingWallFunctionFvPatchScalarField&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvPatchScalarField> clone() const
-        {
-            return tmp<fvPatchScalarField>
-            (
-                new alphatWallBoilingWallFunctionFvPatchScalarField(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         alphatWallBoilingWallFunctionFvPatchScalarField

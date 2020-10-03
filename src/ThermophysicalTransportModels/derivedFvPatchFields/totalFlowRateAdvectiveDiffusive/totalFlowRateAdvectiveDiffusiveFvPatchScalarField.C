@@ -98,18 +98,6 @@ totalFlowRateAdvectiveDiffusiveFvPatchScalarField
 Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::
 totalFlowRateAdvectiveDiffusiveFvPatchScalarField
 (
-    const totalFlowRateAdvectiveDiffusiveFvPatchScalarField& tppsf
-)
-:
-    mixedFvPatchField<scalar>(tppsf),
-    phiName_(tppsf.phiName_),
-    rhoName_(tppsf.rhoName_),
-    massFluxFraction_(tppsf.massFluxFraction_)
-{}
-
-Foam::totalFlowRateAdvectiveDiffusiveFvPatchScalarField::
-totalFlowRateAdvectiveDiffusiveFvPatchScalarField
-(
     const totalFlowRateAdvectiveDiffusiveFvPatchScalarField& tppsf,
     const DimensionedField<scalar, volMesh>& iF
 )

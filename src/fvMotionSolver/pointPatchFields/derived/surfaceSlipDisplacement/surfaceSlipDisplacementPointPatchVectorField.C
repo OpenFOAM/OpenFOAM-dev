@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -341,21 +341,6 @@ surfaceSlipDisplacementPointPatchVectorField
 )
 :
     pointPatchVectorField(p, iF),
-    surfacesDict_(ppf.surfacesDict_),
-    projectMode_(ppf.projectMode_),
-    projectDir_(ppf.projectDir_),
-    wedgePlane_(ppf.wedgePlane_),
-    frozenPointsZone_(ppf.frozenPointsZone_)
-{}
-
-
-surfaceSlipDisplacementPointPatchVectorField::
-surfaceSlipDisplacementPointPatchVectorField
-(
-    const surfaceSlipDisplacementPointPatchVectorField& ppf
-)
-:
-    pointPatchVectorField(ppf),
     surfacesDict_(ppf.surfacesDict_),
     projectMode_(ppf.projectMode_),
     projectDir_(ppf.projectDir_),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,20 +85,6 @@ uniformDensityHydrostaticPressureFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper),
-    rho_(ptf.rho_),
-    pRef_(ptf.pRef_),
-    pRefPointSpecified_(ptf.pRefPointSpecified_),
-    pRefPoint_(ptf.pRefPoint_)
-{}
-
-
-Foam::uniformDensityHydrostaticPressureFvPatchScalarField::
-uniformDensityHydrostaticPressureFvPatchScalarField
-(
-    const uniformDensityHydrostaticPressureFvPatchScalarField& ptf
-)
-:
-    fixedValueFvPatchScalarField(ptf),
     rho_(ptf.rho_),
     pRef_(ptf.pRef_),
     pRefPointSpecified_(ptf.pRefPointSpecified_),

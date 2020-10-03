@@ -67,16 +67,6 @@ Foam::kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 template<class Type>
 Foam::kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
 (
-    const kqRWallFunctionFvPatchField& tkqrwfpf
-)
-:
-    zeroGradientFvPatchField<Type>(tkqrwfpf)
-{}
-
-
-template<class Type>
-Foam::kqRWallFunctionFvPatchField<Type>::kqRWallFunctionFvPatchField
-(
     const kqRWallFunctionFvPatchField& tkqrwfpf,
     const DimensionedField<Type, volMesh>& iF
 )

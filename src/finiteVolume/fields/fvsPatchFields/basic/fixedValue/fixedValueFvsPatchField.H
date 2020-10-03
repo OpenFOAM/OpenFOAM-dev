@@ -85,20 +85,11 @@ public:
             const fvPatchFieldMapper&
         );
 
-        //- Copy constructor
+        //- Disallow copy without setting internal field reference
         fixedValueFvsPatchField
         (
             const fixedValueFvsPatchField<Type>&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<fvsPatchField<Type>> clone() const
-        {
-            return tmp<fvsPatchField<Type>>
-            (
-                new fixedValueFvsPatchField<Type>(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         fixedValueFvsPatchField

@@ -105,18 +105,6 @@ Foam::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
 template<class Type>
 Foam::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
 (
-    const cyclicAMIFvPatchField<Type>& ptf
-)
-:
-    coupledFvPatchField<Type>(ptf),
-    cyclicAMILduInterfaceField(),
-    cyclicAMIPatch_(ptf.cyclicAMIPatch_)
-{}
-
-
-template<class Type>
-Foam::cyclicAMIFvPatchField<Type>::cyclicAMIFvPatchField
-(
     const cyclicAMIFvPatchField<Type>& ptf,
     const DimensionedField<Type, volMesh>& iF
 )

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,19 +83,6 @@ mixedEnergyCalculatedTemperatureFvPatchScalarField
     heRefValue_(mapper(ptf.heRefValue_)),
     heRefGrad_(mapper(ptf.heRefGrad_)),
     heValueFraction_(mapper(ptf.heValueFraction_))
-{}
-
-
-Foam::mixedEnergyCalculatedTemperatureFvPatchScalarField::
-mixedEnergyCalculatedTemperatureFvPatchScalarField
-(
-    const mixedEnergyCalculatedTemperatureFvPatchScalarField& ptf
-)
-:
-    calculatedFvPatchScalarField(ptf),
-    heRefValue_(ptf.heRefValue_),
-    heRefGrad_(ptf.heRefGrad_),
-    heValueFraction_(ptf.heValueFraction_)
 {}
 
 

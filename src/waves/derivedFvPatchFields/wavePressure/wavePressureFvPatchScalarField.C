@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,17 +83,6 @@ Foam::wavePressureFvPatchScalarField::wavePressureFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(ptf, p, iF, mapper),
-    UName_(ptf.UName_),
-    rhoName_(ptf.rhoName_)
-{}
-
-
-Foam::wavePressureFvPatchScalarField::wavePressureFvPatchScalarField
-(
-    const wavePressureFvPatchScalarField& ptf
-)
-:
-    mixedFvPatchScalarField(ptf),
     UName_(ptf.UName_),
     rhoName_(ptf.rhoName_)
 {}

@@ -80,16 +80,6 @@ externalCoupledTemperatureMixedFvPatchScalarField
 Foam::externalCoupledTemperatureMixedFvPatchScalarField::
 externalCoupledTemperatureMixedFvPatchScalarField
 (
-    const externalCoupledTemperatureMixedFvPatchScalarField& ecmpf
-)
-:
-    externalCoupledMixedFvPatchField<scalar>(ecmpf)
-{}
-
-
-Foam::externalCoupledTemperatureMixedFvPatchScalarField::
-externalCoupledTemperatureMixedFvPatchScalarField
-(
     const externalCoupledTemperatureMixedFvPatchScalarField& ecmpf,
     const DimensionedField<scalar, volMesh>& iF
 )
