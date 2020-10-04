@@ -147,6 +147,7 @@ mencoderCreateVideo () {
     _image="$2"
     _fps="$3"
     _out="$4"
+    _fmt="$5"
 
     mencoder \
         "mf://$_dir/$_image.*.png" \
@@ -169,7 +170,7 @@ isInstalled () {
     error "Cannot find first file in image sequence"
 
 ! [ "$fmt" = "webm" ] && ! [ "$start" ] && isInstalled mencoder && \
-    mencoderCreateVideo "$dir" "$image" "$fps" "$video" && \
+    mencoderCreateVideo "$dir" "$image" "$fps" "$video" "$fmt" && \
     exit 0
 
 isInstalled ffmpeg && \
