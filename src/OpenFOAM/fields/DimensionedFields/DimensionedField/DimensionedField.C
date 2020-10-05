@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -411,7 +411,7 @@ DimensionedField<Type, GeoMesh>::component
         )
     );
 
-    Foam::component(result(), *this, d);
+    Foam::component(result.ref(), *this, d);
 
     return result;
 }
@@ -459,7 +459,7 @@ DimensionedField<Type, GeoMesh>::T() const
         )
     );
 
-    Foam::T(result(), *this);
+    Foam::T(result.ref(), *this);
 
     return result;
 }
