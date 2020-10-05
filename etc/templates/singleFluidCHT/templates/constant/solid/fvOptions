@@ -42,11 +42,6 @@ fixedPower
             explicit    $power;
             implicit    0;
         }
-        h
-        {
-            explicit    $power;
-            implicit    0;
-        }
     }
 }
 
