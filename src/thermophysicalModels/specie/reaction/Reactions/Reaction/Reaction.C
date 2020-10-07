@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,6 +80,17 @@ void Foam::Reaction<ReactionThermo>::setThermo
             lhs_[i].stoichCoeff
            *(*thermoDatabase[species_[lhs_[i].index]]).W()
            *(*thermoDatabase[species_[lhs_[i].index]]);
+    }
+
+    // Check for mass imbalance in the reaction
+    // A value of 1 corresponds to an error of 1 H atom in the reaction,
+    // i.e. 1 kg/kmol
+    if (mag(lhsThermo.Y() - rhsThermo.Y()) > 0.1)
+    {
+        FatalErrorInFunction
+            << "Mass imbalance for reaction " << name() << ": "
+            << mag(lhsThermo.Y() - rhsThermo.Y()) << " kg/kmol"
+            << exit(FatalError);
     }
 
     ReactionThermo::thermoType::operator=(lhsThermo == rhsThermo);
