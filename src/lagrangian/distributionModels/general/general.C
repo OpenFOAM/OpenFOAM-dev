@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,7 +144,9 @@ Foam::distributionModels::general::general(const general& p)
     nEntries_(p.nEntries_),
     minValue_(p.minValue_),
     maxValue_(p.maxValue_),
-    integral_(p.integral_)
+    meanValue_(p.meanValue_),
+    integral_(p.integral_),
+    cumulative_(p.cumulative_)
 {}
 
 
