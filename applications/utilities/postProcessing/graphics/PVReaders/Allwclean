@@ -6,4 +6,8 @@ wclean libso vtkPVFoam
 
 rm -rf Make PVblockMeshReader/Make PVFoamReader/Make
 
+# Remove the old $FOAM_LIBBIN/libvtkPV*.so libraries, so that they do not get
+# linked in preference to the new $PV_PLUGIN_PATH/libvtkPV*.so libraries
+rm -f $FOAM_LIBBIN/libvtkPV*
+
 #------------------------------------------------------------------------------
