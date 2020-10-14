@@ -35,7 +35,7 @@ import os
 import sys
 import json
 
-print("Take a look at https://openfoamwiki.net/index.php?title=HowTo_Visual_Studio_Code for more information.")
+print("Take a look at https://openfoamwiki.net/index.php/HowTo_Use_OpenFOAM_with_Visual_Studio_Code for more information.")
 
 assert len(sys.argv) == 1
 
