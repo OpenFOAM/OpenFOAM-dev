@@ -105,10 +105,6 @@ USAGE
 }
 
 
-# Default make is the "make" in the path
-make="make"
-
-
 #------------------------------------------------------------------------------
 # Set WM_NCOMPPROCS to number of cores on local machine
 #------------------------------------------------------------------------------
@@ -210,6 +206,15 @@ checkEnv
     echo "    while building project library" 1>&2
     exit 1
 }
+
+
+if bear --version > /dev/null
+then
+	mkdir -p "$FOAM_LIBBIN/.."
+	make="bear --append --output $FOAM_LIBBIN/../compile_commands.json -- make"
+else
+	make="make"
+fi
 
 
 #------------------------------------------------------------------------------
