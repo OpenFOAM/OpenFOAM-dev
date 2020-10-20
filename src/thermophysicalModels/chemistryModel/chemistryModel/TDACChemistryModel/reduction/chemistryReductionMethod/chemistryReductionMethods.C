@@ -23,12 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "noChemistryReduction.H"
-#include "DAC.H"
-#include "DRG.H"
-#include "DRGEP.H"
-#include "EFA.H"
-#include "PFA.H"
+#include "chemistryReductionMethod.H"
 
 #include "forCommonGases.H"
 #include "forCommonLiquids.H"
@@ -40,31 +35,9 @@ License
 namespace Foam
 {
     forCommonGases(defineChemistryReductionMethod, nullArg);
-
-    forCommonGases(makeChemistryReductionMethod, none);
-    forCommonGases(makeChemistryReductionMethod, DAC);
-    forCommonGases(makeChemistryReductionMethod, DRG);
-    forCommonGases(makeChemistryReductionMethod, DRGEP);
-    forCommonGases(makeChemistryReductionMethod, EFA);
-    forCommonGases(makeChemistryReductionMethod, PFA);
-
     forCommonLiquids(defineChemistryReductionMethod, nullArg);
-
-    forCommonLiquids(makeChemistryReductionMethod, none);
-    forCommonLiquids(makeChemistryReductionMethod, DAC);
-    forCommonLiquids(makeChemistryReductionMethod, DRG);
-    forCommonLiquids(makeChemistryReductionMethod, DRGEP);
-    forCommonLiquids(makeChemistryReductionMethod, EFA);
-    forCommonLiquids(makeChemistryReductionMethod, PFA);
-
     forPolynomials(defineChemistryReductionMethod, nullArg);
-
-    forPolynomials(makeChemistryReductionMethod, none);
-    forPolynomials(makeChemistryReductionMethod, DAC);
-    forPolynomials(makeChemistryReductionMethod, DRG);
-    forPolynomials(makeChemistryReductionMethod, DRGEP);
-    forPolynomials(makeChemistryReductionMethod, EFA);
-    forPolynomials(makeChemistryReductionMethod, PFA);
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// ************************************************************************* //

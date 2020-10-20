@@ -42,11 +42,6 @@ Description
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #define defineReaction(nullArg, ThermoPhysics)                                 \
                                                                                \
     typedef Reaction<ThermoPhysics> Reaction##ThermoPhysics;                   \
@@ -167,9 +162,6 @@ namespace Foam
         ThermoPhysics                                                          \
     )
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

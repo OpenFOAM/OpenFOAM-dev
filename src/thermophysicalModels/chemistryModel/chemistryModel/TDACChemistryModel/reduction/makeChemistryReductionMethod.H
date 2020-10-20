@@ -30,11 +30,6 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #define defineChemistryReductionMethod(nullArg, ThermoPhysics)                 \
                                                                                \
     typedef chemistryReductionMethod<ThermoPhysics>                            \
@@ -58,6 +53,9 @@ namespace Foam
 
 #define makeChemistryReductionMethod(Method, ThermoPhysics)                    \
                                                                                \
+    typedef chemistryReductionMethod<ThermoPhysics>                            \
+        chemistryReductionMethod##ThermoPhysics;                               \
+                                                                               \
     typedef chemistryReductionMethods::Method<ThermoPhysics>                   \
         chemistryReductionMethod##Method##ThermoPhysics;                       \
                                                                                \
@@ -78,9 +76,6 @@ namespace Foam
         dictionary                                                             \
     )
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

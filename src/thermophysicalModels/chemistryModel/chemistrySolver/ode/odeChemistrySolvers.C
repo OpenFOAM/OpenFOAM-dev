@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "chemistrySolver.H"
+#include "ode.H"
 
 #include "StandardChemistryModel.H"
 #include "TDACChemistryModel.H"
@@ -37,9 +37,9 @@ License
 
 namespace Foam
 {
-    forCommonGases(defineChemistrySolvers, nullArg);
-    forCommonLiquids(defineChemistrySolvers, nullArg);
-    forPolynomials(defineChemistrySolvers, nullArg);
+    forCommonGases(makeChemistrySolvers, ode);
+    forCommonLiquids(makeChemistrySolvers, ode);
+    forPolynomials(makeChemistrySolvers, ode);
 }
 
 

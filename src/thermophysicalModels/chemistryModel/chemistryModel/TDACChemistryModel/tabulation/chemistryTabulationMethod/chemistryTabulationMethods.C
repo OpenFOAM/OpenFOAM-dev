@@ -23,8 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "noChemistryTabulation.H"
-#include "ISAT.H"
+#include "chemistryTabulationMethod.H"
 
 #include "forCommonGases.H"
 #include "forCommonLiquids.H"
@@ -36,19 +35,9 @@ License
 namespace Foam
 {
     forCommonGases(defineChemistryTabulationMethod, nullArg);
-
-    forCommonGases(makeChemistryTabulationMethod, none);
-    forCommonGases(makeChemistryTabulationMethod, ISAT);
-
     forCommonLiquids(defineChemistryTabulationMethod, nullArg);
-
-    forCommonLiquids(makeChemistryTabulationMethod, none);
-    forCommonLiquids(makeChemistryTabulationMethod, ISAT);
-
     forPolynomials(defineChemistryTabulationMethod, nullArg);
-
-    forPolynomials(makeChemistryTabulationMethod, none);
-    forPolynomials(makeChemistryTabulationMethod, ISAT);
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// ************************************************************************* //

@@ -30,11 +30,6 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #define defineChemistryTabulationMethod(nullArg, ThermoPhysics)                \
                                                                                \
     typedef chemistryTabulationMethod<ThermoPhysics>                           \
@@ -58,6 +53,9 @@ namespace Foam
 
 #define makeChemistryTabulationMethod(Method, ThermoPhysics)                   \
                                                                                \
+    typedef chemistryTabulationMethod<ThermoPhysics>                           \
+        chemistryTabulationMethod##ThermoPhysics;                              \
+                                                                               \
     typedef chemistryTabulationMethods::Method<ThermoPhysics>                  \
         chemistryTabulationMethod##Method##ThermoPhysics;                      \
                                                                                \
@@ -78,9 +76,6 @@ namespace Foam
         dictionary                                                             \
     )
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

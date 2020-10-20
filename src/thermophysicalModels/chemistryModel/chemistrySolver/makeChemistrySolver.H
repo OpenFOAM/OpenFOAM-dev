@@ -30,11 +30,6 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #define defineChemistrySolver(Model, ThermoPhysics)                            \
                                                                                \
     typedef Model<ThermoPhysics>                                               \
@@ -74,9 +69,35 @@ namespace Foam
         thermo                                                                 \
     )
 
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Foam
+#define defineChemistrySolvers(nullArg, ThermoPhysics)                         \
+    defineChemistrySolver                                                      \
+    (                                                                          \
+        StandardChemistryModel,                                                \
+        ThermoPhysics                                                          \
+    );                                                                         \
+    defineChemistrySolver                                                      \
+    (                                                                          \
+        TDACChemistryModel,                                                    \
+        ThermoPhysics                                                          \
+    )
+
+#define makeChemistrySolvers(Solver, ThermoPhysics)                            \
+    makeChemistrySolver                                                        \
+    (                                                                          \
+        Solver,                                                                \
+        StandardChemistryModel,                                                \
+        ThermoPhysics                                                          \
+    );                                                                         \
+    makeChemistrySolver                                                        \
+    (                                                                          \
+        Solver,                                                                \
+        TDACChemistryModel,                                                    \
+        ThermoPhysics                                                          \
+    )
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

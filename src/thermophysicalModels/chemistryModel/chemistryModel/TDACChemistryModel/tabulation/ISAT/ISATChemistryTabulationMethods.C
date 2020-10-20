@@ -23,23 +23,22 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "chemistrySolver.H"
+#include "chemistryTabulationMethod.H"
 
-#include "StandardChemistryModel.H"
-#include "TDACChemistryModel.H"
+#include "ISAT.H"
 
 #include "forCommonGases.H"
 #include "forCommonLiquids.H"
 #include "forPolynomials.H"
-#include "makeChemistrySolver.H"
+#include "makeChemistryTabulationMethod.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    forCommonGases(defineChemistrySolvers, nullArg);
-    forCommonLiquids(defineChemistrySolvers, nullArg);
-    forPolynomials(defineChemistrySolvers, nullArg);
+    forCommonGases(makeChemistryTabulationMethod, ISAT);
+    forCommonLiquids(makeChemistryTabulationMethod, ISAT);
+    forPolynomials(makeChemistryTabulationMethod, ISAT);
 }
 
 
