@@ -67,6 +67,7 @@ Description
         log      | Log information to standard output    | no       | yes
         startTime| Start time                            | no       |
         endTime  | End time                              | no       |
+        executeAtStart  | Execute at start time switch   | no       | yes
         executeControl  | See time controls below        | no       | timeStep
         executeInterval | Steps between each execute phase | no     |
         writeControl    | See time controls below        | no       | timeStep

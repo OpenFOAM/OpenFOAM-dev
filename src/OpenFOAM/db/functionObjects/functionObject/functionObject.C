@@ -130,7 +130,8 @@ bool Foam::functionObject::read(const dictionary& dict)
 
     if (!postProcess)
     {
-        executeAtStart_ = dict.lookupOrDefault<Switch>("executeAtStart", true);
+        executeAtStart_ =
+            dict.lookupOrDefault<Switch>("executeAtStart", executeAtStart_);
     }
 
     return true;

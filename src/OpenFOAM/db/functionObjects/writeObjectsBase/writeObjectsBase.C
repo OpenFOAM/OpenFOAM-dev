@@ -64,9 +64,9 @@ Foam::wordList Foam::functionObjects::writeObjectsBase::objectNames()
             }
             else
             {
-                WarningInFunction
-                    << "Object " << writeObjectNames_[i] << " not found in "
-                    << "database. Available objects:"
+                Warning
+                    << "writeObjects: object " << writeObjectNames_[i]
+                    << " not found in database. Available objects:"
                     << nl << writeObr_.sortedToc() << endl;
             }
         }
@@ -77,6 +77,13 @@ Foam::wordList Foam::functionObjects::writeObjectsBase::objectNames()
             if (writeObr_.foundObject<regIOobject>(name))
             {
                 allNames.append(name);
+            }
+            else
+            {
+                Warning
+                    << "writeObjects: object " << name
+                    << " not found in database. Available objects:"
+                    << nl << writeObr_.sortedToc() << endl;
             }
         }
     }
@@ -150,7 +157,7 @@ bool Foam::functionObjects::writeObjectsBase::write()
 {
     wordList names(objectNames());
 
-    if(!names.empty())
+    if (!names.empty())
     {
         if (!writeObr_.time().writeTime())
         {
@@ -159,10 +166,7 @@ bool Foam::functionObjects::writeObjectsBase::write()
 
         forAll(names, i)
         {
-            const regIOobject& obj =
-                writeObr_.lookupObject<regIOobject>(names[i]);
-
-            writeObject(obj);
+            writeObject(writeObr_.lookupObject<regIOobject>(names[i]));
         }
     }
 

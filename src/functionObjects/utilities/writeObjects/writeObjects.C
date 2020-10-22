@@ -189,6 +189,8 @@ bool Foam::functionObjects::writeObjects::read(const dictionary& dict)
         writeOption_ = writeOption::ANY_WRITE;
     }
 
+    executeAtStart_ = dict.lookupOrDefault<Switch>("executeAtStart", false);
+
     return functionObject::read(dict);
 }
 
@@ -201,7 +203,7 @@ bool Foam::functionObjects::writeObjects::execute()
 
 bool Foam::functionObjects::writeObjects::write()
 {
-    Info<< type() << " " << name() << " write:" << nl;
+    Log << type() << " " << name() << " write:" << nl;
 
     writeObjectsBase::write();
 
