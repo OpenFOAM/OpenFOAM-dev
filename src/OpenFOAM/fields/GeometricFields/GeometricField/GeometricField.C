@@ -752,6 +752,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
     const PtrList<PatchField<Type>>& ptfl
 )
 {
+    const bool cacheTmp = diField.mesh().thisDb().cacheTemporaryObject(name);
+
     return tmp<GeometricField<Type, PatchField, GeoMesh>>
     (
         new GeometricField<Type, PatchField, GeoMesh>
@@ -763,11 +765,12 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
                 diField.mesh().thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                diField.mesh().thisDb().cacheTemporaryObject(name)
+                cacheTmp
             ),
             diField,
             ptfl
-        )
+        ),
+        cacheTmp
     );
 }
 
@@ -782,6 +785,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
     const word& patchFieldType
 )
 {
+    const bool cacheTmp = mesh.thisDb().cacheTemporaryObject(name);
+
     return tmp<GeometricField<Type, PatchField, GeoMesh>>
     (
         new GeometricField<Type, PatchField, GeoMesh>
@@ -793,12 +798,13 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
                 mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                mesh.thisDb().cacheTemporaryObject(name)
+                cacheTmp
             ),
             mesh,
             ds,
             patchFieldType
-        )
+        ),
+        cacheTmp
     );
 }
 
@@ -813,6 +819,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
     const word& patchFieldType
 )
 {
+    const bool cacheTmp = mesh.thisDb().cacheTemporaryObject(name);
+
     return tmp<GeometricField<Type, PatchField, GeoMesh>>
     (
         new GeometricField<Type, PatchField, GeoMesh>
@@ -824,12 +832,13 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
                 mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                mesh.thisDb().cacheTemporaryObject(name)
+                cacheTmp
             ),
             mesh,
             dt,
             patchFieldType
-        )
+        ),
+        cacheTmp
     );
 }
 
@@ -846,6 +855,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
     const wordList& actualPatchTypes
 )
 {
+    const bool cacheTmp = mesh.thisDb().cacheTemporaryObject(name);
+
     return tmp<GeometricField<Type, PatchField, GeoMesh>>
     (
         new GeometricField<Type, PatchField, GeoMesh>
@@ -857,13 +868,14 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
                 mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                mesh.thisDb().cacheTemporaryObject(name)
+                cacheTmp
             ),
             mesh,
             dt,
             patchFieldTypes,
             actualPatchTypes
-        )
+        ),
+        cacheTmp
     );
 }
 
@@ -876,6 +888,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
     const tmp<GeometricField<Type, PatchField, GeoMesh>>& tgf
 )
 {
+    const bool cacheTmp = tgf().db().cacheTemporaryObject(newName);
+
     return tmp<GeometricField<Type, PatchField, GeoMesh>>
     (
         new GeometricField<Type, PatchField, GeoMesh>
@@ -888,10 +902,11 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
                 tgf().db(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                tgf().db().cacheTemporaryObject(newName)
+                cacheTmp
             ),
             tgf
-        )
+        ),
+        cacheTmp
     );
 }
 
@@ -905,6 +920,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
     const word& patchFieldType
 )
 {
+    const bool cacheTmp = tgf().db().cacheTemporaryObject(newName);
+
     return tmp<GeometricField<Type, PatchField, GeoMesh>>
     (
         new GeometricField<Type, PatchField, GeoMesh>
@@ -917,11 +934,12 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
                 tgf().db(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                tgf().db().cacheTemporaryObject(newName)
+                cacheTmp
             ),
             tgf,
             patchFieldType
-        )
+        ),
+        cacheTmp
     );
 }
 
@@ -936,6 +954,8 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
     const wordList& actualPatchTypes
 )
 {
+    const bool cacheTmp = tgf().db().cacheTemporaryObject(newName);
+
     return tmp<GeometricField<Type, PatchField, GeoMesh>>
     (
         new GeometricField<Type, PatchField, GeoMesh>
@@ -948,12 +968,13 @@ Foam::GeometricField<Type, PatchField, GeoMesh>::New
                 tgf().db(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                tgf().db().cacheTemporaryObject(newName)
+                cacheTmp
             ),
             tgf,
             patchFieldTypes,
             actualPatchTypes
-        )
+        ),
+        cacheTmp
     );
 }
 

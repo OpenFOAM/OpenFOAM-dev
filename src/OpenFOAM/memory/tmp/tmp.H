@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,8 @@ class tmp
         //- Object types
         enum type
         {
-            TMP,
+            REUSABLE_TMP,
+            NON_RESUSABLE_TMP,
             CONST_REF
         };
 
@@ -72,6 +73,9 @@ class tmp
 
     // Private member operators
 
+        //- Return true if the object is a reusable or non-reusable temporary
+        inline bool isAnyTmp() const;
+
         inline void operator++();
 
 
@@ -83,8 +87,8 @@ public:
 
     // Constructors
 
-        //- Store object pointer
-        inline explicit tmp(T* = 0);
+        //- Store object pointer of a non-reusable or reusable temporary object
+        inline explicit tmp(T* = 0, bool nonReusable = false);
 
         //- Store object const reference
         inline tmp(const T&);

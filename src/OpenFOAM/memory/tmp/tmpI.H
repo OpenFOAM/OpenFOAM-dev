@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,9 +46,9 @@ inline void Foam::tmp<T>::operator++()
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class T>
-inline Foam::tmp<T>::tmp(T* tPtr)
+inline Foam::tmp<T>::tmp(T* tPtr, bool nonReusable)
 :
-    type_(TMP),
+    type_(nonReusable ? NON_RESUSABLE_TMP : REUSABLE_TMP),
     ptr_(tPtr)
 {
     if (tPtr && !tPtr->unique())
@@ -75,7 +75,7 @@ inline Foam::tmp<T>::tmp(const tmp<T>& t)
     type_(t.type_),
     ptr_(t.ptr_)
 {
-    if (isTmp())
+    if (isAnyTmp())
     {
         if (ptr_)
         {
@@ -97,7 +97,7 @@ inline Foam::tmp<T>::tmp(const tmp<T>&& t)
     type_(t.type_),
     ptr_(t.ptr_)
 {
-    if (isTmp())
+    if (isAnyTmp())
     {
         t.ptr_ = 0;
     }
@@ -110,11 +110,11 @@ inline Foam::tmp<T>::tmp(const tmp<T>& t, bool allowTransfer)
     type_(t.type_),
     ptr_(t.ptr_)
 {
-    if (isTmp())
+    if (isAnyTmp())
     {
         if (ptr_)
         {
-            if (allowTransfer)
+            if (allowTransfer && type_ == REUSABLE_TMP)
             {
                 t.ptr_ = 0;
             }
@@ -143,23 +143,30 @@ inline Foam::tmp<T>::~tmp()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class T>
+inline bool Foam::tmp<T>::isAnyTmp() const
+{
+    return type_ == REUSABLE_TMP || type_ == NON_RESUSABLE_TMP;
+}
+
+
+template<class T>
 inline bool Foam::tmp<T>::isTmp() const
 {
-    return type_ == TMP;
+    return type_ == REUSABLE_TMP;
 }
 
 
 template<class T>
 inline bool Foam::tmp<T>::empty() const
 {
-    return (isTmp() && !ptr_);
+    return (isAnyTmp() && !ptr_);
 }
 
 
 template<class T>
 inline bool Foam::tmp<T>::valid() const
 {
-    return (!isTmp() || (isTmp() && ptr_));
+    return (!isAnyTmp() || (isAnyTmp() && ptr_));
 }
 
 
@@ -173,7 +180,7 @@ inline Foam::word Foam::tmp<T>::typeName() const
 template<class T>
 inline T& Foam::tmp<T>::ref() const
 {
-    if (isTmp())
+    if (isAnyTmp())
     {
         if (!ptr_)
         {
@@ -229,7 +236,7 @@ inline T* Foam::tmp<T>::ptr() const
 template<class T>
 inline void Foam::tmp<T>::clear() const
 {
-    if (isTmp() && ptr_)
+    if (isAnyTmp() && ptr_)
     {
         if (ptr_->unique())
         {
@@ -251,7 +258,7 @@ inline void Foam::tmp<T>::clear() const
 template<class T>
 inline T& Foam::tmp<T>::operator()()
 {
-    if (isTmp())
+    if (isAnyTmp())
     {
         if (!ptr_)
         {
@@ -271,7 +278,7 @@ inline T& Foam::tmp<T>::operator()()
 template<class T>
 inline const T& Foam::tmp<T>::operator()() const
 {
-    if (isTmp())
+    if (isAnyTmp())
     {
         if (!ptr_)
         {
@@ -296,7 +303,7 @@ inline Foam::tmp<T>::operator const T&() const
 template<class T>
 inline T* Foam::tmp<T>::operator->()
 {
-    if (isTmp())
+    if (isAnyTmp())
     {
         if (!ptr_)
         {
@@ -319,7 +326,7 @@ inline T* Foam::tmp<T>::operator->()
 template<class T>
 inline const T* Foam::tmp<T>::operator->() const
 {
-    if (isTmp() && !ptr_)
+    if (isAnyTmp() && !ptr_)
     {
         FatalErrorInFunction
             << typeName() << " deallocated"
@@ -350,7 +357,7 @@ inline void Foam::tmp<T>::operator=(T* tPtr)
             << abort(FatalError);
     }
 
-    type_ = TMP;
+    type_ = REUSABLE_TMP;
     ptr_ = tPtr;
 }
 
@@ -360,9 +367,9 @@ inline void Foam::tmp<T>::operator=(const tmp<T>& t)
 {
     clear();
 
-    if (t.isTmp())
+    if (t.isAnyTmp())
     {
-        type_ = TMP;
+        type_ = t.type_;
 
         if (!t.ptr_)
         {

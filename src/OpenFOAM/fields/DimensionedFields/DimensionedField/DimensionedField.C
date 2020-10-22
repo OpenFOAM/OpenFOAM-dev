@@ -272,6 +272,8 @@ DimensionedField<Type, GeoMesh>::New
     const dimensionSet& ds
 )
 {
+    const bool cacheTmp = mesh.thisDb().cacheTemporaryObject(name);
+
     return tmp<DimensionedField<Type, GeoMesh>>
     (
         new DimensionedField<Type, GeoMesh>
@@ -283,12 +285,13 @@ DimensionedField<Type, GeoMesh>::New
                 mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                mesh.thisDb().cacheTemporaryObject(name)
+                cacheTmp
             ),
             mesh,
             ds,
             false
-        )
+        ),
+        cacheTmp
     );
 }
 
@@ -302,6 +305,8 @@ DimensionedField<Type, GeoMesh>::New
     const dimensioned<Type>& dt
 )
 {
+    const bool cacheTmp = mesh.thisDb().cacheTemporaryObject(name);
+
     return tmp<DimensionedField<Type, GeoMesh>>
     (
         new DimensionedField<Type, GeoMesh>
@@ -313,12 +318,13 @@ DimensionedField<Type, GeoMesh>::New
                 mesh.thisDb(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                mesh.thisDb().cacheTemporaryObject(name)
+                cacheTmp
             ),
             mesh,
             dt,
             false
-        )
+        ),
+        cacheTmp
     );
 }
 
@@ -331,6 +337,8 @@ DimensionedField<Type, GeoMesh>::New
     const DimensionedField<Type, GeoMesh>& df
 )
 {
+    const bool cacheTmp = df.db().cacheTemporaryObject(newName);
+
     return tmp<DimensionedField<Type, GeoMesh>>
     (
         new DimensionedField<Type, GeoMesh>
@@ -343,10 +351,11 @@ DimensionedField<Type, GeoMesh>::New
                 df.db(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                df.db().cacheTemporaryObject(newName)
+                cacheTmp
             ),
             df
-        )
+        ),
+        cacheTmp
     );
 }
 
@@ -359,6 +368,8 @@ DimensionedField<Type, GeoMesh>::New
     const tmp<DimensionedField<Type, GeoMesh>>& tdf
 )
 {
+    const bool cacheTmp = tdf().db().cacheTemporaryObject(newName);
+
     return tmp<DimensionedField<Type, GeoMesh>>
     (
         new DimensionedField<Type, GeoMesh>
@@ -371,10 +382,11 @@ DimensionedField<Type, GeoMesh>::New
                 tdf().db(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE,
-                tdf().db().cacheTemporaryObject(newName)
+                cacheTmp
             ),
             tdf
-        )
+        ),
+        cacheTmp
     );
 }
 
