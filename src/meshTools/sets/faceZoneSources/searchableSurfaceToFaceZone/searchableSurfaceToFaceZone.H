@@ -44,6 +44,7 @@ namespace Foam
 {
 
 class searchableSurface;
+class faceZoneSet;
 
 /*---------------------------------------------------------------------------*\
                  Class searchableSurfaceToFaceZone Declaration
@@ -60,6 +61,12 @@ class searchableSurfaceToFaceZone
 
         //- Surface
         autoPtr<searchableSurface> surfacePtr_;
+
+
+    // Private Member Functions
+
+        void combine(faceZoneSet& set, const bool add) const;
+
 
 public:
 
