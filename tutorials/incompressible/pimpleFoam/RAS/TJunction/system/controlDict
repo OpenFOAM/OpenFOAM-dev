@@ -79,6 +79,11 @@ functions
             (0.21 0 0.01)         // at central block
         );
     }
+
+    #includeFunc "flowRatePatch(name=outlet1)"
+    #includeFunc "flowRateFaceZone(name=fz1)"
+    #includeFunc "flowRatePatch(name=outlet2)"
+    #includeFunc "flowRateFaceZone(name=fz2)"
 }
 
 // ************************************************************************* //

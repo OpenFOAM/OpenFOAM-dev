@@ -62,6 +62,9 @@ class searchableSurfaceToFaceZone
         //- Surface
         autoPtr<searchableSurface> surfacePtr_;
 
+        //- Tolerance with which to extend the cell-cell vectors
+        const scalar tol_;
+
 
     // Private Member Functions
 
