@@ -109,10 +109,15 @@ void Foam::searchableSurfaceToFaceZone::combine
     }
 
     // Do intersection tests on the vectors between the owner and neighbour
-    // cell centres
+    // cell centres, extended by the tolerance
     List<pointIndexHit> hits;
     pointField normals;
-    surfacePtr_().findLine(ownCc, nbrCc, hits);
+    surfacePtr_().findLine
+    (
+        ownCc + tol_*(ownCc - nbrCc),
+        nbrCc - tol_*(ownCc - nbrCc),
+        hits
+    );
     surfacePtr_().getNormal(hits, normals);
 
     // Create a list of labels indicating what side of the surface a cell
@@ -222,7 +227,8 @@ Foam::searchableSurfaceToFaceZone::searchableSurfaceToFaceZone
             ),
             dict
         )
-    )
+    ),
+    tol_(dict.lookupOrDefault<scalar>("tol", rootSmall))
 {}
 
 
