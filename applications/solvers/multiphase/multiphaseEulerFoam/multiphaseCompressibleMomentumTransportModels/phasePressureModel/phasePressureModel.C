@@ -118,16 +118,9 @@ Foam::RASModels::phasePressureModel::sigma() const
 {
     return tmp<volSymmTensorField>
     (
-        new volSymmTensorField
+        volSymmTensorField::New
         (
-            IOobject
-            (
-                IOobject::groupName("R", U_.group()),
-                runTime_.timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            IOobject::groupName("R", U_.group()),
             mesh_,
             dimensioned<symmTensor>
             (
@@ -201,16 +194,9 @@ Foam::RASModels::phasePressureModel::devTau() const
 {
     return tmp<volSymmTensorField>
     (
-        new volSymmTensorField
+        volSymmTensorField::New
         (
-            IOobject
-            (
-                IOobject::groupName("devTau", U_.group()),
-                runTime_.timeName(),
-                mesh_,
-                IOobject::NO_READ,
-                IOobject::NO_WRITE
-            ),
+            IOobject::groupName("devTau", U_.group()),
             mesh_,
             dimensioned<symmTensor>
             (

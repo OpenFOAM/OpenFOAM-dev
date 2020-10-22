@@ -604,10 +604,10 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     rhom = this->rhom();
 
     // Mixture flux
-    surfaceScalarField phim("phim", mixFlux(phil, phig));
+    const surfaceScalarField phim("phim", mixFlux(phil, phig));
 
     // Mixture velocity divergence
-    volScalarField divUm
+    const volScalarField divUm
     (
         mixU
         (
@@ -621,7 +621,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
         tmp<volTensorField> tgradUl = fvc::grad(Ul);
         Gc = tmp<volScalarField>
         (
-            new volScalarField
+            volScalarField::New
             (
                 this->GName(),
                 nutl*(tgradUl() && dev(twoSymm(tgradUl())))
@@ -641,7 +641,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
         tmp<volTensorField> tgradUg = fvc::grad(Ug);
         Gd = tmp<volScalarField>
         (
-            new volScalarField
+            volScalarField::New
             (
                 this->GName(),
                 nutg*(tgradUg() && dev(twoSymm(tgradUg())))
@@ -657,10 +657,10 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     }
 
     // Mixture turbulence generation
-    volScalarField Gm(mix(Gc, Gd));
+    const volScalarField Gm(mix(Gc, Gd));
 
     // Mixture turbulence viscosity
-    volScalarField nutm(mixU(nutl, nutg));
+    const volScalarField nutm(mixU(nutl, nutg));
 
     // Update the mixture k and epsilon boundary conditions
     km == mix(kl, kg);
@@ -713,7 +713,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     bound(km, this->kMin_);
     km.correctBoundaryConditions();
 
-    volScalarField Cc2(rhom/(alphal*rholEff() + alphag*rhogEff()*Ct2_()));
+    const volScalarField Cc2(rhom/(alphal*rholEff() + alphag*rhogEff()*Ct2_()));
     kl = Cc2*km;
     kl.correctBoundaryConditions();
     epsilonl = Cc2*epsilonm;
