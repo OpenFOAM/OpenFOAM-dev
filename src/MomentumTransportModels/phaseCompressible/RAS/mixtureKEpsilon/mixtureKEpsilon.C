@@ -621,7 +621,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
         tmp<volTensorField> tgradUl = fvc::grad(Ul);
         Gc = tmp<volScalarField>
         (
-            volScalarField::New
+            new volScalarField
             (
                 this->GName(),
                 nutl*(tgradUl() && dev(twoSymm(tgradUl())))
@@ -641,7 +641,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
         tmp<volTensorField> tgradUg = fvc::grad(Ug);
         Gd = tmp<volScalarField>
         (
-            volScalarField::New
+            new volScalarField
             (
                 this->GName(),
                 nutg*(tgradUg() && dev(twoSymm(tgradUg())))
