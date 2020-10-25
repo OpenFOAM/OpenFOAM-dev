@@ -21,14 +21,6 @@ chemistryType
     method            TDAC;
 }
 
-importantSpecies
-{
-    CH4;
-    H2O;
-    O2;
-    CO2;
-}
-
 chemistry           on;
 
 initialChemicalTimeStep 1e-07;

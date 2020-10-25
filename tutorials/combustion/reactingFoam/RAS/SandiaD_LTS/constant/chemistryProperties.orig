@@ -35,14 +35,6 @@ odeCoeffs
     relTol          1e-1;
 }
 
-importantSpecies
-{
-    CO2;
-    H2O;
-    CH4;
-    O2;
-}
-
 reduction
 {
     tolerance   1e-4;
