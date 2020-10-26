@@ -26,7 +26,7 @@ thermoType
     energy          sensibleInternalEnergy;
 }
 
-inertSpecie air;
+defaultSpecie air;
 
 species
 (

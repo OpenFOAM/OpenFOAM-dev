@@ -59,9 +59,6 @@ protected:
         //- Residual phase fraction
         dimensionedScalar residualAlpha_;
 
-        //- Inert species index
-        label inertIndex_;
-
         //- Pointer list to active species
         UPtrList<volScalarField> YActive_;
 

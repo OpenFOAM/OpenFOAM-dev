@@ -32,7 +32,7 @@ species
     water
 );
 
-inertSpecie air;
+defaultSpecie air;
 
 "(mixture|air)"
 {

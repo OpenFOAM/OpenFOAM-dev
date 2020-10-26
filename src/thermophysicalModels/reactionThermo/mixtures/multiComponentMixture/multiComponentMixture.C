@@ -104,31 +104,6 @@ Foam::multiComponentMixture<ThermoType>::readSpeciesComposition
 }
 
 
-template<class ThermoType>
-void Foam::multiComponentMixture<ThermoType>::correctMassFractions()
-{
-    // Multiplication by 1.0 changes Yt patches to "calculated"
-    volScalarField Yt("Yt", 1.0*Y_[0]);
-
-    for (label n=1; n<Y_.size(); n++)
-    {
-        Yt += Y_[n];
-    }
-
-    if (mag(max(Yt).value()) < rootVSmall)
-    {
-        FatalErrorInFunction
-            << "Sum of mass fractions is zero for species " << this->species()
-            << exit(FatalError);
-    }
-
-    forAll(Y_, n)
-    {
-        Y_[n] /= Yt;
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ThermoType>

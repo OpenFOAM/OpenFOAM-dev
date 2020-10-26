@@ -85,9 +85,6 @@ private:
             const speciesTable& speciesTable_
         ) const;
 
-        //- Correct the mass fractions to sum to 1
-        void correctMassFractions();
-
 
 public:
 

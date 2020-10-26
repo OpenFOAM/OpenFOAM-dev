@@ -30,7 +30,7 @@ thermoType
 
 newFormat       yes;
 
-inertSpecie     N2;
+defaultSpecie     N2;
 
 liquids
 {

@@ -59,14 +59,32 @@ protected:
 
     // Protected data
 
+        //- Phase-name
+        const word& phaseName_;
+
         //- Table of specie names
         speciesTable species_;
+
+        //- The name of the default specie
+        //  The mass fraction of which is derived from the other species
+        //  rather than solved.
+        //  Also used as the carrier specie in multicomponent diffusion
+        word defaultSpecie_;
+
+        //- The index of the default specie
+        label defaultSpecieIndex_;
 
         //- List of specie active flags
         mutable List<bool> active_;
 
         //- Species mass fractions
         PtrList<volScalarField> Y_;
+
+
+    // Protected Member Functions
+
+        //- Scale the mass fractions to sum to 1
+        void correctMassFractions();
 
 
 public:
@@ -103,6 +121,9 @@ public:
         //- Does the mixture include this specie?
         inline bool contains(const word& specieName) const;
 
+        //- Return the index of the default specie
+        inline label defaultSpecie() const;
+
         //- Return true for active species
         inline bool active(label speciei) const;
 
@@ -114,6 +135,10 @@ public:
 
         //- Set speciei inactive
         inline void setInactive(label speciei) const;
+
+        //- Return true if the specie should be solved for
+        //  i.e. active and not the default specie
+        inline bool solve(label speciei) const;
 
         //- Return the mass-fraction fields
         inline PtrList<volScalarField>& Y();
@@ -132,6 +157,11 @@ public:
 
         //- Return the const mass-fraction field for a specie given by name
         inline const volScalarField& Y(const word& specieName) const;
+
+        //- Normalise the mass fractions
+        //  by clipping positive
+        //  and deriving the default specie mass fraction from the other species
+        void normalise();
 
 
         // Specie properties

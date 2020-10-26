@@ -18,7 +18,7 @@ setInertY()
         * ) arg="-set $y";;
     esac
 
-    runApplication -a foamDictionary -entry inertSpecie $arg \
+    runApplication -a foamDictionary -entry defaultSpecie $arg \
         constant/thermophysicalProperties.$phase
 }
 

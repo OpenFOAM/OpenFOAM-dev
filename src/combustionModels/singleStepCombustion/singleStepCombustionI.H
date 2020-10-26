@@ -91,13 +91,6 @@ inline tmp<volScalarField> singleStepCombustion<ThermoType>::fres
 
 
 template<class ThermoType>
-inline label singleStepCombustion<ThermoType>::inertIndex() const
-{
-    return inertIndex_;
-}
-
-
-template<class ThermoType>
 inline label singleStepCombustion<ThermoType>::fuelIndex() const
 {
     return fuelIndex_;

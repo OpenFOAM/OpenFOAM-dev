@@ -83,9 +83,6 @@ protected:
         //- List of components residual
         PtrList<volScalarField> fres_;
 
-        //- Inert specie index
-        label inertIndex_;
-
         //- Fuel specie index
         label fuelIndex_;
 
@@ -156,9 +153,6 @@ public:
 
             //- Return the list of components residual
             inline tmp<volScalarField> fres(const label index) const;
-
-            //- Return the inert specie index
-            inline label inertIndex() const;
 
             //- Return the fuel specie index
             inline label fuelIndex() const;

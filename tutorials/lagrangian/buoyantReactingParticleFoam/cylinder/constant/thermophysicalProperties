@@ -28,7 +28,7 @@ thermoType
 
 #include "speciesThermo"
 
-inertSpecie     N2;
+defaultSpecie     N2;
 
 liquids
 {

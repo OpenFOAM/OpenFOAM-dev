@@ -32,7 +32,7 @@ species
     C3H8O
 );
 
-inertSpecie H2O;
+defaultSpecie H2O;
 
 H2O
 {

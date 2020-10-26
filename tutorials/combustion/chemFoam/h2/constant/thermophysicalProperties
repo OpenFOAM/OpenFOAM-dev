@@ -26,6 +26,8 @@ thermoType
     specie          specie;
 }
 
+defaultSpecie N2;
+
 #include "speciesThermo"
 
 // ************************************************************************* //

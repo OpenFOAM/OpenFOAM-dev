@@ -111,7 +111,7 @@ License
 
         forAll(Y, i)
         {
-            if (i != inertIndex && composition.active(i))
+            if (composition.solve(i))
             {
                 volScalarField& Yi = Y[i];
 

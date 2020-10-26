@@ -17,24 +17,9 @@ if (Y.size())
 {
     combustion->correct();
 
-    tmp<volScalarField> Yt(nullptr);
-
-    if (Y.size())
-    {
-        Yt = tmp<volScalarField>
-        (
-            new volScalarField
-            (
-                IOobject("Yt", runTime.timeName(), mesh),
-                mesh,
-                dimensionedScalar(dimless, 0)
-            )
-        );
-    }
-
     forAll(Y, i)
     {
-        if (i != inertIndex && composition.active(i))
+        if (composition.solve(i))
         {
             volScalarField& Yi = Y[i];
 
@@ -57,15 +42,8 @@ if (Y.size())
             YEqn.solve("Yi");
 
             fvOptions.correct(Yi);
-
-            Yi.max(0.0);
-            Yt.ref() += Yi;
         }
     }
 
-    if (Y.size())
-    {
-        Y[inertIndex] = scalar(1) - Yt;
-        Y[inertIndex].max(0.0);
-    }
+    composition.normalise();
 }

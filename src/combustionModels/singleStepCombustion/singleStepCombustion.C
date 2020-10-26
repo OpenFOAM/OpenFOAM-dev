@@ -69,8 +69,8 @@ void singleStepCombustion<ThermoType>:: massAndAirStoichRatios()
     const scalar Wu = mixture_.specieThermos()[fuelIndex_].W();
 
     stoicRatio_ =
-       (mixture_.specieThermos()[inertIndex_].W()
-      * specieStoichCoeffs_[inertIndex_]
+        (mixture_.specieThermos()[mixture_.defaultSpecie()].W()
+      * specieStoichCoeffs_[mixture_.defaultSpecie()]
       + mixture_.specieThermos()[O2Index].W()
       * mag(specieStoichCoeffs_[O2Index]))
       / (Wu*mag(specieStoichCoeffs_[fuelIndex_]));
@@ -166,7 +166,6 @@ singleStepCombustion<ThermoType>::singleStepCombustion
     specieStoichCoeffs_(mixture_.species().size(), 0.0),
     Yprod0_(mixture_.species().size(), 0.0),
     fres_(Yprod0_.size()),
-    inertIndex_(mixture_.species()[thermo.properties().lookup("inertSpecie")]),
     fuelIndex_(mixture_.species()[thermo.properties().lookup("fuel")]),
     specieProd_(Yprod0_.size(), 1),
     wFuel_
@@ -312,7 +311,7 @@ void singleStepCombustion<ThermoType>::fresCorrect()
     forAll(reaction.rhs(), i)
     {
         const label speciei = reaction.rhs()[i].index;
-        if (speciei != inertIndex_)
+        if (speciei != mixture_.defaultSpecie())
         {
             forAll(fres_[speciei], celli)
             {

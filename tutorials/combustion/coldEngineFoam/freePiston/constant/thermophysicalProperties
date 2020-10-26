@@ -31,7 +31,7 @@ species
     air
 );
 
-inertSpecie air;
+defaultSpecie air;
 
 #include "include/thermo.air"
 

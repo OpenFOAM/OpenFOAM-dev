@@ -11,11 +11,10 @@ tmp<fv::convectionScheme<scalar>> mvConvection
 {
     radiation->correct();
     combustion->correct();
-    volScalarField Yt(0.0*Y[0]);
 
     forAll(Y, i)
     {
-        if (i != inertIndex && composition.active(i))
+        if (composition.solve(i))
         {
             volScalarField& Yi = Y[i];
 
@@ -38,14 +37,10 @@ tmp<fv::convectionScheme<scalar>> mvConvection
             YiEqn.solve("Yi");
 
             fvOptions.correct(Yi);
-
-            Yi.max(0.0);
-            Yt += Yi;
         }
     }
 
-    Y[inertIndex] = scalar(1) - Yt;
-    Y[inertIndex].max(0.0);
+    composition.normalise();
 
     volScalarField& he = thermo.he();
 

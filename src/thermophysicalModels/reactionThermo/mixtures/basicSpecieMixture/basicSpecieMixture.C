@@ -44,10 +44,37 @@ Foam::basicSpecieMixture::basicSpecieMixture
 )
 :
     basicMixture(thermoDict, mesh, phaseName),
+    phaseName_(phaseName),
     species_(specieNames),
+    defaultSpecie_
+    (
+        species_.size()
+      ? (
+          thermoDict.found("inertSpecie")
+        ? thermoDict.lookup("inertSpecie")
+        : thermoDict.lookup("defaultSpecie")
+        )
+      : word("undefined")
+    ),
+    defaultSpecieIndex_(-1),
     active_(species_.size(), true),
     Y_(species_.size())
 {
+    if (species_.size())
+    {
+        if (species_.found(defaultSpecie_))
+        {
+            defaultSpecieIndex_ = species_[defaultSpecie_];
+        }
+        else
+        {
+            FatalIOErrorInFunction(thermoDict)
+                << "default specie " << defaultSpecie_
+                << " not found in available species " << species_
+                << exit(FatalIOError);
+        }
+    }
+
     tmp<volScalarField> tYdefault;
 
     forAll(species_, i)
@@ -85,7 +112,10 @@ Foam::basicSpecieMixture::basicSpecieMixture
             // Read Ydefault if not already read
             if (!tYdefault.valid())
             {
-                word YdefaultName(IOobject::groupName("Ydefault", phaseName));
+                const word YdefaultName
+                (
+                    IOobject::groupName("Ydefault", phaseName)
+                );
 
                 IOobject timeIO
                 (
@@ -147,8 +177,72 @@ Foam::basicSpecieMixture::basicSpecieMixture
         }
     }
 
-    // Do not enforce constraint of sum of mass fractions to equal 1 here
-    // - not applicable to all models
+    correctMassFractions();
+}
+
+
+void Foam::basicSpecieMixture::correctMassFractions()
+{
+    if (species_.size())
+    {
+        tmp<volScalarField> tYt
+        (
+            volScalarField::New
+            (
+                IOobject::groupName("Yt", phaseName_),
+                Y_[0],
+                calculatedFvPatchScalarField::typeName
+            )
+        );
+        volScalarField& Yt = tYt.ref();
+
+        for (label i=1; i<Y_.size(); i++)
+        {
+            Yt += Y_[i];
+        }
+
+        if (mag(max(Yt).value()) < rootVSmall)
+        {
+            FatalErrorInFunction
+                << "Sum of mass fractions is zero for species " << species()
+                << exit(FatalError);
+        }
+
+        forAll(Y_, i)
+        {
+            Y_[i] /= Yt;
+        }
+    }
+}
+
+
+void Foam::basicSpecieMixture::normalise()
+{
+    if (species_.size())
+    {
+        tmp<volScalarField> tYt
+        (
+            volScalarField::New
+            (
+                IOobject::groupName("Yt", phaseName_),
+                Y_[0].mesh(),
+                dimensionedScalar(dimless, 0)
+            )
+        );
+        volScalarField& Yt = tYt.ref();
+
+        forAll(Y_, i)
+        {
+            if (solve(i))
+            {
+                Y_[i].max(scalar(0));
+                Yt += Y_[i];
+            }
+        }
+
+        Y_[defaultSpecieIndex_] = scalar(1) - Yt;
+        Y_[defaultSpecieIndex_].max(scalar(0));
+    }
 }
 
 

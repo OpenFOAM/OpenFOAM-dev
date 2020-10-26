@@ -52,24 +52,13 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::MultiComponentPhaseModel
         "residualAlpha",
         dimless,
         fluid.mesh().solverDict("Yi")
-    ),
-    inertIndex_(-1)
+    )
 {
-    const word inertSpecie
-    (
-        this->thermo_->properties().lookupOrDefault("inertSpecie", word::null)
-    );
-
-    if (inertSpecie != word::null)
-    {
-        inertIndex_ = this->thermo_->composition().species()[inertSpecie];
-    }
-
     PtrList<volScalarField>& Y = this->thermo_->composition().Y();
 
     forAll(Y, i)
     {
-        if (i != inertIndex_ && this->thermo_->composition().active(i))
+        if (this->thermo_->composition().solve(i))
         {
             const label j = YActive_.size();
             YActive_.resize(j + 1);
@@ -91,42 +80,7 @@ Foam::MultiComponentPhaseModel<BasePhaseModel>::~MultiComponentPhaseModel()
 template<class BasePhaseModel>
 void Foam::MultiComponentPhaseModel<BasePhaseModel>::correctSpecies()
 {
-    volScalarField Yt
-    (
-        IOobject
-        (
-            IOobject::groupName("Yt", this->name()),
-            this->fluid().mesh().time().timeName(),
-            this->fluid().mesh()
-        ),
-        this->fluid().mesh(),
-        dimensionedScalar(dimless, 0)
-    );
-
-    PtrList<volScalarField>& Yi = YRef();
-
-    forAll(Yi, i)
-    {
-        if (i != inertIndex_)
-        {
-            Yi[i].max(0);
-            Yt += Yi[i];
-        }
-    }
-
-    if (inertIndex_ != -1)
-    {
-        Yi[inertIndex_] = scalar(1) - Yt;
-        Yi[inertIndex_].max(0);
-    }
-    else
-    {
-        forAll(Yi, i)
-        {
-            Yi[i] /= Yt;
-        }
-    }
-
+    this->thermo_->composition().normalise();
     BasePhaseModel::correctSpecies();
 }
 

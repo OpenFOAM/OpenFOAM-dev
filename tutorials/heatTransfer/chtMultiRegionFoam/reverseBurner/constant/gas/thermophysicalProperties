@@ -26,7 +26,7 @@ thermoType
     energy          sensibleEnthalpy;
 }
 
-inertSpecie N2;
+defaultSpecie N2;
 
 #include "thermo.compressibleGas"
 

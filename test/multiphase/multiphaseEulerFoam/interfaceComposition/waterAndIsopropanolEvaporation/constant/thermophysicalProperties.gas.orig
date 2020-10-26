@@ -33,7 +33,7 @@ species
     C3H8O
 );
 
-inertSpecie air;
+defaultSpecie air;
 
 air
 {

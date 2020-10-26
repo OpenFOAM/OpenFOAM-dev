@@ -28,7 +28,7 @@ thermoType
 
 species (TiO2);
 
-inertSpecie TiO2;
+defaultSpecie TiO2;
 
 TiO2
 {

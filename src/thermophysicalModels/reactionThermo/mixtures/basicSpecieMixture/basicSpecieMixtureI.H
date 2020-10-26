@@ -35,6 +35,12 @@ inline bool Foam::basicSpecieMixture::contains(const word& specieName) const
 }
 
 
+inline Foam::label Foam::basicSpecieMixture::defaultSpecie() const
+{
+    return defaultSpecieIndex_;
+}
+
+
 inline bool Foam::basicSpecieMixture::active(label speciei) const
 {
     return active_[speciei];
@@ -58,6 +64,12 @@ inline void Foam::basicSpecieMixture::setInactive(label speciei) const
 {
     active_[speciei] = false;
     const_cast<volScalarField&>(Y_[speciei]).writeOpt() = IOobject::NO_WRITE;
+}
+
+
+inline bool Foam::basicSpecieMixture::solve(label speciei) const
+{
+    return speciei != defaultSpecieIndex_ && active_[speciei];
 }
 
 
