@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,11 +53,14 @@ bool Foam::functionObjects::ddt::calc()
 
     bool processed = false;
 
-    processed = processed || calcDdt<scalar>();
-    processed = processed || calcDdt<vector>();
-    processed = processed || calcDdt<sphericalTensor>();
-    processed = processed || calcDdt<symmTensor>();
-    processed = processed || calcDdt<tensor>();
+    #define processType(fieldType, none)                                       \
+        processed = processed || calcDdt<fieldType>();
+    FOR_ALL_FIELD_TYPES(processType)
+
+    if (!processed)
+    {
+        cannotFindObject(fieldName_);
+    }
 
     return processed;
 }

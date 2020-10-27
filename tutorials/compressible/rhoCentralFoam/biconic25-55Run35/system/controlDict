@@ -17,7 +17,7 @@ FoamFile
 
 application     rhoCentralFoam;
 
-startFrom       latestTime;
+startFrom       startTime;
 
 startTime       0;
 
@@ -53,7 +53,7 @@ maxDeltaT       2e-8;
 
 functions
 {
-    #includeFunc wallHeatFlux
+    #includeFunc wallHeatFlux(log = true)
     #includeFunc sample
 }
 

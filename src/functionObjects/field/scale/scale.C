@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,11 +44,14 @@ bool Foam::functionObjects::scale::calc()
 {
     bool processed = false;
 
-    processed = processed || calcScale<scalar>();
-    processed = processed || calcScale<vector>();
-    processed = processed || calcScale<sphericalTensor>();
-    processed = processed || calcScale<symmTensor>();
-    processed = processed || calcScale<tensor>();
+    #define processType(fieldType, none)                                       \
+        processed = processed || calcScale<fieldType>();
+    FOR_ALL_FIELD_TYPES(processType)
+
+    if (!processed)
+    {
+        cannotFindObject(fieldName_);
+    }
 
     return processed;
 }

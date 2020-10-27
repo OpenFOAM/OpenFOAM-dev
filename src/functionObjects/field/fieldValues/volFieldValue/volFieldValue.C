@@ -191,18 +191,13 @@ bool Foam::functionObjects::fieldValues::volFieldValue::write()
         const word& fieldName = fields_[i];
         bool processed = false;
 
-        processed = processed || writeValues<scalar>(fieldName);
-        processed = processed || writeValues<vector>(fieldName);
-        processed = processed || writeValues<sphericalTensor>(fieldName);
-        processed = processed || writeValues<symmTensor>(fieldName);
-        processed = processed || writeValues<tensor>(fieldName);
+        #define processType(fieldType, none)                                   \
+            processed = processed || writeValues<fieldType>(fieldName);
+        FOR_ALL_FIELD_TYPES(processType)
 
         if (!processed)
         {
-            WarningInFunction
-                << "Requested field " << fieldName
-                << " not found in database and not processed"
-                << endl;
+            cannotFindObject(fieldName);
         }
     }
 

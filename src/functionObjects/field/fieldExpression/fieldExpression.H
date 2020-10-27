@@ -38,7 +38,6 @@ SourceFiles
 #define functionObjects_fieldExpression_H
 
 #include "fvMeshFunctionObject.H"
-#include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,9 +68,6 @@ protected:
     // Protected member functions
 
         virtual bool calc() = 0;
-
-        template<class Type>
-        bool foundObject(const word& name);
 
 
 public:
@@ -126,12 +122,6 @@ public:
 
 } // End namespace functionObjects
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "fieldExpressionTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

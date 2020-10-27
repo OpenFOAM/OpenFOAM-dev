@@ -78,6 +78,13 @@ protected:
         template<class ObjectType>
         bool foundObject(const word& fieldName) const;
 
+        //- Prints a warning message that fieldName cannot be found
+        template<class ObjectType>
+        void cannotFindObject(const word& fieldName);
+
+        //- Prints a warning message that fieldName cannot be found
+        void cannotFindObject(const word& fieldName);
+
         //- Lookup object from the objectRegistry
         template<class ObjectType>
         const ObjectType& lookupObject(const word& fieldName) const;

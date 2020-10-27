@@ -44,11 +44,14 @@ bool Foam::functionObjects::randomise::calc()
 {
     bool processed = false;
 
-    processed = processed || calcRandomised<scalar>();
-    processed = processed || calcRandomised<vector>();
-    processed = processed || calcRandomised<sphericalTensor>();
-    processed = processed || calcRandomised<symmTensor>();
-    processed = processed || calcRandomised<tensor>();
+    #define processType(fieldType, none)                                       \
+        processed = processed || calcRandomised<fieldType>();
+    FOR_ALL_FIELD_TYPES(processType)
+
+    if (!processed)
+    {
+        cannotFindObject(fieldName_);
+    }
 
     return processed;
 }

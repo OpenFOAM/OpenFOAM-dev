@@ -76,6 +76,8 @@ bool Foam::functionObjects::PecletNo::calc()
     }
     else
     {
+        cannotFindObject<surfaceScalarField>(fieldName_);
+
         return false;
     }
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,17 @@ namespace functionObjects
 
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+
+void Foam::functionObjects::regionFunctionObject::cannotFindObject
+(
+    const word& fieldName
+)
+{
+    Warning
+        << "    functionObjects::" << type() << " " << name()
+        << " cannot find required object " << fieldName << endl;
+}
+
 
 bool Foam::functionObjects::regionFunctionObject::writeObject
 (

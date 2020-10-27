@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,11 +44,14 @@ bool Foam::functionObjects::magSqr::calc()
 {
     bool processed = false;
 
-    processed = processed || calcMagSqr<scalar>();
-    processed = processed || calcMagSqr<vector>();
-    processed = processed || calcMagSqr<sphericalTensor>();
-    processed = processed || calcMagSqr<symmTensor>();
-    processed = processed || calcMagSqr<tensor>();
+    #define processType(fieldType, none)                                       \
+        processed = processed || calcMagSqr<fieldType>();
+    FOR_ALL_FIELD_TYPES(processType)
+
+    if (!processed)
+    {
+        cannotFindObject(fieldName_);
+    }
 
     return processed;
 }

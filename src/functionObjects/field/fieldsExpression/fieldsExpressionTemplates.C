@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,11 +69,9 @@ bool Foam::functionObjects::fieldsExpression::calcAllTypes(FOType& fo)
 {
     bool processed = false;
 
-    processed = processed || fo.template calcType<scalar>(fo);
-    processed = processed || fo.template calcType<vector>(fo);
-    processed = processed || fo.template calcType<sphericalTensor>(fo);
-    processed = processed || fo.template calcType<symmTensor>(fo);
-    processed = processed || fo.template calcType<tensor>(fo);
+    #define processType(fieldType, none)                                       \
+        processed = processed || fo.template calcType<fieldType>(fo);
+    FOR_ALL_FIELD_TYPES(processType)
 
     return processed;
 }
