@@ -4,7 +4,8 @@ cd ${0%/*} || exit 1
 
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-gYs="air.gas H2O.gas none.gas"
+# gYs="air.gas H2O.gas none.gas"
+gYs="air.gas H2O.gas"
 gHes="e.gas h.gas"
 lHes="e.liquid h.liquid"
 
