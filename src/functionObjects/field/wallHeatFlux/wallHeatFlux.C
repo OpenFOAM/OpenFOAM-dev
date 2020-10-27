@@ -51,9 +51,10 @@ void Foam::functionObjects::wallHeatFlux::writeFileHeader(const label i)
     writeHeader(file(), "Wall heat-flux");
     writeCommented(file(), "Time");
     writeTabbed(file(), "patch");
-    writeTabbed(file(), "min");
-    writeTabbed(file(), "max");
-    writeTabbed(file(), "integral");
+    writeTabbed(file(), "min [W/m^2]");
+    writeTabbed(file(), "max [W/m^2]");
+    writeTabbed(file(), "Q [W]");
+    writeTabbed(file(), "q [W/m^2]");
     file() << endl;
 }
 
@@ -78,12 +79,13 @@ Foam::functionObjects::wallHeatFlux::calcWallHeatFlux
         twallHeatFlux.ref().boundaryFieldRef();
 
     const surfaceScalarField::Boundary& qBf = q.boundaryField();
+    const surfaceScalarField::Boundary& magSf = mesh_.magSf().boundaryField();
 
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
         const label patchi = iter.key();
 
-        wallHeatFluxBf[patchi] = -qBf[patchi];
+        wallHeatFluxBf[patchi] = -qBf[patchi]/magSf[patchi];
     }
 
     if (foundObject<volScalarField>("qr"))
@@ -239,33 +241,34 @@ bool Foam::functionObjects::wallHeatFlux::write()
 
     const fvPatchList& patches = mesh_.boundary();
 
-    const surfaceScalarField::Boundary& magSf =
-        mesh_.magSf().boundaryField();
+    const surfaceScalarField::Boundary& magSf = mesh_.magSf().boundaryField();
 
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
         label patchi = iter.key();
         const fvPatch& pp = patches[patchi];
 
-        const scalarField& hfp = wallHeatFlux.boundaryField()[patchi];
+        const scalarField& qp = wallHeatFlux.boundaryField()[patchi];
 
-        const scalar minHfp = gMin(hfp);
-        const scalar maxHfp = gMax(hfp);
-        const scalar integralHfp = gSum(magSf[patchi]*hfp);
+        const scalar minqp = gMin(qp);
+        const scalar maxqp = gMax(qp);
+        const scalar Q = gSum(magSf[patchi]*qp);
+        const scalar q = Q/gSum(magSf[patchi]);
 
         if (Pstream::master())
         {
             file()
                 << mesh_.time().value()
                 << tab << pp.name()
-                << tab << minHfp
-                << tab << maxHfp
-                << tab << integralHfp
+                << tab << minqp
+                << tab << maxqp
+                << tab << Q
+                << tab << q
                 << endl;
         }
 
-        Log << "    min/max/integ(" << pp.name() << ") = "
-            << minHfp << ", " << maxHfp << ", " << integralHfp << endl;
+        Log << "    min, max, Q [W], q [W/m^2] for patch " << pp.name() << " = "
+            << minqp << ", " << maxqp << ", " << Q << ", " << q << endl;
     }
 
     Log << endl;
