@@ -127,13 +127,13 @@ public:
             const label patchi
         ) const = 0;
 
-        //- Return the heat flux
+        //- Return the heat flux [W]
         virtual tmp<surfaceScalarField> q() const = 0;
 
         //- Return the source term for the energy equation
         virtual tmp<fvScalarMatrix> divq(volScalarField& he) const = 0;
 
-        //- Return the specie flux for the given specie mass-fraction
+        //- Return the specie flux for the given specie mass-fraction [kg/s]
         virtual tmp<surfaceScalarField> j(const volScalarField& Yi) const = 0;
 
         //- Return the source term for the given specie mass-fraction equation

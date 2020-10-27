@@ -143,7 +143,7 @@ public:
             );
         }
 
-        //- Return the heat flux
+        //- Return the heat flux [W]
         virtual tmp<surfaceScalarField> q() const;
 
         //- Return the source term for the energy equation

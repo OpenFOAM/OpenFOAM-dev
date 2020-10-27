@@ -115,7 +115,7 @@ public:
         //  in the local coordinate system [W/m/K]
         virtual tmp<symmTensorField> KappaLocal(const label patchi) const;
 
-        //- Return the heat flux
+        //- Return the heat flux [W]
         virtual tmp<surfaceScalarField> q() const;
 
         //- Return the source term for the energy equation
