@@ -37,8 +37,7 @@ SourceFiles
 #ifndef Reaction_H
 #define Reaction_H
 
-#include "speciesTable.H"
-#include "specieCoeffs.H"
+#include "reaction.H"
 #include "HashPtrTable.H"
 #include "scalarField.H"
 #include "simpleMatrix.H"
@@ -61,6 +60,7 @@ inline Ostream& operator<<(Ostream&, const Reaction<ReactionThermo>&);
 
 class objectRegistry;
 
+
 /*---------------------------------------------------------------------------*\
                           Class Reaction Declaration
 \*---------------------------------------------------------------------------*/
@@ -68,6 +68,7 @@ class objectRegistry;
 template<class ReactionThermo>
 class Reaction
 :
+    public reaction,
     public ReactionThermo::thermoType
 {
 
@@ -75,39 +76,22 @@ public:
 
     // Static data
 
-        //- Number of un-named reactions
-        static label nUnNamedReactions;
-
         //- Default temperature limits of applicability of reaction rates
         static scalar TlowDefault, ThighDefault;
+
 
 private:
 
     // Private Data
 
-        //- Name of reaction
-        const word name_;
-
-        //- List of specie names present in reaction system
-        const speciesTable& species_;
-
         //- Temperature limits of applicability of reaction rates
         scalar Tlow_, Thigh_;
-
-        //- Specie info for the left-hand-side of the reaction
-        List<specieCoeffs> lhs_;
-
-        //- Specie info for the right-hand-side of the reaction
-        List<specieCoeffs> rhs_;
 
 
     // Private Member Functions
 
         //- Construct reaction thermo
         void setThermo(const HashPtrTable<ReactionThermo>& thermoDatabase);
-
-        //- Return new reaction ID for un-named reactions
-        label getNewReactionID();
 
 
 public:
@@ -219,23 +203,11 @@ public:
 
         // Access
 
-            //- Return the name of the reaction
-            inline const word& name() const;
-
             //- Return the lower temperature limit for the reaction
             inline scalar Tlow() const;
 
             //- Return the upper temperature limit for the reaction
             inline scalar Thigh() const;
-
-            //- Return the components of the left hand side
-            inline const List<specieCoeffs>& lhs() const;
-
-            //- Return the components of the right hand side
-            inline const List<specieCoeffs>& rhs() const;
-
-            //- Return the specie list
-            const speciesTable& species() const;
 
 
         // Reaction rate coefficients

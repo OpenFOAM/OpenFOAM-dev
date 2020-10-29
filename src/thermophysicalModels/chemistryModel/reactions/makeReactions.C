@@ -26,7 +26,6 @@ License
 #include "makeReaction.H"
 
 #include "ArrheniusReactionRate.H"
-#include "infiniteReactionRate.H"
 #include "LandauTellerReactionRate.H"
 #include "thirdBodyArrheniusReactionRate.H"
 
@@ -70,10 +69,6 @@ namespace Foam
     forCommonGases(makeIRNReactions, ArrheniusReactionRate);
     forCommonLiquids(makeIRNReactions, ArrheniusReactionRate);
     forPolynomials(makeIRNReactions, ArrheniusReactionRate);
-
-    forCommonGases(makeIRNReactions, infiniteReactionRate);
-    forCommonLiquids(makeIRNReactions, infiniteReactionRate);
-    forPolynomials(makeIRNReactions, infiniteReactionRate);
 
     forCommonGases(makeIRNReactions, LandauTellerReactionRate);
     forCommonLiquids(makeIRNReactions, LandauTellerReactionRate);

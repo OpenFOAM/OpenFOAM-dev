@@ -25,10 +25,8 @@ License
 
 #include "Reaction.H"
 
-// * * * * * * * * * * * * * * * * Static Data * * * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-Foam::label Foam::Reaction<ReactionThermo>::nUnNamedReactions(0);
+// * * * * * * * * * * * * * * * * Static Data * * * * * * * * * * * * * * * //
 
 template<class ReactionThermo>
 Foam::scalar Foam::Reaction<ReactionThermo>::TlowDefault(0);
@@ -40,13 +38,6 @@ Foam::scalar Foam::Reaction<ReactionThermo>::ThighDefault(great);
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class ReactionThermo>
-Foam::label Foam::Reaction<ReactionThermo>::getNewReactionID()
-{
-    return nUnNamedReactions++;
-}
-
-
-template<class ReactionThermo>
 void Foam::Reaction<ReactionThermo>::setThermo
 (
     const HashPtrTable<ReactionThermo>& thermoDatabase
@@ -54,32 +45,32 @@ void Foam::Reaction<ReactionThermo>::setThermo
 {
     typename ReactionThermo::thermoType rhsThermo
     (
-        rhs_[0].stoichCoeff
-       *(*thermoDatabase[species_[rhs_[0].index]]).W()
-       *(*thermoDatabase[species_[rhs_[0].index]])
+        rhs()[0].stoichCoeff
+       *(*thermoDatabase[species()[rhs()[0].index]]).W()
+       *(*thermoDatabase[species()[rhs()[0].index]])
     );
 
-    for (label i=1; i<rhs_.size(); ++i)
+    for (label i=1; i<rhs().size(); ++i)
     {
         rhsThermo +=
-            rhs_[i].stoichCoeff
-           *(*thermoDatabase[species_[rhs_[i].index]]).W()
-           *(*thermoDatabase[species_[rhs_[i].index]]);
+            rhs()[i].stoichCoeff
+           *(*thermoDatabase[species()[rhs()[i].index]]).W()
+           *(*thermoDatabase[species()[rhs()[i].index]]);
     }
 
     typename ReactionThermo::thermoType lhsThermo
     (
-        lhs_[0].stoichCoeff
-       *(*thermoDatabase[species_[lhs_[0].index]]).W()
-       *(*thermoDatabase[species_[lhs_[0].index]])
+        lhs()[0].stoichCoeff
+       *(*thermoDatabase[species()[lhs()[0].index]]).W()
+       *(*thermoDatabase[species()[lhs()[0].index]])
     );
 
-    for (label i=1; i<lhs_.size(); ++i)
+    for (label i=1; i<lhs().size(); ++i)
     {
         lhsThermo +=
-            lhs_[i].stoichCoeff
-           *(*thermoDatabase[species_[lhs_[i].index]]).W()
-           *(*thermoDatabase[species_[lhs_[i].index]]);
+            lhs()[i].stoichCoeff
+           *(*thermoDatabase[species()[lhs()[i].index]]).W()
+           *(*thermoDatabase[species()[lhs()[i].index]]);
     }
 
     // Check for mass imbalance in the reaction
@@ -108,13 +99,10 @@ Foam::Reaction<ReactionThermo>::Reaction
     const HashPtrTable<ReactionThermo>& thermoDatabase
 )
 :
+    reaction(species, lhs, rhs),
     ReactionThermo::thermoType(*thermoDatabase[species[0]]),
-    name_("un-named-reaction-" + Foam::name(getNewReactionID())),
-    species_(species),
     Tlow_(TlowDefault),
-    Thigh_(ThighDefault),
-    lhs_(lhs),
-    rhs_(rhs)
+    Thigh_(ThighDefault)
 {
     setThermo(thermoDatabase);
 }
@@ -127,13 +115,10 @@ Foam::Reaction<ReactionThermo>::Reaction
     const speciesTable& species
 )
 :
+    reaction(r, species),
     ReactionThermo::thermoType(r),
-    name_(r.name() + "Copy"),
-    species_(species),
     Tlow_(r.Tlow()),
-    Thigh_(r.Thigh()),
-    lhs_(r.lhs_),
-    rhs_(r.rhs_)
+    Thigh_(r.Thigh())
 {}
 
 
@@ -145,19 +130,11 @@ Foam::Reaction<ReactionThermo>::Reaction
     const dictionary& dict
 )
 :
+    reaction(species, dict),
     ReactionThermo::thermoType(*thermoDatabase[species[0]]),
-    name_(dict.dictName()),
-    species_(species),
     Tlow_(dict.lookupOrDefault<scalar>("Tlow", TlowDefault)),
     Thigh_(dict.lookupOrDefault<scalar>("Thigh", ThighDefault))
 {
-    specieCoeffs::setLRhs
-    (
-        IStringStream(dict.lookup("reaction"))(),
-        species_,
-        lhs_,
-        rhs_
-    );
     setThermo(thermoDatabase);
 }
 
@@ -304,13 +281,7 @@ Foam::Reaction<ReactionThermo>::New
 template<class ReactionThermo>
 void Foam::Reaction<ReactionThermo>::write(Ostream& os) const
 {
-    OStringStream reaction;
-    writeEntry
-    (
-        os,
-        "reaction",
-        specieCoeffs::reactionStr(reaction, species_, lhs_, rhs_)
-    );
+    reaction::write(os);
 }
 
 
@@ -358,16 +329,16 @@ void Foam::Reaction<ReactionThermo>::omega
         p, T, c, li, pf, cf, lRef, pr, cr, rRef
     );
 
-    forAll(lhs_, i)
+    forAll(lhs(), i)
     {
-        const label si = lhs_[i].index;
-        const scalar sl = lhs_[i].stoichCoeff;
+        const label si = lhs()[i].index;
+        const scalar sl = lhs()[i].stoichCoeff;
         dcdt[si] -= sl*omegaI;
     }
-    forAll(rhs_, i)
+    forAll(rhs(), i)
     {
-        const label si = rhs_[i].index;
-        const scalar sr = rhs_[i].stoichCoeff;
+        const label si = rhs()[i].index;
+        const scalar sr = rhs()[i].stoichCoeff;
         dcdt[si] += sr*omegaI;
     }
 }
@@ -397,34 +368,34 @@ Foam::scalar Foam::Reaction<ReactionThermo>::omega
     pf = 1;
     pr = 1;
 
-    const label Nl = lhs_.size();
-    const label Nr = rhs_.size();
+    const label Nl = lhs().size();
+    const label Nr = rhs().size();
 
     label slRef = 0;
-    lRef = lhs_[slRef].index;
+    lRef = lhs()[slRef].index;
 
     pf = kf;
     for (label s = 1; s < Nl; s++)
     {
-        const label si = lhs_[s].index;
+        const label si = lhs()[s].index;
 
         if (c[si] < c[lRef])
         {
-            const scalar exp = lhs_[slRef].exponent;
+            const scalar exp = lhs()[slRef].exponent;
             pf *= pow(max(c[lRef], 0), exp);
             lRef = si;
             slRef = s;
         }
         else
         {
-            const scalar exp = lhs_[s].exponent;
+            const scalar exp = lhs()[s].exponent;
             pf *= pow(max(c[si], 0), exp);
         }
     }
     cf = max(c[lRef], 0);
 
     {
-        const scalar exp = lhs_[slRef].exponent;
+        const scalar exp = lhs()[slRef].exponent;
         if (exp < 1)
         {
             if (cf > small)
@@ -443,30 +414,30 @@ Foam::scalar Foam::Reaction<ReactionThermo>::omega
     }
 
     label srRef = 0;
-    rRef = rhs_[srRef].index;
+    rRef = rhs()[srRef].index;
 
     // Find the matrix element and element position for the rhs
     pr = kr;
     for (label s = 1; s < Nr; s++)
     {
-        const label si = rhs_[s].index;
+        const label si = rhs()[s].index;
         if (c[si] < c[rRef])
         {
-            const scalar exp = rhs_[srRef].exponent;
+            const scalar exp = rhs()[srRef].exponent;
             pr *= pow(max(c[rRef], 0), exp);
             rRef = si;
             srRef = s;
         }
         else
         {
-            const scalar exp = rhs_[s].exponent;
+            const scalar exp = rhs()[s].exponent;
             pr *= pow(max(c[si], 0), exp);
         }
     }
     cr = max(c[rRef], 0);
 
     {
-        const scalar exp = rhs_[srRef].exponent;
+        const scalar exp = rhs()[srRef].exponent;
         if (exp < 1)
         {
             if (cr > small)
@@ -509,30 +480,30 @@ void Foam::Reaction<ReactionThermo>::dwdc
 
     omegaI = omega(p, T, c, li, pf, cf, lRef, pr, cr, rRef);
 
-    forAll(lhs_, i)
+    forAll(lhs(), i)
     {
-        const label si = reduced ? c2s[lhs_[i].index] : lhs_[i].index;
-        const scalar sl = lhs_[i].stoichCoeff;
+        const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
+        const scalar sl = lhs()[i].stoichCoeff;
         dcdt[si] -= sl*omegaI;
     }
-    forAll(rhs_, i)
+    forAll(rhs(), i)
     {
-        const label si = reduced ? c2s[rhs_[i].index] : rhs_[i].index;
-        const scalar sr = rhs_[i].stoichCoeff;
+        const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
+        const scalar sr = rhs()[i].stoichCoeff;
         dcdt[si] += sr*omegaI;
     }
 
     kfwd = this->kf(p, T, c, li);
     kbwd = this->kr(kfwd, p, T, c, li);
 
-    forAll(lhs_, j)
+    forAll(lhs(), j)
     {
-        const label sj = reduced ? c2s[lhs_[j].index] : lhs_[j].index;
+        const label sj = reduced ? c2s[lhs()[j].index] : lhs()[j].index;
         scalar kf = kfwd;
-        forAll(lhs_, i)
+        forAll(lhs(), i)
         {
-            const label si = lhs_[i].index;
-            const scalar el = lhs_[i].exponent;
+            const label si = lhs()[i].index;
+            const scalar el = lhs()[i].exponent;
             if (i == j)
             {
                 if (el < 1)
@@ -557,28 +528,28 @@ void Foam::Reaction<ReactionThermo>::dwdc
             }
         }
 
-        forAll(lhs_, i)
+        forAll(lhs(), i)
         {
-            const label si = reduced ? c2s[lhs_[i].index] : lhs_[i].index;
-            const scalar sl = lhs_[i].stoichCoeff;
+            const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
+            const scalar sl = lhs()[i].stoichCoeff;
             J(si, sj) -= sl*kf;
         }
-        forAll(rhs_, i)
+        forAll(rhs(), i)
         {
-            const label si = reduced ? c2s[rhs_[i].index] : rhs_[i].index;
-            const scalar sr = rhs_[i].stoichCoeff;
+            const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
+            const scalar sr = rhs()[i].stoichCoeff;
             J(si, sj) += sr*kf;
         }
     }
 
-    forAll(rhs_, j)
+    forAll(rhs(), j)
     {
-        const label sj = reduced ? c2s[rhs_[j].index] : rhs_[j].index;
+        const label sj = reduced ? c2s[rhs()[j].index] : rhs()[j].index;
         scalar kr = kbwd;
-        forAll(rhs_, i)
+        forAll(rhs(), i)
         {
-            const label si = rhs_[i].index;
-            const scalar er = rhs_[i].exponent;
+            const label si = rhs()[i].index;
+            const scalar er = rhs()[i].exponent;
             if (i == j)
             {
                 if (er < 1)
@@ -603,16 +574,16 @@ void Foam::Reaction<ReactionThermo>::dwdc
             }
         }
 
-        forAll(lhs_, i)
+        forAll(lhs(), i)
         {
-            const label si = reduced ? c2s[lhs_[i].index] : lhs_[i].index;
-            const scalar sl = lhs_[i].stoichCoeff;
+            const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
+            const scalar sl = lhs()[i].stoichCoeff;
             J(si, sj) += sl*kr;
         }
-        forAll(rhs_, i)
+        forAll(rhs(), i)
         {
-            const label si = reduced ? c2s[rhs_[i].index] : rhs_[i].index;
-            const scalar sr = rhs_[i].stoichCoeff;
+            const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
+            const scalar sr = rhs()[i].stoichCoeff;
             J(si, sj) -= sr*kr;
         }
     }
@@ -632,18 +603,18 @@ void Foam::Reaction<ReactionThermo>::dwdc
             sj = reduced ? c2s[sj] : sj;
             if (sj != -1)
             {
-                forAll(lhs_, i)
+                forAll(lhs(), i)
                 {
                     const label si =
-                        reduced ? c2s[lhs_[i].index] : lhs_[i].index;
-                    const scalar sl = lhs_[i].stoichCoeff;
+                        reduced ? c2s[lhs()[i].index] : lhs()[i].index;
+                    const scalar sl = lhs()[i].stoichCoeff;
                     J(si, sj) -= sl*dcidc[j]*omegaI;
                 }
-                forAll(rhs_, i)
+                forAll(rhs(), i)
                 {
                     const label si =
-                        reduced ? c2s[rhs_[i].index] : rhs_[i].index;
-                    const scalar sr = rhs_[i].stoichCoeff;
+                        reduced ? c2s[rhs()[i].index] : rhs()[i].index;
+                    const scalar sr = rhs()[i].stoichCoeff;
                     J(si, sj) += sr*dcidc[j]*omegaI;
                 }
             }
@@ -675,10 +646,10 @@ void Foam::Reaction<ReactionThermo>::dwdT
     scalar dkrdT = this->dkrdT(p, T, c, li, dkfdT, kr);
 
     scalar sumExp = 0.0;
-    forAll(lhs_, i)
+    forAll(lhs(), i)
     {
-        const label si = lhs_[i].index;
-        const scalar el = lhs_[i].exponent;
+        const label si = lhs()[i].index;
+        const scalar el = lhs()[i].exponent;
         const scalar cExp = pow(c[si], el);
         dkfdT *= cExp;
         kf *= cExp;
@@ -687,10 +658,10 @@ void Foam::Reaction<ReactionThermo>::dwdT
     kf *= -sumExp/T;
 
     sumExp = 0.0;
-    forAll(rhs_, i)
+    forAll(rhs(), i)
     {
-        const label si = rhs_[i].index;
-        const scalar er = rhs_[i].exponent;
+        const label si = rhs()[i].index;
+        const scalar er = rhs()[i].exponent;
         const scalar cExp = pow(c[si], er);
         dkrdT *= cExp;
         kr *= cExp;
@@ -707,25 +678,18 @@ void Foam::Reaction<ReactionThermo>::dwdT
     dcidT *= omegaI;
 
     // J(i, indexT) = sum_reactions nu_i dqdT
-    forAll(lhs_, i)
+    forAll(lhs(), i)
     {
-        const label si = reduced ? c2s[lhs_[i].index] : lhs_[i].index;
-        const scalar sl = lhs_[i].stoichCoeff;
+        const label si = reduced ? c2s[lhs()[i].index] : lhs()[i].index;
+        const scalar sl = lhs()[i].stoichCoeff;
         J(si, indexT) -= sl*(dqidT + dcidT);
     }
-    forAll(rhs_, i)
+    forAll(rhs(), i)
     {
-        const label si = reduced ? c2s[rhs_[i].index] : rhs_[i].index;
-        const scalar sr = rhs_[i].stoichCoeff;
+        const label si = reduced ? c2s[rhs()[i].index] : rhs()[i].index;
+        const scalar sr = rhs()[i].stoichCoeff;
         J(si, indexT) += sr*(dqidT + dcidT);
     }
-}
-
-
-template<class ReactionThermo>
-const Foam::speciesTable& Foam::Reaction<ReactionThermo>::species() const
-{
-    return species_;
 }
 
 

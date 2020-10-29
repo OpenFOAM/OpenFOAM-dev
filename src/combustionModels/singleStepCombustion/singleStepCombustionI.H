@@ -35,7 +35,7 @@ namespace combustionModels
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class ThermoType>
-const multiComponentMixture<ThermoType>&
+const Foam::basicSpecieMixture&
 singleStepCombustion<ThermoType>::mixture() const
 {
     return mixture_;
@@ -43,10 +43,10 @@ singleStepCombustion<ThermoType>::mixture() const
 
 
 template<class ThermoType>
-inline const Foam::Reaction<ThermoType>&
-singleStepCombustion<ThermoType>::reaction() const
+inline const Foam::reaction&
+singleStepCombustion<ThermoType>::singleReaction() const
 {
-    return reaction_();
+    return reaction_;
 }
 
 

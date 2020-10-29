@@ -65,36 +65,36 @@ Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::mixtureFraction
             combustionModel::combustionPropertiesName
         );
 
-    const multiComponentMixture<ThermoType>& mixture = combustion.mixture();
+    const basicSpecieMixture& mixture = combustion.mixture();
 
-    const Reaction<ThermoType>& reaction = combustion.reaction();
+    const reaction& singleReaction = combustion.singleReaction();
 
     scalar totalMol = 0;
-    forAll(reaction.rhs(), i)
+    forAll(singleReaction.rhs(), i)
     {
-        const scalar stoichCoeff = reaction.rhs()[i].stoichCoeff;
+        const scalar stoichCoeff = singleReaction.rhs()[i].stoichCoeff;
         totalMol += mag(stoichCoeff);
     }
 
     totalMol += nuSoot_;
 
-    scalarList Xi(reaction.rhs().size());
+    scalarList Xi(singleReaction.rhs().size());
 
     scalar Wm = 0;
-    forAll(reaction.rhs(), i)
+    forAll(singleReaction.rhs(), i)
     {
-        const label speciei = reaction.rhs()[i].index;
-        const scalar stoichCoeff = reaction.rhs()[i].stoichCoeff;
+        const label speciei = singleReaction.rhs()[i].index;
+        const scalar stoichCoeff = singleReaction.rhs()[i].stoichCoeff;
         Xi[i] = mag(stoichCoeff)/totalMol;
-        Wm += Xi[i]*mixture.specieThermos()[speciei].W();
+        Wm += Xi[i]*mixture.Wi(speciei);
     }
 
     scalarList Yprod0(mixture.species().size(), 0.0);
 
-    forAll(reaction.rhs(), i)
+    forAll(singleReaction.rhs(), i)
     {
-        const label speciei = reaction.rhs()[i].index;
-        Yprod0[speciei] = mixture.specieThermos()[speciei].W()/Wm*Xi[i];
+        const label speciei = singleReaction.rhs()[i].index;
+        Yprod0[speciei] = mixture.Wi(speciei)/Wm*Xi[i];
     }
 
     const scalar XSoot = nuSoot_/totalMol;
@@ -106,7 +106,7 @@ Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::mixtureFraction
 
     if (mappingFieldName_ == "none")
     {
-        const label index = reaction.rhs()[0].index;
+        const label index = singleReaction.rhs()[0].index;
         mappingFieldName_ = mixture.Y(index).name();
     }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,32 +23,37 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Reaction.H"
+#include "reaction.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-inline Foam::scalar Foam::Reaction<ReactionThermo>::Tlow() const
+inline const Foam::word& Foam::reaction::name() const
 {
-    return Tlow_;
+    return name_;
 }
 
 
-template<class ReactionThermo>
-inline Foam::scalar Foam::Reaction<ReactionThermo>::Thigh() const
+inline const Foam::List<Foam::specieCoeffs>& Foam::reaction::lhs() const
 {
-    return Thigh_;
+    return lhs_;
+}
+
+
+inline const Foam::List<Foam::specieCoeffs>& Foam::reaction::rhs() const
+{
+    return rhs_;
+}
+
+
+inline const Foam::speciesTable& Foam::reaction::species() const
+{
+    return species_;
 }
 
 
 // * * * * * * * * * * * * * * * Ostream Operator  * * * * * * * * * * * * * //
 
-template<class ReactionThermo>
-inline Foam::Ostream& Foam::operator<<
-(
-    Ostream& os,
-    const Reaction<ReactionThermo>& r
-)
+inline Foam::Ostream& Foam::operator<<(Foam::Ostream& os, const reaction& r)
 {
     r.write(os);
     return os;

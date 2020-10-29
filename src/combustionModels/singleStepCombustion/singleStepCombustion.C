@@ -38,83 +38,79 @@ namespace combustionModels
 template<class ThermoType>
 void singleStepCombustion<ThermoType>::calculateqFuel()
 {
-    const Reaction<ThermoType>& reaction = reaction_();
-    const scalar Wu = mixture_.specieThermos()[fuelIndex_].W();
+    const scalar Wu = mixture_.Wi(fuelIndex_);
 
-    forAll(reaction.lhs(), i)
+    forAll(reaction_.lhs(), i)
     {
-        const label speciei = reaction.lhs()[i].index;
-        const scalar stoichCoeff = reaction.lhs()[i].stoichCoeff;
+        const label speciei = reaction_.lhs()[i].index;
+        const scalar stoichCoeff = reaction_.lhs()[i].stoichCoeff;
         specieStoichCoeffs_[speciei] = -stoichCoeff;
-        qFuel_.value() += mixture_.specieThermos()[speciei].hc()*stoichCoeff/Wu;
+        qFuel_.value() +=
+            mixture_.Hf(speciei)*mixture_.Wi(speciei)*stoichCoeff/Wu;
     }
 
-    forAll(reaction.rhs(), i)
+    forAll(reaction_.rhs(), i)
     {
-        const label speciei = reaction.rhs()[i].index;
-        const scalar stoichCoeff = reaction.rhs()[i].stoichCoeff;
+        const label speciei = reaction_.rhs()[i].index;
+        const scalar stoichCoeff = reaction_.rhs()[i].stoichCoeff;
         specieStoichCoeffs_[speciei] = stoichCoeff;
-        qFuel_.value() -= mixture_.specieThermos()[speciei].hc()*stoichCoeff/Wu;
+        qFuel_.value() -=
+            mixture_.Hf(speciei)*mixture_.Wi(speciei)*stoichCoeff/Wu;
         specieProd_[speciei] = -1;
     }
 
-    Info << "Fuel heat of combustion :" << qFuel_.value() << endl;
+    Info << "Fuel heat of combustion: " << qFuel_.value() << endl;
 }
 
 
 template<class ThermoType>
-void singleStepCombustion<ThermoType>:: massAndAirStoichRatios()
+void singleStepCombustion<ThermoType>::massAndAirStoichRatios()
 {
     const label O2Index = mixture_.species()["O2"];
-    const scalar Wu = mixture_.specieThermos()[fuelIndex_].W();
+    const scalar Wu = mixture_.Wi(fuelIndex_);
 
     stoicRatio_ =
-        (mixture_.specieThermos()[mixture_.defaultSpecie()].W()
-      * specieStoichCoeffs_[mixture_.defaultSpecie()]
-      + mixture_.specieThermos()[O2Index].W()
-      * mag(specieStoichCoeffs_[O2Index]))
-      / (Wu*mag(specieStoichCoeffs_[fuelIndex_]));
+        (
+            mixture_.Wi(mixture_.defaultSpecie())
+           *specieStoichCoeffs_[mixture_.defaultSpecie()]
+          + mixture_.Wi(O2Index)*mag(specieStoichCoeffs_[O2Index])
+        )/(Wu*mag(specieStoichCoeffs_[fuelIndex_]));
 
-    s_ =
-        (mixture_.specieThermos()[O2Index].W()
-      * mag(specieStoichCoeffs_[O2Index]))
-      / (Wu*mag(specieStoichCoeffs_[fuelIndex_]));
+    s_ = mixture_.Wi(O2Index)*mag(specieStoichCoeffs_[O2Index])
+        /(Wu*mag(specieStoichCoeffs_[fuelIndex_]));
 
-    Info << "stoichiometric air-fuel ratio :" << stoicRatio_.value() << endl;
-
-    Info << "stoichiometric oxygen-fuel ratio :" << s_.value() << endl;
+    Info << "stoichiometric air-fuel ratio: " << stoicRatio_.value() << endl;
+    Info << "stoichiometric oxygen-fuel ratio: " << s_.value() << endl;
 }
 
 
 template<class ThermoType>
-void singleStepCombustion<ThermoType>:: calculateMaxProducts()
+void singleStepCombustion<ThermoType>::calculateMaxProducts()
 {
-    const Reaction<ThermoType>& reaction = reaction_();
-
     scalar Wm = 0.0;
     scalar totalMol = 0.0;
-    forAll(reaction.rhs(), i)
+    forAll(reaction_.rhs(), i)
     {
-        label speciei = reaction.rhs()[i].index;
+        label speciei = reaction_.rhs()[i].index;
         totalMol += mag(specieStoichCoeffs_[speciei]);
     }
 
-    scalarList Xi(reaction.rhs().size());
+    scalarList Xi(reaction_.rhs().size());
 
-    forAll(reaction.rhs(), i)
+    forAll(reaction_.rhs(), i)
     {
-        const label speciei = reaction.rhs()[i].index;
+        const label speciei = reaction_.rhs()[i].index;
         Xi[i] = mag(specieStoichCoeffs_[speciei])/totalMol;
-        Wm += Xi[i]*mixture_.specieThermos()[speciei].W();
+        Wm += Xi[i]*mixture_.Wi(speciei);
     }
 
-    forAll(reaction.rhs(), i)
+    forAll(reaction_.rhs(), i)
     {
-        const label speciei = reaction.rhs()[i].index;
-        Yprod0_[speciei] =  mixture_.specieThermos()[speciei].W()/Wm*Xi[i];
+        const label speciei = reaction_.rhs()[i].index;
+        Yprod0_[speciei] =  mixture_.Wi(speciei)/Wm*Xi[i];
     }
 
-    Info << "Maximum products mass concentrations:" << nl;
+    Info << "Maximum products mass concentrations: " << nl;
     forAll(Yprod0_, i)
     {
         if (Yprod0_[i] > 0)
@@ -127,10 +123,8 @@ void singleStepCombustion<ThermoType>:: calculateMaxProducts()
     forAll(specieStoichCoeffs_, i)
     {
         specieStoichCoeffs_[i] =
-            specieStoichCoeffs_[i]
-          * mixture_.specieThermos()[i].W()
-          / (mixture_.specieThermos()[fuelIndex_].W()
-          * mag(specieStoichCoeffs_[fuelIndex_]));
+            specieStoichCoeffs_[i]*mixture_.Wi(i)
+           /(mixture_.Wi(fuelIndex_)*mag(specieStoichCoeffs_[fuelIndex_]));
     }
 }
 
@@ -147,19 +141,8 @@ singleStepCombustion<ThermoType>::singleStepCombustion
 )
 :
     combustionModel(modelType, thermo, turb, combustionProperties),
-    mixture_
-    (
-        dynamic_cast<const multiComponentMixture<ThermoType>&>(this->thermo())
-    ),
-    reaction_
-    (
-        Reaction<ThermoType>::New
-        (
-            mixture_.species(),
-            mixture_.specieThermos(),
-            this->subDict("reaction")
-        )
-    ),
+    mixture_(dynamic_cast<const basicSpecieMixture&>(this->thermo())),
+    reaction_(mixture_.species(), this->subDict("reaction")),
     stoicRatio_(dimensionedScalar("stoicRatio", dimless, 0)),
     s_(dimensionedScalar("s", dimless, 0)),
     qFuel_(dimensionedScalar("qFuel", sqr(dimVelocity), 0)),
@@ -287,16 +270,14 @@ bool singleStepCombustion<ThermoType>::read()
 template<class ThermoType>
 void singleStepCombustion<ThermoType>::fresCorrect()
 {
-    const Reaction<ThermoType>& reaction = reaction_();
-
     const label O2Index = mixture_.species()["O2"];
     const volScalarField& YFuel = mixture_.Y()[fuelIndex_];
     const volScalarField& YO2 = mixture_.Y()[O2Index];
 
     // reactants
-    forAll(reaction.lhs(), i)
+    forAll(reaction_.lhs(), i)
     {
-        const label speciei = reaction.lhs()[i].index;
+        const label speciei = reaction_.lhs()[i].index;
         if (speciei == fuelIndex_)
         {
             fres_[speciei] = max(YFuel - YO2/s_, scalar(0));
@@ -308,9 +289,9 @@ void singleStepCombustion<ThermoType>::fresCorrect()
     }
 
     // products
-    forAll(reaction.rhs(), i)
+    forAll(reaction_.rhs(), i)
     {
-        const label speciei = reaction.rhs()[i].index;
+        const label speciei = reaction_.rhs()[i].index;
         if (speciei != mixture_.defaultSpecie())
         {
             forAll(fres_[speciei], celli)

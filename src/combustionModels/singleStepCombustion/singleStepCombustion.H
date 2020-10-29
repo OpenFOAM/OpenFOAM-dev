@@ -25,7 +25,7 @@ Class
     Foam::combustionModels::singleStepCombustion
 
 Description
-    Base class for combustion models using multiComponentMixture.
+    Base class for combustion models using basicSpecieMixture.
 
 SourceFiles
     singleStepCombustion.C
@@ -36,8 +36,8 @@ SourceFiles
 #define singleStepCombustion_H
 
 #include "combustionModel.H"
-#include "multiComponentMixture.H"
-#include "ReactionList.H"
+#include "basicSpecieMixture.H"
+#include "reaction.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -60,10 +60,10 @@ protected:
     // Protected data
 
         //- Reference to the mixture
-        const multiComponentMixture<ThermoType>& mixture_;
+        const basicSpecieMixture& mixture_;
 
         //- The single-step reaction
-        autoPtr<Reaction<ThermoType>> reaction_;
+        reaction reaction_;
 
         //- Stoichiometric air-fuel mass ratio
         dimensionedScalar stoicRatio_;
@@ -134,10 +134,10 @@ public:
         // Access functions
 
             //- Return the mixture
-            const multiComponentMixture<ThermoType>& mixture() const;
+            const basicSpecieMixture& mixture() const;
 
             //- Return the single step reaction
-            inline const Reaction<ThermoType>& reaction() const;
+            inline const reaction& singleReaction() const;
 
             //- Return the stoichiometric air-fuel mass ratio
             inline const dimensionedScalar& stoicRatio() const;

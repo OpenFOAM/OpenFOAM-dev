@@ -1,6 +1,7 @@
 atomicWeights/atomicWeights.C
 specie/specie.C
 reaction/specieCoeffs/specieCoeffs.C
+reaction/reaction/reaction.C
 
 thermophysicalFunctions/thermophysicalFunction/thermophysicalFunction.C
 

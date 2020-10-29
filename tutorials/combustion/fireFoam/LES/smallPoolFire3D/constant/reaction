@@ -8,7 +8,6 @@
 
 reaction
 {
-    type         irreversibleInfinite;
     reaction      "CH4 + 2O2 + 7.5N2 = CO2 + 2H2O + 7.5N2";
 }
 
