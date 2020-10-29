@@ -181,7 +181,7 @@ public:
             const label patchi
         ) const;
 
-        //- Return the heat flux [W]
+        //- Return the heat flux [W/m^2]
         virtual tmp<surfaceScalarField> q() const;
 
         //- Return the source term for the energy equation

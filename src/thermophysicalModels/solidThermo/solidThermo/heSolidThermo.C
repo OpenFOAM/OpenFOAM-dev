@@ -340,7 +340,7 @@ Foam::heSolidThermo<BasicSolidThermo, MixtureType>::q() const
             isotropic()
           ? fvm::laplacian(this->kappa(), this->T_)().flux()
           : fvm::laplacian(KappaLocal(), this->T_)().flux()
-        );
+        )/mesh.magSf();
 }
 
 

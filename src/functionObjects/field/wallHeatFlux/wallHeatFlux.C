@@ -79,13 +79,12 @@ Foam::functionObjects::wallHeatFlux::calcWallHeatFlux
         twallHeatFlux.ref().boundaryFieldRef();
 
     const surfaceScalarField::Boundary& qBf = q.boundaryField();
-    const surfaceScalarField::Boundary& magSf = mesh_.magSf().boundaryField();
 
     forAllConstIter(labelHashSet, patchSet_, iter)
     {
         const label patchi = iter.key();
 
-        wallHeatFluxBf[patchi] = -qBf[patchi]/magSf[patchi];
+        wallHeatFluxBf[patchi] = -qBf[patchi];
     }
 
     if (foundObject<volScalarField>("qr"))
