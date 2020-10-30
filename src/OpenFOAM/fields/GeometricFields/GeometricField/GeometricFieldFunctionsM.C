@@ -761,4 +761,4 @@ tmp<GeometricField<ReturnType, PatchField, GeoMesh>> operator Op               \
 
 } // End namespace Foam
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,7 +55,6 @@ defineTemplateTypeNameAndDebug(volTensorField, 0);
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-// specialization for scalar fields
 template<>
 tmp<GeometricField<scalar, fvPatchField, volMesh>>
 GeometricField<scalar, fvPatchField, volMesh>::component
@@ -67,7 +66,6 @@ GeometricField<scalar, fvPatchField, volMesh>::component
 }
 
 
-// specialization for scalar fields
 template<>
 void GeometricField<scalar, fvPatchField, volMesh>::replace
 (
@@ -78,8 +76,9 @@ void GeometricField<scalar, fvPatchField, volMesh>::replace
     *this == gsf;
 }
 
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// ************************************************************************* //

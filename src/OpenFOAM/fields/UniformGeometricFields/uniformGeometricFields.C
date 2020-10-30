@@ -42,4 +42,4 @@ defineTemplateTypeNameAndDebug(uniformGeometricTensorField, 0);
 
 } // End namespace Foam
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// ************************************************************************* //
