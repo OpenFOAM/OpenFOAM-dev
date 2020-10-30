@@ -44,6 +44,8 @@ Foam::radiationModels::sootModel::New
         dict.lookup(sootModel::typeName) >> modelType;
         Info<< "Selecting soot model " << modelType << endl;
     }
+
+    // Backwards compatibility check
     const wordList cmpts(basicThermo::splitThermoName(modelType, 3));
     if (cmpts.size() == 3)
     {
@@ -56,103 +58,20 @@ Foam::radiationModels::sootModel::New
             << "combustion model " << modelType << "." << endl;
     }
 
-    // Get the thermo model type names
-    word thermoType(word::null);
-    if (mesh.foundObject<basicThermo>(basicThermo::dictName))
-    {
-        const basicThermo& thermo =
-            mesh.lookupObject<basicThermo>(basicThermo::dictName);
-
-        thermoType = thermo.thermoName();
-    }
-
-    // Construct a thermo-soot model type name
-    const word thermoModelType = modelType + '<' + thermoType + '>';
-
-    // Lookup both possible model names
-    dictionaryConstructorTable::iterator cstrIter =
+    typename dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);
-    dictionaryConstructorTable::iterator thermoCstrIter =
-        dictionaryConstructorTablePtr_->find(thermoModelType);
 
-    // Construct and return
-    if (thermoCstrIter != dictionaryConstructorTablePtr_->end())
-    {
-        return autoPtr<sootModel>(thermoCstrIter()(dict, mesh, modelType));
-    }
-    else if (cstrIter != dictionaryConstructorTablePtr_->end())
-    {
-        return autoPtr<sootModel>(cstrIter()(dict, mesh, modelType));
-    }
-    else
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
             << "Unknown " << sootModel::typeName << " type "
-            << modelType << nl << nl;
-
-        const wordList names(dictionaryConstructorTablePtr_->sortedToc());
-
-        wordList thisCmpts;
-        thisCmpts.append(word::null);
-        thisCmpts.append(basicThermo::splitThermoName(thermoType, 5));
-
-        wordList validNames;
-        forAll(names, i)
-        {
-            wordList cmpts(basicThermo::splitThermoName(names[i], 1));
-            if (cmpts.size() != 1)
-            {
-                cmpts = basicThermo::splitThermoName(names[i], 6);
-            }
-
-            bool isValid = true;
-            for (label i = 1; i < cmpts.size() && isValid; ++ i)
-            {
-                isValid = isValid && cmpts[i] == thisCmpts[i];
-            }
-
-            if (isValid)
-            {
-                validNames.append(cmpts[0]);
-            }
-        }
-
-        FatalErrorInFunction
-            << "Valid " << sootModel::typeName << " types for this "
-            << "thermodynamic model are:" << endl << validNames << endl;
-
-        List<wordList> validCmpts;
-        validCmpts.append(wordList(6, word::null));
-        validCmpts[0][0] = sootModel::typeName;
-        validCmpts[0][1] = "transport";
-        validCmpts[0][2] = "thermo";
-        validCmpts[0][3] = "equationOfState";
-        validCmpts[0][4] = "specie";
-        validCmpts[0][5] = "energy";
-        forAll(names, i)
-        {
-            const wordList cmpts1(basicThermo::splitThermoName(names[i], 1));
-            const wordList cmpts6(basicThermo::splitThermoName(names[i], 6));
-            if (cmpts1.size() == 1)
-            {
-                validCmpts.append(wordList(6, "<any>"));
-                validCmpts.last()[0] = cmpts1[0];
-            }
-            if (cmpts6.size() == 6)
-            {
-                validCmpts.append(cmpts6);
-            }
-        }
-
-        FatalErrorInFunction
-            << "All " << sootModel::typeName
-            << "/thermoPhysics combinations are:" << endl << endl;
-        printTable(validCmpts, FatalErrorInFunction);
-
-        FatalErrorInFunction << exit(FatalError);
-
-       return autoPtr<sootModel>(nullptr);
+            << modelType << nl << nl
+            << "Valid " << sootModel::typeName << " types are:" << nl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
     }
+
+    return autoPtr<sootModel>(cstrIter()(dict, mesh, modelType));
 }
 
 

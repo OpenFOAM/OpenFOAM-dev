@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "combustionModel.H"
+#include "noCombustion.H"
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
@@ -47,10 +48,10 @@ Foam::autoPtr<Foam::combustionModel> Foam::combustionModel::New
         )
     );
 
-    word combModelName("none");
+    word modelType(combustionModels::noCombustion::typeName);
     if (combIO.typeHeaderOk<IOdictionary>(false))
     {
-        IOdictionary(combIO).lookup("combustionModel") >> combModelName;
+        IOdictionary(combIO).lookup(combustionModel::typeName) >> modelType;
     }
     else
     {
@@ -59,106 +60,39 @@ Foam::autoPtr<Foam::combustionModel> Foam::combustionModel::New
             << " not found" << endl;
     }
 
-    Info<< "Selecting combustion model " << combModelName << endl;
+    Info<< "Selecting combustion model " << modelType << endl;
 
-    const wordList cmpts2(basicThermo::splitThermoName(combModelName, 2));
-    const wordList cmpts3(basicThermo::splitThermoName(combModelName, 3));
+    const wordList cmpts2(basicThermo::splitThermoName(modelType, 2));
+    const wordList cmpts3(basicThermo::splitThermoName(modelType, 3));
     if (cmpts2.size() == 2 || cmpts3.size() == 3)
     {
-        combModelName = cmpts2.size() ? cmpts2[0] : cmpts3[0];
+        modelType = cmpts2.size() ? cmpts2[0] : cmpts3[0];
 
         WarningInFunction
             << "Template parameters are no longer required when selecting a "
             << combustionModel::typeName << ". This information is now "
             << "obtained directly from the thermodynamics. Actually selecting "
-            << "combustion model " << combModelName << "." << endl;
+            << "combustion model " << modelType << "." << endl;
     }
 
-    const word thermoCombModelName =
-        combModelName + '<' + thermo.thermoName() + '>';
-
     typename dictionaryConstructorTable::iterator cstrIter =
-        dictionaryConstructorTablePtr_->find(combModelName);
+        dictionaryConstructorTablePtr_->find(modelType);
 
-    typename dictionaryConstructorTable::iterator thermoCstrIter =
-        dictionaryConstructorTablePtr_->find(thermoCombModelName);
-
-    if
-    (
-        cstrIter == dictionaryConstructorTablePtr_->end()
-     && thermoCstrIter == dictionaryConstructorTablePtr_->end()
-    )
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
             << "Unknown " << combustionModel::typeName << " type "
-            << combModelName << endl << endl;
+            << modelType << nl << nl
+            << "Valid " << combustionModel::typeName << " types are:" << nl
+            << dictionaryConstructorTablePtr_->sortedToc()
+            << exit(FatalError);
 
         const wordList names(dictionaryConstructorTablePtr_->sortedToc());
-
-        wordList thisCmpts;
-        thisCmpts.append(word::null);
-        thisCmpts.append(basicThermo::splitThermoName(thermo.thermoName(), 5));
-
-        wordList validNames;
-        forAll(names, i)
-        {
-            wordList cmpts(basicThermo::splitThermoName(names[i], 1));
-
-            if (cmpts.size() != 1)
-            {
-                cmpts = basicThermo::splitThermoName(names[i], 6);
-            }
-
-            if
-            (
-                SubList<word>(cmpts, cmpts.size() - 1, 1)
-             == SubList<word>(thisCmpts, cmpts.size() - 1, 1)
-            )
-            {
-                validNames.append(cmpts[0]);
-            }
-        }
-
-        FatalErrorInFunction
-            << "Valid " << combustionModel::typeName << " types for this "
-            << "thermodynamic model are:" << endl << validNames << endl;
-
-        List<wordList> validCmpts;
-        validCmpts.append(wordList(6, word::null));
-        validCmpts[0][0] = combustionModel::typeName;
-        validCmpts[0][1] = "transport";
-        validCmpts[0][2] = "thermo";
-        validCmpts[0][3] = "equationOfState";
-        validCmpts[0][4] = "specie";
-        validCmpts[0][5] = "energy";
-        forAll(names, i)
-        {
-            const wordList cmpts1(basicThermo::splitThermoName(names[i], 1));
-            const wordList cmpts6(basicThermo::splitThermoName(names[i], 6));
-            if (cmpts1.size() == 1)
-            {
-                validCmpts.append(cmpts1);
-                validCmpts.last().append(wordList(5, "(any)"));
-            }
-            if (cmpts6.size() == 6)
-            {
-                validCmpts.append(cmpts6);
-            }
-        }
-
-        FatalErrorInFunction
-            << "All " << validCmpts[0][0]
-            << "/thermodynamics combinations are:" << endl << endl;
-        printTable(validCmpts, FatalErrorInFunction);
-
-        FatalErrorInFunction << exit(FatalError);
     }
 
     return autoPtr<combustionModel>
     (
-        thermoCstrIter != dictionaryConstructorTablePtr_->end()
-      ? thermoCstrIter()(combModelName, thermo, turb, combustionProperties)
-      : cstrIter()(combModelName, thermo, turb, combustionProperties)
+        cstrIter()(modelType, thermo, turb, combustionProperties)
     );
 }
 
