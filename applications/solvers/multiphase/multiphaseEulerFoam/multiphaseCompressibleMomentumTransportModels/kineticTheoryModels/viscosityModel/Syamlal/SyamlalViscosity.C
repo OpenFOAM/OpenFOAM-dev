@@ -74,11 +74,19 @@ Foam::kineticTheoryModels::viscosityModels::Syamlal::nu
 {
     const scalar sqrtPi = sqrt(constant::mathematical::pi);
 
-    return da*sqrt(Theta)*
+    return volScalarField::New
     (
-        (4.0/5.0)*sqr(alpha1)*g0*(1 + e)/sqrtPi
-      + (1.0/15.0)*sqrtPi*g0*(1 + e)*(3*e - 1)*sqr(alpha1)/(3 - e)
-      + (1.0/6.0)*alpha1*sqrtPi/(3 - e)
+        IOobject::groupName
+        (
+            IOobject::modelName("nu", viscosityModel::typeName),
+            Theta.group()
+        ),
+        da*sqrt(Theta)
+       *(
+            (4.0/5.0)*sqr(alpha1)*g0*(1 + e)/sqrtPi
+          + (1.0/15.0)*sqrtPi*g0*(1 + e)*(3*e - 1)*sqr(alpha1)/(3 - e)
+          + (1.0/6.0)*alpha1*sqrtPi/(3 - e)
+        )
     );
 }
 

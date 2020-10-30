@@ -84,13 +84,21 @@ Foam::kineticTheoryModels::viscosityModels::HrenyaSinclair::nu
 
     const volScalarField lamda(1 + da/(6*sqrt(2.0)*(alpha1 + 1e-5))/L_);
 
-    return da*sqrt(Theta)*
+    return volScalarField::New
     (
-        (4.0/5.0)*sqr(alpha1)*g0*(1 + e)/sqrtPi
-      + (1.0/15.0)*sqrtPi*g0*(1 + e)*(3*e - 1)*sqr(alpha1)/(3 - e)
-      + (1.0/6.0)*sqrtPi*alpha1*(0.5*lamda + 0.25*(3*e - 1))
-       /(0.5*(3 - e)*lamda)
-      + (10.0/96.0)*sqrtPi/((1 + e)*0.5*(3 - e)*g0*lamda)
+        IOobject::groupName
+        (
+            IOobject::modelName("nu", viscosityModel::typeName),
+            Theta.group()
+        ),
+        da*sqrt(Theta)*
+        (
+            (4.0/5.0)*sqr(alpha1)*g0*(1 + e)/sqrtPi
+          + (1.0/15.0)*sqrtPi*g0*(1 + e)*(3*e - 1)*sqr(alpha1)/(3 - e)
+          + (1.0/6.0)*sqrtPi*alpha1*(0.5*lamda + 0.25*(3*e - 1))
+           /(0.5*(3 - e)*lamda)
+          + (10.0/96.0)*sqrtPi/((1 + e)*0.5*(3 - e)*g0*lamda)
+        )
     );
 }
 

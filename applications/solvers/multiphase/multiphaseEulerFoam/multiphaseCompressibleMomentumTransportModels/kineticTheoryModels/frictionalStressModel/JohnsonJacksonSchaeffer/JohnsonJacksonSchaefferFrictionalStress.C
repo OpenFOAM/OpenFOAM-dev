@@ -131,7 +131,11 @@ JohnsonJacksonSchaeffer::nu
     (
         volScalarField::New
         (
-            "JohnsonJacksonSchaeffer:nu",
+            IOobject::groupName
+            (
+                IOobject::modelName("nu", frictionalStressModel::typeName),
+                phase.group()
+            ),
             phase.mesh(),
             dimensionedScalar(dimensionSet(0, 2, -1, 0, 0), 0)
         )

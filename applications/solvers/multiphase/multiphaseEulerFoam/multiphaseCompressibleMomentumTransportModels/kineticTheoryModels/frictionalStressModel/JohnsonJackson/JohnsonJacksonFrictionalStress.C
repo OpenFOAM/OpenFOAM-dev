@@ -124,7 +124,15 @@ Foam::kineticTheoryModels::frictionalStressModels::JohnsonJackson::nu
     const volSymmTensorField& D
 ) const
 {
-    return dimensionedScalar(dimTime, 0.5)*pf*sin(phi_);
+    return volScalarField::New
+    (
+        IOobject::groupName
+        (
+            IOobject::modelName("nu", frictionalStressModel::typeName),
+            phase.group()
+        ),
+        dimensionedScalar(dimTime, 0.5)*pf*sin(phi_)
+    );
 }
 
 

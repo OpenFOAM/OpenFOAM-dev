@@ -138,11 +138,15 @@ Foam::RASModels::phasePressureModel::pPrime() const
 {
     tmp<volScalarField> tpPrime
     (
-        g0_
-       *min
+        volScalarField::New
         (
-            exp(preAlphaExp_*(alpha_ - alphaMax_)),
-            expMax_
+            IOobject::groupName("pPrime", U_.group()),
+            g0_
+           *min
+            (
+                exp(preAlphaExp_*(alpha_ - alphaMax_)),
+                expMax_
+            )
         )
     );
 
@@ -166,11 +170,15 @@ Foam::RASModels::phasePressureModel::pPrimef() const
 {
     tmp<surfaceScalarField> tpPrime
     (
-        g0_
-       *min
+        surfaceScalarField::New
         (
-            exp(preAlphaExp_*(fvc::interpolate(alpha_) - alphaMax_)),
-            expMax_
+            IOobject::groupName("pPrimef", U_.group()),
+            g0_
+           *min
+            (
+                exp(preAlphaExp_*(fvc::interpolate(alpha_) - alphaMax_)),
+                expMax_
+            )
         )
     );
 

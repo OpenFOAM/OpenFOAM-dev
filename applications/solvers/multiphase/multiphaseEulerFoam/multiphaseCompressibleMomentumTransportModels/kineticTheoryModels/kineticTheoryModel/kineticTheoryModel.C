@@ -299,20 +299,24 @@ Foam::RASModels::kineticTheoryModel::pPrime() const
 
     tmp<volScalarField> tpPrime
     (
-        Theta_
-       *granularPressureModel_->granularPressureCoeffPrime
+        volScalarField::New
         (
-            alpha_,
-            radialModel_->g0(alpha_, alphaMinFriction_, alphaMax_),
-            radialModel_->g0prime(alpha_, alphaMinFriction_, alphaMax_),
-            rho,
-            e_
-        )
-     +  frictionalStressModel_->frictionalPressurePrime
-        (
-            phase_,
-            alphaMinFriction_,
-            alphaMax_
+            IOobject::groupName("pPrime", U_.group()),
+            Theta_
+           *granularPressureModel_->granularPressureCoeffPrime
+            (
+                alpha_,
+                radialModel_->g0(alpha_, alphaMinFriction_, alphaMax_),
+                radialModel_->g0prime(alpha_, alphaMinFriction_, alphaMax_),
+                rho,
+                e_
+            )
+         +  frictionalStressModel_->frictionalPressurePrime
+            (
+                phase_,
+                alphaMinFriction_,
+                alphaMax_
+            )
         )
     );
 
@@ -333,7 +337,11 @@ Foam::RASModels::kineticTheoryModel::pPrime() const
 Foam::tmp<Foam::surfaceScalarField>
 Foam::RASModels::kineticTheoryModel::pPrimef() const
 {
-    return fvc::interpolate(pPrime());
+    return surfaceScalarField::New
+    (
+        IOobject::groupName("pPrimef", U_.group()),
+        fvc::interpolate(pPrime())
+    );
 }
 
 
