@@ -124,7 +124,7 @@ public:
         //- Return the source term for the energy equation
         virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
 
-        //- Return the specie flux for the given specie mass-fraction [kg/s]
+        //- Return the specie flux for the given specie mass-fraction [kg/m^2/s]
         virtual tmp<surfaceScalarField> j(const volScalarField& Yi) const;
 
         //- Return the source term for the given specie mass-fraction equation
