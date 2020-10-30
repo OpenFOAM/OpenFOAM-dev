@@ -28,16 +28,24 @@ License
 #include "LESModel.H"
 #include "fvcGrad.H"
 #include "fvcDiv.H"
+#include "addToRunTimeSelectionTable.H"
+
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
 namespace combustionModels
 {
+    defineTypeNameAndDebug(FSD, 0);
+    addToRunTimeSelectionTable(combustionModel, FSD, dictionary);
+}
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-FSD<ThermoType>::FSD
+Foam::combustionModels::FSD::FSD
 (
     const word& modelType,
     const fluidReactionThermo& thermo,
@@ -45,7 +53,7 @@ FSD<ThermoType>::FSD
     const word& combustionProperties
 )
 :
-    singleStepCombustion<ThermoType>
+    singleStepCombustion
     (
         modelType,
         thermo,
@@ -87,15 +95,13 @@ FSD<ThermoType>::FSD
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-FSD<ThermoType>::~FSD()
+Foam::combustionModels::FSD::~FSD()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-void FSD<ThermoType>::calculateSourceNorm()
+void Foam::combustionModels::FSD::calculateSourceNorm()
 {
     this->fresCorrect();
 
@@ -309,8 +315,7 @@ void FSD<ThermoType>::calculateSourceNorm()
 }
 
 
-template<class ThermoType>
-void FSD<ThermoType>::correct()
+void Foam::combustionModels::FSD::correct()
 {
     this->wFuel_ ==
         dimensionedScalar(dimMass/pow3(dimLength)/dimTime, 0);
@@ -319,10 +324,9 @@ void FSD<ThermoType>::correct()
 }
 
 
-template<class ThermoType>
-bool FSD<ThermoType>::read()
+bool Foam::combustionModels::FSD::read()
 {
-    if (singleStepCombustion<ThermoType>::read())
+    if (singleStepCombustion::read())
     {
         this->coeffs().lookup("Cv") >> Cv_ ;
         this->coeffs().lookup("ftVarMin") >> ftVarMin_;
@@ -335,9 +339,5 @@ bool FSD<ThermoType>::read()
     }
 }
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace combustionModels
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// ************************************************************************* //

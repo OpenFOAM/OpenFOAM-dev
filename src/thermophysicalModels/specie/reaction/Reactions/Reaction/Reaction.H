@@ -203,6 +203,9 @@ public:
 
         // Access
 
+            //- Return the name of the reaction
+            using reaction::name;
+
             //- Return the lower temperature limit for the reaction
             inline scalar Tlow() const;
 

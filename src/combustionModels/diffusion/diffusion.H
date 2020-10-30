@@ -50,10 +50,9 @@ namespace combustionModels
                           Class diffusion Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
 class diffusion
 :
-    public singleStepCombustion<ThermoType>
+    public singleStepCombustion
 {
     // Private Data
 
@@ -109,13 +108,6 @@ public:
 
 } // End namespace combustionModels
 } // End namespace Foam
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "diffusion.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

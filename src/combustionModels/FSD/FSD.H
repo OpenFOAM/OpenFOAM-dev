@@ -77,10 +77,9 @@ namespace combustionModels
                              Class FSD Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
 class FSD
 :
-    public singleStepCombustion<ThermoType>
+    public singleStepCombustion
 {
     // Private Data
 
@@ -166,12 +165,6 @@ public:
 
 } // End namespace combustionModels
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "FSD.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

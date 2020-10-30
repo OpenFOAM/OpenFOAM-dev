@@ -25,11 +25,33 @@ License
 
 #include "mixtureFraction.H"
 #include "singleStepCombustion.H"
+#include "addToRunTimeSelectionTable.H"
+
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace radiationModels
+{
+namespace sootModels
+{
+    defineTypeNameAndDebug(mixtureFraction, 0);
+
+    addToRunTimeSelectionTable
+    (
+        sootModel,
+        mixtureFraction,
+        dictionary
+    );
+}
+}
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::mixtureFraction
+Foam::radiationModels::sootModels::mixtureFraction::mixtureFraction
 (
     const dictionary& dict,
     const fvMesh& mesh,
@@ -59,8 +81,8 @@ Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::mixtureFraction
     ),
     mapFieldMax_(1)
 {
-    const combustionModels::singleStepCombustion<ThermoType>& combustion =
-        mesh.lookupObject<combustionModels::singleStepCombustion<ThermoType>>
+    const combustionModels::singleStepCombustion& combustion =
+        mesh.lookupObject<combustionModels::singleStepCombustion>
         (
             combustionModel::combustionPropertiesName
         );
@@ -118,16 +140,13 @@ Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::mixtureFraction
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::
-~mixtureFraction()
+Foam::radiationModels::sootModels::mixtureFraction::~mixtureFraction()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class ThermoType>
-void Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::correct()
+void Foam::radiationModels::sootModels::mixtureFraction::correct()
 {
     const volScalarField& mapField =
         mesh_.lookupObject<volScalarField>(mappingFieldName_);
@@ -136,4 +155,4 @@ void Foam::radiationModels::sootModels::mixtureFraction<ThermoType>::correct()
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// ************************************************************************* //

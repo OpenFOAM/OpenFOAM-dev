@@ -73,7 +73,6 @@ namespace sootModels
                        Class mixtureFraction Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
 class mixtureFraction
 :
     public sootModel
@@ -145,12 +144,6 @@ public:
 } // End namespace sootModels
 } // End namespace radiationModels
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "mixtureFraction.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

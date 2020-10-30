@@ -34,54 +34,43 @@ namespace combustionModels
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-const Foam::basicSpecieMixture&
-singleStepCombustion<ThermoType>::mixture() const
+inline const Foam::basicSpecieMixture& singleStepCombustion::mixture() const
 {
     return mixture_;
 }
 
 
-template<class ThermoType>
-inline const Foam::reaction&
-singleStepCombustion<ThermoType>::singleReaction() const
+inline const Foam::reaction& singleStepCombustion::singleReaction() const
 {
     return reaction_;
 }
 
 
-template<class ThermoType>
-inline const dimensionedScalar&
-singleStepCombustion<ThermoType>::stoicRatio() const
+inline const dimensionedScalar& singleStepCombustion::stoicRatio() const
 {
     return stoicRatio_;
 }
 
 
-template<class ThermoType>
-inline const dimensionedScalar& singleStepCombustion<ThermoType>::s() const
+inline const dimensionedScalar& singleStepCombustion::s() const
 {
     return s_;
 }
 
 
-template<class ThermoType>
-inline const dimensionedScalar& singleStepCombustion<ThermoType>::qFuel() const
+inline const dimensionedScalar& singleStepCombustion::qFuel() const
 {
     return qFuel_;
 }
 
 
-template<class ThermoType>
-inline const List<scalar>&
-singleStepCombustion<ThermoType>::specieStoichCoeffs() const
+inline const List<scalar>& singleStepCombustion::specieStoichCoeffs() const
 {
     return specieStoichCoeffs_;
 }
 
 
-template<class ThermoType>
-inline tmp<volScalarField> singleStepCombustion<ThermoType>::fres
+inline tmp<volScalarField> singleStepCombustion::fres
 (
     const label index
 ) const
@@ -90,22 +79,19 @@ inline tmp<volScalarField> singleStepCombustion<ThermoType>::fres
 }
 
 
-template<class ThermoType>
-inline label singleStepCombustion<ThermoType>::fuelIndex() const
+inline label singleStepCombustion::fuelIndex() const
 {
     return fuelIndex_;
 }
 
 
-template<class ThermoType>
-inline const List<int>& singleStepCombustion<ThermoType>::specieProd() const
+inline const List<int>& singleStepCombustion::specieProd() const
 {
     return specieProd_;
 }
 
 
-template<class ThermoType>
-inline const scalarList& singleStepCombustion<ThermoType>::Yprod0() const
+inline const scalarList& singleStepCombustion::Yprod0() const
 {
     return Yprod0_;
 }

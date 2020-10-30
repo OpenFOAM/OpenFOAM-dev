@@ -50,10 +50,9 @@ namespace combustionModels
                    Class infinitelyFastChemistry Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
 class infinitelyFastChemistry
 :
-    public singleStepCombustion<ThermoType>
+    public singleStepCombustion
 {
     // Private Data
 
@@ -106,13 +105,6 @@ public:
 
 } // End namespace combustionModels
 } // End namespace Foam
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "infinitelyFastChemistry.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

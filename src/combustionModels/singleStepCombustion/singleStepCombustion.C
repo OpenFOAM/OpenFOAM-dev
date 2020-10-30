@@ -26,17 +26,10 @@ License
 #include "singleStepCombustion.H"
 #include "fvmSup.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-namespace combustionModels
-{
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-template<class ThermoType>
-void singleStepCombustion<ThermoType>::calculateqFuel()
+void Foam::combustionModels::singleStepCombustion::calculateqFuel()
 {
     const scalar Wu = mixture_.Wi(fuelIndex_);
 
@@ -63,8 +56,7 @@ void singleStepCombustion<ThermoType>::calculateqFuel()
 }
 
 
-template<class ThermoType>
-void singleStepCombustion<ThermoType>::massAndAirStoichRatios()
+void Foam::combustionModels::singleStepCombustion::massAndAirStoichRatios()
 {
     const label O2Index = mixture_.species()["O2"];
     const scalar Wu = mixture_.Wi(fuelIndex_);
@@ -84,8 +76,7 @@ void singleStepCombustion<ThermoType>::massAndAirStoichRatios()
 }
 
 
-template<class ThermoType>
-void singleStepCombustion<ThermoType>::calculateMaxProducts()
+void Foam::combustionModels::singleStepCombustion::calculateMaxProducts()
 {
     scalar Wm = 0.0;
     scalar totalMol = 0.0;
@@ -131,8 +122,7 @@ void singleStepCombustion<ThermoType>::calculateMaxProducts()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-singleStepCombustion<ThermoType>::singleStepCombustion
+Foam::combustionModels::singleStepCombustion::singleStepCombustion
 (
     const word& modelType,
     const fluidReactionThermo& thermo,
@@ -206,18 +196,14 @@ singleStepCombustion<ThermoType>::singleStepCombustion
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-singleStepCombustion<ThermoType>::~singleStepCombustion()
+Foam::combustionModels::singleStepCombustion::~singleStepCombustion()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-tmp<fvScalarMatrix> singleStepCombustion<ThermoType>::R
-(
-    volScalarField& Y
-) const
+Foam::tmp<Foam::fvScalarMatrix>
+Foam::combustionModels::singleStepCombustion::R(volScalarField& Y) const
 {
     const label specieI = mixture_.species()[Y.member()];
 
@@ -241,9 +227,8 @@ tmp<fvScalarMatrix> singleStepCombustion<ThermoType>::R
 }
 
 
-template<class ThermoType>
-tmp<volScalarField>
-singleStepCombustion<ThermoType>::Qdot() const
+Foam::tmp<Foam::volScalarField>
+Foam::combustionModels::singleStepCombustion::Qdot() const
 {
     const label fuelI = fuelIndex();
     volScalarField& YFuel =
@@ -253,8 +238,7 @@ singleStepCombustion<ThermoType>::Qdot() const
 }
 
 
-template<class ThermoType>
-bool singleStepCombustion<ThermoType>::read()
+bool Foam::combustionModels::singleStepCombustion::read()
 {
     if (combustionModel::read())
     {
@@ -267,8 +251,7 @@ bool singleStepCombustion<ThermoType>::read()
 }
 
 
-template<class ThermoType>
-void singleStepCombustion<ThermoType>::fresCorrect()
+void Foam::combustionModels::singleStepCombustion::fresCorrect()
 {
     const label O2Index = mixture_.species()["O2"];
     const volScalarField& YFuel = mixture_.Y()[fuelIndex_];
@@ -320,9 +303,4 @@ void singleStepCombustion<ThermoType>::fresCorrect()
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace combustionModels
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// ************************************************************************* //

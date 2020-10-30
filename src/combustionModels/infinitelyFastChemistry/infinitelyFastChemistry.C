@@ -24,16 +24,29 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "infinitelyFastChemistry.H"
+#include "addToRunTimeSelectionTable.H"
+
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
 namespace combustionModels
 {
+    defineTypeNameAndDebug(infinitelyFastChemistry, 0);
+    addToRunTimeSelectionTable
+    (
+        combustionModel,
+        infinitelyFastChemistry,
+        dictionary
+    );
+}
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-infinitelyFastChemistry<ThermoType>::infinitelyFastChemistry
+Foam::combustionModels::infinitelyFastChemistry::infinitelyFastChemistry
 (
     const word& modelType,
     const fluidReactionThermo& thermo,
@@ -41,7 +54,7 @@ infinitelyFastChemistry<ThermoType>::infinitelyFastChemistry
     const word& combustionProperties
 )
 :
-    singleStepCombustion<ThermoType>
+    singleStepCombustion
     (
         modelType,
         thermo,
@@ -54,15 +67,13 @@ infinitelyFastChemistry<ThermoType>::infinitelyFastChemistry
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-infinitelyFastChemistry<ThermoType>::~infinitelyFastChemistry()
+Foam::combustionModels::infinitelyFastChemistry::~infinitelyFastChemistry()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-void infinitelyFastChemistry<ThermoType>::correct()
+void Foam::combustionModels::infinitelyFastChemistry::correct()
 {
     this->wFuel_ ==
         dimensionedScalar(dimMass/pow3(dimLength)/dimTime, 0);
@@ -86,10 +97,9 @@ void infinitelyFastChemistry<ThermoType>::correct()
 }
 
 
-template<class ThermoType>
-bool infinitelyFastChemistry<ThermoType>::read()
+bool Foam::combustionModels::infinitelyFastChemistry::read()
 {
-    if (singleStepCombustion<ThermoType>::read())
+    if (singleStepCombustion::read())
     {
         this->coeffs().lookup("C") >> C_ ;
         return true;
@@ -101,9 +111,4 @@ bool infinitelyFastChemistry<ThermoType>::read()
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace combustionModels
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// ************************************************************************* //

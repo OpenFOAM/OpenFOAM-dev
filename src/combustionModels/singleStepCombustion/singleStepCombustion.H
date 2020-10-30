@@ -50,7 +50,6 @@ namespace combustionModels
                     Class singleStepCombustion Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class ThermoType>
 class singleStepCombustion
 :
     public combustionModel
@@ -192,12 +191,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "singleStepCombustionI.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "singleStepCombustion.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

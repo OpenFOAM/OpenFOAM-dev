@@ -25,16 +25,24 @@ License
 
 #include "diffusion.H"
 #include "fvcGrad.H"
+#include "addToRunTimeSelectionTable.H"
+
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
 namespace combustionModels
 {
+    defineTypeNameAndDebug(diffusion, 0);
+    addToRunTimeSelectionTable(combustionModel, diffusion, dictionary);
+}
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-diffusion<ThermoType>::diffusion
+Foam::combustionModels::diffusion::diffusion
 (
     const word& modelType,
     const fluidReactionThermo& thermo,
@@ -42,7 +50,7 @@ diffusion<ThermoType>::diffusion
     const word& combustionProperties
 )
 :
-    singleStepCombustion<ThermoType>
+    singleStepCombustion
     (
         modelType,
         thermo,
@@ -56,15 +64,13 @@ diffusion<ThermoType>::diffusion
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-diffusion<ThermoType>::~diffusion()
+Foam::combustionModels::diffusion::~diffusion()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-template<class ThermoType>
-void diffusion<ThermoType>::correct()
+void Foam::combustionModels::diffusion::correct()
 {
     this->wFuel_ ==
         dimensionedScalar(dimMass/pow3(dimLength)/dimTime, 0);
@@ -88,10 +94,9 @@ void diffusion<ThermoType>::correct()
 }
 
 
-template<class ThermoType>
-bool diffusion<ThermoType>::read()
+bool Foam::combustionModels::diffusion::read()
 {
-    if (singleStepCombustion<ThermoType>::read())
+    if (singleStepCombustion::read())
     {
         this->coeffs().lookup("C") >> C_ ;
         this->coeffs().readIfPresent("oxidant", oxidantName_);
@@ -104,9 +109,4 @@ bool diffusion<ThermoType>::read()
 }
 
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace combustionModels
-} // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// ************************************************************************* //
