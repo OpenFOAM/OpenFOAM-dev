@@ -5,6 +5,8 @@
     \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
+    Copyright (C) 2009-2010 Mark Olesen
+-------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
 
