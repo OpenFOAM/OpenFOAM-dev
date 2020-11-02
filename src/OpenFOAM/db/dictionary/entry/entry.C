@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,12 +26,20 @@ License
 #include "entry.H"
 #include "dictionary.H"
 #include "OStringStream.H"
+#include "registerSwitch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 int Foam::entry::disableFunctionEntries
 (
     Foam::debug::infoSwitch("disableFunctionEntries", 0)
+);
+
+registerInfoSwitch
+(
+    "disableFunctionEntries",
+    int,
+    Foam::entry::disableFunctionEntries
 );
 
 

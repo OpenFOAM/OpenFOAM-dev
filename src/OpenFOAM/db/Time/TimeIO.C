@@ -26,6 +26,7 @@ License
 #include "Time.H"
 #include "Pstream.H"
 #include "simpleObjectRegistry.H"
+#include "registerSwitch.H"
 #include "dimensionedConstants.H"
 #include "IOdictionary.H"
 #include "fileOperation.H"
@@ -42,59 +43,15 @@ void Foam::Time::readDict()
         setEnv("FOAM_APPLICATION", application, false);
     }
 
-
-    // Check for local switches and settings
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    // Debug, info and optimisation switches
-    auto readSwitches = [&](const word& name, simpleObjectRegistry& objects)
-    {
-        if (controlDict_.found(name + "Switches"))
-        {
-            InfoHeader
-                << "Overriding " << name << "Switches according to "
-                << controlDict_.name()
-                << endl;
-
-            const dictionary& localSettings =
-                controlDict_.subDict(name + "Switches");
-            forAllConstIter(dictionary, localSettings, iter)
-            {
-                const word& name = iter().keyword();
-
-                simpleObjectRegistryEntry* objPtr = objects.lookupPtr(name);
-
-                if (objPtr)
-                {
-                    InfoHeader << "    " << iter() << endl;
-
-                    const List<simpleRegIOobject*>& objects = *objPtr;
-
-                    if (iter().isDict())
-                    {
-                        forAll(objects, i)
-                        {
-                            OStringStream os(IOstream::ASCII);
-                            os  << iter().dict();
-                            IStringStream is(os.str());
-                            objects[i]->readData(is);
-                        }
-                    }
-                    else
-                    {
-                        forAll(objects, i)
-                        {
-                            objects[i]->readData(iter().stream());
-                        }
-                    }
-                }
-            }
-        }
-    };
-    readSwitches("Debug", debug::debugObjects());
-    readSwitches("Info", debug::infoObjects());
-    readSwitches("Optimisation", debug::optimisationObjects());
-
+    // Check for local switches and settings and update
+    debug::readSwitches("Debug", debug::debugObjects(), controlDict_);
+    debug::readSwitches("Info", debug::infoObjects(), controlDict_);
+    debug::readSwitches
+    (
+        "Optimisation",
+        debug::optimisationObjects(),
+        controlDict_
+    );
 
     // Handle fileHandler override explicitly since interacts with local
     // dictionary monitoring
@@ -139,75 +96,11 @@ void Foam::Time::readDict()
         }
     }
 
+    // Check for local dimensionedConstants and update
+    readDimensionSets(controlDict_);
 
-    // DimensionedConstants. Handled as a special case since both e.g.
-    // the 'unitSet' might be changed and the individual values
-    if (controlDict_.found("DimensionedConstants"))
-    {
-        InfoHeader
-            << "Overriding DimensionedConstants according to "
-            << controlDict_.name() << endl;
-
-        // Change in-memory
-        dimensionedConstants().merge
-        (
-            controlDict_.subDict("DimensionedConstants")
-        );
-
-
-        simpleObjectRegistry& objects = debug::dimensionedConstantObjects();
-
-        IStringStream dummyIs("");
-
-        forAllConstIter(simpleObjectRegistry, objects, iter)
-        {
-            const List<simpleRegIOobject*>& objects = *iter;
-
-            forAll(objects, i)
-            {
-                objects[i]->readData(dummyIs);
-
-                if (writeInfoHeader)
-                {
-                    Info<< "    ";
-                    objects[i]->writeData(Info);
-                    Info<< endl;
-                }
-            }
-        }
-    }
-
-
-    // Dimension sets
-    if (controlDict_.found("DimensionSets"))
-    {
-        InfoHeader
-            << "Overriding DimensionSets according to "
-            << controlDict_.name() << endl;
-
-        dictionary dict(Foam::dimensionSystems());
-        dict.merge(controlDict_.subDict("DimensionSets"));
-
-        simpleObjectRegistry& objects = debug::dimensionSetObjects();
-
-        simpleObjectRegistryEntry* objPtr = objects.lookupPtr("DimensionSets");
-
-        if (objPtr)
-        {
-            InfoHeader << controlDict_.subDict("DimensionSets") << endl;
-
-            const List<simpleRegIOobject*>& objects = *objPtr;
-
-            forAll(objects, i)
-            {
-                OStringStream os(IOstream::ASCII);
-                os  << dict;
-                IStringStream is(os.str());
-                objects[i]->readData(is);
-            }
-        }
-    }
-
+    // Check for local dimensionSets and update
+    readDimensionSets(controlDict_);
 
     if (!deltaTchanged_)
     {

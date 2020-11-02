@@ -154,6 +154,10 @@ public:
 };
 
 
+//- Read and update the dimensionedConstants specified in dict
+void readDimensionedConstants(const dictionary& dict);
+
+
 //- Defined and register a dimensioned constant with default
 #define defineDimensionedConstantWithDefault(Group, Name, DefaultExpr)         \
     registerDimensionedConstantWithDefault                                     \

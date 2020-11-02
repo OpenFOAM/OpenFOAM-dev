@@ -115,4 +115,39 @@ void Foam::registerDimensionedConstantWithDefault::lookup()
 }
 
 
+void Foam::readDimensionedConstants(const dictionary& dict)
+{
+    if (dict.found("DimensionedConstants"))
+    {
+        InfoHeader
+            << "Overriding DimensionedConstants according to "
+            << dict.name() << endl;
+
+        // Change dimensionedConstants dictionary in-memory
+        dimensionedConstants().merge(dict.subDict("DimensionedConstants"));
+
+        simpleObjectRegistry& objects = debug::dimensionedConstantObjects();
+
+        IStringStream dummyIs("");
+
+        forAllConstIter(simpleObjectRegistry, objects, iter)
+        {
+            const List<simpleRegIOobject*>& objects = *iter;
+
+            forAll(objects, i)
+            {
+                objects[i]->readData(dummyIs);
+
+                if (writeInfoHeader)
+                {
+                    Info<< "    ";
+                    objects[i]->writeData(Info);
+                    Info<< endl;
+                }
+            }
+        }
+    }
+}
+
+
 // ************************************************************************* //

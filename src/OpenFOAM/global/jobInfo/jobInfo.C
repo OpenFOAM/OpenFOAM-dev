@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,9 +36,23 @@ bool Foam::jobInfo::writeJobControl
     Foam::debug::infoSwitch("writeJobControl", 0)
 );
 
+registerInfoSwitch
+(
+    "writeJobControl",
+    bool,
+    Foam::jobInfo::writeJobControl
+);
+
 bool Foam::jobInfo::writeJobInfo
 (
     Foam::debug::infoSwitch("writeJobInfo", 0)
+);
+
+registerInfoSwitch
+(
+    "writeJobInfo",
+    bool,
+    Foam::jobInfo::writeJobInfo
 );
 
 Foam::jobInfo Foam::jobInfo_;

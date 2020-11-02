@@ -701,4 +701,54 @@ void Foam::debug::listSwitches()
 }
 
 
+void Foam::debug::readSwitches
+(
+    const word& name,
+    simpleObjectRegistry& objects,
+    const dictionary& dict
+)
+{
+    if (dict.found(name + "Switches"))
+    {
+        InfoHeader
+            << "Overriding " << name << "Switches according to "
+            << dict.name()
+            << endl;
+
+        const dictionary& localSettings = dict.subDict(name + "Switches");
+        forAllConstIter(dictionary, localSettings, iter)
+        {
+            const word& name = iter().keyword();
+            simpleObjectRegistryEntry* objPtr = objects.lookupPtr(name);
+
+            if (objPtr)
+            {
+                InfoHeader << "    " << iter() << endl;
+
+                const List<simpleRegIOobject*>& objects = *objPtr;
+
+                if (iter().isDict())
+                {
+                    OStringStream os(IOstream::ASCII);
+                    os  << iter().dict();
+                    IStringStream is(os.str());
+
+                    forAll(objects, i)
+                    {
+                        objects[i]->readData(is.rewind());
+                    }
+                }
+                else
+                {
+                    forAll(objects, i)
+                    {
+                        objects[i]->readData(iter().stream());
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 // ************************************************************************* //

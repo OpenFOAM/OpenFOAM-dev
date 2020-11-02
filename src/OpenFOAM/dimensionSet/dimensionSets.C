@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "dimensionSet.H"
 #include "dimensionedScalar.H"
-#include "simpleRegIOobject.H"
+#include "simpleObjectRegistry.H"
 #include "demandDrivenData.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -173,6 +173,39 @@ const dimensionSets& writeUnitSet()
         (void)unitSet();
     }
     return *writeUnitSetPtr_;
+}
+
+
+void readDimensionSets(const dictionary& dict)
+{
+    if (dict.found("DimensionSets"))
+    {
+        InfoHeader
+            << "Overriding DimensionSets according to "
+            << dict.name() << endl;
+
+        dictionary dimensionSetDict(Foam::dimensionSystems());
+        dimensionSetDict.merge(dict.subDict("DimensionSets"));
+
+        simpleObjectRegistry& objects = debug::dimensionSetObjects();
+        simpleObjectRegistryEntry* objPtr = objects.lookupPtr("DimensionSets");
+
+        if (objPtr)
+        {
+            InfoHeader << dict.subDict("DimensionSets") << endl;
+
+            const List<simpleRegIOobject*>& objects = *objPtr;
+
+            OStringStream os(IOstream::ASCII);
+            os  << dimensionSetDict;
+            IStringStream is(os.str());
+
+            forAll(objects, i)
+            {
+                objects[i]->readData(is.rewind());
+            }
+        }
+    }
 }
 
 

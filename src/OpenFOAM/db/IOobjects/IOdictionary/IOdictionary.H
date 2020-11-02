@@ -56,10 +56,6 @@ class IOdictionary
     public regIOobject,
     public dictionary
 {
-    // Private Data
-
-        static bool writeDictionaries;
-
 
 protected:
 
@@ -72,6 +68,11 @@ protected:
 public:
 
     TypeName("dictionary");
+
+
+    // Public static data
+
+        static bool writeDictionaries;
 
 
     // Constructors

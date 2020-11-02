@@ -115,6 +115,14 @@ namespace debug
     //- List debug switches
     void listSwitches();
 
+    //- Read and update the switches specified in dict
+    void readSwitches
+    (
+        const word& name,
+        simpleObjectRegistry& objects,
+        const dictionary& dict
+    );
+
 
     // Registered debug switches
 

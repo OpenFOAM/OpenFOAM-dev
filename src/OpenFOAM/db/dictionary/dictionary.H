@@ -161,10 +161,6 @@ class dictionary
 {
     // Private Data
 
-        //- If true write optional keywords and values
-        //  if not present in dictionary
-        static bool writeOptionalEntries;
-
         //- HashTable of the entries held on the DL-list for quick lookup
         HashTable<entry*> hashedEntries_;
 
@@ -236,8 +232,14 @@ public:
     ClassName("dictionary");
 
 
-    //- Null dictionary
-    static const dictionary null;
+    // Public static data
+
+        //- Null dictionary
+        static const dictionary null;
+
+        //- If true write optional keywords and values
+        //  if not present in dictionary
+        static bool writeOptionalEntries;
 
 
     // Constructors
