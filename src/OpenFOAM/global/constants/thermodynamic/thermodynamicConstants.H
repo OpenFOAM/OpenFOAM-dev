@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,13 +44,13 @@ namespace thermodynamic
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     //- Universal gas constant (default in [J/kmol/K])
-    extern const scalar RR;
+    extern const scalar& RR;
 
     //- Standard pressure (default in [Pa])
-    extern const scalar Pstd;
+    extern const scalar& Pstd;
 
     //- Standard temperature (default in [K])
-    extern const scalar Tstd;
+    extern const scalar& Tstd;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,6 +50,9 @@ namespace physicoChemical
 
     //- Universal gas constant: default SI units: [J/mol/K]
     extern const dimensionedScalar& R;
+
+    //- Universal gas constant: default SI units: [J/kmol/K]
+    extern const dimensionedScalar& RR;
 
     //- Faraday constant: default SI units: [C/mol]
     extern const dimensionedScalar& F;

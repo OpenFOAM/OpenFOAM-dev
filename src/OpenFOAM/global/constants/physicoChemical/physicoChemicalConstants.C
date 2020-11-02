@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,18 @@ defineDimensionedConstantWithDefault
     physicoChemical,
     R,
     dimensionedScalar(physicoChemical::NA*physicoChemical::k)
+);
+
+
+// Note: the 1e3 converts from /mol to /kmol for consistency with the
+// SI choice of kg rather than g for mass.
+// This is not appropriate for USCS and will be changed to an entry in
+// the DimensionedConstants dictionary in etc/controlDict
+defineDimensionedConstantWithDefault
+(
+    physicoChemical,
+    RR,
+    dimensionedScalar(1000*physicoChemical::R)
 );
 
 

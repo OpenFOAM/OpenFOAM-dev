@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,6 +83,8 @@ void Foam::registerDimensionedConstantWithDefault::lookup()
     const word unitSet(dict.lookup("unitSet"));
     dictionary& unitDict(dict.subDict(unitSet + "Coeffs"));
 
+    const dimensionedScalar defaultValue(name(), defaultFunc_());
+
     if (unitDict.found(group_))
     {
         dictionary& groupDict = unitDict.subDict(group_);
@@ -93,22 +95,22 @@ void Foam::registerDimensionedConstantWithDefault::lookup()
                 dimensionedScalar
                 (
                     name(),
-                    default_.dimensions(),
+                    defaultValue.dimensions(),
                     groupDict.lookup(name())
                 )
             );
         }
         else
         {
-            groupDict.add(name(), default_);
-            dimensionedScalar::operator=(default_);
+            groupDict.add(name(), defaultValue);
+            dimensionedScalar::operator=(defaultValue);
         }
     }
     else
     {
         unitDict.add(group_, dictionary::null);
-        unitDict.subDict(group_).add(name(), default_);
-        dimensionedScalar::operator=(default_);
+        unitDict.subDict(group_).add(name(), defaultValue);
+        dimensionedScalar::operator=(defaultValue);
     }
 }
 

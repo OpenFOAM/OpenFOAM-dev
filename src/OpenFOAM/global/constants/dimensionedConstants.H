@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ class registerDimensionedConstant
     public simpleRegIOobject,
     public dimensionedScalar
 {
-    const word& group_;
+    const char* const group_;
 
     //- Lookup the dimensionedConstant from the registry
     void lookup();
@@ -67,7 +67,7 @@ public:
 
     registerDimensionedConstant
     (
-        const word& group,
+        const char* const group,
         const char* name,
         const dimensionSet& dimensions
     )
@@ -113,8 +113,10 @@ class registerDimensionedConstantWithDefault
     public simpleRegIOobject,
     public dimensionedScalar
 {
-    const word& group_;
-    const dimensionedScalar default_;
+    typedef dimensionedScalar (*defaultFuncPtr)();
+
+    const char* const group_;
+    defaultFuncPtr defaultFunc_;
 
     //- Lookup the dimensionedConstant from the registry
     void lookup();
@@ -124,15 +126,15 @@ public:
 
     registerDimensionedConstantWithDefault
     (
-        const word& group,
+        const char* const group,
         const char* name,
-        const dimensionedScalar& value
+        defaultFuncPtr defaultFunc
     )
     :
         simpleRegIOobject(debug::addDimensionedConstantObject, name),
-        dimensionedScalar(name, value),
+        dimensionedScalar(name, defaultFunc()),
         group_(group),
-        default_(name, value)
+        defaultFunc_(defaultFunc)
     {
         lookup();
     }
@@ -159,7 +161,7 @@ public:
         (                                                                      \
             Group::group,                                                      \
             #Name,                                                             \
-            DefaultExpr                                                        \
+            [](){return DefaultExpr;}                                          \
         );                                                                     \
                                                                                \
     const Foam::dimensionedScalar& Group::Name                                 \
