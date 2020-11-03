@@ -96,11 +96,11 @@ void Foam::Time::readDict()
         }
     }
 
-    // Check for local dimensionedConstants and update
-    readDimensionSets(controlDict_);
-
     // Check for local dimensionSets and update
     readDimensionSets(controlDict_);
+
+    // Check for local dimensionedConstants and update
+    readDimensionedConstants(controlDict_);
 
     if (!deltaTchanged_)
     {
