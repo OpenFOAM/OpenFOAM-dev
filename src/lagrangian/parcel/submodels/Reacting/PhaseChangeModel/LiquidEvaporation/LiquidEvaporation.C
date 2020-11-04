@@ -194,7 +194,7 @@ void Foam::LiquidEvaporation<CloudType>::calculate
         const scalar kc = Sh*Dab/(d + rootVSmall);
 
         // vapour concentration at surface [kmol/m^3] at film temperature
-        const scalar Cs = pSat/(RR*Ts);
+        const scalar Cs = X[lid]*pSat/(RR*Ts);
 
         // vapour concentration in bulk gas [kmol/m^3] at film temperature
         const scalar Cinf = Xc[gid]*pc/(RR*Ts);
