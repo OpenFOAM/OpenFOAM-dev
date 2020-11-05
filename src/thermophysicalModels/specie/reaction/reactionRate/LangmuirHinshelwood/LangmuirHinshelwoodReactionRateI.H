@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,7 +51,7 @@ inline Foam::LangmuirHinshelwoodReactionRate::LangmuirHinshelwoodReactionRate
         dict.lookupOrDefault<FixedList<scalar, 3>>
         (
             "m",
-            FixedList<scalar, 3>({1, 1, 2})
+            FixedList<scalar, 3>({2, 1, 1})
         )
     )
 {
@@ -72,8 +72,8 @@ inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::operator()
     const label li
 ) const
 {
-    const scalar c0m = pow(c[r_[0]], m_[0]);
-    const scalar c1m = pow(c[r_[1]], m_[1]);
+    const scalar c1m = pow(c[r_[0]], m_[1]);
+    const scalar c2m = pow(c[r_[1]], m_[2]);
 
     const scalar TaByT0 = Ta_[0]/T;
     const scalar TaByT1 = Ta_[1]/T;
@@ -83,7 +83,7 @@ inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::operator()
     const scalar k1 = A_[1]*pow(T, beta_[1])*exp(-TaByT1);
     const scalar k2 = A_[2]*pow(T, beta_[2])*exp(-TaByT2);
 
-    return k0/pow(a_ + k1*c0m + k2*c1m, m_[2]);
+    return k0/pow(a_ + k1*c1m + k2*c2m, m_[0]);
 }
 
 
@@ -95,8 +95,8 @@ inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::ddT
     const label li
 ) const
 {
-    const scalar c0m = pow(c[r_[0]], m_[0]);
-    const scalar c1m = pow(c[r_[1]], m_[1]);
+    const scalar c1m = pow(c[r_[0]], m_[1]);
+    const scalar c2m = pow(c[r_[1]], m_[2]);
 
     const scalar TaByT0 = Ta_[0]/T;
     const scalar TaByT1 = Ta_[1]/T;
@@ -109,9 +109,9 @@ inline Foam::scalar Foam::LangmuirHinshelwoodReactionRate::ddT
     return
        (
            (beta_[0] + TaByT0)*k0
-         - m_[2]*k0*((beta_[1] + TaByT1)*k1*c0m + (beta_[2] + TaByT2)*k2*c1m)
-          /(a_ + k1*c0m + k2*c1m)
-       )/(pow(a_ + k1*c0m + k2*c1m, m_[2])*T);
+         - m_[0]*k0*((beta_[1] + TaByT1)*k1*c1m + (beta_[2] + TaByT2)*k2*c2m)
+          /(a_ + k1*c1m + k2*c2m)
+       )/(pow(a_ + k1*c1m + k2*c2m, m_[0])*T);
 }
 
 
