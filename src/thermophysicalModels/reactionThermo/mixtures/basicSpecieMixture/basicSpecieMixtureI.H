@@ -119,4 +119,13 @@ inline const Foam::volScalarField& Foam::basicSpecieMixture::Y
 }
 
 
+inline Foam::label Foam::basicSpecieMixture::index
+(
+    const volScalarField& Yi
+) const
+{
+    return species_[Yi.name()];
+}
+
+
 // ************************************************************************* //

@@ -158,6 +158,9 @@ public:
         //- Return the const mass-fraction field for a specie given by name
         inline const volScalarField& Y(const word& specieName) const;
 
+        //- Return the specie index of the given mass-fraction field
+        inline label index(const volScalarField& Yi) const;
+
         //- Normalise the mass fractions
         //  by clipping positive
         //  and deriving the default specie mass fraction from the other species
