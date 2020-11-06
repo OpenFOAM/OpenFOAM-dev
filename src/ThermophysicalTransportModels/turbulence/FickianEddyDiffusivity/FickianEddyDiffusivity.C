@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "nonUnityLewisEddyDiffusivity.H"
+#include "FickianEddyDiffusivity.H"
 #include "fvcDiv.H"
 #include "fvcLaplacian.H"
 #include "fvcSnGrad.H"
@@ -40,8 +40,8 @@ namespace turbulenceThermophysicalTransportModels
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class TurbulenceThermophysicalTransportModel>
-nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::
-nonUnityLewisEddyDiffusivity
+FickianEddyDiffusivity<TurbulenceThermophysicalTransportModel>::
+FickianEddyDiffusivity
 (
     const momentumTransportModel& momentumTransport,
     const thermoModel& thermo
@@ -63,15 +63,37 @@ nonUnityLewisEddyDiffusivity
             dimless,
             this->coeffDict_
         )
-    )
-{}
+    ),
+
+    D_(this->coeffDict_.lookup("D")),
+    DT_(this->coeffDict_.lookupOrDefault("DT", scalarList()))
+{
+    if (D_.size() != this->thermo().composition().Y().size())
+    {
+        FatalIOErrorInFunction(this->coeffDict_)
+            << "Size of mass diffusion coefficient array D " << D_.size()
+            << " does not equal the number of species "
+            << this->thermo().composition().Y().size()
+            << exit(FatalIOError);
+    }
+
+    if (DT_.size() && DT_.size() != this->thermo().composition().Y().size())
+    {
+        FatalIOErrorInFunction(this->coeffDict_)
+            << "Size of thermal (Sorer) diffusion coefficient array DT "
+            << DT_.size()
+            << " does not equal the number of species "
+            << this->thermo().composition().Y().size()
+            << exit(FatalIOError);
+    }
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class TurbulenceThermophysicalTransportModel>
 bool
-nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::read()
+FickianEddyDiffusivity<TurbulenceThermophysicalTransportModel>::read()
 {
     if
     (
@@ -92,7 +114,34 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::read()
 
 template<class TurbulenceThermophysicalTransportModel>
 tmp<surfaceScalarField>
-nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
+FickianEddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
+(
+    const volScalarField& Yi
+) const
+{
+    if (DT_.size())
+    {
+        const basicSpecieMixture& composition = this->thermo().composition();
+        const volScalarField& T = this->thermo().T();
+
+        return
+            unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::
+            j(Yi)
+          - dimensionedScalar(dimDynamicViscosity, DT_[composition.index(Yi)])
+           *fvc::snGrad(T)/fvc::interpolate(T);
+    }
+    else
+    {
+        return
+            unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::
+            j(Yi);
+    }
+}
+
+
+template<class TurbulenceThermophysicalTransportModel>
+tmp<surfaceScalarField>
+FickianEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
 {
     tmp<surfaceScalarField> tmpq
     (
@@ -113,32 +162,54 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
 
     if (Y.size())
     {
-        surfaceScalarField hGradY
+        surfaceScalarField sumJ
         (
             surfaceScalarField::New
             (
-                "hGradY",
+                "sumJ",
                 Y[0].mesh(),
-                dimensionedScalar(dimEnergy/dimMass/dimLength, 0)
+                dimensionedScalar(dimMass/dimArea/dimTime, 0)
+            )
+        );
+
+        surfaceScalarField sumJh
+        (
+            surfaceScalarField::New
+            (
+                "sumJh",
+                Y[0].mesh(),
+                dimensionedScalar(sumJ.dimensions()*dimEnergy/dimMass, 0)
             )
         );
 
         forAll(Y, i)
         {
+            if (i != composition.defaultSpecie())
+            {
+                const volScalarField hi
+                (
+                    composition.HE(i, this->thermo().p(), this->thermo().T())
+                );
+
+                const surfaceScalarField ji(this->j(Y[i]));
+                sumJ += ji;
+
+                sumJh += ji*fvc::interpolate(hi);
+            }
+        }
+
+        {
+            const label i = composition.defaultSpecie();
+
             const volScalarField hi
             (
                 composition.HE(i, this->thermo().p(), this->thermo().T())
             );
 
-            hGradY += fvc::interpolate(hi)*fvc::snGrad(Y[i]);
+            sumJh -= sumJ*fvc::interpolate(hi);
         }
 
-        tmpq.ref() -=
-            fvc::interpolate
-            (
-                this->alpha()
-               *this->thermo().alphaEff((this->Prt_/Sct_)*this->alphat())
-            )*hGradY*Y[0].mesh().magSf();
+        tmpq.ref() += sumJh;
     }
 
     return tmpq;
@@ -147,7 +218,7 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
 
 template<class TurbulenceThermophysicalTransportModel>
 tmp<fvScalarMatrix>
-nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
+FickianEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
 (
     volScalarField& he
 ) const
@@ -183,39 +254,61 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
             )
         );
 
-        surfaceScalarField hGradY
+        surfaceScalarField sumJ
         (
             surfaceScalarField::New
             (
-                "hGradY",
+                "sumJ",
                 he.mesh(),
-                dimensionedScalar(he.dimensions()/dimLength, 0)
+                dimensionedScalar(dimMass/dimArea/dimTime, 0)
+            )
+        );
+
+        surfaceScalarField sumJh
+        (
+            surfaceScalarField::New
+            (
+                "sumJh",
+                he.mesh(),
+                dimensionedScalar(sumJ.dimensions()*he.dimensions(), 0)
             )
         );
 
         forAll(Y, i)
         {
+            if (i != composition.defaultSpecie())
+            {
+                const volScalarField hi
+                (
+                    composition.HE(i, this->thermo().p(), this->thermo().T())
+                );
+
+                heNew += Y[i]*hi;
+
+                const surfaceScalarField ji(this->j(Y[i]));
+                sumJ += ji;
+
+                sumJh += ji*fvc::interpolate(hi);
+            }
+        }
+
+        {
+            const label i = composition.defaultSpecie();
+
             const volScalarField hi
             (
                 composition.HE(i, this->thermo().p(), this->thermo().T())
             );
 
             heNew += Y[i]*hi;
-            hGradY += fvc::interpolate(hi)*fvc::snGrad(Y[i]);
+
+            sumJh -= sumJ*fvc::interpolate(hi);
         }
 
         tmpDivq.ref() +=
             fvc::laplacian(this->alpha()*this->alphaEff(), heNew);
 
-        tmpDivq.ref() -=
-            fvc::div
-            (
-                fvc::interpolate
-                (
-                    this->alpha()
-                   *this->thermo().alphaEff((this->Prt_/Sct_)*this->alphat())
-                )*hGradY*he.mesh().magSf()
-            );
+        tmpDivq.ref() += fvc::div(sumJh*he.mesh().magSf());
     }
 
     return tmpDivq;
