@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,80 +40,51 @@ namespace constant
 const char* const atomic::group = "atomic";
 
 
-// Note: cannot use dimless etc. since not guaranteed to be constructed
-defineDimensionedConstantWithDefault
+// Note: cannot use dimless etc. as they may not have been constructed yet
+
+const Foam::dimensionedScalar atomic::alpha
 (
-    atomic,
-    alpha,
-    dimensionedScalar
+    dimensionedConstant
     (
+        atomic::group,
+        "alpha",
+        sqr(electromagnetic::e)
+       /(2*electromagnetic::epsilon0 *universal::h *universal::c)
+    )
+);
+
+
+const Foam::dimensionedScalar atomic::Rinf
+(
+    dimensionedConstant
+    (
+        atomic::group,
+        "Rinf",
+        sqr(atomic::alpha)*atomic::me*universal::c/(2*universal::h)
+    )
+);
+
+
+const Foam::dimensionedScalar atomic::a0
+(
+    dimensionedConstant
+    (
+        atomic::group,
+        "a0",
+        atomic::alpha/(4*mathematical::pi*atomic::Rinf)
+    )
+);
+
+
+const Foam::dimensionedScalar atomic::re
+(
+    dimensionedConstant
+    (
+        atomic::group,
+        "re",
         sqr(electromagnetic::e)
        /(
-            dimensionedScalar("C", dimensionSet(0, 0, 0, 0, 0), 2.0)
-           *electromagnetic::epsilon0
-           *universal::h
-           *universal::c
-        )
-    )
-);
-
-
-defineDimensionedConstantWithDefault
-(
-    atomic,
-    Rinf,
-    dimensionedScalar
-    (
-        sqr(atomic::alpha)
-       *atomic::me
-       *universal::c
-       /(
-            dimensionedScalar
-            (
-                "C",
-                dimensionSet(0, 0, 0, 0, 0),
-                2.0
-            )
-           *universal::h
-        )
-    )
-);
-
-
-defineDimensionedConstantWithDefault
-(
-    atomic,
-    a0,
-    dimensionedScalar
-    (
-        atomic::alpha
-       /(
-            dimensionedScalar
-            (
-                "C",
-                dimensionSet(0, 0, 0, 0, 0),
-                4.0*mathematical::pi
-            )
-           *atomic::Rinf
-        )
-    )
-);
-
-
-defineDimensionedConstantWithDefault
-(
-    atomic,
-    re,
-    dimensionedScalar
-    (
-        sqr(electromagnetic::e)
-       /(
-            dimensionedScalar
-            (
-                "C",
-                dimensionSet(0, 0, 0, 0, 0),
-                4.0*mathematical::pi
-            )
+            4*mathematical::pi
            *electromagnetic::epsilon0
            *atomic::me
            *sqr(universal::c)
@@ -122,14 +93,13 @@ defineDimensionedConstantWithDefault
 );
 
 
-defineDimensionedConstantWithDefault
+const Foam::dimensionedScalar atomic::Eh
 (
-    atomic,
-    Eh,
-    dimensionedScalar
+    dimensionedConstant
     (
-        dimensionedScalar("C", dimensionSet(0, 0, 0, 0, 0), 2.0)
-       *atomic::Rinf*universal::h*universal::c
+        atomic::group,
+        "Eh",
+        2*atomic::Rinf*universal::h*universal::c
     )
 );
 

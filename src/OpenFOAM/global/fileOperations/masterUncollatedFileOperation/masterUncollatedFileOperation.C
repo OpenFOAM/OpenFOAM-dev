@@ -27,7 +27,6 @@ License
 #include "Time.H"
 #include "masterOFstream.H"
 #include "decomposedBlockData.H"
-#include "registerSwitch.H"
 #include "dummyISstream.H"
 #include "SubList.H"
 #include "PackedBoolList.H"
@@ -51,12 +50,6 @@ namespace fileOperations
     float masterUncollatedFileOperation::maxMasterFileBufferSize
     (
         Foam::debug::floatOptimisationSwitch("maxMasterFileBufferSize", 1e9)
-    );
-    registerOptSwitch
-    (
-        "maxMasterFileBufferSize",
-        float,
-        masterUncollatedFileOperation::maxMasterFileBufferSize
     );
 
     // Mark as not needing threaded mpi

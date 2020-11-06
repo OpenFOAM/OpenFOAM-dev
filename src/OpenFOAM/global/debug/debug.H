@@ -44,8 +44,6 @@ namespace Foam
 class dictionary;
 class Istream;
 class Ostream;
-class simpleRegIOobject;
-class simpleObjectRegistry;
 class word;
 template<class Enum, unsigned int nEnum> class NamedEnum;
 
@@ -114,49 +112,6 @@ namespace debug
 
     //- List debug switches
     void listSwitches();
-
-    //- Read and update the switches specified in dict
-    void readSwitches
-    (
-        const word& name,
-        simpleObjectRegistry& objects,
-        const dictionary& dict
-    );
-
-
-    // Registered debug switches
-
-        //- Register debug switch read/write object
-        void addDebugObject(const char* name, simpleRegIOobject* obj);
-
-        //- Register info switch read/write object
-        void addInfoObject(const char* name, simpleRegIOobject* obj);
-
-        //- Register optimisation switch read/write object
-        void addOptimisationObject(const char* name, simpleRegIOobject* obj);
-
-        //- Register DimensionSets read/write object
-        void addDimensionSetObject(const char* name, simpleRegIOobject* obj);
-
-        //- Register DimensionedConstant read/write object
-        void addDimensionedConstantObject(const char* name, simpleRegIOobject*);
-
-
-        //- Get access to registered debug switch objects
-        simpleObjectRegistry& debugObjects();
-
-        //- Get access to registered info switch objects
-        simpleObjectRegistry& infoObjects();
-
-        //- Get access to registered optimisation switch objects
-        simpleObjectRegistry& optimisationObjects();
-
-        //- Get access to registered dimensionSets switch objects
-        simpleObjectRegistry& dimensionSetObjects();
-
-        //- Get access to registered dimensionedConstant switch objects
-        simpleObjectRegistry& dimensionedConstantObjects();
-
 
 } // End namespace debug
 

@@ -43,7 +43,12 @@ Foam::dictionary& Foam::dimensionedConstants()
 }
 
 
-void Foam::registerDimensionedConstant::lookup()
+Foam::dimensionedScalar Foam::dimensionedConstant
+(
+    const char* const group,
+    const char* name,
+    const dimensionSet& dimensions
+)
 {
     dictionary& dict = dimensionedConstants();
 
@@ -64,88 +69,52 @@ void Foam::registerDimensionedConstant::lookup()
             << dict.name() << std::endl;
     }
 
-    dimensionedScalar::operator=
+    return dimensionedScalar
     (
-        dimensionedScalar
-        (
-            name(),
-            dimensions(),
-            dict.subDict(unitSetCoeffs).subDict(group_)
-        )
+        name,
+        dimensions,
+        dict.subDict(unitSetCoeffs).subDict(group)
     );
 }
 
 
-void Foam::registerDimensionedConstantWithDefault::lookup()
+Foam::dimensionedScalar Foam::dimensionedConstant
+(
+    const char* const group,
+    const char* name,
+    const dimensionedScalar& defaultValuee
+)
 {
     dictionary& dict = dimensionedConstants();
 
     const word unitSet(dict.lookup("unitSet"));
     dictionary& unitDict(dict.subDict(unitSet + "Coeffs"));
 
-    const dimensionedScalar defaultValue(name(), defaultFunc_());
+    const dimensionedScalar defaultValue(name, defaultValuee);
 
-    if (unitDict.found(group_))
+    if (unitDict.found(group))
     {
-        dictionary& groupDict = unitDict.subDict(group_);
-        if (groupDict.found(name()))
+        dictionary& groupDict = unitDict.subDict(group);
+        if (groupDict.found(name))
         {
-            dimensionedScalar::operator=
+            return dimensionedScalar
             (
-                dimensionedScalar
-                (
-                    name(),
-                    defaultValue.dimensions(),
-                    groupDict.lookup(name())
-                )
+                name,
+                defaultValue.dimensions(),
+                groupDict.lookup(name)
             );
         }
         else
         {
-            groupDict.add(name(), defaultValue);
-            dimensionedScalar::operator=(defaultValue);
+            groupDict.add(name, defaultValue);
+            return defaultValue;
         }
     }
     else
     {
-        unitDict.add(group_, dictionary::null);
-        unitDict.subDict(group_).add(name(), defaultValue);
-        dimensionedScalar::operator=(defaultValue);
-    }
-}
-
-
-void Foam::readDimensionedConstants(const dictionary& dict)
-{
-    if (dict.found("DimensionedConstants"))
-    {
-        InfoHeader
-            << "Overriding DimensionedConstants according to "
-            << dict.name() << endl;
-
-        // Change dimensionedConstants dictionary in-memory
-        dimensionedConstants().merge(dict.subDict("DimensionedConstants"));
-
-        simpleObjectRegistry& objects = debug::dimensionedConstantObjects();
-
-        IStringStream dummyIs("");
-
-        forAllConstIter(simpleObjectRegistry, objects, iter)
-        {
-            const List<simpleRegIOobject*>& objects = *iter;
-
-            forAll(objects, i)
-            {
-                objects[i]->readData(dummyIs);
-
-                if (writeInfoHeader)
-                {
-                    Info<< "    ";
-                    objects[i]->writeData(Info);
-                    Info<< endl;
-                }
-            }
-        }
+        unitDict.add(group, dictionary::null);
+        unitDict.subDict(group).add(name, defaultValue);
+        return defaultValue;
     }
 }
 

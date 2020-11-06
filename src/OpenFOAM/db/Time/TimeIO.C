@@ -24,12 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Time.H"
-#include "Pstream.H"
-#include "simpleObjectRegistry.H"
-#include "registerSwitch.H"
-#include "dimensionedConstants.H"
-#include "IOdictionary.H"
-#include "fileOperation.H"
 #include "OSspecific.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -42,65 +36,6 @@ void Foam::Time::readDict()
         // Do not override if already set so external application can override
         setEnv("FOAM_APPLICATION", application, false);
     }
-
-    // Check for local switches and settings and update
-    debug::readSwitches("Debug", debug::debugObjects(), controlDict_);
-    debug::readSwitches("Info", debug::infoObjects(), controlDict_);
-    debug::readSwitches
-    (
-        "Optimisation",
-        debug::optimisationObjects(),
-        controlDict_
-    );
-
-    // Handle fileHandler override explicitly since interacts with local
-    // dictionary monitoring
-    if (controlDict_.found("OptimisationSwitches"))
-    {
-        const dictionary& localSettings =
-            controlDict_.subDict("OptimisationSwitches");
-
-        word fileHandlerName;
-        if
-        (
-            localSettings.readIfPresent("fileHandler", fileHandlerName)
-         && fileHandler().type() != fileHandlerName
-        )
-        {
-            // Remove the old watches since destroying the file
-            fileNameList oldWatchedFiles(controlDict_.watchIndices());
-            forAllReverse(controlDict_.watchIndices(), i)
-            {
-                label watchi = controlDict_.watchIndices()[i];
-                oldWatchedFiles[i] = fileHandler().getFile(watchi);
-                fileHandler().removeWatch(watchi);
-            }
-            controlDict_.watchIndices().clear();
-
-            // Installing the new handler
-            InfoHeader
-                << "Overriding fileHandler to " << fileHandlerName << endl;
-
-            autoPtr<fileOperation> handler
-            (
-                fileOperation::New
-                (
-                    fileHandlerName,
-                    true
-                )
-            );
-            Foam::fileHandler(handler);
-
-            // Reinstall old watches
-            fileHandler().addWatches(controlDict_, oldWatchedFiles);
-        }
-    }
-
-    // Check for local dimensionSets and update
-    readDimensionSets(controlDict_);
-
-    // Check for local dimensionedConstants and update
-    readDimensionedConstants(controlDict_);
 
     if (!deltaTchanged_)
     {

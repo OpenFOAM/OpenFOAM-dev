@@ -92,6 +92,7 @@ class dimensionSets
         //- Is LU decomposition valid
         bool valid_;
 
+
 public:
 
     // Constructors
@@ -131,9 +132,6 @@ const HashTable<dimensionedScalar>& unitSet();
 
 //- Set of units
 const dimensionSets& writeUnitSet();
-
-//- Read and update the dimensionSets specified in dict
-void readDimensionSets(const dictionary& dict);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

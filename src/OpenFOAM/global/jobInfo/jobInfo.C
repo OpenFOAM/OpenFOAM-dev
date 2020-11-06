@@ -36,23 +36,9 @@ bool Foam::jobInfo::writeJobControl
     Foam::debug::infoSwitch("writeJobControl", 0)
 );
 
-registerInfoSwitch
-(
-    "writeJobControl",
-    bool,
-    Foam::jobInfo::writeJobControl
-);
-
 bool Foam::jobInfo::writeJobInfo
 (
     Foam::debug::infoSwitch("writeJobInfo", 0)
-);
-
-registerInfoSwitch
-(
-    "writeJobInfo",
-    bool,
-    Foam::jobInfo::writeJobInfo
 );
 
 Foam::jobInfo Foam::jobInfo_;

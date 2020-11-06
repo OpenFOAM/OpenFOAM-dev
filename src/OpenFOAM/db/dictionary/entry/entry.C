@@ -26,20 +26,12 @@ License
 #include "entry.H"
 #include "dictionary.H"
 #include "OStringStream.H"
-#include "registerSwitch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 int Foam::entry::disableFunctionEntries
 (
     Foam::debug::infoSwitch("disableFunctionEntries", 0)
-);
-
-registerInfoSwitch
-(
-    "disableFunctionEntries",
-    int,
-    Foam::entry::disableFunctionEntries
 );
 
 

@@ -24,11 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Time.H"
-#include "PstreamReduceOps.H"
 #include "argList.H"
-#include "IOdictionary.H"
-
-#include <sstream>
 
 // * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * * //
 
@@ -445,6 +441,32 @@ Foam::Time::Time
     // Explicitly set read flags on objectRegistry so anything constructed
     // from it reads as well (e.g. fvSolution).
     readOpt() = IOobject::MUST_READ_IF_MODIFIED;
+
+    if (args.options().found("case"))
+    {
+        const wordList switchSets
+        (
+            {
+                "InfoSwitches",
+                "OptimisationSwitches",
+                "DebugSwitches",
+                "DimensionedConstants",
+                "DimensionSets"
+            }
+        );
+
+        forAll(switchSets, i)
+        {
+            if (controlDict_.found(switchSets[i]))
+            {
+                IOWarningInFunction(controlDict_)
+                    << switchSets[i]
+                    << " in system/controlDict are only processed if "
+                    << args.executable() << " is run in the "
+                    << args.path() << " directory" << endl;
+            }
+        }
+    }
 
     setControls();
 

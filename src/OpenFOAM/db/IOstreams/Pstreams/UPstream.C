@@ -25,8 +25,6 @@ License
 
 #include "UPstream.H"
 #include "debug.H"
-#include "registerSwitch.H"
-#include "registerNamedEnum.H"
 #include "dictionary.H"
 #include "IOstreams.H"
 
@@ -435,22 +433,10 @@ bool Foam::UPstream::floatTransfer
 (
     Foam::debug::optimisationSwitch("floatTransfer", 0)
 );
-registerOptSwitch
-(
-    "floatTransfer",
-    bool,
-    Foam::UPstream::floatTransfer
-);
 
 int Foam::UPstream::nProcsSimpleSum
 (
     Foam::debug::optimisationSwitch("nProcsSimpleSum", 16)
-);
-registerOptSwitch
-(
-    "nProcsSimpleSum",
-    int,
-    Foam::UPstream::nProcsSimpleSum
 );
 
 Foam::UPstream::commsTypes Foam::UPstream::defaultCommsType
@@ -462,12 +448,6 @@ Foam::UPstream::commsTypes Foam::UPstream::defaultCommsType
         defaultCommsType
     )
 );
-registerOptNamedEnum
-(
-    "commsType",
-    Foam::UPstream::commsTypeNames,
-    Foam::UPstream::defaultCommsType
-);
 
 Foam::label Foam::UPstream::worldComm(0);
 
@@ -476,12 +456,6 @@ Foam::label Foam::UPstream::warnComm(-1);
 int Foam::UPstream::nPollProcInterfaces
 (
     Foam::debug::optimisationSwitch("nPollProcInterfaces", 0)
-);
-registerOptSwitch
-(
-    "nPollProcInterfaces",
-    int,
-    Foam::UPstream::nPollProcInterfaces
 );
 
 

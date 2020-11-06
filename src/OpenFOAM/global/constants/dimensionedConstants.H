@@ -51,127 +51,19 @@ namespace Foam
 
 dictionary& dimensionedConstants();
 
+dimensionedScalar dimensionedConstant
+(
+    const char* const group,
+    const char* name,
+    const dimensionSet& dimensions
+);
 
-class registerDimensionedConstant
-:
-    public simpleRegIOobject,
-    public dimensionedScalar
-{
-    const char* const group_;
-
-    //- Lookup the dimensionedConstant from the registry
-    void lookup();
-
-
-public:
-
-    registerDimensionedConstant
-    (
-        const char* const group,
-        const char* name,
-        const dimensionSet& dimensions
-    )
-    :
-        simpleRegIOobject(debug::addDimensionedConstantObject, name),
-        dimensionedScalar(name, dimensions, 0),
-        group_(group)
-    {
-        lookup();
-    }
-
-    virtual ~registerDimensionedConstant()
-    {}
-
-    virtual void readData(Istream& is)
-    {
-        lookup();
-    }
-
-    virtual void writeData(Ostream& os) const
-    {
-        os << static_cast<const dimensionedScalar&>(*this);
-    }
-};
-
-
-//- Defined and register a dimensioned constant
-#define defineDimensionedConstant(Group, Name, Dimensions)                     \
-    registerDimensionedConstant register##Name##DimensionedConstant_           \
-    (                                                                          \
-        Group::group,                                                          \
-        #Name,                                                                 \
-        Dimensions                                                             \
-    );                                                                         \
-    const Foam::dimensionedScalar& Group::Name                                 \
-    (                                                                          \
-        register##Name##DimensionedConstant_                                   \
-    );
-
-
-class registerDimensionedConstantWithDefault
-:
-    public simpleRegIOobject,
-    public dimensionedScalar
-{
-    typedef dimensionedScalar (*defaultFuncPtr)();
-
-    const char* const group_;
-    defaultFuncPtr defaultFunc_;
-
-    //- Lookup the dimensionedConstant from the registry
-    void lookup();
-
-
-public:
-
-    registerDimensionedConstantWithDefault
-    (
-        const char* const group,
-        const char* name,
-        defaultFuncPtr defaultFunc
-    )
-    :
-        simpleRegIOobject(debug::addDimensionedConstantObject, name),
-        dimensionedScalar(name, defaultFunc()),
-        group_(group),
-        defaultFunc_(defaultFunc)
-    {
-        lookup();
-    }
-
-    virtual ~registerDimensionedConstantWithDefault()
-    {}
-
-    virtual void readData(Istream& is)
-    {
-        lookup();
-    }
-
-    virtual void writeData(Ostream& os) const
-    {
-        os << static_cast<const dimensionedScalar&>(*this);
-    }
-};
-
-
-//- Read and update the dimensionedConstants specified in dict
-void readDimensionedConstants(const dictionary& dict);
-
-
-//- Defined and register a dimensioned constant with default
-#define defineDimensionedConstantWithDefault(Group, Name, DefaultExpr)         \
-    registerDimensionedConstantWithDefault                                     \
-        register##Name##DimensionedConstant_                                   \
-        (                                                                      \
-            Group::group,                                                      \
-            #Name,                                                             \
-            [](){return DefaultExpr;}                                          \
-        );                                                                     \
-                                                                               \
-    const Foam::dimensionedScalar& Group::Name                                 \
-    (                                                                          \
-        register##Name##DimensionedConstant_                                   \
-    );
+dimensionedScalar dimensionedConstant
+(
+    const char* const group,
+    const char* name,
+    const dimensionedScalar& defaultValue
+);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -32,7 +32,6 @@ Description
 #include "etcFiles.H"
 #include "Ostream.H"
 #include "demandDrivenData.H"
-#include "simpleObjectRegistry.H"
 #include "IOobject.H"
 #include "HashSet.H"
 
@@ -86,12 +85,6 @@ dictionary& optimisationDefaultSwitches()
     return *optimisationDefaultSwitchesPtr_;
 }
 
-// Debug switch read and write callback tables.
-simpleObjectRegistry* debugObjectsPtr_(nullptr);
-simpleObjectRegistry* infoObjectsPtr_(nullptr);
-simpleObjectRegistry* optimisationObjectsPtr_(nullptr);
-simpleObjectRegistry* dimensionSetObjectsPtr_(nullptr);
-simpleObjectRegistry* dimensionedConstantObjectsPtr_(nullptr);
 
 // To ensure controlDictPtr_ is deleted at the end of the run
 class deleteControlDictPtr
@@ -103,12 +96,6 @@ public:
 
     ~deleteControlDictPtr()
     {
-        deleteDemandDrivenData(debugObjectsPtr_);
-        deleteDemandDrivenData(infoObjectsPtr_);
-        deleteDemandDrivenData(optimisationObjectsPtr_);
-        deleteDemandDrivenData(dimensionSetObjectsPtr_);
-        deleteDemandDrivenData(dimensionedConstantObjectsPtr_);
-
         deleteDemandDrivenData(debugDefaultSwitchesPtr_);
         deleteDemandDrivenData(infoDefaultSwitchesPtr_);
         deleteDemandDrivenData(optimisationDefaultSwitchesPtr_);
@@ -159,6 +146,13 @@ Foam::dictionary& Foam::debug::controlDict()
                 }
                 controlDictPtr_->merge(dictionary(ifs));
             }
+        }
+
+        IFstream ifs("system/controlDict");
+        if (ifs.good())
+        {
+            entry::disableFunctionEntries = true;
+            controlDictPtr_->merge(dictionary(ifs));
         }
     }
 
@@ -330,180 +324,7 @@ const Foam::word Foam::debug::wordOptimisationSwitch
 }
 
 
-void Foam::debug::addDebugObject(const char* name, simpleRegIOobject* obj)
-{
-    simpleObjectRegistryEntry* ptr = debugObjects().lookupPtr(name);
-    if (ptr)
-    {
-        ptr->append(obj);
-    }
-    else
-    {
-        debugObjects().append
-        (
-            name,
-            new simpleObjectRegistryEntry
-            (
-                List<simpleRegIOobject*>(1, obj)
-            )
-        );
-    }
-}
-
-
-void Foam::debug::addInfoObject(const char* name, simpleRegIOobject* obj)
-{
-    simpleObjectRegistryEntry* ptr = infoObjects().lookupPtr(name);
-    if (ptr)
-    {
-        ptr->append(obj);
-    }
-    else
-    {
-        infoObjects().append
-        (
-            name,
-            new simpleObjectRegistryEntry
-            (
-                List<simpleRegIOobject*>(1, obj)
-            )
-        );
-    }
-}
-
-
-void Foam::debug::addOptimisationObject
-(
-    const char* name,
-    simpleRegIOobject* obj
-)
-{
-    simpleObjectRegistryEntry* ptr = optimisationObjects().lookupPtr(name);
-    if (ptr)
-    {
-        ptr->append(obj);
-    }
-    else
-    {
-        optimisationObjects().append
-        (
-            name,
-            new simpleObjectRegistryEntry
-            (
-                List<simpleRegIOobject*>(1, obj)
-            )
-        );
-    }
-}
-
-
-void Foam::debug::addDimensionSetObject
-(
-    const char* name,
-    simpleRegIOobject* obj
-)
-{
-    simpleObjectRegistryEntry* ptr = dimensionSetObjects().lookupPtr(name);
-    if (ptr)
-    {
-        ptr->append(obj);
-    }
-    else
-    {
-        dimensionSetObjects().append
-        (
-            name,
-            new simpleObjectRegistryEntry
-            (
-                List<simpleRegIOobject*>(1, obj)
-            )
-        );
-    }
-}
-
-
-void Foam::debug::addDimensionedConstantObject
-(
-    const char* name,
-    simpleRegIOobject* obj
-)
-{
-    simpleObjectRegistryEntry* ptr = dimensionedConstantObjects().lookupPtr
-    (
-        name
-    );
-    if (ptr)
-    {
-        ptr->append(obj);
-    }
-    else
-    {
-        dimensionedConstantObjects().append
-        (
-            name,
-            new simpleObjectRegistryEntry
-            (
-                List<simpleRegIOobject*>(1, obj)
-            )
-        );
-    }
-}
-
-
-Foam::simpleObjectRegistry& Foam::debug::debugObjects()
-{
-    if (!debugObjectsPtr_)
-    {
-        debugObjectsPtr_ = new simpleObjectRegistry(1000);
-    }
-
-    return *debugObjectsPtr_;
-}
-
-
-Foam::simpleObjectRegistry& Foam::debug::infoObjects()
-{
-    if (!infoObjectsPtr_)
-    {
-        infoObjectsPtr_ = new simpleObjectRegistry(100);
-    }
-
-    return *infoObjectsPtr_;
-}
-
-
-Foam::simpleObjectRegistry& Foam::debug::optimisationObjects()
-{
-    if (!optimisationObjectsPtr_)
-    {
-        optimisationObjectsPtr_ = new simpleObjectRegistry(100);
-    }
-
-    return *optimisationObjectsPtr_;
-}
-
-
-Foam::simpleObjectRegistry& Foam::debug::dimensionSetObjects()
-{
-    if (!dimensionSetObjectsPtr_)
-    {
-        dimensionSetObjectsPtr_ = new simpleObjectRegistry(100);
-    }
-
-    return *dimensionSetObjectsPtr_;
-}
-
-
-Foam::simpleObjectRegistry& Foam::debug::dimensionedConstantObjects()
-{
-    if (!dimensionedConstantObjectsPtr_)
-    {
-        dimensionedConstantObjectsPtr_ = new simpleObjectRegistry(100);
-    }
-
-    return *dimensionedConstantObjectsPtr_;
-}
-
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
@@ -565,18 +386,16 @@ void listSwitches
     }
 }
 
+
 void listSwitches
 (
     const word& name,
     const dictionary& switches,
-    const dictionary& defaultSwitches,
-    const simpleObjectRegistry& registry
+    const dictionary& defaultSwitches
 )
 {
-    wordHashSet registeredDefaultSet;
-    wordHashSet registeredNonDefaultSet;
-    wordHashSet nonRegisteredDefaultSet;
-    wordHashSet nonRegisteredNonDefaultSet;
+    wordHashSet defaultSet;
+    wordHashSet nonDefaultSet;
     wordHashSet noDefaultSet;
 
     forAllConstIter(dictionary, switches, iter)
@@ -585,35 +404,19 @@ void listSwitches
 
         const bool hasDefault = defaultSwitches.found(name);
 
-        const bool isRegistered = registry.found(name);
-
         const bool isDefault =
             hasDefault
          && defaultSwitches.lookupEntry(name, false, false) == iter();
 
         if (hasDefault)
         {
-            if (isRegistered)
+            if (isDefault)
             {
-                if (isDefault)
-                {
-                    registeredDefaultSet.insert(name);
-                }
-                else
-                {
-                    registeredNonDefaultSet.insert(name);
-                }
+                defaultSet.insert(name);
             }
             else
             {
-                if (isDefault)
-                {
-                    nonRegisteredDefaultSet.insert(name);
-                }
-                else
-                {
-                    nonRegisteredNonDefaultSet.insert(name);
-                }
+                nonDefaultSet.insert(name);
             }
         }
         else
@@ -637,26 +440,14 @@ void listSwitches
 
     print
     (
-        "Registered switches with default values",
-        registeredDefaultSet.sortedToc()
+        "Switches with default values",
+        defaultSet.sortedToc()
     );
     Info<< nl;
     print
     (
-       "Registered switches with non default values",
-       registeredNonDefaultSet.sortedToc()
-    );
-    Info<< nl;
-    print
-    (
-        "Non-registered switches with default values",
-        nonRegisteredDefaultSet.sortedToc()
-    );
-    Info<< nl;
-    print
-    (
-        "Non-registered switches with non-default values",
-        nonRegisteredNonDefaultSet.sortedToc()
+        "Switches with non-default values",
+        nonDefaultSet.sortedToc()
     );
     Info<< nl;
     print
@@ -668,8 +459,10 @@ void listSwitches
     Info<< decrIndent << token::END_BLOCK << endl;
 }
 
-}
+} // End namespace Foam
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 void Foam::debug::listSwitches()
 {
@@ -677,8 +470,7 @@ void Foam::debug::listSwitches()
     (
         "DebugSwitches",
         debug::debugSwitches(),
-        debug::debugDefaultSwitches(),
-        debug::debugObjects()
+        debug::debugDefaultSwitches()
     );
     Info<< endl;
 
@@ -686,8 +478,7 @@ void Foam::debug::listSwitches()
     (
         "InfoSwitches",
         debug::infoSwitches(),
-        debug::infoDefaultSwitches(),
-        debug::infoObjects()
+        debug::infoDefaultSwitches()
     );
     Info<< endl;
 
@@ -695,59 +486,8 @@ void Foam::debug::listSwitches()
     (
         "OptimisationSwitches",
         debug::optimisationSwitches(),
-        debug::optimisationDefaultSwitches(),
-        debug::optimisationObjects()
+        debug::optimisationDefaultSwitches()
     );
-}
-
-
-void Foam::debug::readSwitches
-(
-    const word& name,
-    simpleObjectRegistry& objects,
-    const dictionary& dict
-)
-{
-    if (dict.found(name + "Switches"))
-    {
-        InfoHeader
-            << "Overriding " << name << "Switches according to "
-            << dict.name()
-            << endl;
-
-        const dictionary& localSettings = dict.subDict(name + "Switches");
-        forAllConstIter(dictionary, localSettings, iter)
-        {
-            const word& name = iter().keyword();
-            simpleObjectRegistryEntry* objPtr = objects.lookupPtr(name);
-
-            if (objPtr)
-            {
-                InfoHeader << "    " << iter() << endl;
-
-                const List<simpleRegIOobject*>& objects = *objPtr;
-
-                if (iter().isDict())
-                {
-                    OStringStream os(IOstream::ASCII);
-                    os  << iter().dict();
-                    IStringStream is(os.str());
-
-                    forAll(objects, i)
-                    {
-                        objects[i]->readData(is.rewind());
-                    }
-                }
-                else
-                {
-                    forAll(objects, i)
-                    {
-                        objects[i]->readData(iter().stream());
-                    }
-                }
-            }
-        }
-    }
 }
 
 

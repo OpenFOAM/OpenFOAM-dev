@@ -25,15 +25,11 @@ License
 
 #include "dimensionSet.H"
 #include "dimensionedScalar.H"
-#include "simpleObjectRegistry.H"
-#include "demandDrivenData.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-/* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
 // Since dimensionSystems() can be reread we actually store a copy of
 // the controlDict subDict (v.s. a reference to the subDict for e.g.
@@ -42,47 +38,11 @@ dictionary* dimensionSystemsPtr_(nullptr);
 HashTable<dimensionedScalar>* unitSetPtr_(nullptr);
 dimensionSets* writeUnitSetPtr_(nullptr);
 
-// Helper class to
-//   register re-reader
-//   deallocate demand-driven data
-class addDimensionSetsToDebug
-:
-    public simpleRegIOobject
-{
+}
 
-public:
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    addDimensionSetsToDebug(const char* name)
-    :
-        simpleRegIOobject(debug::addDimensionSetObject, name)
-    {}
-
-    virtual ~addDimensionSetsToDebug()
-    {
-        deleteDemandDrivenData(dimensionSystemsPtr_);
-        deleteDemandDrivenData(unitSetPtr_);
-        deleteDemandDrivenData(writeUnitSetPtr_);
-
-    }
-
-    virtual void readData(Istream& is)
-    {
-        deleteDemandDrivenData(dimensionSystemsPtr_);
-        deleteDemandDrivenData(unitSetPtr_);
-        deleteDemandDrivenData(writeUnitSetPtr_);
-        dimensionSystemsPtr_ = new dictionary(is);
-    }
-
-    virtual void writeData(Ostream& os) const
-    {
-        os << dimensionSystems();
-    }
-};
-
-addDimensionSetsToDebug addDimensionSetsToDebug_("DimensionSets");
-
-
-dictionary& dimensionSystems()
+Foam::dictionary& Foam::dimensionSystems()
 {
     if (!dimensionSystemsPtr_)
     {
@@ -100,7 +60,7 @@ dictionary& dimensionSystems()
 }
 
 
-const HashTable<dimensionedScalar>& unitSet()
+const Foam::HashTable<Foam::dimensionedScalar>& Foam::unitSet()
 {
     if (!unitSetPtr_)
     {
@@ -166,7 +126,7 @@ const HashTable<dimensionedScalar>& unitSet()
 }
 
 
-const dimensionSets& writeUnitSet()
+const Foam::dimensionSets& Foam::writeUnitSet()
 {
     if (!writeUnitSetPtr_)
     {
@@ -176,72 +136,35 @@ const dimensionSets& writeUnitSet()
 }
 
 
-void readDimensionSets(const dictionary& dict)
-{
-    if (dict.found("DimensionSets"))
-    {
-        InfoHeader
-            << "Overriding DimensionSets according to "
-            << dict.name() << endl;
+const Foam::dimensionSet Foam::dimless(0, 0, 0, 0, 0, 0, 0);
 
-        dictionary dimensionSetDict(Foam::dimensionSystems());
-        dimensionSetDict.merge(dict.subDict("DimensionSets"));
+const Foam::dimensionSet Foam::dimMass(1, 0, 0, 0, 0, 0, 0);
+const Foam::dimensionSet Foam::dimLength(0, 1, 0, 0, 0, 0, 0);
+const Foam::dimensionSet Foam::dimTime(0, 0, 1, 0, 0, 0, 0);
+const Foam::dimensionSet Foam::dimTemperature(0, 0, 0, 1, 0, 0, 0);
+const Foam::dimensionSet Foam::dimMoles(0, 0, 0, 0, 1, 0, 0);
+const Foam::dimensionSet Foam::dimCurrent(0, 0, 0, 0, 0, 1, 0);
+const Foam::dimensionSet Foam::dimLuminousIntensity(0, 0, 0, 0, 0, 0, 1);
 
-        simpleObjectRegistry& objects = debug::dimensionSetObjects();
-        simpleObjectRegistryEntry* objPtr = objects.lookupPtr("DimensionSets");
+const Foam::dimensionSet Foam::dimArea(sqr(dimLength));
+const Foam::dimensionSet Foam::dimVolume(pow3(dimLength));
+const Foam::dimensionSet Foam::dimVol(dimVolume);
 
-        if (objPtr)
-        {
-            InfoHeader << dict.subDict("DimensionSets") << endl;
+const Foam::dimensionSet Foam::dimVelocity(dimLength/dimTime);
+const Foam::dimensionSet Foam::dimAcceleration(dimVelocity/dimTime);
 
-            const List<simpleRegIOobject*>& objects = *objPtr;
+const Foam::dimensionSet Foam::dimDensity(dimMass/dimVolume);
+const Foam::dimensionSet Foam::dimForce(dimMass*dimAcceleration);
+const Foam::dimensionSet Foam::dimEnergy(dimForce*dimLength);
+const Foam::dimensionSet Foam::dimPower(dimEnergy/dimTime);
 
-            OStringStream os(IOstream::ASCII);
-            os  << dimensionSetDict;
-            IStringStream is(os.str());
+const Foam::dimensionSet Foam::dimPressure(dimForce/dimArea);
+const Foam::dimensionSet Foam::dimCompressibility(dimDensity/dimPressure);
+const Foam::dimensionSet Foam::dimGasConstant(dimEnergy/dimMass/dimTemperature);
+const Foam::dimensionSet Foam::dimSpecificHeatCapacity(dimGasConstant);
+const Foam::dimensionSet Foam::dimViscosity(dimArea/dimTime);
+const Foam::dimensionSet Foam::dimDynamicViscosity(dimDensity*dimViscosity);
 
-            forAll(objects, i)
-            {
-                objects[i]->readData(is.rewind());
-            }
-        }
-    }
-}
-
-
-const dimensionSet dimless(0, 0, 0, 0, 0, 0, 0);
-
-const dimensionSet dimMass(1, 0, 0, 0, 0, 0, 0);
-const dimensionSet dimLength(0, 1, 0, 0, 0, 0, 0);
-const dimensionSet dimTime(0, 0, 1, 0, 0, 0, 0);
-const dimensionSet dimTemperature(0, 0, 0, 1, 0, 0, 0);
-const dimensionSet dimMoles(0, 0, 0, 0, 1, 0, 0);
-const dimensionSet dimCurrent(0, 0, 0, 0, 0, 1, 0);
-const dimensionSet dimLuminousIntensity(0, 0, 0, 0, 0, 0, 1);
-
-const dimensionSet dimArea(sqr(dimLength));
-const dimensionSet dimVolume(pow3(dimLength));
-const dimensionSet dimVol(dimVolume);
-
-const dimensionSet dimVelocity(dimLength/dimTime);
-const dimensionSet dimAcceleration(dimVelocity/dimTime);
-
-const dimensionSet dimDensity(dimMass/dimVolume);
-const dimensionSet dimForce(dimMass*dimAcceleration);
-const dimensionSet dimEnergy(dimForce*dimLength);
-const dimensionSet dimPower(dimEnergy/dimTime);
-
-const dimensionSet dimPressure(dimForce/dimArea);
-const dimensionSet dimCompressibility(dimDensity/dimPressure);
-const dimensionSet dimGasConstant(dimEnergy/dimMass/dimTemperature);
-const dimensionSet dimSpecificHeatCapacity(dimGasConstant);
-const dimensionSet dimViscosity(dimArea/dimTime);
-const dimensionSet dimDynamicViscosity(dimDensity*dimViscosity);
-
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-} // End namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 

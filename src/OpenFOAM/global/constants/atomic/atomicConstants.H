@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,20 +49,19 @@ namespace atomic
     extern const char* const group;
 
     //- Fine-structure constant: default SI units: []
-    extern const dimensionedScalar& alpha;
+    extern const dimensionedScalar alpha;
 
     //- Rydberg constant: default SI units: [1/m]
-    extern const dimensionedScalar& Rinf;
+    extern const dimensionedScalar Rinf;
 
     //- Bohr radius: default SI units: [m]
-    extern const dimensionedScalar& a0;
+    extern const dimensionedScalar a0;
 
     //- Classical electron radius: default SI units: [m]
-    extern const dimensionedScalar& re;
+    extern const dimensionedScalar re;
 
     //- Hartree energy: default SI units: [J]
-    extern const dimensionedScalar& Eh;
-
+    extern const dimensionedScalar Eh;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

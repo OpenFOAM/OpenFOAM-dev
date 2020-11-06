@@ -26,7 +26,6 @@ License
 #include "regIOobject.H"
 #include "Time.H"
 #include "polyMesh.H"
-#include "registerSwitch.H"
 #include "fileOperation.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

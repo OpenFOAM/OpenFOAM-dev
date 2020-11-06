@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,13 +27,11 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fundamentalConstants.H"
-
 #include "universalConstants.H"
 #include "electromagneticConstants.H"
 #include "atomicConstants.H"
 #include "physicoChemicalConstants.H"
 #include "standardConstants.H"
-
 #include "dimensionedConstants.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -47,42 +45,100 @@ namespace constant
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-defineDimensionedConstant(universal, c, dimensionSet(0, 1, -1, 0, 0));
-defineDimensionedConstant(universal, G, dimensionSet(-1, 3, -2, 0, 0));
-defineDimensionedConstant(universal, h, dimensionSet(1, 2, -1, 0, 0));
+// Note: cannot use dimless etc. as they may not have been constructed yet
 
-// Electromagnetic
-defineDimensionedConstant
+
+const Foam::dimensionedScalar universal::c
 (
-    electromagnetic,
-    e,
-    dimensionSet(0, 0, 1, 0, 0, 1, 0)
+    dimensionedConstant(universal::group, "c", dimensionSet(0, 1, -1, 0, 0))
 );
 
-// Atomic
-defineDimensionedConstant(atomic, me, dimensionSet(1, 0, 0, 0, 0));
-defineDimensionedConstant(atomic, mp, dimensionSet(1, 0, 0, 0, 0));
-
-// Physico-chemical
-defineDimensionedConstant(physicoChemical, mu, dimensionSet(1, 0, 0, 0, 0));
-
-// Note: cannot use dimless etc since not guaranteed to be constructed
-defineDimensionedConstantWithDefault
+const Foam::dimensionedScalar universal::G
 (
-    physicoChemical,
-    NA,
-    dimensionedScalar
+    dimensionedConstant(universal::group, "G", dimensionSet(-1, 3, -2, 0, 0))
+);
+
+const Foam::dimensionedScalar universal::h
+(
+    dimensionedConstant(universal::group, "h", dimensionSet(1, 2, -1, 0, 0))
+);
+
+
+// Electromagnetic
+
+const Foam::dimensionedScalar electromagnetic::e
+(
+    dimensionedConstant
     (
-        dimensionSet(0, 0, 0, 0, -1), // dimless/dimMoles,
-        6.0221417930e+23
+        electromagnetic::group,
+        "e",
+        dimensionSet(0, 0, 1, 0, 0, 1, 0)
     )
 );
 
-defineDimensionedConstant(physicoChemical, k, dimensionSet(1, 2, -2, -1, 0));
+
+// Atomic
+
+const Foam::dimensionedScalar atomic::me
+(
+    dimensionedConstant(atomic::group, "me", dimensionSet(1, 0, 0, 0, 0))
+);
+
+const Foam::dimensionedScalar atomic::mp
+(
+    dimensionedConstant(atomic::group, "mp", dimensionSet(1, 0, 0, 0, 0))
+);
+
+
+// Physico-chemical
+
+const Foam::dimensionedScalar physicoChemical::mu
+(
+    dimensionedConstant
+    (
+        physicoChemical::group,
+        "mu",
+        dimensionSet(1, 0, 0, 0, 0)
+    )
+);
+
+const Foam::dimensionedScalar physicoChemical::NA
+(
+    dimensionedConstant
+    (
+        physicoChemical::group,
+        "NA",
+        dimensionedScalar
+        (
+            dimensionSet(0, 0, 0, 0, -1), // dimless/dimMoles,
+            6.0221417930e+23
+        )
+    )
+);
+
+const Foam::dimensionedScalar physicoChemical::k
+(
+    dimensionedConstant
+    (
+        physicoChemical::group,
+        "k",
+        dimensionSet(1, 2, -2, -1, 0)
+    )
+);
+
 
 // Standard
-defineDimensionedConstant(standard, Pstd, dimensionSet(1, -1, -2, 0, 0));
-defineDimensionedConstant(standard, Tstd, dimensionSet(0, 0, 0, 1, 0));
+
+const Foam::dimensionedScalar standard::Pstd
+(
+    dimensionedConstant(standard::group, "Pstd", dimensionSet(1, -1, -2, 0, 0))
+);
+
+const Foam::dimensionedScalar standard::Tstd
+(
+    dimensionedConstant(standard::group, "Tstd", dimensionSet(0, 0, 0, 1, 0))
+);
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

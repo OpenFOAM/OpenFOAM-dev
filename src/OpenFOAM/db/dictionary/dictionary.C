@@ -31,7 +31,6 @@ License
 #include "DynamicList.H"
 #include "inputSyntaxEntry.H"
 #include "fileOperation.H"
-#include "registerSwitch.H"
 #include "stringOps.H"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
@@ -46,13 +45,6 @@ const Foam::dictionary Foam::dictionary::null;
 bool Foam::dictionary::writeOptionalEntries
 (
     Foam::debug::infoSwitch("writeOptionalEntries", 0)
-);
-
-registerInfoSwitch
-(
-    "writeOptionalEntries",
-    bool,
-    Foam::dictionary::writeOptionalEntries
 );
 
 

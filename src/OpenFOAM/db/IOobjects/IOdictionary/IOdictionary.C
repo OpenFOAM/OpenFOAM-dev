@@ -27,7 +27,6 @@ License
 #include "objectRegistry.H"
 #include "Pstream.H"
 #include "Time.H"
-#include "registerSwitch.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -38,13 +37,6 @@ namespace Foam
     bool IOdictionary::writeDictionaries
     (
         debug::infoSwitch("writeDictionaries", 0)
-    );
-
-    registerInfoSwitch
-    (
-        "writeDictionaries",
-        bool,
-        IOdictionary::writeDictionaries
     );
 }
 

@@ -27,7 +27,6 @@ License
 #include "Time.H"
 #include "threadedCollatedOFstream.H"
 #include "decomposedBlockData.H"
-#include "registerSwitch.H"
 #include "masterOFstream.H"
 #include "OFstream.H"
 #include "addToRunTimeSelectionTable.H"
@@ -49,12 +48,6 @@ namespace fileOperations
     float collatedFileOperation::maxThreadFileBufferSize
     (
         debug::floatOptimisationSwitch("maxThreadFileBufferSize", 1e9)
-    );
-    registerOptSwitch
-    (
-        "maxThreadFileBufferSize",
-        float,
-        collatedFileOperation::maxThreadFileBufferSize
     );
 
     // Mark as needing threaded mpi
