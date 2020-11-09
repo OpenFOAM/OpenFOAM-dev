@@ -145,7 +145,6 @@ int main(int argc, char *argv[])
         }
         else
         {
-            // This needs checking ...
             FatalIOErrorIn(args.executable().c_str(), materialProperties)
                 << "Cannot find region type file "
                 << sourceDir << exit(FatalIOError);
@@ -160,7 +159,7 @@ int main(int argc, char *argv[])
             cpFiles(constantDir/regionType, currentDir/"constant"/regionName);
             cpFiles(matDir, currentDir/"constant"/regionName);
 
-            // system/<region>: from fluid or solid templ
+            // system/<region>: from fluid or solid template
             Info<< "\tCreating system/" << regionName
                 << " directory" << endl;
             cpFiles(systemDir/regionType, currentDir/"system"/regionName);
