@@ -33,8 +33,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef _Template_H
-#define _Template_H
+#ifndef CLASSNAME_H
+#define CLASSNAME_H
 
 #include ".H"
 
