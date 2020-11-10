@@ -54,6 +54,7 @@ SourceFiles
 \*---------------------------------------------------------------------------*/
 
 #include "unityLewisEddyDiffusivity.H"
+#include "Function1.H"
 
 #ifndef FickianEddyDiffusivity_H
 #define FickianEddyDiffusivity_H
@@ -84,12 +85,13 @@ protected:
             //- Turbulent Schmidt number []
             dimensionedScalar Sct_;
 
-            //- List of specie mass diffusion coefficients
+            //- List of specie mass diffusion coefficient functions
             //  w.r.t the mixture [m^2/s]
-            scalarList D_;
+            PtrList<Function1<scalar>> D_;
 
-            //- List of specie Soret thermal diffusion coefficients [kg/m/s]
-            scalarList DT_;
+            //- List of specie Soret thermal diffusion coefficient
+            //  functions [kg/m/s]
+            PtrList<Function1<scalar>> DT_;
 
 
 public:
@@ -130,19 +132,7 @@ public:
         virtual bool read();
 
         //- Effective mass diffusivity for a given specie mass-fraction [kg/m/s]
-        virtual tmp<volScalarField> DEff(const volScalarField& Yi) const
-        {
-            const basicSpecieMixture& composition =
-                this->thermo().composition();
-
-            return volScalarField::New
-            (
-                "DEff",
-                this->momentumTransport().rho()
-               *dimensionedScalar(dimViscosity, D_[composition.index(Yi)])
-              + (this->Prt_/Sct_)*this->alphat()
-            );
-        }
+        virtual tmp<volScalarField> DEff(const volScalarField& Yi) const;
 
         //- Effective mass diffusivity for a given specie mass-fraction
         //  for patch [kg/m/s]
@@ -150,16 +140,7 @@ public:
         (
             const volScalarField& Yi,
             const label patchi
-        ) const
-        {
-            const basicSpecieMixture& composition =
-                this->thermo().composition();
-
-            return
-                this->momentumTransport().rho().boundaryField()[patchi]
-               *D_[composition.index(Yi)]
-              + this->Prt_.value()/Sct_.value()*this->alphat(patchi);
-        }
+        ) const;
 
         //- Return the heat flux [W/m^2]
         virtual tmp<surfaceScalarField> q() const;
