@@ -74,6 +74,18 @@ void Foam::vtkWriteOps::writePointSet
 
     vtkWriteOps::write(pStream, binary, ptField);
 
+    // Write vertices
+
+    pStream << "VERTICES " << pointLabels.size() << ' '
+        << 2*pointLabels.size() << std::endl;
+
+    DynamicList<label> vertexPoints(2*pointLabels.size());
+    forAll(pointLabels, pointi)
+    {
+        vertexPoints.append(1);
+        vertexPoints.append(pointi);
+    }
+    vtkWriteOps::write(pStream, binary, vertexPoints);
 
     //-----------------------------------------------------------------
     //

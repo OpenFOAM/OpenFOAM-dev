@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,6 +79,12 @@ void Foam::vtkSetWriter<Type>::write
         os  << pt.x() << ' ' << pt.y() << ' ' << pt.z() << nl;
     }
 
+    os  << "VERTICES " << points.size() << ' ' << 2*points.size() << nl;
+
+    forAll(points, i)
+    {
+        os  << 1 << ' ' << i << endl;
+    }
 
     os  << "POINT_DATA " << points.size() << nl
         << " FIELD attributes " << valueSetNames.size() << nl;

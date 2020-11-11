@@ -56,6 +56,8 @@ Foam::lagrangianWriter::lagrangianWriter
         nParcels_ = 0;
 
         os_ << "POINTS " << nParcels_ << " float" << std::endl;
+
+        os_ << "VERTICES " << nParcels_ << ' ' << 2*nParcels_ << std::endl;
     }
     else
     {
@@ -66,12 +68,21 @@ Foam::lagrangianWriter::lagrangianWriter
         os_ << "POINTS " << nParcels_ << " float" << std::endl;
 
         DynamicList<floatScalar> partField(3*parcels.size());
-
         forAllConstIter(Cloud<passiveParticle>, parcels, elmnt)
         {
             vtkWriteOps::insert(elmnt().position(), partField);
         }
         vtkWriteOps::write(os_, binary_, partField);
+
+        os_ << "VERTICES " << nParcels_ << ' ' << 2*nParcels_ << std::endl;
+
+        DynamicList<label> vertexPoints(2*parcels.size());
+        forAll(parcels, parceli)
+        {
+            vertexPoints.append(1);
+            vertexPoints.append(parceli);
+        }
+        vtkWriteOps::write(os_, binary, vertexPoints);
     }
 }
 
