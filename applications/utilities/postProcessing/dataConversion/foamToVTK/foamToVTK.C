@@ -1204,7 +1204,7 @@ int main(int argc, char *argv[])
                 );
 
                 // Write number of fields
-                writer.writeParcelHeader
+                writer.writeFieldsHeader
                 (
                     labelNames.size()
                   + scalarNames.size()
@@ -1234,7 +1234,7 @@ int main(int argc, char *argv[])
                 );
 
                 // Write number of fields
-                writer.writeParcelHeader(0);
+                writer.writeFieldsHeader(0);
             }
         }
     }

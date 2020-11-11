@@ -89,7 +89,7 @@ Foam::lagrangianWriter::lagrangianWriter
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::lagrangianWriter::writeParcelHeader(const label nFields)
+void Foam::lagrangianWriter::writeFieldsHeader(const label nFields)
 {
     os_ << "POINT_DATA " << nParcels_ << std::endl
         << "FIELD attributes " << nFields

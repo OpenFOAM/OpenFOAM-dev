@@ -25,7 +25,7 @@ Class
     Foam::lagrangianWriter
 
 Description
-    Write fields (internal).
+    Writes Lagrangian points and fields
 
 SourceFiles
     lagrangianWriter.C
@@ -36,13 +36,8 @@ SourceFiles
 #ifndef lagrangianWriter_H
 #define lagrangianWriter_H
 
-#include "OFstream.H"
-#include "Cloud.H"
-#include "volFields.H"
-#include "pointFields.H"
 #include "vtkMesh.H"
-
-using namespace Foam;
+#include <fstream>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -87,12 +82,8 @@ public:
 
     // Member Functions
 
-        std::ofstream& os()
-        {
-            return os_;
-        }
-
-        void writeParcelHeader(const label nFields);
+        //- Write the fields header specifying the number of fields
+        void writeFieldsHeader(const label nFields);
 
         //- Write IOField
         template<class Type>
@@ -109,7 +100,6 @@ public:
 #ifdef NoRepository
     #include "lagrangianWriterTemplates.C"
 #endif
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
