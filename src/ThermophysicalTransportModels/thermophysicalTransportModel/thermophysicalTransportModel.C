@@ -51,8 +51,7 @@ Foam::thermophysicalTransportModel::thermophysicalTransportModel
             ),
             momentumTransport.time().constant(),
             momentumTransport.mesh(),
-            //***HGW IOobject::MUST_READ_IF_MODIFIED,
-            IOobject::READ_IF_PRESENT,
+            IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE
         )
     ),

@@ -74,23 +74,7 @@ FickianEddyDiffusivity
       : 0
     )
 {
-    const Foam::speciesTable& species = this->thermo().composition().species();
-    const dictionary& Ddict = this->coeffDict_.subDict("D");
-
-    forAll(species, i)
-    {
-        D_.set(i, Function1<scalar>::New(species[i], Ddict).ptr());
-    }
-
-    if (this->coeffDict_.found("DT"))
-    {
-        const dictionary& DTdict = this->coeffDict_.subDict("DT");
-
-        forAll(species, i)
-        {
-            DT_.set(i, Function1<scalar>::New( species[i], DTdict).ptr());
-        }
-    }
+    read();
 }
 
 
@@ -107,6 +91,24 @@ FickianEddyDiffusivity<TurbulenceThermophysicalTransportModel>::read()
     )
     {
         Sct_.readIfPresent(this->coeffDict());
+
+        const speciesTable& species = this->thermo().composition().species();
+        const dictionary& Ddict = this->coeffDict_.subDict("D");
+
+        forAll(species, i)
+        {
+            D_.set(i, Function1<scalar>::New(species[i], Ddict).ptr());
+        }
+
+        if (this->coeffDict_.found("DT"))
+        {
+            const dictionary& DTdict = this->coeffDict_.subDict("DT");
+
+            forAll(species, i)
+            {
+                DT_.set(i, Function1<scalar>::New(species[i], DTdict).ptr());
+            }
+        }
 
         return true;
     }
