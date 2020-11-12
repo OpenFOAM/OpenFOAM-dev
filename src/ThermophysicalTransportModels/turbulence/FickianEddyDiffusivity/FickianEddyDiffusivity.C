@@ -29,7 +29,7 @@ License
 #include "fvcSnGrad.H"
 #include "fvmSup.H"
 #include "surfaceInterpolate.H"
-#include "Function1Evaluate.H"
+#include "Function2Evaluate.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -97,7 +97,7 @@ FickianEddyDiffusivity<TurbulenceThermophysicalTransportModel>::read()
 
         forAll(species, i)
         {
-            D_.set(i, Function1<scalar>::New(species[i], Ddict).ptr());
+            D_.set(i, Function2<scalar>::New(species[i], Ddict).ptr());
         }
 
         if (this->coeffDict_.found("DT"))
@@ -106,7 +106,7 @@ FickianEddyDiffusivity<TurbulenceThermophysicalTransportModel>::read()
 
             forAll(species, i)
             {
-                DT_.set(i, Function1<scalar>::New(species[i], DTdict).ptr());
+                DT_.set(i, Function2<scalar>::New(species[i], DTdict).ptr());
             }
         }
 
@@ -133,7 +133,13 @@ FickianEddyDiffusivity<TurbulenceThermophysicalTransportModel>::DEff
     (
         "DEff",
         this->momentumTransport().rho()
-       *evaluate(D_[composition.index(Yi)], dimViscosity, this->thermo().T())
+       *evaluate
+        (
+            D_[composition.index(Yi)],
+            dimViscosity,
+            this->thermo().p(),
+            this->thermo().T()
+        )
       + (this->Prt_/Sct_)*this->alphat()
     );
 }
@@ -154,6 +160,7 @@ FickianEddyDiffusivity<TurbulenceThermophysicalTransportModel>::DEff
         this->momentumTransport().rho().boundaryField()[patchi]
        *D_[composition.index(Yi)].value
         (
+            this->thermo().p().boundaryField()[patchi],
             this->thermo().T().boundaryField()[patchi]
         )
       + this->Prt_.value()/Sct_.value()*this->alphat(patchi);
@@ -170,6 +177,7 @@ FickianEddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
     if (DT_.size())
     {
         const basicSpecieMixture& composition = this->thermo().composition();
+        const volScalarField& p = this->thermo().T();
         const volScalarField& T = this->thermo().T();
 
         return
@@ -177,7 +185,7 @@ FickianEddyDiffusivity<TurbulenceThermophysicalTransportModel>::j
             j(Yi)
           - fvc::interpolate
             (
-                evaluate(DT_[composition.index(Yi)], dimDynamicViscosity, T)
+                evaluate(DT_[composition.index(Yi)], dimDynamicViscosity, p, T)
             )
            *fvc::snGrad(T)/fvc::interpolate(T);
     }

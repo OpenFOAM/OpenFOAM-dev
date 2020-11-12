@@ -54,7 +54,7 @@ SourceFiles
 \*---------------------------------------------------------------------------*/
 
 #include "unityLewisEddyDiffusivity.H"
-#include "Function1.H"
+#include "Function2.H"
 
 #ifndef FickianEddyDiffusivity_H
 #define FickianEddyDiffusivity_H
@@ -87,11 +87,11 @@ protected:
 
             //- List of specie mass diffusion coefficient functions
             //  w.r.t the mixture [m^2/s]
-            PtrList<Function1<scalar>> D_;
+            PtrList<Function2<scalar>> D_;
 
             //- List of specie Soret thermal diffusion coefficient
             //  functions [kg/m/s]
-            PtrList<Function1<scalar>> DT_;
+            PtrList<Function2<scalar>> DT_;
 
 
 public:
