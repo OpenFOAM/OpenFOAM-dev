@@ -93,7 +93,7 @@ public:
 
     // Member Functions
 
-        //- Return constant value
+        //- Return value as a function of scalar variable
         inline virtual ${TemplateType} value(const scalar x) const
         {
 //{{{ begin code

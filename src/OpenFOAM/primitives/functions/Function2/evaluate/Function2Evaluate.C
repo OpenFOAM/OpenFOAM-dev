@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Function1Evaluate.H"
+#include "Function2Evaluate.H"
 
 // * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * * //
 
@@ -31,11 +31,12 @@ template<class Type, template<class> class PatchField, class GeoMesh>
 void Foam::evaluate
 (
     GeometricField<Type, PatchField, GeoMesh>& result,
-    const Function1<Type>& func,
-    const GeometricField<Type, PatchField, GeoMesh>& x
+    const Function2<Type>& func,
+    const GeometricField<Type, PatchField, GeoMesh>& x,
+    const GeometricField<Type, PatchField, GeoMesh>& y
 )
 {
-    result.primitiveFieldRef() = func.value(x());
+    result.primitiveFieldRef() = func.value(x(), y());
 
     typename GeometricField<Type, PatchField, GeoMesh>::Boundary& bresult =
         result.boundaryFieldRef();
@@ -43,9 +44,12 @@ void Foam::evaluate
     const typename GeometricField<Type, PatchField, GeoMesh>::Boundary& bx =
         x.boundaryField();
 
+    const typename GeometricField<Type, PatchField, GeoMesh>::Boundary& by =
+        y.boundaryField();
+
     forAll(bresult, patchi)
     {
-        bresult[patchi] = func.value(bx[patchi]);
+        bresult[patchi] = func.value(bx[patchi], by[patchi]);
     }
 }
 
@@ -53,22 +57,23 @@ void Foam::evaluate
 template<class Type, template<class> class PatchField, class GeoMesh>
 Foam::tmp<Foam::GeometricField<Type, PatchField, GeoMesh>> Foam::evaluate
 (
-    const Function1<Type>& func,
+    const Function2<Type>& func,
     const dimensionSet& dims,
-    const GeometricField<Type, PatchField, GeoMesh>& x
+    const GeometricField<Type, PatchField, GeoMesh>& x,
+    const GeometricField<Type, PatchField, GeoMesh>& y
 )
 {
     tmp<GeometricField<Type, PatchField, GeoMesh>> tresult
     (
         GeometricField<Type, PatchField, GeoMesh>::New
         (
-            func.name() + "(" + x.name() + ')',
+            func.name() + '(' + x.name() + ',' + y.name() + ')',
             x.mesh(),
             dims
         )
     );
 
-    evaluate(tresult.ref(), func, x);
+    evaluate(tresult.ref(), func, x, y);
 
     return tresult;
 }

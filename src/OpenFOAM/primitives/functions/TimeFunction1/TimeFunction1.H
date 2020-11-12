@@ -111,10 +111,10 @@ public:
 
         // Evaluation
 
-            //- Return value as a function of (scalar) independent variable
+            //- Return value as a function of scalar x
             virtual Type value(const scalar x) const;
 
-            //- Integrate between two (scalar) values
+            //- Integrate between two scalars
             virtual Type integrate(const scalar x1, const scalar x2) const;
 
 

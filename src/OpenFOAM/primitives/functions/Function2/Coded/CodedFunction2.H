@@ -22,59 +22,32 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1s::Coded
+    Foam::Function2s::Coded
 
 Description
-    Constructs a dynamically compiled Function1.
-
-Usage
-    Example of a cosine bell shaped pulse inlet:
-    \verbatim
-    inlet
-    {
-        type            uniformFixedValue;
-        uniformValue    coded;
-
-        name            pulse;
-
-        codeInclude
-        #{
-            #include "mathematicalConstants.H"
-        #};
-
-        code
-        #{
-            return vector
-            (
-                0.5*(1 - cos(constant::mathematical::twoPi*min(x/0.3, 1))),
-                0,
-                0
-            );
-        #};
-    }
-    \endverbatim
+    Constructs a dynamically compiled function of two variables.
 
 See also
     Foam::dynamicCode
     Foam::functionEntries::codeStream
 
 SourceFiles
-    CodedFunction1I.H
-    CodedFunction1.C
+    CodedFunction2I.H
+    CodedFunction2.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef CodedFunction1_H
-#define CodedFunction1_H
+#ifndef CodedFunction2_H
+#define CodedFunction2_H
 
-#include "Function1.H"
+#include "Function2.H"
 #include "CodedBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace Function1s
+namespace Function2s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -85,7 +58,7 @@ class coded
 {
 public:
 
-    ClassNameNoDebug("Function1");
+    ClassNameNoDebug("Function2");
 };
 
 
@@ -96,13 +69,13 @@ public:
 template<class Type>
 class Coded
 :
-    public Function1<Type>,
+    public Function2<Type>,
     public CodedBase<coded>
 {
     // Private Data
 
-        //- The dynamically generated Function1 pointer
-        mutable autoPtr<Function1<Type>> redirectFunction1Ptr_;
+        //- The dynamically generated Function2 pointer
+        mutable autoPtr<Function2<Type>> redirectFunction2Ptr_;
 
 
     // Private Member Functions
@@ -113,8 +86,8 @@ class Coded
         //- Clear the ptr to the redirected object
         virtual void clearRedirect() const;
 
-        //- Compile, link and return the now coded Function1
-        autoPtr<Function1<Type>> compileNew();
+        //- Compile, link and return the now coded Function2
+        autoPtr<Function2<Type>> compileNew();
 
 
 public:
@@ -136,7 +109,7 @@ public:
         Coded(const Coded<Type>& cf1);
 
         //- Construct and return a clone
-        virtual tmp<Function1<Type>> clone() const;
+        virtual tmp<Function2<Type>> clone() const;
 
 
     //- Destructor
@@ -145,20 +118,14 @@ public:
 
     // Member Functions
 
-        //- Return value as a function of a scalar
-        virtual inline Type value(const scalar x) const;
+        //- Return value as a function of two scalars
+        virtual inline Type value(const scalar x, const scalar y) const;
 
-        //- Return value as a function of a scalar field
-        virtual tmp<Field<Type>> value(const scalarField& x) const;
-
-        //- Integrate between two scalars
-        virtual Type integrate(const scalar x1, const scalar x2) const;
-
-        //- Integrate between two scalar fields
-        virtual tmp<Field<Type>> integrate
+        //- Return value as a function of two scalar fields
+        virtual tmp<Field<Type>> value
         (
-            const scalarField& x1,
-            const scalarField& x2
+            const scalarField& x,
+            const scalarField& y
         ) const;
 
         //- Write in dictionary format
@@ -174,15 +141,15 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1s
+} // End namespace Function2s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "CodedFunction1I.H"
+#include "CodedFunction2I.H"
 
 #ifdef NoRepository
-    #include "CodedFunction1.C"
+    #include "CodedFunction2.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

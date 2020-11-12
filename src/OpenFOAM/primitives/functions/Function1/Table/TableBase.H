@@ -128,10 +128,10 @@ public:
 
     // Member Functions
 
-        //- Return Table value
+        //- Return Table value as a function of scalar x
         virtual Type value(const scalar x) const;
 
-        //- Integrate between two (scalar) values
+        //- Integrate between two scalars
         virtual Type integrate(const scalar x1, const scalar x2) const;
 
         //- Return the reference values

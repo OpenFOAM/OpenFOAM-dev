@@ -49,7 +49,7 @@ void evaluate
 (
     GeometricField<Type, PatchField, GeoMesh>& result,
     const Function1<Type>& func,
-    const GeometricField<Type, PatchField, GeoMesh>& f
+    const GeometricField<Type, PatchField, GeoMesh>& x
 );
 
 template<class Type, template<class> class PatchField, class GeoMesh>
@@ -57,7 +57,7 @@ tmp<GeometricField<Type, PatchField, GeoMesh>> evaluate
 (
     const Function1<Type>& func,
     const dimensionSet& dims,
-    const GeometricField<Type, PatchField, GeoMesh>& f
+    const GeometricField<Type, PatchField, GeoMesh>& x
 );
 
 

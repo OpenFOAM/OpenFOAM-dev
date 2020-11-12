@@ -23,54 +23,21 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Function1Evaluate.H"
+#include "CodedFunction2.H"
 
-// * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-void Foam::evaluate
+template<class Type>
+inline Type Foam::Function2s::Coded<Type>::value
 (
-    GeometricField<Type, PatchField, GeoMesh>& result,
-    const Function1<Type>& func,
-    const GeometricField<Type, PatchField, GeoMesh>& x
-)
+    const scalar x,
+    const scalar y
+) const
 {
-    result.primitiveFieldRef() = func.value(x());
+    // Make sure library containing user-defined Function2 is up-to-date
+    this->updateLibrary();
 
-    typename GeometricField<Type, PatchField, GeoMesh>::Boundary& bresult =
-        result.boundaryFieldRef();
-
-    const typename GeometricField<Type, PatchField, GeoMesh>::Boundary& bx =
-        x.boundaryField();
-
-    forAll(bresult, patchi)
-    {
-        bresult[patchi] = func.value(bx[patchi]);
-    }
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-Foam::tmp<Foam::GeometricField<Type, PatchField, GeoMesh>> Foam::evaluate
-(
-    const Function1<Type>& func,
-    const dimensionSet& dims,
-    const GeometricField<Type, PatchField, GeoMesh>& x
-)
-{
-    tmp<GeometricField<Type, PatchField, GeoMesh>> tresult
-    (
-        GeometricField<Type, PatchField, GeoMesh>::New
-        (
-            func.name() + "(" + x.name() + ')',
-            x.mesh(),
-            dims
-        )
-    );
-
-    evaluate(tresult.ref(), func, x);
-
-    return tresult;
+    return redirectFunction2Ptr_->value(x, y);
 }
 
 

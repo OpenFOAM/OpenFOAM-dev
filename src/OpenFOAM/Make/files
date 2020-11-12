@@ -99,6 +99,8 @@ primitives/functions/Function1/halfCosineRamp/halfCosineRamp.C
 primitives/functions/Function1/Table/tableBase.C
 primitives/functions/Function1/TableFile/TableReader/makeTableReaders.C
 
+primitives/functions/Function2/makeFunction2s.C
+
 primitives/subModelBase/subModelBase.C
 
 strings = primitives/strings

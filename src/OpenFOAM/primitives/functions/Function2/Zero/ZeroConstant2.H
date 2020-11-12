@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,93 +22,70 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1s::Polynomial
+    Foam::Function2s::ZeroConstant
 
 Description
-    PolynomialEntry container data entry for scalars. Items are stored in a
-    list of Tuple2's. Data is input in the form,
-    e.g. for an entry \<entryName\> that describes y = x^2 + 2x^3
+    Templated function of two variables that returns the corresponding 0 (zero).
 
+    Usage:
     \verbatim
-        <entryName>  polynomial
-        (
-            (1    2)
-            (2    3)
-        );
+        <entryName> zero;
     \endverbatim
 
 SourceFiles
-    PolynomialEntry.C
+    ZeroConstant.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef PolynomialEntry_H
-#define PolynomialEntry_H
+#ifndef ZeroConstant2_H
+#define ZeroConstant2_H
 
-#include "Function1.H"
-#include "Tuple2.H"
-#include "Function1Fwd.H"
+#include "Function2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace Function1s
+namespace Function2s
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class Polynomial Declaration
+                        Class ZeroConstant Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class Polynomial
+class ZeroConstant
 :
-    public FieldFunction1<Type, Polynomial<Type>>
+    public FieldFunction2<Type, ZeroConstant<Type>>
 {
-    // Private Data
-
-        //- Polynomial coefficients - list of prefactor, exponent
-        List<Tuple2<Type, Type>> coeffs_;
-
-        //- Flag to indicate whether poly can be integrated
-        bool canIntegrate_;
-
 
 public:
 
-    //- Runtime type information
-    TypeName("polynomial");
+    // Runtime type information
+    TypeName("zero");
 
 
     // Constructors
 
-        Polynomial(const word& entryName, const dictionary& dict);
-
-        //- Construct from components
-        Polynomial
-        (
-            const word& entryName,
-            const List<Tuple2<Type, Type>>&
-        );
-
-        //- Copy constructor
-        Polynomial(const Polynomial& poly);
+        //- Construct from entry name and dictionary
+        ZeroConstant(const word& entryName, const dictionary& dict);
 
 
     //- Destructor
-    virtual ~Polynomial();
+    virtual ~ZeroConstant();
 
 
     // Member Functions
 
-        // Evaluation
+        //- Return Zero
+        virtual inline Type value(const scalar x, const scalar y) const;
 
-            //- Return Polynomial value as a function of scalar x
-            virtual Type value(const scalar x) const;
-
-            //- Integrate between two scalar fields
-            virtual Type integrate(const scalar x1, const scalar x2) const;
-
+        //- Return Zero field
+        virtual inline tmp<Field<Type>> value
+        (
+            const scalarField& x,
+            const scalarField& y
+        ) const;
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
@@ -117,19 +94,21 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const Polynomial<Type>&) = delete;
+        void operator=(const ZeroConstant<Type>&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1s
+} // End namespace Function2s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#include "ZeroConstant2I.H"
+
 #ifdef NoRepository
-    #include "PolynomialEntry.C"
+    #include "ZeroConstant2.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

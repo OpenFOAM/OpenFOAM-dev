@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,114 +22,115 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1s::Polynomial
+    Foam::Function2s::Scale
 
 Description
-    PolynomialEntry container data entry for scalars. Items are stored in a
-    list of Tuple2's. Data is input in the form,
-    e.g. for an entry \<entryName\> that describes y = x^2 + 2x^3
+    Function2 which scales a given 'value' function by a 'scale' scalar function
+    and scales the 'x' and 'y' arguments of the 'value' and 'scale' functions
+    by the optional 'xScale' and 'yScale' scalar functions.
 
-    \verbatim
-        <entryName>  polynomial
-        (
-            (1    2)
-            (2    3)
-        );
-    \endverbatim
+See also
+    Foam::Function2s::ramp
+    Foam::Function2s::reverseRamp
 
 SourceFiles
-    PolynomialEntry.C
+    Scale.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef PolynomialEntry_H
-#define PolynomialEntry_H
+#ifndef Scale2_H
+#define Scale2_H
 
+#include "Function2.H"
 #include "Function1.H"
-#include "Tuple2.H"
-#include "Function1Fwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace Function1s
+namespace Function2s
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class Polynomial Declaration
+                            Class Scale Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class Polynomial
+class Scale
 :
-    public FieldFunction1<Type, Polynomial<Type>>
+    public FieldFunction2<Type, Scale<Type>>
 {
     // Private Data
 
-        //- Polynomial coefficients - list of prefactor, exponent
-        List<Tuple2<Type, Type>> coeffs_;
+        //- Scalar scaling function
+        autoPtr<Function2<scalar>> scale_;
 
-        //- Flag to indicate whether poly can be integrated
-        bool canIntegrate_;
+        //- Argument scaling function
+        autoPtr<Function1<scalar>> xScale_;
+
+        //- Argument scaling function
+        autoPtr<Function1<scalar>> yScale_;
+
+        //- Value function
+        autoPtr<Function2<Type>> value_;
+
+
+    // Private Member Functions
+
+        //- Read the coefficients from the given dictionary
+        void read(const dictionary& coeffs);
 
 
 public:
 
-    //- Runtime type information
-    TypeName("polynomial");
+    // Runtime type information
+    TypeName("scale");
 
 
     // Constructors
 
-        Polynomial(const word& entryName, const dictionary& dict);
-
-        //- Construct from components
-        Polynomial
+        //- Construct from entry name and dictionary
+        Scale
         (
             const word& entryName,
-            const List<Tuple2<Type, Type>>&
+            const dictionary& dict
         );
 
         //- Copy constructor
-        Polynomial(const Polynomial& poly);
+        Scale(const Scale<Type>& se);
 
 
     //- Destructor
-    virtual ~Polynomial();
+    virtual ~Scale();
 
 
     // Member Functions
 
-        // Evaluation
-
-            //- Return Polynomial value as a function of scalar x
-            virtual Type value(const scalar x) const;
-
-            //- Integrate between two scalar fields
-            virtual Type integrate(const scalar x1, const scalar x2) const;
-
-
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
+
+        //- Return value
+        virtual inline Type value(const scalar x, const scalar y) const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const Polynomial<Type>&) = delete;
+        void operator=(const Scale<Type>&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1s
+} // End namespace Function2s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#include "Scale2I.H"
+
 #ifdef NoRepository
-    #include "PolynomialEntry.C"
+    #include "Scale2.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

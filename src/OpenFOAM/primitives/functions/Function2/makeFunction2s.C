@@ -23,54 +23,46 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Function1Evaluate.H"
+#include "Constant2.H"
+#include "ZeroConstant2.H"
+#include "OneConstant2.H"
+#include "Scale2.H"
+#include "CodedFunction2.H"
 
-// * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * * //
+#include "fieldTypes.H"
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-void Foam::evaluate
-(
-    GeometricField<Type, PatchField, GeoMesh>& result,
-    const Function1<Type>& func,
-    const GeometricField<Type, PatchField, GeoMesh>& x
-)
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+defineTypeName(Foam::Function2s::coded);
+
+template<>
+const Foam::wordList Foam::CodedBase<Foam::Function2s::coded>::codeKeys_ =
 {
-    result.primitiveFieldRef() = func.value(x());
-
-    typename GeometricField<Type, PatchField, GeoMesh>::Boundary& bresult =
-        result.boundaryFieldRef();
-
-    const typename GeometricField<Type, PatchField, GeoMesh>::Boundary& bx =
-        x.boundaryField();
-
-    forAll(bresult, patchi)
-    {
-        bresult[patchi] = func.value(bx[patchi]);
-    }
-}
+    "code",
+    "codeInclude"
+};
 
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-Foam::tmp<Foam::GeometricField<Type, PatchField, GeoMesh>> Foam::evaluate
-(
-    const Function1<Type>& func,
-    const dimensionSet& dims,
-    const GeometricField<Type, PatchField, GeoMesh>& x
-)
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define makeFunction2s(Type)                                                   \
+    makeFunction2(Type);                                                       \
+    makeFunction2Type(Constant, Type);                                         \
+    makeFunction2Type(ZeroConstant, Type);                                     \
+    makeFunction2Type(OneConstant, Type);                                      \
+    makeFunction2Type(Scale, Type);                                            \
+    makeFunction2Type(Coded, Type);
+
+namespace Foam
 {
-    tmp<GeometricField<Type, PatchField, GeoMesh>> tresult
-    (
-        GeometricField<Type, PatchField, GeoMesh>::New
-        (
-            func.name() + "(" + x.name() + ')',
-            x.mesh(),
-            dims
-        )
-    );
+    makeFunction2(label);
+    makeFunction2Type(Constant, label);
 
-    evaluate(tresult.ref(), func, x);
-
-    return tresult;
+    makeFunction2s(scalar);
+    makeFunction2s(vector);
+    makeFunction2s(sphericalTensor);
+    makeFunction2s(symmTensor);
+    makeFunction2s(tensor);
 }
 
 

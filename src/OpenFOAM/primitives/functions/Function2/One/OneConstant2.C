@@ -23,54 +23,43 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Function1Evaluate.H"
+#include "OneConstant2.H"
 
-// * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-void Foam::evaluate
+template<class Type>
+Foam::Function2s::OneConstant<Type>::OneConstant(const word& entryName)
+:
+    FieldFunction2<Type, OneConstant<Type>>(entryName)
+{}
+
+
+template<class Type>
+Foam::Function2s::OneConstant<Type>::OneConstant
 (
-    GeometricField<Type, PatchField, GeoMesh>& result,
-    const Function1<Type>& func,
-    const GeometricField<Type, PatchField, GeoMesh>& x
+    const word& entryName,
+    const dictionary& dict
 )
+:
+    FieldFunction2<Type, OneConstant<Type>>(entryName)
+{}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::Function2s::OneConstant<Type>::~OneConstant()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::Function2s::OneConstant<Type>::writeData(Ostream& os) const
 {
-    result.primitiveFieldRef() = func.value(x());
+    Function2<Type>::writeData(os);
 
-    typename GeometricField<Type, PatchField, GeoMesh>::Boundary& bresult =
-        result.boundaryFieldRef();
-
-    const typename GeometricField<Type, PatchField, GeoMesh>::Boundary& bx =
-        x.boundaryField();
-
-    forAll(bresult, patchi)
-    {
-        bresult[patchi] = func.value(bx[patchi]);
-    }
-}
-
-
-template<class Type, template<class> class PatchField, class GeoMesh>
-Foam::tmp<Foam::GeometricField<Type, PatchField, GeoMesh>> Foam::evaluate
-(
-    const Function1<Type>& func,
-    const dimensionSet& dims,
-    const GeometricField<Type, PatchField, GeoMesh>& x
-)
-{
-    tmp<GeometricField<Type, PatchField, GeoMesh>> tresult
-    (
-        GeometricField<Type, PatchField, GeoMesh>::New
-        (
-            func.name() + "(" + x.name() + ')',
-            x.mesh(),
-            dims
-        )
-    );
-
-    evaluate(tresult.ref(), func, x);
-
-    return tresult;
+    os  << token::END_STATEMENT << nl;
 }
 
 

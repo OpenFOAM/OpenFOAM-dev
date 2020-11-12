@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) YEAR OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -21,94 +21,89 @@ License
     You should have received a copy of the GNU General Public License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
-Class
-    Foam::Function1s::Polynomial
-
 Description
-    PolynomialEntry container data entry for scalars. Items are stored in a
-    list of Tuple2's. Data is input in the form,
-    e.g. for an entry \<entryName\> that describes y = x^2 + 2x^3
+    Template for use with dynamic code generation of a Function2.
 
-    \verbatim
-        <entryName>  polynomial
-        (
-            (1    2)
-            (2    3)
-        );
-    \endverbatim
+    - without state
 
 SourceFiles
-    PolynomialEntry.C
+    Function2Template.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef PolynomialEntry_H
-#define PolynomialEntry_H
+#ifndef Function2Template_H
+#define Function2Template_H
 
-#include "Function1.H"
-#include "Tuple2.H"
-#include "Function1Fwd.H"
+#include "Function2.H"
+
+//{{{ begin codeInclude
+${codeInclude}
+//}}} end codeInclude
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace Function1s
+namespace Function2s
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class Polynomial Declaration
+                           A templated Function2
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class Polynomial
+class ${typeName}Function2${TemplateType}
 :
-    public FieldFunction1<Type, Polynomial<Type>>
+    public FieldFunction2<${TemplateType}, ${typeName}Function2${TemplateType}>
 {
-    // Private Data
-
-        //- Polynomial coefficients - list of prefactor, exponent
-        List<Tuple2<Type, Type>> coeffs_;
-
-        //- Flag to indicate whether poly can be integrated
-        bool canIntegrate_;
-
 
 public:
 
-    //- Runtime type information
-    TypeName("polynomial");
+    // Runtime type information
+    TypeName("${typeName}");
 
 
     // Constructors
 
-        Polynomial(const word& entryName, const dictionary& dict);
-
-        //- Construct from components
-        Polynomial
+        //- Construct from entry name and dictionary
+        ${typeName}Function2${TemplateType}
         (
             const word& entryName,
-            const List<Tuple2<Type, Type>>&
+            const dictionary& dict
         );
 
         //- Copy constructor
-        Polynomial(const Polynomial& poly);
+        ${typeName}Function2${TemplateType}
+        (
+            const ${typeName}Function2${TemplateType}& f1
+        );
+
+        //- Construct and return a clone
+        virtual tmp<Function2<${TemplateType}>> clone() const
+        {
+            return tmp<Function2<${TemplateType}>>
+            (
+                new ${typeName}Function2${TemplateType}(*this)
+            );
+        }
 
 
     //- Destructor
-    virtual ~Polynomial();
+    virtual ~${typeName}Function2${TemplateType}();
 
 
     // Member Functions
 
-        // Evaluation
-
-            //- Return Polynomial value as a function of scalar x
-            virtual Type value(const scalar x) const;
-
-            //- Integrate between two scalar fields
-            virtual Type integrate(const scalar x1, const scalar x2) const;
-
+        //- Return value as a function of two scalars
+        inline virtual ${TemplateType} value
+        (
+            const scalar x,
+            const scalar y
+        ) const
+        {
+//{{{ begin code
+    ${code}
+//}}} end code
+        }
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
@@ -117,20 +112,14 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const Polynomial<Type>&) = delete;
+        void operator=(const ${typeName}Function2${TemplateType}&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1s
+} // End namespace Function2s
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "PolynomialEntry.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

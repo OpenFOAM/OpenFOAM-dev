@@ -23,54 +23,29 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Function1Evaluate.H"
+#include "Constant2.H"
 
-// * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-void Foam::evaluate
+template<class Type>
+inline Type Foam::Function2s::Constant<Type>::value
 (
-    GeometricField<Type, PatchField, GeoMesh>& result,
-    const Function1<Type>& func,
-    const GeometricField<Type, PatchField, GeoMesh>& x
-)
+    const scalar x,
+    const scalar y
+) const
 {
-    result.primitiveFieldRef() = func.value(x());
-
-    typename GeometricField<Type, PatchField, GeoMesh>::Boundary& bresult =
-        result.boundaryFieldRef();
-
-    const typename GeometricField<Type, PatchField, GeoMesh>::Boundary& bx =
-        x.boundaryField();
-
-    forAll(bresult, patchi)
-    {
-        bresult[patchi] = func.value(bx[patchi]);
-    }
+    return value_;
 }
 
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-Foam::tmp<Foam::GeometricField<Type, PatchField, GeoMesh>> Foam::evaluate
+template<class Type>
+inline Foam::tmp<Foam::Field<Type>> Foam::Function2s::Constant<Type>::value
 (
-    const Function1<Type>& func,
-    const dimensionSet& dims,
-    const GeometricField<Type, PatchField, GeoMesh>& x
-)
+    const scalarField& x,
+    const scalarField& y
+) const
 {
-    tmp<GeometricField<Type, PatchField, GeoMesh>> tresult
-    (
-        GeometricField<Type, PatchField, GeoMesh>::New
-        (
-            func.name() + "(" + x.name() + ')',
-            x.mesh(),
-            dims
-        )
-    );
-
-    evaluate(tresult.ref(), func, x);
-
-    return tresult;
+    return tmp<Field<Type>>(new Field<Type>(x.size(), value_));
 }
 
 

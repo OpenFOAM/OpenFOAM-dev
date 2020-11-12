@@ -23,55 +23,30 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Function1Evaluate.H"
+#ifndef Function2Fwd_H
+#define Function2Fwd_H
 
-// * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * * //
+#include "Function2.H"
+#include "vector.H"
+#include "symmTensor.H"
+#include "sphericalTensor.H"
+#include "tensor.H"
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-void Foam::evaluate
-(
-    GeometricField<Type, PatchField, GeoMesh>& result,
-    const Function1<Type>& func,
-    const GeometricField<Type, PatchField, GeoMesh>& x
-)
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
 {
-    result.primitiveFieldRef() = func.value(x());
-
-    typename GeometricField<Type, PatchField, GeoMesh>::Boundary& bresult =
-        result.boundaryFieldRef();
-
-    const typename GeometricField<Type, PatchField, GeoMesh>::Boundary& bx =
-        x.boundaryField();
-
-    forAll(bresult, patchi)
-    {
-        bresult[patchi] = func.value(bx[patchi]);
-    }
+    typedef Function2<label> labelFunction2;
+    typedef Function2<scalar> scalarFunction2;
+    typedef Function2<vector> vectorFunction2;
+    typedef Function2<symmTensor> symmTensorFunction2;
+    typedef Function2<sphericalTensor> sphericalTensorFunction2;
+    typedef Function2<tensor> tensorFunction2;
 }
 
 
-template<class Type, template<class> class PatchField, class GeoMesh>
-Foam::tmp<Foam::GeometricField<Type, PatchField, GeoMesh>> Foam::evaluate
-(
-    const Function1<Type>& func,
-    const dimensionSet& dims,
-    const GeometricField<Type, PatchField, GeoMesh>& x
-)
-{
-    tmp<GeometricField<Type, PatchField, GeoMesh>> tresult
-    (
-        GeometricField<Type, PatchField, GeoMesh>::New
-        (
-            func.name() + "(" + x.name() + ')',
-            x.mesh(),
-            dims
-        )
-    );
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    evaluate(tresult.ref(), func, x);
-
-    return tresult;
-}
-
+#endif
 
 // ************************************************************************* //

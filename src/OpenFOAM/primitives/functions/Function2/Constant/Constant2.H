@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,93 +22,98 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1s::Polynomial
+    Foam::Function2s::Constant
 
 Description
-    PolynomialEntry container data entry for scalars. Items are stored in a
-    list of Tuple2's. Data is input in the form,
-    e.g. for an entry \<entryName\> that describes y = x^2 + 2x^3
+    Templated function of two variables that returns a constant value.
+
+    Usage - for entry \<entryName\> returning the value <value>:
+    \verbatim
+        <entryName>     constant <value>;
+    \endverbatim
+
+    or simply
 
     \verbatim
-        <entryName>  polynomial
-        (
-            (1    2)
-            (2    3)
-        );
+        <entryName>     <value>;
     \endverbatim
 
 SourceFiles
-    PolynomialEntry.C
+    Constant.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef PolynomialEntry_H
-#define PolynomialEntry_H
+#ifndef Constant2_H
+#define Constant2_H
 
-#include "Function1.H"
-#include "Tuple2.H"
-#include "Function1Fwd.H"
+#include "Function2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace Function1s
+namespace Function2s
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class Polynomial Declaration
+                          Class Constant Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class Polynomial
+class Constant
 :
-    public FieldFunction1<Type, Polynomial<Type>>
+    public FieldFunction2<Type, Constant<Type>>
 {
     // Private Data
 
-        //- Polynomial coefficients - list of prefactor, exponent
-        List<Tuple2<Type, Type>> coeffs_;
-
-        //- Flag to indicate whether poly can be integrated
-        bool canIntegrate_;
+        //- Constant value
+        Type value_;
 
 
 public:
 
-    //- Runtime type information
-    TypeName("polynomial");
+    // Runtime type information
+    TypeName("constant");
 
 
     // Constructors
 
-        Polynomial(const word& entryName, const dictionary& dict);
+        //- Construct from entry name and value
+        Constant(const word& entryName, const Type& val);
 
-        //- Construct from components
-        Polynomial
-        (
-            const word& entryName,
-            const List<Tuple2<Type, Type>>&
-        );
+        //- Construct from entry name and dictionary
+        Constant(const word& entryName, const dictionary& dict);
+
+        //- Construct from entry name and Istream
+        //  Reads the constant value without the Function2 type
+        //  for backward compatibility
+        Constant(const word& entryName, Istream& is);
 
         //- Copy constructor
-        Polynomial(const Polynomial& poly);
+        Constant(const Constant<Type>& cnst);
+
+        //- Construct and return a clone
+        virtual tmp<Function2<Type>> clone() const
+        {
+            return tmp<Function2<Type>>(new Constant<Type>(*this));
+        }
 
 
     //- Destructor
-    virtual ~Polynomial();
+    virtual ~Constant();
 
 
     // Member Functions
 
-        // Evaluation
+        //- Return constant
+        virtual inline Type value(const scalar x, const scalar y) const;
 
-            //- Return Polynomial value as a function of scalar x
-            virtual Type value(const scalar x) const;
-
-            //- Integrate between two scalar fields
-            virtual Type integrate(const scalar x1, const scalar x2) const;
-
+        //- Return constant field
+        virtual inline tmp<Field<Type>> value
+        (
+            const scalarField& x,
+            const scalarField& y
+        ) const;
 
         //- Write in dictionary format
         virtual void writeData(Ostream& os) const;
@@ -117,19 +122,22 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const Polynomial<Type>&) = delete;
+        void operator=(const Constant<Type>&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1s
+} // End namespace Function2s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#include "Constant2I.H"
+
 #ifdef NoRepository
-    #include "PolynomialEntry.C"
+    #include "Constant2.C"
+    #include "Function2New.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

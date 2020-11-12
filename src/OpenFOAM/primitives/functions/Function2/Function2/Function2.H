@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1
+    Foam::Function2
 
 Description
-    Run-time selectable general function of one variable
+    Run-time selectable function of two variables
 
     with many options provided from simple constant values to complex
     functions, interpolated tabulated data etc. etc.
 
 SourceFiles
-    Function1.C
-    Function1New.C
+    Function2.C
+    Function2New.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Function1_H
-#define Function1_H
+#ifndef Function2_H
+#define Function2_H
 
 #include "dictionary.H"
 #include "tmp.H"
@@ -50,17 +50,17 @@ namespace Foam
 {
 
 // Forward declaration of friend functions and operators
-template<class Type> class Function1;
-template<class Type> Ostream& operator<<(Ostream&, const Function1<Type>&);
+template<class Type> class Function2;
+template<class Type> Ostream& operator<<(Ostream&, const Function2<Type>&);
 
 /*---------------------------------------------------------------------------*\
-                          Class Function1 Declaration
+                          Class Function2 Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class Function1
+class Function2
 :
-    public tmp<Function1<Type>>::refCount
+    public tmp<Function2<Type>>::refCount
 {
 
 protected:
@@ -76,13 +76,13 @@ public:
     typedef Type returnType;
 
     //- Runtime type information
-    TypeName("Function1")
+    TypeName("Function2")
 
     //- Declare runtime constructor selection table
     declareRunTimeSelectionTable
     (
         autoPtr,
-        Function1,
+        Function2,
         dictionary,
         (
             const word& entryName,
@@ -95,17 +95,17 @@ public:
     // Constructors
 
         //- Construct from entry name
-        Function1(const word& entryName);
+        Function2(const word& entryName);
 
         //- Copy constructor
-        Function1(const Function1<Type>& f1);
+        Function2(const Function2<Type>& f1);
 
         //- Construct and return a clone
-        virtual tmp<Function1<Type>> clone() const = 0;
+        virtual tmp<Function2<Type>> clone() const = 0;
 
 
     //- Selector
-    static autoPtr<Function1<Type>> New
+    static autoPtr<Function2<Type>> New
     (
         const word& entryName,
         const dictionary& dict
@@ -113,7 +113,7 @@ public:
 
 
     //- Destructor
-    virtual ~Function1();
+    virtual ~Function2();
 
 
     // Member Functions
@@ -121,20 +121,14 @@ public:
         //- Return the name of the entry
         const word& name() const;
 
-        //- Return value as a function of scalar x
-        virtual Type value(const scalar x) const = 0;
+        //- Return value as a function of two scalars
+        virtual Type value(const scalar x, const scalar y) const = 0;
 
-        //- Return value as a function of a scalar field x
-        virtual tmp<Field<Type>> value(const scalarField& x) const = 0;
-
-        //- Integrate between two scalars
-        virtual Type integrate(const scalar x1, const scalar x2) const = 0;
-
-        //- Integrate between two scalar fields
-        virtual tmp<Field<Type>> integrate
+        //- Return value as a function of two scalar fields
+        virtual tmp<Field<Type>> value
         (
-            const scalarField& x1,
-            const scalarField& x2
+            const scalarField& x,
+            const scalarField& y
         ) const = 0;
 
         //- Write in dictionary format
@@ -144,32 +138,32 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const Function1<Type>&) = delete;
+        void operator=(const Function2<Type>&) = delete;
 
 
     // IOstream Operators
 
-            //- Ostream Operator
-            friend Ostream& operator<< <Type>
-            (
-                Ostream& os,
-                const Function1<Type>& func
-            );
+        //- Ostream Operator
+        friend Ostream& operator<< <Type>
+        (
+            Ostream& os,
+            const Function2<Type>& func
+        );
 };
 
 
 template<class Type>
-void writeEntry(Ostream& os, const Function1<Type>& f1);
+void writeEntry(Ostream& os, const Function2<Type>& f1);
 
 
 /*---------------------------------------------------------------------------*\
-                       Class FieldFunction1 Declaration
+                       Class FieldFunction2 Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type, class Function1Type>
-class FieldFunction1
+template<class Type, class Function2Type>
+class FieldFunction2
 :
-    public Function1<Type>
+    public Function2<Type>
 {
 
 public:
@@ -177,35 +171,29 @@ public:
     // Constructors
 
         //- Construct from entry name
-        FieldFunction1(const word& entryName);
+        FieldFunction2(const word& entryName);
 
         //- Copy constructor
-        FieldFunction1(const FieldFunction1<Type, Function1Type>& ff1);
+        FieldFunction2(const FieldFunction2<Type, Function2Type>& ff1);
 
         //- Construct and return a clone
-        virtual tmp<Function1<Type>> clone() const;
+        virtual tmp<Function2<Type>> clone() const;
 
 
     //- Destructor
-    virtual ~FieldFunction1();
+    virtual ~FieldFunction2();
 
 
     // Member Functions
 
-        //- Return value as a function of one scalars
-        virtual Type value(const scalar x) const = 0;
+        //- Return value as a function of two scalars
+        virtual Type value(const scalar x, const scalar y) const = 0;
 
-        //- Return value as a function of one scalar field
-        virtual tmp<Field<Type>> value(const scalarField& x) const;
-
-        //- Integrate between two scalar values
-        virtual Type integrate(const scalar x1, const scalar x2) const = 0;
-
-        //- Integrate between two scalar fields
-        virtual tmp<Field<Type>> integrate
+        //- Return value as a function of two scalar fields
+        virtual tmp<Field<Type>> value
         (
-            const scalarField& x1,
-            const scalarField& x2
+            const scalarField& x,
+            const scalarField& y
         ) const;
 };
 
@@ -216,34 +204,34 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define makeFunction1(Type)                                                    \
+#define makeFunction2(Type)                                                    \
                                                                                \
-    defineNamedTemplateTypeNameAndDebug(Function1<Type>, 0);                   \
+    defineNamedTemplateTypeNameAndDebug(Function2<Type>, 0);                   \
                                                                                \
-    defineTemplateRunTimeSelectionTable(Function1<Type>, dictionary);
+    defineTemplateRunTimeSelectionTable(Function2<Type>, dictionary);
 
 
-#define makeFunction1Type(SS, Type)                                            \
+#define makeFunction2Type(SS, Type)                                            \
                                                                                \
-    defineNamedTemplateTypeNameAndDebug(Function1s::SS<Type>, 0);              \
+    defineNamedTemplateTypeNameAndDebug(Function2s::SS<Type>, 0);              \
                                                                                \
-    Function1<Type>::adddictionaryConstructorToTable<Function1s::SS<Type>>     \
-        addFunction1##SS##Type##ConstructorToTable_;
+    Function2<Type>::adddictionaryConstructorToTable<Function2s::SS<Type>>     \
+        addFunction2##SS##Type##ConstructorToTable_;
 
 
-#define makeScalarFunction1(SS)                                                \
+#define makeScalarFunction2(SS)                                                \
                                                                                \
     defineTypeNameAndDebug(SS, 0);                                             \
                                                                                \
-    Function1<scalar>::adddictionaryConstructorToTable<SS>                     \
-        addFunction1##SS##ConstructorToTable_;
+    Function2<scalar>::adddictionaryConstructorToTable<SS>                     \
+        addFunction2##SS##ConstructorToTable_;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "Function1.C"
-    #include "Constant.H"
+    #include "Function2.C"
+    #include "Constant2.H"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
