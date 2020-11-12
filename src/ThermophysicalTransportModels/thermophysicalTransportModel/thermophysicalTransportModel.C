@@ -51,13 +51,18 @@ Foam::thermophysicalTransportModel::thermophysicalTransportModel
             ),
             momentumTransport.time().constant(),
             momentumTransport.mesh(),
-            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::READ_IF_PRESENT,
             IOobject::NO_WRITE
         )
     ),
 
     momentumTransportModel_(momentumTransport)
-{}
+{
+    // Add run-time re-reading of thermophysicalTransport dictionary
+    // after construction to avoid problems if the dictionary is not present
+    readOpt() = IOobject::MUST_READ_IF_MODIFIED;
+    addWatch();
+}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
