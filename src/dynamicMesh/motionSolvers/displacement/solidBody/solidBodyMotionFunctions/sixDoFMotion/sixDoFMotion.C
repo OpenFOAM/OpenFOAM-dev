@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,12 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "tabulated6DoFMotion.H"
-#include "addToRunTimeSelectionTable.H"
-#include "Tuple2.H"
-#include "IFstream.H"
-#include "interpolateSplineXY.H"
+#include "sixDoFMotion.H"
 #include "mathematicalConstants.H"
+#include "addToRunTimeSelectionTable.H"
 
 using namespace Foam::constant::mathematical;
 
@@ -38,20 +35,71 @@ namespace Foam
 {
 namespace solidBodyMotionFunctions
 {
-    defineTypeNameAndDebug(tabulated6DoFMotion, 0);
+    defineTypeNameAndDebug(sixDoFMotion, 0);
     addToRunTimeSelectionTable
     (
         solidBodyMotionFunction,
-        tabulated6DoFMotion,
+        sixDoFMotion,
         dictionary
     );
 }
 }
 
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "Constant.H"
+#include "Uniform.H"
+#include "ZeroConstant.H"
+#include "OneConstant.H"
+#include "PolynomialEntry.H"
+#include "Sine.H"
+#include "Square.H"
+#include "Table.H"
+#include "TableFile.H"
+#include "FoamTableReader.H"
+#include "Scale.H"
+#include "CodedFunction1.H"
+
+typedef Foam::solidBodyMotionFunctions::sixDoFMotion::translationRotationVectors
+trvType;
+
+template<>
+const char* const trvType::vsType::typeName = "vector2Vector";
+
+template<>
+const char* const trvType::vsType::componentNames[] = {"x", "y"};
+
+template<>
+const trvType trvType::vsType::vsType::zero(vector::zero, vector::zero);
+
+template<>
+const trvType trvType::vsType::one(vector::one, vector::one);
+
+template<>
+const trvType trvType::vsType::max(vector::max, vector::max);
+
+template<>
+const trvType trvType::vsType::min(vector::min, vector::min);
+
+template<>
+const trvType trvType::vsType::rootMax(vector::rootMax, vector::rootMax);
+
+template<>
+const trvType trvType::vsType::rootMin(vector::rootMin, vector::rootMin);
+
+namespace Foam
+{
+    makeFunction1s(trvType);
+
+    defineTableReader(trvType);
+    makeTableReader(Foam, trvType);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::solidBodyMotionFunctions::tabulated6DoFMotion::tabulated6DoFMotion
+Foam::solidBodyMotionFunctions::sixDoFMotion::sixDoFMotion
 (
     const dictionary& SBMFCoeffs,
     const Time& runTime
@@ -65,41 +113,18 @@ Foam::solidBodyMotionFunctions::tabulated6DoFMotion::tabulated6DoFMotion
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::solidBodyMotionFunctions::tabulated6DoFMotion::~tabulated6DoFMotion()
+Foam::solidBodyMotionFunctions::sixDoFMotion::~sixDoFMotion()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 Foam::septernion
-Foam::solidBodyMotionFunctions::tabulated6DoFMotion::transformation() const
+Foam::solidBodyMotionFunctions::sixDoFMotion::transformation() const
 {
-    scalar t = time_.value();
+    const scalar t = time_.value();
 
-    if (t < times_[0])
-    {
-        FatalErrorInFunction
-            << "current time (" << t
-            << ") is less than the minimum in the data table ("
-            << times_[0] << ')'
-            << exit(FatalError);
-    }
-
-    if (t > times_.last())
-    {
-        FatalErrorInFunction
-            << "current time (" << t
-            << ") is greater than the maximum in the data table ("
-            << times_.last() << ')'
-            << exit(FatalError);
-    }
-
-    translationRotationVectors TRV = interpolateSplineXY
-    (
-        t,
-        times_,
-        values_
-    );
+    translationRotationVectors TRV = translationRotation_->value(t);
 
     // Convert the rotational motion from deg to rad
     TRV[1] *= pi/180.0;
@@ -113,49 +138,18 @@ Foam::solidBodyMotionFunctions::tabulated6DoFMotion::transformation() const
 }
 
 
-bool Foam::solidBodyMotionFunctions::tabulated6DoFMotion::read
+bool Foam::solidBodyMotionFunctions::sixDoFMotion::read
 (
     const dictionary& SBMFCoeffs
 )
 {
     solidBodyMotionFunction::read(SBMFCoeffs);
 
-    // If the timeDataFileName has changed read the file
-
-    fileName newTimeDataFileName
+    translationRotation_ = Function1<translationRotationVectors>::New
     (
-        fileName(SBMFCoeffs_.lookup("timeDataFileName")).expand()
+        "translationRotation",
+        SBMFCoeffs
     );
-
-    if (newTimeDataFileName != timeDataFileName_)
-    {
-        timeDataFileName_ = newTimeDataFileName;
-
-        IFstream dataStream(timeDataFileName_);
-
-        if (dataStream.good())
-        {
-            List<Tuple2<scalar, translationRotationVectors>> timeValues
-            (
-                dataStream
-            );
-
-            times_.setSize(timeValues.size());
-            values_.setSize(timeValues.size());
-
-            forAll(timeValues, i)
-            {
-                times_[i] = timeValues[i].first();
-                values_[i] = timeValues[i].second();
-            }
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "Cannot open time data file " << timeDataFileName_
-                << exit(FatalError);
-        }
-    }
 
     SBMFCoeffs_.lookup("CofG") >> CofG_;
 

@@ -19,10 +19,13 @@ dynamicFvMesh   dynamicMotionSolverFvMesh;
 
 motionSolver    solidBody;
 
-solidBodyMotionFunction tabulated6DoFMotion;
+solidBodyMotionFunction sixDoFMotion;
 
 CofG            (0 0 0);
-timeDataFileName "$FOAM_CASE/constant/6DoF.dat";
+
+translationRotation tableFile;
+// interpolationScheme spline;
+file            "$FOAM_CASE/constant/6DoF.dat";
 
 
 // ************************************************************************* //

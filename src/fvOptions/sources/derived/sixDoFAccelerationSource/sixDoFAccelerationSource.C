@@ -56,15 +56,58 @@ namespace fv
 #include "Square.H"
 #include "Table.H"
 #include "TableFile.H"
+#include "FoamTableReader.H"
 #include "Scale.H"
 #include "CodedFunction1.H"
 
+typedef Foam::fv::sixDoFAccelerationSource::accelerationVectors avType;
+
+template<>
+const char* const avType::vsType::typeName = "vectorVector";
+
+template<>
+const char* const avType::vsType::componentNames[] = {"x", "y", "z"};
+
+template<>
+const avType avType::vsType::vsType::zero
+(
+    vector::zero,
+    vector::zero,
+    vector::zero
+);
+
+template<>
+const avType avType::vsType::one(vector::one, vector::one, vector::one);
+
+template<>
+const avType avType::vsType::max(vector::max, vector::max, vector::max);
+
+template<>
+const avType avType::vsType::min(vector::min, vector::min, vector::min);
+
+template<>
+const avType avType::vsType::rootMax
+(
+    vector::rootMax,
+    vector::rootMax,
+    vector::rootMax
+);
+
+template<>
+const avType avType::vsType::rootMin
+(
+    vector::rootMin,
+    vector::rootMin,
+    vector::rootMin
+);
+
 namespace Foam
 {
-    typedef fv::sixDoFAccelerationSource::accelerationVectors
-        sixDoFAccelerationSourceAccelerationVectors;
 
-    makeFunction1s(sixDoFAccelerationSourceAccelerationVectors);
+    makeFunction1s(avType);
+
+    defineTableReader(avType);
+    makeTableReader(Foam, avType);
 }
 
 

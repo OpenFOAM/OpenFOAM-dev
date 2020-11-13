@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::solidBodyMotionFunctions::tabulated6DoFMotion
+    Foam::solidBodyMotionFunctions::sixDoFMotion
 
 Description
     Tabulated 6DoF motion function.
@@ -32,16 +32,17 @@ Description
     pitch (rotation about y) and yaw (rotation about z).
 
 SourceFiles
-    tabulated6DoFMotion.C
+    sixDoFMotion.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef tabulated6DoFMotion_H
-#define tabulated6DoFMotion_H
+#ifndef sixDoFMotion_H
+#define sixDoFMotion_H
 
 #include "solidBodyMotionFunction.H"
-#include "primitiveFields.H"
+#include "Function1.H"
 #include "Vector2D.H"
+#include "primitiveFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,48 +52,47 @@ namespace solidBodyMotionFunctions
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class tabulated6DoFMotion Declaration
+                     Class sixDoFMotion Declaration
 \*---------------------------------------------------------------------------*/
 
-class tabulated6DoFMotion
+class sixDoFMotion
 :
     public solidBodyMotionFunction
 {
-    // Private Data
-
-        //- Time data file name read from dictionary
-        fileName timeDataFileName_;
-
-        //- Center of gravity read from dictionary
-        vector CofG_;
+public:
 
         //- Type used to read in the translation and rotation "vectors"
         typedef Vector2D<vector> translationRotationVectors;
 
-        //- Field of times
-        scalarField times_;
 
-        //- Field of translation and rotation "vectors"
-        Field<translationRotationVectors> values_;
+private:
+
+    // Private Data
+
+        //- Center of gravity read from dictionary
+        vector CofG_;
+
+        //- Translation and rotation function
+        autoPtr<Function1<translationRotationVectors>> translationRotation_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("tabulated6DoFMotion");
+    TypeName("sixDoFMotion");
 
 
     // Constructors
 
         //- Construct from components
-        tabulated6DoFMotion
+        sixDoFMotion
         (
             const dictionary& SBMFCoeffs,
             const Time& runTime
         );
 
         //- Disallow default bitwise copy construction
-        tabulated6DoFMotion(const tabulated6DoFMotion&);
+        sixDoFMotion(const sixDoFMotion&);
 
 
         //- Construct and return a clone
@@ -100,7 +100,7 @@ public:
         {
             return autoPtr<solidBodyMotionFunction>
             (
-                new tabulated6DoFMotion
+                new sixDoFMotion
                 (
                     SBMFCoeffs_,
                     time_
@@ -110,7 +110,7 @@ public:
 
 
     //- Destructor
-    virtual ~tabulated6DoFMotion();
+    virtual ~sixDoFMotion();
 
 
     // Member Functions
@@ -125,7 +125,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const tabulated6DoFMotion&) = delete;
+        void operator=(const sixDoFMotion&) = delete;
 };
 
 
