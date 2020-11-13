@@ -36,7 +36,6 @@ $(nutWallFunctions)/nutkRoughWallFunction/nutkRoughWallFunctionFvPatchScalarFiel
 
 $(nutWallFunctions)/nutUWallFunction/nutUWallFunctionFvPatchScalarField.C
 $(nutWallFunctions)/nutUSpaldingWallFunction/nutUSpaldingWallFunctionFvPatchScalarField.C
-$(nutWallFunctions)/nutUTabulatedWallFunction/nutUTabulatedWallFunctionFvPatchScalarField.C
 $(nutWallFunctions)/nutLowReWallFunction/nutLowReWallFunctionFvPatchScalarField.C
 $(nutWallFunctions)/nutURoughWallFunction/nutURoughWallFunctionFvPatchScalarField.C
 

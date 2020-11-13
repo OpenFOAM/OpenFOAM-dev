@@ -1,5 +1,0 @@
-#!/bin/sh
-
-wclean libso tabulatedWallFunction
-wclean
-
