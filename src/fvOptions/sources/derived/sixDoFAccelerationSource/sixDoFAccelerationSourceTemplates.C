@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "tabulatedAccelerationSource.H"
+#include "sixDoFAccelerationSource.H"
 #include "fvMesh.H"
 #include "fvMatrices.H"
 #include "uniformDimensionedFields.H"
@@ -31,14 +31,14 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class RhoFieldType>
-void Foam::fv::tabulatedAccelerationSource::addSup
+void Foam::fv::sixDoFAccelerationSource::addSup
 (
     const RhoFieldType& rho,
     fvMatrix<vector>& eqn,
     const label fieldi
 ) const
 {
-    Vector<vector> acceleration(motion_.acceleration());
+    Vector<vector> accelerations(accelerations_->value(mesh_.time().value()));
 
     // If gravitational force is present combine with the linear acceleration
     if (mesh_.foundObject<uniformDimensionedVectorField>("g"))
@@ -49,7 +49,7 @@ void Foam::fv::tabulatedAccelerationSource::addSup
         const uniformDimensionedScalarField& hRef =
             mesh_.lookupObject<uniformDimensionedScalarField>("hRef");
 
-        g = g0_ - dimensionedVector("a", dimAcceleration, acceleration.x());
+        g = g0_ - dimensionedVector("a", dimAcceleration, accelerations.x());
 
         dimensionedScalar ghRef(- mag(g)*hRef);
 
@@ -61,28 +61,28 @@ void Foam::fv::tabulatedAccelerationSource::addSup
     // ... otherwise include explicitly in the momentum equation
     else
     {
-        eqn -= rho*dimensionedVector("a", dimAcceleration, acceleration.x());
+        eqn -= rho*dimensionedVector("a", dimAcceleration, accelerations.x());
     }
 
     dimensionedVector Omega
     (
         "Omega",
         dimensionSet(0, 0, -1, 0, 0),
-        acceleration.y()
+        accelerations.y()
     );
 
     dimensionedVector dOmegaDT
     (
         "dOmegaDT",
         dimensionSet(0, 0, -2, 0, 0),
-        acceleration.z()
+        accelerations.z()
     );
 
     eqn -=
     (
         rho*(2*Omega ^ eqn.psi())         // Coriolis force
       + rho*(Omega ^ (Omega ^ mesh_.C())) // Centrifugal force
-      + rho*(dOmegaDT ^ mesh_.C())        // Angular tabulatedAcceleration force
+      + rho*(dOmegaDT ^ mesh_.C())        // Angular acceleration force
     );
 }
 

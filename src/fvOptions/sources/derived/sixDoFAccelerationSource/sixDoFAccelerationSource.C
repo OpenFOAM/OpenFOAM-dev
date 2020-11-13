@@ -23,8 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "tabulatedAccelerationSource.H"
-#include "fvMesh.H"
+#include "sixDoFAccelerationSource.H"
 #include "fvMatrices.H"
 #include "geometricOneField.H"
 #include "addToRunTimeSelectionTable.H"
@@ -35,20 +34,43 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(tabulatedAccelerationSource, 0);
+    defineTypeNameAndDebug(sixDoFAccelerationSource, 0);
     addToRunTimeSelectionTable
     (
         option,
-        tabulatedAccelerationSource,
+        sixDoFAccelerationSource,
         dictionary
     );
 }
 }
 
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "Constant.H"
+#include "Uniform.H"
+#include "ZeroConstant.H"
+#include "OneConstant.H"
+#include "PolynomialEntry.H"
+#include "Sine.H"
+#include "Square.H"
+#include "Table.H"
+#include "TableFile.H"
+#include "Scale.H"
+#include "CodedFunction1.H"
+
+namespace Foam
+{
+    typedef fv::sixDoFAccelerationSource::accelerationVectors
+        sixDoFAccelerationSourceAccelerationVectors;
+
+    makeFunction1s(sixDoFAccelerationSourceAccelerationVectors);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::tabulatedAccelerationSource::tabulatedAccelerationSource
+Foam::fv::sixDoFAccelerationSource::sixDoFAccelerationSource
 (
     const word& name,
     const word& modelType,
@@ -57,7 +79,10 @@ Foam::fv::tabulatedAccelerationSource::tabulatedAccelerationSource
 )
 :
     option(name, modelType, dict, mesh),
-    motion_(coeffs_, mesh.time()),
+    accelerations_
+    (
+        Function1<accelerationVectors>::New("accelerations", coeffs_)
+    ),
     UName_(coeffs_.lookupOrDefault<word>("U", "U")),
     g0_("g0", dimAcceleration, Zero)
 {
@@ -73,7 +98,7 @@ Foam::fv::tabulatedAccelerationSource::tabulatedAccelerationSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::tabulatedAccelerationSource::addSup
+void Foam::fv::sixDoFAccelerationSource::addSup
 (
     fvMatrix<vector>& eqn,
     const label fieldi
@@ -83,7 +108,7 @@ void Foam::fv::tabulatedAccelerationSource::addSup
 }
 
 
-void Foam::fv::tabulatedAccelerationSource::addSup
+void Foam::fv::sixDoFAccelerationSource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
@@ -94,11 +119,17 @@ void Foam::fv::tabulatedAccelerationSource::addSup
 }
 
 
-bool Foam::fv::tabulatedAccelerationSource::read(const dictionary& dict)
+bool Foam::fv::sixDoFAccelerationSource::read(const dictionary& dict)
 {
     if (option::read(dict))
     {
-        return motion_.read(coeffs_);
+        accelerations_ = Function1<accelerationVectors>::New
+        (
+            "accelerations",
+            dict
+        );
+
+        return true;
     }
     else
     {

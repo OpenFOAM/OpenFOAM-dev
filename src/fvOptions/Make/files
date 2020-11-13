@@ -31,8 +31,7 @@ $(derivedSources)/rotorDiskSource/trimModel/fixed/fixedTrim.C
 $(derivedSources)/rotorDiskSource/trimModel/targetCoeff/targetCoeffTrim.C
 $(derivedSources)/solidificationMeltingSource/solidificationMeltingSource.C
 $(derivedSources)/solidificationMeltingSource/solidificationMeltingSourceIO.C
-$(derivedSources)/tabulatedAccelerationSource/tabulatedAccelerationSource.C
-$(derivedSources)/tabulatedAccelerationSource/tabulated6DoFAcceleration/tabulated6DoFAcceleration.C
+$(derivedSources)/sixDoFAccelerationSource/sixDoFAccelerationSource.C
 $(derivedSources)/buoyancyForce/buoyancyForce.C
 $(derivedSources)/buoyancyForce/buoyancyForceIO.C
 $(derivedSources)/buoyancyEnergy/buoyancyEnergy.C

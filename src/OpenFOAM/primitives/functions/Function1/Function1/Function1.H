@@ -239,6 +239,21 @@ public:
         addFunction1##SS##ConstructorToTable_;
 
 
+#define makeFunction1s(Type)                                                   \
+    makeFunction1(Type);                                                       \
+    makeFunction1Type(Constant, Type);                                         \
+    makeFunction1Type(Uniform, Type);                                          \
+    makeFunction1Type(ZeroConstant, Type);                                     \
+    makeFunction1Type(OneConstant, Type);                                      \
+    makeFunction1Type(Polynomial, Type);                                       \
+    makeFunction1Type(Sine, Type);                                             \
+    makeFunction1Type(Square, Type);                                           \
+    makeFunction1Type(Table, Type);                                            \
+    makeFunction1Type(TableFile, Type);                                        \
+    makeFunction1Type(Scale, Type);                                            \
+    makeFunction1Type(Coded, Type);
+
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository

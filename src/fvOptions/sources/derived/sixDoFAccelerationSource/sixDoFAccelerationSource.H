@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::tabulatedAccelerationSource
+    Foam::fv::sixDoFAccelerationSource
 
 Description
     Solid-body 6-DoF acceleration source
@@ -32,23 +32,23 @@ Usage
     \verbatim
     SBM
     {
-        type            tabulatedAccelerationSource;
+        type            sixDoFAccelerationSource;
         active          yes;
 
-        timeDataFileName "constant/acceleration-terms.dat";
+        accelerations   <function1>;
     }
     \endverbatim
 
 SourceFiles
-    tabulatedAccelerationSource.C
+    sixDoFAccelerationSource.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef tabulatedAccelerationSource_H
-#define tabulatedAccelerationSource_H
+#ifndef sixDoFAccelerationSource_H
+#define sixDoFAccelerationSource_H
 
 #include "fvOption.H"
-#include "tabulated6DoFAcceleration.H"
+#include "Function1.H"
 #include "dimensionedTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -59,24 +59,30 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class tabulatedAccelerationSource Declaration
+                 Class sixDoFAccelerationSource Declaration
 \*---------------------------------------------------------------------------*/
 
-class tabulatedAccelerationSource
+class sixDoFAccelerationSource
 :
     public option
 {
+public:
+
+        //- Accelerations type
+        typedef Vector<vector> accelerationVectors;
+
 
 protected:
 
     // Protected data
 
-        //- Run-time selectable acceleration model
-        tabulated6DoFAcceleration motion_;
+        //- Accelerations function
+        autoPtr<Function1<accelerationVectors>> accelerations_;
 
         //- Velocity field name, default = U
         word UName_;
 
+        //- Optional gravitational acceleration
         dimensionedVector g0_;
 
 
@@ -97,13 +103,13 @@ private:
 public:
 
     //- Runtime type information
-    TypeName("tabulatedAccelerationSource");
+    TypeName("sixDoFAccelerationSource");
 
 
     // Constructors
 
         //- Construct from components
-        tabulatedAccelerationSource
+        sixDoFAccelerationSource
         (
             const word& name,
             const word& modelType,
@@ -112,14 +118,14 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        tabulatedAccelerationSource
+        sixDoFAccelerationSource
         (
-            const tabulatedAccelerationSource&
+            const sixDoFAccelerationSource&
         ) = delete;
 
 
     //- Destructor
-    virtual ~tabulatedAccelerationSource()
+    virtual ~sixDoFAccelerationSource()
     {}
 
 
@@ -147,7 +153,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const tabulatedAccelerationSource&) = delete;
+        void operator=(const sixDoFAccelerationSource&) = delete;
 };
 
 
@@ -159,7 +165,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "tabulatedAccelerationSourceTemplates.C"
+    #include "sixDoFAccelerationSourceTemplates.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
