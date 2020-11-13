@@ -184,9 +184,9 @@
             );
         }
 
-        alpha2 = 1.0 - alpha1;
-
         mixture.correct();
+        
+        alpha2 = 1.0 - alpha1;
     }
 
     if (alphaApplyPrevCorr && MULESCorr)
