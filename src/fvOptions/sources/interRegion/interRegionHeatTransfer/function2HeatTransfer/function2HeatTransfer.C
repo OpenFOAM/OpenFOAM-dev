@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "tabulatedHeatTransfer.H"
+#include "function2HeatTransfer.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,11 +32,11 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(tabulatedHeatTransfer, 0);
+    defineTypeNameAndDebug(function2HeatTransfer, 0);
     addToRunTimeSelectionTable
     (
         option,
-        tabulatedHeatTransfer,
+        function2HeatTransfer,
         dictionary
     );
 }
@@ -45,19 +45,19 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-const Foam::interpolation2DTable<Foam::scalar>&
-Foam::fv::tabulatedHeatTransfer::hTable() const
+const Foam::Function2<Foam::scalar>&
+Foam::fv::function2HeatTransfer::htcFunc() const
 {
-    if (!hTable_.valid())
+    if (!htcFunc_.valid())
     {
-        hTable_.reset(new interpolation2DTable<scalar>(coeffs_));
+        htcFunc_ = Function2<scalar>::New("htcFunc", coeffs_);
     }
 
-    return hTable_();
+    return htcFunc_();
 }
 
 
-const Foam::volScalarField& Foam::fv::tabulatedHeatTransfer::AoV() const
+const Foam::volScalarField& Foam::fv::function2HeatTransfer::AoV() const
 {
     if (!AoV_.valid())
     {
@@ -84,7 +84,7 @@ const Foam::volScalarField& Foam::fv::tabulatedHeatTransfer::AoV() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::tabulatedHeatTransfer::tabulatedHeatTransfer
+Foam::fv::function2HeatTransfer::function2HeatTransfer
 (
     const word& name,
     const word& modelType,
@@ -95,7 +95,7 @@ Foam::fv::tabulatedHeatTransfer::tabulatedHeatTransfer
     interRegionHeatTransferModel(name, modelType, dict, mesh),
     UName_(coeffs_.lookupOrDefault<word>("U", "U")),
     UNbrName_(coeffs_.lookupOrDefault<word>("UNbr", "U")),
-    hTable_(),
+    htcFunc_(),
     AoV_(),
     startTimeName_(mesh.time().timeName())
 {}
@@ -103,13 +103,13 @@ Foam::fv::tabulatedHeatTransfer::tabulatedHeatTransfer
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::fv::tabulatedHeatTransfer::~tabulatedHeatTransfer()
+Foam::fv::function2HeatTransfer::~function2HeatTransfer()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::tabulatedHeatTransfer::calculateHtc() const
+void Foam::fv::function2HeatTransfer::calculateHtc() const
 {
     const fvMesh& nbrMesh = mesh_.time().lookupObject<fvMesh>(nbrRegionName());
 
@@ -117,23 +117,14 @@ void Foam::fv::tabulatedHeatTransfer::calculateHtc() const
         nbrMesh.lookupObject<volVectorField>(UNbrName_);
 
     const scalarField UMagNbr(mag(UNbr));
-
     const scalarField UMagNbrMapped(interpolate(UMagNbr));
-
     const volVectorField& U = mesh_.lookupObject<volVectorField>(UName_);
 
-    scalarField& htcc = htc_.primitiveFieldRef();
-
-    forAll(htcc, i)
-    {
-        htcc[i] = hTable()(mag(U[i]), UMagNbrMapped[i]);
-    }
-
-    htcc = htcc*AoV();
+    htc_.primitiveFieldRef() = htcFunc().value(mag(U()), UMagNbrMapped)*AoV();
 }
 
 
-bool Foam::fv::tabulatedHeatTransfer::read(const dictionary& dict)
+bool Foam::fv::function2HeatTransfer::read(const dictionary& dict)
 {
     if (interRegionHeatTransferModel::read(dict))
     {

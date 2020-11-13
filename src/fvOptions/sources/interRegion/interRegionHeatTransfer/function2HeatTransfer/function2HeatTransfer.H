@@ -22,21 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::tabulatedHeatTransfer
+    Foam::fv::function2HeatTransfer
 
 Description
-    Tabulated heat transfer model. The heat exchange area per unit volume
-    must be provided.  The 2D table returns the heat transfer coefficient
-    by querying the local and neighbour region velocities
+    Function2 heat transfer model.
+
+    The heat exchange area per unit volume must be provided.  The 2D function
+    returns the heat transfer coefficient by querying the local and neighbour
+    region velocities.
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef tabulatedHeatTransfer_H
-#define tabulatedHeatTransfer_H
+#ifndef function2HeatTransfer_H
+#define function2HeatTransfer_H
 
 #include "interRegionHeatTransferModel.H"
-#include "autoPtr.H"
-#include "interpolation2DTable.H"
+#include "Function2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,10 +47,10 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class tabulatedHeatTransfer Declaration
+                    Class function2HeatTransfer Declaration
 \*---------------------------------------------------------------------------*/
 
-class tabulatedHeatTransfer
+class function2HeatTransfer
 :
     public interRegionHeatTransferModel
 {
@@ -61,14 +62,14 @@ class tabulatedHeatTransfer
         //- Name of neighbour velocity field; default = U
         word UNbrName_;
 
-        //- 2D look up table
-        mutable autoPtr<interpolation2DTable<scalar>> hTable_;
+        //- Heat transfer coefficient function ptr
+        mutable autoPtr<Function2<scalar>> htcFunc_;
 
         //- Area per unit volume of heat exchanger
         mutable autoPtr<volScalarField> AoV_;
 
-        //- Heat transfer coefficient table
-        const interpolation2DTable<scalar>& hTable() const;
+        //- Heat transfer coefficient function
+        const Function2<scalar>& htcFunc() const;
 
         //- Field of area divided by volume
         const volScalarField& AoV() const;
@@ -80,13 +81,13 @@ class tabulatedHeatTransfer
 public:
 
     //- Runtime type information
-        TypeName("tabulatedHeatTransfer");
+    TypeName("function2HeatTransfer");
 
 
     // Constructors
 
         //- Construct from dictionary
-        tabulatedHeatTransfer
+        function2HeatTransfer
         (
             const word& name,
             const word& modelType,
@@ -96,19 +97,16 @@ public:
 
 
     //- Destructor
-    virtual ~tabulatedHeatTransfer();
+    virtual ~function2HeatTransfer();
 
 
-    // Public Functions
+    // Member Functions
 
         //- Calculate the heat transfer coefficient
         virtual void calculateHtc() const;
 
-
-        // IO
-
-            //- Read dictionary
-            virtual bool read(const dictionary& dict);
+        //- Read dictionary
+        virtual bool read(const dictionary& dict);
 };
 
 
@@ -118,7 +116,6 @@ public:
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 
 #endif
 

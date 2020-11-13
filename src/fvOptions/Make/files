@@ -49,7 +49,7 @@ interRegion = sources/interRegion
 $(interRegion)/interRegionHeatTransfer/interRegionHeatTransferModel/interRegionHeatTransferModel.C
 $(interRegion)/interRegionHeatTransfer/interRegionHeatTransferModel/interRegionHeatTransferModelIO.C
 $(interRegion)/interRegionHeatTransfer/constantHeatTransfer/constantHeatTransfer.C
-$(interRegion)/interRegionHeatTransfer/tabulatedHeatTransfer/tabulatedHeatTransfer.C
+$(interRegion)/interRegionHeatTransfer/function2HeatTransfer/function2HeatTransfer.C
 $(interRegion)/interRegionHeatTransfer/variableHeatTransfer/variableHeatTransfer.C
 $(interRegion)/interRegionExplicitPorositySource/interRegionExplicitPorositySource.C
 
