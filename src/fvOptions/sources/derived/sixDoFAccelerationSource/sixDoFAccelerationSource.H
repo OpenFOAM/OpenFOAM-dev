@@ -68,7 +68,10 @@ class sixDoFAccelerationSource
 {
 public:
 
-        //- Accelerations type
+        //- Accelerations type comprising
+        //      linear acceleration vector
+        //      angular velocity vector
+        //      angular acceleration vector
         typedef Vector<vector> accelerationVectors;
 
 
@@ -76,7 +79,10 @@ protected:
 
     // Protected data
 
-        //- Accelerations function
+        //- Accelerations function returning a vector containing
+        //      linear acceleration vector
+        //      angular velocity vector
+        //      angular acceleration vector
         autoPtr<Function1<accelerationVectors>> accelerations_;
 
         //- Velocity field name, default = U
