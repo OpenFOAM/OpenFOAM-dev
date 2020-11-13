@@ -101,7 +101,6 @@ motionSmoother/badQualityToFace/badQualityToFace.C
 motionSolvers/motionSolver/motionSolver.C
 motionSolvers/displacement/points0/points0MotionSolver.C
 motionSolvers/displacement/displacement/displacementMotionSolver.C
-motionSolvers/displacement/interpolation/displacementInterpolationMotionSolver.C
 motionSolvers/displacement/layeredSolver/displacementLayeredMotionMotionSolver.C
 motionSolvers/displacement/layeredSolver/pointEdgeStructuredWalk.C
 motionSolvers/displacement/linearSolver/displacementLinearMotionMotionSolver.C
