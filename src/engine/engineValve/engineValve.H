@@ -38,7 +38,7 @@ SourceFiles
 #include "word.H"
 #include "coordinateSystem.H"
 #include "polyPatchID.H"
-#include "graph.H"
+#include "Table.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -100,7 +100,7 @@ class engineValve
         // Valve lift data
 
             //- Valve lift profile
-            graph liftProfile_;
+            Function1s::Table<scalar> liftProfile_;
 
             //- Lift curve start angle
             scalar liftProfileStart_;
@@ -155,7 +155,7 @@ public:
             const word& detachInCylinderPatchName,
             const word& detachInPortPatchName,
             const labelList& detachFaces,
-            const graph& liftProfile,
+            const Function1s::Table<scalar>& liftProfile,
             const scalar minLift,
             const scalar minTopLayer,
             const scalar maxTopLayer,
@@ -192,7 +192,7 @@ public:
         }
 
         //- Return lift profile
-        const graph& liftProfile() const
+        const Function1s::Table<scalar>& liftProfile() const
         {
             return liftProfile_;
         }

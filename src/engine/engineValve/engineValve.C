@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "engineValve.H"
 #include "engineTime.H"
 #include "polyMesh.H"
-#include "interpolateXY.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -63,7 +62,6 @@ Foam::scalar Foam::engineValve::adjustCrankAngle(const scalar theta) const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::engineValve::engineValve
 (
     const word& name,
@@ -77,7 +75,7 @@ Foam::engineValve::engineValve
     const word& detachInCylinderPatchName,
     const word& detachInPortPatchName,
     const labelList& detachFaces,
-    const graph& liftProfile,
+    const Function1s::Table<scalar>& liftProfile,
     const scalar minLift,
     const scalar minTopLayer,
     const scalar maxTopLayer,
@@ -110,7 +108,6 @@ Foam::engineValve::engineValve
 {}
 
 
-// Construct from dictionary
 Foam::engineValve::engineValve
 (
     const word& name,
@@ -153,7 +150,7 @@ Foam::engineValve::engineValve
         mesh.boundaryMesh()
     ),
     detachFaces_(dict.lookup("detachFaces")),
-    liftProfile_("theta", "lift", name_, dict.lookup("liftProfile")),
+    liftProfile_("liftProfile", dict),
     liftProfileStart_(min(liftProfile_.x())),
     liftProfileEnd_(max(liftProfile_.x())),
     minLift_(dict.lookup<scalar>("minLift")),
@@ -165,19 +162,11 @@ Foam::engineValve::engineValve
 {}
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::scalar Foam::engineValve::lift(const scalar theta) const
 {
-    return interpolateXY
-    (
-        adjustCrankAngle(theta),
-        liftProfile_.x(),
-        liftProfile_.y()
-    );
+    return liftProfile_.value(adjustCrankAngle(theta));
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,11 +26,9 @@ License
 #include "enginePiston.H"
 #include "engineTime.H"
 #include "polyMesh.H"
-#include "interpolateXY.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::enginePiston::enginePiston
 (
     const polyMesh& mesh,
@@ -49,7 +47,6 @@ Foam::enginePiston::enginePiston
 {}
 
 
-// Construct from dictionary
 Foam::enginePiston::enginePiston
 (
     const polyMesh& mesh,
@@ -70,9 +67,6 @@ Foam::enginePiston::enginePiston
     minLayer_(dict.lookup<scalar>("minLayer")),
     maxLayer_(dict.lookup<scalar>("maxLayer"))
 {}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
