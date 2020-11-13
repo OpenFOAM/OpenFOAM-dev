@@ -24,12 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "effectivenessHeatExchangerSource.H"
-#include "fvMesh.H"
 #include "fvMatrix.H"
-#include "addToRunTimeSelectionTable.H"
 #include "basicThermo.H"
-#include "coupledPolyPatch.H"
 #include "surfaceInterpolate.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -61,7 +59,7 @@ void Foam::fv::effectivenessHeatExchangerSource::initialise()
     label count = 0;
     forAll(fZone, i)
     {
-        label facei = fZone[i];
+        const label facei = fZone[i];
         label faceId = -1;
         label facePatchId = -1;
         if (mesh_.isInternalFace(facei))
@@ -126,7 +124,7 @@ void Foam::fv::effectivenessHeatExchangerSource::calculateTotalArea
     area = 0;
     forAll(faceId_, i)
     {
-        label facei = faceId_[i];
+        const label facei = faceId_[i];
         if (facePatchId_[i] != -1)
         {
             label patchi = facePatchId_[i];
@@ -155,7 +153,7 @@ Foam::fv::effectivenessHeatExchangerSource::effectivenessHeatExchangerSource
     secondaryMassFlowRate_(coeffs_.lookup<scalar>("secondaryMassFlowRate")),
     secondaryInletT_(coeffs_.lookup<scalar>("secondaryInletT")),
     primaryInletT_(coeffs_.lookup<scalar>("primaryInletT")),
-    eTable_(),
+    eTable_(Function2<scalar>::New("effectiveness", coeffs_)),
     UName_(coeffs_.lookupOrDefault<word>("U", "U")),
     TName_(coeffs_.lookupOrDefault<word>("T", "T")),
     phiName_(coeffs_.lookupOrDefault<word>("phi", "phi")),
@@ -184,8 +182,6 @@ Foam::fv::effectivenessHeatExchangerSource::effectivenessHeatExchangerSource
     fieldNames_.setSize(1, thermo.he().name());
 
     applied_.setSize(1, false);
-
-    eTable_.reset(new interpolation2DTable<scalar>(coeffs_));
 
     initialise();
 }
@@ -231,8 +227,8 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
     reduce(CpfMean, sumOp<scalar>());
     reduce(totalphi, sumOp<scalar>());
 
-    scalar Qt =
-        eTable_()(mag(totalphi), secondaryMassFlowRate_)
+    const scalar Qt =
+        eTable_->value(mag(totalphi), secondaryMassFlowRate_)
        *(secondaryInletT_ - primaryInletT_)
        *(CpfMean/faceZoneArea_)*mag(totalphi);
 
@@ -291,8 +287,8 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
         Info<< indent << "Net mass flux [Kg/s] = " << totalphi << nl;
         Info<< indent << "Total energy exchange [W] = " << Qt << nl;
         Info<< indent << "Tref [K] = " << Tref << nl;
-        Info<< indent << "Efficiency : "
-            << eTable_()(mag(totalphi), secondaryMassFlowRate_) << endl;
+        Info<< indent << "Effectiveness : "
+            << eTable_->value(mag(totalphi), secondaryMassFlowRate_) << endl;
     }
 }
 

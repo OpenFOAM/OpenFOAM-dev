@@ -44,7 +44,6 @@ Description
 #define variableHeatTransfer_H
 
 #include "interRegionHeatTransferModel.H"
-#include "autoPtr.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -103,16 +102,13 @@ public:
     virtual ~variableHeatTransfer();
 
 
-    // Public Functions
+    // Member Functions
 
         //- Calculate the heat transfer coefficient
         virtual void calculateHtc() const;
 
-
-        // IO
-
-            //- Read dictionary
-            virtual bool read(const dictionary& dict) ;
+        //- Read dictionary
+        virtual bool read(const dictionary& dict) ;
 };
 
 

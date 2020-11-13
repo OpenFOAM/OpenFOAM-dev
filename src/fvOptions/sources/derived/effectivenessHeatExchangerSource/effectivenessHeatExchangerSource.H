@@ -74,48 +74,18 @@ Usage
         secondaryInletT         336;
         primaryInletT           293;
         faceZone                facesZoneInletOriented;
-        outOfBounds             clamp;
-        file                    "effTable";
+        effectiveness           <function2>;
     }
     \endverbatim
 
-    The effectiveness table is described in terms of the primary and secondary
-    mass flow rates.  For example, the table:
-
-                           secondary MFR
-                       |  0.1   0.2   0.3
-                  -----+-----------------
-                  0.02 |   A     B     C
-     primary MFR  0.04 |   D     E     F
-                  0.06 |   G     H     I
-
-
-    Is specified by the following:
-
-        (
-            0.02
-            (
-                (0.1    A)
-                (0.2    B)
-                (0.3    C)
-            ),
-            0.04
-            (
-                (0.1    D)
-                (0.2    E)
-                (0.3    F)
-            ),
-            0.06
-            (
-                (0.1    G)
-                (0.2    H)
-                (0.3    I)
-            )
-        );
+    The effectiveness Function2 is described in terms of the primary and
+    secondary mass flow rates and has the same units as the secondary mass flow
+    rate and kg/s for phi.
 
 Note
-    - the table with name "file" should have the same units as the
-      secondary mass flow rate and kg/s for phi
+    - The effectiveness Function2 is described in terms of the primary and
+      secondary mass flow rates and has the same units as the secondary mass
+      flow rate and kg/s for phi.
     - faceZone is the faces at the inlet of the cellzone, it needs to be
       created with flip map flags. It is used to integrate the net mass flow
       rate into the heat exchanger
@@ -129,8 +99,7 @@ SourceFiles
 #define effectivenessHeatExchangerSource_H
 
 #include "cellSetOption.H"
-#include "autoPtr.H"
-#include "interpolation2DTable.H"
+#include "Function2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -161,9 +130,9 @@ protected:
         //- Primary air temperature at the heat exchanger inlet [K]
         scalar primaryInletT_;
 
-        //- 2D look up table efficiency = function of primary and secondary
-        // mass flow rates [kg/s]
-        autoPtr<interpolation2DTable<scalar>> eTable_;
+        //- 2D function for effectiveness [kg/s]
+        //  function of primary and secondary mass flow rates [kg/s]
+        autoPtr<Function2<scalar>> eTable_;
 
         //- Name of velocity field; default = U
         word UName_;
@@ -235,34 +204,26 @@ public:
 
     // Member Functions
 
-        // Explicit and implicit source
+        //- Explicit and implicit source
+        virtual void addSup
+        (
+            fvMatrix<scalar>& eqn,
+            const label fieldi
+        ) const
+        {
+            NotImplemented;
+        }
 
-            //- Scalar
-            virtual void addSup
-            (
-                fvMatrix<scalar>& eqn,
-                const label fieldi
-            ) const
-            {
-                NotImplemented;
-            }
+        //- Explicit and implicit source for compressible equation
+        virtual void addSup
+        (
+            const volScalarField& rho,
+            fvMatrix<scalar>& eqn,
+            const label fieldi
+        ) const;
 
-
-        // Explicit and implicit source for compressible equation
-
-            //- Scalar
-            virtual void addSup
-            (
-                const volScalarField& rho,
-                fvMatrix<scalar>& eqn,
-                const label fieldi
-            ) const;
-
-
-        // IO
-
-            //- Read dictionary
-            virtual bool read(const dictionary& dict);
+        //- Read dictionary
+        virtual bool read(const dictionary& dict);
 
 
     // Member Operators
