@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,11 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "interpolationLookUpTable.H"
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-template<class Type>
-Foam::label Foam::interpolationLookUpTable<Type>::index
+Foam::label
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::index
 (
     const List<scalar>& indices,
     const bool lastDim
@@ -45,9 +46,9 @@ Foam::label Foam::interpolationLookUpTable<Type>::index
 
         totalIndex +=
             dim
-           *min
+           *Foam::min
             (
-                max(label((indices[i] - min_[i])/delta_[i]), 0),
+                Foam::max(label((indices[i] - min_[i])/delta_[i]), 0),
                 dim_[i]
             );
     }
@@ -57,7 +58,7 @@ Foam::label Foam::interpolationLookUpTable<Type>::index
         label iLastdim = dim_.size() - 1;
         totalIndex += Foam::min
         (
-            max
+            Foam::max
             (
                 label((indices[iLastdim] - min_[iLastdim])/delta_[iLastdim]),
                 0
@@ -70,8 +71,8 @@ Foam::label Foam::interpolationLookUpTable<Type>::index
 }
 
 
-template<class Type>
-Foam::label Foam::interpolationLookUpTable<Type>::index
+Foam::label
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::index
 (
     const scalar indice
 ) const
@@ -92,8 +93,9 @@ Foam::label Foam::interpolationLookUpTable<Type>::index
 }
 
 
-template<class Type>
-bool Foam::interpolationLookUpTable<Type>::checkRange
+bool
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+checkRange
 (
     const scalar lookUpValue,
     const label interfield
@@ -103,8 +105,9 @@ bool Foam::interpolationLookUpTable<Type>::checkRange
 }
 
 
-template<class Type>
-Foam::scalar Foam::interpolationLookUpTable<Type>::interpolate
+Foam::scalar
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+interpolate
 (
     const label lo,
     const label hi,
@@ -144,11 +147,12 @@ Foam::scalar Foam::interpolationLookUpTable<Type>::interpolate
 }
 
 
-template<class Type>
-void Foam::interpolationLookUpTable<Type>::dimensionTable()
+void
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+dimensionTable()
 {
-    min_.setSize(entries_.size());
     dim_.setSize(entries_.size());
+    min_.setSize(entries_.size());
     delta_.setSize(entries_.size());
     max_.setSize(entries_.size());
     entryIndices_.setSize(entries_.size());
@@ -188,8 +192,9 @@ void Foam::interpolationLookUpTable<Type>::dimensionTable()
 }
 
 
-template<class Type>
-void Foam::interpolationLookUpTable<Type>::readTable
+void
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+readTable
 (
     const word& instance,
     const objectRegistry& obr
@@ -225,16 +230,16 @@ void Foam::interpolationLookUpTable<Type>::readTable
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::interpolationLookUpTable<Type>::interpolationLookUpTable()
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+interpolationLookUpTable()
 :
     List<scalarField>(),
     fileName_("fileNameIsUndefined")
 {}
 
 
-template<class Type>
-Foam::interpolationLookUpTable<Type>::interpolationLookUpTable
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+interpolationLookUpTable
 (
     const fileName& fn,
     const word& instance,
@@ -257,28 +262,28 @@ Foam::interpolationLookUpTable<Type>::interpolationLookUpTable
 }
 
 
-template<class Type>
-Foam::interpolationLookUpTable<Type>::interpolationLookUpTable
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+interpolationLookUpTable
 (
      const interpolationLookUpTable& interpTable
 )
 :
     List<scalarField>(interpTable),
     fileName_(interpTable.fileName_),
-    entryIndices_(interpTable.entryIndices_),
-    outputIndices_(interpTable.outputIndices_),
     dim_(interpTable.dim_),
     min_(interpTable.min_),
     delta_(interpTable.delta_),
     max_(interpTable.max_),
     entries_(0),
     output_(0),
+    entryIndices_(interpTable.entryIndices_),
+    outputIndices_(interpTable.outputIndices_),
     interpOutput_(interpTable.interpOutput_)
 {}
 
 
-template<class Type>
-Foam::interpolationLookUpTable<Type>::interpolationLookUpTable
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+interpolationLookUpTable
 (
     const dictionary& dict
 )
@@ -302,8 +307,9 @@ Foam::interpolationLookUpTable<Type>::interpolationLookUpTable
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type>
-void Foam::interpolationLookUpTable<Type>::check() const
+void
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+check() const
 {
     // check order in the first dimension.
     scalar prevValue = List<scalarField>::operator[](0).operator[](0);
@@ -331,8 +337,9 @@ void Foam::interpolationLookUpTable<Type>::check() const
 }
 
 
-template<class Type>
-void Foam::interpolationLookUpTable<Type>::write
+void
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+write
 (
     Ostream& os,
     const fileName& fn,
@@ -369,9 +376,12 @@ void Foam::interpolationLookUpTable<Type>::write
 
 // * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
 
-template<class Type>
 Foam::scalarField&
-Foam::interpolationLookUpTable<Type>::operator[](const label i)
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+operator[]
+(
+    const label i
+)
 {
     const label n = this->size();
 
@@ -395,9 +405,12 @@ Foam::interpolationLookUpTable<Type>::operator[](const label i)
 }
 
 
-template<class Type>
 const Foam::scalarField&
-Foam::interpolationLookUpTable<Type>::operator[](const label i) const
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+operator[]
+(
+    const label i
+) const
 {
     const label n = this->size();
 
@@ -422,16 +435,23 @@ Foam::interpolationLookUpTable<Type>::operator[](const label i) const
 }
 
 
-template<class Type>
-bool Foam::interpolationLookUpTable<Type>::found(const word& fieldName) const
+bool
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+found
+(
+    const word& fieldName
+) const
 {
     return fieldIndices_.found(fieldName);
 }
 
 
-template<class Type>
 const Foam::scalarList&
-Foam::interpolationLookUpTable<Type>::lookUp(const scalar retvals)
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+lookUp
+(
+    const scalar retvals
+)
 {
     const label lo = index(retvals);
     findHi(lo, retvals);
@@ -439,8 +459,9 @@ Foam::interpolationLookUpTable<Type>::lookUp(const scalar retvals)
 }
 
 
-template<class Type>
-void Foam::interpolationLookUpTable<Type>::findHi
+void
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+findHi
 (
     const label lo,
     const scalar retvals

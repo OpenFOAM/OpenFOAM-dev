@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,15 +50,15 @@ SourceFiles
 
 namespace Foam
 {
-
-// Forward declaration of classes
-class fvMesh;
+namespace radiationModels
+{
+namespace absorptionEmissionModels
+{
 
 /*---------------------------------------------------------------------------*\
                   Class interpolationLookUpTable Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
 class interpolationLookUpTable
 :
     public List<scalarField>
@@ -202,25 +202,23 @@ public:
 
      // Member Operators
 
-        //- Return an element of constant List<scalar, Type>
+        //- Return an element
         const scalarField& operator[](const label) const;
 
-        //- Return an element of List<scalar, Type>
+        //- Return an element
         scalarField& operator[](const label);
 
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace absorptionEmissionModels
+} // End namespace radiationModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "interpolationLookUpTableI.H"
-
-#ifdef NoRepository
-    #include "interpolationLookUpTable.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

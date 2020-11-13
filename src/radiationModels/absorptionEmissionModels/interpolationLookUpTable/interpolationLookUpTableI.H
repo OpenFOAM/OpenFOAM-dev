@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,9 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
 inline Foam::label
-Foam::interpolationLookUpTable<Type>::findFieldIndex
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+findFieldIndex
 (
     const word& fieldName
 ) const
@@ -34,56 +34,57 @@ Foam::interpolationLookUpTable<Type>::findFieldIndex
 }
 
 
-template<class Type>
 inline const Foam::List<Foam::dictionary>&
-Foam::interpolationLookUpTable<Type>::output() const
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+output() const
 {
     return output_;
 }
 
 
-template<class Type>
 inline const Foam::List<Foam::dictionary>&
-Foam::interpolationLookUpTable<Type>::entries() const
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+entries() const
 {
     return entries_;
 }
 
 
-template<class Type>
 inline const Foam::List<Foam::scalar>&
-Foam::interpolationLookUpTable<Type>::min() const
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+min() const
 {
     return min_;
 }
 
 
-template<class Type>
 inline const Foam::List<Foam::label>&
-Foam::interpolationLookUpTable<Type>::dim() const
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+dim() const
 {
     return dim_;
 }
 
 
-template<class Type>
 inline const Foam::List<Foam::scalar>&
-Foam::interpolationLookUpTable<Type>::delta() const
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+delta() const
 {
     return delta_;
 }
 
 
-template<class Type>
 inline const Foam::List<Foam::scalar>&
-Foam::interpolationLookUpTable<Type>::max() const
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+max() const
 {
     return max_;
 }
 
 
-template<class Type>
-inline Foam::word Foam::interpolationLookUpTable<Type>::tableName() const
+inline Foam::word
+Foam::radiationModels::absorptionEmissionModels::interpolationLookUpTable::
+tableName() const
 {
     return fileName_.name();
 }

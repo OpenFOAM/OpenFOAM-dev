@@ -155,7 +155,7 @@ protected:
         FixedList<Vector2D<scalar>, maxBands_> iBands_;
 
         //- Look-up table of species related to ft
-        mutable autoPtr<interpolationLookUpTable<scalar>> lookUpTablePtr_;
+        mutable autoPtr<interpolationLookUpTable> lookUpTablePtr_;
 
         //- Thermo package
         const fluidThermo& thermo_;
