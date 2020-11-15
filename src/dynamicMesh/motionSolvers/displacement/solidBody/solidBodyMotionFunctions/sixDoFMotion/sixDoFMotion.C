@@ -71,22 +71,31 @@ template<>
 const char* const trvType::vsType::componentNames[] = {"x", "y"};
 
 template<>
-const trvType trvType::vsType::vsType::zero(vector::zero, vector::zero);
+const trvType trvType::vsType::vsType::zero
+(
+    trvType::uniform(vector::uniform(0))
+);
 
 template<>
-const trvType trvType::vsType::one(vector::one, vector::one);
+const trvType trvType::vsType::one(trvType::uniform(vector::uniform(1)));
 
 template<>
-const trvType trvType::vsType::max(vector::max, vector::max);
+const trvType trvType::vsType::max(trvType::uniform(vector::uniform(vGreat)));
 
 template<>
-const trvType trvType::vsType::min(vector::min, vector::min);
+const trvType trvType::vsType::min(trvType::uniform(vector::uniform(-vGreat)));
 
 template<>
-const trvType trvType::vsType::rootMax(vector::rootMax, vector::rootMax);
+const trvType trvType::vsType::rootMax
+(
+    trvType::uniform(vector::uniform(rootVGreat))
+);
 
 template<>
-const trvType trvType::vsType::rootMin(vector::rootMin, vector::rootMin);
+const trvType trvType::vsType::rootMin
+(
+    trvType::uniform(vector::uniform(-rootVGreat))
+);
 
 namespace Foam
 {

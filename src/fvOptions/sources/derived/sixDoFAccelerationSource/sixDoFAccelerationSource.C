@@ -69,36 +69,27 @@ template<>
 const char* const avType::vsType::componentNames[] = {"x", "y", "z"};
 
 template<>
-const avType avType::vsType::vsType::zero
-(
-    vector::zero,
-    vector::zero,
-    vector::zero
-);
+const avType avType::vsType::vsType::zero(avType::uniform(vector::uniform(0)));
 
 template<>
-const avType avType::vsType::one(vector::one, vector::one, vector::one);
+const avType avType::vsType::one(avType::uniform(vector::uniform(1)));
 
 template<>
-const avType avType::vsType::max(vector::max, vector::max, vector::max);
+const avType avType::vsType::max(avType::uniform(vector::uniform(vGreat)));
 
 template<>
-const avType avType::vsType::min(vector::min, vector::min, vector::min);
+const avType avType::vsType::min(avType::uniform(vector::uniform(-vGreat)));
 
 template<>
 const avType avType::vsType::rootMax
 (
-    vector::rootMax,
-    vector::rootMax,
-    vector::rootMax
+    avType::uniform(vector::uniform(rootVGreat))
 );
 
 template<>
 const avType avType::vsType::rootMin
 (
-    vector::rootMin,
-    vector::rootMin,
-    vector::rootMin
+    avType::uniform(vector::uniform(-rootVGreat))
 );
 
 namespace Foam
