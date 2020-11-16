@@ -42,7 +42,7 @@ Usage
     <patchName>
     {
         type            fixedProfile;
-        profile         tableFile;
+        profile         table;
         profileCoeffs
         {
             file                "UProfile";

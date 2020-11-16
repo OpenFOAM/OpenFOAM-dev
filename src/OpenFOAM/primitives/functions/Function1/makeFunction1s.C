@@ -31,7 +31,6 @@ License
 #include "Sine.H"
 #include "Square.H"
 #include "Table.H"
-#include "TableFile.H"
 #include "Scale.H"
 #include "CodedFunction1.H"
 

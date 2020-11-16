@@ -36,7 +36,7 @@ boundaryField
     wall
     {
         type            fixedProfile;
-        profile         tableFile;
+        profile         table;
 
         profileCoeffs
         {

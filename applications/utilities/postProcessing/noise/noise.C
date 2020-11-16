@@ -30,7 +30,7 @@ Description
 
     Control settings are read from the $FOAM_CASE/system/noiseDict dictionary,
     or user-specified dictionary using the -dict option.  Pressure data is
-    read using a TableFile Function1:
+    read using a Table Function1:
 
 Usage
     \verbatim
@@ -72,7 +72,7 @@ Usage
     - one-third-octave-band pressure spectrum
 
 See also
-    TableFile.H
+    Table.H
     noiseFFT.H
 
 \*---------------------------------------------------------------------------*/
@@ -81,7 +81,7 @@ See also
 #include "noiseFFT.H"
 #include "argList.H"
 #include "Time.H"
-#include "TableFile.H"
+#include "Table.H"
 #include "IOdictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
     #include "createFields.H"
 
     Info<< "Reading data file" << endl;
-    Function1s::TableFile<scalar> pData
+    Function1s::Table<scalar> pData
     (
         "pressure",
         dict.subDict("pressureData")

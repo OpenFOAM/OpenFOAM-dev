@@ -177,7 +177,7 @@ bool Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::read
 
     moment_.reset
     (
-        new Function1s::TableFile<scalar>("moment", sDoFRBMRCoeffs_)
+        new Function1s::Table<scalar>("moment", sDoFRBMRCoeffs_)
     );
 
     const word angleFormat = sDoFRBMRCoeffs_.lookup("angleFormat");

@@ -67,11 +67,8 @@ public:
     // Constructors
 
         //- Construct null
-        tableBase();
-
-
-    //- Destructor
-    virtual ~tableBase();
+        tableBase()
+        {}
 };
 
 

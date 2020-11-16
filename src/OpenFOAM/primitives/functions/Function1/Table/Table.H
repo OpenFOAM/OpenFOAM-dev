@@ -25,10 +25,10 @@ Class
     Foam::Function1s::Table
 
 Description
-    Templated table container function.
+    Templated interpolated tabulated data Function1.
 
     Items are stored in a list of Tuple2's. First column is always stored as
-    scalar entries. Data is read in Tuple2 form.
+    scalar entries. Data is read in Tuple2 form:
 
     Usage:
     \verbatim
@@ -39,32 +39,93 @@ Description
         );
     \endverbatim
 
+    The data may be read from a separate file in either native or CSV format:
+
+    Usage:
+    \verbatim
+        <entryName> table;
+        file                "<file path>"; // Name/path of thedata file
+        format              foam;          // data format (optional)
+        outOfBounds         clamp;         // optional out-of-bounds handling
+        interpolationScheme linear;        // optional interpolation method
+    \endverbatim
+
 SourceFiles
     Table.C
+
+See also
+    FoamTableReader.C
+    CsvTableReader.C
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef Table_H
 #define Table_H
 
-#include "TableBase.H"
+#include "tableBase.H"
+#include "Function1.H"
+#include "TableReader.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+class interpolationWeights;
+
 namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class Table Declaration
+                          Class Table Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
 class Table
 :
-    public TableBase<Type, Table<Type>>
+    public tableBase,
+    public FieldFunction1<Type, Table<Type>>
 {
+    // Private Data
+
+        //- Enumeration for handling out-of-bound values
+        const tableBase::boundsHandling boundsHandling_;
+
+        //- Interpolation type
+        const word interpolationScheme_;
+
+        //- Table data
+        List<Tuple2<scalar, Type>> table_;
+
+        //- Extracted values
+        mutable autoPtr<scalarField> tableSamplesPtr_;
+
+        //- Interpolator method
+        mutable autoPtr<interpolationWeights> interpolatorPtr_;
+
+        //- Cached indices
+        mutable labelList indices_;
+
+        //- Cached weights
+        mutable scalarField weights_;
+
+        //- Table reader
+        const autoPtr<TableReader<Type>> reader_;
+
+
+    // Protected Member Functions
+
+        //- Return (demand driven) interpolator
+        const interpolationWeights& interpolator() const;
+
+        //- Check the table for size and consistency
+        void check() const;
+
+        //- Bound the argument to the table. Errors or warns, or shifts the
+        //  value if the table repeats. Does not clamp to the ends of the table
+        //  as the interpolator already performs that function.
+        scalar bound(const scalar x) const;
+
 
 public:
 
@@ -74,9 +135,6 @@ public:
 
     // Constructors
 
-        //- Construct from entry name and Istream
-        Table(const word& entryName, const dictionary& dict);
-
         //- Construct from components
         Table
         (
@@ -85,6 +143,9 @@ public:
             const word& interpolationScheme,
             const List<Tuple2<scalar, Type>>& table
         );
+
+        //- Construct from entry name and dictionary
+        Table(const word& name, const dictionary& dict);
 
         //- Copy constructor
         Table(const Table<Type>& tbl);
@@ -96,12 +157,20 @@ public:
 
     // Member Functions
 
-        //- Write entries only in dictionary format
-        virtual void writeEntries
-        (
-            Ostream& os,
-            const List<Tuple2<scalar, Type>>& table
-        ) const;
+        //- Return Table value as a function of scalar x
+        virtual Type value(const scalar x) const;
+
+        //- Integrate between two scalars
+        virtual Type integrate(const scalar x1, const scalar x2) const;
+
+        //- Return the reference values
+        virtual tmp<scalarField> x() const;
+
+        //- Return the dependent values
+        virtual tmp<Field<Type>> y() const;
+
+        //- Write all table data in dictionary format
+        virtual void writeData(Ostream& os) const;
 
 
     // Member Operators

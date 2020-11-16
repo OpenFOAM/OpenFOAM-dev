@@ -40,8 +40,8 @@ Usage
     inlet
     {
         type            fanPressure;
-        fanCurve        tableFile;
-        tableFileCoeffs
+        fanCurve        table;
+        fanCurveCoeffs
         {
             file            "$FOAM_CASE/constant/pressureVsQ";
             format          csv;
@@ -61,8 +61,8 @@ Usage
     outlet
     {
         type            fanPressure;
-        fanCurve        tableFile;
-        tableFileCoeffs
+        fanCurve        table;
+        fanCurveCoeffs
         {
             file            "$FOAM_CASE/constant/pressureVsQ";
             format          csv;
@@ -96,7 +96,7 @@ SourceFiles
 #define fanPressureFvPatchScalarField_H
 
 #include "totalPressureFvPatchScalarField.H"
-#include "TableFile.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

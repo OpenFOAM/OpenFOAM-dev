@@ -37,9 +37,9 @@ Description
         pistonPositionTime  table ( (0 0.13) (0.020 0.03) );
     \endverbatim
 
-    or with a tableFile
+    or from a file
     \verbatim
-        pistonPositionTime  tableFile;
+        pistonPositionTime  table;
         pistonPositionTimeCoeffs
         {
             file                "data";

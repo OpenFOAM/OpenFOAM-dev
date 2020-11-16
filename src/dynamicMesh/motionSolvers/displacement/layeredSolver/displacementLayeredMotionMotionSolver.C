@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 #include "pointFields.H"
 #include "PointEdgeWave.H"
 #include "syncTools.H"
-#include "TableFile.H"
+#include "Table.H"
 #include "pointConstraints.H"
 #include "mapPolyMesh.H"
 
@@ -233,7 +233,7 @@ Foam::displacementLayeredMotionMotionSolver::faceZoneEvaluate
     }
     else if (type == "timeVaryingUniformFixedValue")
     {
-        Function1s::TableFile<vector> timeSeries(word::null, dict);
+        Function1s::Table<vector> timeSeries(word::null, dict);
 
         fld = timeSeries.value(mesh().time().timeOutputValue());
     }

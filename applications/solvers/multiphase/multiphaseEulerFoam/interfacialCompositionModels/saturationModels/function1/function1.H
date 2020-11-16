@@ -52,7 +52,7 @@ Description
 
     \verbatim
         type function1;
-        function tableFile;
+        function table;
         functionCoeffs
         {
             file                "filename.csv";

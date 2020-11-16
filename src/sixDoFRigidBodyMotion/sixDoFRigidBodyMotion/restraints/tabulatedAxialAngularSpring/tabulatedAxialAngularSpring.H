@@ -39,7 +39,7 @@ SourceFiles
 #include "sixDoFRigidBodyMotionRestraint.H"
 #include "point.H"
 #include "tensor.H"
-#include "TableFile.H"
+#include "Table.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,7 +66,7 @@ class tabulatedAxialAngularSpring
         vector axis_;
 
         //- Spring moment as a function of angle
-        autoPtr<Function1s::TableFile<scalar>> moment_;
+        autoPtr<Function1s::Table<scalar>> moment_;
 
         //- Boolean stating whether the angle around the axis needs to
         //  be converted to degrees before evaluating the moment function

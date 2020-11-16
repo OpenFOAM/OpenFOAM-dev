@@ -233,10 +233,8 @@ public:
 
 #define makeNamedFunction1Type(SS, Type, Name)                                 \
                                                                                \
-    defineNamedTemplateTypeNameAndDebug(Function1s::SS<Type>, 0);              \
-                                                                               \
     Function1<Type>::adddictionaryConstructorToTable<Function1s::SS<Type>>     \
-    addFunction1##SS##Type##ConstructorToTable_(#Name);
+    addFunction1##Name##Type##ConstructorToTable_(#Name);
 
 
 #define makeScalarFunction1(SS)                                                \
@@ -257,7 +255,7 @@ public:
     makeFunction1Type(Sine, Type);                                             \
     makeFunction1Type(Square, Type);                                           \
     makeFunction1Type(Table, Type);                                            \
-    makeFunction1Type(TableFile, Type);                                        \
+    makeNamedFunction1Type(Table, Type, tableFile);                            \
     makeFunction1Type(Scale, Type);                                            \
     makeFunction1Type(Coded, Type);
 

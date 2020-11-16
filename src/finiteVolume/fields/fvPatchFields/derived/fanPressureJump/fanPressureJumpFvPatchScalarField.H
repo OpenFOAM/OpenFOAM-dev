@@ -53,8 +53,8 @@ Usage
     {
         type            fanPressureJump;
         patchType       cyclic;
-        fanCurve        tableFile;
-        tableFileCoeffs
+        fanCurve        table;
+        fanCurveCoeffs
         {
             file            "$FOAM_CASE/constant/pressureVsQ";
             format          csv;

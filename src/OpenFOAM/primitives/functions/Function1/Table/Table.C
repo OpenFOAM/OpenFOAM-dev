@@ -24,39 +24,113 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Table.H"
+#include "linearInterpolationWeights.H"
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1s::Table<Type>::Table
-(
-    const word& entryName,
-    const dictionary& dict
-)
-:
-    TableBase<Type, Table<Type>>(entryName, dict)
+const Foam::interpolationWeights&
+Foam::Function1s::Table<Type>::interpolator() const
 {
-    if (!dict.found(entryName))
+    if (interpolatorPtr_.empty())
     {
-        dict.lookup("values") >> this->table_;
-    }
-    else
-    {
-        Istream& is(dict.lookup(entryName));
-        word entryType(is);
-        if (is.eof())
+        // Re-work table into linear list
+        tableSamplesPtr_.reset(new scalarField(table_.size()));
+        scalarField& tableSamples = tableSamplesPtr_();
+        forAll(table_, i)
         {
-            dict.lookup("values") >> this->table_;
+            tableSamples[i] = table_[i].first();
         }
-        else
-        {
-            is  >> this->table_;
-        }
+        interpolatorPtr_ = interpolationWeights::New
+        (
+            interpolationScheme_,
+            tableSamples
+        );
     }
 
-    TableBase<Type, Table<Type>>::check();
+    return interpolatorPtr_();
 }
 
+
+template<class Type>
+void Foam::Function1s::Table<Type>::check() const
+{
+    if (!table_.size())
+    {
+        FatalErrorInFunction
+            << "Table for entry " << this->name() << " is invalid (empty)"
+            << nl << exit(FatalError);
+    }
+
+    label n = table_.size();
+    scalar prevValue = table_[0].first();
+
+    for (label i = 1; i < n; ++i)
+    {
+        const scalar currValue = table_[i].first();
+
+        // avoid duplicate values (divide-by-zero error)
+        if (currValue <= prevValue)
+        {
+            FatalErrorInFunction
+                << "out-of-order value: " << currValue << " at index " << i
+                << exit(FatalError);
+        }
+        prevValue = currValue;
+    }
+}
+
+
+template<class Type>
+Foam::scalar Foam::Function1s::Table<Type>::bound
+(
+    const scalar x
+) const
+{
+    const bool under = x < table_.first().first();
+    const bool over = x > table_.last().first();
+
+    auto errorMessage = [&]()
+    {
+        return "value (" + name(x) + ") " + (under ? "under" : "over") + "flow";
+    };
+
+    if (under || over)
+    {
+        switch (boundsHandling_)
+        {
+            case tableBase::boundsHandling::error:
+            {
+                FatalErrorInFunction
+                    << errorMessage() << nl << exit(FatalError);
+                break;
+            }
+            case tableBase::boundsHandling::warn:
+            {
+                WarningInFunction
+                    << errorMessage() << nl << endl;
+                break;
+            }
+            case tableBase::boundsHandling::clamp:
+            {
+                break;
+            }
+            case tableBase::boundsHandling::repeat:
+            {
+                const scalar t0 = table_.first().first();
+                const scalar t1 = table_.last().first();
+                const scalar dt = t1 - t0;
+                const label n = floor((x - t0)/dt);
+                return x - n*dt;
+            }
+        }
+    }
+
+    return x;
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::Function1s::Table<Type>::Table
@@ -67,20 +141,52 @@ Foam::Function1s::Table<Type>::Table
     const List<Tuple2<scalar, Type>>& table
 )
 :
-    TableBase<Type, Table<Type>>
-    (
-        name,
-        boundsHandling,
-        interpolationScheme,
-        table
-    )
+    FieldFunction1<Type, Table<Type>>(name),
+    boundsHandling_(boundsHandling),
+    interpolationScheme_(interpolationScheme),
+    table_(table)
 {}
+
+
+template<class Type>
+Foam::Function1s::Table<Type>::Table
+(
+    const word& name,
+    const dictionary& dict
+)
+:
+    FieldFunction1<Type, Table<Type>>(name),
+    boundsHandling_
+    (
+        dict.found("outOfBounds")
+      ? tableBase::boundsHandlingNames_.read(dict.lookup("outOfBounds"))
+      : tableBase::boundsHandling::clamp
+    ),
+    interpolationScheme_
+    (
+        dict.lookupOrDefault<word>
+        (
+            "interpolationScheme",
+            linearInterpolationWeights::typeName
+        )
+    ),
+    table_(),
+    reader_(TableReader<Type>::New(name, dict, this->table_))
+{
+    check();
+}
 
 
 template<class Type>
 Foam::Function1s::Table<Type>::Table(const Table<Type>& tbl)
 :
-    TableBase<Type, Table<Type>>(tbl)
+    FieldFunction1<Type, Table<Type>>(tbl),
+    boundsHandling_(tbl.boundsHandling_),
+    interpolationScheme_(tbl.interpolationScheme_),
+    table_(tbl.table_),
+    tableSamplesPtr_(tbl.tableSamplesPtr_),
+    interpolatorPtr_(tbl.interpolatorPtr_),
+    reader_(tbl.reader_, false)
 {}
 
 
@@ -94,14 +200,130 @@ Foam::Function1s::Table<Type>::~Table()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1s::Table<Type>::writeEntries
+Type Foam::Function1s::Table<Type>::value
 (
-    Ostream& os,
-    const List<Tuple2<scalar, Type>>& table
+    const scalar x
 ) const
 {
-    os  << indent << "values" << table
-        << token::END_STATEMENT << endl;
+    const scalar bx = bound(x);
+
+    Type y = Zero;
+
+    interpolator().valueWeights(bx, indices_, weights_);
+    forAll(indices_, i)
+    {
+        y += weights_[i]*table_[indices_[i]].second();
+    }
+
+    return y;
+}
+
+
+template<class Type>
+Type Foam::Function1s::Table<Type>::integrate
+(
+    const scalar x1,
+    const scalar x2
+) const
+{
+    const scalar bx1 = bound(x1), bx2 = bound(x2);
+
+    Type sumY = Zero;
+
+    interpolator().integrationWeights(bx1, bx2, indices_, weights_);
+    forAll(indices_, i)
+    {
+       sumY += weights_[i]*table_[indices_[i]].second();
+    }
+
+    if (boundsHandling_ == tableBase::boundsHandling::repeat)
+    {
+        const scalar t0 = table_.first().first();
+        const scalar t1 = table_.last().first();
+        const scalar dt = t1 - t0;
+        const label n = floor((x2 - t0)/dt) - floor((x1 - t0)/dt);
+
+        if (n != 0)
+        {
+            Type sumY01 = Zero;
+
+            interpolator().integrationWeights(t0, t1, indices_, weights_);
+
+            forAll(indices_, i)
+            {
+                sumY01 += weights_[i]*table_[indices_[i]].second();
+            }
+            sumY += n*sumY01;
+        }
+    }
+
+    return sumY;
+}
+
+
+template<class Type>
+Foam::tmp<Foam::scalarField>
+Foam::Function1s::Table<Type>::x() const
+{
+    tmp<scalarField> tfld(new scalarField(table_.size(), 0.0));
+    scalarField& fld = tfld.ref();
+
+    forAll(table_, i)
+    {
+        fld[i] = table_[i].first();
+    }
+
+    return tfld;
+}
+
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::Function1s::Table<Type>::y() const
+{
+    tmp<Field<Type>> tfld(new Field<Type>(table_.size(), Zero));
+    Field<Type>& fld = tfld.ref();
+
+    forAll(table_, i)
+    {
+        fld[i] = table_[i].second();
+    }
+
+    return tfld;
+}
+
+
+template<class Type>
+void Foam::Function1s::Table<Type>::writeData
+(
+    Ostream& os
+) const
+{
+    Function1<Type>::writeData(os);
+    os  << token::END_STATEMENT << nl;
+
+    os  << indent << word(this->name() + "Coeffs") << nl;
+    os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
+
+    writeEntryIfDifferent
+    (
+        os,
+        "outOfBounds",
+        tableBase::boundsHandlingNames_[tableBase::boundsHandling::clamp],
+        tableBase::boundsHandlingNames_[boundsHandling_]
+    );
+
+    writeEntryIfDifferent
+    (
+        os,
+        "interpolationScheme",
+        linearInterpolationWeights::typeName,
+        interpolationScheme_
+    );
+
+    reader_->write(os, table_);
+
+    os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 
 

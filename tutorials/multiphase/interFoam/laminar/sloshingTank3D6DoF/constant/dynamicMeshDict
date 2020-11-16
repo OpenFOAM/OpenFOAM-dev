@@ -23,7 +23,7 @@ solidBodyMotionFunction sixDoFMotion;
 
 CofG            (0 0 0);
 
-translationRotation tableFile;
+translationRotation table;
 // interpolationScheme spline;
 file            "$FOAM_CASE/constant/6DoF.dat";
 
