@@ -228,7 +228,15 @@ public:
     defineNamedTemplateTypeNameAndDebug(Function1s::SS<Type>, 0);              \
                                                                                \
     Function1<Type>::adddictionaryConstructorToTable<Function1s::SS<Type>>     \
-        addFunction1##SS##Type##ConstructorToTable_;
+    addFunction1##SS##Type##ConstructorToTable_;
+
+
+#define makeNamedFunction1Type(SS, Type, Name)                                 \
+                                                                               \
+    defineNamedTemplateTypeNameAndDebug(Function1s::SS<Type>, 0);              \
+                                                                               \
+    Function1<Type>::adddictionaryConstructorToTable<Function1s::SS<Type>>     \
+    addFunction1##SS##Type##ConstructorToTable_(#Name);
 
 
 #define makeScalarFunction1(SS)                                                \

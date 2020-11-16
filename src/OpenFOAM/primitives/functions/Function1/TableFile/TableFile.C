@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,27 +30,13 @@ License
 template<class Type>
 Foam::Function1s::TableFile<Type>::TableFile
 (
-    const word& entryName,
+    const word& name,
     const dictionary& dict
 )
 :
-    TableBase<Type, TableFile<Type>>(entryName, dict),
-    fName_(dict.lookup("file")),
-    reader_
-    (
-        TableReader<Type>::New
-        (
-            dict.lookupOrDefault<word>
-            (
-                "format",
-                TableReaders::Foam<Type>::typeName
-            ),
-            dict
-        )
-    )
+    TableBase<Type, TableFile<Type>>(name, dict),
+    reader_(TableReader<Type>::New(name, dict, this->table_))
 {
-    reader_()(fName_, this->table_);
-
     TableBase<Type, TableFile<Type>>::check();
 }
 
@@ -59,7 +45,6 @@ template<class Type>
 Foam::Function1s::TableFile<Type>::TableFile(const TableFile<Type>& tbl)
 :
     TableBase<Type, TableFile<Type>>(tbl),
-    fName_(tbl.fName_),
     reader_(tbl.reader_, false)
 {}
 
@@ -74,13 +59,13 @@ Foam::Function1s::TableFile<Type>::~TableFile()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1s::TableFile<Type>::writeEntries(Ostream& os) const
+void Foam::Function1s::TableFile<Type>::writeEntries
+(
+    Ostream& os,
+    const List<Tuple2<scalar, Type>>& table
+) const
 {
-    TableBase<Type, TableFile<Type>>::writeEntries(os);
-
-    writeEntry(os, "file", fName_);
-    writeEntry(os, "format", reader_->type());
-    reader_->write(os);
+    reader_->write(os, table);
 }
 
 

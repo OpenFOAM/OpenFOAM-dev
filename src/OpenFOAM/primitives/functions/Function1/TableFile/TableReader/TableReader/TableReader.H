@@ -36,9 +36,6 @@ SourceFiles
 #define TableReader_H
 
 #include "dictionary.H"
-#include "fieldTypes.H"
-#include "runTimeSelectionTables.H"
-#include "Tuple2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -52,29 +49,12 @@ namespace Foam
 template<class Type>
 class TableReader
 {
-private:
-
-    // Private Member Functions
-
-        //- Read a 1D table
-        virtual void read
-        (
-            ISstream&,
-            List<Tuple2<scalar, Type>>&
-        ) const = 0;
-
-        //- Read a 2D table
-        virtual void read
-        (
-            ISstream&,
-            List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>&
-        ) const = 0;
-
 
 public:
 
     //- Runtime type information
     TypeName("TableReader");
+
 
     // Declare run-time constructor selection table
 
@@ -83,8 +63,12 @@ public:
             autoPtr,
             TableReader,
             dictionary,
-            (const dictionary& dict),
-            (dict)
+            (
+                const word& name,
+                const dictionary& dict,
+                List<Tuple2<scalar, Type>>& table
+            ),
+            (name, dict, table)
         );
 
 
@@ -100,8 +84,9 @@ public:
     // Selector
     static autoPtr<TableReader<Type>> New
     (
-        const word& readerType,
-        const dictionary& dict
+        const word& name,
+        const dictionary& dict,
+        List<Tuple2<scalar, Type>>& table
     );
 
 
@@ -111,12 +96,12 @@ public:
 
     // Member Functions
 
-        //- Read a table
-        template<class TableType>
-        void operator()(const fileName&, TableType&) const;
-
         //- Write additional information
-        virtual void write(Ostream& os) const;
+        virtual void write
+        (
+            Ostream& os,
+            const List<Tuple2<scalar, Type>>& table
+        ) const;
 };
 
 
@@ -142,6 +127,7 @@ public:
 
 #define makeTableReaders(Type)                                                 \
     defineTableReader(Type);                                                   \
+    makeTableReader(Embedded, Type);                                           \
     makeTableReader(Foam, Type);                                               \
     makeTableReader(Csv, Type)
 
@@ -150,7 +136,7 @@ public:
 
 #ifdef NoRepository
     #include "TableReader.C"
-    #include "FoamTableReader.H"
+    #include "TableReaderNew.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,108 +22,80 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1s::TableFile
+    Foam::TableFileReader
 
 Description
-    Templated table container function where data is read from file. Data is
-    stored as a list of Tuple2's. The first column is scalar. Data is read in
-    the form specified by the format entry, which defaults to the native
-    OpenFOAM format.
-
-    Usage:
-    \verbatim
-        <entryName> tableFile;
-        <entryName>Coeffs
-        {
-            file                dataFile;    // name of data file
-            format              foam;        // data format (optional)
-            outOfBounds         clamp;       // optional out-of-bounds handling
-            interpolationScheme linear;      // optional interpolation method
-        }
-    \endverbatim
+    Base class to read table data for tables
 
 SourceFiles
-    TableFile.C
-
-See also
-    FoamTableReader.C
-    CsvTableReader.C
+    TableFileReader.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef TableFile_H
-#define TableFile_H
+#ifndef TableFileReader_H
+#define TableFileReader_H
 
-#include "TableBase.H"
 #include "TableReader.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace Function1s
-{
 
 /*---------------------------------------------------------------------------*\
-                          Class TableFile Declaration
+                         Class TableFileReader Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class TableFile
+class TableFileReader
 :
-    public TableBase<Type, TableFile<Type>>
+    public TableReader<Type>
 {
     // Private Data
 
-        //- Table reader
-        const autoPtr<TableReader<Type>> reader_;
+        //- File name for table
+        const fileName fName_;
+
+
+    // Private Member Functions
+
+        //- Read a 1D table
+        virtual void read(ISstream&, List<Tuple2<scalar, Type>>&) const = 0;
+
+
+protected:
+
+        //- Read a 1D table
+        void read(const dictionary& dict, List<Tuple2<scalar, Type>>&) const;
 
 
 public:
 
-    //- Runtime type information
-    TypeName("tableFile");
-
-
     // Constructors
 
-        //- Construct from entry name and dictionary
-        TableFile(const word& entryName, const dictionary& dict);
-
-        //- Copy constructor
-        TableFile(const TableFile<Type>& tbl);
+        //- Construct from dictionary
+        TableFileReader(const dictionary& dict);
 
 
     //- Destructor
-    virtual ~TableFile();
+    virtual ~TableFileReader();
 
 
-    // I/O
+    // Member Functions
 
-        //- Write entries only in dictionary format
-        virtual void writeEntries
-        (
-            Ostream& os,
-            const List<Tuple2<scalar, Type>>& table
-        ) const;
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const TableFile<Type>&) = delete;
+        //- Write additional information
+        virtual void write(Ostream& os) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "TableFile.C"
+    #include "TableFileReader.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

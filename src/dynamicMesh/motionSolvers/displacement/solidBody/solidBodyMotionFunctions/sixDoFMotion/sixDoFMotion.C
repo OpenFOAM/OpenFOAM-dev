@@ -57,6 +57,7 @@ namespace solidBodyMotionFunctions
 #include "Square.H"
 #include "Table.H"
 #include "TableFile.H"
+#include "EmbeddedTableReader.H"
 #include "FoamTableReader.H"
 #include "Scale.H"
 #include "CodedFunction1.H"
@@ -102,6 +103,7 @@ namespace Foam
     makeFunction1s(trvType);
 
     defineTableReader(trvType);
+    makeTableReader(Embedded, trvType);
     makeTableReader(Foam, trvType);
 }
 

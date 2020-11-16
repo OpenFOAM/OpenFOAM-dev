@@ -45,7 +45,7 @@ SourceFiles
 #ifndef FoamTableReader_H
 #define FoamTableReader_H
 
-#include "TableReader.H"
+#include "TableFileReader.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -61,19 +61,13 @@ namespace TableReaders
 template<class Type>
 class Foam
 :
-    public TableReader<Type>
+    public TableFileReader<Type>
 {
     // Private Member Functions
 
         //- Read a 1D table
         virtual void read(ISstream&, List<Tuple2<scalar, Type>> &) const;
 
-        //- Read a 2D table
-        virtual void read
-        (
-            ISstream&,
-            List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>&
-        ) const;
 
 public:
 
@@ -84,7 +78,12 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        Foam(const dictionary &dict);
+        Foam
+        (
+            const word& name,
+            const dictionary &dict,
+            List<Tuple2<scalar, Type>>& table
+        );
 
         //- Construct and return a copy
         virtual autoPtr<TableReader<Type>> clone() const

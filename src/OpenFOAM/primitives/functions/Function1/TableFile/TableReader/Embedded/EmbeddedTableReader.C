@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,42 +23,59 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "FoamTableReader.H"
-
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-void Foam::TableReaders::Foam<Type>::read
-(
-    ISstream& is,
-    List<Tuple2<scalar, Type>>& data
-) const
-{
-    is  >> data;
-}
-
+#include "EmbeddedTableReader.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::TableReaders::Foam<Type>::Foam
+Foam::TableReaders::Embedded<Type>::Embedded
 (
     const word& name,
     const dictionary& dict,
     List<Tuple2<scalar, Type>>& table
 )
 :
-    TableFileReader<Type>(dict)
+    TableReader<Type>(dict)
 {
-    TableFileReader<Type>::read(dict, table);
+    if (!dict.found(name))
+    {
+        dict.lookup("values") >> table;
+    }
+    else
+    {
+        Istream& is(dict.lookup(name));
+        word entryType(is);
+        if (is.eof())
+        {
+            dict.lookup("values") >> table;
+        }
+        else
+        {
+            is  >> table;
+        }
+    }
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::TableReaders::Foam<Type>::~Foam()
+Foam::TableReaders::Embedded<Type>::~Embedded()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::TableReaders::Embedded<Type>::write
+(
+    Ostream& os,
+    const List<Tuple2<scalar, Type>>& table
+) const
+{
+    os  << indent << "values" << table
+        << token::END_STATEMENT << endl;
+}
 
 
 // ************************************************************************* //

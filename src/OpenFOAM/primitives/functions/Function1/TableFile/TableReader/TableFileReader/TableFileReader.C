@@ -23,42 +23,73 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "FoamTableReader.H"
+#include "TableFileReader.H"
+#include "fileOperation.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
 template<class Type>
-void Foam::TableReaders::Foam<Type>::read
+void Foam::TableFileReader<Type>::read
 (
-    ISstream& is,
-    List<Tuple2<scalar, Type>>& data
+    const dictionary& dict,
+    List<Tuple2<scalar, Type>>& table
 ) const
 {
-    is  >> data;
+    // Expand the file
+    fileName fNameExpanded(fName_);
+    fNameExpanded.expand();
+
+    // Open a stream and check it
+    autoPtr<ISstream> isPtr(fileHandler().NewIFstream(fNameExpanded));
+    ISstream& is = isPtr();
+    if (!is.good())
+    {
+        FatalIOErrorInFunction(is)
+            << "Cannot open file" << fName_ << nl
+            << exit(FatalIOError);
+    }
+
+    // Read data from the stream
+    read(is, table);
+
+    // Check something was read
+    if (table.empty())
+    {
+        FatalIOErrorInFunction(is)
+            << "Table read from " << fName_ << " is empty" << nl
+            << exit(FatalIOError);
+    }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::TableReaders::Foam<Type>::Foam
+Foam::TableFileReader<Type>::TableFileReader
 (
-    const word& name,
-    const dictionary& dict,
-    List<Tuple2<scalar, Type>>& table
+    const dictionary& dict
 )
 :
-    TableFileReader<Type>(dict)
-{
-    TableFileReader<Type>::read(dict, table);
-}
+    TableReader<Type>(dict),
+    fName_(dict.lookup("file"))
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::TableReaders::Foam<Type>::~Foam()
+Foam::TableFileReader<Type>::~TableFileReader()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::TableFileReader<Type>::write(Ostream& os) const
+{
+    writeEntry(os, "format", this->type());
+    writeEntry(os, "file", fName_);
+}
 
 
 // ************************************************************************* //

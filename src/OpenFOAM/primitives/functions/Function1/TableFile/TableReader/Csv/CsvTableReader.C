@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -198,23 +198,17 @@ void Foam::TableReaders::Csv<Type>::read
 }
 
 
-template<class Type>
-void Foam::TableReaders::Csv<Type>::read
-(
-    ISstream&,
-    List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>& data
-) const
-{
-    NotImplemented;
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::TableReaders::Csv<Type>::Csv(const dictionary& dict)
+Foam::TableReaders::Csv<Type>::Csv
+(
+    const word& name,
+    const dictionary& dict,
+    List<Tuple2<scalar, Type>>& table
+)
 :
-    TableReader<Type>(dict),
+    TableFileReader<Type>(dict),
     nHeaderLine_(dict.lookup<label>("nHeaderLine")),
     refColumn_(dict.lookup<label>("refColumn")),
     componentColumns_(dict.lookup("componentColumns")),
@@ -228,6 +222,8 @@ Foam::TableReaders::Csv<Type>::Csv(const dictionary& dict)
             << pTraits<Type>::nComponents << endl
             << exit(FatalError);
     }
+
+    TableFileReader<Type>::read(dict, table);
 }
 
 
@@ -238,10 +234,16 @@ Foam::TableReaders::Csv<Type>::~Csv()
 {}
 
 
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
 template<class Type>
-void Foam::TableReaders::Csv<Type>::write(Ostream& os) const
+void Foam::TableReaders::Csv<Type>::write
+(
+    Ostream& os,
+    const List<Tuple2<scalar, Type>>& table
+) const
 {
-    TableReader<Type>::write(os);
+    TableFileReader<Type>::write(os);
 
     writeEntry(os, "nHeaderLine", nHeaderLine_);
     writeEntry(os, "refColumn", refColumn_);

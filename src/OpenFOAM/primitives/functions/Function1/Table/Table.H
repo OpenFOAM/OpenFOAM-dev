@@ -97,7 +97,11 @@ public:
     // Member Functions
 
         //- Write entries only in dictionary format
-        virtual void writeEntries(Ostream& os) const;
+        virtual void writeEntries
+        (
+            Ostream& os,
+            const List<Tuple2<scalar, Type>>& table
+        ) const;
 
 
     // Member Operators

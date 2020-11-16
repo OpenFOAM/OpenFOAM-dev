@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,108 +22,97 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1s::TableFile
+    Foam::TableReaders::Embedded
 
 Description
-    Templated table container function where data is read from file. Data is
-    stored as a list of Tuple2's. The first column is scalar. Data is read in
-    the form specified by the format entry, which defaults to the native
-    OpenFOAM format.
+    Reads an interpolation table from the \c values entry in OpenFOAM-format.
+
+    This is a list of Tuple2's where the first (x) column is scalar, and the
+    second (y) column is the type to be interpolated.
 
     Usage:
     \verbatim
-        <entryName> tableFile;
-        <entryName>Coeffs
-        {
-            file                dataFile;    // name of data file
-            format              foam;        // data format (optional)
-            outOfBounds         clamp;       // optional out-of-bounds handling
-            interpolationScheme linear;      // optional interpolation method
-        }
+        values
+        (
+            (0.0 (1 2 3))
+            (1.0 (4 5 6))
+        );
     \endverbatim
 
 SourceFiles
-    TableFile.C
-
-See also
-    FoamTableReader.C
-    CsvTableReader.C
+    Embedded.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef TableFile_H
-#define TableFile_H
+#ifndef EmbeddedTableReader_H
+#define EmbeddedTableReader_H
 
-#include "TableBase.H"
 #include "TableReader.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace Function1s
+namespace TableReaders
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class TableFile Declaration
+                            Class Foam Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class Type>
-class TableFile
+class Embedded
 :
-    public TableBase<Type, TableFile<Type>>
+    public TableReader<Type>
 {
-    // Private Data
-
-        //- Table reader
-        const autoPtr<TableReader<Type>> reader_;
-
 
 public:
 
     //- Runtime type information
-    TypeName("tableFile");
+    TypeName("embedded");
 
 
     // Constructors
 
-        //- Construct from entry name and dictionary
-        TableFile(const word& entryName, const dictionary& dict);
+        //- Construct from dictionary
+        Embedded
+        (
+            const word& name,
+            const dictionary &dict,
+            List<Tuple2<scalar, Type>>& table
+        );
 
-        //- Copy constructor
-        TableFile(const TableFile<Type>& tbl);
+        //- Construct and return a copy
+        virtual autoPtr<TableReader<Type>> clone() const
+        {
+            return autoPtr<TableReader<Type>>(new Embedded<Type>(*this));
+        }
 
 
     //- Destructor
-    virtual ~TableFile();
+    virtual ~Embedded();
 
 
-    // I/O
+    // Member Functions
 
-        //- Write entries only in dictionary format
-        virtual void writeEntries
+        //- Write the table values
+        virtual void write
         (
             Ostream& os,
             const List<Tuple2<scalar, Type>>& table
         ) const;
-
-
-    // Member Operators
-
-        //- Disallow default bitwise assignment
-        void operator=(const TableFile<Type>&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1s
+} // End namespace TableReaders
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "TableFile.C"
+    #include "EmbeddedTableReader.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

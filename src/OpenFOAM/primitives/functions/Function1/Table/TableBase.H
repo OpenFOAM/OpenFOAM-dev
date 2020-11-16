@@ -37,7 +37,6 @@ SourceFiles
 
 #include "tableBase.H"
 #include "Function1.H"
-#include "Tuple2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -141,7 +140,11 @@ public:
         virtual tmp<Field<Type>> y() const;
 
         //- Write entries only in dictionary format
-        virtual void writeEntries(Ostream& os) const;
+        virtual void writeEntries
+        (
+            Ostream& os,
+            const List<Tuple2<scalar, Type>>& table
+        ) const = 0;
 
         //- Write all table data in dictionary format
         virtual void writeData(Ostream& os) const;

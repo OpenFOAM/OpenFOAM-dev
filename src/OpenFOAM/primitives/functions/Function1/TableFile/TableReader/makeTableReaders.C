@@ -23,10 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "TableReader.H"
+#include "EmbeddedTableReader.H"
 #include "FoamTableReader.H"
 #include "CsvTableReader.H"
-#include "fieldTypes.H"
-#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

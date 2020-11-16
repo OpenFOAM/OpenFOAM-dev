@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,11 +94,13 @@ Foam::Function1s::Table<Type>::~Table()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1s::Table<Type>::writeEntries(Ostream& os) const
+void Foam::Function1s::Table<Type>::writeEntries
+(
+    Ostream& os,
+    const List<Tuple2<scalar, Type>>& table
+) const
 {
-    TableBase<Type, Table<Type>>::writeEntries(os);
-
-    os  << indent << "values" << this->table_
+    os  << indent << "values" << table
         << token::END_STATEMENT << endl;
 }
 

@@ -48,7 +48,7 @@ SourceFiles
 #ifndef CsvTableReader_H
 #define CsvTableReader_H
 
-#include "TableReader.H"
+#include "TableFileReader.H"
 #include "labelList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -65,7 +65,7 @@ namespace TableReaders
 template<class Type>
 class Csv
 :
-    public TableReader<Type>
+    public TableFileReader<Type>
 {
     // Private Data
 
@@ -93,13 +93,6 @@ class Csv
         //- Read a 1D table
         virtual void read(ISstream&, List<Tuple2<scalar, Type>>&) const;
 
-        //- Read a 2D table
-        virtual void read
-        (
-            ISstream&,
-            List<Tuple2<scalar, List<Tuple2<scalar, Type>>>>&
-        ) const;
-
 
 public:
 
@@ -110,7 +103,12 @@ public:
     // Constructors
 
         //- Construct from dictionary
-        Csv(const dictionary& dict);
+        Csv
+        (
+            const word& name,
+            const dictionary &dict,
+            List<Tuple2<scalar, Type>>& table
+        );
 
         //- Construct and return a copy
         virtual autoPtr<TableReader<Type>> clone() const
@@ -125,8 +123,12 @@ public:
 
     // Member Functions
 
-        //- Write the remaining parameters
-        virtual void write(Ostream& os) const;
+        //- Write the CSV parameters
+        virtual void write
+        (
+            Ostream& os,
+            const List<Tuple2<scalar, Type>>& table
+        ) const;
 };
 
 

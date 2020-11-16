@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "TableBase.H"
-#include "Time.H"
 #include "linearInterpolationWeights.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
@@ -300,11 +299,17 @@ Foam::Function1s::TableBase<Type, Function1Type>::y() const
 
 
 template<class Type, class Function1Type>
-void Foam::Function1s::TableBase<Type, Function1Type>::writeEntries
+void Foam::Function1s::TableBase<Type, Function1Type>::writeData
 (
     Ostream& os
 ) const
 {
+    Function1<Type>::writeData(os);
+    os  << token::END_STATEMENT << nl;
+
+    os  << indent << word(this->name() + "Coeffs") << nl;
+    os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
+
     writeEntryIfDifferent
     (
         os,
@@ -320,21 +325,9 @@ void Foam::Function1s::TableBase<Type, Function1Type>::writeEntries
         linearInterpolationWeights::typeName,
         interpolationScheme_
     );
-}
 
+    writeEntries(os, table_);
 
-template<class Type, class Function1Type>
-void Foam::Function1s::TableBase<Type, Function1Type>::writeData
-(
-    Ostream& os
-) const
-{
-    Function1<Type>::writeData(os);
-    os  << token::END_STATEMENT << nl;
-
-    os  << indent << word(this->name() + "Coeffs") << nl;
-    os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    writeEntries(os);
     os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 
