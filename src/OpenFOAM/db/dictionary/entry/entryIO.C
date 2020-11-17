@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,13 +24,11 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "entry.H"
-#include "primitiveEntry.H"
-#include "dictionaryEntry.H"
-#include "functionEntry.H"
+#include "dictionaryListEntry.H"
+#include "inputSyntaxEntry.H"
 #include "includeEntry.H"
 #include "inputModeEntry.H"
 #include "stringOps.H"
-#include "dictionaryListEntry.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -140,9 +138,11 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
     {
         if (keyword.isFunctionName())      // ... Function entry
         {
+            const word functionName = keyword(1, keyword.size() - 1);
+
             if (disableFunctionEntries)
             {
-                return parentDict.add
+                bool success = parentDict.add
                 (
                     new functionEntry
                     (
@@ -152,10 +152,25 @@ bool Foam::entry::New(dictionary& parentDict, Istream& is)
                     ),
                     false
                 );
+
+                if
+                (
+                    success
+                 && functionName == functionEntries::inputSyntaxEntry::typeName
+                )
+                {
+                   return functionEntry::execute
+                   (
+                       functionName,
+                       parentDict,
+                       parentDict.lookup(keyword)
+                   );
+                }
+
+                return success;
             }
             else
             {
-                const word functionName = keyword(1, keyword.size() - 1);
                 return functionEntry::execute(functionName, parentDict, is);
             }
         }
