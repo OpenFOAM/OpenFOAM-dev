@@ -49,10 +49,10 @@ Description
     c #calc "$a / $b";
     \endverbatim
 
-    or "{}" scoping around the variable, e.g.
+    or "()" scoping around the variable, e.g.
 
     \verbatim
-    c #calc "${a}/$b";
+    c #calc "($a)/$b";
     \endverbatim
 
 Note
