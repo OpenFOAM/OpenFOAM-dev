@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring
+    Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring
 
 Description
-    sixDoFRigidBodyMotionRestraints model.  Axial angular spring with moment
-    values drawn from an interpolation table.  Linear damping.
+    Axial angular spring with moment values obtained from a Function1 and
+    linear damping.
 
 SourceFiles
-    tabulatedAxialAngularSpring.C
+    axialAngularSpring.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef tabulatedAxialAngularSpring_H
-#define tabulatedAxialAngularSpring_H
+#ifndef axialAngularSpring_H
+#define axialAngularSpring_H
 
 #include "sixDoFRigidBodyMotionRestraint.H"
 #include "point.H"
@@ -50,10 +50,10 @@ namespace sixDoFRigidBodyMotionRestraints
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class tabulatedAxialAngularSpring Declaration
+                 Class axialAngularSpring Declaration
 \*---------------------------------------------------------------------------*/
 
-class tabulatedAxialAngularSpring
+class axialAngularSpring
 :
     public sixDoFRigidBodyMotionRestraint
 {
@@ -66,7 +66,7 @@ class tabulatedAxialAngularSpring
         vector axis_;
 
         //- Spring moment as a function of angle
-        autoPtr<Function1s::Table<scalar>> moment_;
+        autoPtr<Function1<scalar>> moment_;
 
         //- Boolean stating whether the angle around the axis needs to
         //  be converted to degrees before evaluating the moment function
@@ -79,13 +79,13 @@ class tabulatedAxialAngularSpring
 public:
 
     //- Runtime type information
-    TypeName("tabulatedAxialAngularSpring");
+    TypeName("axialAngularSpring");
 
 
     // Constructors
 
         //- Construct from components
-        tabulatedAxialAngularSpring
+        axialAngularSpring
         (
             const word& name,
             const dictionary& sDoFRBMRDict
@@ -96,13 +96,13 @@ public:
         {
             return autoPtr<sixDoFRigidBodyMotionRestraint>
             (
-                new tabulatedAxialAngularSpring(*this)
+                new axialAngularSpring(*this)
             );
         }
 
 
     //- Destructor
-    virtual ~tabulatedAxialAngularSpring();
+    virtual ~axialAngularSpring();
 
 
     // Member Functions

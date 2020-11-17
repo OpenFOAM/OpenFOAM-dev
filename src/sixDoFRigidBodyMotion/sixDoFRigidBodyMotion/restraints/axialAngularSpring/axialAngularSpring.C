@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "tabulatedAxialAngularSpring.H"
+#include "axialAngularSpring.H"
 #include "addToRunTimeSelectionTable.H"
 #include "sixDoFRigidBodyMotion.H"
 #include "transform.H"
@@ -35,12 +35,12 @@ namespace Foam
 {
 namespace sixDoFRigidBodyMotionRestraints
 {
-    defineTypeNameAndDebug(tabulatedAxialAngularSpring, 0);
+    defineTypeNameAndDebug(axialAngularSpring, 0);
 
     addToRunTimeSelectionTable
     (
         sixDoFRigidBodyMotionRestraint,
-        tabulatedAxialAngularSpring,
+        axialAngularSpring,
         dictionary
     );
 }
@@ -49,8 +49,8 @@ namespace sixDoFRigidBodyMotionRestraints
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::
-tabulatedAxialAngularSpring
+Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::
+axialAngularSpring
 (
     const word& name,
     const dictionary& sDoFRBMRDict
@@ -69,15 +69,15 @@ tabulatedAxialAngularSpring
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::
-~tabulatedAxialAngularSpring()
+Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::
+~axialAngularSpring()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 void
-Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::restrain
+Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::restrain
 (
     const sixDoFRigidBodyMotion& motion,
     vector& restraintPosition,
@@ -142,7 +142,7 @@ Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::restrain
 }
 
 
-bool Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::read
+bool Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::read
 (
     const dictionary& sDoFRBMRDict
 )
@@ -175,10 +175,7 @@ bool Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::read
             << abort(FatalError);
     }
 
-    moment_.reset
-    (
-        new Function1s::Table<scalar>("moment", sDoFRBMRCoeffs_)
-    );
+    moment_ = Function1<scalar>::New("moment", sDoFRBMRCoeffs_);
 
     const word angleFormat = sDoFRBMRCoeffs_.lookup("angleFormat");
 
@@ -203,7 +200,7 @@ bool Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::read
 }
 
 
-void Foam::sixDoFRigidBodyMotionRestraints::tabulatedAxialAngularSpring::write
+void Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::write
 (
     Ostream& os
 ) const

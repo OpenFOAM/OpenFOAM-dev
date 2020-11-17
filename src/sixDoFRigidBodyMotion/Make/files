@@ -10,7 +10,7 @@ $(restraints)/sixDoFRigidBodyMotionRestraint/sixDoFRigidBodyMotionRestraintNew.C
 $(restraints)/linearAxialAngularSpring/linearAxialAngularSpring.C
 $(restraints)/linearSpring/linearSpring.C
 $(restraints)/sphericalAngularSpring/sphericalAngularSpring.C
-$(restraints)/tabulatedAxialAngularSpring/tabulatedAxialAngularSpring.C
+$(restraints)/axialAngularSpring/axialAngularSpring.C
 $(restraints)/linearDamper/linearDamper.C
 $(restraints)/sphericalAngularDamper/sphericalAngularDamper.C
 
