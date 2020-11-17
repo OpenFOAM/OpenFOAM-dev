@@ -54,7 +54,11 @@ yPlus/yPlus.C
 turbulenceIntensity/turbulenceIntensity.C
 wallShearStress/wallShearStress.C
 wallHeatFlux/wallHeatFlux.C
+
 wallHeatTransferCoeff/wallHeatTransferCoeff.C
+wallHeatTransferCoeff/wallHeatTransferCoeffModels/wallHeatTransferCoeffModel/wallHeatTransferCoeffModel.C
+wallHeatTransferCoeff/wallHeatTransferCoeffModels/kappaEff/kappaEff.C
+wallHeatTransferCoeff/wallHeatTransferCoeffModels/ReynoldsAnalogy/ReynoldsAnalogy.C
 
 writeCellCentres/writeCellCentres.C
 writeCellVolumes/writeCellVolumes.C

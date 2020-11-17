@@ -22,18 +22,33 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::wallHeatTransferCoeff
+    Foam::wallHeatTransferCoeffModels::kappaEff
 
 Description
-    Calculates and writes the estimated heat transfer coefficient at wall
-    patches as the volScalarField field.
+    Calculates the estimated flow heat transfer coefficient at wall patches
+    as the volScalarField field 'kappaEff' using one of equeations bellow.
 
-    All wall patches are included by default; to restrict the calculation to
-    certain patches, use the optional 'patches' entry.
+    kappaEff model, given by:
 
-    The models are selected run time by model entry. For detailed description
-    look at the header file for specific model under
-    wallHeatTransferCoeffModels.
+    \f[
+        htc = \rho*C_p*({\frac{\nu}{Prl} + \frac{\nu_t}{Prt}})
+    \f]
+
+    kappaEff model with characteristic length, given by:
+
+    \f[
+        htc =
+            \rho*C_p*({\frac{\nu}{Prl} + \frac{\nu_t}{Prt}})\frac{1}{L_{char}};
+    \f]
+
+    where
+    \vartable
+        rho      | Density [kg/m^3]
+        Cp       | Specific heat capacity [m^2/K/s^2)]
+        Prl      | Fluid laminar Prandtl number []
+        Prt      | Fluid turbulent Prandtl number []
+        Lchar    | Characteristic length [m]
+    \endvartable
 
     Example of function object specification:
     \verbatim
@@ -69,141 +84,113 @@ Description
     }
     \endverbatim
 
-    \verbatim
-    ReynoldsAnalogy1
-    {
-        type       wallHeatTransferCoeff;
-        libs       ("libfieldFunctionObjects.so");
-        model      ReynoldsAnalogy;
-        ...
-        region     fluid;
-        patches    (".*Wall");
-        rho        1.225;
-        Cp         1005;
-        Uref       1.0;
-    }
-    \endverbatim
+Usage
+    \table
+        Property | Description                   | Required | Default value
+        type     | Type name: wallHeatTransferCoeff | yes   |
+        model    | Type name: kappaEff           | no       | kappaEff
+        patches  | List of patches to process    | no       | all wall patches
+        region   | Region to be evaluated        | no       | default region
+        rho      | Fluid density                 | yes      |
+        Cp       | Fluid heat capacity           | yes      |
+        Prl      | Fluid laminar Prandtl number  | yes      |
+        Prt      | Fluid turbulent Prandtl number| yes      |
+        Lchar    | Characteristic length         | no       | no
+    \endtable
 
 Note
-    Writing field 'wallHeatTransferCoeff' is done by default, but it can be
-    overridden by defining an empty \c objects list. For details see
-    writeLocalObjects.
-
-See also
-    Foam::functionObject
-    Foam::functionObjects::fvMeshFunctionObject
-    Foam::functionObjects::logFiles
-    Foam::functionObjects::writeLocalObjects
-    Foam::functionObjects::timeControl
+    Cp and rho are required only for incompressible flow calclulations.
 
 SourceFiles
-    wallHeatTransferCoeff.C
+    kappaEff.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_wallHeatTransferCoeff_H
-#define functionObjects_wallHeatTransferCoeff_H
+#ifndef wallHeatTransferCoeffModels_kappaEff_H
+#define wallHeatTransferCoeffModels_kappaEff_H
 
-#include "fvMeshFunctionObject.H"
-#include "logFiles.H"
-#include "writeLocalObjects.H"
 #include "wallHeatTransferCoeffModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace functionObjects
+namespace wallHeatTransferCoeffModels
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class wallHeatTransferCoeff Declaration
+                          Class kappaEff Declaration
 \*---------------------------------------------------------------------------*/
 
-class wallHeatTransferCoeff
+class kappaEff
 :
-    public fvMeshFunctionObject,
-    public logFiles,
-    public writeLocalObjects
+    public wallHeatTransferCoeffModel
 {
-
-private:
-
-    // Protected data
-
-        // Pointer to the model
-        autoPtr<wallHeatTransferCoeffModel> coeffModel_;
-
-        // Return wall shear stress
-        tmp<volSymmTensorField> devSigma();
-
-
     // Private data
 
-        //- Density [kg/m^3]
-        dimensionedScalar rho_;
+        //- Reference to mesh
+        const fvMesh& mesh_;
 
-        //- Specific capacity [J/K/kg]
-        dimensionedScalar Cp_;
+        //- Fluid laminar Prandtl number
+        dimensionedScalar Prl_;
 
+        //- Fluid turbulent Prandtl number
+        dimensionedScalar Prt_;
 
-protected:
+        //- Characteristic length
+        dimensionedScalar Lchar_;
 
-    // Protected data
-
-        //- Reference to Time
-        const Time& runTime_;
-
-        //- Optional list of patches to process
-        labelHashSet patchSet_;
-
-        //- File header information
-        virtual void writeFileHeader(const label i);
+        //- Is characteristic length used?
+        bool isCharLength_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("wallHeatTransferCoeff");
+    TypeName("kappaEff");
 
 
     // Constructors
 
         //- Construct from name, mesh and dict
-        wallHeatTransferCoeff
+        kappaEff
         (
             const word& name,
-            const Time& runTime,
-            const dictionary& dict
+            const fvMesh& mesh,
+            const dictionary&
         );
+
+        //- Disallow default bitwise copy construction
+        kappaEff(const kappaEff&) = delete;
 
 
     //- Destructor
-    virtual ~wallHeatTransferCoeff();
+    virtual ~kappaEff();
 
 
     // Member Functions
 
-        //- Read the wallHeatTransferCoeffs data
+        //- Read the kappaEff data
         virtual bool read(const dictionary&);
 
         //- Calculate the wall heat transfer coefficient
-        virtual bool execute();
-
-        //- Write the wall heat transfer coefficient
-        virtual bool write();
+        virtual tmp<volScalarField> htcByRhoCp
+        (
+            const momentumTransportModel& mmtm,
+            const labelHashSet& patches
+        ) const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const wallHeatTransferCoeff&) = delete;
+        void operator=(const kappaEff&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace functionObjects
+} // End namespace wallHeatTransferCoeffModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
