@@ -86,30 +86,30 @@ Usage
 
       - Change solver:
         \verbatim
-           foamDictionary system/fvSolution -entry solvers.p.solver -set PCG
+           foamDictionary system/fvSolution -entry solvers/p/solver -set PCG
         \endverbatim
 
       - Print bc type:
         \verbatim
-           foamDictionary 0/U -entry boundaryField.movingWall.type
+           foamDictionary 0/U -entry boundaryField/movingWall/type
         \endverbatim
 
       - Change bc parameter:
         \verbatim
-           foamDictionary 0/U -entry boundaryField.movingWall.value \
+           foamDictionary 0/U -entry boundaryField/movingWall/value \
              -set "uniform (2 0 0)"
         \endverbatim
 
       - Change bc parameter in parallel:
         \verbatim
            mpirun -np 4 foamDictionary 0.5/U \
-             -entry boundaryField.movingWall.value \
+             -entry boundaryField/movingWall/value \
              -set "uniform (2 0 0)" -parallel
         \endverbatim
 
       - Change whole bc type:
         \verbatim
-          foamDictionary 0/U -entry boundaryField.movingWall \
+          foamDictionary 0/U -entry boundaryField/movingWall \
             -set "{type uniformFixedValue; uniformValue (2 0 0);}"
         \endverbatim
 
@@ -128,7 +128,7 @@ Usage
       - Change patch type:
         \verbatim
           foamDictionary constant/polyMesh/boundary \
-            -entry entry0.fixedWalls.type -set patch
+            -entry entry0/fixedWalls/type -set patch
         \endverbatim
         This uses special parsing of Lists which stores these in the
         dictionary with keyword 'entryDDD' where DDD is the position
