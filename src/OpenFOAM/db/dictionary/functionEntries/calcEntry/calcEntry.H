@@ -33,11 +33,27 @@ Description
     \verbatim
     a 1.0;
     b 3;
-    c #calc "$a/$b";
+    c #calc "$a*$b";
     \endverbatim
 
     Note the explicit trailing 0 ('1.0') to force a to be read (and written)
     as a floating point number.
+
+    Special care is required for calc entries that include a division since
+    "/" is also used as the scoping operator to identify keywords in
+    sub-dictionaries. For example, "$a/b" expects a keyword "b" within a
+    sub-dictionary named "a". A division can be correctly executed by using a
+    space between a variables and "/", e.g.
+
+    \verbatim
+    c #calc "$a / $b";
+    \endverbatim
+
+    or "{}" scoping around the variable, e.g.
+
+    \verbatim
+    c #calc "${a}/$b";
+    \endverbatim
 
 Note
     Internally this is just a wrapper around codeStream functionality - the
