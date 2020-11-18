@@ -57,7 +57,7 @@ Foam::wallHeatTransferCoeffModels::kappaEff::kappaEff
     mesh_(mesh),
     Prl_("Prl", dimless, dict),
     Prt_("Prl", dimless, dict),
-    Lchar_("Lchar", dimLength, dict),
+    Lchar_("Lchar", dimLength, Zero),
     isCharLength_(false)
 {
     read(dict);
@@ -76,8 +76,12 @@ bool Foam::wallHeatTransferCoeffModels::kappaEff::read(const dictionary& dict)
 {
     Prl_.read(dict);
     Prt_.read(dict);
-    Lchar_.lookupOrDefault("Lchar", dict, dimLength);
-    isCharLength_ =  dict.found("Lchar") ? true : false;
+    isCharLength_ = dict.found("Lchar");
+
+    if (isCharLength_)
+    {
+        Lchar_.read(dict);
+    }
 
     return true;
 }
