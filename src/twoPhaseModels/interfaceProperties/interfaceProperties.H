@@ -66,7 +66,8 @@ class interfaceProperties
         //- Stabilisation for normalisation of the interface normal
         const dimensionedScalar deltaN_;
 
-        const volScalarField& alpha1_;
+        volScalarField& alpha1_;
+        volScalarField& alpha2_;
         const volVectorField& U_;
         surfaceScalarField nHatf_;
         volScalarField K_;
@@ -81,7 +82,7 @@ class interfaceProperties
         (
             surfaceVectorField::Boundary& nHat,
             const surfaceVectorField::Boundary& gradAlphaf
-        ) const;
+        );
 
         //- Re-calculate the interface curvature
         void calculateK();
@@ -94,7 +95,8 @@ public:
         //- Construct from volume fraction field gamma and IOdictionary
         interfaceProperties
         (
-            const volScalarField& alpha1,
+            volScalarField& alpha1,
+            volScalarField& alpha2,
             const volVectorField& U,
             const IOdictionary&
         );

@@ -36,7 +36,7 @@ immiscibleIncompressibleTwoPhaseMixture
 )
 :
     incompressibleTwoPhaseMixture(U, phi),
-    interfaceProperties(alpha1(), U, *this)
+    interfaceProperties(alpha1(), alpha2(), U, *this)
 {}
 
 

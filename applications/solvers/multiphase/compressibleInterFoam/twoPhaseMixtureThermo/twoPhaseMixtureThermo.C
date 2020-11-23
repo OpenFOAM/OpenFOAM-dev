@@ -43,7 +43,7 @@ Foam::twoPhaseMixtureThermo::twoPhaseMixtureThermo
 :
     rhoThermo::composite(U.mesh(), word::null),
     twoPhaseMixture(U.mesh(), *this),
-    interfaceProperties(alpha1(), U, *this),
+    interfaceProperties(alpha1(), alpha2(), U, *this),
     thermo1_(nullptr),
     thermo2_(nullptr),
     Alpha1_

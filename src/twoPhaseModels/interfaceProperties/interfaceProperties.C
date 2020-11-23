@@ -43,30 +43,28 @@ void Foam::interfaceProperties::correctContactAngle
 (
     surfaceVectorField::Boundary& nHatb,
     const surfaceVectorField::Boundary& gradAlphaf
-) const
+)
 {
     const fvMesh& mesh = alpha1_.mesh();
-    const volScalarField::Boundary& abf = alpha1_.boundaryField();
+    volScalarField::Boundary& a1bf = alpha1_.boundaryFieldRef();
+    volScalarField::Boundary& a2bf = alpha2_.boundaryFieldRef();
 
     const fvBoundaryMesh& boundary = mesh.boundary();
 
     forAll(boundary, patchi)
     {
-        if (isA<alphaContactAngleFvPatchScalarField>(abf[patchi]))
+        if (isA<alphaContactAngleFvPatchScalarField>(a1bf[patchi]))
         {
-            alphaContactAngleFvPatchScalarField& acap =
-                const_cast<alphaContactAngleFvPatchScalarField&>
+            alphaContactAngleFvPatchScalarField& a1cap =
+                refCast<alphaContactAngleFvPatchScalarField>
                 (
-                    refCast<const alphaContactAngleFvPatchScalarField>
-                    (
-                        abf[patchi]
-                    )
+                    a1bf[patchi]
                 );
 
             fvsPatchVectorField& nHatp = nHatb[patchi];
             const scalarField theta
             (
-                degToRad(acap.theta(U_.boundaryField()[patchi], nHatp))
+                degToRad(a1cap.theta(U_.boundaryField()[patchi], nHatp))
             );
 
             const vectorField nf
@@ -93,8 +91,9 @@ void Foam::interfaceProperties::correctContactAngle
             nHatp = a*nf + b*nHatp;
             nHatp /= (mag(nHatp) + deltaN_.value());
 
-            acap.gradient() = (nf & nHatp)*mag(gradAlphaf[patchi]);
-            acap.evaluate();
+            a1cap.gradient() = (nf & nHatp)*mag(gradAlphaf[patchi]);
+            a1cap.evaluate();
+            a2bf[patchi] = 1 - a1cap;
         }
     }
 }
@@ -148,7 +147,8 @@ void Foam::interfaceProperties::calculateK()
 
 Foam::interfaceProperties::interfaceProperties
 (
-    const volScalarField& alpha1,
+    volScalarField& alpha1,
+    volScalarField& alpha2,
     const volVectorField& U,
     const IOdictionary& dict
 )
@@ -164,6 +164,7 @@ Foam::interfaceProperties::interfaceProperties
     ),
 
     alpha1_(alpha1),
+    alpha2_(alpha2),
     U_(U),
 
     nHatf_
