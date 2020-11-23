@@ -78,6 +78,10 @@ protected:
         //- Minimum gravity driven film thickness (non-dimensionalised delta/R1)
         scalar deltaByR1Min_;
 
+        //- Stable film thickness - drips only formed if thickness
+        //  exceeds this threshold value
+        scalar deltaStable_;
+
         //- List of radii for patches - if patch not defined, radius
         // calculated based on mesh geometry
         List<Tuple2<label, scalar>> definedPatchRadii_;
