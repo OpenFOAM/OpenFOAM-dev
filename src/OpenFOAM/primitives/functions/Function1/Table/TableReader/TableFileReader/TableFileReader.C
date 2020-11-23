@@ -85,7 +85,11 @@ Foam::TableFileReader<Type>::~TableFileReader()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::TableFileReader<Type>::write(Ostream& os) const
+void Foam::TableFileReader<Type>::write
+(
+    Ostream& os,
+    const List<Tuple2<scalar, Type>>& table
+) const
 {
     writeEntry(os, "format", this->type());
     writeEntry(os, "file", fName_);

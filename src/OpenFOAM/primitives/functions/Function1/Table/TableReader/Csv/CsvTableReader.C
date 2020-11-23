@@ -243,7 +243,7 @@ void Foam::TableReaders::Csv<Type>::write
     const List<Tuple2<scalar, Type>>& table
 ) const
 {
-    TableFileReader<Type>::write(os);
+    TableFileReader<Type>::write(os, table);
 
     writeEntry(os, "nHeaderLine", nHeaderLine_);
     writeEntry(os, "refColumn", refColumn_);

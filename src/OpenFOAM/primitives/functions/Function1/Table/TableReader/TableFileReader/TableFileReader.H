@@ -84,7 +84,11 @@ public:
     // Member Functions
 
         //- Write additional information
-        virtual void write(Ostream& os) const;
+        virtual void write
+        (
+            Ostream& os,
+            const List<Tuple2<scalar, Type>>& table
+        ) const;
 };
 
 
