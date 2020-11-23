@@ -362,34 +362,27 @@ void Foam::externalWallHeatFluxTemperatureFvPatchScalarField::updateCoeffs()
                     }
                 }
             }
-            scalarField hp(1/(1/h_ + totalSolidRes));
 
             const scalar Ta = Ta_->value(this->db().time().timeOutputValue());
-            scalarField hpTa(hp*Ta);
 
-            if (emissivity_ > 0)
-            {
-                // Evaluate the radiative flux to the environment
-                // from the surface temperature ...
-                if (totalSolidRes > 0)
-                {
-                    // ... including the effect of the solid wall thermal
-                    // resistance
-                    scalarField TpLambda(h_/(h_ + 1/totalSolidRes));
-                    scalarField Ts(TpLambda*Tp + (1 - TpLambda)*Ta);
-                    scalarField lambdaTa4(pow4((1 - TpLambda)*Ta));
+            const scalarField hp
+            (
+                1
+               /(
+                    1
+                   /(
+                        (emissivity_ > 0)
+                      ? (
+                            h_
+                          + emissivity_*sigma.value()
+                           *((pow3(Ta) + pow3(Tp)) + Ta*Tp*(Ta + Tp))
+                        )()
+                      : h_
+                    ) + totalSolidRes
+                )
+            );
 
-                    hp += emissivity_*sigma.value()*(pow4(Ts) - lambdaTa4)/Tp;
-                    hpTa += emissivity_*sigma.value()*(lambdaTa4 + pow4(Ta));
-                }
-                else
-                {
-                    // ... if there is no solid wall thermal resistance use
-                    // the current wall temperature
-                    hp += emissivity_*sigma.value()*pow3(Tp);
-                    hpTa += emissivity_*sigma.value()*pow4(Ta);
-                }
-            }
+            const scalarField hpTa(hp*Ta);
 
             const scalarField kappaDeltaCoeffs
             (
