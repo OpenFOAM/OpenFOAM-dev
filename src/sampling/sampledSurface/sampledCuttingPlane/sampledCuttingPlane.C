@@ -50,7 +50,7 @@ void Foam::sampledSurfaces::cuttingPlane::createGeometry()
 
     // Clear any stored topologies
     facesPtr_.clear();
-    isoSurfPtr_.ptr();
+    isoSurfPtr_.clear();
     pointDistance_.clear();
     cellDistancePtr_.clear();
 
