@@ -47,7 +47,7 @@ for (label proci = 0; proci < Pstream::nProcs(); proci++)
                     const vector& remA = remoteArea[j];
                     const label& remAgg = remoteAgg[j];
 
-                    const vector& d = remFc - fc;
+                    const vector d(remFc - fc);
 
                     if (((d & fA) < 0.) && ((d & remA) > 0))
                     {
@@ -138,7 +138,7 @@ for (label proci = 0; proci < Pstream::nProcs(); proci++)
                 {
                     const vector& endP = end[rayID];
                     const vector& startP = hitInfo[hitIndex].hitPoint();
-                    const vector& d = endP - startP;
+                    const vector d(endP - startP);
 
                     startHitItself.append(startP + 0.01*d);
                     endHitItself.append(startP + 1.01*d);
