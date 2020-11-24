@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,18 +58,12 @@ void Foam::sampledSurfaces::cuttingPlane::createGeometry()
     clearGeom();
 
     // Get any subMesh
-    if (zoneID_.index() != -1 && !subMeshPtr_.valid())
+    if (zoneKey_.size() && !subMeshPtr_.valid())
     {
         const polyBoundaryMesh& patches = mesh().boundaryMesh();
 
         // Patch to put exposed internal faces into
         const label exposedPatchi = patches.findPatchID(exposedPatchName_);
-
-        DebugInfo
-            << "Allocating subset of size "
-            << mesh().cellZones()[zoneID_.index()].size()
-            << " with exposed faces into patch "
-            << patches[exposedPatchi].name() << endl;
 
         subMeshPtr_.reset
         (
@@ -77,11 +71,15 @@ void Foam::sampledSurfaces::cuttingPlane::createGeometry()
         );
         subMeshPtr_().setLargeCellSubset
         (
-            labelHashSet(mesh().cellZones()[zoneID_.index()]),
+            labelHashSet(mesh().cellZones().findMatching(zoneKey_).used()),
             exposedPatchi
         );
-    }
 
+        DebugInfo
+            << "Allocating subset of size " << subMeshPtr_().subMesh().nCells()
+            << " with exposed faces into patch "
+            << patches[exposedPatchi].name() << endl;
+    }
 
     // Select either the submesh or the underlying mesh
     const fvMesh& mesh =
@@ -255,14 +253,14 @@ Foam::sampledSurfaces::cuttingPlane::cuttingPlane
       : isoSurface::filterType::full
     ),
     average_(dict.lookupOrDefault("average", false)),
-    zoneID_(dict.lookupOrDefault("zone", word::null), mesh.cellZones()),
+    zoneKey_(dict.lookupOrDefault("zone", keyType::null)),
     exposedPatchName_(word::null),
     needsUpdate_(true),
     subMeshPtr_(nullptr),
     cellDistancePtr_(nullptr),
     isoSurfPtr_(nullptr)
 {
-    if (zoneID_.index() != -1)
+    if (zoneKey_.size())
     {
         dict.lookup("exposedPatchName") >> exposedPatchName_;
 
@@ -275,11 +273,18 @@ Foam::sampledSurfaces::cuttingPlane::cuttingPlane
                 << exit(FatalError);
         }
 
-        if (debug && zoneID_.index() != -1)
+        if (debug)
         {
-            Info<< "Restricting to cellZone " << zoneID_.name()
+            Info<< "Restricting to cellZone " << zoneKey_
                 << " with exposed internal faces into patch "
                 << exposedPatchName_ << endl;
+        }
+
+        if (mesh.cellZones().findIndex(zoneKey_) < 0)
+        {
+            WarningInFunction
+                << "cellZone " << zoneKey_
+                << " not found - using entire mesh" << endl;
         }
     }
 }

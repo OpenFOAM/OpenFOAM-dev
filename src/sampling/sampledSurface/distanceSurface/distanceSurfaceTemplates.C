@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,26 +49,48 @@ Foam::sampledSurfaces::distanceSurface::interpolateField
     const interpolation<Type>& interpolator
 ) const
 {
-    const fvMesh& fvm = static_cast<const fvMesh&>(mesh());
-
     // Get fields to sample. Assume volPointInterpolation!
     const GeometricField<Type, fvPatchField, volMesh>& volFld =
         interpolator.psi();
 
-    tmp<GeometricField<Type, pointPatchField, pointMesh>> pointFld
-    (
-        volPointInterpolation::New(fvm).interpolate(volFld)
-    );
+    if (subMeshPtr_.valid())
+    {
+        tmp<GeometricField<Type, fvPatchField, volMesh>> tvolSubFld =
+            subMeshPtr_().interpolate(volFld);
 
-    return isoSurfPtr_().interpolate
-    (
+        const GeometricField<Type, fvPatchField, volMesh>& volSubFld =
+            tvolSubFld();
+
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> tpointSubFld =
+            volPointInterpolation::New(volSubFld.mesh()).interpolate(volSubFld);
+
+        return isoSurfPtr_().interpolate
         (
-            average_
-          ? pointAverage(pointFld())()
-          : volFld
-        ),
-        pointFld()
-    );
+            (
+                average_
+              ? pointAverage(tpointSubFld())()
+              : volSubFld
+            ),
+            tpointSubFld()
+        );
+    }
+    else
+    {
+        tmp<GeometricField<Type, pointPatchField, pointMesh>> pointFld
+        (
+            volPointInterpolation::New(volFld.mesh()).interpolate(volFld)
+        );
+
+        return isoSurfPtr_().interpolate
+        (
+            (
+                average_
+              ? pointAverage(pointFld())()
+              : volFld
+            ),
+            pointFld()
+        );
+    }
 }
 
 

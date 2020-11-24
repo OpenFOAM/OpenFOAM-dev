@@ -63,8 +63,6 @@ SourceFiles
 
 #include "sampledSurface.H"
 #include "isoSurface.H"
-#include "plane.H"
-#include "ZoneIDs.H"
 #include "fvMeshSubset.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -93,15 +91,14 @@ class cuttingPlane
         //- Whether to recalculate cell values as average of point values
         const Switch average_;
 
-        //- Zone name/index (if restricted to zones)
-        mutable cellZoneID zoneID_;
+        //- If restricted to zones, name of this zone or a regular expression
+        keyType zoneKey_;
 
         //- For zones: patch to put exposed faces into
         mutable word exposedPatchName_;
 
         //- Track if the surface needs an update
         mutable bool needsUpdate_;
-
 
         //- Optional subsetted mesh
         autoPtr<fvMeshSubset> subMeshPtr_;

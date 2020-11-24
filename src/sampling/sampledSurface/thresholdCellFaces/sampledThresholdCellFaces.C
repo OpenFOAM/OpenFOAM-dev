@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,7 +149,6 @@ Foam::sampledSurfaces::thresholdCellFaces::thresholdCellFaces
     fieldName_(dict.lookup("field")),
     lowerThreshold_(dict.lookupOrDefault<scalar>("lowerLimit", -vGreat)),
     upperThreshold_(dict.lookupOrDefault<scalar>("upperLimit", vGreat)),
-    zoneKey_(keyType::null),
     triangulate_(dict.lookupOrDefault("triangulate", false)),
     prevTimeIndex_(-1),
     meshCells_(0)

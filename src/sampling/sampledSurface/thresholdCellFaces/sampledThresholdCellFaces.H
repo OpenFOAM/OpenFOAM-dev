@@ -93,9 +93,6 @@ class thresholdCellFaces
         //- Threshold value
         const scalar upperThreshold_;
 
-        //- If restricted to zones, name of this zone or a regular expression
-        keyType zoneKey_;
-
         //- Triangulated faces or keep faces as is
         bool triangulate_;
 

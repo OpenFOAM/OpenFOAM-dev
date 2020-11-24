@@ -90,8 +90,6 @@ class isoSurface
         //- Whether to coarsen
         const Foam::isoSurface::filterType filter_;
 
-        //- If restricted to zones, name of this zone or a regular expression
-        keyType zoneKey_;
 
         // Recreated for every isoSurface
 

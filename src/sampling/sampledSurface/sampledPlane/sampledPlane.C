@@ -49,7 +49,7 @@ Foam::sampledSurfaces::plane::plane
 :
     sampledSurface(name, mesh, dict),
     cuttingPlane(Foam::plane(dict)),
-    zoneKey_(keyType::null),
+    zoneKey_(dict.lookupOrDefault("zone", keyType::null)),
     triangulate_(dict.lookupOrDefault("triangulate", true)),
     needsUpdate_(true)
 {
@@ -68,8 +68,6 @@ Foam::sampledSurfaces::plane::plane
         // Assign the plane description
         static_cast<Foam::plane&>(*this) = Foam::plane(base, norm);
     }
-
-    dict.readIfPresent("zone", zoneKey_);
 
     if (debug && zoneKey_.size() && mesh.cellZones().findIndex(zoneKey_) < 0)
     {
@@ -117,7 +115,10 @@ bool Foam::sampledSurfaces::plane::update()
 
     sampledSurface::clearGeom();
 
-    labelList selectedCells = mesh().cellZones().findMatching(zoneKey_).used();
+    const labelList selectedCells
+    (
+        mesh().cellZones().findMatching(zoneKey_).used()
+    );
 
     if (selectedCells.empty())
     {

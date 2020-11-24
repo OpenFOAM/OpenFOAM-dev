@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,38 @@ void Foam::sampledSurfaces::distanceSurface::createGeometry()
     // Clear derived data
     clearGeom();
 
-    const fvMesh& mesh = static_cast<const fvMesh&>(this->mesh());
+    // Get any subMesh
+    if (zoneKey_.size() && !subMeshPtr_.valid())
+    {
+        const polyBoundaryMesh& patches = mesh().boundaryMesh();
+
+        // Patch to put exposed internal faces into
+        const label exposedPatchi = patches.findPatchID(exposedPatchName_);
+
+        subMeshPtr_.reset
+        (
+            new fvMeshSubset(static_cast<const fvMesh&>(mesh()))
+        );
+        subMeshPtr_().setLargeCellSubset
+        (
+            labelHashSet(mesh().cellZones().findMatching(zoneKey_).used()),
+            exposedPatchi
+        );
+
+        DebugInfo
+            << "Allocating subset of size " << subMeshPtr_().subMesh().nCells()
+            << " with exposed faces into patch "
+            << patches[exposedPatchi].name() << endl;
+    }
+
+    // Select either the submesh or the underlying mesh
+    const fvMesh& mesh =
+    (
+        subMeshPtr_.valid()
+      ? subMeshPtr_().subMesh()
+      : static_cast<const fvMesh&>(this->mesh())
+    );
+
 
     // Distance to cell centres
     // ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -317,51 +348,39 @@ Foam::sampledSurfaces::distanceSurface::distanceSurface
       : isoSurface::filterType::full
     ),
     average_(dict.lookupOrDefault("average", false)),
-    zoneKey_(keyType::null),
+    zoneKey_(dict.lookupOrDefault("zone", keyType::null)),
     needsUpdate_(true),
+    subMeshPtr_(nullptr),
     isoSurfPtr_(nullptr)
-{}
+{
+    if (zoneKey_.size())
+    {
+        dict.lookup("exposedPatchName") >> exposedPatchName_;
 
+        if (mesh.boundaryMesh().findPatchID(exposedPatchName_) == -1)
+        {
+            FatalErrorInFunction
+                << "Cannot find patch " << exposedPatchName_
+                << " in which to put exposed faces." << endl
+                << "Valid patches are " << mesh.boundaryMesh().names()
+                << exit(FatalError);
+        }
 
-Foam::sampledSurfaces::distanceSurface::distanceSurface
-(
-    const word& name,
-    const polyMesh& mesh,
-    const bool interpolate,
-    const word& surfaceType,
-    const word& surfaceName,
-    const scalar distance,
-    const bool signedDistance,
-    const isoSurface::filterType filter,
-    const Switch average
-)
-:
-    sampledSurface(name, mesh, interpolate),
-    surfPtr_
-    (
-        searchableSurface::New
-        (
-            surfaceType,
-            IOobject
-            (
-                surfaceName,  // name
-                mesh.time().constant(),                     // directory
-                "triSurface",                               // instance
-                mesh.time(),                                // registry
-                IOobject::MUST_READ,
-                IOobject::NO_WRITE
-            ),
-            dictionary()
-        )
-    ),
-    distance_(distance),
-    signed_(signedDistance),
-    filter_(filter),
-    average_(average),
-    zoneKey_(keyType::null),
-    needsUpdate_(true),
-    isoSurfPtr_(nullptr)
-{}
+        if (debug)
+        {
+            Info<< "Restricting to cellZone " << zoneKey_
+                << " with exposed internal faces into patch "
+                << exposedPatchName_ << endl;
+        }
+
+        if (mesh.cellZones().findIndex(zoneKey_) < 0)
+        {
+            WarningInFunction
+                << "cellZone " << zoneKey_
+                << " not found - using entire mesh" << endl;
+        }
+    }
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
