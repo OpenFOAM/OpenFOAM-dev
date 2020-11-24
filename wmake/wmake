@@ -127,6 +127,34 @@ useAllCores()
 
 
 #------------------------------------------------------------------------------
+# Check environment variables
+#------------------------------------------------------------------------------
+
+checkEnv
+
+# When compiling anything but a standalone exe WM_PROJECT and WM_PROJECT_DIR
+# must be set
+[ "$1" = exe ] || { [ "$WM_PROJECT" ] && [ "$WM_PROJECT_DIR" ]; } || {
+    echo "$Script error:" 1>&2
+    echo "    environment variable \$WM_PROJECT or " \
+         "\$WM_PROJECT_DIR not set" 1>&2
+    echo "    while building project library" 1>&2
+    exit 1
+}
+
+
+#------------------------------------------------------------------------------
+# check if bear is installed and we are not already running under bear
+#------------------------------------------------------------------------------
+
+if bear --version > /dev/null && [ -z "${INTERCEPT_REPORT_COMMAND}" ] ; then
+	mkdir -p $FOAM_LIBBIN
+	bear --append --output $FOAM_LIBBIN/../compile_commands.json -- wmake $@
+	exit $?
+fi
+
+
+#------------------------------------------------------------------------------
 # Parse arguments and options
 #------------------------------------------------------------------------------
 
@@ -193,34 +221,6 @@ do
     esac
     shift
 done
-
-
-#------------------------------------------------------------------------------
-# Check environment variables
-#------------------------------------------------------------------------------
-
-checkEnv
-
-# When compiling anything but a standalone exe WM_PROJECT and WM_PROJECT_DIR
-# must be set
-[ "$1" = exe ] || { [ "$WM_PROJECT" ] && [ "$WM_PROJECT_DIR" ]; } || {
-    echo "$Script error:" 1>&2
-    echo "    environment variable \$WM_PROJECT or " \
-         "\$WM_PROJECT_DIR not set" 1>&2
-    echo "    while building project library" 1>&2
-    exit 1
-}
-
-
-#------------------------------------------------------------------------------
-# check if bear is installed and we are not already running under bear
-#------------------------------------------------------------------------------
-
-if bear --version > /dev/null && [ -z "${INTERCEPT_REPORT_COMMAND}" ] ; then
-	mkdir -p $FOAM_LIBBIN
-	bear --append --output $FOAM_LIBBIN/../compile_commands.json -- wmake $@
-	exit $?
-fi
 
 
 #------------------------------------------------------------------------------
