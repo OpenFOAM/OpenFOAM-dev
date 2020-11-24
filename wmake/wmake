@@ -105,6 +105,10 @@ USAGE
 }
 
 
+# Default make is the "make" in the path
+make="make"
+
+
 #------------------------------------------------------------------------------
 # Set WM_NCOMPPROCS to number of cores on local machine
 #------------------------------------------------------------------------------
@@ -208,12 +212,14 @@ checkEnv
 }
 
 
-if bear --version > /dev/null
-then
-	mkdir -p "$FOAM_LIBBIN/.."
-	make="bear --append --output $FOAM_LIBBIN/../compile_commands.json -- make"
-else
-	make="make"
+#------------------------------------------------------------------------------
+# check if bear is installed and we are not already running under bear
+#------------------------------------------------------------------------------
+
+if bear --version > /dev/null && [ -z "${INTERCEPT_REPORT_COMMAND}" ] ; then
+	mkdir -p $FOAM_LIBBIN
+	bear --append --output $FOAM_LIBBIN/../compile_commands.json -- wmake $@
+	exit $?
 fi
 
 
