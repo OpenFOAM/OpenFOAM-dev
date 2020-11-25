@@ -45,6 +45,8 @@ Description
 #include "fixedValueFvPatchFields.H"
 #include "distributedTriSurfaceMesh.H"
 #include "cyclicAMIPolyPatch.H"
+#include "symmetryPolyPatch.H"
+#include "symmetryPlanePolyPatch.H"
 #include "wedgePolyPatch.H"
 #include "meshTools.H"
 #include "uindirectPrimitivePatch.H"
@@ -254,11 +256,17 @@ int main(int argc, char *argv[])
     forAll(patches, patchi)
     {
         const polyPatch& pp = patches[patchi];
-        if (isA<cyclicTransform>(pp) || isA<wedgePolyPatch>(pp))
+        if
+        (
+            isA<cyclicTransform>(pp)
+         || isA<symmetryPolyPatch>(pp)
+         || isA<symmetryPlanePolyPatch>(pp)
+         || isA<wedgePolyPatch>(pp)
+        )
         {
             FatalErrorIn(args.executable()) << args.executable()
-                << " does not currently support transforming patches, "
-                   "cyclic and wedge."
+                << " does not currently support transforming patches: "
+                   "cyclic, symmetry and wedge."
                 << exit(FatalError);
         }
     }

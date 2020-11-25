@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,7 @@ License
 #include "scatterModel.H"
 #include "constants.H"
 #include "fvm.H"
+#include "wedgePolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
 using namespace Foam::constant;
@@ -49,6 +50,25 @@ namespace radiationModels
 
 void Foam::radiationModels::fvDOM::initialise()
 {
+    forAll(mesh_.boundaryMesh(), patchi)
+    {
+        const polyPatch& pp = mesh_.boundaryMesh()[patchi];
+        if
+        (
+            (
+                isA<cyclicTransform>(pp)
+             && refCast<const cyclicTransform>(pp).transform().rotates()
+            )
+         || isA<wedgePolyPatch>(pp)
+        )
+        {
+            FatalErrorInFunction << type()
+                << " radiation model does not currently support"
+                   " rotationally transforming patches: cyclic and wedge."
+                << exit(FatalError);
+        }
+    }
+
     // 3D
     if (mesh_.nSolutionD() == 3)
     {
