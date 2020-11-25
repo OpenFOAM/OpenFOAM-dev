@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,12 +58,15 @@ void Foam::sampledSets::boundaryRandom::calcSamples
     DynamicList<scalar>& samplingCurveDist
 ) const
 {
+    // Get the patch IDs
+    const labelList patchIDs(mesh().boundaryMesh().patchSet(patches_).toc());
+
     // Triangulate the patches
-    List<DynamicList<face>> trisDyn(patches_.size());
-    List<DynamicList<label>> trisFaceiDyn(patches_.size());
-    forAll(patches_, patchi)
+    List<DynamicList<face>> trisDyn(patchIDs.size());
+    List<DynamicList<label>> trisFaceiDyn(patchIDs.size());
+    forAll(patchIDs, patchi)
     {
-        const polyPatch& patch = mesh().boundaryMesh()[patchi];
+        const polyPatch& patch = mesh().boundaryMesh()[patchIDs[patchi]];
 
         forAll(patch, patchFacei)
         {
@@ -78,19 +81,19 @@ void Foam::sampledSets::boundaryRandom::calcSamples
         }
     }
 
-    List<faceList> tris(patches_.size());
-    List<labelList> trisFacei(patches_.size());
-    forAll(patches_, patchi)
+    List<faceList> tris(patchIDs.size());
+    List<labelList> trisFacei(patchIDs.size());
+    forAll(patchIDs, patchi)
     {
         tris[patchi].transfer(trisDyn[patchi]);
         trisFacei[patchi].transfer(trisFaceiDyn[patchi]);
     }
 
     // Generate the fractions which select the processor, patch and triangle
-    List<scalarField> trisFraction(patches_.size());
-    forAll(patches_, patchi)
+    List<scalarField> trisFraction(patchIDs.size());
+    forAll(patchIDs, patchi)
     {
-        const polyPatch& patch = mesh().boundaryMesh()[patchi];
+        const polyPatch& patch = mesh().boundaryMesh()[patchIDs[patchi]];
         const pointField& points = patch.points();
 
         trisFraction[patchi] = scalarField(tris[patchi].size() + 1, 0);
@@ -102,8 +105,8 @@ void Foam::sampledSets::boundaryRandom::calcSamples
         }
     }
 
-    scalarField patchesFraction(patches_.size() + 1, 0);
-    forAll(patches_, patchi)
+    scalarField patchesFraction(patchIDs.size() + 1, 0);
+    forAll(patchIDs, patchi)
     {
         patchesFraction[patchi + 1] =
             patchesFraction[patchi] + trisFraction[patchi].last();
@@ -120,7 +123,7 @@ void Foam::sampledSets::boundaryRandom::calcSamples
     }
 
     bool anyTris = false;
-    forAll(patches_, patchi)
+    forAll(patchIDs, patchi)
     {
         if (tris[patchi].size())
         {
@@ -163,7 +166,7 @@ void Foam::sampledSets::boundaryRandom::calcSamples
                 ++ trii;
             }
 
-            const polyPatch& patch = mesh().boundaryMesh()[patchi];
+            const polyPatch& patch = mesh().boundaryMesh()[patchIDs[patchi]];
             const pointField& points = patch.points();
             const face& tf = tris[patchi][trii];
             const triPointRef tt(points[tf[0]], points[tf[1]], points[tf[2]]);
@@ -224,13 +227,7 @@ Foam::sampledSets::boundaryRandom::boundaryRandom
 )
 :
     sampledSet(name, mesh, searchEngine, dict),
-    patches_
-    (
-        mesh.boundaryMesh().patchSet
-        (
-            wordReList(dict.lookup("patches"))
-        )
-    ),
+    patches_(dict.lookup("patches")),
     nPoints_(dict.lookup<label>("nPoints"))
 {
     genSamples();

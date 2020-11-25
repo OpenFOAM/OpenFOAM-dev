@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,16 +55,19 @@ void Foam::sampledSets::boundaryPoints::calcSamples
     DynamicList<scalar>& samplingCurveDist
 ) const
 {
+    // Get the patch IDs
+    const labelHashSet patchIDs(mesh().boundaryMesh().patchSet(patches_));
+
     // Construct a single list of all patch faces
     label nPatchFaces = 0;
-    forAllConstIter(labelHashSet, patches_, iter)
+    forAllConstIter(labelHashSet, patchIDs, iter)
     {
         const polyPatch& pp = mesh().boundaryMesh()[iter.key()];
         nPatchFaces += pp.size();
     }
     labelList patchFaces(nPatchFaces);
     nPatchFaces = 0;
-    forAllConstIter(labelHashSet, patches_, iter)
+    forAllConstIter(labelHashSet, patchIDs, iter)
     {
         const polyPatch& pp = mesh().boundaryMesh()[iter.key()];
         forAll(pp, i)
@@ -75,7 +78,7 @@ void Foam::sampledSets::boundaryPoints::calcSamples
 
     // Construct a processor-local bound box
     treeBoundBox patchBB(point::max, point::min);
-    forAllConstIter(labelHashSet, patches_, iter)
+    forAllConstIter(labelHashSet, patchIDs, iter)
     {
         const polyPatch& pp = mesh().boundaryMesh()[iter.key()];
         const boundBox patchBb(pp.points(), pp.meshPoints(), false);
@@ -237,13 +240,7 @@ Foam::sampledSets::boundaryPoints::boundaryPoints
 :
     sampledSet(name, mesh, searchEngine, dict),
     points_(dict.lookup("points")),
-    patches_
-    (
-        mesh.boundaryMesh().patchSet
-        (
-            wordReList(dict.lookup("patches"))
-        )
-    ),
+    patches_(dict.lookup("patches")),
     maxDistance_(dict.lookup<scalar>("maxDistance"))
 {
     genSamples();

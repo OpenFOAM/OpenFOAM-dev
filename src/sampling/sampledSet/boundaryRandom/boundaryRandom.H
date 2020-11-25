@@ -75,7 +75,7 @@ class boundaryRandom
     // Private Data
 
         //- Patches to sample
-        const labelHashSet patches_;
+        const wordReList patches_;
 
         //- Number of points
         const label nPoints_;

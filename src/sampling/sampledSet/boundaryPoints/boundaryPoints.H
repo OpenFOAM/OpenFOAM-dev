@@ -86,7 +86,7 @@ class boundaryPoints
         const List<point> points_;
 
         //- Patches to sample
-        const labelHashSet patches_;
+        const wordReList patches_;
 
         //- Maximum distance to to search for a nearby patch
         const scalar maxDistance_;
