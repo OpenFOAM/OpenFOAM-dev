@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,13 +120,13 @@ public:
         inline wordRe(const wordRe&);
 
         //- Construct from keyType
-        inline explicit wordRe(const keyType&);
+        inline wordRe(const keyType&);
 
         //- Construct from keyType
         inline wordRe(const keyType&, const compOption);
 
         //- Copy constructor of word
-        inline explicit wordRe(const word&);
+        inline wordRe(const word&);
 
         //- Copy constructor of character array
         //  Optionally specify how it should be treated.

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ SourceFiles
 #include "runTimeSelectionTables.H"
 #include "coordinateSystem.H"
 #include "dimensionedVector.H"
-#include "keyType.H"
+#include "wordRe.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,7 +86,7 @@ protected:
         bool active_;
 
         //- Name(s) of cell-zone
-        keyType zoneName_;
+        wordRe zoneName_;
 
         //- Cell zone IDs
         labelList cellZoneIDs_;

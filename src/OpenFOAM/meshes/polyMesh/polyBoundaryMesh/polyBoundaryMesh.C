@@ -581,7 +581,7 @@ Foam::wordList Foam::polyBoundaryMesh::physicalTypes() const
 
 Foam::labelList Foam::polyBoundaryMesh::findIndices
 (
-    const keyType& key,
+    const wordRe& key,
     const bool usePatchGroups
 ) const
 {
@@ -654,7 +654,7 @@ Foam::labelList Foam::polyBoundaryMesh::findIndices
 }
 
 
-Foam::label Foam::polyBoundaryMesh::findIndex(const keyType& key) const
+Foam::label Foam::polyBoundaryMesh::findIndex(const wordRe& key) const
 {
     if (!key.empty())
     {

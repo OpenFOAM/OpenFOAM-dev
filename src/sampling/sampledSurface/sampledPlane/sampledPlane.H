@@ -80,7 +80,7 @@ class plane
     // Private Data
 
         //- If restricted to zones, name of this zone or a regular expression
-        keyType zoneKey_;
+        wordRe zoneKey_;
 
         //- Triangulated faces or keep faces as is
         const bool triangulate_;

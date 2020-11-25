@@ -253,7 +253,7 @@ Foam::sampledSurfaces::cuttingPlane::cuttingPlane
       : isoSurface::filterType::full
     ),
     average_(dict.lookupOrDefault("average", false)),
-    zoneKey_(dict.lookupOrDefault("zone", keyType::null)),
+    zoneKey_(dict.lookupOrDefault("zone", wordRe::null)),
     exposedPatchName_(word::null),
     needsUpdate_(true),
     subMeshPtr_(nullptr),

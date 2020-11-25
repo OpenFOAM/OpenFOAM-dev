@@ -176,7 +176,7 @@ Foam::labelList Foam::processorCyclicPolyPatch::patchIDs
 {
     return bm.findIndices
     (
-        keyType(string("procBoundary.*to.*through" + cyclicPolyPatchName))
+        wordRe(string("procBoundary.*to.*through" + cyclicPolyPatchName))
     );
 }
 

@@ -348,7 +348,7 @@ Foam::sampledSurfaces::distanceSurface::distanceSurface
       : isoSurface::filterType::full
     ),
     average_(dict.lookupOrDefault("average", false)),
-    zoneKey_(dict.lookupOrDefault("zone", keyType::null)),
+    zoneKey_(dict.lookupOrDefault("zone", wordRe::null)),
     needsUpdate_(true),
     subMeshPtr_(nullptr),
     isoSurfPtr_(nullptr)

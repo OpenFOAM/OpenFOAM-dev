@@ -100,7 +100,7 @@ readField
             {
                 const labelList patchIDs = bmesh_.findIndices
                 (
-                    e.keyword(),
+                    wordRe(e.keyword()),
                     true                    // use patchGroups
                 );
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Description
 #ifndef DynamicID_H
 #define DynamicID_H
 
-#include "keyType.H"
+#include "wordRe.H"
 #include "labelList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -60,7 +60,7 @@ class DynamicID
     // Private Data
 
         //- Zone name
-        keyType key_;
+        wordRe key_;
 
         //- Zone indices
         labelList indices_;
@@ -71,7 +71,7 @@ public:
     // Constructors
 
         //- Construct from name
-        DynamicID(const keyType& key, const ObjectType& obj)
+        DynamicID(const wordRe& key, const ObjectType& obj)
         :
             key_(key),
             indices_(obj.findIndices(key_))
@@ -93,7 +93,7 @@ public:
         // Access
 
             //- Return name
-            const keyType& name() const
+            const wordRe& name() const
             {
                 return key_;
             }

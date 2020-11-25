@@ -97,7 +97,7 @@ public:
         label findPatchID(const word& patchName) const;
 
         //- Find patch indices given a name
-        labelList findIndices(const keyType&, const bool useGroups) const;
+        labelList findIndices(const wordRe&, const bool useGroups) const;
 
         //- Correct pointBoundaryMesh after moving points
         void movePoints(const pointField&);

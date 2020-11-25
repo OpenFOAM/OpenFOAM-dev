@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -271,7 +271,7 @@ Foam::wordList Foam::ZoneMesh<ZoneType, MeshType>::names() const
 template<class ZoneType, class MeshType>
 Foam::labelList Foam::ZoneMesh<ZoneType, MeshType>::findIndices
 (
-    const keyType& key
+    const wordRe& key
 ) const
 {
     labelList indices;
@@ -304,7 +304,7 @@ Foam::labelList Foam::ZoneMesh<ZoneType, MeshType>::findIndices
 template<class ZoneType, class MeshType>
 Foam::label Foam::ZoneMesh<ZoneType, MeshType>::findIndex
 (
-    const keyType& key
+    const wordRe& key
 ) const
 {
     if (!key.empty())
@@ -368,7 +368,7 @@ Foam::label Foam::ZoneMesh<ZoneType, MeshType>::findZoneID
 template<class ZoneType, class MeshType>
 Foam::PackedBoolList Foam::ZoneMesh<ZoneType, MeshType>::findMatching
 (
-    const keyType& key
+    const wordRe& key
 ) const
 {
     PackedBoolList lst;

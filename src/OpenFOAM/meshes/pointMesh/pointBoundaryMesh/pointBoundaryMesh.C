@@ -56,7 +56,7 @@ Foam::label Foam::pointBoundaryMesh::findPatchID(const word& patchName) const
 
 Foam::labelList Foam::pointBoundaryMesh::findIndices
 (
-    const keyType& key,
+    const wordRe& key,
     const bool usePatchGroups
 ) const
 {

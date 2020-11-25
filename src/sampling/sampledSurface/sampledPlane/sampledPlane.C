@@ -49,7 +49,7 @@ Foam::sampledSurfaces::plane::plane
 :
     sampledSurface(name, mesh, dict),
     cuttingPlane(Foam::plane(dict)),
-    zoneKey_(dict.lookupOrDefault("zone", keyType::null)),
+    zoneKey_(dict.lookupOrDefault("zone", wordRe::null)),
     triangulate_(dict.lookupOrDefault("triangulate", true)),
     needsUpdate_(true)
 {

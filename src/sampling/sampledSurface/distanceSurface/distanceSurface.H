@@ -102,7 +102,7 @@ class distanceSurface
         const Switch average_;
 
         //- If restricted to zones, name of this zone or a regular expression
-        keyType zoneKey_;
+        wordRe zoneKey_;
 
         //- For zones: patch to put exposed faces into
         mutable word exposedPatchName_;

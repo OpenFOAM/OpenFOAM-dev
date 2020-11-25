@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -229,7 +229,6 @@ void Foam::attachDetach::clearAddressing() const
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-// Construct from components
 Foam::attachDetach::attachDetach
 (
     const word& name,
@@ -257,7 +256,6 @@ Foam::attachDetach::attachDetach
 }
 
 
-// Construct from components
 Foam::attachDetach::attachDetach
 (
     const word& name,
