@@ -502,6 +502,20 @@ bool Foam::functionObjects::streamLine::write()
             flipOp()
         );
 
+        // Distribute the ages
+        mapDistributeBase::distribute
+        (
+            Pstream::commsTypes::scheduled,
+            distMap.schedule(),
+            distMap.constructSize(),
+            distMap.subMap(),
+            false,
+            distMap.constructMap(),
+            false,
+            allAges_,
+            flipOp()
+        );
+
         // Distribute the scalars
         forAll(allScalars_, scalari)
         {
