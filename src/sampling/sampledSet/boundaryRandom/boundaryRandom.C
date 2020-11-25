@@ -34,6 +34,7 @@ License
 #include "SubField.H"
 #include "barycentric2D.H"
 #include "triPointRef.H"
+#include "tetIndices.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -61,9 +62,8 @@ void Foam::sampledSets::boundaryRandom::calcSamples
     // Get the patch IDs
     const labelList patchIDs(mesh().boundaryMesh().patchSet(patches_).toc());
 
-    // Triangulate the patches
-    List<DynamicList<face>> trisDyn(patchIDs.size());
-    List<DynamicList<label>> trisFaceiDyn(patchIDs.size());
+    // Triangulate the patch faces
+    DynamicList<label> triFaces, triTetPts;
     forAll(patchIDs, patchi)
     {
         const polyPatch& patch = mesh().boundaryMesh()[patchIDs[patchi]];
@@ -73,71 +73,50 @@ void Foam::sampledSets::boundaryRandom::calcSamples
             const face& f = patch[patchFacei];
             const label facei = patchFacei + patch.start();
 
-            DynamicList<face> faceTris(f.nTriangles());
-            f.triangles(patch.points(), faceTris);
-
-            trisDyn[patchi].append(faceTris);
-            trisFaceiDyn[patchi].append(labelList(f.nTriangles(), facei));
+            for (label tetPti = 1; tetPti < f.size() - 1; ++ tetPti)
+            {
+                triFaces.append(facei);
+                triTetPts.append(tetPti);
+            }
         }
-    }
-
-    List<faceList> tris(patchIDs.size());
-    List<labelList> trisFacei(patchIDs.size());
-    forAll(patchIDs, patchi)
-    {
-        tris[patchi].transfer(trisDyn[patchi]);
-        trisFacei[patchi].transfer(trisFaceiDyn[patchi]);
     }
 
     // Generate the fractions which select the processor, patch and triangle
-    List<scalarField> trisFraction(patchIDs.size());
-    forAll(patchIDs, patchi)
+    scalarField trisFraction(triFaces.size() + 1, 0);
+    forAll(triFaces, trii)
     {
-        const polyPatch& patch = mesh().boundaryMesh()[patchIDs[patchi]];
-        const pointField& points = patch.points();
+        const tetIndices tetIs
+        (
+            mesh().faceOwner()[triFaces[trii]],
+            triFaces[trii],
+            triTetPts[trii]
+        );
 
-        trisFraction[patchi] = scalarField(tris[patchi].size() + 1, 0);
-        forAll(tris[patchi], patchTrii)
-        {
-            trisFraction[patchi][patchTrii + 1] =
-                trisFraction[patchi][patchTrii]
-              + tris[patchi][patchTrii].mag(points);
-        }
+        trisFraction[trii + 1] =
+            trisFraction[trii] + tetIs.faceTri(mesh()).mag();
     }
 
-    scalarField patchesFraction(patchIDs.size() + 1, 0);
-    forAll(patchIDs, patchi)
-    {
-        patchesFraction[patchi + 1] =
-            patchesFraction[patchi] + trisFraction[patchi].last();
-    }
-
-    scalarField procsArea(Pstream::nProcs(), 0);
-    procsArea[Pstream::myProcNo()] = patchesFraction.last();
-    Pstream::listCombineGather(procsArea, maxEqOp<scalar>());
-    Pstream::listCombineScatter(procsArea);
     scalarField procsFraction(Pstream::nProcs() + 1, 0);
-    for(label proci = 0; proci < Pstream::nProcs(); ++ proci)
     {
-        procsFraction[proci + 1] = procsFraction[proci] + procsArea[proci];
-    }
-
-    bool anyTris = false;
-    forAll(patchIDs, patchi)
-    {
-        if (tris[patchi].size())
+        scalarField procsArea(Pstream::nProcs(), 0);
+        procsArea[Pstream::myProcNo()] = trisFraction.last();
+        Pstream::listCombineGather(procsArea, maxEqOp<scalar>());
+        Pstream::listCombineScatter(procsArea);
+        for(label proci = 0; proci < Pstream::nProcs(); ++ proci)
         {
-            trisFraction[patchi] /= trisFraction[patchi].last();
-            anyTris = true;
+            procsFraction[proci + 1] = procsFraction[proci] + procsArea[proci];
         }
     }
 
-    if (anyTris)
+    if (triFaces.size())
     {
-        patchesFraction /= patchesFraction.last();
+        trisFraction /= trisFraction.last();
     }
 
-    procsFraction /= procsFraction.last();
+    if (procsFraction.last() != 0)
+    {
+        procsFraction /= procsFraction.last();
+    }
 
     // Generate the samples
     Random rndGen(261782);
@@ -148,32 +127,35 @@ void Foam::sampledSets::boundaryRandom::calcSamples
         // the generator state stays consistent
 
         const scalar rProc = rndGen.scalar01();
-        const scalar rPatch = rndGen.scalar01();
         const scalar rTri = rndGen.scalar01();
-        const barycentric2D r = barycentric2D01(rndGen);
+        const barycentric2D r2D = barycentric2D01(rndGen);
 
         if (procsFraction[proci] < rProc && rProc <= procsFraction[proci + 1])
         {
-            label patchi = 0;
-            while (rPatch > patchesFraction[patchi + 1])
-            {
-                ++ patchi;
-            }
-
             label trii = 0;
-            while (rTri > trisFraction[patchi][trii + 1])
+            while (rTri > trisFraction[trii + 1])
             {
                 ++ trii;
             }
 
-            const polyPatch& patch = mesh().boundaryMesh()[patchIDs[patchi]];
-            const pointField& points = patch.points();
-            const face& tf = tris[patchi][trii];
-            const triPointRef tt(points[tf[0]], points[tf[1]], points[tf[2]]);
+            const tetIndices tetIs
+            (
+                mesh().faceOwner()[triFaces[trii]],
+                triFaces[trii],
+                triTetPts[trii]
+            );
 
-            samplingPts.append(tt.barycentricToPoint(r));
-            samplingCells.append(mesh().faceOwner()[trisFacei[patchi][trii]]);
-            samplingFaces.append(trisFacei[patchi][trii]);
+            const barycentric r3D
+            (
+                rootSmall,
+                (1 - rootSmall)*r2D.a(),
+                (1 - rootSmall)*r2D.b(),
+                (1 - rootSmall)*r2D.c()
+            );
+
+            samplingPts.append(tetIs.tet(mesh()).barycentricToPoint(r3D));
+            samplingCells.append(tetIs.cell());
+            samplingFaces.append(tetIs.face());
             samplingSegments.append(0);
             samplingCurveDist.append(scalar(i));
         }
