@@ -24,18 +24,23 @@ solvers
         relTol          0.1;
     }
 
+    p_rghFinal
+    {
+        $p;
+        relTol         0;
+    }
+
+    Phi
+    {
+        $p;
+    }
+
     "(U|e|k|omega|epsilon)"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
         tolerance       1e-6;
         relTol          0.1;
-    }
-
-    p_rghFinal
-    {
-        $p;
-        relTol         0;
     }
 
     "(U|e|k|omega|epsilon)Final"

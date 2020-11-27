@@ -38,6 +38,11 @@ solvers
 
     }
 
+    Phi
+    {
+        $p;
+    }
+
     "(U|k|omega|epsilon)"
     {
         solver          smoothSolver;
