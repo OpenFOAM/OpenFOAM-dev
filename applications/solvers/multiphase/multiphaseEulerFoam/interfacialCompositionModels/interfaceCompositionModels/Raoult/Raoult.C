@@ -127,11 +127,11 @@ Foam::tmp<Foam::volScalarField> Foam::interfaceCompositionModels::Raoult::Yf
     const volScalarField& Tf
 ) const
 {
-    if (species().contains(speciesName))
+    if (species().found(speciesName))
     {
         return
-             otherComposition().Y(speciesName)
-            *speciesModels_[speciesName]->Yf(speciesName, Tf);
+            otherComposition().Y(speciesName)
+           *speciesModels_[speciesName]->Yf(speciesName, Tf);
     }
     else
     {
@@ -147,11 +147,11 @@ Foam::interfaceCompositionModels::Raoult::YfPrime
     const volScalarField& Tf
 ) const
 {
-    if (species().contains(speciesName))
+    if (species().found(speciesName))
     {
         return
-             otherComposition().Y(speciesName)
-            *speciesModels_[speciesName]->YfPrime(speciesName, Tf);
+            otherComposition().Y(speciesName)
+           *speciesModels_[speciesName]->YfPrime(speciesName, Tf);
     }
     else
     {

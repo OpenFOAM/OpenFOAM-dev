@@ -11,6 +11,7 @@ interfaceCompositionModels/interfaceCompositionModel/interfaceCompositionModel.C
 interfaceCompositionModels/interfaceCompositionModel/interfaceCompositionModelNew.C
 interfaceCompositionModels/Henry/Henry.C
 interfaceCompositionModels/nonRandomTwoLiquid/nonRandomTwoLiquid.C
+interfaceCompositionModels/Raoult/Raoult.C
 interfaceCompositionModels/saturated/saturated.C
 
 saturationModels/saturationModel/saturationModel.C
