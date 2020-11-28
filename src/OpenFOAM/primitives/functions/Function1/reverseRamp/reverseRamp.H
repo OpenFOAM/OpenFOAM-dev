@@ -83,8 +83,16 @@ class reverseRamp
 :
     public Ramp<reverseRamp>
 {
-    //- Standard ramp function to reverse
-    autoPtr<Function1<scalar>> ramp_;
+    // Private Data
+
+        //- Standard ramp function to reverse
+        autoPtr<Function1<scalar>> ramp_;
+
+
+    // Private Member Functions
+
+        //- Write data to dictionary stream
+        virtual void writeData(Ostream& os) const;
 
 
 public:
@@ -121,9 +129,6 @@ public:
             const scalar t1,
             const scalar t2
         ) const;
-
-        //- Write in dictionary format
-        virtual void writeData(Ostream& os) const;
 
 
     // Member Operators

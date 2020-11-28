@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,15 @@ namespace Function1s
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::Function1s::reverseRamp::writeData(Ostream& os) const
+{
+    Ramp<reverseRamp>::writeData(os);
+    ramp_->write(os);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::Function1s::reverseRamp::reverseRamp
@@ -63,19 +72,6 @@ Foam::Function1s::reverseRamp::reverseRamp
 
 Foam::Function1s::reverseRamp::~reverseRamp()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::Function1s::reverseRamp::writeData(Ostream& os) const
-{
-    Ramp<reverseRamp>::writeData(os);
-    os  << token::END_STATEMENT << nl;
-    os  << indent << word(this->name() + "Coeffs") << nl;
-    os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    ramp_->writeData(os);
-    os  << decrIndent << indent << token::END_BLOCK << endl;
-}
 
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,16 @@ void Foam::Function1s::Sine<Type>::read(const dictionary& coeffs)
 }
 
 
+template<class Type>
+void Foam::Function1s::Sine<Type>::writeData(Ostream& os) const
+{
+    amplitude_->write(os);
+    writeEntry(os, "frequency", frequency_);
+    writeEntry(os, "start", start_);
+    level_->write(os);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -73,23 +83,6 @@ Foam::Function1s::Sine<Type>::Sine(const Sine<Type>& se)
 template<class Type>
 Foam::Function1s::Sine<Type>::~Sine()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-void Foam::Function1s::Sine<Type>::writeData(Ostream& os) const
-{
-    Function1<Type>::writeData(os);
-    os  << token::END_STATEMENT << nl;
-    os  << indent << word(this->name() + "Coeffs") << nl;
-    os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    amplitude_->writeData(os);
-    writeEntry(os, "frequency", frequency_);
-    writeEntry(os, "start", start_);
-    level_->writeData(os);
-    os  << decrIndent << indent << token::END_BLOCK << endl;
-}
 
 
 // ************************************************************************* //

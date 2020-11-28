@@ -209,7 +209,7 @@ void Foam::sixDoFRigidBodyMotionRestraints::axialAngularSpring::write
 
     writeEntry(os, "axis", axis_);
 
-    moment_->writeData(os);
+    moment_->write(os);
 
     writeKeyword(os, "angleFormat");
 

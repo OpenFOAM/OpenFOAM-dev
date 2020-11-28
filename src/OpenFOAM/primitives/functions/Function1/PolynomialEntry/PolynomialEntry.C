@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -184,11 +184,10 @@ Type Foam::Function1s::Polynomial<Type>::integrate
 
 
 template<class Type>
-void Foam::Function1s::Polynomial<Type>::writeData(Ostream& os) const
+void Foam::Function1s::Polynomial<Type>::write(Ostream& os) const
 {
-    Function1<Type>::writeData(os);
-
-    os  << nl << indent << coeffs_ << token::END_STATEMENT << nl;
+    this->writeType(os)
+       << nl << indent << coeffs_ << token::END_STATEMENT << nl;
 }
 
 

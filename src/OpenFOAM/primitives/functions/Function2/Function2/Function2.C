@@ -25,6 +25,15 @@ License
 
 #include "Function2.H"
 
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+Foam::Ostream& Foam::Function2<Type>::writeType(Ostream& os) const
+{
+    return writeKeyword(os, name_) << type();
+}
+
+
 // * * * * * * * * * * * * * * * * Constructor * * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -95,9 +104,16 @@ const Foam::word& Foam::Function2<Type>::name() const
 
 
 template<class Type>
-void Foam::Function2<Type>::writeData(Ostream& os) const
+void Foam::Function2<Type>::write(Ostream& os) const
 {
-    writeKeyword(os, name_) << type();
+    writeKeyword(os, name_)
+        << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
+
+    writeEntry(os, "type", type());
+
+    writeData(os);
+
+    os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 
 
@@ -125,7 +141,7 @@ Foam::tmp<Foam::Field<Type>> Foam::FieldFunction2<Type, Function2Type>::value
 template<class Type>
 void  Foam::writeEntry(Ostream& os, const Function2<Type>& f1)
 {
-    f1.writeData(os);
+    f1.write(os);
 }
 
 
@@ -144,7 +160,7 @@ Foam::Ostream& Foam::operator<<
         "Ostream& operator<<(Ostream&, const Function2<Type>&)"
     );
 
-    f1.writeData(os);
+    f1.write(os);
 
     return os;
 }

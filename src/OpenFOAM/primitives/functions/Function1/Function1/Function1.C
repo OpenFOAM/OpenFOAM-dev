@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,16 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Function1.H"
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+Foam::Ostream& Foam::Function1<Type>::writeType(Ostream& os) const
+{
+    return writeKeyword(os, name_) << type();
+}
+
 
 // * * * * * * * * * * * * * * * * Constructor * * * * * * * * * * * * * * * //
 
@@ -95,9 +105,16 @@ const Foam::word& Foam::Function1<Type>::name() const
 
 
 template<class Type>
-void Foam::Function1<Type>::writeData(Ostream& os) const
+void Foam::Function1<Type>::write(Ostream& os) const
 {
-    writeKeyword(os, name_) << type();
+    writeKeyword(os, name_)
+        << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
+
+    writeEntry(os, "type", type());
+
+    writeData(os);
+
+    os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 
 
@@ -144,7 +161,7 @@ Foam::FieldFunction1<Type, Function1Type>::integrate
 template<class Type>
 void  Foam::writeEntry(Ostream& os, const Function1<Type>& f1)
 {
-    f1.writeData(os);
+    f1.write(os);
 }
 
 
@@ -163,7 +180,7 @@ Foam::Ostream& Foam::operator<<
         "Ostream& operator<<(Ostream&, const Function1<Type>&)"
     );
 
-    f1.writeData(os);
+    f1.write(os);
 
     return os;
 }

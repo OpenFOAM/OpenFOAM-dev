@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,6 +125,9 @@ class Square
         //- Read the coefficients from the given dictionary
         void read(const dictionary& coeffs);
 
+        //- Write data to dictionary stream
+        virtual void writeData(Ostream& os) const;
+
 
 public:
 
@@ -156,9 +159,6 @@ public:
 
         //- Integrate between two values
         virtual inline Type integrate(const scalar x1, const scalar x2) const;
-
-        //- Write in dictionary format
-        virtual void writeData(Ostream& os) const;
 
 
     // Member Operators

@@ -62,6 +62,17 @@ extern "C"
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::Function1s::${typeName}Function1${TemplateType}::writeData
+(
+    Ostream& os
+) const
+{
+    NotImplemented;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::Function1s::${typeName}Function1${TemplateType}::
@@ -124,15 +135,6 @@ Foam::Function1s::${typeName}Function1${TemplateType}::integrate
 {
     NotImplemented;
     return pTraits<${TemplateType}>::zero;
-}
-
-
-void Foam::Function1s::${typeName}Function1${TemplateType}::writeData
-(
-    Ostream& os
-) const
-{
-    NotImplemented;
 }
 
 

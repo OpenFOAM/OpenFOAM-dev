@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,6 +47,15 @@ void Foam::Function1s::Scale<Type>::read(const dictionary& coeffs)
 }
 
 
+template<class Type>
+void Foam::Function1s::Scale<Type>::writeData(Ostream& os) const
+{
+    scale_->write(os);
+    xScale_->write(os);
+    value_->write(os);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -79,22 +88,6 @@ Foam::Function1s::Scale<Type>::Scale(const Scale<Type>& se)
 template<class Type>
 Foam::Function1s::Scale<Type>::~Scale()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class Type>
-void Foam::Function1s::Scale<Type>::writeData(Ostream& os) const
-{
-    Function1<Type>::writeData(os);
-    os  << token::END_STATEMENT << nl;
-    os  << indent << word(this->name() + "Coeffs") << nl;
-    os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    scale_->writeData(os);
-    xScale_->writeData(os);
-    value_->writeData(os);
-    os  << decrIndent << indent << token::END_BLOCK << endl;
-}
 
 
 // ************************************************************************* //

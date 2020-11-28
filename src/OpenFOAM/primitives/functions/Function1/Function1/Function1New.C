@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,13 +90,27 @@ Foam::autoPtr<Foam::Function1<Type>> Foam::Function1<Type>::New
                 << exit(FatalError);
         }
 
-        return cstrIter()
+        autoPtr<Function1<Type>> funcPtr
         (
-            entryName,
-            dict.found(entryName + "Coeffs")
-          ? dict.subDict(entryName + "Coeffs")
-          : dict
+            cstrIter()
+            (
+                entryName,
+                dict.found(entryName + "Coeffs")
+              ? dict.subDict(entryName + "Coeffs")
+              : dict
+            )
         );
+
+        if (dict.found(entryName + "Coeffs"))
+        {
+            IOWarningInFunction(dict)
+                << "Using deprecated "
+                << (entryName + "Coeffs") << " sub-dictionary."<< nl
+                << "    Please use the simpler form" << endl;
+            funcPtr->write(Info);
+        }
+
+        return funcPtr;
     }
 }
 

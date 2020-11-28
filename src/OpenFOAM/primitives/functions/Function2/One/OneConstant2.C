@@ -55,11 +55,9 @@ Foam::Function2s::OneConstant<Type>::~OneConstant()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function2s::OneConstant<Type>::writeData(Ostream& os) const
+void Foam::Function2s::OneConstant<Type>::write(Ostream& os) const
 {
-    Function2<Type>::writeData(os);
-
-    os  << token::END_STATEMENT << nl;
+    this->writeType(os) << token::END_STATEMENT << nl;
 }
 
 

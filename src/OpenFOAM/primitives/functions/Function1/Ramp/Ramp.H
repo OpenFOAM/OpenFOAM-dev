@@ -114,6 +114,9 @@ protected:
             return 1/duration_;
         }
 
+        //- Write data to dictionary stream
+        virtual void writeData(Ostream& os) const;
+
 
 private:
 
@@ -143,9 +146,6 @@ public:
 
         //- Return value for time t
         virtual scalar value(const scalar t) const = 0;
-
-        //- Write in dictionary format
-        virtual void writeData(Ostream& os) const;
 
 
     // Member Operators

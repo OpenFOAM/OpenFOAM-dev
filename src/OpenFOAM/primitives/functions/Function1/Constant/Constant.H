@@ -106,7 +106,7 @@ public:
         virtual inline Type integrate(const scalar x1, const scalar x2) const;
 
         //- Write in dictionary format
-        virtual void writeData(Ostream& os) const;
+        virtual void write(Ostream& os) const;
 
 
     // Member Operators

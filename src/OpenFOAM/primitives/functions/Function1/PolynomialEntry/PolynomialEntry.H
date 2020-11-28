@@ -111,7 +111,7 @@ public:
 
 
         //- Write in dictionary format
-        virtual void writeData(Ostream& os) const;
+        virtual void write(Ostream& os) const;
 
 
     // Member Operators

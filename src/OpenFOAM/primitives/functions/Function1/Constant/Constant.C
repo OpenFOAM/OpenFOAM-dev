@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,11 +99,10 @@ Foam::Function1s::Constant<Type>::~Constant()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1s::Constant<Type>::writeData(Ostream& os) const
+void Foam::Function1s::Constant<Type>::write(Ostream& os) const
 {
-    Function1<Type>::writeData(os);
-
-    os  << token::SPACE << value_ << token::END_STATEMENT << nl;
+    this->writeType(os)
+        << token::SPACE << value_ << token::END_STATEMENT << nl;
 }
 
 

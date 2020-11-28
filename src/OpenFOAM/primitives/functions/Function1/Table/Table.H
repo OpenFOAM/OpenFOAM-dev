@@ -39,15 +39,51 @@ Description
         );
     \endverbatim
 
+    or in dictionary form which supports the setting of options, e.g.
+    \verbatim
+        <entryName>   table;
+
+        values
+        (
+            (0.0 (1 2 3))
+            (1.0 (4 5 6))
+        );
+
+        outOfBounds         clamp;     // optional out-of-bounds handling
+        interpolationScheme linear;    // optional interpolation method
+    \endverbatim
+
+    or in sub-dictionary form which avoids clashes between table entries and
+    other entries in the dictionary:
+
+    \verbatim
+        <entryName>
+        {
+            type    table;
+
+            values
+            (
+                (0.0 (1 2 3))
+                (1.0 (4 5 6))
+            );
+
+            outOfBounds         clamp;     // optional out-of-bounds handling
+            interpolationScheme linear;    // optional interpolation method
+        }
+    \endverbatim
+
     The data may be read from a separate file in either native or CSV format:
 
     Usage:
     \verbatim
-        <entryName> table;
-        file                "<file path>"; // Name/path of thedata file
-        format              foam;          // data format (optional)
-        outOfBounds         clamp;         // optional out-of-bounds handling
-        interpolationScheme linear;        // optional interpolation method
+        <entryName>
+        {
+            type                table;
+            file                "<file path>"; // Name/path of thedata file
+            format              foam;      // data format (optional)
+            outOfBounds         clamp;     // optional out-of-bounds handling
+            interpolationScheme linear;    // optional interpolation method
+        }
     \endverbatim
 
 SourceFiles
@@ -113,7 +149,7 @@ class Table
         const autoPtr<TableReader<Type>> reader_;
 
 
-    // Protected Member Functions
+    // Private Member Functions
 
         //- Return (demand driven) interpolator
         const interpolationWeights& interpolator() const;
@@ -125,6 +161,9 @@ class Table
         //  value if the table repeats. Does not clamp to the ends of the table
         //  as the interpolator already performs that function.
         scalar bound(const scalar x) const;
+
+        //- Write data to dictionary stream
+        virtual void writeData(Ostream& os) const;
 
 
 public:
@@ -168,9 +207,6 @@ public:
 
         //- Return the dependent values
         virtual tmp<Field<Type>> y() const;
-
-        //- Write all table data in dictionary format
-        virtual void writeData(Ostream& os) const;
 
 
     // Member Operators

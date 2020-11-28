@@ -130,6 +130,29 @@ Foam::scalar Foam::Function1s::Table<Type>::bound
 }
 
 
+template<class Type>
+void Foam::Function1s::Table<Type>::writeData(Ostream& os) const
+{
+    writeEntryIfDifferent
+    (
+        os,
+        "outOfBounds",
+        tableBase::boundsHandlingNames_[tableBase::boundsHandling::clamp],
+        tableBase::boundsHandlingNames_[boundsHandling_]
+    );
+
+    writeEntryIfDifferent
+    (
+        os,
+        "interpolationScheme",
+        linearInterpolationWeights::typeName,
+        interpolationScheme_
+    );
+
+    reader_->write(os, table_);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -290,40 +313,6 @@ Foam::Function1s::Table<Type>::y() const
     }
 
     return tfld;
-}
-
-
-template<class Type>
-void Foam::Function1s::Table<Type>::writeData
-(
-    Ostream& os
-) const
-{
-    Function1<Type>::writeData(os);
-    os  << token::END_STATEMENT << nl;
-
-    os  << indent << word(this->name() + "Coeffs") << nl;
-    os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-
-    writeEntryIfDifferent
-    (
-        os,
-        "outOfBounds",
-        tableBase::boundsHandlingNames_[tableBase::boundsHandling::clamp],
-        tableBase::boundsHandlingNames_[boundsHandling_]
-    );
-
-    writeEntryIfDifferent
-    (
-        os,
-        "interpolationScheme",
-        linearInterpolationWeights::typeName,
-        interpolationScheme_
-    );
-
-    reader_->write(os, table_);
-
-    os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 
 

@@ -90,13 +90,7 @@ Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
                 << exit(FatalError);
         }
 
-        return cstrIter()
-        (
-            entryName,
-            dict.found(entryName + "Coeffs")
-          ? dict.subDict(entryName + "Coeffs")
-          : dict
-        );
+        return cstrIter()(entryName, dict);
     }
 }
 

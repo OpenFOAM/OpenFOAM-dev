@@ -88,6 +88,13 @@ Foam::Function1s::Coded<Type>::compileNew()
 }
 
 
+template<class Type>
+void Foam::Function1s::Coded<Type>::writeData(Ostream& os) const
+{
+    writeCode(os);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -162,15 +169,6 @@ Foam::tmp<Foam::Field<Type>> Foam::Function1s::Coded<Type>::integrate
 {
     NotImplemented;
     return tmp<Field<Type>>();
-}
-
-
-template<class Type>
-void Foam::Function1s::Coded<Type>::writeData(Ostream& os) const
-{
-    Function1<Type>::writeData(os);
-    os  << token::END_STATEMENT << nl;
-    writeCode(os);
 }
 
 

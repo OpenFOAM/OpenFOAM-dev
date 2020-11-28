@@ -80,6 +80,9 @@ class Scale
         //- Read the coefficients from the given dictionary
         void read(const dictionary& coeffs);
 
+        //- Write data to dictionary stream
+        virtual void writeData(Ostream& os) const;
+
 
 public:
 
@@ -105,9 +108,6 @@ public:
 
 
     // Member Functions
-
-        //- Write in dictionary format
-        virtual void writeData(Ostream& os) const;
 
         //- Return value
         virtual inline Type value(const scalar x, const scalar y) const;

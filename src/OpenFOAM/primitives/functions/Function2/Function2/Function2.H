@@ -71,6 +71,15 @@ protected:
         const word name_;
 
 
+    // Protected member functions
+
+        Ostream& writeType(Ostream& os) const;
+
+        //- Write data to dictionary stream
+        virtual void writeData(Ostream& os) const
+        {}
+
+
 public:
 
     typedef Type returnType;
@@ -132,7 +141,7 @@ public:
         ) const = 0;
 
         //- Write in dictionary format
-        virtual void writeData(Ostream& os) const;
+        virtual void write(Ostream& os) const;
 
 
     // Member Operators

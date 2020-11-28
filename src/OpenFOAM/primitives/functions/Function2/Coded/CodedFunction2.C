@@ -88,6 +88,13 @@ Foam::Function2s::Coded<Type>::compileNew()
 }
 
 
+template<class Type>
+void Foam::Function2s::Coded<Type>::writeData(Ostream& os) const
+{
+    writeCode(os);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
@@ -139,15 +146,6 @@ Foam::tmp<Foam::Field<Type>> Foam::Function2s::Coded<Type>::value
 ) const
 {
     return redirectFunction2Ptr_->value(x, y);
-}
-
-
-template<class Type>
-void Foam::Function2s::Coded<Type>::writeData(Ostream& os) const
-{
-    Function2<Type>::writeData(os);
-    os  << token::END_STATEMENT << nl;
-    writeCode(os);
 }
 
 

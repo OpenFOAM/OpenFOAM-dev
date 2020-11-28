@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,16 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Ramp.H"
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template <class Function1Type>
+void Foam::Function1s::Ramp<Function1Type>::writeData(Ostream& os) const
+{
+    writeEntry(os, "start", start_);
+    writeEntry(os, "duration", duration_);
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -53,21 +63,6 @@ Foam::Function1s::Ramp<Function1Type>::Ramp
 template <class Function1Type>
 Foam::Function1s::Ramp<Function1Type>::~Ramp()
 {}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template <class Function1Type>
-void Foam::Function1s::Ramp<Function1Type>::writeData(Ostream& os) const
-{
-    Function1<scalar>::writeData(os);
-    os  << token::END_STATEMENT << nl;
-    os  << indent << word(this->name() + "Coeffs") << nl;
-    os  << indent << token::BEGIN_BLOCK << incrIndent << nl;
-    writeEntry(os, "start", start_);
-    writeEntry(os, "duration", duration_);
-    os  << decrIndent << indent << token::END_BLOCK << endl;
-}
 
 
 // ************************************************************************* //

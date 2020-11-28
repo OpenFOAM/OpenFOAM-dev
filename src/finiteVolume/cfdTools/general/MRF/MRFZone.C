@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -577,7 +577,7 @@ void Foam::MRFZone::writeData(Ostream& os) const
     writeEntry(os, "cellZone", cellZoneName_);
     writeEntry(os, "origin", origin_);
     writeEntry(os, "axis", axis_);
-    omega_->writeData(os);
+    omega_->write(os);
 
     if (excludedPatchNames_.size())
     {

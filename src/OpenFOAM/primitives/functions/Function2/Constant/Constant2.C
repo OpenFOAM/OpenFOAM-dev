@@ -99,11 +99,10 @@ Foam::Function2s::Constant<Type>::~Constant()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function2s::Constant<Type>::writeData(Ostream& os) const
+void Foam::Function2s::Constant<Type>::write(Ostream& os) const
 {
-    Function2<Type>::writeData(os);
-
-    os  << token::SPACE << value_ << token::END_STATEMENT << nl;
+    this->writeType(os)
+        << token::SPACE << value_ << token::END_STATEMENT << nl;
 }
 
 
