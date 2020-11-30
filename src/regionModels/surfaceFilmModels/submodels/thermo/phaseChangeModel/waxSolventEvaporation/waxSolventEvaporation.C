@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -161,9 +161,9 @@ void waxSolventEvaporation::correctModel
     const surfaceScalarField& phi = film.phi();
 
     // Set local thermo properties
-    const SLGThermo& thermo = film.thermo();
-    const filmThermoModel& filmThermo = film.filmThermo();
-    const label vapId = thermo.carrierId(filmThermo.name());
+    const SLGThermo& slgThermo = film.slgThermo();
+    const thermoModel& thermo = film.thermo();
+    const label vapId = slgThermo.carrierId(thermo.name());
 
     // Retrieve fields from film model
     const scalarField& pInf = film.pPrimary();
@@ -181,7 +181,7 @@ void waxSolventEvaporation::correctModel
     );
 
     // Molecular weight of vapour [kg/kmol]
-    const scalar Wvap = thermo.carrier().Wi(vapId);
+    const scalar Wvap = slgThermo.carrier().Wi(vapId);
 
     const scalar Wwax = Wwax_.value();
     const scalar Wsolvent = Wsolvent_.value();
@@ -239,14 +239,14 @@ void waxSolventEvaporation::correctModel
             const scalar pc = pInf[celli];
 
             // Calculate the boiling temperature
-            const scalar Tb = filmThermo.Tb(pc);
+            const scalar Tb = thermo.Tb(pc);
 
             // Local temperature - impose lower limit of 200 K for stability
             const scalar Tloc = min(TbFactor_*Tb, max(200.0, T[celli]));
 
             const scalar pPartialCoeff
             (
-                filmThermo.pv(pc, Tloc)*activityCoeff_->value(Xsolvent)
+                thermo.pv(pc, Tloc)*activityCoeff_->value(Xsolvent)
             );
 
             scalar XsCoeff = pPartialCoeff/pc;
@@ -277,7 +277,7 @@ void waxSolventEvaporation::correctModel
             const scalar Re = rhoInfc*mag(dU[celli])*L_/muInfc;
 
             // Vapour diffusivity [m^2/s]
-            const scalar Dab = filmThermo.D(pc, Tloc);
+            const scalar Dab = thermo.D(pc, Tloc);
 
             // Schmidt number
             const scalar Sc = muInfc/(rhoInfc*(Dab + rootVSmall));
@@ -308,7 +308,7 @@ void waxSolventEvaporation::correctModel
             evapRateInf[celli] = evapRateCoeff[celli]*YInf[celli];
             evapRateCoeff[celli] *= YsCoeff;
 
-            // hVap[celli] = filmThermo.hl(pc, Tloc);
+            // hVap[celli] = thermo.hl(pc, Tloc);
         }
     }
 
@@ -392,7 +392,7 @@ void waxSolventEvaporation::correctModel
     else
     {
         const thermoSingleLayer& film = filmType<thermoSingleLayer>();
-        const label vapId = film.thermo().carrierId(film.filmThermo().name());
+        const label vapId = film.slgThermo().carrierId(film.thermo().name());
         const scalarField& YInf = film.YPrimary()[vapId];
 
         correctModel(dt, availableMass, dMass, dEnergy, YInf);

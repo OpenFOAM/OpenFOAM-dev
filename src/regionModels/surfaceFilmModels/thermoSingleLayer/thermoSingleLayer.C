@@ -104,10 +104,10 @@ void thermoSingleLayer::resetPrimaryRegionSourceTerms()
 
 void thermoSingleLayer::correctThermoFields()
 {
-    rho_ == filmThermo_->rho();
-    sigma_ == filmThermo_->sigma();
-    Cp_ == filmThermo_->Cp();
-    kappa_ == filmThermo_->kappa();
+    rho_ == thermo_->rho();
+    sigma_ == thermo_->sigma();
+    Cp_ == thermo_->Cp();
+    kappa_ == thermo_->kappa();
 }
 
 
@@ -257,7 +257,7 @@ void thermoSingleLayer::updateSubmodels()
     rhoSp_ += rVDt*(cloudMassTrans_() + primaryMassTrans_());
     hSp_ += rVDt*(cloudMassTrans_()*h_() + primaryEnergyTrans_());
 
-    turbulence_->correct();
+    momentumTransport_->correct();
 }
 
 
@@ -320,7 +320,7 @@ thermoSingleLayer::thermoSingleLayer
 )
 :
     kinematicSingleLayer(modelType, mesh, g, regionType, false),
-    thermo_(mesh.lookupObject<SLGThermo>("SLGThermo")),
+    slgThermo_(mesh.lookupObject<SLGThermo>("SLGThermo")),
 
     Cp_
     (
@@ -473,7 +473,7 @@ thermoSingleLayer::thermoSingleLayer
 
     YPrimary_(),
 
-    viscosity_(filmViscosityModel::New(*this, coeffs(), mu_)),
+    viscosity_(viscosityModel::New(*this, coeffs(), mu_)),
 
     htcs_
     (
@@ -486,7 +486,7 @@ thermoSingleLayer::thermoSingleLayer
     ),
 
     phaseChange_(phaseChangeModel::New(*this, coeffs())),
-    radiation_(filmRadiationModel::New(*this, coeffs())),
+    radiation_(radiationModel::New(*this, coeffs())),
     Tmin_(-vGreat),
     Tmax_(vGreat)
 {
@@ -500,11 +500,11 @@ thermoSingleLayer::thermoSingleLayer
         Info<< "    limiting maximum temperature to " << Tmax_ << endl;
     }
 
-    if (thermo_.hasMultiComponentCarrier())
+    if (slgThermo_.hasMultiComponentCarrier())
     {
-        YPrimary_.setSize(thermo_.carrier().species().size());
+        YPrimary_.setSize(slgThermo_.carrier().species().size());
 
-        forAll(thermo_.carrier().species(), i)
+        forAll(slgThermo_.carrier().species(), i)
         {
             YPrimary_.set
             (
@@ -513,7 +513,7 @@ thermoSingleLayer::thermoSingleLayer
                 (
                     IOobject
                     (
-                        thermo_.carrier().species()[i],
+                        slgThermo_.carrier().species()[i],
                         time().timeName(),
                         regionMesh(),
                         IOobject::NO_READ,
@@ -752,7 +752,7 @@ tmp<volScalarField::Internal> thermoSingleLayer::Srho
     const label i
 ) const
 {
-    const label vapId = thermo_.carrierId(filmThermo_->name());
+    const label vapId = slgThermo_.carrierId(thermo_->name());
 
     tmp<volScalarField::Internal> tSrho
     (

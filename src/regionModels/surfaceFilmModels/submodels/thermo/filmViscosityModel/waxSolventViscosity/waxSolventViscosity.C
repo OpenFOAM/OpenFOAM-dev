@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ defineTypeNameAndDebug(waxSolventViscosity, 0);
 
 addToRunTimeSelectionTable
 (
-    filmViscosityModel,
+    viscosityModel,
     waxSolventViscosity,
     dictionary
 );
@@ -111,7 +111,7 @@ waxSolventViscosity::waxSolventViscosity
     volScalarField& mu
 )
 :
-    filmViscosityModel(typeName, film, dict, mu),
+    viscosityModel(typeName, film, dict, mu),
     muWax_
     (
         IOobject
@@ -128,7 +128,7 @@ waxSolventViscosity::waxSolventViscosity
     ),
     muWaxModel_
     (
-        filmViscosityModel::New
+        viscosityModel::New
         (
             film,
             coeffDict_.subDict("muWax"),
@@ -151,7 +151,7 @@ waxSolventViscosity::waxSolventViscosity
     ),
     muSolventModel_
     (
-        filmViscosityModel::New
+        viscosityModel::New
         (
             film,
             coeffDict_.subDict("muSolvent"),

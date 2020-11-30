@@ -47,7 +47,7 @@ defineTypeNameAndDebug(thixotropicViscosity, 0);
 
 addToRunTimeSelectionTable
 (
-    filmViscosityModel,
+    viscosityModel,
     thixotropicViscosity,
     dictionary
 );
@@ -62,7 +62,7 @@ thixotropicViscosity::thixotropicViscosity
     volScalarField& mu
 )
 :
-    filmViscosityModel(typeName, film, dict, mu),
+    viscosityModel(typeName, film, dict, mu),
     a_("a", dimless/dimTime, coeffDict_),
     b_("b", dimless, coeffDict_),
     d_("d", dimless, coeffDict_),

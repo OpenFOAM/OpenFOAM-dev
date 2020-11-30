@@ -54,7 +54,7 @@ namespace surfaceFilmModels
 
 class function1Viscosity
 :
-    public filmViscosityModel
+    public viscosityModel
 {
     // Private Member Functions
 
@@ -70,7 +70,7 @@ protected:
     // Protected data
 
         //- Base viscosity model
-        autoPtr<filmViscosityModel> viscosity_;
+        autoPtr<viscosityModel> viscosity_;
 
         //- Viscosity factor as a function of temperature
         autoPtr<Function1<scalar>> function_;

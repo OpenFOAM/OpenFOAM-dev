@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::filmThermoModel
+    Foam::regionModels::surfaceFilmModels::thermoModel
 
 Description
     Base class for film thermo models
@@ -49,17 +49,17 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class filmThermoModel Declaration
+                       Class thermoModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class filmThermoModel
+class thermoModel
 :
     public filmSubModelBase
 {
 public:
 
     //- Runtime type information
-    TypeName("filmThermoModel");
+    TypeName("thermophysicalProperties");
 
 
     // Declare runtime constructor selection table
@@ -67,7 +67,7 @@ public:
          declareRunTimeSelectionTable
          (
              autoPtr,
-             filmThermoModel,
+             thermoModel,
              dictionary,
              (
                  surfaceFilmRegionModel& film,
@@ -79,10 +79,10 @@ public:
     // Constructors
 
         //- Construct null
-        filmThermoModel(surfaceFilmRegionModel& film);
+        thermoModel(surfaceFilmRegionModel& film);
 
         //- Construct from type name, dictionary and surface film model
-        filmThermoModel
+        thermoModel
         (
             const word& modelType,
             surfaceFilmRegionModel& film,
@@ -90,13 +90,13 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        filmThermoModel(const filmThermoModel&) = delete;
+        thermoModel(const thermoModel&) = delete;
 
 
     // Selectors
 
         //- Return a reference to the selected phase change model
-        static autoPtr<filmThermoModel> New
+        static autoPtr<thermoModel> New
         (
             surfaceFilmRegionModel& film,
             const dictionary& dict
@@ -104,7 +104,7 @@ public:
 
 
     //- Destructor
-    virtual ~filmThermoModel();
+    virtual ~thermoModel();
 
 
     // Member Functions
@@ -167,7 +167,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const filmThermoModel&) = delete;
+        void operator=(const thermoModel&) = delete;
 };
 
 

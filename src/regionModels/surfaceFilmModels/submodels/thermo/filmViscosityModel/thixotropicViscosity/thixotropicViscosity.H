@@ -87,7 +87,7 @@ namespace surfaceFilmModels
 
 class thixotropicViscosity
 :
-    public filmViscosityModel
+    public viscosityModel
 {
 protected:
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::filmViscosityModel
+    Foam::regionModels::surfaceFilmModels::viscosityModel
 
 Description
     Base class for surface film viscosity models
@@ -50,10 +50,10 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class filmViscosityModel Declaration
+                     Class viscosityModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class filmViscosityModel
+class viscosityModel
 :
     public filmSubModelBase
 {
@@ -68,7 +68,7 @@ protected:
 public:
 
     //- Runtime type information
-    TypeName("filmViscosityModel");
+    TypeName("viscosity");
 
 
     // Declare runtime constructor selection table
@@ -76,7 +76,7 @@ public:
          declareRunTimeSelectionTable
          (
              autoPtr,
-             filmViscosityModel,
+             viscosityModel,
              dictionary,
              (
                 surfaceFilmRegionModel& film,
@@ -89,7 +89,7 @@ public:
     // Constructors
 
         //- Construct from type name, dictionary and surface film model
-        filmViscosityModel
+        viscosityModel
         (
             const word& modelType,
             surfaceFilmRegionModel& film,
@@ -98,13 +98,13 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        filmViscosityModel(const filmViscosityModel&) = delete;
+        viscosityModel(const viscosityModel&) = delete;
 
 
     // Selectors
 
         //- Return a reference to the selected phase change model
-        static autoPtr<filmViscosityModel> New
+        static autoPtr<viscosityModel> New
         (
             surfaceFilmRegionModel& film,
             const dictionary& dict,
@@ -113,7 +113,7 @@ public:
 
 
     //- Destructor
-    virtual ~filmViscosityModel();
+    virtual ~viscosityModel();
 
 
     // Member Functions
@@ -137,7 +137,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const filmViscosityModel&) = delete;
+        void operator=(const viscosityModel&) = delete;
 };
 
 

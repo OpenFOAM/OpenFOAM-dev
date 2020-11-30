@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,9 +39,9 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline const SLGThermo& thermoSingleLayer::thermo() const
+inline const SLGThermo& thermoSingleLayer::slgThermo() const
 {
-    return thermo_;
+    return slgThermo_;
 }
 
 
@@ -128,7 +128,7 @@ inline const phaseChangeModel& thermoSingleLayer::phaseChange() const
 }
 
 
-inline const filmRadiationModel& thermoSingleLayer::radiation() const
+inline const radiationModel& thermoSingleLayer::radiation() const
 {
     return radiation_();
 }

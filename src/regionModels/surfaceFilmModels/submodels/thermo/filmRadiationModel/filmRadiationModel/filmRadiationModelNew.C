@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "filmRadiationModel.H"
+#include "noRadiation.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -36,13 +36,34 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-autoPtr<filmRadiationModel> filmRadiationModel::New
+autoPtr<radiationModel> radiationModel::New
 (
     surfaceFilmRegionModel& model,
     const dictionary& dict
 )
 {
-    word modelType(dict.lookup("radiationModel"));
+    if
+    (
+        !dict.found("radiationModel")
+     && !dict.found(radiationModel::typeName)
+    )
+    {
+        return autoPtr<radiationModel>(new noRadiation(model, dict));
+    }
+
+    const dictionary& radiationDict
+    (
+        dict.found("radiationModel")
+      ? dict
+      : dict.subDict(radiationModel::typeName)
+    );
+
+    const word modelType
+    (
+        dict.found("radiationModel")
+      ? radiationDict.lookup("radiationModel")
+      : radiationDict.lookup("model")
+    );
 
     Info<< "    Selecting radiationModel " << modelType << endl;
 
@@ -53,12 +74,12 @@ autoPtr<filmRadiationModel> filmRadiationModel::New
     {
         FatalErrorInFunction
             << "Unknown radiationModel type " << modelType << nl << nl
-            << "Valid filmRadiationModel types are:" << nl
+            << "Valid radiationModel types are:" << nl
             << dictionaryConstructorTablePtr_->toc()
             << exit(FatalError);
     }
 
-    return autoPtr<filmRadiationModel>(cstrIter()(model, dict));
+    return autoPtr<radiationModel>(cstrIter()(model, radiationDict));
 }
 
 

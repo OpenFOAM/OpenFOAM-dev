@@ -22,10 +22,10 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::filmMomentumTransportModel
+    Foam::regionModels::surfaceFilmModels::momentumTransportModel
 
 Description
-    Base class for film turbulence models
+    Base class for film momentum transport models
 
 SourceFiles
     filmMomentumTransportModel.C
@@ -51,17 +51,17 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                 Class filmMomentumTransportModel Declaration
+                 Class momentumTransportModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class filmMomentumTransportModel
+class momentumTransportModel
 :
     public filmSubModelBase
 {
 public:
 
     //- Runtime type information
-    TypeName("filmMomentumTransportModel");
+    TypeName("momentumTransport");
 
 
     // Declare runtime constructor selection table
@@ -69,7 +69,7 @@ public:
          declareRunTimeSelectionTable
          (
              autoPtr,
-             filmMomentumTransportModel,
+             momentumTransportModel,
              dictionary,
              (
                 surfaceFilmRegionModel& film,
@@ -81,10 +81,10 @@ public:
     // Constructors
 
         //- Construct null
-        filmMomentumTransportModel(surfaceFilmRegionModel& film);
+        momentumTransportModel(surfaceFilmRegionModel& film);
 
         //- Construct from type name, dictionary and surface film model
-        filmMomentumTransportModel
+        momentumTransportModel
         (
             const word& modelType,
             surfaceFilmRegionModel& film,
@@ -92,13 +92,13 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        filmMomentumTransportModel(const filmMomentumTransportModel&) = delete;
+        momentumTransportModel(const momentumTransportModel&) = delete;
 
 
     // Selectors
 
         //- Return a reference to the selected injection model
-        static autoPtr<filmMomentumTransportModel> New
+        static autoPtr<momentumTransportModel> New
         (
             surfaceFilmRegionModel& film,
             const dictionary& dict
@@ -106,7 +106,7 @@ public:
 
 
     //- Destructor
-    virtual ~filmMomentumTransportModel();
+    virtual ~momentumTransportModel();
 
 
     // Member Functions
@@ -115,9 +115,6 @@ public:
 
             //- Return the film surface velocity
             virtual tmp<volVectorField::Internal> Us() const = 0;
-
-            //- Return the film turbulence viscosity
-            virtual tmp<volScalarField> mut() const = 0;
 
             //- Correct/update the model
             virtual void correct() = 0;
@@ -129,7 +126,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const filmMomentumTransportModel&) = delete;
+        void operator=(const momentumTransportModel&) = delete;
 };
 
 

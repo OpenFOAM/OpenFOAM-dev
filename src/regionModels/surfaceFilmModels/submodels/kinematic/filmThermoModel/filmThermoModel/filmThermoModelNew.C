@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,15 +36,27 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-autoPtr<filmThermoModel> filmThermoModel::New
+autoPtr<thermoModel> thermoModel::New
 (
     surfaceFilmRegionModel& model,
     const dictionary& dict
 )
 {
-    word modelType(dict.lookup("filmThermoModel"));
+    const dictionary& thermophysicalPropertiesDict
+    (
+        dict.found("thermoModel")
+      ? dict
+      : dict.subDict(thermoModel::typeName)
+    );
 
-    Info<< "    Selecting filmThermoModel " << modelType << endl;
+    const word modelType
+    (
+        dict.found("thermoModel")
+      ? thermophysicalPropertiesDict.lookup("thermoModel")
+      : thermophysicalPropertiesDict.lookup("type")
+    );
+
+    Info<< "    Selecting thermoModel " << modelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);
@@ -52,13 +64,16 @@ autoPtr<filmThermoModel> filmThermoModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown filmThermoModel type " << modelType << nl << nl
-            << "Valid filmThermoModel types are:" << nl
+            << "Unknown thermoModel type " << modelType << nl << nl
+            << "Valid thermoModel types are:" << nl
             << dictionaryConstructorTablePtr_->toc()
             << exit(FatalError);
     }
 
-    return autoPtr<filmThermoModel>(cstrIter()(model, dict));
+    return autoPtr<thermoModel>
+    (
+        cstrIter()(model, thermophysicalPropertiesDict)
+    );
 }
 
 

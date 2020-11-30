@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ defineTypeNameAndDebug(constantFilmThermo, 0);
 
 addToRunTimeSelectionTable
 (
-    filmThermoModel,
+    thermoModel,
     constantFilmThermo,
     dictionary
 );
@@ -65,7 +65,7 @@ constantFilmThermo::constantFilmThermo
     const dictionary& dict
 )
 :
-    filmThermoModel(typeName, film, dict),
+    thermoModel(typeName, film, dict),
     name_(coeffDict_.lookup("specie")),
     rho0_("rho0"),
     mu0_("mu0"),

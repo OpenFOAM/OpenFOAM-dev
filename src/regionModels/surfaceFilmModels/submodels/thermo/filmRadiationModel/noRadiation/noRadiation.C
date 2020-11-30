@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ defineTypeNameAndDebug(noRadiation, 0);
 
 addToRunTimeSelectionTable
 (
-    filmRadiationModel,
+    radiationModel,
     noRadiation,
     dictionary
 );
@@ -55,7 +55,7 @@ noRadiation::noRadiation
     const dictionary& dict
 )
 :
-    filmRadiationModel(film)
+    radiationModel(film)
 {}
 
 

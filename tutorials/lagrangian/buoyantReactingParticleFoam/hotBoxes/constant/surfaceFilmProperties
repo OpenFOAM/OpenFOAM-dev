@@ -21,58 +21,33 @@ regionName      wallFilmRegion;
 
 active          true;
 
-thermoSingleLayerCoeffs
+thermophysicalProperties
 {
-    filmThermoModel liquid;
+    type        liquid;
 
-    liquidCoeffs
-    {
-        useReferenceValues no;
-        liquid      H2O;
-    }
+    useReferenceValues  no;
+    liquid      H2O;
+}
 
-    filmViscosityModel liquid;
+viscosity
+{
+    model        liquid;
+}
 
-    deltaWet    1e-4;
+deltaWet    1e-4;
+hydrophilic no;
 
-    hydrophilic no;
+momentumTransport
+{
+    model       laminar;
+    Cf          0.005;
+}
 
-    radiationModel  none;
+forces
+{
+    thermocapillary;
 
-    turbulence  laminar;
-    laminarCoeffs
-    {
-        Cf          0.005;
-    }
-
-    upperSurfaceModels
-    {
-        /*
-        heatTransferModel constant;
-        constantCoeffs
-        {
-           c0              1e-8;
-        }
-        */
-        heatTransferModel mappedConvectiveHeatTransfer;
-    }
-
-    lowerSurfaceModels
-    {
-        heatTransferModel constant;
-        constantCoeffs
-        {
-            c0              50;
-        }
-    }
-
-    forces
-    (
-        thermocapillary
-        distributionContactAngle
-    );
-
-    distributionContactAngleCoeffs
+    distributionContactAngle
     {
         Ccf             0.085;
 
@@ -90,14 +65,11 @@ thermoSingleLayerCoeffs
 
         zeroForcePatches ();
     }
+}
 
-    injectionModels
-    (
-        curvatureSeparation
-        drippingInjection
-    );
-
-    curvatureSeparationCoeffs
+injection
+{
+    curvatureSeparation
     {
         definedPatchRadii
         (
@@ -105,7 +77,7 @@ thermoSingleLayerCoeffs
         );
     }
 
-    drippingInjectionCoeffs
+    drippingInjection
     {
         cloudName    reactingCloud1;
         deltaStable  0;
@@ -124,14 +96,30 @@ thermoSingleLayerCoeffs
             }
         }
     }
+}
 
-    phaseChangeModel standardPhaseChange;
+phaseChange
+{
+    model           standardPhaseChange;
+    Tb              373;
+    deltaMin        1e-8;
+    L               1.0;
+}
 
-    standardPhaseChangeCoeffs
+upperSurfaceModels
+{
+    heatTransfer
     {
-        Tb              373;
-        deltaMin        1e-8;
-        L               1.0;
+        model       mappedConvectiveHeatTransfer;
+    }
+}
+
+lowerSurfaceModels
+{
+    heatTransfer
+    {
+        model       constant;
+        c0              50;
     }
 }
 

@@ -21,32 +21,27 @@ regionName      wallFilmRegion;
 
 active          true;
 
-kinematicSingleLayerCoeffs
+thermophysicalProperties
 {
-    filmThermoModel constant;
-    constantCoeffs
-    {
-        specie      water;
-        rho0        1000;
-        mu0         1e-3;
-        sigma0      0.07;
-    }
+    type        constant;
 
-    injectionModels ();
+    specie      water;
+    rho0        1000;
+    mu0         1e-3;
+    sigma0      0.07;
+}
 
-    turbulence      laminar;
-    laminarCoeffs
-    {
-        Cf          0.001;
-    }
+momentumTransport
+{
+    model       laminar;
+    Cf          0.001;
+}
 
-    forces
-    (
-        thermocapillary
-        distributionContactAngle
-    );
+forces
+{
+    thermocapillary;
 
-    distributionContactAngleCoeffs
+    distributionContactAngle
     {
         Ccf             1;
 
@@ -61,8 +56,6 @@ kinematicSingleLayerCoeffs
                 variance        100;
             }
         }
-
-        zeroForcePatches ();
     }
 }
 

@@ -45,7 +45,7 @@ namespace surfaceFilmModels
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 defineTypeNameAndDebug(laminar, 0);
-addToRunTimeSelectionTable(filmMomentumTransportModel, laminar, dictionary);
+addToRunTimeSelectionTable(momentumTransportModel, laminar, dictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -55,7 +55,7 @@ laminar::laminar
     const dictionary& dict
 )
 :
-    filmMomentumTransportModel(type(), film, dict),
+    momentumTransportModel(type(), film, dict),
     Cf_(coeffDict_.lookup<scalar>("Cf"))
 {}
 
@@ -81,20 +81,6 @@ tmp<volVectorField::Internal> laminar::Us() const
     );
 
     return tUs;
-}
-
-
-tmp<volScalarField> laminar::mut() const
-{
-    return tmp<volScalarField>
-    (
-        volScalarField::New
-        (
-            IOobject::modelName("mut", typeName),
-            filmModel_.regionMesh(),
-            dimensionedScalar(dimMass/dimLength/dimTime, 0)
-        )
-    );
 }
 
 

@@ -25,7 +25,7 @@ Class
     Foam::regionModels::surfaceFilmModels::laminar
 
 Description
-    Film laminar turbulence model.
+    Film laminar momentum transport model.
 
 SourceFiles
     laminar.C
@@ -52,7 +52,7 @@ namespace surfaceFilmModels
 
 class laminar
 :
-    public filmMomentumTransportModel
+    public momentumTransportModel
 {
     // Private Data
 
@@ -85,9 +85,6 @@ public:
 
             //- Return the film surface velocity
             virtual tmp<volVectorField::Internal> Us() const;
-
-            //- Return the film turbulence viscosity
-            virtual tmp<volScalarField> mut() const;
 
             //- Correct/update the model
             virtual void correct();

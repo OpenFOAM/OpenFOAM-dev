@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,9 +104,9 @@ void standardPhaseChange::correctModel
     const thermoSingleLayer& film = filmType<thermoSingleLayer>();
 
     // Set local thermo properties
-    const SLGThermo& thermo = film.thermo();
-    const filmThermoModel& filmThermo = film.filmThermo();
-    const label vapId = thermo.carrierId(filmThermo.name());
+    const SLGThermo& slgThermo = film.slgThermo();
+    const thermoModel& thermo = film.thermo();
+    const label vapId = slgThermo.carrierId(thermo.name());
 
     // Retrieve fields from film model
     const scalarField& delta = film.delta();
@@ -124,10 +124,10 @@ void standardPhaseChange::correctModel
     );
 
     // Molecular weight of vapour [kg/kmol]
-    const scalar Wvap = thermo.carrier().Wi(vapId);
+    const scalar Wvap = slgThermo.carrier().Wi(vapId);
 
     // Molecular weight of liquid [kg/kmol]
-    const scalar Wliq = filmThermo.W();
+    const scalar Wliq = thermo.W();
 
     forAll(dMass, celli)
     {
@@ -139,22 +139,22 @@ void standardPhaseChange::correctModel
             const scalar pc = pInf[celli];
 
             // Calculate the boiling temperature
-            const scalar Tb = filmThermo.Tb(pc);
+            const scalar Tb = thermo.Tb(pc);
 
             // Local temperature - impose lower limit of 200 K for stability
             const scalar Tloc = min(TbFactor_*Tb, max(200.0, T[celli]));
 
             // Saturation pressure [Pa]
-            const scalar pSat = filmThermo.pv(pc, Tloc);
+            const scalar pSat = thermo.pv(pc, Tloc);
 
             // Latent heat [J/kg]
-            const scalar hVap = filmThermo.hl(pc, Tloc);
+            const scalar hVap = thermo.hl(pc, Tloc);
 
             // Calculate mass transfer
             if (pSat >= 0.95*pc)
             {
                 // Boiling
-                const scalar Cp = filmThermo.Cp(pc, Tloc);
+                const scalar Cp = thermo.Cp(pc, Tloc);
                 const scalar Tcorr = max(0.0, T[celli] - Tb);
                 const scalar qCorr = limMass[celli]*Cp*(Tcorr);
                 dm = qCorr/hVap;
@@ -174,7 +174,7 @@ void standardPhaseChange::correctModel
                 const scalar Ys = Wliq*pSat/(Wliq*pSat + Wvap*(pc - pSat));
 
                 // Vapour diffusivity [m^2/s]
-                const scalar Dab = filmThermo.D(pc, Tloc);
+                const scalar Dab = thermo.D(pc, Tloc);
 
                 // Schmidt number
                 const scalar Sc = muInfc/(rhoInfc*(Dab + rootVSmall));
@@ -215,7 +215,7 @@ void standardPhaseChange::correctModel
     else
     {
         const thermoSingleLayer& film = filmType<thermoSingleLayer>();
-        const label vapId = film.thermo().carrierId(film.filmThermo().name());
+        const label vapId = film.slgThermo().carrierId(film.thermo().name());
         const scalarField& YInf = film.YPrimary()[vapId];
 
         correctModel(dt, availableMass, dMass, dEnergy, YInf);

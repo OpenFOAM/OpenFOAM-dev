@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,16 +36,28 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-autoPtr<filmViscosityModel> filmViscosityModel::New
+autoPtr<viscosityModel> viscosityModel::New
 (
     surfaceFilmRegionModel& model,
     const dictionary& dict,
     volScalarField& mu
 )
 {
-    word modelType(dict.lookup("filmViscosityModel"));
+    const dictionary& viscosityDict
+    (
+        dict.found("filmViscosityModel")
+      ? dict
+      : dict.subDict(viscosityModel::typeName)
+    );
 
-    Info<< "    Selecting filmViscosityModel " << modelType << endl;
+    const word modelType
+    (
+        dict.found("filmViscosityModel")
+      ? viscosityDict.lookup("filmViscosityModel")
+      : viscosityDict.lookup("model")
+    );
+
+    Info<< "    Selecting viscosityModel " << modelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);
@@ -53,13 +65,13 @@ autoPtr<filmViscosityModel> filmViscosityModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown filmViscosityModel type " << modelType
-            << nl << nl << "Valid filmViscosityModel types are:" << nl
+            << "Unknown viscosityModel type " << modelType
+            << nl << nl << "Valid viscosityModel types are:" << nl
             << dictionaryConstructorTablePtr_->toc()
             << exit(FatalError);
     }
 
-    return autoPtr<filmViscosityModel>(cstrIter()(model, dict, mu));
+    return autoPtr<viscosityModel>(cstrIter()(model, viscosityDict, mu));
 }
 
 

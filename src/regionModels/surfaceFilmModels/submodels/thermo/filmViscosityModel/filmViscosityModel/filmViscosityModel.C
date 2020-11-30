@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,12 +36,12 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(filmViscosityModel, 0);
-defineRunTimeSelectionTable(filmViscosityModel, dictionary);
+defineTypeNameAndDebug(viscosityModel, 0);
+defineRunTimeSelectionTable(viscosityModel, dictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-filmViscosityModel::filmViscosityModel
+viscosityModel::viscosityModel
 (
     const word& modelType,
     surfaceFilmRegionModel& film,
@@ -56,13 +56,13 @@ filmViscosityModel::filmViscosityModel
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-filmViscosityModel::~filmViscosityModel()
+viscosityModel::~viscosityModel()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void filmViscosityModel::info(Ostream& os) const
+void viscosityModel::info(Ostream& os) const
 {}
 
 

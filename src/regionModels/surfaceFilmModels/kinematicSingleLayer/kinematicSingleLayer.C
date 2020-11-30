@@ -69,9 +69,9 @@ bool kinematicSingleLayer::read()
 
 void kinematicSingleLayer::correctThermoFields()
 {
-    rho_ == filmThermo_->rho();
-    mu_ == filmThermo_->mu();
-    sigma_ == filmThermo_->sigma();
+    rho_ == thermo_->rho();
+    mu_ == thermo_->mu();
+    sigma_ == thermo_->sigma();
 }
 
 
@@ -215,7 +215,7 @@ void kinematicSingleLayer::updateSubmodels()
     // Update mass source field
     rhoSp_ += cloudMassTrans_/regionMesh().V()/time().deltaT();
 
-    turbulence_->correct();
+    momentumTransport_->correct();
 }
 
 
@@ -286,7 +286,7 @@ void kinematicSingleLayer::updateSurfaceVelocities()
 
     Uw_ -= nHat()*(Uw_ & nHat());
 
-    Us_ = turbulence_->Us();
+    Us_ = momentumTransport_->Us();
 }
 
 
@@ -316,7 +316,7 @@ tmp<Foam::fvVectorMatrix> kinematicSingleLayer::solveMomentum
       - fvm::Sp(rVDt*(cloudMassTrans_() + primaryMassTrans_()), U_)
 
       + forces_.correct(U_)
-      + turbulence_->Su(U_)
+      + momentumTransport_->Su(U_)
     );
 
     fvVectorMatrix& UEqn = tUEqn.ref();
@@ -828,7 +828,7 @@ kinematicSingleLayer::kinematicSingleLayer
         this->mappedFieldAndInternalPatchTypes<scalar>()
     ),
 
-    filmThermo_(filmThermoModel::New(*this, coeffs_)),
+    thermo_(thermoModel::New(*this, coeffs_)),
 
     availableMass_(regionMesh().nCells(), 0),
 
@@ -836,7 +836,7 @@ kinematicSingleLayer::kinematicSingleLayer
 
     transfer_(*this, coeffs_),
 
-    turbulence_(filmMomentumTransportModel::New(*this, coeffs_)),
+    momentumTransport_(momentumTransportModel::New(*this, coeffs_)),
 
     forces_(*this, coeffs_),
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,11 +50,33 @@ forceList::forceList
 :
     PtrList<force>()
 {
-    const wordList models(dict.lookup("forces"));
-
     Info<< "    Selecting film force models" << endl;
-    if (models.size() > 0)
+
+    if (dict.isDict("forces"))
     {
+        const dictionary& forcesDict(dict.subDict("forces"));
+        this->setSize(forcesDict.size());
+
+        label i = 0;
+        forAllConstIter(dictionary, forcesDict, iter)
+        {
+            set
+            (
+                i++,
+                force::New
+                (
+                    film,
+                    forcesDict.isDict(iter().keyword())
+                  ? forcesDict.subDict(iter().keyword())
+                  : dictionary::null,
+                    iter().keyword()
+                )
+            );
+        }
+    }
+    else if (dict.found("forces"))
+    {
+        const wordList models(dict.lookup("forces"));
         this->setSize(models.size());
 
         forAll(models, i)
@@ -62,16 +84,19 @@ forceList::forceList
             set(i, force::New(film, dict, models[i]));
         }
     }
-    else
+
+    if (!size())
     {
         Info<< "        none" << endl;
     }
 }
 
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 forceList::~forceList()
 {}
+
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 

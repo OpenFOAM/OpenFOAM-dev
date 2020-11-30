@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,28 +60,42 @@ injectionModelList::injectionModelList
     ),
     massInjected_(film.intCoupledPatchIDs().size(), 0.0)
 {
-    const wordList activeModels(dict.lookup("injectionModels"));
+    Info<< "    Selecting film injection" << endl;
 
-    wordHashSet models;
-    forAll(activeModels, i)
+    if (dict.isDict("injection"))
     {
-        models.insert(activeModels[i]);
-    }
-
-    Info<< "    Selecting film injection models" << endl;
-    if (models.size() > 0)
-    {
-        this->setSize(models.size());
+        const dictionary& injectionDict(dict.subDict("injection"));
+        this->setSize(injectionDict.size());
 
         label i = 0;
-        forAllConstIter(wordHashSet, models, iter)
+        forAllConstIter(dictionary, injectionDict, iter)
         {
-            const word& model = iter.key();
-            set(i, injectionModel::New(film, dict, model));
-            i++;
+            set
+            (
+                i++,
+                injectionModel::New
+                (
+                    film,
+                    injectionDict.isDict(iter().keyword())
+                  ? injectionDict.subDict(iter().keyword())
+                  : dictionary::null,
+                    iter().keyword()
+                )
+            );
         }
     }
-    else
+    else if (dict.found("injectionModels"))
+    {
+        const wordList models(dict.lookup("injectionModels"));
+        this->setSize(models.size());
+
+        forAll(models, i)
+        {
+            set(i, injectionModel::New(film, dict, models[i]));
+        }
+    }
+
+    if (!size())
     {
         Info<< "        none" << endl;
     }

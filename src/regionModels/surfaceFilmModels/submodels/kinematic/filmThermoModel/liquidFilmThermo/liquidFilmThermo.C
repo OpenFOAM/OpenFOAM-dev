@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,7 @@ defineTypeNameAndDebug(liquidFilmThermo, 0);
 
 addToRunTimeSelectionTable
 (
-    filmThermoModel,
+    thermoModel,
     liquidFilmThermo,
     dictionary
 );
@@ -107,7 +107,7 @@ liquidFilmThermo::liquidFilmThermo
     const dictionary& dict
 )
 :
-    filmThermoModel(typeName, film, dict),
+    thermoModel(typeName, film, dict),
     name_("unknown_liquid"),
     liquidPtr_(nullptr),
     ownLiquid_(false),

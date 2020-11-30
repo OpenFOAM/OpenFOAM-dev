@@ -57,7 +57,7 @@ namespace surfaceFilmModels
 {
 
 // Forward class declarations
-class filmThermoModel;
+class thermoModel;
 
 /*---------------------------------------------------------------------------*\
                     Class kinematicSingleLayer Declaration
@@ -190,7 +190,7 @@ protected:
         // Sub-models
 
             //- Film thermo model
-            autoPtr<filmThermoModel> filmThermo_;
+            autoPtr<thermoModel> thermo_;
 
             //- Available mass for transfer via sub-models
             scalarField availableMass_;
@@ -201,8 +201,8 @@ protected:
             //- Transfer with the continuous phase
             transferModelList transfer_;
 
-            //- Turbulence model
-            autoPtr<filmMomentumTransportModel> turbulence_;
+            //- Momentum transport model
+            autoPtr<momentumTransportModel> momentumTransport_;
 
             //- List of film forces
             forceList forces_;
@@ -447,7 +447,7 @@ public:
         // Sub-models
 
             //- Film thermo
-            inline const filmThermoModel& filmThermo() const;
+            inline const thermoModel& thermo() const;
 
             //- Injection
             inline injectionModelList& injection();
@@ -455,8 +455,8 @@ public:
             //- Transfer
             inline transferModelList& transfer();
 
-            //- Turbulence
-            inline const filmMomentumTransportModel& turbulence() const;
+            //- Momentum transport
+            inline const momentumTransportModel& momentumTransport() const;
 
 
         // Helper functions

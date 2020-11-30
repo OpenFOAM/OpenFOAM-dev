@@ -53,7 +53,7 @@ namespace surfaceFilmModels
 
 class standardRadiation
 :
-    public filmRadiationModel
+    public radiationModel
 {
     // Private Data
 

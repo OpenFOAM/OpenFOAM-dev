@@ -61,14 +61,14 @@ namespace surfaceFilmModels
 
 class ArrheniusViscosity
 :
-    public filmViscosityModel
+    public viscosityModel
 {
 protected:
 
     // Protected data
 
         //- Base viscosity model
-        autoPtr<filmViscosityModel> viscosity_;
+        autoPtr<viscosityModel> viscosity_;
 
         //- Coefficient k1
         dimensionedScalar k1_;

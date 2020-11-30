@@ -195,9 +195,9 @@ inline const volScalarField& kinematicSingleLayer::muPrimary() const
 }
 
 
-inline const filmThermoModel& kinematicSingleLayer::filmThermo() const
+inline const thermoModel& kinematicSingleLayer::thermo() const
 {
-    return filmThermo_();
+    return thermo_();
 }
 
 
@@ -213,10 +213,10 @@ inline transferModelList& kinematicSingleLayer::transfer()
 }
 
 
-inline const filmMomentumTransportModel&
-kinematicSingleLayer::turbulence() const
+inline const momentumTransportModel&
+kinematicSingleLayer::momentumTransport() const
 {
-    return turbulence_();
+    return momentumTransport_();
 }
 
 

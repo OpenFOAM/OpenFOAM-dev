@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::filmRadiationModel
+    Foam::regionModels::surfaceFilmModels::radiationModel
 
 Description
     Base class for film radiation models
@@ -49,17 +49,17 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class filmRadiationModel Declaration
+                     Class radiationModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class filmRadiationModel
+class radiationModel
 :
     public filmSubModelBase
 {
 public:
 
     //- Runtime type information
-    TypeName("radiationModel");
+    TypeName("radiation");
 
 
     // Declare runtime constructor selection table
@@ -67,7 +67,7 @@ public:
          declareRunTimeSelectionTable
          (
              autoPtr,
-             filmRadiationModel,
+             radiationModel,
              dictionary,
              (
                  surfaceFilmRegionModel& film,
@@ -76,13 +76,14 @@ public:
              (film, dict)
          );
 
+
     // Constructors
 
         //- Construct null
-        filmRadiationModel(surfaceFilmRegionModel& film);
+        radiationModel(surfaceFilmRegionModel& film);
 
         //- Construct from type name, dictionary and surface film model
-        filmRadiationModel
+        radiationModel
         (
             const word& modelType,
             surfaceFilmRegionModel& film,
@@ -90,13 +91,13 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        filmRadiationModel(const filmRadiationModel&) = delete;
+        radiationModel(const radiationModel&) = delete;
 
 
     // Selectors
 
         //- Return a reference to the selected phase change model
-        static autoPtr<filmRadiationModel> New
+        static autoPtr<radiationModel> New
         (
             surfaceFilmRegionModel& film,
             const dictionary& dict
@@ -104,7 +105,7 @@ public:
 
 
     //- Destructor
-    virtual ~filmRadiationModel();
+    virtual ~radiationModel();
 
 
     // Member Functions
@@ -121,7 +122,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const filmRadiationModel&) = delete;
+        void operator=(const radiationModel&) = delete;
 };
 
 

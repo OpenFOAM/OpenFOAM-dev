@@ -52,7 +52,7 @@ namespace surfaceFilmModels
 
 class waxSolventViscosity
 :
-    public filmViscosityModel
+    public viscosityModel
 {
     // Private Member Functions
 
@@ -68,13 +68,13 @@ protected:
         volScalarField muWax_;
 
         //- Wax viscosity model
-        autoPtr<filmViscosityModel> muWaxModel_;
+        autoPtr<viscosityModel> muWaxModel_;
 
         //- Solvent viscosity
         volScalarField muSolvent_;
 
         //- Solvent viscosity model
-        autoPtr<filmViscosityModel> muSolventModel_;
+        autoPtr<viscosityModel> muSolventModel_;
 
 
 public:

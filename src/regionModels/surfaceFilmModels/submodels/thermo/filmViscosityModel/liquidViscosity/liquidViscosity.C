@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ defineTypeNameAndDebug(liquidViscosity, 0);
 
 addToRunTimeSelectionTable
 (
-    filmViscosityModel,
+    viscosityModel,
     liquidViscosity,
     dictionary
 );
@@ -56,7 +56,7 @@ liquidViscosity::liquidViscosity
     volScalarField& mu
 )
 :
-    filmViscosityModel(typeName, film, dict, mu)
+    viscosityModel(typeName, film, dict, mu)
 {}
 
 
@@ -76,7 +76,7 @@ void liquidViscosity::correct
 {
     const thermoSingleLayer& film = filmType<thermoSingleLayer>();
 
-    mu_ = film.filmThermo().mu();
+    mu_ = film.thermo().mu();
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,10 +54,10 @@ namespace surfaceFilmModels
 {
 
 // Forward declaration of classes
-class filmViscosityModel;
+class viscosityModel;
 class heatTransferModel;
 class phaseChangeModel;
-class filmRadiationModel;
+class radiationModel;
 
 /*---------------------------------------------------------------------------*\
                       Class thermoSingleLayer Declaration
@@ -80,7 +80,7 @@ protected:
         // Thermo properties
 
             //- Reference to the SLGThermo
-            const SLGThermo& thermo_;
+            const SLGThermo& slgThermo_;
 
 
             // Fields
@@ -158,7 +158,7 @@ protected:
         // Sub-models
 
             //- Viscosity model
-            autoPtr<filmViscosityModel> viscosity_;
+            autoPtr<viscosityModel> viscosity_;
 
             //- Heat transfer coefficient between film surface and primary
             //  region [W/m^2/K]
@@ -171,7 +171,7 @@ protected:
             autoPtr<phaseChangeModel> phaseChange_;
 
             //- Radiation
-            autoPtr<filmRadiationModel> radiation_;
+            autoPtr<radiationModel> radiation_;
 
 
         // Limits
@@ -253,7 +253,7 @@ public:
         // Thermo properties
 
             //- Return const reference to the SLGThermo object
-            inline const SLGThermo& thermo() const;
+            inline const SLGThermo& slgThermo() const;
 
 
             // Fields
@@ -350,7 +350,7 @@ public:
             inline const phaseChangeModel& phaseChange() const;
 
             //- Return const access to the radiation model
-            inline const filmRadiationModel& radiation() const;
+            inline const radiationModel& radiation() const;
 
 
         // Evolution

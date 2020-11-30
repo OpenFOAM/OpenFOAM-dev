@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -398,7 +398,7 @@ Foam::regionModels::regionModel::regionModel
     infoOutput_(true),
     modelName_(modelName),
     regionMeshPtr_(nullptr),
-    coeffs_(subOrEmptyDict(modelName + "Coeffs")),
+    coeffs_(optionalSubDict(modelName + "Coeffs")),
     outputPropertiesPtr_(nullptr),
     primaryPatchIDs_(),
     intCoupledPatchIDs_(),
@@ -446,7 +446,7 @@ Foam::regionModels::regionModel::regionModel
     infoOutput_(false),
     modelName_(modelName),
     regionMeshPtr_(nullptr),
-    coeffs_(dict.subOrEmptyDict(modelName + "Coeffs")),
+    coeffs_(dict.optionalSubDict(modelName + "Coeffs")),
     outputPropertiesPtr_(nullptr),
     primaryPatchIDs_(),
     intCoupledPatchIDs_(),

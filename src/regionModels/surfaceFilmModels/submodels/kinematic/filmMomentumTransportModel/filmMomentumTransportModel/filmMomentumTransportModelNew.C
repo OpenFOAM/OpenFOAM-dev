@@ -36,15 +36,27 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-autoPtr<filmMomentumTransportModel> filmMomentumTransportModel::New
+autoPtr<momentumTransportModel> momentumTransportModel::New
 (
     surfaceFilmRegionModel& model,
     const dictionary& dict
 )
 {
-    const word modelType(dict.lookup("turbulence"));
+    const dictionary& momentumTransportDict
+    (
+        dict.found("turbulence")
+      ? dict
+      : dict.subDict(momentumTransportModel::typeName)
+    );
 
-    Info<< "    Selecting filmMomentumTransportModel " << modelType << endl;
+    const word modelType
+    (
+        dict.found("turbulence")
+      ? momentumTransportDict.lookup("turbulence")
+      : momentumTransportDict.lookup("model")
+    );
+
+    Info<< "    Selecting momentumTransportModel " << modelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);
@@ -52,13 +64,16 @@ autoPtr<filmMomentumTransportModel> filmMomentumTransportModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown filmMomentumTransportModel type " << modelType
-            << nl << nl << "Valid filmMomentumTransportModel types are:" << nl
+            << "Unknown momentumTransportModel type " << modelType
+            << nl << nl << "Valid momentumTransportModel types are:" << nl
             << dictionaryConstructorTablePtr_->toc()
             << exit(FatalError);
     }
 
-    return autoPtr<filmMomentumTransportModel>(cstrIter()(model, dict));
+    return autoPtr<momentumTransportModel>
+    (
+        cstrIter()(model, momentumTransportDict)
+    );
 }
 
 

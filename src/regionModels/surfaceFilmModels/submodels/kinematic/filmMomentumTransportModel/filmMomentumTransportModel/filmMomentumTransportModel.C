@@ -36,12 +36,12 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(filmMomentumTransportModel, 0);
-defineRunTimeSelectionTable(filmMomentumTransportModel, dictionary);
+defineTypeNameAndDebug(momentumTransportModel, 0);
+defineRunTimeSelectionTable(momentumTransportModel, dictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-filmMomentumTransportModel::filmMomentumTransportModel
+momentumTransportModel::momentumTransportModel
 (
     surfaceFilmRegionModel& film
 )
@@ -50,7 +50,7 @@ filmMomentumTransportModel::filmMomentumTransportModel
 {}
 
 
-filmMomentumTransportModel::filmMomentumTransportModel
+momentumTransportModel::momentumTransportModel
 (
     const word& modelType,
     surfaceFilmRegionModel& film,
@@ -63,7 +63,7 @@ filmMomentumTransportModel::filmMomentumTransportModel
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-filmMomentumTransportModel::~filmMomentumTransportModel()
+momentumTransportModel::~momentumTransportModel()
 {}
 
 

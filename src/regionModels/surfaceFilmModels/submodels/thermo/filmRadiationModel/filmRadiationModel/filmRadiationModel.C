@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,18 +36,18 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(filmRadiationModel, 0);
-defineRunTimeSelectionTable(filmRadiationModel, dictionary);
+defineTypeNameAndDebug(radiationModel, 0);
+defineRunTimeSelectionTable(radiationModel, dictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-filmRadiationModel::filmRadiationModel(surfaceFilmRegionModel& film)
+radiationModel::radiationModel(surfaceFilmRegionModel& film)
 :
     filmSubModelBase(film)
 {}
 
 
-filmRadiationModel::filmRadiationModel
+radiationModel::radiationModel
 (
     const word& modelType,
     surfaceFilmRegionModel& film,
@@ -60,7 +60,7 @@ filmRadiationModel::filmRadiationModel
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-filmRadiationModel::~filmRadiationModel()
+radiationModel::~radiationModel()
 {}
 
 
