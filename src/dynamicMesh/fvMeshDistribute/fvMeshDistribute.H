@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,6 +181,7 @@ class fvMeshDistribute
                 labelList& sourceFace,
                 labelList& sourceProc,
                 labelList& sourcePatch,
+                labelList& sourceNbrPatch,
                 labelList& sourceNewProc,
                 labelList& sourcePointMaster
             ) const;
@@ -201,12 +202,14 @@ class fvMeshDistribute
                 const labelList& sourceFace,
                 const labelList& sourceProc,
                 const labelList& sourcePatch,
+                const labelList& sourceNbrPatch,
                 const labelList& sourceNewProc,
                 const labelList& sourcePointMaster,
 
                 labelList& subFace,
                 labelList& subProc,
                 labelList& subPatch,
+                labelList& subNbrPatch,
                 labelList& subNewProc,
                 labelList& subPointMaster
             );
@@ -263,8 +266,11 @@ class fvMeshDistribute
             //  proc the processor patchID.
             void addProcPatches
             (
-                const labelList&, // processor that neighbour is now on
-                const labelList&, // -1 or patch that face originated from
+                const labelList& nbrProc,         // Processor that neighbour
+                                                  // is now on
+                const labelList& referPatchID,    // Original patch ID (or -1)
+                const labelList& referNbrPatchID, // Original neighbour patch
+                                                  // ID (or -1)
                 List<Map<label>>& procPatchID
             );
 
@@ -287,6 +293,7 @@ class fvMeshDistribute
                 const labelList& sourceFace,
                 const labelList& sourceProc,
                 const labelList& sourcePatch,
+                const labelList& sourceNbrPatch,
                 const labelList& sourceNewProc,
                 const labelList& sourcePointMaster,
                 Ostream& toDomain
@@ -312,6 +319,7 @@ class fvMeshDistribute
                 labelList& domainSourceFace,
                 labelList& domainSourceProc,
                 labelList& domainSourcePatch,
+                labelList& domainSourceNbrPatch,
                 labelList& domainSourceNewProc,
                 labelList& domainSourcePointMaster,
                 Istream& fromNbr
