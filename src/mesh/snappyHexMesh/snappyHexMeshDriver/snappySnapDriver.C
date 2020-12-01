@@ -196,7 +196,8 @@ Foam::pointField Foam::snappySnapDriver::smoothPatchDisplacement
 
             if (isMasterFace.get(pp.addressing()[facei]))
             {
-                avgBoundary[patchPointi] += pp[facei].centre(points);
+                avgBoundary[patchPointi] +=
+                    pp[facei].centre(points) - pp.localPoints()[patchPointi];
                 nBoundary[patchPointi]++;
             }
         }
@@ -221,7 +222,7 @@ Foam::pointField Foam::snappySnapDriver::smoothPatchDisplacement
 
     forAll(avgBoundary, i)
     {
-        avgBoundary[i] /= nBoundary[i];
+        avgBoundary[i] = avgBoundary[i]/nBoundary[i] + pp.localPoints()[i];
     }
 
 
@@ -244,7 +245,7 @@ Foam::pointField Foam::snappySnapDriver::smoothPatchDisplacement
 
             forAll(f, fp)
             {
-                globalSum[f[fp]] += fc;
+                globalSum[f[fp]] += fc - mesh.points()[f[fp]];
                 globalNum[f[fp]]++;
             }
         }
@@ -272,7 +273,7 @@ Foam::pointField Foam::snappySnapDriver::smoothPatchDisplacement
 
                     forAll(f, fp)
                     {
-                        globalSum[f[fp]] += fc;
+                        globalSum[f[fp]] += fc - mesh.points()[f[fp]];
                         globalNum[f[fp]]++;
                     }
                 }
@@ -310,8 +311,8 @@ Foam::pointField Foam::snappySnapDriver::smoothPatchDisplacement
             else
             {
                 avgInternal[patchPointi] =
-                    globalSum[meshPointi]
-                  / nInternal[patchPointi];
+                    globalSum[meshPointi]/nInternal[patchPointi]
+                  + mesh.points()[meshPointi];
             }
         }
     }
@@ -799,7 +800,6 @@ Foam::tmp<Foam::pointField> Foam::snappySnapDriver::avgCellCentres
 {
     const labelListList& pointFaces = pp.pointFaces();
 
-
     tmp<pointField> tavgBoundary
     (
         new pointField(pointFaces.size(), Zero)
@@ -817,7 +817,8 @@ Foam::tmp<Foam::pointField> Foam::snappySnapDriver::avgCellCentres
             label meshFacei = pp.addressing()[facei];
 
             label own = mesh.faceOwner()[meshFacei];
-            avgBoundary[pointi] += mesh.cellCentres()[own];
+            avgBoundary[pointi] +=
+                mesh.cellCentres()[own] - pp.localPoints()[pointi];
             nBoundary[pointi]++;
         }
     }
@@ -839,10 +840,12 @@ Foam::tmp<Foam::pointField> Foam::snappySnapDriver::avgCellCentres
         label(0)            // null value
     );
 
-    forAll(avgBoundary, i)
+    forAll(pointFaces, pointi)
     {
-        avgBoundary[i] /= nBoundary[i];
+        avgBoundary[pointi] =
+            avgBoundary[pointi]/nBoundary[pointi] + pp.localPoints()[pointi];
     }
+
     return tavgBoundary;
 }
 
