@@ -57,7 +57,9 @@ Ostream& operator<<(Ostream&, const patchIdentifier&);
 
 class patchIdentifier
 {
-    // Private Data
+protected:
+
+    // Protected Data
 
         //- Name of patch
         word name_;
@@ -66,7 +68,7 @@ class patchIdentifier
         label index_;
 
         //- Optional physical type
-        mutable word physicalType_;
+        word physicalType_;
 
         //- Optional groups patch belongs to
         wordList inGroups_;
@@ -113,10 +115,10 @@ public:
             return name_;
         }
 
-        //- Return name for modification
-        word& name()
+        //- Return the index of this patch in the boundaryMesh
+        label index() const
         {
-            return name_;
+            return index_;
         }
 
         //- Return the optional physical type of the patch
@@ -129,18 +131,6 @@ public:
         word& physicalType()
         {
             return physicalType_;
-        }
-
-        //- Return the index of this patch in the boundaryMesh
-        label index() const
-        {
-            return index_;
-        }
-
-        //- Return the index of this patch in the boundaryMesh for modification
-        label& index()
-        {
-            return index_;
         }
 
         //- Return the optional groups patch belongs to

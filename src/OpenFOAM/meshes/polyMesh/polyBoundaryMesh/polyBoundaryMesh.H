@@ -221,12 +221,21 @@ public:
         //- Correct polyBoundaryMesh after topology update
         void updateMesh();
 
-        //- Reorders patches. Ordering does not have to be done in
-        //  ascending or descending order. Reordering has to be unique.
-        //  (is shuffle) If validBoundary calls updateMesh()
-        //  after reordering to recalculate data (so call needs to be parallel
-        //  sync in that case)
-        void shuffle(const labelUList& newToOld, const bool validBoundary);
+        //- Rename the patches. If validBoundary is set this calls updateMesh()
+        //  after reordering to recalculate data (so the call needs to be
+        //  parallel synchronised).
+        void renamePatches(const wordUList& newNames, const bool validBoundary);
+
+        //- Reorders the patches. Ordering does not have to be done in
+        //  ascending or descending order. Reordering has to be unique (is a
+        //  shuffle). If validBoundary is set this calls updateMesh() after
+        //  reordering to recalculate data (so the call needs to be parallel
+        //  synchronised).
+        void reorderPatches
+        (
+            const labelUList& newToOld,
+            const bool validBoundary
+        );
 
         //- writeData member function required by regIOobject
         bool writeData(Ostream&) const;

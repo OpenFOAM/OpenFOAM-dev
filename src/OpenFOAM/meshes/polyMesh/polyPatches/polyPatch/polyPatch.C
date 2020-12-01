@@ -59,6 +59,7 @@ void Foam::polyPatch::movePoints(PstreamBuffers&, const pointField& p)
     primitivePatch::movePoints(p);
 }
 
+
 void Foam::polyPatch::updateMesh(PstreamBuffers&)
 {
     primitivePatch::clearGeom();
@@ -69,6 +70,18 @@ void Foam::polyPatch::updateMesh(PstreamBuffers&)
 void Foam::polyPatch::clearGeom()
 {
     primitivePatch::clearGeom();
+}
+
+
+void Foam::polyPatch::rename(const wordList& newNames)
+{
+    name_ = newNames[index_];
+}
+
+
+void Foam::polyPatch::reorder(const labelUList& newToOldIndex)
+{
+    index_ = findIndex(newToOldIndex, index_);
 }
 
 

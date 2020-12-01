@@ -137,6 +137,13 @@ protected:
         //- Update of the patch topology
         virtual void updateMesh(PstreamBuffers&);
 
+        //- Reset the patch name
+        virtual void rename(const wordList& newNames);
+
+        //- Reset the patch index
+        virtual void reorder(const labelUList& newToOldIndex);
+
+
 public:
 
     //- Declare friendship with processorCyclicPolyPatch

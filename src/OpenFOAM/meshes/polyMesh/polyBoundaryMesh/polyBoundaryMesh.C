@@ -1106,7 +1106,29 @@ void Foam::polyBoundaryMesh::updateMesh()
 }
 
 
-void Foam::polyBoundaryMesh::shuffle
+void Foam::polyBoundaryMesh::renamePatches
+(
+    const wordUList& newNames,
+    const bool validBoundary
+)
+{
+    polyPatchList& patches = *this;
+    forAll(patches, patchi)
+    {
+        if (patches.set(patchi))
+        {
+            patches[patchi].rename(newNames);
+        }
+    }
+
+    if (validBoundary)
+    {
+        updateMesh();
+    }
+}
+
+
+void Foam::polyBoundaryMesh::reorderPatches
 (
     const labelUList& newToOld,
     const bool validBoundary
@@ -1117,12 +1139,11 @@ void Foam::polyBoundaryMesh::shuffle
 
     // Adapt indices
     polyPatchList& patches = *this;
-
     forAll(patches, patchi)
     {
         if (patches.set(patchi))
         {
-            patches[patchi].index() = patchi;
+            patches[patchi].reorder(newToOld);
         }
     }
 

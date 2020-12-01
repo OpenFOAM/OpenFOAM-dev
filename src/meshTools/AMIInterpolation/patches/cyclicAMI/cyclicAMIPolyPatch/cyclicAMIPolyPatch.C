@@ -217,6 +217,23 @@ void Foam::cyclicAMIPolyPatch::clearGeom()
 }
 
 
+void Foam::cyclicAMIPolyPatch::rename(const wordList& newNames)
+{
+    polyPatch::rename(newNames);
+    nbrPatch().nbrPatchName_ = newNames[index()];
+}
+
+
+void Foam::cyclicAMIPolyPatch::reorder(const labelUList& newToOldIndex)
+{
+    polyPatch::reorder(newToOldIndex);
+    if (nbrPatchID_ != -1)
+    {
+        nbrPatchID_ = findIndex(newToOldIndex, nbrPatchID_);
+    }
+}
+
+
 // * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * * //
 
 Foam::cyclicAMIPolyPatch::cyclicAMIPolyPatch

@@ -117,6 +117,23 @@ void Foam::cyclicPolyPatch::updateMesh(PstreamBuffers& pBufs)
 }
 
 
+void Foam::cyclicPolyPatch::rename(const wordList& newNames)
+{
+    polyPatch::rename(newNames);
+    nbrPatch().nbrPatchName_ = newNames[index()];
+}
+
+
+void Foam::cyclicPolyPatch::reorder(const labelUList& newToOldIndex)
+{
+    polyPatch::reorder(newToOldIndex);
+    if (nbrPatchID_ != -1)
+    {
+        nbrPatchID_ = findIndex(newToOldIndex, nbrPatchID_);
+    }
+}
+
+
 // * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * * //
 
 Foam::cyclicPolyPatch::cyclicPolyPatch

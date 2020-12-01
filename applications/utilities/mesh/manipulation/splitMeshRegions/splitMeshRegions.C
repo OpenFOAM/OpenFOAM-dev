@@ -121,27 +121,19 @@ void renamePatches
     const labelList& patchesToRename
 )
 {
-    polyBoundaryMesh& polyPatches =
+    polyBoundaryMesh& patches =
         const_cast<polyBoundaryMesh&>(mesh.boundaryMesh());
+
+    // Create a list of all the new names
+    wordList newNames = patches.names();
     forAll(patchesToRename, i)
     {
-        label patchi = patchesToRename[i];
-        polyPatch& pp = polyPatches[patchi];
-
-        if (isA<coupledPolyPatch>(pp))
-        {
-            WarningInFunction
-                << "Encountered coupled patch " << pp.name()
-                << ". Will only rename the patch itself,"
-                << " not any referred patches."
-                << " This might have to be done by hand."
-                << endl;
-        }
-
-        pp.name() = prefix + '_' + pp.name();
+        const label patchi = patchesToRename[i];
+        newNames[patchi] = prefix + '_' + newNames[patchi];
     }
-    // Recalculate any demand driven data (e.g. group to name lookup)
-    polyPatches.updateMesh();
+
+    // Apply to the patches
+    patches.renamePatches(newNames, true);
 }
 
 

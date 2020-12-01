@@ -122,6 +122,12 @@ protected:
         //- Clear geometry
         virtual void clearGeom();
 
+        //- Reset the patch name
+        virtual void rename(const wordList& newNames);
+
+        //- Reset the patch index
+        virtual void reorder(const labelUList& newToOldIndex);
+
 
 public:
 
