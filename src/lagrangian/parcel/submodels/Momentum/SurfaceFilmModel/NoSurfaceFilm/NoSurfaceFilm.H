@@ -91,9 +91,6 @@ public:
 
         // Evaluation
 
-            //- Flag to indicate whether model activates the surface film model
-            virtual bool active() const;
-
             //- Transfer parcel from cloud to surface film
             //  Returns true if parcel is to be transferred
             virtual bool transferParcel

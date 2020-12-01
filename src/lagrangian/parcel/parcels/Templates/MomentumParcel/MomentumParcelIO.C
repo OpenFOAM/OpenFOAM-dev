@@ -38,7 +38,7 @@ template<class ParcelType>
 const std::size_t Foam::MomentumParcel<ParcelType>::sizeofFields_
 (
     sizeof(MomentumParcel<ParcelType>)
-  - offsetof(MomentumParcel<ParcelType>, active_)
+  - offsetof(MomentumParcel<ParcelType>, moving_)
 );
 
 
@@ -53,7 +53,7 @@ Foam::MomentumParcel<ParcelType>::MomentumParcel
 )
 :
     ParcelType(mesh, is, readFields),
-    active_(false),
+    moving_(false),
     typeId_(0),
     nParticle_(0.0),
     d_(0.0),
@@ -68,7 +68,7 @@ Foam::MomentumParcel<ParcelType>::MomentumParcel
     {
         if (is.format() == IOstream::ASCII)
         {
-            active_ = readBool(is);
+            moving_ = readBool(is);
             typeId_ = readLabel(is);
             nParticle_ = readScalar(is);
             d_ = readScalar(is);
@@ -81,7 +81,7 @@ Foam::MomentumParcel<ParcelType>::MomentumParcel
         }
         else
         {
-            is.read(reinterpret_cast<char*>(&active_), sizeofFields_);
+            is.read(reinterpret_cast<char*>(&moving_), sizeofFields_);
         }
     }
 
@@ -102,12 +102,12 @@ void Foam::MomentumParcel<ParcelType>::readFields(CloudType& c)
 
     ParcelType::readFields(c);
 
-    IOField<label> active
+    IOField<label> moving
     (
         c.fieldIOobject("active", IOobject::MUST_READ),
         write
     );
-    c.checkFieldIOobject(c, active);
+    c.checkFieldIOobject(c, moving);
 
     IOField<label> typeId
     (
@@ -178,7 +178,7 @@ void Foam::MomentumParcel<ParcelType>::readFields(CloudType& c)
     {
         MomentumParcel<ParcelType>& p = iter();
 
-        p.active_ = active[i];
+        p.moving_ = moving[i];
         p.typeId_ = typeId[i];
         p.nParticle_ = nParticle[i];
         p.d_ = d[i];
@@ -202,7 +202,7 @@ void Foam::MomentumParcel<ParcelType>::writeFields(const CloudType& c)
 
     label np = c.size();
 
-    IOField<label> active(c.fieldIOobject("active", IOobject::NO_READ), np);
+    IOField<label> moving(c.fieldIOobject("active", IOobject::NO_READ), np);
     IOField<label> typeId(c.fieldIOobject("typeId", IOobject::NO_READ), np);
     IOField<scalar> nParticle
     (
@@ -223,7 +223,7 @@ void Foam::MomentumParcel<ParcelType>::writeFields(const CloudType& c)
     {
         const MomentumParcel<ParcelType>& p = iter();
 
-        active[i] = p.active();
+        moving[i] = p.moving();
         typeId[i] = p.typeId();
         nParticle[i] = p.nParticle();
         d[i] = p.d();
@@ -239,7 +239,7 @@ void Foam::MomentumParcel<ParcelType>::writeFields(const CloudType& c)
 
     const bool write = np > 0;
 
-    active.write(write);
+    moving.write(write);
     typeId.write(write);
     nParticle.write(write);
     d.write(write);
@@ -264,7 +264,7 @@ Foam::Ostream& Foam::operator<<
     if (os.format() == IOstream::ASCII)
     {
         os  << static_cast<const ParcelType&>(p)
-            << token::SPACE << p.active()
+            << token::SPACE << p.moving()
             << token::SPACE << p.typeId()
             << token::SPACE << p.nParticle()
             << token::SPACE << p.d()
@@ -280,7 +280,7 @@ Foam::Ostream& Foam::operator<<
         os  << static_cast<const ParcelType&>(p);
         os.write
         (
-            reinterpret_cast<const char*>(&p.active_),
+            reinterpret_cast<const char*>(&p.moving_),
             MomentumParcel<ParcelType>::sizeofFields_
         );
     }

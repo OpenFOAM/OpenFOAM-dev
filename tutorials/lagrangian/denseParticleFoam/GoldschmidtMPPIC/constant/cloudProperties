@@ -19,7 +19,6 @@ type        MPPICCloud;
 
 solution
 {
-    active          true;
     coupled         true;
     transient       yes;
     cellValueSourceCorrection off;

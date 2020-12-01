@@ -87,9 +87,6 @@ public:
         //  this model this will always be 1.
         virtual label nSubCycles() const;
 
-        //- Flag to indicate whether model activates collision model
-        virtual bool active() const;
-
         // Collision function
         virtual void collide();
 };

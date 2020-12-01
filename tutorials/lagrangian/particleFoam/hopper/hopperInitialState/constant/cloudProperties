@@ -19,7 +19,6 @@ type        collidingCloud;
 
 solution
 {
-    active          true;
     coupled         false;
     transient       yes;
     cellValueSourceCorrection off;

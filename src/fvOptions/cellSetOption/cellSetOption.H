@@ -29,7 +29,6 @@ Description
     e.g.:
     \verbatim
         type            scalarExplicitSource    // Source type
-        active          on;                     // on/off switch
 
         timeStart       0.0;        // Start time
         duration        1000.0;     // Duration
@@ -180,12 +179,6 @@ public:
 
             //- Return access to the duration
             inline scalar& duration();
-
-
-        // Checks
-
-            //- Is the source active?
-            virtual bool isActive() const;
 
 
         // Mesh changes

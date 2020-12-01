@@ -12,7 +12,6 @@ T
         value               uniform 300;
 
         regionName          ${baffleRegionName};
-        active              yes;
 
         # include "3DbaffleSolidThermo"
 

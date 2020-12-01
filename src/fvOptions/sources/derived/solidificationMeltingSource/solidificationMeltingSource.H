@@ -79,7 +79,6 @@ Usage
     solidificationMeltingSource1
     {
         type            solidificationMeltingSource;
-        active          yes;
 
         selectionMode   cellZone;
         cellZone        iceZone;

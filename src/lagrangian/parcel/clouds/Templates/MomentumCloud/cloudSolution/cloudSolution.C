@@ -37,7 +37,6 @@ Foam::cloudSolution::cloudSolution
 :
     mesh_(mesh),
     dict_(dict),
-    active_(dict.lookup("active")),
     transient_(false),
     calcFrequency_(1),
     maxCo_(0.3),
@@ -49,10 +48,7 @@ Foam::cloudSolution::cloudSolution
     resetSourcesOnStartup_(true),
     schemes_()
 {
-    if (active_)
-    {
-        read();
-    }
+    read();
 }
 
 
@@ -63,7 +59,6 @@ Foam::cloudSolution::cloudSolution
 :
     mesh_(cs.mesh_),
     dict_(cs.dict_),
-    active_(cs.active_),
     transient_(cs.transient_),
     calcFrequency_(cs.calcFrequency_),
     maxCo_(cs.maxCo_),
@@ -84,7 +79,6 @@ Foam::cloudSolution::cloudSolution
 :
     mesh_(mesh),
     dict_(dictionary::null),
-    active_(false),
     transient_(false),
     calcFrequency_(0),
     maxCo_(great),
@@ -224,7 +218,7 @@ bool Foam::cloudSolution::semiImplicit(const word& fieldName) const
 
 bool Foam::cloudSolution::solveThisStep() const
 {
-    return active_ && (mesh_.time().timeIndex() % calcFrequency_ == 0);
+    return (mesh_.time().timeIndex() % calcFrequency_ == 0);
 }
 
 
@@ -245,7 +239,7 @@ bool Foam::cloudSolution::canEvolve()
 
 bool Foam::cloudSolution::output() const
 {
-    return active_ && mesh_.time().writeTime();
+    return mesh_.time().writeTime();
 }
 
 

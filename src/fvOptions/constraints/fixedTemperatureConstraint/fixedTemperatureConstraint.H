@@ -32,7 +32,6 @@ Usage
     fixedTemperature
     {
         type            fixedTemperatureConstraint;
-        active          yes;
 
         mode            uniform;      // uniform or lookup
 

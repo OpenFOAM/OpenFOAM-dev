@@ -19,8 +19,6 @@ surfaceFilmModel kinematicSingleLayer;
 
 regionName      wallFilmRegion;
 
-active          true;
-
 thermophysicalProperties
 {
     type        constant;

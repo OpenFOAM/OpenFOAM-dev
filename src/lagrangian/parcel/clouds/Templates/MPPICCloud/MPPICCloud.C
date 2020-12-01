@@ -24,10 +24,10 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "MPPICCloud.H"
-#include "PackingModel.H"
+#include "NoPacking.H"
 #include "ParticleStressModel.H"
-#include "DampingModel.H"
-#include "IsotropyModel.H"
+#include "NoDamping.H"
+#include "NoIsotropy.H"
 #include "TimeScaleModel.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
@@ -87,15 +87,12 @@ Foam::MPPICCloud<CloudType>::MPPICCloud
             << exit(FatalError);
     }
 
-    if (this->solution().active())
-    {
-        setModels();
+    setModels();
 
-        if (readFields)
-        {
-            parcelType::readFields(*this);
-            this->deleteLostParticles();
-        }
+    if (readFields)
+    {
+        parcelType::readFields(*this);
+        this->deleteLostParticles();
     }
 }
 
@@ -213,7 +210,7 @@ void Foam::MPPICCloud<CloudType>::motion
     // Damping
     // ~~~~~~~
 
-    if (dampingModel_->active())
+    if (!isType<DampingModels::NoDamping<CloudType>>(dampingModel_()))
     {
         if (this->mesh().moving())
         {
@@ -244,7 +241,7 @@ void Foam::MPPICCloud<CloudType>::motion
     // Packing
     // ~~~~~~~
 
-    if (packingModel_->active())
+    if (!isType<PackingModels::NoPacking<CloudType>>(packingModel_()))
     {
         if (this->mesh().moving())
         {
@@ -267,7 +264,7 @@ void Foam::MPPICCloud<CloudType>::motion
     // Isotropy
     // ~~~~~~~~
 
-    if (isotropyModel_->active())
+    if (!isType<IsotropyModels::NoIsotropy<CloudType>>(isotropyModel_()))
     {
         // update averages
         td.updateAverages(cloud);

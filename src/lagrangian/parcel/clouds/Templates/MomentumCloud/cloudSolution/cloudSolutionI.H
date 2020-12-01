@@ -35,12 +35,6 @@ inline const Foam::dictionary& Foam::cloudSolution::dict() const
 }
 
 
-inline const Foam::Switch Foam::cloudSolution::active() const
-{
-    return active_;
-}
-
-
 inline const Foam::dictionary& Foam::cloudSolution::sourceTermDict() const
 {
     return dict_.subDict("sourceTerms");

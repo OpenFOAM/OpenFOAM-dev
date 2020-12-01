@@ -14,35 +14,33 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-fixedTemperature
-{
-    type            fixedTemperatureConstraint;
-    active          no;
-    selectionMode   all;
+// fixedTemperature
+// {
+//     type            fixedTemperatureConstraint;
+//     selectionMode   all;
 
-    mode            uniform;
+//     mode            uniform;
 
-    temperature     constant 300; // Set temperature (K)
-}
+//     temperature     constant 300; // Set temperature (K)
+// }
 
-fixedPower
-{
-    type            semiImplicitSource;
-    active          no;
-    selectionMode   all;
+// fixedPower
+// {
+//     type            semiImplicitSource;
+//     selectionMode   all;
 
-    volumeMode      absolute;
+//     volumeMode      absolute;
 
-    power           100;          // Set power (W)
+//     power           100;          // Set power (W)
 
-    sources
-    {
-        e
-        {
-            explicit    $power;
-            implicit    0;
-        }
-    }
-}
+//     sources
+//     {
+//         e
+//         {
+//             explicit    $power;
+//             implicit    0;
+//         }
+//     }
+// }
 
 //************************************************************************** //

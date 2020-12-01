@@ -317,7 +317,7 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     constProps_(particleProperties_),
     subModelProperties_
     (
-        particleProperties_.subOrEmptyDict("subModels", solution_.active())
+        particleProperties_.subOrEmptyDict("subModels", true)
     ),
     rndGen_(0),
     cellOccupancyPtr_(),
@@ -334,15 +334,15 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
         subModelProperties_.subOrEmptyDict
         (
             "particleForces",
-            solution_.active()
+            true
         ),
-        solution_.active()
+        true
     ),
     functions_
     (
         *this,
         particleProperties_.subOrEmptyDict("cloudFunctions"),
-        solution_.active()
+        true
     ),
     injectors_
     (
@@ -387,15 +387,12 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
         )
     )
 {
-    if (solution_.active())
-    {
-        setModels();
+    setModels();
 
-        if (readFields)
-        {
-            parcelType::readFields(*this);
-            this->deleteLostParticles();
-        }
+    if (readFields)
+    {
+        parcelType::readFields(*this);
+        this->deleteLostParticles();
     }
 
     if (solution_.resetSourcesOnStartup())

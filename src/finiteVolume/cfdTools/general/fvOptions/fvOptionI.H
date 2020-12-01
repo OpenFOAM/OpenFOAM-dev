@@ -43,21 +43,9 @@ inline const Foam::dictionary& Foam::fv::option::coeffs() const
 }
 
 
-inline bool Foam::fv::option::active() const
-{
-    return active_;
-}
-
-
 inline void Foam::fv::option::setApplied(const label fieldi) const
 {
     applied_[fieldi] = true;
-}
-
-
-inline Foam::Switch& Foam::fv::option::active()
-{
-    return active_;
 }
 
 

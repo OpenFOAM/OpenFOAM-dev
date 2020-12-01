@@ -75,10 +75,7 @@ void Foam::StochasticCollisionModel<CloudType>::update
     const scalar dt
 )
 {
-    if (this->active())
-    {
-        this->collide(td, dt);
-    }
+    this->collide(td, dt);
 }
 
 

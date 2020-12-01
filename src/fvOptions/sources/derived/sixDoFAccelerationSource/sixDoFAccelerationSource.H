@@ -33,7 +33,6 @@ Usage
     SBM
     {
         type            sixDoFAccelerationSource;
-        active          yes;
 
         accelerations   <function1>;
     }

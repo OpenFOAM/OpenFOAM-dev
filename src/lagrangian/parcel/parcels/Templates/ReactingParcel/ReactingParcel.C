@@ -62,7 +62,7 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
         cloud.composition();
     PhaseChangeModel<reactingCloudType>& phaseChange = cloud.phaseChange();
 
-    if (!phaseChange.active() || (YPhase < small))
+    if (YPhase < small)
     {
         return;
     }

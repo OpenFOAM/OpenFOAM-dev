@@ -411,11 +411,6 @@ void Foam::InjectionModel<CloudType>::inject
     typename CloudType::parcelType::trackingData& td
 )
 {
-    if (!this->active())
-    {
-        return;
-    }
-
     const scalar time = this->owner().db().time().value();
 
     // Prepare for next time step
@@ -531,11 +526,6 @@ void Foam::InjectionModel<CloudType>::injectSteadyState
     const scalar trackTime
 )
 {
-    if (!this->active())
-    {
-        return;
-    }
-
     const polyMesh& mesh = this->owner().mesh();
 
     massTotal_ = massFlowRate_.value(mesh.time().value());

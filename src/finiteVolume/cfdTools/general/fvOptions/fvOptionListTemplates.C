@@ -48,16 +48,13 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::optionList::source
         {
             source.setApplied(fieldi);
 
-            if (source.isActive())
+            if (debug)
             {
-                if (debug)
-                {
-                    Info<< "Applying source " << source.name() << " to field "
-                        << fieldName << endl;
-                }
-
-                source.addSup(mtx, fieldi);
+                Info<< "Applying source " << source.name() << " to field "
+                    << fieldName << endl;
             }
+
+            source.addSup(mtx, fieldi);
         }
     }
 
@@ -125,16 +122,13 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::optionList::operator()
         {
             source.setApplied(fieldi);
 
-            if (source.isActive())
+            if (debug)
             {
-                if (debug)
-                {
-                    Info<< "Applying source " << source.name() << " to field "
-                        << fieldName << endl;
-                }
-
-                source.addSup(rho, mtx, fieldi);
+                Info<< "Applying source " << source.name() << " to field "
+                    << fieldName << endl;
             }
+
+            source.addSup(rho, mtx, fieldi);
         }
     }
 
@@ -184,16 +178,13 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::optionList::operator()
         {
             source.setApplied(fieldi);
 
-            if (source.isActive())
+            if (debug)
             {
-                if (debug)
-                {
-                    Info<< "Applying source " << source.name() << " to field "
-                        << fieldName << endl;
-                }
-
-                source.addSup(alpha, rho, mtx, fieldi);
+                Info<< "Applying source " << source.name() << " to field "
+                    << fieldName << endl;
             }
+
+            source.addSup(alpha, rho, mtx, fieldi);
         }
     }
 
@@ -288,16 +279,13 @@ void Foam::fv::optionList::constrain(fvMatrix<Type>& eqn) const
         {
             source.setApplied(fieldi);
 
-            if (source.isActive())
+            if (debug)
             {
-                if (debug)
-                {
-                    Info<< "Applying constraint " << source.name()
-                        << " to field " << eqn.psi().name() << endl;
-                }
-
-                source.constrain(eqn, fieldi);
+                Info<< "Applying constraint " << source.name()
+                    << " to field " << eqn.psi().name() << endl;
             }
+
+            source.constrain(eqn, fieldi);
         }
     }
 }
@@ -321,16 +309,13 @@ void Foam::fv::optionList::correct
         {
             source.setApplied(fieldi);
 
-            if (source.isActive())
+            if (debug)
             {
-                if (debug)
-                {
-                    Info<< "Correcting source " << source.name()
-                        << " for field " << fieldName << endl;
-                }
-
-                source.correct(field);
+                Info<< "Correcting source " << source.name()
+                    << " for field " << fieldName << endl;
             }
+
+            source.correct(field);
         }
     }
 }

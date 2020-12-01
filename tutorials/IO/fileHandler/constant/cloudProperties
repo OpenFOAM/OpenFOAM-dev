@@ -19,7 +19,6 @@ type        cloud;
 
 solution
 {
-    active          true;
     coupled         false;
     transient       yes;
     cellValueSourceCorrection off;

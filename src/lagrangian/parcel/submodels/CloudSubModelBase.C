@@ -117,8 +117,7 @@ template<class CloudType>
 bool Foam::CloudSubModelBase<CloudType>::writeTime() const
 {
     return
-        active()
-     && owner_.solution().transient()
+        owner_.solution().transient()
      && owner_.db().time().writeTime();
 }
 

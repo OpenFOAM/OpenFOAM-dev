@@ -78,9 +78,6 @@ public:
 
     // Member Functions
 
-        //- Flag to indicate whether model activates devolatilisation model
-        virtual bool active() const;
-
         //- Update model
         virtual void calculate
         (

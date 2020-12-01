@@ -65,7 +65,6 @@ Usage
     effectivenessHeatExchangerSource1
     {
         type            effectivenessHeatExchangerSource;
-        active          yes;
 
         selectionMode   cellZone;
         cellZone        porosity;

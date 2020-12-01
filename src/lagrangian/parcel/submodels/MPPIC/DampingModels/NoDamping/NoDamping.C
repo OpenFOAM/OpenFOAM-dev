@@ -67,11 +67,4 @@ Foam::vector Foam::DampingModels::NoDamping<CloudType>::velocityCorrection
 }
 
 
-template<class CloudType>
-bool Foam::DampingModels::NoDamping<CloudType>::active() const
-{
-    return false;
-}
-
-
 // ************************************************************************* //

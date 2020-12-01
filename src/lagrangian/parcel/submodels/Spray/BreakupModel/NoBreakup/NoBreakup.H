@@ -77,9 +77,6 @@ public:
 
     // Member Functions
 
-        //- Flag to indicate whether model activates break-up model
-        virtual bool active() const;
-
         //- Update the parcel properties
         virtual bool update
         (

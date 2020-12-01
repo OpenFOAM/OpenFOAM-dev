@@ -34,8 +34,6 @@ Usage
     {
         type            scalarCodedSource;
 
-        active          yes;
-
         name    sourceTime;
 
         scalarCodedSourceCoeffs

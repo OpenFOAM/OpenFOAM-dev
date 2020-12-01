@@ -24,7 +24,6 @@ porosity
         selectionMode   cellZone;
         cellZone        porosity;
         type            fixedCoeff;
-        active          yes;
 
         fixedCoeffCoeffs
         {

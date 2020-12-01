@@ -179,7 +179,7 @@ bool Foam::LocalInteraction<CloudType>::correct
     if (patchi >= 0)
     {
         vector& U = p.U();
-        bool& active = p.active();
+        bool& moving = p.moving();
 
         typename PatchInteractionModel<CloudType>::interactionType it =
             this->wordToInteractionType
@@ -198,7 +198,7 @@ bool Foam::LocalInteraction<CloudType>::correct
                 scalar dm = p.mass()*p.nParticle();
 
                 keepParticle = false;
-                active = false;
+                moving = false;
                 U = Zero;
                 nEscape_[patchi]++;
                 massEscape_[patchi] += dm;
@@ -215,7 +215,7 @@ bool Foam::LocalInteraction<CloudType>::correct
                 scalar dm = p.mass()*p.nParticle();
 
                 keepParticle = true;
-                active = false;
+                moving = false;
                 U = Zero;
                 nStick_[patchi]++;
                 massStick_[patchi] += dm;
@@ -230,7 +230,7 @@ bool Foam::LocalInteraction<CloudType>::correct
             case PatchInteractionModel<CloudType>::itRebound:
             {
                 keepParticle = true;
-                active = true;
+                moving = true;
 
                 vector nw;
                 vector Up;

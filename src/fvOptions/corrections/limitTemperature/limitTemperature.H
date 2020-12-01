@@ -34,7 +34,6 @@ Usage
     limitT
     {
         type            limitTemperature;
-        active          yes;
 
         selectionMode   all;
         min             200;

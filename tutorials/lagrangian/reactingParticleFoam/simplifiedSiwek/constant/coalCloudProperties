@@ -19,7 +19,6 @@ type        reactingMultiphaseCloud;
 
 solution
 {
-    active          true;
     transient       yes;
     coupled         true;
     cellValueSourceCorrection on;

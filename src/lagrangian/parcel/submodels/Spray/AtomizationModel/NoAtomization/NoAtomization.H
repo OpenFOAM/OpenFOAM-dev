@@ -77,9 +77,6 @@ public:
 
     // Member Functions
 
-        //- Flag to indicate whether model activates atomization model
-        virtual bool active() const;
-
         //- Initial value of liquidCore
         virtual scalar initLiquidCore() const;
 

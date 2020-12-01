@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,14 +32,12 @@ Description
     zone1
     {
         cellZone    rotor1;
-        active      yes;
         ...
     }
 
     zone2
     {
         cellZone    rotor2;
-        active      yes;
         ...
     }
     \endverbatim

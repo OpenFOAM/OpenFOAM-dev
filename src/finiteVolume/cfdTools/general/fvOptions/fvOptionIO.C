@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,6 @@ void Foam::fv::option::writeFooter(Ostream& os) const
 void Foam::fv::option::writeData(Ostream& os) const
 {
     writeEntry(os, "type", type());
-    writeEntry(os, "active", active_);
     os << nl;
     os << indent << word(type() + "Coeffs");
     coeffs_.write(os);
@@ -52,8 +51,6 @@ void Foam::fv::option::writeData(Ostream& os) const
 
 bool Foam::fv::option::read(const dictionary& dict)
 {
-    dict.readIfPresent("active", active_);
-
     coeffs_ = dict.optionalSubDict(modelType_ + "Coeffs");
 
     return true;

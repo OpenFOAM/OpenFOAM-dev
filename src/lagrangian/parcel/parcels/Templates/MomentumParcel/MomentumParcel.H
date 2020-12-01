@@ -243,8 +243,8 @@ protected:
 
         // Parcel properties
 
-            //- Active flag - tracking inactive when active = false
-            bool active_;
+            //- Moving flag - tracking stopped when moving = false
+            bool moving_;
 
             //- Parcel type id
             label typeId_;
@@ -300,7 +300,7 @@ public:
         AddToPropertyList
         (
             ParcelType,
-            " active"
+            " moving"
           + " typeId"
           + " nParticle"
           + " d"
@@ -388,8 +388,8 @@ public:
 
         // Access
 
-            //- Return const access to active flag
-            inline bool active() const;
+            //- Return const access to moving flag
+            inline bool moving() const;
 
             //- Return const access to type id
             inline label typeId() const;
@@ -421,8 +421,8 @@ public:
 
         // Edit
 
-            //- Return const access to active flag
-            inline bool& active();
+            //- Return const access to moving flag
+            inline bool& moving();
 
             //- Return access to type id
             inline label& typeId();

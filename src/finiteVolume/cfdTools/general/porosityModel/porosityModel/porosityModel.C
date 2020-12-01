@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,14 +100,12 @@ Foam::porosityModel::porosityModel
     mesh_(mesh),
     dict_(dict),
     coeffs_(dict.optionalSubDict(modelType + "Coeffs")),
-    active_(true),
     zoneName_(cellZoneName),
     cellZoneIDs_(),
     coordSys_(coordinateSystem::New(mesh, coeffs_))
 {
     if (zoneName_ == word::null)
     {
-        dict.readIfPresent("active", active_);
         dict_.lookup("cellZone") >> zoneName_;
     }
 
@@ -229,8 +227,6 @@ bool Foam::porosityModel::writeData(Ostream& os) const
 
 bool Foam::porosityModel::read(const dictionary& dict)
 {
-    dict.readIfPresent("active", active_);
-
     coeffs_ = dict.optionalSubDict(type() + "Coeffs");
 
     dict.lookup("cellZone") >> zoneName_;

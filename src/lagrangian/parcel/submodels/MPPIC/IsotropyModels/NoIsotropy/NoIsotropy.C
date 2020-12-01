@@ -62,11 +62,4 @@ void Foam::IsotropyModels::NoIsotropy<CloudType>::calculate()
 {}
 
 
-template<class CloudType>
-bool Foam::IsotropyModels::NoIsotropy<CloudType>::active() const
-{
-    return false;
-}
-
-
 // ************************************************************************* //

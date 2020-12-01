@@ -25,6 +25,8 @@ License
 
 #include "ReactingMultiphaseParcel.H"
 #include "CompositionModel.H"
+#include "NoDevolatilisation.H"
+#include "NoSurfaceReaction.H"
 #include "mathematicalConstants.H"
 
 using namespace Foam::constant::mathematical;
@@ -519,7 +521,13 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
 ) const
 {
     // Check that model is active
-    if (!cloud.devolatilisation().active())
+    if
+    (
+        isType<NoDevolatilisation<typename TrackCloudType::reactingCloudType>>
+        (
+            cloud.devolatilisation()
+        )
+    )
     {
         if (canCombust != -1)
         {
@@ -624,7 +632,13 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcSurfaceReactions
 ) const
 {
     // Check that model is active
-    if (!cloud.surfaceReaction().active())
+    if
+    (
+        isType<NoSurfaceReaction<typename TrackCloudType::reactingCloudType>>
+        (
+            cloud.surfaceReaction()
+        )
+    )
     {
         return;
     }

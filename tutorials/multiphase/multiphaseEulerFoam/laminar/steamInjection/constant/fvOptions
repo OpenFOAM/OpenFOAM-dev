@@ -57,7 +57,6 @@ options
     limitTsteam
     {
         type            limitTemperature;
-        active          yes;
         selectionMode   all;
         min             270;
         max             2000;
@@ -67,7 +66,6 @@ options
     limitTwater
     {
         type            limitTemperature;
-        active          yes;
         selectionMode   all;
         min             270;
         max             2000;

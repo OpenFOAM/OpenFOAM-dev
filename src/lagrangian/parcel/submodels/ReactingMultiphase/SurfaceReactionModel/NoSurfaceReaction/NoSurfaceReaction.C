@@ -58,13 +58,6 @@ Foam::NoSurfaceReaction<CloudType>::~NoSurfaceReaction()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-bool Foam::NoSurfaceReaction<CloudType>::active() const
-{
-    return false;
-}
-
-
-template<class CloudType>
 Foam::scalar Foam::NoSurfaceReaction<CloudType>::calculate
 (
     const scalar,

@@ -67,7 +67,7 @@ bool Foam::Rebound<CloudType>::correct
     vector& U = p.U();
 
     keepParticle = true;
-    p.active() = true;
+    p.moving() = true;
 
     vector nw;
     vector Up;

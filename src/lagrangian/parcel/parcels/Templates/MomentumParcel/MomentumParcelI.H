@@ -80,7 +80,7 @@ inline Foam::MomentumParcel<ParcelType>::MomentumParcel
 )
 :
     ParcelType(owner, coordinates, celli, tetFacei, tetPti),
-    active_(true),
+    moving_(true),
     typeId_(-1),
     nParticle_(0),
     d_(0.0),
@@ -102,7 +102,7 @@ inline Foam::MomentumParcel<ParcelType>::MomentumParcel
 )
 :
     ParcelType(owner, position, celli),
-    active_(true),
+    moving_(true),
     typeId_(-1),
     nParticle_(0),
     d_(0.0),
@@ -160,9 +160,9 @@ Foam::MomentumParcel<ParcelType>::constantProperties::minParcelMass() const
 // * * * * * * * MomentumParcel Member Functions  * * * * * * * //
 
 template<class ParcelType>
-inline bool Foam::MomentumParcel<ParcelType>::active() const
+inline bool Foam::MomentumParcel<ParcelType>::moving() const
 {
-    return active_;
+    return moving_;
 }
 
 
@@ -230,9 +230,9 @@ inline const Foam::vector& Foam::MomentumParcel<ParcelType>::UTurb() const
 
 
 template<class ParcelType>
-inline bool& Foam::MomentumParcel<ParcelType>::active()
+inline bool& Foam::MomentumParcel<ParcelType>::moving()
 {
-    return active_;
+    return moving_;
 }
 
 

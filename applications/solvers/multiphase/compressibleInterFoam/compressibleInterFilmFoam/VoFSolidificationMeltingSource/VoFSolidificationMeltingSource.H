@@ -41,7 +41,6 @@ Usage
     VoFSolidificationMeltingSource1
     {
         type            VoFSolidificationMeltingSource;
-        active          yes;
 
         selectionMode   cellZone;
         cellZone        solidZone;

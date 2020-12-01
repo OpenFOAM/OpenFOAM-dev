@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "ThermoParcel.H"
+#include "NoHeatTransfer.H"
 #include "physicoChemicalConstants.H"
 
 using namespace Foam::constant;
@@ -256,7 +257,13 @@ Foam::scalar Foam::ThermoParcel<ParcelType>::calcHeatTransfer
     scalar& Sph
 )
 {
-    if (!cloud.heatTransfer().active())
+    if
+    (
+        isType<NoHeatTransfer<typename TrackCloudType::thermoCloudType>>
+        (
+            cloud.heatTransfer()
+        )
+    )
     {
         return T_;
     }

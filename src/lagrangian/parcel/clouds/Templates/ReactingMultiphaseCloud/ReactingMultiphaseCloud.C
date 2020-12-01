@@ -90,15 +90,12 @@ Foam::ReactingMultiphaseCloud<CloudType>::ReactingMultiphaseCloud
     dMassDevolatilisation_(0.0),
     dMassSurfaceReaction_(0.0)
 {
-    if (this->solution().active())
-    {
-        setModels();
+    setModels();
 
-        if (readFields)
-        {
-            parcelType::readFields(*this, this->composition());
-            this->deleteLostParticles();
-        }
+    if (readFields)
+    {
+        parcelType::readFields(*this, this->composition());
+        this->deleteLostParticles();
     }
 
     if (this->solution().resetSourcesOnStartup())

@@ -19,8 +19,6 @@ surfaceFilmModel thermoSingleLayer;
 
 regionName      wallFilm;
 
-active          true;
-
 thermophysicalProperties
 {
     type        liquid;

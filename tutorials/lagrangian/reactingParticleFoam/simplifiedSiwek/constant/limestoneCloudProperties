@@ -19,7 +19,6 @@ type        thermoCloud;
 
 solution
 {
-    active          true;
     coupled         true;
     transient       yes;
     cellValueSourceCorrection on;

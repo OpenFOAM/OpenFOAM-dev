@@ -121,11 +121,8 @@ Foam::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
     UName_(coeffs_.lookupOrDefault<word>("U", "U")),
     muName_(coeffs_.lookupOrDefault<word>("mu", "thermo:mu"))
 {
-    if (active_)
-    {
-        fieldNames_.setSize(1, UName_);
-        applied_.setSize(1, false);
-    }
+    fieldNames_.setSize(1, UName_);
+    applied_.setSize(1, false);
 }
 
 

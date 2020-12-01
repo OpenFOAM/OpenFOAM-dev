@@ -102,15 +102,12 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
     phaseChangeModel_(nullptr),
     rhoTrans_(this->thermo().carrier().species().size())
 {
-    if (this->solution().active())
-    {
-        setModels();
+    setModels();
 
-        if (readFields)
-        {
-            parcelType::readFields(*this, this->composition());
-            this->deleteLostParticles();
-        }
+    if (readFields)
+    {
+        parcelType::readFields(*this, this->composition());
+        this->deleteLostParticles();
     }
 
     // Set storage for mass source fields and initialise to zero
@@ -193,7 +190,6 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
     cloudCopyPtr_(nullptr),
     constProps_(),
     compositionModel_(c.compositionModel_->clone()),
-//    compositionModel_(nullptr),
     phaseChangeModel_(nullptr),
     rhoTrans_(0)
 {}

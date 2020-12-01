@@ -57,7 +57,7 @@ Foam::fv::constantHeatTransfer::constantHeatTransfer
     htcConst_(),
     AoV_()
 {
-    if (active() && master_)
+    if (master_)
     {
         htcConst_.reset
         (

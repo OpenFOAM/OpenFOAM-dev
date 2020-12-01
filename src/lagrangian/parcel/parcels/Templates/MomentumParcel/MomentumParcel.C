@@ -237,7 +237,7 @@ Foam::MomentumParcel<ParcelType>::MomentumParcel
 )
 :
     ParcelType(p),
-    active_(p.active_),
+    moving_(p.moving_),
     typeId_(p.typeId_),
     nParticle_(p.nParticle_),
     d_(p.d_),
@@ -258,7 +258,7 @@ Foam::MomentumParcel<ParcelType>::MomentumParcel
 )
 :
     ParcelType(p, mesh),
-    active_(p.active_),
+    moving_(p.moving_),
     typeId_(p.typeId_),
     nParticle_(p.nParticle_),
     d_(p.d_),
@@ -314,14 +314,14 @@ bool Foam::MomentumParcel<ParcelType>::move
         scalar f = 1 - p.stepFraction();
         f = min(f, maxCo);
         f = min(f, maxCo*l/max(small*l, mag(s)));
-        if (p.active())
+        if (p.moving())
         {
             // Track to the next face
             p.trackToFace(f*s - d, f);
         }
         else
         {
-            // At present the only thing that sets active_ to false is a stick
+            // At present the only thing that sets moving_ to false is a stick
             // wall interaction. We want the position of the particle to remain
             // the same relative to the face that it is on. The local
             // coordinates therefore do not change. We still advance in time and
@@ -349,14 +349,14 @@ bool Foam::MomentumParcel<ParcelType>::move
 
         p.age() += dt;
 
-        if (p.active() && p.onFace())
+        if (p.moving() && p.onFace())
         {
             cloud.functions().postFace(p, ttd.keepParticle);
         }
 
         cloud.functions().postMove(p, dt, start, ttd.keepParticle);
 
-        if (p.active() && p.onFace() && ttd.keepParticle)
+        if (p.moving() && p.onFace() && ttd.keepParticle)
         {
             p.hitFace(f*s - d, f, cloud, ttd);
         }

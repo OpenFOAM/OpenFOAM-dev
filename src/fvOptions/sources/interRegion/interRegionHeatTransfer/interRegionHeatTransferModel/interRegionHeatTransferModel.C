@@ -145,13 +145,10 @@ Foam::fv::interRegionHeatTransferModel::interRegionHeatTransferModel
     TName_(coeffs_.lookupOrDefault<word>("T", "T")),
     TNbrName_(coeffs_.lookupOrDefault<word>("TNbr", "T"))
 {
-    if (active())
-    {
-        coeffs_.lookup("fields") >> fieldNames_;
-        applied_.setSize(fieldNames_.size(), false);
+    coeffs_.lookup("fields") >> fieldNames_;
+    applied_.setSize(fieldNames_.size(), false);
 
-        coeffs_.lookup("semiImplicit") >> semiImplicit_;
-    }
+    coeffs_.lookup("semiImplicit") >> semiImplicit_;
 }
 
 

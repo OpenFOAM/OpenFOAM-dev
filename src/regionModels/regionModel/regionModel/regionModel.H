@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,10 +82,7 @@ protected:
         //- Reference to the time database
         const Time& time_;
 
-        //- Active flag
-        Switch active_;
-
-        //- Active information output
+        //- Information output
         Switch infoOutput_;
 
         //- Model name
@@ -188,9 +185,6 @@ public:
 
             //- Return the reference to the time database
             inline const Time& time() const;
-
-            //- Return the active flag
-            inline const Switch& active() const;
 
             //- Return the information flag
             inline const Switch& infoOutput() const;

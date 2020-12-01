@@ -18,7 +18,6 @@ FoamFile
 MRF1
 {
     cellZone    rotatingZone;
-    active      yes;
 
     #include "rotatingZoneProperties"
 }

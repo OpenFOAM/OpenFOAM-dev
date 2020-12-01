@@ -296,10 +296,6 @@ void thermalBaffleFvPatchScalarField::write(Ostream& os) const
         writeKeyword(os, "regionName") << regionName
             << token::END_STATEMENT << nl;
 
-        bool active = readBool(dict_.lookup("active"));
-        writeKeyword(os, "active") <<  active
-            << token::END_STATEMENT << nl;
-
         writeKeyword(os, "thermoType");
         os << dict_.subDict("thermoType") << nl;
 

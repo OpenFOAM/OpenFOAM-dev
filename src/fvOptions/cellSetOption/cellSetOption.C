@@ -215,19 +215,6 @@ Foam::fv::cellSetOption::~cellSetOption()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::cellSetOption::isActive() const
-{
-    if (option::isActive() && inTimeLimits(mesh_.time().value()))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
 void Foam::fv::cellSetOption::updateMesh(const mapPolyMesh&)
 {
     setCellSet();

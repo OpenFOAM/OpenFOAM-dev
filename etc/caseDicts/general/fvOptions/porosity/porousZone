@@ -17,7 +17,6 @@ FoamFile
 porousZone // Change to something more descriptive
 {
     type           explicitPorositySource;
-    active         true;
 
     explicitPorositySourceCoeffs
     {

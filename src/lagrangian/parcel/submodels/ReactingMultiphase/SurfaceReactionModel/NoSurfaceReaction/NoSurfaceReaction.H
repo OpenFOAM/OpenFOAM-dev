@@ -77,9 +77,6 @@ public:
 
     // Member Functions
 
-        //- Flag to indicate whether model activates devolatisation model
-        virtual bool active() const;
-
         //- Update surface reactions
         virtual scalar calculate
         (

@@ -65,13 +65,6 @@ Foam::label Foam::NoCollision<CloudType>::nSubCycles() const
 
 
 template<class CloudType>
-bool Foam::NoCollision<CloudType>::active() const
-{
-    return false;
-}
-
-
-template<class CloudType>
 void Foam::NoCollision<CloudType>::collide()
 {}
 

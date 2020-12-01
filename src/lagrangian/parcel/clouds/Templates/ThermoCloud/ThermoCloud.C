@@ -182,15 +182,12 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
         )
     )
 {
-    if (this->solution().active())
-    {
-        setModels();
+    setModels();
 
-        if (readFields)
-        {
-            parcelType::readFields(*this);
-            this->deleteLostParticles();
-        }
+    if (readFields)
+    {
+        parcelType::readFields(*this);
+        this->deleteLostParticles();
     }
 
     if (this->solution().resetSourcesOnStartup())

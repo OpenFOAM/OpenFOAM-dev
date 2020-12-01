@@ -51,13 +51,6 @@ Foam::NoDispersion<CloudType>::~NoDispersion()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-bool Foam::NoDispersion<CloudType>::active() const
-{
-    return false;
-}
-
-
-template<class CloudType>
 Foam::vector Foam::NoDispersion<CloudType>::update
 (
     const scalar,

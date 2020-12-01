@@ -68,11 +68,4 @@ Foam::vector Foam::PackingModels::NoPacking<CloudType>::velocityCorrection
 }
 
 
-template<class CloudType>
-bool Foam::PackingModels::NoPacking<CloudType>::active() const
-{
-    return false;
-}
-
-
 // ************************************************************************* //

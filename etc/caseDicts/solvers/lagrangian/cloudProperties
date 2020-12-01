@@ -16,7 +16,6 @@ FoamFile
 
 solution
 {
-    active          true;
     transient       true;
     coupled         true;
     cellValueSourceCorrection off;

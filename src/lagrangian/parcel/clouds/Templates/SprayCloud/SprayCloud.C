@@ -84,20 +84,17 @@ Foam::SprayCloud<CloudType>::SprayCloud
     atomizationModel_(nullptr),
     breakupModel_(nullptr)
 {
-    if (this->solution().active())
+    setModels();
+
+    averageParcelMass_ = this->injectors().averageParcelMass();
+
+    if (readFields)
     {
-        setModels();
-
-        averageParcelMass_ = this->injectors().averageParcelMass();
-
-        if (readFields)
-        {
-            parcelType::readFields(*this, this->composition());
-            this->deleteLostParticles();
-        }
-
-        Info << "Average parcel mass: " << averageParcelMass_ << endl;
+        parcelType::readFields(*this, this->composition());
+        this->deleteLostParticles();
     }
+
+    Info << "Average parcel mass: " << averageParcelMass_ << endl;
 
     if (this->solution().resetSourcesOnStartup())
     {

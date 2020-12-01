@@ -108,7 +108,7 @@ bool Foam::StandardWallInteraction<CloudType>::correct
 {
     vector& U = p.U();
 
-    bool& active = p.active();
+    bool& moving = p.moving();
 
     if (isA<wallPolyPatch>(pp))
     {
@@ -121,7 +121,7 @@ bool Foam::StandardWallInteraction<CloudType>::correct
             case PatchInteractionModel<CloudType>::itEscape:
             {
                 keepParticle = false;
-                active = false;
+                moving = false;
                 U = Zero;
                 nEscape_++;
                 massEscape_ += p.mass()*p.nParticle();
@@ -130,7 +130,7 @@ bool Foam::StandardWallInteraction<CloudType>::correct
             case PatchInteractionModel<CloudType>::itStick:
             {
                 keepParticle = true;
-                active = false;
+                moving = false;
                 U = Zero;
                 nStick_++;
                 break;
@@ -138,7 +138,7 @@ bool Foam::StandardWallInteraction<CloudType>::correct
             case PatchInteractionModel<CloudType>::itRebound:
             {
                 keepParticle = true;
-                active = true;
+                moving = true;
 
                 vector nw;
                 vector Up;

@@ -58,13 +58,6 @@ Foam::NoDevolatilisation<CloudType>::~NoDevolatilisation()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-bool Foam::NoDevolatilisation<CloudType>::active() const
-{
-    return false;
-}
-
-
-template<class CloudType>
 void Foam::NoDevolatilisation<CloudType>::calculate
 (
     const scalar,

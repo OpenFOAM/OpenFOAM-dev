@@ -83,9 +83,6 @@ public:
 
         //- Calculate velocities
         virtual void calculate();
-
-        //- Return the model 'active' status
-        virtual bool active() const;
 };
 
 

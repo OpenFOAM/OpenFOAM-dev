@@ -103,7 +103,14 @@ template<class CloudType>
 template<class TrackCloudType>
 void Foam::SurfaceFilmModel<CloudType>::inject(TrackCloudType& cloud)
 {
-    if (!this->active())
+    if
+    (
+        !this->owner().mesh().time().objectRegistry::template foundObject
+        <regionModels::surfaceFilmModels::surfaceFilmRegionModel>
+        (
+            "surfaceFilmProperties"
+        )
+    )
     {
         return;
     }
@@ -115,11 +122,6 @@ void Foam::SurfaceFilmModel<CloudType>::inject(TrackCloudType& cloud)
         (
             "surfaceFilmProperties"
         );
-
-    if (!filmModel.active())
-    {
-        return;
-    }
 
     const labelList& filmPatches = filmModel.intCoupledPatchIDs();
     const labelList& primaryPatches = filmModel.primaryPatchIDs();

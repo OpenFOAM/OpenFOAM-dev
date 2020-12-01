@@ -57,13 +57,6 @@ Foam::NoInjection<CloudType>::~NoInjection()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-bool Foam::NoInjection<CloudType>::active() const
-{
-    return false;
-}
-
-
-template<class CloudType>
 Foam::scalar Foam::NoInjection<CloudType>::timeEnd() const
 {
     return 0.0;

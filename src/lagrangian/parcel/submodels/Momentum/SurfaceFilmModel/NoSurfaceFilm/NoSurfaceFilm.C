@@ -59,13 +59,6 @@ Foam::NoSurfaceFilm<CloudType>::~NoSurfaceFilm()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-bool Foam::NoSurfaceFilm<CloudType>::active() const
-{
-    return false;
-}
-
-
-template<class CloudType>
 bool Foam::NoSurfaceFilm<CloudType>::transferParcel
 (
     parcelType&,

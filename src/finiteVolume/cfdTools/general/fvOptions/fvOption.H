@@ -29,7 +29,6 @@ Description
     controls, e.g.:
     \verbatim
         type            scalarExplicitSource    // source type
-        active          on;                     // on/off switch
     \endverbatim
 
 Note
@@ -84,9 +83,6 @@ protected:
 
         //- Dictionary containing source coefficients
         dictionary coeffs_;
-
-        //- Source active flag
-        Switch active_;
 
         //- Field names to apply source to - populated by derived models
         wordList fieldNames_;
@@ -198,23 +194,11 @@ public:
             //- Return dictionary
             inline const dictionary& coeffs() const;
 
-            //- Return const access to the source active flag
-            inline bool active() const;
-
             //- Set the applied flag to true for field index fieldi
             inline void setApplied(const label fieldi) const;
 
 
-        // Edit
-
-            //- Return access to the source active flag
-            inline Switch& active();
-
-
         // Checks
-
-            //- Is the source active?
-            virtual bool isActive() const;
 
             //- Return index of field name if found in fieldNames list
             virtual label applyToField(const word& fieldName) const;

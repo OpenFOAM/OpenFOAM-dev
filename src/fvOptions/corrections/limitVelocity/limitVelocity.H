@@ -33,7 +33,6 @@ Usage
     limitU
     {
         type            limitVelocity;
-        active          yes;
 
         selectionMode   all;
         max             100;

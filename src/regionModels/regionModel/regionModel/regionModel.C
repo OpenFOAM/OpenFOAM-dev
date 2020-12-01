@@ -142,15 +142,12 @@ bool Foam::regionModels::regionModel::read()
 {
     if (regIOobject::read())
     {
-        if (active_)
+        if (const dictionary* dictPtr = subDictPtr(modelName_ + "Coeffs"))
         {
-            if (const dictionary* dictPtr = subDictPtr(modelName_ + "Coeffs"))
-            {
-                coeffs_ <<= *dictPtr;
-            }
-
-            infoOutput_.readIfPresent("infoOutput", *this);
+            coeffs_ <<= *dictPtr;
         }
+
+        infoOutput_.readIfPresent("infoOutput", *this);
 
         return true;
     }
@@ -163,21 +160,14 @@ bool Foam::regionModels::regionModel::read()
 
 bool Foam::regionModels::regionModel::read(const dictionary& dict)
 {
-    if (active_)
+    if (const dictionary* dictPtr = dict.subDictPtr(modelName_ + "Coeffs"))
     {
-        if (const dictionary* dictPtr = dict.subDictPtr(modelName_ + "Coeffs"))
-        {
-            coeffs_ <<= *dictPtr;
-        }
-
-        infoOutput_.readIfPresent("infoOutput", dict);
-
-        return true;
+        coeffs_ <<= *dictPtr;
     }
-    else
-    {
-        return false;
-    }
+
+    infoOutput_.readIfPresent("infoOutput", dict);
+
+    return true;
 }
 
 
@@ -358,7 +348,6 @@ Foam::regionModels::regionModel::regionModel
     ),
     primaryMesh_(mesh),
     time_(mesh.time()),
-    active_(false),
     infoOutput_(false),
     modelName_("none"),
     regionMeshPtr_(nullptr),
@@ -394,7 +383,6 @@ Foam::regionModels::regionModel::regionModel
     ),
     primaryMesh_(mesh),
     time_(mesh.time()),
-    active_(lookup("active")),
     infoOutput_(true),
     modelName_(modelName),
     regionMeshPtr_(nullptr),
@@ -405,15 +393,12 @@ Foam::regionModels::regionModel::regionModel
     regionName_(lookup("regionName")),
     functions_(*this, subOrEmptyDict("functions"))
 {
-    if (active_)
-    {
-        constructMeshObjects();
-        initialise();
+    constructMeshObjects();
+    initialise();
 
-        if (readFields)
-        {
-            read();
-        }
+    if (readFields)
+    {
+        read();
     }
 }
 
@@ -442,7 +427,6 @@ Foam::regionModels::regionModel::regionModel
     ),
     primaryMesh_(mesh),
     time_(mesh.time()),
-    active_(dict.lookup("active")),
     infoOutput_(false),
     modelName_(modelName),
     regionMeshPtr_(nullptr),
@@ -453,15 +437,12 @@ Foam::regionModels::regionModel::regionModel
     regionName_(dict.lookup("regionName")),
     functions_(*this, subOrEmptyDict("functions"))
 {
-    if (active_)
-    {
-        constructMeshObjects();
-        initialise();
+    constructMeshObjects();
+    initialise();
 
-        if (readFields)
-        {
-            read(dict);
-        }
+    if (readFields)
+    {
+        read(dict);
     }
 }
 
@@ -476,37 +457,32 @@ Foam::regionModels::regionModel::~regionModel()
 
 void Foam::regionModels::regionModel::evolve()
 {
-    if (active_)
+    Info<< "\nEvolving " << modelName_ << " for region "
+        << regionMesh().name() << endl;
+
+    preEvolveRegion();
+
+    evolveRegion();
+
+    postEvolveRegion();
+
+    // Provide some feedback
+    if (infoOutput_)
     {
-        Info<< "\nEvolving " << modelName_ << " for region "
-            << regionMesh().name() << endl;
+        Info<< incrIndent;
+        info();
+        Info<< endl << decrIndent;
+    }
 
-        // read();
-
-        preEvolveRegion();
-
-        evolveRegion();
-
-        postEvolveRegion();
-
-        // Provide some feedback
-        if (infoOutput_)
-        {
-            Info<< incrIndent;
-            info();
-            Info<< endl << decrIndent;
-        }
-
-        if (time_.writeTime())
-        {
-            outputProperties().writeObject
-            (
-                IOstream::ASCII,
-                IOstream::currentVersion,
-                time_.writeCompression(),
-                true
-            );
-        }
+    if (time_.writeTime())
+    {
+        outputProperties().writeObject
+        (
+            IOstream::ASCII,
+            IOstream::currentVersion,
+            time_.writeCompression(),
+            true
+        );
     }
 }
 

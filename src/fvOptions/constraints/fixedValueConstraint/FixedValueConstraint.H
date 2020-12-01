@@ -33,7 +33,6 @@ Usage
     porosityTurbulence
     {
         type            scalarFixedValueConstraint;
-        active          yes;
 
         selectionMode   cellZone;
         cellZone        porosity;

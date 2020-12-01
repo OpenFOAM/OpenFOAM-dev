@@ -306,15 +306,12 @@ Foam::regionModels::regionModel1D::regionModel1D
     nMagSfPtr_(nullptr),
     moveMesh_(true)
 {
-    if (active_)
-    {
-        constructMeshObjects();
-        initialise();
+    constructMeshObjects();
+    initialise();
 
-        if (readFields)
-        {
-            read();
-        }
+    if (readFields)
+    {
+        read();
     }
 }
 
@@ -336,17 +333,15 @@ Foam::regionModels::regionModel1D::regionModel1D
     nMagSfPtr_(nullptr),
     moveMesh_(false)
 {
-    if (active_)
-    {
-        constructMeshObjects();
-        initialise();
+    constructMeshObjects();
+    initialise();
 
-        if (readFields)
-        {
-            read(dict);
-        }
+    if (readFields)
+    {
+        read(dict);
     }
 }
+
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 

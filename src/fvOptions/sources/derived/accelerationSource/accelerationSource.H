@@ -34,7 +34,7 @@ Usage
     accelerationSource
     {
         type        accelerationSource;
-        active      on;
+
         selectionMode all;
         U           U;
         velocity    scale;

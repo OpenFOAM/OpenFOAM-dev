@@ -53,7 +53,6 @@ Foam::fv::option::option
     mesh_(mesh),
     dict_(dict),
     coeffs_(dict.optionalSubDict(modelType + "Coeffs")),
-    active_(dict_.lookupOrDefault<Switch>("active", true)),
     fieldNames_(),
     applied_()
 {
@@ -103,12 +102,6 @@ Foam::fv::option::~option()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::fv::option::isActive() const
-{
-    return active_;
-}
-
 
 Foam::label Foam::fv::option::applyToField(const word& fieldName) const
 {

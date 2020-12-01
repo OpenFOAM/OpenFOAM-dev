@@ -56,13 +56,6 @@ Foam::NoBreakup<CloudType>::~NoBreakup()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-bool Foam::NoBreakup<CloudType>::active() const
-{
-    return false;
-}
-
-
-template<class CloudType>
 bool Foam::NoBreakup<CloudType>::update
 (
     const scalar dt,

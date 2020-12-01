@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,14 +141,11 @@ public:
             //- Returns true if defaultCoeffs is true and outputs on printMsg
             virtual bool defaultCoeffs(const bool printMsg) const;
 
-            //- Return the model 'active' status - default active = true
-            virtual bool active() const;
-
             //- Cache dependent sub-model fields
             virtual void cacheFields(const bool store);
 
             //- Flag to indicate when to write a property
-            virtual bool writeTime() const;
+            virtual bool writeTime() const = 0;
 
 
         // Edit

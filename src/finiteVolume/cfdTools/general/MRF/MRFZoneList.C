@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,8 +39,6 @@ Foam::MRFZoneList::MRFZoneList
     mesh_(mesh)
 {
     reset(dict);
-
-    active(true);
 }
 
 
@@ -51,23 +49,6 @@ Foam::MRFZoneList::~MRFZoneList()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::MRFZoneList::active(const bool warn) const
-{
-    bool a = false;
-    forAll(*this, i)
-    {
-        a = a || this->operator[](i).active();
-    }
-
-    if (warn && this->size() && !a)
-    {
-        Info<< "    No MRF zones active" << endl;
-    }
-
-    return a;
-}
-
 
 void Foam::MRFZoneList::reset(const dictionary& dict)
 {

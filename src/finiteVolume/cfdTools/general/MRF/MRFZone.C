@@ -244,7 +244,6 @@ Foam::MRFZone::MRFZone
     mesh_(mesh),
     name_(name),
     coeffs_(dict),
-    active_(coeffs_.lookupOrDefault("active", true)),
     cellZoneName_(cellZoneName),
     cellZoneID_(),
     excludedPatchNames_
@@ -260,42 +259,35 @@ Foam::MRFZone::MRFZone
         coeffs_.lookup("cellZone") >> cellZoneName_;
     }
 
-    if (!active_)
-    {
-        cellZoneID_ = -1;
-    }
-    else
-    {
         cellZoneID_ = mesh_.cellZones().findZoneID(cellZoneName_);
 
-        axis_ = axis_/mag(axis_);
+    axis_ = axis_/mag(axis_);
 
-        const labelHashSet excludedPatchSet
-        (
-            mesh_.boundaryMesh().patchSet(excludedPatchNames_)
-        );
+    const labelHashSet excludedPatchSet
+    (
+        mesh_.boundaryMesh().patchSet(excludedPatchNames_)
+    );
 
-        excludedPatchLabels_.setSize(excludedPatchSet.size());
+    excludedPatchLabels_.setSize(excludedPatchSet.size());
 
-        label i = 0;
-        forAllConstIter(labelHashSet, excludedPatchSet, iter)
-        {
-            excludedPatchLabels_[i++] = iter.key();
-        }
-
-        bool cellZoneFound = (cellZoneID_ != -1);
-
-        reduce(cellZoneFound, orOp<bool>());
-
-        if (!cellZoneFound)
-        {
-            FatalErrorInFunction
-                << "cannot find MRF cellZone " << cellZoneName_
-                << exit(FatalError);
-        }
-
-        setMRFFaces();
+    label i = 0;
+    forAllConstIter(labelHashSet, excludedPatchSet, iter)
+    {
+        excludedPatchLabels_[i++] = iter.key();
     }
+
+    bool cellZoneFound = (cellZoneID_ != -1);
+
+    reduce(cellZoneFound, orOp<bool>());
+
+    if (!cellZoneFound)
+    {
+        FatalErrorInFunction
+            << "cannot find MRF cellZone " << cellZoneName_
+            << exit(FatalError);
+    }
+
+    setMRFFaces();
 }
 
 
@@ -540,11 +532,6 @@ void Foam::MRFZone::makeAbsolute
 
 void Foam::MRFZone::correctBoundaryVelocity(volVectorField& U) const
 {
-    if (!active_)
-    {
-        return;
-    }
-
     const vector Omega = this->Omega();
 
     // Included patches
@@ -573,7 +560,6 @@ void Foam::MRFZone::writeData(Ostream& os) const
     os  << nl;
     os.write(name_) << nl;
     os  << token::BEGIN_BLOCK << incrIndent << nl;
-    writeEntry(os, "active", active_);
     writeEntry(os, "cellZone", cellZoneName_);
     writeEntry(os, "origin", origin_);
     writeEntry(os, "axis", axis_);
@@ -592,7 +578,6 @@ bool Foam::MRFZone::read(const dictionary& dict)
 {
     coeffs_ = dict;
 
-    active_ = coeffs_.lookupOrDefault("active", true);
     coeffs_.lookup("cellZone") >> cellZoneName_;
     cellZoneID_ = mesh_.cellZones().findZoneID(cellZoneName_);
 

@@ -58,13 +58,6 @@ Foam::NoPhaseChange<CloudType>::~NoPhaseChange()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-bool Foam::NoPhaseChange<CloudType>::active() const
-{
-    return false;
-}
-
-
-template<class CloudType>
 void Foam::NoPhaseChange<CloudType>::calculate
 (
     const scalar dt,

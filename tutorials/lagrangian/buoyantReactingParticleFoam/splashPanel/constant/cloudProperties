@@ -19,7 +19,6 @@ type        reactingCloud;
 
 solution
 {
-    active          true;
     coupled         no;
     transient       yes;
     cellValueSourceCorrection no;

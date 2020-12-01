@@ -151,20 +151,8 @@ bool Foam::subModelBase::defaultCoeffs(const bool printMsg) const
 }
 
 
-bool Foam::subModelBase::active() const
-{
-    return true;
-}
-
-
 void Foam::subModelBase::cacheFields(const bool)
 {}
-
-
-bool Foam::subModelBase::writeTime() const
-{
-    return active();
-}
 
 
 void Foam::subModelBase::write(Ostream& os) const

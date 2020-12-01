@@ -3,7 +3,7 @@
 
     // nUCorrectors used for pressureImplicitPorosity
     int nUCorr = 0;
-    if (pZones.active())
+    if (pZones.UPtrList<porosityModel>::size())
     {
         // nUCorrectors for pressureImplicitPorosity
         simple.dict().readIfPresent("nUCorrectors", nUCorr);

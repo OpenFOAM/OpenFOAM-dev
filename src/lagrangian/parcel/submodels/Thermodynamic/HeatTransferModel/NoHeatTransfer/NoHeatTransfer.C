@@ -58,13 +58,6 @@ Foam::NoHeatTransfer<CloudType>::~NoHeatTransfer()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-bool Foam::NoHeatTransfer<CloudType>::active() const
-{
-    return false;
-}
-
-
-template<class CloudType>
 Foam::scalar Foam::NoHeatTransfer<CloudType>::Nu
 (
     const scalar,

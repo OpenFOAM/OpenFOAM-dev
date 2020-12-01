@@ -106,7 +106,8 @@ protected:
         // References to the cloud sub-models
 
             //- Packing model
-            autoPtr<PackingModel<MPPICCloud<CloudType>>> packingModel_;
+            autoPtr<PackingModel<MPPICCloud<CloudType>>>
+                packingModel_;
 
             //- Damping model
             autoPtr<DampingModel<MPPICCloud<CloudType>>>

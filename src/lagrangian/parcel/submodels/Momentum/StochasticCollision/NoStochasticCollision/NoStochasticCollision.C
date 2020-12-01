@@ -66,13 +66,4 @@ Foam::NoStochasticCollision<CloudType>::~NoStochasticCollision()
 {}
 
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<class CloudType>
-bool Foam::NoStochasticCollision<CloudType>::active() const
-{
-    return false;
-}
-
-
 // ************************************************************************* //

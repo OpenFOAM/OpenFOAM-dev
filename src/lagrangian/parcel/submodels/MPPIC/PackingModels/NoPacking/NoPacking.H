@@ -87,9 +87,6 @@ public:
             typename CloudType::parcelType& p,
             const scalar deltaT
         ) const;
-
-        //- Return the model 'active' status
-        virtual bool active() const;
 };
 
 

@@ -77,9 +77,6 @@ public:
 
     // Member Functions
 
-        //- Flag to indicate whether model activates phase change model
-        virtual bool active() const;
-
         //- Update model
         virtual void calculate
         (

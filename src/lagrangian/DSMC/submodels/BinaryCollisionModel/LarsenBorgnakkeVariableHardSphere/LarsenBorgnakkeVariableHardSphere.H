@@ -90,9 +90,6 @@ public:
 
     // Member Functions
 
-        //- Flag to indicate whether model activates collision model
-        virtual bool active() const;
-
         //- Return the collision cross section * relative velocity product
         virtual scalar sigmaTcR
         (

@@ -18,7 +18,6 @@ FoamFile
 MRF1
 {
     cellZone    rotor;
-    active      yes;
 
     // Fixed patches (by default they 'move' with the MRF zone)
     nonRotatingPatches ();

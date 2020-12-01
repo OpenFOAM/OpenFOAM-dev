@@ -85,12 +85,6 @@ public:
 
     //- Destructor
     virtual ~NoStochasticCollision();
-
-
-    // Member Functions
-
-        //- Flag to indicate whether model activates collision model
-        virtual bool active() const;
 };
 
 

@@ -55,7 +55,6 @@ Usage
 
         // Baffle region name
         regionName          baffleRegion;
-        active              yes;
 
         // Solid thermo in solid region
         thermoType

@@ -59,9 +59,6 @@ class cloudSolution
         //- Dictionary used during construction
         dictionary dict_;
 
-        //- Cloud active flag
-        const Switch active_;
-
         //- Transient flag
         Switch transient_;
 
@@ -140,9 +137,6 @@ public:
 
             //- Return const access to the dictionary
             inline const dictionary& dict() const;
-
-            //- Return the active flag
-            inline const Switch active() const;
 
             //- Return const access to the transient flag
             inline const Switch transient() const;

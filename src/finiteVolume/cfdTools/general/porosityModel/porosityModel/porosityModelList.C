@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,8 +38,6 @@ Foam::porosityModelList::porosityModelList
     mesh_(mesh)
 {
     reset(dict);
-
-    active(true);
 }
 
 
@@ -50,23 +48,6 @@ Foam::porosityModelList::~porosityModelList()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-bool Foam::porosityModelList::active(const bool warn) const
-{
-    bool a = false;
-    forAll(*this, i)
-    {
-        a = a || this->operator[](i).active();
-    }
-
-    if (warn && this->size() && !a)
-    {
-        Info<< "No porosity models active" << endl;
-    }
-
-    return a;
-}
-
 
 void Foam::porosityModelList::reset(const dictionary& dict)
 {
@@ -153,7 +134,7 @@ void Foam::porosityModelList::addResistance
 (
     const fvVectorMatrix& UEqn,
     volTensorField& AU,
-    bool correctAUprocBC         
+    bool correctAUprocBC
 )
 {
     forAll(*this, i)

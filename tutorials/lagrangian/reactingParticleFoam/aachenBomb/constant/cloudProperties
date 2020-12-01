@@ -19,7 +19,6 @@ type        sprayCloud;
 
 solution
 {
-    active          true;
     coupled         true;
     transient       yes;
     cellValueSourceCorrection on;

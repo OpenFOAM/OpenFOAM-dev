@@ -99,26 +99,23 @@ Foam::CollidingCloud<CloudType>::CollidingCloud
     constProps_(this->particleProperties()),
     collisionModel_(nullptr)
 {
-    if (this->solution().active())
+    setModels();
+
+    if (readFields)
     {
-        setModels();
+        parcelType::readFields(*this);
+        this->deleteLostParticles();
+    }
 
-        if (readFields)
-        {
-            parcelType::readFields(*this);
-            this->deleteLostParticles();
-        }
-
-        if
-        (
-            this->solution().steadyState()
-         && !isType<NoCollision<CollidingCloud<CloudType>>>(collisionModel_())
-        )
-        {
-            FatalErrorInFunction
-                << "Collision modelling not currently available "
-                << "for steady state calculations" << exit(FatalError);
-        }
+    if
+    (
+        this->solution().steadyState()
+    && !isType<NoCollision<CollidingCloud<CloudType>>>(collisionModel_())
+    )
+    {
+        FatalErrorInFunction
+            << "Collision modelling not currently available "
+            << "for steady state calculations" << exit(FatalError);
     }
 }
 

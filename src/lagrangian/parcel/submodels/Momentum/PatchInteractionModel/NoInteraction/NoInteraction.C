@@ -58,13 +58,6 @@ Foam::NoInteraction<CloudType>::~NoInteraction()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-bool Foam::NoInteraction<CloudType>::active() const
-{
-    return false;
-}
-
-
-template<class CloudType>
 bool Foam::NoInteraction<CloudType>::correct
 (
     typename CloudType::parcelType& p,

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,9 +75,6 @@ class MRFZone
 
         //- Coefficients dictionary
         dictionary coeffs_;
-
-        //- MRF region active flag
-        bool active_;
 
         //- Name of cell zone
         word cellZoneName_;
@@ -179,9 +176,6 @@ public:
 
         //- Return const access to the MRF region name
         inline const word& name() const;
-
-        //- Return const access to the MRF active flag
-        inline bool active() const;
 
         //- Return the current Omega vector
         vector Omega() const;
