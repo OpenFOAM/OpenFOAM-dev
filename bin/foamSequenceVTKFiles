@@ -119,8 +119,8 @@ do
     i=0
     for f in $file_list
     do
-        i=$(( i + 1 )) # Relies on ordered list of files
         link=$(printf "${n}.%04d.vtk" $i)
         ln -s "../$f" "$out/$link"
+        i=$(( i + 1 )) # Relies on ordered list of files
     done
 done
