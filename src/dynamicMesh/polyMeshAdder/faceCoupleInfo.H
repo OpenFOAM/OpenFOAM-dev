@@ -365,12 +365,11 @@ class faceCoupleInfo
             //  Finds most aligned master face.
             label geometricMatchEdgeFaces(Map<labelList>& candidates);
 
-        //- Used by perfectPointMatch. Determine match from cut points to
-        //  slave points (for perfect matching faces)
-        void perfectSlavePointMatch(const scalar absTol);
+        //- Find point and edge correspondence for perfect matching faces
+        void perfectOrderedPointMatch();
 
         //- Find point and edge correspondence for perfect matching faces
-        void perfectPointMatch(const scalar absTol, const bool);
+        void perfectPointMatch(const scalar absTol);
 
         //- Find point and edge correspondence for slaves being subdivision of
         //  master.

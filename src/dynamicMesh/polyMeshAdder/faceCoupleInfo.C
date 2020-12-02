@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -644,7 +644,7 @@ Foam::label Foam::faceCoupleInfo::matchFaces
             << abort(FatalError);
     }
 
-    const scalar absTolSqr = sqr(absTol);
+    const scalar absTolSqr = sign(absTol)*sqr(absTol);
 
 
     label matchFp = -1;
@@ -1017,7 +1017,7 @@ void Foam::faceCoupleInfo::findSlavesCoveringMaster
         // Generate face centre (prevent cellCentres() reconstruction)
         point fc(f1.centre(mesh1.points()));
 
-        pointIndexHit nearInfo = tree.findNearest(fc, Foam::sqr(absTol));
+        pointIndexHit nearInfo = tree.findNearest(fc, sign(absTol)*sqr(absTol));
 
         if (nearInfo.hit())
         {
@@ -1420,11 +1420,61 @@ Foam::label Foam::faceCoupleInfo::geometricMatchEdgeFaces
 }
 
 
-void Foam::faceCoupleInfo::perfectPointMatch
-(
-    const scalar absTol,
-    const bool slaveFacesOrdered
-)
+void Foam::faceCoupleInfo::perfectOrderedPointMatch()
+{
+    // Calculate the set of cut faces in between master and slave patch assuming
+    // perfect match (and optional face ordering on slave)
+
+    if (debug)
+    {
+        Pout<< "perfectOrderedPointMatch :"
+            << " Matching master and slave to cut."
+            << " Master and slave faces are identical and ordered" << nl;
+    }
+
+    // Faces correspond exactly
+    cutToMasterFaces_ = identity(masterPatch().size());
+    cutToSlaveFaces_ = identity(masterPatch().size());
+
+    // Cut patch is the same as the master patch
+    cutPoints_ = masterPatch().localPoints();
+    cutFacesPtr_.reset
+    (
+        new primitiveFacePatch
+        (
+            masterPatch().localFaces(),
+            cutPoints_
+        )
+    );
+
+    // Cut points are the same as the master points
+    masterToCutPoints_ = identity(cutPoints_.size());
+
+    // Slave points number around the faces in the reverse direction
+    slaveToCutPoints_.setSize(slavePatch().nPoints());
+    forAll(cutFaces(), cutFacei)
+    {
+        const label slaveFacei = cutToSlaveFaces_[cutFacei];
+
+        const face& cutF = cutFaces().localFaces()[cutFacei];
+        const face& slaveF = slavePatch().localFaces()[slaveFacei];
+
+        label slaveFp = 0;
+
+        forAll(cutF, cutFp)
+        {
+            const label cutPointi = cutF[cutFp];
+            const label slavePointi = slaveF[slaveFp];
+
+            slaveToCutPoints_[slavePointi] = cutPointi;
+
+            slaveFp = slaveF.rcIndex(slaveFp);
+        }
+    }
+}
+
+
+void Foam::faceCoupleInfo::perfectPointMatch(const scalar absTol)
 {
     // Calculate the set of cut faces in between master and slave patch assuming
     // perfect match (and optional face ordering on slave)
@@ -1433,18 +1483,7 @@ void Foam::faceCoupleInfo::perfectPointMatch
     {
         Pout<< "perfectPointMatch :"
             << " Matching master and slave to cut."
-            << " Master and slave faces are identical" << nl;
-
-        if (slaveFacesOrdered)
-        {
-            Pout<< "and master and slave faces are ordered"
-                << " (on coupled patches)" << endl;
-        }
-        else
-        {
-            Pout<< "and master and slave faces are not ordered"
-                << " (on coupled patches)" << endl;
-        }
+            << " Master and slave faces are identical and not ordered" << nl;
     }
 
     cutToMasterFaces_ = identity(masterPatch().size());
@@ -1459,31 +1498,47 @@ void Foam::faceCoupleInfo::perfectPointMatch
     );
     masterToCutPoints_ = identity(cutPoints_.size());
 
+    // Faces do not have to be ordered, but all have to match
 
-    // Cut faces to slave patch.
-    bool matchedAllFaces = false;
-
-    if (slaveFacesOrdered)
-    {
-        cutToSlaveFaces_ = identity(cutFaces().size());
-        matchedAllFaces = (cutFaces().size() == slavePatch().size());
-    }
-    else
-    {
-        // Faces do not have to be ordered (but all have
-        // to match). Note: Faces will be already ordered if we enter here from
-        // construct from meshes.
-
-        matchedAllFaces = matchPoints
+    bool matchedAllFaces = matchPoints
+    (
+        calcFaceCentres<List>
         (
-            calcFaceCentres<List>
+            cutFaces(),
+            cutFaces().points(),
+            0,
+            cutFaces().size()
+        ),
+        calcFaceCentres<IndirectList>
+        (
+            slavePatch(),
+            slavePatch().points(),
+            0,
+            slavePatch().size()
+        ),
+        scalarField(slavePatch().size(), absTol),
+        false,
+        cutToSlaveFaces_
+    );
+
+    // If some of the face centres did not match, then try to match the
+    // point averages instead. There is no division by the face area in
+    // calculating the point average, so this is more stable when faces
+    // collapse onto a line or point.
+    if (!matchedAllFaces)
+    {
+        labelList cutToSlaveFacesTemp(cutToSlaveFaces_.size(), -1);
+
+        matchPoints
+        (
+            calcFacePointAverages<List>
             (
                 cutFaces(),
                 cutFaces().points(),
                 0,
                 cutFaces().size()
             ),
-            calcFaceCentres<IndirectList>
+            calcFacePointAverages<IndirectList>
             (
                 slavePatch(),
                 slavePatch().points(),
@@ -1491,45 +1546,14 @@ void Foam::faceCoupleInfo::perfectPointMatch
                 slavePatch().size()
             ),
             scalarField(slavePatch().size(), absTol),
-            false,
-            cutToSlaveFaces_
+            true,
+            cutToSlaveFacesTemp
         );
 
-        // If some of the face centres did not match, then try to match the
-        // point averages instead. There is no division by the face area in
-        // calculating the point average, so this is more stable when faces
-        // collapse onto a line or point.
-        if (!matchedAllFaces)
-        {
-            labelList cutToSlaveFacesTemp(cutToSlaveFaces_.size(), -1);
+        cutToSlaveFaces_ = max(cutToSlaveFaces_, cutToSlaveFacesTemp);
 
-            matchPoints
-            (
-                calcFacePointAverages<List>
-                (
-                    cutFaces(),
-                    cutFaces().points(),
-                    0,
-                    cutFaces().size()
-                ),
-                calcFacePointAverages<IndirectList>
-                (
-                    slavePatch(),
-                    slavePatch().points(),
-                    0,
-                    slavePatch().size()
-                ),
-                scalarField(slavePatch().size(), absTol),
-                true,
-                cutToSlaveFacesTemp
-            );
-
-            cutToSlaveFaces_ = max(cutToSlaveFaces_, cutToSlaveFacesTemp);
-
-            matchedAllFaces = min(cutToSlaveFaces_) != -1;
-        }
+        matchedAllFaces = min(cutToSlaveFaces_) != -1;
     }
-
 
     if (!matchedAllFaces)
     {
@@ -1540,7 +1564,6 @@ void Foam::faceCoupleInfo::perfectPointMatch
             << " do not align to within " << absTol << " metre."
             << abort(FatalError);
     }
-
 
     // Find correspondence from slave points to cut points. This might
     // detect shared points so the output is a slave-to-cut point list
@@ -1554,8 +1577,8 @@ void Foam::faceCoupleInfo::perfectPointMatch
         reorder(cutToSlaveFaces_, cutFaces().localFaces()),
         slavePatch().localPoints(),
         slavePatch().localFaces(),
-        false,                      // slave and cut have opposite orientation
-
+        false,                      // slave and cut have opposite
+                                    // orientation
         slaveToCutPoints_,          // slave to (uncompacted) cut points
         cutToCompact,               // compaction map: from cut to compacted
         compactToCut                // compaction map: from compacted to cut
@@ -1970,7 +1993,7 @@ Foam::faceCoupleInfo::faceCoupleInfo
     if (perfectMatch)
     {
         // Faces are perfectly aligned but probably not ordered.
-        perfectPointMatch(absTol, false);
+        perfectPointMatch(absTol);
     }
     else
     {
@@ -2055,9 +2078,13 @@ Foam::faceCoupleInfo::faceCoupleInfo
     }
 
 
-    if (perfectMatch)
+    if (perfectMatch && orderedFaces)
     {
-        perfectPointMatch(absTol, orderedFaces);
+        perfectOrderedPointMatch();
+    }
+    else if (perfectMatch)
+    {
+        perfectPointMatch(absTol);
     }
     else
     {
