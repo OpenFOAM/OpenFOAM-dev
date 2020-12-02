@@ -103,7 +103,7 @@ public:
         virtual inline Type value(const scalar) const;
 
         //- Integrate between two values
-        virtual inline Type integrate(const scalar x1, const scalar x2) const;
+        virtual inline Type integral(const scalar x1, const scalar x2) const;
 
         //- Write in dictionary format
         virtual void write(Ostream& os) const;

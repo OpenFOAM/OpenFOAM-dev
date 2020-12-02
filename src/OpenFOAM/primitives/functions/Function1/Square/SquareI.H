@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ inline Type Foam::Function1s::Square<Type>::value(const scalar x) const
 
 
 template<class Type>
-inline Type Foam::Function1s::Square<Type>::integrate
+inline Type Foam::Function1s::Square<Type>::integral
 (
     const scalar x1,
     const scalar x2
@@ -57,7 +57,7 @@ inline Type Foam::Function1s::Square<Type>::integrate
             << exit(FatalError);
     }
 
-    auto integrate0 = [&](const scalar x)
+    auto integral0 = [&](const scalar x)
     {
         const scalar markFraction = markSpace_/(1 + markSpace_);
 
@@ -73,7 +73,7 @@ inline Type Foam::Function1s::Square<Type>::integrate
             );
     };
 
-    return integrate0(x2) - integrate0(x1) + level_->integrate(x1, x2);
+    return integral0(x2) - integral0(x1) + level_->integral(x1, x2);
 }
 
 

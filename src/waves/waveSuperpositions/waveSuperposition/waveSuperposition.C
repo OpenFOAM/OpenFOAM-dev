@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ void Foam::waveSuperposition::transformation
 
     axes = tensor(dSurfHat, - gHat ^ dSurfHat, - gHat);
 
-    xyz = axes & (p - origin_ - UMean_->integrate(0, t));
+    xyz = axes & (p - origin_ - UMean_->integral(0, t));
 }
 
 

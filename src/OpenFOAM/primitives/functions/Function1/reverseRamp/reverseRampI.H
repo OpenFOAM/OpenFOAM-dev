@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,13 +36,13 @@ inline Foam::scalar Foam::Function1s::reverseRamp::value
 }
 
 
-inline Foam::scalar Foam::Function1s::reverseRamp::integrate
+inline Foam::scalar Foam::Function1s::reverseRamp::integral
 (
     const scalar t1,
     const scalar t2
 ) const
 {
-    return (t2 - t1) - ramp_->integrate(t1, t2);
+    return (t2 - t1) - ramp_->integral(t1, t2);
 }
 
 

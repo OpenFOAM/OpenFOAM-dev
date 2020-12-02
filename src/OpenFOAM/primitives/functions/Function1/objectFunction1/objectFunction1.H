@@ -106,11 +106,11 @@ public:
 
         //- Integrate between two scalars
         template <class PrimitiveType>
-        PrimitiveType integrate(const scalar x1, const scalar x2) const;
+        PrimitiveType integral(const scalar x1, const scalar x2) const;
 
         //- Integrate between two scalar fields
         template <class PrimitiveType>
-        tmp<Field<PrimitiveType>> integrate
+        tmp<Field<PrimitiveType>> integral
         (
             const scalarField& x1,
             const scalarField& x2

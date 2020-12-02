@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ Foam::solidBodyMotionFunctions::rotatingMotion::transformation() const
     scalar t = time_.value();
 
     // Rotation around axis
-    scalar angle = omega_->integrate(0, t);
+    scalar angle = omega_->integral(0, t);
 
     quaternion R(axis_, angle);
     septernion TR(septernion(-origin_)*R*septernion(origin_));

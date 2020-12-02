@@ -70,7 +70,7 @@ class Polynomial
         //- Polynomial coefficients - list of prefactor, exponent
         List<Tuple2<Type, Type>> coeffs_;
 
-        //- Flag to indicate whether poly can be integrated
+        //- Flag to indicate whether poly can be integrald
         bool canIntegrate_;
 
 
@@ -107,7 +107,7 @@ public:
             virtual Type value(const scalar x) const;
 
             //- Integrate between two scalar fields
-            virtual Type integrate(const scalar x1, const scalar x2) const;
+            virtual Type integral(const scalar x1, const scalar x2) const;
 
 
         //- Write in dictionary format

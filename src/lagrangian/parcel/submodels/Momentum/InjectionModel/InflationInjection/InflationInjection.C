@@ -116,7 +116,7 @@ Foam::InflationInjection<CloudType>::InflationInjection
     }
 
     // Set total volume/mass to inject
-    this->volumeTotal_ = fraction_*flowRateProfile_.integrate(0.0, duration_);
+    this->volumeTotal_ = fraction_*flowRateProfile_.integral(0.0, duration_);
     this->massTotal_ *= fraction_;
 }
 
@@ -212,7 +212,7 @@ Foam::label Foam::InflationInjection<CloudType>::parcelsToInject
     if ((time0 >= 0.0) && (time0 < duration_))
     {
         volumeAccumulator_ +=
-            fraction_*flowRateProfile_.integrate(time0, time1);
+            fraction_*flowRateProfile_.integral(time0, time1);
     }
 
     labelHashSet cellCentresUsed;
@@ -420,7 +420,7 @@ Foam::scalar Foam::InflationInjection<CloudType>::volumeToInject
 {
     if ((time0 >= 0.0) && (time0 < duration_))
     {
-        return fraction_*flowRateProfile_.integrate(time0, time1);
+        return fraction_*flowRateProfile_.integral(time0, time1);
     }
     else
     {

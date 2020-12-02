@@ -25,7 +25,7 @@ Class
     Foam::integrationScheme
 
 Description
-    Base for a set of schemes which integrate simple ODEs which arise from
+    Base for a set of schemes which integral simple ODEs which arise from
     semi-implcit rate expressions.
 
         \f[

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ inline Foam::scalar Foam::Function1s::halfCosineRamp::value
 }
 
 
-inline Foam::scalar Foam::Function1s::halfCosineRamp::integrate
+inline Foam::scalar Foam::Function1s::halfCosineRamp::integral
 (
     const scalar t1,
     const scalar t2

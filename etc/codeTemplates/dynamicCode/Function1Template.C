@@ -127,7 +127,7 @@ Foam::Function1s::${typeName}Function1${TemplateType}::
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::${TemplateType}
-Foam::Function1s::${typeName}Function1${TemplateType}::integrate
+Foam::Function1s::${typeName}Function1${TemplateType}::integral
 (
     const scalar x1,
     const scalar x2

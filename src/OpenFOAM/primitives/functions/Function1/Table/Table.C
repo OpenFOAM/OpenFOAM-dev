@@ -243,7 +243,7 @@ Type Foam::Function1s::Table<Type>::value
 
 
 template<class Type>
-Type Foam::Function1s::Table<Type>::integrate
+Type Foam::Function1s::Table<Type>::integral
 (
     const scalar x1,
     const scalar x2

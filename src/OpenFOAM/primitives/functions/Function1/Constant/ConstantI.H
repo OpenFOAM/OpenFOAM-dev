@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ inline Type Foam::Function1s::Constant<Type>::value(const scalar x) const
 
 
 template<class Type>
-inline Type Foam::Function1s::Constant<Type>::integrate
+inline Type Foam::Function1s::Constant<Type>::integral
 (
     const scalar x1,
     const scalar x2

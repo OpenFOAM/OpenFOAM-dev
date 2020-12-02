@@ -90,7 +90,7 @@ Type Foam::TimeFunction1<Type>::value(const scalar x) const
 
 
 template<class Type>
-Type Foam::TimeFunction1<Type>::integrate
+Type Foam::TimeFunction1<Type>::integral
 (
     const scalar x1,
     const scalar x2
@@ -98,7 +98,7 @@ Type Foam::TimeFunction1<Type>::integrate
 {
     return
         time_.timeToUserTimeRatio()
-       *function_->integrate
+       *function_->integral
         (
             time_.userTimeToTime(x1),
             time_.userTimeToTime(x2)

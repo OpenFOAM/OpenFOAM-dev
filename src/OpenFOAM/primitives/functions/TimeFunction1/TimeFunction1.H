@@ -115,7 +115,7 @@ public:
             virtual Type value(const scalar x) const;
 
             //- Integrate between two scalars
-            virtual Type integrate(const scalar x1, const scalar x2) const;
+            virtual Type integral(const scalar x1, const scalar x2) const;
 
 
     // I/O

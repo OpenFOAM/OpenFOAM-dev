@@ -64,7 +64,7 @@ Foam::Function1s::Polynomial<Type>::Polynomial
         if (!canIntegrate_)
         {
             WarningInFunction
-                << "Polynomial " << this->name_ << " cannot be integrated"
+                << "Polynomial " << this->name_ << " cannot be integrald"
                 << endl;
         }
     }
@@ -103,7 +103,7 @@ Foam::Function1s::Polynomial<Type>::Polynomial
         if (!canIntegrate_)
         {
             WarningInFunction
-                << "Polynomial " << this->name_ << " cannot be integrated"
+                << "Polynomial " << this->name_ << " cannot be integrald"
                 << endl;
         }
     }
@@ -146,7 +146,7 @@ Type Foam::Function1s::Polynomial<Type>::value(const scalar x) const
 
 
 template<class Type>
-Type Foam::Function1s::Polynomial<Type>::integrate
+Type Foam::Function1s::Polynomial<Type>::integral
 (
     const scalar x1,
     const scalar x2

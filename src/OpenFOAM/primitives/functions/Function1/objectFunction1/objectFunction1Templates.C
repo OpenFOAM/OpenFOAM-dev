@@ -107,24 +107,24 @@ Foam::tmp<Foam::Field<PrimitiveType>> Foam::objectFunction1::value
 
 
 template <class PrimitiveType>
-PrimitiveType Foam::objectFunction1::integrate
+PrimitiveType Foam::objectFunction1::integral
 (
     const scalar x1,
     const scalar x2
 ) const
 {
-    return autoPtr<Function1<PrimitiveType>>::operator*().integrate(x1, x2);
+    return autoPtr<Function1<PrimitiveType>>::operator*().integral(x1, x2);
 }
 
 
 template <class PrimitiveType>
-Foam::tmp<Foam::Field<PrimitiveType>> Foam::objectFunction1::integrate
+Foam::tmp<Foam::Field<PrimitiveType>> Foam::objectFunction1::integral
 (
     const scalarField& x1,
     const scalarField& x2
 ) const
 {
-    return autoPtr<Function1<PrimitiveType>>::operator*().integrate(x1, x2);
+    return autoPtr<Function1<PrimitiveType>>::operator*().integral(x1, x2);
 }
 
 

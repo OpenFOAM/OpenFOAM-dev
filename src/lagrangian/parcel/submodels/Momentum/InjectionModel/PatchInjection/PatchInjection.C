@@ -68,7 +68,7 @@ Foam::PatchInjection<CloudType>::PatchInjection
     patchInjectionBase::updateMesh(owner.mesh());
 
     // Set total volume/mass to inject
-    this->volumeTotal_ = flowRateProfile_.integrate(0.0, duration_);
+    this->volumeTotal_ = flowRateProfile_.integral(0.0, duration_);
 }
 
 
@@ -155,7 +155,7 @@ Foam::scalar Foam::PatchInjection<CloudType>::volumeToInject
 {
     if ((time0 >= 0.0) && (time0 < duration_))
     {
-        return flowRateProfile_.integrate(time0, time1);
+        return flowRateProfile_.integral(time0, time1);
     }
     else
     {

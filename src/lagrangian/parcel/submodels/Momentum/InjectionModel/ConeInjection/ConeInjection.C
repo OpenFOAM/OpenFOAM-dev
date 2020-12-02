@@ -193,7 +193,7 @@ Foam::ConeInjection<CloudType>::ConeInjection
     setFlowType();
 
     // Set total volume to inject
-    this->volumeTotal_ = flowRateProfile_.integrate(0, duration_);
+    this->volumeTotal_ = flowRateProfile_.integral(0, duration_);
 
     updateMesh();
 }
@@ -292,7 +292,7 @@ Foam::scalar Foam::ConeInjection<CloudType>::volumeToInject
 {
     if (time0 >= 0 && time0 < duration_)
     {
-        return flowRateProfile_.integrate(time0, time1);
+        return flowRateProfile_.integral(time0, time1);
     }
     else
     {

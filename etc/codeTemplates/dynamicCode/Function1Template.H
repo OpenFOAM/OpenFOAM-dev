@@ -107,7 +107,7 @@ public:
         }
 
         //- Integrate between two values
-        virtual ${TemplateType} integrate
+        virtual ${TemplateType} integral
         (
             const scalar x1,
             const scalar x2

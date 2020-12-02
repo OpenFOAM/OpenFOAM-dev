@@ -155,10 +155,10 @@ public:
         virtual tmp<Field<Type>> value(const scalarField& x) const;
 
         //- Integrate between two scalars
-        virtual Type integrate(const scalar x1, const scalar x2) const;
+        virtual Type integral(const scalar x1, const scalar x2) const;
 
         //- Integrate between two scalar fields
-        virtual tmp<Field<Type>> integrate
+        virtual tmp<Field<Type>> integral
         (
             const scalarField& x1,
             const scalarField& x2

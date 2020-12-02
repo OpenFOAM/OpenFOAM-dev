@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ inline Type Foam::Function1s::Scale<Type>::value(const scalar x) const
 
 
 template<class Type>
-inline Type Foam::Function1s::Scale<Type>::integrate
+inline Type Foam::Function1s::Scale<Type>::integral
 (
     const scalar x1,
     const scalar x2
@@ -45,13 +45,13 @@ inline Type Foam::Function1s::Scale<Type>::integrate
     if (integrableScale_)
     {
         const scalar sx = xScale_->value(NaN);
-        return scale_->value(NaN)*value_->integrate(sx*x1, sx*x2)/sx;
+        return scale_->value(NaN)*value_->integral(sx*x1, sx*x2)/sx;
     }
 
     if (integrableValue_)
     {
         const scalar sx = xScale_->value(NaN);
-        return scale_->integrate(sx*x1, sx*x2)/sx*value_->value(NaN);
+        return scale_->integral(sx*x1, sx*x2)/sx*value_->value(NaN);
     }
 
     FatalErrorInFunction

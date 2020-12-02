@@ -138,7 +138,7 @@ Foam::tmp<Foam::Field<Type>> Foam::FieldFunction1<Type, Function1Type>::value
 
 template<class Type, class Function1Type>
 Foam::tmp<Foam::Field<Type>>
-Foam::FieldFunction1<Type, Function1Type>::integrate
+Foam::FieldFunction1<Type, Function1Type>::integral
 (
     const scalarField& x1,
     const scalarField& x2
@@ -149,7 +149,7 @@ Foam::FieldFunction1<Type, Function1Type>::integrate
 
     forAll(x1, i)
     {
-        fld[i] = refCast<const Function1Type>(*this).integrate(x1[i], x2[i]);
+        fld[i] = refCast<const Function1Type>(*this).integral(x1[i], x2[i]);
     }
 
     return tfld;

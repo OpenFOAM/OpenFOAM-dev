@@ -149,7 +149,7 @@ Foam::tmp<Foam::Field<Type>> Foam::Function1s::Coded<Type>::value
 
 
 template<class Type>
-inline Type Foam::Function1s::Coded<Type>::integrate
+inline Type Foam::Function1s::Coded<Type>::integral
 (
     const scalar x1,
     const scalar x2
@@ -161,7 +161,7 @@ inline Type Foam::Function1s::Coded<Type>::integrate
 
 
 template<class Type>
-Foam::tmp<Foam::Field<Type>> Foam::Function1s::Coded<Type>::integrate
+Foam::tmp<Foam::Field<Type>> Foam::Function1s::Coded<Type>::integral
 (
     const scalarField& x1,
     const scalarField& x2
