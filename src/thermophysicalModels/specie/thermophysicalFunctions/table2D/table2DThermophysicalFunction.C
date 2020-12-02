@@ -107,7 +107,11 @@ inline void Foam::thermophysicalFunctions::table2D::checkRange
 }
 
 
-Foam::scalar Foam::thermophysicalFunctions::table2D::f(scalar p, scalar T) const
+Foam::scalar Foam::thermophysicalFunctions::table2D::value
+(
+    scalar p,
+    scalar T
+) const
 {
     const scalar ndp = (p - pLow_)/deltap_;
     const label ip = ndp;

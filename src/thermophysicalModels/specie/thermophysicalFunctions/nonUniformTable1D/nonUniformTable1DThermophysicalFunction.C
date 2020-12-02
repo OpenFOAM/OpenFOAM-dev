@@ -113,7 +113,7 @@ Foam::thermophysicalFunctions::nonUniformTable1D::nonUniformTable1D
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::thermophysicalFunctions::nonUniformTable1D::f
+Foam::scalar Foam::thermophysicalFunctions::nonUniformTable1D::value
 (
     scalar p,
     scalar T

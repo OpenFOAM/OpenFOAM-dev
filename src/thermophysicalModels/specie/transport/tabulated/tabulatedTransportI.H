@@ -85,7 +85,7 @@ inline Foam::scalar Foam::tabulatedTransport<Thermo>::mu
     const scalar T
 ) const
 {
-    return mu_.f(p, T);
+    return mu_.value(p, T);
 }
 
 
@@ -96,7 +96,7 @@ inline Foam::scalar Foam::tabulatedTransport<Thermo>::kappa
     const scalar T
 ) const
 {
-    return kappa_.f(p, T);
+    return kappa_.value(p, T);
 }
 
 

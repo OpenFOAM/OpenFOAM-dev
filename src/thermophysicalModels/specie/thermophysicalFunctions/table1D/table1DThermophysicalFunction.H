@@ -109,7 +109,7 @@ public:
     // Member Functions
 
         //- Evaluate the function and return the result
-        scalar f(scalar p, scalar T) const;
+        scalar value(scalar p, scalar T) const;
 
         //- Write the function coefficients
         void write(Ostream& os) const;

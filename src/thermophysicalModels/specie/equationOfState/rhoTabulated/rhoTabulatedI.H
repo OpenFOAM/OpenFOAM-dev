@@ -84,7 +84,7 @@ inline Foam::scalar Foam::rhoTabulated<Specie>::rho
     scalar T
 ) const
 {
-    return rho_.f(p, T);
+    return rho_.value(p, T);
 }
 
 

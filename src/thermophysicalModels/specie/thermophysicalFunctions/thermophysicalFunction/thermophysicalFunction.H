@@ -95,7 +95,7 @@ public:
     // Member Functions
 
         //- Evaluate the function and return the result
-        virtual scalar f(scalar p, scalar T) const = 0;
+        virtual scalar value(scalar p, scalar T) const = 0;
 
         //- Write the function coefficients
         virtual void write(Ostream& os) const = 0;

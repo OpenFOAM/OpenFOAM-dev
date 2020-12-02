@@ -144,7 +144,7 @@ public:
         }
 
         //- Evaluate the function and return the result
-        scalar f(scalar p, scalar T) const;
+        scalar value(scalar p, scalar T) const;
 
         //- Evaluate the derivative of the function w.r.t. p
         scalar dfdp(scalar p, scalar T) const;

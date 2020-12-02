@@ -60,7 +60,7 @@ inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::Cp
     const scalar T
 ) const
 {
-    return Cp_.f(p, T) + EquationOfState::Cp(p, T);
+    return Cp_.value(p, T) + EquationOfState::Cp(p, T);
 }
 
 

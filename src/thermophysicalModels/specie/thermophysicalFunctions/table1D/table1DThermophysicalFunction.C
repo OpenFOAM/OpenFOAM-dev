@@ -64,7 +64,11 @@ Foam::thermophysicalFunctions::table1D::table1D(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::thermophysicalFunctions::table1D::f(scalar p, scalar T) const
+Foam::scalar Foam::thermophysicalFunctions::table1D::value
+(
+    scalar p,
+    scalar T
+) const
 {
     const scalar nd = (T - Tlow_)/deltaT_;
     const label i = nd;

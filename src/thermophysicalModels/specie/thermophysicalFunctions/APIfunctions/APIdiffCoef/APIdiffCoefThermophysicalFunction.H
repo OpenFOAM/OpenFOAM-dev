@@ -89,14 +89,14 @@ public:
 
         //- API vapour mass diffusivity function using properties from
         //  construction
-        scalar f(scalar p, scalar T) const
+        scalar value(scalar p, scalar T) const
         {
             return 3.6059e-3*(pow(1.8*T, 1.75))*alpha_/(p*beta_);
         }
 
         //- API vapour mass diffusivity function using properties from
         //  construction - with specified binary pair
-        scalar f(scalar p, scalar T, scalar  Wa) const
+        scalar value(scalar p, scalar T, scalar  Wa) const
         {
             const scalar alphaBinary = sqrt(1/wf_ + 1/Wa);
             return 3.6059e-3*(pow(1.8*T, 1.75))*alphaBinary/(p*beta_);

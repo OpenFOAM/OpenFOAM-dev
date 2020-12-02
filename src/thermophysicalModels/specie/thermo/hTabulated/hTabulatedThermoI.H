@@ -61,7 +61,7 @@ inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Cp
     const scalar T
 ) const
 {
-    return Cp_.f(p, T);
+    return Cp_.value(p, T);
 }
 
 
@@ -72,7 +72,7 @@ inline Foam::scalar Foam::hTabulatedThermo<EquationOfState>::Hs
     const scalar T
 ) const
 {
-    return Hs_.f(p, T);
+    return Hs_.value(p, T);
 }
 
 

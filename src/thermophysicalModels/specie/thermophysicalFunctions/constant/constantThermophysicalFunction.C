@@ -48,7 +48,7 @@ Foam::thermophysicalFunctions::constant::constant(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::thermophysicalFunctions::constant::f
+Foam::scalar Foam::thermophysicalFunctions::constant::value
 (
     scalar p,
     scalar T
