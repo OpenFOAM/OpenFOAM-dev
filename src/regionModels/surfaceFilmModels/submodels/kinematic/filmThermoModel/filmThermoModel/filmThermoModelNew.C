@@ -44,19 +44,20 @@ autoPtr<thermoModel> thermoModel::New
 {
     const dictionary& thermophysicalPropertiesDict
     (
-        dict.found("thermoModel")
+        dict.found("filmThermoModel")
       ? dict
       : dict.subDict(thermoModel::typeName)
     );
 
     const word modelType
     (
-        dict.found("thermoModel")
-      ? thermophysicalPropertiesDict.lookup("thermoModel")
+        dict.found("filmThermoModel")
+      ? thermophysicalPropertiesDict.lookup("filmThermoModel")
       : thermophysicalPropertiesDict.lookup("type")
     );
 
-    Info<< "    Selecting thermoModel " << modelType << endl;
+    Info<< "    Selecting " << thermoModel::typeName
+        << " " << modelType << endl;
 
     dictionaryConstructorTable::iterator cstrIter =
         dictionaryConstructorTablePtr_->find(modelType);
@@ -64,8 +65,9 @@ autoPtr<thermoModel> thermoModel::New
     if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
         FatalErrorInFunction
-            << "Unknown thermoModel type " << modelType << nl << nl
-            << "Valid thermoModel types are:" << nl
+            << "Unknown " << thermoModel::typeName
+            << " type " << modelType << nl << nl
+            << "Valid " << thermoModel::typeName << " types are:" << nl
             << dictionaryConstructorTablePtr_->toc()
             << exit(FatalError);
     }
