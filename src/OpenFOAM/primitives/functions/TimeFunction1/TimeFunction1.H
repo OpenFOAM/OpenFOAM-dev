@@ -82,7 +82,7 @@ public:
         TimeFunction1
         (
             const Time& time,
-            const word& entryName,
+            const word& name,
             const dictionary& dict
         );
 
@@ -90,7 +90,7 @@ public:
         TimeFunction1
         (
             const Time& time,
-            const word& entryName
+            const word& name
         );
 
         //- Copy constructor

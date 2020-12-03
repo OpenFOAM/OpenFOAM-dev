@@ -30,18 +30,32 @@ License
 template<class Type>
 Foam::Function1s::Polynomial<Type>::Polynomial
 (
-    const word& entryName,
+    const word& name,
     const dictionary& dict
 )
 :
-    FieldFunction1<Type, Polynomial<Type>>(entryName),
+    FieldFunction1<Type, Polynomial<Type>>(name),
     coeffs_(),
     canIntegrate_(true)
 {
-    Istream& is(dict.lookup(entryName));
-    word entryType(is);
+    if (!dict.found(name))
+    {
+        dict.lookup("coeffs") >> coeffs_;
+    }
+    else
+    {
+        Istream& is(dict.lookup(name));
+        word entryType(is);
 
-    is  >> coeffs_;
+        if (is.eof())
+        {
+            dict.lookup("coeffs") >> coeffs_;
+        }
+        else
+        {
+            is  >> coeffs_;
+        }
+    }
 
     if (!coeffs_.size())
     {
@@ -74,11 +88,11 @@ Foam::Function1s::Polynomial<Type>::Polynomial
 template<class Type>
 Foam::Function1s::Polynomial<Type>::Polynomial
 (
-    const word& entryName,
+    const word& name,
     const List<Tuple2<Type, Type>>& coeffs
 )
 :
-    FieldFunction1<Type, Polynomial<Type>>(entryName),
+    FieldFunction1<Type, Polynomial<Type>>(name),
     coeffs_(coeffs),
     canIntegrate_(true)
 {
@@ -186,8 +200,7 @@ Type Foam::Function1s::Polynomial<Type>::integral
 template<class Type>
 void Foam::Function1s::Polynomial<Type>::write(Ostream& os) const
 {
-    this->writeType(os)
-       << nl << indent << coeffs_ << token::END_STATEMENT << nl;
+    writeKeyword(os, "coeffs") << coeffs_ << token::END_STATEMENT << nl;
 }
 
 

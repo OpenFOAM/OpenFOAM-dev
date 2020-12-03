@@ -60,7 +60,7 @@ inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::Cp
     const scalar T
 ) const
 {
-    return Cp_.value(p, T) + EquationOfState::Cp(p, T);
+    return Cp_.value(T) + EquationOfState::Cp(p, T);
 }
 
 
@@ -71,7 +71,7 @@ inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::Hs
     const scalar T
 ) const
 {
-    return Cp_.intfdT(p, T) + EquationOfState::H(p, T);
+    return Cp_.intfdT(T) + EquationOfState::H(p, T);
 }
 
 
@@ -101,7 +101,7 @@ inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::S
     const scalar T
 ) const
 {
-    return Cp_.intfByTdT(p, T) + EquationOfState::Sp(p, T) + Sf_;
+    return Cp_.intfByTdT(T) + EquationOfState::Sp(p, T) + Sf_;
 }
 
 
@@ -111,7 +111,7 @@ inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::Gstd
     const scalar T
 ) const
 {
-    return Cp_.intfdT(Pstd, T) + Hf_ - (Cp_.intfByTdT(Pstd, T) + Sf_)*T;
+    return Cp_.intfdT(T) + Hf_ - (Cp_.intfByTdT(T) + Sf_)*T;
 }
 
 
@@ -122,7 +122,7 @@ inline Foam::scalar Foam::hIcoTabulatedThermo<EquationOfState>::dCpdT
     const scalar T
 ) const
 {
-    return Cp_.dfdT(p, T);
+    return Cp_.dfdT(T);
 }
 
 

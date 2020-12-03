@@ -26,21 +26,12 @@ License
 #include "Function1.H"
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-Foam::Ostream& Foam::Function1<Type>::writeType(Ostream& os) const
-{
-    return writeKeyword(os, name_) << type();
-}
-
-
 // * * * * * * * * * * * * * * * * Constructor * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1<Type>::Function1(const word& entryName)
+Foam::Function1<Type>::Function1(const word& name)
 :
-    name_(entryName)
+    name_(name)
 {}
 
 
@@ -55,10 +46,10 @@ Foam::Function1<Type>::Function1(const Function1<Type>& de)
 template<class Type, class Function1Type>
 Foam::FieldFunction1<Type, Function1Type>::FieldFunction1
 (
-    const word& entryName
+    const word& name
 )
 :
-    Function1<Type>(entryName)
+    Function1<Type>(name)
 {}
 
 
@@ -101,20 +92,6 @@ template<class Type>
 const Foam::word& Foam::Function1<Type>::name() const
 {
     return name_;
-}
-
-
-template<class Type>
-void Foam::Function1<Type>::write(Ostream& os) const
-{
-    writeKeyword(os, name_)
-        << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
-
-    writeEntry(os, "type", type());
-
-    writeData(os);
-
-    os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 
 
@@ -161,7 +138,14 @@ Foam::FieldFunction1<Type, Function1Type>::integral
 template<class Type>
 void  Foam::writeEntry(Ostream& os, const Function1<Type>& f1)
 {
+    writeKeyword(os, f1.name())
+        << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
+
+    writeEntry(os, "type", f1.type());
+
     f1.write(os);
+
+    os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 
 

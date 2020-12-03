@@ -101,7 +101,7 @@ public:
     // Member Functions
 
         //- Evaluate the function and return the result
-        scalar value(scalar, scalar T) const
+        scalar value(scalar T) const
         {
             return a_*pow(T, b_)/(1.0 + c_/T + d_/sqr(T));
         }

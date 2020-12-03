@@ -164,7 +164,7 @@ inline void Foam::liquidProperties::readIfPresent
     readIfPresent(l.kappa_, "kappa", dict);
     readIfPresent(l.kappag_, "kappag", dict);
     readIfPresent(l.sigma_, "sigma", dict);
-    readIfPresent(l.D_, "D", dict);
+    // readIfPresent(l.D_, "D", dict);
 }
 
 
@@ -176,19 +176,19 @@ inline void Foam::liquidProperties::write
 ) const
 {
     l.liquidProperties::write(os);
-    l.rho_.write(os, "rho");
-    l.pv_.write(os, "pv");
-    l.hl_.write(os, "hl");
-    l.Cp_.write(os, "Cp");
-    l.h_.write(os, "h");
-    l.Cpg_.write(os, "Cpg");
-    l.B_.write(os, "B");
-    l.mu_.write(os, "mu");
-    l.mug_.write(os, "mug");
-    l.kappa_.write(os, "kappa");
-    l.kappag_.write(os, "kappag");
-    l.sigma_.write(os, "sigma");
-    l.D_.write(os, "D");
+    writeEntry(os, l.rho_);
+    writeEntry(os, l.pv_);
+    writeEntry(os, l.hl_);
+    writeEntry(os, l.Cp_);
+    writeEntry(os, l.h_);
+    writeEntry(os, l.Cpg_);
+    writeEntry(os, l.B_);
+    writeEntry(os, l.mu_);
+    writeEntry(os, l.mug_);
+    writeEntry(os,  l.kappa_);
+    writeEntry(os, l.kappag_);
+    writeEntry(os, l.sigma_);
+    writeEntry(os,  l.D_);
 }
 
 

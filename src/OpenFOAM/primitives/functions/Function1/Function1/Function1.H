@@ -71,15 +71,6 @@ protected:
         const word name_;
 
 
-    // Protected member functions
-
-        Ostream& writeType(Ostream& os) const;
-
-        //- Write data to dictionary stream
-        virtual void writeData(Ostream& os) const
-        {}
-
-
 public:
 
     typedef Type returnType;
@@ -94,17 +85,17 @@ public:
         Function1,
         dictionary,
         (
-            const word& entryName,
+            const word& name,
             const dictionary& dict
         ),
-        (entryName, dict)
+        (name, dict)
     );
 
 
     // Constructors
 
         //- Construct from entry name
-        Function1(const word& entryName);
+        Function1(const word& name);
 
         //- Copy constructor
         Function1(const Function1<Type>& f1);
@@ -116,7 +107,7 @@ public:
     //- Selector
     static autoPtr<Function1<Type>> New
     (
-        const word& entryName,
+        const word& name,
         const dictionary& dict
     );
 
@@ -146,8 +137,8 @@ public:
             const scalarField& x2
         ) const = 0;
 
-        //- Write dictionary to stream
-        virtual void write(Ostream& os) const;
+        //- Write data to dictionary stream
+        virtual void write(Ostream& os) const = 0;
 
 
     // Member Operators
@@ -186,7 +177,7 @@ public:
     // Constructors
 
         //- Construct from entry name
-        FieldFunction1(const word& entryName);
+        FieldFunction1(const word& name);
 
         //- Copy constructor
         FieldFunction1(const FieldFunction1<Type, Function1Type>& ff1);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -95,7 +95,7 @@ Foam::H2O::H2O()
     kappa_(-0.4267, 0.0056903, -8.0065e-06, 1.815e-09, 0, 0),
     kappag_(6.977e-05, 1.1243, 844.9, -148850),
     sigma_(647.13, 0.18548, 2.717, -3.554, 2.047, 0),
-    D_(15.0, 15.0, 18.015, 28)
+    D_("D", 15.0, 15.0, 18.015, 28)
 {}
 
 
@@ -114,7 +114,7 @@ Foam::H2O::H2O
     const thermophysicalFunctions::NSRDS0& thermalConductivity,
     const thermophysicalFunctions::NSRDS2& vapourThermalConductivity,
     const thermophysicalFunctions::NSRDS6& surfaceTension,
-    const thermophysicalFunctions::APIdiffCoef& vapourDiffusivity
+    const Function2s::APIdiffCoef& vapourDiffusivity
 )
 :
     liquidProperties(l),

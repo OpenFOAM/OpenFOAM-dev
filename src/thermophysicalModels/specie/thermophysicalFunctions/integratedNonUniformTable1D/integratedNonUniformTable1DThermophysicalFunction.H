@@ -100,10 +100,10 @@ public:
     // Member Functions
 
         //- Integrate the function and return the result
-        scalar intfdT(scalar p, scalar T) const;
+        scalar intfdT(scalar T) const;
 
         //- Integrate the function divided by T and return the result
-        scalar intfByTdT(scalar p, scalar T) const;
+        scalar intfByTdT(scalar T) const;
 
         //- Write the function coefficients
         void write(Ostream& os) const;

@@ -30,11 +30,11 @@ License
 template<class Type>
 Foam::Function1s::ZeroConstant<Type>::ZeroConstant
 (
-    const word& entryName,
+    const word& name,
     const dictionary& dict
 )
 :
-    FieldFunction1<Type, ZeroConstant<Type>>(entryName)
+    FieldFunction1<Type, ZeroConstant<Type>>(name)
 {}
 
 
@@ -49,9 +49,7 @@ Foam::Function1s::ZeroConstant<Type>::~ZeroConstant()
 
 template<class Type>
 void Foam::Function1s::ZeroConstant<Type>::write(Ostream& os) const
-{
-    this->writeType(os) << token::END_STATEMENT << nl;
-}
+{}
 
 
 // ************************************************************************* //

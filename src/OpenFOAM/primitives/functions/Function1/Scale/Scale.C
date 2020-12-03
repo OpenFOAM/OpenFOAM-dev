@@ -47,25 +47,16 @@ void Foam::Function1s::Scale<Type>::read(const dictionary& coeffs)
 }
 
 
-template<class Type>
-void Foam::Function1s::Scale<Type>::writeData(Ostream& os) const
-{
-    scale_->write(os);
-    xScale_->write(os);
-    value_->write(os);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::Function1s::Scale<Type>::Scale
 (
-    const word& entryName,
+    const word& name,
     const dictionary& dict
 )
 :
-    FieldFunction1<Type, Scale<Type>>(entryName)
+    FieldFunction1<Type, Scale<Type>>(name)
 {
     read(dict);
 }
@@ -88,6 +79,17 @@ Foam::Function1s::Scale<Type>::Scale(const Scale<Type>& se)
 template<class Type>
 Foam::Function1s::Scale<Type>::~Scale()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::Function1s::Scale<Type>::write(Ostream& os) const
+{
+    scale_->write(os);
+    xScale_->write(os);
+    value_->write(os);
+}
 
 
 // ************************************************************************* //

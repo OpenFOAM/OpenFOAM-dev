@@ -28,20 +28,20 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function2s::OneConstant<Type>::OneConstant(const word& entryName)
+Foam::Function2s::OneConstant<Type>::OneConstant(const word& name)
 :
-    FieldFunction2<Type, OneConstant<Type>>(entryName)
+    FieldFunction2<Type, OneConstant<Type>>(name)
 {}
 
 
 template<class Type>
 Foam::Function2s::OneConstant<Type>::OneConstant
 (
-    const word& entryName,
+    const word& name,
     const dictionary& dict
 )
 :
-    FieldFunction2<Type, OneConstant<Type>>(entryName)
+    FieldFunction2<Type, OneConstant<Type>>(name)
 {}
 
 
@@ -56,9 +56,7 @@ Foam::Function2s::OneConstant<Type>::~OneConstant()
 
 template<class Type>
 void Foam::Function2s::OneConstant<Type>::write(Ostream& os) const
-{
-    this->writeType(os) << token::END_STATEMENT << nl;
-}
+{}
 
 
 // ************************************************************************* //

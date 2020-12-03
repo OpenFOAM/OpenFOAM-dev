@@ -85,14 +85,14 @@ SourceFiles
     tabulatedTransport.C
 
 See also
-    Foam::thermophysicalFunctions::table2D
+    Foam::Function2s::uniformTable
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef tabulatedTransport_H
 #define tabulatedTransport_H
 
-#include "table2DThermophysicalFunction.H"
+#include "uniformTable2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -116,7 +116,7 @@ class tabulatedTransport
 :
     public Thermo
 {
-    typedef thermophysicalFunctions::table2D table2D;
+    typedef Function2s::uniformTable table2D;
 
 
     // Private Data

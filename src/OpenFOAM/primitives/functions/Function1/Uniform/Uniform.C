@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,11 +30,11 @@ License
 template<class Type>
 Foam::Function1s::Uniform<Type>::Uniform
 (
-    const word& entryName,
+    const word& name,
     const dictionary& dict
 )
 :
-    Constant<Type>(entryName, dict)
+    Constant<Type>(name, dict)
 {}
 
 

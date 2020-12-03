@@ -42,27 +42,16 @@ void Foam::Function1s::Square<Type>::read(const dictionary& coeffs)
 }
 
 
-template<class Type>
-void Foam::Function1s::Square<Type>::writeData(Ostream& os) const
-{
-    amplitude_->write(os);
-    writeEntry(os, "frequency", frequency_);
-    writeEntry(os, "start", start_);
-    level_->write(os);
-    writeEntry(os, "markSpace", markSpace_);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::Function1s::Square<Type>::Square
 (
-    const word& entryName,
+    const word& name,
     const dictionary& dict
 )
 :
-    FieldFunction1<Type, Square<Type>>(entryName)
+    FieldFunction1<Type, Square<Type>>(name)
 {
     read(dict);
 }
@@ -86,6 +75,19 @@ Foam::Function1s::Square<Type>::Square(const Square<Type>& se)
 template<class Type>
 Foam::Function1s::Square<Type>::~Square()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::Function1s::Square<Type>::write(Ostream& os) const
+{
+    amplitude_->write(os);
+    writeEntry(os, "frequency", frequency_);
+    writeEntry(os, "start", start_);
+    level_->write(os);
+    writeEntry(os, "markSpace", markSpace_);
+}
 
 
 // ************************************************************************* //

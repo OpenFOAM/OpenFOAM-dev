@@ -66,7 +66,6 @@ Foam::thermophysicalFunctions::table1D::table1D(const dictionary& dict)
 
 Foam::scalar Foam::thermophysicalFunctions::table1D::value
 (
-    scalar p,
     scalar T
 ) const
 {

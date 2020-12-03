@@ -29,7 +29,6 @@ License
 
 inline Foam::label Foam::thermophysicalFunctions::nonUniformTable1D::index
 (
-    scalar p,
     scalar T
 ) const
 {

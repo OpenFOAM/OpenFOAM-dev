@@ -30,11 +30,11 @@ License
 template<class Type>
 Foam::Function1s::Constant<Type>::Constant
 (
-    const word& entryName,
+    const word& name,
     const Type& val
 )
 :
-    FieldFunction1<Type, Constant<Type>>(entryName),
+    FieldFunction1<Type, Constant<Type>>(name),
     value_(val)
 {}
 
@@ -42,21 +42,22 @@ Foam::Function1s::Constant<Type>::Constant
 template<class Type>
 Foam::Function1s::Constant<Type>::Constant
 (
-    const word& entryName,
+    const word& name,
     const dictionary& dict
 )
 :
-    FieldFunction1<Type, Constant<Type>>(entryName),
+    FieldFunction1<Type, Constant<Type>>(name),
     value_(Zero)
 {
-    if (!dict.found(entryName))
+    if (!dict.found(name))
     {
         dict.lookup("value") >> value_;
     }
     else
     {
-        Istream& is(dict.lookup(entryName));
+        Istream& is(dict.lookup(name));
         word entryType(is);
+
         if (is.eof())
         {
             dict.lookup("value") >> value_;
@@ -72,11 +73,11 @@ Foam::Function1s::Constant<Type>::Constant
 template<class Type>
 Foam::Function1s::Constant<Type>::Constant
 (
-    const word& entryName,
+    const word& name,
     Istream& is
 )
 :
-    FieldFunction1<Type, Constant<Type>>(entryName),
+    FieldFunction1<Type, Constant<Type>>(name),
     value_(pTraits<Type>(is))
 {}
 
@@ -101,8 +102,7 @@ Foam::Function1s::Constant<Type>::~Constant()
 template<class Type>
 void Foam::Function1s::Constant<Type>::write(Ostream& os) const
 {
-    this->writeType(os)
-        << token::SPACE << value_ << token::END_STATEMENT << nl;
+    writeEntry(os, "value", value_);
 }
 
 

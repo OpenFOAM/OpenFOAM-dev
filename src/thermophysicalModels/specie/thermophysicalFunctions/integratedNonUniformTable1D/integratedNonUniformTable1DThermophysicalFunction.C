@@ -63,12 +63,12 @@ integratedNonUniformTable1D
 
     for(label i = 0; i<intf_.size() - 1; i++)
     {
-        intf_[i + 1] = intf_[i] + intfdT(0, values()[i + 1].first());
-        intfByT_[i + 1] = intfByT_[i] + intfByTdT(0, values()[i + 1].first());
+        intf_[i + 1] = intf_[i] + intfdT(values()[i + 1].first());
+        intfByT_[i + 1] = intfByT_[i] + intfByTdT(values()[i + 1].first());
     }
 
-    const scalar intfStd = intfdT(Pstd, Tstd);
-    const scalar intfByTStd = intfByTdT(Pstd, Tstd);
+    const scalar intfStd = intfdT(Tstd);
+    const scalar intfByTStd = intfByTdT(Tstd);
 
     forAll(intf_, i)
     {
@@ -92,11 +92,10 @@ integratedNonUniformTable1D
 
 Foam::scalar Foam::thermophysicalFunctions::integratedNonUniformTable1D::intfdT
 (
-    scalar p,
     scalar T
 ) const
 {
-    const label i = index(p, T);
+    const label i = index(T);
     const scalar Ti = values()[i].first();
     const scalar fi = values()[i].second();
     const scalar dT = T - Ti;
@@ -111,11 +110,10 @@ Foam::scalar Foam::thermophysicalFunctions::integratedNonUniformTable1D::intfdT
 Foam::scalar Foam::thermophysicalFunctions::integratedNonUniformTable1D::
 intfByTdT
 (
-    scalar p,
     scalar T
 ) const
 {
-    const label i = index(p, T);
+    const label i = index(T);
     const scalar Ti = values()[i].first();
     const scalar fi = values()[i].second();
     const scalar gradf =

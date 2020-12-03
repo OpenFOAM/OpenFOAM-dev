@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::thermophysicalFunctions::APIdiffCoefFunc
+    Foam::Function2s::APIdiffCoefFunc
 
 Description
     API function for vapour mass diffusivity
@@ -38,13 +38,13 @@ Description
 #ifndef APIdiffCoefThermophysicalFunction_H
 #define APIdiffCoefThermophysicalFunction_H
 
-#include "thermophysicalFunction.H"
+#include "Function2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace thermophysicalFunctions
+namespace Function2s
 {
 
 /*---------------------------------------------------------------------------*\
@@ -53,7 +53,7 @@ namespace thermophysicalFunctions
 
 class APIdiffCoef
 :
-    public thermophysicalFunction
+    public FieldFunction2<scalar, APIdiffCoef>
 {
     // Private Data
 
@@ -75,6 +75,7 @@ public:
         //- Construct from components
         APIdiffCoef
         (
+            const word& name,
             const scalar a,
             const scalar b,
             const scalar wf,
@@ -82,14 +83,24 @@ public:
         );
 
         //- Construct from dictionary
-        APIdiffCoef(const dictionary& dict);
+        APIdiffCoef
+        (
+            const word& name,
+            const dictionary& dict
+        );
+
+        //- Construct and return a clone
+        virtual tmp<Function2<scalar>> clone() const
+        {
+            return tmp<Function2<scalar>>(new APIdiffCoef(*this));
+        }
 
 
     // Member Functions
 
         //- API vapour mass diffusivity function using properties from
         //  construction
-        scalar value(scalar p, scalar T) const
+        virtual scalar value(scalar p, scalar T) const
         {
             return 3.6059e-3*(pow(1.8*T, 1.75))*alpha_/(p*beta_);
         }
@@ -102,8 +113,6 @@ public:
             return 3.6059e-3*(pow(1.8*T, 1.75))*alphaBinary/(p*beta_);
         }
 
-        using thermophysicalFunction::write;
-
         //- Write the function coefficients
         virtual void write(Ostream& os) const;
 };
@@ -111,7 +120,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace thermophysicalFunctions
+} // End namespace Function2s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -70,7 +70,7 @@ class objectFunction1
         template <class PrimitiveType>
         objectFunction1
         (
-            const word& entryName,
+            const word& name,
             const dictionary& dict,
             const type<PrimitiveType>&
         );
@@ -83,7 +83,7 @@ public:
         template <template <class> class ObjectType>
         static autoPtr<objectFunction1> New
         (
-            const word& entryName,
+            const word& name,
             const dictionary& dict,
             const word& objectName,
             const objectRegistry& db

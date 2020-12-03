@@ -30,13 +30,13 @@ License
 template<class Type>
 Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
 (
-    const word& entryName,
+    const word& name,
     const dictionary& dict
 )
 {
-    if (dict.isDict(entryName))
+    if (dict.isDict(name))
     {
-        const dictionary& coeffsDict(dict.subDict(entryName));
+        const dictionary& coeffsDict(dict.subDict(name));
 
         const word Function2Type(coeffsDict.lookup("type"));
 
@@ -48,17 +48,17 @@ Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
             FatalErrorInFunction
                 << "Unknown Function2 type "
                 << Function2Type << " for Function2 "
-                << entryName << nl << nl
+                << name << nl << nl
                 << "Valid Function2 types are:" << nl
                 << dictionaryConstructorTablePtr_->sortedToc() << nl
                 << exit(FatalError);
         }
 
-        return cstrIter()(entryName, coeffsDict);
+        return cstrIter()(name, coeffsDict);
     }
     else
     {
-        Istream& is(dict.lookup(entryName, false));
+        Istream& is(dict.lookup(name, false));
 
         token firstToken(is);
         word Function2Type;
@@ -68,7 +68,7 @@ Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
             is.putBack(firstToken);
             return autoPtr<Function2<Type>>
             (
-                new Function2s::Constant<Type>(entryName, is)
+                new Function2s::Constant<Type>(name, is)
             );
         }
         else
@@ -84,13 +84,13 @@ Foam::autoPtr<Foam::Function2<Type>> Foam::Function2<Type>::New
             FatalErrorInFunction
                 << "Unknown Function2 type "
                 << Function2Type << " for Function2 "
-                << entryName << nl << nl
+                << name << nl << nl
                 << "Valid Function2 types are:" << nl
                 << dictionaryConstructorTablePtr_->sortedToc() << nl
                 << exit(FatalError);
         }
 
-        return cstrIter()(entryName, dict);
+        return cstrIter()(name, dict);
     }
 }
 

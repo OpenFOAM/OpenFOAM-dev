@@ -31,13 +31,13 @@ template<class Type>
 Foam::TimeFunction1<Type>::TimeFunction1
 (
     const Time& time,
-    const word& entryName,
+    const word& name,
     const dictionary& dict
 )
 :
     time_(time),
-    name_(entryName),
-    function_(Function1<Type>::New(entryName, dict))
+    name_(name),
+    function_(Function1<Type>::New(name, dict))
 {}
 
 
@@ -45,11 +45,11 @@ template<class Type>
 Foam::TimeFunction1<Type>::TimeFunction1
 (
     const Time& time,
-    const word& entryName
+    const word& name
 )
 :
     time_(time),
-    name_(entryName),
+    name_(name),
     function_(nullptr)
 {}
 
@@ -106,6 +106,13 @@ Type Foam::TimeFunction1<Type>::integral
 }
 
 
+template<class Type>
+void Foam::TimeFunction1<Type>::write(Ostream& os) const
+{
+    writeEntry(os, function_());
+}
+
+
 // * * * * * * * * * * * * * * * IOstream Operators  * * * * * * * * * * * * //
 
 template<class Type>
@@ -116,13 +123,6 @@ Foam::Ostream& Foam::operator<<
 )
 {
     return os << tf.function_();
-}
-
-
-template<class Type>
-void Foam::TimeFunction1<Type>::write(Ostream& os) const
-{
-    function_->write(os);
 }
 
 

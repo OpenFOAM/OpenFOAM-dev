@@ -116,9 +116,6 @@ class Coded
         //- Compile, link and return the now coded Function1
         autoPtr<Function1<Type>> compileNew();
 
-        //- Write data to dictionary stream
-        virtual void writeData(Ostream& os) const;
-
 
 public:
 
@@ -131,7 +128,7 @@ public:
         //- Construct from entry name and dictionary
         Coded
         (
-            const word& entryName,
+            const word& name,
             const dictionary& dict
         );
 
@@ -163,6 +160,9 @@ public:
             const scalarField& x1,
             const scalarField& x2
         ) const;
+
+        //- Write data to dictionary stream
+        virtual void write(Ostream& os) const;
 
 
     // Member Operators

@@ -90,14 +90,14 @@ SourceFiles
     eTabulatedThermo.C
 
 See also
-    Foam::thermophysicalFunctions::table2D
+    Foam::Function2s::uniformTable
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef eTabulatedThermo_H
 #define eTabulatedThermo_H
 
-#include "table2DThermophysicalFunction.H"
+#include "uniformTable2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -126,7 +126,7 @@ class eTabulatedThermo
 :
     public EquationOfState
 {
-    typedef thermophysicalFunctions::table2D table2D;
+    typedef Function2s::uniformTable table2D;
 
 
     // Private Data

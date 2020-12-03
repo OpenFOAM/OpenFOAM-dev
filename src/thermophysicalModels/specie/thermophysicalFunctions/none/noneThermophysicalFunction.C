@@ -48,11 +48,7 @@ Foam::thermophysicalFunctions::none::none(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::thermophysicalFunctions::none::value
-(
-    scalar p,
-    scalar T
-) const
+Foam::scalar Foam::thermophysicalFunctions::none::value(scalar T) const
 {
     FatalErrorInFunction
         << "Required Function " << nl

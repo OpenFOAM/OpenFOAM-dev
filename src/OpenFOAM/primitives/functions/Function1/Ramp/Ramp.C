@@ -25,16 +25,6 @@ License
 
 #include "Ramp.H"
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-template <class Function1Type>
-void Foam::Function1s::Ramp<Function1Type>::writeData(Ostream& os) const
-{
-    writeEntry(os, "start", start_);
-    writeEntry(os, "duration", duration_);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template <class Function1Type>
@@ -48,11 +38,11 @@ void Foam::Function1s::Ramp<Function1Type>::read(const dictionary& coeffs)
 template <class Function1Type>
 Foam::Function1s::Ramp<Function1Type>::Ramp
 (
-    const word& entryName,
+    const word& name,
     const dictionary& dict
 )
 :
-    FieldFunction1<scalar, Function1Type>(entryName)
+    FieldFunction1<scalar, Function1Type>(name)
 {
     read(dict);
 }
@@ -63,6 +53,16 @@ Foam::Function1s::Ramp<Function1Type>::Ramp
 template <class Function1Type>
 Foam::Function1s::Ramp<Function1Type>::~Ramp()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template <class Function1Type>
+void Foam::Function1s::Ramp<Function1Type>::write(Ostream& os) const
+{
+    writeEntry(os, "start", start_);
+    writeEntry(os, "duration", duration_);
+}
 
 
 // ************************************************************************* //

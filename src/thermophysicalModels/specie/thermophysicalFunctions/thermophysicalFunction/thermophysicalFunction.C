@@ -39,8 +39,8 @@ namespace Foam
 
 Foam::autoPtr<Foam::thermophysicalFunction> Foam::thermophysicalFunction::New
 (
-    const dictionary& dict,
-    const word& name
+    const word& name,
+    const dictionary& dict
 )
 {
     if (debug)
@@ -81,16 +81,18 @@ Foam::autoPtr<Foam::thermophysicalFunction> Foam::thermophysicalFunction::New
 }
 
 
+// * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::thermophysicalFunction::write(Ostream& os, const word& name) const
+void Foam::writeEntry(Ostream& os, const thermophysicalFunction& f)
 {
-    os << nl;
-    writeKeyword(os, name)
+    writeKeyword(os, "***HGW")
         << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
-    write(os);
-    os << decrIndent << indent << token::END_BLOCK << endl;
+
+    writeEntry(os, "type", f.type());
+
+    f.write(os);
+
+    os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 
 

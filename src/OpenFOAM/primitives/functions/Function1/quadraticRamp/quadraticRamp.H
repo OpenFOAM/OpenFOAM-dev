@@ -68,7 +68,7 @@ public:
         //- Construct from entry name and dictionary
         quadraticRamp
         (
-            const word& entryName,
+            const word& name,
             const dictionary& dict
         );
 

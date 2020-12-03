@@ -102,7 +102,7 @@ public:
     // Member Functions
 
         //- Evaluate the function and return the result
-        scalar value(scalar, scalar T) const
+        scalar value(scalar T) const
         {
             return a_ + b_*sqr((c_/T)/sinh(c_/T)) + d_*sqr((e_/T)/cosh(e_/T));
         }

@@ -103,7 +103,7 @@ public:
     // Member Functions
 
         //- Evaluate the function and return the result
-        scalar value(scalar, scalar T) const
+        scalar value(scalar T) const
         {
             scalar Tr = T/Tc_;
             return a_*pow(1 - Tr, ((e_*Tr + d_)*Tr + c_)*Tr + b_);

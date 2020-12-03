@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,11 +40,11 @@ namespace Function1s
 
 Foam::Function1s::linearRamp::linearRamp
 (
-    const word& entryName,
+    const word& name,
     const dictionary& dict
 )
 :
-    Ramp<linearRamp>(entryName, dict)
+    Ramp<linearRamp>(name, dict)
 {}
 
 

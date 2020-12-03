@@ -102,7 +102,7 @@ public:
     // Member Functions
 
         //- Evaluate the function and return the result
-        scalar value(scalar, scalar T) const
+        scalar value(scalar T) const
         {
             scalar Tdash = min(T, Tc_ - rootVSmall);
 

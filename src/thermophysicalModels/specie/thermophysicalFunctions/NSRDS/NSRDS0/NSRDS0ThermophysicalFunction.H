@@ -103,7 +103,7 @@ public:
     // Member Functions
 
         //- Evaluate the function and return the result
-        scalar value(scalar, scalar T) const
+        scalar value(scalar T) const
         {
             return ((((f_*T + e_)*T + d_)*T + c_)*T + b_)*T + a_;
         }

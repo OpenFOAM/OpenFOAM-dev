@@ -37,8 +37,8 @@ Foam::eTabulatedThermo<EquationOfState>::eTabulatedThermo
     EquationOfState(dict),
     Hf_(dict.subDict("thermodynamics").lookup<scalar>("Hf")),
     Sf_(dict.subDict("thermodynamics").lookup<scalar>("Sf")),
-    Es_(dict.subDict("thermodynamics").subDict("Es")),
-    Cv_(dict.subDict("thermodynamics").subDict("Cv"))
+    Es_("Es", dict.subDict("thermodynamics")),
+    Cv_("Cv", dict.subDict("thermodynamics"))
 {}
 
 

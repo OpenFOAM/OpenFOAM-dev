@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,7 +88,7 @@ Foam::C4H10O::C4H10O()
     kappa_(0.249, -0.0004005, 0.0, 0.0, 0.0, 0.0),
     kappag_(-0.0044894, 0.6155, -3266.3, 0.0),
     sigma_(466.70, 0.057356, 1.288, 0.0, 0.0, 0.0),
-    D_(147.18, 20.1, 74.123, 28) // note: Same as nHeptane
+    D_("D", 147.18, 20.1, 74.123, 28) // note: Same as nHeptane
 {}
 
 
@@ -107,7 +107,7 @@ Foam::C4H10O::C4H10O
     const thermophysicalFunctions::NSRDS0& thermalConductivity,
     const thermophysicalFunctions::NSRDS2& vapourThermalConductivity,
     const thermophysicalFunctions::NSRDS6& surfaceTension,
-    const thermophysicalFunctions::APIdiffCoef& vapourDiffusivity
+    const Function2s::APIdiffCoef& vapourDiffusivity
 )
 :
     liquidProperties(l),

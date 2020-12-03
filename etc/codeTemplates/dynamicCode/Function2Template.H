@@ -55,11 +55,6 @@ class ${typeName}Function2${TemplateType}
 :
     public FieldFunction2<${TemplateType}, ${typeName}Function2${TemplateType}>
 {
-    // Private Member Functions
-
-        //- Write data to dictionary stream
-        virtual void writeData(Ostream& os) const;
-
 
 public:
 
@@ -109,6 +104,9 @@ public:
     ${code}
 //}}} end code
         }
+
+        //- Write data to dictionary stream
+        virtual void write(Ostream& os) const;
 
 
     // Member Operators

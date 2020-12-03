@@ -32,7 +32,7 @@ Description
 
     Usage:
     \verbatim
-        <entryName>   table
+        <name>   table
         (
             (0.0 (1 2 3))
             (1.0 (4 5 6))
@@ -41,7 +41,7 @@ Description
 
     or in dictionary form which supports the setting of options, e.g.
     \verbatim
-        <entryName>   table;
+        <name>   table;
 
         values
         (
@@ -57,7 +57,7 @@ Description
     other entries in the dictionary:
 
     \verbatim
-        <entryName>
+        <name>
         {
             type    table;
 
@@ -76,7 +76,7 @@ Description
 
     Usage:
     \verbatim
-        <entryName>
+        <name>
         {
             type                table;
             file                "<file path>"; // Name/path of thedata file
@@ -162,9 +162,6 @@ class Table
         //  as the interpolator already performs that function.
         scalar bound(const scalar x) const;
 
-        //- Write data to dictionary stream
-        virtual void writeData(Ostream& os) const;
-
 
 public:
 
@@ -207,6 +204,9 @@ public:
 
         //- Return the dependent values
         virtual tmp<Field<Type>> y() const;
+
+        //- Write data to dictionary stream
+        virtual void write(Ostream& os) const;
 
 
     // Member Operators

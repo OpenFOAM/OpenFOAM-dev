@@ -27,10 +27,10 @@ Class
 Description
     PolynomialEntry container data entry for scalars. Items are stored in a
     list of Tuple2's. Data is input in the form,
-    e.g. for an entry \<entryName\> that describes y = x^2 + 2x^3
+    e.g. for an entry \<name\> that describes y = x^2 + 2x^3
 
     \verbatim
-        <entryName>  polynomial
+        <name>  polynomial
         (
             (1    2)
             (2    3)
@@ -82,12 +82,12 @@ public:
 
     // Constructors
 
-        Polynomial(const word& entryName, const dictionary& dict);
+        Polynomial(const word& name, const dictionary& dict);
 
         //- Construct from components
         Polynomial
         (
-            const word& entryName,
+            const word& name,
             const List<Tuple2<Type, Type>>&
         );
 

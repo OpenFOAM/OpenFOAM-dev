@@ -88,23 +88,16 @@ Foam::Function2s::Coded<Type>::compileNew()
 }
 
 
-template<class Type>
-void Foam::Function2s::Coded<Type>::writeData(Ostream& os) const
-{
-    writeCode(os);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::Function2s::Coded<Type>::Coded
 (
-    const word& entryName,
+    const word& name,
     const dictionary& dict
 )
 :
-    Function2<Type>(entryName),
+    Function2<Type>(name),
     CodedBase<coded>(dict)
 {
     redirectFunction2Ptr_ = compileNew();
@@ -146,6 +139,13 @@ Foam::tmp<Foam::Field<Type>> Foam::Function2s::Coded<Type>::value
 ) const
 {
     return redirectFunction2Ptr_->value(x, y);
+}
+
+
+template<class Type>
+void Foam::Function2s::Coded<Type>::write(Ostream& os) const
+{
+    writeCode(os);
 }
 
 

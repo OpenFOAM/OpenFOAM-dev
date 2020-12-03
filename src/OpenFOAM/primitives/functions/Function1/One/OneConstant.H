@@ -29,7 +29,7 @@ Description
 
     Usage:
     \verbatim
-        <entryName> one;
+        <name> one;
     \endverbatim
 
 SourceFiles
@@ -68,10 +68,10 @@ public:
     // Constructors
 
         //- Construct from entry name
-        OneConstant(const word& entryName);
+        OneConstant(const word& name);
 
         //- Construct from entry name and dictionary
-        OneConstant(const word& entryName, const dictionary& dict);
+        OneConstant(const word& name, const dictionary& dict);
 
 
     //- Destructor

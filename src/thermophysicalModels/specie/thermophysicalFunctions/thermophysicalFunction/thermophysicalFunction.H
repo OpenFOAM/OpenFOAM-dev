@@ -82,8 +82,8 @@ public:
         //- Return pointer to new thermophysicalFunction created from dict
         static autoPtr<thermophysicalFunction> New
         (
-            const dictionary& dict,
-            const word& name
+            const word& name,
+            const dictionary& dict
         );
 
 
@@ -95,13 +95,10 @@ public:
     // Member Functions
 
         //- Evaluate the function and return the result
-        virtual scalar value(scalar p, scalar T) const = 0;
+        virtual scalar value(scalar T) const = 0;
 
         //- Write the function coefficients
         virtual void write(Ostream& os) const = 0;
-
-        //- Write the function coefficients within the property sub-dictionary
-        virtual void write(Ostream& os, const word& name) const;
 
 
     // Ostream Operator
@@ -112,6 +109,9 @@ public:
             const thermophysicalFunction& f
         );
 };
+
+
+void writeEntry(Ostream& os, const thermophysicalFunction& f);
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

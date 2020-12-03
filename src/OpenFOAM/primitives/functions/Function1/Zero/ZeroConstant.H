@@ -29,7 +29,7 @@ Description
 
     Usage:
     \verbatim
-        <entryName> zero;
+        <name> zero;
     \endverbatim
 
 SourceFiles
@@ -68,7 +68,7 @@ public:
     // Constructors
 
         //- Construct from entry name and dictionary
-        ZeroConstant(const word& entryName, const dictionary& dict);
+        ZeroConstant(const word& name, const dictionary& dict);
 
 
     //- Destructor

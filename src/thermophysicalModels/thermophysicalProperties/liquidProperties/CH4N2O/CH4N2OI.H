@@ -25,73 +25,73 @@ License
 
 inline Foam::scalar Foam::CH4N2O::rho(scalar p, scalar T) const
 {
-    return rho_.value(p, T);
+    return rho_.value(T);
 }
 
 
 inline Foam::scalar Foam::CH4N2O::pv(scalar p, scalar T) const
 {
-    return pv_.value(p, T);
+    return pv_.value(T);
 }
 
 
 inline Foam::scalar Foam::CH4N2O::hl(scalar p, scalar T) const
 {
-    return hl_.value(p, T);
+    return hl_.value(T);
 }
 
 
 inline Foam::scalar Foam::CH4N2O::Cp(scalar p, scalar T) const
 {
-    return Cp_.value(p, T);
+    return Cp_.value(T);
 }
 
 
 inline Foam::scalar Foam::CH4N2O::h(scalar p, scalar T) const
 {
-    return h_.value(p, T);
+    return h_.value(T);
 }
 
 
 inline Foam::scalar Foam::CH4N2O::Cpg(scalar p, scalar T) const
 {
-    return Cpg_.value(p, T);
+    return Cpg_.value(T);
 }
 
 
 inline Foam::scalar Foam::CH4N2O::B(scalar p, scalar T) const
 {
-    return B_.value(p, T);
+    return B_.value(T);
 }
 
 
 inline Foam::scalar Foam::CH4N2O::mu(scalar p, scalar T) const
 {
-    return mu_.value(p, T);
+    return mu_.value(T);
 }
 
 
 inline Foam::scalar Foam::CH4N2O::mug(scalar p, scalar T) const
 {
-    return mug_.value(p, T);
+    return mug_.value(T);
 }
 
 
 inline Foam::scalar Foam::CH4N2O::kappa(scalar p, scalar T) const
 {
-    return kappa_.value(p, T);
+    return kappa_.value(T);
 }
 
 
 inline Foam::scalar Foam::CH4N2O::kappag(scalar p, scalar T) const
 {
-    return kappag_.value(p, T);
+    return kappag_.value(T);
 }
 
 
 inline Foam::scalar Foam::CH4N2O::sigma(scalar p, scalar T) const
 {
-    return sigma_.value(p, T);
+    return sigma_.value(T);
 }
 
 

@@ -41,26 +41,16 @@ void Foam::Function1s::Sine<Type>::read(const dictionary& coeffs)
 }
 
 
-template<class Type>
-void Foam::Function1s::Sine<Type>::writeData(Ostream& os) const
-{
-    amplitude_->write(os);
-    writeEntry(os, "frequency", frequency_);
-    writeEntry(os, "start", start_);
-    level_->write(os);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
 Foam::Function1s::Sine<Type>::Sine
 (
-    const word& entryName,
+    const word& name,
     const dictionary& dict
 )
 :
-    FieldFunction1<Type, Sine<Type>>(entryName)
+    FieldFunction1<Type, Sine<Type>>(name)
 {
     read(dict);
 }
@@ -83,6 +73,18 @@ Foam::Function1s::Sine<Type>::Sine(const Sine<Type>& se)
 template<class Type>
 Foam::Function1s::Sine<Type>::~Sine()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::Function1s::Sine<Type>::write(Ostream& os) const
+{
+    amplitude_->write(os);
+    writeEntry(os, "frequency", frequency_);
+    writeEntry(os, "start", start_);
+    level_->write(os);
+}
 
 
 // ************************************************************************* //

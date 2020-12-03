@@ -27,15 +27,15 @@ Class
 Description
     Templated function of two variables that returns a constant value.
 
-    Usage - for entry \<entryName\> returning the value <value>:
+    Usage - for entry \<name\> returning the value <value>:
     \verbatim
-        <entryName>     constant <value>;
+        <name>     constant <value>;
     \endverbatim
 
     or simply
 
     \verbatim
-        <entryName>     <value>;
+        <name>     <value>;
     \endverbatim
 
 SourceFiles
@@ -79,15 +79,15 @@ public:
     // Constructors
 
         //- Construct from entry name and value
-        Constant(const word& entryName, const Type& val);
+        Constant(const word& name, const Type& val);
 
         //- Construct from entry name and dictionary
-        Constant(const word& entryName, const dictionary& dict);
+        Constant(const word& name, const dictionary& dict);
 
         //- Construct from entry name and Istream
         //  Reads the constant value without the Function2 type
         //  for backward compatibility
-        Constant(const word& entryName, Istream& is);
+        Constant(const word& name, Istream& is);
 
         //- Copy constructor
         Constant(const Constant<Type>& cnst);

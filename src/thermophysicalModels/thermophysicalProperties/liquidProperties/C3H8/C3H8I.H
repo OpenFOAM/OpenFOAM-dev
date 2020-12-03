@@ -25,73 +25,73 @@ License
 
 inline Foam::scalar Foam::C3H8::rho(scalar p, scalar T) const
 {
-    return rho_.value(p, T);
+    return rho_.value(T);
 }
 
 
 inline Foam::scalar Foam::C3H8::pv(scalar p, scalar T) const
 {
-    return pv_.value(p, T);
+    return pv_.value(T);
 }
 
 
 inline Foam::scalar Foam::C3H8::hl(scalar p, scalar T) const
 {
-    return hl_.value(p, T);
+    return hl_.value(T);
 }
 
 
 inline Foam::scalar Foam::C3H8::Cp(scalar p, scalar T) const
 {
-    return Cp_.value(p, T);
+    return Cp_.value(T);
 }
 
 
 inline Foam::scalar Foam::C3H8::h(scalar p, scalar T) const
 {
-    return h_.value(p, T);
+    return h_.value(T);
 }
 
 
 inline Foam::scalar Foam::C3H8::Cpg(scalar p, scalar T) const
 {
-    return Cpg_.value(p, T);
+    return Cpg_.value(T);
 }
 
 
 inline Foam::scalar Foam::C3H8::B(scalar p, scalar T) const
 {
-    return B_.value(p, T);
+    return B_.value(T);
 }
 
 
 inline Foam::scalar Foam::C3H8::mu(scalar p, scalar T) const
 {
-    return mu_.value(p, T);
+    return mu_.value(T);
 }
 
 
 inline Foam::scalar Foam::C3H8::mug(scalar p, scalar T) const
 {
-    return mug_.value(p, T);
+    return mug_.value(T);
 }
 
 
 inline Foam::scalar Foam::C3H8::kappa(scalar p, scalar T) const
 {
-    return kappa_.value(p, T);
+    return kappa_.value(T);
 }
 
 
 inline Foam::scalar Foam::C3H8::kappag(scalar p, scalar T) const
 {
-    return kappag_.value(p, T);
+    return kappag_.value(T);
 }
 
 
 inline Foam::scalar Foam::C3H8::sigma(scalar p, scalar T) const
 {
-    return sigma_.value(p, T);
+    return sigma_.value(T);
 }
 
 

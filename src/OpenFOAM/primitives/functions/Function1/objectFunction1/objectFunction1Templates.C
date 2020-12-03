@@ -30,14 +30,14 @@ License
 template <class PrimitiveType>
 Foam::objectFunction1::objectFunction1
 (
-    const word& entryName,
+    const word& name,
     const dictionary& dict,
     const type<PrimitiveType>&
 )
 :
     autoPtr<Function1<PrimitiveType>>
     (
-        Function1<PrimitiveType>::New(entryName, dict).ptr()
+        Function1<PrimitiveType>::New(name, dict).ptr()
     )
 {}
 
@@ -47,7 +47,7 @@ Foam::objectFunction1::objectFunction1
 template <template <class> class ObjectType>
 Foam::autoPtr<Foam::objectFunction1> Foam::objectFunction1::New
 (
-    const word& entryName,
+    const word& name,
     const dictionary& dict,
     const word& objectName,
     const objectRegistry& db
@@ -56,15 +56,15 @@ Foam::autoPtr<Foam::objectFunction1> Foam::objectFunction1::New
     autoPtr<objectFunction1> ptr
     (
         db.foundObject<ObjectType<scalar>>(objectName)
-      ? new objectFunction1(entryName, dict, type<scalar>())
+      ? new objectFunction1(name, dict, type<scalar>())
       : db.foundObject<ObjectType<vector>>(objectName)
-      ? new objectFunction1(entryName, dict, type<vector>())
+      ? new objectFunction1(name, dict, type<vector>())
       : db.foundObject<ObjectType<symmTensor>>(objectName)
-      ? new objectFunction1(entryName, dict, type<symmTensor>())
+      ? new objectFunction1(name, dict, type<symmTensor>())
       : db.foundObject<ObjectType<sphericalTensor>>(objectName)
-      ? new objectFunction1(entryName, dict, type<sphericalTensor>())
+      ? new objectFunction1(name, dict, type<sphericalTensor>())
       : db.foundObject<ObjectType<tensor>>(objectName)
-      ? new objectFunction1(entryName, dict, type<tensor>())
+      ? new objectFunction1(name, dict, type<tensor>())
       : nullptr
     );
 

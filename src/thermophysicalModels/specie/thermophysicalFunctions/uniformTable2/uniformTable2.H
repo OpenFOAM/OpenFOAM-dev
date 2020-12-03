@@ -22,17 +22,17 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::thermophysicalFunctions::table2D
+    Foam::Function2s::uniformTable
 
 Description
     Tabulated property function that linearly interpolates between
-    the table2D values.
+    the uniformTable values.
 
 Usage
     \table
         Property    | Description
-        Tlow        | Lower temperature limit of the table2D
-        Thigh       | Upper temperature limit of the table2D
+        Tlow        | Lower temperature limit of the uniformTable
+        Thigh       | Upper temperature limit of the uniformTable
         values      | Property values, assumed uniformly distributed
     \endtable
 
@@ -40,7 +40,7 @@ Usage
     \verbatim
     rho
     {
-        type    table2D;
+        type    uniformTable;
 
         pLow    1000;
         pHigh   1e6;
@@ -59,31 +59,28 @@ Usage
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef table2DThermophysicalFunction_H
-#define table2DThermophysicalFunction_H
+#ifndef uniformTable2_H
+#define uniformTable2_H
 
-#include "thermophysicalFunction.H"
+#include "Function2.H"
 #include "scalarMatrices.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace thermophysicalFunctions
+namespace Function2s
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class table2D Declaration
+                            Class uniformTable Declaration
 \*---------------------------------------------------------------------------*/
 
-class table2D
+class uniformTable
 :
-    public thermophysicalFunction
+    public FieldFunction2<scalar, uniformTable>
 {
     // Private member data
-
-        //- Name of dictionary from which this function is instantiated
-        word name_;
 
         //- Lowest pressure in the table
         scalar pLow_;
@@ -123,16 +120,13 @@ class table2D
 public:
 
     //- Runtime type information
-    TypeName("table2D");
+    TypeName("uniformTable");
 
 
     // Constructors
 
         //- Construct from entry name and dictionary
-        table2D(const word& name, const dictionary& dict);
-
-        //- Construct from dictionary
-        table2D(const dictionary& dict);
+        uniformTable(const word& name, const dictionary& dict);
 
 
     // Member Functions
@@ -159,7 +153,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace thermophysicalFunctions
+} // End namespace Function2s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -115,11 +115,10 @@ Foam::thermophysicalFunctions::nonUniformTable1D::nonUniformTable1D
 
 Foam::scalar Foam::thermophysicalFunctions::nonUniformTable1D::value
 (
-    scalar p,
     scalar T
 ) const
 {
-    const label i = index(p, T);
+    const label i = index(T);
     const scalar Ti = values_[i].first();
     const scalar lambda = (T - Ti)/(values_[i + 1].first() - Ti);
 
@@ -131,11 +130,10 @@ Foam::scalar Foam::thermophysicalFunctions::nonUniformTable1D::value
 
 Foam::scalar Foam::thermophysicalFunctions::nonUniformTable1D::dfdT
 (
-    scalar p,
     scalar T
 ) const
 {
-    const label i = index(p, T);
+    const label i = index(T);
 
     return
         (values_[i + 1].second() - values_[i].second())

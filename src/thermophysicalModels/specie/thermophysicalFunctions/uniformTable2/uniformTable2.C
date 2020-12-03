@@ -23,30 +23,29 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "table2DThermophysicalFunction.H"
+#include "uniformTable2.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace thermophysicalFunctions
+namespace Function2s
 {
-    defineTypeNameAndDebug(table2D, 0);
-    addToRunTimeSelectionTable(thermophysicalFunction, table2D, dictionary);
+    makeScalarFunction2(uniformTable)
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::thermophysicalFunctions::table2D::table2D
+Foam::Function2s::uniformTable::uniformTable
 (
     const word& name,
     const dictionary& dict
 )
 :
-    name_(name),
+    FieldFunction2<scalar, uniformTable>(name),
     pLow_(dict.lookup<scalar>("pLow")),
     pHigh_(dict.lookup<scalar>("pHigh")),
     Tlow_(dict.lookup<scalar>("Tlow")),
@@ -69,15 +68,9 @@ Foam::thermophysicalFunctions::table2D::table2D
 }
 
 
-Foam::thermophysicalFunctions::table2D::table2D(const dictionary& dict)
-:
-    table2D("values", dict)
-{}
-
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline void Foam::thermophysicalFunctions::table2D::checkRange
+inline void Foam::Function2s::uniformTable::checkRange
 (
     scalar p,
     scalar ndp,
@@ -107,7 +100,7 @@ inline void Foam::thermophysicalFunctions::table2D::checkRange
 }
 
 
-Foam::scalar Foam::thermophysicalFunctions::table2D::value
+Foam::scalar Foam::Function2s::uniformTable::value
 (
     scalar p,
     scalar T
@@ -142,7 +135,7 @@ Foam::scalar Foam::thermophysicalFunctions::table2D::value
 }
 
 
-Foam::scalar Foam::thermophysicalFunctions::table2D::
+Foam::scalar Foam::Function2s::uniformTable::
 dfdp
 (
     scalar p,
@@ -170,7 +163,7 @@ dfdp
 }
 
 
-Foam::scalar Foam::thermophysicalFunctions::table2D::
+Foam::scalar Foam::Function2s::uniformTable::
 dfdT
 (
     scalar p,
@@ -198,7 +191,7 @@ dfdT
 }
 
 
-void Foam::thermophysicalFunctions::table2D::write(Ostream& os) const
+void Foam::Function2s::uniformTable::write(Ostream& os) const
 {
     writeEntry(os, "pLow", Tlow_);
     writeEntry(os, "pHigh", Thigh_);

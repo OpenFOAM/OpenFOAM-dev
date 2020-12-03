@@ -101,7 +101,7 @@ public:
     // Member Functions
 
         //- Evaluate the function and return the result
-        scalar value(scalar, scalar T) const
+        scalar value(scalar T) const
         {
             return a_/pow(b_, 1 + pow(1 - T/c_, d_));
         }

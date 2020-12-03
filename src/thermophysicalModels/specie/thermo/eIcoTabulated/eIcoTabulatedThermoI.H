@@ -60,7 +60,7 @@ inline Foam::scalar Foam::eIcoTabulatedThermo<EquationOfState>::Cv
     const scalar T
 ) const
 {
-    return Cv_.value(p, T) + EquationOfState::Cv(p, T);
+    return Cv_.value(T) + EquationOfState::Cv(p, T);
 }
 
 
@@ -71,7 +71,7 @@ inline Foam::scalar Foam::eIcoTabulatedThermo<EquationOfState>::Es
     const scalar T
 ) const
 {
-    return Cv_.intfdT(p, T) + EquationOfState::E(p, T);
+    return Cv_.intfdT(T) + EquationOfState::E(p, T);
 }
 
 

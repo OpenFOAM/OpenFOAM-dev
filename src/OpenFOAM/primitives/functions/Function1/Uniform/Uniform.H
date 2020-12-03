@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,9 +30,9 @@ Description
     Provides backward-compatibility for cases where a field is spatially
     "uniform" and may be treated as a constant value.
 
-    Usage - for entry \<entryName\> returning the value <value>:
+    Usage - for entry \<name\> returning the value <value>:
     \verbatim
-        <entryName>    uniform  <value>
+        <name>    uniform  <value>
     \endverbatim
 
 SourceFiles
@@ -71,7 +71,7 @@ public:
     // Constructors
 
         //- Construct from entry name and dictionary
-        Uniform(const word& entryName, const dictionary& dict);
+        Uniform(const word& name, const dictionary& dict);
 
 
     // Member Operators

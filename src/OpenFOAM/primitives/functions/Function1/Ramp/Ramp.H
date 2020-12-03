@@ -31,8 +31,8 @@ Description
 
     Usage:
     \verbatim
-        <entryName> <rampFunction>;
-        <entryName>Coeffs
+        <name> <rampFunction>;
+        <name>Coeffs
         {
             start     10;
             duration  20;
@@ -40,7 +40,7 @@ Description
     \endverbatim
     or
     \verbatim
-        <entryName>
+        <name>
         {
             type      <rampFunction>;
             start     10;
@@ -114,9 +114,6 @@ protected:
             return 1/duration_;
         }
 
-        //- Write data to dictionary stream
-        virtual void writeData(Ostream& os) const;
-
 
 private:
 
@@ -133,7 +130,7 @@ public:
         //- Construct from entry name and dictionary
         Ramp
         (
-            const word& entryName,
+            const word& name,
             const dictionary& dict
         );
 
@@ -146,6 +143,9 @@ public:
 
         //- Return value for time t
         virtual scalar value(const scalar t) const = 0;
+
+        //- Write data to dictionary stream
+        virtual void write(Ostream& os) const;
 
 
     // Member Operators

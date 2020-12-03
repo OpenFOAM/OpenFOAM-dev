@@ -78,7 +78,7 @@ See also
 #ifndef rhoTabulated_H
 #define rhoTabulated_H
 
-#include "table2DThermophysicalFunction.H"
+#include "uniformTable2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -107,7 +107,7 @@ class rhoTabulated
 :
     public Specie
 {
-    typedef thermophysicalFunctions::table2D table2D;
+    typedef Function2s::uniformTable table2D;
 
 
     // Private Data

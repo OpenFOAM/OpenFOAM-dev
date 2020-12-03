@@ -62,17 +62,6 @@ extern "C"
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::Function2s::${typeName}Function2${TemplateType}::writeData
-(
-    Ostream& os
-) const
-{
-    NotImplemented;
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::Function2s::${typeName}Function2${TemplateType}::
@@ -121,6 +110,17 @@ Foam::Function2s::${typeName}Function2${TemplateType}::
     {
         Info<< "Destroy ${typeName} sha1: ${SHA1sum}\n";
     }
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::Function2s::${typeName}Function2${TemplateType}::write
+(
+    Ostream& os
+) const
+{
+    NotImplemented;
 }
 
 

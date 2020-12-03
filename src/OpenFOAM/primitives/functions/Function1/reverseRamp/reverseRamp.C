@@ -36,24 +36,15 @@ namespace Function1s
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::Function1s::reverseRamp::writeData(Ostream& os) const
-{
-    Ramp<reverseRamp>::writeData(os);
-    ramp_->write(os);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::Function1s::reverseRamp::reverseRamp
 (
-    const word& entryName,
+    const word& name,
     const dictionary& dict
 )
 :
-    Ramp<reverseRamp>(entryName, dict),
+    Ramp<reverseRamp>(name, dict),
     ramp_(Function1<scalar>::New("ramp", dict))
 {}
 
@@ -72,6 +63,15 @@ Foam::Function1s::reverseRamp::reverseRamp
 
 Foam::Function1s::reverseRamp::~reverseRamp()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+void Foam::Function1s::reverseRamp::write(Ostream& os) const
+{
+    Ramp<reverseRamp>::write(os);
+    ramp_->write(os);
+}
 
 
 // ************************************************************************* //

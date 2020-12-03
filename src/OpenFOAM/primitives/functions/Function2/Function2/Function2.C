@@ -25,21 +25,12 @@ License
 
 #include "Function2.H"
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-template<class Type>
-Foam::Ostream& Foam::Function2<Type>::writeType(Ostream& os) const
-{
-    return writeKeyword(os, name_) << type();
-}
-
-
 // * * * * * * * * * * * * * * * * Constructor * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function2<Type>::Function2(const word& entryName)
+Foam::Function2<Type>::Function2(const word& name)
 :
-    name_(entryName)
+    name_(name)
 {}
 
 
@@ -54,20 +45,20 @@ Foam::Function2<Type>::Function2(const Function2<Type>& de)
 template<class Type, class Function2Type>
 Foam::FieldFunction2<Type, Function2Type>::FieldFunction2
 (
-    const word& entryName
+    const word& name
 )
 :
-    Function2<Type>(entryName)
+    Function2<Type>(name)
 {}
 
 
 template<class Type, class Function2Type>
 Foam::FieldFunction2<Type, Function2Type>::FieldFunction2
 (
-    const FieldFunction2<Type, Function2Type>& ff1
+    const FieldFunction2<Type, Function2Type>& ff2
 )
 :
-    Function2<Type>(ff1)
+    Function2<Type>(ff2)
 {}
 
 
@@ -103,20 +94,6 @@ const Foam::word& Foam::Function2<Type>::name() const
 }
 
 
-template<class Type>
-void Foam::Function2<Type>::write(Ostream& os) const
-{
-    writeKeyword(os, name_)
-        << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
-
-    writeEntry(os, "type", type());
-
-    writeData(os);
-
-    os  << decrIndent << indent << token::END_BLOCK << endl;
-}
-
-
 template<class Type, class Function2Type>
 Foam::tmp<Foam::Field<Type>> Foam::FieldFunction2<Type, Function2Type>::value
 (
@@ -139,9 +116,16 @@ Foam::tmp<Foam::Field<Type>> Foam::FieldFunction2<Type, Function2Type>::value
 // * * * * * * * * * * * * * * * IOstream Functions  * * * * * * * * * * * * //
 
 template<class Type>
-void  Foam::writeEntry(Ostream& os, const Function2<Type>& f1)
+void  Foam::writeEntry(Ostream& os, const Function2<Type>& f2)
 {
-    f1.write(os);
+    writeKeyword(os, f2.name())
+        << nl << indent << token::BEGIN_BLOCK << nl << incrIndent;
+
+    writeEntry(os, "type", f2.type());
+
+    f2.write(os);
+
+    os  << decrIndent << indent << token::END_BLOCK << endl;
 }
 
 
@@ -151,7 +135,7 @@ template<class Type>
 Foam::Ostream& Foam::operator<<
 (
     Ostream& os,
-    const Function2<Type>& f1
+    const Function2<Type>& f2
 )
 {
     // Check state of Ostream
@@ -160,7 +144,7 @@ Foam::Ostream& Foam::operator<<
         "Ostream& operator<<(Ostream&, const Function2<Type>&)"
     );
 
-    f1.write(os);
+    f2.write(os);
 
     return os;
 }

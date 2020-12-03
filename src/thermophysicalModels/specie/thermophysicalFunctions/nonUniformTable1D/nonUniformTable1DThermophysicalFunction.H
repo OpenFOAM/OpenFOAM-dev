@@ -100,7 +100,7 @@ protected:
 
         //- Return the lower index of the interval in the table
         //  corresponding to the given temperature
-        inline label index(scalar p, scalar T) const;
+        inline label index(scalar T) const;
 
 
 public:
@@ -127,10 +127,10 @@ public:
         }
 
         //- Evaluate the function and return the result
-        scalar value(scalar p, scalar T) const;
+        scalar value(scalar T) const;
 
         //- Evaluate the derivative of the function and return the result
-        scalar dfdT(scalar p, scalar T) const;
+        scalar dfdT(scalar T) const;
 
         //- Write the function coefficients
         void write(Ostream& os) const;

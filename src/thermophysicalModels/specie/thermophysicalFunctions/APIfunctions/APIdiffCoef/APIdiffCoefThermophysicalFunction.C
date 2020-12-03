@@ -30,29 +30,25 @@ License
 
 namespace Foam
 {
-namespace thermophysicalFunctions
+namespace Function2s
 {
-    defineTypeNameAndDebug(APIdiffCoef, 0);
-    addToRunTimeSelectionTable
-    (
-        thermophysicalFunction,
-        APIdiffCoef,
-        dictionary
-    );
+    makeScalarFunction2(APIdiffCoef)
 }
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::thermophysicalFunctions::APIdiffCoef::APIdiffCoef
+Foam::Function2s::APIdiffCoef::APIdiffCoef
 (
+    const word& name,
     const scalar a,
     const scalar b,
     const scalar wf,
     const scalar wa
 )
 :
+    FieldFunction2<scalar, APIdiffCoef>(name),
     a_(a),
     b_(b),
     wf_(wf),
@@ -62,8 +58,13 @@ Foam::thermophysicalFunctions::APIdiffCoef::APIdiffCoef
 {}
 
 
-Foam::thermophysicalFunctions::APIdiffCoef::APIdiffCoef(const dictionary& dict)
+Foam::Function2s::APIdiffCoef::APIdiffCoef
+(
+    const word& name,
+    const dictionary& dict
+)
 :
+    FieldFunction2<scalar, APIdiffCoef>(name),
     a_(dict.lookup<scalar>("a")),
     b_(dict.lookup<scalar>("b")),
     wf_(dict.lookup<scalar>("wf")),
@@ -75,7 +76,7 @@ Foam::thermophysicalFunctions::APIdiffCoef::APIdiffCoef(const dictionary& dict)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::thermophysicalFunctions::APIdiffCoef::write(Ostream& os) const
+void Foam::Function2s::APIdiffCoef::write(Ostream& os) const
 {
     writeEntry(os, "a", a_);
     writeEntry(os, "b", b_);

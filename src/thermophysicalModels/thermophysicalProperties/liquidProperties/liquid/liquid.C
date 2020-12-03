@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,19 +39,19 @@ namespace Foam
 Foam::liquid::liquid(const dictionary& dict)
 :
     liquidProperties(dict),
-    rho_(thermophysicalFunction::New(dict, "rho")),
-    pv_(thermophysicalFunction::New(dict, "pv")),
-    hl_(thermophysicalFunction::New(dict, "hl")),
-    Cp_(thermophysicalFunction::New(dict, "Cp")),
-    h_(thermophysicalFunction::New(dict, "h")),
-    Cpg_(thermophysicalFunction::New(dict, "Cpg")),
-    B_(thermophysicalFunction::New(dict, "B")),
-    mu_(thermophysicalFunction::New(dict, "mu")),
-    mug_(thermophysicalFunction::New(dict, "mug")),
-    kappa_(thermophysicalFunction::New(dict, "kappa")),
-    kappag_(thermophysicalFunction::New(dict, "kappag")),
-    sigma_(thermophysicalFunction::New(dict, "sigma")),
-    D_(thermophysicalFunction::New(dict, "D"))
+    rho_(thermophysicalFunction::New("rho", dict)),
+    pv_(thermophysicalFunction::New("pv", dict)),
+    hl_(thermophysicalFunction::New("hl", dict)),
+    Cp_(thermophysicalFunction::New("Cp", dict)),
+    h_(thermophysicalFunction::New("h", dict)),
+    Cpg_(thermophysicalFunction::New("Cpg", dict)),
+    B_(thermophysicalFunction::New("B", dict)),
+    mu_(thermophysicalFunction::New("mu", dict)),
+    mug_(thermophysicalFunction::New("mug", dict)),
+    kappa_(thermophysicalFunction::New("kappa", dict)),
+    kappag_(thermophysicalFunction::New("kappag", dict)),
+    sigma_(thermophysicalFunction::New("sigma", dict)),
+    D_(thermophysicalFunction::New("D", dict))
 {}
 
 

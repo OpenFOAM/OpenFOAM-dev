@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,7 @@ Foam::C7H16::C7H16()
     kappa_(0.215, -0.000303, 0.0, 0.0, 0.0, 0.0),
     kappag_(-0.070028, 0.38068, -7049.9, -2400500.0),
     sigma_(540.20, 0.054143, 1.2512, 0.0, 0.0, 0.0),
-    D_(147.18, 20.1, 100.204, 28.0)
+    D_("D", 147.18, 20.1, 100.204, 28.0)
 {}
 
 
@@ -106,7 +106,7 @@ Foam::C7H16::C7H16
     const thermophysicalFunctions::NSRDS0& thermalConductivity,
     const thermophysicalFunctions::NSRDS2& vapourThermalConductivity,
     const thermophysicalFunctions::NSRDS6& surfaceTension,
-    const thermophysicalFunctions::APIdiffCoef& vapourDiffusivity
+    const Function2s::APIdiffCoef& vapourDiffusivity
 )
 :
     liquidProperties(l),

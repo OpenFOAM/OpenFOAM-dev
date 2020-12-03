@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ class aC10H7CH3
         thermophysicalFunctions::NSRDS0 kappa_;
         thermophysicalFunctions::NSRDS2 kappag_;
         thermophysicalFunctions::NSRDS6 sigma_;
-        thermophysicalFunctions::APIdiffCoef D_;
+        Function2s::APIdiffCoef D_;
 
 
 public:
@@ -106,7 +106,7 @@ public:
             const thermophysicalFunctions::NSRDS0& thermalConductivity,
             const thermophysicalFunctions::NSRDS2& vapourThermalConductivity,
             const thermophysicalFunctions::NSRDS6& surfaceTension,
-            const thermophysicalFunctions::APIdiffCoef& vapourDiffusivity
+            const Function2s::APIdiffCoef& vapourDiffusivity
         );
 
         //- Construct from dictionary
