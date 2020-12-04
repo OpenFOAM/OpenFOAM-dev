@@ -32,7 +32,7 @@ template<class Specie>
 Foam::icoTabulated<Specie>::icoTabulated(const dictionary& dict)
 :
     Specie(dict),
-    rho_("rho", dict.subDict("equationOfState"))
+    rho_("rho", dict.subDict("equationOfState").subDict("rho"))
 {}
 
 

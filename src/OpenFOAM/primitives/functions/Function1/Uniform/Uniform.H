@@ -70,7 +70,7 @@ public:
 
     // Constructors
 
-        //- Construct from entry name and dictionary
+        //- Construct from name and dictionary
         Uniform(const word& name, const dictionary& dict);
 
 

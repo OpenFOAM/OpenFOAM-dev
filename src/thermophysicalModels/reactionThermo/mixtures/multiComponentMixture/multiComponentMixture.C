@@ -138,8 +138,7 @@ void Foam::multiComponentMixture<ThermoType>::read
 {
     forAll(species_, i)
     {
-        // ***HGW specieThermos_[i] =
-        // ThermoType(thermoDict.subDict(species_[i]));
+        specieThermos_[i] = ThermoType(thermoDict.subDict(species_[i]));
     }
 }
 

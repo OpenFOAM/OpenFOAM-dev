@@ -35,8 +35,8 @@ Foam::icoTabulatedTransport<Thermo>::icoTabulatedTransport
 )
 :
     Thermo(dict),
-    mu_("mu", dict.subDict("transport")),
-    kappa_("kappa", dict.subDict("transport"))
+    mu_("mu", dict.subDict("transport").subDict("mu")),
+    kappa_("kappa", dict.subDict("transport").subDict("kappa"))
 {}
 
 

@@ -64,6 +64,7 @@ Usage
 
 #include "Function2.H"
 #include "scalarMatrices.H"
+#include "Pair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -82,38 +83,32 @@ class uniformTable
 {
     // Private member data
 
-        //- Lowest pressure in the table
-        scalar pLow_;
+        //- Lowest values in the table
+        Pair<scalar> low_;
 
-        //- Highest pressure in the table
-        scalar pHigh_;
-
-        //- Lowest temperature in the table
-        scalar Tlow_;
-
-        //- Highest temperature in the table
-        scalar Thigh_;
+        //- Highest values in the table
+        Pair<scalar> high_;
 
         //- Table values
         scalarRectangularMatrix values_;
 
-        //- pressure increment derived from pLow_, pHigh_ and values_.m()
-        scalar deltap_;
+        //- x increment derived from low_, high_ and values_.m()
+        scalar deltax_;
 
-        //- Temperature increment derived from Tlow_, Thigh_ and values_.n()
-        scalar deltaT_;
+        //- y increment derived from low_, high_ and values_.n()
+        scalar deltay_;
 
 
     // Private member functions
 
         inline void checkRange
         (
-            scalar p,
-            scalar ndp,
-            label ip,
-            scalar T,
-            scalar ndT,
-            label iT
+            scalar x,
+            scalar ndx,
+            label ix,
+            scalar y,
+            scalar ndy,
+            label iy
         ) const;
 
 
@@ -125,7 +120,7 @@ public:
 
     // Constructors
 
-        //- Construct from entry name and dictionary
+        //- Construct from name and dictionary
         uniformTable(const word& name, const dictionary& dict);
 
 
@@ -138,7 +133,7 @@ public:
         }
 
         //- Evaluate the function and return the result
-        scalar value(scalar p, scalar T) const;
+        virtual scalar value(scalar x, scalar y) const;
 
         //- Evaluate the derivative of the function w.r.t. p
         scalar dfdp(scalar p, scalar T) const;

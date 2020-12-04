@@ -28,12 +28,12 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1s::Sine<Type>::read(const dictionary& coeffs)
+void Foam::Function1s::Sine<Type>::read(const dictionary& dict)
 {
-    amplitude_ = Function1<Type>::New("amplitude", coeffs);
-    frequency_ = coeffs.lookup<scalar>("frequency");
-    start_ = coeffs.lookupOrDefault<scalar>("start", 0);
-    level_ = Function1<Type>::New("level", coeffs);
+    amplitude_ = Function1<Type>::New("amplitude", dict);
+    frequency_ = dict.lookup<scalar>("frequency");
+    start_ = dict.lookupOrDefault<scalar>("start", 0);
+    level_ = Function1<Type>::New("level", dict);
 
     integrable_ =
         isA<Constant<Type>>(amplitude_())

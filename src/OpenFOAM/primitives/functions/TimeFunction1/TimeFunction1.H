@@ -78,7 +78,7 @@ public:
 
     // Constructor
 
-        //- Construct from time, entry name and dictionary
+        //- Construct from time, name and dictionary
         TimeFunction1
         (
             const Time& time,
@@ -86,7 +86,7 @@ public:
             const dictionary& dict
         );
 
-        //- Construct null from time and entry name
+        //- Construct null from time and name
         TimeFunction1
         (
             const Time& time,

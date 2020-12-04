@@ -53,9 +53,10 @@ Foam::IDEA::IDEA()
         0.3478,
         1.57e+4
     ),
-    rho_(152.012105, 3.87150382e-1, 618.073893, 4.00790044e-1),
+    rho_("rho", 152.012105, 3.87150382e-1, 618.073893, 4.00790044e-1),
     pv_
     (
+        "pv",
         8.4817774623e+01,
        -8.6782398353e+03,
        -9.1277694857,
@@ -64,6 +65,7 @@ Foam::IDEA::IDEA()
     ),
     hl_
     (
+        "hl",
         618.074,
         2.1671983789e+05,
        -4.2413153435e+00,
@@ -71,10 +73,11 @@ Foam::IDEA::IDEA()
        -1.1656446689e+01,
         4.3667661492
     ),
-    Cp_(1.6604957e+3, -6.250871e-1, 6.1778552e-3, 0.0, 0.0, 0.0),
-    h_(0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
+    Cp_("Cp", 1.6604957e+3, -6.250871e-1, 6.1778552e-3, 0.0, 0.0, 0.0),
+    h_("h", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0),
     Cpg_
     (
+        "Cpg",
         1.0457515243e+03,
         3.4410492875e+03,
         1.5976862298e+03,
@@ -83,17 +86,19 @@ Foam::IDEA::IDEA()
     ),
     B_
     (
+        "B",
         0.00337351091119935,
        -4.13606494008504,
        -534560.916470464,
        -1.13364022911762e+19,
         2.80704220402713e+21
     ),
-    mu_(-6.9645853822e+01, 4.4390635942e+03, 8.4680722718e+00, 0.0, 0.0),
-    mug_(4.2629382158e-08, 8.8144402122e-01, 9.6918097636e+01, 0.0),
-    kappa_(2.03684e-01, -2.3168e-04, 0.0, 0.0, 0.0, 0.0),
+    mu_("mu", -6.9645853822e+01, 4.4390635942e+03, 8.4680722718e+00, 0.0, 0.0),
+    mug_("mug", 4.2629382158e-08, 8.8144402122e-01, 9.6918097636e+01, 0.0),
+    kappa_("kappa", 2.03684e-01, -2.3168e-04, 0.0, 0.0, 0.0, 0.0),
     kappag_
     (
+        "kappag",
        -5.664925956707e+02,
         8.896721676320e-01,
        -2.849783998688e+09,
@@ -101,6 +106,7 @@ Foam::IDEA::IDEA()
     ),
     sigma_
     (
+        "sigma",
         618.074,
         8.3846525429e-03,
        -1.0044759047e+01,
@@ -115,18 +121,18 @@ Foam::IDEA::IDEA()
 Foam::IDEA::IDEA
 (
     const liquidProperties& l,
-    const thermophysicalFunctions::NSRDS5& density,
-    const thermophysicalFunctions::NSRDS1& vapourPressure,
-    const thermophysicalFunctions::NSRDS6& heatOfVapourisation,
-    const thermophysicalFunctions::NSRDS0& heatCapacity,
-    const thermophysicalFunctions::NSRDS0& enthalpy,
-    const thermophysicalFunctions::NSRDS7& idealGasHeatCapacity,
-    const thermophysicalFunctions::NSRDS4& secondVirialCoeff,
-    const thermophysicalFunctions::NSRDS1& dynamicViscosity,
-    const thermophysicalFunctions::NSRDS2& vapourDynamicViscosity,
-    const thermophysicalFunctions::NSRDS0& thermalConductivity,
-    const thermophysicalFunctions::NSRDS2& vapourThermalConductivity,
-    const thermophysicalFunctions::NSRDS6& surfaceTension,
+    const Function1s::NSRDS5& density,
+    const Function1s::NSRDS1& vapourPressure,
+    const Function1s::NSRDS6& heatOfVapourisation,
+    const Function1s::NSRDS0& heatCapacity,
+    const Function1s::NSRDS0& enthalpy,
+    const Function1s::NSRDS7& idealGasHeatCapacity,
+    const Function1s::NSRDS4& secondVirialCoeff,
+    const Function1s::NSRDS1& dynamicViscosity,
+    const Function1s::NSRDS2& vapourDynamicViscosity,
+    const Function1s::NSRDS0& thermalConductivity,
+    const Function1s::NSRDS2& vapourThermalConductivity,
+    const Function1s::NSRDS6& surfaceTension,
     const Function2s::APIdiffCoef& vapourDiffusivity
 )
 :

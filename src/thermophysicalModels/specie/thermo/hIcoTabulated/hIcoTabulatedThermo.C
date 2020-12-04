@@ -37,7 +37,7 @@ Foam::hIcoTabulatedThermo<EquationOfState>::hIcoTabulatedThermo
     EquationOfState(dict),
     Hf_(dict.subDict("thermodynamics").lookup<scalar>("Hf")),
     Sf_(dict.subDict("thermodynamics").lookup<scalar>("Sf")),
-    Cp_("Cp", dict.subDict("thermodynamics"))
+    Cp_("Cp", dict.subDict("thermodynamics").subDict("Cp"))
 {}
 
 

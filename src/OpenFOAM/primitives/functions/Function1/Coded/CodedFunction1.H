@@ -125,7 +125,7 @@ public:
 
     // Constructors
 
-        //- Construct from entry name and dictionary
+        //- Construct from name and dictionary
         Coded
         (
             const word& name,

@@ -158,7 +158,7 @@ class Scale
     // Private Member Functions
 
         //- Read the coefficients from the given dictionary
-        void read(const dictionary& coeffs);
+        void read(const dictionary& dict);
 
 
 public:
@@ -169,7 +169,7 @@ public:
 
     // Constructors
 
-        //- Construct from entry name and dictionary
+        //- Construct from name and dictionary
         Scale
         (
             const word& name,

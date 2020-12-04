@@ -39,19 +39,19 @@ namespace Foam
 Foam::liquid::liquid(const dictionary& dict)
 :
     liquidProperties(dict),
-    rho_(thermophysicalFunction::New("rho", dict)),
-    pv_(thermophysicalFunction::New("pv", dict)),
-    hl_(thermophysicalFunction::New("hl", dict)),
-    Cp_(thermophysicalFunction::New("Cp", dict)),
-    h_(thermophysicalFunction::New("h", dict)),
-    Cpg_(thermophysicalFunction::New("Cpg", dict)),
-    B_(thermophysicalFunction::New("B", dict)),
-    mu_(thermophysicalFunction::New("mu", dict)),
-    mug_(thermophysicalFunction::New("mug", dict)),
-    kappa_(thermophysicalFunction::New("kappa", dict)),
-    kappag_(thermophysicalFunction::New("kappag", dict)),
-    sigma_(thermophysicalFunction::New("sigma", dict)),
-    D_(thermophysicalFunction::New("D", dict))
+    rho_(Function1<scalar>::New("rho", dict)),
+    pv_(Function1<scalar>::New("pv", dict)),
+    hl_(Function1<scalar>::New("hl", dict)),
+    Cp_(Function1<scalar>::New("Cp", dict)),
+    h_(Function1<scalar>::New("h", dict)),
+    Cpg_(Function1<scalar>::New("Cpg", dict)),
+    B_(Function1<scalar>::New("B", dict)),
+    mu_(Function1<scalar>::New("mu", dict)),
+    mug_(Function1<scalar>::New("mug", dict)),
+    kappa_(Function1<scalar>::New("kappa", dict)),
+    kappag_(Function1<scalar>::New("kappag", dict)),
+    sigma_(Function1<scalar>::New("sigma", dict)),
+    D_(Function1<scalar>::New("D", dict))
 {}
 
 

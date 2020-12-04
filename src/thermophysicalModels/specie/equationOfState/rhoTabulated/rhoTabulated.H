@@ -71,7 +71,7 @@ SourceFiles
     rhoTabulated.C
 
 See also
-    Foam::thermophysicalFunctions::nonUniformTable1D
+    Foam::Function1s::nonUniformTable
 
 \*---------------------------------------------------------------------------*/
 

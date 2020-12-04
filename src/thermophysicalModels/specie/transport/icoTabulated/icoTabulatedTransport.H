@@ -61,14 +61,14 @@ SourceFiles
     icoTabulatedTransport.C
 
 See also
-    Foam::thermophysicalFunctions::nonUniformTable1D
+    Foam::Function1s::nonUniformTable
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef icoTabulatedTransport_H
 #define icoTabulatedTransport_H
 
-#include "nonUniformTable1DThermophysicalFunction.H"
+#include "nonUniformTable1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -92,16 +92,16 @@ class icoTabulatedTransport
 :
     public Thermo
 {
-    typedef thermophysicalFunctions::nonUniformTable1D nonUniformTable1D;
+    typedef Function1s::nonUniformTable nonUniformTable;
 
 
     // Private Data
 
         //- Dynamic viscosity table [Pa.s]
-        nonUniformTable1D mu_;
+        nonUniformTable mu_;
 
         //- Thermal conductivity table [W/m/K]
-        nonUniformTable1D kappa_;
+        nonUniformTable kappa_;
 
 
     // Private Member Functions
@@ -110,8 +110,8 @@ class icoTabulatedTransport
         inline icoTabulatedTransport
         (
             const Thermo& t,
-            const nonUniformTable1D& muPoly,
-            const nonUniformTable1D& kappaPoly
+            const nonUniformTable& muPoly,
+            const nonUniformTable& kappaPoly
         );
 
 

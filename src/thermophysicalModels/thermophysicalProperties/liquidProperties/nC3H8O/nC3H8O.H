@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,15 +36,15 @@ SourceFiles
 #define nC3H8O_H
 
 #include "liquidProperties.H"
-#include "NSRDS0ThermophysicalFunction.H"
-#include "NSRDS1ThermophysicalFunction.H"
-#include "NSRDS2ThermophysicalFunction.H"
-#include "NSRDS3ThermophysicalFunction.H"
-#include "NSRDS4ThermophysicalFunction.H"
-#include "NSRDS5ThermophysicalFunction.H"
-#include "NSRDS6ThermophysicalFunction.H"
-#include "NSRDS7ThermophysicalFunction.H"
-#include "NSRDS14ThermophysicalFunction.H"
+#include "NSRDS0.H"
+#include "NSRDS1.H"
+#include "NSRDS2.H"
+#include "NSRDS3.H"
+#include "NSRDS4.H"
+#include "NSRDS5.H"
+#include "NSRDS6.H"
+#include "NSRDS7.H"
+#include "NSRDS14.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -61,19 +61,19 @@ class nC3H8O
 {
     // Private Data
 
-        thermophysicalFunctions::NSRDS5 rho_;
-        thermophysicalFunctions::NSRDS1 pv_;
-        thermophysicalFunctions::NSRDS6 hl_;
-        thermophysicalFunctions::NSRDS0 Cp_;
-        thermophysicalFunctions::NSRDS0 h_;
-        thermophysicalFunctions::NSRDS7 Cpg_;
-        thermophysicalFunctions::NSRDS4 B_;
-        thermophysicalFunctions::NSRDS1 mu_;
-        thermophysicalFunctions::NSRDS2 mug_;
-        thermophysicalFunctions::NSRDS0 kappa_;
-        thermophysicalFunctions::NSRDS2 kappag_;
-        thermophysicalFunctions::NSRDS0 sigma_;
-        thermophysicalFunctions::NSRDS1 D_;
+        Function1s::NSRDS5 rho_;
+        Function1s::NSRDS1 pv_;
+        Function1s::NSRDS6 hl_;
+        Function1s::NSRDS0 Cp_;
+        Function1s::NSRDS0 h_;
+        Function1s::NSRDS7 Cpg_;
+        Function1s::NSRDS4 B_;
+        Function1s::NSRDS1 mu_;
+        Function1s::NSRDS2 mug_;
+        Function1s::NSRDS0 kappa_;
+        Function1s::NSRDS2 kappag_;
+        Function1s::NSRDS0 sigma_;
+        Function1s::NSRDS1 D_;
 
 public:
 
@@ -92,19 +92,19 @@ public:
         nC3H8O
         (
             const liquidProperties& l,
-            const thermophysicalFunctions::NSRDS5& density,
-            const thermophysicalFunctions::NSRDS1& vapourPressure,
-            const thermophysicalFunctions::NSRDS6& heatOfVapourisation,
-            const thermophysicalFunctions::NSRDS0& heatCapacity,
-            const thermophysicalFunctions::NSRDS0& enthalpy,
-            const thermophysicalFunctions::NSRDS7& idealGasHeatCapacity,
-            const thermophysicalFunctions::NSRDS4& secondVirialCoeff,
-            const thermophysicalFunctions::NSRDS1& dynamicViscosity,
-            const thermophysicalFunctions::NSRDS2& vapourDynamicViscosity,
-            const thermophysicalFunctions::NSRDS0& thermalConductivity,
-            const thermophysicalFunctions::NSRDS2& vapourThermalConductivity,
-            const thermophysicalFunctions::NSRDS0& surfaceTension,
-            const thermophysicalFunctions::NSRDS1& vapourDiffusivity
+            const Function1s::NSRDS5& density,
+            const Function1s::NSRDS1& vapourPressure,
+            const Function1s::NSRDS6& heatOfVapourisation,
+            const Function1s::NSRDS0& heatCapacity,
+            const Function1s::NSRDS0& enthalpy,
+            const Function1s::NSRDS7& idealGasHeatCapacity,
+            const Function1s::NSRDS4& secondVirialCoeff,
+            const Function1s::NSRDS1& dynamicViscosity,
+            const Function1s::NSRDS2& vapourDynamicViscosity,
+            const Function1s::NSRDS0& thermalConductivity,
+            const Function1s::NSRDS2& vapourThermalConductivity,
+            const Function1s::NSRDS0& surfaceTension,
+            const Function1s::NSRDS1& vapourDiffusivity
         );
 
         //- Construct from dictionary

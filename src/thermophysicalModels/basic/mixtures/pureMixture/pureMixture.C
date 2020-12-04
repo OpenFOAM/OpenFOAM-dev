@@ -46,7 +46,7 @@ Foam::pureMixture<ThermoType>::pureMixture
 template<class ThermoType>
 void Foam::pureMixture<ThermoType>::read(const dictionary& thermoDict)
 {
-    // ***HGW mixture_ = ThermoType(thermoDict.subDict("mixture"));
+    mixture_ = ThermoType(thermoDict.subDict("mixture"));
 }
 
 

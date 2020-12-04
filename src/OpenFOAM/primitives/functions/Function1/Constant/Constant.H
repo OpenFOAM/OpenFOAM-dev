@@ -72,13 +72,13 @@ public:
 
     // Constructors
 
-        //- Construct from entry name and value
+        //- Construct from name and value
         Constant(const word& name, const Type& val);
 
-        //- Construct from entry name and dictionary
+        //- Construct from name and dictionary
         Constant(const word& name, const dictionary& dict);
 
-        //- Construct from entry name and Istream
+        //- Construct from name and Istream
         //  Reads the constant value without the Function1 type
         //  for backward compatibility
         Constant(const word& name, Istream& is);

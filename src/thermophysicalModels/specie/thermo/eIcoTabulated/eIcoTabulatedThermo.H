@@ -57,14 +57,14 @@ SourceFiles
     eIcoTabulatedThermo.C
 
 See also
-    Foam::thermophysicalFunctions::nonUniformTable1D
+    Foam::Function1s::nonUniformTable
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef eIcoTabulatedThermo_H
 #define eIcoTabulatedThermo_H
 
-#include "integratedNonUniformTable1DThermophysicalFunction.H"
+#include "integratedNonUniformTable1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -93,8 +93,7 @@ class eIcoTabulatedThermo
 :
     public EquationOfState
 {
-    typedef thermophysicalFunctions::integratedNonUniformTable1D
-        integratedNonUniformTable1D;
+    typedef Function1s::integratedNonUniformTable integratedNonUniformTable;
 
 
     // Private Data
@@ -106,7 +105,7 @@ class eIcoTabulatedThermo
         scalar Sf_;
 
         //- Specific heat at constant volume table [J/kg/K]
-        integratedNonUniformTable1D Cv_;
+        integratedNonUniformTable Cv_;
 
 
 public:

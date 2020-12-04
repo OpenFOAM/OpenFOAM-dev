@@ -23,8 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "thermophysicalFunction.H"
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 inline Foam::scalar Foam::liquidProperties::limit(const scalar T) const
@@ -139,7 +137,7 @@ inline void Foam::liquidProperties::readIfPresent
 {
     if (dict.found(name))
     {
-        f = Func(dict.subDict(name));
+        f = Func(name, dict.subDict(name));
     }
 }
 

@@ -31,7 +31,7 @@ template<class Specie>
 inline Foam::icoTabulated<Specie>::icoTabulated
 (
     const Specie& sp,
-    const nonUniformTable1D& rho
+    const nonUniformTable& rho
 )
 :
     Specie(sp),

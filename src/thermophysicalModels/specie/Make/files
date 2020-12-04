@@ -3,25 +3,19 @@ specie/specie.C
 reaction/specieCoeffs/specieCoeffs.C
 reaction/reaction/reaction.C
 
-thermophysicalFunctions/thermophysicalFunction/thermophysicalFunction.C
-
-thermophysicalFunctions/none/noneThermophysicalFunction.C
-thermophysicalFunctions/constant/constantThermophysicalFunction.C
-thermophysicalFunctions/table1D/table1DThermophysicalFunction.C
-thermophysicalFunctions/nonUniformTable1D/nonUniformTable1DThermophysicalFunction.C
-thermophysicalFunctions/integratedNonUniformTable1D/integratedNonUniformTable1DThermophysicalFunction.C
+thermophysicalFunctions/integratedNonUniformTable1/integratedNonUniformTable1.C
 thermophysicalFunctions/uniformTable2/uniformTable2.C
-thermophysicalFunctions/APIfunctions/APIdiffCoef/APIdiffCoefThermophysicalFunction.C
+thermophysicalFunctions/APIdiffCoef/APIdiffCoef.C
 
 NSRDS = thermophysicalFunctions/NSRDS
-$(NSRDS)/NSRDS0/NSRDS0ThermophysicalFunction.C
-$(NSRDS)/NSRDS1/NSRDS1ThermophysicalFunction.C
-$(NSRDS)/NSRDS2/NSRDS2ThermophysicalFunction.C
-$(NSRDS)/NSRDS3/NSRDS3ThermophysicalFunction.C
-$(NSRDS)/NSRDS4/NSRDS4ThermophysicalFunction.C
-$(NSRDS)/NSRDS5/NSRDS5ThermophysicalFunction.C
-$(NSRDS)/NSRDS6/NSRDS6ThermophysicalFunction.C
-$(NSRDS)/NSRDS7/NSRDS7ThermophysicalFunction.C
-$(NSRDS)/NSRDS14/NSRDS14ThermophysicalFunction.C
+$(NSRDS)/NSRDS0/NSRDS0.C
+$(NSRDS)/NSRDS1/NSRDS1.C
+$(NSRDS)/NSRDS2/NSRDS2.C
+$(NSRDS)/NSRDS3/NSRDS3.C
+$(NSRDS)/NSRDS4/NSRDS4.C
+$(NSRDS)/NSRDS5/NSRDS5.C
+$(NSRDS)/NSRDS6/NSRDS6.C
+$(NSRDS)/NSRDS7/NSRDS7.C
+$(NSRDS)/NSRDS14/NSRDS14.C
 
 LIB = $(FOAM_LIBBIN)/libspecie

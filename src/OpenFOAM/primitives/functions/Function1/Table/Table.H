@@ -180,7 +180,7 @@ public:
             const List<Tuple2<scalar, Type>>& table
         );
 
-        //- Construct from entry name and dictionary
+        //- Construct from name and dictionary
         Table(const word& name, const dictionary& dict);
 
         //- Copy constructor

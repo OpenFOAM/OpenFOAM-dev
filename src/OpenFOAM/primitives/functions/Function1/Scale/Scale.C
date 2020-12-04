@@ -28,14 +28,14 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function1s::Scale<Type>::read(const dictionary& coeffs)
+void Foam::Function1s::Scale<Type>::read(const dictionary& dict)
 {
-    scale_ = Function1<scalar>::New("scale", coeffs);
+    scale_ = Function1<scalar>::New("scale", dict);
     xScale_ =
-        coeffs.found("xScale")
-      ? Function1<scalar>::New("xScale", coeffs)
+        dict.found("xScale")
+      ? Function1<scalar>::New("xScale", dict)
       : autoPtr<Function1<scalar>>(new Constant<scalar>("xScale", 1));
-    value_ = Function1<Type>::New("value", coeffs);
+    value_ = Function1<Type>::New("value", dict);
 
     integrableScale_ =
         isA<Constant<scalar>>(xScale_())

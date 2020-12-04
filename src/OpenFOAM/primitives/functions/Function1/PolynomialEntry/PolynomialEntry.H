@@ -82,6 +82,7 @@ public:
 
     // Constructors
 
+        //- Construct from name and dictionary
         Polynomial(const word& name, const dictionary& dict);
 
         //- Construct from components

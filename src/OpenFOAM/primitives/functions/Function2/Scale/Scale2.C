@@ -28,24 +28,24 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::Function2s::Scale<Type>::read(const dictionary& coeffs)
+void Foam::Function2s::Scale<Type>::read(const dictionary& dict)
 {
-    scale_ = Function2<scalar>::New("scale", coeffs);
+    scale_ = Function2<scalar>::New("scale", dict);
     xScale_ =
-        coeffs.found("xScale")
-      ? Function1<scalar>::New("xScale", coeffs)
+        dict.found("xScale")
+      ? Function1<scalar>::New("xScale", dict)
       : autoPtr<Function1<scalar>>
         (
             new Function1s::Constant<scalar>("xScale", 1)
         );
     yScale_ =
-        coeffs.found("yScale")
-      ? Function1<scalar>::New("yScale", coeffs)
+        dict.found("yScale")
+      ? Function1<scalar>::New("yScale", dict)
       : autoPtr<Function1<scalar>>
         (
             new Function1s::Constant<scalar>("yScale", 1)
         );
-    value_ = Function2<Type>::New("value", coeffs);
+    value_ = Function2<Type>::New("value", dict);
 }
 
 

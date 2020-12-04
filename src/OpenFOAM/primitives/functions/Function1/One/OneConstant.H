@@ -67,10 +67,10 @@ public:
 
     // Constructors
 
-        //- Construct from entry name
+        //- Construct from name
         OneConstant(const word& name);
 
-        //- Construct from entry name and dictionary
+        //- Construct from name and dictionary
         OneConstant(const word& name, const dictionary& dict);
 
 

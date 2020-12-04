@@ -53,16 +53,6 @@ Foam::FieldFunction2<Type, Function2Type>::FieldFunction2
 
 
 template<class Type, class Function2Type>
-Foam::FieldFunction2<Type, Function2Type>::FieldFunction2
-(
-    const FieldFunction2<Type, Function2Type>& ff2
-)
-:
-    Function2<Type>(ff2)
-{}
-
-
-template<class Type, class Function2Type>
 Foam::tmp<Foam::Function2<Type>>
 Foam::FieldFunction2<Type, Function2Type>::clone() const
 {
@@ -110,6 +100,20 @@ Foam::tmp<Foam::Field<Type>> Foam::FieldFunction2<Type, Function2Type>::value
     }
 
     return tfld;
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::Function2<Type>::operator=(const Function2<Type>& f)
+{
+    if (this == &f)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
 }
 
 

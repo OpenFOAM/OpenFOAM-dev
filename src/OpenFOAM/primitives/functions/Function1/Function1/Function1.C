@@ -54,16 +54,6 @@ Foam::FieldFunction1<Type, Function1Type>::FieldFunction1
 
 
 template<class Type, class Function1Type>
-Foam::FieldFunction1<Type, Function1Type>::FieldFunction1
-(
-    const FieldFunction1<Type, Function1Type>& ff1
-)
-:
-    Function1<Type>(ff1)
-{}
-
-
-template<class Type, class Function1Type>
 Foam::tmp<Foam::Function1<Type>>
 Foam::FieldFunction1<Type, Function1Type>::clone() const
 {
@@ -130,6 +120,20 @@ Foam::FieldFunction1<Type, Function1Type>::integral
     }
 
     return tfld;
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::Function1<Type>::operator=(const Function1<Type>& f)
+{
+    if (this == &f)
+    {
+        FatalErrorInFunction
+            << "attempted assignment to self"
+            << abort(FatalError);
+    }
 }
 
 

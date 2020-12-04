@@ -28,10 +28,10 @@ License
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template <class Function1Type>
-void Foam::Function1s::Ramp<Function1Type>::read(const dictionary& coeffs)
+void Foam::Function1s::Ramp<Function1Type>::read(const dictionary& dict)
 {
-    start_ = coeffs.lookupOrDefault<scalar>("start", 0);
-    duration_ = coeffs.lookup<scalar>("duration");
+    start_ = dict.lookupOrDefault<scalar>("start", 0);
+    duration_ = dict.lookup<scalar>("duration");
 }
 
 

@@ -46,11 +46,9 @@ Foam::Function2s::uniformTable::uniformTable
 )
 :
     FieldFunction2<scalar, uniformTable>(name),
-    pLow_(dict.lookup<scalar>("pLow")),
-    pHigh_(dict.lookup<scalar>("pHigh")),
-    Tlow_(dict.lookup<scalar>("Tlow")),
-    Thigh_(dict.lookup<scalar>("Thigh")),
-    values_(dict.lookup(name))
+    low_(dict.lookup<Pair<scalar>>("low")),
+    high_(dict.lookup<Pair<scalar>>("high")),
+    values_(dict.lookup("values"))
 {
     if (values_.m() < 2 || values_.n() < 2)
     {
@@ -62,8 +60,8 @@ Foam::Function2s::uniformTable::uniformTable
     }
     else
     {
-        deltap_ = (pHigh_ - pLow_)/(values_.m() - 1);
-        deltaT_ = (Thigh_ - Tlow_)/(values_.n() - 1);
+        deltax_ = (high_.first() - low_.first())/(values_.m() - 1);
+        deltay_ = (high_.second() - low_.second())/(values_.n() - 1);
     }
 }
 
@@ -72,28 +70,28 @@ Foam::Function2s::uniformTable::uniformTable
 
 inline void Foam::Function2s::uniformTable::checkRange
 (
-    scalar p,
-    scalar ndp,
-    label ip,
-    scalar T,
-    scalar ndT,
-    label iT
+    scalar x,
+    scalar ndx,
+    label ix,
+    scalar y,
+    scalar ndy,
+    label iy
 ) const
 {
-    if (ndp < 0 || ip > values_.m() - 2)
+    if (ndx < 0 || ix > values_.m() - 2)
     {
         FatalErrorInFunction
-            << "Pressure " << p << " out of range "
-            << pLow_ << " to " << pHigh_ << nl
+            << "x " << x << " out of range "
+            << low_.first() << " to " << high_.first() << nl
             << "    of table " << name_
             << exit(FatalError);
     }
 
-    if (ndT < 0 || iT > values_.n() - 2)
+    if (ndy < 0 || iy > values_.n() - 2)
     {
         FatalErrorInFunction
-            << "Temperature " << T << " out of range "
-            << Tlow_ << " to " << Thigh_ << nl
+            << "y " << y << " out of range "
+            << low_.second() << " to " << high_.second() << nl
             << "    of table " << name_
             << exit(FatalError);
     }
@@ -102,36 +100,36 @@ inline void Foam::Function2s::uniformTable::checkRange
 
 Foam::scalar Foam::Function2s::uniformTable::value
 (
-    scalar p,
-    scalar T
+    scalar x,
+    scalar y
 ) const
 {
-    const scalar ndp = (p - pLow_)/deltap_;
-    const label ip = ndp;
+    const scalar ndx = (x - low_.first())/deltax_;
+    const label ix = ndx;
 
-    const scalar ndT = (T - Tlow_)/deltaT_;
-    const label iT = ndT;
+    const scalar ndy = (y - low_.second())/deltay_;
+    const label iy = ndy;
 
-    checkRange(p, ndp, ip, T, ndT, iT);
+    checkRange(x, ndx, ix, y, ndy, iy);
 
-    const scalar pi = pLow_ + ip*deltap_;
-    const scalar lambdap = (p - pi)/deltap_;
+    const scalar xi = low_.first() + ix*deltax_;
+    const scalar lambdax = (x - xi)/deltax_;
 
-    // Interpolate the values at Ti wrt p
-    const scalar fpi =
-        values_(ip, iT)
-      + lambdap*(values_(ip + 1, iT) - values_(ip, iT));
+    // Interpolate the values at yi wrt x
+    const scalar fxi =
+        values_(ix, iy)
+      + lambdax*(values_(ix + 1, iy) - values_(ix, iy));
 
-    // Interpolate the values at Ti+1 wrt p
-    const scalar fpip1 =
-        values_(ip, iT + 1)
-      + lambdap*(values_(ip + 1, iT + 1) - values_(ip, iT + 1));
+    // Interpolate the values at yi+1 wrt x
+    const scalar fxix1 =
+        values_(ix, iy + 1)
+      + lambdax*(values_(ix + 1, iy + 1) - values_(ix, iy + 1));
 
-    const scalar Ti = Tlow_ + iT*deltaT_;
-    const scalar lambdaT = (T - Ti)/deltaT_;
+    const scalar yi = low_.second() + iy*deltay_;
+    const scalar lambday = (y - yi)/deltay_;
 
-    // Interpolate wrt T
-    return fpi + lambdaT*(fpip1 - fpi);
+    // Interpolate wrt y
+    return fxi + lambday*(fxix1 - fxi);
 }
 
 
@@ -142,21 +140,21 @@ dfdp
     scalar T
 ) const
 {
-    const scalar ndp = (p - pLow_)/deltap_;
+    const scalar ndp = (p - low_.first())/deltax_;
     const label ip = ndp;
 
-    const scalar ndT = (T - Tlow_)/deltaT_;
+    const scalar ndT = (T - low_.second())/deltay_;
     const label iT = ndT;
 
     checkRange(p, ndp, ip, T, ndT, iT);
 
     const scalar dfdpi =
-        (values_(ip + 1, iT) - values_(ip, iT))/deltap_;
+        (values_(ip + 1, iT) - values_(ip, iT))/deltax_;
     const scalar dfdpip1 =
-        (values_(ip + 1, iT + 1) - values_(ip, iT + 1))/deltap_;
+        (values_(ip + 1, iT + 1) - values_(ip, iT + 1))/deltax_;
 
-    const scalar Ti = Tlow_ + iT*deltaT_;
-    const scalar lambdaT = (T - Ti)/deltaT_;
+    const scalar Ti = low_.second() + iT*deltay_;
+    const scalar lambdaT = (T - Ti)/deltay_;
 
     // Interpolate wrt T
     return dfdpi + lambdaT*(dfdpip1 - dfdpi);
@@ -170,21 +168,21 @@ dfdT
     scalar T
 ) const
 {
-    const scalar ndp = (p - pLow_)/deltap_;
+    const scalar ndp = (p - low_.first())/deltax_;
     const label ip = ndp;
 
-    const scalar ndT = (T - Tlow_)/deltaT_;
+    const scalar ndT = (T - low_.second())/deltay_;
     const label iT = ndT;
 
     checkRange(p, ndp, ip, T, ndT, iT);
 
     const scalar dfdTi =
-        (values_(ip, iT + 1) - values_(ip, iT))/deltaT_;
+        (values_(ip, iT + 1) - values_(ip, iT))/deltay_;
     const scalar dfdTip1 =
-        (values_(ip + 1, iT + 1) - values_(ip + 1, iT))/deltaT_;
+        (values_(ip + 1, iT + 1) - values_(ip + 1, iT))/deltay_;
 
-    const scalar pi = pLow_ + ip*deltap_;
-    const scalar lambdap = (p - pi)/deltap_;
+    const scalar pi = low_.first() + ip*deltax_;
+    const scalar lambdap = (p - pi)/deltax_;
 
     // Interpolate wrt p
     return dfdTi + lambdap*(dfdTip1 - dfdTi);
@@ -193,10 +191,8 @@ dfdT
 
 void Foam::Function2s::uniformTable::write(Ostream& os) const
 {
-    writeEntry(os, "pLow", Tlow_);
-    writeEntry(os, "pHigh", Thigh_);
-    writeEntry(os, "Tlow", Tlow_);
-    writeEntry(os, "Thigh", Thigh_);
+    writeEntry(os, "low", low_);
+    writeEntry(os, "high", high_);
     writeEntry(os, "values", values_);
 }
 

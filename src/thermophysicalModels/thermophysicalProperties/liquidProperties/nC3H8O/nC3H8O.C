@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,11 +53,12 @@ Foam::nC3H8O::nC3H8O()
         0.6279,
         2.4557e+4
     ),
-    rho_(75.300288, 0.272, 536.71, 0.2494),
-    pv_(77.46, -7960, -7.5235, 3e-07, 2.0),
-    hl_(536.71, 1098242.8115016, 0.647, -0.783, 0.613, 0.0),
+    rho_("rho", 75.300288, 0.272, 536.71, 0.2494),
+    pv_("pv", 77.46, -7960, -7.5235, 3e-07, 2.0),
+    hl_("hl", 536.71, 1098242.8115016, 0.647, -0.783, 0.613, 0.0),
     Cp_
     (
+        "Cp",
         216.320553780618,
         18.5203674121406,
        -0.0751797124600639,
@@ -67,6 +68,7 @@ Foam::nC3H8O::nC3H8O()
     ),
     h_
     (
+        "h",
        -5533091.96851587,
         216.320553780618,
         9.26018370607029,
@@ -74,40 +76,49 @@ Foam::nC3H8O::nC3H8O()
         3.16160809371672e-05,
         0.0
     ),
-    Cpg_(961.794462193823, 3467.78487752929, 1542, 2046.72523961661, 649),
+    Cpg_
+    (
+        "Cpg",
+        961.794462193823,
+        3467.78487752929,
+        1542,
+        2046.72523961661,
+        649
+    ),
     B_
     (
+        "B",
         0.000933506389776358,
        -1.09325079872204,
        -531649.361022364,
        -2.32627795527157e+17,
        -3.81888977635783e+20
     ),
-    mu_(0.571, 1521, -2.0894, 0.0, 0.0),
-    mug_(7.942e-07, 0.5491, 415.8, 0.0),
-    kappa_(0.204, -0.000169, 0.0, 0.0, 0.0, 0.0),
-    kappag_(-613.84, 0.7927, -1157400000.0, 0.0),
-    sigma_(0.04533, -6.88e-05, -1.6e-08, 0.0, 0.0, 0.0),
-    D_(4.75e-10, 1.75, 0.0, 0.0, 0.0) // note: same as iC3H8O
+    mu_("mu", 0.571, 1521, -2.0894, 0.0, 0.0),
+    mug_("mug", 7.942e-07, 0.5491, 415.8, 0.0),
+    kappa_("kappa", 0.204, -0.000169, 0.0, 0.0, 0.0, 0.0),
+    kappag_("kappag", -613.84, 0.7927, -1157400000.0, 0.0),
+    sigma_("sigma", 0.04533, -6.88e-05, -1.6e-08, 0.0, 0.0, 0.0),
+    D_("D", 4.75e-10, 1.75, 0.0, 0.0, 0.0) // note: same as iC3H8O
 {}
 
 
 Foam::nC3H8O::nC3H8O
 (
     const liquidProperties& l,
-    const thermophysicalFunctions::NSRDS5& density,
-    const thermophysicalFunctions::NSRDS1& vapourPressure,
-    const thermophysicalFunctions::NSRDS6& heatOfVapourisation,
-    const thermophysicalFunctions::NSRDS0& heatCapacity,
-    const thermophysicalFunctions::NSRDS0& enthalpy,
-    const thermophysicalFunctions::NSRDS7& idealGasHeatCapacity,
-    const thermophysicalFunctions::NSRDS4& secondVirialCoeff,
-    const thermophysicalFunctions::NSRDS1& dynamicViscosity,
-    const thermophysicalFunctions::NSRDS2& vapourDynamicViscosity,
-    const thermophysicalFunctions::NSRDS0& thermalConductivity,
-    const thermophysicalFunctions::NSRDS2& vapourThermalConductivity,
-    const thermophysicalFunctions::NSRDS0& surfaceTension,
-    const thermophysicalFunctions::NSRDS1& vapourDiffusivity
+    const Function1s::NSRDS5& density,
+    const Function1s::NSRDS1& vapourPressure,
+    const Function1s::NSRDS6& heatOfVapourisation,
+    const Function1s::NSRDS0& heatCapacity,
+    const Function1s::NSRDS0& enthalpy,
+    const Function1s::NSRDS7& idealGasHeatCapacity,
+    const Function1s::NSRDS4& secondVirialCoeff,
+    const Function1s::NSRDS1& dynamicViscosity,
+    const Function1s::NSRDS2& vapourDynamicViscosity,
+    const Function1s::NSRDS0& thermalConductivity,
+    const Function1s::NSRDS2& vapourThermalConductivity,
+    const Function1s::NSRDS0& surfaceTension,
+    const Function1s::NSRDS1& vapourDiffusivity
 )
 :
     liquidProperties(l),

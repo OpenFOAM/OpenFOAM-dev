@@ -94,7 +94,7 @@ public:
 
     // Constructors
 
-        //- Construct from entry name
+        //- Construct from name
         Function1(const word& name);
 
         //- Copy constructor
@@ -143,8 +143,8 @@ public:
 
     // Member Operators
 
-        //- Disallow default bitwise assignment
-        void operator=(const Function1<Type>&) = delete;
+        //- Assignment
+        void operator=(const Function1<Type>&);
 
 
     // IOstream Operators
@@ -176,11 +176,8 @@ public:
 
     // Constructors
 
-        //- Construct from entry name
+        //- Construct from name
         FieldFunction1(const word& name);
-
-        //- Copy constructor
-        FieldFunction1(const FieldFunction1<Type, Function1Type>& ff1);
 
         //- Construct and return a clone
         virtual tmp<Function1<Type>> clone() const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,7 +37,7 @@ SourceFiles
 #define liquid_H
 
 #include "liquidProperties.H"
-#include "thermophysicalFunction.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,19 +54,19 @@ class liquid
 {
     // Private Data
 
-        autoPtr<thermophysicalFunction> rho_;
-        autoPtr<thermophysicalFunction> pv_;
-        autoPtr<thermophysicalFunction> hl_;
-        autoPtr<thermophysicalFunction> Cp_;
-        autoPtr<thermophysicalFunction> h_;
-        autoPtr<thermophysicalFunction> Cpg_;
-        autoPtr<thermophysicalFunction> B_;
-        autoPtr<thermophysicalFunction> mu_;
-        autoPtr<thermophysicalFunction> mug_;
-        autoPtr<thermophysicalFunction> kappa_;
-        autoPtr<thermophysicalFunction> kappag_;
-        autoPtr<thermophysicalFunction> sigma_;
-        autoPtr<thermophysicalFunction> D_;
+        autoPtr<Function1<scalar>> rho_;
+        autoPtr<Function1<scalar>> pv_;
+        autoPtr<Function1<scalar>> hl_;
+        autoPtr<Function1<scalar>> Cp_;
+        autoPtr<Function1<scalar>> h_;
+        autoPtr<Function1<scalar>> Cpg_;
+        autoPtr<Function1<scalar>> B_;
+        autoPtr<Function1<scalar>> mu_;
+        autoPtr<Function1<scalar>> mug_;
+        autoPtr<Function1<scalar>> kappa_;
+        autoPtr<Function1<scalar>> kappag_;
+        autoPtr<Function1<scalar>> sigma_;
+        autoPtr<Function1<scalar>> D_;
 
 
 public:
