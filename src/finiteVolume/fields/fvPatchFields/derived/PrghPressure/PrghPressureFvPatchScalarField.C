@@ -39,7 +39,8 @@ PrghPressureFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    PressureFvPatchScalarField(p, iF)
+    PressureFvPatchScalarField(p, iF),
+    rhoName_("rho")
 {}
 
 
@@ -52,7 +53,8 @@ PrghPressureFvPatchScalarField
     const dictionary& dict
 )
 :
-    PressureFvPatchScalarField(p, iF, dict)
+    PressureFvPatchScalarField(p, iF, dict),
+    rhoName_(dict.lookupOrDefault<word>("rho", "rho"))
 {}
 
 
@@ -66,7 +68,8 @@ PrghPressureFvPatchScalarField
     const fvPatchFieldMapper& mapper
 )
 :
-    PressureFvPatchScalarField(ptf, p, iF, mapper)
+    PressureFvPatchScalarField(ptf, p, iF, mapper),
+    rhoName_(ptf.rhoName_)
 {}
 
 
@@ -78,7 +81,8 @@ PrghPressureFvPatchScalarField
     const DimensionedField<scalar, volMesh>& iF
 )
 :
-    PressureFvPatchScalarField(ptf, iF)
+    PressureFvPatchScalarField(ptf, iF),
+    rhoName_(ptf.rhoName_)
 {}
 
 
@@ -98,7 +102,7 @@ updateCoeffs()
     const scalarField& rhop = this->patch().template
         lookupPatchField<volScalarField, scalar>
         (
-            "rho"
+            rhoName_
         );
 
     const uniformDimensionedVectorField& g =
@@ -113,6 +117,15 @@ updateCoeffs()
     (
         *this - rhop*((g.value() & this->patch().Cf()) - ghRef.value())
     );
+}
+
+
+template<class PressureFvPatchScalarField>
+void Foam::PrghPressureFvPatchScalarField<PressureFvPatchScalarField>::
+write(Ostream& os) const
+{
+    PressureFvPatchScalarField::write(os);
+    writeEntry(os, "rho", rhoName_);
 }
 
 

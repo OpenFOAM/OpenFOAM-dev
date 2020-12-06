@@ -66,6 +66,11 @@ class PrghPressureFvPatchScalarField
 :
     public PressureFvPatchScalarField
 {
+    // Private Data
+
+        //- Name of the density field, defaults to "rho"
+        const word rhoName_;
+
 
 public:
 
@@ -132,6 +137,10 @@ public:
 
             //- Update the coefficients associated with the patch field
             virtual void updateCoeffs();
+
+
+        //- Write
+        virtual void write(Ostream&) const;
 };
 
 
