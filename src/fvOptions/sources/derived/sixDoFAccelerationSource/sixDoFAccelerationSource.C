@@ -51,7 +51,7 @@ namespace fv
 #include "Uniform.H"
 #include "ZeroConstant.H"
 #include "OneConstant.H"
-#include "PolynomialEntry.H"
+#include "Polynomial1.H"
 #include "Sine.H"
 #include "Square.H"
 #include "Table.H"

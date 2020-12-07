@@ -25,9 +25,10 @@ Class
     Foam::Function1s::Polynomial
 
 Description
-    PolynomialEntry container data entry for scalars. Items are stored in a
-    list of Tuple2's. Data is input in the form,
-    e.g. for an entry \<name\> that describes y = x^2 + 2x^3
+    Arbitrary order polynomial Function1.
+
+    The coefficients and exponents of the terms in the polynomial are specified
+    as a list of Tuple2's e.g. for the polynomial y = x^2 + 2x^3
 
     \verbatim
         <name>  polynomial
@@ -38,16 +39,15 @@ Description
     \endverbatim
 
 SourceFiles
-    PolynomialEntry.C
+    Polynomial1.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef PolynomialEntry_H
-#define PolynomialEntry_H
+#ifndef Polynomial1_H
+#define Polynomial1_H
 
 #include "Function1.H"
 #include "Tuple2.H"
-#include "Function1Fwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -130,7 +130,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "PolynomialEntry.C"
+    #include "Polynomial1.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
