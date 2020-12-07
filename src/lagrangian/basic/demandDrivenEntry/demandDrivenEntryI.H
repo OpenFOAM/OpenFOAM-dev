@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,65 +25,42 @@ License
 
 #include "demandDrivenEntry.H"
 
-// * * * * * * * * * * * * * * * Constructor * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::demandDrivenEntry<Type>::demandDrivenEntry
-(
-    const dictionary& dict,
-    const Type& value
-)
-:
-    dict_(dict),
-    keyword_("unknown-keyword"),
-    value_(value),
-    stored_(true)
-{}
-
-
-template<class Type>
-Foam::demandDrivenEntry<Type>::demandDrivenEntry
-(
-    const dictionary& dict,
-    const word& keyword
-)
-:
-    dict_(dict),
-    keyword_(keyword),
-    value_(Zero),
-    stored_(false)
-{}
-
-
-template<class Type>
-Foam::demandDrivenEntry<Type>::demandDrivenEntry
-(
-    const dictionary& dict,
-    const word& keyword,
-    const Type& defaultValue,
-    const bool readIfPresent
-)
-:
-    dict_(dict),
-    keyword_(keyword),
-    value_(defaultValue),
-    stored_(true)
+inline void Foam::demandDrivenEntry<Type>::initialise() const
 {
-    if (readIfPresent)
+    if (!stored_)
     {
-        dict_.readIfPresent<Type>(keyword, value_);
+        dict_.lookup(keyword_) >> value_;
+        stored_ = true;
     }
 }
 
 
 template<class Type>
-Foam::demandDrivenEntry<Type>::demandDrivenEntry(const demandDrivenEntry& dde)
-:
-    dict_(dde.dict_),
-    keyword_(dde.keyword_),
-    value_(dde.value_),
-    stored_(dde.stored_)
-{}
+inline const Type& Foam::demandDrivenEntry<Type>::value() const
+{
+    initialise();
+
+    return value_;
+}
+
+
+template<class Type>
+inline void Foam::demandDrivenEntry<Type>::setValue(const Type& value)
+{
+//    dict_.set<Type>(keyword_, value);
+    value_ = value;
+    stored_ = true;
+}
+
+
+template<class Type>
+inline void Foam::demandDrivenEntry<Type>::reset()
+{
+    stored_ = false;
+}
 
 
 // ************************************************************************* //
