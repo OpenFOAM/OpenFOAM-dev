@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -417,11 +417,11 @@ fi
 
 
 #------------------------------------------------------------------------------
-# Check the $objectsDir/sourceFiles file was created successfully
+# Check the $objectsDir/files file was created successfully
 #------------------------------------------------------------------------------
 
-[ -r "$objectsDir/sourceFiles" ] || {
-    echo "$Script error: file '$objectsDir/sourceFiles'" \
+[ -r "$objectsDir/files" ] || {
+    echo "$Script error: file '$objectsDir/files'" \
          "could not be created in $PWD" 1>&2
     exit 1
 }

@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -57,6 +57,8 @@ WM_SCRIPTS      = $(WM_DIR)/scripts
 LIB_SRC         = $(WM_PROJECT_DIR)/src
 LIB_PLATFORMS   = $(WM_PROJECT_DIR)/platforms/$(WM_OPTIONS)/lib
 OBJECTS_DIR     = $(MAKE_DIR)/$(WM_OPTIONS)
+OPTIONS         = $(OBJECTS_DIR)/options
+FILES           = $(OBJECTS_DIR)/files
 
 SYS_INC         =
 SYS_LIBS        =
@@ -103,9 +105,8 @@ include $(GENERAL_RULES)/general
 # These are constructed by makefiles/files
 #------------------------------------------------------------------------------
 
-include $(OBJECTS_DIR)/options
-include $(OBJECTS_DIR)/variables
-include $(OBJECTS_DIR)/sourceFiles
+include $(OPTIONS)
+include $(FILES)
 DEPENDENCIES=$(SOURCE:%=$(OBJECTS_DIR)/%.dep)
 BASENAMES=$(basename $(SOURCE))
 OBJECTS=$(BASENAMES:%=$(OBJECTS_DIR)/%.o)
