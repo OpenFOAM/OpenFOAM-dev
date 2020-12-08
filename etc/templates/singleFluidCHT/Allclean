@@ -4,9 +4,9 @@ cd "${0%/*}" || exit 1    # run from this directory
 # Source tutorial clean functions
 . "$WM_PROJECT_DIR/bin/tools/CleanFunctions"
 
-removeRegionDirs () {
-    # HACK to get regionDirs from materialProperties
-    _regionDirs="$(grep -E "^[a-Z]" constant/materialProperties | tail -n +2)"
+removeRegionDirs ()
+{
+    _regionDirs="$(foamDictionary -keywords constant/materialProperties)"
 
     for d in system constant
     do
