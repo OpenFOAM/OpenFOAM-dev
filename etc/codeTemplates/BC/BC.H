@@ -161,16 +161,7 @@ public:
         CONSTRUCT
         (
             const CLASS&
-        );
-
-        //- Construct and return a clone
-        virtual tmp<FVPATCHF> clone() const
-        {
-            return tmp<FVPATCHF>
-            (
-                new CLASS(*this)
-            );
-        }
+        ) = delete;
 
         //- Copy constructor setting internal field reference
         CONSTRUCT
