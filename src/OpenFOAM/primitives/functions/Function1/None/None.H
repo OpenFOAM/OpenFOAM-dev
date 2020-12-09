@@ -74,14 +74,14 @@ public:
 
     // Member Functions
 
-        //- Evaluate the function and return the result
-        virtual Type value(scalar T) const;
+        //- Generates an error
+        virtual Type value(const scalar x) const;
 
-        //- Integrate between two values
+        //- Generates an error
         virtual Type integral(const scalar x1, const scalar x2) const;
 
-        //- Write the function coefficients
-        void write(Ostream& os) const;
+        //- Write in dictionary format
+        virtual void write(Ostream& os) const;
 
 
     // Member Operators

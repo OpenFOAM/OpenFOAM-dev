@@ -49,10 +49,10 @@ Foam::Function1s::None<Type>::~None()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Type Foam::Function1s::None<Type>::value(scalar T) const
+Type Foam::Function1s::None<Type>::value(const scalar) const
 {
     FatalErrorInFunction
-        << "Required Function " << nl
+        << "Required function " << nl
         << "    " << dictName_ << nl
         << "    is not defined."
         << exit(FatalError);
@@ -62,14 +62,10 @@ Type Foam::Function1s::None<Type>::value(scalar T) const
 
 
 template<class Type>
-Type Foam::Function1s::None<Type>::integral
-(
-    const scalar x1,
-    const scalar x2
-) const
+Type Foam::Function1s::None<Type>::integral(const scalar, const scalar) const
 {
     FatalErrorInFunction
-        << "Required Function " << nl
+        << "Required function " << nl
         << "    " << dictName_ << nl
         << "    is not defined."
         << exit(FatalError);
