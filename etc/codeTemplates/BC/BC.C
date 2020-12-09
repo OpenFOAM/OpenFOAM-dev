@@ -74,7 +74,7 @@ CONSTRUCT
 :
     PARENT(p, iF),
     scalarData_(dict.lookup<scalar>("scalarData")),
-    data_(pTraits<TYPE>(dict.lookup("data"))),
+    data_(dict.lookup<TYPE>("data")),
     fieldData_("fieldData", dict, p.size()),
     timeVsData_(Function1<TYPE>::New("timeVsData", dict)),
     wordData_(dict.lookupOrDefault<word>("wordName", "wordDefault")),
@@ -114,24 +114,6 @@ CONSTRUCT
     scalarData_(ptf.scalarData_),
     data_(ptf.data_),
     fieldData_(mapper(ptf.fieldData_)),
-    timeVsData_(ptf.timeVsData_, false),
-    wordData_(ptf.wordData_),
-    labelData_(-1),
-    boolData_(ptf.boolData_)
-{}
-
-
-template<class Type>
-Foam::CLASS::
-CONSTRUCT
-(
-    const CLASS& ptf
-)
-:
-    PARENT(ptf),
-    scalarData_(ptf.scalarData_),
-    data_(ptf.data_),
-    fieldData_(ptf.fieldData_),
     timeVsData_(ptf.timeVsData_, false),
     wordData_(ptf.wordData_),
     labelData_(-1),
