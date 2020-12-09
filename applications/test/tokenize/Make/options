@@ -1,6 +1,3 @@
-/*
-  check for consistent behaviour with non-optimized code
-  */
-
+# Check for consistent behaviour with non-optimized code
 EXE_INC = \
     -DFULLDEBUG -g -O0

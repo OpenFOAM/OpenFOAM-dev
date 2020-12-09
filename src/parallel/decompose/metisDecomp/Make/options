@@ -1,5 +1,4 @@
 EXE_INC = \
-    /* -DFULLDEBUG -g -O0 */ \
     -I$(METIS_ARCH_PATH)/include \
     -I../decompositionMethods/lnInclude
 

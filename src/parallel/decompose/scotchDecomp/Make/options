@@ -1,7 +1,6 @@
-/*
- * Note including of mplib compilation rules.
- * This is purely to avoid scotch.h including mpicxx.h, which causes problems.
- */
+# Note including of mplib compilation rules.
+# This is purely to avoid scotch.h including mpicxx.h, which causes problems.
+
 -include $(GENERAL_RULES)/mplibType
 
 EXE_INC = \

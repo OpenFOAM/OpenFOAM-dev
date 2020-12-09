@@ -22,7 +22,7 @@ EXE_INC = \
 EXE_LIBS = \
     $(CGAL_LIBS) \
     -lconformalVoronoiMesh \
-    -ldecompositionMethods /* -L$(FOAM_LIBBIN)/dummy -lscotchDecomp */ \
+    -ldecompositionMethods \
     -ltriSurface \
     -lsurfMesh \
     -lmeshTools \

@@ -5,7 +5,6 @@ include $(GENERAL_RULES)/CGAL
 EXE_INC = \
     -DUNIX \
     -Wno-old-style-cast \
-    /* -IMarchingCubes */ \
     -I$(FASTDUALOCTREE_SRC_PATH) \
     -I../conformalVoronoiMesh/lnInclude \
     -I$(LIB_SRC)/mesh/snappyHexMesh/lnInclude \

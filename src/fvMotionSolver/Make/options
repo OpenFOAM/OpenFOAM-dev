@@ -14,4 +14,3 @@ LIB_LIBS = \
     -ldynamicFvMesh \
     -lfiniteVolume \
     -lfileFormats
-    /*-lforces include in controlDict if needed */

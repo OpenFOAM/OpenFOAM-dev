@@ -1,4 +1,4 @@
-/* Note: enable vtkPolyhedron when available */
+# Note: enable vtkPolyhedron when available
 
 EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude \

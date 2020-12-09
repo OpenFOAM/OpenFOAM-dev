@@ -1,9 +1,9 @@
-/* Needs ParMGridGen environment variable set. (see Allwmake script) */
+# Needs ParMGridGen environment variable set. (see Allwmake script)
 
-TYPE_REAL=
-#if defined(WM_SP)
-TYPE_REAL=-DTYPE_REAL
-#endif
+TYPE_REAL =
+ifndef $(WM_SP)
+    TYPE_REAL = -DTYPE_REAL
+endif
 
 EXE_INC = \
     -I$(LIB_SRC)/finiteVolume/lnInclude \

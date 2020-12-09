@@ -1,7 +1,6 @@
 -include $(GENERAL_RULES)/mplibType
 
 EXE_INC = \
-    /* -DFULLDEBUG -g -O0 */ \
     $(PFLAGS) $(PINC) \
     -I$(FOAM_SRC)/Pstream/mpi/lnInclude \
     -I$(FOAM_SRC)/renumber/renumberMethods/lnInclude \
@@ -9,5 +8,4 @@ EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 LIB_LIBS = \
-    /* -L$(ZOLTAN_ARCH_PATH)/lib -lzoltan */ \
     -lmeshTools

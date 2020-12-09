@@ -390,8 +390,7 @@ fi
 
 
 #------------------------------------------------------------------------------
-# Spawn a sub-shell and unset MAKEFLAGS in that sub-shell to avoid
-# files and options being built in parallel
+# Created the objectsDir directory
 #------------------------------------------------------------------------------
 
 objectsDir=$MakeDir/$WM_OPTIONS
@@ -402,29 +401,31 @@ then
     objectsDir=$platformPath${exPath//$WM_PROJECT_DIR/}
 fi
 
-(
-    unset MAKEFLAGS
-    mkdir -p "$objectsDir"
-
-    # Pre-build the $WM_OPTIONS/options file
-    # which is included when building the $WM_OPTIONS/files file
-    $make -s -f "$WM_DIR/makefiles/files" MAKE_DIR="$MakeDir" \
-          OBJECTS_DIR="$objectsDir" "$objectsDir/options"
-
-    $make -s -f "$WM_DIR/makefiles/files" MAKE_DIR="$MakeDir" \
-          OBJECTS_DIR="$objectsDir"
-)
+mkdir -p "$objectsDir"
 
 
 #------------------------------------------------------------------------------
-# Check the $objectsDir/files file was created successfully
+# Create $objectsDir/files from $MakeDir/files if necessary
+#
+# Spawn a sub-shell and unset MAKEFLAGS in that sub-shell to avoid
+# $objectsDir/files being built in parallel
 #------------------------------------------------------------------------------
 
-[ -r "$objectsDir/files" ] || {
-    echo "$Script error: file '$objectsDir/files'" \
-         "could not be created in $PWD" 1>&2
-    exit 1
-}
+if ! grep -q "SOURCE" "$MakeDir/files"; then
+    (
+        unset MAKEFLAGS
+
+        $make -s -f "$WM_DIR/makefiles/files" MAKE_DIR="$MakeDir" \
+              OBJECTS_DIR="$objectsDir"
+    )
+
+    # Check the $objectsDir/files file was created successfully
+    [ -r "$objectsDir/files" ] || {
+        echo "$Script error: file '$objectsDir/files'" \
+             "could not be created in $PWD" 1>&2
+        exit 1
+    }
+fi
 
 
 #------------------------------------------------------------------------------

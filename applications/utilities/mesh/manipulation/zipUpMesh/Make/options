@@ -1,8 +1,9 @@
 EXE_INC = \
-    -I$(LIB_SRC)/meshTools/lnInclude \
-    /* -DDEBUG_ZIPUP */ \
-    /* -DDEBUG_CHAIN */ \
-    /* -DDEBUG_ORDER */
+    -I$(LIB_SRC)/meshTools/lnInclude
+
+#EXE_INC += -DDEBUG_ZIPUP
+#EXE_INC += -DDEBUG_CHAIN
+#EXE_INC += -DDEBUG_ORDER
 
 EXE_LIBS = \
     -lmeshTools
