@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "None.H"
 #include "Constant.H"
 #include "Uniform.H"
 #include "ZeroConstant.H"
@@ -53,6 +54,7 @@ const Foam::wordList Foam::CodedBase<Foam::Function1s::coded>::codeKeys_ =
 namespace Foam
 {
     makeFunction1(label);
+    makeFunction1Type(None, label);
     makeFunction1Type(Constant, label);
 
     makeFunction1s(scalar);

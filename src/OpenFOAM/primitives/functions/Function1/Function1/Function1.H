@@ -244,6 +244,7 @@ public:
 
 #define makeFunction1s(Type)                                                   \
     makeFunction1(Type);                                                       \
+    makeFunction1Type(None, Type);                                             \
     makeFunction1Type(Constant, Type);                                         \
     makeFunction1Type(Uniform, Type);                                          \
     makeFunction1Type(ZeroConstant, Type);                                     \

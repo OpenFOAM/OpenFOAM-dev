@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "liquid.H"
+#include "None.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -34,24 +35,47 @@ namespace Foam
     addToRunTimeSelectionTable(liquidProperties, liquid, dictionary);
 }
 
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+Foam::autoPtr<Foam::Function1<Foam::scalar>> Foam::liquid::New
+(
+    const word& name,
+    const dictionary& dict
+)
+{
+    if (dict.isDict(name))
+    {
+        return Function1<scalar>::New(name, dict);
+    }
+    else
+    {
+        return autoPtr<Function1<scalar>>
+        (
+            new Function1s::None<scalar>(name, dict)
+        );
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::liquid::liquid(const dictionary& dict)
 :
     liquidProperties(dict),
-    rho_(Function1<scalar>::New("rho", dict)),
-    pv_(Function1<scalar>::New("pv", dict)),
-    hl_(Function1<scalar>::New("hl", dict)),
-    Cp_(Function1<scalar>::New("Cp", dict)),
-    h_(Function1<scalar>::New("h", dict)),
-    Cpg_(Function1<scalar>::New("Cpg", dict)),
-    B_(Function1<scalar>::New("B", dict)),
-    mu_(Function1<scalar>::New("mu", dict)),
-    mug_(Function1<scalar>::New("mug", dict)),
-    kappa_(Function1<scalar>::New("kappa", dict)),
-    kappag_(Function1<scalar>::New("kappag", dict)),
-    sigma_(Function1<scalar>::New("sigma", dict)),
-    D_(Function1<scalar>::New("D", dict))
+    rho_(New("rho", dict)),
+    pv_(New("pv", dict)),
+    hl_(New("hl", dict)),
+    Cp_(New("Cp", dict)),
+    h_(New("h", dict)),
+    Cpg_(New("Cpg", dict)),
+    B_(New("B", dict)),
+    mu_(New("mu", dict)),
+    mug_(New("mug", dict)),
+    kappa_(New("kappa", dict)),
+    kappag_(New("kappag", dict)),
+    sigma_(New("sigma", dict)),
+    D_(New("D", dict))
 {}
 
 

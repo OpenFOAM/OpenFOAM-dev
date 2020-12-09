@@ -69,6 +69,15 @@ class liquid
         autoPtr<Function1<scalar>> D_;
 
 
+    // Private Member Functions
+
+        autoPtr<Function1<scalar>> New
+        (
+            const word& name,
+            const dictionary& dict
+        );
+
+
 public:
 
     friend class liquidProperties;
