@@ -47,6 +47,7 @@ namespace fv
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#include "None.H"
 #include "Constant.H"
 #include "Uniform.H"
 #include "ZeroConstant.H"
