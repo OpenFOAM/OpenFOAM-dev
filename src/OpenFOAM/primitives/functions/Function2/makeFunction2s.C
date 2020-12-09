@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "None2.H"
 #include "Constant2.H"
 #include "ZeroConstant2.H"
 #include "OneConstant2.H"
@@ -47,6 +48,7 @@ const Foam::wordList Foam::CodedBase<Foam::Function2s::coded>::codeKeys_ =
 
 #define makeFunction2s(Type)                                                   \
     makeFunction2(Type);                                                       \
+    makeFunction2Type(None, Type);                                             \
     makeFunction2Type(Constant, Type);                                         \
     makeFunction2Type(ZeroConstant, Type);                                     \
     makeFunction2Type(OneConstant, Type);                                      \
@@ -56,6 +58,7 @@ const Foam::wordList Foam::CodedBase<Foam::Function2s::coded>::codeKeys_ =
 namespace Foam
 {
     makeFunction2(label);
+    makeFunction2Type(None, label);
     makeFunction2Type(Constant, label);
 
     makeFunction2s(scalar);

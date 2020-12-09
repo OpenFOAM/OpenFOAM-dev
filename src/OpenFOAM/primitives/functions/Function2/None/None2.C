@@ -23,18 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "None.H"
+#include "None2.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1s::None<Type>::None
+Foam::Function2s::None<Type>::None
 (
     const word& name,
     const dictionary& dict
 )
 :
-    FieldFunction1<Type, None<Type>>(name),
+    FieldFunction2<Type, None<Type>>(name),
     dictName_(dict.name())
 {}
 
@@ -42,14 +42,14 @@ Foam::Function1s::None<Type>::None
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class Type>
-Foam::Function1s::None<Type>::~None()
+Foam::Function2s::None<Type>::~None()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-Type Foam::Function1s::None<Type>::value(const scalar) const
+Type Foam::Function2s::None<Type>::value(const scalar, const scalar) const
 {
     FatalErrorInFunction
         << "Required function " << this->name() << " in " << nl
@@ -62,20 +62,7 @@ Type Foam::Function1s::None<Type>::value(const scalar) const
 
 
 template<class Type>
-Type Foam::Function1s::None<Type>::integral(const scalar, const scalar) const
-{
-    FatalErrorInFunction
-        << "Required function " << this->name() << " in " << nl
-        << "    " << dictName_ << nl
-        << "    is not defined."
-        << exit(FatalError);
-
-    return pTraits<Type>::zero;
-}
-
-
-template<class Type>
-void Foam::Function1s::None<Type>::write(Ostream& os) const
+void Foam::Function2s::None<Type>::write(Ostream& os) const
 {}
 
 
