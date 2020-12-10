@@ -17,9 +17,9 @@ memInfo/memInfo.C
 fileMonitor.C
 
 ifdef SunOS64
-dummyPrintStack.C
+    dummyPrintStack.C
 else
-printStack.C
+    printStack.C
 endif
 
 LIB = $(FOAM_LIBBIN)/libOSspecific
