@@ -6,13 +6,13 @@ CLOUDS=clouds
 BASECLOUDS=$(CLOUDS)/baseClasses
 DERIVEDCLOUDS=$(CLOUDS)/derived
 
-/* parcel cloud */
+# parcel cloud
 parcelCloud/parcelCloudBase.C
 parcelCloud/parcelCloud.C
 parcelCloud/parcelCloudNew.C
 parcelCloudList/parcelCloudList.C
 
-/* cloud names */
+# cloud names
 $(CLOUDS)/Templates/MomentumCloud/MomentumCloudName.C
 $(CLOUDS)/Templates/CollidingCloud/CollidingCloudName.C
 $(CLOUDS)/Templates/MPPICCloud/MPPICCloudName.C
@@ -21,7 +21,7 @@ $(CLOUDS)/Templates/ReactingCloud/ReactingCloudName.C
 $(CLOUDS)/Templates/ReactingMultiphaseCloud/ReactingMultiphaseCloudName.C
 $(CLOUDS)/Templates/SprayCloud/SprayCloudName.C
 
-/* clouds */
+# clouds
 $(DERIVEDCLOUDS)/momentumCloud/momentumCloud.C
 $(DERIVEDCLOUDS)/collidingCloud/collidingCloud.C
 $(DERIVEDCLOUDS)/mppicCloud/mppicCloud.C
@@ -30,7 +30,7 @@ $(DERIVEDCLOUDS)/reactingCloud/reactingCloud.C
 $(DERIVEDCLOUDS)/reactingMultiphaseCloud/reactingMultiphaseCloud.C
 $(DERIVEDCLOUDS)/sprayCloud/sprayCloud.C
 
-/* parcel names */
+# parcel names
 $(PARCELS)/Templates/MomentumParcel/MomentumParcelName.C
 $(PARCELS)/Templates/CollidingParcel/CollidingParcelName.C
 $(PARCELS)/Templates/MPPICParcel/MPPICParcelName.C
@@ -39,7 +39,7 @@ $(PARCELS)/Templates/ReactingParcel/ReactingParcelName.C
 $(PARCELS)/Templates/SprayParcel/SprayParcelName.C
 $(PARCELS)/Templates/ThermoParcel/ThermoParcelName.C
 
-/* sub-models */
+# sub-models
 $(DERIVEDPARCELS)/momentumParcel/makeMomentumParcelSubmodels.C
 $(DERIVEDPARCELS)/collidingParcel/makeCollidingParcelSubmodels.C
 $(DERIVEDPARCELS)/mppicParcel/makeMppicParcelSubmodels.C
@@ -48,7 +48,7 @@ $(DERIVEDPARCELS)/reactingParcel/makeReactingParcelSubmodels.C
 $(DERIVEDPARCELS)/reactingMultiphaseParcel/makeReactingMultiphaseParcelSubmodels.C
 $(DERIVEDPARCELS)/sprayParcel/makeSprayParcelSubmodels.C
 
-/* bolt-on models */
+# bolt-on models
 RADIATION=submodels/addOns/radiation
 $(RADIATION)/absorptionEmission/cloudAbsorptionEmission/cloudAbsorptionEmission.C
 $(RADIATION)/scatter/cloudScatter/cloudScatter.C
@@ -96,21 +96,21 @@ $(MPPICTIMESCALE)/equilibrium/equilibrium.C
 $(MPPICTIMESCALE)/nonEquilibrium/nonEquilibrium.C
 $(MPPICTIMESCALE)/isotropic/isotropic.C
 
-/* integration schemes */
+# integration schemes
 integrationScheme/integrationScheme/integrationScheme.C
 integrationScheme/integrationScheme/integrationSchemeNew.C
 integrationScheme/Euler/Euler.C
 integrationScheme/analytical/analytical.C
 
-/* phase properties */
+# phase properties
 phaseProperties/phaseProperties/phaseProperties.C
 phaseProperties/phaseProperties/phasePropertiesIO.C
 phaseProperties/phasePropertiesList/phasePropertiesList.C
 
-/* additional helper classes */
+# additional helper classes
 clouds/Templates/MomentumCloud/cloudSolution/cloudSolution.C
 
-/* averaging methods */
+# averaging methods
 submodels/MPPIC/AveragingMethods/makeAveragingMethods.C
 
 LIB = $(FOAM_LIBBIN)/liblagrangianParcel

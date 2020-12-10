@@ -5,7 +5,7 @@ interRegionOption/interRegionOption.C
 interRegionOption/interRegionOptionIO.C
 
 
-/* Sources */
+# Sources
 
 generalSources=sources/general
 $(generalSources)/codedSource/codedSource.C
@@ -53,13 +53,13 @@ $(interRegion)/interRegionHeatTransfer/variableHeatTransfer/variableHeatTransfer
 $(interRegion)/interRegionExplicitPorositySource/interRegionExplicitPorositySource.C
 
 
-/* Constraints */
+# Constraints
 
 constraints/fixedValueConstraint/fixedValueConstraints.C
 constraints/fixedTemperatureConstraint/fixedTemperatureConstraint.C
 
 
-/* Corrections */
+# Corrections
 
 corrections/limitTemperature/limitTemperature.C
 corrections/limitVelocity/limitVelocity.C

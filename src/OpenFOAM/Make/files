@@ -1,6 +1,6 @@
 global/global.Cver
-/* global/constants/constants.C in global.Cver */
-/* global/constants/dimensionedConstants.C in global.Cver */
+# global/constants/constants.C in global.Cver
+# global/constants/dimensionedConstants.C in global.Cver
 global/argList/argList.C
 global/clock/clock.C
 global/etcFiles/etcFiles.C
@@ -66,10 +66,10 @@ primitives/Tensor/lists/symmTensorList.C
 primitives/Tensor/lists/tensorList.C
 
 primitives/Vector/complexVector/complexVector.C
-#if !defined(WM_SP)
+ifndef $(WM_SP)
 primitives/Vector/floatVector/floatVector.C
 primitives/Tensor/floatTensor/floatTensor.C
-#endif
+endif
 primitives/Vector/labelVector/labelVector.C
 primitives/Vector/vector/vector.C
 primitives/Vector/lists/vectorList.C
@@ -88,7 +88,7 @@ primitives/quaternion/quaternion.C
 primitives/septernion/septernion.C
 primitives/triad/triad.C
 
-/* Run-time selectable functions */
+# Run-time selectable functions
 primitives/functions/Function1/makeFunction1s.C
 primitives/functions/Function1/reverseRamp/reverseRamp.C
 primitives/functions/Function1/linearRamp/linearRamp.C
@@ -193,7 +193,7 @@ $(StringStreams)/StringStreamsPrint.C
 Pstreams = $(Streams)/Pstreams
 $(Pstreams)/UIPstream.C
 $(Pstreams)/IPstream.C
-/* $(Pstreams)/UPstream.C in global.Cver */
+# $(Pstreams)/UPstream.C in global.Cver
 $(Pstreams)/UPstreamCommsStruct.C
 $(Pstreams)/Pstream.C
 $(Pstreams)/UOPstream.C

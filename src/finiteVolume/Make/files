@@ -296,9 +296,7 @@ $(schemes)/quadraticFit/quadraticFit.C
 $(schemes)/quadraticLinearUpwindFit/quadraticLinearUpwindFit.C
 $(schemes)/quadraticUpwindFit/quadraticUpwindFit.C
 $(schemes)/cubicUpwindFit/cubicUpwindFit.C
-/*
-$(schemes)/quadraticLinearPureUpwindFit/quadraticLinearPureUpwindFit.C
-*/
+# $(schemes)/quadraticLinearPureUpwindFit/quadraticLinearPureUpwindFit.C
 $(schemes)/linearPureUpwindFit/linearPureUpwindFit.C
 $(schemes)/linearUpwind/linearUpwind.C
 $(schemes)/linearUpwind/linearUpwindV.C

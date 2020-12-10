@@ -29,7 +29,7 @@ $(cellSizeAndAlignmentControl)/cellSizeAndAlignmentControls.C
 $(cellSizeAndAlignmentControl)/cellSizeAndAlignmentControl/cellSizeAndAlignmentControl.C
 $(cellSizeAndAlignmentControl)/fileControl/fileControl.C
 $(cellSizeAndAlignmentControl)/searchableSurfaceControl/searchableSurfaceControl.C
-/*cellShapeControl/pQuadCoorControl/pQuadCoorControl.C*/
+# cellShapeControl/pQuadCoorControl/pQuadCoorControl.C
 
 cellShapeControl/cellAspectRatioControl/cellAspectRatioControl.C
 
@@ -37,7 +37,7 @@ cellShapeControl/smoothAlignmentSolver/smoothAlignmentSolver.C
 
 cellShapeControl/controlMeshRefinement/controlMeshRefinement.C
 
-/*cellSizeControlSurfaces/cellSizeControlSurfaces.C*/
+# cellSizeControlSurfaces/cellSizeControlSurfaces.C
 
 cellSizeFunctions = cellSizeControlSurfaces/cellSizeFunction
 $(cellSizeFunctions)/cellSizeFunction/cellSizeFunction.C

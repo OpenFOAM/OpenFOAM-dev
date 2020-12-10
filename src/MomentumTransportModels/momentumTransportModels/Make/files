@@ -20,12 +20,12 @@ $(LESfilters)/laplaceFilter/laplaceFilter.C
 $(LESfilters)/anisotropicFilter/anisotropicFilter.C
 
 
-/* Turbulence BCs */
+# Turbulence BCs
 derivedFvPatchFields/fixedShearStress/fixedShearStressFvPatchVectorField.C
 derivedFvPatchFields/porousBafflePressure/porousBafflePressureFvPatchField.C
 
 
-/* Wall function BCs */
+# Wall function BCs
 wallFunctions = derivedFvPatchFields/wallFunctions
 
 nutWallFunctions = $(wallFunctions)/nutWallFunctions
@@ -58,7 +58,7 @@ $(fWallFunctions)/fWallFunction/fWallFunctionFvPatchScalarField.C
 
 RASBCs = RAS/derivedFvPatchFields
 
-/* Inlet turbulence BCs */
+# Inlet turbulence BCs
 $(RASBCs)/turbulentMixingLengthDissipationRateInlet/turbulentMixingLengthDissipationRateInletFvPatchScalarField.C
 $(RASBCs)/turbulentMixingLengthFrequencyInlet/turbulentMixingLengthFrequencyInletFvPatchScalarField.C
 

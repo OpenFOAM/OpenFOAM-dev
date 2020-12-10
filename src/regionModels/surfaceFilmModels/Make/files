@@ -1,4 +1,4 @@
-/* Surface film models */
+# Surface film models
 surfaceFilmModel/surfaceFilmModel.C
 surfaceFilmModel/surfaceFilmModelNew.C
 surfaceFilmRegionModel/surfaceFilmRegionModel.C
@@ -7,7 +7,7 @@ kinematicSingleLayer/kinematicSingleLayer.C
 thermoSingleLayer/thermoSingleLayer.C
 
 
-/* Sub-models */
+# Sub-models
 submodels/filmSubModelBase.C
 
 KINEMATICMODELS=submodels/kinematic
@@ -71,7 +71,7 @@ $(THERMOMODELS)/filmViscosityModel/function1Viscosity/function1Viscosity.C
 $(THERMOMODELS)/filmViscosityModel/waxSolventViscosity/waxSolventViscosity.C
 
 
-/* Boundary conditions */
+# Boundary conditions
 PATCHFIELDS=derivedFvPatchFields
 $(PATCHFIELDS)/filmHeightInletVelocity/filmHeightInletVelocityFvPatchVectorField.C
 $(PATCHFIELDS)/inclinedFilmNusseltHeight/inclinedFilmNusseltHeightFvPatchScalarField.C

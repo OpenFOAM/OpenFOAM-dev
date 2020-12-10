@@ -1,4 +1,4 @@
-/* Radiation model */
+# Radiation model
 radiationModels/radiationModel/radiationModel.C
 radiationModels/radiationModel/radiationModelNew.C
 radiationModels/noRadiation/noRadiation.C
@@ -10,13 +10,13 @@ radiationModels/fvDOM/absorptionCoeffs/absorptionCoeffs.C
 radiationModels/viewFactor/viewFactor.C
 radiationModels/opaqueSolid/opaqueSolid.C
 
-/* Scatter model */
+# Scatter model
 scatterModels/scatterModel/scatterModel.C
 scatterModels/scatterModel/scatterModelNew.C
 scatterModels/noScatter/noScatter.C
 scatterModels/constantScatter/constantScatter.C
 
-/* Absorption/Emission model */
+# Absorption/Emission model
 absorptionEmissionModels/absorptionEmissionModel/absorptionEmissionModel.C
 absorptionEmissionModels/absorptionEmissionModel/absorptionEmissionModelNew.C
 absorptionEmissionModels/noAbsorptionEmission/noAbsorptionEmission.C
@@ -26,12 +26,12 @@ absorptionEmissionModels/greyMean/greyMean.C
 absorptionEmissionModels/wideBand/wideBand.C
 absorptionEmissionModels/interpolationLookUpTable/interpolationLookUpTable.C
 
-/* Soot model */
+# Soot model
 sootModels/sootModel/sootModel.C
 sootModels/sootModel/sootModelNew.C
 sootModels/noSoot/noSoot.C
 
-/* Boundary conditions */
+# Boundary conditions
 derivedFvPatchFields/MarshakRadiation/MarshakRadiationFvPatchScalarField.C
 derivedFvPatchFields/MarshakRadiationFixedTemperature/MarshakRadiationFixedTemperatureFvPatchScalarField.C
 derivedFvPatchFields/greyDiffusiveRadiation/greyDiffusiveRadiationMixedFvPatchScalarField.C
@@ -39,7 +39,7 @@ derivedFvPatchFields/wideBandDiffusiveRadiation/wideBandDiffusiveRadiationMixedF
 derivedFvPatchFields/radiationCoupledBase/radiationCoupledBase.C
 derivedFvPatchFields/greyDiffusiveViewFactor/greyDiffusiveViewFactorFixedValueFvPatchScalarField.C
 
-/* fvOptions */
+# fvOptions
 fvOptions/radiation/radiation.C
 
 LIB = $(FOAM_LIBBIN)/libradiationModels

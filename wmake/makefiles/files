@@ -27,9 +27,8 @@
 # Description
 #     A Makefile to process Make/files for gmake
 #
-#     If the Make/files file does not contain a SOURCE entry it is parsed by cpp
-#     to filter comments, expands macros and variable and the source file list
-#     is converted into the SOURCE entry for gmake.
+#     If the Make/files file does not contain a SOURCE list the source file
+#     names in it are converted into the SOURCE list for gmake.
 #------------------------------------------------------------------------------
 
 GENERAL_RULES   = $(WM_DIR)/rules/General
@@ -54,22 +53,12 @@ include $(OPTIONS)
 
 all : $(FILES)
 
-# Create a grep pattern from the source file suffix list
-SUFFIX_PATTERN = \
-    $(shell echo $(SUFFIXES) \
-    | sed -e "s/\([a-zA-Z]\) \./\1\\\|./g" -e "s/\./\\\./g")
+# Create a sed pattern from the source file suffix list
+SUFFIX_SED = $(foreach s,$(SUFFIXES),'-e s/\(^ *[^ ]*\$(s)$$\)/SOURCE += \1/')
 
+# Prepend SOURCE += to each of the source file names
 $(FILES): $(MAKE_DIR)/files
-	@$(CPP) $(GFLAGS) $(MAKE_DIR)/files | sed -e 's@   *@ @g' \
-        > $(OBJECTS_DIR)/cppdFiles
-	# Use the suffix pattern to find all non source file lines in files
-	@grep -v "$(SUFFIX_PATTERN)" $(OBJECTS_DIR)/cppdFiles > $(FILES)
-	# Use the suffix pattern to create the SOURCE entry from the source files
-	@echo "SOURCE = \\" >> $(FILES)
-	@grep "$(SUFFIX_PATTERN)" $(OBJECTS_DIR)/cppdFiles \
-        | sed -e 's,$$, \\,' -e '$$s,\\,,' >> $(FILES)
-	# Remove the temporary cpp'd files file
-	@rm -f $(OBJECTS_DIR)/cppdFiles
+	@sed $(SUFFIX_SED) $(MAKE_DIR)/files > $(FILES)
 
 
 #------------------------------------------------------------------------------

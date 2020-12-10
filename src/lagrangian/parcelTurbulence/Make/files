@@ -1,7 +1,7 @@
 PARCELS=parcels
 DERIVEDPARCELS=$(PARCELS)/derived
 
-/* sub-models */
+# sub-models
 $(DERIVEDPARCELS)/momentumParcel/makeMomentumParcelSubmodels.C
 $(DERIVEDPARCELS)/collidingParcel/makeCollidingParcelSubmodels.C
 $(DERIVEDPARCELS)/mppicParcel/makeMppicParcelSubmodels.C

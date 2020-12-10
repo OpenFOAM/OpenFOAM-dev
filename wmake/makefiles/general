@@ -106,12 +106,17 @@ include $(GENERAL_RULES)/general
 
 
 #------------------------------------------------------------------------------
-# Include PROJECT directory tree file and
-# source, object and dependency list files.
-# These are constructed by makefiles/files
+# Include the options file which might contain specific rules, suffixes etc.
 #------------------------------------------------------------------------------
 
 include $(OPTIONS)
+include $(GENERAL_RULES)/transform
+
+
+#------------------------------------------------------------------------------
+# Include the files file containing the list of source files to compile
+#------------------------------------------------------------------------------
+
 include $(FILES)
 DEPENDENCIES=$(SOURCE:%=$(OBJECTS_DIR)/%.dep)
 BASENAMES=$(basename $(SOURCE))

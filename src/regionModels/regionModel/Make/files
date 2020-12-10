@@ -1,9 +1,9 @@
-/* Region models */
+# Region models
 regionModel/regionModel.C
 singleLayerRegion/singleLayerRegion.C
 regionModel1D/regionModel1D.C
 
-/* Boundary conditions */
+# Boundary conditions
 derivedFvPatches/mappedVariableThicknessWall/mappedVariableThicknessWallFvPatch.C
 
 regionProperties/regionProperties.C
