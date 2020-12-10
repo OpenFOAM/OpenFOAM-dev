@@ -101,7 +101,8 @@ Foam::functionObjects::turbulenceFields::turbulenceFields
 )
 :
     fvMeshFunctionObject(name, runTime, dict),
-    fieldSet_()
+    fieldSet_(),
+    phaseName_(dict.lookupOrDefault<word>("phase", word::null))
 {
     read(dict);
 }
@@ -114,12 +115,6 @@ Foam::functionObjects::turbulenceFields::~turbulenceFields()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-const Foam::word& Foam::functionObjects::turbulenceFields::modelName()
-{
-    return Foam::momentumTransportModel::typeName;
-}
-
 
 bool Foam::functionObjects::turbulenceFields::read(const dictionary& dict)
 {
@@ -134,7 +129,7 @@ bool Foam::functionObjects::turbulenceFields::read(const dictionary& dict)
 
     if (dict.lookupOrDefault<Switch>("prefix", false))
     {
-        prefix_ = modelName() + ':';
+        prefix_ = momentumTransportModel::typeName + ':';
     }
     else
     {
@@ -147,7 +142,8 @@ bool Foam::functionObjects::turbulenceFields::read(const dictionary& dict)
         Info<< "storing fields:" << nl;
         forAllConstIter(wordHashSet, fieldSet_, iter)
         {
-            Info<< "    " << prefix_ + iter.key() << nl;
+            Info<< "    "
+                << IOobject::groupName(prefix_ + iter.key(), phaseName_) << nl;
         }
         Info<< endl;
     }
@@ -162,7 +158,12 @@ bool Foam::functionObjects::turbulenceFields::read(const dictionary& dict)
 
 bool Foam::functionObjects::turbulenceFields::execute()
 {
-    if (obr_.foundObject<thermophysicalTransportModel>(modelName()))
+    const word modelName
+    (
+        IOobject::groupName(momentumTransportModel::typeName, phaseName_)
+    );
+
+    if (obr_.foundObject<thermophysicalTransportModel>(modelName))
     {
         const thermophysicalTransportModel& ttm =
             obr_.lookupObject<thermophysicalTransportModel>
@@ -226,10 +227,10 @@ bool Foam::functionObjects::turbulenceFields::execute()
             }
         }
     }
-    else if (obr_.foundObject<compressibleMomentumTransportModel>(modelName()))
+    else if (obr_.foundObject<compressibleMomentumTransportModel>(modelName))
     {
         const compressibleMomentumTransportModel& model =
-            obr_.lookupObject<compressibleMomentumTransportModel>(modelName());
+            obr_.lookupObject<compressibleMomentumTransportModel>(modelName);
 
         forAllConstIter(wordHashSet, fieldSet_, iter)
         {
@@ -281,13 +282,13 @@ bool Foam::functionObjects::turbulenceFields::execute()
     }
     else if
     (
-        obr_.foundObject<incompressible::momentumTransportModel>(modelName())
+        obr_.foundObject<incompressible::momentumTransportModel>(modelName)
     )
     {
         const incompressible::momentumTransportModel& model =
             obr_.lookupObject<incompressible::momentumTransportModel>
             (
-                modelName()
+                modelName
             );
 
         forAllConstIter(wordHashSet, fieldSet_, iter)
@@ -353,7 +354,10 @@ bool Foam::functionObjects::turbulenceFields::write()
 {
     forAllConstIter(wordHashSet, fieldSet_, iter)
     {
-        const word fieldName = prefix_ + iter.key();
+        const word fieldName
+        (
+            IOobject::groupName(prefix_ + iter.key(), phaseName_)
+        );
         writeObject(fieldName);
     }
 

@@ -42,7 +42,7 @@ Usage
     \table
         Property | Description                | Required   | Default value
         type     | type name: yPlus           | yes        |
-        phase    | phase name                 | no         | none
+        phase    | phase name                 | no         |
     \endtable
 
 Note

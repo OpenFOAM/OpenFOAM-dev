@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,10 @@ void Foam::functionObjects::turbulenceFields::processField
 {
     typedef GeometricField<Type, fvPatchField, volMesh> FieldType;
 
-    const word scopedName = prefix_ + fieldName;
+    const word scopedName
+    (
+        IOobject::groupName(prefix_ + fieldName, phaseName_)
+    );
 
     if (obr_.foundObject<FieldType>(scopedName))
     {
@@ -89,7 +92,7 @@ Foam::functionObjects::turbulenceFields::omega
         (
             IOobject
             (
-                "omega",
+                IOobject::groupName("omega", phaseName_),
                 k.mesh().time().timeName(),
                 k.mesh(),
                 IOobject::NO_READ,

@@ -55,6 +55,7 @@ Usage
         type         | Type name: processorField   | yes      |
         fields       | Fields to store (see below) | yes      |
         prefix       | If true prefix fields       | no       | no
+        phase        | phase name                  | no       |
     \endtable
 
     Where \c fields can include:
@@ -144,10 +145,13 @@ protected:
         //  Defaults to null
         word prefix_;
 
+        //- Optional phase name
+        word phaseName_;
+
 
     // Protected Member Functions
 
-        static const word& modelName();
+        word modelName();
 
         //- Process the turbulence field
         template<class Type>
