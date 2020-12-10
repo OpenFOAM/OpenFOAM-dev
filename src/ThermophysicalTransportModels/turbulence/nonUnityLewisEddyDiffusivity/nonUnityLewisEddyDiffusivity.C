@@ -138,7 +138,7 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
             (
                 this->alpha()
                *this->thermo().alphaEff((this->Prt_/Sct_)*this->alphat())
-            )*hGradY*Y[0].mesh().magSf();
+            )*hGradY;
     }
 
     return tmpq;
