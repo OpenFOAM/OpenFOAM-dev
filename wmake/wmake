@@ -374,11 +374,11 @@ cdSource
 if [ "$targetType" = "" ]
 then
     unset targetType
-    if grep -e '^ *LIB *=' "$MakeDir/files" >/dev/null 2>&1
+    if grep -q -e '^ *LIB *=' "$MakeDir/files"
     then
         targetType=libso
     fi
-elif grep -e '^ *EXE *=' "$MakeDir/files" >/dev/null 2>&1
+elif grep -q -e '^ *EXE *=' "$MakeDir/files"
 then
     # Application. Remove any nonsense targetType
     case "$targetType" in
@@ -436,7 +436,7 @@ fi
 case "$targetType" in
     lib | libo | libso | dep )
         # ... but only if 'LIB' is declared in 'Make/files'
-        if grep -e '^ *LIB *=' "$MakeDir/files" >/dev/null 2>&1
+        if grep -q -e '^ *LIB *=' "$MakeDir/files"
         then
             $make -s -f "$WM_DIR/makefiles/general" MAKE_DIR="$MakeDir" \
                   OBJECTS_DIR="$objectsDir" lnInclude
