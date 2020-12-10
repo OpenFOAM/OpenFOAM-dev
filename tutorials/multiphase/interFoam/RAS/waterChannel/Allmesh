@@ -9,9 +9,8 @@ runApplication blockMesh
 echo "Creating channel"
 i=1
 while [ "$i" -lt 3 ] ; do
-    cp system/extrudeMeshDict.${i} system/extrudeMeshDict
     echo "Running extrudeMesh, instance" ${i}
-    extrudeMesh > log.extrudeMesh.${i}
+    extrudeMesh -dict extrudeMeshDict.${i} > log.extrudeMesh.${i}
     i=$((i + 1))
 done
 

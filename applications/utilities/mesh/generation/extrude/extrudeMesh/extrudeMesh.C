@@ -263,6 +263,8 @@ void changeFrontBackPatches
 int main(int argc, char *argv[])
 {
     #include "addRegionOption.H"
+    #include "addDictOption.H"
+
     #include "setRootCase.H"
     #include "createTimeExtruded.H"
 
@@ -282,12 +284,16 @@ int main(int argc, char *argv[])
             << runTimeExtruded.timeName() << nl << endl;
     }
 
+    const word dictName
+    (
+        args.optionLookupOrDefault<word>("dict", "extrudeMeshDict")
+    );
 
     IOdictionary dict
     (
         IOobject
         (
-            "extrudeMeshDict",
+            dictName,
             runTimeExtruded.system(),
             runTimeExtruded,
             IOobject::MUST_READ_IF_MODIFIED
