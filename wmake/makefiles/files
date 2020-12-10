@@ -54,7 +54,8 @@ include $(OPTIONS)
 all : $(FILES)
 
 # Create a sed pattern from the source file suffix list
-SUFFIX_SED = $(foreach s,$(SUFFIXES),'-e s/\(^ *[^ ]*\$(s)$$\)/SOURCE += \1/')
+SUFFIX_SED = \
+    $(foreach s,$(SUFFIXES),'-e s/\(^ *\)\([^ ]*\$(s)$$\)/\1SOURCE += \2/')
 
 # Prepend SOURCE += to each of the source file names
 $(FILES): $(MAKE_DIR)/files
