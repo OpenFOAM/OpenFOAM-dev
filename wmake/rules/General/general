@@ -3,7 +3,6 @@
 AR         = ar
 ARFLAGS    = cr
 RANLIB     = ranlib
-CPP        = cpp
 LD         = ld
 
 GFLAGS     = -D$(WM_ARCH) -DWM_ARCH_OPTION=$(WM_ARCH_OPTION) \

@@ -1,4 +1,3 @@
-CPP        = cpp -traditional-cpp $(GFLAGS)
 LD         = ld -m elf64ppc
 
 PROJECT_LIBS = -l$(WM_PROJECT) -ldl

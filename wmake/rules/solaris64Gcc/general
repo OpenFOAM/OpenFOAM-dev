@@ -1,4 +1,3 @@
-CPP        = /lib/cpp
 LD         = ld -64
 
 PROJECT_LIBS = -l$(WM_PROJECT) -lnsl -lsocket -L$(FOAM_LIBBIN)/dummy -lPstream

@@ -1,5 +1,3 @@
-CPP        = /usr/lib/cpp -undef
-
 PROJECT_LIBS = -l$(WM_PROJECT) -lnsl -lsocket -L$(FOAM_LIBBIN)/dummy -lPstream
 
 include $(GENERAL_RULES)/standard
