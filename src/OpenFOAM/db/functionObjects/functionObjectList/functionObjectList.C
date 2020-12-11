@@ -224,19 +224,19 @@ bool Foam::functionObjectList::readFunctionObject
     const word& region
 )
 {
-    word funcName;
+    word funcType;
     wordReList args;
     List<Tuple2<word, string>> namedArgs;
 
-    dictArgList(funcArgs, funcName, args, namedArgs);
+    dictArgList(funcArgs, funcType, args, namedArgs);
 
     // Search for the functionObject dictionary
-    fileName path = findDict(funcName, region);
+    fileName path = findDict(funcType, region);
 
     if (path == fileName::null)
     {
         WarningInFunction
-            << "Cannot find functionObject file " << funcName << endl;
+            << "Cannot find functionObject file " << funcType << endl;
         return false;
     }
 
@@ -248,14 +248,14 @@ bool Foam::functionObjectList::readFunctionObject
     // Delay processing the functionEntries
     // until after the function argument entries have been added
     entry::disableFunctionEntries = true;
-    dictionary funcsDict(funcName, functionsDict, fileStream);
+    dictionary funcsDict(funcType, functionsDict, fileStream);
     entry::disableFunctionEntries = false;
 
     dictionary* funcDictPtr = &funcsDict;
 
-    if (funcsDict.found(funcName) && funcsDict.isDict(funcName))
+    if (funcsDict.found(funcType) && funcsDict.isDict(funcType))
     {
-        funcDictPtr = &funcsDict.subDict(funcName);
+        funcDictPtr = &funcsDict.subDict(funcType);
     }
 
     dictionary& funcDict = *funcDictPtr;
@@ -324,9 +324,16 @@ bool Foam::functionObjectList::readFunctionObject
         funcDict.set("region", region);
     }
 
-    const word funcArgsKeyword = string::validate<word>(funcArgs);
+    // Set the name of the function entry to that specified by the optional
+    // funcName argument otherwise automatically generate a unique name
+    // from the function type and arguments
+    const word funcName
+    (
+        funcDict.lookupOrDefault("funcName", string::validate<word>(funcArgs))
+    );
+
     dictionary funcArgsDict;
-    funcArgsDict.add(funcArgsKeyword, funcDict);
+    funcArgsDict.add(funcName, funcDict);
 
     // Re-parse the funcDict to execute the functionEntries
     // now that the function argument entries have been added
@@ -335,7 +342,7 @@ bool Foam::functionObjectList::readFunctionObject
         funcArgsDict.write(os);
         funcArgsDict = dictionary
         (
-            funcName,
+            funcType,
             functionsDict,
             IStringStream(os.str())()
         );
@@ -346,7 +353,7 @@ bool Foam::functionObjectList::readFunctionObject
 
     // Lookup the field, fields and objects entries from the now expanded
     // funcDict and insert into the requiredFields
-    dictionary& expandedFuncDict = funcArgsDict.subDict(funcArgsKeyword);
+    dictionary& expandedFuncDict = funcArgsDict.subDict(funcName);
     if (functionObject::debug)
     {
         InfoInFunction
@@ -377,7 +384,7 @@ bool Foam::functionObjectList::readFunctionObject
 
     // Merge this functionObject dictionary into functionsDict
     functionsDict.merge(funcArgsDict);
-    functionsDict.subDict(funcArgsKeyword).name() = funcDict.name();
+    functionsDict.subDict(funcName).name() = funcDict.name();
 
     return true;
 }
