@@ -84,7 +84,7 @@ void Foam::Time::adjustDeltaT()
         max
         (
             0,
-            (writeTimeIndex_ + 1)*writeInterval_ - (value() - startTime_)
+            (writeTimeIndex_ + 1)*writeInterval_ - (value() - beginTime_)
         ),
         functionObjects_.timeToNextWrite()
     );
@@ -245,6 +245,8 @@ void Foam::Time::setControls()
         )
     );
 
+    beginTime_ = timeDict.lookupOrDefault("beginTime", startTime_);
+
     // Read and set the deltaT only if time-step adjustment is active
     // otherwise use the deltaT from the controlDict
     if (controlDict_.lookupOrDefault<Switch>("adjustTimeStep", false))
@@ -344,6 +346,7 @@ Foam::Time::Time
     startTimeIndex_(0),
     startTime_(0),
     endTime_(0),
+    beginTime_(startTime_),
 
     stopAt_(stopAtControl::endTime),
     writeControl_(writeControl::timeStep),
@@ -412,6 +415,7 @@ Foam::Time::Time
     startTimeIndex_(0),
     startTime_(0),
     endTime_(0),
+    beginTime_(startTime_),
 
     stopAt_(stopAtControl::endTime),
     writeControl_(writeControl::timeStep),
@@ -513,6 +517,7 @@ Foam::Time::Time
     startTimeIndex_(0),
     startTime_(0),
     endTime_(0),
+    beginTime_(startTime_),
 
     stopAt_(stopAtControl::endTime),
     writeControl_(writeControl::timeStep),
@@ -580,6 +585,7 @@ Foam::Time::Time
     startTimeIndex_(0),
     startTime_(0),
     endTime_(0),
+    beginTime_(startTime_),
 
     stopAt_(stopAtControl::endTime),
     writeControl_(writeControl::timeStep),
@@ -763,6 +769,12 @@ Foam::label Foam::Time::findClosestTimeIndex
 Foam::label Foam::Time::startTimeIndex() const
 {
     return startTimeIndex_;
+}
+
+
+Foam::dimensionedScalar Foam::Time::beginTime() const
+{
+    return dimensionedScalar("beginTime", dimTime, beginTime_);
 }
 
 
@@ -1060,7 +1072,7 @@ Foam::Time& Foam::Time::operator++()
             {
                 label writeIndex = label
                 (
-                    ((value() - startTime_) + 0.5*deltaT_)
+                    ((value() - beginTime_) + 0.5*deltaT_)
                   / writeInterval_
                 );
 

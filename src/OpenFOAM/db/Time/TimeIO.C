@@ -285,6 +285,7 @@ bool Foam::Time::writeTimeDict() const
         )
     );
 
+    timeDict.add("beginTime", beginTime_);
     timeDict.add("value", timeName(timeToUserTime(value()), maxPrecision_));
     timeDict.add("name", string(tmName));
     timeDict.add("index", timeIndex_);

@@ -120,6 +120,7 @@ protected:
         label  startTimeIndex_;
         scalar startTime_;
         mutable scalar endTime_;
+        scalar beginTime_;
 
         static const NamedEnum<stopAtControl, 4> stopAtControlNames_;
         mutable stopAtControl stopAt_;
@@ -401,6 +402,9 @@ public:
             //- Return start time index
             virtual label startTimeIndex() const;
 
+            //- Return begin time (initial start time)
+            virtual dimensionedScalar beginTime() const;
+
             //- Return start time
             virtual dimensionedScalar startTime() const;
 
@@ -411,6 +415,12 @@ public:
             const functionObjectList& functionObjects() const
             {
                 return functionObjects_;
+            }
+
+            //- Return true if the run is a restart, i.e. startTime != beginTime
+            bool restart() const
+            {
+                return startTime_ != beginTime_;
             }
 
             //- Return true if time currently being sub-cycled, otherwise false
