@@ -89,7 +89,10 @@ void Foam::Time::adjustDeltaT()
         functionObjects_.timeToNextWrite()
     );
 
+    Info << "timeToNextWrite " << timeToNextWrite << endl;
+
     const scalar nSteps = timeToNextWrite/deltaT_;
+    Info << "nSteps " << nSteps << endl;
 
     // Ensure nStepsToNextWrite does not overflow
     if (nSteps < labelMax)
@@ -97,7 +100,11 @@ void Foam::Time::adjustDeltaT()
         // Allow the time-step to increase by up to 1%
         // to accommodate the next write time before splitting
         const label nStepsToNextWrite = label(max(nSteps, 1) + 0.99);
+
+        Info << "nStepsToNextWrite " << nStepsToNextWrite << endl;
+
         deltaT_ = timeToNextWrite/nStepsToNextWrite;
+        Info << "deltaT " << deltaT_ << endl;
     }
 }
 
@@ -263,6 +270,23 @@ void Foam::Time::setControls()
     if (timeDict.readIfPresent("index", startTimeIndex_))
     {
         timeIndex_ = startTimeIndex_;
+    }
+
+    // Set writeTimeIndex_ to correspond to beginTime_ for restarted cases
+    if
+    (
+        restart()
+     && (
+            writeControl_ == writeControl::runTime
+         || writeControl_ == writeControl::adjustableRunTime
+        )
+    )
+    {
+        writeTimeIndex_ = label
+        (
+            ((value() - beginTime_) + 0.5*deltaT_)
+          / writeInterval_
+        );
     }
 
 
