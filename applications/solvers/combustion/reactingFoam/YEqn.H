@@ -9,34 +9,32 @@ tmp<fv::convectionScheme<scalar>> mvConvection
     )
 );
 
+reaction->correct();
+
+forAll(Y, i)
 {
-    reaction->correct();
-
-    forAll(Y, i)
+    if (composition.solve(i))
     {
-        if (composition.solve(i))
-        {
-            volScalarField& Yi = Y[i];
+        volScalarField& Yi = Y[i];
 
-            fvScalarMatrix YiEqn
-            (
-                fvm::ddt(rho, Yi)
-              + mvConvection->fvmDiv(phi, Yi)
-              + thermophysicalTransport->divj(Yi)
-             ==
-                reaction->R(Yi)
-              + fvOptions(rho, Yi)
-            );
+        fvScalarMatrix YiEqn
+        (
+            fvm::ddt(rho, Yi)
+          + mvConvection->fvmDiv(phi, Yi)
+          + thermophysicalTransport->divj(Yi)
+         ==
+            reaction->R(Yi)
+          + fvOptions(rho, Yi)
+        );
 
-            YiEqn.relax();
+        YiEqn.relax();
 
-            fvOptions.constrain(YiEqn);
+        fvOptions.constrain(YiEqn);
 
-            YiEqn.solve("Yi");
+        YiEqn.solve("Yi");
 
-            fvOptions.correct(Yi);
-        }
+        fvOptions.correct(Yi);
     }
-
-    composition.normalise();
 }
+
+composition.normalise();

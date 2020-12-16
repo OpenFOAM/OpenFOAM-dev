@@ -101,63 +101,71 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        // --- Pressure-velocity PIMPLE corrector loop
-        while (pimple.loop())
+        if (pimple.frozenFlow())
         {
-            if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
-            {
-                // Store momentum to set rhoUf for introduced faces.
-                autoPtr<volVectorField> rhoU;
-                if (rhoUf.valid())
-                {
-                    rhoU = new volVectorField("rhoU", rho*U);
-                }
-
-                // Do any mesh changes
-                mesh.update();
-
-                if (mesh.changing())
-                {
-                    MRF.update();
-
-                    if (correctPhi)
-                    {
-                        // Calculate absolute flux
-                        // from the mapped surface velocity
-                        phi = mesh.Sf() & rhoUf();
-
-                        #include "../../compressible/rhoPimpleFoam/correctPhi.H"
-
-                        // Make the fluxes relative to the mesh-motion
-                        fvc::makeRelative(phi, rho, U);
-                    }
-
-                    if (checkMeshCourantNo)
-                    {
-                        #include "meshCourantNo.H"
-                    }
-                }
-            }
-
-            if (pimple.firstPimpleIter() && !pimple.simpleRho())
-            {
-                #include "rhoEqn.H"
-            }
-
-            #include "UEqn.H"
             #include "YEqn.H"
             #include "EEqn.H"
-
-            // --- Pressure corrector loop
-            while (pimple.correct())
+        }
+        else
+        {
+            // --- Pressure-velocity PIMPLE corrector loop
+            while (pimple.loop())
             {
-                #include "../../compressible/rhoPimpleFoam/pEqn.H"
-            }
+                if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
+                {
+                    // Store momentum to set rhoUf for introduced faces.
+                    autoPtr<volVectorField> rhoU;
+                    if (rhoUf.valid())
+                    {
+                        rhoU = new volVectorField("rhoU", rho*U);
+                    }
 
-            if (pimple.turbCorr())
-            {
-                turbulence->correct();
-                thermophysicalTransport->correct();
+                    // Do any mesh changes
+                    mesh.update();
+
+                    if (mesh.changing())
+                    {
+                        MRF.update();
+
+                        if (correctPhi)
+                        {
+                            // Calculate absolute flux
+                            // from the mapped surface velocity
+                            phi = mesh.Sf() & rhoUf();
+
+                            #include "correctPhi.H"
+
+                            // Make the fluxes relative to the mesh-motion
+                            fvc::makeRelative(phi, rho, U);
+                        }
+
+                        if (checkMeshCourantNo)
+                        {
+                            #include "meshCourantNo.H"
+                        }
+                    }
+                }
+
+                if (pimple.firstPimpleIter() && !pimple.simpleRho())
+                {
+                    #include "rhoEqn.H"
+                }
+
+                #include "UEqn.H"
+                #include "YEqn.H"
+                #include "EEqn.H"
+
+                // --- Pressure corrector loop
+                while (pimple.correct())
+                {
+                    #include "../../compressible/rhoPimpleFoam/pEqn.H"
+                }
+
+                if (pimple.turbCorr())
+                {
+                    turbulence->correct();
+                    thermophysicalTransport->correct();
+                }
             }
         }
 
