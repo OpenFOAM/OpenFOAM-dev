@@ -1,7 +1,7 @@
 // Initialise solid field pointer lists
-PtrList<solidThermo> thermos(solidRegions.size());
-PtrList<radiationModel> radiations(solidRegions.size());
-PtrList<fv::options> solidHeatSources(solidRegions.size());
+PtrList<solidThermo> thermoSolid(solidRegions.size());
+PtrList<radiationModel> radiationSolid(solidRegions.size());
+PtrList<fv::options> fvOptionsSolid(solidRegions.size());
 
 // Populate solid field pointer lists
 forAll(solidRegions, i)
@@ -9,14 +9,14 @@ forAll(solidRegions, i)
     Info<< "*** Reading solid mesh thermophysical properties for region "
         << solidRegions[i].name() << nl << endl;
 
-    Info<< "    Adding to thermos\n" << endl;
-    thermos.set(i, solidThermo::New(solidRegions[i]));
+    Info<< "    Adding to thermoSolid\n" << endl;
+    thermoSolid.set(i, solidThermo::New(solidRegions[i]));
 
-    Info<< "    Adding to radiations\n" << endl;
-    radiations.set(i, radiationModel::New(thermos[i].T()));
+    Info<< "    Adding to radiationSolid\n" << endl;
+    radiationSolid.set(i, radiationModel::New(thermoSolid[i].T()));
 
-    Info<< "    Adding fvOptions\n" << endl;
-    solidHeatSources.set
+    Info<< "    Adding to fvOptionsSolid\n" << endl;
+    fvOptionsSolid.set
     (
         i,
         new fv::options(solidRegions[i])
