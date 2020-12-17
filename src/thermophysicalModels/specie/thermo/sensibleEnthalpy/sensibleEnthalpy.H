@@ -64,6 +64,11 @@ public:
 
         // Fundamental properties
 
+            static bool enthalpy()
+            {
+                return true;
+            }
+
             static word energyName()
             {
                 return "h";
@@ -78,17 +83,6 @@ public:
             ) const
             {
                 return thermo.Cp(p, T);
-            }
-
-            //- Cp/Cp []
-            scalar CpByCpv
-            (
-                const Thermo& thermo,
-                const scalar p,
-                const scalar T
-            ) const
-            {
-                return 1;
             }
 
             // Sensible enthalpy [J/kg]

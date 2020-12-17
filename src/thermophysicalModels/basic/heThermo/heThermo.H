@@ -61,6 +61,12 @@ protected:
         //- Energy field
         volScalarField he_;
 
+        //- Heat capacity at constant pressure field [J/kg/K]
+        volScalarField Cp_;
+
+        // Heat capacity at constant volume field [J/kg/K]
+        volScalarField Cv_;
+
 
     // Protected Member Functions
 
@@ -199,6 +205,18 @@ public:
                 return he_;
             }
 
+            //- Heat capacity at constant pressure [J/kg/K]
+            virtual tmp<volScalarField> Cp() const
+            {
+                return Cp_;
+            }
+
+            //- Heat capacity at constant volume [J/kg/K]
+            virtual tmp<volScalarField> Cv() const
+            {
+                return Cv_;
+            }
+
 
         // Fields derived from thermodynamic state variables
 
@@ -308,18 +326,12 @@ public:
                 const label patchi
             ) const;
 
-            //- Heat capacity at constant pressure [J/kg/K]
-            virtual tmp<volScalarField> Cp() const;
-
             //- Heat capacity at constant volume for patch [J/kg/K]
             virtual tmp<scalarField> Cv
             (
                 const scalarField& T,
                 const label patchi
             ) const;
-
-            //- Heat capacity at constant volume [J/kg/K]
-            virtual tmp<volScalarField> Cv() const;
 
             //- Gamma = Cp/Cv []
             virtual tmp<volScalarField> gamma() const;
@@ -340,16 +352,6 @@ public:
 
             //- Heat capacity at constant pressure/volume [J/kg/K]
             virtual tmp<volScalarField> Cpv() const;
-
-            //- Heat capacity ratio []
-            virtual tmp<volScalarField> CpByCpv() const;
-
-            //- Heat capacity ratio for patch []
-            virtual tmp<scalarField> CpByCpv
-            (
-                const scalarField& T,
-                const label patchi
-            ) const;
 
             //- Molecular weight [kg/kmol]
             virtual tmp<volScalarField> W() const;

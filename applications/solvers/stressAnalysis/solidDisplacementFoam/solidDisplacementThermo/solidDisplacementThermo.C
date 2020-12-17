@@ -447,25 +447,6 @@ Foam::tmp<Foam::scalarField> Foam::solidDisplacementThermo::Cpv
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::solidDisplacementThermo::CpByCpv() const
-{
-    NotImplemented;
-    return tmp<volScalarField>(nullptr);
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::solidDisplacementThermo::CpByCpv
-(
-    const scalarField& T,
-    const label patchi
-) const
-{
-    NotImplemented;
-    return tmp<scalarField>(nullptr);
-}
-
-
-
 Foam::tmp<Foam::volScalarField> Foam::solidDisplacementThermo::kappa() const
 {
     return kappa_;

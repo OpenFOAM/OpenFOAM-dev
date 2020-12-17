@@ -367,6 +367,12 @@ public:
                 const label patchi
             ) const = 0;
 
+            //- Heat capacity at constant pressure [J/kg/K]
+            virtual tmp<volScalarField> Cp() const = 0;
+
+            //- Heat capacity at constant volume [J/kg/K]
+            virtual tmp<volScalarField> Cv() const = 0;
+
 
         // Fields derived from thermodynamic state variables
 
@@ -377,18 +383,12 @@ public:
             //  Non-const access allowed for transport equations
             virtual volScalarField& T() = 0;
 
-            //- Heat capacity at constant pressure [J/kg/K]
-            virtual tmp<volScalarField> Cp() const = 0;
-
             //- Heat capacity at constant pressure for patch [J/kg/K]
             virtual tmp<scalarField> Cp
             (
                 const scalarField& T,
                 const label patchi
             ) const = 0;
-
-            //- Heat capacity at constant volume [J/kg/K]
-            virtual tmp<volScalarField> Cv() const = 0;
 
             //- Heat capacity at constant volume for patch [J/kg/K]
             virtual tmp<scalarField> Cv
@@ -402,16 +402,6 @@ public:
 
             //- Heat capacity at constant pressure/volume for patch [J/kg/K]
             virtual tmp<scalarField> Cpv
-            (
-                const scalarField& T,
-                const label patchi
-            ) const = 0;
-
-            //- Heat capacity ratio []
-            virtual tmp<volScalarField> CpByCpv() const = 0;
-
-            //- Heat capacity ratio for patch []
-            virtual tmp<scalarField> CpByCpv
             (
                 const scalarField& T,
                 const label patchi

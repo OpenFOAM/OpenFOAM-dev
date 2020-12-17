@@ -289,16 +289,6 @@ public:
                 const label patchi
             ) const;
 
-            //- Heat capacity ratio []
-            virtual tmp<volScalarField> CpByCpv() const;
-
-            //- Heat capacity ratio for patch []
-            virtual tmp<scalarField> CpByCpv
-            (
-                const scalarField& T,
-                const label patchi
-            ) const;
-
             //- Molecular weight [kg/kmol]
             virtual tmp<volScalarField> W() const;
 

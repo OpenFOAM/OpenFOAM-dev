@@ -614,46 +614,6 @@ Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::Cpv
 }
 
 
-Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::CpByCpv() const
-{
-    PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();
-
-    tmp<volScalarField> tCpByCpv(phasei().Alpha()*phasei().thermo().CpByCpv());
-
-    for (++phasei; phasei != phases_.end(); ++phasei)
-    {
-        tCpByCpv.ref() += phasei().Alpha()*phasei().thermo().CpByCpv();
-    }
-
-    return tCpByCpv;
-}
-
-
-Foam::tmp<Foam::scalarField> Foam::multiphaseMixtureThermo::CpByCpv
-(
-    const scalarField& T,
-    const label patchi
-) const
-{
-    PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();
-
-    tmp<scalarField> tCpByCpv
-    (
-        phasei().Alpha().boundaryField()[patchi]
-       *phasei().thermo().CpByCpv(T, patchi)
-    );
-
-    for (++phasei; phasei != phases_.end(); ++phasei)
-    {
-        tCpByCpv.ref() +=
-            phasei().boundaryField()[patchi]
-           *phasei().thermo().CpByCpv(T, patchi);
-    }
-
-    return tCpByCpv;
-}
-
-
 Foam::tmp<Foam::volScalarField> Foam::multiphaseMixtureThermo::W() const
 {
     PtrDictionary<phaseModel>::const_iterator phasei = phases_.begin();

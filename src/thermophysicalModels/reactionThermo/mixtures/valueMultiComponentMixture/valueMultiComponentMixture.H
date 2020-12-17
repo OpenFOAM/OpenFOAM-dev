@@ -128,10 +128,6 @@ public:
             //- Gamma = Cp/Cv []
             scalar gamma(const scalar p, const scalar T) const;
 
-            //- Ratio of heat capacity at constant pressure to that at
-            //  constant pressure/volume []
-            scalar CpByCpv(const scalar p, const scalar T) const;
-
             //- Enthalpy/Internal energy [J/kg]
             scalar HE(const scalar p, const scalar T) const;
 

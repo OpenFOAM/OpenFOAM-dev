@@ -192,7 +192,6 @@ thermoMixtureFunction(Hs)
 thermoMixtureFunction(Ha)
 thermoMixtureFunction(Cpv)
 thermoMixtureFunction(gamma)
-thermoMixtureFunction(CpByCpv)
 thermoMixtureFunction(HE)
 
 

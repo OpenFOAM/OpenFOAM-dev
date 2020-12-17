@@ -167,6 +167,12 @@ public:
             //- Enthalpy/Internal energy [J/kg]
             virtual const volScalarField& he() const;
 
+            //- Heat capacity at constant pressure [J/kg/K]
+            virtual tmp<volScalarField> Cp() const;
+
+            //- Heat capacity at constant volume [J/kg/K]
+            virtual tmp<volScalarField> Cv() const;
+
 
         // Fields derived from thermodynamic state variables
 
@@ -269,18 +275,12 @@ public:
                 const label patchi
             ) const;
 
-            //- Heat capacity at constant pressure [J/kg/K]
-            virtual tmp<volScalarField> Cp() const;
-
             //- Heat capacity at constant pressure for patch [J/kg/K]
             virtual tmp<scalarField> Cp
             (
                 const scalarField& T,
                 const label patchi
             ) const;
-
-            //- Heat capacity at constant volume [J/kg/K]
-            virtual tmp<volScalarField> Cv() const;
 
             //- Heat capacity at constant volume for patch [J/kg/K]
             virtual tmp<scalarField> Cv
@@ -294,16 +294,6 @@ public:
 
             //- Heat capacity at constant pressure/volume for patch [J/kg/K]
             virtual tmp<scalarField> Cpv
-            (
-                const scalarField& T,
-                const label patchi
-            ) const;
-
-            //- Heat capacity ratio []
-            virtual tmp<volScalarField> CpByCpv() const;
-
-            //- Heat capacity ratio for patch []
-            virtual tmp<scalarField> CpByCpv
             (
                 const scalarField& T,
                 const label patchi

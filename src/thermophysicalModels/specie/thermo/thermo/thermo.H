@@ -128,6 +128,9 @@ public:
                 + Type<thermo<Thermo, Type>>::typeName();
         }
 
+        //- Return true if energy type is enthalpy
+        static inline bool enthalpy();
+
         //- Name of Enthalpy/Internal energy
         static inline word heName();
 
@@ -167,10 +170,6 @@ public:
 
             //- Gamma = Cp/Cv []
             inline scalar gamma(const scalar p, const scalar T) const;
-
-            //- Ratio of heat capacity at constant pressure to that at
-            //  constant pressure/volume []
-            inline scalar CpByCpv(const scalar p, const scalar T) const;
 
             //- Enthalpy/Internal energy [J/kg]
             inline scalar HE(const scalar p, const scalar T) const;

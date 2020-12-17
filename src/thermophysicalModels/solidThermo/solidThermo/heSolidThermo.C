@@ -37,6 +37,8 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
     const auto& pCells = this->p_;
 
     scalarField& TCells = this->T_.primitiveFieldRef();
+    scalarField& CpCells = this->Cp_.primitiveFieldRef();
+    scalarField& CvCells = this->Cv_.primitiveFieldRef();
     scalarField& rhoCells = this->rho_.primitiveFieldRef();
     scalarField& alphaCells = this->alpha_.primitiveFieldRef();
 
@@ -48,8 +50,6 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
         const typename MixtureType::transportMixtureType& transportMixture =
             this->cellTransportMixture(celli, thermoMixture);
 
-        rhoCells[celli] = thermoMixture.rho(pCells[celli], TCells[celli]);
-
         TCells[celli] = thermoMixture.THE
         (
             hCells[celli],
@@ -57,31 +57,44 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
             TCells[celli]
         );
 
+        CpCells[celli] = thermoMixture.Cp(pCells[celli], TCells[celli]);
+        CvCells[celli] = thermoMixture.Cv(pCells[celli], TCells[celli]);
+        rhoCells[celli] = thermoMixture.rho(pCells[celli], TCells[celli]);
+
         alphaCells[celli] =
             transportMixture.kappa(pCells[celli], TCells[celli])
-           /thermoMixture.Cpv(pCells[celli], TCells[celli]);
+           /thermoMixture.Cv(pCells[celli], TCells[celli]);
     }
+
+
+    volScalarField::Boundary& heBf =
+        this->he().boundaryFieldRef();
 
     const auto& pBf = this->p_.boundaryField();
 
     volScalarField::Boundary& TBf =
         this->T_.boundaryFieldRef();
 
+    volScalarField::Boundary& CpBf =
+        this->Cp_.boundaryFieldRef();
+
+    volScalarField::Boundary& CvBf =
+        this->Cv_.boundaryFieldRef();
+
     volScalarField::Boundary& rhoBf =
         this->rho_.boundaryFieldRef();
-
-    volScalarField::Boundary& heBf =
-        this->he().boundaryFieldRef();
 
     volScalarField::Boundary& alphaBf =
         this->alpha_.boundaryFieldRef();
 
     forAll(this->T_.boundaryField(), patchi)
     {
+        fvPatchScalarField& phe = heBf[patchi];
         const auto& pp = pBf[patchi];
         fvPatchScalarField& pT = TBf[patchi];
+        fvPatchScalarField& pCp = CpBf[patchi];
+        fvPatchScalarField& pCv = CvBf[patchi];
         fvPatchScalarField& prho = rhoBf[patchi];
-        fvPatchScalarField& phe = heBf[patchi];
         fvPatchScalarField& palpha = alphaBf[patchi];
 
         if (pT.fixesValue())
@@ -97,11 +110,14 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
                     (patchi, facei, thermoMixture);
 
                 phe[facei] = thermoMixture.HE(pp[facei], pT[facei]);
+
                 prho[facei] = thermoMixture.rho(pp[facei], pT[facei]);
+                pCp[facei] = thermoMixture.Cp(pp[facei], pT[facei]);
+                pCv[facei] = thermoMixture.Cv(pp[facei], pT[facei]);
 
                 palpha[facei] =
                     transportMixture.kappa(pp[facei], pT[facei])
-                   /thermoMixture.Cpv(pp[facei], pT[facei]);
+                   /thermoMixture.Cv(pp[facei], pT[facei]);
             }
         }
         else
@@ -117,11 +133,14 @@ void Foam::heSolidThermo<BasicSolidThermo, MixtureType>::calculate()
                     (patchi, facei, thermoMixture);
 
                 pT[facei] = thermoMixture.THE(phe[facei], pp[facei] ,pT[facei]);
+
                 prho[facei] = thermoMixture.rho(pp[facei], pT[facei]);
+                pCp[facei] = thermoMixture.Cp(pp[facei], pT[facei]);
+                pCv[facei] = thermoMixture.Cv(pp[facei], pT[facei]);
 
                 palpha[facei] =
                     transportMixture.kappa(pp[facei], pT[facei])
-                   /thermoMixture.Cpv(pp[facei], pT[facei]);
+                   /thermoMixture.Cv(pp[facei], pT[facei]);
             }
         }
     }

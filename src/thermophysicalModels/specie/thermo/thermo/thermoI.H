@@ -52,6 +52,14 @@ inline Foam::species::thermo<Thermo, Type>::thermo
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Thermo, template<class> class Type>
+inline bool
+Foam::species::thermo<Thermo, Type>::enthalpy()
+{
+    return Type<thermo<Thermo, Type>>::enthalpy();
+}
+
+
+template<class Thermo, template<class> class Type>
 inline Foam::word
 Foam::species::thermo<Thermo, Type>::heName()
 {
@@ -73,18 +81,6 @@ Foam::species::thermo<Thermo, Type>::gamma(const scalar p, const scalar T) const
 {
     const scalar Cp = this->Cp(p, T);
     return Cp/(Cp - this->CpMCv(p, T));
-}
-
-
-template<class Thermo, template<class> class Type>
-inline Foam::scalar
-Foam::species::thermo<Thermo, Type>::CpByCpv
-(
-    const scalar p,
-    const scalar T
-) const
-{
-    return Type<thermo<Thermo, Type>>::CpByCpv(*this, p, T);
 }
 
 

@@ -65,6 +65,11 @@ public:
 
         // Fundamental properties
 
+            static bool enthalpy()
+            {
+                return false;
+            }
+
             static word energyName()
             {
                 return "ea";
@@ -79,17 +84,6 @@ public:
             ) const
             {
                 return thermo.Cv(p, T);
-            }
-
-            //- Cp/Cv []
-            scalar CpByCpv
-            (
-                const Thermo& thermo,
-                const scalar p,
-                const scalar T
-            ) const
-            {
-                return thermo.gamma(p, T);
             }
 
             // Absolute internal energy [J/kg]
