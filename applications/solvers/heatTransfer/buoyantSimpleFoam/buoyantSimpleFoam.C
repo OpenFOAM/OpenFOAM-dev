@@ -33,7 +33,6 @@ Description
 #include "fvCFD.H"
 #include "fluidThermoMomentumTransportModel.H"
 #include "fluidThermophysicalTransportModel.H"
-#include "radiationModel.H"
 #include "simpleControl.H"
 #include "pressureControl.H"
 #include "fvOptions.H"

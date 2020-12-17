@@ -69,5 +69,5 @@ volScalarField dpdt
 Info<< "Creating field kinetic energy K\n" << endl;
 volScalarField K("K", 0.5*magSqr(U));
 
-#include "createRadiationModel.H"
 #include "createFvOptions.H"
+#include "checkRadiationModel.H"

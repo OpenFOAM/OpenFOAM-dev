@@ -17,8 +17,8 @@ FoamFile
 
 radiation
 {
-    type            radiation;
-    libs ("libradiationModels.so");
+    type    radiation;
+    libs    ("libradiationModels.so");
 }
 
 // ************************************************************************* //

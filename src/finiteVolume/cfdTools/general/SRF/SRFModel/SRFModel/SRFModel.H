@@ -138,7 +138,7 @@ public:
 
         // Edit
 
-            //- Read radiationProperties dictionary
+            //- Read SRFProperties dictionary
             virtual bool read();
 
 

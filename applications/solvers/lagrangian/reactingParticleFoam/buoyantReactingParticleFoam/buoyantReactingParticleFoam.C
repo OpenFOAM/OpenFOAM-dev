@@ -37,7 +37,6 @@ Description
 #include "parcelCloudList.H"
 #include "surfaceFilmModel.H"
 #include "combustionModel.H"
-#include "radiationModel.H"
 #include "SLGThermo.H"
 #include "fvOptions.H"
 #include "pimpleControl.H"

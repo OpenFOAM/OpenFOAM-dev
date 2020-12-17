@@ -109,5 +109,5 @@ volScalarField K("K", 0.5*magSqr(U));
 dimensionedScalar initialMass = fvc::domainIntegrate(rho);
 
 #include "createMRF.H"
-#include "createRadiationModel.H"
 #include "createFvOptions.H"
+#include "checkRadiationModel.H"

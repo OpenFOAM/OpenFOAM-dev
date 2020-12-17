@@ -17,8 +17,7 @@
         )
       + thermophysicalTransport->divq(he)
      ==
-        radiation->Sh(thermo, he)
-      + fvOptions(rho, he)
+        fvOptions(rho, he)
     );
 
     EEqn.relax();
@@ -30,5 +29,4 @@
     fvOptions.correct(he);
 
     thermo.correct();
-    radiation->correct();
 }

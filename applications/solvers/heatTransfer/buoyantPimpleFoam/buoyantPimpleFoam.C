@@ -39,7 +39,6 @@ Description
 #include "fluidThermo.H"
 #include "fluidThermoMomentumTransportModel.H"
 #include "fluidThermophysicalTransportModel.H"
-#include "radiationModel.H"
 #include "pimpleControl.H"
 #include "pressureControl.H"
 #include "CorrectPhi.H"

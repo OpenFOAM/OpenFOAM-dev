@@ -15,8 +15,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-radiation on;
-
 radiationModel  P1;
 
 // Number of flow iterations per radiation iteration

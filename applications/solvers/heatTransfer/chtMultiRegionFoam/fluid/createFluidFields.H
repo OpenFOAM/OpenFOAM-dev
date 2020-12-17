@@ -14,7 +14,6 @@ PtrList<fluidReactionThermophysicalTransportModel>
     thermophysicalTransportFluid(fluidRegions.size());
 PtrList<combustionModel> reactionFluid(fluidRegions.size());
 PtrList<volScalarField> p_rghFluid(fluidRegions.size());
-PtrList<radiationModel> radiationFluid(fluidRegions.size());
 PtrList<volScalarField> KFluid(fluidRegions.size());
 PtrList<volScalarField> dpdtFluid(fluidRegions.size());
 PtrList<multivariateSurfaceInterpolationScheme<scalar>::fieldTable>
@@ -218,13 +217,6 @@ forAll(fluidRegions, i)
     p_rghFluid[i] = thermoFluid[i].p() - rhoFluid[i]*ghFluid[i] - pRefFluid[i];
 
     fluidRegions[i].setFluxRequired(p_rghFluid[i].name());
-
-    Info<< "    Adding to radiationFluid\n" << endl;
-    radiationFluid.set
-    (
-        i,
-        radiationModel::New(thermoFluid[i].T())
-    );
 
     initialMassFluid[i] = fvc::domainIntegrate(rhoFluid[i]).value();
 

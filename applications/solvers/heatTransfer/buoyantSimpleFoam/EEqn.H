@@ -12,7 +12,6 @@
       + thermophysicalTransport->divq(he)
      ==
         rho*(U&g)
-      + radiation->Sh(thermo, he)
       + fvOptions(rho, he)
     );
 
@@ -25,5 +24,4 @@
     fvOptions.correct(he);
 
     thermo.correct();
-    radiation->correct();
 }

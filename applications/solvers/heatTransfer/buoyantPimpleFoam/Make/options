@@ -2,7 +2,6 @@ EXE_INC = \
     -I. \
     -I../../compressible/rhoPimpleFoam \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
-    -I$(LIB_SRC)/radiationModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/lnInclude \
@@ -14,7 +13,6 @@ EXE_INC = \
 
 EXE_LIBS = \
     -lfluidThermophysicalModels \
-    -lradiationModels \
     -lspecie \
     -lmomentumTransportModels \
     -lfluidThermoMomentumTransportModels \

@@ -41,7 +41,6 @@ Description
 #include "compressibleCourantNo.H"
 #include "solidRegionDiffNo.H"
 #include "solidThermo.H"
-#include "radiationModel.H"
 #include "fvOptions.H"
 #include "coordinateSystem.H"
 #include "pimpleMultiRegionControl.H"

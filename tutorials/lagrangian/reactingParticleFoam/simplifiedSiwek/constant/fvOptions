@@ -28,5 +28,11 @@ source1
     temperature     2000;
 }
 
+radiation
+{
+    type    radiation;
+    libs    ("libradiationModels.so");
+}
+
 
 // ************************************************************************* //

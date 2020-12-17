@@ -25,7 +25,6 @@
         rho*(U&g)
       + clouds.Sh(he)
       + surfaceFilm.Sh()
-      + radiation->Sh(thermo, he)
       + combustion->Qdot()
       + fvOptions(rho, he)
     );
@@ -39,7 +38,6 @@
     fvOptions.correct(he);
 
     thermo.correct();
-    radiation->correct();
 
     Info<< "T gas min/max   = " << min(T).value() << ", "
         << max(T).value() << endl;

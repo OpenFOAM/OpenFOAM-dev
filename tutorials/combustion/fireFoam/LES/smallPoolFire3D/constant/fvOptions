@@ -11,10 +11,14 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "constant";
-    object      radiationProperties;
+    object      fvOptions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-radiationModel  none;
+radiation
+{
+    type    radiation;
+    libs    ("libradiationModels.so");
+}
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,26 +33,20 @@ Foam::autoPtr<Foam::radiationModel> Foam::radiationModel::New
     const volScalarField& T
 )
 {
-    IOobject radIO
+    const IOdictionary radiationProperties
     (
-        "radiationProperties",
-        T.time().constant(),
-        T.mesh(),
-        IOobject::MUST_READ_IF_MODIFIED,
-        IOobject::NO_WRITE,
-        false
+        IOobject
+        (
+            "radiationProperties",
+            T.time().constant(),
+            T.mesh(),
+            IOobject::MUST_READ,
+            IOobject::NO_WRITE,
+            false
+        )
     );
 
-    word modelType("none");
-    if (radIO.typeHeaderOk<IOdictionary>(false))
-    {
-        IOdictionary(radIO).lookup("radiationModel") >> modelType;
-    }
-    else
-    {
-        Info<< "Radiation model not active: radiationProperties not found"
-            << endl;
-    }
+    const word modelType(radiationProperties.lookup("radiationModel"));
 
     Info<< "Selecting radiationModel " << modelType << endl;
 

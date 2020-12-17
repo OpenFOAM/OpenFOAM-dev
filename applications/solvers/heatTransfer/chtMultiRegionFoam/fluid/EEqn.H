@@ -23,7 +23,6 @@
       + thermophysicalTransport.divq(he)
      ==
         rho*(U&g)
-      + radiation.Sh(thermo, he)
       + reaction.Qdot()
       + fvOptions(rho, he)
     );
@@ -37,7 +36,6 @@
     fvOptions.correct(he);
 
     thermo.correct();
-    radiation.correct();
 
     Info<< "Min/max T:" << min(thermo.T()).value() << ' '
         << max(thermo.T()).value() << endl;

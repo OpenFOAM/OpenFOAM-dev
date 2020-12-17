@@ -20,7 +20,6 @@ EXE_INC = \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/fluidReactionThermo/lnInclude \
-    -I$(LIB_SRC)/radiationModels/lnInclude \
     -I$(LIB_SRC)/regionModels/regionModel/lnInclude
 
 
@@ -38,7 +37,6 @@ EXE_LIBS = \
     -lfluidReactionThermophysicalTransportModels \
     -lmeshTools \
     -lfiniteVolume \
-    -lradiationModels \
     -lfvOptions \
     -lregionModels \
     -lsampling

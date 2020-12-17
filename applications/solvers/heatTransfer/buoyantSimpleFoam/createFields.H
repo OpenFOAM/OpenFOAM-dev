@@ -91,5 +91,5 @@ mesh.setFluxRequired(p_rgh.name());
 dimensionedScalar initialMass = fvc::domainIntegrate(rho);
 
 #include "createMRF.H"
-#include "createRadiationModel.H"
 #include "createFvOptions.H"
+#include "checkRadiationModel.H"

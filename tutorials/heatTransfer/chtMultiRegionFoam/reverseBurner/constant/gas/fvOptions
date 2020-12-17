@@ -15,28 +15,10 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-options
+radiation
 {
-    energySource
-    {
-        type            semiImplicitSource;
-
-        timeStart       0;
-        duration        1;
-        selectionMode   cellSet;
-        cellSet         ignition;
-        volumeMode      specific;
-
-        sources
-        {
-            h
-            {
-                explicit    5e7; // kg/m/s^3
-                implicit    0;
-            }
-        }
-    }
+    type    radiation;
+    libs    ("libradiationModels.so");
 }
-
 
 // ************************************************************************* //

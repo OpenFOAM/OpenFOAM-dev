@@ -36,7 +36,6 @@ Description
 #include "parcelCloudList.H"
 #include "fluidReactionThermo.H"
 #include "combustionModel.H"
-#include "radiationModel.H"
 #include "IOporosityModelList.H"
 #include "fvOptions.H"
 #include "SLGThermo.H"

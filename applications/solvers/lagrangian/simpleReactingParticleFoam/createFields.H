@@ -102,6 +102,6 @@ forAll(Y, i)
 fields.add(thermo.he());
 
 #include "createMRF.H"
-#include "createRadiationModel.H"
 #include "createClouds.H"
 #include "createFvOptions.H"
+#include "checkRadiationModel.H"

@@ -9,7 +9,6 @@ tmp<fv::convectionScheme<scalar>> mvConvection
     )
 );
 {
-    radiation->correct();
     combustion->correct();
 
     forAll(Y, i)
@@ -61,7 +60,6 @@ tmp<fv::convectionScheme<scalar>> mvConvection
       + thermophysicalTransport->divq(he)
      ==
         combustion->Qdot()
-      + radiation->Sh(thermo, he)
       + parcels.Sh(he)
       + surfaceFilm.Sh()
       + fvOptions(rho, he)
