@@ -4,7 +4,6 @@ reaction/specieCoeffs/specieCoeffs.C
 reaction/reaction/reaction.C
 
 thermophysicalFunctions/integratedNonUniformTable1/integratedNonUniformTable1.C
-thermophysicalFunctions/uniformTable2/uniformTable2.C
 thermophysicalFunctions/APIdiffCoef/APIdiffCoef.C
 
 NSRDS = thermophysicalFunctions/NSRDS

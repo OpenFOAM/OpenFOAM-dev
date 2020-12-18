@@ -78,7 +78,7 @@ See also
 #ifndef rhoTabulated_H
 #define rhoTabulated_H
 
-#include "uniformTable2.H"
+#include "UniformTable2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -107,7 +107,7 @@ class rhoTabulated
 :
     public Specie
 {
-    typedef Function2s::uniformTable table2D;
+    typedef Function2s::UniformTable<scalar> table2D;
 
 
     // Private Data

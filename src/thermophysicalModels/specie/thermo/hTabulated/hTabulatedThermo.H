@@ -97,7 +97,7 @@ See also
 #ifndef hTabulatedThermo_H
 #define hTabulatedThermo_H
 
-#include "uniformTable2.H"
+#include "UniformTable2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -126,7 +126,7 @@ class hTabulatedThermo
 :
     public EquationOfState
 {
-    typedef Function2s::uniformTable table2D;
+    typedef Function2s::UniformTable<scalar> table2D;
 
 
     // Private Data

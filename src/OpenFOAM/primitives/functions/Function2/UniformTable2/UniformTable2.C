@@ -23,29 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "uniformTable2.H"
-#include "addToRunTimeSelectionTable.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-namespace Function2s
-{
-    makeScalarFunction2(uniformTable)
-}
-}
-
+#include "UniformTable2.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::Function2s::uniformTable::uniformTable
+template<class Type>
+Foam::Function2s::UniformTable<Type>::UniformTable
 (
     const word& name,
     const dictionary& dict
 )
 :
-    FieldFunction2<scalar, uniformTable>(name),
+    FieldFunction2<Type, UniformTable<Type>>(name),
     low_(dict.lookup<Pair<scalar>>("low")),
     high_(dict.lookup<Pair<scalar>>("high")),
     values_(dict.lookup("values"))
@@ -54,7 +43,7 @@ Foam::Function2s::uniformTable::uniformTable
     {
         FatalErrorInFunction
             << "Table " << nl
-            << "    " << name_ << nl
+            << "    " << this->name_ << nl
             << "    has less than 2 entries in one or both dimensions."
             << exit(FatalError);
     }
@@ -68,7 +57,8 @@ Foam::Function2s::uniformTable::uniformTable
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline void Foam::Function2s::uniformTable::checkRange
+template<class Type>
+inline void Foam::Function2s::UniformTable<Type>::checkRange
 (
     scalar x,
     scalar ndx,
@@ -83,7 +73,7 @@ inline void Foam::Function2s::uniformTable::checkRange
         FatalErrorInFunction
             << "x " << x << " out of range "
             << low_.first() << " to " << high_.first() << nl
-            << "    of table " << name_
+            << "    of table " << this->name_
             << exit(FatalError);
     }
 
@@ -92,13 +82,14 @@ inline void Foam::Function2s::uniformTable::checkRange
         FatalErrorInFunction
             << "y " << y << " out of range "
             << low_.second() << " to " << high_.second() << nl
-            << "    of table " << name_
+            << "    of table " << this->name_
             << exit(FatalError);
     }
 }
 
 
-Foam::scalar Foam::Function2s::uniformTable::value
+template<class Type>
+Type Foam::Function2s::UniformTable<Type>::value
 (
     scalar x,
     scalar y
@@ -116,12 +107,12 @@ Foam::scalar Foam::Function2s::uniformTable::value
     const scalar lambdax = (x - xi)/deltax_;
 
     // Interpolate the values at yi wrt x
-    const scalar fxi =
+    const Type fxi =
         values_(ix, iy)
       + lambdax*(values_(ix + 1, iy) - values_(ix, iy));
 
     // Interpolate the values at yi+1 wrt x
-    const scalar fxix1 =
+    const Type fxix1 =
         values_(ix, iy + 1)
       + lambdax*(values_(ix + 1, iy + 1) - values_(ix, iy + 1));
 
@@ -133,7 +124,8 @@ Foam::scalar Foam::Function2s::uniformTable::value
 }
 
 
-Foam::scalar Foam::Function2s::uniformTable::
+template<class Type>
+Type Foam::Function2s::UniformTable<Type>::
 dfdp
 (
     scalar p,
@@ -148,9 +140,9 @@ dfdp
 
     checkRange(p, ndp, ip, T, ndT, iT);
 
-    const scalar dfdpi =
+    const Type dfdpi =
         (values_(ip + 1, iT) - values_(ip, iT))/deltax_;
-    const scalar dfdpip1 =
+    const Type dfdpip1 =
         (values_(ip + 1, iT + 1) - values_(ip, iT + 1))/deltax_;
 
     const scalar Ti = low_.second() + iT*deltay_;
@@ -161,7 +153,8 @@ dfdp
 }
 
 
-Foam::scalar Foam::Function2s::uniformTable::
+template<class Type>
+Type Foam::Function2s::UniformTable<Type>::
 dfdT
 (
     scalar p,
@@ -176,9 +169,9 @@ dfdT
 
     checkRange(p, ndp, ip, T, ndT, iT);
 
-    const scalar dfdTi =
+    const Type dfdTi =
         (values_(ip, iT + 1) - values_(ip, iT))/deltay_;
-    const scalar dfdTip1 =
+    const Type dfdTip1 =
         (values_(ip + 1, iT + 1) - values_(ip + 1, iT))/deltay_;
 
     const scalar pi = low_.first() + ip*deltax_;
@@ -189,7 +182,8 @@ dfdT
 }
 
 
-void Foam::Function2s::uniformTable::write(Ostream& os) const
+template<class Type>
+void Foam::Function2s::UniformTable<Type>::write(Ostream& os) const
 {
     writeEntry(os, "low", low_);
     writeEntry(os, "high", high_);

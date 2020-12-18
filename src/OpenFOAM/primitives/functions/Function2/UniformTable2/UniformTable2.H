@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function2s::uniformTable
+    Foam::Function2s::UniformTable
 
 Description
     Tabulated property function that linearly interpolates between
@@ -59,11 +59,11 @@ Usage
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef uniformTable2_H
-#define uniformTable2_H
+#ifndef UniformTable2_H
+#define UniformTable2_H
 
 #include "Function2.H"
-#include "scalarMatrices.H"
+#include "RectangularMatrix.H"
 #include "Pair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -74,12 +74,13 @@ namespace Function2s
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class uniformTable Declaration
+                            Class UniformTable Declaration
 \*---------------------------------------------------------------------------*/
 
-class uniformTable
+template<class Type>
+class UniformTable
 :
-    public FieldFunction2<scalar, uniformTable>
+    public FieldFunction2<Type, UniformTable<Type>>
 {
     // Private member data
 
@@ -90,7 +91,7 @@ class uniformTable
         Pair<scalar> high_;
 
         //- Table values
-        scalarRectangularMatrix values_;
+        RectangularMatrix<Type> values_;
 
         //- x increment derived from low_, high_ and values_.m()
         scalar deltax_;
@@ -121,25 +122,25 @@ public:
     // Constructors
 
         //- Construct from name and dictionary
-        uniformTable(const word& name, const dictionary& dict);
+        UniformTable(const word& name, const dictionary& dict);
 
 
     // Member Functions
 
         //- Return the non-uniform table of values
-        const scalarRectangularMatrix& values() const
+        const RectangularMatrix<Type>& values() const
         {
             return values_;
         }
 
         //- Evaluate the function and return the result
-        virtual scalar value(scalar x, scalar y) const;
+        virtual Type value(scalar x, scalar y) const;
 
         //- Evaluate the derivative of the function w.r.t. p
-        scalar dfdp(scalar p, scalar T) const;
+        Type dfdp(scalar p, scalar T) const;
 
         //- Evaluate the derivative of the function w.r.t. T
-        scalar dfdT(scalar p, scalar T) const;
+        Type dfdT(scalar p, scalar T) const;
 
         //- Write the function coefficients
         void write(Ostream& os) const;
@@ -150,6 +151,12 @@ public:
 
 } // End namespace Function2s
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#ifdef NoRepository
+    #include "UniformTable2.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

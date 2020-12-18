@@ -92,7 +92,7 @@ See also
 #ifndef tabulatedTransport_H
 #define tabulatedTransport_H
 
-#include "uniformTable2.H"
+#include "UniformTable2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -116,7 +116,7 @@ class tabulatedTransport
 :
     public Thermo
 {
-    typedef Function2s::uniformTable table2D;
+    typedef Function2s::UniformTable<scalar> table2D;
 
 
     // Private Data
