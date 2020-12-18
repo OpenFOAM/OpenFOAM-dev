@@ -1,0 +1,45 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "$FOAM_CASE/system/blockMeshDict"
+
+actions
+(
+    {
+        name    cs;
+        type    cellSet;
+        action  new;
+        source  cylinderToCell;
+        sourceInfo
+        {
+            p1 (0 0 -100);
+            p2 (0 0  100);
+            centre (0 0 0);
+            radius $cylinderRadius;
+        }
+    }
+    {
+        name    solid;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        sourceInfo { set cs; }
+    }
+
+);
+
+// ************************************************************************* //
