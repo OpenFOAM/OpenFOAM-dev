@@ -25,11 +25,12 @@ Class
     Foam::functionObjects::setTimeStepFunctionObject
 
 Description
-    Overrides the timeStep. Can only be used with
-    solvers with adjustTimeStep control (e.g. pimpleFoam). Makes no attempt
-    to cooperate with other timeStep 'controllers' (maxCo, other
-    functionObjects). Supports 'enabled' flag but none of the other ones
-    'startTime', 'endTime', 'writeControl' etc.
+    Updates the writeInterval as a Function1 of time.
+
+    Can only be used with solvers with adjustTimeStep control
+    (e.g. pimpleFoam). Makes no attempt to cooperate with other timeStep
+    'controllers' (maxCo, other functionObjects). Supports 'enabled' flag but
+    none of the other ones 'startTime', 'endTime', 'writeControl' etc.
 
 SourceFiles
     setTimeStepFunctionObject.C
@@ -93,23 +94,13 @@ public:
 
     // Member Functions
 
-        //- Return time database
-        const Time& time() const;
-
-        //- Override the time-step value
-        virtual bool setTimeStep();
-
-        //- Read and set the function object if its data have changed
+        //-  Read and reset the timeStep Function1
         virtual bool read(const dictionary&);
 
-        //- Called at each ++ or += of the time-loop.
-        //  postProcess overrides the usual executeControl behaviour and
-        //  forces execution (used in post-processing mode)
+        //- Reset the timeStep from the Function1 of time
         virtual bool execute();
 
-        //- Called at each ++ or += of the time-loop.
-        //  postProcess overrides the usual writeControl behaviour and
-        //  forces writing always (used in post-processing mode)
+        //- Do nothing
         virtual bool write();
 
 

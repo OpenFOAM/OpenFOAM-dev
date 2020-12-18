@@ -50,14 +50,14 @@ void Foam::Time::readDict()
         );
     }
 
-    scalar oldWriteInterval = writeInterval_;
+    scalar newWriteInterval = writeInterval_;
 
-    if (controlDict_.readIfPresent("writeInterval", writeInterval_))
+    if (controlDict_.readIfPresent("writeInterval", newWriteInterval))
     {
         if
         (
             writeControl_ == writeControl::timeStep
-         && label(writeInterval_) < 1
+         && label(newWriteInterval) < 1
         )
         {
             FatalIOErrorInFunction(controlDict_)
@@ -67,30 +67,10 @@ void Foam::Time::readDict()
     }
     else
     {
-        controlDict_.lookup("writeFrequency") >> writeInterval_;
+        controlDict_.lookup("writeFrequency") >> newWriteInterval;
     }
 
-
-    if (oldWriteInterval != writeInterval_)
-    {
-        switch (writeControl_)
-        {
-            case writeControl::runTime:
-            case writeControl::adjustableRunTime:
-                // Recalculate writeTimeIndex_ to be in units of current
-                // writeInterval.
-                writeTimeIndex_ = label
-                (
-                    writeTimeIndex_
-                  * oldWriteInterval
-                  / writeInterval_
-                );
-            break;
-
-            default:
-            break;
-        }
-    }
+    setWriteInterval(newWriteInterval);
 
     if (controlDict_.readIfPresent("purgeWrite", purgeWrite_))
     {

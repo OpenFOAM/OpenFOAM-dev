@@ -3,6 +3,7 @@ residuals/residuals.C
 timeActivatedFileUpdate/timeActivatedFileUpdate.C
 timeStep/timeStepFunctionObject.C
 setTimeStep/setTimeStepFunctionObject.C
+setWriteInterval/setWriteIntervalFunctionObject.C
 systemCall/systemCall.C
 stopAt/stopAt.C
 stopAt/stopAtFile/stopAtFile.C
