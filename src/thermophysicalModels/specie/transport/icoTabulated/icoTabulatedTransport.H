@@ -61,14 +61,14 @@ SourceFiles
     icoTabulatedTransport.C
 
 See also
-    Foam::Function1s::nonUniformTable
+    Foam::Function1s::NonUniformTable
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef icoTabulatedTransport_H
 #define icoTabulatedTransport_H
 
-#include "nonUniformTable1.H"
+#include "NonUniformTable1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -92,7 +92,7 @@ class icoTabulatedTransport
 :
     public Thermo
 {
-    typedef Function1s::nonUniformTable nonUniformTable;
+    typedef Function1s::NonUniformTable<scalar> nonUniformTable;
 
 
     // Private Data

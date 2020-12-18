@@ -52,14 +52,14 @@ SourceFiles
     icoTabulated.C
 
 See also
-    Foam::Function1s::nonUniformTable
+    Foam::Function1s::NonUniformTable
 
 \*---------------------------------------------------------------------------*/
 
 #ifndef icoTabulated_H
 #define icoTabulated_H
 
-#include "nonUniformTable1.H"
+#include "NonUniformTable1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -88,7 +88,7 @@ class icoTabulated
 :
     public Specie
 {
-    typedef Function1s::nonUniformTable nonUniformTable;
+    typedef Function1s::NonUniformTable<scalar> nonUniformTable;
 
 
     // Private Data

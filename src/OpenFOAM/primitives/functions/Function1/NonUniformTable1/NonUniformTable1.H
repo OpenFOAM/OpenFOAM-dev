@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,44 +22,44 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1s::uniformTable
+    Foam::Function1s::NonUniformTable
 
 Description
-    Tabulated property function that linearly interpolates between
-    the uniformTable values.
+    Non-uniform tabulated property function that linearly interpolates between
+    the values.
+
+    To speed-up the search of the non-uniform table a uniform jump-table is
+    created on construction which is used for fast indirect addressing into
+    the table.
 
 Usage
-    \table
+    \NonUniformTable
         Property    | Description
-        low         | Lower limit of the table
-        high        | Upper limit of the table
-        values      | Values, assumed uniformly distributed
-    \endtable
+        values      | List of value pairs
+    \endNonUniformTable
 
     Example for the density of water between 280 and 350K
     \verbatim
     rho
     {
-        type    uniformTable;
-
-        low    280;
-        high   350;
+        type    NonUniformTable;
 
         values
         (
-            999.87
-            991.53
-            973.7
+            (280 999.87)
+            (300 995.1)
+            (350 973.7)
         );
     }
     \endverbatim
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef uniformTable1_H
-#define uniformTable1_H
+#ifndef NonUniformTable1_H
+#define NonUniformTable1_H
 
 #include "Function1.H"
+#include "Tuple2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,50 +69,66 @@ namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class uniformTable Declaration
+                       Class NonUniformTable Declaration
 \*---------------------------------------------------------------------------*/
 
-class uniformTable
+template<class Type>
+class NonUniformTable
 :
-    public FieldFunction1<scalar, uniformTable>
+    public FieldFunction1<Type, NonUniformTable<Type>>
 {
     // Private member data
 
-        //- Name of dictionary from which this function is instantiated
-        fileName dictName_;
-
-        //- Lowest value in the table
+        //- Lowest value in the NonUniformTable
         scalar low_;
 
-        //- Highest value in the table
+        //- Highest value in the NonUniformTable
         scalar high_;
 
         //- Table values
-        List<scalar> values_;
+        List<Tuple2<scalar, Type>> values_;
 
         //- Increment derived from low_, high_ and values_.size()
         scalar delta_;
+
+        List<label> jumpTable_;
+
+
+protected:
+
+        //- Return the lower index of the interval in the table
+        //  corresponding to the given value
+        inline label index(scalar x) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("uniformTable");
+    TypeName("nonUniformTable");
 
 
     // Constructors
 
         //- Construct from name and dictionary
-        uniformTable(const word& name, const dictionary& dict);
+        NonUniformTable(const word& name, const dictionary& dict);
 
 
     // Member Functions
 
+        //- Return the non-uniform table of values
+        const List<Tuple2<scalar, Type>>& values() const
+        {
+            return values_;
+        }
+
         //- Evaluate the function and return the result
-        virtual scalar value(scalar x) const;
+        virtual Type value(scalar x) const;
 
         //- Integrate between two scalar values
-        virtual scalar integral(const scalar x1, const scalar x2) const;
+        virtual Type integral(const scalar x1, const scalar x2) const;
+
+        //- Evaluate the derivative of the function and return the result
+        Type dfdT(scalar T) const;
 
         //- Write the function coefficients
         void write(Ostream& os) const;
@@ -123,6 +139,14 @@ public:
 
 } // End namespace Function1s
 } // End namespace Foam
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "NonUniformTable1I.H"
+
+#ifdef NoRepository
+    #include "NonUniformTable1.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -56,6 +56,8 @@ namespace fv
 #include "Sine.H"
 #include "Square.H"
 #include "Table.H"
+#include "UniformTable1.H"
+#include "NonUniformTable1.H"
 #include "EmbeddedTableReader.H"
 #include "FoamTableReader.H"
 #include "Scale.H"

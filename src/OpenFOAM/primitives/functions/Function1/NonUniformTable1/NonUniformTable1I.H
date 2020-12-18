@@ -25,7 +25,8 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline Foam::label Foam::Function1s::nonUniformTable::index
+template<class Type>
+inline Foam::label Foam::Function1s::NonUniformTable<Type>::index
 (
     scalar x
 ) const
@@ -35,7 +36,7 @@ inline Foam::label Foam::Function1s::nonUniformTable::index
         FatalErrorInFunction
             << x << " out of range "
             << low_ << " to " << high_ << nl
-            << "    of nonUniformTable " << name_
+            << "    of NonUniformTable " << this->name_
             << exit(FatalError);
     }
 

@@ -23,29 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "uniformTable1.H"
-#include "addToRunTimeSelectionTable.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-namespace Function1s
-{
-    makeScalarFunction1(uniformTable)
-}
-}
-
+#include "UniformTable1.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::Function1s::uniformTable::uniformTable
+template<class Type>
+Foam::Function1s::UniformTable<Type>::UniformTable
 (
     const word& name,
     const dictionary& dict
 )
 :
-    FieldFunction1<scalar, uniformTable>(name),
+    FieldFunction1<Type, UniformTable<Type>>(name),
     dictName_(dict.name()),
     low_(dict.lookup<scalar>("low")),
     high_(dict.lookup<scalar>("high")),
@@ -68,7 +57,8 @@ Foam::Function1s::uniformTable::uniformTable
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::Function1s::uniformTable::value(scalar x) const
+template<class Type>
+Type Foam::Function1s::UniformTable<Type>::value(scalar x) const
 {
     const scalar nd = (x - low_)/delta_;
     const label i = nd;
@@ -89,18 +79,20 @@ Foam::scalar Foam::Function1s::uniformTable::value(scalar x) const
 }
 
 
-Foam::scalar Foam::Function1s::uniformTable::integral
+template<class Type>
+Type Foam::Function1s::UniformTable<Type>::integral
 (
     const scalar x1,
     const scalar x2
 ) const
 {
     NotImplemented;
-    return 0;
+    return Zero;
 }
 
 
-void Foam::Function1s::uniformTable::write(Ostream& os) const
+template<class Type>
+void Foam::Function1s::UniformTable<Type>::write(Ostream& os) const
 {
     writeEntry(os, "low", low_);
     writeEntry(os, "high", high_);

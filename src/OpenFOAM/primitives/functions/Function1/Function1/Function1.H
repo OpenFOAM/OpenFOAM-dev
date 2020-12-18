@@ -243,6 +243,13 @@ public:
 
 
 #define makeFunction1s(Type)                                                   \
+                                                                               \
+    template<>                                                                 \
+    const char* const Foam::Tuple2<Foam::scalar, Type>::typeName               \
+    (                                                                          \
+        "Tuple2<scalar," #Type ">"                                             \
+    );                                                                         \
+                                                                               \
     makeFunction1(Type);                                                       \
     makeFunction1Type(None, Type);                                             \
     makeFunction1Type(Constant, Type);                                         \
@@ -253,6 +260,8 @@ public:
     makeFunction1Type(Sine, Type);                                             \
     makeFunction1Type(Square, Type);                                           \
     makeFunction1Type(Table, Type);                                            \
+    makeFunction1Type(UniformTable, Type);                                     \
+    makeFunction1Type(NonUniformTable, Type);                                  \
     makeNamedFunction1Type(Table, Type, tableFile);                            \
     makeFunction1Type(Scale, Type);                                            \
     makeFunction1Type(Coded, Type);

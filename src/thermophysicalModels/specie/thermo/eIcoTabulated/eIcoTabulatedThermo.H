@@ -57,7 +57,7 @@ SourceFiles
     eIcoTabulatedThermo.C
 
 See also
-    Foam::Function1s::nonUniformTable
+    Foam::Function1s::UniformTable
 
 \*---------------------------------------------------------------------------*/
 

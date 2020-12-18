@@ -73,8 +73,7 @@ void Foam::TableReaders::Embedded<Type>::write
     const List<Tuple2<scalar, Type>>& table
 ) const
 {
-    os  << indent << "values" << table
-        << token::END_STATEMENT << endl;
+    writeEntry(os, "values", table);
 }
 
 

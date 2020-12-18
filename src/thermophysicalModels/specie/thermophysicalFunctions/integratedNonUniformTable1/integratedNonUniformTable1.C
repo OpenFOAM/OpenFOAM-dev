@@ -46,7 +46,7 @@ Foam::Function1s::integratedNonUniformTable::integratedNonUniformTable
     const dictionary& dict
 )
 :
-    nonUniformTable(name, dict),
+    NonUniformTable<scalar>(name, dict),
     intf_(values().size()),
     intfByT_(values().size())
 {
@@ -110,7 +110,7 @@ void Foam::Function1s::integratedNonUniformTable::write
     Ostream& os
 ) const
 {
-    nonUniformTable::write(os);
+    NonUniformTable<scalar>::write(os);
 }
 
 

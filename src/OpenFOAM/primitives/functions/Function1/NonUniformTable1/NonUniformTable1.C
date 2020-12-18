@@ -23,35 +23,18 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "nonUniformTable1.H"
-#include "addToRunTimeSelectionTable.H"
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-namespace Foam
-{
-namespace Function1s
-{
-    makeScalarFunction1(nonUniformTable)
-}
-}
-
-template<>
-const char* const Foam::Tuple2<Foam::scalar, Foam::scalar>::typeName
-(
-    "Tuple2<scalar,scalar>"
-);
-
+#include "NonUniformTable1.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::Function1s::nonUniformTable::nonUniformTable
+template<class Type>
+Foam::Function1s::NonUniformTable<Type>::NonUniformTable
 (
     const word& name,
     const dictionary& dict
 )
 :
-    FieldFunction1<scalar, nonUniformTable>(name),
+    FieldFunction1<Type, NonUniformTable<Type>>(name),
     low_(great),
     high_(-great),
     values_(dict.lookup("values")),
@@ -97,7 +80,8 @@ Foam::Function1s::nonUniformTable::nonUniformTable
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::scalar Foam::Function1s::nonUniformTable::value
+template<class Type>
+Type Foam::Function1s::NonUniformTable<Type>::value
 (
     scalar x
 ) const
@@ -112,18 +96,20 @@ Foam::scalar Foam::Function1s::nonUniformTable::value
 }
 
 
-Foam::scalar Foam::Function1s::nonUniformTable::integral
+template<class Type>
+Type Foam::Function1s::NonUniformTable<Type>::integral
 (
     const scalar x1,
     const scalar x2
 ) const
 {
     NotImplemented;
-    return 0;
+    return Zero;
 }
 
 
-Foam::scalar Foam::Function1s::nonUniformTable::dfdT
+template<class Type>
+Type Foam::Function1s::NonUniformTable<Type>::dfdT
 (
     scalar T
 ) const
@@ -136,7 +122,8 @@ Foam::scalar Foam::Function1s::nonUniformTable::dfdT
 }
 
 
-void Foam::Function1s::nonUniformTable::write(Ostream& os) const
+template<class Type>
+void Foam::Function1s::NonUniformTable<Type>::write(Ostream& os) const
 {
     writeEntry(os, "values", values_);
 }
