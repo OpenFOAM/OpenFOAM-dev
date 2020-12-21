@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,7 @@ See also
 #define Tuple2_H
 
 #include "Istream.H"
+#include "Hash.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -68,6 +69,22 @@ class Tuple2
 
 
 public:
+
+    //- Hashing function class
+    template<class HashT1=Hash<Type1>, class HashT2=Hash<Type2>>
+    class Hash
+    {
+    public:
+        Hash()
+        {}
+
+        inline unsigned operator()
+        (
+            const Tuple2<Type1, Type2>&,
+            unsigned seed = 0
+        ) const;
+    };
+
 
     // Static Data Members
 
@@ -137,6 +154,22 @@ public:
             const Tuple2<Type1, Type2>& t2
         );
 };
+
+
+template<class Type1, class Type2>
+template<class HashT1, class HashT2>
+inline unsigned Tuple2<Type1, Type2>::Hash<HashT1, HashT2>::operator()
+(
+    const Tuple2<Type1, Type2>& t,
+    unsigned seed
+) const
+{
+    // Hash incrementally
+    unsigned val = seed;
+    val = HashT1()(t.first(), val);
+    val = HashT2()(t.second(), val);
+    return val;
+}
 
 
 //- Return reverse of a tuple2
