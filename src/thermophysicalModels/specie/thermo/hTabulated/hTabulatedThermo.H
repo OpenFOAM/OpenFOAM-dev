@@ -143,6 +143,9 @@ class hTabulatedThermo
         //- Specific heat at constant pressure table [J/kg/K]
         table2D Cp_;
 
+        //- Specific heat at constant volume table [J/kg/K]
+        table2D Cv_;
+
 
 public:
 
@@ -172,11 +175,20 @@ public:
             //- Heat capacity at constant pressure [J/kg/K]
             inline scalar Cp(const scalar p, const scalar T) const;
 
+            //- Heat capacity at constant volume [J/kg/K]
+            inline scalar Cv(const scalar p, const scalar T) const;
+
             //- Sensible enthalpy [J/kg]
             inline scalar Hs(const scalar p, const scalar T) const;
 
             //- Absolute enthalpy [J/kg]
             inline scalar Ha(const scalar p, const scalar T) const;
+
+            //- Sensible internal energy [J/kg]
+            inline scalar Es(const scalar p, const scalar T) const;
+
+            //- Absolute internal energy [J/kg]
+            inline scalar Ea(const scalar p, const scalar T) const;
 
             //- Enthalpy of formation [J/kg]
             inline scalar Hf() const;
@@ -186,8 +198,6 @@ public:
 
             //- Gibbs free energy of the mixture in the standard state [J/kg]
             inline scalar Gstd(const scalar T) const;
-
-            #include "HtoEthermo.H"
 
 
         // Derivative term used for Jacobian

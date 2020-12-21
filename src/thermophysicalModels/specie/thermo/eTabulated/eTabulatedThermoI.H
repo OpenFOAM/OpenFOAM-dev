@@ -38,6 +38,7 @@ inline Foam::eTabulatedThermo<EquationOfState>::eTabulatedThermo
     Hf_(pt.Hf_),
     Sf_(pt.Sf_),
     Es_(pt.Es_),
+    Cp_(pt.Cp_),
     Cv_(pt.Cv_)
 {}
 
@@ -51,6 +52,17 @@ inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::limit
 ) const
 {
     return T;
+}
+
+
+template<class EquationOfState>
+inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::Cp
+(
+    const scalar p,
+    const scalar T
+) const
+{
+    return Cp_.value(p, T);
 }
 
 
@@ -84,6 +96,28 @@ inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::Ea
 ) const
 {
     return Es(p, T) + Hf_;
+}
+
+
+template<class EquationOfState>
+inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::Hs
+(
+    const scalar p,
+    const scalar T
+) const
+{
+    return Es(p, T) + p/EquationOfState::rho(p, T);
+}
+
+
+template<class EquationOfState>
+inline Foam::scalar Foam::eTabulatedThermo<EquationOfState>::Ha
+(
+    const scalar p,
+    const scalar T
+) const
+{
+    return Ea(p, T) + p/EquationOfState::rho(p, T);
 }
 
 

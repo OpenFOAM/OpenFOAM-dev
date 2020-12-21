@@ -38,6 +38,7 @@ Foam::eTabulatedThermo<EquationOfState>::eTabulatedThermo
     Hf_(dict.subDict("thermodynamics").lookup<scalar>("Hf")),
     Sf_(dict.subDict("thermodynamics").lookup<scalar>("Sf")),
     Es_("Es", dict.subDict("thermodynamics").subDict("Es")),
+    Cp_("Cp", dict.subDict("thermodynamics").subDict("Cp")),
     Cv_("Cv", dict.subDict("thermodynamics").subDict("Cv"))
 {}
 
@@ -59,6 +60,10 @@ void Foam::eTabulatedThermo<EquationOfState>::write
     dictionary EsDict("Es");
     EsDict.add("values", Es_.values());
     dict.add("Es", EsDict);
+
+    dictionary CpDict("Cp");
+    CpDict.add("values", Cp_.values());
+    dict.add("Cp", CpDict);
 
     dictionary CvDict("Cv");
     CvDict.add("values", Cv_.values());
