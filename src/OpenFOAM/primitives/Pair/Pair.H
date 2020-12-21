@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,12 +37,23 @@ See also
 #define Pair_H
 
 #include "FixedList.H"
-#include "Istream.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+// Forward declaration of friend functions and operators
+
+template<class Type>
+class Pair;
+
+template<class Type>
+inline Istream& operator>>(Istream&, Pair<Type>&);
+
+template<class Type>
+inline Ostream& operator<<(Ostream&, const Pair<Type>&);
+
 
 /*---------------------------------------------------------------------------*\
                             Class Pair Declaration
@@ -77,9 +88,9 @@ public:
 
         //- Construct from Istream
         inline Pair(Istream& is)
-        :
-            FixedList<Type, 2>(is)
-        {}
+        {
+            is >> *this;
+        }
 
 
     // Member Functions
@@ -212,6 +223,31 @@ template<class Type>
 bool operator>=(const Pair<Type>& a, const Pair<Type>& b)
 {
     return !(a < b);
+}
+
+
+template<class Type>
+inline Istream& operator>>(Istream& is, Pair<Type>& p)
+{
+    is.readBegin("Pair");
+    is >> p.first() >> p.second();
+    is.readEnd("Pair");
+
+    // Check state of Istream
+    is.check("operator>>(Istream&, Pair<Type>&)");
+
+    return is;
+}
+
+
+template<class Type>
+inline Ostream& operator<<(Ostream& os, const Pair<Type>& p)
+{
+    os  << token::BEGIN_LIST
+        << p.first() << token::SPACE << p.second()
+        << token::END_LIST;
+
+    return os;
 }
 
 
