@@ -60,6 +60,7 @@ Usage
 
 #include "Function1.H"
 #include "Tuple2.H"
+#include "TableReader.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -93,6 +94,9 @@ class NonUniformTable
 
         List<label> jumpTable_;
 
+        //- Table reader
+        autoPtr<TableReader<Type>> reader_;
+
 
 protected:
 
@@ -111,6 +115,9 @@ public:
 
         //- Construct from name and dictionary
         NonUniformTable(const word& name, const dictionary& dict);
+
+        //- Copy constructor
+        NonUniformTable(const NonUniformTable<Type>& nut);
 
 
     // Member Functions
@@ -132,6 +139,12 @@ public:
 
         //- Write the function coefficients
         void write(Ostream& os) const;
+
+
+    // Member Operators
+
+        //- Assignment
+        void operator=(const NonUniformTable<Type>&);
 };
 
 

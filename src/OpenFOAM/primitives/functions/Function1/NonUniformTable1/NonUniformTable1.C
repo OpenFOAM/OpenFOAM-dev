@@ -37,8 +37,9 @@ Foam::Function1s::NonUniformTable<Type>::NonUniformTable
     FieldFunction1<Type, NonUniformTable<Type>>(name),
     low_(great),
     high_(-great),
-    values_(dict.lookup("values")),
-    delta_(great)
+    values_(),
+    delta_(great),
+    reader_(TableReader<Type>::New(name, dict, this->values_))
 {
     if (values_.size() < 2)
     {
@@ -76,6 +77,22 @@ Foam::Function1s::NonUniformTable<Type>::NonUniformTable
         }
     }
 }
+
+
+template<class Type>
+Foam::Function1s::NonUniformTable<Type>::NonUniformTable
+(
+    const NonUniformTable<Type>& nut
+)
+:
+    FieldFunction1<Type, NonUniformTable<Type>>(nut),
+    low_(nut.low_),
+    high_(nut.high_),
+    values_(nut.values_),
+    delta_(nut.delta_),
+    jumpTable_(nut.jumpTable_),
+    reader_(nut.reader_, false)
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -125,7 +142,24 @@ Type Foam::Function1s::NonUniformTable<Type>::dfdT
 template<class Type>
 void Foam::Function1s::NonUniformTable<Type>::write(Ostream& os) const
 {
-    writeEntry(os, "values", values_);
+    reader_->write(os, values_);
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+template<class Type>
+void Foam::Function1s::NonUniformTable<Type>::operator=
+(
+    const NonUniformTable<Type>& nut
+)
+{
+    low_ = nut.low_;
+    high_ = nut.high_;
+    values_ = nut.values_;
+    delta_ = nut.delta_;
+    jumpTable_ = nut.jumpTable_;
+    reader_ = nut.reader_->clone();
 }
 
 
