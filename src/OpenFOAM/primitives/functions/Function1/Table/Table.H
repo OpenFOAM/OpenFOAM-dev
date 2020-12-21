@@ -131,7 +131,7 @@ class Table
         const word interpolationScheme_;
 
         //- Table data
-        List<Tuple2<scalar, Type>> table_;
+        List<Tuple2<scalar, Type>> values_;
 
         //- Extracted values
         mutable autoPtr<scalarField> tableSamplesPtr_;

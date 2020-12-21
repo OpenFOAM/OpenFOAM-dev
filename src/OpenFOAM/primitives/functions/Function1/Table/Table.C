@@ -35,11 +35,11 @@ Foam::Function1s::Table<Type>::interpolator() const
     if (interpolatorPtr_.empty())
     {
         // Re-work table into linear list
-        tableSamplesPtr_.reset(new scalarField(table_.size()));
+        tableSamplesPtr_.reset(new scalarField(values_.size()));
         scalarField& tableSamples = tableSamplesPtr_();
-        forAll(table_, i)
+        forAll(values_, i)
         {
-            tableSamples[i] = table_[i].first();
+            tableSamples[i] = values_[i].first();
         }
         interpolatorPtr_ = interpolationWeights::New
         (
@@ -55,19 +55,19 @@ Foam::Function1s::Table<Type>::interpolator() const
 template<class Type>
 void Foam::Function1s::Table<Type>::check() const
 {
-    if (!table_.size())
+    if (!values_.size())
     {
         FatalErrorInFunction
             << "Table for entry " << this->name() << " is invalid (empty)"
             << nl << exit(FatalError);
     }
 
-    label n = table_.size();
-    scalar prevValue = table_[0].first();
+    label n = values_.size();
+    scalar prevValue = values_[0].first();
 
     for (label i = 1; i < n; ++i)
     {
-        const scalar currValue = table_[i].first();
+        const scalar currValue = values_[i].first();
 
         // avoid duplicate values (divide-by-zero error)
         if (currValue <= prevValue)
@@ -87,8 +87,8 @@ Foam::scalar Foam::Function1s::Table<Type>::bound
     const scalar x
 ) const
 {
-    const bool under = x < table_.first().first();
-    const bool over = x > table_.last().first();
+    const bool under = x < values_.first().first();
+    const bool over = x > values_.last().first();
 
     auto errorMessage = [&]()
     {
@@ -117,8 +117,8 @@ Foam::scalar Foam::Function1s::Table<Type>::bound
             }
             case tableBase::boundsHandling::repeat:
             {
-                const scalar t0 = table_.first().first();
-                const scalar t1 = table_.last().first();
+                const scalar t0 = values_.first().first();
+                const scalar t1 = values_.last().first();
                 const scalar dt = t1 - t0;
                 const label n = floor((x - t0)/dt);
                 return x - n*dt;
@@ -144,7 +144,7 @@ Foam::Function1s::Table<Type>::Table
     FieldFunction1<Type, Table<Type>>(name),
     boundsHandling_(boundsHandling),
     interpolationScheme_(interpolationScheme),
-    table_(table)
+    values_(table)
 {}
 
 
@@ -170,8 +170,8 @@ Foam::Function1s::Table<Type>::Table
             linearInterpolationWeights::typeName
         )
     ),
-    table_(),
-    reader_(TableReader<Type>::New(name, dict, this->table_))
+    values_(),
+    reader_(TableReader<Type>::New(name, dict, this->values_))
 {
     check();
 }
@@ -183,7 +183,7 @@ Foam::Function1s::Table<Type>::Table(const Table<Type>& tbl)
     FieldFunction1<Type, Table<Type>>(tbl),
     boundsHandling_(tbl.boundsHandling_),
     interpolationScheme_(tbl.interpolationScheme_),
-    table_(tbl.table_),
+    values_(tbl.values_),
     tableSamplesPtr_(tbl.tableSamplesPtr_),
     interpolatorPtr_(tbl.interpolatorPtr_),
     reader_(tbl.reader_, false)
@@ -212,7 +212,7 @@ Type Foam::Function1s::Table<Type>::value
     interpolator().valueWeights(bx, indices_, weights_);
     forAll(indices_, i)
     {
-        y += weights_[i]*table_[indices_[i]].second();
+        y += weights_[i]*values_[indices_[i]].second();
     }
 
     return y;
@@ -233,13 +233,13 @@ Type Foam::Function1s::Table<Type>::integral
     interpolator().integrationWeights(bx1, bx2, indices_, weights_);
     forAll(indices_, i)
     {
-       sumY += weights_[i]*table_[indices_[i]].second();
+       sumY += weights_[i]*values_[indices_[i]].second();
     }
 
     if (boundsHandling_ == tableBase::boundsHandling::repeat)
     {
-        const scalar t0 = table_.first().first();
-        const scalar t1 = table_.last().first();
+        const scalar t0 = values_.first().first();
+        const scalar t1 = values_.last().first();
         const scalar dt = t1 - t0;
         const label n = floor((x2 - t0)/dt) - floor((x1 - t0)/dt);
 
@@ -251,7 +251,7 @@ Type Foam::Function1s::Table<Type>::integral
 
             forAll(indices_, i)
             {
-                sumY01 += weights_[i]*table_[indices_[i]].second();
+                sumY01 += weights_[i]*values_[indices_[i]].second();
             }
             sumY += n*sumY01;
         }
@@ -265,12 +265,12 @@ template<class Type>
 Foam::tmp<Foam::scalarField>
 Foam::Function1s::Table<Type>::x() const
 {
-    tmp<scalarField> tfld(new scalarField(table_.size(), 0.0));
+    tmp<scalarField> tfld(new scalarField(values_.size(), 0.0));
     scalarField& fld = tfld.ref();
 
-    forAll(table_, i)
+    forAll(values_, i)
     {
-        fld[i] = table_[i].first();
+        fld[i] = values_[i].first();
     }
 
     return tfld;
@@ -281,12 +281,12 @@ template<class Type>
 Foam::tmp<Foam::Field<Type>>
 Foam::Function1s::Table<Type>::y() const
 {
-    tmp<Field<Type>> tfld(new Field<Type>(table_.size(), Zero));
+    tmp<Field<Type>> tfld(new Field<Type>(values_.size(), Zero));
     Field<Type>& fld = tfld.ref();
 
-    forAll(table_, i)
+    forAll(values_, i)
     {
-        fld[i] = table_[i].second();
+        fld[i] = values_[i].second();
     }
 
     return tfld;
@@ -312,7 +312,7 @@ void Foam::Function1s::Table<Type>::write(Ostream& os) const
         interpolationScheme_
     );
 
-    reader_->write(os, table_);
+    reader_->write(os, values_);
 }
 
 
