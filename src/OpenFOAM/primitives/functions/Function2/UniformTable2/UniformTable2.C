@@ -35,8 +35,8 @@ Foam::Function2s::UniformTable<Type>::UniformTable
 )
 :
     FieldFunction2<Type, UniformTable<Type>>(name),
-    low_(dict.lookup<Pair<scalar>>("low")),
-    high_(dict.lookup<Pair<scalar>>("high")),
+    low_(dict.lookup("low")),
+    high_(dict.lookup("high")),
     values_(dict.lookup("values"))
 {
     if (values_.m() < 2 || values_.n() < 2)
