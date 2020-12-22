@@ -56,7 +56,7 @@ solvers
         maxIter         20;
     }
 
-    "(k|epsilon|Theta).*"
+    "(k|epsilon).*"
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
