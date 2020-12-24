@@ -29,7 +29,7 @@ deltaT          1e-3;
 
 writeControl    adjustableRunTime;
 
-writeInterval   0.1;
+writeInterval   0.05;
 
 purgeWrite      0;
 
@@ -48,5 +48,41 @@ runTimeModifiable true;
 adjustTimeStep  yes;
 
 maxCo           0.5;
+
+functions
+{
+    cartesianToCylindrical
+    {
+        type        cylindrical;
+        libs        ("libfieldFunctionObjects.so");
+
+        origin      (0 0 0);
+        axis        (0 0 1);
+
+        field       U;
+
+        writeControl    outputTime;
+        writeInterval   1;
+    }
+
+    #includeFunc fieldAverage(cylindrical(U))
+
+    cylindricalToCartesian
+    {
+        type        cylindrical;
+        libs        ("libfieldFunctionObjects.so");
+
+        origin      (0 0 0);
+        axis        (0 0 1);
+
+        field       cylindrical(U)Mean;
+        toCartesian true;
+        result      UMean;
+
+        writeControl    outputTime;
+        writeInterval   1;
+    }
+}
+
 
 // ************************************************************************* //

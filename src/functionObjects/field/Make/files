@@ -76,4 +76,6 @@ age/age.C
 
 comfort/comfort.C
 
+cylindrical/cylindricalFunctionObject.C
+
 LIB = $(FOAM_LIBBIN)/libfieldFunctionObjects
