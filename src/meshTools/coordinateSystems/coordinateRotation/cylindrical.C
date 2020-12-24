@@ -40,20 +40,25 @@ namespace Foam
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
 
-Foam::tensor Foam::cylindrical::R(const vector& dir) const
+Foam::tensor Foam::cylindrical::R(const vector& p) const
 {
-    const vector e3 = e3_/mag(e3_);
-    const vector r = dir - (dir & e3)*e3;
+    vector dir = p - origin_;
+    dir /= mag(dir) + vSmall;
+
+    const vector axis = axis_/mag(axis_);
+    const vector r = dir - (dir & axis)*axis;
 
     if (mag(r) < small)
     {
         // If the point is on the axis choose any radial direction
-        return axesRotation(e3, perpendicular(e3)).R();
+        return axesRotation(axis, perpendicular(axis)).R();
     }
     else
     {
-        return axesRotation(e3, dir).R();
+        return axesRotation(axis, dir).R();
     }
+
+    return tensor(r, axis^r, axis);
 }
 
 
@@ -64,10 +69,7 @@ void Foam::cylindrical::init(const UList<vector>& points)
 
     forAll(points, i)
     {
-        vector dir = points[i] - origin_;
-        dir /= mag(dir) + vSmall;
-
-        R[i] = this->R(dir);
+        R[i] = this->R(points[i]);
     }
 }
 
@@ -83,7 +85,7 @@ Foam::cylindrical::cylindrical
 :
     Rptr_(),
     origin_(origin),
-    e3_(axis)
+    axis_(axis)
 {
     init(points);
 }
@@ -92,17 +94,19 @@ Foam::cylindrical::cylindrical
 Foam::cylindrical::cylindrical(const dictionary& dict)
 :
     Rptr_(),
-    origin_(),
-    e3_()
+    origin_
+    (
+        dict.parent().found("origin")
+      ? dict.parent().lookup("origin")
+      : dict.lookup("origin")
+    ),
+    axis_
+    (
+        dict.found("e3")
+      ? dict.lookup("e3")
+      : dict.lookup("axis")
+    )
 {
-    // If origin is specified in the coordinateSystem
-    if (dict.parent().found("origin"))
-    {
-        dict.parent().lookup("origin") >> origin_;
-    }
-
-    // Rotation axis
-    dict.lookup("e3") >> e3_;
 }
 
 
@@ -135,10 +139,7 @@ void Foam::cylindrical::updatePoints(const UList<vector>& points)
 
     forAll(points, i)
     {
-        vector dir = points[i] - origin_;
-        dir /= mag(dir) + vSmall;
-
-        R[i] = this->R(dir);
+        R[i] = this->R(points[i]);
     }
 }
 
@@ -270,7 +271,7 @@ Foam::symmTensor Foam::cylindrical::transformVector
 
 void Foam::cylindrical::write(Ostream& os) const
 {
-     writeEntry(os, "e3", e3());
+     writeEntry(os, "axis", axis());
 }
 
 

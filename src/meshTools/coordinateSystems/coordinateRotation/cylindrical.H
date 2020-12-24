@@ -28,15 +28,15 @@ Description
     A local coordinate rotation.
 
     The rotational field can be created in two ways:
-      -# Each rotational tensor is defined with two vectors (\c dir and \c e3)
-         where <tt>dir = point - origin</tt> and \c e3 is the rotation axis.
+      -# Each rotational tensor is defined with two vectors (\c dir and \c axis)
+         where <tt>dir = point - origin</tt> and \c axis is the rotation axis.
           Per each point an axesRotation type of rotation is created
           (cylindrical coordinates). For example:
           \verbatim
           cylindrical
           {
               type        localAxes;
-              e3          (0 0 1);
+              axis          (0 0 1);
           }
           \endverbatim
 
@@ -76,14 +76,14 @@ class cylindrical
         point origin_;
 
         //- Rotation axis
-        vector e3_;
+        vector axis_;
 
 
     // Private members
 
         //- Return the local transformation tensor
-        //  corresponding to the given vector
-        tensor R(const vector& dir) const;
+        //  corresponding to the given point
+        tensor R(const vector& p) const;
 
         //- Initialise transformation tensor field for given points
         void init(const UList<vector>& points);
@@ -151,26 +151,14 @@ public:
         //- Return local Cartesian z-axis in global coordinates
         virtual const vector e3() const
         {
-            return e3_;
+            return axis_;
         }
 
-        //- Transform vectorField using transformation tensor field
-        virtual tmp<vectorField> transform(const vectorField& tf) const;
-
-        //- Transform vector using transformation tensor
-        virtual vector transform(const vector& v) const;
-
-        //- Transform vector using transformation tensor for component
-        virtual vector transform(const vector& v, const label cmptI) const;
-
-        //- Inverse transform vectorField using transformation tensor field
-        virtual tmp<vectorField> invTransform(const vectorField& vf) const;
-
-        //- Inverse transform vector using transformation tensor
-        virtual vector invTransform(const vector& v) const;
-
-        //- Inverse transform vector using transformation tensor for component
-        virtual vector invTransform(const vector& v, const label cmptI) const;
+        //- Return local Cartesian z-axis in global coordinates
+        virtual const vector axis() const
+        {
+            return axis_;
+        }
 
         //- Return if the rotation is uniform
         virtual bool uniform() const
@@ -178,22 +166,40 @@ public:
             return false;
         }
 
-        //- Transform tensor field using transformation tensorField
-        virtual tmp<tensorField> transformTensor(const tensorField& tf) const;
+        //- Transform vector using transformation tensor
+        virtual vector transform(const vector& v) const;
+
+        //- Transform vectorField using transformation tensor field
+        virtual tmp<vectorField> transform(const vectorField& tf) const;
+
+        //- Transform vector using transformation tensor for component
+        virtual vector transform(const vector& v, const label cmptI) const;
+
+        //- Inverse transform vector using transformation tensor
+        virtual vector invTransform(const vector& v) const;
+
+        //- Inverse transform vectorField using transformation tensor field
+        virtual tmp<vectorField> invTransform(const vectorField& vf) const;
+
+        //- Inverse transform vector using transformation tensor for component
+        virtual vector invTransform(const vector& v, const label cmptI) const;
 
         //- Transform tensor using transformation tensorField
         virtual tensor transformTensor(const tensor& t) const;
 
+        //- Transform tensor field using transformation tensorField
+        virtual tmp<tensorField> transformTensor(const tensorField& tf) const;
+
+        //- Transform vector using transformation tensor and return
+        //  symmetrical tensor
+        virtual symmTensor transformVector(const vector& v) const;
+
         //- Transform vectorField using transformation tensorField and return
-        // symmetrical tensorField
+        //  symmetrical tensorField
         virtual tmp<symmTensorField> transformVector
         (
             const vectorField& vf
         ) const;
-
-        //- Transform vector using transformation tensor and return
-        // symmetrical tensor (R & st & R.T())
-        virtual symmTensor transformVector(const vector& v) const;
 
 
     // Write

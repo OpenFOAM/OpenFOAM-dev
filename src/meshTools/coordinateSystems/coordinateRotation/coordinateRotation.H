@@ -161,17 +161,20 @@ public:
             return true;
         }
 
+        //- Transform vector using transformation tensor
+        virtual vector transform(const vector& st) const = 0;
+
         //- Transform vectorField using transformation tensor field
         virtual tmp<vectorField> transform(const vectorField& st) const = 0;
 
-        //- Transform vector using transformation tensor
-        virtual vector transform(const vector& st) const = 0;
+        //- Inverse transform vector using transformation tensor
+        virtual vector invTransform(const vector& st) const = 0;
 
         //- Inverse transform vectorField using transformation tensor field
         virtual tmp<vectorField> invTransform(const vectorField& st) const = 0;
 
-        //- Inverse transform vector using transformation tensor
-        virtual vector invTransform(const vector& st) const = 0;
+        //- Transform tensor using transformation tensorField
+        virtual tensor transformTensor(const tensor& st) const = 0;
 
         //- Transform tensor field using transformation tensorField
         virtual tmp<tensorField> transformTensor
@@ -179,26 +182,22 @@ public:
             const tensorField& st
         ) const = 0;
 
-        //- Transform tensor using transformation tensorField
-        virtual tensor transformTensor(const tensor& st) const = 0;
+        //- Transform vector using transformation tensor and return
+        //  symmetrical tensor
+        virtual symmTensor transformVector(const vector& st) const = 0;
 
         //- Transform vectorField using transformation tensorField and return
-        // symmetrical tensorField
+        //  symmetrical tensorField
         virtual tmp<symmTensorField> transformVector
         (
             const vectorField& st
         ) const = 0;
-
-        //- Transform vector using transformation tensor and return
-        // symmetrical tensor
-        virtual symmTensor transformVector(const vector& st) const = 0;
 
 
     // Write
 
             //- Write
             virtual void write(Ostream&) const = 0;
-
 };
 
 
