@@ -66,7 +66,7 @@ primitives/Tensor/lists/symmTensorList.C
 primitives/Tensor/lists/tensorList.C
 
 primitives/Vector/complexVector/complexVector.C
-ifndef $(WM_SP)
+ifneq "$(WM_PRECISION_OPTION)" "SP"
 primitives/Vector/floatVector/floatVector.C
 primitives/Tensor/floatTensor/floatTensor.C
 endif

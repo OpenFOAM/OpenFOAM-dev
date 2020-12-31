@@ -16,7 +16,7 @@ memInfo/memInfo.C
 # to use stat (=timestamps) instead of inotify
 fileMonitor.C
 
-ifdef SunOS64
+ifeq "$(WM_ARCH)" "SunOS64"
     dummyPrintStack.C
 else
     printStack.C

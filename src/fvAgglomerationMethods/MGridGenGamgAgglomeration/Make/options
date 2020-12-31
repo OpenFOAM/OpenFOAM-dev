@@ -1,7 +1,7 @@
 # Needs ParMGridGen environment variable set. (see Allwmake script)
 
 TYPE_REAL =
-ifndef $(WM_SP)
+ifneq "$(WM_PRECISION_OPTION)" "SP"
     TYPE_REAL = -DTYPE_REAL
 endif
 
