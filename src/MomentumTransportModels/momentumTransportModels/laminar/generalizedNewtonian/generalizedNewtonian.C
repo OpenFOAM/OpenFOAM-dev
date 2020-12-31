@@ -73,7 +73,11 @@ generalizedNewtonian<BasicMomentumTransportModel>::generalizedNewtonian
     (
         IOobject
         (
-            IOobject::groupName("generalizedNewtonian:nu", alphaRhoPhi.group()),
+            IOobject::groupName
+            (
+                IOobject::modelName("nu", typeName),
+                alphaRhoPhi.group()
+            ),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::NO_READ,
@@ -87,7 +91,7 @@ generalizedNewtonian<BasicMomentumTransportModel>::generalizedNewtonian
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
-Foam::tmp<Foam::volScalarField>
+tmp<volScalarField>
 generalizedNewtonian<BasicMomentumTransportModel>::strainRate() const
 {
     return sqrt(2.0)*mag(symm(fvc::grad(this->U())));
@@ -102,33 +106,6 @@ bool generalizedNewtonian<BasicMomentumTransportModel>::read()
     viscosityModel_->read(this->coeffDict_);
 
     return true;
-}
-
-
-template<class BasicMomentumTransportModel>
-tmp<volScalarField>
-generalizedNewtonian<BasicMomentumTransportModel>::nut() const
-{
-    return volScalarField::New
-    (
-        IOobject::groupName("nut", this->alphaRhoPhi_.group()),
-        this->mesh_,
-        dimensionedScalar(dimViscosity, 0)
-    );
-}
-
-
-template<class BasicMomentumTransportModel>
-tmp<scalarField>
-generalizedNewtonian<BasicMomentumTransportModel>::nut
-(
-    const label patchi
-) const
-{
-    return tmp<scalarField>
-    (
-        new scalarField(this->mesh_.boundary()[patchi].size(), 0.0)
-    );
 }
 
 
@@ -152,45 +129,6 @@ generalizedNewtonian<BasicMomentumTransportModel>::nuEff
 ) const
 {
     return nu_.boundaryField()[patchi];
-}
-
-
-template<class BasicMomentumTransportModel>
-tmp<volScalarField>
-generalizedNewtonian<BasicMomentumTransportModel>::k() const
-{
-    return volScalarField::New
-    (
-        IOobject::groupName("k", this->alphaRhoPhi_.group()),
-        this->mesh_,
-        dimensionedScalar(sqr(this->U_.dimensions()), 0)
-    );
-}
-
-
-template<class BasicMomentumTransportModel>
-tmp<volScalarField>
-generalizedNewtonian<BasicMomentumTransportModel>::epsilon() const
-{
-    return volScalarField::New
-    (
-        IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
-        this->mesh_,
-        dimensionedScalar(sqr(this->U_.dimensions())/dimTime, 0)
-    );
-}
-
-
-template<class BasicMomentumTransportModel>
-tmp<volSymmTensorField>
-generalizedNewtonian<BasicMomentumTransportModel>::sigma() const
-{
-    return volSymmTensorField::New
-    (
-        IOobject::groupName("R", this->alphaRhoPhi_.group()),
-        this->mesh_,
-        dimensionedSymmTensor(sqr(this->U_.dimensions()), Zero)
-    );
 }
 
 

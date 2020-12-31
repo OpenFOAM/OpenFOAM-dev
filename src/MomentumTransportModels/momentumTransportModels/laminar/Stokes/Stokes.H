@@ -25,7 +25,7 @@ Class
     Foam::laminarModels::Stokes
 
 Description
-    Turbulence model for Stokes flow.
+    Momentum transport model for Stokes flow.
 
 SourceFiles
     Stokes.C
@@ -107,27 +107,11 @@ public:
         //- Read momentumTransport dictionary
         virtual bool read();
 
-        //- Return the turbulence viscosity, i.e. 0 for Stokes flow
-        virtual tmp<volScalarField> nut() const;
-
-        //- Return the turbulence viscosity on patch
-        virtual tmp<scalarField> nut(const label patchi) const;
-
         //- Return the effective viscosity, i.e. the Stokes viscosity
         virtual tmp<volScalarField> nuEff() const;
 
         //- Return the effective viscosity on patch
         virtual tmp<scalarField> nuEff(const label patchi) const;
-
-        //- Return the turbulence kinetic energy, i.e. 0 for Stokes flow
-        virtual tmp<volScalarField> k() const;
-
-        //- Return the turbulence kinetic energy dissipation rate,
-        //  i.e. 0 for Stokes flow
-        virtual tmp<volScalarField> epsilon() const;
-
-        //- Return the stress tensor [m^2/s^2], i.e. 0 for Stokes flow
-        virtual tmp<volSymmTensorField> sigma() const;
 
         //- Correct the Stokes viscosity
         virtual void correct();

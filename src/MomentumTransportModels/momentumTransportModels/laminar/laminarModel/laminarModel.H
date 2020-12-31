@@ -144,39 +144,36 @@ public:
         //- Read model coefficients if they have changed
         virtual bool read();
 
+        //- Const access to the coefficients dictionary
+        virtual const dictionary& coeffDict() const
+        {
+            return coeffDict_;
+        }
 
-        // Access
+        //- Return the turbulence viscosity, i.e. 0 for laminar flow
+        virtual tmp<volScalarField> nut() const;
 
-            //- Const access to the coefficients dictionary
-            virtual const dictionary& coeffDict() const
-            {
-                return coeffDict_;
-            }
+        //- Return the turbulence viscosity on patch
+        virtual tmp<scalarField> nut(const label patchi) const;
 
-            //- Return the turbulence viscosity, i.e. 0 for laminar flow
-            virtual tmp<volScalarField> nut() const;
+        //- Return the effective viscosity, i.e. the laminar viscosity
+        virtual tmp<volScalarField> nuEff() const = 0;
 
-            //- Return the turbulence viscosity on patch
-            virtual tmp<scalarField> nut(const label patchi) const;
+        //- Return the effective viscosity on patch
+        virtual tmp<scalarField> nuEff(const label patchi) const = 0;
 
-            //- Return the effective viscosity, i.e. the laminar viscosity
-            virtual tmp<volScalarField> nuEff() const;
+        //- Return the turbulence kinetic energy, i.e. 0 for laminar flow
+        virtual tmp<volScalarField> k() const;
 
-            //- Return the effective viscosity on patch
-            virtual tmp<scalarField> nuEff(const label patchi) const;
+        //- Return the turbulence kinetic energy dissipation rate,
+        //  i.e. 0 for laminar flow
+        virtual tmp<volScalarField> epsilon() const;
 
-            //- Return the turbulence kinetic energy, i.e. 0 for laminar flow
-            virtual tmp<volScalarField> k() const;
+        //- Return the stress tensor [m^2/s^2], i.e. 0 for laminar flow
+        virtual tmp<volSymmTensorField> sigma() const;
 
-            //- Return the turbulence kinetic energy dissipation rate,
-            //  i.e. 0 for laminar flow
-            virtual tmp<volScalarField> epsilon() const;
-
-            //- Return the stress tensor [m^2/s^2], i.e. 0 for laminar flow
-            virtual tmp<volSymmTensorField> sigma() const;
-
-            //- Correct the laminar transport
-            virtual void correct();
+        //- Correct the laminar transport
+        virtual void correct();
 
 
     // Member Operators

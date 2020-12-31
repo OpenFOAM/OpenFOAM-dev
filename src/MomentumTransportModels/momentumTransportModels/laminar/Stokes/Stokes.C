@@ -66,8 +66,7 @@ Stokes<BasicMomentumTransportModel>::Stokes
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
-const dictionary&
-Stokes<BasicMomentumTransportModel>::coeffDict() const
+const dictionary& Stokes<BasicMomentumTransportModel>::coeffDict() const
 {
     return dictionary::null;
 }
@@ -81,35 +80,7 @@ bool Stokes<BasicMomentumTransportModel>::read()
 
 
 template<class BasicMomentumTransportModel>
-tmp<volScalarField>
-Stokes<BasicMomentumTransportModel>::nut() const
-{
-    return volScalarField::New
-    (
-        IOobject::groupName("nut", this->alphaRhoPhi_.group()),
-        this->mesh_,
-        dimensionedScalar(dimViscosity, 0)
-    );
-}
-
-
-template<class BasicMomentumTransportModel>
-tmp<scalarField>
-Stokes<BasicMomentumTransportModel>::nut
-(
-    const label patchi
-) const
-{
-    return tmp<scalarField>
-    (
-        new scalarField(this->mesh_.boundary()[patchi].size(), 0.0)
-    );
-}
-
-
-template<class BasicMomentumTransportModel>
-tmp<volScalarField>
-Stokes<BasicMomentumTransportModel>::nuEff() const
+tmp<volScalarField> Stokes<BasicMomentumTransportModel>::nuEff() const
 {
     return volScalarField::New
     (
@@ -120,52 +91,12 @@ Stokes<BasicMomentumTransportModel>::nuEff() const
 
 
 template<class BasicMomentumTransportModel>
-tmp<scalarField>
-Stokes<BasicMomentumTransportModel>::nuEff
+tmp<scalarField> Stokes<BasicMomentumTransportModel>::nuEff
 (
     const label patchi
 ) const
 {
     return this->nu(patchi);
-}
-
-
-template<class BasicMomentumTransportModel>
-tmp<volScalarField>
-Stokes<BasicMomentumTransportModel>::k() const
-{
-    return volScalarField::New
-    (
-        IOobject::groupName("k", this->alphaRhoPhi_.group()),
-        this->mesh_,
-        dimensionedScalar(sqr(this->U_.dimensions()), 0)
-    );
-}
-
-
-template<class BasicMomentumTransportModel>
-tmp<volScalarField>
-Stokes<BasicMomentumTransportModel>::epsilon() const
-{
-    return volScalarField::New
-    (
-        IOobject::groupName("epsilon", this->alphaRhoPhi_.group()),
-        this->mesh_,
-        dimensionedScalar(sqr(this->U_.dimensions())/dimTime, 0)
-    );
-}
-
-
-template<class BasicMomentumTransportModel>
-tmp<volSymmTensorField>
-Stokes<BasicMomentumTransportModel>::sigma() const
-{
-    return volSymmTensorField::New
-    (
-        IOobject::groupName("R", this->alphaRhoPhi_.group()),
-        this->mesh_,
-        dimensionedSymmTensor(sqr(this->U_.dimensions()), Zero)
-    );
 }
 
 

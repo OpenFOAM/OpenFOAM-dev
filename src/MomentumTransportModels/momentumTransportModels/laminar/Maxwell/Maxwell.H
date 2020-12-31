@@ -160,6 +160,12 @@ public:
         //- Read model coefficients if they have changed
         virtual bool read();
 
+        //- Return the effective viscosity, i.e. the laminar viscosity
+        virtual tmp<volScalarField> nuEff() const;
+
+        //- Return the effective viscosity on patch
+        virtual tmp<scalarField> nuEff(const label patchi) const;
+
         //- Return the stress tensor [m^2/s^2]
         virtual tmp<volSymmTensorField> sigma() const;
 

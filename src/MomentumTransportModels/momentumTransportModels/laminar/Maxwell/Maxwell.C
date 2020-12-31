@@ -37,7 +37,7 @@ namespace laminarModels
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
-Foam::PtrList<Foam::dimensionedScalar>
+PtrList<dimensionedScalar>
 Maxwell<BasicMomentumTransportModel>::readModeCoefficients
 (
     const word& name,
@@ -135,15 +135,7 @@ Maxwell<BasicMomentumTransportModel>::Maxwell
 
     nModes_(modeCoefficients_.size() ? modeCoefficients_.size() : 1),
 
-    nuM_
-    (
-        dimensioned<scalar>
-        (
-            "nuM",
-            dimViscosity,
-            this->coeffDict_.lookup("nuM")
-        )
-    ),
+    nuM_("nuM", dimViscosity, this->coeffDict_.lookup("nuM")),
 
     lambdas_(readModeCoefficients("lambda", dimTime)),
 
@@ -238,7 +230,7 @@ bool Maxwell<BasicMomentumTransportModel>::read()
             this->coeffDict().lookup("modes") >> modeCoefficients_;
         }
 
-        nuM_.readIfPresent(this->coeffDict());
+        nuM_.read(this->coeffDict());
 
         lambdas_ = readModeCoefficients("lambda", dimTime);
 
@@ -252,16 +244,35 @@ bool Maxwell<BasicMomentumTransportModel>::read()
 
 
 template<class BasicMomentumTransportModel>
-tmp<Foam::volSymmTensorField>
-Maxwell<BasicMomentumTransportModel>::sigma() const
+tmp<volScalarField> Maxwell<BasicMomentumTransportModel>::nuEff() const
+{
+    return volScalarField::New
+    (
+        IOobject::groupName("nuEff", this->alphaRhoPhi_.group()),
+        this->nu()
+    );
+}
+
+
+template<class BasicMomentumTransportModel>
+tmp<scalarField> Maxwell<BasicMomentumTransportModel>::nuEff
+(
+    const label patchi
+) const
+{
+    return this->nu(patchi);
+}
+
+
+template<class BasicMomentumTransportModel>
+tmp<volSymmTensorField> Maxwell<BasicMomentumTransportModel>::sigma() const
 {
     return sigma_;
 }
 
 
 template<class BasicMomentumTransportModel>
-tmp<Foam::volSymmTensorField>
-Maxwell<BasicMomentumTransportModel>::devTau() const
+tmp<volSymmTensorField> Maxwell<BasicMomentumTransportModel>::devTau() const
 {
     return volSymmTensorField::New
     (
@@ -274,8 +285,7 @@ Maxwell<BasicMomentumTransportModel>::devTau() const
 
 
 template<class BasicMomentumTransportModel>
-tmp<Foam::fvVectorMatrix>
-Maxwell<BasicMomentumTransportModel>::divDevTau
+tmp<fvVectorMatrix> Maxwell<BasicMomentumTransportModel>::divDevTau
 (
     volVectorField& U
 ) const
@@ -294,7 +304,7 @@ Maxwell<BasicMomentumTransportModel>::divDevTau
 
 
 template<class BasicMomentumTransportModel>
-tmp<Foam::fvVectorMatrix>
+tmp<fvVectorMatrix>
 Maxwell<BasicMomentumTransportModel>::divDevTau
 (
     const volScalarField& rho,
