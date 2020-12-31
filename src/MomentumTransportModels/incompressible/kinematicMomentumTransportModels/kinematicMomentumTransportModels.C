@@ -47,6 +47,9 @@ makeLaminarModel(Stokes);
 #include "generalizedNewtonian.H"
 makeLaminarModel(generalizedNewtonian);
 
+#include "lambdaThixotropic.H"
+makeLaminarModel(lambdaThixotropic);
+
 #include "Maxwell.H"
 makeLaminarModel(Maxwell);
 
