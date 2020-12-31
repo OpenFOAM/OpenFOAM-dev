@@ -29,7 +29,7 @@ Description
     parameter \f$ \lambda \f$:
 
         \f[
-            \lambda = a(1 - \lambda)^b - c \lambda \dot{\gamma}^d
+            \frac{D\lambda}{Dt} = a(1 - \lambda)^b - c \lambda \dot{\gamma}^d
         \f]
 
     The viscosity is then calculated using the expression
