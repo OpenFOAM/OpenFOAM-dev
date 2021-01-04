@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,15 +55,7 @@ nonUnityLewisEddyDiffusivity
         false
     ),
 
-    Sct_
-    (
-        dimensioned<scalar>
-        (
-            "Sct",
-            dimless,
-            this->coeffDict_
-        )
-    )
+    Sct_("Sct", dimless, this->coeffDict_)
 {}
 
 
@@ -79,7 +71,7 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::read()
         ::read()
     )
     {
-        Sct_.readIfPresent(this->coeffDict());
+        Sct_.read(this->coeffDict());
 
         return true;
     }
