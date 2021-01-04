@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,9 +76,18 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from a momentum transport model and a thermo model
         unityLewisFourier
         (
+            const momentumTransportModel& momentumTransport,
+            const thermoModel& thermo
+        );
+
+        //- Construct from a type name, a momentum transport model and a thermo
+        //  model
+        unityLewisFourier
+        (
+            const word& type,
             const momentumTransportModel& momentumTransport,
             const thermoModel& thermo
         );

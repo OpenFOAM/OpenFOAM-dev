@@ -22,12 +22,11 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::turbulenceThermophysicalTransportModels::FickianEddyDiffusivity
+    Foam::laminarThermophysicalTransportModels::FickianFourier
 
 Description
-    Multi-component Fickian and eddy-diffusivity turbulent based temperature
-    gradient heat flux model for RAS or LES of turbulent flow with optional
-    Soret thermal diffusion of species.
+    Multi-component Fickian and Fourier based temperature gradient heat flux
+    model laminar flow with optional Soret thermal diffusion of species.
 
     Currently the diffusion coefficients are constant but temperature and
     pressure dependency will be added.
@@ -38,12 +37,9 @@ Description
 
 Usage
     \verbatim
-    RAS
+    laminar
     {
-        model           FickianEddyDiffusivity;
-
-        Prt             0.85;
-        Sct             0.7;
+        model           FickianFourier;
 
         D               (1e-5 2e-5 1e-5); // [m^2/s]
         DT              (1e-5 2e-5 1e-5); // [kg/m/s] Optional
@@ -51,33 +47,33 @@ Usage
     \endverbatim
 
 SourceFiles
-    FickianEddyDiffusivity.C
+    FickianFourier.C
 
 \*---------------------------------------------------------------------------*/
 
 #include "Fickian.H"
-#include "unityLewisEddyDiffusivity.H"
+#include "unityLewisFourier.H"
 
-#ifndef FickianEddyDiffusivity_H
-#define FickianEddyDiffusivity_H
+#ifndef FickianFourier_H
+#define FickianFourier_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace turbulenceThermophysicalTransportModels
+namespace laminarThermophysicalTransportModels
 {
 
 /*---------------------------------------------------------------------------*\
-                Class FickianEddyDiffusivity Declaration
+                Class FickianFourier Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class TurbulenceThermophysicalTransportModel>
-class FickianEddyDiffusivity
+template<class laminarThermophysicalTransportModel>
+class FickianFourier
 :
     public Fickian
     <
-        unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>
+        unityLewisFourier<laminarThermophysicalTransportModel>
     >
 {
 
@@ -93,25 +89,25 @@ protected:
 
 public:
 
-    typedef typename TurbulenceThermophysicalTransportModel::alphaField
+    typedef typename laminarThermophysicalTransportModel::alphaField
         alphaField;
 
     typedef typename
-        TurbulenceThermophysicalTransportModel::momentumTransportModel
+        laminarThermophysicalTransportModel::momentumTransportModel
         momentumTransportModel;
 
-    typedef typename TurbulenceThermophysicalTransportModel::thermoModel
+    typedef typename laminarThermophysicalTransportModel::thermoModel
         thermoModel;
 
 
     //- Runtime type information
-    TypeName("FickianEddyDiffusivity");
+    TypeName("FickianFourier");
 
 
     // Constructors
 
         //- Construct from a momentum transport model and a thermo model
-        FickianEddyDiffusivity
+        FickianFourier
         (
             const momentumTransportModel& momentumTransport,
             const thermoModel& thermo
@@ -119,7 +115,7 @@ public:
 
 
     //- Destructor
-    virtual ~FickianEddyDiffusivity()
+    virtual ~FickianFourier()
     {}
 
 
@@ -127,29 +123,18 @@ public:
 
         //- Read thermophysicalTransport dictionary
         virtual bool read();
-
-        //- Effective mass diffusivity for a given specie mass-fraction [kg/m/s]
-        virtual tmp<volScalarField> DEff(const volScalarField& Yi) const;
-
-        //- Effective mass diffusivity for a given specie mass-fraction
-        //  for patch [kg/m/s]
-        virtual tmp<scalarField> DEff
-        (
-            const volScalarField& Yi,
-            const label patchi
-        ) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace turbulenceThermophysicalTransportModels
+} // End namespace laminarThermophysicalTransportModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "FickianEddyDiffusivity.C"
+    #include "FickianFourier.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

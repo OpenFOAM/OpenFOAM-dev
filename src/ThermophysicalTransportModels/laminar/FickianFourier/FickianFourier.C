@@ -23,33 +23,31 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "FickianEddyDiffusivity.H"
+#include "FickianFourier.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace turbulenceThermophysicalTransportModels
+namespace laminarThermophysicalTransportModels
 {
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class TurbulenceThermophysicalTransportModel>
-FickianEddyDiffusivity<TurbulenceThermophysicalTransportModel>::
-FickianEddyDiffusivity
+template<class laminarThermophysicalTransportModel>
+FickianFourier<laminarThermophysicalTransportModel>::
+FickianFourier
 (
     const momentumTransportModel& momentumTransport,
     const thermoModel& thermo
 )
 :
-    Fickian<unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>>
+    Fickian<unityLewisFourier<laminarThermophysicalTransportModel>>
     (
         typeName,
         momentumTransport,
         thermo
-    ),
-
-    Sct_("Sct", dimless, this->coeffDict_)
+    )
 {
     read();
 }
@@ -57,68 +55,20 @@ FickianEddyDiffusivity
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class TurbulenceThermophysicalTransportModel>
+template<class laminarThermophysicalTransportModel>
 bool
-FickianEddyDiffusivity<TurbulenceThermophysicalTransportModel>::read()
+FickianFourier<laminarThermophysicalTransportModel>::read()
 {
-    if
-    (
-        Fickian
-        <
-            unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>
-        >::read()
-    )
-    {
-        Sct_.read(this->coeffDict());
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-
-template<class TurbulenceThermophysicalTransportModel>
-tmp<volScalarField>
-FickianEddyDiffusivity<TurbulenceThermophysicalTransportModel>::DEff
-(
-    const volScalarField& Yi
-) const
-{
-    return volScalarField::New
-    (
-        "DEff",
-        Fickian
-        <
-            unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>
-        >::DEff(Yi)
-      + (this->Prt_/Sct_)*this->alphat()
-    );
-}
-
-
-template<class TurbulenceThermophysicalTransportModel>
-tmp<scalarField>
-FickianEddyDiffusivity<TurbulenceThermophysicalTransportModel>::DEff
-(
-    const volScalarField& Yi,
-    const label patchi
-) const
-{
-    return
-        Fickian
-        <
-            unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>
-        >::DEff(Yi, patchi)
-      + this->Prt_.value()/Sct_.value()*this->alphat(patchi);
+    return Fickian
+    <
+        unityLewisFourier<laminarThermophysicalTransportModel>
+    >::read();
 }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace turbulenceThermophysicalTransportModels
+} // End namespace laminarThermophysicalTransportModels
 } // End namespace Foam
 
 // ************************************************************************* //

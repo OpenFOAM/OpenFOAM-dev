@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,9 +44,26 @@ unityLewisFourier<BasicThermophysicalTransportModel>::unityLewisFourier
     const thermoModel& thermo
 )
 :
-    laminarThermophysicalTransportModel<BasicThermophysicalTransportModel>
+    unityLewisFourier
     (
         typeName,
+        momentumTransport,
+        thermo
+    )
+{}
+
+
+template<class BasicThermophysicalTransportModel>
+unityLewisFourier<BasicThermophysicalTransportModel>::unityLewisFourier
+(
+    const word& type,
+    const momentumTransportModel& momentumTransport,
+    const thermoModel& thermo
+)
+:
+    laminarThermophysicalTransportModel<BasicThermophysicalTransportModel>
+    (
+        type,
         momentumTransport,
         thermo
     )
@@ -120,7 +137,7 @@ tmp<fvScalarMatrix>
 unityLewisFourier<BasicThermophysicalTransportModel>::
 divj(volScalarField& Yi) const
 {
-    return -fvm::laplacian(this->alpha()*this->thermo().alpha(), Yi);
+    return -fvm::laplacian(this->alpha()*this->DEff(Yi), Yi);
 }
 
 

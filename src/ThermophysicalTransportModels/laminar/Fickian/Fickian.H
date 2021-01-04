@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,12 +22,11 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::turbulenceThermophysicalTransportModels::FickianEddyDiffusivity
+    Foam::turbulenceThermophysicalTransportModels::Fickian
 
 Description
-    Multi-component Fickian and eddy-diffusivity turbulent based temperature
-    gradient heat flux model for RAS or LES of turbulent flow with optional
-    Soret thermal diffusion of species.
+    Base class for multi-component Fickian based temperature gradient heat
+    flux models with optional Soret thermal diffusion of species.
 
     Currently the diffusion coefficients are constant but temperature and
     pressure dependency will be added.
@@ -36,49 +35,29 @@ Description
     temperature gradient based flux source.  At convergence the energy
     correction is 0.
 
-Usage
-    \verbatim
-    RAS
-    {
-        model           FickianEddyDiffusivity;
-
-        Prt             0.85;
-        Sct             0.7;
-
-        D               (1e-5 2e-5 1e-5); // [m^2/s]
-        DT              (1e-5 2e-5 1e-5); // [kg/m/s] Optional
-    }
-    \endverbatim
-
 SourceFiles
-    FickianEddyDiffusivity.C
+    Fickian.C
 
 \*---------------------------------------------------------------------------*/
 
-#include "Fickian.H"
-#include "unityLewisEddyDiffusivity.H"
+#include "Function2.H"
 
-#ifndef FickianEddyDiffusivity_H
-#define FickianEddyDiffusivity_H
+#ifndef Fickian_H
+#define Fickian_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace turbulenceThermophysicalTransportModels
-{
 
 /*---------------------------------------------------------------------------*\
-                Class FickianEddyDiffusivity Declaration
+                Class Fickian Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class TurbulenceThermophysicalTransportModel>
-class FickianEddyDiffusivity
+template<class BasicThermophysicalTransportModel>
+class Fickian
 :
-    public Fickian
-    <
-        unityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>
-    >
+    public BasicThermophysicalTransportModel
 {
 
 protected:
@@ -87,39 +66,41 @@ protected:
 
         // Model coefficients
 
-            //- Turbulent Schmidt number []
-            dimensionedScalar Sct_;
+            //- List of specie mass diffusion coefficient functions
+            //  w.r.t the mixture [m^2/s]
+            PtrList<Function2<scalar>> D_;
+
+            //- List of specie Soret thermal diffusion coefficient
+            //  functions [kg/m/s]
+            PtrList<Function2<scalar>> DT_;
 
 
 public:
 
-    typedef typename TurbulenceThermophysicalTransportModel::alphaField
+    typedef typename BasicThermophysicalTransportModel::alphaField
         alphaField;
 
     typedef typename
-        TurbulenceThermophysicalTransportModel::momentumTransportModel
+        BasicThermophysicalTransportModel::momentumTransportModel
         momentumTransportModel;
 
-    typedef typename TurbulenceThermophysicalTransportModel::thermoModel
+    typedef typename BasicThermophysicalTransportModel::thermoModel
         thermoModel;
-
-
-    //- Runtime type information
-    TypeName("FickianEddyDiffusivity");
 
 
     // Constructors
 
         //- Construct from a momentum transport model and a thermo model
-        FickianEddyDiffusivity
+        Fickian
         (
+            const word& type,
             const momentumTransportModel& momentumTransport,
             const thermoModel& thermo
         );
 
 
     //- Destructor
-    virtual ~FickianEddyDiffusivity()
+    virtual ~Fickian()
     {}
 
 
@@ -138,18 +119,29 @@ public:
             const volScalarField& Yi,
             const label patchi
         ) const;
+
+        //- Return the heat flux [W/m^2]
+        virtual tmp<surfaceScalarField> q() const;
+
+        //- Return the source term for the energy equation
+        virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;
+
+        //- Return the specie flux for the given specie mass-fraction [kg/m^2/s]
+        virtual tmp<surfaceScalarField> j(const volScalarField& Yi) const;
+
+        //- Return the source term for the given specie mass-fraction equation
+        virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace turbulenceThermophysicalTransportModels
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "FickianEddyDiffusivity.C"
+    #include "Fickian.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
