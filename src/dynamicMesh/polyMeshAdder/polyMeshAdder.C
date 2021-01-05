@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,6 @@ License
 #include "SortableList.H"
 #include "Time.H"
 #include "globalMeshData.H"
-#include "mergePoints.H"
 #include "polyModifyFace.H"
 #include "polyRemovePoint.H"
 #include "polyTopoChange.H"
@@ -395,81 +394,6 @@ Foam::labelList Foam::polyMeshAdder::getFaceOrder
 }
 
 
-// Extends face f with split points. cutEdgeToPoints gives for every
-// edge the points introduced in between the endpoints.
-void Foam::polyMeshAdder::insertVertices
-(
-    const edgeLookup& cutEdgeToPoints,
-    const Map<label>& meshToMaster,
-    const labelList& masterToCutPoints,
-    const face& masterF,
-
-    DynamicList<label>& workFace,
-    face& allF
-)
-{
-    workFace.clear();
-
-    // Check any edge for being cut (check on the cut so takes account
-    // for any point merging on the cut)
-
-    forAll(masterF, fp)
-    {
-        label v0 = masterF[fp];
-        label v1 = masterF.nextLabel(fp);
-
-        // Copy existing face point
-        workFace.append(allF[fp]);
-
-        // See if any edge between v0,v1
-
-        Map<label>::const_iterator v0Fnd = meshToMaster.find(v0);
-        if (v0Fnd != meshToMaster.end())
-        {
-            Map<label>::const_iterator v1Fnd = meshToMaster.find(v1);
-            if (v1Fnd != meshToMaster.end())
-            {
-                // Get edge in cutPoint numbering
-                edge cutEdge
-                (
-                    masterToCutPoints[v0Fnd()],
-                    masterToCutPoints[v1Fnd()]
-                );
-
-                edgeLookup::const_iterator iter = cutEdgeToPoints.find(cutEdge);
-
-                if (iter != cutEdgeToPoints.end())
-                {
-                    const edge& e = iter.key();
-                    const labelList& addedPoints = iter();
-
-                    // cutPoints first in allPoints so no need for renumbering
-                    if (e[0] == cutEdge[0])
-                    {
-                        forAll(addedPoints, i)
-                        {
-                            workFace.append(addedPoints[i]);
-                        }
-                    }
-                    else
-                    {
-                        forAllReverse(addedPoints, i)
-                        {
-                            workFace.append(addedPoints[i]);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    if (workFace.size() != allF.size())
-    {
-        allF.transfer(workFace);
-    }
-}
-
-
 // Adds primitives (cells, faces, points)
 // Cells:
 //  - all of mesh0
@@ -511,7 +435,6 @@ void Foam::polyMeshAdder::mergePrimitives
     const polyBoundaryMesh& patches0 = mesh0.boundaryMesh();
     const polyBoundaryMesh& patches1 = mesh1.boundaryMesh();
 
-    const primitiveFacePatch& cutFaces = coupleInfo.cutFaces();
     const indirectPrimitivePatch& masterPatch = coupleInfo.masterPatch();
     const indirectPrimitivePatch& slavePatch = coupleInfo.slavePatch();
 
@@ -528,53 +451,37 @@ void Foam::polyMeshAdder::mergePrimitives
     from1ToAllPoints.setSize(mesh1.nPoints());
     from1ToAllPoints = -1;
 
-    // Copy coupled points (on cut)
+    // Copy coupled points
     {
-        const pointField& cutPoints = coupleInfo.cutPoints();
-
-        // const labelListList& cutToMasterPoints =
-        //   coupleInfo.cutToMasterPoints();
-        labelListList cutToMasterPoints
+        const labelListList coupleToMasterPoints
         (
-            invertOneToMany
-            (
-                cutPoints.size(),
-                coupleInfo.masterToCutPoints()
-            )
+            coupleInfo.coupleToMasterPoints()
+        );
+        const labelListList coupleToSlavePoints
+        (
+            coupleInfo.coupleToSlavePoints()
         );
 
-        // const labelListList& cutToSlavePoints =
-        //    coupleInfo.cutToSlavePoints();
-        labelListList cutToSlavePoints
-        (
-            invertOneToMany
-            (
-                cutPoints.size(),
-                coupleInfo.slaveToCutPoints()
-            )
-        );
-
-        forAll(cutPoints, i)
+        forAll(coupleToMasterPoints, couplePointi)
         {
-            allPoints[allPointi] = cutPoints[i];
-
-            // Mark all master and slave points referring to this point.
-
-            const labelList& masterPoints = cutToMasterPoints[i];
+            const labelList& masterPoints = coupleToMasterPoints[couplePointi];
 
             forAll(masterPoints, j)
             {
                 label mesh0Pointi = masterPatch.meshPoints()[masterPoints[j]];
                 from0ToAllPoints[mesh0Pointi] = allPointi;
+                allPoints[allPointi] = mesh0.points()[mesh0Pointi];
             }
 
-            const labelList& slavePoints = cutToSlavePoints[i];
+            const labelList& slavePoints = coupleToSlavePoints[couplePointi];
 
             forAll(slavePoints, j)
             {
                 label mesh1Pointi = slavePatch.meshPoints()[slavePoints[j]];
                 from1ToAllPoints[mesh1Pointi] = allPointi;
+                allPoints[allPointi] = mesh1.points()[mesh1Pointi];
             }
+
             allPointi++;
         }
     }
@@ -635,14 +542,9 @@ void Foam::polyMeshAdder::mergePrimitives
 
     // Copy coupled faces. Every coupled face has an equivalent master and
     // slave. Also uncount as boundary faces all the newly coupled faces.
-    const labelList& cutToMasterFaces = coupleInfo.cutToMasterFaces();
-    const labelList& cutToSlaveFaces = coupleInfo.cutToSlaveFaces();
-
-    forAll(cutFaces, i)
+    forAll(masterPatch, coupleFacei)
     {
-        label masterFacei = cutToMasterFaces[i];
-
-        label mesh0Facei = masterPatch.addressing()[masterFacei];
+        const label mesh0Facei = masterPatch.addressing()[coupleFacei];
 
         if (from0ToAllFaces[mesh0Facei] == -1)
         {
@@ -654,9 +556,7 @@ void Foam::polyMeshAdder::mergePrimitives
             nFacesPerPatch[patch0]--;
         }
 
-        label slaveFacei = cutToSlaveFaces[i];
-
-        label mesh1Facei = slavePatch.addressing()[slaveFacei];
+        const label mesh1Facei = slavePatch.addressing()[coupleFacei];
 
         if (from1ToAllFaces[mesh1Facei] == -1)
         {
@@ -668,7 +568,7 @@ void Foam::polyMeshAdder::mergePrimitives
 
         // Copy cut face (since cutPoints are copied first no renumbering
         // necessary)
-        allFaces[allFacei] = cutFaces[i];
+        allFaces[allFacei] = coupleInfo.coupleFace(coupleFacei);
         allOwner[allFacei] = mesh0.faceOwner()[mesh0Facei];
         allNeighbour[allFacei] = mesh1.faceOwner()[mesh1Facei] + mesh0.nCells();
 
@@ -749,85 +649,6 @@ void Foam::polyMeshAdder::mergePrimitives
     allFaces.setSize(allFacei);
     allOwner.setSize(allFacei);
     allNeighbour.setSize(allFacei);
-
-
-    // So now we have all ok for one-to-one mapping.
-    // For split slace faces:
-    // - mesh consistent with slave side
-    // - mesh not consistent with owner side. It is not zipped up, the
-    //   original faces need edges split.
-
-    // Use brute force to prevent having to calculate addressing:
-    // - get map from master edge to split edges.
-    // - check all faces to find any edge that is split.
-    {
-        // From two cut-points to labels of cut-points in between.
-        // (in order: from e[0] to e[1]
-        const edgeLookup& cutEdgeToPoints = coupleInfo.cutEdgeToPoints();
-
-        // Get map of master face (in mesh labels) that are in cut. These faces
-        // do not need to be renumbered.
-        labelHashSet masterCutFaces(cutToMasterFaces.size());
-        forAll(cutToMasterFaces, i)
-        {
-            label meshFacei = masterPatch.addressing()[cutToMasterFaces[i]];
-
-            masterCutFaces.insert(meshFacei);
-        }
-
-        DynamicList<label> workFace(100);
-
-        forAll(from0ToAllFaces, face0)
-        {
-            if (!masterCutFaces.found(face0))
-            {
-                label allFacei = from0ToAllFaces[face0];
-
-                insertVertices
-                (
-                    cutEdgeToPoints,
-                    masterPatch.meshPointMap(),
-                    coupleInfo.masterToCutPoints(),
-                    mesh0.faces()[face0],
-
-                    workFace,
-                    allFaces[allFacei]
-                );
-            }
-        }
-
-        // Same for slave face
-
-        labelHashSet slaveCutFaces(cutToSlaveFaces.size());
-        forAll(cutToSlaveFaces, i)
-        {
-            label meshFacei = slavePatch.addressing()[cutToSlaveFaces[i]];
-
-            slaveCutFaces.insert(meshFacei);
-        }
-
-        forAll(from1ToAllFaces, face1)
-        {
-            if (!slaveCutFaces.found(face1))
-            {
-                label allFacei = from1ToAllFaces[face1];
-
-                insertVertices
-                (
-                    cutEdgeToPoints,
-                    slavePatch.meshPointMap(),
-                    coupleInfo.slaveToCutPoints(),
-                    mesh1.faces()[face1],
-
-                    workFace,
-                    allFaces[allFacei]
-                );
-            }
-        }
-    }
-
-    // Now we have a full facelist and owner/neighbour addressing.
-
 
     // Cells
     // ~~~~~
@@ -1603,7 +1424,7 @@ Foam::autoPtr<Foam::polyMesh> Foam::polyMeshAdder::add
             fromAllTo1Patches,
             mesh0.nInternalFaces()
           + mesh1.nInternalFaces()
-          + coupleInfo.cutFaces().size(),
+          + coupleInfo.masterPatch().size(),
             nFaces,
 
             from0ToAllPatches,
@@ -1995,312 +1816,6 @@ Foam::autoPtr<Foam::mapAddedPolyMesh> Foam::polyMeshAdder::add
     );
 
     return mapPtr;
-}
-
-
-Foam::Map<Foam::label> Foam::polyMeshAdder::findSharedPoints
-(
-    const polyMesh& mesh,
-    const scalar mergeDist
-)
-{
-    const labelList& sharedPointLabels = mesh.globalData().sharedPointLabels();
-    const labelList& sharedPointAddr = mesh.globalData().sharedPointAddr();
-
-    // Because of adding the missing pieces e.g. when redistributing a mesh
-    // it can be that there are multiple points on the same processor that
-    // refer to the same shared point.
-
-    // Invert point-to-shared addressing
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    Map<labelList> sharedToMesh(sharedPointLabels.size());
-
-    label nMultiple = 0;
-
-    forAll(sharedPointLabels, i)
-    {
-        label pointi = sharedPointLabels[i];
-
-        label sharedI = sharedPointAddr[i];
-
-        Map<labelList>::iterator iter = sharedToMesh.find(sharedI);
-
-        if (iter != sharedToMesh.end())
-        {
-            // sharedI already used by other point. Add this one.
-
-            nMultiple++;
-
-            labelList& connectedPointLabels = iter();
-
-            label sz = connectedPointLabels.size();
-
-            // Check just to make sure.
-            if (findIndex(connectedPointLabels, pointi) != -1)
-            {
-                FatalErrorInFunction
-                    << "Duplicate point in sharedPoint addressing." << endl
-                    << "When trying to add point " << pointi << " on shared "
-                    << sharedI  << " with connected points "
-                    << connectedPointLabels
-                    << abort(FatalError);
-            }
-
-            connectedPointLabels.setSize(sz+1);
-            connectedPointLabels[sz] = pointi;
-        }
-        else
-        {
-            sharedToMesh.insert(sharedI, labelList(1, pointi));
-        }
-    }
-
-
-    // Assign single master for every shared with multiple geometric points
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    Map<label> pointToMaster(nMultiple);
-
-    forAllConstIter(Map<labelList>, sharedToMesh, iter)
-    {
-        const labelList& connectedPointLabels = iter();
-
-        // Pout<< "For shared:" << iter.key()
-        //    << " found points:" << connectedPointLabels
-        //    << " at coords:"
-        //    <<  pointField(mesh.points(), connectedPointLabels) << endl;
-
-        if (connectedPointLabels.size() > 1)
-        {
-            const pointField connectedPoints
-            (
-                mesh.points(),
-                connectedPointLabels
-            );
-
-            labelList toMergedPoints;
-            label nUnique = Foam::mergePoints
-            (
-                connectedPoints,
-                mergeDist,
-                false,
-                toMergedPoints
-            );
-
-            if (nUnique < connectedPoints.size())
-            {
-                // Invert toMergedPoints
-                const labelListList mergeSets
-                (
-                    invertOneToMany
-                    (
-                        nUnique,
-                        toMergedPoints
-                    )
-                );
-
-                // Find master for valid merges
-                forAll(mergeSets, setI)
-                {
-                    const labelList& mergeSet = mergeSets[setI];
-
-                    if (mergeSet.size() > 1)
-                    {
-                        // Pick lowest numbered point
-                        label masterPointi = labelMax;
-
-                        forAll(mergeSet, i)
-                        {
-                            label pointi = connectedPointLabels[mergeSet[i]];
-
-                            masterPointi = min(masterPointi, pointi);
-                        }
-
-                        forAll(mergeSet, i)
-                        {
-                            label pointi = connectedPointLabels[mergeSet[i]];
-
-                            // Pout<< "Merging point " << pointi
-                            //    << " at " << mesh.points()[pointi]
-                            //    << " into master point "
-                            //    << masterPointi
-                            //    << " at " << mesh.points()[masterPointi]
-                            //    << endl;
-
-                            pointToMaster.insert(pointi, masterPointi);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    //- Old: geometric merging. Causes problems for two close shared points.
-    // labelList sharedToMerged;
-    // label nUnique = Foam::mergePoints
-    //(
-    //    pointField
-    //    (
-    //        mesh.points(),
-    //        sharedPointLabels
-    //    ),
-    //    mergeDist,
-    //    false,
-    //    sharedToMerged
-    //);
-    //
-    //// Find out which sets of points get merged and create a map from
-    //// mesh point to unique point.
-    //
-    // Map<label> pointToMaster(10*sharedToMerged.size());
-    //
-    // if (nUnique < sharedPointLabels.size())
-    //{
-    //    labelListList mergeSets
-    //    (
-    //        invertOneToMany
-    //        (
-    //            sharedToMerged.size(),
-    //            sharedToMerged
-    //        )
-    //    );
-    //
-    //    label nMergeSets = 0;
-    //
-    //    forAll(mergeSets, setI)
-    //    {
-    //        const labelList& mergeSet = mergeSets[setI];
-    //
-    //        if (mergeSet.size() > 1)
-    //        {
-    //            // Take as master the shared point with the lowest mesh
-    //            // point label. (rather arbitrarily - could use max or
-    //            // any other one of the points)
-    //
-    //            nMergeSets++;
-    //
-    //            label masterI = labelMax;
-    //
-    //            forAll(mergeSet, i)
-    //            {
-    //                label sharedI = mergeSet[i];
-    //
-    //                masterI = min(masterI, sharedPointLabels[sharedI]);
-    //            }
-    //
-    //            forAll(mergeSet, i)
-    //            {
-    //                label sharedI = mergeSet[i];
-    //
-    //                pointToMaster.insert(sharedPointLabels[sharedI], masterI);
-    //            }
-    //        }
-    //    }
-    //
-    //    // if (debug)
-    //    //{
-    //    //    Pout<< "polyMeshAdder : merging:"
-    //    //        << pointToMaster.size() << " into " << nMergeSets
-    //    //        << " sets." << endl;
-    //    //}
-    //}
-
-    return pointToMaster;
-}
-
-
-void Foam::polyMeshAdder::mergePoints
-(
-    const polyMesh& mesh,
-    const Map<label>& pointToMaster,
-    polyTopoChange& meshMod
-)
-{
-    // Remove all non-master points.
-    forAll(mesh.points(), pointi)
-    {
-        Map<label>::const_iterator iter = pointToMaster.find(pointi);
-
-        if (iter != pointToMaster.end())
-        {
-            if (iter() != pointi)
-            {
-                meshMod.removePoint(pointi, iter());
-            }
-        }
-    }
-
-    // Modify faces for points. Note: could use pointFaces here but want to
-    // avoid addressing calculation.
-    const faceList& faces = mesh.faces();
-
-    forAll(faces, facei)
-    {
-        const face& f = faces[facei];
-
-        bool hasMerged = false;
-
-        forAll(f, fp)
-        {
-            label pointi = f[fp];
-
-            Map<label>::const_iterator iter = pointToMaster.find(pointi);
-
-            if (iter != pointToMaster.end())
-            {
-                if (iter() != pointi)
-                {
-                    hasMerged = true;
-                    break;
-                }
-            }
-        }
-
-        if (hasMerged)
-        {
-            face newF(f);
-
-            forAll(f, fp)
-            {
-                label pointi = f[fp];
-
-                Map<label>::const_iterator iter = pointToMaster.find(pointi);
-
-                if (iter != pointToMaster.end())
-                {
-                    newF[fp] = iter();
-                }
-            }
-
-            label patchID = mesh.boundaryMesh().whichPatch(facei);
-            label nei = (patchID == -1 ? mesh.faceNeighbour()[facei] : -1);
-            label zoneID = mesh.faceZones().whichZone(facei);
-            bool zoneFlip = false;
-
-            if (zoneID >= 0)
-            {
-                const faceZone& fZone = mesh.faceZones()[zoneID];
-                zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
-            }
-
-            meshMod.setAction
-            (
-                polyModifyFace
-                (
-                    newF,                       // modified face
-                    facei,                      // label of face
-                    mesh.faceOwner()[facei],    // owner
-                    nei,                        // neighbour
-                    false,                      // face flip
-                    patchID,                    // patch for face
-                    false,                      // remove from zone
-                    zoneID,                     // zone for face
-                    zoneFlip                    // face flip in zone
-                )
-            );
-        }
-    }
 }
 
 

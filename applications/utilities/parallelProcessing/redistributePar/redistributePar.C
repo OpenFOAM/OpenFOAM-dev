@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,65 +57,6 @@ Description
 #include "loadOrCreateMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-// Tolerance (as fraction of the bounding box). Needs to be fairly lax since
-// usually meshes get written with limited precision (6 digits)
-static const scalar defaultMergeTol = 1e-6;
-
-
-// Get merging distance when matching face centres
-scalar getMergeDistance
-(
-    const argList& args,
-    const Time& runTime,
-    const boundBox& bb
-)
-{
-    scalar mergeTol = defaultMergeTol;
-    args.optionReadIfPresent("mergeTol", mergeTol);
-
-    scalar writeTol =
-        Foam::pow(scalar(10.0), -scalar(IOstream::defaultPrecision()));
-
-    Info<< "Merge tolerance : " << mergeTol << nl
-        << "Write tolerance : " << writeTol << endl;
-
-    if (runTime.writeFormat() == IOstream::ASCII && mergeTol < writeTol)
-    {
-        FatalErrorInFunction
-            << "Your current settings specify ASCII writing with "
-            << IOstream::defaultPrecision() << " digits precision." << endl
-            << "Your merging tolerance (" << mergeTol << ") is finer than this."
-            << endl
-            << "Please change your writeFormat to binary"
-            << " or increase the writePrecision" << endl
-            << "or adjust the merge tolerance (-mergeTol)."
-            << exit(FatalError);
-    }
-
-    scalar mergeDist = mergeTol * bb.mag();
-
-    Info<< "Overall meshes bounding box : " << bb << nl
-        << "Relative tolerance          : " << mergeTol << nl
-        << "Absolute matching distance  : " << mergeDist << nl
-        << endl;
-
-    return mergeDist;
-}
-
-
-//void printMeshData(Ostream& os, const polyMesh& mesh)
-//{
-//    os  << "Number of points:           " << mesh.points().size() << nl
-//        << "          faces:            " << mesh.faces().size() << nl
-//        << "          internal faces:   " << mesh.faceNeighbour().size() << nl
-//        << "          cells:            " << mesh.cells().size() << nl
-//        << "          boundary patches: " << mesh.boundaryMesh().size() << nl
-//        << "          point zones:      " << mesh.pointZones().size() << nl
-//        << "          face zones:       " << mesh.faceZones().size() << nl
-//        << "          cell zones:       " << mesh.cellZones().size() << nl;
-//}
-
 
 void printMeshData(const polyMesh& mesh)
 {
@@ -365,72 +306,11 @@ void readFields
 }
 
 
-// Debugging: compare two fields.
-void compareFields
-(
-    const scalar tolDim,
-    const volVectorField& a,
-    const volVectorField& b
-)
-{
-    forAll(a, celli)
-    {
-        if (mag(b[celli] - a[celli]) > tolDim)
-        {
-            FatalErrorInFunction
-                << "Did not map volVectorField correctly:" << nl
-                << "cell:" << celli
-                << " transfer b:" << b[celli]
-                << " real cc:" << a[celli]
-                << abort(FatalError);
-        }
-    }
-    forAll(a.boundaryField(), patchi)
-    {
-        // We have real mesh cellcentre and
-        // mapped original cell centre.
-
-        const fvPatchVectorField& aBoundary =
-            a.boundaryField()[patchi];
-
-        const fvPatchVectorField& bBoundary =
-            b.boundaryField()[patchi];
-
-        if (!bBoundary.coupled())
-        {
-            forAll(aBoundary, i)
-            {
-                if (mag(aBoundary[i] - bBoundary[i]) > tolDim)
-                {
-                    WarningInFunction
-                        << "Did not map volVectorField correctly:"
-                        << endl
-                        << "patch:" << patchi << " patchFace:" << i
-                        << " cc:" << endl
-                        << "    real    :" << aBoundary[i] << endl
-                        << "    mapped  :" << bBoundary[i] << endl
-                        << "This might be just a precision entry"
-                        << " on writing the mesh." << endl;
-                        //<< abort(FatalError);
-                }
-            }
-        }
-    }
-}
-
-
-
 int main(int argc, char *argv[])
 {
     #include "addRegionOption.H"
     #include "addOverwriteOption.H"
-    argList::addOption
-    (
-        "mergeTol",
-        "scalar",
-        "specify the merge distance relative to the bounding box size "
-        "(default 1e-6)"
-    );
+
     // Include explicit constant options, have zero from time range
     timeSelector::addOptions();
 
@@ -781,16 +661,8 @@ int main(int argc, char *argv[])
     // Used to test correctness of mapping
     // volVectorField mapCc("mapCc", 1*mesh.C());
 
-    // Global matching tolerance
-    const scalar tolDim = getMergeDistance
-    (
-        args,
-        runTime,
-        mesh.bounds()
-    );
-
     // Mesh distribution engine
-    fvMeshDistribute distributor(mesh, tolDim);
+    fvMeshDistribute distributor(mesh);
 
     // Pout<< "Wanted distribution:"
     //    << distributor.countCells(finalDecomp) << nl << endl;
@@ -818,9 +690,6 @@ int main(int argc, char *argv[])
     Info<< "Writing redistributed mesh to " << runTime.timeName() << nl << endl;
     mesh.write();
 
-
-    // Debugging: test mapped cellcentre field.
-    // compareFields(tolDim, mesh.C(), mapCc);
 
     // Print nice message
     // ~~~~~~~~~~~~~~~~~~

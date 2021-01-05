@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -656,10 +656,95 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::mergeSharedPoints
         return autoPtr<mapPolyMesh>(nullptr);
     }
 
-
+    // Create the mesh change engine to merge the points
     polyTopoChange meshMod(mesh_);
+    {
+        // Remove all non-master points.
+        forAll(mesh_.points(), pointi)
+        {
+            Map<label>::const_iterator iter = pointToMaster.find(pointi);
 
-    fvMeshAdder::mergePoints(mesh_, pointToMaster, meshMod);
+            if (iter != pointToMaster.end())
+            {
+                if (iter() != pointi)
+                {
+                    meshMod.removePoint(pointi, iter());
+                }
+            }
+        }
+
+        // Modify faces for points. Note: could use pointFaces here but want to
+        // avoid addressing calculation.
+        const faceList& faces = mesh_.faces();
+
+        forAll(faces, facei)
+        {
+            const face& f = faces[facei];
+
+            bool hasMerged = false;
+
+            forAll(f, fp)
+            {
+                label pointi = f[fp];
+
+                Map<label>::const_iterator iter = pointToMaster.find(pointi);
+
+                if (iter != pointToMaster.end())
+                {
+                    if (iter() != pointi)
+                    {
+                        hasMerged = true;
+                        break;
+                    }
+                }
+            }
+
+            if (hasMerged)
+            {
+                face newF(f);
+
+                forAll(f, fp)
+                {
+                    label pointi = f[fp];
+
+                    Map<label>::const_iterator iter =
+                        pointToMaster.find(pointi);
+
+                    if (iter != pointToMaster.end())
+                    {
+                        newF[fp] = iter();
+                    }
+                }
+
+                label patchID = mesh_.boundaryMesh().whichPatch(facei);
+                label nei = (patchID == -1 ? mesh_.faceNeighbour()[facei] : -1);
+                label zoneID = mesh_.faceZones().whichZone(facei);
+                bool zoneFlip = false;
+
+                if (zoneID >= 0)
+                {
+                    const faceZone& fZone = mesh_.faceZones()[zoneID];
+                    zoneFlip = fZone.flipMap()[fZone.whichFace(facei)];
+                }
+
+                meshMod.setAction
+                (
+                    polyModifyFace
+                    (
+                        newF,                       // modified face
+                        facei,                      // label of face
+                        mesh_.faceOwner()[facei],   // owner
+                        nei,                        // neighbour
+                        false,                      // face flip
+                        patchID,                    // patch for face
+                        false,                      // remove from zone
+                        zoneID,                     // zone for face
+                        zoneFlip                    // face flip in zone
+                    )
+                );
+            }
+        }
+    }
 
     // Change the mesh (no inflation). Note: parallel comms allowed.
     autoPtr<mapPolyMesh> map = meshMod.changeMesh(mesh_, false, true);
@@ -1624,10 +1709,9 @@ Foam::autoPtr<Foam::fvMesh> Foam::fvMeshDistribute::receiveMesh
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 // Construct from components
-Foam::fvMeshDistribute::fvMeshDistribute(fvMesh& mesh, const scalar mergeTol)
+Foam::fvMeshDistribute::fvMeshDistribute(fvMesh& mesh)
 :
-    mesh_(mesh),
-    mergeTol_(mergeTol)
+    mesh_(mesh)
 {}
 
 
@@ -2676,11 +2760,7 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
                 mesh_,
                 masterCoupledFaces,
                 domainMesh,
-                slaveCoupledFaces,
-                mergeTol_,              // merge tolerance
-                true,                   // faces align
-                true,                   // couples are ordered already
-                false
+                slaveCoupledFaces
             );
 
 

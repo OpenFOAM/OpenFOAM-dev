@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,6 @@ class polyTopoChange;
 
 class polyMeshAdder
 {
-
 private:
 
     // Private Member Functions
@@ -89,6 +88,7 @@ private:
 
         //- Get starts of patches
         static labelList getPatchStarts(const polyBoundaryMesh&);
+
         //- Get sizes of patches
         static labelList getPatchSizes(const polyBoundaryMesh&);
 
@@ -115,19 +115,6 @@ private:
             const label nInternalFaces,
             const labelList& owner,
             const labelList& neighbour
-        );
-
-        //- Extends face f with split points. cutEdgeToPoints gives for every
-        // edge the points introduced in between the endpoints.
-        static void insertVertices
-        (
-            const edgeLookup& cutEdgeToPoints,
-            const Map<label>& meshToMaster,
-            const labelList& masterToCutPoints,
-            const face& masterFace,
-
-            DynamicList<label>& workFace,
-            face& f
         );
 
         //- Merges primitives of two meshes.
@@ -250,7 +237,6 @@ public:
 
     // Member Functions
 
-
         //- Add two polyMeshes. Returns new polyMesh and map construct.
         static autoPtr<polyMesh> add
         (
@@ -269,32 +255,6 @@ public:
             const faceCoupleInfo& coupleInfo,
             const bool validBoundary = true
         );
-
-        // Point merging
-
-            //- Find topologically and geometrically shared points.
-            //
-            //  - should only be called for parallel correct mesh
-            //    (since uses mesh.globalData)
-            //  - returns Map from point to master point (all in mesh point
-            //    labels) for any sets of points that need to be merged.
-            static Map<label> findSharedPoints
-            (
-                const polyMesh&,
-                const scalar mergeTol
-            );
-
-            //- Helper: Merge points.
-            //
-            //  - Gets map from point to destination point
-            //  - Removes all points that don't map to themselves
-            //  - Modifies all faces that use the points to be removed.
-            static void mergePoints
-            (
-                const polyMesh&,
-                const Map<label>& pointToMaster,
-                polyTopoChange& meshMod
-            );
 };
 
 

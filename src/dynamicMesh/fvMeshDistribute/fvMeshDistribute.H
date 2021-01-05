@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,10 +74,6 @@ class fvMeshDistribute
 
         //- Underlying fvMesh
         fvMesh& mesh_;
-
-        //- Absolute merging tolerance (constructing meshes gets done using
-        //  geometric matching)
-        const scalar mergeTol_;
 
 
     // Private Member Functions
@@ -344,8 +340,8 @@ public:
 
     // Constructors
 
-        //- Construct from mesh and absolute merge tolerance
-        fvMeshDistribute(fvMesh& mesh, const scalar mergeTol);
+        //- Construct from mesh
+        fvMeshDistribute(fvMesh& mesh);
 
         //- Disallow default bitwise copy construction
         fvMeshDistribute(const fvMeshDistribute&) = delete;

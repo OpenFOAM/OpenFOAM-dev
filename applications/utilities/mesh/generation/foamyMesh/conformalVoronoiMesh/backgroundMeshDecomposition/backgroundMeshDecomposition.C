@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -405,7 +405,7 @@ void Foam::backgroundMeshDecomposition::initialRefinement()
                 icellWeights
             );
 
-            fvMeshDistribute distributor(mesh_, mergeDist_);
+            fvMeshDistribute distributor(mesh_);
 
             autoPtr<mapDistributePolyMesh> mapDist = distributor.distribute
             (
@@ -813,7 +813,6 @@ Foam::backgroundMeshDecomposition::backgroundMeshDecomposition
         )
     ),
     decomposerPtr_(decompositionMethod::New(decomposeDict_)),
-    mergeDist_(1e-6*mesh_.bounds().mag()),
     spanScale_(coeffsDict.lookup<scalar>("spanScale")),
     minCellSizeLimit_
     (
@@ -998,7 +997,7 @@ Foam::backgroundMeshDecomposition::distribute
 
     Info<< "    Redistributing background mesh cells" << endl;
 
-    fvMeshDistribute distributor(mesh_, mergeDist_);
+    fvMeshDistribute distributor(mesh_);
 
     autoPtr<mapDistributePolyMesh> mapDist = distributor.distribute(newDecomp);
 
