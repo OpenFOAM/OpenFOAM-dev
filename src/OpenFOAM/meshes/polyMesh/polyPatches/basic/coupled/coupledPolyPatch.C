@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,67 +66,81 @@ bool Foam::coupledPolyPatch::walk
     // Walk the patch until we get back to the seed face and point
     do
     {
-        // Get the next point and edge around the current face
+        // Get the next point around the face
         const label facePointi1 =
             direction
           ? pp[facei].fcIndex(facePointi)
           : pp[facei].rcIndex(facePointi);
-        const label faceEdgei = direction ? facePointi : facePointi1;
 
-        // Get the edge and the faces connected to the edge
+        // Get the current edge within the face
+        const label faceEdgei =
+            direction ? facePointi : pp[facei].rcIndex(facePointi);
         const label edgei = pp.faceEdges()[facei][faceEdgei];
-        const labelList edgeFaces = pp.edgeFaces()[edgei];
 
-        // Test if this is an edge the walk *can* cross
-        if (edgeFaces.size() == 2)
+        // If the number of faces connected to this edge is not 2, then this
+        // edge is non-manifold and is considered a boundary to the walk. So,
+        // the walk moves on to the next point around the current face.
+        if (pp.edgeFaces()[edgei].size() != 2)
         {
-            // This edge is manifold (i.e., the number of connected faces is
-            // 2), so it is permitted for the walk to cross it. Get the face
-            // connected to the other side of the edge that we may want to walk
-            // into.
-            const label facej = edgeFaces[edgeFaces[0] == facei];
-            const label facePointj = pp[facej].which(pp[facei][facePointi]);
+            facePointi = facePointi1;
+            continue;
+        }
 
-            // Test if this is an edge the walk *should* cross
-            if (faceMap[facej] == -1)
-            {
-                // The connected face has not been visited, so walk into it and
-                // set its ordering in the map, its point and visited status
-                facei = facej;
-                facePointi = facePointj;
-                faceMap[facei] = mapFacei;
-                facePointMap[facei] = facePointi;
-                changed = changed || facei != mapFacei || facePointi != 0;
-                ++ mapFacei;
-            }
-            else if (facePointMap[facei] != facePointi1 || facei == seedFacei)
-            {
-                // The connected face has been visited, but there are more
-                // edges to consider on the current face, so move to the next
-                // face point
-                facePointi = facePointi1;
-            }
-            else
-            {
-                // The connected face has been visited, and there are no more
-                // edges to consider on the current face, so backtrack to the
-                // previous face in the walk
-                facei = facej;
-                facePointi = facePointj;
-            }
+        // Get the connected face and the corresponding point index within
+        const label facej =
+            pp.edgeFaces()[edgei][pp.edgeFaces()[edgei][0] == facei];
+        const label facePointj = pp[facej].which(pp[facei][facePointi]);
 
-            // Add to the walk, if that information is being stored
-            if (walks.valid() && walks->last().last() != facei)
-            {
-                walks->last().append(facei);
-            }
+        // Get the corresponding next point within the connected face
+        const label facePointj1 =
+            direction
+          ? pp[facej].rcIndex(facePointj)
+          : pp[facej].fcIndex(facePointj);
+
+        // If the next points are not the same then that indicates that the
+        // faces are numbered in opposite directions. This means that the faces
+        // are not actually connected. There should really be two edges, each
+        // connected to just one of the faces. This edge should therefore be
+        // considered a boundary to the walk.
+        if (pp[facei][facePointi1] != pp[facej][facePointj1])
+        {
+            facePointi = facePointi1;
+            continue;
+        }
+
+        // It has been determined that the current edge *can* be crossed. Now
+        // test whether of not the walk *should* cross this edge...
+        if (faceMap[facej] == -1)
+        {
+            // The connected face has not been visited, so walk into it and
+            // set its ordering in the map, its point and visited status
+            facei = facej;
+            facePointi = facePointj;
+            faceMap[facei] = mapFacei;
+            facePointMap[facei] = facePointi;
+            changed = changed || facei != mapFacei || facePointi != 0;
+            ++ mapFacei;
+        }
+        else if (facePointMap[facei] != facePointi1 || facei == seedFacei)
+        {
+            // The connected face has been visited, but there are more
+            // edges to consider on the current face, so move to the next
+            // face point
+            facePointi = facePointi1;
         }
         else
         {
-            // This edge is non-manifold (i.e., the number of connected faces
-            // does not equal 2), so it is considered a boundary to the walk.
-            // Move on to the next point around the current face.
-            facePointi = facePointi1;
+            // The connected face has been visited, and there are no more
+            // edges to consider on the current face, so backtrack to the
+            // previous face in the walk
+            facei = facej;
+            facePointi = facePointj;
+        }
+
+        // Add to the walk, if that information is being stored
+        if (walks.valid() && walks->last().last() != facei)
+        {
+            walks->last().append(facei);
         }
     }
     while (facei != seedFacei || facePointi != seedFacePointi);
