@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ SourceFile
 #define fvOptionList_H
 
 #include "fvOption.H"
-#include "PtrList.H"
+#include "PtrListDictionary.H"
 #include "GeometricField.H"
 #include "geometricOneField.H"
 #include "fvPatchField.H"
@@ -64,7 +64,7 @@ namespace fv
 
 class optionList
 :
-    public PtrList<option>
+    public PtrListDictionary<option>
 {
 protected:
 
@@ -86,12 +86,13 @@ protected:
         void checkApplied() const;
 
         //- Return source for equation with specified name and dimensions
-        template<class Type>
+        template<class Type, class ... AlphaRhoFieldTypes>
         tmp<fvMatrix<Type>> source
         (
             GeometricField<Type, fvPatchField, volMesh>& field,
             const word& fieldName,
-            const dimensionSet& ds
+            const dimensionSet& ds,
+            const AlphaRhoFieldTypes& ... alphaRhos
         ) const;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,6 +46,7 @@ SourceFiles
 #include "fvMatricesFwd.H"
 #include "volFieldsFwd.H"
 #include "dictionary.H"
+#include "dimensionSet.H"
 #include "Switch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -91,13 +92,26 @@ protected:
         mutable List<bool> applied_;
 
 
+    // Protected Member Functions
+
+        //- Return source for equation with specified name and dimensions
+        template<class Type, class ... AlphaRhoFieldTypes>
+        tmp<fvMatrix<Type>> source
+        (
+            GeometricField<Type, fvPatchField, volMesh>& field,
+            const word& fieldName,
+            const dimensionSet& ds,
+            const AlphaRhoFieldTypes& ... alphaRhos
+        ) const;
+
+
 public:
 
     //- Runtime type information
     TypeName("option");
 
 
-     // Declare run-time constructor selection table
+    // Declare run-time constructor selection table
 
         declareRunTimeSelectionTable
         (
@@ -111,6 +125,33 @@ public:
                 const fvMesh& mesh
             ),
             (name, modelType, dict, mesh)
+        );
+
+
+    // Static Member Functions
+
+        //- Return the dimensions of the matrix of a source term
+        template
+        <
+            class Type,
+            class AlphaRhoFieldType,
+            class ... AlphaRhoFieldTypes
+        >
+        inline static dimensionSet sourceDims
+        (
+            const GeometricField<Type, fvPatchField, volMesh>& field,
+            const dimensionSet& ds,
+            const AlphaRhoFieldType& alphaRho,
+            const AlphaRhoFieldTypes& ... alphaRhos
+        );
+
+        //- Return the dimensions of the matrix of a source term (base
+        //  condition for the above)
+        template<class Type>
+        inline static dimensionSet sourceDims
+        (
+            const GeometricField<Type, fvPatchField, volMesh>& field,
+            const dimensionSet& ds
         );
 
 
@@ -323,6 +364,54 @@ public:
                 ) const;
 
 
+            // Sources
+
+                template<class Type>
+                tmp<fvMatrix<Type>> operator()
+                (
+                    GeometricField<Type, fvPatchField, volMesh>& field
+                ) const;
+
+                template<class Type>
+                tmp<fvMatrix<Type>> operator()
+                (
+                    GeometricField<Type, fvPatchField, volMesh>& field,
+                    const word& fieldName
+                ) const;
+
+                template<class Type>
+                tmp<fvMatrix<Type>> operator()
+                (
+                    const volScalarField& rho,
+                    GeometricField<Type, fvPatchField, volMesh>& field
+                ) const;
+
+                template<class Type>
+                tmp<fvMatrix<Type>> operator()
+                (
+                    const volScalarField& rho,
+                    GeometricField<Type, fvPatchField, volMesh>& field,
+                    const word& fieldName
+                ) const;
+
+                template<class Type>
+                tmp<fvMatrix<Type>> operator()
+                (
+                    const volScalarField& alpha,
+                    const volScalarField& rho,
+                    GeometricField<Type, fvPatchField, volMesh>& field
+                ) const;
+
+                template<class Type>
+                tmp<fvMatrix<Type>> operator()
+                (
+                    const volScalarField& alpha,
+                    const volScalarField& rho,
+                    GeometricField<Type, fvPatchField, volMesh>& field,
+                    const word& fieldName
+                ) const;
+
+
             // Constraints
 
                 virtual void constrain
@@ -398,6 +487,10 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "fvOptionI.H"
+
+#ifdef NoRepository
+    #include "fvOptionTemplates.C"
+#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

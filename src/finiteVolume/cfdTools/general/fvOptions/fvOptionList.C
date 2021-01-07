@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ void Foam::fv::optionList::checkApplied() const
 
 Foam::fv::optionList::optionList(const fvMesh& mesh, const dictionary& dict)
 :
-    PtrList<option>(),
+    PtrListDictionary<option>(0),
     mesh_(mesh),
     checkTimeIndex_(mesh_.time().startTimeIndex() + 2)
 {
@@ -99,7 +99,7 @@ Foam::fv::optionList::optionList(const fvMesh& mesh, const dictionary& dict)
 
 Foam::fv::optionList::optionList(const fvMesh& mesh)
 :
-    PtrList<option>(),
+    PtrListDictionary<option>(0),
     mesh_(mesh),
     checkTimeIndex_(mesh_.time().startTimeIndex() + 2)
 {}
@@ -133,7 +133,8 @@ void Foam::fv::optionList::reset(const dictionary& dict)
             this->set
             (
                 i++,
-                option::New(name, sourceDict, mesh_)
+                name,
+                option::New(name, sourceDict, mesh_).ptr()
             );
         }
     }
