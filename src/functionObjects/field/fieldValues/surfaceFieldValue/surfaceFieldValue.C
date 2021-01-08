@@ -564,13 +564,12 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::writeFileHeader
 }
 
 
-template<>
-Foam::scalar Foam::functionObjects::fieldValues::surfaceFieldValue::
-processValues
+bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
 (
     const Field<scalar>& values,
     const vectorField& Sf,
-    const scalarField& weightField
+    const scalarField& weightField,
+    scalar& result
 ) const
 {
     switch (operation_)
@@ -578,31 +577,59 @@ processValues
         case operationType::sumDirection:
         {
             vector n(dict_.lookup("direction"));
-            return sum(pos0(values*(Sf & n))*mag(values));
+            result = sum(pos0(values*(Sf & n))*mag(values));
+            return true;
         }
         case operationType::sumDirectionBalance:
         {
             vector n(dict_.lookup("direction"));
             const scalarField nv(values*(Sf & n));
-
-            return sum(pos0(nv)*mag(values) - neg(nv)*mag(values));
+            result = sum(pos0(nv)*mag(values) - neg(nv)*mag(values));
+            return true;
         }
         default:
         {
-            // Fall through to other operations
-            return processSameTypeValues(values, Sf, weightField);
+            // Fall through to same-type operations
+            return processValuesTypeType(values, Sf, weightField, result);
         }
     }
 }
 
 
-template<>
-Foam::vector Foam::functionObjects::fieldValues::surfaceFieldValue::
-processValues
+bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
 (
     const Field<vector>& values,
     const vectorField& Sf,
-    const scalarField& weightField
+    const scalarField& weightField,
+    scalar& result
+) const
+{
+    switch (operation_)
+    {
+        case operationType::areaNormalAverage:
+        {
+            result = sum(values & Sf)/sum(mag(Sf));
+            return true;
+        }
+        case operationType::areaNormalIntegrate:
+        {
+            result = sum(values & Sf);
+            return true;
+        }
+        default:
+        {
+            return false;
+        }
+    }
+}
+
+
+bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
+(
+    const Field<vector>& values,
+    const vectorField& Sf,
+    const scalarField& weightField,
+    vector& result
 ) const
 {
     switch (operation_)
@@ -612,31 +639,21 @@ processValues
             vector n(dict_.lookup("direction"));
             n /= mag(n) + rootVSmall;
             const scalarField nv(n & values);
-
-            return sum(pos0(nv)*n*(nv));
+            result = sum(pos0(nv)*n*(nv));
+            return true;
         }
         case operationType::sumDirectionBalance:
         {
             vector n(dict_.lookup("direction"));
             n /= mag(n) + rootVSmall;
             const scalarField nv(n & values);
-
-            return sum(pos0(nv)*n*(nv));
-        }
-        case operationType::areaNormalAverage:
-        {
-            scalar result = sum(values & Sf)/sum(mag(Sf));
-            return vector(result, 0.0, 0.0);
-        }
-        case operationType::areaNormalIntegrate:
-        {
-            scalar result = sum(values & Sf);
-            return vector(result, 0.0, 0.0);
+            result = sum(pos0(nv)*n*(nv));
+            return true;
         }
         default:
         {
-            // Fall through to other operations
-            return processSameTypeValues(values, Sf, weightField);
+            // Fall through to same-type operations
+            return processValuesTypeType(values, Sf, weightField, result);
         }
     }
 }
@@ -792,8 +809,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
         bool orient = i >= orientedFieldsStart_;
         ok = ok || writeValues<scalar>(fieldName, weightField, orient);
         ok = ok || writeValues<vector>(fieldName, weightField, orient);
-        ok = ok
-          || writeValues<sphericalTensor>(fieldName, weightField, orient);
+        ok = ok || writeValues<sphericalTensor>(fieldName, weightField, orient);
         ok = ok || writeValues<symmTensor>(fieldName, weightField, orient);
         ok = ok || writeValues<tensor>(fieldName, weightField, orient);
 
