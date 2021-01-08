@@ -13,8 +13,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-triSurface <triSurfaceFile>;
+name    <triSurfaceFileName>;
 
-#includeEtc "caseDicts/postProcessing/flowRate/volFlowRateSurface.cfg"
+#includeEtc "caseDicts/postProcessing/flowRate/volumetricFlowRateTriSurface.cfg"
 
 // ************************************************************************* //

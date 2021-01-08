@@ -49,5 +49,12 @@ adjustTimeStep  yes;
 
 maxCo           1.0;
 
+functions
+{
+    #includeFunc "flowRatePatch(name=inlet)"
+    #includeFunc "flowRatePatch(name=outlet)"
+    #includeFunc "volumetricFlowRateTriSurface(name=surface0.stl)"
+    #includeFunc "volumetricFlowRateTriSurface(name=surface1.stl)"
+}
 
 // ************************************************************************* //
