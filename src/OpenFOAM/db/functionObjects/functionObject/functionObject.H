@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ Description
         libs     | Libraries containing implementation   | yes      |
         region   | Name of region for multi-region cases | no       |
         enabled  | On/off switch                         | no       | yes
-        log      | Log information to standard output    | no       | yes
+        log      | Log information to standard output    | no       | no
         startTime| Start time                            | no       |
         endTime  | End time                              | no       |
         executeAtStart  | Execute at start time switch   | no       | yes
