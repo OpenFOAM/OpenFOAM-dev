@@ -18,8 +18,8 @@ FoamFile
 sleeve
 {
     CH4 0;
-    N2  0.79;
-    O2  0.21;
+    N2  0.77;
+    O2  0.23;
 }
 
 pipe
