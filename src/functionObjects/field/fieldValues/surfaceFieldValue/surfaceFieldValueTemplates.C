@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,22 +132,48 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::getFieldValues
 }
 
 
-template<class Type>
-Type Foam::functionObjects::fieldValues::surfaceFieldValue::
-processSameTypeValues
+template<class Type, class ResultType>
+bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
 (
     const Field<Type>& values,
     const vectorField& Sf,
-    const scalarField& weightField
+    const scalarField& weightField,
+    ResultType& result
 ) const
 {
-    Type result = Zero;
+    return false;
+}
+
+
+template<class Type>
+bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
+(
+    const Field<Type>& values,
+    const vectorField& Sf,
+    const scalarField& weightField,
+    Type& result
+) const
+{
+    return processValuesTypeType(values, Sf, weightField, result);
+}
+
+
+template<class Type>
+bool Foam::functionObjects::fieldValues::surfaceFieldValue::
+processValuesTypeType
+(
+    const Field<Type>& values,
+    const vectorField& Sf,
+    const scalarField& weightField,
+    Type& result
+) const
+{
     switch (operation_)
     {
         case operationType::sum:
         {
             result = sum(values);
-            break;
+            return true;
         }
         case operationType::weightedSum:
         {
@@ -159,39 +185,17 @@ processSameTypeValues
             {
                 result = sum(values);
             }
-            break;
+            return true;
         }
         case operationType::sumMag:
         {
             result = sum(cmptMag(values));
-            break;
-        }
-        case operationType::sumDirection:
-        {
-            FatalErrorInFunction
-                << "Operation " << operationTypeNames_[operation_]
-                << " not available for values of type "
-                << pTraits<Type>::typeName
-                << exit(FatalError);
-
-            result = Zero;
-            break;
-        }
-        case operationType::sumDirectionBalance:
-        {
-            FatalErrorInFunction
-                << "Operation " << operationTypeNames_[operation_]
-                << " not available for values of type "
-                << pTraits<Type>::typeName
-                << exit(FatalError);
-
-            result = Zero;
-            break;
+            return true;
         }
         case operationType::average:
         {
             result = sum(values)/values.size();
-            break;
+            return true;
         }
         case operationType::weightedAverage:
         {
@@ -205,14 +209,14 @@ processSameTypeValues
             {
                 result = sum(values)/values.size();
             }
-            break;
+            return true;
         }
         case operationType::areaAverage:
         {
             const scalarField magSf(mag(Sf));
 
             result = sum(magSf*values)/sum(magSf);
-            break;
+            return true;
         }
         case operationType::weightedAreaAverage:
         {
@@ -228,14 +232,14 @@ processSameTypeValues
             {
                 result = sum(magSf*values)/sum(magSf);
             }
-            break;
+            return true;
         }
         case operationType::areaIntegrate:
         {
             const scalarField magSf(mag(Sf));
 
             result = sum(magSf*values);
-            break;
+            return true;
         }
         case operationType::weightedAreaIntegrate:
         {
@@ -249,17 +253,17 @@ processSameTypeValues
             {
                 result = sum(magSf*values);
             }
-            break;
+            return true;
         }
         case operationType::min:
         {
             result = min(values);
-            break;
+            return true;
         }
         case operationType::max:
         {
             result = max(values);
-            break;
+            return true;
         }
         case operationType::CoV:
         {
@@ -278,31 +282,18 @@ processSameTypeValues
                 res = sqrt(sum(magSf*sqr(vals - mean))/sum(magSf))/mean;
             }
 
-            break;
+            return true;
         }
-        case operationType::areaNormalAverage:
-        {}
-        case operationType::areaNormalIntegrate:
-        {}
         case operationType::none:
-        {}
+        {
+            return true;
+        }
+        default:
+        {
+            return false;
+        }
     }
-
-    return result;
 }
-
-
-template<class Type>
-Type Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
-(
-    const Field<Type>& values,
-    const vectorField& Sf,
-    const scalarField& weightField
-) const
-{
-    return processSameTypeValues(values, Sf, weightField);
-}
-
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -374,21 +365,60 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::writeValues
 
             if (Pstream::master())
             {
-                Type result = processValues(values, Sf, weightField);
-
-                // Add to result dictionary, over-writing any previous entry
-                resultDict_.add(fieldName, result, true);
-
-                file() << tab << result;
-
-                Log << "    " << operationTypeNames_[operation_]
-                    << "(" << regionName_ << ") of " << fieldName
-                    <<  " = " << result << endl;
+                if
+                (
+                    !writeValues<Type, scalar>
+                    (fieldName, weightField, values, Sf)
+                 && !writeValues<Type, vector>
+                    (fieldName, weightField, values, Sf)
+                 && !writeValues<Type, sphericalTensor>
+                    (fieldName, weightField, values, Sf)
+                 && !writeValues<Type, symmTensor>
+                    (fieldName, weightField, values, Sf)
+                 && !writeValues<Type, tensor>
+                    (fieldName, weightField, values, Sf)
+                )
+                {
+                    FatalErrorInFunction
+                        << "Operation " << operationTypeNames_[operation_]
+                        << " not available for values of type "
+                        << pTraits<Type>::typeName
+                        << exit(FatalError);
+                }
             }
         }
     }
 
     return ok;
+}
+
+
+template<class Type, class ResultType>
+bool Foam::functionObjects::fieldValues::surfaceFieldValue::writeValues
+(
+    const word& fieldName,
+    const scalarField& weightField,
+    const Field<Type>& values,
+    const vectorField& Sf
+)
+{
+    ResultType result;
+
+    if (processValues(values, Sf, weightField, result))
+    {
+        // Add to result dictionary, over-writing any previous entry
+        resultDict_.add(fieldName, result, true);
+
+        file() << tab << result;
+
+        Log << "    " << operationTypeNames_[operation_]
+            << "(" << regionName_ << ") of " << fieldName
+            <<  " = " << result << endl;
+
+        return true;
+    }
+
+    return false;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -332,24 +332,67 @@ protected:
             const bool applyOrientation = false
         ) const;
 
-        //- Apply the 'operation' to the values. Operation has to
-        //  preserve Type.
-        template<class Type>
-        Type processSameTypeValues
+        //- Apply the operation to the values, and return true if successful.
+        //  Does nothing unless overloaded below.
+        template<class Type, class ResultType>
+        bool processValues
         (
             const Field<Type>& values,
             const vectorField& Sf,
-            const scalarField& weightField
+            const scalarField& weightField,
+            ResultType& result
         ) const;
 
-        //- Apply the 'operation' to the values. Wrapper around
-        //  processSameTypeValues. See also template specialisation below.
+        //- Apply Type -> Type operation to the values. Calls
+        //  processValuesTypeType.
         template<class Type>
-        Type processValues
+        bool processValues
         (
             const Field<Type>& values,
             const vectorField& Sf,
-            const scalarField& weightField
+            const scalarField& weightField,
+            Type& result
+        ) const;
+
+        //- Apply scalar -> scalar operation to the values. Tries to apply
+        //  scalar -> scalar specific operations, otherwise calls
+        //  processValuesTypeType.
+        bool processValues
+        (
+            const Field<scalar>& values,
+            const vectorField& Sf,
+            const scalarField& weightField,
+            scalar& result
+        ) const;
+
+        //- Apply vector -> vector operation to the values.
+        bool processValues
+        (
+            const Field<vector>& values,
+            const vectorField& Sf,
+            const scalarField& weightField,
+            scalar& result
+        ) const;
+
+        //- Apply vector -> vector operation to the values. Tries to apply
+        //  vector -> vector specific operations, otherwise calls
+        //  processValuesTypeType.
+        bool processValues
+        (
+            const Field<vector>& values,
+            const vectorField& Sf,
+            const scalarField& weightField,
+            vector& result
+        ) const;
+
+        //- Apply a Type -> Type operation to the values
+        template<class Type>
+        bool processValuesTypeType
+        (
+            const Field<Type>& values,
+            const vectorField& Sf,
+            const scalarField& weightField,
+            Type& result
         ) const;
 
         //- Output file header information
@@ -411,6 +454,16 @@ public:
             const bool orient
         );
 
+        //- Templated helper function to output field values
+        template<class Type, class ResultType>
+        bool writeValues
+        (
+            const word& fieldName,
+            const scalarField& weightField,
+            const Field<Type>& values,
+            const vectorField& Sf
+        );
+
         //- Filter a surface field according to faceIds
         template<class Type>
         tmp<Field<Type>> filterField
@@ -433,26 +486,6 @@ public:
         //- Calculate and write
         virtual bool write();
 };
-
-
-//- Specialisation for scalar
-template<>
-scalar surfaceFieldValue::processValues
-(
-    const Field<scalar>& values,
-    const vectorField& Sf,
-    const scalarField& weightField
-) const;
-
-
-//- Specialisation for vector
-template<>
-vector surfaceFieldValue::processValues
-(
-    const Field<vector>& values,
-    const vectorField& Sf,
-    const scalarField& weightField
-) const;
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

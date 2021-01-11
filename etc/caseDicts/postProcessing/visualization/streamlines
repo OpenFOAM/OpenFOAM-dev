@@ -76,14 +76,14 @@ sphereRandom
 triSurfaceMesh
 {
     type            triSurfaceMesh;
-    surface         <surfaceMeshFile>; // in constant/triSurface directory
+    surface         "surfaceMeshFile.obj"; // in constant/triSurface directory
 }
 
 // Seeding at a boundary
 boundaryRandom
 {
     type            boundaryRandom;
-    patches         (<patch1> <patch2>);
+    patches         (patch1 patch2);
     nPoints         50;
 }
 
