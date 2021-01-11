@@ -21,13 +21,25 @@ internalField   uniform 0;
 
 boundaryField
 {
+    inlet
+    {
+        type            calculated;
+        value           uniform 0;
+    }
+
     walls
     {
         type            nutkWallFunction;
         value           uniform 0;
     }
 
-    ".*"
+    atmosphere
+    {
+        type            calculated;
+        value           uniform 0;
+    }
+
+    outlet
     {
         type            calculated;
         value           uniform 0;
