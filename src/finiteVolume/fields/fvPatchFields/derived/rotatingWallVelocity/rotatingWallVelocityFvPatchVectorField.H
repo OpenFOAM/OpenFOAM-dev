@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,10 @@ Class
     Foam::rotatingWallVelocityFvPatchVectorField
 
 Description
-    This boundary condition provides a rotational velocity condition.
+    Condition on velocity for a boundary consisting of a rotating solid of
+    revolution, e.g. cylinder. Calculates a tangential component of velocity
+    from the angular velocity and rotational axis and ensures a zero normal
+    component.
 
 Usage
     \table
