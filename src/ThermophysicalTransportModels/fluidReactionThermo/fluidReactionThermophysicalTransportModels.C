@@ -48,6 +48,9 @@ makeLaminarThermophysicalTransportModel(unityLewisFourier);
 #include "FickianFourier.H"
 makeLaminarThermophysicalTransportModel(FickianFourier);
 
+#include "MaxwellStefanFourier.H"
+makeLaminarThermophysicalTransportModel(MaxwellStefanFourier);
+
 
 // -------------------------------------------------------------------------- //
 // RAS models

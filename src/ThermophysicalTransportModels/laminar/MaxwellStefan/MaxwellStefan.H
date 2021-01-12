@@ -22,28 +22,43 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::turbulenceThermophysicalTransportModels::Fickian
+    Foam::turbulenceThermophysicalTransportModels::MaxwellStefan
 
 Description
-    Base class for multi-component Fickian based temperature gradient heat
-    flux models with optional Soret thermal diffusion of species.
+    Base class for multi-component Maxwell Stefan generalized Fick's law
+    diffusion coefficients based temperature gradient heat flux model with
+    optional Soret thermal diffusion of species.
 
-    The mixture diffusion coefficients are specified as Function2<scalar>s of
+    The binary diffusion coefficients are specified as Function2<scalar>s of
     pressure and temperature but independent of composition.
 
     The heat flux source is implemented as an implicit energy correction to the
     temperature gradient based flux source.  At convergence the energy
     correction is 0.
 
+    References:
+    \verbatim
+        Taylor, R., & Krishna, R. (1993).
+        Multicomponent mass transfer (Vol. 2).
+        John Wiley & Sons.
+
+        Merk, H. J. (1959).
+        The macroscopic equations for simultaneous heat and mass transfer
+        in isotropic, continuous and closed systems.
+        Applied Scientific Research,
+        Section A, 8(1), 73-99.
+    \endverbatim
+
 SourceFiles
-    Fickian.C
+    MaxwellStefan.C
 
 \*---------------------------------------------------------------------------*/
 
 #include "Function2.H"
+#include "LUscalarMatrix.H"
 
-#ifndef Fickian_H
-#define Fickian_H
+#ifndef MaxwellStefan_H
+#define MaxwellStefan_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,28 +66,87 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                Class Fickian Declaration
+                Class MaxwellStefan Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class BasicThermophysicalTransportModel>
-class Fickian
+class MaxwellStefan
 :
     public BasicThermophysicalTransportModel
 {
-
-protected:
-
-    // Protected data
+    // Private data
 
         // Model coefficients
 
-            //- List of specie mass diffusion coefficient functions
-            //  w.r.t the mixture [m^2/s]
-            PtrList<Function2<scalar>> D_;
+            //- Array of specie binary mass diffusion coefficient functions
+            //  [m^2/s]
+            List<PtrList<Function2<scalar>>> D_;
 
             //- List of specie Soret thermal diffusion coefficient
             //  functions [kg/m/s]
             PtrList<Function2<scalar>> DT_;
+
+            //- Generalized Fick's law diffusion coefficients field list.
+            //  This is the diagonal of the mass diffusion coefficient matrix
+            PtrList<volScalarField> Dii_;
+
+            //- List of fields of the explicit part of the mass diffusion flux
+            // of the species
+            PtrList<surfaceScalarField> jexp_;
+
+
+        // Workspace for diffusion coefficient transformation
+
+            //- Molecular weights of the species
+            scalarField W;
+
+            //- List of mass-fraction field pointers
+            //  for the internal mesh or a patch
+            List<const scalarField*> YPtrs;
+
+            //- Matrix of mass diffusion coefficient field pointers
+            //  for the internal mesh or a patch
+            SquareMatrix<scalarField*> DijPtrs;
+
+            //- Mass-fractions at a cell or face
+            scalarField Y;
+
+            //- Mole-fractions at a cell or face
+            scalarField X;
+
+            //- Binary mass diffusion coefficient matrix at a cell or face
+            scalarSquareMatrix DD;
+
+            //- Matrix form of the coefficients in the Maxwell-Stefan equation
+            //  at a cell or face
+            LUscalarMatrix A;
+
+            //- Matrix of composition coefficients at a cell or face
+            //  used to transform the binary mass diffusion coefficients into
+            //  the generalized Fick's law diffusion coefficients
+            scalarSquareMatrix B;
+
+            //- Inverse of A
+            scalarSquareMatrix invA;
+
+            //- Matrix of the generalized Fick's law diffusion coefficients
+            //  at a cell or face
+            scalarSquareMatrix D;
+
+
+    // Private member functions
+
+        //- Transform the Binary mass diffusion coefficient matrix DD into the
+        //  matrix of the generalized Fick's law diffusion coefficients D
+        void transformDiffusionCoefficient();
+
+        //- Calls transformDiffusionCoefficient() for each cell and patch face
+        //  and maps the resulting D into DijPtrs
+        void transformDiffusionCoefficientFields();
+
+        //- Calls transformDiffusionCoefficientFields() for the internal mesh
+        //  and each patch and maps the resulting DijPtrs into Dii_ and Dij
+        void transform(List<PtrList<volScalarField>>& Dij);
 
 
 public:
@@ -91,7 +165,7 @@ public:
     // Constructors
 
         //- Construct from a momentum transport model and a thermo model
-        Fickian
+        MaxwellStefan
         (
             const word& type,
             const momentumTransportModel& momentumTransport,
@@ -100,7 +174,7 @@ public:
 
 
     //- Destructor
-    virtual ~Fickian()
+    virtual ~MaxwellStefan()
     {}
 
 
@@ -109,11 +183,13 @@ public:
         //- Read thermophysicalTransport dictionary
         virtual bool read();
 
-        //- Effective mass diffusivity for a given specie mass-fraction [kg/m/s]
+        //- Effective mass diffusion coefficient
+        //  for a given specie mass-fraction [kg/m/s]
+        //  This is the self-diffusion coefficient
         virtual tmp<volScalarField> DEff(const volScalarField& Yi) const;
 
-        //- Effective mass diffusivity for a given specie mass-fraction
-        //  for patch [kg/m/s]
+        //- Effective mass diffusion coefficient
+        //  for a given specie mass-fraction for patch [kg/m/s]
         virtual tmp<scalarField> DEff
         (
             const volScalarField& Yi,
@@ -131,6 +207,9 @@ public:
 
         //- Return the source term for the given specie mass-fraction equation
         virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
+
+        //- Update the multi-component diffusivities and flux corrections
+        virtual void correct();
 };
 
 
@@ -141,7 +220,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "Fickian.C"
+    #include "MaxwellStefan.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

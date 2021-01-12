@@ -22,13 +22,14 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::laminarThermophysicalTransportModels::FickianFourier
+    Foam::laminarThermophysicalTransportModels::MaxwellStefanFourier
 
 Description
-    Multi-component Fickian and Fourier based temperature gradient heat flux
-    models with optional Soret thermal diffusion of species for laminar flow.
+    Multi-component Maxwell Stefan generalized Fick's law diffusion coefficients
+    and Fourier based temperature gradient heat flux model with optional Soret
+    thermal diffusion of species for laminar flow.
 
-    The mixture diffusion coefficients are specified as Function2<scalar>s of
+    The binary diffusion coefficients are specified as Function2<scalar>s of
     pressure and temperature but independent of composition.
 
     The heat flux source is implemented as an implicit energy correction to the
@@ -39,10 +40,17 @@ Usage
     \verbatim
     laminar
     {
-        model           FickianFourier;
+        model           MaxwellStefanFourier;
 
         D // [m^2/s]
         {
+            O2_O2 1e-2;
+            O3_O3 5e-2;
+            N2_N2 1e-2;
+            O3_O2 5e-2;
+            O3_N2 5e-2;
+            O2_N2 1e-2;
+
             O2 1e-2;
             O3 5e-2;
             N2 1e-2;
@@ -58,15 +66,15 @@ Usage
     \endverbatim
 
 SourceFiles
-    FickianFourier.C
+    MaxwellStefanFourier.C
 
 \*---------------------------------------------------------------------------*/
 
-#include "Fickian.H"
+#include "MaxwellStefan.H"
 #include "unityLewisFourier.H"
 
-#ifndef FickianFourier_H
-#define FickianFourier_H
+#ifndef MaxwellStefanFourier_H
+#define MaxwellStefanFourier_H
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -76,13 +84,13 @@ namespace laminarThermophysicalTransportModels
 {
 
 /*---------------------------------------------------------------------------*\
-                Class FickianFourier Declaration
+                Class MaxwellStefanFourier Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class laminarThermophysicalTransportModel>
-class FickianFourier
+class MaxwellStefanFourier
 :
-    public Fickian
+    public MaxwellStefan
     <
         unityLewisFourier<laminarThermophysicalTransportModel>
     >
@@ -112,13 +120,13 @@ public:
 
 
     //- Runtime type information
-    TypeName("FickianFourier");
+    TypeName("MaxwellStefanFourier");
 
 
     // Constructors
 
         //- Construct from a momentum transport model and a thermo model
-        FickianFourier
+        MaxwellStefanFourier
         (
             const momentumTransportModel& momentumTransport,
             const thermoModel& thermo
@@ -126,7 +134,7 @@ public:
 
 
     //- Destructor
-    virtual ~FickianFourier()
+    virtual ~MaxwellStefanFourier()
     {}
 
 
@@ -145,7 +153,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "FickianFourier.C"
+    #include "MaxwellStefanFourier.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

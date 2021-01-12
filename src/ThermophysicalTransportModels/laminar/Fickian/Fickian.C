@@ -39,8 +39,7 @@ namespace Foam
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicThermophysicalTransportModel>
-Fickian<BasicThermophysicalTransportModel>::
-Fickian
+Fickian<BasicThermophysicalTransportModel>::Fickian
 (
     const word& type,
     const momentumTransportModel& momentumTransport,
@@ -55,6 +54,7 @@ Fickian
     ),
 
     D_(this->thermo().composition().species().size()),
+
     DT_
     (
         this->coeffDict_.found("DT")
@@ -67,8 +67,7 @@ Fickian
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicThermophysicalTransportModel>
-bool
-Fickian<BasicThermophysicalTransportModel>::read()
+bool Fickian<BasicThermophysicalTransportModel>::read()
 {
     if
     (
@@ -103,8 +102,7 @@ Fickian<BasicThermophysicalTransportModel>::read()
 
 
 template<class BasicThermophysicalTransportModel>
-tmp<volScalarField>
-Fickian<BasicThermophysicalTransportModel>::DEff
+tmp<volScalarField> Fickian<BasicThermophysicalTransportModel>::DEff
 (
     const volScalarField& Yi
 ) const
@@ -128,8 +126,7 @@ Fickian<BasicThermophysicalTransportModel>::DEff
 
 
 template<class BasicThermophysicalTransportModel>
-tmp<scalarField>
-Fickian<BasicThermophysicalTransportModel>::DEff
+tmp<scalarField> Fickian<BasicThermophysicalTransportModel>::DEff
 (
     const volScalarField& Yi,
     const label patchi
@@ -149,8 +146,7 @@ Fickian<BasicThermophysicalTransportModel>::DEff
 
 
 template<class BasicThermophysicalTransportModel>
-tmp<surfaceScalarField>
-Fickian<BasicThermophysicalTransportModel>::q() const
+tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::q() const
 {
     tmp<surfaceScalarField> tmpq
     (
@@ -226,8 +222,10 @@ Fickian<BasicThermophysicalTransportModel>::q() const
 
 
 template<class BasicThermophysicalTransportModel>
-tmp<fvScalarMatrix>
-Fickian<BasicThermophysicalTransportModel>::divq(volScalarField& he) const
+tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divq
+(
+    volScalarField& he
+) const
 {
     tmp<fvScalarMatrix> tmpDivq
     (
@@ -322,8 +320,7 @@ Fickian<BasicThermophysicalTransportModel>::divq(volScalarField& he) const
 
 
 template<class BasicThermophysicalTransportModel>
-tmp<surfaceScalarField>
-Fickian<BasicThermophysicalTransportModel>::j
+tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::j
 (
     const volScalarField& Yi
 ) const
@@ -350,8 +347,10 @@ Fickian<BasicThermophysicalTransportModel>::j
 
 
 template<class BasicThermophysicalTransportModel>
-tmp<fvScalarMatrix>
-Fickian<BasicThermophysicalTransportModel>::divj(volScalarField& Yi) const
+tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divj
+(
+    volScalarField& Yi
+) const
 {
     if (DT_.size())
     {
