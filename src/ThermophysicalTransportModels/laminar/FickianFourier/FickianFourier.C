@@ -50,6 +50,7 @@ FickianFourier
     )
 {
     read();
+    this->correct();
 }
 
 

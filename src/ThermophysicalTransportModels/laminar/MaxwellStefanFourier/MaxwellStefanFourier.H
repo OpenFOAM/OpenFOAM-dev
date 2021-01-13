@@ -29,8 +29,8 @@ Description
     and Fourier based temperature gradient heat flux model with optional Soret
     thermal diffusion of species for laminar flow.
 
-    The binary diffusion coefficients are specified as Function2<scalar>s of
-    pressure and temperature but independent of composition.
+    The binary mass diffusion coefficients are specified as Function2<scalar>s
+    of pressure and temperature but independent of composition.
 
     The heat flux source is implemented as an implicit energy correction to the
     temperature gradient based flux source.  At convergence the energy
@@ -44,16 +44,12 @@ Usage
 
         D // [m^2/s]
         {
-            O2_O2 1e-2;
-            O3_O3 5e-2;
-            N2_N2 1e-2;
-            O3_O2 5e-2;
-            O3_N2 5e-2;
-            O2_N2 1e-2;
-
-            O2 1e-2;
-            O3 5e-2;
-            N2 1e-2;
+            O2-O2 1e-2;
+            O3-O3 5e-2;
+            N2-N2 1e-2;
+            O3-O2 5e-2;
+            O3-N2 5e-2;
+            O2-N2 1e-2;
         }
 
         DT // [kg/m/s] Optional

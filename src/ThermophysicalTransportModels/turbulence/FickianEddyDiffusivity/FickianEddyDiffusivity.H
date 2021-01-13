@@ -29,8 +29,8 @@ Description
     gradient heat flux model for RAS or LES of turbulent flow with optional
     Soret thermal diffusion of species.
 
-    Currently the diffusion coefficients are constant but temperature and
-    pressure dependency will be added.
+    The mixture diffusion coefficients are specified as Function2<scalar>s of
+    pressure and temperature but independent of composition.
 
     The heat flux source is implemented as an implicit energy correction to the
     temperature gradient based flux source.  At convergence the energy
@@ -42,11 +42,56 @@ Usage
     {
         model           FickianEddyDiffusivity;
 
+        mixtureDiffusionCoefficients yes;
+
         Prt             0.85;
         Sct             0.7;
 
-        D               (1e-5 2e-5 1e-5); // [m^2/s]
-        DT              (1e-5 2e-5 1e-5); // [kg/m/s] Optional
+        Dm // [m^2/s]
+        {
+            O2 1e-2;
+            O3 5e-2;
+            N2 1e-2;
+        }
+
+        DT // [kg/m/s] Optional
+        {
+            O2 1e-2;
+            O3 5e-2;
+            N2 1e-2;
+        }
+    }
+    \endverbatim
+
+    or if binary mass diffusion coefficient functions are available they can be
+    mixed to form the mass diffusion coefficients w.r.t. the mixture:
+
+    \verbatim
+    RAS
+    {
+        model           FickianEddyDiffusivity;
+
+        mixtureDiffusionCoefficients no;
+
+        Prt             0.85;
+        Sct             0.7;
+
+        D // [m^2/s]
+        {
+            O2-O2 1e-2;
+            O3-O3 5e-2;
+            N2-N2 1e-2;
+            O3-O2 5e-2;
+            O3-N2 5e-2;
+            O2-N2 1e-2;
+        }
+
+        DT // [kg/m/s] Optional
+        {
+            O2 1e-2;
+            O3 5e-2;
+            N2 1e-2;
+        }
     }
     \endverbatim
 
@@ -128,11 +173,12 @@ public:
         //- Read thermophysicalTransport dictionary
         virtual bool read();
 
-        //- Effective mass diffusivity for a given specie mass-fraction [kg/m/s]
+        //- Effective mass diffusion coefficient
+        //  for a given specie mass-fraction [kg/m/s]
         virtual tmp<volScalarField> DEff(const volScalarField& Yi) const;
 
-        //- Effective mass diffusivity for a given specie mass-fraction
-        //  for patch [kg/m/s]
+        //- Effective mass diffusion coefficient
+        //  for a given specie mass-fraction for patch [kg/m/s]
         virtual tmp<scalarField> DEff
         (
             const volScalarField& Yi,

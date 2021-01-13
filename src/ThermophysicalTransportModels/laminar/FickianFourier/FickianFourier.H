@@ -41,11 +41,42 @@ Usage
     {
         model           FickianFourier;
 
-        D // [m^2/s]
+        mixtureDiffusionCoefficients yes;
+
+        Dm // [m^2/s]
         {
             O2 1e-2;
             O3 5e-2;
             N2 1e-2;
+        }
+
+        DT // [kg/m/s] Optional
+        {
+            O2 1e-2;
+            O3 5e-2;
+            N2 1e-2;
+        }
+    }
+    \endverbatim
+
+    or if binary mass diffusion coefficient functions are available they can be
+    mixed to form the mass diffusion coefficients w.r.t. the mixture:
+
+    \verbatim
+    laminar
+    {
+        model           FickianFourier;
+
+        mixtureDiffusionCoefficients no;
+
+        D // [m^2/s]
+        {
+            O2-O2 1e-2;
+            O3-O3 5e-2;
+            N2-N2 1e-2;
+            O3-O2 5e-2;
+            O3-N2 5e-2;
+            O2-N2 1e-2;
         }
 
         DT // [kg/m/s] Optional

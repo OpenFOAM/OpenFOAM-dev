@@ -29,8 +29,8 @@ Description
     diffusion coefficients based temperature gradient heat flux model with
     optional Soret thermal diffusion of species.
 
-    The binary diffusion coefficients are specified as Function2<scalar>s of
-    pressure and temperature but independent of composition.
+    The binary mass diffusion coefficients are specified as Function2<scalar>s
+    of pressure and temperature but independent of composition.
 
     The heat flux source is implemented as an implicit energy correction to the
     temperature gradient based flux source.  At convergence the energy
@@ -80,11 +80,11 @@ class MaxwellStefan
 
             //- Array of specie binary mass diffusion coefficient functions
             //  [m^2/s]
-            List<PtrList<Function2<scalar>>> D_;
+            List<PtrList<Function2<scalar>>> DFuncs_;
 
             //- List of specie Soret thermal diffusion coefficient
             //  functions [kg/m/s]
-            PtrList<Function2<scalar>> DT_;
+            PtrList<Function2<scalar>> DTFuncs_;
 
             //- Generalized Fick's law diffusion coefficients field list.
             //  This is the diagonal of the mass diffusion coefficient matrix
@@ -208,7 +208,7 @@ public:
         //- Return the source term for the given specie mass-fraction equation
         virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
 
-        //- Update the multi-component diffusivities and flux corrections
+        //- Update the diffusion coefficients and flux corrections
         virtual void correct();
 };
 

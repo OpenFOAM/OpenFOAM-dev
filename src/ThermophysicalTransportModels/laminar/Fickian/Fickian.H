@@ -59,20 +59,28 @@ class Fickian
 :
     public BasicThermophysicalTransportModel
 {
-
-protected:
-
-    // Protected data
+    // Private data
 
         // Model coefficients
 
+            //- Choice between mass diffusion coefficient functions w.r.t
+            //  mixture and mixing binary mass diffusion coefficient functions
+            bool mixtureDiffusionCoefficients_;
+
+            //- Array of specie binary mass diffusion coefficient functions
+            //  [m^2/s]
+            List<PtrList<Function2<scalar>>> DFuncs_;
+
             //- List of specie mass diffusion coefficient functions
             //  w.r.t the mixture [m^2/s]
-            PtrList<Function2<scalar>> D_;
+            PtrList<Function2<scalar>> DmFuncs_;
 
             //- List of specie Soret thermal diffusion coefficient
             //  functions [kg/m/s]
-            PtrList<Function2<scalar>> DT_;
+            PtrList<Function2<scalar>> DTFuncs_;
+
+            //- Mass diffusion coefficients in the mixture
+            PtrList<volScalarField> Dm_;
 
 
 public:
@@ -109,11 +117,12 @@ public:
         //- Read thermophysicalTransport dictionary
         virtual bool read();
 
-        //- Effective mass diffusivity for a given specie mass-fraction [kg/m/s]
+        //- Effective mass diffusion coefficient
+        //  for a given specie mass-fraction [kg/m/s]
         virtual tmp<volScalarField> DEff(const volScalarField& Yi) const;
 
-        //- Effective mass diffusivity for a given specie mass-fraction
-        //  for patch [kg/m/s]
+        //- Effective mass diffusion coefficient
+        //  for a given specie mass-fraction for patch [kg/m/s]
         virtual tmp<scalarField> DEff
         (
             const volScalarField& Yi,
@@ -131,6 +140,9 @@ public:
 
         //- Return the source term for the given specie mass-fraction equation
         virtual tmp<fvScalarMatrix> divj(volScalarField& Yi) const;
+
+        //- Update the diffusion coefficients
+        virtual void correct();
 };
 
 

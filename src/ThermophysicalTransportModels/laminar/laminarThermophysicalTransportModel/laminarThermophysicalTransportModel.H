@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -181,11 +181,12 @@ public:
             return this->thermo().alphahe(patchi);
         }
 
-        //- Effective mass diffusivity for a given specie mass-fraction [kg/m/s]
+        //- Effective mass diffusion coefficient
+        //  for a given specie mass-fraction [kg/m/s]
         virtual tmp<volScalarField> DEff(const volScalarField& Yi) const = 0;
 
-        //- Effective mass diffusivity for a given specie mass-fraction
-        //  for patch [kg/m/s]
+        //- Effective mass diffusion coefficient
+        //  for a given specie mass-fraction for patch [kg/m/s]
         virtual tmp<scalarField> DEff
         (
             const volScalarField& Yi,

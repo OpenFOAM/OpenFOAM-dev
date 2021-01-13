@@ -178,7 +178,8 @@ public:
             );
         }
 
-        //- Effective mass diffusivity for a given specie mass-fraction [kg/m/s]
+        //- Effective mass diffusion coefficient
+        //  for a given specie mass-fraction [kg/m/s]
         virtual tmp<volScalarField> DEff(const volScalarField& Yi) const
         {
             return volScalarField::New
@@ -188,8 +189,8 @@ public:
             );
         }
 
-        //- Effective mass diffusivity for a given specie mass-fraction
-        //  for patch [kg/m/s]
+        //- Effective mass diffusion coefficient
+        //  for a given specie mass-fraction for patch [kg/m/s]
         virtual tmp<scalarField> DEff
         (
             const volScalarField& Yi,

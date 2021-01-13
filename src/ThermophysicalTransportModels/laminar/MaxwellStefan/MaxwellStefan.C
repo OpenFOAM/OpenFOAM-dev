@@ -53,9 +53,9 @@ MaxwellStefan<BasicThermophysicalTransportModel>::MaxwellStefan
         thermo
     ),
 
-    D_(this->thermo().composition().species().size()),
+    DFuncs_(this->thermo().composition().species().size()),
 
-    DT_
+    DTFuncs_
     (
         this->coeffDict_.found("DT")
       ? this->thermo().composition().species().size()
@@ -106,14 +106,14 @@ bool MaxwellStefan<BasicThermophysicalTransportModel>::read()
         // Read the array of specie binary mass diffusion coefficient functions
         forAll(species, i)
         {
-            D_[i].setSize(species.size());
+            DFuncs_[i].setSize(species.size());
 
             forAll(species, j)
             {
                 if (j >= i)
                 {
-                    const word nameij(species[i] + '_' + species[j]);
-                    const word nameji(species[j] + '_' + species[i]);
+                    const word nameij(species[i] + '-' + species[j]);
+                    const word nameji(species[j] + '-' + species[i]);
 
                     word Dname;
 
@@ -122,8 +122,8 @@ bool MaxwellStefan<BasicThermophysicalTransportModel>::read()
                         if (i != j)
                         {
                             WarningInFunction
-                                << "Binary diffusivities for Both "
-                                << nameij << " and " << nameji
+                                << "Binary mass diffusion coefficients "
+                                   "for both " << nameij << " and " << nameji
                                 << " provided, using " << nameij << endl;
                         }
 
@@ -140,12 +140,12 @@ bool MaxwellStefan<BasicThermophysicalTransportModel>::read()
                     else
                     {
                         FatalIOErrorInFunction(Ddict)
-                            << "Binary diffusivity for pair " << nameij
-                            << " or " << nameji << " not provided"
+                            << "Binary mass diffusion coefficients for pair "
+                            << nameij << " or " << nameji << " not provided"
                             << exit(FatalIOError);
                     }
 
-                    D_[i].set
+                    DFuncs_[i].set
                     (
                         j,
                         Function2<scalar>::New(Dname, Ddict).ptr()
@@ -162,7 +162,11 @@ bool MaxwellStefan<BasicThermophysicalTransportModel>::read()
 
             forAll(species, i)
             {
-                DT_.set(i, Function2<scalar>::New(species[i], DTdict).ptr());
+                DTFuncs_.set
+                (
+                    i,
+                    Function2<scalar>::New(species[i], DTdict).ptr()
+                );
             }
         }
 
@@ -433,8 +437,8 @@ transformDiffusionCoefficient()
     // i counter for the specie sub-system without the default specie
     label is = 0;
 
-    // Calculate the A and B matrices from the binary diffusion coefficients
-    // and specie mole fractions
+    // Calculate the A and B matrices from the binary mass diffusion
+    // coefficients and specie mole fractions
     forAll(X, i)
     {
         if (i != d)
@@ -561,7 +565,7 @@ void MaxwellStefan<BasicThermophysicalTransportModel>::transform
         }
     }
 
-    // Transform binary diffusion coefficients internal field DijPtrs ->
+    // Transform binary mass diffusion coefficients internal field DijPtrs ->
     // generalized Fick's law diffusion coefficients DijPtrs
     transformDiffusionCoefficientFields();
 
@@ -585,7 +589,7 @@ void MaxwellStefan<BasicThermophysicalTransportModel>::transform
             }
         }
 
-        // Transform binary diffusion coefficients patch field DijPtrs ->
+        // Transform binary mass diffusion coefficients patch field DijPtrs ->
         // generalized Fick's law diffusion coefficients DijPtrs
         transformDiffusionCoefficientFields();
     }
@@ -632,7 +636,7 @@ void MaxwellStefan<BasicThermophysicalTransportModel>::correct()
             }
         }
 
-        Dii_.set(i, evaluate(D_[i][i], dimViscosity, p, T));
+        Dii_.set(i, evaluate(DFuncs_[i][i], dimViscosity, p, T));
 
         Dij[i].setSize(Y.size());
 
@@ -640,7 +644,7 @@ void MaxwellStefan<BasicThermophysicalTransportModel>::correct()
         {
             if (j > i)
             {
-                Dij[i].set(j, evaluate(D_[i][j], dimViscosity, p, T));
+                Dij[i].set(j, evaluate(DFuncs_[i][j], dimViscosity, p, T));
             }
             else if (j < i)
             {
@@ -672,7 +676,7 @@ void MaxwellStefan<BasicThermophysicalTransportModel>::correct()
 
     // Optionally add the Soret thermal diffusion contribution to the
     // explicit part of the specie mass flux fields
-    if (DT_.size())
+    if (DTFuncs_.size())
     {
         const surfaceScalarField gradTbyT(fvc::snGrad(T)/fvc::interpolate(T));
 
@@ -682,7 +686,7 @@ void MaxwellStefan<BasicThermophysicalTransportModel>::correct()
             {
                 jexp_[i] -= fvc::interpolate
                 (
-                    evaluate(DT_[i], dimDynamicViscosity, p, T)
+                    evaluate(DTFuncs_[i], dimDynamicViscosity, p, T)
                 )*gradTbyT;
             }
         }

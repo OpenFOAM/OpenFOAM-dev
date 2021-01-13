@@ -53,14 +53,20 @@ Fickian<BasicThermophysicalTransportModel>::Fickian
         thermo
     ),
 
-    D_(this->thermo().composition().species().size()),
+    mixtureDiffusionCoefficients_(true),
 
-    DT_
+    DFuncs_(this->thermo().composition().species().size()),
+
+    DmFuncs_(this->thermo().composition().species().size()),
+
+    DTFuncs_
     (
         this->coeffDict_.found("DT")
       ? this->thermo().composition().species().size()
       : 0
-    )
+    ),
+
+    Dm_(this->thermo().composition().species().size())
 {}
 
 
@@ -74,21 +80,96 @@ bool Fickian<BasicThermophysicalTransportModel>::read()
         BasicThermophysicalTransportModel::read()
     )
     {
-        const speciesTable& species = this->thermo().composition().species();
-        const dictionary& Ddict = this->coeffDict_.subDict("D");
+        const basicSpecieMixture& composition = this->thermo().composition();
+        const speciesTable& species = composition.species();
 
-        forAll(species, i)
+        this->coeffDict_.lookup("mixtureDiffusionCoefficients")
+            >> mixtureDiffusionCoefficients_;
+
+        if (mixtureDiffusionCoefficients_)
         {
-            D_.set(i, Function2<scalar>::New(species[i], Ddict).ptr());
+            const dictionary& Ddict = this->coeffDict_.subDict("Dm");
+
+            forAll(species, i)
+            {
+                DmFuncs_.set
+                (
+                    i,
+                    Function2<scalar>::New(species[i], Ddict).ptr()
+                );
+            }
+        }
+        else
+        {
+            const dictionary& Ddict = this->coeffDict_.subDict("D");
+
+            // Read the array of specie binary mass diffusion coefficient
+            // functions
+            forAll(species, i)
+            {
+                DFuncs_[i].setSize(species.size());
+
+                forAll(species, j)
+                {
+                    if (j >= i)
+                    {
+                        const word nameij(species[i] + '-' + species[j]);
+                        const word nameji(species[j] + '-' + species[i]);
+
+                        word Dname;
+
+                        if (Ddict.found(nameij) && Ddict.found(nameji))
+                        {
+                            if (i != j)
+                            {
+                                WarningInFunction
+                                    << "Binary mass diffusion coefficients "
+                                       "for Both " << nameij
+                                    << " and " << nameji << " provided, using "
+                                    << nameij << endl;
+                            }
+
+                            Dname = nameij;
+                        }
+                        else if (Ddict.found(nameij))
+                        {
+                            Dname = nameij;
+                        }
+                        else if (Ddict.found(nameji))
+                        {
+                            Dname = nameji;
+                        }
+                        else
+                        {
+                            FatalIOErrorInFunction(Ddict)
+                                << "Binary mass diffusion coefficient for pair "
+                                << nameij << " or " << nameji << " not provided"
+                                << exit(FatalIOError);
+                        }
+
+                        DFuncs_[i].set
+                        (
+                            j,
+                            Function2<scalar>::New(Dname, Ddict).ptr()
+                        );
+                    }
+                }
+            }
         }
 
+        // Optionally read the List of specie Soret thermal diffusion
+        // coefficient functions
         if (this->coeffDict_.found("DT"))
         {
             const dictionary& DTdict = this->coeffDict_.subDict("DT");
 
             forAll(species, i)
             {
-                DT_.set(i, Function2<scalar>::New(species[i], DTdict).ptr());
+                DTFuncs_.set
+                (
+                    i,
+                    Function2<scalar>::New(species[i], DTdict).ptr()
+                );
             }
         }
 
@@ -107,20 +188,13 @@ tmp<volScalarField> Fickian<BasicThermophysicalTransportModel>::DEff
     const volScalarField& Yi
 ) const
 {
-    const basicSpecieMixture& composition =
-        this->thermo().composition();
+    const basicSpecieMixture& composition = this->thermo().composition();
 
     return volScalarField::New
     (
         "DEff",
         this->momentumTransport().rho()
-       *evaluate
-        (
-            D_[composition.index(Yi)],
-            dimViscosity,
-            this->thermo().p(),
-            this->thermo().T()
-        )
+       *Dm_[composition.index(Yi)]
     );
 }
 
@@ -132,16 +206,11 @@ tmp<scalarField> Fickian<BasicThermophysicalTransportModel>::DEff
     const label patchi
 ) const
 {
-    const basicSpecieMixture& composition =
-        this->thermo().composition();
+    const basicSpecieMixture& composition = this->thermo().composition();
 
     return
         this->momentumTransport().rho().boundaryField()[patchi]
-       *D_[composition.index(Yi)].value
-        (
-            this->thermo().p().boundaryField()[patchi],
-            this->thermo().T().boundaryField()[patchi]
-        );
+       *Dm_[composition.index(Yi)].boundaryField()[patchi];
 }
 
 
@@ -325,7 +394,7 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::j
     const volScalarField& Yi
 ) const
 {
-    if (DT_.size())
+    if (DTFuncs_.size())
     {
         const basicSpecieMixture& composition = this->thermo().composition();
         const volScalarField& p = this->thermo().T();
@@ -335,7 +404,13 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::j
             BasicThermophysicalTransportModel::j(Yi)
           - fvc::interpolate
             (
-                evaluate(DT_[composition.index(Yi)], dimDynamicViscosity, p, T)
+                evaluate
+                (
+                    DTFuncs_[composition.index(Yi)],
+                    dimDynamicViscosity,
+                    p,
+                    T
+                )
             )
            *fvc::snGrad(T)/fvc::interpolate(T);
     }
@@ -352,7 +427,7 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divj
     volScalarField& Yi
 ) const
 {
-    if (DT_.size())
+    if (DTFuncs_.size())
     {
         const basicSpecieMixture& composition = this->thermo().composition();
         const volScalarField& p = this->thermo().T();
@@ -366,7 +441,7 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divj
                 (
                     evaluate
                     (
-                        DT_[composition.index(Yi)],
+                        DTFuncs_[composition.index(Yi)],
                         dimDynamicViscosity,
                         p,
                         T
@@ -379,6 +454,76 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divj
     else
     {
         return BasicThermophysicalTransportModel::divj(Yi);
+    }
+}
+
+
+template<class BasicThermophysicalTransportModel>
+void Fickian<BasicThermophysicalTransportModel>::correct()
+{
+    BasicThermophysicalTransportModel::correct();
+
+    const basicSpecieMixture& composition = this->thermo().composition();
+    const PtrList<volScalarField>& Y = composition.Y();
+    const volScalarField& p = this->thermo().T();
+    const volScalarField& T = this->thermo().T();
+
+    if (mixtureDiffusionCoefficients_)
+    {
+        forAll(Y, i)
+        {
+            Dm_.set(i, evaluate(DmFuncs_[i], dimViscosity, p, T));
+        }
+    }
+    else
+    {
+        const volScalarField Wm(this->thermo().W());
+        volScalarField sumXbyD
+        (
+            volScalarField::New
+            (
+                "sumXbyD",
+                T.mesh(),
+                dimless/dimViscosity/Wm.dimensions()
+            )
+        );
+
+        forAll(Dm_, i)
+        {
+            sumXbyD = Zero;
+
+            forAll(Y, j)
+            {
+                if (j != i)
+                {
+                    sumXbyD +=
+                        Y[j]
+                       /(
+                           dimensionedScalar
+                           (
+                               "Wj",
+                               Wm.dimensions(),
+                               composition.Wi(j)
+                           )
+                          *(
+                               i < j
+                             ? evaluate(DFuncs_[i][j], dimViscosity, p, T)
+                             : evaluate(DFuncs_[j][i], dimViscosity, p, T)
+                           )
+                       );
+                }
+            }
+
+            Dm_.set
+            (
+                i,
+                (
+                    1/Wm
+                  - Y[i]
+                   /dimensionedScalar("Wi", Wm.dimensions(), composition.Wi(i))
+                )/max(sumXbyD, dimensionedScalar(sumXbyD.dimensions(), small))
+            );
+        }
     }
 }
 
