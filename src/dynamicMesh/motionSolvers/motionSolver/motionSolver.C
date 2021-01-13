@@ -64,17 +64,13 @@ Foam::autoPtr<Foam::motionSolver> Foam::motionSolver::New
     const dictionary& solverDict
 )
 {
-    if (solverDict.found("solvers"))
+    if (solverDict.found("motionSolvers"))
     {
         return autoPtr<motionSolver>(new motionSolverList(mesh, solverDict));
     }
     else
     {
-        const word solverTypeName =
-            solverDict.lookupBackwardsCompatible<word>
-            (
-                {"motionSolver", "solver"}
-            );
+        const word solverTypeName = solverDict.lookup<word>("motionSolver");
 
         Info<< "Selecting motion solver: " << solverTypeName << endl;
 
