@@ -26,8 +26,8 @@ actions
         source  cylinderToCell;
         sourceInfo
         {
-            p1 (0 0 -100);
-            p2 (0 0  100);
+            point1 (0 0 -100);
+            point2 (0 0  100);
             centre (0 0 0);
             radius $cylinderRadius;
         }
