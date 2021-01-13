@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,12 +129,11 @@ Foam::RASModel<BasicMomentumTransportModel>::New
         )
     );
 
-    const word modelType
-    (
-        modelDict.subDict("RAS").found("model")
-      ? modelDict.subDict("RAS").lookup("model")
-      : modelDict.subDict("RAS").lookup("RASModel")
-    );
+    const word modelType =
+        modelDict.subDict("RAS").lookupBackwardsCompatible<word>
+        (
+            {"model", "RASModel"}
+        );
 
     Info<< "Selecting RAS turbulence model " << modelType << endl;
 

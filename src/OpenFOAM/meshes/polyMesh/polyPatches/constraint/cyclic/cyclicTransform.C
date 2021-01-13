@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,14 +212,14 @@ Foam::cyclicTransform::cyclicTransform
 :
     transformType_
     (
-        // Lookup the new "transformType" keyword first, then for backwards
-        // compatibility try "transform", then finally assume the default
-        // transform type
-        dict.found("transformType")
-      ? transformTypeNames.read(dict.lookup("transformType"))
-      : dict.found("transform")
-      ? transformTypeNames.read(dict.lookup("transform"))
-      : (defaultIsNone ? NONE : UNSPECIFIED)
+        transformTypeNames
+        [
+            dict.lookupOrDefaultBackwardsCompatible<word>
+            (
+                {"transformType", "transform"},
+                transformTypeNames[defaultIsNone ? NONE : UNSPECIFIED]
+            )
+        ]
     ),
     rotationAxis_
     (
@@ -238,14 +238,10 @@ Foam::cyclicTransform::cyclicTransform
     (
         transformType_ == TRANSLATIONAL
       ? (
-            // Lookup the new "separation" keyword first, then for backwards
-            // compatibility try "separationVector", then finally spit an error
-            // that the new "separation" keyword is not present
-            dict.found("separation")
-          ? dict.lookup<vector>("separation")
-          : dict.found("separationVector")
-          ? dict.lookup<vector>("separationVector")
-          : dict.lookup<vector>("separation")
+            dict.lookupBackwardsCompatible<vector>
+            (
+                {"separation", "separationVector"}
+            )
         )
       : vector::uniform(NaN)
     ),

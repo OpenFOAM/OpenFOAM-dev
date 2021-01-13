@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,16 +63,13 @@ Foam::autoPtr<Foam::basicChemistryModel> Foam::basicChemistryModel::New
     const dictionary& chemistryTypeDict =
         chemistryDict.subDict("chemistryType");
 
-    const word& solverName
-    (
-        chemistryTypeDict.found("solver")
-      ? chemistryTypeDict.lookup("solver")
-      : chemistryTypeDict.found("chemistrySolver")
-      ? chemistryTypeDict.lookup("chemistrySolver")
-      : chemistryTypeDict.lookup("solver") // error if neither entry is found
-    );
+    const word solverName =
+         chemistryTypeDict.lookupBackwardsCompatible<word>
+         (
+             {"solver", "chemistrySolver"}
+         );
 
-    const word& methodName
+    const word methodName
     (
         chemistryTypeDict.lookupOrDefault<word>
         (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,9 +66,18 @@ bool Foam::fluidSolutionControl::read()
 
     const dictionary& solutionDict = dict();
 
-    // The solveFluid keyword is maintained here for backwards compatibility
-    frozenFlow_ = !solutionDict.lookupOrDefault<bool>("solveFluid", true);
-    frozenFlow_ = solutionDict.lookupOrDefault<bool>("frozenFlow", frozenFlow_);
+    frozenFlow_ =
+        solutionDict.lookupOrDefaultBackwardsCompatible<bool>
+        (
+            {"frozenFlow", "solveFluid"},
+            false
+        );
+
+    // If using the old keyword, then the logic is reversed
+    if (!solutionDict.found("frozenFlow") && solutionDict.found("solveFluid"))
+    {
+        frozenFlow_ = !frozenFlow_;
+    }
 
     momentumPredictor_ =
         solutionDict.lookupOrDefault<bool>("momentumPredictor", true);

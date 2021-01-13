@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,18 +73,8 @@ dynamicAlphaContactAngleFvPatchScalarField
     alphaContactAngleFvPatchScalarField(p, iF, dict),
     theta0_(dict.lookup<scalar>("theta0")),
     uTheta_(dict.lookup<scalar>("uTheta")),
-    thetaA_
-    (
-        dict.found("thetaA")
-      ? dict.lookup<scalar>("thetaA")
-      : dict.lookup<scalar>("thetaRec")
-    ),
-    thetaR_
-    (
-        dict.found("thetaR")
-      ? dict.lookup<scalar>("thetaR")
-      : dict.lookup<scalar>("thetaAdv")
-    )
+    thetaA_(dict.lookupBackwardsCompatible<scalar>({"thetaA", "thetaRec"})),
+    thetaR_(dict.lookupBackwardsCompatible<scalar>({"thetaR", "thetaAdv"}))
 {
     evaluate();
 }

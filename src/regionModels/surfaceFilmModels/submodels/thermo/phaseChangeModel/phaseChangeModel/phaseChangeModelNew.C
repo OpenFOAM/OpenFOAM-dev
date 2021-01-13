@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,8 +44,12 @@ autoPtr<phaseChangeModel> phaseChangeModel::New
 {
     if
     (
-        !dict.found("phaseChangeModel")
-     && !dict.found(phaseChangeModel::typeName)
+        !dict.lookupEntryPtrBackwardsCompatible
+        (
+            {phaseChangeModel::typeName, "phaseChangeModel"},
+            false,
+            true
+        )
     )
     {
         return autoPtr<phaseChangeModel>(new noPhaseChange(model, dict));
@@ -53,16 +57,16 @@ autoPtr<phaseChangeModel> phaseChangeModel::New
 
     const dictionary& phaseChangeDict
     (
-        dict.found("phaseChangeModel")
-      ? dict
-      : dict.subDict(phaseChangeModel::typeName)
+        dict.found(phaseChangeModel::typeName)
+      ? dict.subDict(phaseChangeModel::typeName)
+      : dict
     );
 
     const word modelType
     (
-        dict.found("phaseChangeModel")
-      ? phaseChangeDict.lookup("phaseChangeModel")
-      : phaseChangeDict.lookup("model")
+        dict.found(phaseChangeModel::typeName)
+      ? phaseChangeDict.lookup("model")
+      : phaseChangeDict.lookup("phaseChangeModel")
     );
 
     Info<< "    Selecting phaseChangeModel " << modelType << endl;

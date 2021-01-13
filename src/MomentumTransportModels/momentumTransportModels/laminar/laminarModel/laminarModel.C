@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,12 +101,11 @@ Foam::laminarModel<BasicMomentumTransportModel>::New
 
     if (modelDict.found("laminar"))
     {
-        const word modelType
-        (
-            modelDict.subDict("laminar").found("model")
-          ? modelDict.subDict("laminar").lookup("model")
-          : modelDict.subDict("laminar").lookup("laminarModel")
-        );
+        const word modelType =
+            modelDict.subDict("laminar").lookupBackwardsCompatible<word>
+            (
+                {"model", "laminarModel"}
+            );
 
         Info<< "Selecting laminar stress model " << modelType << endl;
 
