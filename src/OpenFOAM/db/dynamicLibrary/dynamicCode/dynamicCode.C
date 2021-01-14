@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,7 +126,8 @@ void Foam::dynamicCode::copyAndFilter
     string line;
     do
     {
-        is.getLine(line);
+        // Read the next line without continuation
+        is.getLine(line, false);
 
         // Expand according to mapping.
         // Expanding according to env variables might cause too many

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -133,7 +133,8 @@ public:
             inline ISstream& putback(const char&);
 
             //- Read line into a string
-            ISstream& getLine(string&);
+            //  with optional support for continuation lines
+            ISstream& getLine(string&, const bool continuation = true);
 
             //- Read a '(...)' delimited set of characters into a string
             Istream& readList(string&);
