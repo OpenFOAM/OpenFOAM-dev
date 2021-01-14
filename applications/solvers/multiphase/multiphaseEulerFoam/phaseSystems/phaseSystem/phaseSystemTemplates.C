@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -215,6 +215,20 @@ void Foam::phaseSystem::generatePairsAndSubModels
 
             models[key][pair.index(phase)] = tempModelIter().ptr();
         }
+    }
+}
+
+
+template<class modelType>
+void Foam::phaseSystem::validateMassTransfer(const phasePair& key) const
+{
+    if (key.phase1().stationary() || key.phase2().stationary())
+    {
+        FatalErrorInFunction
+            << "A " << modelType::typeName << " was specified for pair "
+            << key.name() << ", but one of these phases is stationary. "
+            << "Mass transfer is not supported on stationary phases"
+            << exit(FatalError);
     }
 }
 
