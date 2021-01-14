@@ -14,7 +14,7 @@ runParallel -s par $(getApplication)
 runParallel -s par checkMesh
 runParallel -s par foamToEnsight
 
-runApplication reconstructParMesh -mergeTol 1e-6
+runApplication reconstructParMesh
 # This will fail for any processors that does not have any local patches
 # added so exclude that time
 runApplication reconstructPar -time '0:0.01'
