@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,9 +86,9 @@ Foam::Function1s::Scale<Type>::~Scale()
 template<class Type>
 void Foam::Function1s::Scale<Type>::write(Ostream& os) const
 {
-    scale_->write(os);
-    xScale_->write(os);
-    value_->write(os);
+    writeEntry(os, scale_());
+    writeEntry(os, xScale_());
+    writeEntry(os, value_());
 }
 
 

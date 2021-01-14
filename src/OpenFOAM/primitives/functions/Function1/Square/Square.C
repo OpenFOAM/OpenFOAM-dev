@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -82,10 +82,10 @@ Foam::Function1s::Square<Type>::~Square()
 template<class Type>
 void Foam::Function1s::Square<Type>::write(Ostream& os) const
 {
-    amplitude_->write(os);
+    writeEntry(os, amplitude_());
     writeEntry(os, "frequency", frequency_);
     writeEntry(os, "start", start_);
-    level_->write(os);
+    writeEntry(os, level_());
     writeEntry(os, "markSpace", markSpace_);
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ Foam::Function1s::reverseRamp::~reverseRamp()
 void Foam::Function1s::reverseRamp::write(Ostream& os) const
 {
     Ramp<reverseRamp>::write(os);
-    ramp_->write(os);
+    writeEntry(os, ramp_());
 }
 
 
