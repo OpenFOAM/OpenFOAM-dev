@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -802,7 +802,7 @@ kinematicSingleLayer::kinematicSingleLayer
     (
         IOobject
         (
-            "rho", // must have same name as rho to enable mapping
+            "thermo:rho", // must have same name as rho to enable mapping
             time().timeName(),
             regionMesh(),
             IOobject::NO_READ,

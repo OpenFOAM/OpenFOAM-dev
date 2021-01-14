@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,33 +60,39 @@ transferModelList::transferModelList
     ),
     massTransferred_(film.intCoupledPatchIDs().size(), 0.0)
 {
-    const wordList activeModels
-    (
-        dict.lookupOrDefault("transferModels", wordList())
-    );
+    Info<< "    Selecting film transfer" << endl;
 
-    wordHashSet models;
-    forAll(activeModels, i)
+    if (dict.isDict("transfer"))
     {
-        models.insert(activeModels[i]);
-    }
-
-    Info<< "    Selecting film transfer models" << endl;
-    if (models.size() > 0)
-    {
-        this->setSize(models.size());
+        const dictionary& transferDict(dict.subDict("transfer"));
+        this->setSize(transferDict.size());
 
         label i = 0;
-        forAllConstIter(wordHashSet, models, iter)
+        forAllConstIter(dictionary, transferDict, iter)
         {
-            const word& model = iter.key();
-            set(i, transferModel::New(film, dict, model));
-            i++;
+            set
+            (
+                i++,
+                transferModel::New
+                (
+                    film,
+                    transferDict.isDict(iter().keyword())
+                  ? transferDict.subDict(iter().keyword())
+                  : dictionary::null,
+                    iter().keyword()
+                )
+            );
         }
     }
-    else
+    else if (dict.found("transferModels"))
     {
-        Info<< "        none" << endl;
+        const wordList models(dict.lookup("transferModels"));
+        this->setSize(models.size());
+
+        forAll(models, i)
+        {
+            set(i, transferModel::New(film, dict, models[i]));
+        }
     }
 }
 
