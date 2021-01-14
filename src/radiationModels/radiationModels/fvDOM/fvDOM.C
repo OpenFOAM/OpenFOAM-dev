@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -295,9 +295,11 @@ Foam::radiationModels::fvDOM::fvDOM(const volScalarField& T)
     IRay_(0),
     tolerance_
     (
-        coeffs_.found("convergence")
-      ? coeffs_.lookup<scalar>("convergence")
-      : coeffs_.lookupOrDefault<scalar>("tolerance", 0)
+        coeffs_.lookupOrDefaultBackwardsCompatible<scalar>
+        (
+            {"tolerance", "convergence"},
+            0
+        )
     ),
     maxIter_(coeffs_.lookupOrDefault<label>("maxIter", 50)),
     omegaMax_(0)
@@ -387,9 +389,11 @@ Foam::radiationModels::fvDOM::fvDOM
     IRay_(0),
     tolerance_
     (
-        coeffs_.found("convergence")
-      ? coeffs_.lookup<scalar>("convergence")
-      : coeffs_.lookupOrDefault<scalar>("tolerance", 0)
+        coeffs_.lookupOrDefaultBackwardsCompatible<scalar>
+        (
+            {"tolerance", "convergence"},
+            0
+        )
     ),
     maxIter_(coeffs_.lookupOrDefault<label>("maxIter", 50)),
     omegaMax_(0)

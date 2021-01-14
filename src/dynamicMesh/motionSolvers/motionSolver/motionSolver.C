@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,18 +64,13 @@ Foam::autoPtr<Foam::motionSolver> Foam::motionSolver::New
     const dictionary& solverDict
 )
 {
-    if (solverDict.found("solvers"))
+    if (solverDict.found("motionSolvers"))
     {
         return autoPtr<motionSolver>(new motionSolverList(mesh, solverDict));
     }
     else
     {
-        const word solverTypeName
-        (
-            solverDict.found("motionSolver")
-          ? solverDict.lookup("motionSolver")
-          : solverDict.lookup("solver")
-        );
+        const word solverTypeName = solverDict.lookup<word>("motionSolver");
 
         Info<< "Selecting motion solver: " << solverTypeName << endl;
 

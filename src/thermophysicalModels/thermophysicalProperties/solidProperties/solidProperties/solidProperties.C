@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,12 +57,7 @@ Foam::solidProperties::solidProperties(const dictionary& dict)
 :
     rho_(dict.lookup<scalar>("rho")),
     Cp_(dict.lookup<scalar>("Cp")),
-    kappa_
-    (
-        dict.found("K")
-      ? dict.lookup<scalar>("K")
-      : dict.lookup<scalar>("kappa")
-    ),
+    kappa_(dict.lookupBackwardsCompatible<scalar>({"kappa", "K"})),
     Hf_(dict.lookup<scalar>("Hf")),
     emissivity_(dict.lookup<scalar>("emissivity"))
 {}
@@ -76,7 +71,7 @@ void Foam::solidProperties::readIfPresent(const dictionary& dict)
     dict.readIfPresent("Cp", Cp_);
     dict.readIfPresent("K", kappa_);
     dict.readIfPresent("kappa", kappa_);
-    dict.readIfPresent("Hf_", Hf_);
+    dict.readIfPresent("Hf", Hf_);
     dict.readIfPresent("emissivity", emissivity_);
 }
 

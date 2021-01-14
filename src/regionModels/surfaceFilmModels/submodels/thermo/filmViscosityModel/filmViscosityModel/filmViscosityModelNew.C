@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,18 +43,25 @@ autoPtr<viscosityModel> viscosityModel::New
     volScalarField& mu
 )
 {
+    dict.lookupEntryBackwardsCompatible
+    (
+        {viscosityModel::typeName, "filmViscosityModel"},
+        false,
+        true
+    );
+
     const dictionary& viscosityDict
     (
-        dict.found("filmViscosityModel")
-      ? dict
-      : dict.subDict(viscosityModel::typeName)
+        dict.found(viscosityModel::typeName)
+      ? dict.subDict(viscosityModel::typeName)
+      : dict
     );
 
     const word modelType
     (
-        dict.found("filmViscosityModel")
-      ? viscosityDict.lookup("filmViscosityModel")
-      : viscosityDict.lookup("model")
+        dict.found(viscosityModel::typeName)
+      ? viscosityDict.lookup("model")
+      : viscosityDict.lookup("filmViscosityModel")
     );
 
     Info<< "    Selecting viscosityModel " << modelType << endl;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,10 +80,12 @@ bool Foam::pimpleNoLoopControl::read()
         return false;
     }
 
-    // The SIMPLErho keyword is maintained here for backwards compatibility
-    simpleRho_ = mesh().steady();
-    simpleRho_ = dict().lookupOrDefault<bool>("SIMPLErho", simpleRho_);
-    simpleRho_ = dict().lookupOrDefault<bool>("simpleRho", simpleRho_);
+    simpleRho_ =
+        dict().lookupOrDefaultBackwardsCompatible<bool>
+        (
+            {"simpleRho", "SIMPLErho"},
+            mesh().steady()
+        );
 
     turbOnFinalIterOnly_ =
         dict().lookupOrDefault<bool>("turbOnFinalIterOnly", true);

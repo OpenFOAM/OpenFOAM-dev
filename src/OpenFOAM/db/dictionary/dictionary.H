@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -365,6 +365,28 @@ public:
                 bool patternMatch
             ) const;
 
+            //- Find and return an entry data stream if present, trying a list
+            //  of keywords in sequence, otherwise return nullptr.
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions
+            const entry* lookupEntryPtrBackwardsCompatible
+            (
+                const wordList&,
+                bool recursive,
+                bool patternMatch
+            ) const;
+
+            //- Find and return an entry data stream if present, trying a list
+            //  of keywords in sequence, otherwise error.
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions
+            const entry& lookupEntryBackwardsCompatible
+            (
+                const wordList&,
+                bool recursive,
+                bool patternMatch
+            ) const;
+
             //- Find and return an entry data stream
             //  If recursive, search parent dictionaries.
             //  If patternMatch, use regular expressions.
@@ -412,6 +434,31 @@ public:
                 bool recursive=false,
                 bool patternMatch=true
             );
+
+            //- Find and return a T, trying a list of keywords in sequence
+            //  if not found throw a fatal error relating to the first keyword
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions.
+            template<class T>
+            T lookupBackwardsCompatible
+            (
+                const wordList&,
+                bool recursive=false,
+                bool patternMatch=true
+            ) const;
+
+            //- Find and return a T, trying a list of keywords in sequence
+            //  if not found throw a fatal error relating to the first keyword
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions.
+            template<class T>
+            T lookupOrDefaultBackwardsCompatible
+            (
+                const wordList&,
+                const T&,
+                bool recursive=false,
+                bool patternMatch=true
+            ) const;
 
             //- Find an entry if present, and assign to T
             //  Returns true if the entry was found.

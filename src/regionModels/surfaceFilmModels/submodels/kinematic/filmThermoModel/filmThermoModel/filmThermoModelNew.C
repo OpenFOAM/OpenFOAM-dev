@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,18 +42,25 @@ autoPtr<thermoModel> thermoModel::New
     const dictionary& dict
 )
 {
+    dict.lookupEntryBackwardsCompatible
+    (
+        {thermoModel::typeName, "filmThermoModel"},
+        false,
+        true
+    );
+
     const dictionary& thermophysicalPropertiesDict
     (
-        dict.found("filmThermoModel")
-      ? dict
-      : dict.subDict(thermoModel::typeName)
+        dict.found(thermoModel::typeName)
+      ? dict.subDict(thermoModel::typeName)
+      : dict
     );
 
     const word modelType
     (
-        dict.found("filmThermoModel")
-      ? thermophysicalPropertiesDict.lookup("filmThermoModel")
-      : thermophysicalPropertiesDict.lookup("type")
+        dict.found(thermoModel::typeName)
+      ? thermophysicalPropertiesDict.lookup("type")
+      : thermophysicalPropertiesDict.lookup("filmThermoModel")
     );
 
     Info<< "    Selecting " << thermoModel::typeName

@@ -23,8 +23,8 @@ actions
         source  cylinderToCell;
         sourceInfo
         {
-            p1           (0.435 0 0);
-            p2           (0.44 0 0);
+            point1       (0.435 0 0);
+            point2       (0.44 0 0);
             radius       0.015875;
         }
     }

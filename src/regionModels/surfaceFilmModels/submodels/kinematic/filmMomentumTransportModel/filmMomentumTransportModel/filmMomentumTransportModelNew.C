@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,18 +42,25 @@ autoPtr<momentumTransportModel> momentumTransportModel::New
     const dictionary& dict
 )
 {
+    dict.lookupEntryBackwardsCompatible
+    (
+        {momentumTransportModel::typeName, "turbulence"},
+        false,
+        true
+    );
+
     const dictionary& momentumTransportDict
     (
-        dict.found("turbulence")
-      ? dict
-      : dict.subDict(momentumTransportModel::typeName)
+        dict.found(momentumTransportModel::typeName)
+      ? dict.subDict(momentumTransportModel::typeName)
+      : dict
     );
 
     const word modelType
     (
-        dict.found("turbulence")
-      ? momentumTransportDict.lookup("turbulence")
-      : momentumTransportDict.lookup("model")
+        dict.found(momentumTransportModel::typeName)
+      ? momentumTransportDict.lookup("model")
+      : momentumTransportDict.lookup("turbulence")
     );
 
     Info<< "    Selecting momentumTransportModel " << modelType << endl;

@@ -118,8 +118,8 @@ FoamFile
 //    source cylinderToCell;
 //    sourceInfo
 //    {
-//       p1       (0.2 0.2 -10); // start point on cylinder axis
-//       p2       (0.2 0.2 0);   // end point on cylinder axis
+//       point1   (0.2 0.2 -10); // start point on cylinder axis
+//       point2   (0.2 0.2 0);   // end point on cylinder axis
 //       radius   5.0;
 //    }
 //

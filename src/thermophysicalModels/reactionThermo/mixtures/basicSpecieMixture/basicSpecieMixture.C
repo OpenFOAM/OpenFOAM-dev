@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,10 +49,9 @@ Foam::basicSpecieMixture::basicSpecieMixture
     defaultSpecie_
     (
         species_.size()
-      ? (
-          thermoDict.found("inertSpecie")
-        ? thermoDict.lookup("inertSpecie")
-        : thermoDict.lookup("defaultSpecie")
+      ? thermoDict.lookupBackwardsCompatible<word>
+        (
+            {"defaultSpecie", "inertSpecie"}
         )
       : word("undefined")
     ),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,8 +44,12 @@ autoPtr<radiationModel> radiationModel::New
 {
     if
     (
-        !dict.found("radiationModel")
-     && !dict.found(radiationModel::typeName)
+        !dict.lookupEntryPtrBackwardsCompatible
+        (
+            {radiationModel::typeName, "radiationModel"},
+            false,
+            true
+        )
     )
     {
         return autoPtr<radiationModel>(new noRadiation(model, dict));
@@ -53,16 +57,16 @@ autoPtr<radiationModel> radiationModel::New
 
     const dictionary& radiationDict
     (
-        dict.found("radiationModel")
-      ? dict
-      : dict.subDict(radiationModel::typeName)
+        dict.found(radiationModel::typeName)
+      ? dict.subDict(radiationModel::typeName)
+      : dict
     );
 
     const word modelType
     (
-        dict.found("radiationModel")
-      ? radiationDict.lookup("radiationModel")
-      : radiationDict.lookup("model")
+        dict.found(radiationModel::typeName)
+      ? radiationDict.lookup("model")
+      : radiationDict.lookup("radiationModel")
     );
 
     Info<< "    Selecting radiationModel " << modelType << endl;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -186,16 +186,18 @@ Foam::plane::plane(const dictionary& dict)
         const dictionary& subDict = dict.optionalSubDict("pointAndNormalDict");
 
         point_ =
-            subDict.found("basePoint")
-          ? subDict.lookup("basePoint")
-          : subDict.lookup("point");
-
+            subDict.lookupBackwardsCompatible<point>
+            (
+                {"point", "basePoint"}
+            );
         normal_ =
-            subDict.found("normalVector")
-          ? subDict.lookup("normalVector")
-          : subDict.lookup("normal");
-
-        normal_ /= mag(normal_);
+            normalised
+            (
+                subDict.lookupBackwardsCompatible<vector>
+                (
+                    {"normal", "normalVector"}
+                )
+            );
     }
     else
     {
