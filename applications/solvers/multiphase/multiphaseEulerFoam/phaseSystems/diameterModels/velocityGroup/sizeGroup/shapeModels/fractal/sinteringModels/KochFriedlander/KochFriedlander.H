@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,8 +29,11 @@ Description
     sintering is given by
 
     \f[
-        \tau = c_s d_{p_i}^n T^m \exp\left(\frac{T_a}{T}\right)\;.
+        \tau = c_s d_{p_i}^n T^m \exp(T_a/T \cdot [1 - d_{p,min}/d_{p_i}])\;.
     \f]
+
+    Note that the correction factor in the exponential function can be
+    eliminated by setting \f$d_{p,min}\f$ to zero which is done by default.
 
     Reference:
     \verbatim
@@ -47,6 +50,7 @@ Usage
         n        | Particle diameter exponent | yes         | none
         m        | Temperature exponent       | yes         | none
         Ta       | Activation temperature     | yes         | none
+        dpMin    | Minimum primary particle diameter | no   | 0
     \endtable
 
 SourceFiles
@@ -94,6 +98,9 @@ class KochFriedlander
 
         //- Activation temperature
         scalar Ta_;
+
+        //- Minimum primary particle diameter, defaults to Zero
+        scalar dpMin_;
 
 
 public:

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,7 +59,8 @@ KochFriedlander
     Cs_(dict_.lookup<scalar>("Cs")),
     n_(dict_.lookup<scalar>("n")),
     m_(dict_.lookup<scalar>("m")),
-    Ta_(dict_.lookup<scalar>("Ta"))
+    Ta_(dict_.lookup<scalar>("Ta")),
+    dpMin_(dict_.lookupOrDefault<scalar>("dpMin", 0))
 {}
 
 
@@ -93,9 +94,10 @@ Foam::diameterModels::shapeModels::sinteringModels::KochFriedlander::tau() const
 
     forAll(tau, celli)
     {
+        const scalar dp = 6/max(6/fi.dSph().value(), kappai[celli]);
+
         tau[celli] =
-            Cs_*pow(6.0/max(6.0/fi.dSph().value(), kappai[celli]), n_)
-           *pow(T[celli], m_)*exp(Ta_/T[celli]);
+            Cs_*pow(dp, n_)*pow(T[celli], m_)*exp(Ta_/T[celli]*(1 - dpMin_/dp));
     }
 
     return tTau;
