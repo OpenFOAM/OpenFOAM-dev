@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,9 +129,6 @@ class backgroundMeshDecomposition
 
         //- Decomposition method
         autoPtr<decompositionMethod> decomposerPtr_;
-
-        //- Merge distance required by fvMeshDistribute
-        scalar mergeDist_;
 
         //- Scale of a cell span vs cell size used to decide to refine a cell
         scalar spanScale_;
