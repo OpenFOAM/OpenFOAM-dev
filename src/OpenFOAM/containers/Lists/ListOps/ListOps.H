@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,10 +59,20 @@ static const List<Type>& emptyList()
 template<class ListType>
 ListType renumber(const labelUList& oldToNew, const ListType&);
 
+//- As above, but given a pre-constructed result list
+template<class ListType>
+void renumber(const labelUList& oldToNew, const ListType&, ListType&);
+
+//- As above, but for a single label. Termination condition.
+inline void renumber(const labelUList& oldToNew, const label, label&);
+
 //- Inplace renumber the values of a list.
 //  Negative ListType elements are left as is.
 template<class ListType>
 void inplaceRenumber(const labelUList& oldToNew, ListType&);
+
+//- As above, but for a single label. Termination condition.
+inline void inplaceRenumber(const labelUList& oldToNew, label&);
 
 
 //- Reorder the elements (indices, not values) of a list.

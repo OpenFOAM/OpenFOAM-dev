@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,43 +28,62 @@ License
 // * * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * //
 
 template<class ListType>
-ListType Foam::renumber
-(
-    const labelUList& oldToNew,
-    const ListType& lst
-)
+ListType Foam::renumber(const labelUList& oldToNew, const ListType& lst)
 {
-    // Create copy
-    ListType newLst(lst.size());
+    ListType newLst;
 
-    // ensure consistent addressable size (eg, DynamicList)
-    newLst.setSize(lst.size());
-
-    forAll(lst, elemI)
-    {
-        if (lst[elemI] >= 0)
-        {
-            newLst[elemI] = oldToNew[lst[elemI]];
-        }
-    }
+    renumber(oldToNew, lst, newLst);
 
     return newLst;
 }
 
 
 template<class ListType>
-void Foam::inplaceRenumber
+void Foam::renumber
 (
     const labelUList& oldToNew,
-    ListType& lst
+    const ListType& lst,
+    ListType& newLst
 )
+{
+    newLst.setSize(lst.size());
+
+    forAll(lst, elemI)
+    {
+        renumber(oldToNew, lst[elemI], newLst[elemI]);
+    }
+}
+
+
+inline void Foam::renumber
+(
+    const labelUList& oldToNew,
+    const label lst,
+    label& newLst
+)
+{
+    if (lst >= 0)
+    {
+        newLst = oldToNew[lst];
+    }
+}
+
+
+template<class ListType>
+void Foam::inplaceRenumber(const labelUList& oldToNew, ListType& lst)
 {
     forAll(lst, elemI)
     {
-        if (lst[elemI] >= 0)
-        {
-            lst[elemI] = oldToNew[lst[elemI]];
-        }
+        inplaceRenumber(oldToNew, lst[elemI]);
+    }
+}
+
+
+inline void Foam::inplaceRenumber(const labelUList& oldToNew, label& lst)
+{
+    if (lst >= 0)
+    {
+        lst = oldToNew[lst];
     }
 }
 
