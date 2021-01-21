@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "logFiles.H"
 #include "Time.H"
-#include "IFstream.H"
 #include "OSspecific.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
@@ -41,22 +40,10 @@ void Foam::functionObjects::logFiles::createFiles()
         {
             if (!filePtrs_.set(i))
             {
-                fileName outputDir(baseFileDir()/prefix_/startTimeName);
+                const fileName outputDir(baseFileDir()/prefix_/startTimeName);
                 mkDir(outputDir);
-
-                word fName(names_[i]);
-
-                // Check if file already exists
-                IFstream is(outputDir/(fName + ".dat"));
-                if (is.good())
-                {
-                    fName = fName + "_" + fileObr_.time().timeName();
-                }
-
-                filePtrs_.set(i, new OFstream(outputDir/(fName + ".dat")));
-
+                filePtrs_.set(i, new OFstream(outputDir/(names_[i] + ".dat")));
                 initStream(filePtrs_[i]);
-
                 writeFileHeader(i);
             }
         }
