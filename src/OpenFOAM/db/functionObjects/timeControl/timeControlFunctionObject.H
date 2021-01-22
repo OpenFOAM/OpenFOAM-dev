@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,9 +64,6 @@ class timeControl
         //- Reference to the time database
         const Time& time_;
 
-        //- Input dictionary
-        dictionary dict_;
-
 
         // Optional user inputs
 
@@ -94,7 +91,7 @@ class timeControl
     // Private Member Functions
 
         //- Read relevant dictionary entries
-        void readControls();
+        void readControls(const dictionary& dict);
 
         //- Returns true if within time bounds
         bool active() const;
@@ -126,9 +123,6 @@ public:
 
             //- Return time database
             inline const Time& time() const;
-
-            //- Return the input dictionary
-            inline const dictionary& dict() const;
 
             //- Return the execute control object
             inline const Foam::timeControl& executeControl() const;

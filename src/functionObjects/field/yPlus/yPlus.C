@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -138,8 +138,6 @@ Foam::functionObjects::yPlus::yPlus
     phaseName_(dict.lookupOrDefault<word>("phase", word::null))
 {
     read(dict);
-    resetName(IOobject::groupName(typeName, phaseName_));
-    resetLocalObjectName(IOobject::groupName(typeName, phaseName_));
 }
 
 
@@ -155,6 +153,9 @@ bool Foam::functionObjects::yPlus::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
     writeLocalObjects::read(dict);
+
+    resetName(IOobject::groupName(typeName, phaseName_));
+    resetLocalObjectName(IOobject::groupName(typeName, phaseName_));
 
     return true;
 }

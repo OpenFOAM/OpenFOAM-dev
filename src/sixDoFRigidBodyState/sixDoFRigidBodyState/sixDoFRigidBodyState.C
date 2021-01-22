@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,7 +60,6 @@ Foam::functionObjects::sixDoFRigidBodyState::sixDoFRigidBodyState
     logFiles(obr_, name)
 {
     read(dict);
-    resetName(typeName);
 }
 
 
@@ -75,7 +74,10 @@ Foam::functionObjects::sixDoFRigidBodyState::~sixDoFRigidBodyState()
 bool Foam::functionObjects::sixDoFRigidBodyState::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
+
     angleFormat_ = dict.lookupOrDefault<word>("angleFormat", "radians");
+
+    resetName(typeName);
 
     return true;
 }

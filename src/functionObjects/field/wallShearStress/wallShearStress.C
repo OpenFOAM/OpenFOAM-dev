@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,8 +105,6 @@ Foam::functionObjects::wallShearStress::wallShearStress
     patchSet_()
 {
     read(dict);
-    resetName(typeName);
-    resetLocalObjectName(typeName);
 }
 
 
@@ -169,6 +167,9 @@ bool Foam::functionObjects::wallShearStress::read(const dictionary& dict)
 
         patchSet_ = filteredPatchSet;
     }
+
+    resetName(typeName);
+    resetLocalObjectName(typeName);
 
     return true;
 }

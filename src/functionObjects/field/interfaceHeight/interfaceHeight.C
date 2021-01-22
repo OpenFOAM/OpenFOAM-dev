@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -224,7 +224,6 @@ Foam::functionObjects::interfaceHeight::interfaceHeight
     interpolationScheme_("cellPoint")
 {
     read(dict);
-    resetNames({"height", "position"});
 }
 
 
@@ -238,10 +237,14 @@ Foam::functionObjects::interfaceHeight::~interfaceHeight()
 
 bool Foam::functionObjects::interfaceHeight::read(const dictionary& dict)
 {
+    fvMeshFunctionObject::read(dict);
+
     dict.readIfPresent("alpha", alphaName_);
     dict.readIfPresent("liquid", liquid_);
     dict.lookup("locations") >> locations_;
     dict.readIfPresent("interpolationScheme", interpolationScheme_);
+
+    resetNames({"height", "position"});
 
     return true;
 }

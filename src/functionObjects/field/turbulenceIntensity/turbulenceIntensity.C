@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,8 +72,6 @@ Foam::functionObjects::turbulenceIntensity::turbulenceIntensity
     writeLocalObjects(obr_, log)
 {
     read(dict);
-    resetName(typeName);
-    resetLocalObjectName("I");
 }
 
 
@@ -89,6 +87,9 @@ bool Foam::functionObjects::turbulenceIntensity::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
     writeLocalObjects::read(dict);
+
+    resetName(typeName);
+    resetLocalObjectName("I");
 
     return true;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,7 +58,6 @@ Foam::functionObjects::timeStep::timeStep
     logFiles(obr_, name)
 {
     read(dict);
-    resetName(typeName);
 }
 
 
@@ -73,6 +72,8 @@ Foam::functionObjects::timeStep::~timeStep()
 bool Foam::functionObjects::timeStep::read(const dictionary& dict)
 {
     functionObject::read(dict);
+
+    resetName(typeName);
 
     return true;
 }

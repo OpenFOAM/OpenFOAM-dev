@@ -33,14 +33,13 @@ void Foam::functionObjects::logFiles::createFiles()
 {
     if (Pstream::master())
     {
-        const word startTimeName =
-            fileObr_.time().timeName(fileObr_.time().startTime().value());
+        const word timeName = fileObr_.time().timeName();
 
         forAll(names_, i)
         {
             if (!filePtrs_.set(i))
             {
-                const fileName outputDir(baseFileDir()/prefix_/startTimeName);
+                const fileName outputDir(baseFileDir()/prefix_/timeName);
                 mkDir(outputDir);
                 filePtrs_.set(i, new OFstream(outputDir/(names_[i] + ".dat")));
                 initStream(filePtrs_[i]);

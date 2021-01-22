@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -415,7 +415,6 @@ Foam::functionObjects::sizeDistribution::sizeDistribution
     binCmpt_(0)
 {
     read(dict);
-    resetName(name);
 
     switch (coordinateType_)
     {
@@ -465,6 +464,8 @@ bool Foam::functionObjects::sizeDistribution::read(const dictionary& dict)
     densityFunction_ = dict.lookupOrDefault<Switch>("densityFunction", false);
     geometric_ = dict.lookupOrDefault<Switch>("geometric", false);
     maxOrder_ = dict.lookupOrDefault("maxOrder", 3);
+
+    resetName(name());
 
     return false;
 }
