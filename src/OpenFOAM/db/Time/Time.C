@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -969,8 +969,6 @@ void Foam::Time::setDeltaT(const dimensionedScalar& deltaT)
 void Foam::Time::setDeltaT(const scalar deltaT)
 {
     setDeltaTNoAdjust(deltaT);
-
-    functionObjects_.setTimeStep();
 
     if (writeControl_ == writeControl::adjustableRunTime)
     {

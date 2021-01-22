@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,12 +25,17 @@ Class
     Foam::functionObjects::setTimeStepFunctionObject
 
 Description
-    Updates the writeInterval as a Function1 of time.
+    Updates the time step as a Function1 of time.
 
-    Can only be used with solvers with adjustTimeStep control
-    (e.g. pimpleFoam). Makes no attempt to cooperate with other timeStep
-    'controllers' (maxCo, other functionObjects). Supports 'enabled' flag but
-    none of the other ones 'startTime', 'endTime', 'writeControl' etc.
+    Makes no attempt to cooperate with other timeStep controllers (i.e., solver
+    courant number control or other functionObjects). In general any value set
+    here will be overwritten by solver time-step adjustment if enabled, so for
+    this to work 'adjustTime' should be switched off. This is compatible with
+    'adjustableWriteTime', in which case the time-step values set will not be
+    exactly as specified, but write intervals will be matched exactly.
+
+    This function supports the 'enabled' flag but none of the other run
+    controls; 'startTime', 'endTime', 'writeControl', etc...
 
 SourceFiles
     setTimeStepFunctionObject.C
