@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,6 +40,7 @@ Description
 #include "CrankNicolsonDdtScheme.H"
 #include "subCycle.H"
 #include "immiscibleIncompressibleTwoPhaseMixture.H"
+#include "noPhaseChange.H"
 #include "kinematicMomentumTransportModel.H"
 #include "pimpleControl.H"
 #include "fvOptions.H"
@@ -58,6 +59,7 @@ int main(int argc, char *argv[])
     #include "initContinuityErrs.H"
     #include "createDyMControls.H"
     #include "createFields.H"
+    #include "createFieldRefs.H"
     #include "createAlphaFluxes.H"
     #include "initCorrectPhi.H"
     #include "createUfIfPresent.H"
@@ -97,6 +99,24 @@ int main(int argc, char *argv[])
         {
             if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
             {
+                // Store divU from the previous mesh so that it can be mapped
+                // and used in correctPhi to ensure the corrected phi has the
+                // same divergence
+                tmp<volScalarField> divU;
+
+                if
+                (
+                    correctPhi
+                 && !isType<twoPhaseChangeModels::noPhaseChange>(phaseChange)
+                )
+                {
+                    divU = volScalarField::New
+                    (
+                        "divU0",
+                        fvc::div(fvc::absolute(phi, U))
+                    );
+                }
+
                 mesh.update();
 
                 if (mesh.changing())
@@ -132,7 +152,21 @@ int main(int argc, char *argv[])
                         #include "meshCourantNo.H"
                     }
                 }
+
+                divU.clear();
             }
+
+            surfaceScalarField rhoPhi
+            (
+                IOobject
+                (
+                    "rhoPhi",
+                    runTime.timeName(),
+                    mesh
+                ),
+                mesh,
+                dimensionedScalar(dimMass/dimTime, 0)
+            );
 
             #include "alphaControls.H"
             #include "alphaEqnSubCycle.H"

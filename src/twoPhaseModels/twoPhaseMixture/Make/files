@@ -1,6 +1,7 @@
 twoPhaseMixture/twoPhaseMixture.C
 
 interfaceCompression/interfaceCompression.C
+noInterfaceCompression/noInterfaceCompression.C
 
 MPLIC/MPLICface.C
 MPLIC/MPLICcellStorage.C

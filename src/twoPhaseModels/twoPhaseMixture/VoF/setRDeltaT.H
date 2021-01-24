@@ -59,8 +59,8 @@
     rDeltaT.ref() = max
     (
         1/dimensionedScalar(dimTime, maxDeltaT),
-        fvc::surfaceSum(mag(rhoPhi))()()
-       /((2*maxCo)*mesh.V()*rho())
+        fvc::surfaceSum(mag(phi))()()
+       /((2*maxCo)*mesh.V())
     );
 
     if (maxAlphaCo < maxCo)

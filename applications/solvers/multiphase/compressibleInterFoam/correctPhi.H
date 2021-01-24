@@ -3,8 +3,8 @@ CorrectPhi
     U,
     phi,
     p,
-    dimensionedScalar("rAUf", dimTime/rho.dimensions(), 1),
-    divU,
+    surfaceScalarField("rAUf", fvc::interpolate(rAU())),
+    divU(),
     pimple,
     true
 );

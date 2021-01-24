@@ -1,7 +1,0 @@
-phaseChangeTwoPhaseMixture/phaseChangeTwoPhaseMixture.C
-phaseChangeTwoPhaseMixture/phaseChangeTwoPhaseMixtureNew.C
-Kunz/Kunz.C
-Merkle/Merkle.C
-SchnerrSauer/SchnerrSauer.C
-
-LIB = $(FOAM_LIBBIN)/libphaseChangeTwoPhaseMixtures

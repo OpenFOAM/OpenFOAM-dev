@@ -64,13 +64,7 @@ boundaryField
     }
     porous_half1
     {
-        type            porousBafflePressure;
-        patchType       cyclic;
-        D               10;
-        I               5;
-        length          0.15;
-        jump            uniform 0;
-        value           uniform 0;
+        type            cyclic;
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,6 +148,16 @@ namespace fvm
         zeroField SuSp
         (
             const zero&,
+            const GeometricField<Type, fvPatchField, volMesh>&
+        );
+
+
+    // Explict and implicit sources provided as a pair
+
+        template<class Type>
+        tmp<fvMatrix<Type>> S
+        (
+            const Pair<tmp<volScalarField::Internal>>&,
             const GeometricField<Type, fvPatchField, volMesh>&
         );
 }

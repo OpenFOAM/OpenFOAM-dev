@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -281,12 +281,12 @@ inline void Foam::tmpNrc<T>::operator=(const tmpNrc<T>& t)
     {
         type_ = TMP;
 
-        if (!t.ptr_)
-        {
-            FatalErrorInFunction
-                << "Attempted assignment to a deallocated " << typeName()
-                << abort(FatalError);
-        }
+        // if (!t.ptr_)
+        // {
+        //     FatalErrorInFunction
+        //         << "Attempted assignment to a deallocated " << typeName()
+        //         << abort(FatalError);
+        // }
 
         ptr_ = t.ptr_;
         t.ptr_ = 0;

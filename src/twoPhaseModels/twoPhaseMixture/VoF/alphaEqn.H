@@ -66,10 +66,10 @@
         );
     }
 
+    #include "alphaSuSp.H"
+
     if (MULESCorr)
     {
-        #include "alphaSuSp.H"
-
         fvScalarMatrix alpha1Eqn
         (
             (
@@ -83,11 +83,12 @@
                 phiCN,
                 upwind<scalar>(mesh, phiCN)
             ).fvmDiv(phiCN, alpha1)
-       // - fvm::Sp(fvc::ddt(dimensionedScalar(dimless, 1), mesh)
-       //           + fvc::div(phiCN), alpha1)
-         ==
-            Su + fvm::Sp(Sp + divU, alpha1)
         );
+
+        if (divU.valid())
+        {
+            alpha1Eqn -= Su() + fvm::Sp(Sp() + divU(), alpha1);
+        }
 
         alpha1Eqn.solve();
 
@@ -126,8 +127,6 @@
 
     for (int aCorr=0; aCorr<nAlphaCorr; aCorr++)
     {
-        #include "alphaSuSp.H"
-
         // Split operator
         tmp<surfaceScalarField> talphaPhi1Un
         (
@@ -144,17 +143,32 @@
             tmp<surfaceScalarField> talphaPhi1Corr(talphaPhi1Un() - alphaPhi10);
             volScalarField alpha10("alpha10", alpha1);
 
-            MULES::correct
-            (
-                geometricOneField(),
-                alpha1,
-                talphaPhi1Un(),
-                talphaPhi1Corr.ref(),
-                Sp,
-                (-Sp*alpha1)(),
-                oneField(),
-                zeroField()
-            );
+            if (divU.valid())
+            {
+                MULES::correct
+                (
+                    geometricOneField(),
+                    alpha1,
+                    talphaPhi1Un(),
+                    talphaPhi1Corr.ref(),
+                    Sp(),
+                    (-Sp()*alpha1)(),
+                    oneField(),
+                    zeroField()
+                );
+            }
+            else
+            {
+                MULES::correct
+                (
+                    geometricOneField(),
+                    alpha1,
+                    talphaPhi1Un(),
+                    talphaPhi1Corr.ref(),
+                    oneField(),
+                    zeroField()
+                );
+            }
 
             // Under-relax the correction for all but the 1st corrector
             if (aCorr == 0)
@@ -171,17 +185,32 @@
         {
             alphaPhi10 = talphaPhi1Un;
 
-            MULES::explicitSolve
-            (
-                geometricOneField(),
-                alpha1,
-                phiCN,
-                alphaPhi10,
-                Sp,
-                (Su + divU*min(alpha1(), scalar(1)))(),
-                oneField(),
-                zeroField()
-            );
+            if (divU.valid())
+            {
+                MULES::explicitSolve
+                (
+                    geometricOneField(),
+                    alpha1,
+                    phiCN,
+                    alphaPhi10,
+                    Sp(),
+                    (Su() + divU()*min(alpha1(), scalar(1)))(),
+                    oneField(),
+                    zeroField()
+                );
+            }
+            else
+            {
+                MULES::explicitSolve
+                (
+                    geometricOneField(),
+                    alpha1,
+                    phiCN,
+                    alphaPhi10,
+                    oneField(),
+                    zeroField()
+                );
+            }
         }
 
         alpha2 = 1.0 - alpha1;

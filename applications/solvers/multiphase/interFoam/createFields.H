@@ -34,6 +34,11 @@ volVectorField U
 Info<< "Reading transportProperties\n" << endl;
 immiscibleIncompressibleTwoPhaseMixture mixture(U, phi);
 
+autoPtr<twoPhaseChangeModel> phaseChangePtr
+(
+    twoPhaseChangeModel::New(mixture)
+);
+
 volScalarField& alpha1(mixture.alpha1());
 volScalarField& alpha2(mixture.alpha2());
 
@@ -54,21 +59,6 @@ volScalarField rho
     alpha1*rho1 + alpha2*rho2
 );
 rho.oldTime();
-
-
-// Mass flux
-surfaceScalarField rhoPhi
-(
-    IOobject
-    (
-        "rhoPhi",
-        runTime.timeName(),
-        mesh,
-        IOobject::NO_READ,
-        IOobject::NO_WRITE
-    ),
-    fvc::interpolate(rho)*phi
-);
 
 
 // Construct incompressible turbulence model

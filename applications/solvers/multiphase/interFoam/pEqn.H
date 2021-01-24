@@ -38,11 +38,15 @@
     // Update the pressure BCs to ensure flux consistency
     constrainPressure(p_rgh, U, phiHbyA, rAUf, MRF);
 
+    // Cache the phase change pressure source
+    fvScalarMatrix Sp_rgh(phaseChange.Sp_rgh(rho, gh, p_rgh));
+
     while (pimple.correctNonOrthogonal())
     {
         fvScalarMatrix p_rghEqn
         (
-            fvm::laplacian(rAUf, p_rgh) == fvc::div(phiHbyA)
+            fvc::div(phiHbyA) - fvm::laplacian(rAUf, p_rgh)
+         == Sp_rgh
         );
 
         p_rghEqn.setReference(pRefCell, getRefCellValue(p_rgh, pRefCell));
@@ -51,11 +55,11 @@
 
         if (pimple.finalNonOrthogonalIter())
         {
-            phi = phiHbyA - p_rghEqn.flux();
+            phi = phiHbyA + p_rghEqn.flux();
 
             p_rgh.relax();
 
-            U = HbyA + rAU()*fvc::reconstruct((phig - p_rghEqn.flux())/rAUf);
+            U = HbyA + rAU()*fvc::reconstruct((phig + p_rghEqn.flux())/rAUf);
             U.correctBoundaryConditions();
             fvOptions.correct(U);
         }

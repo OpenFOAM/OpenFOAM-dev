@@ -6,7 +6,8 @@
       + MRF.DDt(rho, U)
       + turbulence->divDevTau(rho, U)
      ==
-        fvOptions(rho, U)
+       phaseChange.SU(rho, rhoPhi, U)
+     + fvOptions(rho, U)
     );
 
     UEqn.relax();

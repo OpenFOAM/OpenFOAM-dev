@@ -1,41 +1,40 @@
-volScalarField::Internal Sp
+tmp<volScalarField::Internal> Sp
 (
-    IOobject
+    volScalarField::Internal::New
     (
         "Sp",
-        runTime.timeName(),
-        mesh
-    ),
-    mesh,
-    dimensionedScalar(dgdt.dimensions(), 0)
+        mesh,
+        dimensionedScalar(dgdt.dimensions(), 0)
+    )
 );
 
-volScalarField::Internal Su
+tmp<volScalarField::Internal> Su
 (
-    IOobject
+    volScalarField::Internal::New
     (
         "Su",
-        runTime.timeName(),
-        mesh
-    ),
-    mesh,
-    dimensionedScalar(dgdt.dimensions(), 0)
+        mesh,
+        dimensionedScalar(dgdt.dimensions(), 0)
+    )
 );
+
+volScalarField::Internal& SpRef = Sp.ref();
+volScalarField::Internal& SuRef = Su.ref();
 
 forAll(dgdt, celli)
 {
     if (dgdt[celli] > 0.0)
     {
-        Sp[celli] -= dgdt[celli]/max(1.0 - alpha1[celli], 1e-4);
-        Su[celli] += dgdt[celli]/max(1.0 - alpha1[celli], 1e-4);
+        SpRef[celli] -= dgdt[celli]/max(1.0 - alpha1[celli], 1e-4);
+        SuRef[celli] += dgdt[celli]/max(1.0 - alpha1[celli], 1e-4);
     }
     else if (dgdt[celli] < 0.0)
     {
-        Sp[celli] += dgdt[celli]/max(alpha1[celli], 1e-4);
+        SpRef[celli] += dgdt[celli]/max(alpha1[celli], 1e-4);
     }
 }
 
-volScalarField::Internal divU
+tmp<volScalarField> divU
 (
     mesh.moving()
   ? fvc::div(phiCN() + mesh.phi())
