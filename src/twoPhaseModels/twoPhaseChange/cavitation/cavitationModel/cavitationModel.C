@@ -88,8 +88,8 @@ Foam::twoPhaseChangeModels::cavitationModel::Sp_rgh
     dimensionedScalar pCoeff(1.0/mixture_.rho1() - 1.0/mixture_.rho2());
     Pair<tmp<volScalarField>> mDotP = this->mDotP();
 
-    const volScalarField vDotcP = pCoeff*mDotP[0];
-    const volScalarField vDotvP = pCoeff*mDotP[1];
+    const volScalarField vDotcP(pCoeff*mDotP[0]);
+    const volScalarField vDotvP(pCoeff*mDotP[1]);
 
     return
         (vDotvP - vDotcP)*(pSat() - rho*gh)

@@ -70,8 +70,6 @@ class noInterfaceCompressionNew
 {
     // Private member data
 
-        const surfaceScalarField& phi_;
-
         //- Base scheme to which the compression is applied
         tmp<surfaceInterpolationScheme<scalar>> tScheme_;
 
@@ -93,7 +91,6 @@ public:
         )
         :
             surfaceInterpolationScheme<scalar>(mesh),
-            phi_(faceFlux),
             tScheme_
             (
                 surfaceInterpolationScheme<scalar>::New(mesh, faceFlux, is)
