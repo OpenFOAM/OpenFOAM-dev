@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -307,7 +307,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::psiu() const
         &MixtureType::patchFaceReactants,
         &MixtureType::thermoMixtureType::psi,
         this->p_,
-        this->T_
+        this->Tu_
     );
 }
 
@@ -316,6 +316,8 @@ template<class BasicPsiThermo, class MixtureType>
 Foam::tmp<Foam::volScalarField>
 Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::psib() const
 {
+    const volScalarField Tb(this->Tb());
+
     return this->volScalarFieldProperty
     (
         "psib",
@@ -324,7 +326,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::psib() const
         &MixtureType::patchFaceProducts,
         &MixtureType::thermoMixtureType::psi,
         this->p_,
-        this->T_
+        Tb
     );
 }
 
@@ -341,7 +343,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::muu() const
         &MixtureType::patchFaceReactants,
         &MixtureType::transportMixtureType::mu,
         this->p_,
-        this->T_
+        this->Tu_
     );
 }
 
@@ -350,6 +352,8 @@ template<class BasicPsiThermo, class MixtureType>
 Foam::tmp<Foam::volScalarField>
 Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::mub() const
 {
+    const volScalarField Tb(this->Tb());
+
     return this->volScalarFieldProperty
     (
         "mub",
@@ -358,7 +362,7 @@ Foam::heheuPsiThermo<BasicPsiThermo, MixtureType>::mub() const
         &MixtureType::patchFaceProducts,
         &MixtureType::transportMixtureType::mu,
         this->p_,
-        this->T_
+        Tb
     );
 }
 
