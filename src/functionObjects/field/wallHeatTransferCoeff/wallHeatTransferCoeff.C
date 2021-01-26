@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,15 +76,13 @@ Foam::functionObjects::wallHeatTransferCoeff::wallHeatTransferCoeff
     fvMeshFunctionObject(name, runTime, dict),
     logFiles(obr_, name),
     writeLocalObjects(obr_, log),
+    coeffModel_(wallHeatTransferCoeffModel::New(dict.name(), mesh_, dict)),
     rho_("rho", dimDensity, Zero),
     Cp_("Cp", dimArea/sqr(dimTime)/dimTemperature, Zero),
     runTime_(runTime),
     patchSet_()
 {
-    coeffModel_ = wallHeatTransferCoeffModel::New(dict.name(), mesh_, dict);
     read(dict);
-    resetName(typeName);
-    resetLocalObjectName(typeName);
 }
 
 
@@ -161,6 +159,9 @@ bool Foam::functionObjects::wallHeatTransferCoeff::read(const dictionary& dict)
     }
 
     coeffModel_->read(dict);
+
+    resetName(typeName);
+    resetLocalObjectName(typeName);
 
     return true;
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,8 +61,6 @@ Foam::functionObjects::time::time
     clockTime0_(time_.elapsedClockTime())
 {
     read(dict);
-    resetName(typeName);
-    write();
 }
 
 
@@ -79,6 +77,8 @@ bool Foam::functionObjects::time::read(const dictionary& dict)
     functionObject::read(dict);
 
     dict.readIfPresent("perTimeStep", perTimeStep_);
+
+    resetName(typeName);
 
     return true;
 }

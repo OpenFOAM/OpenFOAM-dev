@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -120,8 +120,6 @@ Foam::functionObjects::wallHeatFlux::wallHeatFlux
     patchSet_()
 {
     read(dict);
-    resetName(typeName);
-    resetLocalObjectName(typeName);
 }
 
 
@@ -184,6 +182,9 @@ bool Foam::functionObjects::wallHeatFlux::read(const dictionary& dict)
 
         patchSet_ = filteredPatchSet;
     }
+
+    resetName(typeName);
+    resetLocalObjectName(typeName);
 
     return true;
 }

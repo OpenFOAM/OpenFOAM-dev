@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,8 +87,6 @@ bool Foam::functionObjects::cloudInfo::read(const dictionary& dict)
 {
     regionFunctionObject::read(dict);
 
-    logFiles::resetNames(dict.lookup("clouds"));
-
     Info<< type() << " " << name() << ": ";
     if (names().size())
     {
@@ -103,6 +101,8 @@ bool Foam::functionObjects::cloudInfo::read(const dictionary& dict)
     {
         Info<< "no clouds to be processed" << nl << endl;
     }
+
+    resetNames(dict.lookup("clouds"));
 
     return true;
 }

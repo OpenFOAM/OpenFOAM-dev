@@ -230,11 +230,6 @@ public:
         //- Called when Time::run() determines that the time-loop exits.
         virtual bool end();
 
-        //- Called by Time::setDeltaT(). Allows the functionObject to override
-        //  the time-step value.
-        //  Returns whether or not the value was overridden.
-        virtual bool setTimeStep();
-
         //- Called by Time::adjustTimeStep(). Allows the functionObject to
         //  insert a write time earlier than that already in use by the run
         //  time. Returns the write time, or vGreat.

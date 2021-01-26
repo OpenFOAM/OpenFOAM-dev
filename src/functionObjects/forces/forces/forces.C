@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -559,7 +559,6 @@ Foam::functionObjects::forces::forces
     initialised_(false)
 {
     read(dict);
-    resetNames(createFileNames(dict));
 }
 
 
@@ -594,7 +593,6 @@ Foam::functionObjects::forces::forces
     initialised_(false)
 {
     read(dict);
-    resetNames(createFileNames(dict));
 }
 
 
@@ -738,6 +736,8 @@ bool Foam::functionObjects::forces::read(const dictionary& dict)
         moment_[1].setSize(1);
         moment_[2].setSize(1);
     }
+
+    resetNames(createFileNames(dict));
 
     return true;
 }

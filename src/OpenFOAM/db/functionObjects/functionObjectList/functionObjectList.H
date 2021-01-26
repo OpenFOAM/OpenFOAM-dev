@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -271,9 +271,6 @@ public:
 
         //- Called when Time::run() determines that the time-loop exits
         bool end();
-
-        //- Override the time-step value
-        bool setTimeStep();
 
         //- Return the time to the next write
         scalar timeToNextWrite();

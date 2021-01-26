@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -625,43 +625,6 @@ bool Foam::functionObjectList::end()
     }
 
     return ok;
-}
-
-
-bool Foam::functionObjectList::setTimeStep()
-{
-    bool set = true;
-
-    if (execution_)
-    {
-        if (!updated_)
-        {
-            read();
-        }
-
-        wordList names;
-
-        forAll(*this, oi)
-        {
-            if (operator[](oi).setTimeStep())
-            {
-                names.append(operator[](oi).name());
-                set = true;
-            }
-        }
-
-        if (names.size() > 1)
-        {
-            WarningInFunction << "Multiple function objects (" << names[0];
-            for (label i = 1; i < names.size(); ++ i)
-            {
-                WarningInFunction << ", " << names[i];
-            }
-            WarningInFunction << ") are setting the time step." << endl;
-        }
-    }
-
-    return set;
 }
 
 

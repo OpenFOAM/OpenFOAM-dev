@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,6 @@ Foam::functionObjects::fieldMinMax::fieldMinMax
     fieldSet_()
 {
     read(dict);
-    resetName(typeName);
 }
 
 
@@ -130,6 +129,8 @@ bool Foam::functionObjects::fieldMinMax::read(const dictionary& dict)
 
     mode_ = modeTypeNames_[dict.lookupOrDefault<word>("mode", "magnitude")];
     dict.lookup("fields") >> fieldSet_;
+
+    resetName(typeName);
 
     return true;
 }
