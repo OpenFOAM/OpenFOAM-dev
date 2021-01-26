@@ -32,6 +32,7 @@ License
 #include "inputSyntaxEntry.H"
 #include "fileOperation.H"
 #include "stringOps.H"
+#include "IOstreams.H"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
@@ -364,16 +365,16 @@ const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
                     << exit(FatalIOError);
             }
 
-            dictionary dict(ifs);
+            dictionary dict(keyword, *this, ifs);
 
-            const Foam::entry* hmm = dict.lookupScopedEntryPtr
+            const Foam::entry* entryPtr = dict.lookupScopedEntryPtr
             (
                 localKeyword,
                 recursive,
                 patternMatch
             );
 
-            if (!hmm)
+            if (!entryPtr)
             {
                 FatalIOErrorInFunction(dict)
                     << "keyword " << localKeyword
@@ -382,7 +383,7 @@ const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
                     << exit(FatalIOError);
             }
 
-            return hmm->clone(*this).ptr();
+            return entryPtr->clone(*this).ptr();
         }
     }
 }
