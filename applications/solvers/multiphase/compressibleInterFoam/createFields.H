@@ -33,6 +33,11 @@ volVectorField U
 Info<< "Constructing twoPhaseMixtureThermo\n" << endl;
 twoPhaseMixtureThermo mixture(U, phi);
 
+autoPtr<twoPhaseChangeModel> phaseChangePtr
+(
+    twoPhaseChangeModel::New(mixture)
+);
+
 volScalarField& alpha1(mixture.alpha1());
 const volScalarField& rho = mixture.rho();
 

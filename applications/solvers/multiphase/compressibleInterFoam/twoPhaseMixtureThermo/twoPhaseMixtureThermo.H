@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,8 @@ Class
     Foam::twoPhaseMixtureThermo
 
 Description
+    Thermophysical properties class for a mixture of two rhoThermo including
+    interfaceProperties for VoF for use in compressibleInterFoam.
 
 SourceFiles
     twoPhaseMixtureThermoI.H
@@ -92,24 +94,40 @@ public:
 
     // Member Functions
 
+        //- Return the thermo for phase 1
         const rhoThermo& thermo1() const
         {
             return thermo1_();
         }
 
+        //- Return the thermo for phase 2
         const rhoThermo& thermo2() const
         {
             return thermo2_();
         }
 
+        //- Return the thermo for phase 1
         rhoThermo& thermo1()
         {
             return thermo1_();
         }
 
+        //- Return the thermo for phase 2
         rhoThermo& thermo2()
         {
             return thermo2_();
+        }
+
+        //- Return the density of phase 1
+        const volScalarField& rho1() const
+        {
+            return thermo1_->rho();
+        }
+
+        //- Return the density of phase 2
+        const volScalarField& rho2() const
+        {
+            return thermo2_->rho();
         }
 
         //- Correct the thermodynamics of each phase

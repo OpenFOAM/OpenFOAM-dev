@@ -1,3 +1,5 @@
+twoPhaseChangeModel& phaseChange = phaseChangePtr();
+
 volScalarField& alpha2(mixture.alpha2());
 
 const volScalarField& rho1 = mixture.thermo1().rho();

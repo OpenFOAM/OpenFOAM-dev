@@ -18,6 +18,18 @@ tmp<volScalarField::Internal> Su
     )
 );
 
+// Phase change alpha1 source
+Pair<tmp<volScalarField::Internal>> phaseChangeS
+(
+    phaseChange.Salpha(alpha1)
+);
+
+if (phaseChangeS[0].valid())
+{
+    Su = phaseChangeS[0];
+    Sp = phaseChangeS[1];
+}
+
 volScalarField::Internal& SpRef = Sp.ref();
 volScalarField::Internal& SuRef = Su.ref();
 

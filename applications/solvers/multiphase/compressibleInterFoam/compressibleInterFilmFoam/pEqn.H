@@ -23,6 +23,9 @@
     // Update the pressure BCs to ensure flux consistency
     constrainPressure(p_rgh, U, phiHbyA, rAUf, MRF);
 
+    // Cache the phase change pressure source
+    fvScalarMatrix Sp_rgh(phaseChange.Sp_rgh(rho, gh, p_rgh));
+
     tmp<fvScalarMatrix> p_rghEqnComp1;
     tmp<fvScalarMatrix> p_rghEqnComp2;
 
@@ -101,8 +104,8 @@
     {
         fvScalarMatrix p_rghEqnIncomp
         (
-            fvc::div(phiHbyA)
-          - fvm::laplacian(rAUf, p_rgh)
+            fvc::div(phiHbyA) - fvm::laplacian(rAUf, p_rgh)
+         == Sp_rgh
         );
 
         solve

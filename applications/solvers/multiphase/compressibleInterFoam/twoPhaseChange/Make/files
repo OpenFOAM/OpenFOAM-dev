@@ -1,0 +1,9 @@
+twoPhaseChangeModel/twoPhaseChangeModel.C
+twoPhaseChangeModel/twoPhaseChangeModelNew.C
+noPhaseChange/noPhaseChange.C
+cavitation/cavitationModel/cavitationModel.C
+cavitation/Kunz/Kunz.C
+cavitation/Merkle/Merkle.C
+cavitation/SchnerrSauer/SchnerrSauer.C
+
+LIB = $(FOAM_LIBBIN)/libcompressibleTwoPhaseChangeModels
