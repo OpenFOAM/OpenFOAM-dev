@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -157,6 +157,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
         fluid.mesh(),
         dimensionedScalar(dimensionSet(1, 0, -1, 0, 0), 0)
     ),
+    Uf_(nullptr),
     DUDt_(nullptr),
     DUDtf_(nullptr),
     divU_(nullptr),
@@ -194,6 +195,22 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
     K_(nullptr)
 {
     phi_.writeOpt() = IOobject::AUTO_WRITE;
+
+    if (fluid.mesh().dynamic())
+    {
+        Uf_ = new surfaceVectorField
+        (
+            IOobject
+            (
+                IOobject::groupName("Uf", this->name()),
+                fluid.mesh().time().timeName(),
+                fluid.mesh(),
+                IOobject::READ_IF_PRESENT,
+                IOobject::AUTO_WRITE
+            ),
+            fvc::interpolate(U_)
+        );
+    }
 
     correctKinematics();
 }
@@ -271,6 +288,33 @@ void Foam::MovingPhaseModel<BasePhaseModel>::correctEnergyTransport()
 
 
 template<class BasePhaseModel>
+void Foam::MovingPhaseModel<BasePhaseModel>::correctUf()
+{
+    const fvMesh& mesh = this->fluid().mesh();
+
+    if (mesh.dynamic())
+    {
+        Uf_.ref() = fvc::interpolate(U_);
+        surfaceVectorField n(mesh.Sf()/mesh.magSf());
+        Uf_.ref() += n*(fvc::absolute(phi_, U_)/mesh.magSf() - (n & Uf_()));
+
+        surfaceVectorField::Boundary& UfBf = Uf_.ref().boundaryFieldRef();
+        const volVectorField::Boundary& UBf = U_.boundaryField();
+
+        forAll(mesh.boundary(), patchi)
+        {
+            // Remove the flux correction on AMI patches to compensate for
+            // AMI non-conservation error
+            if (isA<cyclicAMIFvPatch>(mesh.boundary()[patchi]))
+            {
+                UfBf[patchi] = UBf[patchi];
+            }
+        }
+    }
+}
+
+
+template<class BasePhaseModel>
 bool Foam::MovingPhaseModel<BasePhaseModel>::stationary() const
 {
     return false;
@@ -343,6 +387,17 @@ Foam::surfaceScalarField&
 Foam::MovingPhaseModel<BasePhaseModel>::phiRef()
 {
     return phi_;
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::surfaceVectorField>
+Foam::MovingPhaseModel<BasePhaseModel>::Uf() const
+{
+    return
+        Uf_.valid()
+      ? tmp<surfaceVectorField>(Uf_())
+      : tmp<surfaceVectorField>();
 }
 
 

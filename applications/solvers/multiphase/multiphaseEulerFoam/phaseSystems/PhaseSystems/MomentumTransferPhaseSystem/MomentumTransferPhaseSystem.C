@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,8 +42,8 @@ License
 #include "fvcDiv.H"
 #include "fvcFlux.H"
 #include "fvcSnGrad.H"
+#include "fvcMeshPhi.H"
 #include "fvMatrix.H"
-
 
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
@@ -654,7 +654,14 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiFfs
                 "phiFf",
                -rAUfs[iter().index()]*Vmf
                *(
-                   byDt(this->MRF().absolute(iter().phi()().oldTime()))
+                   byDt
+                   (
+                       fvc::absolute
+                       (
+                           this->MRF().absolute(iter().phi()().oldTime()),
+                           iter().U()
+                       )
+                   )
                  + iter.otherPhase().DUDtf()
                 ),
                 phiFfs
@@ -794,7 +801,11 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiKdPhis
                 iter(),
                 "phiKdPhi",
                -fvc::interpolate(rAUs[iter().index()]*K)
-               *this->MRF().absolute(iter.otherPhase().phi()),
+               *fvc::absolute
+                (
+                    this->MRF().absolute(iter.otherPhase().phi()),
+                    iter.otherPhase().U()
+                ),
                 phiKdPhis
             );
         }
@@ -836,7 +847,11 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::phiKdPhifs
                 iter(),
                 "phiKdPhif",
                -rAUfs[iter().index()]*Kf
-               *this->MRF().absolute(iter.otherPhase().phi()),
+               *fvc::absolute
+                (
+                    this->MRF().absolute(iter.otherPhase().phi()),
+                    iter.otherPhase().U()
+                ),
                 phiKdPhifs
             );
         }
@@ -1105,8 +1120,15 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::ddtCorrByAs
         phiCorrs.set
         (
             phasei,
-            this->MRF().absolute(phase.phi()().oldTime())
-            -fvc::flux(phase.U()().oldTime())
+            this->MRF().zeroFilter
+            (
+                (
+                    phase.Uf().valid()
+                  ? (this->mesh_.Sf() & phase.Uf()().oldTime())()
+                  : phase.phi()().oldTime()
+                )
+              - fvc::flux(phase.U()().oldTime())
+            )
         );
     }
 
@@ -1172,7 +1194,11 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::ddtCorrByAs
                    -fvc::interpolate(Vm*byDt(rAUs[phase.index()]))
                    *(
                        phiCorrs[phase.index()]
-                     + this->MRF().absolute(otherPhase.phi())
+                     + fvc::absolute
+                       (
+                           this->MRF().absolute(otherPhase.phi()),
+                           otherPhase.U()
+                       )
                      - fvc::flux(otherPhase.U())
                      - phiCorrs[otherPhase.index()]
                     ),

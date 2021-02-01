@@ -9,47 +9,48 @@ FoamFile
 {
     version     2.0;
     format      ascii;
-    class       dictionary;
-    location    "system";
-    object      fvSchemes;
+    class       volScalarField;
+    object      alpha.oil;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-ddtSchemes
+dimensions      [0 0 0 0 0 0 0];
+
+internalField   uniform 0.1;
+
+boundaryField
 {
-    default         Euler;
-}
+    rotor
+    {
+        type            zeroGradient;
+    }
 
-gradSchemes
-{
-    default         Gauss linear;
-}
+    stator
+    {
+        type            zeroGradient;
+    }
 
-divSchemes
-{
-    div(phi,alpha)  Gauss interfaceCompression vanLeer 1;
+    front
+    {
+        type            empty;
+    }
 
-    div(rhoPhi,U)  Gauss vanLeerV;
-    div(rhoPhi,T)  Gauss vanLeer;
-    div(rhoPhi,K)  Gauss linear;
-    div(phi,p)     Gauss linear;
+    back
+    {
+        type            empty;
+    }
 
-    div(((thermo:rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
-}
+    AMI1
+    {
+        type            cyclicAMI;
+        value           $internalField;
+    }
 
-laplacianSchemes
-{
-    default         Gauss linear corrected;
-}
-
-interpolationSchemes
-{
-    default         linear;
-}
-
-snGradSchemes
-{
-    default         corrected;
+    AMI2
+    {
+        type            cyclicAMI;
+        value           $internalField;
+    }
 }
 
 // ************************************************************************* //

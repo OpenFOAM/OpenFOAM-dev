@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -172,13 +172,6 @@ public:
 
         //- Correct the boundary velocity for the rotation of the MRF region
         void correctBoundaryVelocity(volVectorField& U) const;
-
-        //- Correct the boundary flux for the rotation of the MRF region
-        void correctBoundaryFlux
-        (
-            const volVectorField& U,
-            surfaceScalarField& phi
-        ) const;
 
         //- Filter-out the MRF region contribution from the given field
         // setting the corresponding values to zero

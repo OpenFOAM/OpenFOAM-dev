@@ -76,13 +76,6 @@ while (pimple.correct())
     // Correct p_rgh for consistency with p and the updated densities
     p_rgh = p - rho*gh;
 
-    // Correct fixed-flux BCs to be consistent with the velocity BCs
-    forAll(fluid.movingPhases(), movingPhasei)
-    {
-        phaseModel& phase = fluid.movingPhases()[movingPhasei];
-        MRF.correctBoundaryFlux(phase.U(), phase.phiRef());
-    }
-
     // Combined buoyancy and force fluxes
     PtrList<surfaceScalarField> phigFs(phases.size());
     {
@@ -125,16 +118,22 @@ while (pimple.correct())
         phiHbyAs.set
         (
             phase.index(),
-            new surfaceScalarField
+            constrainPhiHbyA
             (
-                IOobject::groupName("phiHbyA", phase.name()),
                 rAUfs[phase.index()]
                *(
                    fvc::flux(UEqns[phase.index()].H())
                  + alphaRho0fs[phase.index()]
-                  *byDt(MRF.absolute(phase.phi()().oldTime()))
+                  *byDt
+                   (
+                       phase.Uf().valid()
+                     ? (mesh.Sf() & phase.Uf()().oldTime())
+                     : MRF.absolute(phase.phi()().oldTime())
+                   )
                 )
-              - phigFs[phase.index()]
+              - phigFs[phase.index()],
+                phase.U(),
+                p_rgh
             )
         );
     }
@@ -172,6 +171,7 @@ while (pimple.correct())
     }
 
     MRF.makeRelative(phiHbyA);
+    fvc::makeRelative(phiHbyA, phases[0].U());
 
     // Construct pressure "diffusivity"
     surfaceScalarField rAUf
@@ -342,15 +342,6 @@ while (pimple.correct())
             if (partialElimination)
             {
                 fluid.partialEliminationf(rAUfs, alphafs, phiKdPhifs);
-
-                forAll(fluid.movingPhases(), movingPhasei)
-                {
-                    phaseModel& phase = fluid.movingPhases()[movingPhasei];
-
-                    phase.URef() = fvc::reconstruct(MRF.absolute(phase.phi()));
-                    phase.URef().correctBoundaryConditions();
-                    fvOptions.correct(phase.URef());
-                }
             }
             else
             {
@@ -358,11 +349,23 @@ while (pimple.correct())
                 {
                     phaseModel& phase = fluid.movingPhases()[movingPhasei];
 
-                    phase.URef() = fvc::reconstruct(phase.phi());
                     MRF.makeRelative(phase.phiRef());
-                    phase.URef().correctBoundaryConditions();
-                    fvOptions.correct(phase.URef());
+                    fvc::makeRelative(phase.phiRef(), phase.U());
                 }
+            }
+
+            forAll(fluid.movingPhases(), movingPhasei)
+            {
+                phaseModel& phase = fluid.movingPhases()[movingPhasei];
+
+                phase.URef() = fvc::reconstruct
+                (
+                    fvc::absolute(MRF.absolute(phase.phi()), phase.U())
+                );
+
+                phase.URef().correctBoundaryConditions();
+                phase.correctUf();
+                fvOptions.correct(phase.URef());
             }
         }
     }

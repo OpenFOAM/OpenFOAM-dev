@@ -842,6 +842,20 @@ void Foam::phaseSystem::correctEnergyTransport()
 }
 
 
+void Foam::phaseSystem::meshUpdate()
+{
+    if (mesh_.changing())
+    {
+        MRF_.update();
+
+        // forAll(phaseModels_, phasei)
+        // {
+        //     phaseModels_[phasei].meshUpdate();
+        // }
+    }
+}
+
+
 bool Foam::phaseSystem::read()
 {
     if (regIOobject::read())

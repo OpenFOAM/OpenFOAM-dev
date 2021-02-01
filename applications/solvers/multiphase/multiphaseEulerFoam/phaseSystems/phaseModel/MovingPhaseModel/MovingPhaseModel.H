@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,6 +78,9 @@ protected:
         //- Mass flux
         surfaceScalarField alphaRhoPhi_;
 
+        //- Face velocity field
+        tmp<surfaceVectorField> Uf_;
+
         //- Lagrangian acceleration field (needed for virtual-mass)
         mutable tmp<volVectorField> DUDt_;
 
@@ -149,6 +152,9 @@ public:
         //- Correct the energy transport e.g. alphat
         virtual void correctEnergyTransport();
 
+        //- Correct the face velocity for moving meshes
+        virtual void correctUf();
+
 
         // Momentum
 
@@ -172,6 +178,10 @@ public:
 
             //- Access the volumetric flux
             virtual surfaceScalarField& phiRef();
+
+            //- Return the face velocity
+            //  Required for moving mesh cases
+            virtual tmp<surfaceVectorField> Uf() const;
 
             //- Return the volumetric flux of the phase
             virtual tmp<surfaceScalarField> alphaPhi() const;

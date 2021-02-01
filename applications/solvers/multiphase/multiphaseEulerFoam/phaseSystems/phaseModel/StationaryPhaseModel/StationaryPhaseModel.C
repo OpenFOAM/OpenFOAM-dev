@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,6 +127,18 @@ Foam::StationaryPhaseModel<BasePhaseModel>::phiRef()
         << exit(FatalError);
 
     return const_cast<surfaceScalarField&>(surfaceScalarField::null());
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::surfaceVectorField>
+Foam::StationaryPhaseModel<BasePhaseModel>::Uf() const
+{
+    FatalErrorInFunction
+        << "Cannot access the face velocity of a stationary phase"
+        << exit(FatalError);
+
+    return tmp<Foam::surfaceVectorField>();
 }
 
 

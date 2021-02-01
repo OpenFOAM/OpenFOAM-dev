@@ -675,6 +675,9 @@ public:
             //- Correct the energy transport e.g. alphat
             virtual void correctEnergyTransport();
 
+            //- Update the fluid properties for mesh changes
+            virtual void meshUpdate();
+
 
         // IO
 

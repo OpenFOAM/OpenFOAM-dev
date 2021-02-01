@@ -10,46 +10,43 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      fvSchemes;
+    location    "constant";
+    object      thermophysicalProperties.water;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-ddtSchemes
+thermoType
 {
-    default         Euler;
+    type            heRhoThermo;
+    mixture         pureMixture;
+    transport       const;
+    thermo          eConst;
+    equationOfState rPolynomial;
+    specie          specie;
+    energy          sensibleInternalEnergy;
 }
 
-gradSchemes
+mixture
 {
-    default         Gauss linear;
+    specie
+    {
+        molWeight   18;
+    }
+    equationOfState
+    {
+        C (0.001278 -2.1055e-06 3.9689e-09 4.3772e-13 -2.0225e-16);
+    }
+    thermodynamics
+    {
+        Cv          4195;
+        Hf          0;
+    }
+    transport
+    {
+        mu          3.645e-4;
+        Pr          2.289;
+    }
 }
 
-divSchemes
-{
-    div(phi,alpha)  Gauss interfaceCompression vanLeer 1;
-
-    div(rhoPhi,U)  Gauss vanLeerV;
-    div(rhoPhi,T)  Gauss vanLeer;
-    div(rhoPhi,K)  Gauss linear;
-    div(phi,p)     Gauss linear;
-
-    div(((thermo:rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
-}
-
-laplacianSchemes
-{
-    default         Gauss linear corrected;
-}
-
-interpolationSchemes
-{
-    default         linear;
-}
-
-snGradSchemes
-{
-    default         corrected;
-}
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,11 +42,15 @@ Foam::tmp<Foam::volVectorField> Foam::constrainHbyA
     if (tHbyA.isTmp())
     {
         tHbyANew = tHbyA;
-        tHbyANew.ref().rename("HbyA");
+        tHbyANew.ref().rename(IOobject::groupName("HbyA", U.group()));
     }
     else
     {
-        tHbyANew = volVectorField::New("HbyA", tHbyA);
+        tHbyANew = volVectorField::New
+        (
+            IOobject::groupName("HbyA", U.group()),
+            tHbyA
+        );
     }
 
     volVectorField& HbyA = tHbyANew.ref();
@@ -83,11 +87,15 @@ Foam::tmp<Foam::surfaceScalarField> Foam::constrainPhiHbyA
     if (tphiHbyA.isTmp())
     {
         tphiHbyANew = tphiHbyA;
-        tphiHbyANew.ref().rename("phiHbyA");
+        tphiHbyANew.ref().rename(IOobject::groupName("phiHbyA", U.group()));
     }
     else
     {
-        tphiHbyANew = surfaceScalarField::New("phiHbyA", tphiHbyA);
+        tphiHbyANew = surfaceScalarField::New
+        (
+            IOobject::groupName("phiHbyA", U.group()),
+            tphiHbyA
+        );
     }
 
     surfaceScalarField& phiHbyA = tphiHbyANew.ref();
