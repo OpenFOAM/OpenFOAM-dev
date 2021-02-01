@@ -16,6 +16,7 @@
         fvc::flux(HbyA)
       + MRF.zeroFilter(fvc::interpolate(rho*rAU())*fvc::ddtCorr(U, phi, Uf))
     );
+
     MRF.makeRelative(phiHbyA);
 
     surfaceScalarField phig

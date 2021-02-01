@@ -240,6 +240,12 @@ while (pimple.correct())
                 )/rho;
         }
 
+        // Mesh dilatation correction
+        if (mesh.moving())
+        {
+            pEqnComp += fvc::div(mesh.phi())*alpha;
+        }
+
         // Compressibility
         if (!phase.incompressible())
         {
