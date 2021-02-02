@@ -32,7 +32,6 @@ License
 #include "inputSyntaxEntry.H"
 #include "fileOperation.H"
 #include "stringOps.H"
-#include "IOstreams.H"
 
 /* * * * * * * * * * * * * * * Static Member Data  * * * * * * * * * * * * * */
 
@@ -350,22 +349,7 @@ const Foam::entry* Foam::dictionary::lookupScopedSubEntryPtr
                 keyword.size() - emarkPos - 1
             );
 
-            autoPtr<ISstream> ifsPtr
-            (
-                fileHandler().NewIFstream(fName)
-            );
-            ISstream& ifs = ifsPtr();
-
-            if (!ifs || !ifs.good())
-            {
-                FatalIOErrorInFunction(*this)
-                    << "dictionary file " << fName
-                    << " cannot be found for keyword "
-                    << keyword
-                    << exit(FatalIOError);
-            }
-
-            dictionary dict(keyword, *this, ifs);
+            includedDictionary dict(fName, *this);
 
             const Foam::entry* entryPtr = dict.lookupScopedEntryPtr
             (

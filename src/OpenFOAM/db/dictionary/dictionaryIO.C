@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,6 +61,33 @@ Foam::dictionary::dictionary(Istream& is, const bool keepHeader)
     functionEntries::inputModeEntry::clear();
 
     read(is, keepHeader);
+}
+
+
+Foam::dictionary::includedDictionary::includedDictionary
+(
+    const fileName& fName,
+    const dictionary& parentDict
+)
+:
+    dictionary(fName),
+    global_(parentDict.topDict().global())
+{
+    autoPtr<ISstream> ifsPtr
+    (
+        fileHandler().NewIFstream(fName)
+    );
+    ISstream& ifs = ifsPtr();
+
+    if (!ifs || !ifs.good())
+    {
+        FatalIOErrorInFunction(parentDict)
+            << "Included dictionary file " << fName
+            << " cannot be found for dictionary " << parentDict.name()
+            << exit(FatalIOError);
+    }
+
+    read(ifs);
 }
 
 

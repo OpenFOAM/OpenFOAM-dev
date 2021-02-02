@@ -222,6 +222,11 @@ class dictionary
         );
 
 
+    // Private Classes
+
+        class includedDictionary;
+
+
 public:
 
     //- Declare friendship with the entry class for IO
@@ -664,6 +669,46 @@ public:
 
         //- Write dictionary to Ostream
         friend Ostream& operator<<(Ostream&, const dictionary&);
+};
+
+
+// Private Classes
+
+class dictionary::includedDictionary
+:
+    public dictionary
+{
+    // Private Data
+
+        //- Global IO status inherited from the parent dictionary
+        bool global_;
+
+public:
+
+    // Constructors
+
+        //- Construct an included dictionary for the given parent
+        //  setting the "global" status dictionary without setting the parent
+        includedDictionary
+        (
+            const fileName& fName,
+            const dictionary& parentDict
+        );
+
+    //- Destructor
+    virtual ~includedDictionary()
+    {}
+
+
+    // Member Functions
+
+        //- Return true if the dictionary global,
+        //  i.e. the same on all processors.
+        //  Inherited from the parent dictionary into which this is included
+        virtual bool global() const
+        {
+            return global_;
+        }
 };
 
 
