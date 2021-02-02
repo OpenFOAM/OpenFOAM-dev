@@ -192,9 +192,11 @@ Foam::tmp<Foam::surfaceScalarField> Foam::fvc::absolute
 {
     if (tphi().mesh().moving())
     {
+        const word phiName(tphi().name());
+
         return surfaceScalarField::New
         (
-            tphi().name(),
+            phiName,
             tphi + fvc::meshPhi(U)
         );
     }
@@ -214,9 +216,11 @@ Foam::tmp<Foam::surfaceScalarField> Foam::fvc::absolute
 {
     if (tphi().mesh().moving())
     {
+        const word phiName(tphi().name());
+
         return surfaceScalarField::New
         (
-            tphi().name(),
+            phiName,
             tphi + fvc::interpolate(rho)*fvc::meshPhi(rho, U)
         );
     }
