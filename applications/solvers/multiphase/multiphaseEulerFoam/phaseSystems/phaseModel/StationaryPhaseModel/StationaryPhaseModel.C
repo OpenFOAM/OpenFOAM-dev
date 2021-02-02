@@ -136,7 +136,7 @@ Foam::StationaryPhaseModel<BasePhaseModel>::Uf() const
 {
     FatalErrorInFunction
         << "Cannot access the face velocity of a stationary phase"
-        << exit(FatalError);
+        << abort(FatalError);
 
     return tmp<Foam::surfaceVectorField>();
 }

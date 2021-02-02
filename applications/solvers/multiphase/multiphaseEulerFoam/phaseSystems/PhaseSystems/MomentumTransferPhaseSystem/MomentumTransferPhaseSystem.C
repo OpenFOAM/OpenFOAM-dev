@@ -1113,9 +1113,11 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::ddtCorrByAs
 
     // Construct phi differences
     PtrList<surfaceScalarField> phiCorrs(this->phaseModels_.size());
-    forAll(this->phaseModels_, phasei)
+
+    forAll(this->movingPhases(), movingPhasei)
     {
-        const phaseModel& phase = this->phaseModels_[phasei];
+        const phaseModel& phase = this->movingPhases()[movingPhasei];
+        const label phasei = phase.index();
 
         phiCorrs.set
         (
@@ -1133,9 +1135,10 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::ddtCorrByAs
     }
 
     // Add correction
-    forAll(this->phaseModels_, phasei)
+    forAll(this->movingPhases(), movingPhasei)
     {
-        const phaseModel& phase = this->phaseModels_[phasei];
+        const phaseModel& phase = this->movingPhases()[movingPhasei];
+        const label phasei = phase.index();
         const volScalarField& alpha = phase;
 
         // Apply ddtPhiCorr filter in pure(ish) phases
