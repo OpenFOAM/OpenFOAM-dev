@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,6 +59,7 @@ Foam::volScalarField& Foam::diameterModel::dRef()
     return dPtr_();
 }
 
+
 Foam::volScalarField& Foam::diameterModel::aRef()
 {
     if (!aPtr_.valid())
@@ -81,6 +82,7 @@ Foam::volScalarField& Foam::diameterModel::aRef()
 
     return aPtr_();
 }
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -140,8 +142,14 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModel::a() const
 }
 
 
+void Foam::diameterModel::correctNoStore()
+{}
+
+
 void Foam::diameterModel::correct()
 {
+    correctNoStore();
+
     if (dPtr_.valid())
     {
         tmp<volScalarField> td = calcD();

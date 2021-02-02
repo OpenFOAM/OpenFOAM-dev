@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -165,7 +165,7 @@ public:
         inline const PtrList<sizeGroup>& sizeGroups() const;
 
         //- Correct the diameter field
-        virtual void correct();
+        virtual void correctNoStore();
 
         //- Read diameterProperties dictionary
         virtual bool read(const dictionary& diameterProperties);
