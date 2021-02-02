@@ -1130,7 +1130,7 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::ddtCorrByAs
                   : phase.phi()().oldTime()
                 )
               - fvc::flux(phase.U()().oldTime())
-            )
+            )()
         );
     }
 
