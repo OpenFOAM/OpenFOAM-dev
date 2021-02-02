@@ -101,51 +101,69 @@ int main(int argc, char *argv[])
         runTime++;
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        // --- Pressure-velocity PIMPLE corrector loop
-        while (pimple.loop())
+        if (pimple.frozenFlow())
         {
-            if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
+             fluid.solve(rAUs, rAUfs);
+             fluid.correct();
+             fluid.correctContinuityError();
+
+             #include "YEqns.H"
+             #include "EEqns.H"
+             #include "pEqnComps.H"
+
+             forAll(phases, phasei)
+             {
+                 phases[phasei].divU(-pEqnComps[phasei] & p_rgh);
+             }
+        }
+        else
+        {
+            // --- Pressure-velocity PIMPLE corrector loop
+            while (pimple.loop())
             {
-                mesh.update();
-
-                if (mesh.changing())
+                if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
                 {
-                    gh = (g & mesh.C()) - ghRef;
-                    ghf = (g & mesh.Cf()) - ghRef;
+                    mesh.update();
 
-                    fluid.meshUpdate();
-
-                    if (checkMeshCourantNo)
+                    if (mesh.changing())
                     {
-                        #include "meshCourantNo.H"
+                        gh = (g & mesh.C()) - ghRef;
+                        ghf = (g & mesh.Cf()) - ghRef;
+
+                        fluid.meshUpdate();
+
+                        if (checkMeshCourantNo)
+                        {
+                            #include "meshCourantNo.H"
+                        }
                     }
                 }
-            }
 
-            fluid.solve(rAUs, rAUfs);
-            fluid.correct();
-            fluid.correctContinuityError();
+                fluid.solve(rAUs, rAUfs);
+                fluid.correct();
+                fluid.correctContinuityError();
 
-            #include "YEqns.H"
+                #include "YEqns.H"
 
-            if (faceMomentum)
-            {
-                #include "pUf/UEqns.H"
-                #include "EEqns.H"
-                #include "pUf/pEqn.H"
-            }
-            else
-            {
-                #include "pU/UEqns.H"
-                #include "EEqns.H"
-                #include "pU/pEqn.H"
-            }
+                if (faceMomentum)
+                {
+                    #include "pUf/UEqns.H"
+                    #include "EEqns.H"
+                    #include "pUf/pEqn.H"
+                }
+                else
+                {
+                    #include "pU/UEqns.H"
+                    #include "EEqns.H"
+                    #include "pU/pEqn.H"
+                }
 
-            fluid.correctKinematics();
+                fluid.correctKinematics();
 
-            if (pimple.turbCorr())
-            {
-                fluid.correctTurbulence();
+                if (pimple.turbCorr())
+                {
+                    fluid.correctTurbulence();
+                }
             }
         }
 
