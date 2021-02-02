@@ -61,6 +61,9 @@ while (pimple.correct())
     // Correct p_rgh for consistency with p and the updated densities
     p_rgh = p - rho*gh;
 
+    // Correct fixed-flux BCs to be consistent with the velocity BCs
+    fluid.correctBoundaryFlux();
+
     // Combined buoyancy and force fluxes
     PtrList<surfaceScalarField> phigFs(phases.size());
     {

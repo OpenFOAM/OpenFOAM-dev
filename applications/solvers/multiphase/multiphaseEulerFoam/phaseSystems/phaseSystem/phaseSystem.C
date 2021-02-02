@@ -36,6 +36,7 @@ License
 #include "unitConversion.H"
 #include "dragModel.H"
 #include "BlendedInterfacialModel.H"
+#include "movingWallVelocityFvPatchVectorField.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -852,6 +853,36 @@ void Foam::phaseSystem::meshUpdate()
         // {
         //     phaseModels_[phasei].meshUpdate();
         // }
+    }
+}
+
+
+void Foam::phaseSystem::correctBoundaryFlux()
+{
+    forAll(movingPhases(), movingPhasei)
+    {
+        phaseModel& phase = movingPhases()[movingPhasei];
+
+        const volVectorField::Boundary& UBf = phase.U()().boundaryField();
+
+        FieldField<fvsPatchField, scalar> phiRelBf
+        (
+            MRF_.relative(mesh_.Sf().boundaryField() & UBf)
+        );
+
+        surfaceScalarField::Boundary& phiBf = phase.phiRef().boundaryFieldRef();
+
+        forAll(mesh_.boundary(), patchi)
+        {
+            if
+            (
+                isA<fixedValueFvsPatchScalarField>(phiBf[patchi])
+             && !isA<movingWallVelocityFvPatchVectorField>(UBf[patchi])
+            )
+            {
+                phiBf[patchi] == phiRelBf[patchi];
+            }
+        }
     }
 }
 
