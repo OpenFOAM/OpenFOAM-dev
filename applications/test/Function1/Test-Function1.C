@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 
     Info<< "Calculating values\n" << endl;
     const scalarField ys(function.value(xs));
-    const scalarField integralYs(function.integrate(scalarField(nX, x0), xs));
+    const scalarField integralYs(function.integral(scalarField(nX, x0), xs));
     scalarField trapezoidIntegralYs(nX, 0);
     for (label i = 1; i < nX; ++ i)
     {

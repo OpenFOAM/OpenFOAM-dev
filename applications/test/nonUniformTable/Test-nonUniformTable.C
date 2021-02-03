@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#include "nonUniformTable1DThermophysicalFunction.H"
+#include "NonUniformTable1.H"
 #include "IFstream.H"
 
 using namespace Foam;
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 {
     dictionary dict(IFstream("thermoDict")());
 
-    thermophysicalFunctions::nonUniformTable1D table(dict);
+    Function1s::NonUniformTable<scalar> table("table", dict);
 
     const label n = 1000;
     const scalar T0 = table.values().first().first();
@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     for (int i = 0; i<n + 1; i++)
     {
         const scalar T = T0 + i*deltaT;
-        const scalar f = table.f(0, T);
+        const scalar f = table.value(T);
 
         if (mag(T - f) > small)
         {
