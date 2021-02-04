@@ -867,11 +867,10 @@ int main(int argc, char *argv[])
     (
         IOobject
         (
-            "abc",                      // dummy name
-            mesh.time().constant(),     // instance
-            // mesh.time().findInstance("triSurface", word::null),// instance
-            "triSurface",               // local
-            mesh.time(),                // registry
+            "abc",
+            mesh.time().constant(),
+            searchableSurface::geometryDir(mesh.time()),
+            mesh.time(),
             IOobject::MUST_READ,
             IOobject::NO_WRITE
         ),

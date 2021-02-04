@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,7 @@ Foam::faceSelections::searchableSurfaceSelection::searchableSurfaceSelection
             (
                 dict.lookupOrDefault("name", mesh.objectRegistry::db().name()),
                 mesh.time().constant(),
-                "triSurface",
+                searchableSurface::geometryDir(mesh.time()),
                 mesh.objectRegistry::db(),
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE

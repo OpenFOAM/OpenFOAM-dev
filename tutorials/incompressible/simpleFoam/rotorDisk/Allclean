@@ -5,8 +5,8 @@
 
 # remove surface and features
 rm -rf constant/extendedFeatureEdgeMesh > /dev/null 2>&1
-rm -f constant/triSurface/rotatingZone.eMesh > /dev/null 2>&1
-rm -f constant/triSurface/fixed.eMesh > /dev/null 2>&1
+rm -f constant/geometry/rotatingZone.eMesh > /dev/null 2>&1
+rm -f constant/geometry/fixed.eMesh > /dev/null 2>&1
 rm -f 0/pointLevel > /dev/null 2>&1
 rm -f 0/cellLevel > /dev/null 2>&1
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,7 @@ Foam::sampledSets::triSurfaceMeshSampledSet::triSurfaceMeshSampledSet
             (
                 surface_,
                 mesh.time().constant(),
-                "triSurface",
+                searchableSurface::geometryDir(mesh.time()),
                 mesh.time(),
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE,

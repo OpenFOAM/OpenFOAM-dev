@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -220,7 +220,7 @@ Foam::searchableSurfaceToFaceZone::searchableSurfaceToFaceZone
             (
                 dict.lookupOrDefault("name", mesh.objectRegistry::db().name()),
                 mesh.time().constant(),
-                "triSurface",
+                searchableSurface::geometryDir(mesh.time()),
                 mesh.objectRegistry::db(),
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE

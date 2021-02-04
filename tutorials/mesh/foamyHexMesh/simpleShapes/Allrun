@@ -5,19 +5,19 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 runApplication -s cone \
-    surfaceOrient constant/triSurface/cone.stl \
-                  constant/triSurface/cone_orient.stl \
+    surfaceOrient constant/geometry/cone.stl \
+                  constant/geometry/cone_orient.stl \
                   -inside '(0 -0.5 0)'
 
 runApplication -s sphere \
-    surfaceOrient constant/triSurface/sphere.stl \
-                  constant/triSurface/sphere_orient.stl \
+    surfaceOrient constant/geometry/sphere.stl \
+                  constant/geometry/sphere_orient.stl \
                   -inside '(0 -0.5 0)'
 
 runApplication \
     surfaceBooleanFeatures \
-                  constant/triSurface/cone_orient.stl \
-                  constant/triSurface/sphere_orient.stl \
+                  constant/geometry/cone_orient.stl \
+                  constant/geometry/sphere_orient.stl \
                   intersection
 
 runApplication foamyHexMesh

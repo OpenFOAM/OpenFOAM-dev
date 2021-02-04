@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -828,8 +828,8 @@ void Foam::triSurfaceMesh::setField(const labelList& values)
             IOobject
             (
                 "values",
-                objectRegistry::time().timeName(),  // instance
-                "triSurface",                       // local
+                objectRegistry::time().timeName(),
+                searchableSurface::geometryDir(objectRegistry::time()),
                 *this,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE

@@ -5,8 +5,8 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Copy pipe surface from resources directory
-mkdir -p constant/triSurface
-cp $FOAM_TUTORIALS/resources/geometry/pipe*.obj.gz constant/triSurface/
+mkdir -p constant/geometry
+cp $FOAM_TUTORIALS/resources/geometry/pipe*.obj.gz constant/geometry/
 
 runApplication surfaceFeatures
 runApplication blockMesh

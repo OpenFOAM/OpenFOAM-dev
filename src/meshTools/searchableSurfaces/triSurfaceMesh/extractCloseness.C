@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -266,7 +266,7 @@ Foam::triSurfaceMesh::extractCloseness
                 (
                     objectRegistry::name() + ".internalCloseness",
                     runTime.constant(),
-                    "triSurface",
+                    searchableSurface::geometryDir(runTime),
                     runTime
                 ),
                 *this,
@@ -283,7 +283,7 @@ Foam::triSurfaceMesh::extractCloseness
                 (
                     objectRegistry::name() + ".externalCloseness",
                     runTime.constant(),
-                    "triSurface",
+                    searchableSurface::geometryDir(runTime),
                     runTime
                 ),
                 *this,
@@ -396,7 +396,7 @@ Foam::triSurfaceMesh::extractPointCloseness
                 (
                     objectRegistry::name() + ".internalPointCloseness",
                     runTime.constant(),
-                    "triSurface",
+                    searchableSurface::geometryDir(runTime),
                     runTime
                 ),
                 *this,
@@ -413,7 +413,7 @@ Foam::triSurfaceMesh::extractPointCloseness
                 (
                     objectRegistry::name() + ".externalPointCloseness",
                     runTime.constant(),
-                    "triSurface",
+                    searchableSurface::geometryDir(runTime),
                     runTime
                 ),
                 *this,

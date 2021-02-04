@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -329,10 +329,10 @@ Foam::sampledSurfaces::distanceSurface::distanceSurface
             dict.lookup("surfaceType"),
             IOobject
             (
-                dict.lookupOrDefault("surfaceName", name),  // name
-                mesh.time().constant(),                     // directory
-                "triSurface",                               // instance
-                mesh.time(),                                // registry
+                dict.lookupOrDefault("surfaceName", name),
+                mesh.time().constant(),
+                searchableSurface::geometryDir(mesh.time()),
+                mesh.time(),
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE
             ),

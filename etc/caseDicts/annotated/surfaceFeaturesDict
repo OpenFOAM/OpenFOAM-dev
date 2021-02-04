@@ -45,7 +45,7 @@ surface2
     // Load from an existing feature edge file
     files
     (
-        "surface2.nas" "constant/triSurface/featureEdges.nas";
+        "surface2.nas" "constant/geometry/featureEdges.nas";
     );
 
     trimFeatures

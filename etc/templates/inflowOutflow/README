@@ -4,7 +4,7 @@ Overview
 + Setup to run the simpleFoam solver
 + The case is designed to be meshed with snappyHexMesh
 + snappyHexMesh is setup to use a single trisurface file named CAD.obj
-+ Copy the CAD.obj file to the constant/triSurface directory
++ Copy the CAD.obj file to the constant/geometry directory
 + The CAD.obj should contain an inlet and outlet region to create the relevant
   patches in the mesh
 

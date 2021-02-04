@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -300,7 +300,7 @@ int main(int argc, char *argv[])
         (
             "surfacesToHook",
             runTime.constant(),
-            "triSurface",
+            searchableSurface::geometryDir(runTime),
             runTime
         ),
         dict,
@@ -345,7 +345,7 @@ int main(int argc, char *argv[])
                 (
                     "hookedSurface_" + surfs.names()[surfI],
                     runTime.constant(),
-                    "triSurface",
+                    searchableSurface::geometryDir(runTime),
                     runTime
                 ),
                 surf
@@ -559,7 +559,7 @@ int main(int argc, char *argv[])
                     (
                         "hookedSurface_" + surfs.names()[surfI],
                         runTime.constant(),
-                        "triSurface",
+                        searchableSurface::geometryDir(runTime),
                         runTime
                     ),
                     triSurface

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,10 +79,10 @@ void Foam::refinementFeatures::read
 
             IOobject featObj
             (
-                featFileName,                       // name
-                io.time().constant(),               // instance
-                "triSurface",                       // local
-                io.time(),                          // registry
+                featFileName,
+                io.time().constant(),
+                searchableSurface::geometryDir(io.time()),
+                io.time(),
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE,
                 false

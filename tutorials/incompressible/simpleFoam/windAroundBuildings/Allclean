@@ -7,7 +7,7 @@ cd ${0%/*} || exit 1    # run from this directory
 cleanCase
 
 rm -rf constant/extendedFeatureEdgeMesh > /dev/null 2>&1
-rm -f constant/triSurface/buildings.eMesh > /dev/null 2>&1
+rm -f constant/geometry/buildings.eMesh > /dev/null 2>&1
 rm -f constant/polyMesh/boundary > /dev/null 2>&1
 
 #------------------------------------------------------------------------------

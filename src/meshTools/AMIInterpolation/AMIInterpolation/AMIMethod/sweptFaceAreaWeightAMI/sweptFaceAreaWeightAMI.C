@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,6 +28,7 @@ License
 #include "linearEqn.H"
 #include "quadraticEqn.H"
 #include "unitConversion.H"
+#include "triSurface.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -56,7 +57,7 @@ void Foam::sweptFaceAreaWeightAMI::writeCutTrisVTK
     OFstream obj(typeName + "_" + name + ".vtk");
 
     obj << "# vtk DataFile Version 2.0" << endl
-        << "triSurface" << endl
+        << triSurface::typeName << endl
         << "ASCII" << endl
         << "DATASET POLYDATA" << endl
         << "POINTS " << 3*tris.size() << " float" << endl;

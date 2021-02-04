@@ -8,7 +8,7 @@ Overview
   + fixed.obj: CAD of the stationary geometry
   + rotating.obj: CAD of the rotating geometry
   + rotatingZone.obj: CAD of surface bounding the rotating region
-+ Copy the *.obj files to the constant/triSurface directory
++ Copy the *.obj files to the constant/geometry directory
 + The fixed.obj should contain an inlet and outlet region to create the relevant
   patches in the mesh
 

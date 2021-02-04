@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Description
 #include "pointFields.H"
 #include "fvMeshMapper.H"
 #include "faceSelection.H"
-
+#include "searchableSurface.H"
 #include "fvMeshTools.H"
 
 using namespace Foam;
@@ -445,7 +445,6 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     runTime.functionObjects().off();
     #include "createNamedMesh.H"
-
 
     const bool overwrite = args.optionFound("overwrite");
 

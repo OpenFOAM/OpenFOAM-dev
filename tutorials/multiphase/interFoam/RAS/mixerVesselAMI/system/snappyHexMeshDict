@@ -182,7 +182,7 @@ castellatedMeshControls
 
     // Specifies a level for any cell intersected by explicitly provided
     // edges.
-    // This is a featureEdgeMesh, read from constant/triSurface for now.
+    // This is a featureEdgeMesh, read from constant/geometry for now.
     // Specify 'levels' in the same way as the 'distance' mode in the
     // refinementRegions (see below). The old specification
     //      level   2;

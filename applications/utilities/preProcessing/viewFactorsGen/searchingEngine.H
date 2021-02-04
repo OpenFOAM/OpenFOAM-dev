@@ -56,9 +56,9 @@ distributedTriSurfaceMesh surfacesMesh
     IOobject
     (
         "wallSurface.stl",
-        runTime.constant(),     // directory
-        "triSurface",           // instance
-        runTime,                // registry
+        runTime.constant(),
+        searchableSurface::geometryDir(runTime),
+        runTime,
         IOobject::NO_READ,
         IOobject::NO_WRITE
     ),

@@ -23,7 +23,7 @@ Meshing Strategy
 Surface Geometry
 ================
 + Copy the overall domain geometry file ("CAD.obj") and solid geometry files
-  (e.g. "solid.obj") to the constant/triSurface
+  (e.g. "solid.obj") to the constant/geometry
 + The CAD.obj should contain an inlet and outlet region to create the relevant
   patches in the mesh
 

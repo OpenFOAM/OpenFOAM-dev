@@ -5,11 +5,11 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 runApplication surfaceTransformPoints -translate '(-0.586 0 -0.156)' \
-               constant/triSurface/w3_orig.stl constant/triSurface/w3.stl
+               constant/geometry/w3_orig.stl constant/geometry/w3.stl
 runApplication -a surfaceTransformPoints -rollPitchYaw '(0 -3.485 0)' \
-               constant/triSurface/w3.stl constant/triSurface/w3.stl
+               constant/geometry/w3.stl constant/geometry/w3.stl
 runApplication -a surfaceTransformPoints -translate '(0.586 0 0.156)' \
-               constant/triSurface/w3.stl constant/triSurface/w3.stl
+               constant/geometry/w3.stl constant/geometry/w3.stl
 
 runApplication surfaceFeatures
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,9 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "searchableSurface.H"
+#include "Time.H"
+#include "triSurface.H"
+#include "OSspecific.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -32,6 +35,8 @@ namespace Foam
     defineTypeNameAndDebug(searchableSurface, 0);
     defineRunTimeSelectionTable(searchableSurface, dict);
 }
+
+Foam::word Foam::searchableSurface::geometryDir_("geometry");
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -75,6 +80,43 @@ Foam::searchableSurface::~searchableSurface()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::word& Foam::searchableSurface::geometryDir()
+{
+    return geometryDir_;
+}
+
+
+const Foam::word& Foam::searchableSurface::geometryDir(const Time& time)
+{
+    if
+    (
+        isDir
+        (
+            time.rootPath()/time.globalCaseName()/time.constant()/
+            searchableSurface::geometryDir_
+        )
+    )
+    {
+        return searchableSurface::geometryDir_;
+    }
+    else if
+    (
+        isDir
+        (
+            time.rootPath()/time.globalCaseName()/time.constant()/
+            triSurface::typeName
+        )
+    )
+    {
+        return triSurface::typeName;
+    }
+    else
+    {
+        return searchableSurface::geometryDir_;
+    }
+}
+
 
 void Foam::searchableSurface::findNearest
 (

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ void triSurface::writeVTK(const bool writeSorted, Ostream& os) const
 {
     // Write header
     os  << "# vtk DataFile Version 2.0" << nl
-        << "triSurface" << nl
+        << triSurface::typeName << nl
         << "ASCII" << nl
         << "DATASET POLYDATA"
         << nl;

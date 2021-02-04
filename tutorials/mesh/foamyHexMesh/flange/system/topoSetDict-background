@@ -23,7 +23,7 @@ actions
         source surfaceToCell;
         sourceInfo
         {
-            file            "constant/triSurface/flange.obj";
+            file            "constant/geometry/flange.obj";
             outsidePoints   ((-0.026 -0.0275 -0.0235));
             includeCut      true;
             includeInside   true;

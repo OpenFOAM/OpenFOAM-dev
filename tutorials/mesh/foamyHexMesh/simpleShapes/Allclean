@@ -5,8 +5,8 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
 rm -r constant/extendedFeatureEdgeMesh constant/internalDelaunayVertices > /dev/null 2>&1
-rm constant/triSurface/*.eMesh > /dev/null 2>&1
-rm constant/triSurface/*_orient* > /dev/null 2>&1
+rm constant/geometry/*.eMesh > /dev/null 2>&1
+rm constant/geometry/*_orient* > /dev/null 2>&1
 rm -r constant/polyMesh > /dev/null 2>&1
 rm -r constant/polyMesh > /dev/null 2>&1
 rm -r constant/tetDualMesh > /dev/null 2>&1

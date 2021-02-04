@@ -76,7 +76,7 @@ sphereRandom
 triSurfaceMesh
 {
     type            triSurfaceMesh;
-    surface         "surfaceMeshFile.obj"; // in constant/triSurface directory
+    surface         "surfaceMeshFile.obj"; // in constant/geometry directory
 }
 
 // Seeding at a boundary

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -835,7 +835,7 @@ Foam::conformalVoronoiMesh::conformalVoronoiMesh
         (
             "cvSearchableSurfaces",
             runTime_.constant(),
-            "triSurface",
+            searchableSurface::geometryDir(runTime),
             runTime_,
             IOobject::MUST_READ,
             IOobject::NO_WRITE

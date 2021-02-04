@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,6 +80,14 @@ public:
     //- Runtime type information
     TypeName("searchableSurface");
 
+
+    // Static data
+
+        //- Name of the directory for the geometry files
+        //  Defaults to "geometry"
+        static word geometryDir_;
+
+
     // Declare run-time constructor selection table
 
         // For the dictionary constructor
@@ -153,6 +161,13 @@ public:
 
 
     // Member Functions
+
+        //- Return the geometry directory name
+        static const word& geometryDir();
+
+        //- Check that the geometry directory exists and return
+        //  if not return "triSurface" for backward compatibility
+        static const word& geometryDir(const Time& time);
 
         //- Return const reference to boundBox
         const boundBox& bounds() const

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
     argList::addBoolOption("clean");
     argList::addBoolOption("orient");
     argList::addBoolOption("surfMesh");
-    argList::addBoolOption("triSurface");
+    argList::addBoolOption(triSurface::typeName);
     argList::addBoolOption("unsorted");
     argList::addBoolOption("triFace");
 
@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    if (args.optionFound("triSurface"))
+    if (args.optionFound(triSurface::typeName))
     {
         triSurface surf(importName);
 

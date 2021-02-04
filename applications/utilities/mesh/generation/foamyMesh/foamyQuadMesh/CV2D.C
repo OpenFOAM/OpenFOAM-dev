@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,7 +117,7 @@ Foam::CV2D::CV2D
         (
             "cvSearchableSurfaces",
             runTime_.constant(),
-            "triSurface",
+            searchableSurface::geometryDir(runTime),
             runTime_,
             IOobject::MUST_READ,
             IOobject::NO_WRITE

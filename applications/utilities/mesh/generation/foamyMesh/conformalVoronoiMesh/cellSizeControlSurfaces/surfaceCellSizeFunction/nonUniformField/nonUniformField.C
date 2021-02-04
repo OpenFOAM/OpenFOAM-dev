@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,10 @@ Foam::nonUniformField::nonUniformField
         (
             "pointCellSize.cellSize",
             surfaceTriMesh_.searchableSurface::time().constant(),
-            "triSurface",
+            searchableSurface::geometryDir
+            (
+                surfaceTriMesh_.searchableSurface::time()
+            ),
             surfaceTriMesh_.searchableSurface::time(),
             IOobject::NO_READ,
             IOobject::NO_WRITE

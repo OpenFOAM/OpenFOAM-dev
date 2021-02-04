@@ -4,7 +4,7 @@ Overview
 + Setup to run buoyantSimpleFoam
 + The case is designed to be meshed with snappyHexMesh
 + snappyHexMesh is setup to use a single trisurface file named CAD.obj
-+ Copy the CAD.obj file to the constant/triSurface directory
++ Copy the CAD.obj file to the constant/geometry directory
 + The CAD.obj can contain one or more regions to create patches in the mesh
 + The user can then specify different boundary condition on T on these patches
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -528,9 +528,9 @@ Foam::sampledSurfaces::triSurfaceMesh::triSurfaceMesh
         IOobject
         (
             surfaceName,
-            mesh.time().constant(), // instance
-            "triSurface",           // local
-            mesh,                   // registry
+            mesh.time().constant(),
+            searchableSurface::geometryDir(mesh.time()),
+            mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE,
             false
@@ -556,9 +556,9 @@ Foam::sampledSurfaces::triSurfaceMesh::triSurfaceMesh
         IOobject
         (
             dict.lookup("surface"),
-            mesh.time().constant(), // instance
-            "triSurface",           // local
-            mesh,                   // registry
+            mesh.time().constant(),
+            searchableSurface::geometryDir(mesh.time()),
+            mesh,
             IOobject::MUST_READ,
             IOobject::NO_WRITE,
             false
@@ -585,9 +585,9 @@ Foam::sampledSurfaces::triSurfaceMesh::triSurfaceMesh
         IOobject
         (
             name,
-            mesh.time().constant(), // instance
-            "triSurface",           // local
-            mesh,                  // registry
+            mesh.time().constant(),
+            searchableSurface::geometryDir(mesh.time()),
+            mesh,
             IOobject::NO_READ,
             IOobject::NO_WRITE,
             false

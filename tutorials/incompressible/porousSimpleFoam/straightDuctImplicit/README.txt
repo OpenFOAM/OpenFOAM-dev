@@ -1,9 +1,9 @@
 2013-10-01 Meshing the angledDuct geometry.
 
-constant/triSurface/angledDuct.stl
+constant/geometry/angledDuct.stl
     outer geometry
 
-constant/triSurface/boundaryAndFaceZones.stl
+constant/geometry/boundaryAndFaceZones.stl
     boundary and faceZones to extract feature
     edges from.
 
@@ -23,7 +23,7 @@ surfaceFeatures
 
 
 
-constant/triSurface/porosity_inflated.stl
+constant/geometry/porosity_inflated.stl
     block around porosity
     (slightly inflated)
 

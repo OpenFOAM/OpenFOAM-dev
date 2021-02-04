@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,10 +61,10 @@ Foam::searchableExtrudedCircle::searchableExtrudedCircle
         (
             IOobject
             (
-                dict.lookup("file"),                // name
-                io.time().constant(),               // instance
-                "geometry",                         // local
-                io.time(),                          // registry
+                dict.lookup("file"),
+                io.time().constant(),
+                searchableSurface::geometryDir(),
+                io.time(),
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE,
                 false

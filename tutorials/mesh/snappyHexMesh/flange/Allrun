@@ -3,7 +3,7 @@
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Copy flange surface from resources directory
-cp $FOAM_TUTORIALS/resources/geometry/flange.stl.gz constant/triSurface/
+cp $FOAM_TUTORIALS/resources/geometry/flange.stl.gz constant/geometry/
 
 runApplication blockMesh
 runApplication surfaceFeatures

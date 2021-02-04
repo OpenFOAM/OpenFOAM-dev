@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,7 +180,12 @@ namespace Foam
         // Read
         // ~~~~
 
-        triSurface surf(runTime.constantPath()/"triSurface"/surfaceFileName);
+        triSurface surf
+        (
+            runTime.constantPath()
+           /searchableSurface::geometryDir(runTime)
+           /surfaceFileName
+        );
 
         Info<< "Statistics:" << endl;
         surf.writeStats(Info);
@@ -405,7 +410,7 @@ namespace Foam
             (
                 surfaceFileName.lessExt().name() + ".eMesh",
                 runTime.constant(),
-                "triSurface",
+                searchableSurface::geometryDir(runTime),
                 runTime,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE,
@@ -457,7 +462,7 @@ namespace Foam
                 (
                     sFeatFileName + ".closeness",
                     runTime.constant(),
-                    "triSurface",
+                    searchableSurface::geometryDir(runTime),
                     runTime
                 ),
                 surf
@@ -488,8 +493,9 @@ namespace Foam
 
                     vtkSurfaceWriter(runTime.writeFormat()).write
                     (
-                        runTime.constantPath()/"triSurface",// outputDir
-                        searchSurf.objectRegistry::name(),  // surfaceName
+                        runTime.constantPath()
+                       /searchableSurface::geometryDir(runTime),
+                        searchSurf.objectRegistry::name(),
                         searchSurf.points(),
                         faces,
                         "internalCloseness",                // fieldName
@@ -499,8 +505,9 @@ namespace Foam
 
                     vtkSurfaceWriter(runTime.writeFormat()).write
                     (
-                        runTime.constantPath()/"triSurface",// outputDir
-                        searchSurf.objectRegistry::name(),  // surfaceName
+                        runTime.constantPath()
+                       /searchableSurface::geometryDir(runTime),
+                        searchSurf.objectRegistry::name(),
                         searchSurf.points(),
                         faces,
                         "externalCloseness",                // fieldName
@@ -554,8 +561,9 @@ namespace Foam
 
                     vtkSurfaceWriter(runTime.writeFormat()).write
                     (
-                        runTime.constantPath()/"triSurface",// outputDir
-                        searchSurf.objectRegistry::name(),  // surfaceName
+                        runTime.constantPath()
+                       /searchableSurface::geometryDir(runTime),
+                        searchSurf.objectRegistry::name(),
                         searchSurf.points(),
                         faces,
                         "internalPointCloseness",           // fieldName
@@ -565,8 +573,9 @@ namespace Foam
 
                     vtkSurfaceWriter(runTime.writeFormat()).write
                     (
-                        runTime.constantPath()/"triSurface",// outputDir
-                        searchSurf.objectRegistry::name(),  // surfaceName
+                        runTime.constantPath()
+                       /searchableSurface::geometryDir(runTime),
+                        searchSurf.objectRegistry::name(),
                         searchSurf.points(),
                         faces,
                         "externalPointCloseness",           // fieldName
@@ -589,7 +598,7 @@ namespace Foam
                 (
                     sFeatFileName + ".curvature",
                     runTime.constant(),
-                    "triSurface",
+                    searchableSurface::geometryDir(runTime),
                     runTime
                 ),
                 surf,
@@ -603,8 +612,9 @@ namespace Foam
             {
                 vtkSurfaceWriter(runTime.writeFormat()).write
                 (
-                    runTime.constantPath()/"triSurface",// outputDir
-                    sFeatFileName,                      // surfaceName
+                    runTime.constantPath()
+                   /searchableSurface::geometryDir(runTime),
+                    sFeatFileName,
                     surf.points(),
                     faces,
                     "curvature",                        // fieldName
@@ -659,7 +669,7 @@ namespace Foam
                 (
                     sFeatFileName + ".featureProximity",
                     runTime.constant(),
-                    "triSurface",
+                    searchableSurface::geometryDir(runTime),
                     runTime,
                     IOobject::NO_READ,
                     IOobject::NO_WRITE
@@ -675,8 +685,9 @@ namespace Foam
             {
                 vtkSurfaceWriter(runTime.writeFormat()).write
                 (
-                    runTime.constantPath()/"triSurface",// outputDir
-                    sFeatFileName,                      // surfaceName
+                    runTime.constantPath()
+                   /searchableSurface::geometryDir(runTime),
+                    sFeatFileName,
                     surf.points(),
                     faces,
                     "featureProximity",                 // fieldName

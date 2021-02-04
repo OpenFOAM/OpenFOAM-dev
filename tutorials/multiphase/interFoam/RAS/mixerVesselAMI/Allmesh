@@ -5,7 +5,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
 # Copy mixerVessel surfaces from resources directory
-cp $FOAM_TUTORIALS/resources/geometry/mixerVessel*.stl.gz constant/triSurface/
+cp $FOAM_TUTORIALS/resources/geometry/mixerVessel*.stl.gz constant/geometry/
 
 # Meshing
 runApplication blockMesh

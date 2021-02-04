@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -145,7 +145,10 @@ Foam::tmp<Foam::triSurfacePointScalarField> Foam::automatic::load()
             (
                 surfaceName_ + ".cellSize",
                 surface_.searchableSurface::time().constant(),
-                "triSurface",
+                searchableSurface::geometryDir
+                (
+                    surface_.searchableSurface::time()
+                ),
                 surface_.searchableSurface::time(),
                 IOobject::NO_READ,
                 IOobject::NO_WRITE
@@ -169,7 +172,10 @@ Foam::tmp<Foam::triSurfacePointScalarField> Foam::automatic::load()
             (
                 curvatureFile_,
                 surface_.searchableSurface::time().constant(),
-                "triSurface",
+                searchableSurface::geometryDir
+                (
+                    surface_.searchableSurface::time()
+                ),
                 surface_.searchableSurface::time(),
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE
@@ -214,7 +220,10 @@ Foam::tmp<Foam::triSurfacePointScalarField> Foam::automatic::load()
             (
                 internalClosenessFile_,
                 surface_.searchableSurface::time().constant(),
-                "triSurface",
+                searchableSurface::geometryDir
+                (
+                    surface_.searchableSurface::time()
+                ),
                 surface_.searchableSurface::time(),
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE
@@ -247,7 +256,10 @@ Foam::tmp<Foam::triSurfacePointScalarField> Foam::automatic::load()
             (
                 featureProximityFile_,
                 surface_.searchableSurface::time().constant(),
-                "triSurface",
+                searchableSurface::geometryDir
+                (
+                    surface_.searchableSurface::time()
+                ),
                 surface_.searchableSurface::time(),
                 IOobject::MUST_READ,
                 IOobject::NO_WRITE
@@ -291,7 +303,11 @@ Foam::tmp<Foam::triSurfacePointScalarField> Foam::automatic::load()
             surface_.searchableSurface::time().writeFormat()
         ).write
         (
-            surface_.searchableSurface::time().constant()/"triSurface",
+            surface_.searchableSurface::time().constant()/
+                searchableSurface::geometryDir
+                (
+                    surface_.searchableSurface::time()
+                ),
             surfaceName_.lessExt().name(),
             surface_.points(),
             faces,
