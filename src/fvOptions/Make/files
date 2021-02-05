@@ -37,6 +37,7 @@ $(derivedSources)/phaseLimitStabilization/phaseLimitStabilization.C
 $(derivedSources)/accelerationSource/accelerationSource.C
 $(derivedSources)/volumeFractionSource/volumeFractionSource.C
 $(derivedSources)/solidEquilibriumEnergySource/solidEquilibriumEnergySource.C
+$(derivedSources)/massSource/massSource.C
 
 interRegion = sources/interRegion
 $(interRegion)/interRegionHeatTransfer/interRegionHeatTransferModel/interRegionHeatTransferModel.C

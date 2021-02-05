@@ -19,26 +19,21 @@ options
 {
     massSource
     {
-        type            semiImplicitSource;
-
-        timeStart       0;
-        duration        1e6;
+        type            massSource;
 
         selectionMode   points;
-        points
-        (
-            (0.075 0.925 0.05)
-        );
+        points          ((0.075 0.925 0.05));
 
         volumeMode      absolute;
 
-        sources
+        massFlowRate    1;
+
+        phase           water;
+        rho             thermo:rho.water;
+
+        fieldValues
         {
-            thermo:rho.water
-            {
-                explicit    1; // kg/s
-                implicit    0;
-            }
+            U.water         (0 0 0);
         }
     }
 }

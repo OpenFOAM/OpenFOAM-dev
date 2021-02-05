@@ -19,7 +19,7 @@ options
 {
     massSource
     {
-        type            semiImplicitSource;
+        type            massSource;
 
         timeStart       1;
         duration        500;
@@ -32,25 +32,22 @@ options
 
         volumeMode      absolute;
 
-        sources
+        phase           steam;
+        rho             thermo:rho.steam;
+
+        massFlowRate
         {
-            thermo:rho.steam
-            {
-                explicit    1.0e-3; // kg/s
-                implicit    0;
-            }
+            type            scale;
+            scale           squarePulse;
+            start           1;
+            duration        1e6;
+            value           1e-3;
+        }
 
-            U.steam
-            {
-                explicit    (0 1e-1 0); // kg*m/s^2
-                implicit    0;
-            }
-
-            h.steam
-            {
-                explicit    3700; // kg*m^2/s^3
-                implicit    0;
-            }
+        fieldValues
+        {
+            U.steam         (0 10 0);
+            h.steam         3700000;
         }
     }
 

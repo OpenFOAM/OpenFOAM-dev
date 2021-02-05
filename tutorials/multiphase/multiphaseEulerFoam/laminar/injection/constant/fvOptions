@@ -19,7 +19,7 @@ options
 {
     massSource
     {
-        type            semiImplicitSource;
+        type            massSource;
 
         timeStart       0.1;
         duration        5;
@@ -32,25 +32,22 @@ options
 
         volumeMode      absolute;
 
-        sources
+        phase           air;
+        rho             thermo:rho.air;
+
+        massFlowRate
         {
-            thermo:rho.air
-            {
-                explicit    1e-3; // kg/s
-                implicit    0;
-            }
+            type            scale;
+            scale           squarePulse;
+            start           0.1;
+            duration        5;
+            value           1e-3;
+        }
 
-            U.air
-            {
-                explicit    (0 -1e-2 0); // kg*m/s^2
-                implicit    0;
-            }
-
-            e.air
-            {
-                explicit    500; // kg*m^2/s^3
-                implicit    0;
-            }
+        fieldValues
+        {
+            U.air       (0 -10 0);
+            T.air       300;
         }
     }
 }
