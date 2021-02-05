@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,6 +75,7 @@ public:
         //- Disallow default bitwise copy construction
         options(const options&) = delete;
 
+        //- Inherit the base New method
         using MeshObject<fvMesh, UpdateableMeshObject, options>::New;
 
 
@@ -101,6 +102,7 @@ public:
         //- ReadData function required for regIOobject read operation
         virtual bool readData(Istream&);
 
+        //- Inherit the base read method
         using optionList::read;
 
         //- Read dictionary

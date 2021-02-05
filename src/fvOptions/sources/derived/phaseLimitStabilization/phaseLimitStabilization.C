@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,16 +23,157 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "makeFvOption.H"
-#include "PhaseLimitStabilization.H"
+#include "phaseLimitStabilization.H"
+#include "fvMatrices.H"
+#include "fvmSup.H"
+#include "uniformDimensionedFields.H"
+#include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-makeFvOption(PhaseLimitStabilization, scalar);
-makeFvOption(PhaseLimitStabilization, vector);
-makeFvOption(PhaseLimitStabilization, sphericalTensor);
-makeFvOption(PhaseLimitStabilization, symmTensor);
-makeFvOption(PhaseLimitStabilization, tensor);
+namespace Foam
+{
+namespace fv
+{
+    defineTypeNameAndDebug(phaseLimitStabilization, 0);
+
+    addToRunTimeSelectionTable
+    (
+        option,
+        phaseLimitStabilization,
+        dictionary
+    );
+}
+}
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::fv::phaseLimitStabilization::readCoeffs()
+{
+    fieldName_ = coeffs_.lookup<word>("field");
+    rateName_ = coeffs_.lookup<word>("rate");
+    residualAlpha_ = coeffs_.lookup<scalar>("residualAlpha");
+}
+
+
+template<class Type>
+void Foam::fv::phaseLimitStabilization::addSupType
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{
+    const GeometricField<Type, fvPatchField, volMesh>& psi = eqn.psi();
+
+    uniformDimensionedScalarField& rate =
+        mesh_.lookupObjectRef<uniformDimensionedScalarField>(rateName_);
+
+    eqn -= fvm::Sp(max(residualAlpha_ - alpha, scalar(0))*rho*rate, psi);
+}
+
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::fv::phaseLimitStabilization::phaseLimitStabilization
+(
+    const word& name,
+    const word& modelType,
+    const dictionary& dict,
+    const fvMesh& mesh
+)
+:
+    option(name, modelType, dict, mesh),
+    fieldName_(word::null),
+    rateName_(word::null),
+    residualAlpha_(NaN)
+{
+    readCoeffs();
+}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::wordList Foam::fv::phaseLimitStabilization::addedToFields() const
+{
+    return wordList(1, fieldName_);
+}
+
+
+void Foam::fv::phaseLimitStabilization::addSup
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<scalar>& eqn,
+    const word& fieldName
+) const
+{
+    addSupType(alpha, rho, eqn, fieldName);
+}
+
+
+void Foam::fv::phaseLimitStabilization::addSup
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<vector>& eqn,
+    const word& fieldName
+) const
+{
+    addSupType(alpha, rho, eqn, fieldName);
+}
+
+
+void Foam::fv::phaseLimitStabilization::addSup
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<symmTensor>& eqn,
+    const word& fieldName
+) const
+{
+    addSupType(alpha, rho, eqn, fieldName);
+}
+
+
+void Foam::fv::phaseLimitStabilization::addSup
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<sphericalTensor>& eqn,
+    const word& fieldName
+) const
+{
+    addSupType(alpha, rho, eqn, fieldName);
+}
+
+
+void Foam::fv::phaseLimitStabilization::addSup
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<tensor>& eqn,
+    const word& fieldName
+) const
+{
+    addSupType(alpha, rho, eqn, fieldName);
+}
+
+
+bool Foam::fv::phaseLimitStabilization::read(const dictionary& dict)
+{
+    if (option::read(dict))
+    {
+        readCoeffs();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
 
 // ************************************************************************* //

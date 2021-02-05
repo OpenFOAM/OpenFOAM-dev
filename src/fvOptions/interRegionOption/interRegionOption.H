@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,9 +53,7 @@ class interRegionOption
 :
     public option
 {
-protected:
-
-    // Protected data
+    // Private data
 
         //- Master or slave region
         bool master_;
@@ -63,14 +61,20 @@ protected:
         //- Name of the neighbour region to map
         word nbrRegionName_;
 
+        //- Interpolation method
+        meshToMesh::interpolationMethod interpolationMethod_;
+
         //- Mesh to mesh interpolation object
-        autoPtr<meshToMesh> meshInterpPtr_;
+        mutable autoPtr<meshToMesh> meshInterpPtr_;
 
 
-    // Protected member functions
+    // Private member functions
+
+        //- Non-virtual read
+        void readCoeffs();
 
         //- Set the mesh to mesh interpolation object
-        void setMapper();
+        void setMapper() const;
 
 
 public:
@@ -98,6 +102,9 @@ public:
     // Member Functions
 
         // Access
+
+            //- Return whether the master region
+            inline bool master() const;
 
             //- Return const access to the neighbour region name
             inline const word& nbrRegionName() const;

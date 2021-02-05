@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ void Foam::fv::sixDoFAccelerationSource::addSup
 (
     const RhoFieldType& rho,
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     Vector<vector> accelerations(accelerations_->value(mesh_.time().value()));
@@ -49,7 +49,7 @@ void Foam::fv::sixDoFAccelerationSource::addSup
         const uniformDimensionedScalarField& hRef =
             mesh_.lookupObject<uniformDimensionedScalarField>("hRef");
 
-        g = g0_ - dimensionedVector("a", dimAcceleration, accelerations.x());
+        g = g_ - dimensionedVector("a", dimAcceleration, accelerations.x());
 
         dimensionedScalar ghRef(- mag(g)*hRef);
 

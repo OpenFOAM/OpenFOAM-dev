@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,12 @@ Description
 Usage
     Example usage:
     \verbatim
-    fields          (h);                    // Name of energy field
+    buoyancyEnergy1
+    {
+        type        buoyancyEnergy;
+
+        U           U;  // Name of the velocity field
+    }
     \endverbatim
 
 SourceFiles
@@ -62,8 +67,17 @@ class buoyancyEnergy
 {
     // Private Data
 
-        //- Name of velocity field; default = U
+        //- Optional phase name
+        word phaseName_;
+
+        //- Name of velocity field; default = U.<phase>
         word UName_;
+
+
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
 
 
 public:
@@ -89,6 +103,13 @@ public:
 
     // Member Functions
 
+        // Checks
+
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addedToFields() const;
+
+
         // Evaluate
 
             //- Add explicit contribution to compressible momentum equation
@@ -96,7 +117,16 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<scalar>& eqn,
-                const label fieldi
+                const word& fieldName
+            ) const;
+
+            //- Add explicit contribution to phase momentum equation
+            virtual void addSup
+            (
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                fvMatrix<scalar>& eqn,
+                const word& fieldName
             ) const;
 
 

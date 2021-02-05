@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,26 +48,37 @@ namespace fv
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::actuationDiskSource::checkData() const
+void Foam::fv::actuationDiskSource::readCoeffs()
 {
-    if (magSqr(diskArea_) <= vSmall)
-    {
-        FatalErrorInFunction
-           << "diskArea is approximately zero"
-           << exit(FatalIOError);
-    }
-    if (Cp_ <= vSmall || Ct_ <= vSmall)
-    {
-        FatalErrorInFunction
-           << "Cp and Ct must be greater than zero"
-           << exit(FatalIOError);
-    }
+    UName_ = coeffs_.lookupOrDefault<word>("U", "U");
+
+    diskDir_ = coeffs_.lookup<vector>("diskDir");
     if (mag(diskDir_) < vSmall)
     {
         FatalErrorInFunction
            << "disk direction vector is approximately zero"
            << exit(FatalIOError);
     }
+
+    Cp_ = coeffs_.lookup<scalar>("Cp");
+    Ct_ = coeffs_.lookup<scalar>("Ct");
+    if (Cp_ <= vSmall || Ct_ <= vSmall)
+    {
+        FatalErrorInFunction
+           << "Cp and Ct must be greater than zero"
+           << exit(FatalIOError);
+    }
+
+    diskArea_ = coeffs_.lookup<scalar>("diskArea");
+    if (magSqr(diskArea_) <= vSmall)
+    {
+        FatalErrorInFunction
+           << "diskArea is approximately zero"
+           << exit(FatalIOError);
+    }
+
+    upstreamPoint_ = coeffs_.lookup<point>("upstreamPoint");
+    upstreamCellId_ = mesh_.findCell(upstreamPoint_);
     if (returnReduce(upstreamCellId_, maxOp<label>()) == -1)
     {
         FatalErrorInFunction
@@ -88,31 +99,30 @@ Foam::fv::actuationDiskSource::actuationDiskSource
 )
 :
     cellSetOption(name, modelType, dict, mesh),
-    diskDir_(coeffs_.lookup("diskDir")),
-    Cp_(coeffs_.lookup<scalar>("Cp")),
-    Ct_(coeffs_.lookup<scalar>("Ct")),
-    diskArea_(coeffs_.lookup<scalar>("diskArea")),
-    upstreamPoint_(coeffs_.lookup("upstreamPoint")),
+    UName_(word::null),
+    diskDir_(vector::uniform(NaN)),
+    Cp_(NaN),
+    Ct_(NaN),
+    diskArea_(NaN),
+    upstreamPoint_(vector::uniform(NaN)),
     upstreamCellId_(-1)
 {
-    coeffs_.lookup("fields") >> fieldNames_;
-    applied_.setSize(fieldNames_.size(), false);
-
-    Info<< "    - creating actuation disk zone: "
-        << this->name() << endl;
-
-    upstreamCellId_ = mesh.findCell(upstreamPoint_);
-
-    checkData();
+    readCoeffs();
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::wordList Foam::fv::actuationDiskSource::addedToFields() const
+{
+    return wordList(1, UName_);
+}
+
+
 void Foam::fv::actuationDiskSource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     const scalarField& cellsV = mesh_.V();
@@ -137,7 +147,7 @@ void Foam::fv::actuationDiskSource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     const scalarField& cellsV = mesh_.V();
@@ -162,13 +172,7 @@ bool Foam::fv::actuationDiskSource::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))
     {
-        coeffs_.readIfPresent("diskDir", diskDir_);
-        coeffs_.readIfPresent("Cp", Cp_);
-        coeffs_.readIfPresent("Ct", Ct_);
-        coeffs_.readIfPresent("diskArea", diskArea_);
-
-        checkData();
-
+        readCoeffs();
         return true;
     }
     else

@@ -18,18 +18,19 @@ FoamFile
 volumeFraction
 {
     type            volumeFractionSource;
-    phase           solid;
-    phi             phi;
-    rho             rho;
-    U               U;
-    fields          (rho U e);
+    volumePhase     volume;
+}
+
+solidFraction
+{
+    type            volumeFractionSource;
+    volumePhase     solid;
 }
 
 solidEquilibriumEnergy
 {
     type            solidEquilibriumEnergySource;
-    phase           solid;
-    field           e;
+    solidPhase      solid;
 }
 
 // ************************************************************************* //

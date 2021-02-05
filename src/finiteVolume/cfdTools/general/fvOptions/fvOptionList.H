@@ -74,7 +74,16 @@ protected:
         const fvMesh& mesh_;
 
         //- Time index to check that all defined sources have been applied
-        label checkTimeIndex_;
+        mutable label checkTimeIndex_;
+
+        //- Sets of the fields that have had sources added by the options
+        mutable PtrList<wordHashSet> addedToFields_;
+
+        //- Sets of the fields that have been constrained by the options
+        mutable PtrList<wordHashSet> constrainedFields_;
+
+        //- Sets of the fields that have been corrected by the options
+        mutable PtrList<wordHashSet> correctedFields_;
 
 
     // Protected Member Functions
@@ -82,7 +91,7 @@ protected:
         //- Read options dictionary
         bool readOptions(const dictionary& dict);
 
-        //- Check that all sources have been applied
+        //- Check that all options have been applied
         void checkApplied() const;
 
         //- Return source for equation with specified name and dimensions
@@ -132,8 +141,18 @@ public:
         //- Reset the source list
         void reset(const dictionary& dict);
 
-        //- Return whether there is something to apply to the field
-        bool appliesToField(const word& fieldName) const;
+
+        // Checks
+
+            //- Return true if an option adds a source term to the given
+            //  field's transport equation
+            virtual bool addsToField(const word& fieldName) const;
+
+            //- Return true if an option constrains the given field
+            virtual bool constrainsField(const word& fieldName) const;
+
+            //- Return true if an option corrects the given field
+            virtual bool correctsField(const word& fieldName) const;
 
 
         // Sources

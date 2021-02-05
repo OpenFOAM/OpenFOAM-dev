@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,16 +29,16 @@ Description
     equation. It assumes that the solid is in thermal equilibrium with the
     surrounding fluid phase.
 
-    The volume fraction of the solid phase is read from constant/alpha.<phase>,
-    and the associated thermophysical properties are specified in
-    constant/thermophysicalProperties.<phase>.
+    The volume fraction of the solid phase is read from
+    constant/alpha.<solidPhase>, and the associated thermophysical properties
+    are specified in constant/thermophysicalProperties.<solidPhase>.
 
 Usage
     \table
         Property    | Description                            | Req'd? | Default
-        phase       | Name of the solid phase                | yes    |
-        field       | Name of the energy field to apply the option to \\
-                                                             | yes    |
+        phase       | Name of the phase to which this option applies \\
+                                                             | no     | none
+        solidPhase  | Name of the solid phase                | yes    |
     \endtable
 
     Example specification:
@@ -46,8 +46,8 @@ Usage
     <fvOptionName>
     {
         type        solidEquilibriumEnergySource;
-        phase       solid;
-        field       e;
+
+        solidPhase  solid;
     }
     \endverbatim
 
@@ -77,14 +77,23 @@ class solidEquilibriumEnergySource
 {
     // Private Member Data
 
-        //- The name of the phase
-        const word phaseName_;
+        //- The name of the phase to which this option applies
+        word phaseName_;
 
-        //- Get the volume fraction field
-        const volScalarField& alpha() const;
+        //- The name of the solid phase
+        word solidPhaseName_;
 
-        //- Get the thermo
-        const solidThermo& thermo() const;
+
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
+
+        //- Get the solid volume fraction field
+        const volScalarField& solidAlpha() const;
+
+        //- Get the solid thermo
+        const Foam::solidThermo& solidThermo() const;
 
 
 public:
@@ -117,6 +126,13 @@ public:
 
     // Member Functions
 
+        // Checks
+
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addedToFields() const;
+
+
         // Evaluation
 
             //- Explicit and implicit sources for compressible equations
@@ -124,7 +140,7 @@ public:
             (
                 const volScalarField&,
                 fvMatrix<scalar>&,
-                const label
+                const word& fieldName
             ) const;
 
             //- Explicit and implicit sources for phase equations
@@ -133,7 +149,7 @@ public:
                 const volScalarField&,
                 const volScalarField&,
                 fvMatrix<scalar>&,
-                const label
+                const word& fieldName
             ) const;
 
 

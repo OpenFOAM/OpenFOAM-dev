@@ -18,10 +18,7 @@ FoamFile
 volumeFraction
 {
     type            volumeFractionSource;
-    phase           solid;
-    phi             phi;
-    U               U;
-    fields          (U);
+    volumePhase     volume;
 }
 
 // ************************************************************************* //

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,21 @@ namespace fv
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::fv::patchMeanVelocityForce::readCoeffs()
+{
+    patch_ = coeffs_.lookup<word>("patch");
+
+    if (mesh_.boundaryMesh().findPatchID(patch_) < 0)
+    {
+        FatalErrorInFunction
+            << "Cannot find patch " << patch_
+            << exit(FatalError);
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::patchMeanVelocityForce::patchMeanVelocityForce
@@ -56,15 +71,9 @@ Foam::fv::patchMeanVelocityForce::patchMeanVelocityForce
 )
 :
     meanVelocityForce(sourceName, modelType, dict, mesh),
-    patch_(coeffs_.lookup("patch")),
-    patchi_(mesh.boundaryMesh().findPatchID(patch_))
+    patch_(word::null)
 {
-    if (patchi_ < 0)
-    {
-        FatalErrorInFunction
-            << "Cannot find patch " << patch_
-            << exit(FatalError);
-    }
+    readCoeffs();
 }
 
 
@@ -75,25 +84,23 @@ Foam::scalar Foam::fv::patchMeanVelocityForce::magUbarAve
     const volVectorField& U
 ) const
 {
-    vector2D sumAmagUsumA
-    (
+    const label patchi = mesh_.boundaryMesh().findPatchID(patch_);
+
+    scalar sumA = sum(mesh_.boundary()[patchi].magSf());
+    scalar sumAmagU =
         sum
         (
-            (flowDir_ & U.boundaryField()[patchi_])
-           *mesh_.boundary()[patchi_].magSf()
-        ),
-        sum(mesh_.boundary()[patchi_].magSf())
-    );
-
+            mesh_.boundary()[patchi].magSf()
+           *(normalised(Ubar()) & U.boundaryField()[patchi])
+        );
 
     // If the mean velocity force is applied to a cyclic patch
     // for parallel runs include contributions from processorCyclic patches
     // generated from the decomposition of the cyclic patch
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
-
-    if (Pstream::parRun() && isA<cyclicPolyPatch>(patches[patchi_]))
+    if (Pstream::parRun() && isA<cyclicPolyPatch>(patches[patchi]))
     {
-        labelList processorCyclicPatches
+        const labelList processorCyclicPatches
         (
             processorCyclicPolyPatch::patchIDs(patch_, patches)
         );
@@ -102,20 +109,34 @@ Foam::scalar Foam::fv::patchMeanVelocityForce::magUbarAve
         {
             const label patchi = processorCyclicPatches[pcpi];
 
-            sumAmagUsumA.x() +=
+            sumA += sum(mesh_.boundary()[patchi].magSf());
+            sumAmagU +=
                 sum
                 (
-                    (flowDir_ & U.boundaryField()[patchi])
-                   *mesh_.boundary()[patchi].magSf()
+                    mesh_.boundary()[patchi].magSf()
+                   *(normalised(Ubar()) & U.boundaryField()[patchi])
                 );
-
-            sumAmagUsumA.y() += sum(mesh_.boundary()[patchi].magSf());
         }
     }
 
-    mesh_.reduce(sumAmagUsumA, sumOp<vector2D>());
+    mesh_.reduce(sumA, sumOp<scalar>());
+    mesh_.reduce(sumAmagU, sumOp<scalar>());
 
-    return sumAmagUsumA.x()/sumAmagUsumA.y();
+    return sumAmagU/sumA;
+}
+
+
+bool Foam::fv::patchMeanVelocityForce::read(const dictionary& dict)
+{
+    if (cellSetOption::read(dict))
+    {
+        readCoeffs();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

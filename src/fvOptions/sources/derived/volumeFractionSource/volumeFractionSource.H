@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,9 +27,9 @@ Class
 Description
     This option adds transport terms into the equations to account for the
     presence of a constant volume fraction. The volume fraction is read from
-    constant/alpha.<phase>, where <phase> is given as a parameter to the
-    option. Both advective and diffusive terms are added, and the resulting
-    solution is time-accurate. The flux and velocity are treated as
+    constant/alpha.<volumePhase>, where <volumePhase> is given as a parameter
+    to the option. Both advective and diffusive terms are added, and the
+    resulting solution is time-accurate. The flux and velocity are treated as
     superficial.
 
     This can be used to represent the effect of porous media that are caused
@@ -40,26 +40,25 @@ Description
 
 Usage
     \table
-        Property    | Description                            | Req'd? | Default
-        phase       | Name of the phase associated with the volume fraction \\
-                                                             | yes    |
-        phi         | Name of the flux field                 | no     | phi
-        rho         | Name of the density field              | no     | rho
-        U           | Name of the velocity field             | no     | U
-        fields      | Names of the fields to apply the option to \\
-                                                             | yes    |
+        Property    | Description                        | Req'd? | Default
+        phi         | Name of the flux field             | no     | phi
+        rho         | Name of the density field          | no     | rho
+        U           | Name of the velocity field         | no     | U
+        volumePhase | Name of the phase associated with the volume fraction \\
+                                                         | yes    |
     \endtable
 
     Example specification:
     \verbatim
-    <fvOptionName>
+    volumeFractionSource1
     {
         type        volumeFractionSource;
-        phase       solid;
+
         phi         phi;
         rho         rho;
         U           U;
-        fields      (rho U e);
+
+        volumePhase solid;
     }
     \endverbatim
 
@@ -92,9 +91,6 @@ class volumeFractionSource
 {
     // Private Member Data
 
-        //- The name of the phase
-        const word phaseName_;
-
         //- The name of the flux field
         word phiName_;
 
@@ -104,18 +100,24 @@ class volumeFractionSource
         //- The name of the velocity field
         word UName_;
 
+        //- The name of the volume fraction phase
+        word volumePhaseName_;
+
 
     // Private Member Functions
 
+        //- Non-virtual read
+        void readCoeffs();
+
         //- Get the volume fraction field
-        const volScalarField& alpha() const;
+        const volScalarField& volumeAlpha() const;
 
         //- Get the diffusivity for a given field
-        tmp<volScalarField> D(const label) const;
+        tmp<volScalarField> D(const word& fieldName) const;
 
         //- Add time-derivative terms to an equation
         template <class Type>
-        void addDdtSup(fvMatrix<Type>&, const label) const;
+        void addDdtSup(fvMatrix<Type>&, const word& fieldName) const;
 
         //- Add time-derivative terms to a compressible equation
         template <class Type>
@@ -123,7 +125,7 @@ class volumeFractionSource
         (
             const volScalarField&,
             fvMatrix<Type>&,
-            const label
+            const word& fieldName
         ) const;
 
         //- Add time-derivative terms to a phase-compressible equation
@@ -133,18 +135,18 @@ class volumeFractionSource
             const volScalarField&,
             const volScalarField&,
             fvMatrix<Type>&,
-            const label
+            const word& fieldName
         ) const;
 
         //- Add divergence terms to an equation
         template <class Type>
-        void addDivSup(fvMatrix<Type>&, const label) const;
+        void addDivSup(fvMatrix<Type>&, const word& fieldName) const;
 
         //- Add divergence terms to the momentum equation
-        void addUDivSup(fvMatrix<vector>&, const label) const;
+        void addUDivSup(fvMatrix<vector>&, const word& fieldName) const;
 
         //- Add divergence terms to the continuity equation
-        void addRhoDivSup(fvMatrix<scalar>&, const label) const;
+        void addRhoDivSup(fvMatrix<scalar>&, const word& fieldName) const;
 
         //- Add Laplacian terms to an equation
         template <class Type, class AlphaFieldType>
@@ -152,7 +154,7 @@ class volumeFractionSource
         (
             const AlphaFieldType& alpha,
             fvMatrix<Type>& eqn,
-            const label fieldi
+            const word& fieldName
         ) const;
 
 
@@ -183,23 +185,50 @@ public:
 
     // Member Functions
 
+        // Checks
+
+            //- Return true if the option adds a source term to the given
+            //  field's transport equation
+            virtual bool addsToField(const word& fieldName) const;
+
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addedToFields() const;
+
+
         // Evaluation
 
             // Explicit and implicit sources
 
-                virtual void addSup(fvMatrix<scalar>&, const label) const;
+                virtual void addSup
+                (
+                    fvMatrix<scalar>&,
+                    const word& fieldName
+                ) const;
 
-                virtual void addSup(fvMatrix<vector>&, const label) const;
+                virtual void addSup
+                (
+                    fvMatrix<vector>&,
+                    const word& fieldName
+                ) const;
 
-                virtual void addSup(fvMatrix<symmTensor>&, const label) const;
+                virtual void addSup
+                (
+                    fvMatrix<symmTensor>&,
+                    const word& fieldName
+                ) const;
 
                 virtual void addSup
                 (
                     fvMatrix<sphericalTensor>&,
-                    const label
+                    const word& fieldName
                 ) const;
 
-                virtual void addSup(fvMatrix<tensor>&, const label) const;
+                virtual void addSup
+                (
+                    fvMatrix<tensor>&,
+                    const word& fieldName
+                ) const;
 
 
             // Explicit and implicit sources for compressible equations
@@ -208,35 +237,35 @@ public:
                 (
                     const volScalarField&,
                     fvMatrix<scalar>&,
-                    const label
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     const volScalarField&,
                     fvMatrix<vector>&,
-                    const label
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     const volScalarField&,
                     fvMatrix<symmTensor>&,
-                    const label
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     const volScalarField&,
                     fvMatrix<sphericalTensor>&,
-                    const label
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     const volScalarField&,
                     fvMatrix<tensor>&,
-                    const label
+                    const word& fieldName
                 ) const;
 
 
@@ -247,7 +276,7 @@ public:
                     const volScalarField&,
                     const volScalarField&,
                     fvMatrix<scalar>&,
-                    const label
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
@@ -255,7 +284,7 @@ public:
                     const volScalarField&,
                     const volScalarField&,
                     fvMatrix<vector>&,
-                    const label
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
@@ -263,7 +292,7 @@ public:
                     const volScalarField&,
                     const volScalarField&,
                     fvMatrix<symmTensor>&,
-                    const label
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
@@ -271,7 +300,7 @@ public:
                     const volScalarField&,
                     const volScalarField&,
                     fvMatrix<sphericalTensor>&,
-                    const label
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
@@ -279,7 +308,7 @@ public:
                     const volScalarField&,
                     const volScalarField&,
                     fvMatrix<tensor>&,
-                    const label
+                    const word& fieldName
                 ) const;
 
 

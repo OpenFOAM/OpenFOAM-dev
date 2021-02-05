@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,7 +32,8 @@ Usage
     \verbatim
     radiationCoeffs
     {
-        fields          (h);                    // Name of energy field
+        libs    ("libradiationModels.so");
+        type    radiation;
     }
     \endverbatim
 
@@ -92,6 +93,13 @@ public:
 
     // Member Functions
 
+        // Checks
+
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addedToFields() const;
+
+
         // Evaluate
 
             //- Add explicit contribution to compressible momentum equation
@@ -99,14 +107,8 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<scalar>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
-
-
-        // IO
-
-            //- Read source dictionary
-            virtual bool read(const dictionary& dict);
 
 
     // Member Operators

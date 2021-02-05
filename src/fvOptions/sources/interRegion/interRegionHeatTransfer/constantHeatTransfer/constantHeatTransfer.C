@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,12 @@ namespace fv
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::fv::constantHeatTransfer::correctHtc() const
+{}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::constantHeatTransfer::constantHeatTransfer
@@ -53,45 +59,37 @@ Foam::fv::constantHeatTransfer::constantHeatTransfer
     const fvMesh& mesh
 )
 :
-    interRegionHeatTransferModel(name, modelType, dict, mesh),
-    htcConst_(),
-    AoV_()
+    interRegionHeatTransferModel(name, modelType, dict, mesh)
 {
-    if (master_)
+    if (master())
     {
-        htcConst_.reset
+        const volScalarField htcConst
         (
-            new volScalarField
+            IOobject
             (
-                IOobject
-                (
-                    "htcConst",
-                    mesh_.time().timeName(),
-                    mesh_,
-                    IOobject::MUST_READ,
-                    IOobject::AUTO_WRITE
-                ),
-                mesh_
-            )
+                "htcConst",
+                mesh_.time().constant(),
+                mesh_,
+                IOobject::MUST_READ,
+                IOobject::AUTO_WRITE
+            ),
+            mesh_
         );
 
-        AoV_.reset
+        const volScalarField AoV
         (
-            new volScalarField
+            IOobject
             (
-                IOobject
-                (
-                    "AoV",
-                    mesh_.time().timeName(),
-                    mesh_,
-                    IOobject::MUST_READ,
-                    IOobject::AUTO_WRITE
-                ),
-                mesh_
-            )
+                "AoV",
+                mesh_.time().constant(),
+                mesh_,
+                IOobject::MUST_READ,
+                IOobject::AUTO_WRITE
+            ),
+            mesh_
         );
 
-        htc_ = htcConst_()*AoV_();
+        htc_ = htcConst*AoV;
     }
 }
 
@@ -103,10 +101,6 @@ Foam::fv::constantHeatTransfer::~constantHeatTransfer()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::fv::constantHeatTransfer::calculateHtc() const
-{}
-
 
 bool Foam::fv::constantHeatTransfer::read(const dictionary& dict)
 {

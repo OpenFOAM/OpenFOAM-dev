@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,7 +66,6 @@ Usage
         duration        1e6;
     }
     \endverbatim
-
     Example usage with graduated onset:
     \verbatim
     verticalDamping1
@@ -167,7 +166,7 @@ public:
             virtual void addSup
             (
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Source term to compressible momentum equation
@@ -175,7 +174,7 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Source term to phase momentum equation
@@ -184,7 +183,7 @@ public:
                 const volScalarField& alpha,
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 };
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,10 +47,18 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-const Foam::volScalarField&
-Foam::fv::solidEquilibriumEnergySource::alpha() const
+void Foam::fv::solidEquilibriumEnergySource::readCoeffs()
 {
-    const word alphaName = IOobject::groupName("alpha", phaseName_);
+    phaseName_ = coeffs_.lookupOrDefault<word>("phase", word::null);
+
+    solidPhaseName_ = coeffs_.lookup<word>("solidPhase");
+}
+
+
+const Foam::volScalarField&
+Foam::fv::solidEquilibriumEnergySource::solidAlpha() const
+{
+    const word alphaName = IOobject::groupName("alpha", solidPhaseName_);
 
     if (!mesh_.foundObject<volScalarField>(alphaName))
     {
@@ -75,19 +83,21 @@ Foam::fv::solidEquilibriumEnergySource::alpha() const
 }
 
 
-const Foam::solidThermo& Foam::fv::solidEquilibriumEnergySource::thermo() const
+const Foam::solidThermo&
+Foam::fv::solidEquilibriumEnergySource::solidThermo() const
 {
     const word thermoName =
-        IOobject::groupName(basicThermo::dictName, phaseName_);
+        IOobject::groupName(basicThermo::dictName, solidPhaseName_);
 
-    if (!mesh_.foundObject<solidThermo>(thermoName))
+    if (!mesh_.foundObject<Foam::solidThermo>(thermoName))
     {
-        solidThermo* thermoPtr = solidThermo::New(mesh_, phaseName_).ptr();
+        Foam::solidThermo* thermoPtr =
+            solidThermo::New(mesh_, solidPhaseName_).ptr();
 
         thermoPtr->properties().store();
     }
 
-    return mesh_.lookupObject<solidThermo>(thermoName);
+    return mesh_.lookupObject<Foam::solidThermo>(thermoName);
 }
 
 
@@ -102,11 +112,12 @@ Foam::fv::solidEquilibriumEnergySource::solidEquilibriumEnergySource
 )
 :
     option(name, modelType, dict, mesh),
-    phaseName_(dict.lookup<word>("phase"))
+    phaseName_(word::null),
+    solidPhaseName_(word::null)
 {
     read(dict);
-    alpha();
-    thermo();
+    solidAlpha();
+    solidThermo();
 }
 
 
@@ -118,20 +129,32 @@ Foam::fv::solidEquilibriumEnergySource::~solidEquilibriumEnergySource()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
+Foam::wordList Foam::fv::solidEquilibriumEnergySource::addedToFields() const
+{
+    const basicThermo& thermo =
+        mesh_.lookupObject<basicThermo>
+        (
+            IOobject::groupName(basicThermo::dictName, phaseName_)
+        );
+
+    return wordList(1, thermo.he().name());
+}
+
+
 void Foam::fv::solidEquilibriumEnergySource::addSup
 (
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
-    const volScalarField alphahe(thermo().alphahe());
+    const volScalarField alphahe(solidThermo().alphahe());
 
-    const volScalarField& A = this->alpha();
+    const volScalarField& A = solidAlpha();
     const volScalarField B(1 - A);
 
     eqn -=
-        A/B*fvm::ddt(thermo().rho(), eqn.psi());
+        A/B*fvm::ddt(solidThermo().rho(), eqn.psi());
       - 1/B*fvm::laplacian
         (
             A*alphahe,
@@ -146,16 +169,16 @@ void Foam::fv::solidEquilibriumEnergySource::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
-    const volScalarField alphahe(alpha*thermo().alphahe());
+    const volScalarField alphahe(alpha*solidThermo().alphahe());
 
-    const volScalarField& A = this->alpha();
+    const volScalarField& A = solidAlpha();
     const volScalarField B(1 - A);
 
     eqn -=
-        A/B*fvm::ddt(alpha, thermo().rho(), eqn.psi());
+        A/B*fvm::ddt(alpha, solidThermo().rho(), eqn.psi());
       - 1/B*fvm::laplacian
         (
             A*alphahe,
@@ -169,10 +192,7 @@ bool Foam::fv::solidEquilibriumEnergySource::read(const dictionary& dict)
 {
     if (option::read(dict))
     {
-        fieldNames_ = wordList(1, coeffs_.lookup<word>("field"));
-
-        applied_.setSize(fieldNames_.size(), false);
-
+        readCoeffs();
         return true;
     }
     else

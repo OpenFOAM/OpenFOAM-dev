@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,63 +45,71 @@ namespace fv
 }
 }
 
-// * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
+// * * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * //
 
-void Foam::fv::interRegionExplicitPorositySource::initialise() const
+void Foam::fv::interRegionExplicitPorositySource::readCoeffs()
 {
-    if (!firstIter_)
+    UName_ = coeffs_.lookupOrDefault<word>("U", "U");
+
+    muName_ = coeffs_.lookupOrDefault<word>("mu", "thermo:mu");
+}
+
+
+Foam::porosityModel&
+Foam::fv::interRegionExplicitPorositySource::porosity() const
+{
+    if (!porosityPtr_.valid())
     {
-        return;
-    }
+        const word zoneName(name_ + ":porous");
 
-    const word zoneName(name_ + ":porous");
+        const fvMesh& nbrMesh =
+            mesh_.time().lookupObject<fvMesh>(nbrRegionName());
+        const cellZoneMesh& cellZones = nbrMesh.cellZones();
+        label zoneID = cellZones.findZoneID(zoneName);
 
-    const fvMesh& nbrMesh = mesh_.time().lookupObject<fvMesh>(nbrRegionName_);
-    const cellZoneMesh& cellZones = nbrMesh.cellZones();
-    label zoneID = cellZones.findZoneID(zoneName);
+        if (zoneID == -1)
+        {
+            cellZoneMesh& cz = const_cast<cellZoneMesh&>(cellZones);
 
-    if (zoneID == -1)
-    {
-        cellZoneMesh& cz = const_cast<cellZoneMesh&>(cellZones);
+            zoneID = cz.size();
 
-        zoneID = cz.size();
+            cz.setSize(zoneID + 1);
 
-        cz.setSize(zoneID + 1);
-
-        cz.set
-        (
-            zoneID,
-            new cellZone
+            cz.set
             (
-                zoneName,
-                nbrMesh.faceNeighbour(), // Neighbour internal cells
                 zoneID,
-                cellZones
-            )
-        );
+                new cellZone
+                (
+                    zoneName,
+                    nbrMesh.faceNeighbour(), // Neighbour internal cells
+                    zoneID,
+                    cellZones
+                )
+            );
 
-        cz.clearAddressing();
-    }
-    else
-    {
-        FatalErrorInFunction
-            << "Unable to create porous cellZone " << zoneName
-            << ": zone already exists"
-            << abort(FatalError);
-    }
+            cz.clearAddressing();
+        }
+        else
+        {
+            FatalErrorInFunction
+                << "Unable to create porous cellZone " << zoneName
+                << ": zone already exists"
+                << abort(FatalError);
+        }
 
-    porosityPtr_.reset
-    (
-        porosityModel::New
+        porosityPtr_.reset
         (
-            name_,
-            nbrMesh,
-            coeffs_,
-            zoneName
-        ).ptr()
-    ),
+            porosityModel::New
+            (
+                name_,
+                nbrMesh,
+                coeffs_,
+                zoneName
+            ).ptr()
+        );
+    }
 
-    firstIter_ = false;
+    return porosityPtr_();
 }
 
 
@@ -116,27 +124,31 @@ Foam::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
 )
 :
     interRegionOption(name, modelType, dict, mesh),
-    porosityPtr_(nullptr),
-    firstIter_(true),
-    UName_(coeffs_.lookupOrDefault<word>("U", "U")),
-    muName_(coeffs_.lookupOrDefault<word>("mu", "thermo:mu"))
+    UName_(word::null),
+    muName_(word::null),
+    porosityPtr_(nullptr)
 {
-    fieldNames_.setSize(1, UName_);
-    applied_.setSize(1, false);
+    readCoeffs();
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::wordList
+Foam::fv::interRegionExplicitPorositySource::addedToFields() const
+{
+    return wordList(1, UName_);
+
+}
+
+
 void Foam::fv::interRegionExplicitPorositySource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
-    initialise();
-
-    const fvMesh& nbrMesh = mesh_.time().lookupObject<fvMesh>(nbrRegionName_);
+    const fvMesh& nbrMesh = mesh_.time().lookupObject<fvMesh>(nbrRegionName());
 
     const volVectorField& U = eqn.psi();
 
@@ -164,7 +176,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
 
     fvMatrix<vector> nbrEqn(UNbr, eqn.dimensions());
 
-    porosityPtr_->addResistance(nbrEqn);
+    porosity().addResistance(nbrEqn);
 
     // Convert source from neighbour to local region
     fvMatrix<vector> porosityEqn(U, eqn.dimensions());
@@ -185,12 +197,10 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
-    initialise();
-
-    const fvMesh& nbrMesh = mesh_.time().lookupObject<fvMesh>(nbrRegionName_);
+    const fvMesh& nbrMesh = mesh_.time().lookupObject<fvMesh>(nbrRegionName());
 
     const volVectorField& U = eqn.psi();
 
@@ -265,7 +275,7 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
         muNbr.primitiveFieldRef()
     );
 
-    porosityPtr_->addResistance(nbrEqn, rhoNbr, muNbr);
+    porosity().addResistance(nbrEqn, rhoNbr, muNbr);
 
     // Convert source from neighbour to local region
     fvMatrix<vector> porosityEqn(U, eqn.dimensions());
@@ -286,11 +296,7 @@ bool Foam::fv::interRegionExplicitPorositySource::read(const dictionary& dict)
 {
     if (interRegionOption::read(dict))
     {
-        coeffs_.readIfPresent("U", UName_);
-        coeffs_.readIfPresent("mu", muName_);
-
-        // Reset the porosity model?
-
+        readCoeffs();
         return true;
     }
     else

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,15 @@ namespace fv
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::fv::limitVelocity::readCoeffs()
+{
+    UName_ = coeffs_.lookupOrDefault<word>("U", "U");
+    max_ = coeffs_.lookup<scalar>("max");
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::limitVelocity::limitVelocity
@@ -55,28 +64,18 @@ Foam::fv::limitVelocity::limitVelocity
 )
 :
     cellSetOption(name, modelType, dict, mesh),
-    UName_(coeffs_.lookupOrDefault<word>("U", "U")),
-    max_(coeffs_.lookup<scalar>("max"))
+    UName_(word::null),
+    max_(vGreat)
 {
-    fieldNames_.setSize(1, UName_);
-    applied_.setSize(1, false);
+    readCoeffs();
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::limitVelocity::read(const dictionary& dict)
+Foam::wordList Foam::fv::limitVelocity::correctedFields() const
 {
-    if (cellSetOption::read(dict))
-    {
-        coeffs_.lookup("max") >> max_;
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return wordList(1, UName_);
 }
 
 
@@ -101,7 +100,7 @@ void Foam::fv::limitVelocity::correct(volVectorField& U) const
     }
 
     // handle boundaries in the case of 'all'
-    if (selectionMode() == smAll)
+    if (selectionMode() == selectionModeType::all)
     {
         volVectorField::Boundary& Ubf = U.boundaryFieldRef();
 
@@ -122,6 +121,20 @@ void Foam::fv::limitVelocity::correct(volVectorField& U) const
                 }
             }
         }
+    }
+}
+
+
+bool Foam::fv::limitVelocity::read(const dictionary& dict)
+{
+    if (cellSetOption::read(dict))
+    {
+        readCoeffs();
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
 

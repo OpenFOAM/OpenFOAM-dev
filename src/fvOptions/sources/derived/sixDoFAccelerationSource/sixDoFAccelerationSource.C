@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,6 +106,23 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::fv::sixDoFAccelerationSource::readCoeffs()
+{
+    UName_ = coeffs_.lookupOrDefault<word>("U", "U");
+
+    accelerations_.reset
+    (
+        Function1<accelerationVectors>::New
+        (
+            "accelerations",
+            coeffs_
+        ).ptr()
+    );
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::sixDoFAccelerationSource::sixDoFAccelerationSource
@@ -117,32 +134,34 @@ Foam::fv::sixDoFAccelerationSource::sixDoFAccelerationSource
 )
 :
     option(name, modelType, dict, mesh),
-    accelerations_
-    (
-        Function1<accelerationVectors>::New("accelerations", coeffs_)
-    ),
     UName_(coeffs_.lookupOrDefault<word>("U", "U")),
-    g0_("g0", dimAcceleration, Zero)
+    accelerations_(nullptr),
+    g_
+    (
+        mesh.foundObject<uniformDimensionedVectorField>("g")
+      ? dimensionedVector(mesh.lookupObject<uniformDimensionedVectorField>("g"))
+      : dimensionedVector("g", dimAcceleration, Zero)
+    )
 {
-    fieldNames_.setSize(1, UName_);
-    applied_.setSize(1, false);
-
-    if (mesh.foundObject<uniformDimensionedVectorField>("g"))
-    {
-        g0_ = mesh.lookupObject<uniformDimensionedVectorField>("g");
-    }
+    readCoeffs();
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::wordList Foam::fv::sixDoFAccelerationSource::addedToFields() const
+{
+    return wordList(1, UName_);
+}
+
+
 void Foam::fv::sixDoFAccelerationSource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
-    addSup<geometricOneField>(geometricOneField(), eqn, fieldi);
+    addSup<geometricOneField>(geometricOneField(), eqn, fieldName);
 }
 
 
@@ -150,10 +169,10 @@ void Foam::fv::sixDoFAccelerationSource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
-    addSup<volScalarField>(rho, eqn, fieldi);
+    addSup<volScalarField>(rho, eqn, fieldName);
 }
 
 
@@ -161,12 +180,7 @@ bool Foam::fv::sixDoFAccelerationSource::read(const dictionary& dict)
 {
     if (option::read(dict))
     {
-        accelerations_ = Function1<accelerationVectors>::New
-        (
-            "accelerations",
-            dict
-        );
-
+        readCoeffs();
         return true;
     }
     else

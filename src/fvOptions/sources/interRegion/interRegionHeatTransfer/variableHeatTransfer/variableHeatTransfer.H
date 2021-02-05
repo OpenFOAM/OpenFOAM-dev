@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,18 +25,26 @@ Class
     Foam::fv::variableHeatTransfer
 
 Description
-    Variable heat transfer model depending on local values. The area of contact
-    between regions (area) must be provided. The Nu number is calculated as:
+    Variable heat transfer model depending on local values. The Nu number is
+    calculated as:
 
-        Nu = a*pow(Re, b)*pow(Pr, c)
+        \f[
+            Nu = a*Re^b*Pr^c
+        \f]
 
-    and the heat transfer coefficient as:
+    And the heat transfer coefficient is calculated as:
 
-        htc = Nu*K/ds
+        \f[
+            htc = Nu*K/ds
+        \f]
 
     where:
-        K is the heat conduction
-        ds is the strut diameter
+    \vartable
+        K   | Conductivity
+        ds  | Strut diameter
+    \endvartable
+
+    An area-per-unit-volume [1/m] field (AoV) must be provided in constant.
 
 \*---------------------------------------------------------------------------*/
 
@@ -65,9 +73,13 @@ class variableHeatTransfer
         //- Name of neighbour velocity field; default = U
         word UNbrName_;
 
-        //- Model constants
+        //- Model constant
         scalar a_;
+
+        //- Model constant
         scalar b_;
+
+        //- Model constant
         scalar c_;
 
         //- Strut diameter
@@ -78,6 +90,15 @@ class variableHeatTransfer
 
         //- Area per unit volume of heat exchanger
         autoPtr<volScalarField> AoV_;
+
+
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
+
+        //- Correct the heat transfer coefficient
+        virtual void correctHtc() const;
 
 
 public:
@@ -104,11 +125,8 @@ public:
 
     // Member Functions
 
-        //- Calculate the heat transfer coefficient
-        virtual void calculateHtc() const;
-
         //- Read dictionary
-        virtual bool read(const dictionary& dict) ;
+        virtual bool read(const dictionary& dict);
 };
 
 

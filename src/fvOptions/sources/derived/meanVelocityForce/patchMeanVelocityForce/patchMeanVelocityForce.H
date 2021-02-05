@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,17 +28,26 @@ Description
     Calculates and applies the force necessary to maintain the specified mean
     velocity averaged over the specified patch.
 
-    Note: Currently only handles kinematic pressure (incompressible solvers).
-
 Usage
     Example usage:
     \verbatim
-    selectionMode   all;                    // Apply force to all cells
-    fields          (U);                    // Name of velocity field
-    patch           inlet;                  // Name of the patch
-    Ubar            (10.0 0 0);             // Desired mean velocity
-    relaxation      0.2;                    // Optional relaxation factor
-    \endverbatim
+    patchMeanVelocityForce1
+    {
+        type            patchMeanVelocityForce;
+
+        selectionMode   all;
+
+        U               U;          // Name of velocity field
+
+        patch           inlet;      // Name of the patch
+
+        Ubar            (10.0 0 0); // Desired mean velocity
+        relaxation      0.2;        // Optional relaxation factor
+   }
+   \endverbatim
+
+Note
+    Currently only handles kinematic pressure (incompressible solvers).
 
 SourceFiles
     patchMeanVelocityForce.C
@@ -65,18 +74,16 @@ class patchMeanVelocityForce
 :
     public meanVelocityForce
 {
-protected:
-
-    // Protected data
+    // Private data
 
         //- Patch name
         word patch_;
 
-        //- Patch index
-        label patchi_;
 
+    // Private Member Functions
 
-    // Protected Member Functions
+        //- Non-virtual read
+        void readCoeffs();
 
         //- Calculate and return the magnitude of the mean velocity
         //  averaged over the specified patch
@@ -100,14 +107,13 @@ public:
             const fvMesh& mesh
         );
 
-        //- Disallow default bitwise copy construction
-        patchMeanVelocityForce(const patchMeanVelocityForce&) = delete;
 
+    // Member Functions
 
-    // Member Operators
+        // IO
 
-        //- Disallow default bitwise assignment
-        void operator=(const patchMeanVelocityForce&) = delete;
+            //- Read dictionary
+            virtual bool read(const dictionary& dict);
 };
 
 

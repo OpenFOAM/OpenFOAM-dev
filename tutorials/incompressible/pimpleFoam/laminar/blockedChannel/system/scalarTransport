@@ -23,10 +23,7 @@ fvOptions
     volumeFraction
     {
         type            volumeFractionSource;
-        phase           solid;
-        phi             phi;
-        U               U;
-        fields          (tracer);
+        volumePhase     volume;
     }
 }
 

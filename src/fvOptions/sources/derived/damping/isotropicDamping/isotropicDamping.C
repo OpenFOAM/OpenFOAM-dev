@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,18 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
+void Foam::fv::isotropicDamping::readCoeffs()
+{
+    value_ =
+        dimensionedVector
+        (
+            value_.name(),
+            value_.dimensions(),
+            coeffs_.lookup(value_.name())
+        );
+}
+
+
 void Foam::fv::isotropicDamping::add
 (
     const volScalarField::Internal& forceCoeff,
@@ -64,9 +76,9 @@ Foam::fv::isotropicDamping::isotropicDamping
 )
 :
     damping(name, modelType, dict, mesh),
-    value_("value", dimVelocity, coeffs_.lookup("value"))
+    value_("value", dimVelocity, vector::uniform(NaN))
 {
-    read(dict);
+    readCoeffs();
 }
 
 
@@ -75,7 +87,7 @@ Foam::fv::isotropicDamping::isotropicDamping
 void Foam::fv::isotropicDamping::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     add(this->forceCoeff(), eqn);
@@ -86,7 +98,7 @@ void Foam::fv::isotropicDamping::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     add(rho*forceCoeff(), eqn);
@@ -98,7 +110,7 @@ void Foam::fv::isotropicDamping::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     add(alpha()*rho()*this->forceCoeff(), eqn);
@@ -109,14 +121,7 @@ bool Foam::fv::isotropicDamping::read(const dictionary& dict)
 {
     if (damping::read(dict))
     {
-        value_ =
-            dimensionedVector
-            (
-                value_.name(),
-                value_.dimensions(),
-                coeffs_.lookup(value_.name())
-            );
-
+        readCoeffs();
         return true;
     }
     else

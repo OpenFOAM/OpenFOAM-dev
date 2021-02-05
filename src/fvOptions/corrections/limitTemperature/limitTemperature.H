@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,9 +36,11 @@ Usage
         type            limitTemperature;
 
         selectionMode   all;
+
+        phase           gas; // Optional phase name
+
         min             200;
         max             500;
-        phase           gas; // optional
     }
     \endverbatim
 
@@ -67,9 +69,7 @@ class limitTemperature
 :
     public cellSetOption
 {
-protected:
-
-    // Protected data
+    // Private data
 
         //- Minimum temperature limit [K]
         scalar Tmin_;
@@ -78,7 +78,13 @@ protected:
         scalar Tmax_;
 
         //- Optional phase name
-        word phase_;
+        word phaseName_;
+
+
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
 
 
 public:
@@ -109,11 +115,14 @@ public:
 
     // Member Functions
 
-        //- Read dictionary
-        virtual bool read(const dictionary& dict);
+        //- Return the list of fields corrected by the option
+        virtual wordList correctedFields() const;
 
         //- Correct the energy field
         virtual void correct(volScalarField& he) const;
+
+        //- Read dictionary
+        virtual bool read(const dictionary& dict);
 
 
     // Member Operators

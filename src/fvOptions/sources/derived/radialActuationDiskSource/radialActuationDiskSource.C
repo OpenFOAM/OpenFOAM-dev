@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,14 @@ namespace fv
 }
 }
 
+// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::fv::radialActuationDiskSource::readCoeffs()
+{
+    coeffs_.lookup("coeffs") >> radialCoeffs_;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::radialActuationDiskSource::radialActuationDiskSource
@@ -54,9 +62,9 @@ Foam::fv::radialActuationDiskSource::radialActuationDiskSource
 )
 :
     actuationDiskSource(name, modelType, dict, mesh),
-    radialCoeffs_(coeffs_.lookup("coeffs"))
+    radialCoeffs_()
 {
-    Info<< "    - creating radial actuation disk zone: " << name_ << endl;
+    readCoeffs();
 }
 
 
@@ -65,7 +73,7 @@ Foam::fv::radialActuationDiskSource::radialActuationDiskSource
 void Foam::fv::radialActuationDiskSource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     const scalarField& cellsV = mesh_.V();
@@ -90,7 +98,7 @@ void Foam::fv::radialActuationDiskSource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     const scalarField& cellsV = mesh_.V();
@@ -115,7 +123,7 @@ bool Foam::fv::radialActuationDiskSource::read(const dictionary& dict)
 {
     if (actuationDiskSource::read(dict))
     {
-        coeffs_.lookup("coeffs") >> radialCoeffs_;
+        readCoeffs();
         return true;
     }
     else

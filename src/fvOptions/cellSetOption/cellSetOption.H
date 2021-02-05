@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,25 +25,37 @@ Class
     Foam::fv::cellSetOption
 
 Description
-    Cell-set options abstract base class.  Provides a base set of controls,
-    e.g.:
+    Cell-set options abstract base class. Provides a base set of controls
+    regarding the location where the option is applied.
+
+Usage
+    Example usage:
     \verbatim
-        type            scalarExplicitSource    // Source type
+    option1
+    {
+        type            <optionType>
 
-        timeStart       0.0;        // Start time
-        duration        1000.0;     // Duration
-        selectionMode   cellSet;    // cellSet, points, cellZone
-        .
-        .
-        .
+        // Apply everywhere
+        selectionMode   all;
+
+        // // Apply within a given cell set
+        // selectionMode   cellSet;
+        // cellSet         c0;
+
+        // // Apply in cells containing a list of points
+        // selectionMode   points;
+        // points
+        // (
+        //     (2.25 0.5 0)
+        //     (2.75 0.5 0)
+        // );
+
+        ...
+    }
     \endverbatim
-
-Note
-    Source/sink options are to be added to the equation R.H.S.
 
 SourceFiles
     cellSetOption.C
-    cellSetOptionIO.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -75,12 +87,12 @@ public:
     // Public data
 
         //- Enumeration for selection mode types
-        enum selectionModeType
+        enum class selectionModeType
         {
-            smPoints,
-            smCellSet,
-            smCellZone,
-            smAll
+            points,
+            cellSet,
+            cellZone,
+            all
         };
 
         //- Word list of selection mode type names
@@ -90,13 +102,7 @@ public:
 
 private:
 
-    // Protected data
-
-        //- Time start
-        scalar timeStart_;
-
-        //- Duration
-        scalar duration_;
+    // Private data
 
         //- Cell selection mode
         selectionModeType selectionMode_;
@@ -114,10 +120,10 @@ private:
         mutable scalar V_;
 
 
-    // Protected functions
+    // Private functions
 
-        //- Set the cellSet or points selection
-        void setSelection(const dictionary& dict);
+        //- Non-virtual read
+        void readCoeffs();
 
         //- Set the cell set based on the user input selection mode
         void setCellSet();
@@ -149,15 +155,6 @@ public:
 
         // Access
 
-            //- Return const access to the time start
-            inline scalar timeStart() const;
-
-            //- Return const access to the duration
-            inline scalar duration() const;
-
-            //- Return true if within time limits
-            inline bool inTimeLimits(const scalar time) const;
-
             //- Return const access to the cell selection mode
             inline const selectionModeType& selectionMode() const;
 
@@ -170,15 +167,6 @@ public:
 
             //- Return const access to the cell set
             inline const labelList& cells() const;
-
-
-        // Edit
-
-            //- Return access to the time start
-            inline scalar& timeStart();
-
-            //- Return access to the duration
-            inline scalar& duration();
 
 
         // Mesh changes

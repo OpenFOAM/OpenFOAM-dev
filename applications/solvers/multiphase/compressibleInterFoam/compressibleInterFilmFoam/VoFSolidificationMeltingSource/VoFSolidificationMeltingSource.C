@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,6 +47,16 @@ namespace Foam
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::fv::VoFSolidificationMeltingSource::readCoeffs()
+{
+    alphaSolidT_.reset(Function1<scalar>::New("alphaSolidT", coeffs_).ptr());
+    L_ = dimensionedScalar("L", dimEnergy/dimMass, coeffs_);
+    relax_ = coeffs_.lookupOrDefault<scalar>("relax", 0.9);
+    Cu_ = coeffs_.lookupOrDefault<scalar>("Cu", 100000);
+    q_ = coeffs_.lookupOrDefault<scalar>("q", 0.001);
+}
+
 
 void Foam::fv::VoFSolidificationMeltingSource::update() const
 {
@@ -122,11 +132,11 @@ Foam::fv::VoFSolidificationMeltingSource::VoFSolidificationMeltingSource
 )
 :
     cellSetOption(sourceName, modelType, dict, mesh),
-    alphaSolidT_(Function1<scalar>::New("alphaSolidT", coeffs_)),
-    L_("L", dimEnergy/dimMass, coeffs_),
-    relax_(coeffs_.lookupOrDefault("relax", 0.9)),
-    Cu_(coeffs_.lookupOrDefault<scalar>("Cu", 100000)),
-    q_(coeffs_.lookupOrDefault("q", 0.001)),
+    alphaSolidT_(),
+    L_("L", dimEnergy/dimMass, NaN),
+    relax_(NaN),
+    Cu_(NaN),
+    q_(NaN),
     alphaSolid_
     (
         IOobject
@@ -143,19 +153,22 @@ Foam::fv::VoFSolidificationMeltingSource::VoFSolidificationMeltingSource
     ),
     curTimeIndex_(-1)
 {
-    fieldNames_.setSize(2);
-    fieldNames_[0] = "U";
-    fieldNames_[1] = "T";
-    applied_.setSize(fieldNames_.size(), false);
+    readCoeffs();
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::wordList Foam::fv::VoFSolidificationMeltingSource::addedToFields() const
+{
+    return wordList({"U", "T"});
+}
+
+
 void Foam::fv::VoFSolidificationMeltingSource::addSup
 (
     fvMatrix<scalar>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     apply(geometricOneField(), eqn);
@@ -166,7 +179,7 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
 (
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     apply(rho, eqn);
@@ -176,7 +189,7 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
 void Foam::fv::VoFSolidificationMeltingSource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     if (debug)
@@ -208,11 +221,27 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     // Momentum source uses a Boussinesq approximation - redirect
-    addSup(eqn, fieldi);
+    addSup(eqn, fieldName);
+}
+
+
+bool Foam::fv::VoFSolidificationMeltingSource::read(const dictionary& dict)
+{
+    if (cellSetOption::read(dict))
+    {
+        readCoeffs();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
+    return false;
 }
 
 

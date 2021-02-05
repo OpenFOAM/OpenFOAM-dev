@@ -43,10 +43,4 @@ inline const Foam::dictionary& Foam::fv::option::coeffs() const
 }
 
 
-inline void Foam::fv::option::setApplied(const label fieldi) const
-{
-    applied_[fieldi] = true;
-}
-
-
 // ************************************************************************* //

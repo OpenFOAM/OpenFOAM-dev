@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -93,7 +93,7 @@ SourceFiles
 #define semiImplicitSource_H
 
 #include "cellSetOption.H"
-#include "Function1.H"
+#include "HashPtrTable.H"
 #include "objectFunction1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -137,17 +137,20 @@ private:
         scalar VDash_;
 
         //- Explicit parts of the sources
-        PtrList<objectFunction1> fieldSu_;
+        HashPtrTable<objectFunction1> fieldSu_;
 
         //- Implicit parts of the sources
-        PtrList<Function1<scalar>> fieldSp_;
+        HashPtrTable<Function1<scalar>> fieldSp_;
 
 
     // Private Member Functions
 
+        //- Non-virtual read
+        void readCoeffs();
+
         //- Add divergence terms to an equation
         template <class Type>
-        void addSupType(fvMatrix<Type>&, const label) const;
+        void addSupType(fvMatrix<Type>&, const word&) const;
 
         //- Add divergence terms to an equation
         template <class Type>
@@ -155,7 +158,7 @@ private:
         (
             const volScalarField&,
             fvMatrix<Type>&,
-            const label
+            const word&
         ) const;
 
 
@@ -182,6 +185,13 @@ public:
 
     // Member Functions
 
+        // Checks
+
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addedToFields() const;
+
+
         // Evaluation
 
             // Explicit and implicit sources
@@ -189,31 +199,31 @@ public:
                 virtual void addSup
                 (
                     fvMatrix<scalar>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     fvMatrix<vector>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     fvMatrix<symmTensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     fvMatrix<sphericalTensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     fvMatrix<tensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
 
@@ -223,35 +233,35 @@ public:
                 (
                     const volScalarField& rho,
                     fvMatrix<scalar>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     const volScalarField& rho,
                     fvMatrix<vector>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     const volScalarField& rho,
                     fvMatrix<symmTensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     const volScalarField& rho,
                     fvMatrix<sphericalTensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     const volScalarField& rho,
                     fvMatrix<tensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
 
@@ -262,7 +272,7 @@ public:
                     const volScalarField& alpha,
                     const volScalarField& rho,
                     fvMatrix<scalar>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
@@ -270,7 +280,7 @@ public:
                     const volScalarField& alpha,
                     const volScalarField& rho,
                     fvMatrix<vector>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
@@ -278,7 +288,7 @@ public:
                     const volScalarField& alpha,
                     const volScalarField& rho,
                     fvMatrix<symmTensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
@@ -286,7 +296,7 @@ public:
                     const volScalarField& alpha,
                     const volScalarField& rho,
                     fvMatrix<sphericalTensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
@@ -294,7 +304,7 @@ public:
                     const volScalarField& alpha,
                     const volScalarField& rho,
                     fvMatrix<tensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
 

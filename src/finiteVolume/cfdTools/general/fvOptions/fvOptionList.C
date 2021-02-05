@@ -59,7 +59,7 @@ bool Foam::fv::optionList::readOptions(const dictionary& dict)
 {
     const dictionary& optionsDict(this->optionsDict(dict));
 
-    checkTimeIndex_ = mesh_.time().timeIndex() + 2;
+    checkTimeIndex_ = mesh_.time().timeIndex() + 1;
 
     bool allOk = true;
     forAll(*this, i)
@@ -74,13 +74,44 @@ bool Foam::fv::optionList::readOptions(const dictionary& dict)
 
 void Foam::fv::optionList::checkApplied() const
 {
-    if (mesh_.time().timeIndex() == checkTimeIndex_)
+    if (mesh_.time().timeIndex() > checkTimeIndex_)
     {
         forAll(*this, i)
         {
-            const option& bs = this->operator[](i);
-            bs.checkApplied();
+            const option& source = this->operator[](i);
+
+            wordHashSet notAddedToFields(source.addedToFields());
+            notAddedToFields -= addedToFields_[i];
+
+            forAllConstIter(wordHashSet, notAddedToFields, iter)
+            {
+                WarningInFunction
+                    << "Source " << source.name() << " defined for field "
+                    << iter.key() << " but never used" << endl;
+            }
+
+            wordHashSet notConstrainedFields(source.constrainedFields());
+            notConstrainedFields -= constrainedFields_[i];
+
+            forAllConstIter(wordHashSet, notConstrainedFields, iter)
+            {
+                WarningInFunction
+                    << "Constraint " << source.name() << " defined for field "
+                    << iter.key() << " but never used" << endl;
+            }
+
+            wordHashSet notCorrectedFields(source.correctedFields());
+            notCorrectedFields -= correctedFields_[i];
+
+            forAllConstIter(wordHashSet, notCorrectedFields, iter)
+            {
+                WarningInFunction
+                    << "Correction " << source.name() << " defined for field "
+                    << iter.key() << " but never used" << endl;
+            }
         }
+
+        checkTimeIndex_ = mesh_.time().timeIndex();
     }
 }
 
@@ -91,7 +122,10 @@ Foam::fv::optionList::optionList(const fvMesh& mesh, const dictionary& dict)
 :
     PtrListDictionary<option>(0),
     mesh_(mesh),
-    checkTimeIndex_(mesh_.time().startTimeIndex() + 2)
+    checkTimeIndex_(mesh_.time().timeIndex() + 1),
+    addedToFields_(),
+    constrainedFields_(),
+    correctedFields_()
 {
     reset(dict);
 }
@@ -101,7 +135,10 @@ Foam::fv::optionList::optionList(const fvMesh& mesh)
 :
     PtrListDictionary<option>(0),
     mesh_(mesh),
-    checkTimeIndex_(mesh_.time().startTimeIndex() + 2)
+    checkTimeIndex_(mesh_.time().timeIndex() + 1),
+    addedToFields_(),
+    constrainedFields_(),
+    correctedFields_()
 {}
 
 
@@ -122,6 +159,11 @@ void Foam::fv::optionList::reset(const dictionary& dict)
     }
 
     this->setSize(count);
+
+    addedToFields_.setSize(count);
+    constrainedFields_.setSize(count);
+    correctedFields_.setSize(count);
+
     label i = 0;
     forAllConstIter(dictionary, optionsDict, iter)
     {
@@ -132,24 +174,54 @@ void Foam::fv::optionList::reset(const dictionary& dict)
 
             this->set
             (
-                i++,
+                i,
                 name,
                 option::New(name, sourceDict, mesh_).ptr()
             );
+
+            addedToFields_.set(i, new wordHashSet());
+            constrainedFields_.set(i, new wordHashSet());
+            correctedFields_.set(i, new wordHashSet());
+
+            i++;
         }
     }
 }
 
 
-bool Foam::fv::optionList::appliesToField(const word& fieldName) const
+bool Foam::fv::optionList::addsToField(const word& fieldName) const
 {
     forAll(*this, i)
     {
-        const option& source = this->operator[](i);
+        if (this->operator[](i).addsToField(fieldName))
+        {
+            return true;
+        }
+    }
 
-        label fieldi = source.applyToField(fieldName);
+    return false;
+}
 
-        if (fieldi != -1)
+
+bool Foam::fv::optionList::constrainsField(const word& fieldName) const
+{
+    forAll(*this, i)
+    {
+        if (this->operator[](i).constrainsField(fieldName))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+bool Foam::fv::optionList::correctsField(const word& fieldName) const
+{
+    forAll(*this, i)
+    {
+        if (this->operator[](i).correctsField(fieldName))
         {
             return true;
         }

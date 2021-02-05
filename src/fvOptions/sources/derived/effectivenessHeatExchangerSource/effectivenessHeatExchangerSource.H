@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,22 +64,20 @@ Usage
     \verbatim
     effectivenessHeatExchangerSource1
     {
-        type            effectivenessHeatExchangerSource;
+        type                    effectivenessHeatExchangerSource;
 
-        selectionMode   cellZone;
-        cellZone        porosity;
+        selectionMode           cellZone;
+        cellZone                porosity;
 
         secondaryMassFlowRate   1.0;
         secondaryInletT         336;
         primaryInletT           293;
+
         faceZone                facesZoneInletOriented;
+
         effectiveness           <function2>;
     }
     \endverbatim
-
-    The effectiveness Function2 is described in terms of the primary and
-    secondary mass flow rates and has the same units as the secondary mass flow
-    rate and kg/s for phi.
 
 Note
     - The effectiveness Function2 is described in terms of the primary and
@@ -115,10 +113,7 @@ class effectivenessHeatExchangerSource
 :
     public cellSetOption
 {
-
-protected:
-
-    // Protected data
+    // Private data
 
         //- Secondary flow mass rate [kg/s]
         scalar secondaryMassFlowRate_;
@@ -165,8 +160,11 @@ private:
 
     // Private Member Functions
 
-        //- Initialise heat exchanger source model
-        void initialise();
+        //- Non-virtual read
+        void readCoeffs();
+
+        //- Set the zone information
+        void setZone();
 
         //- Calculate total area of faceZone across processors
         void calculateTotalArea(scalar& area) const;
@@ -203,22 +201,16 @@ public:
 
     // Member Functions
 
-        //- Explicit and implicit source
-        virtual void addSup
-        (
-            fvMatrix<scalar>& eqn,
-            const label fieldi
-        ) const
-        {
-            NotImplemented;
-        }
+        //- Return the list of fields for which the option adds source term
+        //  to the transport equation
+        virtual wordList addedToFields() const;
 
         //- Explicit and implicit source for compressible equation
         virtual void addSup
         (
             const volScalarField& rho,
             fvMatrix<scalar>& eqn,
-            const label fieldi
+            const word& fieldName
         ) const;
 
         //- Read dictionary

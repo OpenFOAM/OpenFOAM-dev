@@ -19,10 +19,9 @@ disk1
 {
     type            actuationDiskSource;
 
-    fields      (U);
-
     selectionMode   cellSet;
     cellSet         actuationDisk1;
+
     diskDir         (1 0 0);    // Orientation of the disk
     Cp              0.386;
     Ct              0.58;
@@ -34,10 +33,9 @@ disk2
 {
     type            actuationDiskSource;
 
-    fields      (U);
-
     selectionMode   cellSet;
     cellSet         actuationDisk2;
+
     diskDir         (1 0 0);    // Orientation of the disk
     Cp              0.53;
     Ct              0.58;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ Class
     Foam::fv::isotropicDamping
 
 Description
-
     This fvOption applies an implicit damping force to all components of the
     vector field to relax the field towards a specified uniform value.  Its
     intended purpose is to damp the motions of an interface in the region
@@ -50,12 +49,8 @@ Usage
 
         value           (2 0 0);   // Value towards which the field it relaxed
         lambda          [0 0 -1 0 0 0 0] 1; // Damping coefficient
-
-        timeStart       0;
-        duration        1e6;
     }
     \endverbatim
-
     Example usage with graduated onset:
     \verbatim
     isotropicDamping1
@@ -68,7 +63,7 @@ Usage
         origin          (1200 0 0);
         direction       (1 0 0);
 
-        // Or, define multiple lines
+        // // Or, define multiple lines
         // origins         ((1200 0 0) (1200 -300 0) (1200 300 0));
         // directions      ((1 0 0) (0 -1 0) (0 1 0));
 
@@ -79,11 +74,9 @@ Usage
             duration    600;
         }
 
-        value           (2 0 0);   // Value towards which the field it relaxed
+        value           (2 0 0);            // Value towards which the field is
+                                            // relaxed
         lambda          [0 0 -1 0 0 0 0] 1; // Damping coefficient
-
-        timeStart       0;
-        duration        1e6;
     }
     \endverbatim
 
@@ -124,6 +117,9 @@ class isotropicDamping
 
     // Private Member Functions
 
+        //- Non-virtual read
+        void readCoeffs();
+
         //- Source term to momentum equation
         void add
         (
@@ -163,7 +159,7 @@ public:
             virtual void addSup
             (
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Source term to compressible momentum equation
@@ -171,7 +167,7 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Source term to phase momentum equation
@@ -180,7 +176,7 @@ public:
                 const volScalarField& alpha,
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
 

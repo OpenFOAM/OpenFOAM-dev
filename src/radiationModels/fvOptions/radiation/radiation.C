@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,24 +56,25 @@ Foam::fv::radiation::radiation
     const fvMesh& mesh
 )
 :
-    option(sourceName, modelType, dict, mesh)
-{
-    const basicThermo& thermo =
-        mesh_.lookupObject<basicThermo>(basicThermo::dictName);
-
-    fieldNames_.setSize(1);
-    fieldNames_[0] = thermo.he().name();
-    applied_.setSize(fieldNames_.size(), false);
-
-    radiation_ = radiationModel::New(thermo.T());
-}
+    option(sourceName, modelType, dict, mesh),
+    radiation_
+    (
+        radiationModel::New
+        (
+            mesh_.lookupObject<basicThermo>(basicThermo::dictName).T()
+        )
+    )
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::radiation::read(const dictionary& dict)
+Foam::wordList Foam::fv::radiation::addedToFields() const
 {
-    return option::read(dict);
+    const basicThermo& thermo =
+        mesh_.lookupObject<basicThermo>(basicThermo::dictName);
+
+    return wordList(1, thermo.he().name());
 }
 
 
@@ -81,7 +82,7 @@ void Foam::fv::radiation::addSup
 (
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     const basicThermo& thermo =

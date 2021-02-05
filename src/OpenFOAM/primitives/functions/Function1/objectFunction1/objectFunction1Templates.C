@@ -50,7 +50,8 @@ Foam::autoPtr<Foam::objectFunction1> Foam::objectFunction1::New
     const word& name,
     const dictionary& dict,
     const word& objectName,
-    const objectRegistry& db
+    const objectRegistry& db,
+    const bool error
 )
 {
     autoPtr<objectFunction1> ptr
@@ -68,7 +69,7 @@ Foam::autoPtr<Foam::objectFunction1> Foam::objectFunction1::New
       : nullptr
     );
 
-    if (!ptr.valid())
+    if (error && !ptr.valid())
     {
         // Spit lookup error
         db.lookupObject<regIOobject>(objectName);

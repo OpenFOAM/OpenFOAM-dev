@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "buoyancyEnergy.H"
 #include "fvMatrices.H"
+#include "basicThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
@@ -45,6 +46,21 @@ namespace fv
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::fv::buoyancyEnergy::readCoeffs()
+{
+    phaseName_ = coeffs_.lookupOrDefault<word>("phase", word::null);
+
+    UName_ =
+        coeffs_.lookupOrDefault<word>
+        (
+            "U",
+            IOobject::groupName("U", phaseName_)
+        );
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::buoyancyEnergy::buoyancyEnergy
@@ -56,27 +72,32 @@ Foam::fv::buoyancyEnergy::buoyancyEnergy
 )
 :
     option(sourceName, modelType, dict, mesh),
-    UName_(coeffs_.lookupOrDefault<word>("U", "U"))
+    phaseName_(word::null),
+    UName_(word::null)
 {
-    coeffs_.lookup("fields") >> fieldNames_;
-
-    if (fieldNames_.size() != 1)
-    {
-        FatalErrorInFunction
-            << "settings are:" << fieldNames_ << exit(FatalError);
-    }
-
-    applied_.setSize(fieldNames_.size(), false);
+    readCoeffs();
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::wordList Foam::fv::buoyancyEnergy::addedToFields() const
+{
+    const basicThermo& thermo =
+        mesh_.lookupObject<basicThermo>
+        (
+            IOobject::groupName(basicThermo::dictName, phaseName_)
+        );
+
+    return wordList(1, thermo.he().name());
+}
+
+
 void Foam::fv::buoyancyEnergy::addSup
 (
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     const uniformDimensionedVectorField& g =
@@ -85,6 +106,37 @@ void Foam::fv::buoyancyEnergy::addSup
     const volVectorField& U = mesh_.lookupObject<volVectorField>(UName_);
 
     eqn += rho*(U&g);
+}
+
+
+void Foam::fv::buoyancyEnergy::addSup
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<scalar>& eqn,
+    const word& fieldName
+) const
+{
+    const uniformDimensionedVectorField& g =
+        mesh_.lookupObject<uniformDimensionedVectorField>("g");
+
+    const volVectorField& U = mesh_.lookupObject<volVectorField>(UName_);
+
+    eqn += alpha*rho*(U&g);
+}
+
+
+bool Foam::fv::buoyancyEnergy::read(const dictionary& dict)
+{
+    if (option::read(dict))
+    {
+        readCoeffs();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

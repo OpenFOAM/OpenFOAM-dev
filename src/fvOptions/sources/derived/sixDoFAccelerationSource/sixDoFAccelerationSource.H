@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,9 +74,12 @@ public:
         typedef Vector<vector> accelerationVectors;
 
 
-protected:
+private:
 
-    // Protected data
+    // Private data
+
+        //- Velocity field name, default = U
+        word UName_;
 
         //- Accelerations function returning a vector containing
         //      linear acceleration vector
@@ -84,16 +87,14 @@ protected:
         //      angular acceleration vector
         autoPtr<Function1<accelerationVectors>> accelerations_;
 
-        //- Velocity field name, default = U
-        word UName_;
-
         //- Optional gravitational acceleration
-        dimensionedVector g0_;
+        dimensionedVector g_;
 
-
-private:
 
     // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
 
         //- Source term to momentum equation
         template<class RhoFieldType>
@@ -101,7 +102,7 @@ private:
         (
             const RhoFieldType& rho,
             fvMatrix<vector>& eqn,
-            const label fieldi
+            const word& fieldName
         ) const;
 
 
@@ -136,11 +137,15 @@ public:
 
     // Member Functions
 
+        //- Return the list of fields for which the option adds source term
+        //  to the transport equation
+        virtual wordList addedToFields() const;
+
         //- Source term to momentum equation
         virtual void addSup
         (
             fvMatrix<vector>& eqn,
-            const label fieldi
+            const word& fieldName
         ) const;
 
         //- Source term to compressible momentum equation
@@ -148,7 +153,7 @@ public:
         (
             const volScalarField& rho,
             fvMatrix<vector>& eqn,
-            const label fieldi
+            const word& fieldName
         ) const;
 
         //- Read dictionary

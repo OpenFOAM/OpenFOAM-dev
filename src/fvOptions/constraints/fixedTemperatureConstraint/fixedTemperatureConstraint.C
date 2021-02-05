@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,34 @@ namespace Foam
 }
 
 const Foam::NamedEnum<Foam::fv::fixedTemperatureConstraint::temperatureMode, 2>
-    Foam::fv::fixedTemperatureConstraint::temperatureModeNames_;
+    Foam::fv::fixedTemperatureConstraint::modeNames_;
+
+
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::fv::fixedTemperatureConstraint::readCoeffs()
+{
+    mode_ = modeNames_.read(coeffs_.lookup("mode"));
+
+    switch (mode_)
+    {
+        case temperatureMode::uniform:
+        {
+            TValue_.reset
+            (
+                Function1<scalar>::New("temperature", coeffs_).ptr()
+            );
+            break;
+        }
+        case temperatureMode::lookup:
+        {
+            TName_ = coeffs_.lookupOrDefault<word>("T", "T");
+            break;
+        }
+    }
+
+    phaseName_ = coeffs_.lookupOrDefault<word>("phase", word::null);
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
@@ -68,84 +95,57 @@ Foam::fv::fixedTemperatureConstraint::fixedTemperatureConstraint
 )
 :
     cellSetOption(name, modelType, dict, mesh),
-    mode_(temperatureModeNames_.read(coeffs_.lookup("mode"))),
-    Tuniform_(nullptr),
-    TName_("T"),
-    phase_(coeffs_.lookupOrDefault<word>("phase", word::null))
+    mode_(temperatureMode::uniform),
+    TValue_(nullptr),
+    TName_(word::null),
+    phaseName_(word::null)
 {
-    switch (mode_)
-    {
-        case tmUniform:
-        {
-            Tuniform_.reset
-            (
-                Function1<scalar>::New("temperature", coeffs_).ptr()
-            );
-            break;
-        }
-        case tmLookup:
-        {
-            TName_ = coeffs_.lookupOrDefault<word>("T", "T");
-            break;
-        }
-        default:
-        {
-            // error handling done by NamedEnum
-        }
-    }
-
-    // Set the field name to that of the energy field from which the temperature
-    // is obtained
-
-    const basicThermo& thermo =
-        mesh_.lookupObject<basicThermo>
-        (
-            IOobject::groupName(basicThermo::dictName, phase_)
-        );
-
-    fieldNames_.setSize(1, thermo.he().name());
-
-    applied_.setSize(1, false);
+    readCoeffs();
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::wordList Foam::fv::fixedTemperatureConstraint::constrainedFields() const
+{
+    const basicThermo& thermo =
+        mesh_.lookupObject<basicThermo>
+        (
+            IOobject::groupName(basicThermo::dictName, phaseName_)
+        );
+
+    return wordList(1, thermo.he().name());
+}
+
+
 void Foam::fv::fixedTemperatureConstraint::constrain
 (
     fvMatrix<scalar>& eqn,
-    const label
+    const word& fieldName
 ) const
 {
     const basicThermo& thermo =
         mesh_.lookupObject<basicThermo>
         (
-            IOobject::groupName(basicThermo::dictName, phase_)
+            IOobject::groupName(basicThermo::dictName, phaseName_)
         );
 
     switch (mode_)
     {
-        case tmUniform:
+        case temperatureMode::uniform:
         {
             const scalar t = mesh_.time().value();
-            scalarField Tuni(cells().size(), Tuniform_->value(t));
+            scalarField Tuni(cells().size(), TValue_->value(t));
             eqn.setValues(cells(), thermo.he(Tuni, cells()));
-
             break;
         }
-        case tmLookup:
+        case temperatureMode::lookup:
         {
             const volScalarField& T =
                 mesh().lookupObject<volScalarField>(TName_);
-
             scalarField Tlkp(T, cells());
             eqn.setValues(cells(), thermo.he(Tlkp, cells()));
-
             break;
-        }
-        default:
-        {
-            // error handling done by NamedEnum
         }
     }
 }
@@ -155,16 +155,7 @@ bool Foam::fv::fixedTemperatureConstraint::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))
     {
-        if (coeffs_.found(Tuniform_->name()))
-        {
-            Tuniform_.reset
-            (
-                Function1<scalar>::New(Tuniform_->name(), dict).ptr()
-            );
-        }
-
-        coeffs_.readIfPresent("T", TName_);
-
+        readCoeffs();
         return true;
     }
     else

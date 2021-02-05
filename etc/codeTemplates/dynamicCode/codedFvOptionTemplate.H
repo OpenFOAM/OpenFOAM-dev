@@ -70,23 +70,20 @@ public:
             const fvMesh& mesh
         );
 
+
     //- Destructor
     virtual ~${typeName}FvOption${SourceType}();
 
 
     // Member Functions
 
-            //- Correct field
-            virtual void correct
-            (
-                GeometricField<${TemplateType}, fvPatchField, volMesh>&
-            ) const;
+        // Evaluation
 
             //- Explicit and implicit matrix contributions
             virtual void addSup
             (
                 fvMatrix<${TemplateType}>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Explicit and implicit matrix contributions for compressible
@@ -95,7 +92,7 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<${TemplateType}>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Explicit and implicit matrix contributions for phase equations
@@ -104,14 +101,7 @@ public:
                 const volScalarField& alpha,
                 const volScalarField& rho,
                 fvMatrix<${TemplateType}>& eqn,
-                const label fieldi
-            ) const;
-
-            //- Set value
-            virtual void constrain
-            (
-                fvMatrix<${TemplateType}>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 };
 

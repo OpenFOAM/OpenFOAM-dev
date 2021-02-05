@@ -9,7 +9,7 @@
 type            coded;
 libs            ("libutilityFunctionObjects.so");
 
-name            generateAlphaSolid;
+name            generateAlphas;
 
 codeWrite
 #{
@@ -19,9 +19,26 @@ codeWrite
     const volScalarField x(mesh().C() & dx), y(mesh().C() & dy);
 
     const scalar x0 = 0.032, x1 = 0.064, x2 = 0.128, x3 = 0.224;
-    const scalar y0 = -0.088, y1 = -0.056;
 
-    volScalarField alpha
+    const volScalarField f
+    (
+        pos(x - x0)*pos(x1 - x)*(x - x0)/(x1 - x0)
+      + pos(x - x1)*pos(x2 - x)
+      + pos(x - x2)*pos(x3 - x)*(x3 - x)/(x3 - x2)
+    );
+
+    volScalarField
+    (
+        IOobject
+        (
+            IOobject::groupName("alpha", "volume"),
+            mesh().time().constant(),
+            mesh()
+        ),
+        0.5*pos(y - (-0.088))*pos((-0.056) - y)*f
+    ).write();
+
+    volScalarField
     (
         IOobject
         (
@@ -29,21 +46,8 @@ codeWrite
             mesh().time().constant(),
             mesh()
         ),
-        mesh(),
-        dimless,
-        zeroGradientFvPatchScalarField::typeName
-    );
-
-    alpha =
-        0.5
-       *(
-            pos(x - x0)*pos(x1 - x)*(x - x0)/(x1 - x0)
-          + pos(x - x1)*pos(x2 - x)
-          + pos(x - x2)*pos(x3 - x)*(x3 - x)/(x3 - x2)
-        )
-       *pos(y - y0)*pos(y1 - y);
-
-    alpha.write();
+        0.5*pos(y - (-0.124))*pos((-0.092) - y)*f
+    ).write();
 #};
 
 // ************************************************************************* //

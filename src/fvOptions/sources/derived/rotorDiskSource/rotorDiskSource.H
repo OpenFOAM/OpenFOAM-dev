@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,32 +25,32 @@ Class
     Foam::fv::rotorDiskSource
 
 Description
-    Rotor disk source
-
     Cell based momentum source which approximates the mean effects of
     rotor forces on a cylindrical region within the domain.
 
 Usage
     Example usage:
     \verbatim
-        fields          (U);    // names of fields on which to apply source
-        nBlades         3;      // number of blades
-        tipEffect       0.96;   // normalised radius above which lift = 0
+    rotorDiskSource1
+    {
+        type            rotorDisk;
 
-        inletFlowType   local;  // inlet flow type specification
+        U               U;          // Name of the velocity field
 
-        geometryMode    auto;   // geometry specification
+        nBlades         3;          // Number of blades
+        tipEffect       0.96;       // Normalised radius above which lift = 0
+        inletFlowType   local;      // Inlet flow type specification
+        geometryMode    auto;       // Geometry specification
+        refDirection    (-1 0 0);   // Reference direction for psi angle
 
-        refDirection    (-1 0 0); // reference direction
-                                  // - used as reference for psi angle
-
-        trimModel       fixed;  // fixed || targetForce
+        trimModel       fixed;      // Trim model; fixed or targetCoeff
+        // see fixedTrim.H or targetCoeffTrim.H for documentation
 
         flapCoeffs
         {
-            beta0           0;  // coning angle [deg]
-            beta1c          0;  // lateral flapping coeff (cos coeff)
-            beta2s          0;  // longitudinal flapping coeff (sin coeff)
+            beta0           0;  // Coning angle [deg]
+            beta1c          0;  // Lateral flapping coeff (cos coeff)
+            beta2s          0;  // Longitudinal flapping coeff (sin coeff)
         }
 
         blade
@@ -62,8 +62,10 @@ Usage
         {
             profile1
             {
-                type    lookup; // lookup || series
+                type    lookup;     // Profile model; lookup or series
+
                 ...
+
                 // see lookupProfile.H or seriesProfile.H for documentation
             }
             profile2
@@ -71,12 +73,13 @@ Usage
                 ...
             }
         }
+    }
     \endverbatim
 
     Where:
     Valid options for the \c geometryMode entry include:
-    - auto          : determine rotor co-ord system from cells
-    - specified     : specified co-ord system
+    - auto          : determine rotor coordinate system from cells
+    - specified     : specified coordinate system
 
     Valid options for the \c inletFlowType entry include:
     - fixed         : specified velocity
@@ -128,16 +131,16 @@ public:
 
     enum geometryModeType
     {
-        gmAuto,
-        gmSpecified
+        automatic,
+        specified
     };
     static const NamedEnum<geometryModeType, 2> geometryModeTypeNames_;
 
     enum inletFlowType
     {
-        ifFixed,
-        ifSurfaceNormal,
-        ifLocal
+        fixed,
+        surfaceNormal,
+        local
     };
     static const NamedEnum<inletFlowType, 3> inletFlowTypeNames_;
 
@@ -157,8 +160,8 @@ protected:
 
     // Protected data
 
-        //- Reference density for incompressible case
-        mutable scalar rhoRef_;
+        //- Name of the velocity field
+        word UName_;
 
         //- Rotational speed [rad/s]
         //  Positive anti-clockwise when looking along -ve lift direction
@@ -211,8 +214,14 @@ protected:
         //- Profile data
         profileModelList profiles_;
 
+        //- Reference density for incompressible case
+        mutable scalar rhoRef_;
+
 
     // Protected Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
 
         //- Check data
         void checkData();
@@ -281,6 +290,13 @@ public:
             inline const coordinateSystems::cylindrical& coordSys() const;
 
 
+        // Checks
+
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addedToFields() const;
+
+
         // Evaluation
 
             //- Calculate forces
@@ -302,7 +318,7 @@ public:
             virtual void addSup
             (
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Source term to compressible momentum equation
@@ -310,7 +326,7 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
 

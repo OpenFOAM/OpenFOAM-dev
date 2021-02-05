@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,19 +31,21 @@ Description
 Usage
     Example usage:
     \verbatim
-    accelerationSource
+    accelerationSource1
     {
-        type        accelerationSource;
+        type            accelerationSource;
 
-        selectionMode all;
-        U           U;
-        velocity    scale;
-        value       (-2.572 0 0);
+        selectionMode   all;
+
+        U               U;
+
+        velocity        scale;
+        value           (-2.572 0 0);
         scale
         {
-            type        halfCosineRamp;
-            start       0;
-            duration    10;
+            type            halfCosineRamp;
+            start           0;
+            duration        10;
         }
     }
     \endverbatim
@@ -76,11 +78,17 @@ class accelerationSource
 {
     // Private Data
 
+        //- Name of the velocity field
+        word UName_;
+
         //- Time-varying velocity
         autoPtr<Function1<vector>> velocity_;
 
 
     // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
 
         //- Source term to momentum equation
         template<class AlphaRhoFieldType>
@@ -88,7 +96,7 @@ class accelerationSource
         (
             const AlphaRhoFieldType& rho,
             fvMatrix<vector>& eqn,
-            const label fieldi
+            const word& fieldName
         ) const;
 
 
@@ -117,13 +125,20 @@ public:
 
     // Member Functions
 
+        // Checks
+
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addedToFields() const;
+
+
          // Add explicit and implicit contributions
 
             //- Source term to momentum equation
             virtual void addSup
             (
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Source term to compressible momentum equation
@@ -131,7 +146,7 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Source term to phase momentum equation
@@ -140,7 +155,7 @@ public:
                 const volScalarField& alpha,
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
 

@@ -24,7 +24,6 @@ airToporous
     master          false;
 
     nbrModel        porousToair;
-    fields          (e);
     semiImplicit    no;
 }
 

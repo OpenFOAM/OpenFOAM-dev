@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,7 +54,7 @@ Usage
     }
     \endverbatim
 
-Note:
+Note
     The porous region must be selected as a cellZone.
 
 SourceFiles
@@ -86,12 +86,19 @@ class explicitPorositySource
 :
     public cellSetOption
 {
-protected:
+    // Private data
 
-    // Protected data
+        //- Names of the velocity fields
+        wordList UNames_;
 
         //- Run-time selectable porosity model
         mutable autoPtr<porosityModel> porosityPtr_;
+
+
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
 
 
 public:
@@ -122,10 +129,21 @@ public:
 
     // Member Functions
 
-        const porosityModel& model() const
-        {
-            return porosityPtr_();
-        }
+        // Access
+
+            //- Return the porosity model
+            const porosityModel& model() const
+            {
+                return porosityPtr_();
+            }
+
+
+        // Checks
+
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addedToFields() const;
+
 
         // Add explicit and implicit contributions
 
@@ -133,7 +151,7 @@ public:
             virtual void addSup
             (
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Add implicit contribution to compressible momentum equation
@@ -141,7 +159,7 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Add implicit contribution to phase momentum equation
@@ -150,7 +168,7 @@ public:
                 const volScalarField& alpha,
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
 

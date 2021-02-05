@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,8 +48,34 @@ namespace fv
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::effectivenessHeatExchangerSource::initialise()
+void Foam::fv::effectivenessHeatExchangerSource::readCoeffs()
 {
+    secondaryMassFlowRate_ = coeffs_.lookup<scalar>("secondaryMassFlowRate");
+    secondaryInletT_ = coeffs_.lookup<scalar>("secondaryInletT");
+    primaryInletT_ = coeffs_.lookup<scalar>("primaryInletT");
+
+    eTable_.reset(Function2<scalar>::New("effectiveness", coeffs_).ptr());
+
+    UName_ = coeffs_.lookupOrDefault<word>("U", "U");
+    TName_ = coeffs_.lookupOrDefault<word>("T", "T");
+    phiName_ = coeffs_.lookupOrDefault<word>("phi", "phi");
+
+    faceZoneName_ = coeffs_.lookup<word>("faceZone");
+}
+
+
+void Foam::fv::effectivenessHeatExchangerSource::setZone()
+{
+    zoneID_ = mesh_.faceZones().findZoneID(faceZoneName_);
+    if (zoneID_ < 0)
+    {
+        FatalErrorInFunction
+            << type() << " " << this->name() << ": "
+            << "    Unknown face zone name: " << faceZoneName_
+            << ". Valid face zones are: " << mesh_.faceZones().names()
+            << nl << exit(FatalError);
+    }
+
     const faceZone& fZone = mesh_.faceZones()[zoneID_];
 
     faceId_.setSize(fZone.size());
@@ -150,50 +176,41 @@ Foam::fv::effectivenessHeatExchangerSource::effectivenessHeatExchangerSource
 )
 :
     cellSetOption(name, modelType, dict, mesh),
-    secondaryMassFlowRate_(coeffs_.lookup<scalar>("secondaryMassFlowRate")),
-    secondaryInletT_(coeffs_.lookup<scalar>("secondaryInletT")),
-    primaryInletT_(coeffs_.lookup<scalar>("primaryInletT")),
-    eTable_(Function2<scalar>::New("effectiveness", coeffs_)),
-    UName_(coeffs_.lookupOrDefault<word>("U", "U")),
-    TName_(coeffs_.lookupOrDefault<word>("T", "T")),
-    phiName_(coeffs_.lookupOrDefault<word>("phi", "phi")),
-    faceZoneName_(coeffs_.lookup("faceZone")),
-    zoneID_(mesh_.faceZones().findZoneID(faceZoneName_)),
+    secondaryMassFlowRate_(NaN),
+    secondaryInletT_(NaN),
+    primaryInletT_(NaN),
+    eTable_(nullptr),
+    UName_(word::null),
+    TName_(word::null),
+    phiName_(word::null),
+    faceZoneName_(word::null),
+    zoneID_(-1),
     faceId_(),
     facePatchId_(),
     faceSign_(),
-    faceZoneArea_(0)
+    faceZoneArea_(NaN)
 {
-    if (zoneID_ < 0)
-    {
-        FatalErrorInFunction
-            << type() << " " << this->name() << ": "
-            << "    Unknown face zone name: " << faceZoneName_
-            << ". Valid face zones are: " << mesh_.faceZones().names()
-            << nl << exit(FatalError);
-    }
-
-    // Set the field name to that of the energy field from which the temperature
-    // is obtained
-
-    const basicThermo& thermo =
-        mesh_.lookupObject<basicThermo>(basicThermo::dictName);
-
-    fieldNames_.setSize(1, thermo.he().name());
-
-    applied_.setSize(1, false);
-
-    initialise();
+    readCoeffs();
+    setZone();
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::wordList Foam::fv::effectivenessHeatExchangerSource::addedToFields() const
+{
+    const basicThermo& thermo =
+        mesh_.lookupObject<basicThermo>(basicThermo::dictName);
+
+    return wordList(1, thermo.he().name());
+}
+
+
 void Foam::fv::effectivenessHeatExchangerSource::addSup
 (
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
-    const label
+    const word& fieldName
 ) const
 {
     const basicThermo& thermo =
@@ -297,10 +314,8 @@ bool Foam::fv::effectivenessHeatExchangerSource::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))
     {
-        coeffs_.lookup("secondaryMassFlowRate") >> secondaryMassFlowRate_;
-        coeffs_.lookup("secondaryInletT") >> secondaryInletT_;
-        coeffs_.lookup("primaryInletT") >> primaryInletT_;
-
+        readCoeffs();
+        setZone();
         return true;
     }
     else

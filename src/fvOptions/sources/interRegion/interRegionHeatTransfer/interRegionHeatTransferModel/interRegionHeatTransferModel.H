@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,11 +27,10 @@ Class
 Description
     Base class for inter region heat exchange. The derived classes must
     provide the heat transfer coefficient (htc) which is used as follows
-    in the energy equation.
-
-     \f[
-        -htc*Tmapped + Sp(htc, T)
-     \f]
+    in the energy equation:
+    \f[
+        -htc*T_{mapped} + Sp(htc, T)
+    \f]
 
 \*---------------------------------------------------------------------------*/
 
@@ -56,24 +55,13 @@ class interRegionHeatTransferModel
 :
     public interRegionOption
 {
-protected:
-
-    // Protected data
+    // Private data
 
         //- Name of the model in the neighbour mesh
         word nbrModelName_;
 
-        //- Pointer to neighbour interRegionHeatTransferModel
-        mutable interRegionHeatTransferModel* nbrModel_;
-
-        //- First iteration
-        mutable bool firstIter_;
-
         //- Time index - used for updating htc
         mutable label timeIndex_;
-
-        //- Heat transfer coefficient [W/m^2/k] times area/volume [1/m]
-        mutable volScalarField htc_;
 
         //- Flag to activate semi-implicit coupling
         bool semiImplicit_;
@@ -85,16 +73,30 @@ protected:
         word TNbrName_;
 
 
-    // Protected member functions
+    // Private member functions
 
-        //- Set the neighbour interRegionHeatTransferModel
-        void setNbrModel() const;
+        //- Non-virtual read
+        void readCoeffs();
 
-        //- Inherit correct from interRegionOption
-        using interRegionOption::correct;
+        //- Get the neighbour interRegionHeatTransferModel
+        interRegionHeatTransferModel& nbrModel() const;
 
         //- Correct to calculate the inter-region heat transfer coefficient
         void correct() const;
+
+        //- Correct heat transfer coefficient
+        virtual void correctHtc() const = 0;
+
+
+protected:
+
+    // Protected data
+
+        //- Heat transfer coefficient [W/m^2/k] times area/volume [1/m]
+        mutable volScalarField htc_;
+
+
+    // Protected Member Functions
 
         //- Interpolate field with nbrModel specified
         template<class Type>
@@ -155,26 +157,24 @@ public:
 
         // Access
 
-            //- Return const access to the neighbour region name
-            inline const word& nbrRegionName() const;
-
-            //- Return const access to the mapToMap pointer
-            inline const meshToMesh& meshInterp() const;
-
             //- Return the heat transfer coefficient
             inline const volScalarField& htc() const;
 
-            //- Return const access to the neighbour model
-            inline const interRegionHeatTransferModel& nbrModel() const;
 
-            //- Return access to the neighbour model
-            inline interRegionHeatTransferModel& nbrModel();
+        // Checks
+
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addedToFields() const;
+
+
+        // Sources
 
             //- Source term to energy equation
             virtual void addSup
             (
                 fvMatrix<scalar>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Source term to compressible energy equation
@@ -182,11 +182,14 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<scalar>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
-            //- Calculate heat transfer coefficient
-            virtual void calculateHtc() const = 0;
+
+        // Correction
+
+            //- Inherit base class correct method to avoid clang warning
+            using interRegionOption::correct;
 
 
         // IO

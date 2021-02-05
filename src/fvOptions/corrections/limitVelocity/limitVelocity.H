@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::fv::limitVelocity
 
 Description
-    Limits the maximum velocity magnitude to the specified \c max value.
+    Limits the velocity magnitude to the specified \c max value.
 
 Usage
     Example usage:
@@ -35,6 +35,7 @@ Usage
         type            limitVelocity;
 
         selectionMode   all;
+
         max             100;
     }
     \endverbatim
@@ -64,15 +65,19 @@ class limitVelocity
 :
     public cellSetOption
 {
-protected:
-
-    // Protected data
+    // Private data
 
         //- Velocity field name, default = U
         word UName_;
 
         //- Maximum velocity magnitude
         scalar max_;
+
+
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
 
 
 public:
@@ -103,11 +108,14 @@ public:
 
     // Member Functions
 
+        //- Return the list of fields corrected by the option
+        virtual wordList correctedFields() const;
+
+        //- Correct the velocity field
+        virtual void correct(volVectorField& U) const;
+
         //- Read dictionary
         virtual bool read(const dictionary& dict);
-
-        //- Correct the energy field
-        virtual void correct(volVectorField& U) const;
 
 
     // Member Operators

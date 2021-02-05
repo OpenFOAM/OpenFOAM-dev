@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,40 +45,27 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-const Foam::Function2<Foam::scalar>&
-Foam::fv::function2HeatTransfer::htcFunc() const
+void Foam::fv::function2HeatTransfer::readCoeffs()
 {
-    if (!htcFunc_.valid())
-    {
-        htcFunc_ = Function2<scalar>::New("htcFunc", coeffs_);
-    }
+    UName_ = coeffs_.lookupOrDefault<word>("U", "U");
+    UNbrName_ = coeffs_.lookupOrDefault<word>("UNbr", "U");
 
-    return htcFunc_();
+    htcFunc_.reset(Function2<scalar>::New("htcFunc", coeffs_).ptr());
 }
 
 
-const Foam::volScalarField& Foam::fv::function2HeatTransfer::AoV() const
+void Foam::fv::function2HeatTransfer::correctHtc() const
 {
-    if (!AoV_.valid())
-    {
-        AoV_.reset
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    "AoV",
-                    startTimeName_,
-                    mesh_,
-                    IOobject::MUST_READ,
-                    IOobject::AUTO_WRITE
-                ),
-                mesh_
-            )
-        );
-    }
+    const volVectorField& U = mesh_.lookupObject<volVectorField>(UName_);
 
-    return AoV_();
+    const fvMesh& nbrMesh = mesh_.time().lookupObject<fvMesh>(nbrRegionName());
+
+    const volVectorField& UNbr =
+        nbrMesh.lookupObject<volVectorField>(UNbrName_);
+    const scalarField UMagNbr(mag(UNbr));
+    const scalarField UMagNbrMapped(interpolate(UMagNbr));
+
+    htc_.primitiveFieldRef() = htcFunc_->value(mag(U()), UMagNbrMapped)*AoV_();
 }
 
 
@@ -93,12 +80,29 @@ Foam::fv::function2HeatTransfer::function2HeatTransfer
 )
 :
     interRegionHeatTransferModel(name, modelType, dict, mesh),
-    UName_(coeffs_.lookupOrDefault<word>("U", "U")),
-    UNbrName_(coeffs_.lookupOrDefault<word>("UNbr", "U")),
+    UName_(word::null),
+    UNbrName_(word::null),
     htcFunc_(),
-    AoV_(),
-    startTimeName_(mesh.time().timeName())
-{}
+    AoV_
+    (
+        master()
+      ? new volScalarField
+        (
+            IOobject
+            (
+                "AoV",
+                mesh_.time().constant(),
+                mesh_,
+                IOobject::MUST_READ,
+                IOobject::AUTO_WRITE
+            ),
+            mesh_
+        )
+      : nullptr
+    )
+{
+    readCoeffs();
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -109,25 +113,11 @@ Foam::fv::function2HeatTransfer::~function2HeatTransfer()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::function2HeatTransfer::calculateHtc() const
-{
-    const fvMesh& nbrMesh = mesh_.time().lookupObject<fvMesh>(nbrRegionName());
-
-    const volVectorField& UNbr =
-        nbrMesh.lookupObject<volVectorField>(UNbrName_);
-
-    const scalarField UMagNbr(mag(UNbr));
-    const scalarField UMagNbrMapped(interpolate(UMagNbr));
-    const volVectorField& U = mesh_.lookupObject<volVectorField>(UName_);
-
-    htc_.primitiveFieldRef() = htcFunc().value(mag(U()), UMagNbrMapped)*AoV();
-}
-
-
 bool Foam::fv::function2HeatTransfer::read(const dictionary& dict)
 {
     if (interRegionHeatTransferModel::read(dict))
     {
+        readCoeffs();
         return true;
     }
     else

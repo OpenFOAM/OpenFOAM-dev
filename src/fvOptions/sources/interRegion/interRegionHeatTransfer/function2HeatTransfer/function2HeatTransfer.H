@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,11 +25,10 @@ Class
     Foam::fv::function2HeatTransfer
 
 Description
-    Function2 heat transfer model.
-
-    The heat exchange area per unit volume must be provided.  The 2D function
-    returns the heat transfer coefficient by querying the local and neighbour
-    region velocities.
+    Function2 heat transfer model. The 2D function returns the heat transfer
+    coefficient as a function of the local and neighbouring velocity
+    magnitudes. An area-per-unit-volume [1/m] field (AoV) must be provided in
+    constant.
 
 \*---------------------------------------------------------------------------*/
 
@@ -68,14 +67,17 @@ class function2HeatTransfer
         //- Area per unit volume of heat exchanger
         mutable autoPtr<volScalarField> AoV_;
 
-        //- Heat transfer coefficient function
-        const Function2<scalar>& htcFunc() const;
-
-        //- Field of area divided by volume
-        const volScalarField& AoV() const;
-
         //- Start time name
         const word startTimeName_;
+
+
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
+
+        //- Calculate the heat transfer coefficient
+        virtual void correctHtc() const;
 
 
 public:
@@ -101,9 +103,6 @@ public:
 
 
     // Member Functions
-
-        //- Calculate the heat transfer coefficient
-        virtual void calculateHtc() const;
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);

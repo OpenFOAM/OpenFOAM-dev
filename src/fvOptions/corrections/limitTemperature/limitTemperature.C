@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,16 @@ namespace fv
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::fv::limitTemperature::readCoeffs()
+{
+    Tmin_ = coeffs_.lookup<scalar>("min");
+    Tmax_ = coeffs_.lookup<scalar>("max");
+    phaseName_ = coeffs_.lookupOrDefault<word>("phase", word::null);
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::limitTemperature::limitTemperature
@@ -56,39 +66,25 @@ Foam::fv::limitTemperature::limitTemperature
 )
 :
     cellSetOption(name, modelType, dict, mesh),
-    Tmin_(coeffs_.lookup<scalar>("min")),
-    Tmax_(coeffs_.lookup<scalar>("max")),
-    phase_(coeffs_.lookupOrDefault<word>("phase", word::null))
+    Tmin_(-vGreat),
+    Tmax_(vGreat),
+    phaseName_(word::null)
 {
-    // Set the field name to that of the energy field from which the temperature
-    // is obtained
-    const basicThermo& thermo =
-        mesh_.lookupObject<basicThermo>
-        (
-            IOobject::groupName(basicThermo::dictName, phase_)
-        );
-
-    fieldNames_.setSize(1, thermo.he().name());
-
-    applied_.setSize(1, false);
+    readCoeffs();
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::limitTemperature::read(const dictionary& dict)
+Foam::wordList Foam::fv::limitTemperature::correctedFields() const
 {
-    if (cellSetOption::read(dict))
-    {
-        coeffs_.lookup("min") >> Tmin_;
-        coeffs_.lookup("max") >> Tmax_;
+    const basicThermo& thermo =
+        mesh_.lookupObject<basicThermo>
+        (
+            IOobject::groupName(basicThermo::dictName, phaseName_)
+        );
 
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return wordList(1, thermo.he().name());
 }
 
 
@@ -97,7 +93,7 @@ void Foam::fv::limitTemperature::correct(volScalarField& he) const
     const basicThermo& thermo =
         mesh_.lookupObject<basicThermo>
         (
-            IOobject::groupName(basicThermo::dictName, phase_)
+            IOobject::groupName(basicThermo::dictName, phaseName_)
         );
 
     scalarField Tmin(cells().size(), Tmin_);
@@ -117,7 +113,7 @@ void Foam::fv::limitTemperature::correct(volScalarField& he) const
     }
 
     // handle boundaries in the case of 'all'
-    if (selectionMode() == smAll)
+    if (selectionMode() == selectionModeType::all)
     {
         volScalarField::Boundary& bf = he.boundaryFieldRef();
 
@@ -140,6 +136,20 @@ void Foam::fv::limitTemperature::correct(volScalarField& he) const
                 }
             }
         }
+    }
+}
+
+
+bool Foam::fv::limitTemperature::read(const dictionary& dict)
+{
+    if (cellSetOption::read(dict))
+    {
+        readCoeffs();
+        return true;
+    }
+    else
+    {
+        return false;
     }
 }
 

@@ -70,11 +70,9 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::option::source
     );
     fvMatrix<Type>& mtx = tmtx.ref();
 
-    const label fieldi = applyToField(fieldName);
-
-    if (fieldi != -1)
+    if (addsToField(fieldName))
     {
-        addSup(alphaRhos ..., mtx, fieldi);
+        addSup(alphaRhos ..., mtx, -1);
     }
 
     return tmtx;

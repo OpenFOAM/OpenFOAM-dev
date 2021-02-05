@@ -61,7 +61,7 @@ PtrList<fvScalarMatrix> pEqnComps(phases.size());
         }
 
         // Option sources
-        if (fvOptions.appliesToField(rho.name()))
+        if (fvOptions.addsToField(rho.name()))
         {
             pEqnComp -= (fvOptions(alpha, rho) & rho)/rho;
         }

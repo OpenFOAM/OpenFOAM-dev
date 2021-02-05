@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,32 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-inline Foam::scalar Foam::fv::cellSetOption::timeStart() const
-{
-    return timeStart_;
-}
-
-
-inline Foam::scalar Foam::fv::cellSetOption::duration() const
-{
-    return duration_;
-}
-
-
-inline bool Foam::fv::cellSetOption::inTimeLimits(const scalar time) const
-{
-    return
-    (
-        (timeStart_ < 0)
-     ||
-        (
-            (mesh_.time().value() >= timeStart_)
-         && (mesh_.time().value() <= (timeStart_ + duration_))
-        )
-    );
-}
-
 
 inline const Foam::fv::cellSetOption::selectionModeType&
 Foam::fv::cellSetOption::selectionMode() const
@@ -73,18 +47,6 @@ inline Foam::scalar Foam::fv::cellSetOption::V() const
 inline const Foam::labelList& Foam::fv::cellSetOption::cells() const
 {
     return cells_;
-}
-
-
-inline Foam::scalar& Foam::fv::cellSetOption::timeStart()
-{
-    return timeStart_;
-}
-
-
-inline Foam::scalar& Foam::fv::cellSetOption::duration()
-{
-    return duration_;
 }
 
 

@@ -85,12 +85,6 @@ protected:
         //- Dictionary containing source coefficients
         dictionary coeffs_;
 
-        //- Field names to apply source to - populated by derived models
-        wordList fieldNames_;
-
-        //- Applied flag list - corresponds to each fieldNames_ entry
-        mutable List<bool> applied_;
-
 
     // Protected Member Functions
 
@@ -235,17 +229,28 @@ public:
             //- Return dictionary
             inline const dictionary& coeffs() const;
 
-            //- Set the applied flag to true for field index fieldi
-            inline void setApplied(const label fieldi) const;
-
 
         // Checks
 
-            //- Return index of field name if found in fieldNames list
-            virtual label applyToField(const word& fieldName) const;
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addedToFields() const;
 
-            //- Check that the source has been applied
-            virtual void checkApplied() const;
+            //- Return the list of fields constrained by the option
+            virtual wordList constrainedFields() const;
+
+            //- Return the list of fields corrected by the option
+            virtual wordList correctedFields() const;
+
+            //- Return true if the option adds a source term to the given
+            //  field's transport equation
+            virtual bool addsToField(const word& fieldName) const;
+
+            //- Return true if the option constrains the given field
+            virtual bool constrainsField(const word& fieldName) const;
+
+            //- Return true if the option corrects the given field
+            virtual bool correctsField(const word& fieldName) const;
 
 
         // Evaluation
@@ -255,31 +260,31 @@ public:
                 virtual void addSup
                 (
                     fvMatrix<scalar>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     fvMatrix<vector>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     fvMatrix<symmTensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     fvMatrix<sphericalTensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     fvMatrix<tensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
 
@@ -289,35 +294,35 @@ public:
                 (
                     const volScalarField& rho,
                     fvMatrix<scalar>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     const volScalarField& rho,
                     fvMatrix<vector>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     const volScalarField& rho,
                     fvMatrix<symmTensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     const volScalarField& rho,
                     fvMatrix<sphericalTensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
                 (
                     const volScalarField& rho,
                     fvMatrix<tensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
 
@@ -328,7 +333,7 @@ public:
                     const volScalarField& alpha,
                     const volScalarField& rho,
                     fvMatrix<scalar>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
@@ -336,7 +341,7 @@ public:
                     const volScalarField& alpha,
                     const volScalarField& rho,
                     fvMatrix<vector>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
@@ -344,7 +349,7 @@ public:
                     const volScalarField& alpha,
                     const volScalarField& rho,
                     fvMatrix<symmTensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
@@ -352,7 +357,7 @@ public:
                     const volScalarField& alpha,
                     const volScalarField& rho,
                     fvMatrix<sphericalTensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void addSup
@@ -360,7 +365,7 @@ public:
                     const volScalarField& alpha,
                     const volScalarField& rho,
                     fvMatrix<tensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
 
@@ -417,31 +422,31 @@ public:
                 virtual void constrain
                 (
                     fvMatrix<scalar>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void constrain
                 (
                     fvMatrix<vector>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void constrain
                 (
                     fvMatrix<sphericalTensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void constrain
                 (
                     fvMatrix<symmTensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
                 virtual void constrain
                 (
                     fvMatrix<tensor>& eqn,
-                    const label fieldi
+                    const word& fieldName
                 ) const;
 
 

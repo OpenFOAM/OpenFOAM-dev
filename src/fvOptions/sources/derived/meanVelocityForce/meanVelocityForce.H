@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,16 +28,24 @@ Description
     Calculates and applies the force necessary to maintain the specified mean
     velocity.
 
-    Note: Currently only handles kinematic pressure (incompressible solvers).
-
 Usage
     Example usage:
     \verbatim
-    selectionMode   all;                    // Apply force to all cells
-    fields          (U);                    // Name of velocity field
-    Ubar            (10.0 0 0);             // Desired mean velocity
-    relaxation      0.2;                    // Optional relaxation factor
+    meanVelocitySource1
+    {
+        type            meanVelocitySource;
+
+        selectionMode   all;
+
+        U               U;          // Name of velocity field
+
+        Ubar            (10.0 0 0); // Desired mean velocity
+        relaxation      0.2;        // Optional relaxation factor
+    }
     \endverbatim
+
+Note
+    Currently only handles kinematic pressure (incompressible solvers).
 
 SourceFiles
     meanVelocityForce.C
@@ -69,12 +77,16 @@ class meanVelocityForce
 :
     public cellSetOption
 {
-protected:
+    // Private data
 
-    // Protected data
+        //- Name of the velocity field
+        word UName_;
 
         //- Average velocity
         vector Ubar_;
+
+        //- Relaxation factor
+        scalar relaxation_;
 
         //- Pressure gradient before correction
         mutable scalar gradP0_;
@@ -82,17 +94,14 @@ protected:
         //- Change in pressure gradient
         mutable scalar dGradP_;
 
-        //- Flow direction
-        vector flowDir_;
-
-        //- Relaxation factor
-        scalar relaxation_;
-
         //- Matrix 1/A coefficients field pointer
         mutable autoPtr<volScalarField> rAPtr_;
 
 
-    // Protected Member Functions
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
 
         //- Calculate and return the magnitude of the mean velocity
         //  averaged over the selected cellSet
@@ -128,6 +137,22 @@ public:
 
     // Member Functions
 
+        // Access
+
+            //- Return the average velocity
+            const vector& Ubar() const
+            {
+                return Ubar_;
+            }
+
+
+        // Checks
+
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addedToFields() const;
+
+
         // Evaluate
 
             //- Correct the pressure gradient
@@ -137,7 +162,7 @@ public:
             virtual void addSup
             (
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Add explicit contribution to compressible momentum equation
@@ -145,14 +170,14 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Set 1/A coefficient
             virtual void constrain
             (
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,24 +33,22 @@ Usage
     {
         type            fixedTemperatureConstraint;
 
-        mode            uniform;      // uniform or lookup
+        selectionMode   all;
 
-        // For uniform option
-        temperature     constant 500; // fixed temperature with time [K]
+        phase           gas; // Optional phase name
 
-        // For lookup option
-        // T            <Tname>;      // optional temperature field name
+        // Uniform temperature constraint
+        mode            uniform;
+        temperature     constant 500; // Uniform temperature
 
-        phase           gas; // optional
+        // // Looked-up field temperature constraint
+        // T            T; // Temperature field name
     }
     \endverbatim
 
-Note:
+Note
     The 'uniform' option allows the use of a time-varying uniform temperature
     by means of the Function1 type.
-
-See also
-    Foam::fvOption
 
 SourceFiles
     fixedTemperatureConstraint.C
@@ -82,32 +80,37 @@ class fixedTemperatureConstraint
 public:
 
     //- Temperature mode
-    enum temperatureMode
+    enum class temperatureMode
     {
-        tmUniform,
-        tmLookup
+        uniform,
+        lookup
     };
 
+    //- String representation of mode enums
+    static const NamedEnum<temperatureMode, 2> modeNames_;
 
-    //- String representation of temperatureMode enums
-    static const NamedEnum<temperatureMode, 2> temperatureModeNames_;
 
+private:
 
-protected:
-
-    // Protected data
+    // Private Data
 
         //- Operation mode
         temperatureMode mode_;
 
         //- Uniform temperature [K]
-        autoPtr<Function1<scalar>> Tuniform_;
+        autoPtr<Function1<scalar>> TValue_;
 
         //- Temperature field name
         word TName_;
 
         //- Optional phase name
-        word phase_;
+        word phaseName_;
+
+
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
 
 
 public:
@@ -138,11 +141,14 @@ public:
 
     // Member Functions
 
+        //- Return the list of fields constrained by the option
+        virtual wordList constrainedFields() const;
+
         //- Constrain energy equation to fix the temperature
         virtual void constrain
         (
             fvMatrix<scalar>& eqn,
-            const label fieldi
+            const word& fieldName
         ) const;
 
         //- Read dictionary

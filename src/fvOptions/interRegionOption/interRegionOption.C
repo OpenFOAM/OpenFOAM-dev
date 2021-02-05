@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,10 +36,26 @@ namespace fv
 }
 
 
-// * * * * * * * * * * * *  Protected member functions * * * * * * * * * * * //
+// * * * * * * * * * * * * *  Private Member Functions * * * * * * * * * * * //
 
-void Foam::fv::interRegionOption::setMapper()
+void Foam::fv::interRegionOption::readCoeffs()
 {
+    master_ = coeffs_.lookupOrDefault<bool>("master", true);
+
+    nbrRegionName_ = coeffs_.lookup<word>("nbrRegionName");
+
+    interpolationMethod_ =
+        meshToMesh::interpolationMethodNames_.read
+        (
+            coeffs_.lookup("interpolationMethod")
+        );
+}
+
+
+void Foam::fv::interRegionOption::setMapper() const
+{
+    Info<< incrIndent;
+
     if (master_)
     {
         Info<< indent << "- selecting inter region mapping" << endl;
@@ -65,10 +81,7 @@ void Foam::fv::interRegionOption::setMapper()
                 (
                     mesh_,
                     nbrMesh,
-                    meshToMesh::interpolationMethodNames_.read
-                    (
-                        coeffs_.lookup("interpolationMethod")
-                    ),
+                    interpolationMethod_,
                     false // not interpolating patches
                 )
             );
@@ -81,6 +94,8 @@ void Foam::fv::interRegionOption::setMapper()
                 << exit(FatalError);
         }
     }
+
+    Info<< decrIndent;
 }
 
 
@@ -94,18 +109,13 @@ Foam::fv::interRegionOption::interRegionOption
     const fvMesh& mesh
 )
 :
-    option
-    (
-        name,
-        modelType,
-        dict,
-        mesh
-    ),
-    master_(coeffs_.lookupOrDefault<bool>("master", true)),
-    nbrRegionName_(coeffs_.lookup("nbrRegionName")),
+    option(name, modelType, dict, mesh),
+    master_(false),
+    nbrRegionName_(word::null),
+    interpolationMethod_(meshToMesh::imDirect),
     meshInterpPtr_()
 {
-    setMapper();
+    readCoeffs();
 }
 
 
@@ -113,6 +123,23 @@ Foam::fv::interRegionOption::interRegionOption
 
 Foam::fv::interRegionOption::~interRegionOption()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+bool Foam::fv::interRegionOption::read(const dictionary& dict)
+{
+    if (option::read(dict))
+    {
+        readCoeffs();
+        setMapper();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 
 
 // ************************************************************************* //

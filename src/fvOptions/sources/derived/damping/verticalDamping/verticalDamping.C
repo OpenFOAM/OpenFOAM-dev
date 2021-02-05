@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,9 +68,7 @@ Foam::fv::verticalDamping::verticalDamping
 )
 :
     damping(name, modelType, dict, mesh)
-{
-    read(dict);
-}
+{}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
@@ -78,7 +76,7 @@ Foam::fv::verticalDamping::verticalDamping
 void Foam::fv::verticalDamping::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     add(eqn.psi(), eqn);
@@ -89,7 +87,7 @@ void Foam::fv::verticalDamping::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     add(rho*eqn.psi(), eqn);
@@ -101,7 +99,7 @@ void Foam::fv::verticalDamping::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     add(alpha*rho*eqn.psi(), eqn);

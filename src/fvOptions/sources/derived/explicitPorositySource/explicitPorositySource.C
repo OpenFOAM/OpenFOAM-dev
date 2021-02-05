@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,20 +46,18 @@ namespace fv
 }
 
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::fv::explicitPorositySource::explicitPorositySource
-(
-    const word& name,
-    const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
-)
-:
-    cellSetOption(name, modelType, dict, mesh),
-    porosityPtr_(nullptr)
+void Foam::fv::explicitPorositySource::readCoeffs()
 {
-    read(dict);
+    if (coeffs_.found("UNames"))
+    {
+        UNames_ = wordList(coeffs_.lookup("UNames"));
+    }
+    else
+    {
+        UNames_ = wordList(1, coeffs_.lookupOrDefault<word>("U", "U"));
+    }
 
     porosityPtr_.reset
     (
@@ -74,12 +72,37 @@ Foam::fv::explicitPorositySource::explicitPorositySource
 }
 
 
+
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::fv::explicitPorositySource::explicitPorositySource
+(
+    const word& name,
+    const word& modelType,
+    const dictionary& dict,
+    const fvMesh& mesh
+)
+:
+    cellSetOption(name, modelType, dict, mesh),
+    UNames_(),
+    porosityPtr_(nullptr)
+{
+    readCoeffs();
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::wordList Foam::fv::explicitPorositySource::addedToFields() const
+{
+    return UNames_;
+}
+
 
 void Foam::fv::explicitPorositySource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
@@ -92,7 +115,7 @@ void Foam::fv::explicitPorositySource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
@@ -106,7 +129,7 @@ void Foam::fv::explicitPorositySource::addSup
     const volScalarField& alpha,
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
@@ -119,22 +142,7 @@ bool Foam::fv::explicitPorositySource::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))
     {
-        if (coeffs_.found("UNames"))
-        {
-            coeffs_.lookup("UNames") >> fieldNames_;
-        }
-        else if (coeffs_.found("U"))
-        {
-            word UName(coeffs_.lookup("U"));
-            fieldNames_ = wordList(1, UName);
-        }
-        else
-        {
-            fieldNames_ = wordList(1, "U");
-        }
-
-        applied_.setSize(fieldNames_.size(), false);
-
+        readCoeffs();
         return true;
     }
     else

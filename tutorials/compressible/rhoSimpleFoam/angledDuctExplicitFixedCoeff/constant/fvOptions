@@ -23,6 +23,7 @@ porosity
     {
         selectionMode   cellZone;
         cellZone        porosity;
+
         type            fixedCoeff;
 
         fixedCoeffCoeffs
@@ -53,6 +54,7 @@ fixedTemperature
 
     selectionMode   cellZone;
     cellZone        porosity;
+
     mode            uniform;
     temperature     350;
 }
@@ -60,10 +62,11 @@ fixedTemperature
 
 porosityTurbulence
 {
-    type            scalarFixedValueConstraint;
+    type            fixedValueConstraint;
 
     selectionMode   cellZone;
     cellZone        porosity;
+
     fieldValues
     {
         k           1;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,25 +68,65 @@ namespace Foam
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
+void Foam::fv::rotorDiskSource::readCoeffs()
+{
+    UName_ = coeffs_.lookupOrDefault<word>("U", "U");
+
+    // Read co-ordinate system/geometry invariant properties
+    scalar rpm(coeffs_.lookup<scalar>("rpm"));
+    omega_ = rpm/60.0*mathematical::twoPi;
+
+    coeffs_.lookup("nBlades") >> nBlades_;
+
+    inletFlow_ = inletFlowTypeNames_.read(coeffs_.lookup("inletFlowType"));
+
+    coeffs_.lookup("tipEffect") >> tipEffect_;
+
+    const dictionary& flapCoeffs(coeffs_.subDict("flapCoeffs"));
+    flapCoeffs.lookup("beta0") >> flap_.beta0;
+    flapCoeffs.lookup("beta1c") >> flap_.beta1c;
+    flapCoeffs.lookup("beta2s") >> flap_.beta2s;
+    flap_.beta0 = degToRad(flap_.beta0);
+    flap_.beta1c = degToRad(flap_.beta1c);
+    flap_.beta2s = degToRad(flap_.beta2s);
+
+    // Create co-ordinate system
+    createCoordinateSystem();
+
+    // Read co-odinate system dependent properties
+    checkData();
+
+    constructGeometry();
+
+    trim_->read(coeffs_);
+
+    if (debug)
+    {
+        writeField("thetag", trim_->thetag()(), true);
+        writeField("faceArea", area_, true);
+    }
+}
+
+
 void Foam::fv::rotorDiskSource::checkData()
 {
     // Set inflow type
     switch (selectionMode())
     {
-        case smCellSet:
-        case smCellZone:
-        case smAll:
+        case selectionModeType::cellSet:
+        case selectionModeType::cellZone:
+        case selectionModeType::all:
         {
             // Set the profile ID for each blade section
             profiles_.connectBlades(blade_.profileName(), blade_.profileID());
             switch (inletFlow_)
             {
-                case ifFixed:
+                case inletFlowType::fixed:
                 {
                     coeffs_.lookup("inletVelocity") >> inletVelocity_;
                     break;
                 }
-                case ifSurfaceNormal:
+                case inletFlowType::surfaceNormal:
                 {
                     scalar UIn
                     (
@@ -95,7 +135,7 @@ void Foam::fv::rotorDiskSource::checkData()
                     inletVelocity_ = -coordSys_.R().e3()*UIn;
                     break;
                 }
-                case ifLocal:
+                case inletFlowType::local:
                 {
                     break;
                 }
@@ -105,8 +145,6 @@ void Foam::fv::rotorDiskSource::checkData()
                         << "Unknown inlet velocity type" << abort(FatalError);
                 }
             }
-
-
             break;
         }
         default:
@@ -115,9 +153,9 @@ void Foam::fv::rotorDiskSource::checkData()
                 << "Source cannot be used with '"
                 << selectionModeTypeNames_[selectionMode()]
                 << "' mode.  Please use one of: " << nl
-                << selectionModeTypeNames_[smCellSet] << nl
-                << selectionModeTypeNames_[smCellZone] << nl
-                << selectionModeTypeNames_[smAll]
+                << selectionModeTypeNames_[selectionModeType::cellSet] << nl
+                << selectionModeTypeNames_[selectionModeType::cellZone] << nl
+                << selectionModeTypeNames_[selectionModeType::all]
                 << exit(FatalError);
         }
     }
@@ -272,7 +310,7 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
 
     switch (gm)
     {
-        case gmAuto:
+        case geometryModeType::automatic:
         {
             // Determine rotation origin (cell volume weighted)
             scalar sumV = 0.0;
@@ -348,7 +386,7 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
 
             break;
         }
-        case gmSpecified:
+        case geometryModeType::specified:
         {
             coeffs_.lookup("origin") >> origin;
             coeffs_.lookup("axis") >> axis;
@@ -367,13 +405,6 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
             setFaceArea(axis, false);
 
             break;
-        }
-        default:
-        {
-            FatalErrorInFunction
-                << "Unknown geometryMode " << geometryModeTypeNames_[gm]
-                << ". Available geometry modes include "
-                << geometryModeTypeNames_ << exit(FatalError);
         }
     }
 
@@ -441,8 +472,8 @@ Foam::tmp<Foam::vectorField> Foam::fv::rotorDiskSource::inflowVelocity
 {
     switch (inletFlow_)
     {
-        case ifFixed:
-        case ifSurfaceNormal:
+        case inletFlowType::fixed:
+        case inletFlowType::surfaceNormal:
         {
             return tmp<vectorField>
             (
@@ -451,7 +482,7 @@ Foam::tmp<Foam::vectorField> Foam::fv::rotorDiskSource::inflowVelocity
 
             break;
         }
-        case ifLocal:
+        case inletFlowType::local:
         {
             return U.primitiveField();
 
@@ -479,25 +510,26 @@ Foam::fv::rotorDiskSource::rotorDiskSource
 )
 :
     cellSetOption(name, modelType, dict, mesh),
-    rhoRef_(1.0),
-    omega_(0.0),
+    UName_(word::null),
+    omega_(0),
     nBlades_(0),
-    inletFlow_(ifLocal),
+    inletFlow_(inletFlowType::local),
     inletVelocity_(Zero),
-    tipEffect_(1.0),
+    tipEffect_(1),
     flap_(),
     x_(cells().size(), Zero),
     R_(cells().size(), I),
     invR_(cells().size(), I),
-    area_(cells().size(), 0.0),
+    area_(cells().size(), Zero),
     coordSys_("rotorCoordSys", vector::zero, axesRotation(sphericalTensor::I)),
     cylindrical_(),
-    rMax_(0.0),
+    rMax_(0),
     trim_(trimModel::New(*this, coeffs_)),
     blade_(coeffs_.subDict("blade")),
-    profiles_(coeffs_.subDict("profiles"))
+    profiles_(coeffs_.subDict("profiles")),
+    rhoRef_(1)
 {
-    read(dict);
+    readCoeffs();
 }
 
 
@@ -509,10 +541,16 @@ Foam::fv::rotorDiskSource::~rotorDiskSource()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::wordList Foam::fv::rotorDiskSource::addedToFields() const
+{
+    return wordList(1, UName_);
+}
+
+
 void Foam::fv::rotorDiskSource::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     volVectorField force
@@ -553,7 +591,7 @@ void Foam::fv::rotorDiskSource::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     volVectorField force
@@ -591,44 +629,7 @@ bool Foam::fv::rotorDiskSource::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))
     {
-        coeffs_.lookup("fields") >> fieldNames_;
-        applied_.setSize(fieldNames_.size(), false);
-
-        // Read co-ordinate system/geometry invariant properties
-        scalar rpm(coeffs_.lookup<scalar>("rpm"));
-        omega_ = rpm/60.0*mathematical::twoPi;
-
-        coeffs_.lookup("nBlades") >> nBlades_;
-
-        inletFlow_ = inletFlowTypeNames_.read(coeffs_.lookup("inletFlowType"));
-
-        coeffs_.lookup("tipEffect") >> tipEffect_;
-
-        const dictionary& flapCoeffs(coeffs_.subDict("flapCoeffs"));
-        flapCoeffs.lookup("beta0") >> flap_.beta0;
-        flapCoeffs.lookup("beta1c") >> flap_.beta1c;
-        flapCoeffs.lookup("beta2s") >> flap_.beta2s;
-        flap_.beta0 = degToRad(flap_.beta0);
-        flap_.beta1c = degToRad(flap_.beta1c);
-        flap_.beta2s = degToRad(flap_.beta2s);
-
-
-        // Create co-ordinate system
-        createCoordinateSystem();
-
-        // Read co-odinate system dependent properties
-        checkData();
-
-        constructGeometry();
-
-        trim_->read(coeffs_);
-
-        if (debug)
-        {
-            writeField("thetag", trim_->thetag()(), true);
-            writeField("faceArea", area_, true);
-        }
-
+        readCoeffs();
         return true;
     }
     else

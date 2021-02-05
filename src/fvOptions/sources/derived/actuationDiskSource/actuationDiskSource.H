@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,12 +47,21 @@ Description
 Usage
     Example usage:
     \verbatim
-    fields          (U);        // names of fields to apply source
-    diskDir         (-1 0 0);   // disk direction
-    Cp              0.1;        // power coefficient
-    Ct              0.5;        // thrust coefficient
-    diskArea        5.0;        // disk area
-    upstreamPoint   (0 0 0);    // upstream point
+    actuationDiskSource1
+    {
+        type            actuationDiskSource;
+
+        selectionMode   cellSet;
+        cellSet         actuationDisk1;
+
+        U               U;          // Name of the velocity field
+
+        diskDir         (-1 0 0);   // Disk direction
+        Cp              0.1;        // Power coefficient
+        Ct              0.5;        // Thrust coefficient
+        diskArea        5.0;        // Disk area
+        upstreamPoint   (0 0 0);    // Upstream point
+    }
     \endverbatim
 
 
@@ -82,10 +91,12 @@ class actuationDiskSource
 :
     public cellSetOption
 {
-
 protected:
 
     // Protected data
+
+        //- Name of the velocity field
+        word UName_;
 
         //- Disk area normal
         vector diskDir_;
@@ -110,8 +121,8 @@ private:
 
     // Private Member Functions
 
-        //- Check data
-        void checkData() const;
+        //- Non-virtual read
+        void readCoeffs();
 
         //- Add resistance to the UEqn
         template<class RhoFieldType>
@@ -153,31 +164,11 @@ public:
 
     // Member Functions
 
-        // Access
+        // Checks
 
-            //- Return Cp
-            scalar Cp() const
-            {
-                return Cp_;
-            }
-
-            //- Return Ct
-            scalar Ct() const
-            {
-                return Ct_;
-            }
-
-            //- Normal disk direction
-            const vector& diskDir() const
-            {
-                return diskDir_;
-            }
-
-            //- Disk area
-            scalar diskArea() const
-            {
-                return diskArea_;
-            }
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addedToFields() const;
 
 
          // Add explicit and implicit contributions
@@ -186,7 +177,7 @@ public:
             virtual void addSup
             (
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Source term to compressible momentum equation
@@ -194,7 +185,7 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
 

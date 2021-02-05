@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,12 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+inline bool Foam::fv::interRegionOption::master() const
+{
+    return master_;
+}
+
+
 inline const Foam::word&
 Foam::fv::interRegionOption::nbrRegionName() const
 {
@@ -37,14 +43,11 @@ Foam::fv::interRegionOption::meshInterp() const
 {
     if (!meshInterpPtr_.valid())
     {
-        FatalErrorInFunction
-            << "Interpolation object not set"
-            << abort(FatalError);
+        setMapper();
     }
 
     return meshInterpPtr_();
 }
-
 
 
 // ************************************************************************* //

@@ -50,11 +50,9 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::optionList::source
     {
         const option& source = this->operator[](i);
 
-        const label fieldi = source.applyToField(fieldName);
-
-        if (fieldi != -1)
+        if (source.addsToField(fieldName))
         {
-            source.setApplied(fieldi);
+            addedToFields_[i].insert(fieldName);
 
             if (debug)
             {
@@ -62,7 +60,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::optionList::source
                     << fieldName << endl;
             }
 
-            source.addSup(alphaRhos ..., mtx, fieldi);
+            source.addSup(alphaRhos ..., mtx, fieldName);
         }
     }
 
@@ -222,21 +220,19 @@ void Foam::fv::optionList::constrain(fvMatrix<Type>& eqn) const
 
     forAll(*this, i)
     {
-        const option& source = this->operator[](i);
+        const option& constraint = this->operator[](i);
 
-        label fieldi = source.applyToField(eqn.psi().name());
-
-        if (fieldi != -1)
+        if (constraint.constrainsField(eqn.psi().name()))
         {
-            source.setApplied(fieldi);
+            constrainedFields_[i].insert(eqn.psi().name());
 
             if (debug)
             {
-                Info<< "Applying constraint " << source.name()
+                Info<< "Applying constraint " << constraint.name()
                     << " to field " << eqn.psi().name() << endl;
             }
 
-            source.constrain(eqn, fieldi);
+            constraint.constrain(eqn, eqn.psi().name());
         }
     }
 }
@@ -252,21 +248,19 @@ void Foam::fv::optionList::correct
 
     forAll(*this, i)
     {
-        const option& source = this->operator[](i);
+        const option& correction = this->operator[](i);
 
-        label fieldi = source.applyToField(fieldName);
-
-        if (fieldi != -1)
+        if (correction.correctsField(fieldName))
         {
-            source.setApplied(fieldi);
+            correctedFields_[i].insert(fieldName);
 
             if (debug)
             {
-                Info<< "Correcting source " << source.name()
+                Info<< "Applying correction " << correction.name()
                     << " for field " << fieldName << endl;
             }
 
-            source.correct(field);
+            correction.correct(field);
         }
     }
 }

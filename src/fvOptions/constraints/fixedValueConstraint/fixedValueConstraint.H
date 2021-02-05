@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::FixedValueConstraint
+    Foam::fv::fixedValueConstraint
 
 Description
     Constrain the field values within a specified region.
@@ -32,10 +32,11 @@ Usage
     \verbatim
     porosityTurbulence
     {
-        type            scalarFixedValueConstraint;
+        type            fixedValueConstraint;
 
         selectionMode   cellZone;
         cellZone        porosity;
+
         fieldValues
         {
             k           1;
@@ -44,19 +45,17 @@ Usage
     }
     \endverbatim
 
-See also
-    Foam::fvOption
-
 SourceFiles
-    FixedValueConstraint.C
-    fixedValueConstraints.C
+    fixedValueConstraint.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef FixedValueConstraint_H
-#define FixedValueConstraint_H
+#ifndef fixedValueConstraint_H
+#define fixedValueConstraint_H
 
 #include "cellSetOption.H"
+#include "objectFunction1.H"
+#include "HashPtrTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,30 +65,39 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class FixedValueConstraint Declaration
+                    Class fixedValueConstraint Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class FixedValueConstraint
+class fixedValueConstraint
 :
     public cellSetOption
 {
-    // Private member data
+    // Private Member Data
 
         //- Field values
-        List<Type> fieldValues_;
+        HashPtrTable<objectFunction1> fieldValues_;
+
+
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
+
+        //- Set value on a field
+        template<class Type>
+        void constrainType(fvMatrix<Type>& eqn, const word& fieldName) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("FixedValueConstraint");
+    TypeName("fixedValueConstraint");
 
 
     // Constructors
 
         //- Construct from components
-        FixedValueConstraint
+        fixedValueConstraint
         (
             const word& name,
             const word& modelType,
@@ -100,11 +108,51 @@ public:
 
     // Member Functions
 
-        //- Read source dictionary
-        virtual bool read(const dictionary& dict);
+        // Checks
 
-        //- Set value on field
-        virtual void constrain(fvMatrix<Type>& eqn, const label fieldi) const;
+            //- Return the list of fields constrained by the option
+            virtual wordList constrainedFields() const;
+
+
+        // Evaluation
+
+            // Constraints
+
+                virtual void constrain
+                (
+                    fvMatrix<scalar>& eqn,
+                    const word& fieldName
+                ) const;
+
+                virtual void constrain
+                (
+                    fvMatrix<vector>& eqn,
+                    const word& fieldName
+                ) const;
+
+                virtual void constrain
+                (
+                    fvMatrix<symmTensor>& eqn,
+                    const word& fieldName
+                ) const;
+
+                virtual void constrain
+                (
+                    fvMatrix<sphericalTensor>& eqn,
+                    const word& fieldName
+                ) const;
+
+                virtual void constrain
+                (
+                    fvMatrix<tensor>& eqn,
+                    const word& fieldName
+                ) const;
+
+
+        // IO
+
+            //- Read source dictionary
+            virtual bool read(const dictionary& dict);
 };
 
 
@@ -112,12 +160,6 @@ public:
 
 } // End namespace fv
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "FixedValueConstraint.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

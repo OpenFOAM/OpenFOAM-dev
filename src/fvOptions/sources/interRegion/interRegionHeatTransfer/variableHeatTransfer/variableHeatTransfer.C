@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,61 +43,21 @@ namespace fv
 }
 }
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-Foam::fv::variableHeatTransfer::variableHeatTransfer
-(
-    const word& name,
-    const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
-)
-:
-    interRegionHeatTransferModel(name, modelType, dict, mesh),
-    UNbrName_(coeffs_.lookupOrDefault<word>("UNbr", "U")),
-    a_(0),
-    b_(0),
-    c_(0),
-    ds_(0),
-    Pr_(0),
-    AoV_()
+void Foam::fv::variableHeatTransfer::readCoeffs()
 {
-    if (master_)
-    {
-        a_ = coeffs_.lookup<scalar>("a");
-        b_ = coeffs_.lookup<scalar>("b");
-        c_ = coeffs_.lookup<scalar>("c");
-        ds_ = coeffs_.lookup<scalar>("ds");
-        Pr_ = coeffs_.lookup<scalar>("Pr");
-        AoV_.reset
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    "AoV",
-                    mesh_.time().timeName(),
-                    mesh_,
-                    IOobject::MUST_READ,
-                    IOobject::AUTO_WRITE
-                ),
-                mesh_
-            )
-        );
-    }
+    UNbrName_ = coeffs_.lookupOrDefault<word>("UNbr", "U");
+
+    a_ = coeffs_.lookup<scalar>("a");
+    b_ = coeffs_.lookup<scalar>("b");
+    c_ = coeffs_.lookup<scalar>("c");
+    ds_ = coeffs_.lookup<scalar>("ds");
+    Pr_ = coeffs_.lookup<scalar>("Pr");
 }
 
 
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-Foam::fv::variableHeatTransfer::~variableHeatTransfer()
-{}
-
-
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::fv::variableHeatTransfer::calculateHtc() const
+void Foam::fv::variableHeatTransfer::correctHtc() const
 {
     const fvMesh& nbrMesh =
         mesh_.time().lookupObject<fvMesh>(nbrRegionName());
@@ -128,18 +88,58 @@ void Foam::fv::variableHeatTransfer::calculateHtc() const
 }
 
 
+// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
+
+Foam::fv::variableHeatTransfer::variableHeatTransfer
+(
+    const word& name,
+    const word& modelType,
+    const dictionary& dict,
+    const fvMesh& mesh
+)
+:
+    interRegionHeatTransferModel(name, modelType, dict, mesh),
+    UNbrName_(word::null),
+    a_(NaN),
+    b_(NaN),
+    c_(NaN),
+    ds_(NaN),
+    Pr_(NaN),
+    AoV_
+    (
+        master()
+      ? new volScalarField
+        (
+            IOobject
+            (
+                "AoV",
+                mesh_.time().constant(),
+                mesh_,
+                IOobject::MUST_READ,
+                IOobject::AUTO_WRITE
+            ),
+            mesh_
+        )
+      : nullptr
+    )
+{
+    readCoeffs();
+}
+
+
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::fv::variableHeatTransfer::~variableHeatTransfer()
+{}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
 bool Foam::fv::variableHeatTransfer::read(const dictionary& dict)
 {
     if (interRegionHeatTransferModel::read(dict))
     {
-        coeffs_.readIfPresent("UNbr", UNbrName_);
-
-        coeffs_.readIfPresent("a", a_);
-        coeffs_.readIfPresent("b", b_);
-        coeffs_.readIfPresent("c", c_);
-        coeffs_.readIfPresent("ds", ds_);
-        coeffs_.readIfPresent("Pr", Pr_);
-
+        readCoeffs();
         return true;
     }
     else

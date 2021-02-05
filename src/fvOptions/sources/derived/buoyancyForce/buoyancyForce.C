@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,21 @@ namespace fv
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+void Foam::fv::buoyancyForce::readCoeffs()
+{
+    phaseName_ = coeffs_.lookupOrDefault<word>("phase", word::null);
+
+    UName_ =
+        coeffs_.lookupOrDefault<word>
+        (
+            "U",
+            IOobject::groupName("U", phaseName_)
+        );
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::buoyancyForce::buoyancyForce
@@ -56,6 +71,8 @@ Foam::fv::buoyancyForce::buoyancyForce
 )
 :
     option(sourceName, modelType, dict, mesh),
+    phaseName_(word::null),
+    UName_(word::null),
     g_
     (
         IOobject
@@ -68,24 +85,22 @@ Foam::fv::buoyancyForce::buoyancyForce
         )
     )
 {
-    coeffs_.lookup("fields") >> fieldNames_;
-
-    if (fieldNames_.size() != 1)
-    {
-        FatalErrorInFunction
-            << "settings are:" << fieldNames_ << exit(FatalError);
-    }
-
-    applied_.setSize(fieldNames_.size(), false);
+    readCoeffs();
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
+Foam::wordList Foam::fv::buoyancyForce::addedToFields() const
+{
+    return wordList(1, UName_);
+}
+
+
 void Foam::fv::buoyancyForce::addSup
 (
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     eqn += g_;
@@ -96,10 +111,36 @@ void Foam::fv::buoyancyForce::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
-    const label fieldi
+    const word& fieldName
 ) const
 {
     eqn += rho*g_;
+}
+
+
+void Foam::fv::buoyancyForce::addSup
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<vector>& eqn,
+    const word& fieldName
+) const
+{
+    eqn += alpha*rho*g_;
+}
+
+
+bool Foam::fv::buoyancyForce::read(const dictionary& dict)
+{
+    if (option::read(dict))
+    {
+        readCoeffs();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

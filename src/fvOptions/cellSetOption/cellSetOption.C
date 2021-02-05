@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,28 +52,31 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::cellSetOption::setSelection(const dictionary& dict)
+void Foam::fv::cellSetOption::readCoeffs()
 {
+    selectionMode_ =
+        selectionModeTypeNames_.read(coeffs_.lookup("selectionMode"));
+
     switch (selectionMode_)
     {
-        case smPoints:
+        case selectionModeType::points:
         {
-            dict.lookup("points") >> points_;
+            coeffs_.lookup("points") >> points_;
             break;
         }
-        case smCellSet:
+        case selectionModeType::cellSet:
         {
-            dict.lookup("cellSet") >> cellSetName_;
+            coeffs_.lookup("cellSet") >> cellSetName_;
             break;
         }
-        case smCellZone:
+        case selectionModeType::cellZone:
         {
-            dict.lookup("cellZone") >> cellSetName_;
+            coeffs_.lookup("cellZone") >> cellSetName_;
             break;
         }
-        case smAll:
+        case selectionModeType::all:
         {
             break;
         }
@@ -91,9 +94,11 @@ void Foam::fv::cellSetOption::setSelection(const dictionary& dict)
 
 void Foam::fv::cellSetOption::setCellSet()
 {
+    Info<< incrIndent;
+
     switch (selectionMode_)
     {
-        case smPoints:
+        case selectionModeType::points:
         {
             Info<< indent << "- selecting cells using points" << endl;
 
@@ -121,7 +126,7 @@ void Foam::fv::cellSetOption::setCellSet()
 
             break;
         }
-        case smCellSet:
+        case selectionModeType::cellSet:
         {
             Info<< indent
                 << "- selecting cells using cellSet " << cellSetName_ << endl;
@@ -131,7 +136,7 @@ void Foam::fv::cellSetOption::setCellSet()
 
             break;
         }
-        case smCellZone:
+        case selectionModeType::cellZone:
         {
             Info<< indent
                 << "- selecting cells using cellZone " << cellSetName_ << endl;
@@ -148,25 +153,17 @@ void Foam::fv::cellSetOption::setCellSet()
 
             break;
         }
-        case smAll:
+        case selectionModeType::all:
         {
             Info<< indent << "- selecting all cells" << endl;
             cells_ = identity(mesh_.nCells());
 
             break;
         }
-        default:
-        {
-            FatalErrorInFunction
-                << "Unknown selectionMode "
-                << selectionModeTypeNames_[selectionMode_]
-                << ". Valid selectionMode types are" << selectionModeTypeNames_
-                << exit(FatalError);
-        }
     }
 
     // Set volume information
-    V_ = 0.0;
+    V_ = 0;
     forAll(cells_, i)
     {
         V_ += mesh_.V()[cells_[i]];
@@ -176,6 +173,8 @@ void Foam::fv::cellSetOption::setCellSet()
     Info<< indent
         << "- selected " << returnReduce(cells_.size(), sumOp<label>())
         << " cell(s) with volume " << V_ << endl;
+
+    Info<< decrIndent;
 }
 
 
@@ -190,20 +189,12 @@ Foam::fv::cellSetOption::cellSetOption
 )
 :
     option(name, modelType, dict, mesh),
-    timeStart_(-1.0),
-    duration_(0.0),
-    selectionMode_
-    (
-        selectionModeTypeNames_.read(coeffs_.lookup("selectionMode"))
-    ),
-    cellSetName_("none"),
-    V_(0.0)
+    selectionMode_(selectionModeType::all),
+    cellSetName_(word::null),
+    V_(NaN)
 {
-    Info<< incrIndent;
-    read(dict);
-    setSelection(coeffs_);
+    readCoeffs();
     setCellSet();
-    Info<< decrIndent;
 }
 
 
@@ -224,6 +215,21 @@ void Foam::fv::cellSetOption::updateMesh(const mapPolyMesh&)
 bool Foam::fv::cellSetOption::movePoints()
 {
     return true;
+}
+
+
+bool Foam::fv::cellSetOption::read(const dictionary& dict)
+{
+    if (option::read(dict))
+    {
+        readCoeffs();
+        setCellSet();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 

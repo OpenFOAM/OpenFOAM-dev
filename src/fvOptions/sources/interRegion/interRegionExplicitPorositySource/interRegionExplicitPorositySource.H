@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,12 +27,13 @@ Class
 Description
     Inter-region explicit porosity source.
 
-    Sources described by, for example using the DarcyForchheimer model:
-
+Usage
+    Example usage, here employing the Darcy-Forchheimer model:
     \verbatim
     interRegionExplicitPorositySourceCoeffs
     {
         type            DarcyForchheimer;
+
         DarcyForchheimerCoeffs
         {
             d   d [0 -2 0 0 0 0 0] (5e7 -1000 -1000);
@@ -40,15 +41,18 @@ Description
 
             coordinateSystem
             {
-                e1  (0.70710678 0.70710678 0);
-                e2  (0 0 1);
+                type    cartesian;
+                origin  (0 0 0);
+                coordinateRotation
+                {
+                    type    axesRotation;
+                    e1  (0.70710678 0.70710678 0);
+                    e2  (0 0 1);
+                }
             }
         }
     }
     \endverbatim
-
-Note
-    The porous region must be selected as a cellZone.
 
 SourceFiles
     interRegionExplicitPorositySource.C
@@ -79,16 +83,7 @@ class interRegionExplicitPorositySource
 :
     public interRegionOption
 {
-
-protected:
-
-    // Protected data
-
-        //- Run-time selectable porosity model
-        mutable autoPtr<porosityModel> porosityPtr_;
-
-        //- First iteration
-        mutable bool firstIter_;
+    // Private data
 
         //- Velocity field name, default = U
         word UName_;
@@ -97,11 +92,17 @@ protected:
         //  default = thermo:mu
         word muName_;
 
+        //- Run-time selectable porosity model
+        mutable autoPtr<porosityModel> porosityPtr_;
+
 
     // Protected Member Functions
 
-        //- Initialise
-        void initialise() const;
+        //- Non-virtual read
+        void readCoeffs();
+
+        //- Get the porosity model
+        porosityModel& porosity() const;
 
 
 public:
@@ -135,24 +136,29 @@ public:
 
     // Member Functions
 
+        // Checks
+
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addedToFields() const;
+
+
         // Add explicit and implicit contributions
 
-            //- Vector
             virtual void addSup
             (
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
 
         // Add explicit and implicit contributions to compressible equation
 
-            //- Vector
             virtual void addSup
             (
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
 

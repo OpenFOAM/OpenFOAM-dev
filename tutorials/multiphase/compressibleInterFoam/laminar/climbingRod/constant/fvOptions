@@ -17,7 +17,7 @@ FoamFile
 
 stabilization
 {
-    type            symmTensorPhaseLimitStabilization;
+    type            phaseLimitStabilization;
 
     field           sigma.liquid;
     rate            rLambda.liquid;

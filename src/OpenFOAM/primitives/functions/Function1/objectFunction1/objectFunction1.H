@@ -86,7 +86,8 @@ public:
             const word& name,
             const dictionary& dict,
             const word& objectName,
-            const objectRegistry& db
+            const objectRegistry& db,
+            const bool error = true
         );
 
 

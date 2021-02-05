@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::PhaseLimitStabilization
+    Foam::fv::phaseLimitStabilization
 
 Description
     Stabilization source for phase transport equations
@@ -41,21 +41,22 @@ Usage
     \verbatim
     stabilization
     {
-        type            symmTensorPhaseLimitStabilization;
+        type            phaseLimitStabilization;
 
         field           sigma.liquid;
+
         rate            rLambda.liquid;
         residualAlpha   1e-3;
     }
     \endverbatim
 
 SourceFiles
-    PhaseLimitStabilization.C
+    phaseLimitStabilization.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef PhaseLimitStabilization_H
-#define PhaseLimitStabilization_H
+#ifndef phaseLimitStabilization_H
+#define phaseLimitStabilization_H
 
 #include "fvOption.H"
 
@@ -67,11 +68,10 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                   Class PhaseLimitStabilization Declaration
+                   Class phaseLimitStabilization Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-class PhaseLimitStabilization
+class phaseLimitStabilization
 :
     public option
 {
@@ -87,16 +87,32 @@ class PhaseLimitStabilization
         scalar residualAlpha_;
 
 
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
+
+        //- Add source terms to a phase equation
+        template<class Type>
+        void addSupType
+        (
+            const volScalarField& alpha,
+            const volScalarField& rho,
+            fvMatrix<Type>& eqn,
+            const word& fieldName
+        ) const;
+
+
 public:
 
     //- Runtime type information
-    TypeName("PhaseLimitStabilization");
+    TypeName("phaseLimitStabilization");
 
 
     // Constructors
 
         //- Construct from components
-        PhaseLimitStabilization
+        phaseLimitStabilization
         (
             const word& name,
             const word& modelType,
@@ -105,24 +121,67 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        PhaseLimitStabilization(const PhaseLimitStabilization&) = delete;
+        phaseLimitStabilization(const phaseLimitStabilization&) = delete;
 
 
     //- Destructor
-    virtual ~PhaseLimitStabilization()
+    virtual ~phaseLimitStabilization()
     {}
 
 
     // Member Functions
 
-        //- Source term to compressible phase equation
-        virtual void addSup
-        (
-            const volScalarField& alpha,
-            const volScalarField& rho,
-            fvMatrix<Type>& eqn,
-            const label fieldi
-        ) const;
+        // Checks
+
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addedToFields() const;
+
+
+        // Evaluation
+
+            // Explicit and implicit sources for phase equations
+
+                virtual void addSup
+                (
+                    const volScalarField& alpha,
+                    const volScalarField& rho,
+                    fvMatrix<scalar>& eqn,
+                    const word& fieldName
+                ) const;
+
+                virtual void addSup
+                (
+                    const volScalarField& alpha,
+                    const volScalarField& rho,
+                    fvMatrix<vector>& eqn,
+                    const word& fieldName
+                ) const;
+
+                virtual void addSup
+                (
+                    const volScalarField& alpha,
+                    const volScalarField& rho,
+                    fvMatrix<symmTensor>& eqn,
+                    const word& fieldName
+                ) const;
+
+                virtual void addSup
+                (
+                    const volScalarField& alpha,
+                    const volScalarField& rho,
+                    fvMatrix<sphericalTensor>& eqn,
+                    const word& fieldName
+                ) const;
+
+                virtual void addSup
+                (
+                    const volScalarField& alpha,
+                    const volScalarField& rho,
+                    fvMatrix<tensor>& eqn,
+                    const word& fieldName
+                ) const;
+
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);
@@ -131,7 +190,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const PhaseLimitStabilization&) = delete;
+        void operator=(const phaseLimitStabilization&) = delete;
 };
 
 
@@ -139,12 +198,6 @@ public:
 
 } // End namespace fv
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "PhaseLimitStabilization.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

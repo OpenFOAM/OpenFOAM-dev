@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,7 +114,6 @@ Usage
 
 SourceFiles
     solidificationMeltingSource.C
-    solidificationMeltingSourceIO.C
 
 \*---------------------------------------------------------------------------*/
 
@@ -143,10 +142,10 @@ class solidificationMeltingSource
 {
 public:
 
-    enum thermoMode
+    enum class thermoMode
     {
-        mdThermo,
-        mdLookup
+        thermo,
+        lookup
     };
 
     static const NamedEnum<thermoMode, 2> thermoModeTypeNames_;
@@ -213,6 +212,9 @@ private:
 
     // Private Member Functions
 
+        //- Non-virtual read
+        void readCoeffs();
+
         //- Return the specific heat capacity field
         tmp<volScalarField> Cp() const;
 
@@ -253,20 +255,27 @@ public:
 
     // Member Functions
 
+        // Checks
+
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addedToFields() const;
+
+
         // Add explicit and implicit contributions
 
             //- Add explicit contribution to enthalpy equation
             virtual void addSup
             (
                 fvMatrix<scalar>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Add implicit contribution to momentum equation
             virtual void addSup
             (
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
 
@@ -277,7 +286,7 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<scalar>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Add implicit contribution to compressible momentum equation
@@ -285,7 +294,7 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
 

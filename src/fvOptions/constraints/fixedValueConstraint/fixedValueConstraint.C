@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,10 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "fixedValueConstraint.H"
 #include "fvMesh.H"
-#include "fvMatrix.H"
-#include "geometricOneField.H"
-#include "accelerationSource.H"
+#include "fvMatrices.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -35,25 +34,61 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(accelerationSource, 0);
-    addToRunTimeSelectionTable(option, accelerationSource, dictionary);
+    defineTypeNameAndDebug(fixedValueConstraint, 0);
+
+    addToRunTimeSelectionTable
+    (
+        cellSetOption,
+        fixedValueConstraint,
+        dictionary
+    );
 }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::accelerationSource::readCoeffs()
+void Foam::fv::fixedValueConstraint::readCoeffs()
 {
-    UName_ = coeffs_.lookupOrDefault<word>("U", "U");
+    fieldValues_.clear();
+    forAllConstIter(dictionary, coeffs_.subDict("fieldValues"), iter)
+    {
+        fieldValues_.set
+        (
+            iter().keyword(),
+            objectFunction1::New<VolField>
+            (
+                iter().keyword(),
+                coeffs_.subDict("fieldValues"),
+                iter().keyword(),
+                mesh_,
+                false
+            ).ptr()
+        );
+    }
+}
 
-    velocity_ = Function1<vector>::New("velocity", coeffs_);
+
+template<class Type>
+void Foam::fv::fixedValueConstraint::constrainType
+(
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{
+    const scalar t = mesh_.time().value();
+
+    eqn.setValues
+    (
+        cells(),
+        List<Type>(cells().size(), fieldValues_[fieldName]->value<Type>(t))
+    );
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::accelerationSource::accelerationSource
+Foam::fv::fixedValueConstraint::fixedValueConstraint
 (
     const word& name,
     const word& modelType,
@@ -61,9 +96,7 @@ Foam::fv::accelerationSource::accelerationSource
     const fvMesh& mesh
 )
 :
-    cellSetOption(name, modelType, dict, mesh),
-    UName_(word::null),
-    velocity_(nullptr)
+    cellSetOption(name, modelType, dict, mesh)
 {
     readCoeffs();
 }
@@ -71,46 +104,63 @@ Foam::fv::accelerationSource::accelerationSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::accelerationSource::addedToFields() const
+Foam::wordList Foam::fv::fixedValueConstraint::constrainedFields() const
 {
-    return wordList(1, UName_);
+    return fieldValues_.toc();
 }
 
 
-void Foam::fv::accelerationSource::addSup
+void Foam::fv::fixedValueConstraint::constrain
+(
+    fvMatrix<scalar>& eqn,
+    const word& fieldName
+) const
+{
+    constrainType(eqn, fieldName);
+}
+
+
+void Foam::fv::fixedValueConstraint::constrain
 (
     fvMatrix<vector>& eqn,
     const word& fieldName
 ) const
 {
-    add(geometricOneField(), eqn, fieldName);
+    constrainType(eqn, fieldName);
 }
 
 
-void Foam::fv::accelerationSource::addSup
+void Foam::fv::fixedValueConstraint::constrain
 (
-    const volScalarField& rho,
-    fvMatrix<vector>& eqn,
+    fvMatrix<symmTensor>& eqn,
     const word& fieldName
 ) const
 {
-    add(rho, eqn, fieldName);
+    constrainType(eqn, fieldName);
 }
 
 
-void Foam::fv::accelerationSource::addSup
+void Foam::fv::fixedValueConstraint::constrain
 (
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<vector>& eqn,
+    fvMatrix<sphericalTensor>& eqn,
     const word& fieldName
 ) const
 {
-    add((alpha*rho)(), eqn, fieldName);
+    constrainType(eqn, fieldName);
 }
 
 
-bool Foam::fv::accelerationSource::read(const dictionary& dict)
+void Foam::fv::fixedValueConstraint::constrain
+(
+    fvMatrix<tensor>& eqn,
+    const word& fieldName
+) const
+{
+    constrainType(eqn, fieldName);
+}
+
+
+bool Foam::fv::fixedValueConstraint::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))
     {

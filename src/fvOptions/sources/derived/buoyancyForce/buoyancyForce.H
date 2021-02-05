@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,12 @@ Description
 Usage
     Example usage:
     \verbatim
-    fields          (U);                    // Name of velocity field
+    buoyancyForce1
+    {
+        type        buoyancyForce;
+
+        U           U;  // Name of the velocity field
+    }
     \endverbatim
 
 SourceFiles
@@ -62,7 +67,20 @@ class buoyancyForce
 {
     // Private Data
 
+        //- Optional phase name
+        word phaseName_;
+
+        //- Name of the velocity field
+        word UName_;
+
+        //- Gravitational acceleration
         uniformDimensionedVectorField g_;
+
+
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
 
 
 public:
@@ -88,13 +106,20 @@ public:
 
     // Member Functions
 
+        // Checks
+
+            //- Return the list of fields for which the option adds source term
+            //  to the transport equation
+            virtual wordList addedToFields() const;
+
+
         // Evaluate
 
             //- Add explicit contribution to incompressible momentum equation
             virtual void addSup
             (
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
             ) const;
 
             //- Add explicit contribution to compressible momentum equation
@@ -102,7 +127,16 @@ public:
             (
                 const volScalarField& rho,
                 fvMatrix<vector>& eqn,
-                const label fieldi
+                const word& fieldName
+            ) const;
+
+            //- Add explicit contribution to phase momentum equation
+            virtual void addSup
+            (
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                fvMatrix<vector>& eqn,
+                const word& fieldName
             ) const;
 
 
