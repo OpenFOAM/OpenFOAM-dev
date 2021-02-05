@@ -1,0 +1,129 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Block definition for a porosity with an angled inlet/outlet
+// the porosity is not aligned with the main axes
+
+convertToMeters 0.001;
+
+angle 45;
+
+width     50;
+lenInlet  150;
+lenPoro   100;
+lenOutlet 100;
+
+yzCells      20;
+nInletCells  15;
+nPoroCells   20;
+nOutletCells 20;
+
+vertices #codeStream
+{
+    codeInclude
+    #{
+        #include "pointField.H"
+        #include "transformField.H"
+    #};
+
+    code
+    #{
+        const scalar halfWidth = ($width)/2.0;
+
+        // Length between the bend and outlet
+        const scalar distOutlet = $lenPoro + $lenOutlet;
+
+        pointField points
+        ({
+            point(0,          0,      -halfWidth), // pt 0
+            point($lenPoro,   0,      -halfWidth), // pt 1
+            point(distOutlet, 0,      -halfWidth), // pt 2
+            point(0,          $width, -halfWidth), // pt 3
+            point($lenPoro,   $width, -halfWidth), // pt 4
+            point(distOutlet, $width, -halfWidth)  // pt 5
+        });
+
+        // Rotate points around z-axis
+        points = transform(Rz(-degToRad($angle)), points);
+
+        // Append points 6 and 7
+        points.append(points[0]);  // pt 6
+        points.append(points[3]);  // pt 7
+
+        points[6].x() = -$lenInlet;
+        points[7].x() = -$lenInlet;
+
+        // Duplicate z points
+        points.append(cmptMultiply(points, vector(1, 1, -1)));
+
+        os  << points;
+    #};
+};
+
+blocks
+(
+    // Inlet block
+    hex (6 0 3 7 14 8 11 15)
+    inlet  ($nInletCells $yzCells $yzCells) simpleGrading (1 1 1)
+
+    // Porosity block
+    hex (0 1 4 3 8 9 12 11)
+    porosity ($nPoroCells $yzCells $yzCells) simpleGrading (1 1 1)
+
+    // Outlet block
+    hex (1 2 5 4 9 10 13 12)
+    outlet ($nOutletCells $yzCells $yzCells)  simpleGrading (1 1 1)
+);
+
+defaultPatch
+{
+    name walls;
+    type wall;
+}
+
+boundary
+(
+    porosityWall
+    {
+        type wall;
+        faces
+        (
+            (8 9 12 11)
+            (0 3 4 1)
+            (0 1 9 8)
+            (3 11 12 4)
+        );
+    }
+
+    inlet
+    {
+        type patch;
+        faces
+        (
+            (14 15 7 6)
+        );
+    }
+
+    outlet
+    {
+        type patch;
+        faces
+        (
+            (2 5 13 10)
+        );
+    }
+);
+
+// ************************************************************************* //
