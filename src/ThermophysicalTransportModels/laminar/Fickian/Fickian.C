@@ -397,7 +397,7 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::j
     if (DTFuncs_.size())
     {
         const basicSpecieMixture& composition = this->thermo().composition();
-        const volScalarField& p = this->thermo().T();
+        const volScalarField& p = this->thermo().p();
         const volScalarField& T = this->thermo().T();
 
         return
@@ -430,7 +430,7 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divj
     if (DTFuncs_.size())
     {
         const basicSpecieMixture& composition = this->thermo().composition();
-        const volScalarField& p = this->thermo().T();
+        const volScalarField& p = this->thermo().p();
         const volScalarField& T = this->thermo().T();
 
         return
@@ -465,7 +465,7 @@ void Fickian<BasicThermophysicalTransportModel>::correct()
 
     const basicSpecieMixture& composition = this->thermo().composition();
     const PtrList<volScalarField>& Y = composition.Y();
-    const volScalarField& p = this->thermo().T();
+    const volScalarField& p = this->thermo().p();
     const volScalarField& T = this->thermo().T();
 
     if (mixtureDiffusionCoefficients_)

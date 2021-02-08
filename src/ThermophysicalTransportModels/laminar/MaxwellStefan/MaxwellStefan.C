@@ -605,7 +605,7 @@ void MaxwellStefan<BasicThermophysicalTransportModel>::correct()
     const label d = composition.defaultSpecie();
 
     const PtrList<volScalarField>& Y = composition.Y();
-    const volScalarField& p = this->thermo().T();
+    const volScalarField& p = this->thermo().p();
     const volScalarField& T = this->thermo().T();
     const volScalarField& rho = this->momentumTransport().rho();
 
