@@ -140,6 +140,36 @@ class codedSource
         option& redirectFvOption() const;
 
 
+        // Sources
+
+            //- Add a source term to an equation
+            template<class Type>
+            void addSupType
+            (
+                fvMatrix<Type>& eqn,
+                const word& fieldName
+            ) const;
+
+            //- Add a source term to a compressible equation
+            template<class Type>
+            void addSupType
+            (
+                const volScalarField& rho,
+                fvMatrix<Type>& eqn,
+                const word& fieldName
+            ) const;
+
+            //- Add a source term to a phase equation
+            template<class Type>
+            void addSupType
+            (
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                fvMatrix<Type>& eqn,
+                const word& fieldName
+            ) const;
+
+
 public:
 
     //- Runtime type information
@@ -167,49 +197,16 @@ public:
             virtual wordList addedToFields() const;
 
 
-        // Evaluation
+        // Sources
 
-            // Explicit and implicit matrix contributions
+            //- Add a source term to an equation
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_ADD_SUP);
 
-                #define defineAddSup(Type, nullArg)                            \
-                                                                               \
-                    virtual void addSup                                        \
-                    (                                                          \
-                        fvMatrix<Type>& eqn,                                   \
-                        const word& fieldName                                  \
-                    ) const;
+            //- Add a source term to a compressible equation
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_ADD_RHO_SUP);
 
-                FOR_ALL_FIELD_TYPES(defineAddSup);
-
-
-            // Explicit and implicit matrix contributions to compressible
-            // equations
-
-                #define defineAddRhoSup(Type, nullArg)                         \
-                                                                               \
-                    virtual void addSup                                        \
-                    (                                                          \
-                        const volScalarField& rho,                             \
-                        fvMatrix<Type>& eqn,                                   \
-                        const word& fieldName                                  \
-                    ) const;
-
-                FOR_ALL_FIELD_TYPES(defineAddRhoSup);
-
-
-            // Explicit and implicit matrix contributions to phase equations
-
-                #define defineAddAlphaRhoSup(Type, nullArg)                    \
-                                                                               \
-                    virtual void addSup                                        \
-                    (                                                          \
-                        const volScalarField& alpha,                           \
-                        const volScalarField& rho,                             \
-                        fvMatrix<Type>& eqn,                                   \
-                        const word& fieldName                                  \
-                    ) const;
-
-                FOR_ALL_FIELD_TYPES(defineAddAlphaRhoSup);
+            //- Add a source term to a phase equation
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_ADD_ALPHA_RHO_SUP);
 
 
         // IO

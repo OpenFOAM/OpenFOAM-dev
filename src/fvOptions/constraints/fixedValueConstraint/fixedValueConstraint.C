@@ -110,54 +110,7 @@ Foam::wordList Foam::fv::fixedValueConstraint::constrainedFields() const
 }
 
 
-void Foam::fv::fixedValueConstraint::constrain
-(
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    constrainType(eqn, fieldName);
-}
-
-
-void Foam::fv::fixedValueConstraint::constrain
-(
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{
-    constrainType(eqn, fieldName);
-}
-
-
-void Foam::fv::fixedValueConstraint::constrain
-(
-    fvMatrix<symmTensor>& eqn,
-    const word& fieldName
-) const
-{
-    constrainType(eqn, fieldName);
-}
-
-
-void Foam::fv::fixedValueConstraint::constrain
-(
-    fvMatrix<sphericalTensor>& eqn,
-    const word& fieldName
-) const
-{
-    constrainType(eqn, fieldName);
-}
-
-
-void Foam::fv::fixedValueConstraint::constrain
-(
-    fvMatrix<tensor>& eqn,
-    const word& fieldName
-) const
-{
-    constrainType(eqn, fieldName);
-}
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_CONSTRAIN, fixedValueConstraint);
 
 
 bool Foam::fv::fixedValueConstraint::read(const dictionary& dict)

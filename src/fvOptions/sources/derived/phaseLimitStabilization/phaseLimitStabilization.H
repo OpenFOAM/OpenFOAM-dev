@@ -138,49 +138,10 @@ public:
             virtual wordList addedToFields() const;
 
 
-        // Evaluation
+        // Sources
 
-            // Explicit and implicit sources for phase equations
-
-                virtual void addSup
-                (
-                    const volScalarField& alpha,
-                    const volScalarField& rho,
-                    fvMatrix<scalar>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void addSup
-                (
-                    const volScalarField& alpha,
-                    const volScalarField& rho,
-                    fvMatrix<vector>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void addSup
-                (
-                    const volScalarField& alpha,
-                    const volScalarField& rho,
-                    fvMatrix<symmTensor>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void addSup
-                (
-                    const volScalarField& alpha,
-                    const volScalarField& rho,
-                    fvMatrix<sphericalTensor>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void addSup
-                (
-                    const volScalarField& alpha,
-                    const volScalarField& rho,
-                    fvMatrix<tensor>& eqn,
-                    const word& fieldName
-                ) const;
+            //- Add a source term to a phase equation
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_ADD_ALPHA_RHO_SUP);
 
 
         //- Read dictionary

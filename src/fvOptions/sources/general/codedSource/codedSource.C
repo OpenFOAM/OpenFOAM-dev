@@ -165,6 +165,69 @@ Foam::fv::option& Foam::fv::codedSource::redirectFvOption() const
 }
 
 
+template<class Type>
+void Foam::fv::codedSource::addSupType
+(
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{
+    if (fieldPrimitiveTypeName() != word::null)
+    {
+        if (debug)
+        {
+            Info<< "codedSource::addSup for source " << name_ << endl;
+        }
+
+        updateLibrary();
+        redirectFvOption().addSup(eqn, fieldName);
+    }
+}
+
+
+template<class Type>
+void Foam::fv::codedSource::addSupType
+(
+    const volScalarField& rho,
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{
+    if (fieldPrimitiveTypeName() != word::null)
+    {
+        if (debug)
+        {
+            Info<< "codedSource::addSup for source " << name_ << endl;
+        }
+
+        updateLibrary();
+        redirectFvOption().addSup(rho, eqn, fieldName);
+    }
+}
+
+
+template<class Type>
+void Foam::fv::codedSource::addSupType
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{
+    if (fieldPrimitiveTypeName() != word::null)
+    {
+        if (debug)
+        {
+            Info<< "codedSource::addSup for source " << name_ << endl;
+        }
+
+        updateLibrary();
+        redirectFvOption().addSup(alpha, rho, eqn, fieldName);
+    }
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::codedSource::codedSource
@@ -190,76 +253,13 @@ Foam::wordList Foam::fv::codedSource::addedToFields() const
 }
 
 
-#define implementAddSup(Type, nullArg)                                         \
-                                                                               \
-    void Foam::fv::codedSource::addSup                                         \
-    (                                                                          \
-        fvMatrix<Type>& eqn,                                                   \
-        const word& fieldName                                                  \
-    ) const                                                                    \
-    {                                                                          \
-        if (fieldPrimitiveTypeName() != word::null)                            \
-        {                                                                      \
-            if (debug)                                                         \
-            {                                                                  \
-                Info<< "codedSource::addSup for source " << name_ << endl;     \
-            }                                                                  \
-                                                                               \
-            updateLibrary();                                                   \
-            redirectFvOption().addSup(eqn, fieldName);                         \
-        }                                                                      \
-    }
-
-FOR_ALL_FIELD_TYPES(implementAddSup);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_ADD_SUP, codedSource);
 
 
-#define implementAddRhoSup(Type, nullArg)                                      \
-                                                                               \
-    void Foam::fv::codedSource::addSup                                         \
-    (                                                                          \
-        const volScalarField& rho,                                             \
-        fvMatrix<Type>& eqn,                                                   \
-        const word& fieldName                                                  \
-    ) const                                                                    \
-    {                                                                          \
-        if (fieldPrimitiveTypeName() != word::null)                            \
-        {                                                                      \
-            if (debug)                                                         \
-            {                                                                  \
-                Info<< "codedSource::addSup for source " << name_ << endl;     \
-            }                                                                  \
-                                                                               \
-            updateLibrary();                                                   \
-            redirectFvOption().addSup(rho, eqn, fieldName);                    \
-        }                                                                      \
-    }
-
-FOR_ALL_FIELD_TYPES(implementAddRhoSup);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_ADD_RHO_SUP, codedSource);
 
 
-#define implementAddAlphaRhoSup(Type, nullArg)                                 \
-                                                                               \
-    void Foam::fv::codedSource::addSup                                         \
-    (                                                                          \
-        const volScalarField& alpha,                                           \
-        const volScalarField& rho,                                             \
-        fvMatrix<Type>& eqn,                                                   \
-        const word& fieldName                                                  \
-    ) const                                                                    \
-    {                                                                          \
-        if (fieldPrimitiveTypeName() != word::null)                            \
-        {                                                                      \
-            if (debug)                                                         \
-            {                                                                  \
-                Info<< "codedSource::addSup for source " << name_ << endl;     \
-            }                                                                  \
-                                                                               \
-            updateLibrary();                                                   \
-            redirectFvOption().addSup(alpha, rho, eqn, fieldName);             \
-        }                                                                      \
-    }
-
-FOR_ALL_FIELD_TYPES(implementAddAlphaRhoSup);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_ADD_ALPHA_RHO_SUP, codedSource);
 
 
 bool Foam::fv::codedSource::read(const dictionary& dict)

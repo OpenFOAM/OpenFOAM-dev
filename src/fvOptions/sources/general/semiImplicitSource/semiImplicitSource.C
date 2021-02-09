@@ -182,12 +182,19 @@ void Foam::fv::semiImplicitSource::addSupType
     const word& fieldName
 ) const
 {
-    if (debug)
-    {
-        Info<< "semiImplicitSource<" << pTraits<Type>::typeName
-            << ">::addSup for source " << name_ << endl;
-    }
+    return this->addSup(eqn, fieldName);
+}
 
+
+template<class Type>
+void Foam::fv::semiImplicitSource::addSupType
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{
     return this->addSup(eqn, fieldName);
 }
 
@@ -224,169 +231,13 @@ Foam::wordList Foam::fv::semiImplicitSource::addedToFields() const
 }
 
 
-void Foam::fv::semiImplicitSource::addSup
-(
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_ADD_SUP, semiImplicitSource);
 
 
-void Foam::fv::semiImplicitSource::addSup
-(
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_ADD_RHO_SUP, semiImplicitSource);
 
 
-void Foam::fv::semiImplicitSource::addSup
-(
-    fvMatrix<symmTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
-
-
-void Foam::fv::semiImplicitSource::addSup
-(
-    fvMatrix<sphericalTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
-
-
-void Foam::fv::semiImplicitSource::addSup
-(
-    fvMatrix<tensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
-
-
-void Foam::fv::semiImplicitSource::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
-
-
-void Foam::fv::semiImplicitSource::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
-
-
-void Foam::fv::semiImplicitSource::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<symmTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
-
-
-void Foam::fv::semiImplicitSource::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<sphericalTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
-
-
-void Foam::fv::semiImplicitSource::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<tensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
-
-
-void Foam::fv::semiImplicitSource::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
-
-
-void Foam::fv::semiImplicitSource::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
-
-
-void Foam::fv::semiImplicitSource::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<symmTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
-
-
-void Foam::fv::semiImplicitSource::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<sphericalTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
-
-
-void Foam::fv::semiImplicitSource::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<tensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_ADD_ALPHA_RHO_SUP, semiImplicitSource);
 
 
 bool Foam::fv::semiImplicitSource::read(const dictionary& dict)

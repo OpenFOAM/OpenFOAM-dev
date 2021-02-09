@@ -114,39 +114,10 @@ public:
             virtual wordList constrainedFields() const;
 
 
-        // Evaluation
+        // Constraints
 
-            // Constraints
-
-                virtual void constrain
-                (
-                    fvMatrix<scalar>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void constrain
-                (
-                    fvMatrix<vector>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void constrain
-                (
-                    fvMatrix<symmTensor>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void constrain
-                (
-                    fvMatrix<sphericalTensor>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void constrain
-                (
-                    fvMatrix<tensor>& eqn,
-                    const word& fieldName
-                ) const;
+            //- Add a constraint to an equation
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_CONSTRAIN);
 
 
         // IO

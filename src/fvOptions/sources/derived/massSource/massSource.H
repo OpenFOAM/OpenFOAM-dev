@@ -110,18 +110,44 @@ class massSource
 
         //- Read field values for a given primitive type
         template<class Type>
-        void readFieldValuesType();
+        void readFieldValues();
 
-        //- Add the mass source term to the continuity equation
-        void addRhoSup(fvMatrix<scalar>& eqn, const word& fieldName) const;
 
-        //- Add the mass source term to the energy equation, given a value of
-        //  temperature
-        void addHeSupT(fvMatrix<scalar>& eqn, const word& fieldName) const;
+        // Sources
 
-        //- Add the mass source term to an equation
-        template<class Type>
-        void addSupType(fvMatrix<Type>& eqn, const word& fieldName) const;
+            //- Add a source term to an equation
+            template<class Type>
+            void addGeneralSupType
+            (
+                fvMatrix<Type>& eqn,
+                const word& fieldName
+            ) const;
+
+            //- Add a source term to an equation
+            template<class Type>
+            void addSupType(fvMatrix<Type>& eqn, const word& fieldName) const;
+
+            //- Add a source term to a scalar equation
+            void addSupType(fvMatrix<scalar>& eqn, const word& fieldName) const;
+
+            //- Add a source term to a compressible equation
+            template<class Type>
+            void addSupType
+            (
+                const volScalarField& rho,
+                fvMatrix<Type>& eqn,
+                const word& fieldName
+            ) const;
+
+            //- Add a source term to a phase equation
+            template<class Type>
+            void addSupType
+            (
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                fvMatrix<Type>& eqn,
+                const word& fieldName
+            ) const;
 
 
 public:
@@ -167,112 +193,16 @@ public:
             virtual wordList addedToFields() const;
 
 
-        // Evaluate
+        // Sources
 
-            virtual void addSup
-            (
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
-            ) const;
+            //- Add a source term to an equation
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_ADD_SUP);
 
-            virtual void addSup
-            (
-                fvMatrix<vector>& eqn,
-                const word& fieldName
-            ) const;
+            //- Add a source term to a compressible equation
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_ADD_RHO_SUP);
 
-            virtual void addSup
-            (
-                fvMatrix<sphericalTensor>& eqn,
-                const word& fieldName
-            ) const;
-
-            virtual void addSup
-            (
-                fvMatrix<symmTensor>& eqn,
-                const word& fieldName
-            ) const;
-
-            virtual void addSup
-            (
-                fvMatrix<tensor>& eqn,
-                const word& fieldName
-            ) const;
-
-            virtual void addSup
-            (
-                const volScalarField& rho,
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
-            ) const;
-
-            virtual void addSup
-            (
-                const volScalarField& rho,
-                fvMatrix<vector>& eqn,
-                const word& fieldName
-            ) const;
-
-            virtual void addSup
-            (
-                const volScalarField& rho,
-                fvMatrix<sphericalTensor>& eqn,
-                const word& fieldName
-            ) const;
-
-            virtual void addSup
-            (
-                const volScalarField& rho,
-                fvMatrix<symmTensor>& eqn,
-                const word& fieldName
-            ) const;
-
-            virtual void addSup
-            (
-                const volScalarField& rho,
-                fvMatrix<tensor>& eqn,
-                const word& fieldName
-            ) const;
-
-            virtual void addSup
-            (
-                const volScalarField& alpha,
-                const volScalarField& rho,
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
-            ) const;
-
-            virtual void addSup
-            (
-                const volScalarField& alpha,
-                const volScalarField& rho,
-                fvMatrix<vector>& eqn,
-                const word& fieldName
-            ) const;
-
-            virtual void addSup
-            (
-                const volScalarField& alpha,
-                const volScalarField& rho,
-                fvMatrix<sphericalTensor>& eqn,
-                const word& fieldName
-            ) const;
-
-            virtual void addSup
-            (
-                const volScalarField& alpha,
-                const volScalarField& rho,
-                fvMatrix<symmTensor>& eqn,
-                const word& fieldName
-            ) const;
-
-            virtual void addSup
-            (
-                const volScalarField& alpha,
-                const volScalarField& rho,
-                fvMatrix<tensor>& eqn,
-                const word& fieldName
-            ) const;
+            //- Add a source term to a phase equation
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_ADD_ALPHA_RHO_SUP);
 
 
         // IO

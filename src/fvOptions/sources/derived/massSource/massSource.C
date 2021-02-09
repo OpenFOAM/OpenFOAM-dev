@@ -76,18 +76,17 @@ void Foam::fv::massSource::readCoeffs()
     {
         fieldValues_.set(iter().keyword(), nullptr);
     }
-    readFieldValuesType<scalar>();
-    readFieldValuesType<vector>();
-    readFieldValuesType<sphericalTensor>();
-    readFieldValuesType<symmTensor>();
-    readFieldValuesType<tensor>();
+
+    #define callReadFieldValues(Type, nullArg) readFieldValues<Type>();
+    FOR_ALL_FIELD_TYPES(callReadFieldValues);
+    #undef callReadFieldValues
 
     massFlowRate_.reset(Function1<scalar>::New("massFlowRate", coeffs_).ptr());
 }
 
 
 template<class Type>
-void Foam::fv::massSource::readFieldValuesType()
+void Foam::fv::massSource::readFieldValues()
 {
     const dictionary& fieldCoeffs = coeffs_.subDict("fieldValues");
 
@@ -113,56 +112,8 @@ void Foam::fv::massSource::readFieldValuesType()
 }
 
 
-void Foam::fv::massSource::addRhoSup
-(
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    const scalar t = mesh_.time().value();
-    const scalar massFlowRate = massFlowRate_->value(t);
-
-    forAll(cells(), i)
-    {
-        eqn.source()[cells()[i]] -= mesh_.V()[cells()[i]]/V()*massFlowRate;
-    }
-}
-
-
-void Foam::fv::massSource::addHeSupT
-(
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    if (fieldValues_.found(heName_))
-    {
-        WarningInFunction
-            << "Source " << name() << " defined for both field " << heName_
-            << " and " << TName_ << ". Only one of these should be present."
-            << endl;
-    }
-
-    const scalar t = mesh_.time().value();
-    const scalar massFlowRate = massFlowRate_->value(t);
-    const scalar T = fieldValues_[TName_]->value<scalar>(t);
-    const basicThermo& thermo =
-        mesh_.lookupObject<basicThermo>
-        (
-            IOobject::groupName(basicThermo::dictName, phaseName_)
-        );
-    const scalarField hs(thermo.hs(scalarField(cells().size(), T), cells()));
-
-    forAll(cells(), i)
-    {
-        eqn.source()[cells()[i]] -=
-            mesh_.V()[cells()[i]]/V()*massFlowRate*hs[i];
-    }
-}
-
-
 template<class Type>
-void Foam::fv::massSource::addSupType
+void Foam::fv::massSource::addGeneralSupType
 (
     fvMatrix<Type>& eqn,
     const word& fieldName
@@ -177,6 +128,94 @@ void Foam::fv::massSource::addSupType
         eqn.source()[cells()[i]] -=
             mesh_.V()[cells()[i]]/V()*massFlowRate*value;
     }
+}
+
+
+template<class Type>
+void Foam::fv::massSource::addSupType
+(
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{
+    addGeneralSupType(eqn, fieldName);
+}
+
+
+void Foam::fv::massSource::addSupType
+(
+    fvMatrix<scalar>& eqn,
+    const word& fieldName
+) const
+{
+    if (fieldName == rhoName_)
+    {
+        const scalar t = mesh_.time().value();
+        const scalar massFlowRate = massFlowRate_->value(t);
+
+        forAll(cells(), i)
+        {
+            eqn.source()[cells()[i]] -= mesh_.V()[cells()[i]]/V()*massFlowRate;
+        }
+    }
+    else if (fieldName == heName_ && fieldValues_.found(TName_))
+    {
+        if (fieldValues_.found(heName_))
+        {
+            WarningInFunction
+                << "Source " << name() << " defined for both field " << heName_
+                << " and " << TName_ << ". Only one of these should be present."
+                << endl;
+        }
+
+        const scalar t = mesh_.time().value();
+        const scalar massFlowRate = massFlowRate_->value(t);
+        const scalar T = fieldValues_[TName_]->value<scalar>(t);
+        const basicThermo& thermo =
+            mesh_.lookupObject<basicThermo>
+            (
+                IOobject::groupName(basicThermo::dictName, phaseName_)
+            );
+        const scalarField hs
+        (
+            thermo.hs(scalarField(cells().size(), T), cells())
+        );
+
+        forAll(cells(), i)
+        {
+            eqn.source()[cells()[i]] -=
+                mesh_.V()[cells()[i]]/V()*massFlowRate*hs[i];
+        }
+    }
+    else
+    {
+        addGeneralSupType(eqn, fieldName);
+    }
+}
+
+
+template<class Type>
+void Foam::fv::massSource::addSupType
+(
+    const volScalarField& rho,
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{
+    addSupType(eqn, fieldName);
+}
+
+
+template<class Type>
+void Foam::fv::massSource::addSupType
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{
+    addSupType(eqn, fieldName);
 }
 
 
@@ -240,192 +279,13 @@ Foam::wordList Foam::fv::massSource::addedToFields() const
 }
 
 
-void Foam::fv::massSource::addSup
-(
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    if (fieldName == rhoName_)
-    {
-        addRhoSup(eqn, fieldName);
-    }
-    else if (fieldName == heName_ && fieldValues_.found(TName_))
-    {
-        addHeSupT(eqn, fieldName);
-    }
-    else
-    {
-        addSupType(eqn, fieldName);
-    }
-}
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_ADD_SUP, massSource);
 
 
-void Foam::fv::massSource::addSup
-(
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_ADD_RHO_SUP, massSource);
 
 
-void Foam::fv::massSource::addSup
-(
-    fvMatrix<sphericalTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
-
-
-void Foam::fv::massSource::addSup
-(
-    fvMatrix<symmTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
-
-
-void Foam::fv::massSource::addSup
-(
-    fvMatrix<tensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(eqn, fieldName);
-}
-
-
-void Foam::fv::massSource::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    if (fieldName == heName_ && fieldValues_.found(TName_))
-    {
-        addHeSupT(eqn, fieldName);
-    }
-    else
-    {
-        addSup(eqn, fieldName);
-    }
-}
-
-
-void Foam::fv::massSource::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{
-    addSup(eqn, fieldName);
-}
-
-
-void Foam::fv::massSource::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<sphericalTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSup(eqn, fieldName);
-}
-
-void Foam::fv::massSource::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<symmTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSup(eqn, fieldName);
-}
-
-
-void Foam::fv::massSource::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<tensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSup(eqn, fieldName);
-}
-
-
-void Foam::fv::massSource::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    if (fieldName == heName_ && fieldValues_.found(TName_))
-    {
-        addHeSupT(eqn, fieldName);
-    }
-    else
-    {
-        addSup(eqn, fieldName);
-    }
-}
-
-
-void Foam::fv::massSource::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{
-    addSup(eqn, fieldName);
-}
-
-
-void Foam::fv::massSource::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<sphericalTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSup(eqn, fieldName);
-}
-
-void Foam::fv::massSource::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<symmTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSup(eqn, fieldName);
-}
-
-
-void Foam::fv::massSource::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<tensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSup(eqn, fieldName);
-}
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_ADD_ALPHA_RHO_SUP, massSource);
 
 
 bool Foam::fv::massSource::read(const dictionary& dict)

@@ -132,79 +132,135 @@ Foam::tmp<Foam::volScalarField> Foam::fv::volumeFractionSource::D
 }
 
 
-template <class Type>
-void Foam::fv::volumeFractionSource::addDivSup
-(
-    fvMatrix<Type>& eqn,
-    const word& fieldName
-) const
-{
-    const word phiName =
-        IOobject::groupName(phiName_, IOobject::group(fieldName));
-    const surfaceScalarField& phi =
-        mesh().lookupObject<surfaceScalarField>(phiName);
-
-    const volScalarField AByB(volumeAlpha()/(1 - volumeAlpha()));
-
-    const word scheme("div(" + phiName + "," + eqn.psi().name() + ")");
-
-    eqn -= AByB*fvm::div(phi, eqn.psi(), scheme);
-}
-
-
-void Foam::fv::volumeFractionSource::addUDivSup
-(
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{
-    const word phiName =
-        IOobject::groupName(phiName_, IOobject::group(fieldName));
-    const surfaceScalarField& phi =
-        mesh().lookupObject<surfaceScalarField>(phiName);
-
-    const volScalarField AByB(volumeAlpha()/(1 - volumeAlpha()));
-
-    const word scheme("div(" + phiName + "," + eqn.psi().name() + ")");
-
-    eqn -= fvm::div(fvc::interpolate(AByB)*phi, eqn.psi(), scheme);
-}
-
-
-void Foam::fv::volumeFractionSource::addRhoDivSup
-(
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    const word phiName =
-        IOobject::groupName(phiName_, IOobject::group(fieldName));
-    const surfaceScalarField& phi =
-        mesh().lookupObject<surfaceScalarField>(phiName);
-
-    const volScalarField AByB(volumeAlpha()/(1 - volumeAlpha()));
-
-    eqn -= AByB*fvc::div(phi);
-}
-
-
 template <class Type, class AlphaFieldType>
-void Foam::fv::volumeFractionSource::addLaplacianSup
+void Foam::fv::volumeFractionSource::addGeneralSup
 (
     const AlphaFieldType& alpha,
     fvMatrix<Type>& eqn,
     const word& fieldName
 ) const
 {
-    const volScalarField B(1 - volumeAlpha());
+    const word phiName =
+        IOobject::groupName(phiName_, IOobject::group(fieldName));
+    const surfaceScalarField& phi =
+        mesh().lookupObject<surfaceScalarField>(phiName);
 
+    const volScalarField B(1 - volumeAlpha());
+    const volScalarField AByB(volumeAlpha()/B);
     const volScalarField D(this->D(fieldName));
 
-    const word scheme("laplacian(" + D.name() + "," + eqn.psi().name() + ")");
+    // Divergence term
+    const word divScheme = "div(" + phiName + "," + eqn.psi().name() + ")";
+    eqn -= AByB*fvm::div(phi, eqn.psi(), divScheme);
 
+    // Laplacian term
+    const word laplacianScheme =
+        "laplacian(" + D.name() + "," + eqn.psi().name() + ")";
     eqn +=
         fvm::laplacian(D, eqn.psi())
-      - 1/B*fvm::laplacian(B*D, eqn.psi(), scheme);
+      - 1/B*fvm::laplacian(B*D, eqn.psi(), laplacianScheme);
+}
+
+
+template<class Type, class AlphaFieldType>
+void Foam::fv::volumeFractionSource::addAlphaSupType
+(
+    const AlphaFieldType& alpha,
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{
+    addGeneralSup(alpha, eqn, fieldName);
+}
+
+
+template<class AlphaFieldType>
+void Foam::fv::volumeFractionSource::addAlphaSupType
+(
+    const AlphaFieldType& alpha,
+    fvMatrix<scalar>& eqn,
+    const word& fieldName
+) const
+{
+    if (IOobject::member(fieldName) == rhoName_)
+    {
+        const word phiName =
+            IOobject::groupName(phiName_, IOobject::group(fieldName));
+        const surfaceScalarField& phi =
+            mesh().lookupObject<surfaceScalarField>(phiName);
+
+        const volScalarField AByB(volumeAlpha()/(1 - volumeAlpha()));
+
+        eqn -= AByB*fvc::div(phi);
+    }
+    else
+    {
+        addGeneralSup(alpha, eqn, fieldName);
+    }
+}
+
+
+template<class AlphaFieldType>
+void Foam::fv::volumeFractionSource::addAlphaSupType
+(
+    const AlphaFieldType& alpha,
+    fvMatrix<vector>& eqn,
+    const word& fieldName
+) const
+{
+    if (IOobject::member(fieldName) == UName_)
+    {
+        const word phiName =
+            IOobject::groupName(phiName_, IOobject::group(fieldName));
+        const surfaceScalarField& phi =
+            mesh().lookupObject<surfaceScalarField>(phiName);
+
+        const volScalarField AByB(volumeAlpha()/(1 - volumeAlpha()));
+
+        const word scheme("div(" + phiName + "," + eqn.psi().name() + ")");
+
+        eqn -= fvm::div(fvc::interpolate(AByB)*phi, eqn.psi(), scheme);
+    }
+    else
+    {
+        addGeneralSup(alpha, eqn, fieldName);
+    }
+}
+
+
+template<class Type>
+void Foam::fv::volumeFractionSource::addSupType
+(
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{
+    addAlphaSupType(geometricOneField(), eqn, fieldName);
+}
+
+
+template<class Type>
+void Foam::fv::volumeFractionSource::addSupType
+(
+    const volScalarField& rho,
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{
+    addAlphaSupType(geometricOneField(), eqn, fieldName);
+}
+
+
+template<class Type>
+void Foam::fv::volumeFractionSource::addSupType
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{
+    addAlphaSupType(alpha, eqn, fieldName);
 }
 
 
@@ -249,226 +305,17 @@ Foam::wordList Foam::fv::volumeFractionSource::addedToFields() const
 }
 
 
-void Foam::fv::volumeFractionSource::addSup
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_ADD_SUP, volumeFractionSource);
+
+
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_ADD_RHO_SUP, volumeFractionSource);
+
+
+FOR_ALL_FIELD_TYPES
 (
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    if (IOobject::member(fieldName) == rhoName_)
-    {
-        addRhoDivSup(eqn, fieldName);
-    }
-    else
-    {
-        addDivSup(eqn, fieldName);
-        addLaplacianSup(geometricOneField(), eqn, fieldName);
-    }
-}
-
-
-void Foam::fv::volumeFractionSource::addSup
-(
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{
-    if (IOobject::member(fieldName) == UName_)
-    {
-        addUDivSup(eqn, fieldName);
-    }
-    else
-    {
-        addDivSup(eqn, fieldName);
-        addLaplacianSup(geometricOneField(), eqn, fieldName);
-    }
-}
-
-
-void Foam::fv::volumeFractionSource::addSup
-(
-    fvMatrix<sphericalTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addDivSup(eqn, fieldName);
-    addLaplacianSup(geometricOneField(), eqn, fieldName);
-}
-
-
-void Foam::fv::volumeFractionSource::addSup
-(
-    fvMatrix<symmTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addDivSup(eqn, fieldName);
-    addLaplacianSup(geometricOneField(), eqn, fieldName);
-}
-
-
-void Foam::fv::volumeFractionSource::addSup
-(
-    fvMatrix<tensor>& eqn,
-    const word& fieldName
-) const
-{
-    addDivSup(eqn, fieldName);
-    addLaplacianSup(geometricOneField(), eqn, fieldName);
-}
-
-
-void Foam::fv::volumeFractionSource::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    if (IOobject::member(fieldName) == rhoName_)
-    {
-        addRhoDivSup(eqn, fieldName);
-    }
-    else
-    {
-        addDivSup(eqn, fieldName);
-        addLaplacianSup(geometricOneField(), eqn, fieldName);
-    }
-}
-
-
-void Foam::fv::volumeFractionSource::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{
-    if (IOobject::member(fieldName) == UName_)
-    {
-        addUDivSup(eqn, fieldName);
-    }
-    else
-    {
-        addDivSup(eqn, fieldName);
-        addLaplacianSup(geometricOneField(), eqn, fieldName);
-    }
-}
-
-
-void Foam::fv::volumeFractionSource::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<sphericalTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addDivSup(eqn, fieldName);
-    addLaplacianSup(geometricOneField(), eqn, fieldName);
-}
-
-
-void Foam::fv::volumeFractionSource::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<symmTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addDivSup(eqn, fieldName);
-    addLaplacianSup(geometricOneField(), eqn, fieldName);
-}
-
-
-void Foam::fv::volumeFractionSource::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<tensor>& eqn,
-    const word& fieldName
-) const
-{
-    addDivSup(eqn, fieldName);
-    addLaplacianSup(geometricOneField(), eqn, fieldName);
-}
-
-
-void Foam::fv::volumeFractionSource::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    if (IOobject::member(fieldName) == rhoName_)
-    {
-        addRhoDivSup(eqn, fieldName);
-    }
-    else
-    {
-        addDivSup(eqn, fieldName);
-        addLaplacianSup(alpha, eqn, fieldName);
-    }
-}
-
-
-void Foam::fv::volumeFractionSource::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{
-    if (IOobject::member(fieldName) == UName_)
-    {
-        addUDivSup(eqn, fieldName);
-    }
-    else
-    {
-        addDivSup(eqn, fieldName);
-        addLaplacianSup(alpha, eqn, fieldName);
-    }
-}
-
-
-void Foam::fv::volumeFractionSource::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<sphericalTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addDivSup(eqn, fieldName);
-    addLaplacianSup(alpha, eqn, fieldName);
-}
-
-
-void Foam::fv::volumeFractionSource::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<symmTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addDivSup(eqn, fieldName);
-    addLaplacianSup(alpha, eqn, fieldName);
-}
-
-
-void Foam::fv::volumeFractionSource::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<tensor>& eqn,
-    const word& fieldName
-) const
-{
-    addDivSup(eqn, fieldName);
-    addLaplacianSup(alpha, eqn, fieldName);
-}
+    IMPLEMENT_FV_OPTION_ADD_ALPHA_RHO_SUP,
+    volumeFractionSource
+);
 
 
 bool Foam::fv::volumeFractionSource::read(const dictionary& dict)

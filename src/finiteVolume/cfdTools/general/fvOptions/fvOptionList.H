@@ -157,14 +157,14 @@ public:
 
         // Sources
 
-            //- Return source for equation
+            //- Return source for an equation
             template<class Type>
             tmp<fvMatrix<Type>> operator()
             (
                 GeometricField<Type, fvPatchField, volMesh>& field
             ) const;
 
-            //- Return source for equation with specified name
+            //- Return source for an equation with a specified name
             template<class Type>
             tmp<fvMatrix<Type>> operator()
             (
@@ -172,7 +172,7 @@ public:
                 const word& fieldName
             ) const;
 
-            //- Return source for equation
+            //- Return source for a compressible equation
             template<class Type>
             tmp<fvMatrix<Type>> operator()
             (
@@ -180,7 +180,7 @@ public:
                 GeometricField<Type, fvPatchField, volMesh>& field
             ) const;
 
-            //- Return source for equation with specified name
+            //- Return source for a compressible equation with a specified name
             template<class Type>
             tmp<fvMatrix<Type>> operator()
             (
@@ -189,7 +189,7 @@ public:
                 const word& fieldName
             ) const;
 
-            //- Return source for equation
+            //- Return source for a phase equation
             template<class Type>
             tmp<fvMatrix<Type>> operator()
             (
@@ -198,7 +198,7 @@ public:
                 GeometricField<Type, fvPatchField, volMesh>& field
             ) const;
 
-            //- Return source for equation with specified name
+            //- Return source for a phase equation with a specified name
             template<class Type>
             tmp<fvMatrix<Type>> operator()
             (
@@ -208,7 +208,7 @@ public:
                 const word& fieldName
             ) const;
 
-            //- Return source for equation
+            //- Return source for a phase equation
             template<class Type>
             tmp<fvMatrix<Type>> operator()
             (
@@ -217,7 +217,7 @@ public:
                 GeometricField<Type, fvPatchField, volMesh>& field
             ) const;
 
-            //- Return source for equation
+            //- Return source for a phase equation
             template<class Type>
             tmp<fvMatrix<Type>> operator()
             (
@@ -226,7 +226,7 @@ public:
                 GeometricField<Type, fvPatchField, volMesh>& field
             ) const;
 
-            //- Return source for equation
+            //- Return source for a phase equation
             template<class Type>
             tmp<fvMatrix<Type>> operator()
             (
@@ -235,14 +235,14 @@ public:
                 GeometricField<Type, fvPatchField, volMesh>& field
             ) const;
 
-            //- Return source for equation with second time derivative
+            //- Return source for an equation with a second time derivative
             template<class Type>
             tmp<fvMatrix<Type>> d2dt2
             (
                 GeometricField<Type, fvPatchField, volMesh>& field
             ) const;
 
-            //- Return source for equation with second time derivative
+            //- Return source for an equation with a second time derivative
             template<class Type>
             tmp<fvMatrix<Type>> d2dt2
             (
@@ -253,14 +253,14 @@ public:
 
         // Constraints
 
-            //- Apply constraints to equation
+            //- Apply constraints to an equation
             template<class Type>
             void constrain(fvMatrix<Type>& eqn) const;
 
 
         // Correction
 
-            //- Apply correction to field
+            //- Apply correction to a field
             template<class Type>
             void correct
             (

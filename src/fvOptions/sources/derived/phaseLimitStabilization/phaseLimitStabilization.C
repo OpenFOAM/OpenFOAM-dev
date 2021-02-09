@@ -102,64 +102,11 @@ Foam::wordList Foam::fv::phaseLimitStabilization::addedToFields() const
 }
 
 
-void Foam::fv::phaseLimitStabilization::addSup
+FOR_ALL_FIELD_TYPES
 (
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(alpha, rho, eqn, fieldName);
-}
-
-
-void Foam::fv::phaseLimitStabilization::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(alpha, rho, eqn, fieldName);
-}
-
-
-void Foam::fv::phaseLimitStabilization::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<symmTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(alpha, rho, eqn, fieldName);
-}
-
-
-void Foam::fv::phaseLimitStabilization::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<sphericalTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(alpha, rho, eqn, fieldName);
-}
-
-
-void Foam::fv::phaseLimitStabilization::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<tensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSupType(alpha, rho, eqn, fieldName);
-}
+    IMPLEMENT_FV_OPTION_ADD_ALPHA_RHO_SUP,
+    phaseLimitStabilization
+);
 
 
 bool Foam::fv::phaseLimitStabilization::read(const dictionary& dict)

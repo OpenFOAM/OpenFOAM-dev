@@ -25,17 +25,10 @@ Class
     Foam::fv::option
 
 Description
-    Finite volume options abstract base class.  Provides a base set of
-    controls, e.g.:
-    \verbatim
-        type            scalarExplicitSource    // source type
-    \endverbatim
-
-Note
-    On evaluation, source/sink options are to be added to the equation R.H.S.
+    Finite volume options abstract base class.
 
 SourceFiles
-    fvOption.C
+    FvOption.C
     fvOptionIO.C
 
 \*---------------------------------------------------------------------------*/
@@ -48,6 +41,7 @@ SourceFiles
 #include "dictionary.H"
 #include "dimensionSet.H"
 #include "Switch.H"
+#include "fvOptionM.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,6 +60,56 @@ namespace fv
 
 class option
 {
+    // Private Member Functions
+
+        // Sources
+
+            //- Add a source term to an equation
+            template<class Type>
+            void addSupType
+            (
+                fvMatrix<Type>& eqn,
+                const word& fieldName
+            ) const;
+
+            //- Add a source term to a compressible equation
+            template<class Type>
+            void addSupType
+            (
+                const volScalarField& rho,
+                fvMatrix<Type>& eqn,
+                const word& fieldName
+            ) const;
+
+            //- Add a source term to a phase equation
+            template<class Type>
+            void addSupType
+            (
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                fvMatrix<Type>& eqn,
+                const word& fieldName
+            ) const;
+
+
+        // Constraints
+
+            //- Add a constraint to an equation
+            template<class Type>
+            void constrainType
+            (
+                fvMatrix<Type>& eqn,
+                const word& fieldName
+            ) const;
+
+
+        // Correction
+
+            //- Apply correction to a field
+            template<class Type>
+            void correctType(VolField<Type>& field) const;
+
+
 protected:
 
     // Protected data
@@ -253,210 +297,79 @@ public:
             virtual bool correctsField(const word& fieldName) const;
 
 
-        // Evaluation
+        // Sources
 
-            // Explicit and implicit sources
+            //- Add a source term to an equation
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_ADD_SUP);
 
-                virtual void addSup
-                (
-                    fvMatrix<scalar>& eqn,
-                    const word& fieldName
-                ) const;
+            //- Add a source term to a compressible equation
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_ADD_RHO_SUP);
 
-                virtual void addSup
-                (
-                    fvMatrix<vector>& eqn,
-                    const word& fieldName
-                ) const;
+            //- Add a source term to a phase equation
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_ADD_ALPHA_RHO_SUP);
 
-                virtual void addSup
-                (
-                    fvMatrix<symmTensor>& eqn,
-                    const word& fieldName
-                ) const;
+            //- Return source for an equation
+            template<class Type>
+            tmp<fvMatrix<Type>> operator()
+            (
+                GeometricField<Type, fvPatchField, volMesh>& field
+            ) const;
 
-                virtual void addSup
-                (
-                    fvMatrix<sphericalTensor>& eqn,
-                    const word& fieldName
-                ) const;
+            //- Return source for an equation with a specified name
+            template<class Type>
+            tmp<fvMatrix<Type>> operator()
+            (
+                GeometricField<Type, fvPatchField, volMesh>& field,
+                const word& fieldName
+            ) const;
 
-                virtual void addSup
-                (
-                    fvMatrix<tensor>& eqn,
-                    const word& fieldName
-                ) const;
+            //- Return source for a compressible equation
+            template<class Type>
+            tmp<fvMatrix<Type>> operator()
+            (
+                const volScalarField& rho,
+                GeometricField<Type, fvPatchField, volMesh>& field
+            ) const;
 
+            //- Return source for a compressible equation with a specified name
+            template<class Type>
+            tmp<fvMatrix<Type>> operator()
+            (
+                const volScalarField& rho,
+                GeometricField<Type, fvPatchField, volMesh>& field,
+                const word& fieldName
+            ) const;
 
-            // Explicit and implicit sources for compressible equations
+            //- Return source for a phase equation
+            template<class Type>
+            tmp<fvMatrix<Type>> operator()
+            (
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                GeometricField<Type, fvPatchField, volMesh>& field
+            ) const;
 
-                virtual void addSup
-                (
-                    const volScalarField& rho,
-                    fvMatrix<scalar>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void addSup
-                (
-                    const volScalarField& rho,
-                    fvMatrix<vector>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void addSup
-                (
-                    const volScalarField& rho,
-                    fvMatrix<symmTensor>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void addSup
-                (
-                    const volScalarField& rho,
-                    fvMatrix<sphericalTensor>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void addSup
-                (
-                    const volScalarField& rho,
-                    fvMatrix<tensor>& eqn,
-                    const word& fieldName
-                ) const;
+            //- Return source for a phase equation with a specified name
+            template<class Type>
+            tmp<fvMatrix<Type>> operator()
+            (
+                const volScalarField& alpha,
+                const volScalarField& rho,
+                GeometricField<Type, fvPatchField, volMesh>& field,
+                const word& fieldName
+            ) const;
 
 
-            // Explicit and implicit sources for phase equations
+        // Constraints
 
-                virtual void addSup
-                (
-                    const volScalarField& alpha,
-                    const volScalarField& rho,
-                    fvMatrix<scalar>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void addSup
-                (
-                    const volScalarField& alpha,
-                    const volScalarField& rho,
-                    fvMatrix<vector>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void addSup
-                (
-                    const volScalarField& alpha,
-                    const volScalarField& rho,
-                    fvMatrix<symmTensor>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void addSup
-                (
-                    const volScalarField& alpha,
-                    const volScalarField& rho,
-                    fvMatrix<sphericalTensor>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void addSup
-                (
-                    const volScalarField& alpha,
-                    const volScalarField& rho,
-                    fvMatrix<tensor>& eqn,
-                    const word& fieldName
-                ) const;
+            //- Add a constraint to an equation
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_CONSTRAIN);
 
 
-            // Sources
+        // Correction
 
-                template<class Type>
-                tmp<fvMatrix<Type>> operator()
-                (
-                    GeometricField<Type, fvPatchField, volMesh>& field
-                ) const;
-
-                template<class Type>
-                tmp<fvMatrix<Type>> operator()
-                (
-                    GeometricField<Type, fvPatchField, volMesh>& field,
-                    const word& fieldName
-                ) const;
-
-                template<class Type>
-                tmp<fvMatrix<Type>> operator()
-                (
-                    const volScalarField& rho,
-                    GeometricField<Type, fvPatchField, volMesh>& field
-                ) const;
-
-                template<class Type>
-                tmp<fvMatrix<Type>> operator()
-                (
-                    const volScalarField& rho,
-                    GeometricField<Type, fvPatchField, volMesh>& field,
-                    const word& fieldName
-                ) const;
-
-                template<class Type>
-                tmp<fvMatrix<Type>> operator()
-                (
-                    const volScalarField& alpha,
-                    const volScalarField& rho,
-                    GeometricField<Type, fvPatchField, volMesh>& field
-                ) const;
-
-                template<class Type>
-                tmp<fvMatrix<Type>> operator()
-                (
-                    const volScalarField& alpha,
-                    const volScalarField& rho,
-                    GeometricField<Type, fvPatchField, volMesh>& field,
-                    const word& fieldName
-                ) const;
-
-
-            // Constraints
-
-                virtual void constrain
-                (
-                    fvMatrix<scalar>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void constrain
-                (
-                    fvMatrix<vector>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void constrain
-                (
-                    fvMatrix<sphericalTensor>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void constrain
-                (
-                    fvMatrix<symmTensor>& eqn,
-                    const word& fieldName
-                ) const;
-
-                virtual void constrain
-                (
-                    fvMatrix<tensor>& eqn,
-                    const word& fieldName
-                ) const;
-
-
-            // Correction
-
-                virtual void correct(volScalarField& field) const;
-                virtual void correct(volVectorField& field) const;
-                virtual void correct(volSphericalTensorField& field) const;
-                virtual void correct(volSymmTensorField& field) const;
-                virtual void correct(volTensorField& field) const;
+            //- Apply correction to a field
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_CORRECT);
 
 
         // Mesh changes

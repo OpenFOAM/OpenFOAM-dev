@@ -38,6 +38,52 @@ namespace Foam
 }
 
 
+// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+template<class Type>
+void Foam::fv::option::addSupType
+(
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{}
+
+
+template<class Type>
+void Foam::fv::option::addSupType
+(
+    const volScalarField& rho,
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{}
+
+
+template<class Type>
+void Foam::fv::option::addSupType
+(
+    const volScalarField& alpha,
+    const volScalarField& rho,
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{}
+
+
+template<class Type>
+void Foam::fv::option::constrainType
+(
+    fvMatrix<Type>& eqn,
+    const word& fieldName
+) const
+{}
+
+
+template<class Type>
+void Foam::fv::option::correctType(VolField<Type>& field) const
+{}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::fv::option::option
@@ -137,209 +183,19 @@ bool Foam::fv::option::correctsField(const word& fieldName) const
 }
 
 
-void Foam::fv::option::addSup
-(
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{}
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_ADD_SUP, option);
 
 
-void Foam::fv::option::addSup
-(
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{}
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_ADD_RHO_SUP, option);
 
 
-void Foam::fv::option::addSup
-(
-    fvMatrix<sphericalTensor>& eqn,
-    const word& fieldName
-) const
-{}
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_ADD_ALPHA_RHO_SUP, option);
 
 
-void Foam::fv::option::addSup
-(
-    fvMatrix<symmTensor>& eqn,
-    const word& fieldName
-) const
-{}
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_CONSTRAIN, option);
 
 
-void Foam::fv::option::addSup
-(
-    fvMatrix<tensor>& eqn,
-    const word& fieldName
-) const
-{}
-
-
-void Foam::fv::option::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{}
-
-
-void Foam::fv::option::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{}
-
-
-void Foam::fv::option::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<sphericalTensor>& eqn,
-    const word& fieldName
-) const
-{}
-
-
-void Foam::fv::option::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<symmTensor>& eqn,
-    const word& fieldName
-) const
-{}
-
-
-void Foam::fv::option::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<tensor>& eqn,
-    const word& fieldName
-) const
-{}
-
-
-void Foam::fv::option::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    addSup(alpha*rho, eqn, fieldName);
-}
-
-
-void Foam::fv::option::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{
-    addSup(alpha*rho, eqn, fieldName);
-}
-
-
-void Foam::fv::option::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<sphericalTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSup(alpha*rho, eqn, fieldName);
-}
-
-
-void Foam::fv::option::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<symmTensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSup(alpha*rho, eqn, fieldName);
-}
-
-
-void Foam::fv::option::addSup
-(
-    const volScalarField& alpha,
-    const volScalarField& rho,
-    fvMatrix<tensor>& eqn,
-    const word& fieldName
-) const
-{
-    addSup(alpha*rho, eqn, fieldName);
-}
-
-
-void Foam::fv::option::constrain
-(
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{}
-
-
-void Foam::fv::option::constrain
-(
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{}
-
-
-void Foam::fv::option::constrain
-(
-    fvMatrix<sphericalTensor>& eqn,
-    const word& fieldName
-) const
-{}
-
-
-void Foam::fv::option::constrain
-(
-    fvMatrix<symmTensor>& eqn,
-    const word& fieldName
-) const
-{}
-
-
-void Foam::fv::option::constrain
-(
-    fvMatrix<tensor>& eqn,
-    const word& fieldName
-) const
-{}
-
-
-void Foam::fv::option::correct(volScalarField& field) const
-{}
-
-
-void Foam::fv::option::correct(volVectorField& field) const
-{}
-
-
-void Foam::fv::option::correct(volSphericalTensorField& field) const
-{}
-
-
-void Foam::fv::option::correct(volSymmTensorField& field) const
-{}
-
-
-void Foam::fv::option::correct(volTensorField& field) const
-{}
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_CORRECT, option);
 
 
 void Foam::fv::option::updateMesh(const mapPolyMesh& mpm)
