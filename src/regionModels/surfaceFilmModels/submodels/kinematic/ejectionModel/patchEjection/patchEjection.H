@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,27 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::drippingInjection
+    Foam::regionModels::surfaceFilmModels::patchEjection
 
 Description
-    Film Dripping mass transfer model.
-
-    If the film mass exceeds that needed to generate a valid parcel, the
-    equivalent mass is removed from the film.
-
-    New parcel diameters are sampled from a PDF.
+    Remove and eject the mass in the film as it passes over the selected
+    patches.
 
 SourceFiles
-    drippingInjection.C
+    patchEjection.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef drippingInjection_H
-#define drippingInjection_H
+#ifndef patchEjection_H
+#define patchEjection_H
 
-#include "injectionModel.H"
-#include "distributionModel.H"
-#include "Random.H"
+#include "ejectionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -54,75 +48,67 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class drippingInjection Declaration
+                       Class patchEjection Declaration
 \*---------------------------------------------------------------------------*/
 
-class drippingInjection
+class patchEjection
 :
-    public injectionModel
+    public ejectionModel
 {
 protected:
 
-    // Protected data
-
-        //- Stable film thickness - drips only formed if thickness
-        //  exceeds this threshold value
+        //- Stable film thickness - mass only removed if thickness exceeds
+        //  this threshold value
         scalar deltaStable_;
 
-        //- Number of particles per parcel
-        scalar particlesPerParcel_;
+        //- List of patch IDs at which the film is removed
+        labelList patchIDs_;
 
-        //- Random number generator
-        Random rndGen_;
-
-        //- Parcel size PDF model
-        const autoPtr<distributionModel>
-            parcelDistribution_;
-
-        //- Diameters of particles to inject into the dripping
-        scalarList diameter_;
+        //- Ejected mass for each patch at which the film is removed
+        scalarField patchEjectedMasses_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("drippingInjection");
+    TypeName("patchEjection");
 
 
     // Constructors
 
         //- Construct from surface film model
-        drippingInjection
-        (
-            surfaceFilmRegionModel& film,
-            const dictionary& dict
-        );
+        patchEjection(surfaceFilmRegionModel& film, const dictionary& dict);
 
         //- Disallow default bitwise copy construction
-        drippingInjection(const drippingInjection&) = delete;
+        patchEjection(const patchEjection&) = delete;
 
 
     //- Destructor
-    virtual ~drippingInjection();
+    virtual ~patchEjection();
 
 
     // Member Functions
 
-        // Evolution
+        //- Correct
+        virtual void correct
+        (
+            scalarField& availableMass,
+            scalarField& massToEject,
+            scalarField& diameterToEject
+        );
 
-            //- Correct
-            virtual void correct
-            (
-                scalarField& availableMass,
-                scalarField& massToInject,
-                scalarField& diameterToInject
-            );
+        //- Accumulate the total mass ejected for the patches into the
+        //  scalarField provided
+        virtual void patchEjectedMassTotals
+        (
+            scalarField& patchMasses
+        ) const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const drippingInjection&) = delete;
+        void operator=(const patchEjection&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "drippingInjection.H"
+#include "drippingEjection.H"
 #include "addToRunTimeSelectionTable.H"
 #include "fvMesh.H"
 #include "Time.H"
@@ -43,18 +43,18 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(drippingInjection, 0);
-addToRunTimeSelectionTable(injectionModel, drippingInjection, dictionary);
+defineTypeNameAndDebug(drippingEjection, 0);
+addToRunTimeSelectionTable(ejectionModel, drippingEjection, dictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-drippingInjection::drippingInjection
+drippingEjection::drippingEjection
 (
     surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :
-    injectionModel(type(), film, dict),
+    ejectionModel(type(), film, dict),
     deltaStable_(coeffDict_.lookup<scalar>("deltaStable")),
     particlesPerParcel_(coeffDict_.lookup<scalar>("particlesPerParcel")),
     rndGen_(label(0)),
@@ -72,17 +72,17 @@ drippingInjection::drippingInjection
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-drippingInjection::~drippingInjection()
+drippingEjection::~drippingEjection()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void drippingInjection::correct
+void drippingEjection::correct
 (
     scalarField& availableMass,
-    scalarField& massToInject,
-    scalarField& diameterToInject
+    scalarField& massToEject,
+    scalarField& diameterToEject
 )
 {
     const kinematicSingleLayer& film =
@@ -127,33 +127,33 @@ void drippingInjection::correct
 
             if (massDrip[celli] > minMass)
             {
-                // All drip mass can be injected
-                massToInject[celli] += massDrip[celli];
+                // All drip mass can be ejected
+                massToEject[celli] += massDrip[celli];
                 availableMass[celli] -= massDrip[celli];
 
                 // Set particle diameter
-                diameterToInject[celli] = diam;
+                diameterToEject[celli] = diam;
 
                 // Retrieve new particle diameter sample
                 diam = parcelDistribution_->sample();
 
-                addToInjectedMass(massDrip[celli]);
+                addToEjectedMass(massDrip[celli]);
             }
             else
             {
-                // Particle mass below minimum threshold - cannot be injected
-                massToInject[celli] = 0.0;
-                diameterToInject[celli] = 0.0;
+                // Particle mass below minimum threshold - cannot be ejected
+                massToEject[celli] = 0.0;
+                diameterToEject[celli] = 0.0;
             }
         }
         else
         {
-            massToInject[celli] = 0.0;
-            diameterToInject[celli] = 0.0;
+            massToEject[celli] = 0.0;
+            diameterToEject[celli] = 0.0;
         }
     }
 
-    injectionModel::correct();
+    ejectionModel::correct();
 }
 
 

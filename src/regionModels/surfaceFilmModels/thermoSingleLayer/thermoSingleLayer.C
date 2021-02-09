@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -229,8 +229,8 @@ void thermoSingleLayer::updateSubmodels()
     // Update radiation
     radiation_->correct();
 
-    // Update injection model - mass returned is mass available for injection
-    injection_.correct(availableMass_, cloudMassTrans_, cloudDiameterTrans_);
+    // Update ejection model - mass returned is mass available for ejection
+    ejection_.correct(availableMass_, cloudMassTrans_, cloudDiameterTrans_);
 
     phaseChange_->correct
     (

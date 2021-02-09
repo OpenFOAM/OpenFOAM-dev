@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "patchInjection.H"
+#include "patchEjection.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -37,18 +37,18 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(patchInjection, 0);
-addToRunTimeSelectionTable(injectionModel, patchInjection, dictionary);
+defineTypeNameAndDebug(patchEjection, 0);
+addToRunTimeSelectionTable(ejectionModel, patchEjection, dictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-patchInjection::patchInjection
+patchEjection::patchEjection
 (
     surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :
-    injectionModel(type(), film, dict),
+    ejectionModel(type(), film, dict),
     deltaStable_(coeffDict_.lookupOrDefault<scalar>("deltaStable", 0.0))
 {
     const polyBoundaryMesh& pbm = film.regionMesh().boundaryMesh();
@@ -72,7 +72,7 @@ patchInjection::patchInjection
             Info<< "            " << pbm[patchi].name() << endl;
         }
         patchIDs_.setSize(pidi);
-        patchInjectedMasses_.setSize(pidi, 0);
+        patchEjectedMasses_.setSize(pidi, 0);
     }
     else
     {
@@ -83,7 +83,7 @@ patchInjection::patchInjection
             patchIDs_[patchi] = patchi;
         }
 
-        patchInjectedMasses_.setSize(patchIDs_.size(), 0);
+        patchEjectedMasses_.setSize(patchIDs_.size(), 0);
     }
 
     if (!patchIDs_.size())
@@ -97,17 +97,17 @@ patchInjection::patchInjection
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-patchInjection::~patchInjection()
+patchEjection::~patchEjection()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void patchInjection::correct
+void patchEjection::correct
 (
     scalarField& availableMass,
-    scalarField& massToInject,
-    scalarField& diameterToInject
+    scalarField& massToEject,
+    scalarField& diameterToEject
 )
 {
     // Do not correct if no patches selected
@@ -134,65 +134,65 @@ void patchInjection::correct
 
             scalar ddelta = max(0.0, delta[celli] - deltaStable_);
             scalar dMass = ddelta*rho[celli]*magSf[celli];
-            massToInject[celli] += dMass;
+            massToEject[celli] += dMass;
             availableMass[celli] -= dMass;
             dMassPatch += dMass;
         }
 
-        patchInjectedMasses_[pidi] += dMassPatch;
-        addToInjectedMass(dMassPatch);
+        patchEjectedMasses_[pidi] += dMassPatch;
+        addToEjectedMass(dMassPatch);
     }
 
-    injectionModel::correct();
+    ejectionModel::correct();
 
     if (writeTime())
     {
-        scalarField patchInjectedMasses0
+        scalarField patchEjectedMasses0
         (
             getModelProperty<scalarField>
             (
-                "patchInjectedMasses",
-                scalarField(patchInjectedMasses_.size(), 0)
+                "patchEjectedMasses",
+                scalarField(patchEjectedMasses_.size(), 0)
             )
         );
 
-        scalarField patchInjectedMassTotals(patchInjectedMasses_);
-        Pstream::listCombineGather(patchInjectedMassTotals, plusEqOp<scalar>());
-        patchInjectedMasses0 += patchInjectedMassTotals;
+        scalarField patchEjectedMassTotals(patchEjectedMasses_);
+        Pstream::listCombineGather(patchEjectedMassTotals, plusEqOp<scalar>());
+        patchEjectedMasses0 += patchEjectedMassTotals;
 
         setModelProperty<scalarField>
         (
-            "patchInjectedMasses",
-            patchInjectedMasses0
+            "patchEjectedMasses",
+            patchEjectedMasses0
         );
 
-        patchInjectedMasses_ = 0;
+        patchEjectedMasses_ = 0;
     }
 }
 
 
-void patchInjection::patchInjectedMassTotals(scalarField& patchMasses) const
+void patchEjection::patchEjectedMassTotals(scalarField& patchMasses) const
 {
     // Do not correct if no patches selected
     if (!patchIDs_.size()) return;
 
-    scalarField patchInjectedMasses
+    scalarField patchEjectedMasses
     (
         getModelProperty<scalarField>
         (
-            "patchInjectedMasses",
-            scalarField(patchInjectedMasses_.size(), 0)
+            "patchEjectedMasses",
+            scalarField(patchEjectedMasses_.size(), 0)
         )
     );
 
-    scalarField patchInjectedMassTotals(patchInjectedMasses_);
-    Pstream::listCombineGather(patchInjectedMassTotals, plusEqOp<scalar>());
+    scalarField patchEjectedMassTotals(patchEjectedMasses_);
+    Pstream::listCombineGather(patchEjectedMassTotals, plusEqOp<scalar>());
 
     forAll(patchIDs_, pidi)
     {
         label patchi = patchIDs_[pidi];
         patchMasses[patchi] +=
-            patchInjectedMasses[pidi] + patchInjectedMassTotals[pidi];
+            patchEjectedMasses[pidi] + patchEjectedMassTotals[pidi];
     }
 }
 

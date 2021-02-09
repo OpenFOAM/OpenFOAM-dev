@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,42 +22,34 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::BrunDrippingInjection
+    Foam::regionModels::surfaceFilmModels::curvatureSeparation
 
 Description
-    Film Dripping mass transfer model.
+    Curvature film separation model
 
-    If the film thickness exceeds the critical value needed to generate one or
-    more drops, the equivalent mass is removed from the film.  The critical film
-    thickness is calculated from the Rayleigh-Taylor stability analysis of film
-    flow on an inclined plane by Brun et.al.
+    Assesses film curvature via the mesh geometry and calculates a force
+    balance of the form:
 
-    Reference:
-    \verbatim
-        Brun, P. T., Damiano, A., Rieu, P., Balestra, G., & Gallaire, F. (2015).
-        Rayleigh-Taylor instability under an inclined plane.
-        Physics of Fluids (1994-present), 27(8), 084107.
-    \endverbatim
+        F_sum = F_inertial + F_body + F_surface
 
-    The diameter of the drops formed are obtained from the local capillary
-    length multiplied by the \c dCoeff coefficient which defaults to 3.3.
+    If F_sum < 0, the film separates. Similarly, if F_sum > 0 the film will
+    remain attached.
 
-    Reference:
-    \verbatim
-        Lefebvre, A. (1988).
-        Atomization and sprays
-        (Vol. 1040, No. 2756). CRC press.
-    \endverbatim
+    Based on description given by
+        Owen and D. J. Ryley. The flow of thin liquid films around corners.
+        International Journal of Multiphase Flow, 11(1):51-62, 1985.
+
 
 SourceFiles
-    BrunDrippingInjection.C
+    curvatureSeparation.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef BrunDrippingInjection_H
-#define BrunDrippingInjection_H
+#ifndef curvatureSeparation_H
+#define curvatureSeparation_H
 
-#include "injectionModel.H"
+#include "ejectionModel.H"
+#include "surfaceFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -69,73 +61,88 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                    Class BrunDrippingInjection Declaration
+                     Class curvatureSeparation Declaration
 \*---------------------------------------------------------------------------*/
 
-class BrunDrippingInjection
+class curvatureSeparation
 :
-    public injectionModel
+    public ejectionModel
 {
 protected:
 
     // Protected data
 
-        //- Critical non-dimensional interface velocity
-        //  Coefficient in the film angle stability function.
-        //  Defaults to 1.62208
-        scalar ubarStar_;
+        //- Gradient of surface normals
+        volTensorField gradNHat_;
 
-        //- Coefficient relating the diameter of the drops formed to
-        //  the capillary length.
-        //  Defaults to 3.3
-        scalar dCoeff_;
+        //- Minimum gravity driven film thickness (non-dimensionalised delta/R1)
+        scalar deltaByR1Min_;
 
         //- Stable film thickness - drips only formed if thickness
         //  exceeds this threshold value
         scalar deltaStable_;
 
-        //- Diameters of particles to inject into the dripping
-        scalarList diameter_;
+        //- List of radii for patches - if patch not defined, radius
+        // calculated based on mesh geometry
+        List<Tuple2<label, scalar>> definedPatchRadii_;
+
+        //- Magnitude of gravity vector
+        scalar magG_;
+
+        //- Direction of gravity vector
+        vector gHat_;
+
+
+    // Protected Member Functions
+
+        //- Calculate local (inverse) radius of curvature
+        tmp<volScalarField> calcInvR1(const volVectorField& U) const;
+
+        //- Calculate the cosine of the angle between gravity vector and
+        //  cell out flow direction
+        tmp<scalarField> calcCosAngle(const surfaceScalarField& phi) const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("BrunDrippingInjection");
+    TypeName("curvatureSeparation");
 
 
     // Constructors
 
         //- Construct from surface film model
-        BrunDrippingInjection
+        curvatureSeparation
         (
             surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        BrunDrippingInjection(const BrunDrippingInjection&) = delete;
+        curvatureSeparation(const curvatureSeparation&) = delete;
 
 
     //- Destructor
-    virtual ~BrunDrippingInjection();
+    virtual ~curvatureSeparation();
 
 
     // Member Functions
 
-        //- Correct
-        virtual void correct
-        (
-            scalarField& availableMass,
-            scalarField& massToInject,
-            scalarField& diameterToInject
-        );
+        // Evolution
+
+            //- Correct
+            virtual void correct
+            (
+                scalarField& availableMass,
+                scalarField& massToEject,
+                scalarField& diameterToEject
+            );
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const BrunDrippingInjection&) = delete;
+        void operator=(const curvatureSeparation&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,24 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::injectionModelList
+    Foam::regionModels::surfaceFilmModels::ejectionModel
 
 Description
-    List container for film injection models
+    Base class for film ejection models, handling mass transfer from the
+    film.
 
 SourceFiles
-    injectionModelList.C
+    ejectionModel.C
+    ejectionModelNew.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef injectionModelList_H
-#define injectionModelList_H
+#ifndef ejectionModel_H
+#define ejectionModel_H
 
-#include "PtrList.H"
-#include "injectionModel.H"
 #include "filmSubModelBase.H"
+#include "runTimeSelectionTables.H"
+#include "scalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -49,65 +51,106 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class injectionModelList Declaration
+                       Class ejectionModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class injectionModelList
+class ejectionModel
 :
-    public PtrList<injectionModel>,
     public filmSubModelBase
 {
     // Private Data
 
-        //- List of mass injected per patch
-        scalarField massInjected_;
+        //- Ejected mass
+        scalar ejectedMass_;
+
+
+protected:
+
+    // Protected Member Functions
+
+        //- Add to ejected mass
+        void addToEjectedMass(const scalar dMass);
+
+        //- Correct
+        void correct();
 
 
 public:
 
+    //- Runtime type information
+    TypeName("ejectionModel");
+
+
+    // Declare runtime constructor selection table
+
+         declareRunTimeSelectionTable
+         (
+             autoPtr,
+             ejectionModel,
+             dictionary,
+             (
+                surfaceFilmRegionModel& film,
+                const dictionary& dict
+             ),
+             (film, dict)
+         );
+
+
     // Constructors
 
         //- Construct null
-        injectionModelList(surfaceFilmRegionModel& film);
+        ejectionModel(surfaceFilmRegionModel& film);
 
         //- Construct from type name, dictionary and surface film model
-        injectionModelList
+        ejectionModel
         (
+            const word& modelType,
             surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        injectionModelList(const injectionModelList&) = delete;
+        ejectionModel(const ejectionModel&) = delete;
+
+
+    // Selectors
+
+        //- Return a reference to the selected ejection model
+        static autoPtr<ejectionModel> New
+        (
+            surfaceFilmRegionModel& film,
+            const dictionary& dict,
+            const word& mdoelType
+        );
 
 
     //- Destructor
-    virtual ~injectionModelList();
+    virtual ~ejectionModel();
 
 
     // Member Functions
 
-        // Evolution
+        //- Correct
+        virtual void correct
+        (
+            scalarField& availableMass,
+            scalarField& massToEject,
+            scalarField& diameterToEject
+        ) = 0;
 
-            //- Correct
-            virtual void correct
-            (
-                scalarField& availableMass,
-                volScalarField& massToInject,
-                volScalarField& diameterToInject
-            );
+        //- Return the total mass ejected
+        virtual scalar ejectedMassTotal() const;
 
-
-        // I-O
-
-            //- Provide some info
-            virtual void info(Ostream& os);
+        //- Accumulate the total mass ejected for the patches into the
+        //  scalarField provided
+        virtual void patchEjectedMassTotals(scalarField& patchMasses) const
+        {}
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const injectionModelList&) = delete;
+        void operator=(const ejectionModel&) = delete;
 };
 
 

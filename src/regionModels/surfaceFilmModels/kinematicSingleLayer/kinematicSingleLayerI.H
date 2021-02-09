@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -201,9 +201,9 @@ inline const thermoModel& kinematicSingleLayer::thermo() const
 }
 
 
-inline injectionModelList& kinematicSingleLayer::injection()
+inline ejectionModelList& kinematicSingleLayer::ejection()
 {
-    return injection_;
+    return ejection_;
 }
 
 

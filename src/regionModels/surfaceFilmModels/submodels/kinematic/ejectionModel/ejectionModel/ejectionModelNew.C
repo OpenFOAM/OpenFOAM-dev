@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "injectionModel.H"
+#include "ejectionModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -34,64 +34,30 @@ namespace regionModels
 namespace surfaceFilmModels
 {
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * * Selectors * * * * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(injectionModel, 0);
-defineRunTimeSelectionTable(injectionModel, dictionary);
-
-// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
-
-void injectionModel::addToInjectedMass(const scalar dMass)
-{
-    injectedMass_ += dMass;
-}
-
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-injectionModel::injectionModel(surfaceFilmRegionModel& film)
-:
-    filmSubModelBase(film),
-    injectedMass_(0.0)
-{}
-
-
-injectionModel::injectionModel
+autoPtr<ejectionModel> ejectionModel::New
 (
-    const word& modelType,
-    surfaceFilmRegionModel& film,
-    const dictionary& dict
+    surfaceFilmRegionModel& model,
+    const dictionary& dict,
+    const word& modelType
 )
-:
-    filmSubModelBase(film, dict, typeName, modelType),
-    injectedMass_(0.0)
-{}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-injectionModel::~injectionModel()
-{}
-
-
-// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-void injectionModel::correct()
 {
-    if (writeTime())
+    Info<< "        " << modelType << endl;
+
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(modelType);
+
+    if (cstrIter == dictionaryConstructorTablePtr_->end())
     {
-        scalar injectedMass0 = getModelProperty<scalar>("injectedMass");
-        injectedMass0 += returnReduce(injectedMass_, sumOp<scalar>());
-        setModelProperty<scalar>("injectedMass", injectedMass0);
-        injectedMass_ = 0.0;
+        FatalErrorInFunction
+            << "Unknown ejectionModel type " << modelType
+            << nl << nl << "Valid ejectionModel types are:" << nl
+            << dictionaryConstructorTablePtr_->toc()
+            << exit(FatalError);
     }
-}
 
-
-scalar injectionModel::injectedMassTotal() const
-{
-    scalar injectedMass0 = getModelProperty<scalar>("injectedMass");
-    return injectedMass0 + returnReduce(injectedMass_, sumOp<scalar>());
+    return autoPtr<ejectionModel>(cstrIter()(model, dict));
 }
 
 

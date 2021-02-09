@@ -20,13 +20,13 @@ $(KINEMATICMODELS)/force/contactAngleForces/temperatureDependent/temperatureDepe
 $(KINEMATICMODELS)/force/contactAngleForces/perturbedTemperatureDependent/perturbedTemperatureDependentContactAngleForce.C
 $(KINEMATICMODELS)/force/thermocapillaryForce/thermocapillaryForce.C
 
-$(KINEMATICMODELS)/injectionModel/injectionModel/injectionModel.C
-$(KINEMATICMODELS)/injectionModel/injectionModel/injectionModelNew.C
-$(KINEMATICMODELS)/injectionModel/injectionModelList/injectionModelList.C
-$(KINEMATICMODELS)/injectionModel/drippingInjection/drippingInjection.C
-$(KINEMATICMODELS)/injectionModel/BrunDrippingInjection/BrunDrippingInjection.C
-$(KINEMATICMODELS)/injectionModel/patchInjection/patchInjection.C
-$(KINEMATICMODELS)/injectionModel/curvatureSeparation/curvatureSeparation.C
+$(KINEMATICMODELS)/ejectionModel/ejectionModel/ejectionModel.C
+$(KINEMATICMODELS)/ejectionModel/ejectionModel/ejectionModelNew.C
+$(KINEMATICMODELS)/ejectionModel/ejectionModelList/ejectionModelList.C
+$(KINEMATICMODELS)/ejectionModel/drippingEjection/drippingEjection.C
+$(KINEMATICMODELS)/ejectionModel/BrunDrippingEjection/BrunDrippingEjection.C
+$(KINEMATICMODELS)/ejectionModel/patchEjection/patchEjection.C
+$(KINEMATICMODELS)/ejectionModel/curvatureSeparation/curvatureSeparation.C
 
 $(KINEMATICMODELS)/transferModels/transferModel/transferModel.C
 $(KINEMATICMODELS)/transferModels/transferModel/transferModelNew.C

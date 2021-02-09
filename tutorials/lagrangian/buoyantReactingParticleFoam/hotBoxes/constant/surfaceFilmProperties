@@ -65,7 +65,7 @@ forces
     }
 }
 
-injection
+ejection
 {
     curvatureSeparation
     {
@@ -75,7 +75,7 @@ injection
         );
     }
 
-    drippingInjection
+    drippingEjection
     {
         cloudName    reactingCloud1;
         deltaStable  0;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ SourceFiles
 #include "fvMatrices.H"
 #include "pimpleControl.H"
 
-#include "injectionModelList.H"
+#include "ejectionModelList.H"
 #include "transferModelList.H"
 #include "forceList.H"
 #include "filmMomentumTransportModel.H"
@@ -195,8 +195,8 @@ protected:
             //- Available mass for transfer via sub-models
             scalarField availableMass_;
 
-            //- Cloud injection
-            injectionModelList injection_;
+            //- Cloud ejection
+            ejectionModelList ejection_;
 
             //- Transfer with the continuous phase
             transferModelList transfer_;
@@ -449,8 +449,8 @@ public:
             //- Film thermo
             inline const thermoModel& thermo() const;
 
-            //- Injection
-            inline injectionModelList& injection();
+            //- Ejection
+            inline ejectionModelList& ejection();
 
             //- Transfer
             inline transferModelList& transfer();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "BrunDrippingInjection.H"
+#include "BrunDrippingEjection.H"
 #include "addToRunTimeSelectionTable.H"
 #include "kinematicSingleLayer.H"
 
@@ -38,18 +38,18 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(BrunDrippingInjection, 0);
-addToRunTimeSelectionTable(injectionModel, BrunDrippingInjection, dictionary);
+defineTypeNameAndDebug(BrunDrippingEjection, 0);
+addToRunTimeSelectionTable(ejectionModel, BrunDrippingEjection, dictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-BrunDrippingInjection::BrunDrippingInjection
+BrunDrippingEjection::BrunDrippingEjection
 (
     surfaceFilmRegionModel& film,
     const dictionary& dict
 )
 :
-    injectionModel(type(), film, dict),
+    ejectionModel(type(), film, dict),
     ubarStar_(coeffDict_.lookupOrDefault("ubarStar", 1.62208)),
     dCoeff_(coeffDict_.lookupOrDefault("dCoeff", 3.3)),
     deltaStable_(coeffDict_.lookupOrDefault("deltaStable", scalar(0))),
@@ -59,17 +59,17 @@ BrunDrippingInjection::BrunDrippingInjection
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-BrunDrippingInjection::~BrunDrippingInjection()
+BrunDrippingEjection::~BrunDrippingEjection()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void BrunDrippingInjection::correct
+void BrunDrippingEjection::correct
 (
     scalarField& availableMass,
-    scalarField& massToInject,
-    scalarField& diameterToInject
+    scalarField& massToEject,
+    scalarField& diameterToEject
 )
 {
     const kinematicSingleLayer& film =
@@ -112,11 +112,11 @@ void BrunDrippingInjection::correct
                     const scalar diam = dCoeff_*lc;
                     diameter_[celli] = diam;
 
-                    massToInject[celli] += massDrip;
+                    massToEject[celli] += massDrip;
                     availableMass[celli] -= massDrip;
 
-                    diameterToInject[celli] = diam;
-                    addToInjectedMass(massDrip);
+                    diameterToEject[celli] = diam;
+                    addToEjectedMass(massDrip);
 
                     dripping = true;
                 }
@@ -125,12 +125,12 @@ void BrunDrippingInjection::correct
 
         if (!dripping)
         {
-            diameterToInject[celli] = 0;
-            massToInject[celli] = 0;
+            diameterToEject[celli] = 0;
+            massToEject[celli] = 0;
         }
     }
 
-    injectionModel::correct();
+    ejectionModel::correct();
 }
 
 

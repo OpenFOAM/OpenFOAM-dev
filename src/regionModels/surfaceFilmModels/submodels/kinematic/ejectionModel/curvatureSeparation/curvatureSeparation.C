@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ namespace surfaceFilmModels
 defineTypeNameAndDebug(curvatureSeparation, 0);
 addToRunTimeSelectionTable
 (
-    injectionModel,
+    ejectionModel,
     curvatureSeparation,
     dictionary
 );
@@ -175,7 +175,7 @@ curvatureSeparation::curvatureSeparation
     const dictionary& dict
 )
 :
-    injectionModel(type(), film, dict),
+    ejectionModel(type(), film, dict),
     gradNHat_(fvc::grad(film.nHat())),
     deltaByR1Min_
     (
@@ -237,8 +237,8 @@ curvatureSeparation::~curvatureSeparation()
 void curvatureSeparation::correct
 (
     scalarField& availableMass,
-    scalarField& massToInject,
-    scalarField& diameterToInject
+    scalarField& massToEject,
+    scalarField& diameterToEject
 )
 {
     const kinematicSingleLayer& film =
@@ -286,12 +286,12 @@ void curvatureSeparation::correct
         }
     }
 
-    // Inject all available mass
-    massToInject = separated*availableMass;
-    diameterToInject = separated*delta;
+    // Eject all available mass
+    massToEject = separated*availableMass;
+    diameterToEject = separated*delta;
     availableMass -= separated*availableMass;
 
-    addToInjectedMass(sum(separated*availableMass));
+    addToEjectedMass(sum(separated*availableMass));
 
     if (debug && mesh.time().writeTime())
     {
@@ -313,7 +313,7 @@ void curvatureSeparation::correct
         volFnet.write();
     }
 
-    injectionModel::correct();
+    ejectionModel::correct();
 }
 
 
