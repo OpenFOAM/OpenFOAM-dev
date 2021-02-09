@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,6 +97,9 @@ public:
 
 
     // Member Functions
+
+        //- Inherit base class value methods to prevent clang warnings
+        using FieldFunction2<scalar, APIdiffCoef>::value;
 
         //- API vapour mass diffusivity function using properties from
         //  construction
