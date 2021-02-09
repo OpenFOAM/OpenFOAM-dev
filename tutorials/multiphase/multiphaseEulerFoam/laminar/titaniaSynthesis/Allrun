@@ -7,8 +7,7 @@ cd ${0%/*} || exit 1    # run from this directory
 # Set application name
 application=$(getApplication)
 
-m4 system/blockMeshDict.m4 > system/blockMeshDict
-runApplication blockMesh
+runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/titaniaSynthesis
 runApplication topoSet
 runApplication decomposePar
 runParallel    $application
