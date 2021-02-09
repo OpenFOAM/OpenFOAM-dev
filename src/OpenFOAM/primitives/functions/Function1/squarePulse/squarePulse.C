@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,26 +23,35 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Ramp.H"
+#include "squarePulse.H"
+
+// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+
+namespace Foam
+{
+namespace Function1s
+{
+    makeScalarFunction1(squarePulse);
+}
+}
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Function1Type>
-void Foam::Function1s::Ramp<Function1Type>::read(const dictionary& dict)
+void Foam::Function1s::squarePulse::read(const dictionary& dict)
 {
     start_ = dict.lookupOrDefault<scalar>("start", 0);
     duration_ = dict.lookup<scalar>("duration");
 }
 
 
-template<class Function1Type>
-Foam::Function1s::Ramp<Function1Type>::Ramp
+Foam::Function1s::squarePulse::squarePulse
 (
     const word& name,
     const dictionary& dict
 )
 :
-    FieldFunction1<scalar, Function1Type>(name)
+    FieldFunction1<scalar, squarePulse>(name)
 {
     read(dict);
 }
@@ -50,15 +59,13 @@ Foam::Function1s::Ramp<Function1Type>::Ramp
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-template<class Function1Type>
-Foam::Function1s::Ramp<Function1Type>::~Ramp()
+Foam::Function1s::squarePulse::~squarePulse()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Function1Type>
-void Foam::Function1s::Ramp<Function1Type>::write(Ostream& os) const
+void Foam::Function1s::squarePulse::write(Ostream& os) const
 {
     writeEntry(os, "start", start_);
     writeEntry(os, "duration", duration_);

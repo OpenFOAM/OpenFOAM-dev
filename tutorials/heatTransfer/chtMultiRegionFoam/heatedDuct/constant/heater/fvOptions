@@ -21,9 +21,8 @@ options
     {
         type            semiImplicitSource;
 
-        timeStart       0;
-        duration        1e6;
         selectionMode   all;
+
         volumeMode      specific;
 
         sources

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,45 +23,24 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "Ramp.H"
-
-// * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
-
-template<class Function1Type>
-void Foam::Function1s::Ramp<Function1Type>::read(const dictionary& dict)
-{
-    start_ = dict.lookupOrDefault<scalar>("start", 0);
-    duration_ = dict.lookup<scalar>("duration");
-}
-
-
-template<class Function1Type>
-Foam::Function1s::Ramp<Function1Type>::Ramp
-(
-    const word& name,
-    const dictionary& dict
-)
-:
-    FieldFunction1<scalar, Function1Type>(name)
-{
-    read(dict);
-}
-
-
-// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
-
-template<class Function1Type>
-Foam::Function1s::Ramp<Function1Type>::~Ramp()
-{}
-
+#include "squarePulse.H"
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Function1Type>
-void Foam::Function1s::Ramp<Function1Type>::write(Ostream& os) const
+inline Foam::scalar Foam::Function1s::squarePulse::value(const scalar t) const
 {
-    writeEntry(os, "start", start_);
-    writeEntry(os, "duration", duration_);
+    return start_ < t && t < start_ + duration_;
+}
+
+
+inline Foam::scalar Foam::Function1s::squarePulse::integral
+(
+    const scalar t1,
+    const scalar t2
+) const
+{
+    NotImplemented;
+    return NaN;
 }
 
 

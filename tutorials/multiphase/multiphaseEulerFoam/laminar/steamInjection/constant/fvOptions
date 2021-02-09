@@ -21,9 +21,6 @@ options
     {
         type            massSource;
 
-        timeStart       1;
-        duration        500;
-
         selectionMode   points;
         points
         (

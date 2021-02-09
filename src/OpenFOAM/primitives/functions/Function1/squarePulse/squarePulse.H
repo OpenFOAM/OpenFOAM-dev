@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,16 +22,16 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::Function1s::Ramp
+    Foam::Function1s::squarePulse
 
 Description
-    Ramp function base class for the set of scalar functions starting from 0 and
-    increasing monotonically to 1 from \c start over the \c duration and
-    remaining at 1 thereafter.
+    Square pulse function. Takes a value of 0 before \c start, then rises
+    instantaneously to 1, remains at 1 for \c duration, then drops
+    instantaneously back to 0.
 
     Usage:
     \verbatim
-        <name> <rampFunction>;
+        <name> squarePulse;
         <name>Coeffs
         {
             start     10;
@@ -42,7 +42,7 @@ Description
     \verbatim
         <name>
         {
-            type      <rampFunction>;
+            type      squarePulse;
             start     10;
             duration  20;
         }
@@ -59,12 +59,12 @@ See also
     Foam::Function1
 
 SourceFiles
-    Ramp.C
+    squarePulse.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Ramp_H
-#define Ramp_H
+#ifndef squarePulse_H
+#define squarePulse_H
 
 #include "Function1.H"
 
@@ -76,43 +76,20 @@ namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class Ramp Declaration
+                            Class squarePulse Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Function1Type>
-class Ramp
+class squarePulse
 :
-    public FieldFunction1<scalar, Function1Type>
+    public FieldFunction1<scalar, squarePulse>
 {
-protected:
-
-    // Protected data
+    // Private data
 
         //- Start-time of the ramp function
         scalar start_;
 
         //- Duration of the ramp function
         scalar duration_;
-
-        //- Return the end-time of the ramp function
-        inline scalar end() const
-        {
-            return start_ + duration_;
-        }
-
-        //- Simple linear ramp function which form the basis of many more
-        //  complex ramp functions
-        inline scalar linearRamp(const scalar t) const
-        {
-            return max(min((t - start_)/duration_, 1), 0);
-        }
-
-        //- The gradient of the linear ramp within the bounds of the ramp
-        //  duration
-        inline scalar dLinearRampDt() const
-        {
-            return 1/duration_;
-        }
 
 
 private:
@@ -125,10 +102,14 @@ private:
 
 public:
 
+    // Runtime type information
+    TypeName("squarePulse");
+
+
     // Constructors
 
         //- Construct from name and dictionary
-        Ramp
+        squarePulse
         (
             const word& name,
             const dictionary& dict
@@ -136,13 +117,20 @@ public:
 
 
     //- Destructor
-    virtual ~Ramp();
+    virtual ~squarePulse();
 
 
     // Member Functions
 
         //- Return value for time t
-        virtual scalar value(const scalar t) const = 0;
+        virtual inline scalar value(const scalar t) const;
+
+        //- Return the integral between times t1 and t2
+        virtual inline scalar integral
+        (
+            const scalar t1,
+            const scalar t2
+        ) const;
 
         //- Write data to dictionary stream
         virtual void write(Ostream& os) const;
@@ -151,7 +139,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const Ramp<Function1Type>&) = delete;
+        void operator=(const squarePulse&) = delete;
 };
 
 
@@ -163,7 +151,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "Ramp.C"
+    #include "squarePulseI.H"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

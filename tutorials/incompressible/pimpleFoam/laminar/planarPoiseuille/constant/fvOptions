@@ -19,8 +19,6 @@ momentumSource
 {
     type            semiImplicitSource;
 
-    timeStart       0.0;
-    duration        1000;
     selectionMode   all;
 
     volumeMode      specific;

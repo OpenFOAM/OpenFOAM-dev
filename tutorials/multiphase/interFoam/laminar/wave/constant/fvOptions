@@ -32,9 +32,6 @@ option1
 
     value           (2 0 0);
     lambda          0.5;
-
-    timeStart       0;
-    duration        1e6;
 }
 
 

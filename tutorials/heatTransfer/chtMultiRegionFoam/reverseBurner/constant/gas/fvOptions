@@ -15,6 +15,32 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+ignition
+{
+    type            semiImplicitSource;
+
+    selectionMode   cellSet;
+    cellSet         ignition;
+
+    volumeMode      specific;
+
+    sources
+    {
+        h
+        {
+            explicit
+            {
+                type        scale;
+                scale       squarePulse;
+                start       0;
+                duration    1;
+                value       5e7; // kg/m/s^3
+            }
+            implicit    0;
+        }
+    }
+}
+
 radiation
 {
     type    radiation;
