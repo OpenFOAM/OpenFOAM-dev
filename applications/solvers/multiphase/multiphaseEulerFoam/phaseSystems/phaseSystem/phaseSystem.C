@@ -764,7 +764,7 @@ void Foam::phaseSystem::correctContinuityError()
             )
         );
 
-        if (fvOptions().addsToField(rho.name()))
+        if (fvOptions().addsSupToField(rho.name()))
         {
             source += fvOptions()(alpha, rho)&rho;
         }

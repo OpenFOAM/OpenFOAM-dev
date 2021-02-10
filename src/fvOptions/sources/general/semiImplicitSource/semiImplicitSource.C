@@ -225,7 +225,7 @@ Foam::fv::semiImplicitSource::~semiImplicitSource()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::semiImplicitSource::addedToFields() const
+Foam::wordList Foam::fv::semiImplicitSource::addSupFields() const
 {
     return fieldSu_.toc();
 }

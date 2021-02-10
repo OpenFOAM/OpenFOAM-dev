@@ -25,6 +25,7 @@ License
 
 #include "VoFSolidificationMeltingSource.H"
 #include "twoPhaseMixtureThermo.H"
+#include "fvcDdt.H"
 #include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -159,19 +160,9 @@ Foam::fv::VoFSolidificationMeltingSource::VoFSolidificationMeltingSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::VoFSolidificationMeltingSource::addedToFields() const
+Foam::wordList Foam::fv::VoFSolidificationMeltingSource::addSupFields() const
 {
     return wordList({"U", "T"});
-}
-
-
-void Foam::fv::VoFSolidificationMeltingSource::addSup
-(
-    fvMatrix<scalar>& eqn,
-    const word& fieldName
-) const
-{
-    apply(geometricOneField(), eqn);
 }
 
 
@@ -182,12 +173,37 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
     const word& fieldName
 ) const
 {
-    apply(rho, eqn);
+    if (debug)
+    {
+        Info<< type() << ": applying source to " << eqn.psi().name() << endl;
+    }
+
+    update();
+
+    const twoPhaseMixtureThermo& thermo
+    (
+        mesh_.lookupObject<twoPhaseMixtureThermo>
+        (
+            twoPhaseMixtureThermo::dictName
+        )
+    );
+
+    const volScalarField CpVoF(thermo.thermo1().Cp());
+
+    if (eqn.psi().dimensions() == dimTemperature)
+    {
+        eqn += L_/CpVoF*(fvc::ddt(rho, alphaSolid_));
+    }
+    else
+    {
+        eqn += L_*(fvc::ddt(rho, alphaSolid_));
+    }
 }
 
 
 void Foam::fv::VoFSolidificationMeltingSource::addSup
 (
+    const volScalarField& rho,
     fvMatrix<vector>& eqn,
     const word& fieldName
 ) const
@@ -212,20 +228,8 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
 
         const scalar S = Cu_*sqr(1 - alphaFluid)/(pow3(alphaFluid) + q_);
 
-        Sp[celli] -= Vc*S;
+        Sp[celli] -= Vc*rho[celli]*S;
     }
-}
-
-
-void Foam::fv::VoFSolidificationMeltingSource::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{
-    // Momentum source uses a Boussinesq approximation - redirect
-    addSup(eqn, fieldName);
 }
 
 

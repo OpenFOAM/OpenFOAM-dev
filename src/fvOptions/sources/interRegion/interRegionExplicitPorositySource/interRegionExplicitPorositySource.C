@@ -135,7 +135,7 @@ Foam::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::wordList
-Foam::fv::interRegionExplicitPorositySource::addedToFields() const
+Foam::fv::interRegionExplicitPorositySource::addSupFields() const
 {
     return wordList(1, UName_);
 

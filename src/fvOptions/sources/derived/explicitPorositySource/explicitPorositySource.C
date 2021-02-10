@@ -93,7 +93,7 @@ Foam::fv::explicitPorositySource::explicitPorositySource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::explicitPorositySource::addedToFields() const
+Foam::wordList Foam::fv::explicitPorositySource::addSupFields() const
 {
     return UNames_;
 }

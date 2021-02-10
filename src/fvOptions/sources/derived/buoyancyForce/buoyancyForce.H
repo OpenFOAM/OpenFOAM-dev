@@ -110,7 +110,7 @@ public:
 
             //- Return the list of fields for which the option adds source term
             //  to the transport equation
-            virtual wordList addedToFields() const;
+            virtual wordList addSupFields() const;
 
 
         // Evaluate

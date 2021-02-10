@@ -243,7 +243,7 @@ Foam::fv::massSource::massSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::massSource::addsToField(const word& fieldName) const
+bool Foam::fv::massSource::addsSupToField(const word& fieldName) const
 {
     const bool isThisPhase = IOobject::group(fieldName) == phaseName_;
 
@@ -266,7 +266,7 @@ bool Foam::fv::massSource::addsToField(const word& fieldName) const
 }
 
 
-Foam::wordList Foam::fv::massSource::addedToFields() const
+Foam::wordList Foam::fv::massSource::addSupFields() const
 {
     wordList fieldNames = fieldValues_.toc();
 

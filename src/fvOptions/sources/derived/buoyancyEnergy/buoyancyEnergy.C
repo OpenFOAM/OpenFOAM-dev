@@ -81,7 +81,7 @@ Foam::fv::buoyancyEnergy::buoyancyEnergy
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::buoyancyEnergy::addedToFields() const
+Foam::wordList Foam::fv::buoyancyEnergy::addSupFields() const
 {
     const basicThermo& thermo =
         mesh_.lookupObject<basicThermo>

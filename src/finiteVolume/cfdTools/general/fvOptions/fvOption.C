@@ -147,7 +147,7 @@ Foam::fv::option::~option()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::option::addedToFields() const
+Foam::wordList Foam::fv::option::addSupFields() const
 {
     return wordList::null();
 }
@@ -165,9 +165,9 @@ Foam::wordList Foam::fv::option::correctedFields() const
 }
 
 
-bool Foam::fv::option::addsToField(const word& fieldName) const
+bool Foam::fv::option::addsSupToField(const word& fieldName) const
 {
-    return findIndex(addedToFields(), fieldName) != -1;
+    return findIndex(addSupFields(), fieldName) != -1;
 }
 
 

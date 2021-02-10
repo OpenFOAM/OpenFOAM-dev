@@ -50,7 +50,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::optionList::source
     {
         const option& source = this->operator[](i);
 
-        if (source.addsToField(fieldName))
+        if (source.addsSupToField(fieldName))
         {
             addedToFields_[i].insert(fieldName);
 

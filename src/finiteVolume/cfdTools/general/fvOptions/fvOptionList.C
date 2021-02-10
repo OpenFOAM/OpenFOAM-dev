@@ -80,7 +80,7 @@ void Foam::fv::optionList::checkApplied() const
         {
             const option& source = this->operator[](i);
 
-            wordHashSet notAddedToFields(source.addedToFields());
+            wordHashSet notAddedToFields(source.addSupFields());
             notAddedToFields -= addedToFields_[i];
 
             forAllConstIter(wordHashSet, notAddedToFields, iter)
@@ -189,11 +189,11 @@ void Foam::fv::optionList::reset(const dictionary& dict)
 }
 
 
-bool Foam::fv::optionList::addsToField(const word& fieldName) const
+bool Foam::fv::optionList::addsSupToField(const word& fieldName) const
 {
     forAll(*this, i)
     {
-        if (this->operator[](i).addsToField(fieldName))
+        if (this->operator[](i).addsSupToField(fieldName))
         {
             return true;
         }

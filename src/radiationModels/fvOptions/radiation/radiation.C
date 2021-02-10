@@ -69,7 +69,7 @@ Foam::fv::radiation::radiation
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::radiation::addedToFields() const
+Foam::wordList Foam::fv::radiation::addSupFields() const
 {
     const basicThermo& thermo =
         mesh_.lookupObject<basicThermo>(basicThermo::dictName);

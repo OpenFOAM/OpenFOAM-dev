@@ -146,7 +146,7 @@ public:
 
             //- Return true if an option adds a source term to the given
             //  field's transport equation
-            virtual bool addsToField(const word& fieldName) const;
+            virtual bool addsSupToField(const word& fieldName) const;
 
             //- Return true if an option constrains the given field
             virtual bool constrainsField(const word& fieldName) const;

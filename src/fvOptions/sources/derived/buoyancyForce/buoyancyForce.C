@@ -91,7 +91,7 @@ Foam::fv::buoyancyForce::buoyancyForce
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::buoyancyForce::addedToFields() const
+Foam::wordList Foam::fv::buoyancyForce::addSupFields() const
 {
     return wordList(1, UName_);
 }

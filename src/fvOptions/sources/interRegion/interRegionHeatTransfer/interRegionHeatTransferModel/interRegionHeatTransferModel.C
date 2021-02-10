@@ -157,7 +157,7 @@ Foam::fv::interRegionHeatTransferModel::~interRegionHeatTransferModel()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::interRegionHeatTransferModel::addedToFields() const
+Foam::wordList Foam::fv::interRegionHeatTransferModel::addSupFields() const
 {
     const basicThermo& thermo =
         mesh_.lookupObject<basicThermo>(basicThermo::dictName);

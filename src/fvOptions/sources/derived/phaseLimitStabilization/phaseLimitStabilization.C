@@ -96,7 +96,7 @@ Foam::fv::phaseLimitStabilization::phaseLimitStabilization
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::phaseLimitStabilization::addedToFields() const
+Foam::wordList Foam::fv::phaseLimitStabilization::addSupFields() const
 {
     return wordList(1, fieldName_);
 }

@@ -197,7 +197,7 @@ Foam::fv::effectivenessHeatExchangerSource::effectivenessHeatExchangerSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::effectivenessHeatExchangerSource::addedToFields() const
+Foam::wordList Foam::fv::effectivenessHeatExchangerSource::addSupFields() const
 {
     const basicThermo& thermo =
         mesh_.lookupObject<basicThermo>(basicThermo::dictName);

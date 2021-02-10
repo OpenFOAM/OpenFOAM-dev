@@ -168,24 +168,7 @@ public:
 
             //- Return the list of fields for which the option adds source term
             //  to the transport equation
-            virtual wordList addedToFields() const;
-
-
-        // Add explicit and implicit contributions
-
-            //- Add explicit contribution to enthalpy equation
-            virtual void addSup
-            (
-                fvMatrix<scalar>& eqn,
-                const word& fieldName
-            ) const;
-
-            //- Add implicit contribution to momentum equation
-            virtual void addSup
-            (
-                fvMatrix<vector>& eqn,
-                const word& fieldName
-            ) const;
+            virtual wordList addSupFields() const;
 
 
         // Add explicit and implicit contributions to compressible equation
@@ -224,12 +207,6 @@ public:
 
 } // End namespace fv
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "VoFSolidificationMeltingSourceTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

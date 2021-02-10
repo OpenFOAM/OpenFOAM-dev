@@ -541,7 +541,7 @@ Foam::fv::rotorDiskSource::~rotorDiskSource()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::rotorDiskSource::addedToFields() const
+Foam::wordList Foam::fv::rotorDiskSource::addSupFields() const
 {
     return wordList(1, UName_);
 }

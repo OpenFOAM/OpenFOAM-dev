@@ -129,7 +129,7 @@ Foam::fv::solidEquilibriumEnergySource::~solidEquilibriumEnergySource()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::solidEquilibriumEnergySource::addedToFields() const
+Foam::wordList Foam::fv::solidEquilibriumEnergySource::addSupFields() const
 {
     const basicThermo& thermo =
         mesh_.lookupObject<basicThermo>

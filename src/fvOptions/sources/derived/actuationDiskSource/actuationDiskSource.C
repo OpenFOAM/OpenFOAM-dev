@@ -113,7 +113,7 @@ Foam::fv::actuationDiskSource::actuationDiskSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::actuationDiskSource::addedToFields() const
+Foam::wordList Foam::fv::actuationDiskSource::addSupFields() const
 {
     return wordList(1, UName_);
 }

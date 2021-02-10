@@ -247,7 +247,7 @@ Foam::fv::codedSource::codedSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::codedSource::addedToFields() const
+Foam::wordList Foam::fv::codedSource::addSupFields() const
 {
     return wordList(1, fieldName_);
 }

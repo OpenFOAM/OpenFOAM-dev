@@ -293,13 +293,13 @@ Foam::fv::volumeFractionSource::~volumeFractionSource()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::volumeFractionSource::addsToField(const word& fieldName) const
+bool Foam::fv::volumeFractionSource::addsSupToField(const word& fieldName) const
 {
     return true;
 }
 
 
-Foam::wordList Foam::fv::volumeFractionSource::addedToFields() const
+Foam::wordList Foam::fv::volumeFractionSource::addSupFields() const
 {
     return wordList();
 }

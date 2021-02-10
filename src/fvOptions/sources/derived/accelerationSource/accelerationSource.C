@@ -71,7 +71,7 @@ Foam::fv::accelerationSource::accelerationSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::accelerationSource::addedToFields() const
+Foam::wordList Foam::fv::accelerationSource::addSupFields() const
 {
     return wordList(1, UName_);
 }

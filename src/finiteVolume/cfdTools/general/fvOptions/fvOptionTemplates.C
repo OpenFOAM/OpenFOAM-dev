@@ -70,7 +70,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::option::source
     );
     fvMatrix<Type>& mtx = tmtx.ref();
 
-    if (addsToField(fieldName))
+    if (addsSupToField(fieldName))
     {
         addSup(alphaRhos ..., mtx, -1);
     }

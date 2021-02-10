@@ -261,7 +261,7 @@ Foam::fv::solidificationMeltingSource::solidificationMeltingSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::solidificationMeltingSource::addedToFields() const
+Foam::wordList Foam::fv::solidificationMeltingSource::addSupFields() const
 {
     switch (mode_)
     {

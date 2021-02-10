@@ -192,7 +192,7 @@ Foam::fv::damping::damping
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::damping::addedToFields() const
+Foam::wordList Foam::fv::damping::addSupFields() const
 {
     return wordList(1, UName_);
 }

@@ -211,11 +211,11 @@ public:
 
             //- Return true if the option adds a source term to the given
             //  field's transport equation
-            virtual bool addsToField(const word& fieldName) const;
+            virtual bool addsSupToField(const word& fieldName) const;
 
             //- Return the list of fields for which the option adds source term
             //  to the transport equation
-            virtual wordList addedToFields() const;
+            virtual wordList addSupFields() const;
 
 
         // Sources

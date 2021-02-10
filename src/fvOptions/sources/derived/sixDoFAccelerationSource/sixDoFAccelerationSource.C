@@ -149,7 +149,7 @@ Foam::fv::sixDoFAccelerationSource::sixDoFAccelerationSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::sixDoFAccelerationSource::addedToFields() const
+Foam::wordList Foam::fv::sixDoFAccelerationSource::addSupFields() const
 {
     return wordList(1, UName_);
 }

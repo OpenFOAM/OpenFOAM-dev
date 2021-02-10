@@ -121,7 +121,7 @@ Foam::fv::meanVelocityForce::meanVelocityForce
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::meanVelocityForce::addedToFields() const
+Foam::wordList Foam::fv::meanVelocityForce::addSupFields() const
 {
     return wordList(1, UName_);
 }
