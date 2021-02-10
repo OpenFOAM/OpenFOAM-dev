@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,6 +51,14 @@ inline Foam::ArrheniusReactionRate::ArrheniusReactionRate
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+inline void Foam::ArrheniusReactionRate::preEvaluate() const
+{}
+
+
+inline void Foam::ArrheniusReactionRate::postEvaluate() const
+{}
+
 
 inline Foam::scalar Foam::ArrheniusReactionRate::operator()
 (

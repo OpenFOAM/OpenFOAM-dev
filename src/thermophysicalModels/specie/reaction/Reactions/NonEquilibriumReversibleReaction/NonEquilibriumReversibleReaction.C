@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,6 +88,24 @@ NonEquilibriumReversibleReaction
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class ReactionThermo, class ReactionRate>
+void Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::
+preEvaluate() const
+{
+    fk_.preEvaluate();
+    rk_.preEvaluate();
+}
+
+
+template<class ReactionThermo, class ReactionRate>
+void Foam::NonEquilibriumReversibleReaction<ReactionThermo, ReactionRate>::
+postEvaluate() const
+{
+    fk_.postEvaluate();
+    rk_.postEvaluate();
+}
+
 
 template<class ReactionThermo, class ReactionRate>
 Foam::scalar

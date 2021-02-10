@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -142,6 +142,15 @@ public:
 
 
     // Member Functions
+
+        // Hooks
+
+            //- Pre-evaluation hook
+            virtual void preEvaluate() const;
+
+            //- Post-evaluation hook
+            virtual void postEvaluate() const;
+
 
         // NonEquilibriumReversibleReaction rate coefficients
 

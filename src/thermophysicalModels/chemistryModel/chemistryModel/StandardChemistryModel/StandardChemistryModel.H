@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,6 +70,40 @@ class StandardChemistryModel
 
 
 protected:
+
+    // Protected classes
+
+        //- Class to define scope of reaction evaluation. Runs pre-evaluate
+        //  hook on all reactions on construction and post-evaluate on
+        //  destruction.
+        class reactionEvaluationScope
+        {
+            const StandardChemistryModel<ThermoType>& chemistry_;
+
+        public:
+
+            reactionEvaluationScope
+            (
+                const StandardChemistryModel<ThermoType>& chemistry
+            )
+            :
+                chemistry_(chemistry)
+            {
+                forAll(chemistry_.reactions_, i)
+                {
+                    chemistry_.reactions_[i].preEvaluate();
+                }
+            }
+
+            ~reactionEvaluationScope()
+            {
+                forAll(chemistry_.reactions_, i)
+                {
+                    chemistry_.reactions_[i].postEvaluate();
+                }
+            }
+        };
+
 
     // Protected data
 

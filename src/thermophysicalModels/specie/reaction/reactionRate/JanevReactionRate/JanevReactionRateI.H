@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,6 +54,14 @@ inline Foam::JanevReactionRate::JanevReactionRate
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+inline void Foam::JanevReactionRate::preEvaluate() const
+{}
+
+
+inline void Foam::JanevReactionRate::postEvaluate() const
+{}
+
 
 inline Foam::scalar Foam::JanevReactionRate::operator()
 (
