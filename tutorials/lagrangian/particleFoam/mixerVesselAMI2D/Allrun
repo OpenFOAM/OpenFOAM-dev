@@ -4,8 +4,8 @@ cd ${0%/*} || exit 1 # Run from this directory
 
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-m4 < system/blockMeshDict.m4 > system/blockMeshDict
-
-runApplication blockMesh
+runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/mixerVessel2D
+runApplication createBaffles -overwrite
+runApplication mergeOrSplitBaffles -split -overwrite
 
 runApplication $(getApplication)

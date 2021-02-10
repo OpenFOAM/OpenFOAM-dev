@@ -1,0 +1,351 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1.0;
+
+hub            0.02;
+rotorBlades    0.05;
+rotorRegion    0.06;
+statorBlades   0.07;
+stator          0.1;
+halfDepth     0.005;
+angle            45;
+
+nRadialEndsCells 12;
+nRadialMidsCells  4;
+nCircCells       12;
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+vertices #codeStream
+{
+    codeInclude
+    #{
+        #include "pointField.H"
+        #include "transformField.H"
+    #};
+
+    code
+    #{
+        const pointField initPoints
+        ({
+            point(-$stator,       0, -$halfDepth),
+            point(-$stator,       0, -$halfDepth),
+            point(-$statorBlades, 0, -$halfDepth),
+            point(-$rotorRegion,  0, -$halfDepth),
+            point(-$rotorBlades,  0, -$halfDepth),
+            point(-$hub,          0, -$halfDepth),
+            point(-$hub,          0, -$halfDepth),
+        });
+
+        pointField points;
+
+        // Rotate points around z-axis and append
+        for (label i = 0; i < 8; i++)
+        {
+            points.append(transform(Rz(-degToRad(i*$angle)), initPoints));
+        }
+
+        // Duplicate z points
+        points.append(points + vector(0, 0, 2*$halfDepth));
+
+        os  << points;
+    #};
+};
+
+hubTankBlocks ($nCircCells $nRadialEndsCells 1) simpleGrading (1 1 1);
+middleBocks   ($nCircCells $nRadialMidsCells 1) simpleGrading (1 1 1);
+
+blocks
+(
+    hex (0 8 9 2 56 64 65 58) stator $hubTankBlocks
+    hex (2 9 10 3 58 65 66 59) stator $middleBocks
+    hex (3 10 11 4 59 66 67 60) rotor $middleBocks
+    hex (4 11 12 5 60 67 68 61) rotor $hubTankBlocks
+
+    hex (7 14 16 9 63 70 72 65) stator $hubTankBlocks
+    hex (9 16 17 10 65 72 73 66) stator $middleBocks
+    hex (10 17 18 11 66 73 74 67) rotor $middleBocks
+    hex (11 18 20 12 67 74 76 68) rotor $hubTankBlocks
+
+    hex (14 22 23 16 70 78 79 72) stator $hubTankBlocks
+    hex (16 23 24 17 72 79 80 73) stator $middleBocks
+    hex (17 24 25 18 73 80 81 74) rotor $middleBocks
+    hex (18 25 26 19 74 81 82 75) rotor $hubTankBlocks
+
+    hex (21 28 30 23 77 84 86 79) stator $hubTankBlocks
+    hex (23 30 31 24 79 86 87 80) stator $middleBocks
+    hex (24 31 32 25 80 87 88 81) rotor $middleBocks
+    hex (25 32 34 26 81 88 90 82) rotor $hubTankBlocks
+
+    hex (28 36 37 30 84 92 93 86) stator $hubTankBlocks
+    hex (30 37 38 31 86 93 94 87) stator $middleBocks
+    hex (31 38 39 32 87 94 95 88) rotor $middleBocks
+    hex (32 39 40 33 88 95 96 89) rotor $hubTankBlocks
+
+    hex (35 42 44 37 91 98 100 93) stator $hubTankBlocks
+    hex (37 44 45 38 93 100 101 94) stator $middleBocks
+    hex (38 45 46 39 94 101 102 95) rotor $middleBocks
+    hex (39 46 48 40 95 102 104 96) rotor $hubTankBlocks
+
+    hex (42 50 51 44 98 106 107 100) stator $hubTankBlocks
+    hex (44 51 52 45 100 107 108 101) stator $middleBocks
+    hex (45 52 53 46 101 108 109 102) rotor $middleBocks
+    hex (46 53 54 47 102 109 110 103) rotor $hubTankBlocks
+
+    hex (49 0 2 51 105 56 58 107) stator $hubTankBlocks
+    hex (51 2 3 52 107 58 59 108) stator $middleBocks
+    hex (52 3 4 53 108 59 60 109) rotor $middleBocks
+    hex (53 4 6 54 109 60 62 110) rotor $hubTankBlocks
+);
+
+circle $angle (0 0 1);
+
+edges
+(
+    arc 0 8 $circle
+    arc 7 14 $circle
+    arc 14 22 $circle
+    arc 21 28 $circle
+    arc 28 36 $circle
+    arc 35 42 $circle
+    arc 42 50 $circle
+    arc 49 0 $circle
+    arc 56 64 $circle
+    arc 63 70 $circle
+    arc 70 78 $circle
+    arc 77 84 $circle
+    arc 84 92 $circle
+    arc 91 98 $circle
+    arc 98 106 $circle
+    arc 105 56 $circle
+
+    arc 2 9 $circle
+    arc 9 16 $circle
+    arc 16 23 $circle
+    arc 23 30 $circle
+    arc 30 37 $circle
+    arc 37 44 $circle
+    arc 44 51 $circle
+    arc 51 2 $circle
+    arc 58 65 $circle
+    arc 65 72 $circle
+    arc 72 79 $circle
+    arc 79 86 $circle
+    arc 86 93 $circle
+    arc 93 100 $circle
+    arc 100 107 $circle
+    arc 107 58 $circle
+
+    arc 3 10 $circle
+    arc 10 17 $circle
+    arc 17 24 $circle
+    arc 24 31 $circle
+    arc 31 38 $circle
+    arc 38 45 $circle
+    arc 45 52 $circle
+    arc 52 3 $circle
+    arc 59 66 $circle
+    arc 66 73 $circle
+    arc 73 80 $circle
+    arc 80 87 $circle
+    arc 87 94 $circle
+    arc 94 101 $circle
+    arc 101 108 $circle
+    arc 108 59 $circle
+
+    arc 4 11 $circle
+    arc 11 18 $circle
+    arc 18 25 $circle
+    arc 25 32 $circle
+    arc 32 39 $circle
+    arc 39 46 $circle
+    arc 46 53 $circle
+    arc 53 4 $circle
+    arc 60 67 $circle
+    arc 67 74 $circle
+    arc 74 81 $circle
+    arc 81 88 $circle
+    arc 88 95 $circle
+    arc 95 102 $circle
+    arc 102 109 $circle
+    arc 109 60 $circle
+
+    arc 5 12 $circle
+    arc 12 20 $circle
+    arc 19 26 $circle
+    arc 26 34 $circle
+    arc 33 40 $circle
+    arc 40 48 $circle
+    arc 47 54 $circle
+    arc 54 6 $circle
+    arc 61 68 $circle
+    arc 68 76 $circle
+    arc 75 82 $circle
+    arc 82 90 $circle
+    arc 89 96 $circle
+    arc 96 104 $circle
+    arc 103 110 $circle
+    arc 110 62 $circle
+);
+
+defaultPatch
+{
+    name walls;
+    type wall;
+}
+
+boundary
+(
+    rotor
+    {
+        type wall;
+        faces
+        (
+            (5 61 68 12)
+            (12 68 76 20)
+            (19 75 82 26)
+            (26 82 90 34)
+            (33 89 96 40)
+            (40 96 104 48)
+            (47 103 110 54)
+            (54 110 62 6)
+
+            (4 60 62 6)
+            (18 74 76 20)
+            (32 88 90 34)
+            (46 102 104 48)
+            (4 5 61 60)
+            (18 19 75 74)
+            (32 33 89 88)
+            (46 47 103 102)
+        );
+    }
+    stator
+    {
+        type wall;
+        faces
+        (
+            (0 8 64 56)
+            (7 14 70 63)
+            (14 22 78 70)
+            (21 28 84 77)
+            (28 36 92 84)
+            (35 42 98 91)
+            (42 50 106 98)
+            (49 0 56 105)
+
+            (8 64 65 9)
+            (22 78 79 23)
+            (36 92 93 37)
+            (50 106 107 51)
+            (7 9 65 63)
+            (21 23 79 77)
+            (35 37 93 91)
+            (49 51 107 105)
+        );
+    }
+    front
+    {
+        type empty;
+        faces
+        (
+            (56 58 65 64)
+            (63 65 72 70)
+            (70 72 79 78)
+            (77 79 86 84)
+            (84 86 93 92)
+            (91 93 100 98)
+            (98 100 107 106)
+            (105 107 58 56)
+
+            (58 59 66 65)
+            (65 66 73 72)
+            (72 73 80 79)
+            (79 80 87 86)
+            (86 87 94 93)
+            (93 94 101 100)
+            (100 101 108 107)
+            (107 108 59 58)
+
+            (59 60 67 66)
+            (66 67 74 73)
+            (73 74 81 80)
+            (80 81 88 87)
+            (87 88 95 94)
+            (94 95 102 101)
+            (101 102 109 108)
+            (108 109 60 59)
+
+            (60 61 68 67)
+            (67 68 76 74)
+            (74 75 82 81)
+            (81 82 90 88)
+            (88 89 96 95)
+            (95 96 104 102)
+            (102 103 110 109)
+            (109 110 62 60)
+        );
+    }
+    back
+    {
+        type empty;
+        faces
+        (
+            (0 2 9 8)
+            (7 9 16 14)
+            (14 16 23 22)
+            (21 23 30 28)
+            (28 30 37 36)
+            (35 37 44 42)
+            (42 44 51 50)
+            (49 51 2 0)
+
+            (2 3 10 9)
+            (9 10 17 16)
+            (16 17 24 23)
+            (23 24 31 30)
+            (30 31 38 37)
+            (37 38 45 44)
+            (44 45 52 51)
+            (51 52 3 2)
+
+            (3 4 11 10)
+            (10 11 18 17)
+            (17 18 25 24)
+            (24 25 32 31)
+            (31 32 39 38)
+            (38 39 46 45)
+            (45 46 53 52)
+            (52 53 4 3)
+
+            (4 5 12 11)
+            (11 12 20 18)
+            (18 19 26 25)
+            (25 26 34 32)
+            (32 33 40 39)
+            (39 40 48 46)
+            (46 47 54 53)
+            (53 54 6 4)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

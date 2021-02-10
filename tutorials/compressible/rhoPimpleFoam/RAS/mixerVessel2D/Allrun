@@ -5,5 +5,5 @@
 
 application=$(getApplication)
 
-./makeMesh
+runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/mixerVessel2D
 runApplication $application

@@ -6,7 +6,10 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 application=$(getApplication)
 
-./makeMesh
+runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/mixerVessel2D
+runApplication createBaffles -overwrite
+runApplication mergeOrSplitBaffles -split -overwrite
+runApplication topoSet
 
 #runApplication $application
 runApplication decomposePar
