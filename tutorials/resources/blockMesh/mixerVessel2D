@@ -14,19 +14,19 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-convertToMeters 1.0;
+convertToMeters   1.0;
 
-hub            0.02;
-rotorBlades    0.05;
-rotorRegion    0.06;
-statorBlades   0.07;
-stator          0.1;
-halfDepth     0.005;
-angle            45;
+hub               0.02;
+rotorBlades       0.05;
+rotorRegion       0.06;
+statorBlades      0.07;
+stator            0.1;
+halfDepth         0.005;
+angle             45;
 
-nRadialEndsCells 12;
+nRadialEndsCells  12;
 nRadialMidsCells  4;
-nCircCells       12;
+nCircCells        12;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -116,90 +116,90 @@ circle $angle (0 0 1);
 
 edges
 (
-    arc 0 8 $circle
-    arc 7 14 $circle
-    arc 14 22 $circle
-    arc 21 28 $circle
-    arc 28 36 $circle
-    arc 35 42 $circle
-    arc 42 50 $circle
-    arc 49 0 $circle
-    arc 56 64 $circle
-    arc 63 70 $circle
-    arc 70 78 $circle
-    arc 77 84 $circle
-    arc 84 92 $circle
-    arc 91 98 $circle
-    arc 98 106 $circle
-    arc 105 56 $circle
+    arc 0 8     $circle
+    arc 7 14    $circle
+    arc 14 22   $circle
+    arc 21 28   $circle
+    arc 28 36   $circle
+    arc 35 42   $circle
+    arc 42 50   $circle
+    arc 49 0    $circle
+    arc 56 64   $circle
+    arc 63 70   $circle
+    arc 70 78   $circle
+    arc 77 84   $circle
+    arc 84 92   $circle
+    arc 91 98   $circle
+    arc 98 106  $circle
+    arc 105 56  $circle
 
-    arc 2 9 $circle
-    arc 9 16 $circle
-    arc 16 23 $circle
-    arc 23 30 $circle
-    arc 30 37 $circle
-    arc 37 44 $circle
-    arc 44 51 $circle
-    arc 51 2 $circle
-    arc 58 65 $circle
-    arc 65 72 $circle
-    arc 72 79 $circle
-    arc 79 86 $circle
-    arc 86 93 $circle
-    arc 93 100 $circle
+    arc 2 9     $circle
+    arc 9 16    $circle
+    arc 16 23   $circle
+    arc 23 30   $circle
+    arc 30 37   $circle
+    arc 37 44   $circle
+    arc 44 51   $circle
+    arc 51 2    $circle
+    arc 58 65   $circle
+    arc 65 72   $circle
+    arc 72 79   $circle
+    arc 79 86   $circle
+    arc 86 93   $circle
+    arc 93 100  $circle
     arc 100 107 $circle
-    arc 107 58 $circle
+    arc 107 58  $circle
 
-    arc 3 10 $circle
-    arc 10 17 $circle
-    arc 17 24 $circle
-    arc 24 31 $circle
-    arc 31 38 $circle
-    arc 38 45 $circle
-    arc 45 52 $circle
-    arc 52 3 $circle
-    arc 59 66 $circle
-    arc 66 73 $circle
-    arc 73 80 $circle
-    arc 80 87 $circle
-    arc 87 94 $circle
-    arc 94 101 $circle
+    arc 3 10    $circle
+    arc 10 17   $circle
+    arc 17 24   $circle
+    arc 24 31   $circle
+    arc 31 38   $circle
+    arc 38 45   $circle
+    arc 45 52   $circle
+    arc 52 3    $circle
+    arc 59 66   $circle
+    arc 66 73   $circle
+    arc 73 80   $circle
+    arc 80 87   $circle
+    arc 87 94   $circle
+    arc 94 101  $circle
     arc 101 108 $circle
-    arc 108 59 $circle
+    arc 108 59  $circle
 
-    arc 4 11 $circle
-    arc 11 18 $circle
-    arc 18 25 $circle
-    arc 25 32 $circle
-    arc 32 39 $circle
-    arc 39 46 $circle
-    arc 46 53 $circle
-    arc 53 4 $circle
-    arc 60 67 $circle
-    arc 67 74 $circle
-    arc 74 81 $circle
-    arc 81 88 $circle
-    arc 88 95 $circle
-    arc 95 102 $circle
+    arc 4 11    $circle
+    arc 11 18   $circle
+    arc 18 25   $circle
+    arc 25 32   $circle
+    arc 32 39   $circle
+    arc 39 46   $circle
+    arc 46 53   $circle
+    arc 53 4    $circle
+    arc 60 67   $circle
+    arc 67 74   $circle
+    arc 74 81   $circle
+    arc 81 88   $circle
+    arc 88 95   $circle
+    arc 95 102  $circle
     arc 102 109 $circle
-    arc 109 60 $circle
+    arc 109 60  $circle
 
-    arc 5 12 $circle
-    arc 12 20 $circle
-    arc 19 26 $circle
-    arc 26 34 $circle
-    arc 33 40 $circle
-    arc 40 48 $circle
-    arc 47 54 $circle
-    arc 54 6 $circle
-    arc 61 68 $circle
-    arc 68 76 $circle
-    arc 75 82 $circle
-    arc 82 90 $circle
-    arc 89 96 $circle
-    arc 96 104 $circle
+    arc 5 12    $circle
+    arc 12 20   $circle
+    arc 19 26   $circle
+    arc 26 34   $circle
+    arc 33 40   $circle
+    arc 40 48   $circle
+    arc 47 54   $circle
+    arc 54 6    $circle
+    arc 61 68   $circle
+    arc 68 76   $circle
+    arc 75 82   $circle
+    arc 82 90   $circle
+    arc 89 96   $circle
+    arc 96 104  $circle
     arc 103 110 $circle
-    arc 110 62 $circle
+    arc 110 62  $circle
 );
 
 defaultPatch
