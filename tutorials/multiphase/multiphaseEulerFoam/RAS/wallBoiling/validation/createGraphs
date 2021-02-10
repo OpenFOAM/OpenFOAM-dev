@@ -1,0 +1,73 @@
+#!/bin/sh
+
+if ! which gnuplot > /dev/null 2>&1
+then
+    echo 'gnuplot not found - skipping graph creation' >&2
+    exit 1
+fi
+
+graphFile=$(foamListTimes -latestTime)/line_alpha.gas_T.liquid_T.gas.xy
+surfaceFile=$(cd postProcessing/inflow && ls -1tr */* | tail -n 1)
+
+gnuplot<<EOF
+
+    set terminal postscript eps size 8,9 color enhanced font "Helvetica,20"
+    set output "./validation/$(basename "$PWD").eps"
+    set multiplot layout 2,2
+    set decimalsign '.'
+    set grid
+
+    A = 0.000586423
+    q = 73890
+
+    set key at graph 0.65,0.95
+    set xlabel 'Radial coordinate, r/R (-)'
+    set xrange [0:1]
+
+    set ylabel 'Void fraction (-)'
+    plot \
+        "postProcessing/singleGraph/$graphFile" \
+        u (\$1/0.0096):2 w lp lt 1 t 'Simulation', \
+        './validation/exptData/vof_deb1.txt' \
+        u 1:2 w p lt rgb "black" pt 4 t 'Experiment'
+
+    set ylabel 'Liquid temperature (K)'
+    plot \
+        "postProcessing/singleGraph/$graphFile" \
+        u (\$1/0.0096):3 w lp lt 1 t 'Simulation', \
+        './validation/exptData/T_deb1.txt' \
+        u 1:2 w p lt rgb "black" pt 4 t 'Experiment'
+
+    set key at graph 0.99,0.95
+    set xlabel 'Time (s)'
+    set xrange [0.5:4]
+
+    set ylabel 'Mass in- and outflow (kg/s)'
+    set yrange [0.5:0.8]
+    plot \
+        './postProcessing/inflow/$surfaceFile' \
+        every ::4::10000 u 1:(-1*360*\$3) w l lt 1 t 'liquid inflow', \
+        './postProcessing/outflow/$surfaceFile' \
+        every ::4::10000 u 1:(360*\$3) w l lt 3 t 'liquid outflow', \
+        './postProcessing/outflow/$surfaceFile' \
+        every ::4::10000 u 1:(360*\$2+360*\$3) w l lt 4 t 'liquid + vapor outflow'
+
+    set ylabel 'Enthalpy in- and outflow (J/s)'
+    set yrange [1.5e5:2.0e5]
+    plot \
+        './postProcessing/inletLiquid/$surfaceFile' \
+        every ::4::10000 u 1:(-1*360*\$2) w l lt 1 t 'liquid inflow', \
+        './postProcessing/inletLiquid/$surfaceFile' \
+        every ::4::10000 u 1:(-1*360*\$2+360*A*q) w l lt 8 t 'liquid inflow + wall heat flux', \
+        './postProcessing/outletLiquid/$surfaceFile' \
+        every ::4::10000 u 1:(360*\$2) w l lt 3 t 'liquid outflow', \
+        "<paste \
+        ./postProcessing/outletLiquid/$surfaceFile \
+        ./postProcessing/outletGas/$surfaceFile" \
+        every ::4::10000 u 1:(360*\$2+360*\$4) w l lt 4 t 'liquid + vapor outflow'
+
+    unset multiplot
+
+EOF
+
+#------------------------------------------------------------------------------

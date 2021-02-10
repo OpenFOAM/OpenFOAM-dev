@@ -114,6 +114,78 @@ functions
         operation       sum;
         fields          ( alphaRhoPhi.gas alphaRhoPhi.gas2 alphaRhoPhi.liquid );
     }
+    outletGas
+    {
+        type            surfaceFieldValue;
+        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        log             yes;
+        writeFields     false;
+        regionType      patch;
+        name            outlet;
+        operation       weightedSum;
+        weightField     alphaRhoPhi.gas;
+        fields          ( h.gas );
+    }
+    outletGas2
+    {
+        type            surfaceFieldValue;
+        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        log             yes;
+        writeFields     false;
+        regionType      patch;
+        name            outlet;
+        operation       weightedSum;
+        weightField     alphaRhoPhi.gas2;
+        fields          ( h.gas2 );
+    }
+    outletLiquid
+    {
+        type            surfaceFieldValue;
+        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        log             yes;
+        writeFields     false;
+        regionType      patch;
+        name            outlet;
+        operation       weightedSum;
+        weightField     alphaRhoPhi.liquid;
+        fields          ( h.liquid );
+    }
+    inletGas
+    {
+        type            surfaceFieldValue;
+        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        log             yes;
+        writeFields     false;
+        regionType      patch;
+        name            inlet;
+        operation       weightedSum;
+        weightField     alphaRhoPhi.gas;
+        fields          ( h.gas );
+    }
+    inletGas2
+    {
+        type            surfaceFieldValue;
+        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        log             yes;
+        writeFields     false;
+        regionType      patch;
+        name            inlet;
+        operation       weightedSum;
+        weightField     alphaRhoPhi.gas2;
+        fields          ( h.gas2 );
+    }
+    inletLiquid
+    {
+        type            surfaceFieldValue;
+        functionObjectLibs ( "libfieldFunctionObjects.so" );
+        log             yes;
+        writeFields     false;
+        regionType      patch;
+        name            inlet;
+        operation       weightedSum;
+        weightField     alphaRhoPhi.liquid;
+        fields          ( h.liquid );
+    }
     #includeFunc writeObjects(d.gas, d.gas2)
 }
 

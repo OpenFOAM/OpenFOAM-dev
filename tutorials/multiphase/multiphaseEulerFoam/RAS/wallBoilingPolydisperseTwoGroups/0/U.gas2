@@ -26,15 +26,15 @@ boundaryField
         type            mapped;
         field           U.gas2;
         setAverage      0;
-        average         (1.96244 0 0);
+        average         (1.75175 0 0);
         interpolationScheme cell;
-        value           uniform (1.96244 0 0);
+        value           uniform (1.75175 0 0);
     }
     outlet
     {
         type            pressureInletOutletVelocity;
         phi             phi.gas2;
-        value           uniform (1.96244 0 0);
+        value           uniform (1.75175 0 0);
     }
     wall
     {

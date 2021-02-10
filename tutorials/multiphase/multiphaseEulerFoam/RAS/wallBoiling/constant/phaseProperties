@@ -71,9 +71,7 @@ heatTransfer.gas
 (
     (gas in liquid)
     {
-        type constantNu;
-        Nu  1e1;
-        residualAlpha 1e-4;
+        type spherical;
     }
 );
 
@@ -82,7 +80,6 @@ heatTransfer.liquid
     (gas in liquid)
     {
         type RanzMarshall;
-        residualAlpha 1e-4;
     }
 );
 
@@ -146,24 +143,21 @@ saturation
         type function1;
 
         function scale;
-        functionCoeffs
+
+        xScale 1e-6;
+        scale   1;
+        value
         {
-            xScale 1e-6;
-            scale   1;
-            value
-            {
-                type                table;
-                format              csv;
-                nHeaderLine         1;
-                refColumn           1;
-                componentColumns    (0);
-                separator           ";";
-                mergeSeparators     no;
-                file                "R12.csv";
-                outOfBounds         clamp;
-                interpolationScheme linear;
-            }
-        };
+            type                tableFile;
+            format              csv;
+            nHeaderLine         1;
+            refColumn           1;
+            componentColumns    (0);
+            mergeSeparators     no;
+            file "$FOAM_ETC/thermoData/refrigerant/R12/saturation.csv";
+            outOfBounds         clamp;
+            interpolationScheme linear;
+        }
     }
 );
 

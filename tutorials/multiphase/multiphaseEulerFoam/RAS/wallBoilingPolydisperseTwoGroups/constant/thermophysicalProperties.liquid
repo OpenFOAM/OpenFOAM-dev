@@ -19,35 +19,20 @@ thermoType
 {
     type            heRhoThermo;
     mixture         pureMixture;
-    transport       const;
-    thermo          eConst;
-    equationOfState rhoConst;
+    transport       tabulated;
+    thermo          hTabulated;
+    equationOfState rhoTabulated;
     specie          specie;
-    energy          sensibleInternalEnergy;
+    energy          sensibleEnthalpy;
 }
 
 mixture
 {
     specie
     {
-        nMoles          1;
         molWeight       120.914;
     }
-    equationOfState
-    {
-        rho        1017.1;
-    }
-    thermodynamics
-    {
-        Hf          0;
-        Cv          1394.5;
-        Tref        359.981;
-        Esref       290090;
-    }
-    transport
-    {
-        mu          8.9e-5;
-        Pr          2.8;
-    }
+
+    #include "$FOAM_ETC/thermoData/refrigerant/R12/liquid"
 }
 // ************************************************************************* //

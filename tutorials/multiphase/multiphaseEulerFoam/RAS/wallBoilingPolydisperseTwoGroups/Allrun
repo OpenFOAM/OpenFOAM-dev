@@ -4,24 +4,24 @@ cd ${0%/*} || exit 1    # run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-application=`getApplication`
-
 runApplication blockMesh
 runApplication extrudeMesh
 runApplication topoSet
 runApplication decomposePar
 
-runParallel $application
+runParallel $(getApplication)
 
-if ! isTest $@
+if ! isTest "$@"
 then
     runApplication -a foamDictionary system/controlDict -entry endTime -set 4
     runApplication -a foamDictionary system/controlDict -entry startTime -set 0.5
-    runParallel -a foamDictionary -expand 0.5/T.liquid -entry boundaryField/wall/q -set "uniform 73900"
-    runParallel -a foamDictionary -expand 0.5/U.liquid -entry boundaryField/inlet/type -set "fixedValue"
-    runParallel -a $application
+    runParallel -a foamDictionary 0.5/T.liquid -entry boundaryField/wall/q -set "uniform 73890"
+    runParallel -a foamDictionary 0.5/U.liquid -entry boundaryField/inlet/type -set "fixedValue"
+    runParallel -a $(getApplication)
 fi
 
-runApplication -a reconstructPar -latestTime
+runApplication reconstructPar -latestTime
+runApplication postProcess -func singleGraph -latestTime
+./validation/createGraphs
 
 #------------------------------------------------------------------------------

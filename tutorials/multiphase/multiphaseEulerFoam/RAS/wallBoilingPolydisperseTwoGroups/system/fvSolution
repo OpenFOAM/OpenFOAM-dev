@@ -48,19 +48,10 @@ solvers
         relTol          0;
     }
 
-    "U.*"
-    {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-6;
-        relTol          0;
-        minIter         1;
-    }
-
     "(e|h).*"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
+        solver          PBiCGStab;
+        preconditioner  DILU;
         tolerance       1e-12;
         relTol          0.001;
         minIter         1;
@@ -69,8 +60,8 @@ solvers
 
     "(k|epsilon|omega).*"
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
+        solver          PBiCGStab;
+        preconditioner  DILU;
         tolerance       1e-8;
         relTol          0;
         minIter         1;
@@ -82,16 +73,6 @@ solvers
         preconditioner  DILU;
         tolerance       1e-6;
         relTol          0;
-    }
-
-    Yi
-    {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-6;
-        relTol          0;
-        minIter         1;
-        residualAlpha   1e-8;
     }
 }
 
@@ -108,13 +89,13 @@ relaxationFactors
 {
     fields
     {
-        thermalPhaseChange:dmdtf 0.8;
+        thermalPhaseChange:dmdtf 1.0;
     }
 
     equations
     {
         ".*"            1;
-        "e\..*"         0.8;
+        "h\..*"         1;
     }
 }
 
