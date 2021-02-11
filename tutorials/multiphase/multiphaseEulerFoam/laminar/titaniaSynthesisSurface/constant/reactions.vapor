@@ -40,7 +40,7 @@ reactions
 
     oxidationAtSurface
     {
-        type        irreversibleSurfaceArrhenius;
+        type        irreversiblePhaseSurfaceArrhenius;
 
         reaction    "O2^0 + TiCl4 = TiO2_s + 2Cl2";
 
@@ -48,7 +48,7 @@ reactions
         beta        0.0;
         Ta          8993;
 
-        a           a.particles;
+        phase       particles;
     }
 }
 
