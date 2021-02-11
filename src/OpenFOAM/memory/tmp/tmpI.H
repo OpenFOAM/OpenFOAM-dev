@@ -369,8 +369,6 @@ inline void Foam::tmp<T>::operator=(const tmp<T>& t)
 
     if (t.isAnyTmp())
     {
-        type_ = t.type_;
-
         // if (!t.ptr_)
         // {
         //     FatalErrorInFunction
@@ -378,7 +376,9 @@ inline void Foam::tmp<T>::operator=(const tmp<T>& t)
         //         << abort(FatalError);
         // }
 
+        type_ = t.type_;
         ptr_ = t.ptr_;
+
         t.ptr_ = 0;
     }
     else
@@ -387,6 +387,21 @@ inline void Foam::tmp<T>::operator=(const tmp<T>& t)
             << "Attempted assignment to a const reference to an object"
             << " of type " << typeid(T).name()
             << abort(FatalError);
+    }
+}
+
+
+template<class T>
+inline void Foam::tmp<T>::operator=(const tmp<T>&& t)
+{
+    clear();
+
+    type_ = t.type_;
+    ptr_ = t.ptr_;
+
+    if (isAnyTmp())
+    {
+        t.ptr_ = 0;
     }
 }
 
