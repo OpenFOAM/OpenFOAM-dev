@@ -108,7 +108,7 @@ class velocityGroup
         PtrList<sizeGroup> sizeGroups_;
 
         //- Sauter-mean diameter of the phase
-        volScalarField& d_;
+        volScalarField d_;
 
 
     // Private Member Functions
@@ -122,17 +122,6 @@ class velocityGroup
         void scale();
 
 
-protected:
-
-    // Protected Member Functions
-
-        //- Get the diameter field
-        virtual tmp<volScalarField> calcD() const;
-
-        //- Get the surface area per unit volume field
-        virtual tmp<volScalarField> calcA() const;
-
-
 public:
 
     //- Runtime type information
@@ -141,7 +130,7 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from dictionary and phase
         velocityGroup
         (
             const dictionary& diameterProperties,
@@ -164,8 +153,14 @@ public:
         //- Return sizeGroups belonging to this velocityGroup
         inline const PtrList<sizeGroup>& sizeGroups() const;
 
-        //- Correct the diameter field
-        virtual void correctNoStore();
+        //- Get the diameter field
+        virtual tmp<volScalarField> d() const;
+
+        //- Get the surface area per unit volume field
+        virtual tmp<volScalarField> a() const;
+
+        //- Correct the model
+        virtual void correct();
 
         //- Read diameterProperties dictionary
         virtual bool read(const dictionary& diameterProperties);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,15 +37,6 @@ namespace diameterModels
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField>
-Foam::diameterModels::spherical::calcA() const
-{
-    return 6*phase()/d();
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::diameterModels::spherical::spherical
@@ -56,6 +47,14 @@ Foam::diameterModels::spherical::spherical
 :
     diameterModel(diameterProperties, phase)
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField> Foam::diameterModels::spherical::a() const
+{
+    return 6*phase()/d();
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //

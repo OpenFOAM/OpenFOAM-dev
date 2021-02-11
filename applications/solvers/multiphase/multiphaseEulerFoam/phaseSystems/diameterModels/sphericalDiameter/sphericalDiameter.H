@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,14 +53,6 @@ class spherical
 :
     public diameterModel
 {
-protected:
-
-    // Protected Member Functions
-
-        //- Get the diameter field
-        virtual tmp<volScalarField> calcA() const;
-
-
 public:
 
     //- Runtime type information
@@ -69,6 +61,7 @@ public:
 
     // Constructors
 
+        //- Construct from dictionary and phase
         spherical
         (
             const dictionary& diameterProperties,
@@ -78,6 +71,12 @@ public:
 
     //- Destructor
     virtual ~spherical();
+
+
+    // Member Functions
+
+        //- Get the surface area per unit volume field
+        virtual tmp<volScalarField> a() const;
 };
 
 

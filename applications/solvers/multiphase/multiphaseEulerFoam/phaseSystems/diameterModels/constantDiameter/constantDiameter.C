@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,19 +38,6 @@ namespace diameterModels
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField> Foam::diameterModels::constant::calcD() const
-{
-    return volScalarField::New
-    (
-        IOobject::groupName("d", phase().name()),
-        phase().mesh(),
-        d_
-    );
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::diameterModels::constant::constant
@@ -71,6 +58,17 @@ Foam::diameterModels::constant::~constant()
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::tmp<Foam::volScalarField> Foam::diameterModels::constant::d() const
+{
+    return volScalarField::New
+    (
+        IOobject::groupName("d", phase().name()),
+        phase().mesh(),
+        d_
+    );
+}
+
 
 bool Foam::diameterModels::constant::read(const dictionary& phaseProperties)
 {

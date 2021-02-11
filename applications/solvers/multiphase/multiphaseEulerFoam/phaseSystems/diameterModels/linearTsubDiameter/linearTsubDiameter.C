@@ -40,14 +40,6 @@ namespace diameterModels
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
-
-Foam::tmp<Foam::volScalarField> Foam::diameterModels::linearTsub::calcD() const
-{
-    return d_;
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::diameterModels::linearTsub::linearTsub
@@ -77,10 +69,18 @@ Foam::diameterModels::linearTsub::linearTsub
         dimTemperature,
         diameterProperties.lookupOrDefault("Tsub1", 13.5)
     ),
-    d_(dRef())
-{
-    d_ = d1_;
-}
+    d_
+    (
+        IOobject
+        (
+            IOobject::groupName("d", phase.name()),
+            phase.time().timeName(),
+            phase.mesh()
+        ),
+        phase.mesh(),
+        d1_
+    )
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -91,7 +91,13 @@ Foam::diameterModels::linearTsub::~linearTsub()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::diameterModels::linearTsub::correctNoStore()
+Foam::tmp<Foam::volScalarField> Foam::diameterModels::linearTsub::d() const
+{
+    return d_;
+}
+
+
+void Foam::diameterModels::linearTsub::correct()
 {
     // Lookup the fluid model
     const phaseSystem& fluid =

@@ -48,17 +48,11 @@ namespace diameterModels
 }
 
 
-// * * * * * * * * * * * * Protected Member Functions * * * * * * * * * * * //
+// * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::calcD() const
+Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::dsm() const
 {
-    return d_;
-}
-
-
-Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::calcA() const
-{
-    return phase()*kappai_;
+    return max(6/max(kappai_, 6/dMax_), dMin_);
 }
 
 
@@ -86,11 +80,9 @@ Foam::diameterModels::IATE::IATE
     dMax_("dMax", dimLength, diameterProperties),
     dMin_("dMin", dimLength, diameterProperties),
     residualAlpha_("residualAlpha", dimless, diameterProperties),
-    d_(dRef()),
+    d_(IOobject::groupName("d", phase.name()), dsm()),
     sources_(diameterProperties.lookup("sources"), IATEsource::iNew(*this))
-{
-    d_ = dsm();
-}
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -101,13 +93,19 @@ Foam::diameterModels::IATE::~IATE()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::dsm() const
+Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::d() const
 {
-    return max(6/max(kappai_, 6/dMax_), dMin_);
+    return d_;
 }
 
 
-void Foam::diameterModels::IATE::correctNoStore()
+Foam::tmp<Foam::volScalarField> Foam::diameterModels::IATE::a() const
+{
+    return phase()*kappai_;
+}
+
+
+void Foam::diameterModels::IATE::correct()
 {
     volScalarField alphaAv
     (
