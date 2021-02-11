@@ -77,7 +77,7 @@ protected:
         mutable label checkTimeIndex_;
 
         //- Sets of the fields that have had sources added by the options
-        mutable PtrList<wordHashSet> addedToFields_;
+        mutable PtrList<wordHashSet> addSupFields_;
 
         //- Sets of the fields that have been constrained by the options
         mutable PtrList<wordHashSet> constrainedFields_;

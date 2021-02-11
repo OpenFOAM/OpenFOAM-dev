@@ -80,10 +80,10 @@ void Foam::fv::optionList::checkApplied() const
         {
             const option& source = this->operator[](i);
 
-            wordHashSet notAddedToFields(source.addSupFields());
-            notAddedToFields -= addedToFields_[i];
+            wordHashSet notAddSupFields(source.addSupFields());
+            notAddSupFields -= addSupFields_[i];
 
-            forAllConstIter(wordHashSet, notAddedToFields, iter)
+            forAllConstIter(wordHashSet, notAddSupFields, iter)
             {
                 WarningInFunction
                     << "Source " << source.name() << " defined for field "
@@ -123,7 +123,7 @@ Foam::fv::optionList::optionList(const fvMesh& mesh, const dictionary& dict)
     PtrListDictionary<option>(0),
     mesh_(mesh),
     checkTimeIndex_(mesh_.time().timeIndex() + 1),
-    addedToFields_(),
+    addSupFields_(),
     constrainedFields_(),
     correctedFields_()
 {
@@ -136,7 +136,7 @@ Foam::fv::optionList::optionList(const fvMesh& mesh)
     PtrListDictionary<option>(0),
     mesh_(mesh),
     checkTimeIndex_(mesh_.time().timeIndex() + 1),
-    addedToFields_(),
+    addSupFields_(),
     constrainedFields_(),
     correctedFields_()
 {}
@@ -160,7 +160,7 @@ void Foam::fv::optionList::reset(const dictionary& dict)
 
     this->setSize(count);
 
-    addedToFields_.setSize(count);
+    addSupFields_.setSize(count);
     constrainedFields_.setSize(count);
     correctedFields_.setSize(count);
 
@@ -179,7 +179,7 @@ void Foam::fv::optionList::reset(const dictionary& dict)
                 option::New(name, sourceDict, mesh_).ptr()
             );
 
-            addedToFields_.set(i, new wordHashSet());
+            addSupFields_.set(i, new wordHashSet());
             constrainedFields_.set(i, new wordHashSet());
             correctedFields_.set(i, new wordHashSet());
 
