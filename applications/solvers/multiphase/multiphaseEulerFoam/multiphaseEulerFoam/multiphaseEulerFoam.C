@@ -103,18 +103,18 @@ int main(int argc, char *argv[])
 
         if (pimple.frozenFlow())
         {
-             fluid.solve(rAUs, rAUfs);
-             fluid.correct();
-             fluid.correctContinuityError();
+            fluid.solve(rAUs, rAUfs);
+            fluid.correct();
+            fluid.correctContinuityError();
 
-             #include "YEqns.H"
-             #include "EEqns.H"
-             #include "pEqnComps.H"
+            #include "YEqns.H"
+            #include "EEqns.H"
+            #include "pEqnComps.H"
 
-             forAll(phases, phasei)
-             {
-                 phases[phasei].divU(-pEqnComps[phasei] & p_rgh);
-             }
+            forAll(phases, phasei)
+            {
+                phases[phasei].divU(-pEqnComps[phasei] & p_rgh);
+            }
         }
         else
         {
