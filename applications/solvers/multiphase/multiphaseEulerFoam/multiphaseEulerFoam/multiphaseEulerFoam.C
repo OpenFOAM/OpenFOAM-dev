@@ -101,25 +101,25 @@ int main(int argc, char *argv[])
         runTime++;
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        if (pimple.frozenFlow())
+        // --- Pressure-velocity PIMPLE corrector loop
+        while (pimple.loop())
         {
-            fluid.solve(rAUs, rAUfs);
-            fluid.correct();
-            fluid.correctContinuityError();
-
-            #include "YEqns.H"
-            #include "EEqns.H"
-            #include "pEqnComps.H"
-
-            forAll(phases, phasei)
+            if (pimple.frozenFlow())
             {
-                phases[phasei].divU(-pEqnComps[phasei] & p_rgh);
+                fluid.solve(rAUs, rAUfs);
+                fluid.correct();
+                fluid.correctContinuityError();
+
+                #include "YEqns.H"
+                #include "EEqns.H"
+                #include "pEqnComps.H"
+
+                forAll(phases, phasei)
+                {
+                    phases[phasei].divU(-pEqnComps[phasei] & p_rgh);
+                }
             }
-        }
-        else
-        {
-            // --- Pressure-velocity PIMPLE corrector loop
-            while (pimple.loop())
+            else
             {
                 if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
                 {
