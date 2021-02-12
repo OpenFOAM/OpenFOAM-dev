@@ -337,6 +337,16 @@ FoamFile
 //        includeOutside  false;  //   ,,    outside  ,,
 //    }
 //
+//    // Select based on distance to a patch ('patch') or multiple patches
+//    // ('patches')
+//    source patchDistanceToCell;
+//    sourceInfo
+//    {
+//        patch     ".*Wall";                   // Patch name
+//        // patches   (".*Wall" atmosphere);   // List of patch names
+//        distance  0.1;                        // Distance below which to
+//                                              // include cells
+//    }
 //
 //
 //
@@ -360,7 +370,7 @@ FoamFile
 // faceZoneSet
 // ~~~~~~~~~~~
 // Manipulates a faceZone (as well as a faceSet). It can only be used
-// with two special sources:
+// with certain special sources:
 //
 //    // Select based on faceSet without orientation
 //    source setToFaceZone;
@@ -380,18 +390,25 @@ FoamFile
 //    }
 //
 //    // Select based on surface. Orientation from normals on surface
+//    source  searchableSurfaceToFaceZone;
+//    sourceInfo
 //    {
-//        name    fz0;
-//        type    faceZoneSet;
-//        action  new;
-//        source  searchableSurfaceToFaceZone;
-//        sourceInfo
-//        {
-//            surface searchableSphere;
-//            centre  (0.05 0.05 0.005);
-//            radius  0.025;
-//            // name  sphere.stl; // Optional name if surface triSurfaceMesh
-//        }
+//        surface searchableSphere;
+//        centre  (0.05 0.05 0.005);
+//        radius  0.025;
+//        // name  sphere.stl; // Optional name if surface triSurfaceMesh
+//    }
+//
+//    // Select based on a plane. Select faces for which the adjacent cell
+//    // centres span the given plane.
+//    source  planeToFaceZone;
+//    sourceInfo
+//    {
+//        point   (0 0 4);
+//        normal  (1 0 0.2);
+//        include all;          // Take all faces (default)
+//        // include closest;   // Take the closest contiguous region of
+//                              // faces to the plane point
 //    }
 //
 //
