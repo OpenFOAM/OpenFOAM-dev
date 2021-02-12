@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -37,12 +37,11 @@ SourceFiles
 #define porosityModel_H
 
 #include "fvMesh.H"
-#include "dictionary.H"
 #include "fvMatricesFwd.H"
-#include "runTimeSelectionTables.H"
 #include "coordinateSystem.H"
 #include "dimensionedVector.H"
 #include "wordRe.H"
+#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -94,7 +93,6 @@ protected:
 
     // Protected Member Functions
 
-
         //- Transform the model data wrt mesh changes
         virtual void calcTransformModelData() = 0;
 
@@ -111,13 +109,6 @@ protected:
         ) const = 0;
 
         virtual void correct(fvVectorMatrix& UEqn) const = 0;
-
-        virtual void correct
-        (
-            fvVectorMatrix& UEqn,
-            const volScalarField& rho,
-            const volScalarField& mu
-        ) const = 0;
 
         virtual void correct
         (
@@ -229,18 +220,10 @@ public:
             const volVectorField& U,
             const volScalarField& rho,
             const volScalarField& mu
-        );
+        ) const;
 
         //- Add resistance
         virtual void addResistance(fvVectorMatrix& UEqn);
-
-        //- Add resistance
-        virtual void addResistance
-        (
-            fvVectorMatrix& UEqn,
-            const volScalarField& rho,
-            const volScalarField& mu
-        );
 
         //- Add resistance
         virtual void addResistance

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,14 +86,6 @@ public:
 
         //- Add resistance
         void addResistance(fvVectorMatrix& UEqn);
-
-        //- Add resistance
-        void addResistance
-        (
-            fvVectorMatrix& UEqn,
-            const volScalarField& rho,
-            const volScalarField& mu
-        );
 
         //- Add resistance
         void addResistance

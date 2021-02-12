@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -150,9 +150,9 @@ Foam::tmp<Foam::vectorField> Foam::porosityModel::porosityModel::force
     const volVectorField& U,
     const volScalarField& rho,
     const volScalarField& mu
-)
+) const
 {
-    transformModelData();
+    const_cast<porosityModel&>(*this).transformModelData();
 
     tmp<vectorField> tforce(new vectorField(U.size(), Zero));
 
@@ -174,23 +174,6 @@ void Foam::porosityModel::addResistance(fvVectorMatrix& UEqn)
 
     transformModelData();
     this->correct(UEqn);
-}
-
-
-void Foam::porosityModel::addResistance
-(
-    fvVectorMatrix& UEqn,
-    const volScalarField& rho,
-    const volScalarField& mu
-)
-{
-    if (cellZoneIDs_.empty())
-    {
-        return;
-    }
-
-    transformModelData();
-    this->correct(UEqn, rho, mu);
 }
 
 

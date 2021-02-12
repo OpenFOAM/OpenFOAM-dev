@@ -45,71 +45,12 @@ namespace fv
 }
 }
 
+
 // * * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * //
 
 void Foam::fv::interRegionExplicitPorositySource::readCoeffs()
 {
     UName_ = coeffs_.lookupOrDefault<word>("U", "U");
-
-    muName_ = coeffs_.lookupOrDefault<word>("mu", "thermo:mu");
-}
-
-
-Foam::porosityModel&
-Foam::fv::interRegionExplicitPorositySource::porosity() const
-{
-    if (!porosityPtr_.valid())
-    {
-        const word zoneName(name_ + ":porous");
-
-        const fvMesh& nbrMesh =
-            mesh_.time().lookupObject<fvMesh>(nbrRegionName());
-        const cellZoneMesh& cellZones = nbrMesh.cellZones();
-        label zoneID = cellZones.findZoneID(zoneName);
-
-        if (zoneID == -1)
-        {
-            cellZoneMesh& cz = const_cast<cellZoneMesh&>(cellZones);
-
-            zoneID = cz.size();
-
-            cz.setSize(zoneID + 1);
-
-            cz.set
-            (
-                zoneID,
-                new cellZone
-                (
-                    zoneName,
-                    nbrMesh.faceNeighbour(), // Neighbour internal cells
-                    zoneID,
-                    cellZones
-                )
-            );
-
-            cz.clearAddressing();
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "Unable to create porous cellZone " << zoneName
-                << ": zone already exists"
-                << abort(FatalError);
-        }
-
-        porosityPtr_.reset
-        (
-            porosityModel::New
-            (
-                name_,
-                nbrMesh,
-                coeffs_,
-                zoneName
-            ).ptr()
-        );
-    }
-
-    return porosityPtr_();
 }
 
 
@@ -125,10 +66,83 @@ Foam::fv::interRegionExplicitPorositySource::interRegionExplicitPorositySource
 :
     interRegionOption(name, modelType, dict, mesh),
     UName_(word::null),
-    muName_(word::null),
+    filter_
+    (
+        volScalarField::Internal::New
+        (
+            "filter",
+            mesh,
+            dimensionedScalar(dimless, 0)
+        )
+    ),
     porosityPtr_(nullptr)
 {
     readCoeffs();
+
+    const fvMesh& nbrMesh = mesh_.time().lookupObject<fvMesh>(nbrRegionName());
+
+    meshInterp().mapTgtToSrc
+    (
+        scalarField(nbrMesh.nCells(), 1),
+        plusEqOp<scalar>(),
+        filter_
+    );
+
+    const word zoneName(name_ + ":porous");
+
+    const cellZoneMesh& cellZones = mesh_.cellZones();
+    label zoneID = cellZones.findZoneID(zoneName);
+
+    if (zoneID == -1)
+    {
+        cellZoneMesh& cz = const_cast<cellZoneMesh&>(cellZones);
+
+        zoneID = cz.size();
+
+        cz.setSize(zoneID + 1);
+
+        // Scan the porous region filter for all cells containing porosity
+        labelList porousCells(mesh_.nCells());
+
+        label i = 0;
+        forAll(filter_, celli)
+        {
+            if (filter_[celli] > small)
+            {
+                porousCells[i++] = celli;
+            }
+        }
+        porousCells.setSize(i);
+
+        cz.set
+        (
+            zoneID,
+            new cellZone
+            (
+                zoneName,
+                porousCells,
+                zoneID,
+                cellZones
+            )
+        );
+
+        cz.clearAddressing();
+    }
+    else
+    {
+        FatalErrorInFunction
+            << "Unable to create porous cellZone " << zoneName
+            << ": zone already exists"
+            << abort(FatalError);
+    }
+
+    porosityPtr_ = porosityModel::New
+    (
+        name_,
+        mesh_,
+        coeffs_,
+        zoneName
+    );
 }
 
 
@@ -138,58 +152,6 @@ Foam::wordList
 Foam::fv::interRegionExplicitPorositySource::addSupFields() const
 {
     return wordList(1, UName_);
-
-}
-
-
-void Foam::fv::interRegionExplicitPorositySource::addSup
-(
-    fvMatrix<vector>& eqn,
-    const word& fieldName
-) const
-{
-    const fvMesh& nbrMesh = mesh_.time().lookupObject<fvMesh>(nbrRegionName());
-
-    const volVectorField& U = eqn.psi();
-
-    volVectorField UNbr
-    (
-        IOobject
-        (
-            name_ + ":UNbr",
-            nbrMesh.time().timeName(),
-            nbrMesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        nbrMesh,
-        dimensionedVector(U.dimensions(), Zero)
-    );
-
-    // Map local velocity onto neighbour region
-    meshInterp().mapSrcToTgt
-    (
-        U.primitiveField(),
-        plusEqOp<vector>(),
-        UNbr.primitiveFieldRef()
-    );
-
-    fvMatrix<vector> nbrEqn(UNbr, eqn.dimensions());
-
-    porosity().addResistance(nbrEqn);
-
-    // Convert source from neighbour to local region
-    fvMatrix<vector> porosityEqn(U, eqn.dimensions());
-    scalarField& Udiag = porosityEqn.diag();
-    vectorField& Usource = porosityEqn.source();
-
-    Udiag.setSize(eqn.diag().size(), 0.0);
-    Usource.setSize(eqn.source().size(), Zero);
-
-    meshInterp().mapTgtToSrc(nbrEqn.diag(), plusEqOp<scalar>(), Udiag);
-    meshInterp().mapTgtToSrc(nbrEqn.source(), plusEqOp<vector>(), Usource);
-
-    eqn -= porosityEqn;
 }
 
 
@@ -200,95 +162,9 @@ void Foam::fv::interRegionExplicitPorositySource::addSup
     const word& fieldName
 ) const
 {
-    const fvMesh& nbrMesh = mesh_.time().lookupObject<fvMesh>(nbrRegionName());
-
-    const volVectorField& U = eqn.psi();
-
-    volVectorField UNbr
-    (
-        IOobject
-        (
-            name_ + ":UNbr",
-            nbrMesh.time().timeName(),
-            nbrMesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        nbrMesh,
-        dimensionedVector(U.dimensions(), Zero)
-    );
-
-    // Map local velocity onto neighbour region
-    meshInterp().mapSrcToTgt
-    (
-        U.primitiveField(),
-        plusEqOp<vector>(),
-        UNbr.primitiveFieldRef()
-    );
-
-    fvMatrix<vector> nbrEqn(UNbr, eqn.dimensions());
-
-    volScalarField rhoNbr
-    (
-        IOobject
-        (
-            "rho:UNbr",
-            nbrMesh.time().timeName(),
-            nbrMesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        nbrMesh,
-        dimensionedScalar(dimDensity, 0)
-    );
-
-    volScalarField muNbr
-    (
-        IOobject
-        (
-            "mu:UNbr",
-            nbrMesh.time().timeName(),
-            nbrMesh,
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        nbrMesh,
-        dimensionedScalar(dimViscosity, 0)
-    );
-
-    const volScalarField& mu =
-        mesh_.lookupObject<volScalarField>(muName_);
-
-    // Map local rho onto neighbour region
-    meshInterp().mapSrcToTgt
-    (
-        rho.primitiveField(),
-        plusEqOp<scalar>(),
-        rhoNbr.primitiveFieldRef()
-    );
-
-    // Map local mu onto neighbour region
-    meshInterp().mapSrcToTgt
-    (
-        mu.primitiveField(),
-        plusEqOp<scalar>(),
-        muNbr.primitiveFieldRef()
-    );
-
-    porosity().addResistance(nbrEqn, rhoNbr, muNbr);
-
-    // Convert source from neighbour to local region
-    fvMatrix<vector> porosityEqn(U, eqn.dimensions());
-    scalarField& Udiag = porosityEqn.diag();
-    vectorField& Usource = porosityEqn.source();
-
-    Udiag.setSize(eqn.diag().size(), 0.0);
-    Usource.setSize(eqn.source().size(), Zero);
-
-    meshInterp().mapTgtToSrc(nbrEqn.diag(), plusEqOp<scalar>(), Udiag);
-    meshInterp().mapTgtToSrc(nbrEqn.source(), plusEqOp<vector>(), Usource);
-
-    eqn -= porosityEqn;
+    fvMatrix<vector> porosityEqn(eqn.psi(), eqn.dimensions());
+    porosityPtr_->addResistance(porosityEqn);
+    eqn -= filter_*porosityEqn;
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -209,28 +209,6 @@ void Foam::porosityModels::fixedCoeff::calcForce
 void Foam::porosityModels::fixedCoeff::correct
 (
     fvVectorMatrix& UEqn
-) const
-{
-    const vectorField& U = UEqn.psi();
-    const scalarField& V = mesh_.V();
-    scalarField& Udiag = UEqn.diag();
-    vectorField& Usource = UEqn.source();
-
-    scalar rho = 1.0;
-    if (UEqn.dimensions() == dimForce)
-    {
-        coeffs_.lookup("rhoRef") >> rho;
-    }
-
-    apply(Udiag, Usource, V, U, rho);
-}
-
-
-void Foam::porosityModels::fixedCoeff::correct
-(
-    fvVectorMatrix& UEqn,
-    const volScalarField&,
-    const volScalarField&
 ) const
 {
     const vectorField& U = UEqn.psi();

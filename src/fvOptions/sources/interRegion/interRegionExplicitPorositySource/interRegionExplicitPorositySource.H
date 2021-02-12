@@ -88,9 +88,8 @@ class interRegionExplicitPorositySource
         //- Velocity field name, default = U
         word UName_;
 
-        //- Dynamic viscosity field name (compressible case only)
-        //  default = thermo:mu
-        word muName_;
+        //- Porosity mapping filter
+        volScalarField::Internal filter_;
 
         //- Run-time selectable porosity model
         mutable autoPtr<porosityModel> porosityPtr_;
@@ -100,9 +99,6 @@ class interRegionExplicitPorositySource
 
         //- Non-virtual read
         void readCoeffs();
-
-        //- Get the porosity model
-        porosityModel& porosity() const;
 
 
 public:
@@ -141,15 +137,6 @@ public:
             //- Return the list of fields for which the option adds source term
             //  to the transport equation
             virtual wordList addSupFields() const;
-
-
-        // Add explicit and implicit contributions
-
-            virtual void addSup
-            (
-                fvMatrix<vector>& eqn,
-                const word& fieldName
-            ) const;
 
 
         // Add explicit and implicit contributions to compressible equation

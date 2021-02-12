@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -241,22 +241,6 @@ void Foam::porosityModels::DarcyForchheimer::correct
             apply(Udiag, Usource, V, geometricOneField(), mu/rho, U);
         }
     }
-}
-
-
-void Foam::porosityModels::DarcyForchheimer::correct
-(
-    fvVectorMatrix& UEqn,
-    const volScalarField& rho,
-    const volScalarField& mu
-) const
-{
-    const vectorField& U = UEqn.psi();
-    const scalarField& V = mesh_.V();
-    scalarField& Udiag = UEqn.diag();
-    vectorField& Usource = UEqn.source();
-
-    apply(Udiag, Usource, V, rho, mu, U);
 }
 
 

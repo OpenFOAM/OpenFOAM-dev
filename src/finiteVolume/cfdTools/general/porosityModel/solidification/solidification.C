@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,21 +110,6 @@ void Foam::porosityModels::solidification::correct
     {
         apply(Udiag, V, geometricOneField(), U);
     }
-}
-
-
-void Foam::porosityModels::solidification::correct
-(
-    fvVectorMatrix& UEqn,
-    const volScalarField& rho,
-    const volScalarField& mu
-) const
-{
-    const volVectorField& U = UEqn.psi();
-    const scalarField& V = mesh_.V();
-    scalarField& Udiag = UEqn.diag();
-
-    apply(Udiag, V, rho, U);
 }
 
 
