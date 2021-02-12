@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -211,6 +211,15 @@ public:
 
             //- Return the upper temperature limit for the reaction
             inline scalar Thigh() const;
+
+
+        // Hooks
+
+            //- Pre-evaluation hook
+            virtual void preEvaluate() const = 0;
+
+            //- Post-evaluation hook
+            virtual void postEvaluate() const = 0;
 
 
         // Reaction rate coefficients

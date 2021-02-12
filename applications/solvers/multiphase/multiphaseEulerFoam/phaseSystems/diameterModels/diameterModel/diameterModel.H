@@ -59,29 +59,6 @@ class diameterModel
         //- The phase that this model applies
         const phaseModel& phase_;
 
-        //- Optionally stored diameter field
-        autoPtr<volScalarField> dPtr_;
-
-        //- Optionally stored surface area per unit volume field
-        autoPtr<volScalarField> aPtr_;
-
-
-protected:
-
-    // Access
-
-        //- Get a reference to the stored diameter field
-        volScalarField& dRef();
-
-        //- Get a reference to the stored surface area per unit volume field
-        volScalarField& aRef();
-
-        //- Get the diameter field
-        virtual tmp<volScalarField> calcD() const = 0;
-
-        //- Get the surface area per unit volume field
-        virtual tmp<volScalarField> calcA() const = 0;
-
 
 public:
 
@@ -106,6 +83,7 @@ public:
 
     // Constructors
 
+        //- Construct from dictionary and phase
         diameterModel
         (
             const dictionary& diameterProperties,
@@ -119,6 +97,7 @@ public:
 
     // Selectors
 
+        //- Select from dictionary and phase
         static autoPtr<diameterModel> New
         (
             const dictionary& diameterProperties,
@@ -141,16 +120,13 @@ public:
         }
 
         //- Return the diameter
-        tmp<volScalarField> d() const;
+        virtual tmp<volScalarField> d() const = 0;
 
         //- Return the surface area per unit volume
-        tmp<volScalarField> a() const;
+        virtual tmp<volScalarField> a() const = 0;
 
-        //- Correct the diameter field
-        virtual void correctNoStore();
-
-        //- Correct the diameter field and optionally store the results
-        void correct();
+        //- Correct the model
+        virtual void correct();
 
         //- Read phaseProperties dictionary
         virtual bool read(const dictionary& phaseProperties);

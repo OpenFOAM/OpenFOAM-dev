@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -112,20 +112,6 @@ void Foam::porosityModelList::addResistance
     forAll(*this, i)
     {
         this->operator[](i).addResistance(UEqn);
-    }
-}
-
-
-void Foam::porosityModelList::addResistance
-(
-    fvVectorMatrix& UEqn,
-    const volScalarField& rho,
-    const volScalarField& mu
-)
-{
-    forAll(*this, i)
-    {
-        this->operator[](i).addResistance(UEqn, rho, mu);
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -58,14 +58,6 @@ class constant
         dimensionedScalar d_;
 
 
-protected:
-
-    // Protected Member Functions
-
-        //- Get the diameter field
-        virtual tmp<volScalarField> calcD() const;
-
-
 public:
 
     //- Runtime type information
@@ -74,7 +66,7 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from dictionary and phase
         constant
         (
             const dictionary& diameterProperties,
@@ -87,6 +79,9 @@ public:
 
 
     // Member Functions
+
+        //- Get the diameter field
+        virtual tmp<volScalarField> d() const;
 
         //- Read diameterProperties dictionary
         virtual bool read(const dictionary& diameterProperties);

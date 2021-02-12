@@ -78,8 +78,6 @@ particles
             f28{dSph 7.873E-06; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
             f29{dSph 1.136E-05; value 0.0; kappa 1.5E+10; Df 1.8; alphaC 1;}
         );
-
-        storeA              on;
     }
 
     Sct             1.0;

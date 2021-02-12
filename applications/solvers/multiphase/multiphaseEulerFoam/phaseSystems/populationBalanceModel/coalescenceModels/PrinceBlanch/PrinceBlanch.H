@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,7 +62,7 @@ Description
 
     \f[
         \theta_{ij}^{LS} =
-            \frac{1}{6} \left(d_i + d_j\right)^{3} \gamma_c\;.
+            \frac{1}{6} \left(d_i + d_j\right)^{3} \dot{\gamma}_c\;.
     \f]
 
     The rise velocity of bubble i is calculated by
@@ -86,12 +86,12 @@ Description
     and the shear strain rate by
 
     \f[
-        \dot{\gamma_{b}} = \mathrm{mag}(\mathrm{symm}(\mathrm{grad}(U_c)))\;.
+        \dot{\gamma}_c = \mathrm{mag}(\mathrm{symm}(\mathrm{grad}(U_c)))\;.
     \f]
 
     Note that in equation 2, the bubble radius has been substituted by the
-    bubble diameter. Also the expression for the equivalent radius r_ij
-    (equation 19 in the paper of Prince and Blanch (1990)) was corrected.
+    bubble diameter, which leads to a different coefficient in equation 8.
+    Also the expression for the equivalent radius, equation 19 was corrected.
 
     \vartable
         \theta_{ij}^{T}   |  Turbulent collision rate [m3/s]
@@ -109,7 +109,7 @@ Description
         u_{ri}            |  Rise velocity of bubble i [m/s]
         S_{ij}            |  Collision cross sectional area [m2]
         g                 |  Gravitational constant [m/s2]
-        \gamma_c          |  Continuous phase shear strain rate [1/s]
+        \dot{\gamma}_c    |  Continuous phase shear strain rate [1/s]
         U_c               |  Continuous phase velocity field [m/s]
     \endvartable
 
@@ -123,7 +123,7 @@ Description
 Usage
     \table
         Property     | Description             | Required    | Default value
-        C1           | coefficient C1          | no          | 0.089
+        C1           | coefficient C1          | no          | 0.356
         h0           | initial film thickness  | no          | 1e-4m
         hf           | critical film thickness | no          | 1e-8m
         turbulence   | Switch for collisions due to turbulence    | yes | none
@@ -160,7 +160,7 @@ class PrinceBlanch
 {
     // Private Data
 
-        //- Optional coefficient C1, defaults to 0.089
+        //- Optional coefficient C1, defaults to 0.356
         dimensionedScalar C1_;
 
         //- Initial film thickness, defaults to 1e-4m

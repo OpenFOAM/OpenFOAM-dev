@@ -81,15 +81,7 @@ class linearTsub
         dimensionedScalar Tsub1_;
 
         //- Diameter field
-        volScalarField& d_;
-
-
-protected:
-
-    // Protected Member Functions
-
-        //- Get the diameter field
-        virtual tmp<volScalarField> calcD() const;
+        volScalarField d_;
 
 
 public:
@@ -100,7 +92,7 @@ public:
 
     // Constructors
 
-        //- Construct from components
+        //- Construct from dictionary and phase
         linearTsub
         (
             const dictionary& diameterProperties,
@@ -114,8 +106,11 @@ public:
 
     // Member Functions
 
-        //- Correct the diameter field
-        virtual void correctNoStore();
+        //- Get the diameter field
+        virtual tmp<volScalarField> d() const;
+
+        //- Correct the model
+        virtual void correct();
 
         //- Read phaseProperties dictionary
         virtual bool read(const dictionary& phaseProperties);

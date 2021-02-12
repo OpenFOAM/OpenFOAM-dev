@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,15 +101,15 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        if (pimple.frozenFlow())
+        // --- Pressure-velocity PIMPLE corrector loop
+        while (pimple.loop())
         {
-            #include "YEqn.H"
-            #include "EEqn.H"
-        }
-        else
-        {
-            // --- Pressure-velocity PIMPLE corrector loop
-            while (pimple.loop())
+            if (pimple.frozenFlow())
+            {
+                #include "YEqn.H"
+                #include "EEqn.H"
+            }
+            else
             {
                 if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
                 {

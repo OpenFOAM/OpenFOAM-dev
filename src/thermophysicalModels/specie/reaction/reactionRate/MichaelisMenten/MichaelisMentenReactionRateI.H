@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,14 @@ inline Foam::MichaelisMentenReactionRate::MichaelisMentenReactionRate
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+inline void Foam::MichaelisMentenReactionRate::preEvaluate() const
+{}
+
+
+inline void Foam::MichaelisMentenReactionRate::postEvaluate() const
+{}
+
 
 inline Foam::scalar Foam::MichaelisMentenReactionRate::operator()
 (

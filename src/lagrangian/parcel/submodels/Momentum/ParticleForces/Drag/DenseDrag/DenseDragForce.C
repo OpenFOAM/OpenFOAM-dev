@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,7 @@ void Foam::DenseDragForce<CloudType>::cacheFields(const bool store)
 {
     if (store)
     {
-        if (!this->mesh().template foundObject<volVectorField>(alphacName_))
+        if (!this->mesh().template foundObject<volScalarField>(alphacName_))
         {
             alphacPtr_.reset
             (

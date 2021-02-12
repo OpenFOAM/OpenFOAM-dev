@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,6 +81,30 @@ inline Foam::ChemicallyActivatedReactionRate
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class ReactionRate, class ChemicallyActivationFunction>
+inline void Foam::ChemicallyActivatedReactionRate
+<
+    ReactionRate,
+    ChemicallyActivationFunction
+>::preEvaluate() const
+{
+    k0_.preEvaluate();
+    kInf_.preEvaluate();
+}
+
+
+template<class ReactionRate, class ChemicallyActivationFunction>
+inline void Foam::ChemicallyActivatedReactionRate
+<
+    ReactionRate,
+    ChemicallyActivationFunction
+>::postEvaluate() const
+{
+    k0_.postEvaluate();
+    kInf_.postEvaluate();
+}
+
 
 template<class ReactionRate, class ChemicallyActivationFunction>
 inline Foam::scalar Foam::ChemicallyActivatedReactionRate

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -193,8 +193,8 @@ addToCoalescenceRate
     if (laminarShear_)
     {
         coalescenceRate +=
-            1.0/6.0*pow3(fi.d() + fj.d())*shearStrainRate_()
-           *collisionEfficiency;
+            pow3(fi.dSph() + fj.dSph())/6
+           *shearStrainRate_()*collisionEfficiency;
     }
 }
 

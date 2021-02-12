@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,6 +100,16 @@ Foam::ReactionProxy<ReactionThermo>::clone
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class ReactionThermo>
+void Foam::ReactionProxy<ReactionThermo>::preEvaluate() const
+{}
+
+
+template<class ReactionThermo>
+void Foam::ReactionProxy<ReactionThermo>::postEvaluate() const
+{}
+
 
 template<class ReactionThermo>
 Foam::scalar Foam::ReactionProxy<ReactionThermo>::kf

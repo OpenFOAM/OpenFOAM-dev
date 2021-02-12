@@ -52,7 +52,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fv::optionList::source
 
         if (source.addsSupToField(fieldName))
         {
-            addedToFields_[i].insert(fieldName);
+            addSupFields_[i].insert(fieldName);
 
             if (debug)
             {

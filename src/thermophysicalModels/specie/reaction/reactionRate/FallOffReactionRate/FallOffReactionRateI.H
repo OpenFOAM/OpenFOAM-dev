@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,6 +75,24 @@ FallOffReactionRate
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+template<class ReactionRate, class FallOffFunction>
+inline void
+Foam::FallOffReactionRate<ReactionRate, FallOffFunction>::preEvaluate() const
+{
+    k0_.preEvaluate();
+    kInf_.preEvaluate();
+}
+
+
+template<class ReactionRate, class FallOffFunction>
+inline void
+Foam::FallOffReactionRate<ReactionRate, FallOffFunction>::postEvaluate() const
+{
+    k0_.postEvaluate();
+    kInf_.postEvaluate();
+}
+
 
 template<class ReactionRate, class FallOffFunction>
 inline Foam::scalar

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -205,6 +205,16 @@ fluxLimitedLangmuirHinshelwoodReactionRate
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+inline void
+Foam::fluxLimitedLangmuirHinshelwoodReactionRate::preEvaluate() const
+{}
+
+
+inline void
+Foam::fluxLimitedLangmuirHinshelwoodReactionRate::postEvaluate() const
+{}
+
 
 inline Foam::scalar
 Foam::fluxLimitedLangmuirHinshelwoodReactionRate::operator()

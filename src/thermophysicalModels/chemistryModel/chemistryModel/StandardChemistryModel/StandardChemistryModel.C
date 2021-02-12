@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -107,7 +107,6 @@ void Foam::StandardChemistryModel<ThermoType>::omega
     scalarField& dcdt
 ) const
 {
-
     dcdt = Zero;
 
     forAll(reactions_, i)
@@ -306,6 +305,8 @@ Foam::StandardChemistryModel<ThermoType>::tc() const
 
     if (this->chemistry_)
     {
+        reactionEvaluationScope scope(*this);
+
         forAll(rho, celli)
         {
             const scalar rhoi = rho[celli];
@@ -358,6 +359,8 @@ Foam::StandardChemistryModel<ThermoType>::Qdot() const
 
     if (this->chemistry_)
     {
+        reactionEvaluationScope scope(*this);
+
         scalarField& Qdot = tQdot.ref();
 
         forAll(Y_, i)
@@ -399,6 +402,8 @@ Foam::StandardChemistryModel<ThermoType>::calculateRR
 
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();
+
+    reactionEvaluationScope scope(*this);
 
     scalar pf, cf, pr, cr;
     label lRef, rRef;
@@ -458,6 +463,8 @@ void Foam::StandardChemistryModel<ThermoType>::calculate()
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();
 
+    reactionEvaluationScope scope(*this);
+
     forAll(rho, celli)
     {
         const scalar rhoi = rho[celli];
@@ -501,6 +508,8 @@ Foam::scalar Foam::StandardChemistryModel<ThermoType>::solve
 
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();
+
+    reactionEvaluationScope scope(*this);
 
     scalarField c0(nSpecie_);
 

@@ -1,0 +1,15 @@
+EXE_INC = \
+    -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/chemistryModel/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I../phaseSystems/lnInclude
+
+LIB_LIBS = \
+    -lspecie \
+    -lfluidThermophysicalModels \
+    -lreactionThermophysicalModels \
+    -lchemistryModel \
+    -lfiniteVolume \
+    -lphaseSystem
