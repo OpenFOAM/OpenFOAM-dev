@@ -147,6 +147,7 @@ $(cellSources)/cylinderToCell/cylinderToCell.C
 $(cellSources)/faceZoneToCell/faceZoneToCell.C
 $(cellSources)/cylinderAnnulusToCell/cylinderAnnulusToCell.C
 $(cellSources)/targetVolumeToCell/targetVolumeToCell.C
+$(cellSources)/patchDistanceToCell/patchDistanceToCell.C
 
 faceSources = sets/faceSources
 $(faceSources)/faceToFace/faceToFace.C

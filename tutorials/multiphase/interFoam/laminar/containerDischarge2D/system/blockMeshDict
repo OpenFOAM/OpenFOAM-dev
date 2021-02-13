@@ -1,0 +1,192 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+tankRad 0.05;
+holeRad 0.01;
+height  0.1;
+holeCellSize 0.0005;
+tankCellSize 0.001;
+halfDepth    0.01;
+
+nTankCells 20;
+nHoleCells 20;
+nVerCells  60;
+
+horizGrading    3;
+upperGrading    1;
+lowerGrading    1;
+
+tankNeg       #neg $tankRad;
+holeNeg       #neg $holeRad;
+heightNeg     #neg $height;
+halfDepthNeg  #neg $halfDepth;
+
+vertices
+(
+    ($tankNeg $halfDepthNeg $heightNeg)
+    ($holeNeg $halfDepthNeg $heightNeg)
+    ($holeRad $halfDepthNeg $heightNeg)
+    ($tankRad $halfDepthNeg $heightNeg)
+    ($tankNeg $halfDepthNeg 0)
+    ($holeNeg $halfDepthNeg 0)
+    ($holeRad $halfDepthNeg 0)
+    ($tankRad $halfDepthNeg 0)
+    ($tankNeg $halfDepthNeg 0)
+    ($tankRad $halfDepthNeg 0)
+    ($tankNeg $halfDepthNeg $height)
+    ($holeNeg $halfDepthNeg $height)
+    ($holeRad $halfDepthNeg $height)
+    ($tankRad $halfDepthNeg $height)
+
+    ($tankNeg $halfDepth $heightNeg)
+    ($holeNeg $halfDepth $heightNeg)
+    ($holeRad $halfDepth $heightNeg)
+    ($tankRad $halfDepth $heightNeg)
+    ($tankNeg $halfDepth 0)
+    ($holeNeg $halfDepth 0)
+    ($holeRad $halfDepth 0)
+    ($tankRad $halfDepth 0)
+    ($tankNeg $halfDepth 0)
+    ($tankRad $halfDepth 0)
+    ($tankNeg $halfDepth $height)
+    ($holeNeg $halfDepth $height)
+    ($holeRad $halfDepth $height)
+    ($tankRad $halfDepth $height)
+);
+
+blocks
+(
+    hex (15 14 0 1 19 18 4 5)
+    ($nTankCells 1 $nVerCells)
+    simpleGrading ($horizGrading 1 $lowerGrading)
+
+    hex (1 2 16 15 5 6 20 19)
+    ($nHoleCells 1 $nVerCells)
+    simpleGrading (1 1 $lowerGrading)
+
+    hex (2 3 17 16 6 7 21 20)
+    ($nTankCells 1 $nVerCells)
+    simpleGrading ($horizGrading 1 $lowerGrading)
+
+    hex (19 22 8 5 25 24 10 11)
+    ($nTankCells 1 $nVerCells)
+    simpleGrading ($horizGrading 1 $upperGrading)
+
+    hex (5 6 20 19 11 12 26 25)
+    ($nHoleCells 1 $nVerCells)
+    simpleGrading (1 1 $upperGrading)
+
+    hex (6 9 23 20 12 13 27 26)
+    ($nTankCells 1 $nVerCells)
+    simpleGrading ($horizGrading 1 $upperGrading)
+);
+
+edges
+(
+);
+
+boundary
+(
+    left
+    {
+        type patch;
+        faces
+        (
+            (0 4 18 14)
+        );
+    }
+
+    right
+    {
+        type patch;
+        faces
+        (
+            (3 7 21 17)
+        );
+    }
+
+    containerWalls
+    {
+        type wall;
+        faces
+        (
+            (8 10 24 22)
+            (9 13 27 23)
+        );
+    }
+
+    containerBase
+    {
+        type wall;
+        faces
+        (
+            (4 5 19 18)
+            (6 7 21 20)
+            (8 5 19 22)
+            (6 9 23 20)
+        );
+    }
+
+    ground
+    {
+        type wall;
+        faces
+        (
+            (0 1 15 14)
+            (1 2 16 15)
+            (2 3 17 16)
+        );
+    }
+
+    atmosphere
+    {
+        type patch;
+        faces
+        (
+            (10 11 25 24)
+            (11 12 26 25)
+            (12 13 27 26)
+        );
+    }
+
+    frontAndBack
+    {
+        type empty;
+        faces
+        (
+            (0 1 5 4)
+            (1 2 6 5)
+            (2 3 7 6)
+            (8 5 11 10)
+            (5 6 12 11)
+            (6 9 13 12)
+            (14 15 19 18)
+            (15 16 20 19)
+            (16 17 21 20)
+            (22 19 25 24)
+            (19 20 26 25)
+            (20 23 27 26)
+        );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //
