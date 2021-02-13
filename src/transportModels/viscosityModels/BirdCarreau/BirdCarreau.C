@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,14 +75,7 @@ Foam::viscosityModels::BirdCarreau::BirdCarreau
     nuInf_("nuInf", dimViscosity, BirdCarreauCoeffs_),
     k_("k", dimTime, BirdCarreauCoeffs_),
     n_("n", dimless, BirdCarreauCoeffs_),
-    a_
-    (
-        BirdCarreauCoeffs_.lookupOrDefault
-        (
-            "a",
-            dimensionedScalar("a", dimless, 2)
-        )
-    ),
+    a_(dimensioned<scalar>::lookupOrDefault("a", BirdCarreauCoeffs_, 2)),
     nu_
     (
         IOobject
@@ -114,11 +107,7 @@ bool Foam::viscosityModels::BirdCarreau::read
     BirdCarreauCoeffs_.lookup("nuInf") >> nuInf_;
     BirdCarreauCoeffs_.lookup("k") >> k_;
     BirdCarreauCoeffs_.lookup("n") >> n_;
-    a_ = BirdCarreauCoeffs_.lookupOrDefault
-    (
-        "a",
-        dimensionedScalar("a", dimless, 2)
-    );
+    a_ = dimensioned<scalar>::lookupOrDefault("a", BirdCarreauCoeffs_, 2);
 
     return true;
 }
