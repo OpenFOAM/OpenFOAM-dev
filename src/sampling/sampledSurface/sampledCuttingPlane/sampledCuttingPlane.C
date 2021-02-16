@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -250,7 +250,7 @@ Foam::sampledSurfaces::cuttingPlane::cuttingPlane
     (
         dict.found("filtering")
       ? isoSurface::filterTypeNames_.read(dict.lookup("filtering"))
-      : isoSurface::filterType::full
+      : isoSurface::filterType::partial
     ),
     average_(dict.lookupOrDefault("average", false)),
     zoneKey_(dict.lookupOrDefault("zone", wordRe::null)),

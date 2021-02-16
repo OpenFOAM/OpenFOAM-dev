@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -253,7 +253,7 @@ Foam::sampledSurfaces::isoSurface::isoSurface
     (
         dict.found("filtering")
       ? Foam::isoSurface::filterTypeNames_.read(dict.lookup("filtering"))
-      : Foam::isoSurface::filterType::full
+      : Foam::isoSurface::filterType::partial
     ),
     prevTimeIndex_(-1),
     meshCells_(0)

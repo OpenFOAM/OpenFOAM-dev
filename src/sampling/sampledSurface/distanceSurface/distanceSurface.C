@@ -345,7 +345,7 @@ Foam::sampledSurfaces::distanceSurface::distanceSurface
     (
         dict.found("filtering")
       ? isoSurface::filterTypeNames_.read(dict.lookup("filtering"))
-      : isoSurface::filterType::full
+      : isoSurface::filterType::partial
     ),
     average_(dict.lookupOrDefault("average", false)),
     zoneKey_(dict.lookupOrDefault("zone", wordRe::null)),
