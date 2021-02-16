@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -60,6 +60,7 @@ Usage
         p            | Pressure field name     | no          | p
         U            | Velocity field name     | no          | U
         rho          | Density field name (see below) | no   | rho
+        phase        | Phase name for phase-fraction  | no   |
         CofR         | Centre of rotation (see below) | no   |
         directForceDensity | Force density supplied directly (see below)|no|no
         fD           | Name of force density field (see below) | no | fD
@@ -74,9 +75,11 @@ Usage
     \endtable
 
 Note
-  - For incompressible cases, set \c rho to \c rhoInf.  You will then be
-    required to provide a \c rhoInf value corresponding to the free-stream
-    constant density.
+  - For incompressible cases, set \c rho to \c rhoInf and provide
+    a \c rhoInf value corresponding to the free-stream constant density.
+  - If the \c phase name is specified the corresponding phase-fraction field
+    \c alpha.<phase> is used to filter the surface force field
+    before integration.
   - If the force density is supplied directly, set the \c directForceDensity
     flag to 'yes', and supply the force density field using the \c
     fDName entry
@@ -167,6 +170,9 @@ protected:
             //- Name of density field (optional)
             word rhoName_;
 
+            //- The name of the phase (optional)
+            word phaseName_;
+
             //- Is the force density being supplied directly?
             Switch directForceDensity_;
 
@@ -244,6 +250,12 @@ protected:
         //- Return rhoRef if the pressure field is dynamic, i.e. p/rho
         //  otherwise return 1
         scalar rho(const volScalarField& p) const;
+
+        tmp<vectorField> phaseFilter
+        (
+            const tmp<vectorField>& F,
+            const label patchi
+        ) const;
 
         //- Accumulate bin data
         void applyBins
