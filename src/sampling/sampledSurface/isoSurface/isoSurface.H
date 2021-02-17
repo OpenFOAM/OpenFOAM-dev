@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,13 @@ Description
         As partial, but also remove points from face-diagonals and merge edges
         that originate from the same face
 
+    - clean:
+        As full, but also remove faces that were made non-manifold by the point
+        filtering process. Note that this process is not entirely robust. The
+        removal process can result in entire contiguous sections of the surface
+        being removed. If small imperfections in the surface can be tolerated,
+        then it is advised to use "full" filtering instead.
+
 SourceFiles
     isoSurface.C
 
@@ -79,10 +86,11 @@ public:
         {
             none,
             partial,
-            full
+            full,
+            clean
         };
 
-        static const NamedEnum<filterType, 3> filterTypeNames_;
+        static const NamedEnum<filterType, 4> filterTypeNames_;
 
 
 private:

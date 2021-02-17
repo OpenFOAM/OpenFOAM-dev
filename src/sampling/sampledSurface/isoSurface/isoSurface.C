@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,11 +41,11 @@ namespace Foam
 namespace Foam
 {
     template<>
-    const char* NamedEnum<isoSurface::filterType, 3>::names[] =
-        {"none", "partial", "full"};
+    const char* NamedEnum<isoSurface::filterType, 4>::names[] =
+        {"none", "partial", "full", "clean"};
 }
 
-const Foam::NamedEnum<Foam::isoSurface::filterType, 3>
+const Foam::NamedEnum<Foam::isoSurface::filterType, 4>
     Foam::isoSurface::filterTypeNames_;
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -1288,7 +1288,12 @@ Foam::isoSurface::isoSurface
     }
 
 
-    if (filter != filterType::none)
+    if
+    (
+        filter == filterType::partial
+     || filter == filterType::full
+     || filter == filterType::clean
+    )
     {
         // Triangulate outside (filter edges to cell centres and optionally
         // face diagonals)
@@ -1298,7 +1303,12 @@ Foam::isoSurface::isoSurface
         (
             removeInsidePoints
             (
-                (filter == filterType::full ? true : false),
+                (
+                    filter == filterType::full
+                 || filter == filterType::clean
+                  ? true
+                  : false
+                ),
                 *this,
                 pointFromDiag,
                 pointToFace_,
@@ -1319,114 +1329,113 @@ Foam::isoSurface::isoSurface
                 << " after removing cell centre and face-diag triangles : "
                 << size() << endl;
         }
+    }
 
 
-        if (filter == filterType::full)
+    if (filter == filterType::clean)
+    {
+        // We remove verts on face diagonals. This is in fact just
+        // straightening the edges of the face through the cell. This can
+        // close off 'pockets' of triangles and create open or
+        // multiply-connected triangles
+
+        // Solved by eroding open-edges
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        // Mark points on mesh outside. Note that we extend with nCells
+        // so we can easily index with pointToVerts_.
+        PackedBoolList isBoundaryPoint(mesh.nPoints() + mesh.nCells());
+        for
+        (
+            label facei = mesh.nInternalFaces();
+            facei < mesh.nFaces();
+            facei++
+        )
         {
-            // We remove verts on face diagonals. This is in fact just
-            // straightening the edges of the face through the cell. This can
-            // close off 'pockets' of triangles and create open or
-            // multiply-connected triangles
-
-            // Solved by eroding open-edges
-            // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            isBoundaryPoint.set(mesh.faces()[facei]);
+        }
 
 
-            // Mark points on mesh outside. Note that we extend with nCells
-            // so we can easily index with pointToVerts_.
-            PackedBoolList isBoundaryPoint(mesh.nPoints() + mesh.nCells());
-            for
-            (
-                label facei = mesh.nInternalFaces();
-                facei < mesh.nFaces();
-                facei++
-            )
+        while (true)
+        {
+            const labelList& mp = meshPoints();
+
+            PackedBoolList removeFace(this->size());
+            label nFaces = 0;
             {
-                isBoundaryPoint.set(mesh.faces()[facei]);
-            }
-
-
-            while (true)
-            {
-                const labelList& mp = meshPoints();
-
-                PackedBoolList removeFace(this->size());
-                label nFaces = 0;
+                const labelListList& edgeFaces =
+                    MeshedSurface<face>::edgeFaces();
+                forAll(edgeFaces, edgei)
                 {
-                    const labelListList& edgeFaces =
-                        MeshedSurface<face>::edgeFaces();
-                    forAll(edgeFaces, edgei)
+                    const labelList& eFaces = edgeFaces[edgei];
+                    if (eFaces.size() == 1)
                     {
-                        const labelList& eFaces = edgeFaces[edgei];
-                        if (eFaces.size() == 1)
+                        // Open edge. Check that vertices do not originate
+                        // from a boundary face
+                        const edge& e = edges()[edgei];
+                        const edge& verts0 = pointToVerts_[mp[e[0]]];
+                        const edge& verts1 = pointToVerts_[mp[e[1]]];
+                        if
+                        (
+                            isBoundaryPoint[verts0[0]]
+                         && isBoundaryPoint[verts0[1]]
+                         && isBoundaryPoint[verts1[0]]
+                         && isBoundaryPoint[verts1[1]]
+                        )
                         {
-                            // Open edge. Check that vertices do not originate
-                            // from a boundary face
-                            const edge& e = edges()[edgei];
-                            const edge& verts0 = pointToVerts_[mp[e[0]]];
-                            const edge& verts1 = pointToVerts_[mp[e[1]]];
-                            if
-                            (
-                                isBoundaryPoint[verts0[0]]
-                             && isBoundaryPoint[verts0[1]]
-                             && isBoundaryPoint[verts1[0]]
-                             && isBoundaryPoint[verts1[1]]
-                            )
+                            // Open edge on boundary face. Keep
+                        }
+                        else
+                        {
+                            // Open edge. Mark for erosion
+                            if (removeFace.set(eFaces[0]))
                             {
-                                // Open edge on boundary face. Keep
-                            }
-                            else
-                            {
-                                // Open edge. Mark for erosion
-                                if (removeFace.set(eFaces[0]))
-                                {
-                                    nFaces++;
-                                }
+                                nFaces++;
                             }
                         }
                     }
                 }
-
-                if (debug)
-                {
-                    Pout<< "isoSurface :"
-                        << " removing " << nFaces
-                        << " faces since on open edges" << endl;
-                }
-
-                if (returnReduce(nFaces, sumOp<label>()) == 0)
-                {
-                    break;
-                }
-
-                // Remove the faces
-                labelHashSet keepFaces(2*size());
-                forAll(removeFace, facei)
-                {
-                    if (!removeFace[facei])
-                    {
-                        keepFaces.insert(facei);
-                    }
-                }
-
-                labelList pointMap;
-                labelList faceMap;
-                MeshedSurface<face> filteredSurf
-                (
-                    MeshedSurface<face>::subsetMesh
-                    (
-                        keepFaces,
-                        pointMap,
-                        faceMap
-                    )
-                );
-                MeshedSurface<face>::transfer(filteredSurf);
-
-                pointToVerts_ = UIndirectList<edge>(pointToVerts_, pointMap)();
-                pointToFace_ = UIndirectList<label>(pointToFace_, pointMap)();
-                pointFromDiag = UIndirectList<bool>(pointFromDiag, pointMap)();
-                meshCells_ = UIndirectList<label>(meshCells_, faceMap)();
             }
+
+            if (debug)
+            {
+                Pout<< "isoSurface :"
+                    << " removing " << nFaces
+                    << " faces since on open edges" << endl;
+            }
+
+            if (returnReduce(nFaces, sumOp<label>()) == 0)
+            {
+                break;
+            }
+
+            // Remove the faces
+            labelHashSet keepFaces(2*size());
+            forAll(removeFace, facei)
+            {
+                if (!removeFace[facei])
+                {
+                    keepFaces.insert(facei);
+                }
+            }
+
+            labelList pointMap;
+            labelList faceMap;
+            MeshedSurface<face> filteredSurf
+            (
+                MeshedSurface<face>::subsetMesh
+                (
+                    keepFaces,
+                    pointMap,
+                    faceMap
+                )
+            );
+            MeshedSurface<face>::transfer(filteredSurf);
+
+            pointToVerts_ = UIndirectList<edge>(pointToVerts_, pointMap)();
+            pointToFace_ = UIndirectList<label>(pointToFace_, pointMap)();
+            pointFromDiag = UIndirectList<bool>(pointFromDiag, pointMap)();
+            meshCells_ = UIndirectList<label>(meshCells_, faceMap)();
         }
     }
 }

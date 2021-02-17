@@ -253,7 +253,7 @@ Foam::sampledSurfaces::isoSurface::isoSurface
     (
         dict.found("filtering")
       ? Foam::isoSurface::filterTypeNames_.read(dict.lookup("filtering"))
-      : Foam::isoSurface::filterType::partial
+      : Foam::isoSurface::filterType::full
     ),
     prevTimeIndex_(-1),
     meshCells_(0)
