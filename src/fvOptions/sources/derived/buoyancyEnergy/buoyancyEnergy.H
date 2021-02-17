@@ -112,7 +112,7 @@ public:
 
         // Evaluate
 
-            //- Add explicit contribution to compressible momentum equation
+            //- Add explicit contribution to compressible energy equation
             virtual void addSup
             (
                 const volScalarField& rho,
@@ -120,7 +120,7 @@ public:
                 const word& fieldName
             ) const;
 
-            //- Add explicit contribution to phase momentum equation
+            //- Add explicit contribution to phase energy equation
             virtual void addSup
             (
                 const volScalarField& alpha,

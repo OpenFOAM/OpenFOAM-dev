@@ -102,7 +102,7 @@ public:
 
         // Evaluate
 
-            //- Add explicit contribution to compressible momentum equation
+            //- Add explicit contribution to compressible energy equation
             virtual void addSup
             (
                 const volScalarField& rho,
