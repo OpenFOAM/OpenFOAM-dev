@@ -28,15 +28,15 @@ surfaces
     yNormal
     {
         $cuttingPlane;
-        normalVector $y;      // Overrides default normalVector (1 0 0)
-                              // $y: macro for (0 1 0)
+        normal   $y;      // Overrides default normal (1 0 0)
+                          // $y: macro for (0 1 0)
     }
 
     zNormal
     {
         $cuttingPlane;
-        basePoint    (0 0 2); // Overrides default basePoint (0 0 0)
-        normalVector $z;      // $z: macro for (0 0 1)
+        point    (0 0 2); // Overrides default point (0 0 0)
+        normal   $z;      // $z: macro for (0 0 1)
     }
 
     p100
