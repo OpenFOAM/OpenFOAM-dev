@@ -20,16 +20,16 @@ depth       20;  // Depth of tank (x-direction)
 width       40;  // Width of tank (y-direction)
 height      30;  // Depth of tank (z-direction)
 
-lowerHeight  5;  // Height to the top of lower chamfer
+lowerHeight 5;   // Height to the top of lower chamfer
 upperHeight 10;  // Height of upper chamfer
 
 angleLower  45;  // Angle of lower chamfer to the horizontal
 angleUpper  45;  // Angle of upper chamfer to the horizontal
-moveZ      -10;  // Moving tank in z direction
+moveZ       -10; // Moving tank in z direction
 
 xCells      19;  // Number of cells in the depth
 yCells      40;  // Number of cells in the width
-zLowCells    6;  // Number of cells in the height of the lower champfer
+zLowCells   6;   // Number of cells in the height of the lower champfer
 zMidCells   16;  // Number of cells in the height between the chamfers
 zUpCells    12;  // Number of cells in the height of the upper champfer
 
