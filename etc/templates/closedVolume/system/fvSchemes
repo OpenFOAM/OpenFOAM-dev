@@ -47,7 +47,7 @@ divSchemes
 
     div(phi,Ekp)    bounded Gauss linear;
 
-    div((nuEff*dev2(T(grad(U))))) Gauss linear;
+    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 
 laplacianSchemes
