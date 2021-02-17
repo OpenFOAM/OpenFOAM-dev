@@ -19,8 +19,6 @@ option1
 {
     type            isotropicDamping;
 
-    selectionMode   all;
-
     origin          (1200 0 0);
     direction       (1 0 0);
     scale

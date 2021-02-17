@@ -39,7 +39,7 @@ SourceFiles
 #ifndef damping_H
 #define damping_H
 
-#include "cellSetOption.H"
+#include "fvOption.H"
 #include "Function1.H"
 #include "volFields.H"
 
@@ -56,7 +56,7 @@ namespace fv
 
 class damping
 :
-    public cellSetOption
+    public option
 {
 protected:
 

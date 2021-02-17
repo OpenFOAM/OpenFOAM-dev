@@ -57,23 +57,6 @@ Usage
     {
         type            verticalDamping;
 
-        selectionMode   cellZone;
-        cellZone        nearOutlet;
-
-        lambda          [0 0 -1 0 0 0 0] 1; // Damping coefficient
-
-        timeStart       0;
-        duration        1e6;
-    }
-    \endverbatim
-    Example usage with graduated onset:
-    \verbatim
-    verticalDamping1
-    {
-        type            verticalDamping;
-
-        selectionMode   all;
-
         // Define the line along which to apply the graduation
         origin          (1200 0 0);
         direction       (1 0 0);

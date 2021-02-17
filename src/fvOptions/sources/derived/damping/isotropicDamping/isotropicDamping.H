@@ -44,21 +44,6 @@ Usage
     {
         type            isotropicDamping;
 
-        selectionMode   cellZone;
-        cellZone        nearOutlet;
-
-        value           (2 0 0);   // Value towards which the field it relaxed
-        lambda          [0 0 -1 0 0 0 0] 1; // Damping coefficient
-    }
-    \endverbatim
-    Example usage with graduated onset:
-    \verbatim
-    isotropicDamping1
-    {
-        type            isotropicDamping;
-
-        selectionMode   all;
-
         // Define the line along which to apply the graduation
         origin          (1200 0 0);
         direction       (1 0 0);

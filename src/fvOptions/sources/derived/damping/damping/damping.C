@@ -179,7 +179,7 @@ Foam::fv::damping::damping
     const fvMesh& mesh
 )
 :
-    cellSetOption(name, modelType, dict, mesh),
+    option(name, modelType, dict, mesh),
     UName_(word::null),
     lambda_("lambda", dimless/dimTime, NaN),
     scale_(nullptr),
@@ -200,7 +200,7 @@ Foam::wordList Foam::fv::damping::addSupFields() const
 
 bool Foam::fv::damping::read(const dictionary& dict)
 {
-    if (cellSetOption::read(dict))
+    if (option::read(dict))
     {
         readCoeffs();
         return true;
