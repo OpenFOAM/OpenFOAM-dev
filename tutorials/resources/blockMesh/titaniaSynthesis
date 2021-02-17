@@ -16,13 +16,13 @@ FoamFile
 convertToMeters 1;
 
 radius 0.015875; // Pipe radius (z-axis)
-length     0.44; // Pipe length (x-axis)
-angle         1; // Center (wedge) angle
+length 0.44;     // Pipe length (x-axis)
+angle  1;        // Center (wedge) angle
 
 // Number of cells
 xCells 220;
-yCells   1;
-zCells  16;
+yCells 1;
+zCells 16;
 
 // Derived parameters
 zr           #calc "$radius*cos(degToRad(0.5*$angle))";
