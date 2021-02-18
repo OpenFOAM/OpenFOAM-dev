@@ -1,0 +1,139 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeEtc "caseDicts/mesh/generation/snappyHexMeshDict.cfg"
+
+castellatedMesh on;
+snap            on;
+addLayers       on;
+
+geometry
+{
+    body
+    {
+        type triSurfaceMesh;
+        file "body.obj";
+    }
+
+    frontWheels
+    {
+        type triSurfaceMesh;
+        file "frontWheels.obj";
+    }
+
+    rearWheels
+    {
+        type triSurfaceMesh;
+        file "rearWheels.obj";
+    }
+
+    upstream
+    {
+        type searchableBox;
+        min (-10 -1.5  0);
+        max ( 3   1.5  0.8);
+    }
+
+    underbody
+    {
+        type searchableBox;
+        min (-10 -1.5  0);
+        max ( 3   1.5  0.15);
+    }
+
+    wake
+    {
+        type searchableBox;
+        min ( 3 -1.2  0);
+        max ( 6  1.2 1.4);
+    }
+
+    downstream
+    {
+        type searchableBox;
+        min ( 3 -1.5  0);
+        max (30  1.5 1.8);
+    }
+};
+
+castellatedMeshControls
+{
+    features ();
+
+    refinementSurfaces
+    {
+        body
+        {
+            level (5 5);
+            patchInfo { type wall; }
+        }
+
+        ".*Wheels" // level 5 needed to avoid single cells in treads
+        {
+            level (4 5);
+            patchInfo { type wall; }
+        }
+    }
+
+    refinementRegions
+    {
+        body
+        {
+            mode distance;
+            levels ((0.2 5));
+        }
+
+        "(wake|underbody)"
+        {
+            mode inside;
+            levels ((1E15 4));
+        }
+
+        ".*stream"
+        {
+            mode inside;
+            levels ((1E15 3));
+        }
+    }
+
+    locationInMesh (0 0 3);
+    nCellsBetweenLevels 5;
+}
+
+snapControls {}
+
+addLayersControls
+{
+    layers
+    {
+        body
+        {
+            nSurfaceLayers 2;
+        }
+    }
+
+    relativeSizes       on;
+    expansionRatio      1.2;
+    finalLayerThickness 0.5;
+    minThickness        1e-3;
+    maxThicknessToMedialRatio 0.6;
+}
+
+writeFlags ();
+
+mergeTolerance 1e-6;
+
+// ************************************************************************* //

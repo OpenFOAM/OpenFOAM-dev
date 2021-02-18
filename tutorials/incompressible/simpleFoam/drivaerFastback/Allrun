@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Run from this directory
+cd "${0%/*}" || exit 1
+
+# Source tutorial run functions
+. "$WM_PROJECT_DIR/bin/tools/RunFunctions"
+
+runApplication blockMesh
+
+runApplication decomposePar -copyZero
+
+# echo "Switching to ptscotch for dynamic load balancing with snappyHexMesh"
+# foamDictionary \
+#     -entry method -set ptscotch system/decomposeParDict > /dev/null
+
+runParallel snappyHexMesh -overwrite
+
+runParallel checkMesh
+
+runParallel "$(getApplication)"
+
+#------------------------------------------------------------------------------
