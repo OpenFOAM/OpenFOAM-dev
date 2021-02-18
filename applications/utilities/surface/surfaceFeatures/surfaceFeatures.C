@@ -307,7 +307,7 @@ namespace Foam
 
             if (subsetDict.found("plane"))
             {
-                const plane cutPlane(subsetDict.lookup("plane")());
+                const plane cutPlane(subsetDict.subDict("plane"));
 
                 selectCutEdges(surf, cutPlane, edgeStat);
 

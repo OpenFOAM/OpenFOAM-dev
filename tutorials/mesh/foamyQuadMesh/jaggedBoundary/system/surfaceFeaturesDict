@@ -24,10 +24,13 @@ includedAngle   175;
 
 subsetFeatures
 {
-    // Use a plane to select feature edges
-    // (normal)(point)
-    // Keep only edges that intersect the plane will be included
-    plane               (0 0 1)(-0.6 0.3 0.0);
+    // Keep only edges that intersect the plane
+    plane
+    {
+        planeType       pointAndNormal;
+        point           (-0.6 0.3 0);
+        normal          (0 0 1);
+    }
 
     // Keep nonManifold edges (edges with >2 connected faces where
     // the faces form more than two different normal planes)

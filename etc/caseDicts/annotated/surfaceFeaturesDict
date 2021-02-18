@@ -59,18 +59,19 @@ surface2
 
     subsetFeatures
     {
-        // Use a plane to select feature edges
-        // (normal)(basePoint)
-        // Keep only edges that intersect the plane will be included
-        plane               (1 0 0)(0 0 0);
+        // Keep only edges that intersect the plane
+        plane
+        {
+            planeType       pointAndNormal;
+            point           (0 0 0);
+            normal          (1 0 0);
+        }
 
-        // Select feature edges using a box
-        // (minPt)(maxPt)
-        // Keep edges inside the box:
-        insideBox           (0 0 0)(1 1 1);
+        // Keep only edges inside the box
+        insideBox           (0 0 0) (1 1 1);
 
-        // Keep edges outside the box:
-        outsideBox          (0 0 0)(1 1 1);
+        // Keep only edges outside the box
+        outsideBox          (0 0 0) (1 1 1);
 
         // Keep nonManifold edges (edges with >2 connected faces where
         // the faces form more than two different normal planes)

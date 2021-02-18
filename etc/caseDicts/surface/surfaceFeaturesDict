@@ -28,8 +28,13 @@ geometricTestOnly   no;
 
 subsetFeatures
 {
-    // Include only edges that intersect the plane with (normal)(basePoint)
-    // plane               (1 0 0)(0 0 0);
+    // Include only edges that intersect the plane
+    // plane
+    // {
+    //     planeType       pointAndNormal;
+    //     point           (0 0 0);
+    //     normal          (1 0 0);
+    // }
 
     // Include only edges inside the box
     // insideBox           (0 0 0)(1 1 1);
