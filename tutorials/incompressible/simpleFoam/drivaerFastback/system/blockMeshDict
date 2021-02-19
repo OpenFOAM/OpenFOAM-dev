@@ -20,9 +20,9 @@ yMin   -5;
 yMax    5;
 zMin    0;
 zMax    8;
-xCells  80; // 40
-yCells  20; // 10
-zCells  16; //  8
+xCells  40;
+yCells  10;
+zCells  8;
 
 convertToMeters 1;
 

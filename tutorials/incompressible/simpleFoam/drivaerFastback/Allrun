@@ -15,10 +15,11 @@ Usage: ${0##*/} [OPTIONS]
 options:
   -c | -cores <nCores>   number of cores in parallel run
   -h | -help             help
-  -m | -meshSize <S|M|L> mesh size
-                         - S: small, ~3M cells (default)
-                         - M: medium, ~25M cells
-                         - L: large, ~200M cells
+  -m | -mesh <S|M|L|XL>  mesh size
+                         - S: small, 440k cells
+                         - M: medium, 3M cells (default)
+                         - L: large, 22.5M cells
+                         - XL: extra large, ~200M cells
 
 Runs the ${PWD##*/} simulation
 
@@ -51,8 +52,15 @@ refineBackgroundMesh () {
     done
 }
 
-meshSize=""
-nRefine=0
+setKeyword () {
+    _entry="$1"
+    _value="$2"
+    _file="$3"
+
+    foamDictionary -entry "$_entry" -set "$_value" "$_file" > /dev/null
+}
+
+nRefine=1
 nCores=8
 
 while [ "$#" -gt 0 ]
@@ -63,22 +71,21 @@ do
       nCores=$2
       shift 2
       checkCores "$nCores" || usage
+      setKeyword numberOfSubdomains "$nCores" system/decomposeParDict
       ;;
    -h | -help)
       usage
       ;;
-   -m | -meshSize)
+   -m | -mesh)
       [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
-      meshSize=$2
+      mesh=$2
       shift 2
-      case "$meshSize" in
-          S|3M)   ;;
-          M|25M)  nRefine=1 ;;
-          L|200M) nRefine=2 ;;
-          *)
-              usage "Invalid argument '$meshSize'."\
-                "Valid options: 'S', 'M', 'L'."
-          ;;
+      case "$mesh" in
+          S)  ;;
+          M)  nRefine=1 ;;
+          L)  nRefine=2 ; setKeyword endTime 2000 system/controlDict ;;
+          XL) nRefine=3 ; setKeyword endTime 2000 system/controlDict ;;
+          *)  usage "Invalid argument '$mesh' to -m|-mesh <S|M|L|XL>." ;;
       esac
       ;;
    -*)
@@ -94,17 +101,12 @@ done
 
 runApplication blockMesh
 
-foamDictionary \
-    -entry numberOfSubdomains \
-    -set "$nCores" system/decomposeParDict > /dev/null
-
 runApplication decomposePar -copyZero
 
 refineBackgroundMesh $nRefine
 
 # echo "Switching to ptscotch for dynamic load balancing with snappyHexMesh"
-# foamDictionary \
-#     -entry method -set ptscotch system/decomposeParDict > /dev/null
+# setKeyword method ptscotch system/decomposeParDict
 
 runParallel snappyHexMesh -overwrite
 
