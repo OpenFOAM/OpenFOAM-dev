@@ -6,9 +6,101 @@ cd "${0%/*}" || exit 1
 # Source tutorial run functions
 . "$WM_PROJECT_DIR/bin/tools/RunFunctions"
 
+usage () {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    cat <<USAGE
+
+Usage: ${0##*/} [OPTIONS]
+options:
+  -c | -cores <nCores>   number of cores in parallel run
+  -h | -help             help
+  -m | -meshSize <S|M|L> mesh size
+                         - S: small, ~3M cells (default)
+                         - M: medium, ~25M cells
+                         - L: medium, ~200M cells
+
+Runs the ${PWD##*/} simulation
+
+USAGE
+    exit 1
+}
+
+checkCores () {
+    _cores="$1"
+
+    ! [ "$_cores" -eq "$_cores" ] 2> /dev/null && \
+        echo "Number of cores '$_cores' must be an integer" && \
+        return 1
+
+    [ "$_cores" -lt 2 ] && \
+        echo "Number of cores '$_cores' must be >= 2" && \
+        return 1
+
+    return 0
+}
+
+refineBackgroundMesh () {
+    _nRefine="$1"
+    _r=0
+    while [ $_r -lt "$_nRefine" ]
+    do
+        echo "Refining the background mesh"
+        runParallel -a refineMesh -overwrite
+        _r=$(( _r + 1 ))
+    done
+}
+
+meshSize=""
+nRefine=0
+nCores=8
+
+while [ "$#" -gt 0 ]
+do
+   case "$1" in
+   -c | -cores)
+      [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+      nCores=$2
+      shift 2
+      checkCores "$nCores" || usage
+      ;;
+   -h | -help)
+      usage
+      ;;
+   -m | -meshSize)
+      [ "$#" -ge 2 ] || usage "'$1' option requires an argument"
+      meshSize=$2
+      shift 2
+      case "$meshSize" in
+          S|3M)   ;;
+          M|25M)  nRefine=1 ;;
+          L|200M) nRefine=2 ;;
+          *)
+              usage "Invalid argument '$meshSize'."\
+                "Valid options: 'S', 'M', 'L'."
+          ;;
+      esac
+      ;;
+   -*)
+      usage "Invalid option '$1'"
+      ;;
+   *)
+      break
+      ;;
+    esac
+done
+
+# START OF MAIN SCRIPT
+
 runApplication blockMesh
 
+foamDictionary \
+    -entry numberOfSubdomains \
+    -set "$nCores" system/decomposeParDict > /dev/null
+
 runApplication decomposePar -copyZero
+
+refineBackgroundMesh $nRefine
 
 # echo "Switching to ptscotch for dynamic load balancing with snappyHexMesh"
 # foamDictionary \
