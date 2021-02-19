@@ -18,7 +18,7 @@ options:
   -m | -meshSize <S|M|L> mesh size
                          - S: small, ~3M cells (default)
                          - M: medium, ~25M cells
-                         - L: medium, ~200M cells
+                         - L: large, ~200M cells
 
 Runs the ${PWD##*/} simulation
 
