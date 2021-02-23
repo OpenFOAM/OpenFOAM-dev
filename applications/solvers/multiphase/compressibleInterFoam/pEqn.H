@@ -83,8 +83,7 @@
         #include "rhofs.H"
 
         p_rghEqnComp1 =
-            pos(alpha1)
-           *(
+            (
                 (
                     fvc::ddt(alpha1, rho1) + fvc::div(alphaPhi1*rho1f)
                   - (fvOptions(alpha1, mixture.thermo1().rho())&rho1)
@@ -94,8 +93,7 @@
             );
 
         p_rghEqnComp2 =
-            pos(alpha2)
-           *(
+            (
                (
                    fvc::ddt(alpha2, rho2) + fvc::div(alphaPhi2*rho2f)
                  - (fvOptions(alpha2, mixture.thermo2().rho())&rho2)

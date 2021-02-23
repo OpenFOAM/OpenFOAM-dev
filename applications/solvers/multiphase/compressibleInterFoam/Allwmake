@@ -10,6 +10,5 @@ wmake $targetType twoPhaseChange
 wmake $targetType VoFphaseCompressibleMomentumTransportModels
 
 wmake $targetType
-wmake $targetType compressibleInterFilmFoam
 
 #------------------------------------------------------------------------------

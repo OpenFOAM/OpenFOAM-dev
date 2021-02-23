@@ -183,6 +183,10 @@ bool Foam::fv::option::correctsField(const word& fieldName) const
 }
 
 
+void Foam::fv::option::correct()
+{}
+
+
 FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_ADD_SUP, option);
 
 

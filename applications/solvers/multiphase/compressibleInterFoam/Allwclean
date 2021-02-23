@@ -7,6 +7,5 @@ wclean libso twoPhaseChange
 wclean libso VoFphaseCompressibleMomentumTransportModels
 
 wclean
-wclean compressibleInterFilmFoam
 
 #------------------------------------------------------------------------------

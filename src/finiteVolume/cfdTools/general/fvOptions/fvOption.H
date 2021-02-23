@@ -299,6 +299,10 @@ public:
 
         // Sources
 
+            //- Correct the fvOption
+            //  e.g. solve equations, update model, for film, Lagrangian etc.
+            virtual void correct();
+
             //- Add a source term to an equation
             FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_ADD_SUP);
 

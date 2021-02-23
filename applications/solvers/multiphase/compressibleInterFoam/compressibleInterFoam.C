@@ -144,6 +144,8 @@ int main(int argc, char *argv[])
                 divU.clear();
             }
 
+            fvOptions.correct();
+
             #include "alphaControls.H"
             #include "compressibleAlphaEqnSubCycle.H"
 

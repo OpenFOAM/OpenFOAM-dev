@@ -253,6 +253,15 @@ bool Foam::fv::optionList::writeData(Ostream& os) const
 }
 
 
+void Foam::fv::optionList::correct()
+{
+    forAll(*this, i)
+    {
+        this->operator[](i).correct();
+    }
+}
+
+
 void Foam::fv::optionList::updateMesh(const mapPolyMesh& mpm)
 {
     forAll(*this, i)

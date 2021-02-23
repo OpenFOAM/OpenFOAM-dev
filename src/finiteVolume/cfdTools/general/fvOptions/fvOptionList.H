@@ -157,6 +157,10 @@ public:
 
         // Sources
 
+            //- Correct the fvOptions
+            //  e.g. solve equations, update model, for film, Lagrangian etc.
+            virtual void correct();
+
             //- Return source for an equation
             template<class Type>
             tmp<fvMatrix<Type>> operator()
