@@ -1,5 +1,7 @@
 if (pimple.frozenFlow())
 {
+    fvOptions.correct();
+
     #include "YEqn.H"
     #include "EEqn.H"
 }
@@ -9,6 +11,8 @@ else
     {
         #include "rhoEqn.H"
     }
+
+    fvOptions.correct();
 
     #include "UEqn.H"
     #include "YEqn.H"

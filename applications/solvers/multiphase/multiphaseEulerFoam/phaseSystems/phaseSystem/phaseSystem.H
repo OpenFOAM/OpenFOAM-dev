@@ -439,6 +439,9 @@ public:
             inline const IOMRFZoneList& MRF() const;
 
             //- Access the fvOptions
+            inline fv::options& fvOptions(fvMesh& mesh);
+
+            //- Access the fvOptions
             inline const fv::options& fvOptions() const;
 
 

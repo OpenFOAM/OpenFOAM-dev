@@ -156,6 +156,8 @@ int main(int argc, char *argv[])
                 divU.clear();
             }
 
+            fvOptions.correct();
+
             surfaceScalarField rhoPhi
             (
                 IOobject

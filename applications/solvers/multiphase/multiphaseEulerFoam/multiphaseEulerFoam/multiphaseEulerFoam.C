@@ -106,6 +106,8 @@ int main(int argc, char *argv[])
         {
             if (pimple.frozenFlow())
             {
+                fvOptions.correct();
+
                 fluid.solve(rAUs, rAUfs);
                 fluid.correct();
                 fluid.correctContinuityError();
@@ -138,6 +140,8 @@ int main(int argc, char *argv[])
                         }
                     }
                 }
+
+                fvOptions.correct();
 
                 fluid.solve(rAUs, rAUfs);
                 fluid.correct();

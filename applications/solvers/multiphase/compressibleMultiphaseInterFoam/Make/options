@@ -18,5 +18,4 @@ EXE_LIBS = \
     -lmomentumTransportModels \
     -lfluidThermoMomentumTransportModels \
     -lfiniteVolume \
-    -lfvOptions \
     -lmeshTools

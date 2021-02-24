@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -158,6 +158,12 @@ inline Foam::volScalarField& Foam::phaseSystem::dpdt()
 inline const Foam::IOMRFZoneList& Foam::phaseSystem::MRF() const
 {
     return MRF_;
+}
+
+
+inline Foam::fv::options& Foam::phaseSystem::fvOptions(fvMesh& mesh)
+{
+    return fv::options::New(mesh);
 }
 
 
