@@ -88,6 +88,9 @@ do
           *)  usage "Invalid argument '$mesh' to -m|-mesh <S|M|L|XL>." ;;
       esac
       ;;
+   -test)
+      shift
+      ;;
    -*)
       usage "Invalid option '$1'"
       ;;
