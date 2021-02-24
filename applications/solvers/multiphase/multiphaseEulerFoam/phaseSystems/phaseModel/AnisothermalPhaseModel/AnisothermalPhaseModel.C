@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,12 +102,20 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
 {
     const volScalarField& alpha = *this;
 
-    const volVectorField U(this->U());
-    const surfaceScalarField alphaPhi(this->alphaPhi());
-    const surfaceScalarField alphaRhoPhi(this->alphaRhoPhi());
+    const tmp<volVectorField> tU(this->U());
+    const volVectorField& U(tU());
 
-    const volScalarField contErr(this->continuityError());
-    const volScalarField K(this->K());
+    const tmp<surfaceScalarField> talphaPhi(this->alphaPhi());
+    const surfaceScalarField& alphaPhi(talphaPhi());
+
+    const tmp<surfaceScalarField> talphaRhoPhi(this->alphaRhoPhi());
+    const surfaceScalarField& alphaRhoPhi(talphaRhoPhi());
+
+    const tmp<volScalarField> tcontErr(this->continuityError());
+    const volScalarField& contErr(tcontErr());
+
+    tmp<volScalarField> tK(this->K());
+    const volScalarField& K(tK());
 
     volScalarField& he = this->thermo_->he();
 
@@ -119,6 +127,7 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
 
       + fvc::ddt(alpha, this->rho(), K) + fvc::div(alphaRhoPhi, K)
       - contErr*K
+
       + this->divq(he)
      ==
         alpha*this->Qdot()

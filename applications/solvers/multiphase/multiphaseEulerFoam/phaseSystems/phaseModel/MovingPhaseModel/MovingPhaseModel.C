@@ -264,8 +264,7 @@ void Foam::MovingPhaseModel<BasePhaseModel>::correctKinematics()
 
     if (K_.valid())
     {
-        K_.clear();
-        K();
+        K_.ref() = 0.5*magSqr(this->U());
     }
 }
 
