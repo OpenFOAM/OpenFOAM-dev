@@ -101,6 +101,7 @@ Foam::tmp<Foam::fvScalarMatrix>
 Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
 {
     const volScalarField& alpha = *this;
+    const volScalarField& rho = this->rho();
 
     const tmp<volVectorField> tU(this->U());
     const volVectorField& U(tU());
@@ -121,11 +122,11 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
 
     tmp<fvScalarMatrix> tEEqn
     (
-        fvm::ddt(alpha, this->rho(), he)
+        fvm::ddt(alpha, rho, he)
       + fvm::div(alphaRhoPhi, he)
       - fvm::Sp(contErr, he)
 
-      + fvc::ddt(alpha, this->rho(), K) + fvc::div(alphaRhoPhi, K)
+      + fvc::ddt(alpha, rho, K) + fvc::div(alphaRhoPhi, K)
       - contErr*K
 
       + this->divq(he)
@@ -139,7 +140,7 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
         tEEqn.ref() += filterPressureWork
         (
             fvc::div(fvc::absolute(alphaPhi, alpha, U), this->thermo().p())
-          + (fvc::ddt(alpha) - contErr/this->rho())*this->thermo().p()
+          + (fvc::ddt(alpha) - contErr/rho)*this->thermo().p()
         );
     }
     else if (this->thermo_->dpdt())
