@@ -438,7 +438,8 @@ Foam::MovingPhaseModel<BasePhaseModel>::DUDt() const
 {
     if (!DUDt_.valid())
     {
-        DUDt_ = fvc::ddt(U_) + fvc::div(phi_, U_) - fvc::div(phi_)*U_;
+        const tmp<surfaceScalarField> aphi(fvc::absolute(phi_, U_));
+        DUDt_ = fvc::ddt(U_) + fvc::div(aphi, U_) - fvc::div(aphi)*U_;
     }
 
     return tmp<volVectorField>(DUDt_());
