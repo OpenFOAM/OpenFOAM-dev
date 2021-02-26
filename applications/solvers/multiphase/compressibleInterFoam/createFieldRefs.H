@@ -11,3 +11,20 @@ const volScalarField& psi1 = mixture.thermo1().psi();
 const volScalarField& psi2 = mixture.thermo2().psi();
 
 tmp<volScalarField> rAU;
+
+if (correctPhi)
+{
+    rAU = new volScalarField
+    (
+        IOobject
+        (
+            "rAU",
+            runTime.timeName(),
+            mesh,
+            IOobject::READ_IF_PRESENT,
+            IOobject::AUTO_WRITE
+        ),
+        mesh,
+        dimensionedScalar(dimTime/dimDensity, 1)
+    );
+}
