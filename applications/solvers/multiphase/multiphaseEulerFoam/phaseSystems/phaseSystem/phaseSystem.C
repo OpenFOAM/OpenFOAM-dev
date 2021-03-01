@@ -32,11 +32,14 @@ License
 #include "fvcDiv.H"
 #include "fvcGrad.H"
 #include "fvcSnGrad.H"
+#include "CorrectPhi.H"
+#include "fvcMeshPhi.H"
 #include "alphaContactAngleFvPatchScalarField.H"
 #include "unitConversion.H"
 #include "dragModel.H"
 #include "BlendedInterfacialModel.H"
 #include "movingWallVelocityFvPatchVectorField.H"
+#include "pimpleControl.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -883,6 +886,76 @@ void Foam::phaseSystem::correctBoundaryFlux()
                 phiBf[patchi] == phiRelBf[patchi];
             }
         }
+    }
+}
+
+
+void Foam::phaseSystem::correctPhi
+(
+    const volScalarField& p_rgh,
+    const tmp<volScalarField>& divU,
+    nonOrthogonalSolutionControl& pimple
+)
+{
+    forAll(movingPhases(), movingPhasei)
+    {
+        phaseModel& phase = movingPhases()[movingPhasei];
+
+        volVectorField::Boundary& Ubf = phase.URef().boundaryFieldRef();
+        surfaceVectorField::Boundary& UfBf = phase.UfRef().boundaryFieldRef();
+
+        forAll(Ubf, patchi)
+        {
+            if (Ubf[patchi].fixesValue())
+            {
+                Ubf[patchi].initEvaluate();
+            }
+        }
+
+        forAll(Ubf, patchi)
+        {
+            if (Ubf[patchi].fixesValue())
+            {
+                Ubf[patchi].evaluate();
+                UfBf[patchi] = Ubf[patchi];
+            }
+        }
+    }
+
+    // Correct fixed-flux BCs to be consistent with the velocity BCs
+    correctBoundaryFlux();
+
+    {
+        phi_ = Zero;
+        PtrList<surfaceScalarField> alphafs(phaseModels_.size());
+        forAll(movingPhases(), movingPhasei)
+        {
+            phaseModel& phase = movingPhases()[movingPhasei];
+            const label phasei = phase.index();
+            const volScalarField& alpha = phase;
+
+            alphafs.set(phasei, fvc::interpolate(alpha).ptr());
+
+            // Calculate absolute flux
+            // from the mapped surface velocity
+            phi_ += alphafs[phasei]*(mesh_.Sf() & phase.Uf());
+        }
+
+        CorrectPhi
+        (
+            phi_,
+            movingPhases()[0].U(),
+            p_rgh,
+            // surfaceScalarField("rAUf", fvc::interpolate(rAU())),
+            dimensionedScalar(dimTime/dimDensity, 1),
+            divU(),
+            pimple
+        );
+
+        // Make the flux relative to the mesh motion
+        fvc::makeRelative(phi_, movingPhases()[0].U());
+
+        setMixturePhi(alphafs, phi_);
     }
 }
 

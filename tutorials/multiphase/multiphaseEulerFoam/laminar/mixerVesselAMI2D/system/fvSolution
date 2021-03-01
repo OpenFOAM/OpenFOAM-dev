@@ -79,6 +79,7 @@ PIMPLE
     nOuterCorrectors     1;
     nCorrectors     3;
     nNonOrthogonalCorrectors 0;
+    correctPhi      yes;
 
     pRefCell        0;
     pRefValue       0;
