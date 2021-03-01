@@ -371,7 +371,8 @@ Foam::MomentumTransferPhaseSystem<BasePhaseSystem>::momentumTransfer()
 
                 const volVectorField& U = eqn.psi();
                 const surfaceScalarField& phi = phase.phi();
-                const tmp<surfaceScalarField> aphi(fvc::absolute(phi, U));
+                const tmp<surfaceScalarField> taphi(fvc::absolute(phi, U));
+                const surfaceScalarField& aphi(taphi());
 
                 eqn -=
                     Vm

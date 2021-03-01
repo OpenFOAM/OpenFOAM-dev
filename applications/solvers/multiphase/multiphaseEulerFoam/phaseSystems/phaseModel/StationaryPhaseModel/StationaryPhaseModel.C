@@ -143,6 +143,18 @@ Foam::StationaryPhaseModel<BasePhaseModel>::Uf() const
 
 
 template<class BasePhaseModel>
+Foam::surfaceVectorField&
+Foam::StationaryPhaseModel<BasePhaseModel>::UfRef()
+{
+    FatalErrorInFunction
+        << "Cannot access the face velocity of a stationary phase"
+        << exit(FatalError);
+
+    return const_cast<surfaceVectorField&>(surfaceVectorField::null());
+}
+
+
+template<class BasePhaseModel>
 Foam::tmp<Foam::surfaceScalarField>
 Foam::StationaryPhaseModel<BasePhaseModel>::alphaPhi() const
 {

@@ -319,6 +319,10 @@ public:
             //  Required for moving mesh cases
             virtual tmp<surfaceVectorField> Uf() const = 0;
 
+            //- Access the face velocity
+            //  Required for moving mesh cases
+            virtual surfaceVectorField& UfRef() = 0;
+
             //- Return the volumetric flux of the phase
             virtual tmp<surfaceScalarField> alphaPhi() const = 0;
 
