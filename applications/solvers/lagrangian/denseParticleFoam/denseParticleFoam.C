@@ -119,13 +119,7 @@ int main(int argc, char *argv[])
         {
             if (correctPhi)
             {
-                // Calculate absolute flux from the mapped surface velocity
-                phic = mesh.Sf() & Ucf();
-
                 #include "correctPhic.H"
-
-                // Make the flux relative to the mesh motion
-                fvc::makeRelative(phic, Uc);
             }
 
             if (checkMeshCourantNo)

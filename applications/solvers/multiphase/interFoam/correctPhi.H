@@ -2,30 +2,30 @@
 // from the mapped surface velocity
 phi = mesh.Sf() & Uf();
 
+correctUphiBCs(U, phi, true);
+
 if (divU.valid())
 {
     CorrectPhi
     (
-        U,
         phi,
+        U,
         p_rgh,
         surfaceScalarField("rAUf", fvc::interpolate(rAU())),
         divU(),
-        pimple,
-        true
+        pimple
     );
 }
 else
 {
     CorrectPhi
     (
-        U,
         phi,
+        U,
         p_rgh,
         surfaceScalarField("rAUf", fvc::interpolate(rAU())),
         geometricZeroField(),
-        pimple,
-        true
+        pimple
     );
 }
 

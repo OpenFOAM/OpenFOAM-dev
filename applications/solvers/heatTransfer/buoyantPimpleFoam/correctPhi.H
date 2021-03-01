@@ -1,12 +1,19 @@
+// Calculate absolute flux
+// from the mapped surface velocity
+phi = mesh.Sf() & rhoUf();
+
+correctUphiBCs(rho, U, phi, true);
+
 CorrectPhi
 (
-    U,
     phi,
     p_rgh,
     rho,
     psi,
     dimensionedScalar("rAUf", dimTime, 1),
     divrhoU(),
-    pimple,
-    true
+    pimple
 );
+
+// Make the fluxes relative to the mesh-motion
+fvc::makeRelative(phi, rho, U);

@@ -16,30 +16,32 @@ if (correctPhi)
         dimensionedScalar(dimTime/dimDensity, 1)
     );
 
+    correctUphiBCs(U, phi, true);
+
     CorrectPhi
     (
-        U,
         phi,
+        U,
         p_rgh,
         surfaceScalarField("rAUf", fvc::interpolate(rAU())),
         geometricZeroField(),
-        pimple,
-        false
+        pimple
     );
 
     #include "continuityErrs.H"
 }
 else
 {
+    correctUphiBCs(U, phi, true);
+
     CorrectPhi
     (
-        U,
         phi,
+        U,
         p_rgh,
         dimensionedScalar(dimTime/rho.dimensions(), 1),
         geometricZeroField(),
-        pimple,
-        false
+        pimple
     );
 
     #include "continuityErrs.H"

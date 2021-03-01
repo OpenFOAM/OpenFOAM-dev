@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,19 +41,16 @@ License
 template<class RAUfType, class DivUType>
 void Foam::CorrectPhi
 (
-    volVectorField& U,
     surfaceScalarField& phi,
+    const volVectorField& U,
     const volScalarField& p,
     const RAUfType& rAUf,
     const DivUType& divU,
-    nonOrthogonalSolutionControl& pcorrControl,
-    const bool evaluateUBCs
+    nonOrthogonalSolutionControl& pcorrControl
 )
 {
-    const fvMesh& mesh = U.mesh();
+    const fvMesh& mesh = phi.mesh();
     const Time& runTime = mesh.time();
-
-    correctUphiBCs(U, phi, evaluateUBCs);
 
     // Initialize BCs list for pcorr to zero-gradient
     wordList pcorrTypes
@@ -117,21 +114,17 @@ void Foam::CorrectPhi
 template<class RAUfType, class DivRhoUType>
 void Foam::CorrectPhi
 (
-    volVectorField& U,
     surfaceScalarField& phi,
     const volScalarField& p,
     const volScalarField& rho,
     const volScalarField& psi,
     const RAUfType& rAUf,
     const DivRhoUType& divRhoU,
-    nonOrthogonalSolutionControl& pcorrControl,
-    const bool evaluateUBCs
+    nonOrthogonalSolutionControl& pcorrControl
 )
 {
-    const fvMesh& mesh = U.mesh();
+    const fvMesh& mesh = phi.mesh();
     const Time& runTime = mesh.time();
-
-    correctUphiBCs(rho, U, phi, evaluateUBCs);
 
     // Initialize BCs list for pcorr to zero-gradient
     wordList pcorrTypes

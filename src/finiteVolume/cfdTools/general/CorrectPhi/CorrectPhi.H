@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,27 +72,24 @@ namespace Foam
     template<class RAUfType, class DivUType>
     void CorrectPhi
     (
-        volVectorField& U,
         surfaceScalarField& phi,
+        const volVectorField& U,
         const volScalarField& p,
         const RAUfType& rAUf,
         const DivUType& divU,
-        nonOrthogonalSolutionControl& pcorrControl,
-        const bool evaluateUBCs
+        nonOrthogonalSolutionControl& pcorrControl
     );
 
     template<class RAUfType, class DivRhoUType>
     void CorrectPhi
     (
-        volVectorField& U,
         surfaceScalarField& phi,
         const volScalarField& p,
         const volScalarField& rho,
         const volScalarField& psi,
         const RAUfType& rAUf,
         const DivRhoUType& divRhoU,
-        nonOrthogonalSolutionControl& pcorrControl,
-        const bool evaluateUBCs
+        nonOrthogonalSolutionControl& pcorrControl
     );
 }
 
