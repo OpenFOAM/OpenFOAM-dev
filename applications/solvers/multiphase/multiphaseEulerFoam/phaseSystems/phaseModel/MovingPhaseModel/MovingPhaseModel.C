@@ -414,8 +414,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::UfRef()
             << "Uf has not been allocated."
             << exit(FatalError);
 
-        // return const_cast<volVectorField&>(volVectorField::null());
-        return surfaceVectorField::null();
+        return const_cast<surfaceVectorField&>(surfaceVectorField::null());
     }
 }
 
