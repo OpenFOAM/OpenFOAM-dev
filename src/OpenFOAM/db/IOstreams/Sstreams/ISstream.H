@@ -38,6 +38,7 @@ SourceFiles
 
 #include "Istream.H"
 #include "fileName.H"
+#include "DynamicList.H"
 #include <iostream>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -53,10 +54,26 @@ class ISstream
 :
     public Istream
 {
+    // Private Static Data
+
+        //- Initial capacity of the character buffer
+        static const int bufInitialCapacity = 1024;
+
+        //- Amount of the buffer used in error messages. Less than the buffer
+        //  length to facilitate readability.
+        static const int bufErrorLength = 80;
+
+
     // Private Data
 
+        //- The name of this stream
         fileName name_;
+
+        //- Reference to the standard stream
         istream& is_;
+
+        //- Character buffer
+        DynamicList<char> buf_;
 
 
     // Private Member Functions

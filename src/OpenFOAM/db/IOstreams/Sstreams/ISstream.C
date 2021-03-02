@@ -132,9 +132,6 @@ void Foam::ISstream::readWordToken(token& t)
 
 Foam::Istream& Foam::ISstream::read(token& t)
 {
-    static const int maxLen = 128;
-    static char buf[maxLen];
-
     // Return the put back token if it exists
     if (Istream::getBack(t))
     {
@@ -293,8 +290,8 @@ Foam::Istream& Foam::ISstream::read(token& t)
         {
             bool asLabel = (c != '.');
 
-            int nChar = 0;
-            buf[nChar++] = c;
+            buf_.clear();
+            buf_.append(c);
 
             // Get everything that could resemble a number and let
             // readScalar determine the validity
@@ -316,22 +313,10 @@ Foam::Istream& Foam::ISstream::read(token& t)
                     asLabel = isdigit(c);
                 }
 
-                buf[nChar++] = c;
-                if (nChar == maxLen)
-                {
-                    // Runaway argument - avoid buffer overflow
-                    buf[maxLen-1] = '\0';
-
-                    FatalIOErrorInFunction(*this)
-                        << "number '" << buf << "...'\n"
-                        << "    is too long (max. " << maxLen << " characters)"
-                        << exit(FatalIOError);
-
-                    t.setBad();
-                    return *this;
-                }
+                buf_.append(c);
             }
-            buf[nChar] = '\0';
+
+            buf_.append('\0');
 
             setState(is_.rdstate());
             if (is_.bad())
@@ -342,7 +327,7 @@ Foam::Istream& Foam::ISstream::read(token& t)
             {
                 is_.putback(c);
 
-                if (nChar == 1 && buf[0] == '-')
+                if (buf_.size() == 2 && buf_[0] == '-')
                 {
                     // A single '-' is punctuation
                     t = token::punctuationToken(token::SUBTRACT);
@@ -352,7 +337,7 @@ Foam::Istream& Foam::ISstream::read(token& t)
                     if (asLabel)
                     {
                         label labelVal = 0;
-                        if (Foam::read(buf, labelVal))
+                        if (Foam::read(buf_.cdata(), labelVal))
                         {
                             t = labelVal;
                         }
@@ -360,7 +345,7 @@ Foam::Istream& Foam::ISstream::read(token& t)
                         {
                             // Maybe too big? Try as scalar
                             scalar scalarVal;
-                            if (readScalar(buf, scalarVal))
+                            if (readScalar(buf_.cdata(), scalarVal))
                             {
                                 t = scalarVal;
                             }
@@ -373,7 +358,7 @@ Foam::Istream& Foam::ISstream::read(token& t)
                     else
                     {
                         scalar scalarVal;
-                        if (readScalar(buf, scalarVal))
+                        if (readScalar(buf_.cdata(), scalarVal))
                         {
                             t = scalarVal;
                         }
@@ -410,11 +395,8 @@ Foam::Istream& Foam::ISstream::read(char& c)
 
 Foam::Istream& Foam::ISstream::read(word& str)
 {
-    static const int maxLen = 1024;
-    static const int errLen = 80; // Truncate error message for readability
-    static char buf[maxLen];
+    buf_.clear();
 
-    int nChar = 0;
     int listDepth = 0;
     char c;
 
@@ -436,33 +418,23 @@ Foam::Istream& Foam::ISstream::read(word& str)
             }
         }
 
-        buf[nChar++] = c;
-        if (nChar == maxLen)
-        {
-            buf[errLen] = '\0';
-
-            FatalIOErrorInFunction(*this)
-                << "word '" << buf << "...'\n"
-                << "    is too long (max. " << maxLen << " characters)"
-                << exit(FatalIOError);
-
-            return *this;
-        }
+        buf_.append(c);
     }
 
     if (bad())
     {
-        buf[errLen] = buf[nChar] = '\0';
+        // Truncate the string to the maximum error length
+        buf_.data()[bufErrorLength] = buf_.last() = '\0';
 
         FatalIOErrorInFunction(*this)
-            << "problem while reading word '" << buf << "...' after "
-            << nChar << " characters\n"
+            << "problem while reading word '" << buf_.cdata() << "...' after "
+            << buf_.size() << " characters\n"
             << exit(FatalIOError);
 
         return *this;
     }
 
-    if (nChar == 0)
+    if (buf_.empty())
     {
         FatalIOErrorInFunction(*this)
             << "invalid first character found : " << c
@@ -470,8 +442,8 @@ Foam::Istream& Foam::ISstream::read(word& str)
     }
 
     // Append end string character
-    buf[nChar] = '\0';
-    str = buf;
+    buf_.append('\0');
+    str = buf_.cdata();
     putback(c);
 
     return *this;
@@ -480,9 +452,7 @@ Foam::Istream& Foam::ISstream::read(word& str)
 
 Foam::Istream& Foam::ISstream::read(string& str)
 {
-    static const int maxLen = 1024;
-    static const int errLen = 80; // Truncate error message for readability
-    static char buf[maxLen];
+    buf_.clear();
 
     char c;
 
@@ -505,7 +475,6 @@ Foam::Istream& Foam::ISstream::read(string& str)
         return *this;
     }
 
-    int nChar = 0;
     bool escaped = false;
 
     while (get(c))
@@ -515,13 +484,13 @@ Foam::Istream& Foam::ISstream::read(string& str)
             if (escaped)
             {
                 escaped = false;
-                nChar--;    // Overwrite backslash
+                buf_.remove(); // Overwrite backslash
             }
             else
             {
                 // Append end string character
-                buf[nChar] = '\0';
-                str = buf;
+                buf_.append('\0');
+                str = buf_.cdata();
                 return *this;
             }
         }
@@ -530,15 +499,16 @@ Foam::Istream& Foam::ISstream::read(string& str)
             if (escaped)
             {
                 escaped = false;
-                nChar--;    // Overwrite backslash
+                buf_.remove(); // Overwrite backslash
             }
             else
             {
-                buf[errLen] = buf[nChar] = '\0';
+                // Truncate the string to the maximum error length
+                buf_.data()[bufErrorLength] = buf_.last() = '\0';
 
                 FatalIOErrorInFunction(*this)
                     << "found '\\n' while reading string \""
-                    << buf << "...\""
+                    << buf_.cdata() << "...\""
                     << exit(FatalIOError);
 
                 return *this;
@@ -553,26 +523,14 @@ Foam::Istream& Foam::ISstream::read(string& str)
             escaped = false;
         }
 
-        buf[nChar++] = c;
-        if (nChar == maxLen)
-        {
-            buf[errLen] = '\0';
-
-            FatalIOErrorInFunction(*this)
-                << "string \"" << buf << "...\"\n"
-                << "    is too long (max. " << maxLen << " characters)"
-                << exit(FatalIOError);
-
-            return *this;
-        }
+        buf_.append(c);
     }
 
-
-    // Don't worry about a dangling backslash if string terminated prematurely
-    buf[errLen] = buf[nChar] = '\0';
+    // Truncate the string to the maximum error length
+    buf_.data()[bufErrorLength] = buf_.last() = '\0';
 
     FatalIOErrorInFunction(*this)
-        << "problem while reading string \"" << buf << "...\""
+        << "problem while reading string \"" << buf_.cdata() << "...\""
         << exit(FatalIOError);
 
     return *this;
@@ -581,12 +539,8 @@ Foam::Istream& Foam::ISstream::read(string& str)
 
 Foam::Istream& Foam::ISstream::readVariable(string& str)
 {
-    static const int maxLen = 1024;
-    static const int errLen = 80; // Truncate error message for readability
-    static char buf[maxLen];
+    buf_.clear();
 
-    int nChar = 0;
-    int blockCount = 0;
     char c;
 
     if (!get(c) || c != '$')
@@ -596,13 +550,13 @@ Foam::Istream& Foam::ISstream::readVariable(string& str)
             << exit(FatalIOError);
     }
 
-    buf[nChar++] = c;
+    buf_.append(c);
 
     // Read next character to see if '{'
     if (get(c) && c == token::BEGIN_BLOCK)
     {
         // Read, counting brackets
-        buf[nChar++] = c;
+        buf_.append(c);
 
         while
         (
@@ -614,18 +568,9 @@ Foam::Istream& Foam::ISstream::readVariable(string& str)
             )
         )
         {
-            buf[nChar++] = c;
-            if (nChar == maxLen)
-            {
-                buf[errLen] = '\0';
+            buf_.append(c);
 
-                FatalIOErrorInFunction(*this)
-                    << "variable '" << buf << "...'\n"
-                    << "    is too long (max. " << maxLen << " characters)"
-                    << exit(FatalIOError);
-
-                return *this;
-            }
+            int blockCount = 0;
 
             if (c == token::BEGIN_BLOCK)
             {
@@ -646,7 +591,8 @@ Foam::Istream& Foam::ISstream::readVariable(string& str)
     }
     else
     {
-        buf[nChar++] = c;
+        buf_.append(c);
+
         int listDepth = 0;
 
         while (get(c) && variable::valid(c))
@@ -667,34 +613,24 @@ Foam::Istream& Foam::ISstream::readVariable(string& str)
                 }
             }
 
-            buf[nChar++] = c;
-            if (nChar == maxLen)
-            {
-                buf[errLen] = '\0';
-
-                FatalIOErrorInFunction(*this)
-                    << "variable '" << buf << "...'\n"
-                    << "    is too long (max. " << maxLen << " characters)"
-                    << exit(FatalIOError);
-
-                return *this;
-            }
+            buf_.append(c);
         }
     }
 
     if (bad())
     {
-        buf[errLen] = buf[nChar] = '\0';
+        // Truncate the string to the maximum error length
+        buf_.data()[bufErrorLength] = buf_.last() = '\0';
 
         FatalIOErrorInFunction(*this)
-            << "problem while reading string '" << buf << "...' after "
-            << nChar << " characters\n"
+            << "problem while reading string '" << buf_.cdata() << "...' after "
+            << buf_.size() << " characters\n"
             << exit(FatalIOError);
 
         return *this;
     }
 
-    if (nChar == 0)
+    if (buf_.empty())
     {
         FatalIOErrorInFunction(*this)
             << "invalid first character found : " << c
@@ -702,8 +638,8 @@ Foam::Istream& Foam::ISstream::readVariable(string& str)
     }
 
     // Append end string character
-    buf[nChar] = '\0';
-    str = buf;
+    buf_.append('\0');
+    str = buf_.cdata();
 
     // Note: check if we exited due to '}' or just !variable::valid.
     if (c != token::END_BLOCK)
@@ -717,13 +653,9 @@ Foam::Istream& Foam::ISstream::readVariable(string& str)
 
 Foam::Istream& Foam::ISstream::readVerbatim(verbatimString& str)
 {
-    static const int maxLen = 8000;
-    static const int errLen = 80; // Truncate error message for readability
-    static char buf[maxLen];
+    buf_.clear();
 
     char c;
-
-    int nChar = 0;
 
     while (get(c))
     {
@@ -733,8 +665,8 @@ Foam::Istream& Foam::ISstream::readVerbatim(verbatimString& str)
             get(nextC);
             if (nextC == token::END_BLOCK)
             {
-                buf[nChar] = '\0';
-                str = buf;
+                buf_.append('\0');
+                str = buf_.cdata();
                 return *this;
             }
             else
@@ -743,26 +675,14 @@ Foam::Istream& Foam::ISstream::readVerbatim(verbatimString& str)
             }
         }
 
-        buf[nChar++] = c;
-        if (nChar == maxLen)
-        {
-            buf[errLen] = '\0';
-
-            FatalIOErrorInFunction(*this)
-                << "string \"" << buf << "...\"\n"
-                << "    is too long (max. " << maxLen << " characters)"
-                << exit(FatalIOError);
-
-            return *this;
-        }
+        buf_.append(c);
     }
 
-
-    // Don't worry about a dangling backslash if string terminated prematurely
-    buf[errLen] = buf[nChar] = '\0';
+    // Truncate the string to the maximum error length
+    buf_.data()[bufErrorLength] = buf_.last() = '\0';
 
     FatalIOErrorInFunction(*this)
-        << "problem while reading string \"" << buf << "...\""
+        << "problem while reading string \"" << buf_.cdata() << "...\""
         << exit(FatalIOError);
 
     return *this;
