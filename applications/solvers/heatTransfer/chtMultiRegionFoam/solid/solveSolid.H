@@ -15,7 +15,7 @@
 
         eEqn.solve();
 
-        fvOptions.correct(e);
+        fvOptions.constrain(e);
     }
 }
 

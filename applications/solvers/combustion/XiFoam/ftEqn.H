@@ -26,5 +26,5 @@ if (composition.contains("ft"))
 
     ftEqn.solve();
 
-    fvOptions.correct(ft);
+    fvOptions.constrain(ft);
 }

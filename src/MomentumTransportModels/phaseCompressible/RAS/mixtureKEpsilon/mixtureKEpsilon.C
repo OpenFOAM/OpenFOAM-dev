@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -344,7 +344,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correctNut()
 {
     this->nut_ = Cmu_*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).correct(this->nut_);
+    fv::options::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -687,7 +687,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     fvOptions.constrain(epsEqn.ref());
     epsEqn.ref().boundaryManipulate(epsilonm.boundaryFieldRef());
     solve(epsEqn);
-    fvOptions.correct(epsilonm);
+    fvOptions.constrain(epsilonm);
     bound(epsilonm, this->epsilonMin_);
 
 
@@ -709,7 +709,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     kmEqn.ref().relax();
     fvOptions.constrain(kmEqn.ref());
     solve(kmEqn);
-    fvOptions.correct(km);
+    fvOptions.constrain(km);
     bound(km, this->kMin_);
     km.correctBoundaryConditions();
 

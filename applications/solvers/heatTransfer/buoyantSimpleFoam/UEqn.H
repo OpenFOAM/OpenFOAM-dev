@@ -31,5 +31,5 @@
             )
         );
 
-        fvOptions.correct(U);
+        fvOptions.constrain(U);
     }

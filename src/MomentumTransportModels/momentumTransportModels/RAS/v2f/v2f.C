@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ void v2f<BasicMomentumTransportModel>::correctNut()
 {
     this->nut_ = min(CmuKEps_*sqr(k_)/epsilon_, this->Cmu_*v2_*Ts());
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).correct(this->nut_);
+    fv::options::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -329,7 +329,7 @@ void v2f<BasicMomentumTransportModel>::correct()
     fvOptions.constrain(epsEqn.ref());
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
-    fvOptions.correct(epsilon_);
+    fvOptions.constrain(epsilon_);
     bound(epsilon_, this->epsilonMin_);
 
 
@@ -349,7 +349,7 @@ void v2f<BasicMomentumTransportModel>::correct()
     kEqn.ref().relax();
     fvOptions.constrain(kEqn.ref());
     solve(kEqn);
-    fvOptions.correct(k_);
+    fvOptions.constrain(k_);
     bound(k_, this->kMin_);
 
 
@@ -365,7 +365,7 @@ void v2f<BasicMomentumTransportModel>::correct()
     fEqn.ref().relax();
     fvOptions.constrain(fEqn.ref());
     solve(fEqn);
-    fvOptions.correct(f_);
+    fvOptions.constrain(f_);
     bound(f_, fMin_);
 
 
@@ -384,7 +384,7 @@ void v2f<BasicMomentumTransportModel>::correct()
     v2Eqn.ref().relax();
     fvOptions.constrain(v2Eqn.ref());
     solve(v2Eqn);
-    fvOptions.correct(v2_);
+    fvOptions.constrain(v2_);
     bound(v2_, v2Min_);
 
     correctNut();

@@ -33,7 +33,7 @@ forAll(Y, i)
 
         YiEqn.solve("Yi");
 
-        fvOptions.correct(Yi);
+        fvOptions.constrain(Yi);
     }
 }
 

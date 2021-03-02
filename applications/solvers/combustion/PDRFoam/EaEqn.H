@@ -25,7 +25,7 @@
 
     EaEqn.solve();
 
-    fvOptions.correct(hea);
+    fvOptions.constrain(hea);
 
     thermo.correct();
 }

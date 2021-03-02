@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -195,7 +195,7 @@ void lambdaThixotropic<BasicMomentumTransportModel>::correct()
     lambdaEqn.ref().relax();
     fvOptions.constrain(lambdaEqn.ref());
     solve(lambdaEqn);
-    fvOptions.correct(lambda_);
+    fvOptions.constrain(lambda_);
 
     lambda_.maxMin(scalar(0), scalar(1));
 

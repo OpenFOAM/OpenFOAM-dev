@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ void dynamicLagrangian<BasicMomentumTransportModel>::correctNut
 {
     this->nut_ = (flm_/fmm_)*sqr(this->delta())*mag(dev(symm(gradU)));
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).correct(this->nut_);
+    fv::options::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -199,7 +199,7 @@ void dynamicLagrangian<BasicMomentumTransportModel>::correct()
     flmEqn.relax();
     fvOptions.constrain(flmEqn);
     flmEqn.solve();
-    fvOptions.correct(flm_);
+    fvOptions.constrain(flm_);
     bound(flm_, flm0_);
 
     volScalarField MM(M && M);
@@ -217,7 +217,7 @@ void dynamicLagrangian<BasicMomentumTransportModel>::correct()
     fmmEqn.relax();
     fvOptions.constrain(fmmEqn);
     fmmEqn.solve();
-    fvOptions.correct(fmm_);
+    fvOptions.constrain(fmm_);
     bound(fmm_, fmm0_);
 
     correctNut(gradU);

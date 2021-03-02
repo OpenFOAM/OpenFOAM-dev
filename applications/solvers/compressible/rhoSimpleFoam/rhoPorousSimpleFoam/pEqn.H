@@ -81,7 +81,7 @@
     }
 
     U.correctBoundaryConditions();
-    fvOptions.correct(U);
+    fvOptions.constrain(U);
 
     pressureControl.limit(p);
 

@@ -18,5 +18,5 @@ if (pimple.momentumPredictor())
 {
     solve(UEqn == -fvc::grad(p_gh));
 
-    fvOptions.correct(U);
+    fvOptions.constrain(U);
 }

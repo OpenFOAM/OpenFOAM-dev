@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ void kEqn<BasicMomentumTransportModel>::correctNut()
 {
     this->nut_ = Ck_*sqrt(k_)*this->delta();
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).correct(this->nut_);
+    fv::options::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -185,7 +185,7 @@ void kEqn<BasicMomentumTransportModel>::correct()
     kEqn.ref().relax();
     fvOptions.constrain(kEqn.ref());
     solve(kEqn);
-    fvOptions.correct(k_);
+    fvOptions.constrain(k_);
     bound(k_, this->kMin_);
 
     correctNut();

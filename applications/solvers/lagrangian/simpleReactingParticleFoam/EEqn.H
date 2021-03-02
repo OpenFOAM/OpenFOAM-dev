@@ -23,7 +23,7 @@
 
     EEqn.solve();
 
-    fvOptions.correct(he);
+    fvOptions.constrain(he);
     thermo.correct();
 
     Info<< "T gas min/max   = " << min(T).value() << ", "

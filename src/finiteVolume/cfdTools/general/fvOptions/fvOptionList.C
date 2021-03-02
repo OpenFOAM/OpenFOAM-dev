@@ -99,16 +99,6 @@ void Foam::fv::optionList::checkApplied() const
                     << "Constraint " << source.name() << " defined for field "
                     << iter.key() << " but never used" << endl;
             }
-
-            wordHashSet notCorrectedFields(source.correctedFields());
-            notCorrectedFields -= correctedFields_[i];
-
-            forAllConstIter(wordHashSet, notCorrectedFields, iter)
-            {
-                WarningInFunction
-                    << "Correction " << source.name() << " defined for field "
-                    << iter.key() << " but never used" << endl;
-            }
         }
 
         checkTimeIndex_ = mesh_.time().timeIndex();
@@ -124,8 +114,7 @@ Foam::fv::optionList::optionList(const fvMesh& mesh, const dictionary& dict)
     mesh_(mesh),
     checkTimeIndex_(mesh_.time().timeIndex() + 1),
     addSupFields_(),
-    constrainedFields_(),
-    correctedFields_()
+    constrainedFields_()
 {
     reset(dict);
 }
@@ -137,8 +126,7 @@ Foam::fv::optionList::optionList(const fvMesh& mesh)
     mesh_(mesh),
     checkTimeIndex_(mesh_.time().timeIndex() + 1),
     addSupFields_(),
-    constrainedFields_(),
-    correctedFields_()
+    constrainedFields_()
 {}
 
 
@@ -162,7 +150,6 @@ void Foam::fv::optionList::reset(const dictionary& dict)
 
     addSupFields_.setSize(count);
     constrainedFields_.setSize(count);
-    correctedFields_.setSize(count);
 
     label i = 0;
     forAllConstIter(dictionary, optionsDict, iter)
@@ -181,7 +168,6 @@ void Foam::fv::optionList::reset(const dictionary& dict)
 
             addSupFields_.set(i, new wordHashSet());
             constrainedFields_.set(i, new wordHashSet());
-            correctedFields_.set(i, new wordHashSet());
 
             i++;
         }
@@ -208,20 +194,6 @@ bool Foam::fv::optionList::constrainsField(const word& fieldName) const
     forAll(*this, i)
     {
         if (this->operator[](i).constrainsField(fieldName))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-
-bool Foam::fv::optionList::correctsField(const word& fieldName) const
-{
-    forAll(*this, i)
-    {
-        if (this->operator[](i).correctsField(fieldName))
         {
             return true;
         }

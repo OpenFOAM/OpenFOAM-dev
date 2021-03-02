@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 
         UEqn.solve();
 
-        fvOptions.correct(U);
+        fvOptions.constrain(U);
 
 
         // Correct driving force for a constant volume flow rate

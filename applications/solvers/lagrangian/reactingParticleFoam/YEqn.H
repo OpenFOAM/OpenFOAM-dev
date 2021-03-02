@@ -41,7 +41,7 @@ if (Y.size())
 
             YEqn.solve("Yi");
 
-            fvOptions.correct(Yi);
+            fvOptions.constrain(Yi);
         }
     }
 

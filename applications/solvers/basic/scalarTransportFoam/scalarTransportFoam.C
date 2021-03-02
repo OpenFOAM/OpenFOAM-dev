@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
             TEqn.relax();
             fvOptions.constrain(TEqn);
             TEqn.solve();
-            fvOptions.correct(T);
+            fvOptions.constrain(T);
         }
 
         runTime.write();

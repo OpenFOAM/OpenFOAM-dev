@@ -90,7 +90,7 @@ if (ign.ignited())
 
     bEqn.solve();
 
-    fvOptions.correct(b);
+    fvOptions.constrain(b);
 
     Info<< "min(b) = " << min(b).value() << endl;
 

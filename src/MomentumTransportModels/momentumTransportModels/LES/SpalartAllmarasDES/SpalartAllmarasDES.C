@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -204,7 +204,7 @@ void SpalartAllmarasDES<BasicMomentumTransportModel>::correctNut
 {
     this->nut_ = nuTilda_*fv1;
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).correct(this->nut_);
+    fv::options::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -489,7 +489,7 @@ void SpalartAllmarasDES<BasicMomentumTransportModel>::correct()
     nuTildaEqn.ref().relax();
     fvOptions.constrain(nuTildaEqn.ref());
     solve(nuTildaEqn);
-    fvOptions.correct(nuTilda_);
+    fvOptions.constrain(nuTilda_);
     bound(nuTilda_, dimensionedScalar(nuTilda_.dimensions(), 0));
     nuTilda_.correctBoundaryConditions();
 

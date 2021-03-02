@@ -71,7 +71,7 @@ if (ign.ignited())
 
     bEqn.solve();
 
-    fvOptions.correct(b);
+    fvOptions.constrain(b);
 
     Info<< "min(b) = " << min(b).value() << endl;
 
@@ -172,7 +172,7 @@ if (ign.ignited())
 
         SuEqn.solve();
 
-        fvOptions.correct(Su);
+        fvOptions.constrain(Su);
 
         // Limit the maximum Su
         // ~~~~~~~~~~~~~~~~~~~~
@@ -259,7 +259,7 @@ if (ign.ignited())
 
         XiEqn.solve();
 
-        fvOptions.correct(Xi);
+        fvOptions.constrain(Xi);
 
         // Correct boundedness of Xi
         // ~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -39,5 +39,5 @@ if (pimple.momentumPredictor())
       + (1.0/rhoc)*(fvm::Sp(cloudSUp, Uc) - cloudSUp*Uc)
     );
 
-    fvOptions.correct(Uc);
+    fvOptions.constrain(Uc);
 }

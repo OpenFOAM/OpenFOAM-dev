@@ -59,7 +59,7 @@ p.relax();
 
 U = HbyA - rAtU*fvc::grad(p);
 U.correctBoundaryConditions();
-fvOptions.correct(U);
+fvOptions.constrain(U);
 
 // Correct Uf if the mesh is moving
 fvc::correctUf(Uf, U, phi);

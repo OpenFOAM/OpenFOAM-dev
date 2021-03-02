@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 
             solve(UEqn == -fvc::grad(p));
 
-            fvOptions.correct(U);
+            fvOptions.constrain(U);
 
             volScalarField rAU(1.0/UEqn.A());
             volVectorField HbyA(constrainHbyA(rAU*UEqn.H(), U, p));
@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
             // Momentum corrector
             U = HbyA - rAU*fvc::grad(p);
             U.correctBoundaryConditions();
-            fvOptions.correct(U);
+            fvOptions.constrain(U);
         }
 
         // Adjoint Pressure-velocity SIMPLE corrector
@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
 
             solve(UaEqn == -fvc::grad(pa));
 
-            fvOptions.correct(Ua);
+            fvOptions.constrain(Ua);
 
             volScalarField rAUa(1.0/UaEqn.A());
             volVectorField HbyAa("HbyAa", Ua);
@@ -228,7 +228,7 @@ int main(int argc, char *argv[])
             // Adjoint momentum corrector
             Ua = HbyAa - rAUa*fvc::grad(pa);
             Ua.correctBoundaryConditions();
-            fvOptions.correct(Ua);
+            fvOptions.constrain(Ua);
         }
 
         laminarTransport.correct();

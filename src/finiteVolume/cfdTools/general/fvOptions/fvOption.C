@@ -80,7 +80,7 @@ void Foam::fv::option::constrainType
 
 
 template<class Type>
-void Foam::fv::option::correctType(VolField<Type>& field) const
+void Foam::fv::option::constrainType(VolField<Type>& field) const
 {}
 
 
@@ -159,12 +159,6 @@ Foam::wordList Foam::fv::option::constrainedFields() const
 }
 
 
-Foam::wordList Foam::fv::option::correctedFields() const
-{
-    return wordList::null();
-}
-
-
 bool Foam::fv::option::addsSupToField(const word& fieldName) const
 {
     return findIndex(addSupFields(), fieldName) != -1;
@@ -174,12 +168,6 @@ bool Foam::fv::option::addsSupToField(const word& fieldName) const
 bool Foam::fv::option::constrainsField(const word& fieldName) const
 {
     return findIndex(constrainedFields(), fieldName) != -1;
-}
-
-
-bool Foam::fv::option::correctsField(const word& fieldName) const
-{
-    return findIndex(correctedFields(), fieldName) != -1;
 }
 
 
@@ -199,7 +187,7 @@ FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_ADD_ALPHA_RHO_SUP, option);
 FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_CONSTRAIN, option);
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_CORRECT, option);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_OPTION_CONSTRAIN_FIELD, option);
 
 
 void Foam::fv::option::updateMesh(const mapPolyMesh& mpm)

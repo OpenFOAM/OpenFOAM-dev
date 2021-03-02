@@ -78,7 +78,7 @@ else
 
 U = HbyA - rAU*fvc::grad(p);
 U.correctBoundaryConditions();
-fvOptions.correct(U);
+fvOptions.constrain(U);
 K = 0.5*magSqr(U);
 
 if (thermo.dpdt())

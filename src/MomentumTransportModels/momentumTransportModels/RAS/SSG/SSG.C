@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ void SSG<BasicMomentumTransportModel>::correctNut()
 {
     this->nut_ = this->Cmu_*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).correct(this->nut_);
+    fv::options::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -311,7 +311,7 @@ void SSG<BasicMomentumTransportModel>::correct()
     fvOptions.constrain(epsEqn.ref());
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
-    fvOptions.correct(epsilon_);
+    fvOptions.constrain(epsilon_);
     bound(epsilon_, this->epsilonMin_);
 
 
@@ -364,7 +364,7 @@ void SSG<BasicMomentumTransportModel>::correct()
     REqn.ref().relax();
     fvOptions.constrain(REqn.ref());
     solve(REqn);
-    fvOptions.correct(R);
+    fvOptions.constrain(R);
 
     this->boundNormalStress(R);
 

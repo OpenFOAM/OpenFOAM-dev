@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ void DeardorffDiffStress<BasicMomentumTransportModel>::correctNut()
 {
     this->nut_ = Ck_*sqrt(this->k())*this->delta();
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).correct(this->nut_);
+    fv::options::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -192,7 +192,7 @@ void DeardorffDiffStress<BasicMomentumTransportModel>::correct()
     REqn.ref().relax();
     fvOptions.constrain(REqn.ref());
     REqn.ref().solve();
-    fvOptions.correct(R);
+    fvOptions.constrain(R);
     this->boundNormalStress(R);
 
     correctNut();

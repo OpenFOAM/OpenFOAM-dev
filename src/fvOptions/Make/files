@@ -1,9 +1,6 @@
 cellSetOption/cellSetOption.C
-
 interRegionOption/interRegionOption.C
 
-
-# Sources
 
 generalSources=sources/general
 $(generalSources)/codedSource/codedSource.C
@@ -47,16 +44,10 @@ $(interRegion)/interRegionHeatTransfer/variableHeatTransfer/variableHeatTransfer
 $(interRegion)/interRegionExplicitPorositySource/interRegionExplicitPorositySource.C
 
 
-# Constraints
-
 constraints/fixedValueConstraint/fixedValueConstraint.C
 constraints/fixedTemperatureConstraint/fixedTemperatureConstraint.C
-
-
-# Corrections
-
-corrections/limitTemperature/limitTemperature.C
-corrections/limitVelocity/limitVelocity.C
+constraints/limitTemperature/limitTemperature.C
+constraints/limitVelocity/limitVelocity.C
 
 
 LIB = $(FOAM_LIBBIN)/libfvOptions

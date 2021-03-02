@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -497,7 +497,7 @@ void Foam::RASModels::kineticTheoryModel::correct()
         ThetaEqn.relax();
         fvOptions.constrain(ThetaEqn);
         ThetaEqn.solve();
-        fvOptions.correct(Theta_);
+        fvOptions.constrain(Theta_);
     }
     else
     {

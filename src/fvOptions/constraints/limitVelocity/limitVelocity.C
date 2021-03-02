@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,9 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "limitTemperature.H"
-#include "fvMesh.H"
-#include "basicThermo.H"
+#include "limitVelocity.H"
+#include "volFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -34,11 +33,11 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(limitTemperature, 0);
+    defineTypeNameAndDebug(limitVelocity, 0);
     addToRunTimeSelectionTable
     (
         option,
-        limitTemperature,
+        limitVelocity,
         dictionary
     );
 }
@@ -47,17 +46,16 @@ namespace fv
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::limitTemperature::readCoeffs()
+void Foam::fv::limitVelocity::readCoeffs()
 {
-    Tmin_ = coeffs_.lookup<scalar>("min");
-    Tmax_ = coeffs_.lookup<scalar>("max");
-    phaseName_ = coeffs_.lookupOrDefault<word>("phase", word::null);
+    UName_ = coeffs_.lookupOrDefault<word>("U", "U");
+    max_ = coeffs_.lookup<scalar>("max");
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::limitTemperature::limitTemperature
+Foam::fv::limitVelocity::limitVelocity
 (
     const word& name,
     const word& modelType,
@@ -66,9 +64,8 @@ Foam::fv::limitTemperature::limitTemperature
 )
 :
     cellSetOption(name, modelType, dict, mesh),
-    Tmin_(-vGreat),
-    Tmax_(vGreat),
-    phaseName_(word::null)
+    UName_(word::null),
+    max_(vGreat)
 {
     readCoeffs();
 }
@@ -76,63 +73,51 @@ Foam::fv::limitTemperature::limitTemperature
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::limitTemperature::correctedFields() const
+Foam::wordList Foam::fv::limitVelocity::constrainedFields() const
 {
-    const basicThermo& thermo =
-        mesh_.lookupObject<basicThermo>
-        (
-            IOobject::groupName(basicThermo::dictName, phaseName_)
-        );
-
-    return wordList(1, thermo.he().name());
+    return wordList(1, UName_);
 }
 
 
-void Foam::fv::limitTemperature::correct(volScalarField& he) const
+void Foam::fv::limitVelocity::constrain(volVectorField& U) const
 {
-    const basicThermo& thermo =
-        mesh_.lookupObject<basicThermo>
-        (
-            IOobject::groupName(basicThermo::dictName, phaseName_)
-        );
+    const scalar maxSqrU = sqr(max_);
 
-    scalarField Tmin(cells().size(), Tmin_);
-    scalarField Tmax(cells().size(), Tmax_);
-
-    scalarField heMin(thermo.he(Tmin, cells()));
-    scalarField heMax(thermo.he(Tmax, cells()));
-
-    scalarField& hec = he.primitiveFieldRef();
+    vectorField& Uif = U.primitiveFieldRef();
 
     const labelList& cells = this->cells();
 
     forAll(cells, i)
     {
         const label celli = cells[i];
-        hec[celli]= max(min(hec[celli], heMax[i]), heMin[i]);
+
+        const scalar magSqrUi = magSqr(Uif[celli]);
+
+        if (magSqrUi > maxSqrU)
+        {
+            Uif[celli] *= sqrt(maxSqrU/magSqrUi);
+        }
     }
 
     // handle boundaries in the case of 'all'
     if (selectionMode() == selectionModeType::all)
     {
-        volScalarField::Boundary& bf = he.boundaryFieldRef();
+        volVectorField::Boundary& Ubf = U.boundaryFieldRef();
 
-        forAll(bf, patchi)
+        forAll(Ubf, patchi)
         {
-            fvPatchScalarField& hep = bf[patchi];
+            fvPatchVectorField& Up = Ubf[patchi];
 
-            if (!hep.fixesValue())
+            if (!Up.fixesValue())
             {
-                scalarField Tminp(hep.size(), Tmin_);
-                scalarField Tmaxp(hep.size(), Tmax_);
-
-                scalarField heMinp(thermo.he(Tminp, patchi));
-                scalarField heMaxp(thermo.he(Tmaxp, patchi));
-
-                forAll(hep, facei)
+                forAll(Up, facei)
                 {
-                    hep[facei] =
-                        max(min(hep[facei], heMaxp[facei]), heMinp[facei]);
+                    const scalar magSqrUi = magSqr(Up[facei]);
+
+                    if (magSqrUi > maxSqrU)
+                    {
+                        Up[facei] *= sqrt(maxSqrU/magSqrUi);
+                    }
                 }
             }
         }
@@ -140,7 +125,7 @@ void Foam::fv::limitTemperature::correct(volScalarField& he) const
 }
 
 
-bool Foam::fv::limitTemperature::read(const dictionary& dict)
+bool Foam::fv::limitVelocity::read(const dictionary& dict)
 {
     if (cellSetOption::read(dict))
     {

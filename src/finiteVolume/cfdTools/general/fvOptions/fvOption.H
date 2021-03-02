@@ -102,12 +102,9 @@ class option
                 const word& fieldName
             ) const;
 
-
-        // Correction
-
-            //- Apply correction to a field
+            //- Apply constraint to a field
             template<class Type>
-            void correctType(VolField<Type>& field) const;
+            void constrainType(VolField<Type>& field) const;
 
 
 protected:
@@ -283,18 +280,12 @@ public:
             //- Return the list of fields constrained by the option
             virtual wordList constrainedFields() const;
 
-            //- Return the list of fields corrected by the option
-            virtual wordList correctedFields() const;
-
             //- Return true if the option adds a source term to the given
             //  field's transport equation
             virtual bool addsSupToField(const word& fieldName) const;
 
             //- Return true if the option constrains the given field
             virtual bool constrainsField(const word& fieldName) const;
-
-            //- Return true if the option corrects the given field
-            virtual bool correctsField(const word& fieldName) const;
 
 
         // Sources
@@ -366,14 +357,11 @@ public:
 
         // Constraints
 
-            //- Add a constraint to an equation
+            //- Apply a constraint to an equation
             FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_CONSTRAIN);
 
-
-        // Correction
-
-            //- Apply correction to a field
-            FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_CORRECT);
+            //- Apply contraint to a field
+            FOR_ALL_FIELD_TYPES(DEFINE_FV_OPTION_CONSTRAIN_FIELD);
 
 
         // Mesh changes

@@ -16,4 +16,4 @@
 
     solve(UrelEqn == -fvc::grad(p));
 
-    fvOptions.correct(Urel);
+    fvOptions.constrain(Urel);

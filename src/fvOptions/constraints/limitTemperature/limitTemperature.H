@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,31 +22,34 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::limitVelocity
+    Foam::fv::limitTemperature
 
 Description
-    Limits the velocity magnitude to the specified \c max value.
+    Limits the temperature to be between minimum and maximum values.
 
 Usage
     Example usage:
     \verbatim
-    limitU
+    limitT
     {
-        type            limitVelocity;
+        type            limitTemperature;
 
         selectionMode   all;
 
-        max             100;
+        phase           gas; // Optional phase name
+
+        min             200;
+        max             500;
     }
     \endverbatim
 
 SourceFiles
-    limitVelocity.C
+    limitTemperature.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef limitVelocity_H
-#define limitVelocity_H
+#ifndef limitTemperature_H
+#define limitTemperature_H
 
 #include "cellSetOption.H"
 
@@ -58,20 +61,23 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                        Class limitVelocity Declaration
+                      Class limitTemperature Declaration
 \*---------------------------------------------------------------------------*/
 
-class limitVelocity
+class limitTemperature
 :
     public cellSetOption
 {
     // Private data
 
-        //- Velocity field name, default = U
-        word UName_;
+        //- Minimum temperature limit [K]
+        scalar Tmin_;
 
-        //- Maximum velocity magnitude
-        scalar max_;
+        //- Maximum temperature limit [K]
+        scalar Tmax_;
+
+        //- Optional phase name
+        word phaseName_;
 
 
     // Private Member Functions
@@ -83,13 +89,13 @@ class limitVelocity
 public:
 
     //- Runtime type information
-    TypeName("limitVelocity");
+    TypeName("limitTemperature");
 
 
     // Constructors
 
         //- Construct from components
-        limitVelocity
+        limitTemperature
         (
             const word& name,
             const word& modelType,
@@ -98,21 +104,21 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        limitVelocity(const limitVelocity&) = delete;
+        limitTemperature(const limitTemperature&) = delete;
 
 
     //- Destructor
-    virtual ~limitVelocity()
+    virtual ~limitTemperature()
     {}
 
 
     // Member Functions
 
-        //- Return the list of fields corrected by the option
-        virtual wordList correctedFields() const;
+        //- Return the list of fields constrained by the option
+        virtual wordList constrainedFields() const;
 
-        //- Correct the velocity field
-        virtual void correct(volVectorField& U) const;
+        //- Constrain the energy field
+        virtual void constrain(volScalarField& he) const;
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);
@@ -121,7 +127,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const limitVelocity&) = delete;
+        void operator=(const limitTemperature&) = delete;
 };
 
 

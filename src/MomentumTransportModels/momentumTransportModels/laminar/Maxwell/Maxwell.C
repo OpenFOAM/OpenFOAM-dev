@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -385,7 +385,7 @@ void Maxwell<BasicMomentumTransportModel>::correct()
         sigmaEqn.relax();
         fvOptions.constrain(sigmaEqn);
         sigmaEqn.solve("sigma");
-        fvOptions.correct(sigma);
+        fvOptions.constrain(sigma);
     }
 
     if (sigmas_.size())

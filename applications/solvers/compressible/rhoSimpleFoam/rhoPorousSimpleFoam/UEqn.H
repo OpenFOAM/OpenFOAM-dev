@@ -38,7 +38,7 @@
         }
         U.correctBoundaryConditions();
 
-        fvOptions.correct(U);
+        fvOptions.constrain(U);
     }
     else
     {
@@ -48,7 +48,7 @@
 
         solve(UEqn == -fvc::grad(p));
 
-        fvOptions.correct(U);
+        fvOptions.constrain(U);
 
         trAU = 1.0/UEqn.A();
         trAU.ref().rename("rAU");

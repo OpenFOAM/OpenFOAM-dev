@@ -127,7 +127,7 @@ p_rgh.relax();
 // calculated from the relaxed pressure
 U = HbyA + rAU*fvc::reconstruct((phig + p_rghEqn.flux())/rhorAUf);
 U.correctBoundaryConditions();
-fvOptions.correct(U);
+fvOptions.constrain(U);
 K = 0.5*magSqr(U);
 
 if (mesh.steady())

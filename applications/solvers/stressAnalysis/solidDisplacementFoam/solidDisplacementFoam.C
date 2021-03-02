@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 
                 TEqn.solve();
 
-                fvOptions.correct(T);
+                fvOptions.constrain(T);
             }
 
             {

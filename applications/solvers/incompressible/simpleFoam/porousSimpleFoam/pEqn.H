@@ -56,4 +56,4 @@ else
 }
 
 U.correctBoundaryConditions();
-fvOptions.correct(U);
+fvOptions.constrain(U);

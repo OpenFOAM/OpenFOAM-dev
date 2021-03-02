@@ -29,7 +29,7 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
         EEqn.relax();
         fvOptions.constrain(EEqn);
         EEqn.solve();
-        fvOptions.correct(phase.thermoRef().he());
+        fvOptions.constrain(phase.thermoRef().he());
     }
 
     fluid.correctThermo();

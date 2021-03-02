@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1284,7 +1284,7 @@ void Foam::diameterModels::populationBalanceModel::solve()
                     maxInitialResidual
                 );
 
-                fluid_.fvOptions().correct(fi);
+                fluid_.fvOptions().constrain(fi);
             }
         }
 

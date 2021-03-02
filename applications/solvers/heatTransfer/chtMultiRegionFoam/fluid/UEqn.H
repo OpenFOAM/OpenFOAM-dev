@@ -31,8 +31,8 @@
             )
         );
 
-        fvOptions.correct(U);
+        fvOptions.constrain(U);
         K = 0.5*magSqr(U);
     }
 
-    fvOptions.correct(U);
+    fvOptions.constrain(U);

@@ -33,7 +33,7 @@
 
     EEqn.solve();
 
-    fvOptions.correct(he);
+    fvOptions.constrain(he);
 
     thermo.correct();
 

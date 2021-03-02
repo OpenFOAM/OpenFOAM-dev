@@ -101,13 +101,13 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define DEFINE_FV_OPTION_CORRECT(Type, nullArg)                                \
-    virtual void correct(VolField<Type>& field) const;
+#define DEFINE_FV_OPTION_CONSTRAIN_FIELD(Type, nullArg)                        \
+    virtual void constrain(VolField<Type>& field) const;
 
-#define IMPLEMENT_FV_OPTION_CORRECT(Type, optionType)                          \
-    void Foam::fv::optionType::correct(VolField<Type>& field) const            \
+#define IMPLEMENT_FV_OPTION_CONSTRAIN_FIELD(Type, optionType)                  \
+    void Foam::fv::optionType::constrain(VolField<Type>& field) const          \
     {                                                                          \
-        correctType(field);                                                    \
+        constrainType(field);                                                  \
     }
 
 // ************************************************************************* //

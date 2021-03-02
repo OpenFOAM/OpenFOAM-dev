@@ -239,7 +239,7 @@ void Foam::fv::optionList::constrain(fvMatrix<Type>& eqn) const
 
 
 template<class Type>
-void Foam::fv::optionList::correct
+void Foam::fv::optionList::constrain
 (
     GeometricField<Type, fvPatchField, volMesh>& field
 ) const
@@ -248,19 +248,19 @@ void Foam::fv::optionList::correct
 
     forAll(*this, i)
     {
-        const option& correction = this->operator[](i);
+        const option& constraint = this->operator[](i);
 
-        if (correction.correctsField(fieldName))
+        if (constraint.constrainsField(fieldName))
         {
-            correctedFields_[i].insert(fieldName);
+            constrainedFields_[i].insert(fieldName);
 
             if (debug)
             {
-                Info<< "Applying correction " << correction.name()
+                Info<< "Applying constraint " << constraint.name()
                     << " for field " << fieldName << endl;
             }
 
-            correction.correct(field);
+            constraint.constrain(field);
         }
     }
 }

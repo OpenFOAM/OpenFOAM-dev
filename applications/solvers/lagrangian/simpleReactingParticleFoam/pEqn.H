@@ -45,7 +45,7 @@ thermo.correctRho(psi*p - psip0);
 
 U = HbyA - rAU*fvc::grad(p);
 U.correctBoundaryConditions();
-fvOptions.correct(U);
+fvOptions.constrain(U);
 
 rho = thermo.rho();
 rho = max(rho, rhoMin);

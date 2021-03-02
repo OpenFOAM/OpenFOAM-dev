@@ -57,7 +57,7 @@ while (pimple.correctNonOrthogonal())
 
         U = HbyA + rAU*fvc::reconstruct((p_rghEqn.flux() + phig)/rhorAUf);
         U.correctBoundaryConditions();
-        fvOptions.correct(U);
+        fvOptions.constrain(U);
         K = 0.5*magSqr(U);
     }
 }

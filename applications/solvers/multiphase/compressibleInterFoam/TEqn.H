@@ -22,7 +22,7 @@
 
     TEqn.solve();
 
-    fvOptions.correct(T);
+    fvOptions.constrain(T);
 
     mixture.correctThermo();
     mixture.correct();

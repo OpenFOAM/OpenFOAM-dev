@@ -82,9 +82,6 @@ protected:
         //- Sets of the fields that have been constrained by the options
         mutable PtrList<wordHashSet> constrainedFields_;
 
-        //- Sets of the fields that have been corrected by the options
-        mutable PtrList<wordHashSet> correctedFields_;
-
 
     // Protected Member Functions
 
@@ -150,9 +147,6 @@ public:
 
             //- Return true if an option constrains the given field
             virtual bool constrainsField(const word& fieldName) const;
-
-            //- Return true if an option corrects the given field
-            virtual bool correctsField(const word& fieldName) const;
 
 
         // Sources
@@ -261,12 +255,9 @@ public:
             template<class Type>
             void constrain(fvMatrix<Type>& eqn) const;
 
-
-        // Correction
-
-            //- Apply correction to a field
+            //- Apply constraints to a field
             template<class Type>
-            void correct
+            void constrain
             (
                 GeometricField<Type, fvPatchField, volMesh>& field
             ) const;

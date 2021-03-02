@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,7 +122,7 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correctNut
 {
     this->nut_ = a1_*k_/max(a1_*omega_, b1_*F2*sqrt(S2));
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).correct(this->nut_);
+    fv::options::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -489,7 +489,7 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correct()
         fvOptions.constrain(omegaEqn.ref());
         omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
         solve(omegaEqn);
-        fvOptions.correct(omega_);
+        fvOptions.constrain(omega_);
         bound(omega_, this->omegaMin_);
     }
 
@@ -510,7 +510,7 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correct()
     kEqn.ref().relax();
     fvOptions.constrain(kEqn.ref());
     solve(kEqn);
-    fvOptions.correct(k_);
+    fvOptions.constrain(k_);
     bound(k_, this->kMin_);
 
     correctNut(S2, F23);

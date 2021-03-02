@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -530,7 +530,7 @@ void kOmegaSSTLM<BasicMomentumTransportModel>::correctReThetatGammaInt()
         ReThetatEqn.ref().relax();
         fvOptions.constrain(ReThetatEqn.ref());
         solve(ReThetatEqn);
-        fvOptions.correct(ReThetat_);
+        fvOptions.constrain(ReThetat_);
         bound(ReThetat_, 0);
     }
 
@@ -567,7 +567,7 @@ void kOmegaSSTLM<BasicMomentumTransportModel>::correctReThetatGammaInt()
         gammaIntEqn.ref().relax();
         fvOptions.constrain(gammaIntEqn.ref());
         solve(gammaIntEqn);
-        fvOptions.correct(gammaInt_);
+        fvOptions.constrain(gammaInt_);
         bound(gammaInt_, 0);
     }
 

@@ -32,5 +32,5 @@ if (ign.ignited())
 
     heauEqn.solve();
 
-    fvOptions.correct(heau);
+    fvOptions.constrain(heau);
 }
