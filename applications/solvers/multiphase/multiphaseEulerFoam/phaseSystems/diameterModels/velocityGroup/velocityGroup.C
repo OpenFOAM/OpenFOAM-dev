@@ -152,11 +152,7 @@ Foam::diameterModels::velocityGroup::velocityGroup
             IOobject::groupName
             (
                 "f",
-                IOobject::groupName
-                (
-                    phase.name(),
-                    popBalName_
-                )
+                phase.name()
             ),
             phase.time().timeName(),
             phase.mesh(),

@@ -11,7 +11,7 @@ FoamFile
     format      ascii;
     class       volScalarField;
     location    "0";
-    object      f.air.bubbles;
+    object      f.gas;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -21,6 +21,27 @@ internalField   uniform 1.0;
 
 boundaryField
 {
+    inlet
+    {
+        type            fixedValue;
+        value           uniform 1.0;
+    }
+    outlet
+    {
+        type            zeroGradient;
+    }
+    wall
+    {
+        type            zeroGradient;
+    }
+    front
+    {
+        type            wedge;
+    }
+    back
+    {
+        type            wedge;
+    }
 }
 
 // ************************************************************************* //

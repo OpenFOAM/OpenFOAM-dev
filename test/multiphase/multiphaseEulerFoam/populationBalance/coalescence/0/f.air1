@@ -10,7 +10,8 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      f.air3.bubbles;
+    location    "0";
+    object      f.air1;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -20,18 +21,6 @@ internalField   uniform 1.0;
 
 boundaryField
 {
-    #includeEtc "caseDicts/setConstraintTypes"
-
-    inlet
-    {
-        type            fixedValue;
-        value           uniform 1.0;
-    }
-
-    outlet
-    {
-        type            zeroGradient;
-    }
 }
 
 // ************************************************************************* //

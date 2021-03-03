@@ -10,7 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       volScalarField;
-    object      f.air1.bubbles;
+    object      f.air1;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -25,15 +25,10 @@ boundaryField
     inlet
     {
         type            fixedValue;
-        value           $internalField;
+        value           uniform 1.0;
     }
 
     outlet
-    {
-        type            zeroGradient;
-    }
-
-    walls
     {
         type            zeroGradient;
     }

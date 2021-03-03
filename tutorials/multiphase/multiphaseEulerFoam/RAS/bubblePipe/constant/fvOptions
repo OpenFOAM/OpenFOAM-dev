@@ -10,6 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
+    location    "constant";
     object      fvOptions;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -18,27 +19,24 @@ options
 {
     massSource
     {
-        type            semiImplicitSource;
+        type            massSource;
 
         selectionMode   cellZone;
         cellZone        injection;
 
-        volumeMode      absolute;
+        massFlowRate    6e-7;
 
-        sources
+        phase           air1;
+        rho             thermo:rho.air1;
+
+        fieldValues
         {
-            thermo:rho.air1
-            {
-                explicit    6e-07;
-                implicit    0;
-            }
-
-            f3.air1.bubbles
-            {
-                value       1.0;
-                explicit    #calc "$value*$../thermo:rho.air1/explicit";
-                implicit    0;
-            }
+            f1.air1     0;
+            f2.air1     0;
+            f3.air1     1;
+            f4.air1     0;
+            f5.air1     0;
+            U.air1      (0 0 0);
         }
     }
 }
