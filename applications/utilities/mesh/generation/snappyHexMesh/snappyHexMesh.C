@@ -732,7 +732,7 @@ int main(int argc, char *argv[])
 
 
     // Read meshing dictionary
-    const dictionary meshDict(systemDict("snappyHexMeshDict", args, mesh));
+    const IOdictionary meshDict(systemDict("snappyHexMeshDict", args, mesh));
 
 
     // all surface geometry

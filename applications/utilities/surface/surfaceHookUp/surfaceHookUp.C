@@ -41,7 +41,7 @@ Usage
 #include "PackedBoolList.H"
 #include "unitConversion.H"
 #include "searchableSurfaces.H"
-#include "IOdictionary.H"
+#include "systemDict.H"
 
 using namespace Foam;
 
@@ -281,12 +281,7 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
 
-    const word dictName("surfaceHookUpDict");
-    #include "setSystemRunTimeDictionaryIO.H"
-
-    Info<< "Reading " << dictName << nl << endl;
-
-    const IOdictionary dict(dictIO);
+    const dictionary dict(systemDict("surfaceHookUpDict", args, runTime));
 
     const scalar dist(args.argRead<scalar>(1));
     const scalar matchTolerance(max(1e-6*dist, small));

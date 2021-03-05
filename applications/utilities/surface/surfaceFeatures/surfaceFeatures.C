@@ -35,7 +35,7 @@ Description
 #include "surfaceFeatures.H"
 #include "triSurfaceFields.H"
 #include "vtkSurfaceWriter.H"
-#include "IOdictionary.H"
+#include "systemDict.H"
 
 using namespace Foam;
 
@@ -731,12 +731,7 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
 
-    const word dictName("surfaceFeaturesDict");
-    #include "setSystemRunTimeDictionaryIO.H"
-
-    Info<< "Reading " << dictName << nl << endl;
-
-    const IOdictionary dict(dictIO);
+    const dictionary dict(systemDict("surfaceFeaturesDict", args, runTime));
 
     if (dict.found("surfaces"))
     {
