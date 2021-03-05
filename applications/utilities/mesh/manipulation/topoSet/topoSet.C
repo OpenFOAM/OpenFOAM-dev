@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,7 @@ Description
 #include "cellZoneSet.H"
 #include "faceZoneSet.H"
 #include "pointZoneSet.H"
-#include "IOdictionary.H"
+#include "systemDict.H"
 
 using namespace Foam;
 
@@ -211,12 +211,7 @@ int main(int argc, char *argv[])
 
     const bool noSync = args.optionFound("noSync");
 
-    const word dictName("topoSetDict");
-    #include "setSystemMeshDictionaryIO.H"
-
-    Info<< "Reading " << dictName << "\n" << endl;
-
-    IOdictionary topoSetDict(dictIO);
+    const dictionary topoSetDict(systemDict("topoSetDict", args, mesh));
 
     // Read set construct info from dictionary
     PtrList<dictionary> actions(topoSetDict.lookup("actions"));

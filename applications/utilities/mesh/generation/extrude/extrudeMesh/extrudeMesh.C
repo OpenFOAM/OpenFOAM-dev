@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,7 @@ Description
 #include "MeshedSurfaces.H"
 #include "globalIndex.H"
 #include "cellSet.H"
+#include "systemDict.H"
 
 #include "extrudedMesh.H"
 #include "extrudeModel.H"
@@ -266,7 +267,7 @@ int main(int argc, char *argv[])
     #include "addDictOption.H"
 
     #include "setRootCase.H"
-    #include "createTimeExtruded.H"
+    #include "createTime.H"
 
     // Get optional regionName
     word regionName;
@@ -275,30 +276,16 @@ int main(int argc, char *argv[])
     {
         regionDir = regionName;
         Info<< "Create mesh " << regionName << " for time = "
-            << runTimeExtruded.timeName() << nl << endl;
+            << runTime.timeName() << nl << endl;
     }
     else
     {
         regionName = fvMesh::defaultRegion;
         Info<< "Create mesh for time = "
-            << runTimeExtruded.timeName() << nl << endl;
+            << runTime.timeName() << nl << endl;
     }
 
-    const word dictName
-    (
-        args.optionLookupOrDefault<word>("dict", "extrudeMeshDict")
-    );
-
-    IOdictionary dict
-    (
-        IOobject
-        (
-            dictName,
-            runTimeExtruded.system(),
-            runTimeExtruded,
-            IOobject::MUST_READ_IF_MODIFIED
-        )
-    );
+    const dictionary dict(systemDict("extrudeMeshDict", args, runTime));
 
     // Point generator
     autoPtr<extrudeModel> model(extrudeModel::New(dict));
@@ -375,13 +362,6 @@ int main(int argc, char *argv[])
         Info<< "Extruding patches " << sourcePatches
             << " on mesh " << sourceCasePath << nl
             << endl;
-
-        Time runTime
-        (
-            Time::controlDictName,
-            sourceRootDir,
-            sourceCaseDir
-        );
 
         #include "createMesh.H"
 
@@ -711,8 +691,8 @@ int main(int argc, char *argv[])
             IOobject
             (
                 regionName,
-                runTimeExtruded.constant(),
-                runTimeExtruded,
+                runTime.constant(),
+                runTime,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE,
                 false
@@ -795,8 +775,8 @@ int main(int argc, char *argv[])
                 IOobject
                 (
                     extrudedMesh::defaultRegion,
-                    runTimeExtruded.constant(),
-                    runTimeExtruded
+                    runTime.constant(),
+                    runTime
                 ),
                 fMesh,
                 model()
@@ -1040,7 +1020,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    mesh.setInstance(runTimeExtruded.constant());
+    mesh.setInstance(runTime.constant());
     Info<< "Writing mesh to " << mesh.localObjectPath() << nl << endl;
 
     if (!mesh.write())

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,8 +33,11 @@ Description
 #include "cellSet.H"
 #include "faceSet.H"
 #include "volFields.H"
+#include "systemDict.H"
 
 using namespace Foam;
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 template<class Type>
 bool setCellFieldType
@@ -373,7 +376,6 @@ public:
 };
 
 
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
@@ -384,12 +386,7 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     #include "createNamedMesh.H"
 
-    const word dictName("setFieldsDict");
-    #include "setSystemMeshDictionaryIO.H"
-
-    Info<< "Reading " << dictName << "\n" << endl;
-
-    IOdictionary setFieldsDict(dictIO);
+    const dictionary setFieldsDict(systemDict("setFieldsDict", args, mesh));
 
     if (setFieldsDict.found("defaultFieldValues"))
     {
@@ -401,7 +398,6 @@ int main(int argc, char *argv[])
         );
         Info<< endl;
     }
-
 
     Info<< "Setting field region values" << endl;
 

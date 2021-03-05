@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,6 +80,7 @@ Note
 #include "volFields.H"
 #include "stringListOps.H"
 #include "timeSelector.H"
+#include "systemDict.H"
 
 using namespace Foam;
 
@@ -508,10 +509,7 @@ int main(int argc, char *argv[])
 
 
         // Get the replacement rules from a dictionary
-
-        const word dictName("changeDictionaryDict");
-        #include "setSystemMeshDictionaryIO.H"
-        IOdictionary dict(dictIO);
+        const dictionary dict(systemDict("changeDictionaryDict", args, mesh));
 
         const dictionary* replaceDictsPtr = &dict;
 

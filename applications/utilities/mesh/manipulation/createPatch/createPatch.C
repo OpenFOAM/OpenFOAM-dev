@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,7 +49,7 @@ Description
 #include "polyTopoChange.H"
 #include "polyModifyFace.H"
 #include "wordReList.H"
-#include "IOdictionary.H"
+#include "systemDict.H"
 
 using namespace Foam;
 
@@ -488,12 +488,7 @@ int main(int argc, char *argv[])
 
     const word oldInstance = mesh.pointsInstance();
 
-    const word dictName("createPatchDict");
-    #include "setSystemMeshDictionaryIO.H"
-
-    Info<< "Reading " << dictName << nl << endl;
-
-    IOdictionary dict(dictIO);
+    const dictionary dict(systemDict("createPatchDict", args, mesh));
 
     // Whether to synchronise points
     const Switch pointSync(dict.lookup("pointSync"));

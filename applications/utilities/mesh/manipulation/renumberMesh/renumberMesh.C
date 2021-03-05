@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,7 @@ Description
 #include "cellSet.H"
 #include "faceSet.H"
 #include "pointSet.H"
+#include "systemDict.H"
 
 #ifdef FOAM_USE_ZOLTAN
     #include "zoltanRenumber.H"
@@ -691,18 +692,16 @@ int main(int argc, char *argv[])
     bool renumberSets = true;
 
     // Construct renumberMethod
-    autoPtr<IOdictionary> renumberDictPtr;
+    autoPtr<dictionary> renumberDictPtr;
     autoPtr<renumberMethod> renumberPtr;
 
     if (readDict)
     {
-        const word dictName("renumberMeshDict");
-        #include "setSystemMeshDictionaryIO.H"
-
-        Info<< "Renumber according to " << dictName << nl << endl;
-
-        renumberDictPtr.reset(new IOdictionary(dictIO));
-        const IOdictionary& renumberDict = renumberDictPtr();
+        renumberDictPtr.reset
+        (
+            new dictionary(systemDict("renumberMeshDict", args, mesh))
+        );
+        const dictionary& renumberDict = renumberDictPtr();
 
         renumberPtr = renumberMethod::New(renumberDict);
 

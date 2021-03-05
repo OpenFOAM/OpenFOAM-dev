@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,7 @@ Usage
 #include "fvMesh.H"
 #include "polyMeshFilter.H"
 #include "faceSet.H"
+#include "systemDict.H"
 
 using namespace Foam;
 
@@ -92,12 +93,7 @@ int main(int argc, char *argv[])
 
     const word oldInstance = mesh.pointsInstance();
 
-    const word dictName("collapseDict");
-    #include "setSystemMeshDictionaryIO.H"
-
-    Info<< "Reading " << dictName << nl << endl;
-
-    IOdictionary collapseDict(dictIO);
+    const dictionary collapseDict(systemDict("collapseDict", args, mesh));
 
     const bool overwrite = args.optionFound("overwrite");
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,7 @@ Description
 #include "wallPolyPatch.H"
 #include "waveAlphaFvPatchScalarField.H"
 #include "waveVelocityFvPatchVectorField.H"
+#include "systemDict.H"
 
 using namespace Foam;
 
@@ -78,10 +79,7 @@ int main(int argc, char *argv[])
 
     #include "createNamedMesh.H"
 
-    const word dictName("setWavesDict");
-    #include "setSystemMeshDictionaryIO.H"
-    Info<< "Reading " << dictName << "\n" << endl;
-    IOdictionary setWavesDict(dictIO);
+    const dictionary setWavesDict(systemDict("setWavesDict", args, mesh));
 
     #include "readGravitationalAcceleration.H"
 

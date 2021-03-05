@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -126,6 +126,7 @@ Notes:
 #include "fvMeshTools.H"
 #include "OBJstream.H"
 #include "PatchTools.H"
+#include "systemDict.H"
 
 using namespace Foam;
 
@@ -1406,11 +1407,7 @@ int main(int argc, char *argv[])
     bool overwrite = args.optionFound("overwrite");
 
 
-    const word dictName("extrudeToRegionMeshDict");
-
-    #include "setSystemMeshDictionaryIO.H"
-
-    IOdictionary dict(dictIO);
+    const dictionary dict(systemDict("extrudeToRegionMeshDict", args, mesh));
 
 
     // Point generator
