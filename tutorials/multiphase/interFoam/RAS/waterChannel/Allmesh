@@ -10,7 +10,7 @@ echo "Creating channel"
 i=1
 while [ "$i" -lt 3 ] ; do
     echo "Running extrudeMesh, instance" ${i}
-    extrudeMesh -dict extrudeMeshDict.${i} > log.extrudeMesh.${i}
+    extrudeMesh -dict system/extrudeMeshDict.${i} > log.extrudeMesh.${i}
     i=$((i + 1))
 done
 
