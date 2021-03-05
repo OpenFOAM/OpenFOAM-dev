@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
     #include "addDictOption.H"
 
     #include "setRootCase.H"
-    #include "createTime.H"
+    #include "createTimeExtruded.H"
 
     // Get optional regionName
     word regionName;
@@ -276,16 +276,16 @@ int main(int argc, char *argv[])
     {
         regionDir = regionName;
         Info<< "Create mesh " << regionName << " for time = "
-            << runTime.timeName() << nl << endl;
+            << runTimeExtruded.timeName() << nl << endl;
     }
     else
     {
         regionName = fvMesh::defaultRegion;
         Info<< "Create mesh for time = "
-            << runTime.timeName() << nl << endl;
+            << runTimeExtruded.timeName() << nl << endl;
     }
 
-    const dictionary dict(systemDict("extrudeMeshDict", args, runTime));
+    const dictionary dict(systemDict("extrudeMeshDict", args, runTimeExtruded));
 
     // Point generator
     autoPtr<extrudeModel> model(extrudeModel::New(dict));
@@ -362,6 +362,13 @@ int main(int argc, char *argv[])
         Info<< "Extruding patches " << sourcePatches
             << " on mesh " << sourceCasePath << nl
             << endl;
+
+        Time runTime
+        (
+            Time::controlDictName,
+            sourceRootDir,
+            sourceCaseDir
+        );
 
         #include "createMesh.H"
 
@@ -691,8 +698,8 @@ int main(int argc, char *argv[])
             IOobject
             (
                 regionName,
-                runTime.constant(),
-                runTime,
+                runTimeExtruded.constant(),
+                runTimeExtruded,
                 IOobject::NO_READ,
                 IOobject::AUTO_WRITE,
                 false
@@ -775,8 +782,8 @@ int main(int argc, char *argv[])
                 IOobject
                 (
                     extrudedMesh::defaultRegion,
-                    runTime.constant(),
-                    runTime
+                    runTimeExtruded.constant(),
+                    runTimeExtruded
                 ),
                 fMesh,
                 model()
@@ -1020,7 +1027,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    mesh.setInstance(runTime.constant());
+    mesh.setInstance(runTimeExtruded.constant());
     Info<< "Writing mesh to " << mesh.localObjectPath() << nl << endl;
 
     if (!mesh.write())
