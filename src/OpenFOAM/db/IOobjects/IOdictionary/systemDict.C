@@ -29,7 +29,7 @@ License
 
 // * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * * //
 
-Foam::dictionary Foam::systemDict
+Foam::IOdictionary Foam::systemDict
 (
     const word& dictName,
     const argList& args,

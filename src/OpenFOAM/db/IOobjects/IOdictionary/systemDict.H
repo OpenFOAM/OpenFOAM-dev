@@ -37,7 +37,7 @@ SourceFiles
 #define systemDict_H
 
 #include "argList.H"
-#include "objectRegistry.H"
+#include "IOdictionary.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,7 +46,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * * //
 
-dictionary systemDict
+IOdictionary systemDict
 (
     const word& dictName,
     const argList& args,
