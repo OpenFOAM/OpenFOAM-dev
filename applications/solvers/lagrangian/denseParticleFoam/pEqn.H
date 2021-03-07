@@ -53,7 +53,7 @@
                     (phicSUSu + phicSUSp*phic - pEqn.flux()/alphacf)/rASpUcf
                 );
             Uc.correctBoundaryConditions();
-            fvOptions.constrain(Uc);
+            fvConstraints.constrain(Uc);
 
             // Correct Ucf if the mesh is moving
             fvc::correctUf(Ucf, Uc, phic);

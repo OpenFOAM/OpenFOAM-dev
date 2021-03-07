@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SpalartAllmarasDES.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -204,7 +205,7 @@ void SpalartAllmarasDES<BasicMomentumTransportModel>::correctNut
 {
     this->nut_ = nuTilda_*fv1;
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -454,7 +455,11 @@ void SpalartAllmarasDES<BasicMomentumTransportModel>::correct()
     const rhoField& rho = this->rho_;
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
-    const fv::options& fvOptions(fv::options::New(this->mesh_));
+    const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(this->mesh_)
+    );
 
     LESeddyViscosity<BasicMomentumTransportModel>::correct();
 
@@ -483,13 +488,13 @@ void SpalartAllmarasDES<BasicMomentumTransportModel>::correct()
             Cw1_*alpha()*rho()*fw(Stilda, dTilda)*nuTilda_()/sqr(dTilda),
             nuTilda_
         )
-      + fvOptions(alpha, rho, nuTilda_)
+      + fvModels.source(alpha, rho, nuTilda_)
     );
 
     nuTildaEqn.ref().relax();
-    fvOptions.constrain(nuTildaEqn.ref());
+    fvConstraints.constrain(nuTildaEqn.ref());
     solve(nuTildaEqn);
-    fvOptions.constrain(nuTilda_);
+    fvConstraints.constrain(nuTilda_);
     bound(nuTilda_, dimensionedScalar(nuTilda_.dimensions(), 0));
     nuTilda_.correctBoundaryConditions();
 

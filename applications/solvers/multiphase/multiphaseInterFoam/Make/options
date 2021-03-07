@@ -18,6 +18,7 @@ EXE_LIBS = \
     -lincompressibleMomentumTransportModels \
     -lfiniteVolume \
     -ldynamicFvMesh \
-    -lfvOptions \
+    -lfvModels \
+    -lfvConstraints \
     -lmeshTools \
     -lsampling

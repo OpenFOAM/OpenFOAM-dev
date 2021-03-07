@@ -36,7 +36,8 @@ Description
 #include "fluidThermoMomentumTransportModel.H"
 #include "fluidThermophysicalTransportModel.H"
 #include "OFstream.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "pimpleControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -84,7 +85,7 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            fvOptions.correct();
+            fvModels.correct();
 
             #include "UEqn.H"
 

@@ -34,11 +34,11 @@ if (args.optionFound("listFunctionObjects"))
 }
 #endif
 
-#ifdef fvOption_H
-if (args.optionFound("listFvOptions"))
+#ifdef fvModel_H
+if (args.optionFound("listFvModels"))
 {
-    Info<< "fvOptions"
-        << fv::option::dictionaryConstructorTablePtr_->sortedToc()
+    Info<< "fvModels"
+        << Foam::fvModel::dictionaryConstructorTablePtr_->sortedToc()
         << endl;
     listOptions = true;
 }

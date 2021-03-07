@@ -25,16 +25,16 @@ tmp<fv::convectionScheme<scalar>> mvConvection
              ==
                 clouds.SYi(i, Yi)
               + combustion->R(Yi)
-              + fvOptions(rho, Yi)
+              + fvModels.source(rho, Yi)
             );
 
             YEqn.relax();
 
-            fvOptions.constrain(YEqn);
+            fvConstraints.constrain(YEqn);
 
             YEqn.solve("Yi");
 
-            fvOptions.constrain(Yi);
+            fvConstraints.constrain(Yi);
         }
     }
 

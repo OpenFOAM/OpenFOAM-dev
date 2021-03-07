@@ -57,7 +57,8 @@ Description
 #include "ignition.H"
 #include "Switch.H"
 #include "pimpleControl.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -97,7 +98,7 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            fvOptions.correct();
+            fvModels.correct();
 
             #include "UEqn.H"
 

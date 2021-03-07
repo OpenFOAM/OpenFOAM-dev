@@ -12,4 +12,4 @@ EXE_LIBS = \
     -lgenericPatchFields \
     -lfiniteVolume \
     -lmeshTools \
-    -lfvOptions
+    -lfvModels

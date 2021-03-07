@@ -53,7 +53,7 @@ if (pimple.transonic())
         fvc::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
       + fvc::div(phiHbyA) + fvm::div(phid, p_rgh)
      ==
-        fvOptions(psi, p_rgh, rho.name())
+        fvModels.source(psi, p_rgh, rho.name())
     );
 
     while (pimple.correctNonOrthogonal())
@@ -79,7 +79,7 @@ else
         fvc::ddt(rho) + psi*correction(fvm::ddt(p_rgh))
       + fvc::div(phiHbyA)
      ==
-        fvOptions(psi, p_rgh, rho.name())
+        fvModels.source(psi, p_rgh, rho.name())
     );
 
     while (pimple.correctNonOrthogonal())
@@ -127,7 +127,7 @@ p_rgh.relax();
 // calculated from the relaxed pressure
 U = HbyA + rAU*fvc::reconstruct((phig + p_rghEqn.flux())/rhorAUf);
 U.correctBoundaryConditions();
-fvOptions.constrain(U);
+fvConstraints.constrain(U);
 K = 0.5*magSqr(U);
 
 if (mesh.steady())

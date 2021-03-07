@@ -4,13 +4,13 @@
       + fvm::div(phi, U)
       + turbulence->divDevTau(U)
      ==
-        fvOptions(rho, U)
+        fvModels.source(rho, U)
     );
 
     if (pimple.momentumPredictor())
     {
         solve(UEqn == -fvc::grad(p));
 
-        fvOptions.constrain(U);
+        fvConstraints.constrain(U);
         K = 0.5*magSqr(U);
     }

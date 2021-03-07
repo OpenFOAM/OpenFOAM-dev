@@ -8,13 +8,13 @@
       + MRF.DDt(rho, U)
       + turbulence->divDevTau(U)
      ==
-        fvOptions(rho, U)
+        fvModels.source(rho, U)
     );
     fvVectorMatrix& UEqn = tUEqn.ref();
 
     UEqn.relax();
 
-    fvOptions.constrain(UEqn);
+    fvConstraints.constrain(UEqn);
 
     if (simple.momentumPredictor())
     {
@@ -31,5 +31,5 @@
             )
         );
 
-        fvOptions.constrain(U);
+        fvConstraints.constrain(U);
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,6 @@ SourceFiles
 
 #include "fvMeshFunctionObject.H"
 #include "volFields.H"
-#include "fvOptionList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -98,9 +97,6 @@ class scalarTransport
 
         //- Name of field whose schemes are used (optional)
         word schemesField_;
-
-        //- Run-time selectable finite volume options, e.g. sources, constraints
-        fv::optionList fvOptions_;
 
         //- The scalar field
         volScalarField s_;

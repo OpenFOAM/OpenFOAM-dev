@@ -20,7 +20,7 @@ EXE_INC = \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
-    -I$(LIB_SRC)/fvOptions/lnInclude
+    -I$(LIB_SRC)/fvModels/lnInclude
 
 EXE_LIBS = \
     -ltwoPhaseMixtureThermo \
@@ -38,7 +38,8 @@ EXE_LIBS = \
     -lsurfaceFilmModels \
     -lsurfaceFilmDerivedFvPatchFields \
     -lfiniteVolume \
-    -lfvOptions \
+    -lfvModels \
+    -lfvConstraints \
     -lmeshTools \
     -ldynamicMesh \
     -ldynamicFvMesh

@@ -6,5 +6,5 @@ EXE_LIBS = \
     -lmomentumTransportModels \
     -lfluidThermoMomentumTransportModels \
     -lfiniteVolume \
-    -lfvOptions \
+    -lfvModels \
     -lmeshTools

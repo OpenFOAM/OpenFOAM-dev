@@ -39,7 +39,7 @@ namespace Foam
 
         addToRunTimeSelectionTable
         (
-            option,
+            fvModel,
             VoFSolidificationMeltingSource,
             dictionary
         );
@@ -51,24 +51,24 @@ namespace Foam
 
 void Foam::fv::VoFSolidificationMeltingSource::readCoeffs()
 {
-    alphaSolidT_.reset(Function1<scalar>::New("alphaSolidT", coeffs_).ptr());
-    L_ = dimensionedScalar("L", dimEnergy/dimMass, coeffs_);
-    relax_ = coeffs_.lookupOrDefault<scalar>("relax", 0.9);
-    Cu_ = coeffs_.lookupOrDefault<scalar>("Cu", 100000);
-    q_ = coeffs_.lookupOrDefault<scalar>("q", 0.001);
+    alphaSolidT_.reset(Function1<scalar>::New("alphaSolidT", coeffs()).ptr());
+    L_ = dimensionedScalar("L", dimEnergy/dimMass, coeffs());
+    relax_ = coeffs().lookupOrDefault<scalar>("relax", 0.9);
+    Cu_ = coeffs().lookupOrDefault<scalar>("Cu", 100000);
+    q_ = coeffs().lookupOrDefault<scalar>("q", 0.001);
 }
 
 
 void Foam::fv::VoFSolidificationMeltingSource::update() const
 {
-    if (curTimeIndex_ == mesh_.time().timeIndex())
+    if (curTimeIndex_ == mesh().time().timeIndex())
     {
         return;
     }
 
     if (debug)
     {
-        Info<< type() << ": " << name_
+        Info<< type() << ": " << name()
             << " - updating solid phase fraction" << endl;
     }
 
@@ -76,7 +76,7 @@ void Foam::fv::VoFSolidificationMeltingSource::update() const
 
     const twoPhaseMixtureThermo& thermo
     (
-        mesh_.lookupObject<twoPhaseMixtureThermo>
+        mesh().lookupObject<twoPhaseMixtureThermo>
         (
             twoPhaseMixtureThermo::dictName
         )
@@ -102,7 +102,7 @@ void Foam::fv::VoFSolidificationMeltingSource::update() const
 
     alphaSolid_.correctBoundaryConditions();
 
-    curTimeIndex_ = mesh_.time().timeIndex();
+    curTimeIndex_ = mesh().time().timeIndex();
 }
 
 
@@ -110,7 +110,7 @@ Foam::word Foam::fv::VoFSolidificationMeltingSource::alphaSolidName() const
 {
     const twoPhaseMixtureThermo& thermo
     (
-        mesh_.lookupObject<twoPhaseMixtureThermo>
+        mesh().lookupObject<twoPhaseMixtureThermo>
         (
             twoPhaseMixtureThermo::dictName
         )
@@ -132,7 +132,7 @@ Foam::fv::VoFSolidificationMeltingSource::VoFSolidificationMeltingSource
     const fvMesh& mesh
 )
 :
-    cellSetOption(sourceName, modelType, dict, mesh),
+    cellSetModel(sourceName, modelType, dict, mesh),
     alphaSolidT_(),
     L_("L", dimEnergy/dimMass, NaN),
     relax_(NaN),
@@ -182,7 +182,7 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
 
     const twoPhaseMixtureThermo& thermo
     (
-        mesh_.lookupObject<twoPhaseMixtureThermo>
+        mesh().lookupObject<twoPhaseMixtureThermo>
         (
             twoPhaseMixtureThermo::dictName
         )
@@ -216,7 +216,7 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
     update();
 
     scalarField& Sp = eqn.diag();
-    const scalarField& V = mesh_.V();
+    const scalarField& V = mesh().V();
 
     const labelList& cells = this->cells();
 
@@ -235,7 +235,7 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
 
 bool Foam::fv::VoFSolidificationMeltingSource::read(const dictionary& dict)
 {
-    if (cellSetOption::read(dict))
+    if (cellSetModel::read(dict))
     {
         readCoeffs();
         return true;

@@ -21,7 +21,8 @@ EXE_LIBS = \
     -lmomentumTransportModels \
     -lfluidThermoMomentumTransportModels \
     -lfiniteVolume \
-    -lfvOptions \
+    -lfvModels \
+    -lfvConstraints \
     -lmeshTools \
     -lregionModels \
     -lsurfaceFilmModels \

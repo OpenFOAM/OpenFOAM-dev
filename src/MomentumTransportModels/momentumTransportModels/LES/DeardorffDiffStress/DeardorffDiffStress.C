@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "DeardorffDiffStress.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,7 +41,7 @@ void DeardorffDiffStress<BasicMomentumTransportModel>::correctNut()
 {
     this->nut_ = Ck_*sqrt(this->k())*this->delta();
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -163,7 +164,11 @@ void DeardorffDiffStress<BasicMomentumTransportModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volSymmTensorField& R = this->R_;
-    const fv::options& fvOptions(fv::options::New(this->mesh_));
+    const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(this->mesh_)
+    );
 
     ReynoldsStress<LESModel<BasicMomentumTransportModel>>::correct();
 
@@ -186,13 +191,13 @@ void DeardorffDiffStress<BasicMomentumTransportModel>::correct()
         alpha*rho*P
       + (4.0/5.0)*alpha*rho*k*D
       - ((2.0/3.0)*(1.0 - Cm_/this->Ce_)*I)*(alpha*rho*this->epsilon())
-      + fvOptions(alpha, rho, R)
+      + fvModels.source(alpha, rho, R)
     );
 
     REqn.ref().relax();
-    fvOptions.constrain(REqn.ref());
+    fvConstraints.constrain(REqn.ref());
     REqn.ref().solve();
-    fvOptions.constrain(R);
+    fvConstraints.constrain(R);
     this->boundNormalStress(R);
 
     correctNut();

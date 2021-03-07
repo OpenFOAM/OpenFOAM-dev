@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "mixtureKEpsilon.H"
-#include "fvOptions.H"
+#include "fvModels.H"
 #include "bound.H"
 #include "phaseSystem.H"
 #include "dragModel.H"
@@ -344,7 +344,7 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correctNut()
 {
     this->nut_ = Cmu_*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -596,7 +596,11 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
     volScalarField& km = km_();
     volScalarField& epsilonm = epsilonm_();
 
-    const fv::options& fvOptions(fv::options::New(this->mesh_));
+    const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(this->mesh_)
+    );
 
     eddyViscosity<RASModel<BasicMomentumTransportModel>>::correct();
 
@@ -680,14 +684,14 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
       - fvm::SuSp(((2.0/3.0)*C1_)*divUm, epsilonm)
       - fvm::Sp(C2_*epsilonm/km, epsilonm)
       + epsilonSource()
-      + fvOptions(epsilonm)
+      + fvModels.source(epsilonm)
     );
 
     epsEqn.ref().relax();
-    fvOptions.constrain(epsEqn.ref());
+    fvConstraints.constrain(epsEqn.ref());
     epsEqn.ref().boundaryManipulate(epsilonm.boundaryFieldRef());
     solve(epsEqn);
-    fvOptions.constrain(epsilonm);
+    fvConstraints.constrain(epsilonm);
     bound(epsilonm, this->epsilonMin_);
 
 
@@ -703,13 +707,13 @@ void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
       - fvm::SuSp((2.0/3.0)*divUm, km)
       - fvm::Sp(epsilonm/km, km)
       + kSource()
-      + fvOptions(km)
+      + fvModels.source(km)
     );
 
     kmEqn.ref().relax();
-    fvOptions.constrain(kmEqn.ref());
+    fvConstraints.constrain(kmEqn.ref());
     solve(kmEqn);
-    fvOptions.constrain(km);
+    fvConstraints.constrain(km);
     bound(km, this->kMin_);
     km.correctBoundaryConditions();
 

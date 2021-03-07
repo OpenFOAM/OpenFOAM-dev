@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "v2f.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "bound.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -57,7 +58,7 @@ void v2f<BasicMomentumTransportModel>::correctNut()
 {
     this->nut_ = min(CmuKEps_*sqr(k_)/epsilon_, this->Cmu_*v2_*Ts());
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -282,7 +283,11 @@ void v2f<BasicMomentumTransportModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
-    const fv::options& fvOptions(fv::options::New(this->mesh_));
+    const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(this->mesh_)
+    );
 
     eddyViscosity<RASModel<BasicMomentumTransportModel>>::correct();
 
@@ -322,14 +327,14 @@ void v2f<BasicMomentumTransportModel>::correct()
         Ceps1*alpha*rho*G/Ts
       - fvm::SuSp(((2.0/3.0)*Ceps1 + Ceps3_)*alpha*rho*divU, epsilon_)
       - fvm::Sp(Ceps2_*alpha*rho/Ts, epsilon_)
-      + fvOptions(alpha, rho, epsilon_)
+      + fvModels.source(alpha, rho, epsilon_)
     );
 
     epsEqn.ref().relax();
-    fvOptions.constrain(epsEqn.ref());
+    fvConstraints.constrain(epsEqn.ref());
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
-    fvOptions.constrain(epsilon_);
+    fvConstraints.constrain(epsilon_);
     bound(epsilon_, this->epsilonMin_);
 
 
@@ -343,13 +348,13 @@ void v2f<BasicMomentumTransportModel>::correct()
         alpha*rho*G
       - fvm::SuSp((2.0/3.0)*alpha*rho*divU, k_)
       - fvm::Sp(alpha*rho*epsilon_/k_, k_)
-      + fvOptions(alpha, rho, k_)
+      + fvModels.source(alpha, rho, k_)
     );
 
     kEqn.ref().relax();
-    fvOptions.constrain(kEqn.ref());
+    fvConstraints.constrain(kEqn.ref());
     solve(kEqn);
-    fvOptions.constrain(k_);
+    fvConstraints.constrain(k_);
     bound(k_, this->kMin_);
 
 
@@ -363,9 +368,9 @@ void v2f<BasicMomentumTransportModel>::correct()
     );
 
     fEqn.ref().relax();
-    fvOptions.constrain(fEqn.ref());
+    fvConstraints.constrain(fEqn.ref());
     solve(fEqn);
-    fvOptions.constrain(f_);
+    fvConstraints.constrain(f_);
     bound(f_, fMin_);
 
 
@@ -378,13 +383,13 @@ void v2f<BasicMomentumTransportModel>::correct()
       ==
         alpha*rho*min(k_*f_, C2_*G - v2fAlpha)
       - fvm::Sp(N*alpha*rho*epsilon_/k_, v2_)
-      + fvOptions(alpha, rho, v2_)
+      + fvModels.source(alpha, rho, v2_)
     );
 
     v2Eqn.ref().relax();
-    fvOptions.constrain(v2Eqn.ref());
+    fvConstraints.constrain(v2Eqn.ref());
     solve(v2Eqn);
-    fvOptions.constrain(v2_);
+    fvConstraints.constrain(v2_);
     bound(v2_, v2Min_);
 
     correctNut();

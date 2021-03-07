@@ -47,7 +47,7 @@ while (pimple.correctNonOrthogonal())
 
         U = HbyA - rAU*fvc::grad(p_gh);
         U.correctBoundaryConditions();
-        fvOptions.constrain(U);
+        fvConstraints.constrain(U);
     }
 }
 

@@ -54,7 +54,7 @@ if (ign.ignited())
       - fvm::Sp(fvc::div(phiSt), b)
       - fvm::laplacian(thermophysicalTransport->alphaEff(), b)
      ==
-        fvOptions(rho, b)
+        fvModels.source(rho, b)
     );
 
 
@@ -67,11 +67,11 @@ if (ign.ignited())
     // ~~~~~~~~~~~
     bEqn.relax();
 
-    fvOptions.constrain(bEqn);
+    fvConstraints.constrain(bEqn);
 
     bEqn.solve();
 
-    fvOptions.constrain(b);
+    fvConstraints.constrain(b);
 
     Info<< "min(b) = " << min(b).value() << endl;
 
@@ -163,16 +163,16 @@ if (ign.ignited())
           ==
           - fvm::SuSp(-rho*Rc*Su0/Su, Su)
           - fvm::SuSp(rho*(sigmas + Rc), Su)
-          + fvOptions(rho, Su)
+          + fvModels.source(rho, Su)
         );
 
         SuEqn.relax();
 
-        fvOptions.constrain(SuEqn);
+        fvConstraints.constrain(SuEqn);
 
         SuEqn.solve();
 
-        fvOptions.constrain(Su);
+        fvConstraints.constrain(Su);
 
         // Limit the maximum Su
         // ~~~~~~~~~~~~~~~~~~~~
@@ -250,16 +250,16 @@ if (ign.ignited())
                 ),
                 Xi
             )
-          + fvOptions(rho, Xi)
+          + fvModels.source(rho, Xi)
         );
 
         XiEqn.relax();
 
-        fvOptions.constrain(XiEqn);
+        fvConstraints.constrain(XiEqn);
 
         XiEqn.solve();
 
-        fvOptions.constrain(Xi);
+        fvConstraints.constrain(Xi);
 
         // Correct boundedness of Xi
         // ~~~~~~~~~~~~~~~~~~~~~~~~~

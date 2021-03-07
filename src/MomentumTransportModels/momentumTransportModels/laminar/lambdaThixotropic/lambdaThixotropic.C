@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "lambdaThixotropic.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "uniformDimensionedFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -180,7 +181,11 @@ void lambdaThixotropic<BasicMomentumTransportModel>::correct()
 {
     // Local references
     const surfaceScalarField& phi = this->phi_;
-    const fv::options& fvOptions(fv::options::New(this->mesh_));
+    const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(this->mesh_)
+    );
 
     tmp<fvScalarMatrix> lambdaEqn
     (
@@ -189,13 +194,13 @@ void lambdaThixotropic<BasicMomentumTransportModel>::correct()
      ==
         a_*pow(1 - lambda_(), b_)
       - fvm::Sp(c_*pow(strainRate(), d_), lambda_)
-      + fvOptions(lambda_)
+      + fvModels.source(lambda_)
     );
 
     lambdaEqn.ref().relax();
-    fvOptions.constrain(lambdaEqn.ref());
+    fvConstraints.constrain(lambdaEqn.ref());
     solve(lambdaEqn);
-    fvOptions.constrain(lambda_);
+    fvConstraints.constrain(lambda_);
 
     lambda_.maxMin(scalar(0), scalar(1));
 

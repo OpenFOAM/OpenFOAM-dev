@@ -34,7 +34,8 @@ Description
 #include "fluidThermoMomentumTransportModel.H"
 #include "fluidThermophysicalTransportModel.H"
 #include "LESModel.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "simpleControl.H"
 #include "pimpleControl.H"
 
@@ -84,7 +85,7 @@ int main(int argc, char *argv[])
 
             Info<< "Time = " << runTime.timeName() << nl << endl;
 
-            fvOptions.correct();
+            fvModels.correct();
 
             while (pimple.correctNonOrthogonal())
             {

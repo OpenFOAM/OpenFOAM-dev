@@ -31,7 +31,8 @@ License
 #include "fvcDdt.H"
 #include "fvcDiv.H"
 #include "fvcAverage.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "mathematicalConstants.H"
 #include "fundamentalConstants.H"
 #include "addToRunTimeSelectionTable.H"
@@ -142,7 +143,11 @@ void Foam::diameterModels::IATE::correct()
         R += sources_[j].R(alphaAv, kappai_);
     }
 
-    const fv::options& fvOptions(fv::options::New(phase().mesh()));
+    const Foam::fvModels& fvModels(Foam::fvModels::New(phase().mesh()));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(phase().mesh())
+    );
 
     // Construct the interfacial curvature equation
     fvScalarMatrix kappaiEqn
@@ -151,12 +156,12 @@ void Foam::diameterModels::IATE::correct()
       - fvm::Sp(fvc::div(phase().phi()), kappai_)
      ==
         R
-      + fvOptions(kappai_)
+      + fvModels.source(kappai_)
     );
 
     kappaiEqn.relax();
 
-    fvOptions.constrain(kappaiEqn);
+    fvConstraints.constrain(kappaiEqn);
 
     kappaiEqn.solve();
 

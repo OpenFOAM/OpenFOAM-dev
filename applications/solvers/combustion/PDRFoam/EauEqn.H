@@ -24,12 +24,12 @@ if (ign.ignited())
         //- fvm::div(muEff*fvc::grad(b)/(b + 0.001), heau)
         //+ fvm::Sp(fvc::div(muEff*fvc::grad(b)/(b + 0.001)), heau)
      ==
-        betav*fvOptions(rho, heau)
+        betav*fvModels.source(rho, heau)
     );
 
-    fvOptions.constrain(heauEqn);
+    fvConstraints.constrain(heauEqn);
 
     heauEqn.solve();
 
-    fvOptions.constrain(heau);
+    fvConstraints.constrain(heau);
 }

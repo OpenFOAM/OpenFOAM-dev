@@ -55,7 +55,7 @@ Initialisation
 + Initialise the field files in the 0 directory
 + Set the viscosity in constant/transportProperties
 + Rotating properties are set in constant/rotatingZoneProperties
-  + For MRF, this file is included from system/fvOptions
+  + For MRF, this file is included from system/fvModels
   + For AMI, this file is included from constant/dynamicMeshDict
 + Ensure settings are appropriate in controlDict, fvSchemes, fvSolution, for
   relevant simulation; for AMI, in particular, ensure that deltaT, ddtSchemes

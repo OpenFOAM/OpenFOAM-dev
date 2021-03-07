@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,8 @@ License
 #include "age.H"
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "momentumTransportModel.H"
 #include "inletOutletFvPatchField.H"
 #include "wallFvPatch.H"
@@ -95,8 +97,7 @@ Foam::functionObjects::age::age
     const dictionary& dict
 )
 :
-    fvMeshFunctionObject(name, runTime, dict),
-    fvOptions_(mesh_)
+    fvMeshFunctionObject(name, runTime, dict)
 {
     read(dict);
 }
@@ -118,11 +119,6 @@ bool Foam::functionObjects::age::read(const dictionary& dict)
     schemesField_ = dict.lookupOrDefault<word>("schemesField", typeName);
     diffusion_ = dict.lookupOrDefault<Switch>("diffusion", false);
     tolerance_ = dict.lookupOrDefault<scalar>("tolerance", 1e-5);
-
-    if (dict.found("fvOptions"))
-    {
-        fvOptions_.reset(dict.subDict("fvOptions"));
-    }
 
     return true;
 }
@@ -159,6 +155,12 @@ bool Foam::functionObjects::age::execute()
         relaxCoeff = mesh_.equationRelaxationFactor(schemesField_);
     }
 
+    const Foam::fvModels& fvModels(Foam::fvModels::New(mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(mesh_)
+    );
+
     // This only works because the null constructed inletValue for an
     // inletOutletFvPatchField is zero. If we needed any other value we would
     // have to loop over the inletOutlet patches and explicitly set the
@@ -192,7 +194,7 @@ bool Foam::functionObjects::age::execute()
         {
             fvScalarMatrix ageEqn
             (
-                fvm::div(phi, age, divScheme) == rho + fvOptions_(rho, age)
+                fvm::div(phi, age, divScheme) == rho + fvModels.source(rho, age)
             );
 
             if (diffusion_)
@@ -202,12 +204,14 @@ bool Foam::functionObjects::age::execute()
 
             ageEqn.relax(relaxCoeff);
 
-            fvOptions_.constrain(ageEqn);
+            fvConstraints.constrain(ageEqn);
 
             if (converged(i, ageEqn.solve(schemesField_).initialResidual()))
             {
                 break;
             };
+
+            fvConstraints.constrain(age);
         }
     }
     else
@@ -232,7 +236,7 @@ bool Foam::functionObjects::age::execute()
             fvScalarMatrix ageEqn
             (
                 fvm::div(phi, age, divScheme)
-             == dimensionedScalar(1) + fvOptions_(age)
+             == dimensionedScalar(1) + fvModels.source(age)
             );
 
             if (diffusion_)
@@ -242,12 +246,14 @@ bool Foam::functionObjects::age::execute()
 
             ageEqn.relax(relaxCoeff);
 
-            fvOptions_.constrain(ageEqn);
+            fvConstraints.constrain(ageEqn);
 
             if (converged(i, ageEqn.solve(schemesField_).initialResidual()))
             {
                 break;
             }
+
+            fvConstraints.constrain(age);
         }
     }
 

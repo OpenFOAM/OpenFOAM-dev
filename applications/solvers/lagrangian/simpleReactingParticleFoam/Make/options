@@ -42,5 +42,6 @@ EXE_LIBS = \
     -lregionModels \
     -lsurfaceFilmModels \
     -lcombustionModels \
-    -lfvOptions \
+    -lfvModels \
+    -lfvConstraints \
     -lsampling

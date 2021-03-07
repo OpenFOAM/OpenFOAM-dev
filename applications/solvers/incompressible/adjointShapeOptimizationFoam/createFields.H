@@ -110,4 +110,5 @@ volScalarField alpha
 zeroCells(alpha, inletCells);
 //zeroCells(alpha, outletCells);
 
-#include "createFvOptions.H"
+#include "createFvModels.H"
+#include "createFvConstraints.H"

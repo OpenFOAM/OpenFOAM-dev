@@ -34,7 +34,8 @@ Description
 #include "singlePhaseTransportModel.H"
 #include "kinematicMomentumTransportModel.H"
 #include "simpleControl.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,7 +60,7 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        fvOptions.correct();
+        fvModels.correct();
 
         // --- Pressure-velocity SIMPLE corrector
         {

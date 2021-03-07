@@ -19,12 +19,12 @@ if (composition.contains("ft"))
       + mvConvection->fvmDiv(phi, ft)
       - fvm::laplacian(thermophysicalTransport->alphaEff(), ft)
      ==
-        fvOptions(rho, ft)
+        fvModels.source(rho, ft)
     );
 
-    fvOptions.constrain(ftEqn);
+    fvConstraints.constrain(ftEqn);
 
     ftEqn.solve();
 
-    fvOptions.constrain(ft);
+    fvConstraints.constrain(ft);
 }

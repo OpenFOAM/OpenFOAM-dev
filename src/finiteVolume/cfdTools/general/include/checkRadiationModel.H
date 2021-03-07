@@ -21,14 +21,14 @@ if (!mesh.foundObject<IOdictionary>("radiationProperties"))
         {
             FatalErrorInFunction
                 << "Radiation model " << modelType
-                << " selected but not enabled in fvOptions" << nl
+                << " selected but not enabled in fvModels" << nl
                 << "To enable radiation add " << nl << nl
                 << "radiation" << nl
                 << "{" << nl
                 << "    type    radiation;" << nl
                 << "    libs    (\"libradiationModels.so\");" << nl
                 << "}" << nl << nl
-                << "to " << radiationProperties.localPath()/"fvOptions"
+                << "to " << radiationProperties.localPath()/"fvModels"
                 << exit(FatalError);
         }
     }

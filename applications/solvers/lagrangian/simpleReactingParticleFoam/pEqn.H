@@ -25,7 +25,7 @@ while (simple.correctNonOrthogonal())
       - fvm::laplacian(rhorAUf, p)
      ==
         clouds.Srho()
-      + fvOptions(psi, p, rho.name())
+      + fvModels.source(psi, p, rho.name())
     );
 
     pEqn.solve();
@@ -45,7 +45,7 @@ thermo.correctRho(psi*p - psip0);
 
 U = HbyA - rAU*fvc::grad(p);
 U.correctBoundaryConditions();
-fvOptions.constrain(U);
+fvConstraints.constrain(U);
 
 rho = thermo.rho();
 rho = max(rho, rhoMin);

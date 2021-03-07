@@ -11,7 +11,8 @@ EXE_INC = \
 
 EXE_LIBS = \
     -lfiniteVolume \
-    -lfvOptions \
+    -lfvModels \
+    -lfvConstraints \
     -lfluidThermophysicalModels \
     -lspecie \
     -lrhoCentralFoam \

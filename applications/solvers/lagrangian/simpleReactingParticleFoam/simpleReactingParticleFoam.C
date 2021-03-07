@@ -37,7 +37,8 @@ Description
 #include "fluidReactionThermo.H"
 #include "combustionModel.H"
 #include "IOporosityModelList.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "SLGThermo.H"
 #include "simpleControl.H"
 
@@ -67,7 +68,7 @@ int main(int argc, char *argv[])
 
         clouds.evolve();
 
-        fvOptions.correct();
+        fvModels.correct();
 
         // --- Pressure-velocity SIMPLE corrector loop
         {

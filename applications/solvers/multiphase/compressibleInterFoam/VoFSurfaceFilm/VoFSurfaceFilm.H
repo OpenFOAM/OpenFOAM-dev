@@ -46,7 +46,7 @@ SourceFiles
 #ifndef VoFSurfaceFilm_H
 #define VoFSurfaceFilm_H
 
-#include "fvOption.H"
+#include "fvModel.H"
 #include "rhoThermo.H"
 #include "SLGThermo.H"
 #include "surfaceFilmModel.H"
@@ -64,7 +64,7 @@ namespace fv
 
 class VoFSurfaceFilm
 :
-    public option
+    public fvModel
 {
     // Private Data
 

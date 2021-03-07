@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "WALE.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -82,7 +83,7 @@ void WALE<BasicMomentumTransportModel>::correctNut()
 {
     this->nut_ = Ck_*this->delta()*sqrt(this->k(fvc::grad(this->U_)));
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 

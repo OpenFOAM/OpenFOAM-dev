@@ -11,7 +11,8 @@ EXE_LIBS = \
     -lfiniteVolume \
     -lsampling \
     -lmeshTools \
-    -lfvOptions \
+    -lfvModels \
+    -lfvConstraints \
     -lfluidThermophysicalModels \
     -lspecie \
     -lmomentumTransportModels \

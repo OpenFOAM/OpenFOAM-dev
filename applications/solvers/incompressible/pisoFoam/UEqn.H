@@ -8,16 +8,16 @@ fvVectorMatrix UEqn
   + MRF.DDt(U)
   + turbulence->divDevSigma(U)
  ==
-    fvOptions(U)
+    fvModels.source(U)
 );
 
 UEqn.relax();
 
-fvOptions.constrain(UEqn);
+fvConstraints.constrain(UEqn);
 
 if (piso.momentumPredictor())
 {
     solve(UEqn == -fvc::grad(p));
 
-    fvOptions.constrain(U);
+    fvConstraints.constrain(U);
 }

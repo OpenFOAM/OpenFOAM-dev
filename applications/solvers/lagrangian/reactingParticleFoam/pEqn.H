@@ -32,7 +32,7 @@ fvScalarMatrix pDDtEqn
  ==
     clouds.Srho()
   + surfaceFilm.Srho()
-  + fvOptions(psi, p, rho.name())
+  + fvModels.source(psi, p, rho.name())
 );
 
 while (pimple.correctNonOrthogonal())
@@ -55,7 +55,7 @@ p.relax();
 
 U = HbyA - rAU*fvc::grad(p);
 U.correctBoundaryConditions();
-fvOptions.constrain(U);
+fvConstraints.constrain(U);
 K = 0.5*magSqr(U);
 
 bool limitedp = pressureControl.limit(p);

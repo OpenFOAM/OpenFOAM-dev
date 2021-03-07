@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "continuousGasKEpsilon.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "phaseSystem.H"
 #include "dragModel.H"
 #include "virtualMassModel.H"
@@ -141,7 +142,7 @@ void continuousGasKEpsilon<BasicMomentumTransportModel>::correctNut()
     volScalarField omega((1 - expThetar)/(1 + expThetar));
 
     nutEff_ = omega*liquidTurbulence.nut();
-    fv::options::New(this->mesh_).constrain(nutEff_);
+    fvConstraints::New(this->mesh_).constrain(nutEff_);
 }
 
 

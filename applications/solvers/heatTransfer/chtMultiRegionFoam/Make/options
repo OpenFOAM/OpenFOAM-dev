@@ -37,6 +37,7 @@ EXE_LIBS = \
     -lfluidReactionThermophysicalTransportModels \
     -lmeshTools \
     -lfiniteVolume \
-    -lfvOptions \
+    -lfvModels \
+    -lfvConstraints \
     -lregionModels \
     -lsampling

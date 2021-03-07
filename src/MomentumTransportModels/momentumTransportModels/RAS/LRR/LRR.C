@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LRR.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "wallDist.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -41,7 +42,7 @@ void LRR<BasicMomentumTransportModel>::correctNut()
 {
     this->nut_ = this->Cmu_*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -272,7 +273,11 @@ void LRR<BasicMomentumTransportModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volSymmTensorField& R = this->R_;
-    const fv::options& fvOptions(fv::options::New(this->mesh_));
+    const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(this->mesh_)
+    );
 
     ReynoldsStress<RASModel<BasicMomentumTransportModel>>::correct();
 
@@ -294,14 +299,14 @@ void LRR<BasicMomentumTransportModel>::correct()
      ==
         Ceps1_*alpha*rho*G*epsilon_/k_
       - fvm::Sp(Ceps2_*alpha*rho*epsilon_/k_, epsilon_)
-      + fvOptions(alpha, rho, epsilon_)
+      + fvModels.source(alpha, rho, epsilon_)
     );
 
     epsEqn.ref().relax();
-    fvOptions.constrain(epsEqn.ref());
+    fvConstraints.constrain(epsEqn.ref());
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
-    fvOptions.constrain(epsilon_);
+    fvConstraints.constrain(epsilon_);
     bound(epsilon_, this->epsilonMin_);
 
 
@@ -338,7 +343,7 @@ void LRR<BasicMomentumTransportModel>::correct()
         alpha*rho*P
       - (2.0/3.0*(1 - C1_)*I)*alpha*rho*epsilon_
       - C2_*alpha*rho*dev(P)
-      + fvOptions(alpha, rho, R)
+      + fvModels.source(alpha, rho, R)
     );
 
     // Optionally add wall-refection term
@@ -358,9 +363,9 @@ void LRR<BasicMomentumTransportModel>::correct()
     }
 
     REqn.ref().relax();
-    fvOptions.constrain(REqn.ref());
+    fvConstraints.constrain(REqn.ref());
     solve(REqn);
-    fvOptions.constrain(R);
+    fvConstraints.constrain(R);
 
     this->boundNormalStress(R);
 

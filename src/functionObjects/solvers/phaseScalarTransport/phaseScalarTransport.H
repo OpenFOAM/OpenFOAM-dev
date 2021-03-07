@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,6 @@ SourceFiles
 
 #include "fvMeshFunctionObject.H"
 #include "volFields.H"
-#include "fvOptionList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -163,9 +162,6 @@ class phaseScalarTransport
         //- Flag to indicate whether to write the field multiplied by the phase
         //  fraction
         bool writeAlphaField_;
-
-        //- Run-time selectable finite volume options, e.g. sources, constraints
-        fv::optionList fvOptions_;
 
         //- The field
         volScalarField s_;

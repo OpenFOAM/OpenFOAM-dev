@@ -24,16 +24,16 @@ forAll(Y, i)
           + thermophysicalTransport->divj(Yi)
          ==
             reaction->R(Yi)
-          + fvOptions(rho, Yi)
+          + fvModels.source(rho, Yi)
         );
 
         YiEqn.relax();
 
-        fvOptions.constrain(YiEqn);
+        fvConstraints.constrain(YiEqn);
 
         YiEqn.solve("Yi");
 
-        fvOptions.constrain(Yi);
+        fvConstraints.constrain(Yi);
     }
 }
 

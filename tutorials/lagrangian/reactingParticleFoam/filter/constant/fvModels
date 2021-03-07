@@ -1,0 +1,112 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+filter1
+{
+    type            explicitPorositySource;
+
+    explicitPorositySourceCoeffs
+    {
+        selectionMode   cellZone;
+        cellZone        filter;
+
+        type            DarcyForchheimer;
+
+        d   (500000 -1000 -1000);
+        f   (0 0 0);
+
+        coordinateSystem
+        {
+            type    cartesian;
+            origin  (0 0 0);
+            coordinateRotation
+            {
+                type    axesRotation;
+                e1  (1 0 0);
+                e2  (0 1 0);
+            }
+        }
+    }
+}
+
+
+massSource
+{
+    type            semiImplicitSource;
+
+    selectionMode   points;
+    points
+    (
+        (2.75 0.5 0)
+    );
+
+    volumeMode      absolute;
+
+    squarePulse
+    {
+        type            scale;
+        scale           squarePulse;
+        start           0.2;
+        duration        2;
+    }
+
+    sources
+    {
+        rho
+        {
+            explicit
+            {
+                $squarePulse;
+                value       1e-4; // kg/s
+            }
+            implicit    0;
+        }
+
+        U
+        {
+            explicit
+            {
+                $squarePulse;
+                value       (0 0.005 0);
+            }
+            implicit    0;
+        }
+
+        h
+        {
+            explicit
+            {
+                $squarePulse;
+                value       10;
+            }
+            implicit    0;
+        }
+
+        H2O
+        {
+            explicit
+            {
+                $squarePulse;
+                value       1e-4; // kg/s
+            }
+            implicit    0;
+        }
+    }
+}
+
+
+// ************************************************************************* //

@@ -45,7 +45,8 @@ SourceFiles
 #include "PtrListDictionary.H"
 
 #include "IOMRFZoneList.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 #include "volFields.H"
 #include "surfaceFields.H"
@@ -431,11 +432,17 @@ public:
             //- Return MRF zones
             inline const IOMRFZoneList& MRF() const;
 
-            //- Access the fvOptions
-            inline fv::options& fvOptions(fvMesh& mesh);
+            //- Access the fvModels
+            inline Foam::fvModels& fvModels(fvMesh& mesh);
 
-            //- Access the fvOptions
-            inline const fv::options& fvOptions() const;
+            //- Access the fvModels
+            inline const Foam::fvModels& fvModels() const;
+
+            //- Access the fvConstraints
+            inline Foam::fvConstraints& fvConstraints(fvMesh& mesh);
+
+            //- Access the fvConstraints
+            inline const Foam::fvConstraints& fvConstraints() const;
 
 
         // Sub-model lookup

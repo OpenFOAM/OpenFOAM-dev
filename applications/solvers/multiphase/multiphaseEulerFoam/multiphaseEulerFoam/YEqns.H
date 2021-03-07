@@ -22,7 +22,7 @@
                 phase.YiEqn(Y[i])
              ==
                *specieTransfer[Y[i].name()]
-              + fvOptions(alpha, rho, Y[i])
+              + fvModels.source(alpha, rho, Y[i])
             );
 
             YiEqn.relax();

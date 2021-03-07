@@ -38,7 +38,8 @@ Description
 #include "fvCFD.H"
 #include "singlePhaseTransportModel.H"
 #include "kinematicMomentumTransportModel.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "wallFvPatch.H"
 #include "makeGraph.H"
 
@@ -65,23 +66,23 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        fvOptions.correct();
+        fvModels.correct();
 
         fvVectorMatrix divR(turbulence->divDevSigma(U));
         divR.source() = flowMask & divR.source();
 
         fvVectorMatrix UEqn
         (
-            divR == gradP + fvOptions(U)
+            divR == gradP + fvModels.source(U)
         );
 
         UEqn.relax();
 
-        fvOptions.constrain(UEqn);
+        fvConstraints.constrain(UEqn);
 
         UEqn.solve();
 
-        fvOptions.constrain(U);
+        fvConstraints.constrain(U);
 
 
         // Correct driving force for a constant volume flow rate

@@ -18,13 +18,4 @@ Description
 
 field           tracer;
 
-fvOptions
-{
-    volumeFraction
-    {
-        type            volumeFractionSource;
-        volumePhase     volume;
-    }
-}
-
 // ************************************************************************* //

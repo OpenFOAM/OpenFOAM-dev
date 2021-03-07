@@ -497,7 +497,11 @@ void kOmegaSSTLM<BasicMomentumTransportModel>::correctReThetatGammaInt()
     const tmp<volScalarField> tnu = this->nu();
     const volScalarField::Internal& nu = tnu()();
     const volScalarField::Internal& y = this->y_();
-    const fv::options& fvOptions(fv::options::New(this->mesh_));
+    const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(this->mesh_)
+    );
 
     // Fields derived from the velocity gradient
     tmp<volTensorField> tgradU = fvc::grad(U);
@@ -524,13 +528,13 @@ void kOmegaSSTLM<BasicMomentumTransportModel>::correctReThetatGammaInt()
           - fvm::laplacian(alpha*rho*DReThetatEff(), ReThetat_)
          ==
             Pthetat*ReThetat0(Us, dUsds, nu) - fvm::Sp(Pthetat, ReThetat_)
-          + fvOptions(alpha, rho, ReThetat_)
+          + fvModels.source(alpha, rho, ReThetat_)
         );
 
         ReThetatEqn.ref().relax();
-        fvOptions.constrain(ReThetatEqn.ref());
+        fvConstraints.constrain(ReThetatEqn.ref());
         solve(ReThetatEqn);
-        fvOptions.constrain(ReThetat_);
+        fvConstraints.constrain(ReThetat_);
         bound(ReThetat_, 0);
     }
 
@@ -561,13 +565,13 @@ void kOmegaSSTLM<BasicMomentumTransportModel>::correctReThetatGammaInt()
         ==
             Pgamma - fvm::Sp(ce1_*Pgamma, gammaInt_)
           + Egamma - fvm::Sp(ce2_*Egamma, gammaInt_)
-          + fvOptions(alpha, rho, gammaInt_)
+          + fvModels.source(alpha, rho, gammaInt_)
         );
 
         gammaIntEqn.ref().relax();
-        fvOptions.constrain(gammaIntEqn.ref());
+        fvConstraints.constrain(gammaIntEqn.ref());
         solve(gammaIntEqn);
-        fvOptions.constrain(gammaInt_);
+        fvConstraints.constrain(gammaInt_);
         bound(gammaInt_, 0);
     }
 

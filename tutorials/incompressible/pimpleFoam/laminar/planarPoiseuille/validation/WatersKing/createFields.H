@@ -38,11 +38,11 @@ const scalar lambda = MaxwellCoeffs.lookup<scalar>("lambda");
 const scalar rho = 1;
 
 Info<< "Reading pressure gradient\n" << endl;
-IOdictionary fvOptions
+IOdictionary fvModels
 (
     IOobject
     (
-        "fvOptions",
+        "fvModels",
         runTime.constant(),
         mesh,
         IOobject::MUST_READ,
@@ -50,7 +50,7 @@ IOdictionary fvOptions
     )
 );
 const dictionary& gradPDict =
-    fvOptions.subDict("momentumSource").subDict("sources");
+    fvModels.subDict("momentumSource").subDict("sources");
 const scalar K(vector(gradPDict.subDict("U").lookup("explicit")).x());
 
 dictionary probes(IFstream(runTime.system()/"probes")());

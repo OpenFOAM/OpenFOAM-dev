@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "realizableKE.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "bound.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -79,7 +80,7 @@ void realizableKE<BasicMomentumTransportModel>::correctNut
 {
     this->nut_ = rCmu(gradU, S2, magS)*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -256,7 +257,11 @@ void realizableKE<BasicMomentumTransportModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
-    const fv::options& fvOptions(fv::options::New(this->mesh_));
+    const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(this->mesh_)
+    );
 
     eddyViscosity<RASModel<BasicMomentumTransportModel>>::correct();
 
@@ -300,14 +305,14 @@ void realizableKE<BasicMomentumTransportModel>::correct()
             epsilon_
         )
       + epsilonSource()
-      + fvOptions(alpha, rho, epsilon_)
+      + fvModels.source(alpha, rho, epsilon_)
     );
 
     epsEqn.ref().relax();
-    fvOptions.constrain(epsEqn.ref());
+    fvConstraints.constrain(epsEqn.ref());
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
-    fvOptions.constrain(epsilon_);
+    fvConstraints.constrain(epsilon_);
     bound(epsilon_, this->epsilonMin_);
 
 
@@ -323,13 +328,13 @@ void realizableKE<BasicMomentumTransportModel>::correct()
       - fvm::SuSp(2.0/3.0*alpha()*rho()*divU, k_)
       - fvm::Sp(alpha()*rho()*epsilon_()/k_(), k_)
       + kSource()
-      + fvOptions(alpha, rho, k_)
+      + fvModels.source(alpha, rho, k_)
     );
 
     kEqn.ref().relax();
-    fvOptions.constrain(kEqn.ref());
+    fvConstraints.constrain(kEqn.ref());
     solve(kEqn);
-    fvOptions.constrain(k_);
+    fvConstraints.constrain(k_);
     bound(k_, this->kMin_);
 
     correctNut(tgradU(), S2, magS);

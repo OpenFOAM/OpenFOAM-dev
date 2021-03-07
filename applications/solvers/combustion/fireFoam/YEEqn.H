@@ -26,16 +26,16 @@ tmp<fv::convectionScheme<scalar>> mvConvection
                 parcels.SYi(i, Yi)
               + surfaceFilm.Srho(i)
               + combustion->R(Yi)
-              + fvOptions(rho, Yi)
+              + fvModels.source(rho, Yi)
             );
 
             YiEqn.relax();
 
-            fvOptions.constrain(YiEqn);
+            fvConstraints.constrain(YiEqn);
 
             YiEqn.solve("Yi");
 
-            fvOptions.constrain(Yi);
+            fvConstraints.constrain(Yi);
         }
     }
 
@@ -62,16 +62,16 @@ tmp<fv::convectionScheme<scalar>> mvConvection
         combustion->Qdot()
       + parcels.Sh(he)
       + surfaceFilm.Sh()
-      + fvOptions(rho, he)
+      + fvModels.source(rho, he)
     );
 
     EEqn.relax();
 
-    fvOptions.constrain(EEqn);
+    fvConstraints.constrain(EEqn);
 
     EEqn.solve();
 
-    fvOptions.constrain(he);
+    fvConstraints.constrain(he);
 
     thermo.correct();
 

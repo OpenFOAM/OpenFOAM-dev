@@ -52,7 +52,7 @@
             (
                 (
                     fvc::ddt(alpha1, rho1) + fvc::div(alphaPhi1*rho1f)
-                  - (fvOptions(alpha1, mixture.thermo1().rho())&rho1)
+                  - (fvModels.source(alpha1, mixture.thermo1().rho())&rho1)
                 )/rho1
               - fvc::ddt(alpha1) - fvc::div(alphaPhi1)
               + (alpha1/rho1)
@@ -67,7 +67,7 @@
             (
                (
                    fvc::ddt(alpha2, rho2) + fvc::div(alphaPhi2*rho2f)
-                 - (fvOptions(alpha2, mixture.thermo2().rho())&rho2)
+                 - (fvModels.source(alpha2, mixture.thermo2().rho())&rho2)
                )/rho2
              - fvc::ddt(alpha2) - fvc::div(alphaPhi2)
              + (alpha2/rho2)
@@ -86,7 +86,7 @@
             (
                 (
                     fvc::ddt(alpha1, rho1) + fvc::div(alphaPhi1*rho1f)
-                  - (fvOptions(alpha1, mixture.thermo1().rho())&rho1)
+                  - (fvModels.source(alpha1, mixture.thermo1().rho())&rho1)
                 )/rho1
               - fvc::ddt(alpha1) - fvc::div(alphaPhi1)
               + (alpha1*psi1/rho1)*correction(fvm::ddt(p_rgh))
@@ -96,7 +96,7 @@
             (
                (
                    fvc::ddt(alpha2, rho2) + fvc::div(alphaPhi2*rho2f)
-                 - (fvOptions(alpha2, mixture.thermo2().rho())&rho2)
+                 - (fvModels.source(alpha2, mixture.thermo2().rho())&rho2)
                )/rho2
              - fvc::ddt(alpha2) - fvc::div(alphaPhi2)
              + (alpha2*psi2/rho2)*correction(fvm::ddt(p_rgh))
@@ -150,7 +150,7 @@
             U = HbyA
               + rAU()*fvc::reconstruct((phig + p_rghEqnIncomp.flux())/rAUf);
             U.correctBoundaryConditions();
-            fvOptions.constrain(U);
+            fvConstraints.constrain(U);
         }
     }
 

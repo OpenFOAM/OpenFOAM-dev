@@ -47,5 +47,5 @@
     // Momentum corrector
     Urel = HbyA - rAtUrel()*fvc::grad(p);
     Urel.correctBoundaryConditions();
-    fvOptions.constrain(Urel);
+    fvConstraints.constrain(Urel);
 }

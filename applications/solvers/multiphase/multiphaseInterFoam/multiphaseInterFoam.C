@@ -38,7 +38,8 @@ Description
 #include "multiphaseMixture.H"
 #include "kinematicMomentumTransportModel.H"
 #include "pimpleControl.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "CorrectPhi.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -112,7 +113,7 @@ int main(int argc, char *argv[])
                 }
             }
 
-            fvOptions.correct();
+            fvModels.correct();
 
             mixture.solve();
             rho = mixture.rho();

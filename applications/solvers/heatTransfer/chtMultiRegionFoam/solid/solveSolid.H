@@ -6,16 +6,16 @@
             fvm::ddt(rho, e)
           + thermo.divq(e)
           ==
-            fvOptions(rho, e)
+            fvModels.source(rho, e)
         );
 
         eEqn.relax();
 
-        fvOptions.constrain(eEqn);
+        fvConstraints.constrain(eEqn);
 
         eEqn.solve();
 
-        fvOptions.constrain(e);
+        fvConstraints.constrain(e);
     }
 }
 

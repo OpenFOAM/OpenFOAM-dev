@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kEqn.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -40,7 +41,7 @@ void kEqn<BasicMomentumTransportModel>::correctNut()
 {
     this->nut_ = Ck_*sqrt(k_)*this->delta();
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -159,7 +160,11 @@ void kEqn<BasicMomentumTransportModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
-    const fv::options& fvOptions(fv::options::New(this->mesh_));
+    const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(this->mesh_)
+    );
 
     LESeddyViscosity<BasicMomentumTransportModel>::correct();
 
@@ -179,13 +184,13 @@ void kEqn<BasicMomentumTransportModel>::correct()
       - fvm::SuSp((2.0/3.0)*alpha*rho*divU, k_)
       - fvm::Sp(this->Ce_*alpha*rho*sqrt(k_)/this->delta(), k_)
       + kSource()
-      + fvOptions(alpha, rho, k_)
+      + fvModels.source(alpha, rho, k_)
     );
 
     kEqn.ref().relax();
-    fvOptions.constrain(kEqn.ref());
+    fvConstraints.constrain(kEqn.ref());
     solve(kEqn);
-    fvOptions.constrain(k_);
+    fvConstraints.constrain(k_);
     bound(k_, this->kMin_);
 
     correctNut();

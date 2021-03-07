@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kOmegaSSTSato.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "phaseSystem.H"
 
 
@@ -175,7 +176,7 @@ void kOmegaSSTSato<BasicMomentumTransportModel>::correctNut
     }
 
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 

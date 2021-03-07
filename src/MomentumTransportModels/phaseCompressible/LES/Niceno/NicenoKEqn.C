@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "NicenoKEqn.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "phaseSystem.H"
 #include "dragModel.H"
 
@@ -164,7 +165,7 @@ void NicenoKEqn<BasicMomentumTransportModel>::correctNut()
        *(mag(this->U_ - gasTurbulence.U()));
 
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 

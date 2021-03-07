@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SmagorinskyZhang.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -142,7 +143,7 @@ void SmagorinskyZhang<BasicMomentumTransportModel>::correctNut()
        *(mag(this->U_ - gasTurbulence.U()));
 
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 

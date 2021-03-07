@@ -41,7 +41,8 @@ Description
 #include "momentumTransportModel.H"
 #include "CompressibleMomentumTransportModel.H"
 #include "pimpleControl.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "gaussLaplacianScheme.H"
 #include "uncorrectedSnGrad.H"
 
@@ -83,7 +84,7 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            fvOptions.correct();
+            fvModels.correct();
 
             UdmModel.correct();
 

@@ -39,7 +39,8 @@ Description
 #include "pimpleControl.H"
 #include "pressureControl.H"
 #include "CorrectPhi.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "localEulerDdtScheme.H"
 #include "fvcSmooth.H"
 
@@ -104,7 +105,7 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            fvOptions.correct();
+            fvModels.correct();
 
             if (pimple.frozenFlow())
             {

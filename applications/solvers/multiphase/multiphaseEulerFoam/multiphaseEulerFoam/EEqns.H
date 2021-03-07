@@ -23,13 +23,13 @@ for (int Ecorr=0; Ecorr<nEnergyCorrectors; Ecorr++)
          ==
            *heatTransfer[phase.name()]
           + alpha*rho*(U&g)
-          + fvOptions(alpha, rho, phase.thermoRef().he())
+          + fvModels.source(alpha, rho, phase.thermoRef().he())
         );
 
         EEqn.relax();
-        fvOptions.constrain(EEqn);
+        fvConstraints.constrain(EEqn);
         EEqn.solve();
-        fvOptions.constrain(phase.thermoRef().he());
+        fvConstraints.constrain(phase.thermoRef().he());
     }
 
     fluid.correctThermo();

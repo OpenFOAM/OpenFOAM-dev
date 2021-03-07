@@ -37,7 +37,8 @@ Description
 
 #include "fvCFD.H"
 #include "solidDisplacementThermo.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,7 +68,7 @@ int main(int argc, char *argv[])
 
         do
         {
-            fvOptions.correct();
+            fvModels.correct();
 
             if (thermo.thermalStress())
             {
@@ -77,14 +78,14 @@ int main(int argc, char *argv[])
                     fvm::ddt(rho, Cp, T)
                   + thermo.divq(T)
                  ==
-                    fvOptions(rho*Cp, T)
+                    fvModels.source(rho*Cp, T)
                 );
 
-                fvOptions.constrain(TEqn);
+                fvConstraints.constrain(TEqn);
 
                 TEqn.solve();
 
-                fvOptions.constrain(T);
+                fvConstraints.constrain(T);
             }
 
             {
@@ -94,7 +95,7 @@ int main(int argc, char *argv[])
                  ==
                     fvm::laplacian(2*mu + lambda, D, "laplacian(DD,D)")
                   + divSigmaExp
-                  + rho*fvOptions.d2dt2(D)
+                  + rho*fvModels.d2dt2(D)
                 );
 
                 if (thermo.thermalStress())
@@ -102,7 +103,7 @@ int main(int argc, char *argv[])
                     DEqn += fvc::grad(threeKalpha*thermo.T());
                 }
 
-                fvOptions.constrain(DEqn);
+                fvConstraints.constrain(DEqn);
 
                 initialResidual = DEqn.solve().max().initialResidual();
 

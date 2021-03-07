@@ -1,4 +1,5 @@
 surfaceScalarField& phi = fluid.phi();
 
 const IOMRFZoneList& MRF = fluid.MRF();
-fv::options& fvOptions = fluid.fvOptions(mesh);
+Foam::fvModels& fvModels = fluid.fvModels(mesh);
+Foam::fvConstraints& fvConstraints = fluid.fvConstraints(mesh);

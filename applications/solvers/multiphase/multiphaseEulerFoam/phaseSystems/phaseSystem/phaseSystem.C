@@ -767,9 +767,9 @@ void Foam::phaseSystem::correctContinuityError()
             )
         );
 
-        if (fvOptions().addsSupToField(rho.name()))
+        if (fvModels().addsSupToField(rho.name()))
         {
-            source += fvOptions()(alpha, rho)&rho;
+            source += fvModels().source(alpha, rho)&rho;
         }
 
         if (dmdts.set(phase.index()))

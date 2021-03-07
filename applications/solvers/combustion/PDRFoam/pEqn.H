@@ -24,7 +24,7 @@ if (pimple.transonic())
           + fvm::div(phid, p)
           - fvm::laplacian(rho*invA, p)
          ==
-            betav*fvOptions(psi, p, rho.name())
+            betav*fvModels.source(psi, p, rho.name())
         );
 
         pEqn.solve();
@@ -54,7 +54,7 @@ else
           + fvc::div(phiHbyA)
           - fvm::laplacian(rho*invA, p)
          ==
-            betav*fvOptions(psi, p, rho.name())
+            betav*fvModels.source(psi, p, rho.name())
         );
 
         pEqn.solve();
@@ -71,7 +71,7 @@ else
 
 U = HbyA - (invA & (betav*fvc::grad(p)));
 U.correctBoundaryConditions();
-fvOptions.constrain(U);
+fvConstraints.constrain(U);
 K = 0.5*magSqr(U);
 
 if (thermo.dpdt())

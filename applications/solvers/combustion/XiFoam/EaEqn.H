@@ -16,16 +16,16 @@
           : -dpdt
         )
       - fvm::laplacian(thermophysicalTransport->alphaEff(), hea)
-      + fvOptions(rho, hea)
+      + fvModels.source(rho, hea)
     );
 
     EaEqn.relax();
 
-    fvOptions.constrain(EaEqn);
+    fvConstraints.constrain(EaEqn);
 
     EaEqn.solve();
 
-    fvOptions.constrain(hea);
+    fvConstraints.constrain(hea);
 
     thermo.correct();
 }

@@ -43,7 +43,8 @@ Description
 #include "noPhaseChange.H"
 #include "kinematicMomentumTransportModel.H"
 #include "pimpleControl.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "CorrectPhi.H"
 #include "fvcSmooth.H"
 
@@ -149,7 +150,7 @@ int main(int argc, char *argv[])
                 divU.clear();
             }
 
-            fvOptions.correct();
+            fvModels.correct();
 
             surfaceScalarField rhoPhi
             (

@@ -21,6 +21,7 @@ EXE_LIBS = \
     -lmultiphaseReactions \
     -lthermophysicalTransportModels \
     -lfiniteVolume \
-    -lfvOptions \
+    -lfvModels \
+    -lfvConstraints \
     -lmeshTools \
     -ldynamicFvMesh

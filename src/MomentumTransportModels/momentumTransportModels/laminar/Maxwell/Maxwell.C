@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Maxwell.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "uniformDimensionedFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -332,7 +333,11 @@ void Maxwell<BasicMomentumTransportModel>::correct()
     const rhoField& rho = this->rho_;
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
-    const fv::options& fvOptions(fv::options::New(this->mesh_));
+    const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(this->mesh_)
+    );
 
     laminarModel<BasicMomentumTransportModel>::correct();
 
@@ -379,13 +384,13 @@ void Maxwell<BasicMomentumTransportModel>::correct()
          ==
             alpha*rho*P
           + sigmaSource(modei, sigma)
-          + fvOptions(alpha, rho, sigma)
+          + fvModels.source(alpha, rho, sigma)
         );
 
         sigmaEqn.relax();
-        fvOptions.constrain(sigmaEqn);
+        fvConstraints.constrain(sigmaEqn);
         sigmaEqn.solve("sigma");
-        fvOptions.constrain(sigma);
+        fvConstraints.constrain(sigma);
     }
 
     if (sigmas_.size())

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,8 @@ License
 #include "fvmDdt.H"
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "nonOrthogonalSolutionControl.H"
 #include "phaseScalarTransport.H"
 #include "surfaceFields.H"
@@ -300,7 +302,6 @@ Foam::functionObjects::phaseScalarTransport::phaseScalarTransport
     phaseName_(IOobject::group(fieldName_)),
     nCorr_(0),
     residualAlpha_(rootSmall),
-    fvOptions_(mesh_),
     s_
     (
         IOobject
@@ -371,11 +372,6 @@ bool Foam::functionObjects::phaseScalarTransport::read(const dictionary& dict)
     dict.readIfPresent("residualAlpha", residualAlpha_);
     writeAlphaField_ = dict.lookupOrDefault<bool>("writeAlphaField", true);
 
-    if (dict.found("fvOptions"))
-    {
-        fvOptions_.reset(dict.subDict("fvOptions"));
-    }
-
     return true;
 }
 
@@ -406,6 +402,12 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
       ? mesh_.equationRelaxationFactor(schemesField_)
       : 0;
 
+    const Foam::fvModels& fvModels(Foam::fvModels::New(mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(mesh_)
+    );
+
     // Solve
     if (alphaPhi.dimensions() == dimVolume/dimTime)
     {
@@ -422,14 +424,15 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
                     laplacianScheme
                 )
              ==
-                fvOptions_(alpha, s_)
+                fvModels.source(alpha, s_)
               - fvm::ddt(residualAlpha_, s_)
               + fvc::ddt(residualAlpha_, s_)
             );
 
             fieldEqn.relax(relaxCoeff);
-            fvOptions_.constrain(fieldEqn);
+            fvConstraints.constrain(fieldEqn);
             fieldEqn.solve(schemesField_);
+            fvConstraints.constrain(s_);
         }
     }
     else if (alphaPhi.dimensions() == dimMass/dimTime)
@@ -450,14 +453,15 @@ bool Foam::functionObjects::phaseScalarTransport::execute()
                     laplacianScheme
                 )
              ==
-                fvOptions_(alpha, rho, s_)
+                fvModels.source(alpha, rho, s_)
               - fvm::ddt(residualAlpha_*rho, s_)
               + fvc::ddt(residualAlpha_*rho, s_)
             );
 
             fieldEqn.relax(relaxCoeff);
-            fvOptions_.constrain(fieldEqn);
+            fvConstraints.constrain(fieldEqn);
             fieldEqn.solve(schemesField_);
+            fvConstraints.constrain(s_);
         }
     }
     else

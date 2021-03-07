@@ -21,6 +21,7 @@ EXE_LIBS = \
     -lspecie \
     -llaminarFlameSpeedModels \
     -lfiniteVolume \
-    -lfvOptions \
+    -lfvModels \
+    -lfvConstraints \
     -lsampling \
     -lmeshTools

@@ -10,4 +10,4 @@ EXE_LIBS = \
     -lmeshTools \
     -ldynamicMesh \
     -lfiniteVolume \
-    -lfvOptions
+    -lfvModels

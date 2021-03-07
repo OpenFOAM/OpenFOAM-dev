@@ -1,0 +1,39 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      fvModels;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+massSource
+{
+    type            massSource;
+
+    selectionMode   points;
+    points          ((0.075 0.925 0.05));
+
+    volumeMode      absolute;
+
+    massFlowRate    1;
+
+    phase           water;
+    rho             thermo:rho.water;
+
+    fieldValues
+    {
+        U.water         (0 0 0);
+    }
+}
+
+
+// ************************************************************************* //

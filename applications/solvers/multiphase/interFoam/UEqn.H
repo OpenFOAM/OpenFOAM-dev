@@ -7,12 +7,12 @@
       + turbulence->divDevTau(rho, U)
      ==
        phaseChange.SU(rho, rhoPhi, U)
-     + fvOptions(rho, U)
+     + fvModels.source(rho, U)
     );
 
     UEqn.relax();
 
-    fvOptions.constrain(UEqn);
+    fvConstraints.constrain(UEqn);
 
     if (pimple.momentumPredictor())
     {
@@ -30,5 +30,5 @@
             )
         );
 
-        fvOptions.constrain(U);
+        fvConstraints.constrain(U);
     }

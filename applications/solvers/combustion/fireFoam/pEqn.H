@@ -33,7 +33,7 @@ while (pimple.correctNonOrthogonal())
      ==
         parcels.Srho()
       + surfaceFilm.Srho()
-      + fvOptions(psi, p_rgh, rho.name())
+      + fvModels.source(psi, p_rgh, rho.name())
     );
 
     p_rghEqn.solve();
@@ -43,7 +43,7 @@ while (pimple.correctNonOrthogonal())
         phi = phiHbyA + p_rghEqn.flux();
         U = HbyA + rAU*fvc::reconstruct((p_rghEqn.flux() + phig)/rhorAUf);
         U.correctBoundaryConditions();
-        fvOptions.constrain(U);
+        fvConstraints.constrain(U);
     }
 }
 

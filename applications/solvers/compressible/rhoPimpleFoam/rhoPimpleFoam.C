@@ -41,7 +41,8 @@ Description
 #include "pimpleControl.H"
 #include "pressureControl.H"
 #include "CorrectPhi.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "localEulerDdtScheme.H"
 #include "fvcSmooth.H"
 
@@ -144,7 +145,7 @@ int main(int argc, char *argv[])
                 #include "rhoEqn.H"
             }
 
-            fvOptions.correct();
+            fvModels.correct();
 
             #include "UEqn.H"
             #include "EEqn.H"

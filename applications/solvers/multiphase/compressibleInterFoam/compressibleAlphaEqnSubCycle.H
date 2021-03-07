@@ -1,4 +1,4 @@
-fvOptions(alpha1, mixture.thermo1().rho());
+fvModels.source(alpha1, mixture.thermo1().rho());
 
 tmp<surfaceScalarField> talphaPhi1(alphaPhi10);
 
@@ -63,7 +63,7 @@ volScalarField::Internal contErr
 (
     (
         fvc::ddt(rho) + fvc::div(rhoPhi)
-      - (fvOptions(alpha1, mixture.thermo1().rho())&rho1)
-      - (fvOptions(alpha2, mixture.thermo2().rho())&rho2)
+      - (fvModels.source(alpha1, mixture.thermo1().rho())&rho1)
+      - (fvModels.source(alpha2, mixture.thermo2().rho())&rho2)
     )()
 );

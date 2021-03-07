@@ -22,7 +22,8 @@ PtrList<multivariateSurfaceInterpolationScheme<scalar>::fieldTable>
 List<scalar> initialMassFluid(fluidRegions.size());
 
 PtrList<IOMRFZoneList> MRFfluid(fluidRegions.size());
-PtrList<fv::options> fvOptionsFluid(fluidRegions.size());
+PtrList<Foam::fvModels> fvModelsFluid(fluidRegions.size());
+PtrList<fvConstraints> fvConstraintsFluid(fluidRegions.size());
 
 // Populate fluid field pointer lists
 forAll(fluidRegions, i)
@@ -271,11 +272,18 @@ forAll(fluidRegions, i)
         new IOMRFZoneList(fluidRegions[i])
     );
 
-    Info<< "    Adding fvOptionsFluid\n" << endl;
-    fvOptionsFluid.set
+    Info<< "    Adding fvModelsFluid\n" << endl;
+    fvModelsFluid.set
     (
         i,
-        new fv::options(fluidRegions[i])
+        new Foam::fvModels(fluidRegions[i])
+    );
+
+    Info<< "    Adding fvConstraintsFluid\n" << endl;
+    fvConstraintsFluid.set
+    (
+        i,
+        new fvConstraints(fluidRegions[i])
     );
 
     turbulenceFluid[i].validate();

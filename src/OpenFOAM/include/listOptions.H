@@ -25,11 +25,11 @@ argList::addBoolOption
 );
 #endif
 
-#ifdef fvOption_H
+#ifdef fvModel_H
 argList::addBoolOption
 (
-    "listFvOptions",
-    "List fvOptions"
+    "listFvModels",
+    "List fvModels"
 );
 #endif
 

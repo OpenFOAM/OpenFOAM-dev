@@ -74,7 +74,7 @@ if (ign.ignited())
       - fvm::Sp(fvc::div(phiSt), b)
       - fvm::laplacian(Db, b)
      ==
-        betav*fvOptions(rho, b)
+        betav*fvModels.source(rho, b)
     );
 
 
@@ -86,11 +86,11 @@ if (ign.ignited())
     // ~~~~~~~~~~~
     bEqn.relax();
 
-    fvOptions.constrain(bEqn);
+    fvConstraints.constrain(bEqn);
 
     bEqn.solve();
 
-    fvOptions.constrain(b);
+    fvConstraints.constrain(b);
 
     Info<< "min(b) = " << min(b).value() << endl;
 

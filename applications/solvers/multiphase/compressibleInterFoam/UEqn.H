@@ -5,12 +5,12 @@
       + MRF.DDt(rho, U)
       + turbulence.divDevTau(U)
      ==
-        fvOptions(rho, U)
+        fvModels.source(rho, U)
     );
 
     UEqn.relax();
 
-    fvOptions.constrain(UEqn);
+    fvConstraints.constrain(UEqn);
 
     if (pimple.momentumPredictor())
     {
@@ -28,7 +28,7 @@
             )
         );
 
-        fvOptions.constrain(U);
+        fvConstraints.constrain(U);
 
         K = 0.5*magSqr(U);
     }

@@ -161,15 +161,27 @@ inline const Foam::IOMRFZoneList& Foam::phaseSystem::MRF() const
 }
 
 
-inline Foam::fv::options& Foam::phaseSystem::fvOptions(fvMesh& mesh)
+inline Foam::fvModels& Foam::phaseSystem::fvModels(fvMesh& mesh)
 {
-    return fv::options::New(mesh);
+    return Foam::fvModels::New(mesh);
 }
 
 
-inline const Foam::fv::options& Foam::phaseSystem::fvOptions() const
+inline const Foam::fvModels& Foam::phaseSystem::fvModels() const
 {
-    return fv::options::New(mesh_);
+    return Foam::fvModels::New(mesh_);
+}
+
+
+inline Foam::fvConstraints& Foam::phaseSystem::fvConstraints(fvMesh& mesh)
+{
+    return Foam::fvConstraints::New(mesh);
+}
+
+
+inline const Foam::fvConstraints& Foam::phaseSystem::fvConstraints() const
+{
+    return Foam::fvConstraints::New(mesh_);
 }
 
 

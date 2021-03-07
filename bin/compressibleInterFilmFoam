@@ -27,7 +27,7 @@
 #
 # Description
 #     Script to inform the user that compressibleInterFilmFoam has been replaced
-#     by the more general compressibleInterFoam solver with a special fvOption.
+#     by the more general compressibleInterFoam solver with a special fvModel.
 #
 #------------------------------------------------------------------------------
 
@@ -35,9 +35,9 @@ cat << EOF
 
 The compressibleInterFilmFoam solver has solver has been replaced by the more general
 compressibleInterFoam solver, which now supports surface films using the new
-VoFSurfaceFilm fvOption.
+VoFSurfaceFilm fvModel.
 
-To run with with surface film create a system/fvOptions dictionary
+To run with with surface film create a system/fvModels dictionary
 containing the VoFSurfaceFilm specification, e.g.
 
     VoFSurfaceFilm

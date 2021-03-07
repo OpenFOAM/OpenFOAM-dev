@@ -23,4 +23,5 @@ EXE_LIBS = \
     -lspecie \
     -lfiniteVolume \
     -lmeshTools \
-    -lfvOptions
+    -lfvModels \
+    -lfvConstraints

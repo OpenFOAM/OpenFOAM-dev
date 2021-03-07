@@ -299,7 +299,7 @@ while (pimple.correct())
 
                 phase.URef().correctBoundaryConditions();
                 phase.correctUf();
-                fvOptions.constrain(phase.URef());
+                fvConstraints.constrain(phase.URef());
             }
         }
     }

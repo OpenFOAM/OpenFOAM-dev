@@ -12,5 +12,6 @@ EXE_LIBS = \
     -lfiniteVolume \
     -lsolidThermo \
     -lsolidDisplacementThermo \
-    -lfvOptions \
+    -lfvModels \
+    -lfvConstraints \
     -lmeshTools

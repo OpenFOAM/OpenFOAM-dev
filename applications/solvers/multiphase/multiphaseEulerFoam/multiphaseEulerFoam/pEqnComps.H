@@ -61,9 +61,9 @@ PtrList<fvScalarMatrix> pEqnComps(phases.size());
         }
 
         // Option sources
-        if (fvOptions.addsSupToField(rho.name()))
+        if (fvModels.addsSupToField(rho.name()))
         {
-            pEqnComp -= (fvOptions(alpha, rho) & rho)/rho;
+            pEqnComp -= (fvModels.source(alpha, rho) & rho)/rho;
         }
 
         // Mass transfer

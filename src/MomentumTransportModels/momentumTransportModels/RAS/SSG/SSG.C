@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SSG.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "wallFvPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -41,7 +42,7 @@ void SSG<BasicMomentumTransportModel>::correctNut()
 {
     this->nut_ = this->Cmu_*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -282,7 +283,11 @@ void SSG<BasicMomentumTransportModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volSymmTensorField& R = this->R_;
-    const fv::options& fvOptions(fv::options::New(this->mesh_));
+    const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(this->mesh_)
+    );
 
     ReynoldsStress<RASModel<BasicMomentumTransportModel>>::correct();
 
@@ -304,14 +309,14 @@ void SSG<BasicMomentumTransportModel>::correct()
      ==
         Ceps1_*alpha*rho*G*epsilon_/k_
       - fvm::Sp(Ceps2_*alpha*rho*epsilon_/k_, epsilon_)
-      + fvOptions(alpha, rho, epsilon_)
+      + fvModels.source(alpha, rho, epsilon_)
     );
 
     epsEqn.ref().relax();
-    fvOptions.constrain(epsEqn.ref());
+    fvConstraints.constrain(epsEqn.ref());
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
-    fvOptions.constrain(epsilon_);
+    fvConstraints.constrain(epsilon_);
     bound(epsilon_, this->epsilonMin_);
 
 
@@ -358,13 +363,13 @@ void SSG<BasicMomentumTransportModel>::correct()
           + C4_*dev(twoSymm(b&S))
           + C5_*twoSymm(b&Omega)
         )
-      + fvOptions(alpha, rho, R)
+      + fvModels.source(alpha, rho, R)
     );
 
     REqn.ref().relax();
-    fvOptions.constrain(REqn.ref());
+    fvConstraints.constrain(REqn.ref());
     solve(REqn);
-    fvOptions.constrain(R);
+    fvConstraints.constrain(R);
 
     this->boundNormalStress(R);
 

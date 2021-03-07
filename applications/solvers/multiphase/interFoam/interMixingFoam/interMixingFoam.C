@@ -39,7 +39,8 @@ Description
 #include "immiscibleIncompressibleThreePhaseMixture.H"
 #include "kinematicMomentumTransportModel.H"
 #include "pimpleControl.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "CorrectPhi.H"
 #include "fvcSmooth.H"
 
@@ -118,7 +119,7 @@ int main(int argc, char *argv[])
                 }
             }
 
-            fvOptions.correct();
+            fvModels.correct();
 
             #include "alphaEqnSubCycle.H"
 

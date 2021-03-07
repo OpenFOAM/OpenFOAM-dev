@@ -37,12 +37,12 @@ Description
       ==
         parcels.Srho(rho)
       + surfaceFilm.Srho()
-      + fvOptions(rho)
+      + fvModels.source(rho)
     );
 
     rhoEqn.solve();
 
-    fvOptions.constrain(rho);
+    fvConstraints.constrain(rho);
 }
 
 // ************************************************************************* //

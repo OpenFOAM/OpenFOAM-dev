@@ -33,7 +33,8 @@
         fieldsFluid[i];
 
     IOMRFZoneList& MRF = MRFfluid[i];
-    fv::options& fvOptions = fvOptionsFluid[i];
+    Foam::fvModels& fvModels = fvModelsFluid[i];
+    Foam::fvConstraints& fvConstraints = fvConstraintsFluid[i];
 
     #include "checkRadiationModel.H"
 

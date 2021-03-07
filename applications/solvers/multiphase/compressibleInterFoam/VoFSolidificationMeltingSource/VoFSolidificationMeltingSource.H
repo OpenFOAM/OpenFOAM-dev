@@ -80,7 +80,7 @@ SourceFiles
 
 #include "fvMesh.H"
 #include "volFields.H"
-#include "cellSetOption.H"
+#include "cellSetModel.H"
 #include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -96,7 +96,7 @@ namespace fv
 
 class VoFSolidificationMeltingSource
 :
-    public cellSetOption
+    public cellSetModel
 {
     // Private Data
 

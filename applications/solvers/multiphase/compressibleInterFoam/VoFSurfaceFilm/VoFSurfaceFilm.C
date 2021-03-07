@@ -39,7 +39,7 @@ namespace Foam
 
         addToRunTimeSelectionTable
         (
-            option,
+            fvModel,
             VoFSurfaceFilm,
             dictionary
         );
@@ -57,22 +57,22 @@ Foam::fv::VoFSurfaceFilm::VoFSurfaceFilm
     const fvMesh& mesh
 )
 :
-    option(sourceName, modelType, dict, mesh),
+    fvModel(sourceName, modelType, dict, mesh),
     phaseName_(dict.lookup("phase")),
     thermo_
     (
-        mesh_.lookupObject<rhoThermo>
+        mesh.lookupObject<rhoThermo>
         (
             IOobject::groupName(basicThermo::dictName, phaseName_)
         )
     ),
-    slgThermo_(mesh_, thermo_),
+    slgThermo_(mesh, thermo_),
     film_
     (
         regionModels::surfaceFilmModel::New
         (
-            mesh_,
-            mesh_.lookupObject<uniformDimensionedVectorField>("g")
+            mesh,
+            mesh.lookupObject<uniformDimensionedVectorField>("g")
         )
     ),
     curTimeIndex_(-1)
@@ -89,20 +89,20 @@ Foam::wordList Foam::fv::VoFSurfaceFilm::addSupFields() const
 
 void Foam::fv::VoFSurfaceFilm::correct()
 {
-    if (curTimeIndex_ == mesh_.time().timeIndex())
+    if (curTimeIndex_ == mesh().time().timeIndex())
     {
         return;
     }
 
     if (debug)
     {
-        Info<< type() << ": " << name_
+        Info<< type() << ": " << name()
             << " - updating solid phase fraction" << endl;
     }
 
     film_->evolve();
 
-    curTimeIndex_ = mesh_.time().timeIndex();
+    curTimeIndex_ = mesh().time().timeIndex();
 }
 
 
@@ -126,7 +126,7 @@ void Foam::fv::VoFSurfaceFilm::addSup
     {
         const twoPhaseMixtureThermo& thermo
         (
-            mesh_.lookupObject<twoPhaseMixtureThermo>
+            mesh().lookupObject<twoPhaseMixtureThermo>
             (
                 twoPhaseMixtureThermo::dictName
             )

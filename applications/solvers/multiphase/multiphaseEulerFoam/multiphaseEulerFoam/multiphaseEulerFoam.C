@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
         {
             if (pimple.frozenFlow())
             {
-                fvOptions.correct();
+                fvModels.correct();
 
                 fluid.solve(rAUs, rAUfs);
                 fluid.correct();
@@ -166,7 +166,7 @@ int main(int argc, char *argv[])
                     }
                 }
 
-                fvOptions.correct();
+                fvModels.correct();
 
                 fluid.solve(rAUs, rAUfs);
                 fluid.correct();

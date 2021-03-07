@@ -35,7 +35,7 @@ fvScalarMatrix p_rghDDtEqn
  ==
     clouds.Srho()
   + surfaceFilm.Srho()
-  + fvOptions(psi, p_rgh, rho.name())
+  + fvModels.source(psi, p_rgh, rho.name())
 );
 
 while (pimple.correctNonOrthogonal())
@@ -57,7 +57,7 @@ while (pimple.correctNonOrthogonal())
 
         U = HbyA + rAU*fvc::reconstruct((p_rghEqn.flux() + phig)/rhorAUf);
         U.correctBoundaryConditions();
-        fvOptions.constrain(U);
+        fvConstraints.constrain(U);
         K = 0.5*magSqr(U);
     }
 }

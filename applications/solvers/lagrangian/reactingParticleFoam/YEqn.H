@@ -30,18 +30,18 @@ if (Y.size())
               + thermophysicalTransport->divj(Yi)
               ==
                 clouds.SYi(i, Yi)
-              + fvOptions(rho, Yi)
+              + fvModels.source(rho, Yi)
               + combustion->R(Yi)
               + surfaceFilm.Srho(i)
             );
 
             YEqn.relax();
 
-            fvOptions.constrain(YEqn);
+            fvConstraints.constrain(YEqn);
 
             YEqn.solve("Yi");
 
-            fvOptions.constrain(Yi);
+            fvConstraints.constrain(Yi);
         }
     }
 

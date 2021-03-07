@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kEpsilonLopesdaCosta.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "explicitPorositySource.H"
 #include "bound.H"
 
@@ -98,14 +99,17 @@ template<class BasicMomentumTransportModel>
 void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::
 setPorosityCoefficients()
 {
-    const fv::options::optionList& fvOptions(fv::options::New(this->mesh_));
+    const PtrListDictionary<fvModel>& fvModels
+    (
+        Foam::fvModels::New(this->mesh_)
+    );
 
-    forAll(fvOptions, i)
+    forAll(fvModels, i)
     {
-        if (isA<fv::explicitPorositySource>(fvOptions[i]))
+        if (isA<fv::explicitPorositySource>(fvModels[i]))
         {
             const fv::explicitPorositySource& eps =
-                refCast<const fv::explicitPorositySource>(fvOptions[i]);
+                refCast<const fv::explicitPorositySource>(fvModels[i]);
 
             if (isA<porosityModels::powerLawLopesdaCosta>(eps.model()))
             {
@@ -137,7 +141,7 @@ void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::correctNut()
 {
     this->nut_ = Cmu_*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -398,7 +402,11 @@ void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
-    const fv::options& fvOptions(fv::options::New(this->mesh_));
+    const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(this->mesh_)
+    );
 
     eddyViscosity<RASModel<BasicMomentumTransportModel>>::correct();
 
@@ -432,14 +440,14 @@ void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::correct()
       - fvm::SuSp(((2.0/3.0)*C1_)*alpha()*rho()*divU, epsilon_)
       - fvm::Sp(C2_*alpha()*rho()*epsilon_()/k_(), epsilon_)
       + epsilonSource(magU, magU3)
-      + fvOptions(alpha, rho, epsilon_)
+      + fvModels.source(alpha, rho, epsilon_)
     );
 
     epsEqn.ref().relax();
-    fvOptions.constrain(epsEqn.ref());
+    fvConstraints.constrain(epsEqn.ref());
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
-    fvOptions.constrain(epsilon_);
+    fvConstraints.constrain(epsilon_);
     bound(epsilon_, this->epsilonMin_);
 
     // Turbulent kinetic energy equation
@@ -453,13 +461,13 @@ void kEpsilonLopesdaCosta<BasicMomentumTransportModel>::correct()
       - fvm::SuSp((2.0/3.0)*alpha()*rho()*divU, k_)
       - fvm::Sp(alpha()*rho()*epsilon_()/k_(), k_)
       + kSource(magU, magU3)
-      + fvOptions(alpha, rho, k_)
+      + fvModels.source(alpha, rho, k_)
     );
 
     kEqn.ref().relax();
-    fvOptions.constrain(kEqn.ref());
+    fvConstraints.constrain(kEqn.ref());
     solve(kEqn);
-    fvOptions.constrain(k_);
+    fvConstraints.constrain(k_);
     bound(k_, this->kMin_);
 
     correctNut();

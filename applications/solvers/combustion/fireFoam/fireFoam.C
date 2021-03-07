@@ -39,7 +39,8 @@ Description
 #include "fluidReactionThermo.H"
 #include "combustionModel.H"
 #include "pimpleControl.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,7 +87,7 @@ int main(int argc, char *argv[])
             // --- PIMPLE loop
             while (pimple.loop())
             {
-                fvOptions.correct();
+                fvModels.correct();
 
                 #include "UEqn.H"
                 #include "YEEqn.H"

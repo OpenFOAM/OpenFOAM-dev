@@ -7,7 +7,8 @@ const volScalarField& rho = trho();
 
 volScalarField& e = thermo.he();
 
-const fv::options& fvOptions = fvOptionsSolid[i];
+const Foam::fvModels& fvModels = fvModelsSolid[i];
+Foam::fvConstraints& fvConstraints = fvConstraintsSolid[i];
 
 #include "checkRadiationModel.H"
 

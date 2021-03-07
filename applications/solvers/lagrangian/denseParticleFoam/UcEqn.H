@@ -9,7 +9,7 @@ fvVectorMatrix UcEqn
 
 UcEqn.relax();
 
-fvOptions.constrain(UcEqn);
+fvConstraints.constrain(UcEqn);
 
 volScalarField rAUc(1.0/UcEqn.A());
 volScalarField rASpUc(1.0/(UcEqn.A() - cloudSUp/rhoc));
@@ -39,5 +39,5 @@ if (pimple.momentumPredictor())
       + (1.0/rhoc)*(fvm::Sp(cloudSUp, Uc) - cloudSUp*Uc)
     );
 
-    fvOptions.constrain(Uc);
+    fvConstraints.constrain(Uc);
 }

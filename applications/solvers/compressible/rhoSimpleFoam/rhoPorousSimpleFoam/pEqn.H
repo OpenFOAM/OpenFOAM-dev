@@ -34,7 +34,7 @@
             tpEqn =
             (
                 fvm::laplacian(rho*trTU(), p)
-              + fvOptions(psi, p, rho.name())
+              + fvModels.source(psi, p, rho.name())
              ==
                 fvc::div(phiHbyA)
             );
@@ -44,7 +44,7 @@
             tpEqn =
             (
                 fvm::laplacian(rho*trAU(), p)
-              + fvOptions(psi, p, rho.name())
+              + fvModels.source(psi, p, rho.name())
              ==
                 fvc::div(phiHbyA)
             );
@@ -81,7 +81,7 @@
     }
 
     U.correctBoundaryConditions();
-    fvOptions.constrain(U);
+    fvConstraints.constrain(U);
 
     pressureControl.limit(p);
 

@@ -98,7 +98,7 @@ Initialisation
 
 Source Terms
 ============
-+ An fvOptions file is included in system for the solid regions
++ An fvModels file is included in system for the solid regions
 + It contains examples of fixed temperature and heat flux sources which can
   be switched on accordingly
 

@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "dynamicLagrangian.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,7 +44,7 @@ void dynamicLagrangian<BasicMomentumTransportModel>::correctNut
 {
     this->nut_ = (flm_/fmm_)*sqr(this->delta())*mag(dev(symm(gradU)));
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -159,7 +160,11 @@ void dynamicLagrangian<BasicMomentumTransportModel>::correct()
     const rhoField& rho = this->rho_;
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
-    const fv::options& fvOptions(fv::options::New(this->mesh_));
+    const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(this->mesh_)
+    );
 
     LESeddyViscosity<BasicMomentumTransportModel>::correct();
 
@@ -193,13 +198,13 @@ void dynamicLagrangian<BasicMomentumTransportModel>::correct()
      ==
         invT*LM
       - fvm::Sp(invT, flm_)
-      + fvOptions(alpha, rho, flm_)
+      + fvModels.source(alpha, rho, flm_)
     );
 
     flmEqn.relax();
-    fvOptions.constrain(flmEqn);
+    fvConstraints.constrain(flmEqn);
     flmEqn.solve();
-    fvOptions.constrain(flm_);
+    fvConstraints.constrain(flm_);
     bound(flm_, flm0_);
 
     volScalarField MM(M && M);
@@ -211,13 +216,13 @@ void dynamicLagrangian<BasicMomentumTransportModel>::correct()
      ==
         invT*MM
       - fvm::Sp(invT, fmm_)
-      + fvOptions(alpha, rho, fmm_)
+      + fvModels.source(alpha, rho, fmm_)
     );
 
     fmmEqn.relax();
-    fvOptions.constrain(fmmEqn);
+    fvConstraints.constrain(fmmEqn);
     fmmEqn.solve();
-    fvOptions.constrain(fmm_);
+    fvConstraints.constrain(fmm_);
     bound(fmm_, fmm0_);
 
     correctNut(gradU);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,6 +29,8 @@ License
 #include "fvmDiv.H"
 #include "fvmLaplacian.H"
 #include "fvmSup.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "kinematicMomentumTransportModel.H"
 #include "fluidThermoMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
@@ -115,7 +117,6 @@ Foam::functionObjects::scalarTransport::scalarTransport
     fieldName_(dict.lookupOrDefault<word>("field", "s")),
     D_(0),
     nCorr_(0),
-    fvOptions_(mesh_),
     s_
     (
         IOobject
@@ -155,11 +156,6 @@ bool Foam::functionObjects::scalarTransport::read(const dictionary& dict)
 
     dict.readIfPresent("nCorr", nCorr_);
 
-    if (dict.found("fvOptions"))
-    {
-        fvOptions_.reset(dict.subDict("fvOptions"));
-    }
-
     return true;
 }
 
@@ -184,6 +180,12 @@ bool Foam::functionObjects::scalarTransport::execute()
         relaxCoeff = mesh_.equationRelaxationFactor(schemesField_);
     }
 
+    const Foam::fvModels& fvModels(Foam::fvModels::New(mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(mesh_)
+    );
+
     if (phi.dimensions() == dimMass/dimTime)
     {
         const volScalarField& rho =
@@ -197,14 +199,16 @@ bool Foam::functionObjects::scalarTransport::execute()
               + fvm::div(phi, s_, divScheme)
               - fvm::laplacian(D, s_, laplacianScheme)
              ==
-                fvOptions_(rho, s_)
+                fvModels.source(rho, s_)
             );
 
             sEqn.relax(relaxCoeff);
 
-            fvOptions_.constrain(sEqn);
+            fvConstraints.constrain(sEqn);
 
             sEqn.solve(schemesField_);
+
+            fvConstraints.constrain(s_);
         }
     }
     else if (phi.dimensions() == dimVolume/dimTime)
@@ -217,14 +221,16 @@ bool Foam::functionObjects::scalarTransport::execute()
               + fvm::div(phi, s_, divScheme)
               - fvm::laplacian(D, s_, laplacianScheme)
              ==
-                fvOptions_(s_)
+                fvModels.source(s_)
             );
 
             sEqn.relax(relaxCoeff);
 
-            fvOptions_.constrain(sEqn);
+            fvConstraints.constrain(sEqn);
 
             sEqn.solve(schemesField_);
+
+            fvConstraints.constrain(s_);
         }
     }
     else

@@ -45,4 +45,5 @@ EXE_LIBS = \
     -llaminarFlameSpeedModels \
     -lfiniteVolume \
     -ldynamicFvMesh \
-    -lfvOptions
+    -lfvModels \
+    -lfvConstraints

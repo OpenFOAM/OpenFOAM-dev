@@ -38,4 +38,4 @@ while (piso.correctNonOrthogonal())
 
 U = HbyA - rAU*fvc::grad(p);
 U.correctBoundaryConditions();
-fvOptions.constrain(U);
+fvConstraints.constrain(U);

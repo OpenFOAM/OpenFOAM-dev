@@ -26,7 +26,8 @@ License
 #include "kineticTheoryModel.H"
 #include "mathematicalConstants.H"
 #include "phaseSystem.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -470,7 +471,11 @@ void Foam::RASModels::kineticTheoryModel::correct()
         // 'thermal' conductivity (Table 3.3, p. 49)
         kappa_ = conductivityModel_->kappa(alpha, Theta_, gs0_, rho, da, e_);
 
-        const fv::options& fvOptions(fv::options::New(mesh_));
+        const Foam::fvModels& fvModels(Foam::fvModels::New(mesh_));
+        const Foam::fvConstraints& fvConstraints
+        (
+            Foam::fvConstraints::New(mesh_)
+        );
 
         // Construct the granular temperature equation (Eq. 3.20, p. 44)
         // NB. note that there are two typos in Eq. 3.20:
@@ -491,13 +496,13 @@ void Foam::RASModels::kineticTheoryModel::correct()
           + fvm::Sp(-gammaCoeff, Theta_)
           + fvm::Sp(-J1, Theta_)
           + fvm::Sp(J2/(Theta_ + ThetaSmall), Theta_)
-          + fvOptions(alpha, rho, Theta_)
+          + fvModels.source(alpha, rho, Theta_)
         );
 
         ThetaEqn.relax();
-        fvOptions.constrain(ThetaEqn);
+        fvConstraints.constrain(ThetaEqn);
         ThetaEqn.solve();
-        fvOptions.constrain(Theta_);
+        fvConstraints.constrain(Theta_);
     }
     else
     {

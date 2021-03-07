@@ -38,7 +38,8 @@ Description
 #include "surfaceFilmModel.H"
 #include "combustionModel.H"
 #include "SLGThermo.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "pimpleControl.H"
 #include "pressureControl.H"
 #include "CorrectPhi.H"
@@ -146,7 +147,7 @@ int main(int argc, char *argv[])
         // --- PIMPLE loop
         while (solvePrimaryRegion && pimple.loop())
         {
-            fvOptions.correct();
+            fvModels.correct();
 
             #include "UEqn.H"
             #include "YEqn.H"

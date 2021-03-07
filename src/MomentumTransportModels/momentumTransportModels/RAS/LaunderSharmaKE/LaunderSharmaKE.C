@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "LaunderSharmaKE.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "bound.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -57,7 +58,7 @@ void LaunderSharmaKE<BasicMomentumTransportModel>::correctNut()
 {
     this->nut_ = Cmu_*fMu()*sqr(k_)/epsilon_;
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -246,7 +247,11 @@ void LaunderSharmaKE<BasicMomentumTransportModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
-    const fv::options& fvOptions(fv::options::New(this->mesh_));
+    const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(this->mesh_)
+    );
 
     eddyViscosity<RASModel<BasicMomentumTransportModel>>::correct();
 
@@ -275,14 +280,14 @@ void LaunderSharmaKE<BasicMomentumTransportModel>::correct()
       - fvm::Sp(C2_*f2()*alpha*rho*epsilon_/k_, epsilon_)
       + alpha*rho*E
       + epsilonSource()
-      + fvOptions(alpha, rho, epsilon_)
+      + fvModels.source(alpha, rho, epsilon_)
     );
 
     epsEqn.ref().relax();
-    fvOptions.constrain(epsEqn.ref());
+    fvConstraints.constrain(epsEqn.ref());
     epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
     solve(epsEqn);
-    fvOptions.constrain(epsilon_);
+    fvConstraints.constrain(epsilon_);
     bound(epsilon_, this->epsilonMin_);
 
 
@@ -296,13 +301,13 @@ void LaunderSharmaKE<BasicMomentumTransportModel>::correct()
         alpha*rho*G - fvm::SuSp(2.0/3.0*alpha*rho*divU, k_)
       - fvm::Sp(alpha*rho*(epsilon_ + D)/k_, k_)
       + kSource()
-      + fvOptions(alpha, rho, k_)
+      + fvModels.source(alpha, rho, k_)
     );
 
     kEqn.ref().relax();
-    fvOptions.constrain(kEqn.ref());
+    fvConstraints.constrain(kEqn.ref());
     solve(kEqn);
-    fvOptions.constrain(k_);
+    fvConstraints.constrain(k_);
     bound(k_, this->kMin_);
 
     correctNut();

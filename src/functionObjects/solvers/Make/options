@@ -8,7 +8,6 @@ EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude
 
 LIB_LIBS = \
-    -lfvOptions \
     -lfluidThermophysicalModels \
     -lincompressibleTransportModels \
     -lmomentumTransportModels \
@@ -16,4 +15,6 @@ LIB_LIBS = \
     -lfluidThermoMomentumTransportModels \
     -lspecie \
     -lfiniteVolume \
-    -lmeshTools
+    -lmeshTools \
+    -lfvModels \
+    -lfvConstraints

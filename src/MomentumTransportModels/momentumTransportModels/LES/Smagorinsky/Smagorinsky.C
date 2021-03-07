@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "Smagorinsky.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -62,7 +63,7 @@ void Smagorinsky<BasicMomentumTransportModel>::correctNut()
 
     this->nut_ = Ck_*this->delta()*sqrt(k);
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 

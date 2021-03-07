@@ -35,14 +35,14 @@ Description
         fvm::ddt(rho)
       + fvc::div(phi)
       ==
-        fvOptions(rho)
+        fvModels.source(rho)
     );
 
-    fvOptions.constrain(rhoEqn);
+    fvConstraints.constrain(rhoEqn);
 
     rhoEqn.solve();
 
-    fvOptions.constrain(rho);
+    fvConstraints.constrain(rho);
 }
 
 // ************************************************************************* //

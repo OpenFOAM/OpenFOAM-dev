@@ -20,5 +20,6 @@ EXE_LIBS = \
     -lfiniteVolume \
     -ldynamicFvMesh \
     -ltopoChangerFvMesh \
-    -lfvOptions \
+    -lfvModels \
+    -lfvConstraints \
     -lmeshTools

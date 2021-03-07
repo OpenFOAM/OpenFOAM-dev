@@ -38,7 +38,8 @@ Description
 #include "singlePhaseTransportModel.H"
 #include "kinematicMomentumTransportModel.H"
 #include "pisoControl.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -67,7 +68,7 @@ int main(int argc, char *argv[])
 
         // Pressure-velocity PISO corrector
         {
-            fvOptions.correct();
+            fvModels.correct();
 
             #include "UEqn.H"
 

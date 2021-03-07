@@ -30,7 +30,8 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "simpleControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -54,7 +55,7 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        fvOptions.correct();
+        fvModels.correct();
 
         while (simple.correctNonOrthogonal())
         {
@@ -62,12 +63,12 @@ int main(int argc, char *argv[])
             (
                 fvm::ddt(T) - fvm::laplacian(DT, T)
              ==
-                fvOptions(T)
+                fvModels.source(T)
             );
 
-            fvOptions.constrain(TEqn);
+            fvConstraints.constrain(TEqn);
             TEqn.solve();
-            fvOptions.constrain(T);
+            fvConstraints.constrain(T);
         }
 
         #include "write.H"

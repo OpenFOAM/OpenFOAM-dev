@@ -24,7 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "kOmegaSSTBase.H"
-#include "fvOptions.H"
+#include "fvModels.H"
+#include "fvConstraints.H"
 #include "bound.H"
 #include "wallDist.H"
 
@@ -122,7 +123,7 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correctNut
 {
     this->nut_ = a1_*k_/max(a1_*omega_, b1_*F2*sqrt(S2));
     this->nut_.correctBoundaryConditions();
-    fv::options::New(this->mesh_).constrain(this->nut_);
+    fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 
@@ -429,7 +430,11 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correct()
     const surfaceScalarField& alphaRhoPhi = this->alphaRhoPhi_;
     const volVectorField& U = this->U_;
     volScalarField& nut = this->nut_;
-    const fv::options& fvOptions(fv::options::New(this->mesh_));
+    const Foam::fvModels& fvModels(Foam::fvModels::New(this->mesh_));
+    const Foam::fvConstraints& fvConstraints
+    (
+        Foam::fvConstraints::New(this->mesh_)
+    );
 
     BasicMomentumTransportModel::correct();
 
@@ -482,14 +487,14 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correct()
             )
           + Qsas(S2(), gamma, beta)
           + omegaSource()
-          + fvOptions(alpha, rho, omega_)
+          + fvModels.source(alpha, rho, omega_)
         );
 
         omegaEqn.ref().relax();
-        fvOptions.constrain(omegaEqn.ref());
+        fvConstraints.constrain(omegaEqn.ref());
         omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
         solve(omegaEqn);
-        fvOptions.constrain(omega_);
+        fvConstraints.constrain(omega_);
         bound(omega_, this->omegaMin_);
     }
 
@@ -504,13 +509,13 @@ void kOmegaSST<MomentumTransportModel, BasicMomentumTransportModel>::correct()
       - fvm::SuSp((2.0/3.0)*alpha()*rho()*divU, k_)
       - fvm::Sp(alpha()*rho()*epsilonByk(F1, F23), k_)
       + kSource()
-      + fvOptions(alpha, rho, k_)
+      + fvModels.source(alpha, rho, k_)
     );
 
     kEqn.ref().relax();
-    fvOptions.constrain(kEqn.ref());
+    fvConstraints.constrain(kEqn.ref());
     solve(kEqn);
-    fvOptions.constrain(k_);
+    fvConstraints.constrain(k_);
     bound(k_, this->kMin_);
 
     correctNut(S2, F23);

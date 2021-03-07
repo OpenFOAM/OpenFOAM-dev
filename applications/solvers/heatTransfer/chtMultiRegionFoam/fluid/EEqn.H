@@ -24,16 +24,16 @@
      ==
         rho*(U&g)
       + reaction.Qdot()
-      + fvOptions(rho, he)
+      + fvModels.source(rho, he)
     );
 
     EEqn.relax();
 
-    fvOptions.constrain(EEqn);
+    fvConstraints.constrain(EEqn);
 
     EEqn.solve();
 
-    fvOptions.constrain(he);
+    fvConstraints.constrain(he);
 
     thermo.correct();
 

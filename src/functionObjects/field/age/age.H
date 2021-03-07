@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,7 +73,6 @@ SourceFiles
 
 #include "fvMeshFunctionObject.H"
 #include "volFields.H"
-#include "fvOptionList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -109,9 +108,6 @@ class age
 
         //- Convergence tolerance
         scalar tolerance_;
-
-        //- Run-time selectable finite volume options, e.g. sources, constraints
-        fv::optionList fvOptions_;
 
 
     // Private Member Functions

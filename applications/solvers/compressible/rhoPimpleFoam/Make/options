@@ -20,4 +20,5 @@ EXE_LIBS = \
     -ltopoChangerFvMesh \
     -lmeshTools \
     -lsampling \
-    -lfvOptions
+    -lfvModels \
+    -lfvConstraints
