@@ -87,7 +87,7 @@ private:
         //      angular acceleration vector
         autoPtr<Function1<accelerationVectors>> accelerations_;
 
-        //- Modelal gravitational acceleration
+        //- Optional gravitational acceleration
         dimensionedVector g_;
 
 
