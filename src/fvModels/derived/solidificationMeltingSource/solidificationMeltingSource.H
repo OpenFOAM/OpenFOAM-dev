@@ -179,16 +179,16 @@ private:
         //- Reference density - typically the solid density
         scalar rhoRef_;
 
-        //- Name of temperature field - default = "T" (fvModelal)
+        //- Name of temperature field - default = "T" (optional)
         word TName_;
 
-        //- Name of specific heat capacity field - default = "Cp" (fvModelal)
+        //- Name of specific heat capacity field - default = "Cp" (optional)
         word CpName_;
 
-        //- Name of velocity field - default = "U" (fvModelal)
+        //- Name of velocity field - default = "U" (optional)
         word UName_;
 
-        //- Name of flux field - default = "phi" (fvModelal)
+        //- Name of flux field - default = "phi" (optional)
         word phiName_;
 
         //- Mushy region momentum sink coefficient [1/s]; default = 10^5

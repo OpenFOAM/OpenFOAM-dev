@@ -67,7 +67,7 @@ class buoyancyForce
 {
     // Private Data
 
-        //- Modelal phase name
+        //- Optional phase name
         word phaseName_;
 
         //- Name of the velocity field

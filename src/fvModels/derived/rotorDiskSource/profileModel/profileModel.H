@@ -61,7 +61,7 @@ protected:
         //- Name of profile model
         const word name_;
 
-        //- File name (fvModelal)
+        //- File name (optional)
         fileName fName_;
 
 

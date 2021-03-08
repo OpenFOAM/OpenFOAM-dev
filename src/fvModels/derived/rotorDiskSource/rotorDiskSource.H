@@ -226,7 +226,7 @@ protected:
         //- Check data
         void checkData();
 
-        //- Set the face areas per cell, and fvModelally correct the rotor axis
+        //- Set the face areas per cell, and optionally correct the rotor axis
         void setFaceArea(vector& axis, const bool correct);
 
         //- Create the co-ordinate system

@@ -67,7 +67,7 @@ class buoyancyEnergy
 {
     // Private Data
 
-        //- Modelal phase name
+        //- Optional phase name
         word phaseName_;
 
         //- Name of velocity field; default = U.<phase>

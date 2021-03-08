@@ -84,7 +84,7 @@ protected:
         //- Chord [m]
         List<scalar> chord_;
 
-        //- File name (fvModelal)
+        //- File name (optional)
         fileName fName_;
 
 
