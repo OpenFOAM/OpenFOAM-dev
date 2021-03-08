@@ -79,7 +79,7 @@ defineTypeNameAndDebug(${typeName}FvModel${SourceType}, 0);
 
 addRemovableToRunTimeSelectionTable
 (
-    option,
+    fvModel,
     ${typeName}FvModel${SourceType},
     dictionary
 );
@@ -100,7 +100,7 @@ ${typeName}FvModel${SourceType}
     const fvMesh& mesh
 )
 :
-    cellSetOption(name, modelType, dict, mesh)
+    cellSetModel(name, modelType, dict, mesh)
 {
     if (${verbose:-false})
     {

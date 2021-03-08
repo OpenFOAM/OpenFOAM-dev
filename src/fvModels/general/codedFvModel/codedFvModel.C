@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "codedSource.H"
+#include "codedFvModel.H"
 #include "fvMesh.H"
 #include "fvMatrices.H"
 #include "dynamicCode.H"
@@ -32,7 +32,7 @@ License
 
 // * * * * * * * * * * * * Private Static Data Members * * * * * * * * * * * //
 
-const Foam::wordList Foam::fv::codedSource::codeKeys_ =
+const Foam::wordList Foam::fv::codedFvModel::codeKeys_ =
 {
     "codeAddSup",
     "codeAddRhoSup",
@@ -48,15 +48,15 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(codedSource, 0);
-    addToRunTimeSelectionTable(fvModel, codedSource, dictionary);
+    defineTypeNameAndDebug(codedFvModel, 0);
+    addToRunTimeSelectionTable(fvModel, codedFvModel, dictionary);
 }
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::codedSource::readCoeffs()
+void Foam::fv::codedFvModel::readCoeffs()
 {
     fieldName_ = coeffs().lookup<word>("field");
 
@@ -69,7 +69,7 @@ void Foam::fv::codedSource::readCoeffs()
 }
 
 
-Foam::word Foam::fv::codedSource::fieldPrimitiveTypeName() const
+Foam::word Foam::fv::codedFvModel::fieldPrimitiveTypeName() const
 {
     #define fieldPrimitiveTypeNameTernary(Type, nullArg)                       \
         mesh().foundObject<VolField<Type>>(fieldName_)                         \
@@ -80,7 +80,7 @@ Foam::word Foam::fv::codedSource::fieldPrimitiveTypeName() const
 }
 
 
-void Foam::fv::codedSource::prepare
+void Foam::fv::codedFvModel::prepare
 (
     dynamicCode& dynCode,
     const dynamicCodeContext& context
@@ -118,37 +118,37 @@ void Foam::fv::codedSource::prepare
 }
 
 
-const Foam::word& Foam::fv::codedSource::codeName() const
+const Foam::word& Foam::fv::codedFvModel::codeName() const
 {
     return name();
 }
 
 
-Foam::string Foam::fv::codedSource::description() const
+Foam::string Foam::fv::codedFvModel::description() const
 {
     return "fvModel:: " + name();
 }
 
 
-void Foam::fv::codedSource::clearRedirect() const
+void Foam::fv::codedFvModel::clearRedirect() const
 {
     redirectFvModelPtr_.clear();
 }
 
 
-const Foam::dictionary& Foam::fv::codedSource::codeDict() const
+const Foam::dictionary& Foam::fv::codedFvModel::codeDict() const
 {
     return coeffs();
 }
 
 
-const Foam::wordList& Foam::fv::codedSource::codeKeys() const
+const Foam::wordList& Foam::fv::codedFvModel::codeKeys() const
 {
     return codeKeys_;
 }
 
 
-Foam::fvModel& Foam::fv::codedSource::redirectFvModel() const
+Foam::fvModel& Foam::fv::codedFvModel::redirectFvModel() const
 {
     if (!redirectFvModelPtr_.valid())
     {
@@ -166,7 +166,7 @@ Foam::fvModel& Foam::fv::codedSource::redirectFvModel() const
 
 
 template<class Type>
-void Foam::fv::codedSource::addSupType
+void Foam::fv::codedFvModel::addSupType
 (
     fvMatrix<Type>& eqn,
     const word& fieldName
@@ -176,7 +176,7 @@ void Foam::fv::codedSource::addSupType
     {
         if (debug)
         {
-            Info<< "codedSource::addSup for source " << name() << endl;
+            Info<< "codedFvModel::addSup for source " << name() << endl;
         }
 
         updateLibrary();
@@ -186,7 +186,7 @@ void Foam::fv::codedSource::addSupType
 
 
 template<class Type>
-void Foam::fv::codedSource::addSupType
+void Foam::fv::codedFvModel::addSupType
 (
     const volScalarField& rho,
     fvMatrix<Type>& eqn,
@@ -197,7 +197,7 @@ void Foam::fv::codedSource::addSupType
     {
         if (debug)
         {
-            Info<< "codedSource::addSup for source " << name() << endl;
+            Info<< "codedFvModel::addSup for source " << name() << endl;
         }
 
         updateLibrary();
@@ -207,7 +207,7 @@ void Foam::fv::codedSource::addSupType
 
 
 template<class Type>
-void Foam::fv::codedSource::addSupType
+void Foam::fv::codedFvModel::addSupType
 (
     const volScalarField& alpha,
     const volScalarField& rho,
@@ -219,7 +219,7 @@ void Foam::fv::codedSource::addSupType
     {
         if (debug)
         {
-            Info<< "codedSource::addSup for source " << name() << endl;
+            Info<< "codedFvModel::addSup for source " << name() << endl;
         }
 
         updateLibrary();
@@ -230,7 +230,7 @@ void Foam::fv::codedSource::addSupType
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::codedSource::codedSource
+Foam::fv::codedFvModel::codedFvModel
 (
     const word& name,
     const word& modelType,
@@ -247,22 +247,22 @@ Foam::fv::codedSource::codedSource
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::codedSource::addSupFields() const
+Foam::wordList Foam::fv::codedFvModel::addSupFields() const
 {
     return wordList(1, fieldName_);
 }
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_SUP, fv::codedSource);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_SUP, fv::codedFvModel);
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fv::codedSource);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fv::codedFvModel);
 
 
-FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP, fv::codedSource);
+FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP, fv::codedFvModel);
 
 
-bool Foam::fv::codedSource::read(const dictionary& dict)
+bool Foam::fv::codedFvModel::read(const dictionary& dict)
 {
     if (cellSetModel::read(dict))
     {

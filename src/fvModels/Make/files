@@ -1,7 +1,7 @@
 cellSetModel/cellSetModel.C
 interRegionModel/interRegionModel.C
 
-general/codedSource/codedSource.C
+general/codedFvModel/codedFvModel.C
 general/semiImplicitSource/semiImplicitSource.C
 
 derived/actuationDiskSource/actuationDiskSource.C

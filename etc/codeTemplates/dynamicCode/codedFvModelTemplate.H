@@ -32,7 +32,7 @@ SourceFiles
 #ifndef codedFvModelTemplate_H
 #define codedFvModelTemplate_H
 
-#include "cellSetOption.H"
+#include "cellSetModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,7 +48,7 @@ namespace fv
 
 class ${typeName}FvModel${SourceType}
 :
-    public cellSetOption
+    public cellSetModel
 {
 public:
 

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::codedSource
+    Foam::fv::codedFvModel
 
 Description
    Constructs on-the-fly fvModel source from user-supplied code
@@ -32,7 +32,7 @@ Usage
     \verbatim
     energySource
     {
-        type            codedSource;
+        type            codedFvModel;
         name            sourceTime;
 
         selectionMode   all;
@@ -66,12 +66,12 @@ Usage
 
 
 SourceFiles
-    codedSource.C
+    codedFvModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef codedSource_H
-#define codedSource_H
+#ifndef codedFvModel_H
+#define codedFvModel_H
 
 #include "cellSetModel.H"
 #include "codedBase.H"
@@ -84,10 +84,10 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                         Class codedSource Declaration
+                         Class codedFvModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class codedSource
+class codedFvModel
 :
     public cellSetModel,
     public codedBase
@@ -173,13 +173,13 @@ class codedSource
 public:
 
     //- Runtime type information
-    TypeName("codedSource");
+    TypeName("codedFvModel");
 
 
     // Constructors
 
         //- Construct from components
-        codedSource
+        codedFvModel
         (
             const word& name,
             const word& modelType,
