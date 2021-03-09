@@ -129,7 +129,7 @@ Foam::scalar Foam::fv::patchMeanVelocityForce::magUbarAve
 
 bool Foam::fv::patchMeanVelocityForce::read(const dictionary& dict)
 {
-    if (cellSetConstraint::read(dict))
+    if (meanVelocityForce::read(dict))
     {
         readCoeffs();
         return true;

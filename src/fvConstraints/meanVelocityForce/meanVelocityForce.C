@@ -52,9 +52,7 @@ namespace fv
 void Foam::fv::meanVelocityForce::readCoeffs()
 {
     UName_ = coeffs().lookupOrDefault<word>("U", "U");
-
     Ubar_ = coeffs().lookup<vector>("Ubar");
-
     relaxation_ = coeffs().lookupOrDefault<scalar>("relaxation", 1);
 }
 
@@ -89,13 +87,14 @@ void Foam::fv::meanVelocityForce::writeProps
 
 Foam::fv::meanVelocityForce::meanVelocityForce
 (
-    const word& sourceName,
+    const word& name,
     const word& modelType,
     const dictionary& dict,
     const fvMesh& mesh
 )
 :
-    cellSetConstraint(sourceName, modelType, dict, mesh),
+    fvConstraint(name, modelType, dict, mesh),
+    set_(coeffs(), mesh),
     UName_(word::null),
     Ubar_(vector::uniform(NaN)),
     relaxation_(NaN),
@@ -108,7 +107,7 @@ Foam::fv::meanVelocityForce::meanVelocityForce
     // Read the initial pressure gradient from file if it exists
     IFstream propsFile
     (
-        mesh.time().timePath()/"uniform"/(name() + "Properties")
+        mesh.time().timePath()/"uniform"/(this->name() + "Properties")
     );
     if (propsFile.good())
     {
@@ -134,7 +133,7 @@ Foam::scalar Foam::fv::meanVelocityForce::magUbarAve
     const volVectorField& U
 ) const
 {
-    const labelList& cells = this->cells();
+    const labelList& cells = set_.cells();
     const scalarField& cv = mesh().V();
 
     scalar magUbarAve = 0;
@@ -144,7 +143,7 @@ Foam::scalar Foam::fv::meanVelocityForce::magUbarAve
         magUbarAve += (normalised(Ubar_) & U[celli])*cv[celli];
     }
     reduce(magUbarAve, sumOp<scalar>());
-    magUbarAve /= V();
+    magUbarAve /= set_.V();
 
     return magUbarAve;
 }
@@ -172,7 +171,7 @@ void Foam::fv::meanVelocityForce::constrain
 
     const scalar gradP = gradP0_ + dGradP_;
 
-    UIndirectList<vector>(Su, cells()) = normalised(Ubar_)*gradP;
+    UIndirectList<vector>(Su, set_.cells()) = normalised(Ubar_)*gradP;
 
     eqn -= Su;
 
@@ -209,7 +208,7 @@ void Foam::fv::meanVelocityForce::constrain(volVectorField& U) const
 {
     const scalarField& rAU = rAPtr_();
 
-    const labelList& cells = this->cells();
+    const labelList& cells = set_.cells();
     const scalarField& cv = mesh().V();
 
     // Average rAU over the cell set
@@ -220,7 +219,7 @@ void Foam::fv::meanVelocityForce::constrain(volVectorField& U) const
         rAUave += rAU[celli]*cv[celli];
     }
     reduce(rAUave, sumOp<scalar>());
-    rAUave /= V();
+    rAUave /= set_.V();
 
     const scalar magUbarAve = this->magUbarAve(U);
 
@@ -244,10 +243,17 @@ void Foam::fv::meanVelocityForce::constrain(volVectorField& U) const
 }
 
 
+void Foam::fv::meanVelocityForce::updateMesh(const mapPolyMesh& mpm)
+{
+    set_.updateMesh(mpm);
+}
+
+
 bool Foam::fv::meanVelocityForce::read(const dictionary& dict)
 {
-    if (cellSetConstraint::read(dict))
+    if (fvConstraint::read(dict))
     {
+        set_.read(coeffs());
         return true;
     }
     else

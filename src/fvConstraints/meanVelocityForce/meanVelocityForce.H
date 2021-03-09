@@ -55,7 +55,8 @@ SourceFiles
 #ifndef meanVelocityForce_H
 #define meanVelocityForce_H
 
-#include "cellSetConstraint.H"
+#include "fvConstraint.H"
+#include "fvCellSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -70,9 +71,12 @@ namespace fv
 
 class meanVelocityForce
 :
-    public cellSetConstraint
+    public fvConstraint
 {
     // Private data
+
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
         //- Name of the velocity field
         word UName_;
@@ -150,6 +154,9 @@ public:
 
         //- Correct the pressure gradient
         virtual void constrain(volVectorField& U) const;
+
+        //- Update for mesh changes
+        virtual void updateMesh(const mapPolyMesh&);
 
         //- Read source dictionary
         virtual bool read(const dictionary& dict);

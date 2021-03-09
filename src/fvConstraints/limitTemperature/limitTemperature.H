@@ -51,7 +51,8 @@ SourceFiles
 #ifndef limitTemperature_H
 #define limitTemperature_H
 
-#include "cellSetConstraint.H"
+#include "fvConstraint.H"
+#include "fvCellSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,9 +67,12 @@ namespace fv
 
 class limitTemperature
 :
-    public cellSetConstraint
+    public fvConstraint
 {
     // Private data
+
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
         //- Minimum temperature limit [K]
         scalar Tmin_;
@@ -119,6 +123,9 @@ public:
 
         //- Constrain the energy field
         virtual void constrain(volScalarField& he) const;
+
+        //- Update for mesh changes
+        virtual void updateMesh(const mapPolyMesh&);
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);

@@ -53,7 +53,8 @@ SourceFiles
 #ifndef fixedValueConstraint_H
 #define fixedValueConstraint_H
 
-#include "cellSetConstraint.H"
+#include "fvConstraint.H"
+#include "fvCellSet.H"
 #include "objectFunction1.H"
 #include "HashPtrTable.H"
 
@@ -70,9 +71,12 @@ namespace fv
 
 class fixedValueConstraint
 :
-    public cellSetConstraint
+    public fvConstraint
 {
     // Private Member Data
+
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
         //- Field values
         HashPtrTable<objectFunction1> fieldValues_;
@@ -108,22 +112,17 @@ public:
 
     // Member Functions
 
-        // Checks
+        //- Return the list of fields constrained by the fvConstraint
+        virtual wordList constrainedFields() const;
 
-            //- Return the list of fields constrained by the fvConstraint
-            virtual wordList constrainedFields() const;
+        //- Add a constraint to an equation
+        FOR_ALL_FIELD_TYPES(DEFINE_FV_CONSTRAINT_CONSTRAIN);
 
+        //- Update for mesh changes
+        virtual void updateMesh(const mapPolyMesh&);
 
-        // Constraints
-
-            //- Add a constraint to an equation
-            FOR_ALL_FIELD_TYPES(DEFINE_FV_CONSTRAINT_CONSTRAIN);
-
-
-        // IO
-
-            //- Read source dictionary
-            virtual bool read(const dictionary& dict);
+        //- Read source dictionary
+        virtual bool read(const dictionary& dict);
 };
 
 

@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::cellSetConstraint
+    Foam::fv::fvCellSet
 
 Description
     Cell-set fvConstraint abstract base class. Provides a base set of controls
@@ -31,9 +31,9 @@ Description
 Usage
     Example usage:
     \verbatim
-    option1
+    constraint1
     {
-        type            <optionType>
+        type            <constraintType>
 
         // Apply everywhere
         selectionMode   all;
@@ -55,32 +55,27 @@ Usage
     \endverbatim
 
 SourceFiles
-    cellSetConstraint.C
+    fvCellSet.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef cellSetConstraint_H
-#define cellSetConstraint_H
+#ifndef fvCellSet_H
+#define fvCellSet_H
 
-#include "fvConstraint.H"
 #include "cellSet.H"
-#include "fvMesh.H"
-#include "Time.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-namespace fv
-{
+
+class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                        Class cellSetConstraint Declaration
+                        Class fvCellSet Declaration
 \*---------------------------------------------------------------------------*/
 
-class cellSetConstraint
-:
-    public fvConstraint
+class fvCellSet
 {
 public:
 
@@ -104,6 +99,8 @@ private:
 
     // Private data
 
+        const fvMesh& mesh_;
+
         //- Cell selection mode
         selectionModeType selectionMode_;
 
@@ -122,8 +119,8 @@ private:
 
     // Private functions
 
-        //- Non-virtual read
-        void readCoeffs();
+        //- Read the coefficients from the given dictionary
+        void readCoeffs(const dictionary& dict);
 
         //- Set the cell set based on the user input selection mode
         void setCellSet();
@@ -131,24 +128,18 @@ private:
 
 public:
 
-    //- Runtime type information
-    TypeName("cellSetConstraint");
-
-
     // Constructors
 
         //- Construct from components
-        cellSetConstraint
+        fvCellSet
         (
-            const word& name,
-            const word& modelType,
             const dictionary& dict,
             const fvMesh& mesh
         );
 
 
     //- Destructor
-    virtual ~cellSetConstraint();
+    ~fvCellSet();
 
 
     // Member Functions
@@ -172,27 +163,23 @@ public:
         // Mesh changes
 
             //- Update for mesh changes
-            virtual void updateMesh(const mapPolyMesh&);
-
-            //- Update for mesh motion
-            virtual bool movePoints();
+            void updateMesh(const mapPolyMesh&);
 
 
         // IO
 
-            //- Read source dictionary
-            virtual bool read(const dictionary& dict);
+            //- Read coefficients dictionary
+            bool read(const dictionary& dict);
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace fv
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "cellSetConstraintI.H"
+#include "fvCellSetI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

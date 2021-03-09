@@ -23,21 +23,16 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "cellSetConstraint.H"
+#include "fvCellSet.H"
 #include "volFields.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    namespace fv
-    {
-        defineTypeNameAndDebug(cellSetConstraint, 0);
-    }
-
     template<> const char* NamedEnum
     <
-        fv::cellSetConstraint::selectionModeType,
+        fvCellSet::selectionModeType,
         4
         >::names[] =
     {
@@ -47,52 +42,14 @@ namespace Foam
         "all"
     };
 
-    const NamedEnum<fv::cellSetConstraint::selectionModeType, 4>
-        fv::cellSetConstraint::selectionModeTypeNames_;
+    const NamedEnum<fvCellSet::selectionModeType, 4>
+        fvCellSet::selectionModeTypeNames_;
 }
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::cellSetConstraint::readCoeffs()
-{
-    selectionMode_ =
-        selectionModeTypeNames_.read(coeffs().lookup("selectionMode"));
-
-    switch (selectionMode_)
-    {
-        case selectionModeType::points:
-        {
-            coeffs().lookup("points") >> points_;
-            break;
-        }
-        case selectionModeType::cellSet:
-        {
-            coeffs().lookup("cellSet") >> cellSetName_;
-            break;
-        }
-        case selectionModeType::cellZone:
-        {
-            coeffs().lookup("cellZone") >> cellSetName_;
-            break;
-        }
-        case selectionModeType::all:
-        {
-            break;
-        }
-        default:
-        {
-            FatalErrorInFunction
-                << "Unknown selectionMode "
-                << selectionModeTypeNames_[selectionMode_]
-                << ". Valid selectionMode types are" << selectionModeTypeNames_
-                << exit(FatalError);
-        }
-    }
-}
-
-
-void Foam::fv::cellSetConstraint::setCellSet()
+void Foam::fvCellSet::setCellSet()
 {
     Info<< incrIndent;
 
@@ -106,7 +63,7 @@ void Foam::fv::cellSetConstraint::setCellSet()
 
             forAll(points_, i)
             {
-                label celli = mesh().findCell(points_[i]);
+                label celli = mesh_.findCell(points_[i]);
                 if (celli >= 0)
                 {
                     selectedCells.insert(celli);
@@ -131,7 +88,7 @@ void Foam::fv::cellSetConstraint::setCellSet()
             Info<< indent
                 << "- selecting cells using cellSet " << cellSetName_ << endl;
 
-            cellSet selectedCells(mesh(), cellSetName_);
+            cellSet selectedCells(mesh_, cellSetName_);
             cells_ = selectedCells.toc();
 
             break;
@@ -141,22 +98,22 @@ void Foam::fv::cellSetConstraint::setCellSet()
             Info<< indent
                 << "- selecting cells using cellZone " << cellSetName_ << endl;
 
-            label zoneID = mesh().cellZones().findZoneID(cellSetName_);
+            label zoneID = mesh_.cellZones().findZoneID(cellSetName_);
             if (zoneID == -1)
             {
                 FatalErrorInFunction
                     << "Cannot find cellZone " << cellSetName_ << endl
-                    << "Valid cellZones are " << mesh().cellZones().names()
+                    << "Valid cellZones are " << mesh_.cellZones().names()
                     << exit(FatalError);
             }
-            cells_ = mesh().cellZones()[zoneID];
+            cells_ = mesh_.cellZones()[zoneID];
 
             break;
         }
         case selectionModeType::all:
         {
             Info<< indent << "- selecting all cells" << endl;
-            cells_ = identity(mesh().nCells());
+            cells_ = identity(mesh_.nCells());
 
             break;
         }
@@ -166,7 +123,7 @@ void Foam::fv::cellSetConstraint::setCellSet()
     V_ = 0;
     forAll(cells_, i)
     {
-        V_ += mesh().V()[cells_[i]];
+        V_ += mesh_.V()[cells_[i]];
     }
     reduce(V_, sumOp<scalar>());
 
@@ -180,56 +137,74 @@ void Foam::fv::cellSetConstraint::setCellSet()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::cellSetConstraint::cellSetConstraint
+Foam::fvCellSet::fvCellSet
 (
-    const word& name,
-    const word& modelType,
     const dictionary& dict,
     const fvMesh& mesh
 )
 :
-    fvConstraint(name, modelType, dict, mesh),
+    mesh_(mesh),
     selectionMode_(selectionModeType::all),
     cellSetName_(word::null),
     V_(NaN)
 {
-    readCoeffs();
-    setCellSet();
+    read(dict);
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::fv::cellSetConstraint::~cellSetConstraint()
+Foam::fvCellSet::~fvCellSet()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::cellSetConstraint::updateMesh(const mapPolyMesh&)
+void Foam::fvCellSet::updateMesh(const mapPolyMesh&)
 {
     setCellSet();
 }
 
 
-bool Foam::fv::cellSetConstraint::movePoints()
+bool Foam::fvCellSet::read(const dictionary& dict)
 {
+    selectionMode_ =
+        selectionModeTypeNames_.read(dict.lookup("selectionMode"));
+
+    switch (selectionMode_)
+    {
+        case selectionModeType::points:
+        {
+            dict.lookup("points") >> points_;
+            break;
+        }
+        case selectionModeType::cellSet:
+        {
+            dict.lookup("cellSet") >> cellSetName_;
+            break;
+        }
+        case selectionModeType::cellZone:
+        {
+            dict.lookup("cellZone") >> cellSetName_;
+            break;
+        }
+        case selectionModeType::all:
+        {
+            break;
+        }
+        default:
+        {
+            FatalErrorInFunction
+                << "Unknown selectionMode "
+                << selectionModeTypeNames_[selectionMode_]
+                << ". Valid selectionMode types are" << selectionModeTypeNames_
+                << exit(FatalError);
+        }
+    }
+
+    setCellSet();
+
     return true;
-}
-
-
-bool Foam::fv::cellSetConstraint::read(const dictionary& dict)
-{
-    if (fvConstraint::read(dict))
-    {
-        readCoeffs();
-        setCellSet();
-        return true;
-    }
-    else
-    {
-        return false;
-    }
 }
 
 

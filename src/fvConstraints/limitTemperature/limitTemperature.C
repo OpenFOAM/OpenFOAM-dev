@@ -24,7 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "limitTemperature.H"
-#include "fvMesh.H"
 #include "basicThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -65,7 +64,8 @@ Foam::fv::limitTemperature::limitTemperature
     const fvMesh& mesh
 )
 :
-    cellSetConstraint(name, modelType, dict, mesh),
+    fvConstraint(name, modelType, dict, mesh),
+    set_(coeffs(), mesh),
     Tmin_(-vGreat),
     Tmax_(vGreat),
     phaseName_(word::null)
@@ -96,15 +96,15 @@ void Foam::fv::limitTemperature::constrain(volScalarField& he) const
             IOobject::groupName(basicThermo::dictName, phaseName_)
         );
 
-    scalarField Tmin(cells().size(), Tmin_);
-    scalarField Tmax(cells().size(), Tmax_);
+    const labelList& cells = set_.cells();
 
-    scalarField heMin(thermo.he(Tmin, cells()));
-    scalarField heMax(thermo.he(Tmax, cells()));
+    scalarField Tmin(cells.size(), Tmin_);
+    scalarField Tmax(cells.size(), Tmax_);
+
+    scalarField heMin(thermo.he(Tmin, cells));
+    scalarField heMax(thermo.he(Tmax, cells));
 
     scalarField& hec = he.primitiveFieldRef();
-
-    const labelList& cells = this->cells();
 
     forAll(cells, i)
     {
@@ -112,8 +112,8 @@ void Foam::fv::limitTemperature::constrain(volScalarField& he) const
         hec[celli]= max(min(hec[celli], heMax[i]), heMin[i]);
     }
 
-    // handle boundaries in the case of 'all'
-    if (selectionMode() == selectionModeType::all)
+    // Handle boundaries in the case of 'all'
+    if (set_.selectionMode() == fvCellSet::selectionModeType::all)
     {
         volScalarField::Boundary& bf = he.boundaryFieldRef();
 
@@ -140,10 +140,17 @@ void Foam::fv::limitTemperature::constrain(volScalarField& he) const
 }
 
 
+void Foam::fv::limitTemperature::updateMesh(const mapPolyMesh& mpm)
+{
+    set_.updateMesh(mpm);
+}
+
+
 bool Foam::fv::limitTemperature::read(const dictionary& dict)
 {
-    if (cellSetConstraint::read(dict))
+    if (fvConstraint::read(dict))
     {
+        set_.read(coeffs());
         readCoeffs();
         return true;
     }

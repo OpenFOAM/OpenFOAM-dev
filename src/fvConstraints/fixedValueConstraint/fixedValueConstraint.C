@@ -38,7 +38,7 @@ namespace fv
 
     addToRunTimeSelectionTable
     (
-        cellSetConstraint,
+        fvConstraint,
         fixedValueConstraint,
         dictionary
     );
@@ -80,8 +80,8 @@ void Foam::fv::fixedValueConstraint::constrainType
 
     eqn.setValues
     (
-        cells(),
-        List<Type>(cells().size(), fieldValues_[fieldName]->value<Type>(t))
+        set_.cells(),
+        List<Type>(set_.cells().size(), fieldValues_[fieldName]->value<Type>(t))
     );
 }
 
@@ -96,7 +96,8 @@ Foam::fv::fixedValueConstraint::fixedValueConstraint
     const fvMesh& mesh
 )
 :
-    cellSetConstraint(name, modelType, dict, mesh)
+    fvConstraint(name, modelType, dict, mesh),
+    set_(coeffs(), mesh)
 {
     readCoeffs();
 }
@@ -117,10 +118,17 @@ FOR_ALL_FIELD_TYPES
 );
 
 
+void Foam::fv::fixedValueConstraint::updateMesh(const mapPolyMesh& mpm)
+{
+    set_.updateMesh(mpm);
+}
+
+
 bool Foam::fv::fixedValueConstraint::read(const dictionary& dict)
 {
-    if (cellSetConstraint::read(dict))
+    if (fvConstraint::read(dict))
     {
+        set_.read(coeffs());
         readCoeffs();
         return true;
     }

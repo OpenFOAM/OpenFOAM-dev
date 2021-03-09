@@ -25,26 +25,26 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline const Foam::fv::cellSetConstraint::selectionModeType&
-Foam::fv::cellSetConstraint::selectionMode() const
+inline const Foam::fvCellSet::selectionModeType&
+Foam::fvCellSet::selectionMode() const
 {
     return selectionMode_;
 }
 
 
-inline const Foam::word& Foam::fv::cellSetConstraint::cellSetName() const
+inline const Foam::word& Foam::fvCellSet::cellSetName() const
 {
     return cellSetName_;
 }
 
 
-inline Foam::scalar Foam::fv::cellSetConstraint::V() const
+inline Foam::scalar Foam::fvCellSet::V() const
 {
     return V_;
 }
 
 
-inline const Foam::labelList& Foam::fv::cellSetConstraint::cells() const
+inline const Foam::labelList& Foam::fvCellSet::cells() const
 {
     return cells_;
 }

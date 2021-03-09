@@ -63,7 +63,8 @@ Foam::fv::limitVelocity::limitVelocity
     const fvMesh& mesh
 )
 :
-    cellSetConstraint(name, modelType, dict, mesh),
+    fvConstraint(name, modelType, dict, mesh),
+    set_(coeffs(), mesh),
     UName_(word::null),
     max_(vGreat)
 {
@@ -85,7 +86,7 @@ void Foam::fv::limitVelocity::constrain(volVectorField& U) const
 
     vectorField& Uif = U.primitiveFieldRef();
 
-    const labelList& cells = this->cells();
+    const labelList& cells = set_.cells();
 
     forAll(cells, i)
     {
@@ -100,7 +101,7 @@ void Foam::fv::limitVelocity::constrain(volVectorField& U) const
     }
 
     // handle boundaries in the case of 'all'
-    if (selectionMode() == selectionModeType::all)
+    if (set_.selectionMode() == fvCellSet::selectionModeType::all)
     {
         volVectorField::Boundary& Ubf = U.boundaryFieldRef();
 
@@ -125,10 +126,17 @@ void Foam::fv::limitVelocity::constrain(volVectorField& U) const
 }
 
 
+void Foam::fv::limitVelocity::updateMesh(const mapPolyMesh& mpm)
+{
+    set_.updateMesh(mpm);
+}
+
+
 bool Foam::fv::limitVelocity::read(const dictionary& dict)
 {
-    if (cellSetConstraint::read(dict))
+    if (fvConstraint::read(dict))
     {
+        set_.read(coeffs());
         readCoeffs();
         return true;
     }

@@ -94,7 +94,8 @@ Foam::fv::fixedTemperatureConstraint::fixedTemperatureConstraint
     const fvMesh& mesh
 )
 :
-    cellSetConstraint(name, modelType, dict, mesh),
+    fvConstraint(name, modelType, dict, mesh),
+    set_(coeffs(), mesh),
     mode_(temperatureMode::uniform),
     TValue_(nullptr),
     TName_(word::null),
@@ -124,6 +125,8 @@ void Foam::fv::fixedTemperatureConstraint::constrain
     const word& fieldName
 ) const
 {
+    const labelList& cells = set_.cells();
+
     const basicThermo& thermo =
         mesh().lookupObject<basicThermo>
         (
@@ -135,26 +138,33 @@ void Foam::fv::fixedTemperatureConstraint::constrain
         case temperatureMode::uniform:
         {
             const scalar t = mesh().time().value();
-            scalarField Tuni(cells().size(), TValue_->value(t));
-            eqn.setValues(cells(), thermo.he(Tuni, cells()));
+            scalarField Tuni(cells.size(), TValue_->value(t));
+            eqn.setValues(cells, thermo.he(Tuni, cells));
             break;
         }
         case temperatureMode::lookup:
         {
             const volScalarField& T =
                 mesh().lookupObject<volScalarField>(TName_);
-            scalarField Tlkp(T, cells());
-            eqn.setValues(cells(), thermo.he(Tlkp, cells()));
+            scalarField Tlkp(T, cells);
+            eqn.setValues(cells, thermo.he(Tlkp, cells));
             break;
         }
     }
 }
 
 
+void Foam::fv::fixedTemperatureConstraint::updateMesh(const mapPolyMesh& mpm)
+{
+    set_.updateMesh(mpm);
+}
+
+
 bool Foam::fv::fixedTemperatureConstraint::read(const dictionary& dict)
 {
-    if (cellSetConstraint::read(dict))
+    if (fvConstraint::read(dict))
     {
+        set_.read(coeffs());
         readCoeffs();
         return true;
     }

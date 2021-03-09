@@ -58,7 +58,8 @@ SourceFiles
 #ifndef fixedTemperatureConstraint_H
 #define fixedTemperatureConstraint_H
 
-#include "cellSetConstraint.H"
+#include "fvConstraint.H"
+#include "fvCellSet.H"
 #include "NamedEnum.H"
 #include "Function1.H"
 
@@ -75,7 +76,7 @@ namespace fv
 
 class fixedTemperatureConstraint
 :
-    public cellSetConstraint
+    public fvConstraint
 {
 public:
 
@@ -93,6 +94,9 @@ public:
 private:
 
     // Private Data
+
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
         //- Operation mode
         temperatureMode mode_;
@@ -150,6 +154,9 @@ public:
             fvMatrix<scalar>& eqn,
             const word& fieldName
         ) const;
+
+        //- Update for mesh changes
+        virtual void updateMesh(const mapPolyMesh&);
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);

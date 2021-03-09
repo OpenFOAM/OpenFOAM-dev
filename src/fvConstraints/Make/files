@@ -1,5 +1,3 @@
-cellSetConstraint/cellSetConstraint.C
-
 fixedValueConstraint/fixedValueConstraint.C
 fixedTemperatureConstraint/fixedTemperatureConstraint.C
 limitTemperature/limitTemperature.C
