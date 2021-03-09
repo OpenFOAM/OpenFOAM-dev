@@ -54,7 +54,7 @@ addRadialActuationDiskAxialInertialResistance
     const Field<vector> zoneCellCentres(mesh().cellCentres(), cells);
     const Field<scalar> zoneCellVolumes(mesh().cellVolumes(), cells);
 
-    const vector avgCentre = gSum(zoneCellVolumes*zoneCellCentres)/V();
+    const vector avgCentre = gSum(zoneCellVolumes*zoneCellCentres)/set_.V();
     const scalar maxR = gMax(mag(zoneCellCentres - avgCentre));
 
     scalar intCoeffs =
@@ -82,7 +82,7 @@ addRadialActuationDiskAxialInertialResistance
            *(radialCoeffs_[0] + radialCoeffs_[1]*r2 + radialCoeffs_[2]*sqr(r2))
            /intCoeffs;
 
-        Usource[cells[i]] += ((Vcells[cells[i]]/V())*Tr[i]*E) & upU;
+        Usource[cells[i]] += ((Vcells[cells[i]]/set_.V())*Tr[i]*E) & upU;
     }
 
     if (debug)

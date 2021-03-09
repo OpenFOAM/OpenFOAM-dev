@@ -64,13 +64,13 @@ void Foam::fv::buoyancyForce::readCoeffs()
 
 Foam::fv::buoyancyForce::buoyancyForce
 (
-    const word& sourceName,
+    const word& name,
     const word& modelType,
     const dictionary& dict,
     const fvMesh& mesh
 )
 :
-    fvModel(sourceName, modelType, dict, mesh),
+    fvModel(name, modelType, dict, mesh),
     phaseName_(word::null),
     UName_(word::null),
     g_

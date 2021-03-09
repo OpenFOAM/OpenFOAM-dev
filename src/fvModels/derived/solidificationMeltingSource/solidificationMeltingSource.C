@@ -176,7 +176,7 @@ void Foam::fv::solidificationMeltingSource::update
 
     const volScalarField& T = mesh().lookupObject<volScalarField>(TName_);
 
-    const labelList& cells = this->cells();
+    const labelList& cells = set_.cells();
 
     forAll(cells, i)
     {
@@ -218,13 +218,14 @@ void Foam::fv::solidificationMeltingSource::update
 
 Foam::fv::solidificationMeltingSource::solidificationMeltingSource
 (
-    const word& sourceName,
+    const word& name,
     const word& modelType,
     const dictionary& dict,
     const fvMesh& mesh
 )
 :
-    cellSetModel(sourceName, modelType, dict, mesh),
+    fvModel(name, modelType, dict, mesh),
+    set_(coeffs(), mesh),
     Tsol_(NaN),
     Tliq_(NaN),
     alpha1e_(NaN),
@@ -243,7 +244,7 @@ Foam::fv::solidificationMeltingSource::solidificationMeltingSource
     (
         IOobject
         (
-            name() + ":alpha1",
+            this->name() + ":alpha1",
             mesh.time().timeName(),
             mesh,
             IOobject::READ_IF_PRESENT,
@@ -254,7 +255,7 @@ Foam::fv::solidificationMeltingSource::solidificationMeltingSource
         zeroGradientFvPatchScalarField::typeName
     ),
     curTimeIndex_(-1),
-    deltaT_(cells().size(), 0)
+    deltaT_(set_.cells().size(), 0)
 {
     readCoeffs();
 }
@@ -325,7 +326,7 @@ void Foam::fv::solidificationMeltingSource::addSup
     vectorField& Su = eqn.source();
     const scalarField& V = mesh().V();
 
-    const labelList& cells = this->cells();
+    const labelList& cells = set_.cells();
 
     forAll(cells, i)
     {
@@ -355,10 +356,17 @@ void Foam::fv::solidificationMeltingSource::addSup
 }
 
 
+void Foam::fv::solidificationMeltingSource::updateMesh(const mapPolyMesh& mpm)
+{
+    set_.updateMesh(mpm);
+}
+
+
 bool Foam::fv::solidificationMeltingSource::read(const dictionary& dict)
 {
-    if (cellSetModel::read(dict))
+    if (fvModel::read(dict))
     {
+        set_.read(coeffs());
         readCoeffs();
         return true;
     }

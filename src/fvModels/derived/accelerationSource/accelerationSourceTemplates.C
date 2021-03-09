@@ -40,7 +40,7 @@ void Foam::fv::accelerationSource::add
     const vector dU = velocity_->value(t) - velocity_->value(t - dt);
     const vector a = dU/mesh().time().deltaTValue();
 
-    const labelList& cells = this->cells();
+    const labelList& cells = set_.cells();
 
     forAll(cells, i)
     {

@@ -95,7 +95,8 @@ SourceFiles
 #ifndef effectivenessHeatExchangerSource_H
 #define effectivenessHeatExchangerSource_H
 
-#include "cellSetModel.H"
+#include "fvModel.H"
+#include "fvCellSet.H"
 #include "Function2.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -111,9 +112,12 @@ namespace fv
 
 class effectivenessHeatExchangerSource
 :
-    public cellSetModel
+    public fvModel
 {
     // Private data
+
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
         //- Secondary flow mass rate [kg/s]
         scalar secondaryMassFlowRate_;
@@ -212,6 +216,9 @@ public:
             fvMatrix<scalar>& eqn,
             const word& fieldName
         ) const;
+
+        //- Update for mesh changes
+        virtual void updateMesh(const mapPolyMesh&);
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);

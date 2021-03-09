@@ -73,7 +73,8 @@ SourceFiles
 #ifndef codedFvModel_H
 #define codedFvModel_H
 
-#include "cellSetModel.H"
+#include "fvModel.H"
+#include "fvCellSet.H"
 #include "codedBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -89,7 +90,7 @@ namespace fv
 
 class codedFvModel
 :
-    public cellSetModel,
+    public fvModel,
     public codedBase
 {
     // Private static data
@@ -99,6 +100,9 @@ class codedFvModel
 
 
     // Private data
+
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
         //- The name
         word name_;
@@ -207,6 +211,12 @@ public:
 
             //- Add a source term to a phase equation
             FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_ALPHA_RHO_SUP);
+
+
+        // Mesh motion
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
 
 
         // IO

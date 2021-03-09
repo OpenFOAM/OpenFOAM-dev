@@ -66,7 +66,7 @@ void Foam::fv::explicitPorositySource::readCoeffs()
             name(),
             mesh(),
             coeffs(),
-            cellSetName()
+            set_.cellSetName()
         ).ptr()
     );
 }
@@ -83,7 +83,8 @@ Foam::fv::explicitPorositySource::explicitPorositySource
     const fvMesh& mesh
 )
 :
-    cellSetModel(name, modelType, dict, mesh),
+    fvModel(name, modelType, dict, mesh),
+    set_(coeffs(), mesh),
     UNames_(),
     porosityPtr_(nullptr)
 {
@@ -138,10 +139,17 @@ void Foam::fv::explicitPorositySource::addSup
 }
 
 
+void Foam::fv::explicitPorositySource::updateMesh(const mapPolyMesh& mpm)
+{
+    set_.updateMesh(mpm);
+}
+
+
 bool Foam::fv::explicitPorositySource::read(const dictionary& dict)
 {
-    if (cellSetModel::read(dict))
+    if (fvModel::read(dict))
     {
+        set_.read(coeffs());
         readCoeffs();
         return true;
     }

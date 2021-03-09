@@ -238,7 +238,8 @@ Foam::fv::codedFvModel::codedFvModel
     const fvMesh& mesh
 )
 :
-    cellSetModel(name, modelType, dict, mesh),
+    fvModel(name, modelType, dict, mesh),
+    set_(coeffs(), mesh),
     fieldName_(word::null)
 {
     readCoeffs();
@@ -262,10 +263,17 @@ FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fv::codedFvModel);
 FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP, fv::codedFvModel);
 
 
+void Foam::fv::codedFvModel::updateMesh(const mapPolyMesh& mpm)
+{
+    set_.updateMesh(mpm);
+}
+
+
 bool Foam::fv::codedFvModel::read(const dictionary& dict)
 {
-    if (cellSetModel::read(dict))
+    if (fvModel::read(dict))
     {
+        set_.read(coeffs());
         readCoeffs();
         return true;
     }

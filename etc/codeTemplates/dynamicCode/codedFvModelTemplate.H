@@ -32,7 +32,8 @@ SourceFiles
 #ifndef codedFvModelTemplate_H
 #define codedFvModelTemplate_H
 
-#include "cellSetModel.H"
+#include "fvModel.H"
+#include "fvCellSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -48,8 +49,14 @@ namespace fv
 
 class ${typeName}FvModel${SourceType}
 :
-    public cellSetModel
+    public fvModel
 {
+    // Private Data
+
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
+
+
 public:
 
     //- Information about the SHA1 of the code itself

@@ -111,11 +111,11 @@ void Foam::fv::rotorDiskSource::readCoeffs()
 void Foam::fv::rotorDiskSource::checkData()
 {
     // Set inflow type
-    switch (selectionMode())
+    switch (set_.selectionMode())
     {
-        case selectionModeType::cellSet:
-        case selectionModeType::cellZone:
-        case selectionModeType::all:
+        case fvCellSet::selectionModeType::cellSet:
+        case fvCellSet::selectionModeType::cellZone:
+        case fvCellSet::selectionModeType::all:
         {
             // Set the profile ID for each blade section
             profiles_.connectBlades(blade_.profileName(), blade_.profileID());
@@ -151,11 +151,14 @@ void Foam::fv::rotorDiskSource::checkData()
         {
             FatalErrorInFunction
                 << "Source cannot be used with '"
-                << selectionModeTypeNames_[selectionMode()]
+                << fvCellSet::selectionModeTypeNames_[set_.selectionMode()]
                 << "' mode.  Please use one of: " << nl
-                << selectionModeTypeNames_[selectionModeType::cellSet] << nl
-                << selectionModeTypeNames_[selectionModeType::cellZone] << nl
-                << selectionModeTypeNames_[selectionModeType::all]
+                << fvCellSet::selectionModeTypeNames_
+                   [fvCellSet::selectionModeType::cellSet] << nl
+                << fvCellSet::selectionModeTypeNames_
+                   [fvCellSet::selectionModeType::cellZone] << nl
+                << fvCellSet::selectionModeTypeNames_
+                   [fvCellSet::selectionModeType::all]
                 << exit(FatalError);
         }
     }
@@ -177,7 +180,8 @@ void Foam::fv::rotorDiskSource::setFaceArea(vector& axis, const bool correct)
 
     // Calculate cell addressing for selected cells
     labelList cellAddr(mesh().nCells(), -1);
-    UIndirectList<label>(cellAddr, cells()) = identity(cells().size());
+    UIndirectList<label>(cellAddr, set_.cells()) =
+        identity(set_.cells().size());
     labelList nbrFaceCellAddr(mesh().nFaces() - nInternalFaces, -1);
     forAll(pbm, patchi)
     {
@@ -288,7 +292,7 @@ void Foam::fv::rotorDiskSource::setFaceArea(vector& axis, const bool correct)
             mesh(),
             dimensionedScalar(dimArea, 0)
         );
-        UIndirectList<scalar>(area.primitiveField(), cells()) = area_;
+        UIndirectList<scalar>(area.primitiveField(), set_.cells()) = area_;
 
         Info<< type() << ": " << name() << " writing field " << area.name()
             << endl;
@@ -317,7 +321,7 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
             const scalarField& V = mesh().V();
             const vectorField& C = mesh().C();
 
-            const labelList& cells = this->cells();
+            const labelList& cells = set_.cells();
 
             forAll(cells, i)
             {
@@ -398,7 +402,7 @@ void Foam::fv::rotorDiskSource::createCoordinateSystem()
                 (
                     axis,
                     origin,
-                    UIndirectList<vector>(mesh().C(), this->cells())()
+                    UIndirectList<vector>(mesh().C(), set_.cells())()
                 )
             );
 
@@ -433,7 +437,7 @@ void Foam::fv::rotorDiskSource::constructGeometry()
 {
     const vectorField& C = mesh().C();
 
-    const labelList& cells = this->cells();
+    const labelList& cells = set_.cells();
 
     forAll(cells, i)
     {
@@ -509,7 +513,8 @@ Foam::fv::rotorDiskSource::rotorDiskSource
     const fvMesh& mesh
 )
 :
-    cellSetModel(name, modelType, dict, mesh),
+    fvModel(name, modelType, dict, mesh),
+    set_(coeffs(), mesh),
     UName_(word::null),
     omega_(0),
     nBlades_(0),
@@ -517,10 +522,10 @@ Foam::fv::rotorDiskSource::rotorDiskSource
     inletVelocity_(Zero),
     tipEffect_(1),
     flap_(),
-    x_(cells().size(), Zero),
-    R_(cells().size(), I),
-    invR_(cells().size(), I),
-    area_(cells().size(), Zero),
+    x_(set_.cells().size(), Zero),
+    R_(set_.cells().size(), I),
+    invR_(set_.cells().size(), I),
+    area_(set_.cells().size(), Zero),
     coordSys_("rotorCoordSys", vector::zero, axesRotation(sphericalTensor::I)),
     cylindrical_(),
     rMax_(0),
@@ -625,10 +630,17 @@ void Foam::fv::rotorDiskSource::addSup
 }
 
 
+void Foam::fv::rotorDiskSource::updateMesh(const mapPolyMesh& mpm)
+{
+    set_.updateMesh(mpm);
+}
+
+
 bool Foam::fv::rotorDiskSource::read(const dictionary& dict)
 {
-    if (cellSetModel::read(dict))
+    if (fvModel::read(dict))
     {
+        set_.read(coeffs());
         readCoeffs();
         return true;
     }

@@ -100,7 +100,8 @@ ${typeName}FvModel${SourceType}
     const fvMesh& mesh
 )
 :
-    cellSetModel(name, modelType, dict, mesh)
+    fvModel(name, modelType, dict, mesh)
+    set_(coeffs(), mesh),
 {
     if (${verbose:-false})
     {

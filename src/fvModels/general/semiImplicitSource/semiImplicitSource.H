@@ -92,7 +92,8 @@ SourceFiles
 #ifndef semiImplicitSource_H
 #define semiImplicitSource_H
 
-#include "cellSetModel.H"
+#include "fvModel.H"
+#include "fvCellSet.H"
 #include "HashPtrTable.H"
 #include "objectFunction1.H"
 
@@ -109,7 +110,7 @@ namespace fv
 
 class semiImplicitSource
 :
-    public cellSetModel
+    public fvModel
 {
 public:
 
@@ -129,6 +130,9 @@ public:
 private:
 
     // Private member data
+
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
         //- Volume mode
         volumeMode volumeMode_;
@@ -215,6 +219,12 @@ public:
 
             //- Add a source term to a phase equation
             FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_ALPHA_RHO_SUP);
+
+
+        // Mesh motion
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
 
 
         // IO

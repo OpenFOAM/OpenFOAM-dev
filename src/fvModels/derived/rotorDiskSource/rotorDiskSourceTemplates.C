@@ -51,7 +51,7 @@ void Foam::fv::rotorDiskSource::calculate
     scalar AOAmax = -great;
     scalar powerEff = 0;
 
-    const labelList& cells = this->cells();
+    const labelList& cells = set_.cells();
 
     forAll(cells, i)
     {
@@ -187,12 +187,12 @@ void Foam::fv::rotorDiskSource::writeField
 
         Field<Type>& field = tfield.ref().primitiveFieldRef();
 
-        if (cells().size() != values.size())
+        const labelList& cells = set_.cells();
+
+        if (cells.size() != values.size())
         {
             FatalErrorInFunction << abort(FatalError);
         }
-
-        const labelList& cells = this->cells();
 
         forAll(cells, i)
         {

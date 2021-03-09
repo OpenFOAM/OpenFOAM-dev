@@ -63,7 +63,8 @@ SourceFiles
 #ifndef massSource_H
 #define massSource_H
 
-#include "cellSetModel.H"
+#include "fvModel.H"
+#include "fvCellSet.H"
 #include "HashPtrTable.H"
 #include "objectFunction1.H"
 
@@ -80,9 +81,12 @@ namespace fv
 
 class massSource
 :
-    public cellSetModel
+    public fvModel
 {
     // Private Data
+
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
         //- Name of the phase
         word phaseName_;
@@ -161,7 +165,7 @@ public:
         //- Construct from explicit source name and mesh
         massSource
         (
-            const word& sourceName,
+            const word& name,
             const word& modelType,
             const dictionary& dict,
             const fvMesh& mesh
@@ -203,6 +207,12 @@ public:
 
             //- Add a source term to a phase equation
             FOR_ALL_FIELD_TYPES(DEFINE_FV_MODEL_ADD_ALPHA_RHO_SUP);
+
+
+        // Mesh motion
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
 
 
         // IO

@@ -65,7 +65,8 @@ SourceFiles
 #ifndef explicitPorositySource_H
 #define explicitPorositySource_H
 
-#include "cellSetModel.H"
+#include "fvModel.H"
+#include "fvCellSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -84,9 +85,12 @@ namespace fv
 
 class explicitPorositySource
 :
-    public cellSetModel
+    public fvModel
 {
     // Private data
+
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
         //- Names of the velocity fields
         wordList UNames_;
@@ -170,6 +174,12 @@ public:
                 fvMatrix<vector>& eqn,
                 const word& fieldName
             ) const;
+
+
+        // Mesh motion
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
 
 
         // IO

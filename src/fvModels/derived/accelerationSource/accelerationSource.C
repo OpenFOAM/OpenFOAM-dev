@@ -61,7 +61,8 @@ Foam::fv::accelerationSource::accelerationSource
     const fvMesh& mesh
 )
 :
-    cellSetModel(name, modelType, dict, mesh),
+    fvModel(name, modelType, dict, mesh),
+    set_(coeffs(), mesh),
     UName_(word::null),
     velocity_(nullptr)
 {
@@ -110,10 +111,17 @@ void Foam::fv::accelerationSource::addSup
 }
 
 
+void Foam::fv::accelerationSource::updateMesh(const mapPolyMesh& mpm)
+{
+    set_.updateMesh(mpm);
+}
+
+
 bool Foam::fv::accelerationSource::read(const dictionary& dict)
 {
-    if (cellSetModel::read(dict))
+    if (fvModel::read(dict))
     {
+        set_.read(coeffs());
         readCoeffs();
         return true;
     }

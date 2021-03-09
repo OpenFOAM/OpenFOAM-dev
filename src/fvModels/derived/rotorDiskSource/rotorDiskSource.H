@@ -100,7 +100,8 @@ SourceFiles
 #ifndef rotorDiskSource_H
 #define rotorDiskSource_H
 
-#include "cellSetModel.H"
+#include "fvModel.H"
+#include "fvCellSet.H"
 #include "cylindricalCS.H"
 #include "cylindrical.H"
 #include "NamedEnum.H"
@@ -125,7 +126,7 @@ namespace fv
 
 class rotorDiskSource
 :
-    public cellSetModel
+    public fvModel
 {
 public:
 
@@ -145,7 +146,7 @@ public:
     static const NamedEnum<inletFlowType, 3> inletFlowTypeNames_;
 
 
-protected:
+private:
 
     // Helper structures to encapsulate flap and trim data
     // Note: all input in degrees (converted to radians internally)
@@ -158,7 +159,10 @@ protected:
         };
 
 
-    // Protected data
+    // Private data
+
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
         //- Name of the velocity field
         word UName_;
@@ -282,6 +286,8 @@ public:
             //  Positive anti-clockwise when looking along -ve lift direction
             inline scalar omega() const;
 
+            inline const fvCellSet& set() const;
+
             //- Return the cell centre positions in local rotor frame
             // (Cylindrical r, theta, z)
             inline const List<point>& x() const;
@@ -328,6 +334,12 @@ public:
                 fvMatrix<vector>& eqn,
                 const word& fieldName
             ) const;
+
+
+        // Mesh motion
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
 
 
         // IO

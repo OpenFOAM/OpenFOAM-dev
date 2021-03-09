@@ -120,9 +120,10 @@ SourceFiles
 #ifndef solidificationMeltingSource_H
 #define solidificationMeltingSource_H
 
+#include "fvModel.H"
+#include "fvCellSet.H"
 #include "fvMesh.H"
 #include "volFields.H"
-#include "cellSetModel.H"
 #include "NamedEnum.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -138,7 +139,7 @@ namespace fv
 
 class solidificationMeltingSource
 :
-    public cellSetModel
+    public fvModel
 {
 public:
 
@@ -154,6 +155,9 @@ public:
 private:
 
     // Private Data
+
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
         //- Temperature at which isotherm melting occurs
         //  and not isotherm melting starts e.g. eutectic [K]
@@ -240,7 +244,7 @@ public:
         //- Construct from explicit source name and mesh
         solidificationMeltingSource
         (
-            const word& sourceName,
+            const word& name,
             const word& modelType,
             const dictionary& dict,
             const fvMesh& mesh
@@ -296,6 +300,12 @@ public:
                 fvMatrix<vector>& eqn,
                 const word& fieldName
             ) const;
+
+
+        // Mesh motion
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
 
 
         // IO

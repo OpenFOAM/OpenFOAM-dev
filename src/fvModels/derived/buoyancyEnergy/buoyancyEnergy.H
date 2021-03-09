@@ -91,7 +91,7 @@ public:
         //- Construct from explicit source name and mesh
         buoyancyEnergy
         (
-            const word& sourceName,
+            const word& name,
             const word& modelType,
             const dictionary& dict,
             const fvMesh& mesh

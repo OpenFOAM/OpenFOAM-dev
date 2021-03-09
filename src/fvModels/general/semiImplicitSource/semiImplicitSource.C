@@ -39,7 +39,7 @@ namespace Foam
 
         addToRunTimeSelectionTable
         (
-            cellSetModel,
+            fvModel,
             semiImplicitSource,
             dictionary
         );
@@ -68,7 +68,7 @@ void Foam::fv::semiImplicitSource::readCoeffs()
     switch (volumeMode_)
     {
         case volumeMode::absolute:
-            VDash_ = V();
+            VDash_ = set_.V();
             break;
         case volumeMode::specific:
             VDash_ = 1;
@@ -143,7 +143,7 @@ void Foam::fv::semiImplicitSource::addSupType
     );
 
     // Explicit source function for the field
-    UIndirectList<Type>(Su, cells()) =
+    UIndirectList<Type>(Su, set_.cells()) =
         fieldSu_[fieldName]->value<Type>(t)/VDash_;
 
     volScalarField::Internal Sp
@@ -167,7 +167,7 @@ void Foam::fv::semiImplicitSource::addSupType
     );
 
     // Implicit source function for the field
-    UIndirectList<scalar>(Sp, cells()) =
+    UIndirectList<scalar>(Sp, set_.cells()) =
         fieldSp_[fieldName]->value(t)/VDash_;
 
     eqn += Su + fvm::SuSp(Sp, psi);
@@ -209,7 +209,8 @@ Foam::fv::semiImplicitSource::semiImplicitSource
     const fvMesh& mesh
 )
 :
-    cellSetModel(name, modelType, dict, mesh),
+    fvModel(name, modelType, dict, mesh),
+    set_(coeffs(), mesh),
     volumeMode_(volumeMode::absolute),
     VDash_(1)
 {
@@ -244,10 +245,17 @@ FOR_ALL_FIELD_TYPES
 );
 
 
+void Foam::fv::semiImplicitSource::updateMesh(const mapPolyMesh& mpm)
+{
+    set_.updateMesh(mpm);
+}
+
+
 bool Foam::fv::semiImplicitSource::read(const dictionary& dict)
 {
-    if (cellSetModel::read(dict))
+    if (fvModel::read(dict))
     {
+        set_.read(coeffs());
         readCoeffs();
         return true;
     }

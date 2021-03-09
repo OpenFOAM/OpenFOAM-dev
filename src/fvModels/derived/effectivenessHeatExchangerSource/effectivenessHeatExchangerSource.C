@@ -175,7 +175,8 @@ Foam::fv::effectivenessHeatExchangerSource::effectivenessHeatExchangerSource
     const fvMesh& mesh
 )
 :
-    cellSetModel(name, modelType, dict, mesh),
+    fvModel(name, modelType, dict, mesh),
+    set_(coeffs(), mesh),
     secondaryMassFlowRate_(NaN),
     secondaryInletT_(NaN),
     primaryInletT_(NaN),
@@ -249,8 +250,10 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
        *(secondaryInletT_ - primaryInletT_)
        *(CpfMean/faceZoneArea_)*mag(totalphi);
 
+    const labelList& cells = set_.cells();
+
     const volScalarField& T = mesh().lookupObject<volScalarField>(TName_);
-    const scalarField TCells(T, cells());
+    const scalarField TCells(T, cells);
     scalar Tref = 0;
     if (Qt > 0)
     {
@@ -263,7 +266,7 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
         reduce(Tref, minOp<scalar>());
     }
 
-    scalarField deltaTCells(cells().size(), 0);
+    scalarField deltaTCells(cells.size(), 0);
     forAll(deltaTCells, i)
     {
         if (Qt > 0)
@@ -280,15 +283,13 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
     const scalarField& V = mesh().V();
     scalar sumWeight = 0;
 
-    const labelList& cells = this->cells();
-
     forAll(cells, i)
     {
         sumWeight += V[cells[i]]*mag(U[cells[i]])*deltaTCells[i];
     }
     reduce(sumWeight, sumOp<scalar>());
 
-    if (this->V() > vSmall && mag(Qt) > vSmall)
+    if (set_.V() > vSmall && mag(Qt) > vSmall)
     {
         scalarField& heSource = eqn.source();
 
@@ -310,10 +311,20 @@ void Foam::fv::effectivenessHeatExchangerSource::addSup
 }
 
 
+void Foam::fv::effectivenessHeatExchangerSource::updateMesh
+(
+    const mapPolyMesh& mpm
+)
+{
+    set_.updateMesh(mpm);
+}
+
+
 bool Foam::fv::effectivenessHeatExchangerSource::read(const dictionary& dict)
 {
-    if (cellSetModel::read(dict))
+    if (fvModel::read(dict))
     {
+        set_.read(coeffs());
         readCoeffs();
         setZone();
         return true;

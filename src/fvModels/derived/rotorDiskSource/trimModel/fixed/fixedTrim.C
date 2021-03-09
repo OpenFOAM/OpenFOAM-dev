@@ -49,7 +49,7 @@ Foam::fixedTrim::fixedTrim
 )
 :
     trimModel(rotor, dict, typeName),
-    thetag_(rotor.cells().size(), 0.0)
+    thetag_(rotor.set().cells().size(), 0.0)
 {
     read(dict);
 }

@@ -86,7 +86,7 @@ void Foam::fv::VoFSolidificationMeltingSource::update() const
     const volScalarField CpVoF(thermo.thermo1().Cp());
     const volScalarField& alphaVoF = thermo.alpha1();
 
-    const labelList& cells = this->cells();
+    const labelList& cells = set_.cells();
 
     forAll(cells, i)
     {
@@ -126,13 +126,14 @@ Foam::word Foam::fv::VoFSolidificationMeltingSource::alphaSolidName() const
 
 Foam::fv::VoFSolidificationMeltingSource::VoFSolidificationMeltingSource
 (
-    const word& sourceName,
+    const word& name,
     const word& modelType,
     const dictionary& dict,
     const fvMesh& mesh
 )
 :
-    cellSetModel(sourceName, modelType, dict, mesh),
+    fvModel(name, modelType, dict, mesh),
+    set_(coeffs(), mesh),
     alphaSolidT_(),
     L_("L", dimEnergy/dimMass, NaN),
     relax_(NaN),
@@ -218,7 +219,7 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
     scalarField& Sp = eqn.diag();
     const scalarField& V = mesh().V();
 
-    const labelList& cells = this->cells();
+    const labelList& cells = set_.cells();
 
     forAll(cells, i)
     {
@@ -233,10 +234,20 @@ void Foam::fv::VoFSolidificationMeltingSource::addSup
 }
 
 
+void Foam::fv::VoFSolidificationMeltingSource::updateMesh
+(
+    const mapPolyMesh& mpm
+)
+{
+    set_.updateMesh(mpm);
+}
+
+
 bool Foam::fv::VoFSolidificationMeltingSource::read(const dictionary& dict)
 {
-    if (cellSetModel::read(dict))
+    if (fvModel::read(dict))
     {
+        set_.read(coeffs());
         readCoeffs();
         return true;
     }

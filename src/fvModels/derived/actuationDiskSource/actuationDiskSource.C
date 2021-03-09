@@ -98,7 +98,8 @@ Foam::fv::actuationDiskSource::actuationDiskSource
     const fvMesh& mesh
 )
 :
-    cellSetModel(name, modelType, dict, mesh),
+    fvModel(name, modelType, dict, mesh),
+    set_(coeffs(), mesh),
     UName_(word::null),
     diskDir_(vector::uniform(NaN)),
     Cp_(NaN),
@@ -129,12 +130,12 @@ void Foam::fv::actuationDiskSource::addSup
     vectorField& Usource = eqn.source();
     const vectorField& U = eqn.psi();
 
-    if (V() > vSmall)
+    if (set_.V() > vSmall)
     {
         addActuationDiskAxialInertialResistance
         (
             Usource,
-            cells(),
+            set_.cells(),
             cellsV,
             geometricOneField(),
             U
@@ -154,12 +155,12 @@ void Foam::fv::actuationDiskSource::addSup
     vectorField& Usource = eqn.source();
     const vectorField& U = eqn.psi();
 
-    if (V() > vSmall)
+    if (set_.V() > vSmall)
     {
         addActuationDiskAxialInertialResistance
         (
             Usource,
-            cells(),
+            set_.cells(),
             cellsV,
             rho,
             U
@@ -168,10 +169,17 @@ void Foam::fv::actuationDiskSource::addSup
 }
 
 
+void Foam::fv::actuationDiskSource::updateMesh(const mapPolyMesh& mpm)
+{
+    set_.updateMesh(mpm);
+}
+
+
 bool Foam::fv::actuationDiskSource::read(const dictionary& dict)
 {
-    if (cellSetModel::read(dict))
+    if (fvModel::read(dict))
     {
+        set_.read(coeffs());
         readCoeffs();
         return true;
     }

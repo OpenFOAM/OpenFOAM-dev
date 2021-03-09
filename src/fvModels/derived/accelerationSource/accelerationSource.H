@@ -58,7 +58,8 @@ SourceFiles
 #ifndef accelerationSource_H
 #define accelerationSource_H
 
-#include "cellSetModel.H"
+#include "fvModel.H"
+#include "fvCellSet.H"
 #include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -74,9 +75,12 @@ namespace fv
 
 class accelerationSource
 :
-    public cellSetModel
+    public fvModel
 {
     // Private Data
+
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
         //- Name of the velocity field
         word UName_;
@@ -157,6 +161,12 @@ public:
                 fvMatrix<vector>& eqn,
                 const word& fieldName
             ) const;
+
+
+        // Mesh motion
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
 
 
         // IO

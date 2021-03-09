@@ -78,9 +78,10 @@ SourceFiles
 #ifndef VoFSolidificationMeltingSource_H
 #define VoFSolidificationMeltingSource_H
 
+#include "fvModel.H"
+#include "fvCellSet.H"
 #include "fvMesh.H"
 #include "volFields.H"
-#include "cellSetModel.H"
 #include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -96,9 +97,12 @@ namespace fv
 
 class VoFSolidificationMeltingSource
 :
-    public cellSetModel
+    public fvModel
 {
     // Private Data
+
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
         //- Solid fraction as a function of temperature
         autoPtr<Function1<scalar>> alphaSolidT_;
@@ -149,7 +153,7 @@ public:
         //- Construct from explicit source name and mesh
         VoFSolidificationMeltingSource
         (
-            const word& sourceName,
+            const word& name,
             const word& modelType,
             const dictionary& dict,
             const fvMesh& mesh
@@ -188,6 +192,12 @@ public:
                 fvMatrix<vector>& eqn,
                 const word& fieldName
             ) const;
+
+
+        // Mesh motion
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
 
 
         // IO

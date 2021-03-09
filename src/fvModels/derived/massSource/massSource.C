@@ -123,10 +123,12 @@ void Foam::fv::massSource::addGeneralSupType
     const scalar massFlowRate = massFlowRate_->value(t);
     const Type value = fieldValues_[fieldName]->value<Type>(t);
 
-    forAll(cells(), i)
+    const labelList& cells = set_.cells();
+
+    forAll(cells, i)
     {
-        eqn.source()[cells()[i]] -=
-            mesh().V()[cells()[i]]/V()*massFlowRate*value;
+        eqn.source()[cells[i]] -=
+            mesh().V()[cells[i]]/set_.V()*massFlowRate*value;
     }
 }
 
@@ -148,14 +150,17 @@ void Foam::fv::massSource::addSupType
     const word& fieldName
 ) const
 {
+    const labelList& cells = set_.cells();
+
     if (fieldName == rhoName_)
     {
         const scalar t = mesh().time().value();
         const scalar massFlowRate = massFlowRate_->value(t);
 
-        forAll(cells(), i)
+        forAll(cells, i)
         {
-            eqn.source()[cells()[i]] -= mesh().V()[cells()[i]]/V()*massFlowRate;
+            eqn.source()[cells[i]] -=
+                mesh().V()[cells[i]]/set_.V()*massFlowRate;
         }
     }
     else if (fieldName == heName_ && fieldValues_.found(TName_))
@@ -178,13 +183,13 @@ void Foam::fv::massSource::addSupType
             );
         const scalarField hs
         (
-            thermo.hs(scalarField(cells().size(), T), cells())
+            thermo.hs(scalarField(cells.size(), T), cells)
         );
 
-        forAll(cells(), i)
+        forAll(cells, i)
         {
-            eqn.source()[cells()[i]] -=
-                mesh().V()[cells()[i]]/V()*massFlowRate*hs[i];
+            eqn.source()[cells[i]] -=
+                mesh().V()[cells[i]]/set_.V()*massFlowRate*hs[i];
         }
     }
     else
@@ -229,7 +234,8 @@ Foam::fv::massSource::massSource
     const fvMesh& mesh
 )
 :
-    cellSetModel(name, modelType, dict, mesh),
+    fvModel(name, modelType, dict, mesh),
+    set_(coeffs(), mesh),
     phaseName_(),
     rhoName_(),
     heName_(),
@@ -288,10 +294,17 @@ FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_RHO_SUP, fv::massSource);
 FOR_ALL_FIELD_TYPES(IMPLEMENT_FV_MODEL_ADD_ALPHA_RHO_SUP, fv::massSource);
 
 
+void Foam::fv::massSource::updateMesh(const mapPolyMesh& mpm)
+{
+    set_.updateMesh(mpm);
+}
+
+
 bool Foam::fv::massSource::read(const dictionary& dict)
 {
-    if (cellSetModel::read(dict))
+    if (fvModel::read(dict))
     {
+        set_.read(coeffs());
         readCoeffs();
         return true;
     }

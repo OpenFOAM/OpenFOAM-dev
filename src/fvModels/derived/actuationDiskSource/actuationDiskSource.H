@@ -74,7 +74,8 @@ SourceFiles
 #ifndef actuationDiskSource_H
 #define actuationDiskSource_H
 
-#include "cellSetModel.H"
+#include "fvModel.H"
+#include "fvCellSet.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -89,11 +90,14 @@ namespace fv
 
 class actuationDiskSource
 :
-    public cellSetModel
+    public fvModel
 {
 protected:
 
-    // Protected data
+    // Protected Data
+
+        //- The set of cells the fvConstraint applies to
+        fvCellSet set_;
 
         //- Name of the velocity field
         word UName_;
@@ -187,6 +191,12 @@ public:
                 fvMatrix<vector>& eqn,
                 const word& fieldName
             ) const;
+
+
+        // Mesh motion
+
+            //- Update for mesh changes
+            virtual void updateMesh(const mapPolyMesh&);
 
 
         // IO

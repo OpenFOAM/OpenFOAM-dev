@@ -80,12 +80,12 @@ void Foam::fv::radialActuationDiskSource::addSup
     vectorField& Usource = eqn.source();
     const vectorField& U = eqn.psi();
 
-    if (V() > vSmall)
+    if (set_.V() > vSmall)
     {
         addRadialActuationDiskAxialInertialResistance
         (
             Usource,
-            cells(),
+            set_.cells(),
             cellsV,
             geometricOneField(),
             U
@@ -105,12 +105,12 @@ void Foam::fv::radialActuationDiskSource::addSup
     vectorField& Usource = eqn.source();
     const vectorField& U = eqn.psi();
 
-    if (V() > vSmall)
+    if (set_.V() > vSmall)
     {
         addRadialActuationDiskAxialInertialResistance
         (
             Usource,
-            cells(),
+            set_.cells(),
             cellsV,
             rho,
             U
