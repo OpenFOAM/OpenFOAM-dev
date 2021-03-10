@@ -54,7 +54,7 @@ Foam::dimensionSet Foam::fvModel::sourceDims
 template<class Type, class ... AlphaRhoFieldTypes>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
 (
-    GeometricField<Type, fvPatchField, volMesh>& field,
+    const GeometricField<Type, fvPatchField, volMesh>& field,
     const word& fieldName,
     const dimensionSet& ds,
     const AlphaRhoFieldTypes& ... alphaRhos
@@ -84,7 +84,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
 template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
 (
-    GeometricField<Type, fvPatchField, volMesh>& field
+    const GeometricField<Type, fvPatchField, volMesh>& field
 ) const
 {
     return this->source(field, field.name());
@@ -94,7 +94,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
 template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
 (
-    GeometricField<Type, fvPatchField, volMesh>& field,
+    const GeometricField<Type, fvPatchField, volMesh>& field,
     const word& fieldName
 ) const
 {
@@ -106,7 +106,7 @@ template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
 (
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& field
+    const GeometricField<Type, fvPatchField, volMesh>& field
 ) const
 {
     return this->source(field, field.name());
@@ -117,7 +117,7 @@ template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
 (
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& field,
+    const GeometricField<Type, fvPatchField, volMesh>& field,
     const word& fieldName
 ) const
 {
@@ -130,7 +130,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& field
+    const GeometricField<Type, fvPatchField, volMesh>& field
 ) const
 {
     return this->source(field, field.name());
@@ -142,7 +142,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModel::source
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& field,
+    const GeometricField<Type, fvPatchField, volMesh>& field,
     const word& fieldName
 ) const
 {

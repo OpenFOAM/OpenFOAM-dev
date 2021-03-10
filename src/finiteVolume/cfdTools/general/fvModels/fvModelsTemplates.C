@@ -28,7 +28,7 @@ License
 template<class Type, class ... AlphaRhoFieldTypes>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
 (
-    GeometricField<Type, fvPatchField, volMesh>& field,
+    const GeometricField<Type, fvPatchField, volMesh>& field,
     const word& fieldName,
     const dimensionSet& ds,
     const AlphaRhoFieldTypes& ... alphaRhos
@@ -75,7 +75,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
 template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
 (
-    GeometricField<Type, fvPatchField, volMesh>& field
+    const GeometricField<Type, fvPatchField, volMesh>& field
 ) const
 {
     return this->source(field, field.name());
@@ -85,7 +85,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
 template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
 (
-    GeometricField<Type, fvPatchField, volMesh>& field,
+    const GeometricField<Type, fvPatchField, volMesh>& field,
     const word& fieldName
 ) const
 {
@@ -97,7 +97,7 @@ template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
 (
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& field
+    const GeometricField<Type, fvPatchField, volMesh>& field
 ) const
 {
     return this->source(rho, field, field.name());
@@ -108,7 +108,7 @@ template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
 (
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& field,
+    const GeometricField<Type, fvPatchField, volMesh>& field,
     const word& fieldName
 ) const
 {
@@ -121,7 +121,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& field
+    const GeometricField<Type, fvPatchField, volMesh>& field
 ) const
 {
     return this->source(alpha, rho, field, field.name());
@@ -133,7 +133,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
 (
     const volScalarField& alpha,
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& field,
+    const GeometricField<Type, fvPatchField, volMesh>& field,
     const word& fieldName
 ) const
 {
@@ -146,7 +146,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
 (
     const geometricOneField& alpha,
     const geometricOneField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& field
+    const GeometricField<Type, fvPatchField, volMesh>& field
 ) const
 {
     return this->source(field, field.name());
@@ -158,7 +158,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
 (
     const volScalarField& alpha,
     const geometricOneField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& field
+    const GeometricField<Type, fvPatchField, volMesh>& field
 ) const
 {
     volScalarField one
@@ -185,7 +185,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
 (
     const geometricOneField& alpha,
     const volScalarField& rho,
-    GeometricField<Type, fvPatchField, volMesh>& field
+    const GeometricField<Type, fvPatchField, volMesh>& field
 ) const
 {
     return this->source(rho, field, field.name());
@@ -197,7 +197,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::source
 template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::d2dt2
 (
-    GeometricField<Type, fvPatchField, volMesh>& field
+    const GeometricField<Type, fvPatchField, volMesh>& field
 ) const
 {
     return this->d2dt2(field, field.name());
@@ -207,7 +207,7 @@ Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::d2dt2
 template<class Type>
 Foam::tmp<Foam::fvMatrix<Type>> Foam::fvModels::d2dt2
 (
-    GeometricField<Type, fvPatchField, volMesh>& field,
+    const GeometricField<Type, fvPatchField, volMesh>& field,
     const word& fieldName
 ) const
 {

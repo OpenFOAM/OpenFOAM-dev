@@ -109,7 +109,7 @@ protected:
         template<class Type, class ... AlphaRhoFieldTypes>
         tmp<fvMatrix<Type>> source
         (
-            GeometricField<Type, fvPatchField, volMesh>& field,
+            const GeometricField<Type, fvPatchField, volMesh>& field,
             const word& fieldName,
             const dimensionSet& ds,
             const AlphaRhoFieldTypes& ... alphaRhos
@@ -273,14 +273,14 @@ public:
             template<class Type>
             tmp<fvMatrix<Type>> source
             (
-                GeometricField<Type, fvPatchField, volMesh>& field
+                const GeometricField<Type, fvPatchField, volMesh>& field
             ) const;
 
             //- Return source for an equation with a specified name
             template<class Type>
             tmp<fvMatrix<Type>> source
             (
-                GeometricField<Type, fvPatchField, volMesh>& field,
+                const GeometricField<Type, fvPatchField, volMesh>& field,
                 const word& fieldName
             ) const;
 
@@ -289,7 +289,7 @@ public:
             tmp<fvMatrix<Type>> source
             (
                 const volScalarField& rho,
-                GeometricField<Type, fvPatchField, volMesh>& field
+                const GeometricField<Type, fvPatchField, volMesh>& field
             ) const;
 
             //- Return source for a compressible equation with a specified name
@@ -297,7 +297,7 @@ public:
             tmp<fvMatrix<Type>> source
             (
                 const volScalarField& rho,
-                GeometricField<Type, fvPatchField, volMesh>& field,
+                const GeometricField<Type, fvPatchField, volMesh>& field,
                 const word& fieldName
             ) const;
 
@@ -307,7 +307,7 @@ public:
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
-                GeometricField<Type, fvPatchField, volMesh>& field
+                const GeometricField<Type, fvPatchField, volMesh>& field
             ) const;
 
             //- Return source for a phase equation with a specified name
@@ -316,7 +316,7 @@ public:
             (
                 const volScalarField& alpha,
                 const volScalarField& rho,
-                GeometricField<Type, fvPatchField, volMesh>& field,
+                const GeometricField<Type, fvPatchField, volMesh>& field,
                 const word& fieldName
             ) const;
 
