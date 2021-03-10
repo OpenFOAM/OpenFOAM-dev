@@ -1,0 +1,81 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      SurfaceFilmProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+surfaceFilmModel thermoSingleLayer;
+
+regionName      plateRegion;
+
+thermophysicalProperties
+{
+    type        liquid;
+
+    liquid      liquid;
+
+    useReferenceValues  yes;
+    pRef    1e5;
+    TRef    300;
+}
+
+viscosity
+{
+    model       liquid;
+}
+
+deltaWet        1e-12;
+
+hydrophilic     no;
+
+transfer
+{
+    VoFPatchTransfer
+    {
+        deltaFactorToVoF  1.5;
+        alphaToVoF        0.9;
+
+        deltaFactorToFilm 0.9;
+        alphaToFilm       0.86;
+
+        transferRateCoeff 0.1;
+    }
+}
+
+momentumTransport
+{
+    model       laminar;
+    Cf          0.001;
+}
+
+upperSurfaceModels
+{
+    heatTransfer
+    {
+        model    constant;
+        c0       1;
+    }
+}
+
+lowerSurfaceModels
+{
+    heatTransfer
+    {
+        model    constant;
+        c0       1;
+    }
+}
+
+
+// ************************************************************************* //

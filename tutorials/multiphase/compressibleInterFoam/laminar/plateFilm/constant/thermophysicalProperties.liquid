@@ -1,0 +1,59 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      thermophysicalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+thermoType
+{
+    type            heRhoThermo;
+    mixture         pureMixture;
+    properties      liquid;
+    energy          sensibleInternalEnergy;
+}
+
+"(mixture|liquids)"
+{
+    liquid
+    {
+        type H2O;
+
+        // Set Cp constant and the corresponding linear function for h
+        // for compatibility with the current hard-coded thermodynamics model
+        // in surfaceFilm
+
+        Cp
+        {
+            a   4200;
+            b   0;
+            c   0;
+            d   0;
+            e   0;
+            f   0;
+        }
+
+        h
+        {
+            a   -1252230; // -Cp*TRef where TRef = 298.15
+            b   4200;
+            c   0;
+            d   0;
+            e   0;
+            f   0;
+        }
+    }
+}
+
+
+// ************************************************************************* //
