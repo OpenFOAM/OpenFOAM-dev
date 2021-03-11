@@ -46,6 +46,20 @@ void SSG<BasicMomentumTransportModel>::correctNut()
 }
 
 
+template<class BasicMomentumTransportModel>
+tmp<fvScalarMatrix> SSG<BasicMomentumTransportModel>::epsilonSource() const
+{
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix
+        (
+            epsilon_,
+            dimVolume*this->rho_.dimensions()*epsilon_.dimensions()/dimTime
+        )
+    );
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
@@ -309,6 +323,7 @@ void SSG<BasicMomentumTransportModel>::correct()
      ==
         Ceps1_*alpha*rho*G*epsilon_/k_
       - fvm::Sp(Ceps2_*alpha*rho*epsilon_/k_, epsilon_)
+      + epsilonSource()
       + fvModels.source(alpha, rho, epsilon_)
     );
 
@@ -363,6 +378,7 @@ void SSG<BasicMomentumTransportModel>::correct()
           + C4_*dev(twoSymm(b&S))
           + C5_*twoSymm(b&Omega)
         )
+      + this->RSource()
       + fvModels.source(alpha, rho, R)
     );
 

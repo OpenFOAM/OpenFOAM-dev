@@ -46,6 +46,20 @@ void LRR<BasicMomentumTransportModel>::correctNut()
 }
 
 
+template<class BasicMomentumTransportModel>
+tmp<fvScalarMatrix> LRR<BasicMomentumTransportModel>::epsilonSource() const
+{
+    return tmp<fvScalarMatrix>
+    (
+        new fvScalarMatrix
+        (
+            epsilon_,
+            dimVolume*this->rho_.dimensions()*epsilon_.dimensions()/dimTime
+        )
+    );
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
@@ -299,6 +313,7 @@ void LRR<BasicMomentumTransportModel>::correct()
      ==
         Ceps1_*alpha*rho*G*epsilon_/k_
       - fvm::Sp(Ceps2_*alpha*rho*epsilon_/k_, epsilon_)
+      + epsilonSource()
       + fvModels.source(alpha, rho, epsilon_)
     );
 
@@ -343,6 +358,7 @@ void LRR<BasicMomentumTransportModel>::correct()
         alpha*rho*P
       - (2.0/3.0*(1 - C1_)*I)*alpha*rho*epsilon_
       - C2_*alpha*rho*dev(P)
+      + this->RSource()
       + fvModels.source(alpha, rho, R)
     );
 
