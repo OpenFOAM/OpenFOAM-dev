@@ -176,7 +176,7 @@ LRR<BasicMomentumTransportModel>::LRR
     (
         IOobject
         (
-            "k",
+            IOobject::groupName("k", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::NO_READ,
@@ -188,7 +188,7 @@ LRR<BasicMomentumTransportModel>::LRR
     (
         IOobject
         (
-            "epsilon",
+            IOobject::groupName("epsilon", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,

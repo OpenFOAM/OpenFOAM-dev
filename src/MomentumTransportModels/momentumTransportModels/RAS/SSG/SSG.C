@@ -185,7 +185,7 @@ SSG<BasicMomentumTransportModel>::SSG
     (
         IOobject
         (
-            "k",
+            IOobject::groupName("k", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::NO_READ,
@@ -197,7 +197,7 @@ SSG<BasicMomentumTransportModel>::SSG
     (
         IOobject
         (
-            "epsilon",
+            IOobject::groupName("epsilon", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,

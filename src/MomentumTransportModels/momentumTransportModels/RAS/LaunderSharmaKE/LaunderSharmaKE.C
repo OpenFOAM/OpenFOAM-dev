@@ -178,7 +178,7 @@ LaunderSharmaKE<BasicMomentumTransportModel>::LaunderSharmaKE
     (
         IOobject
         (
-            "k",
+            IOobject::groupName("k", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -191,7 +191,7 @@ LaunderSharmaKE<BasicMomentumTransportModel>::LaunderSharmaKE
     (
         IOobject
         (
-            "epsilon",
+            IOobject::groupName("epsilon", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,
