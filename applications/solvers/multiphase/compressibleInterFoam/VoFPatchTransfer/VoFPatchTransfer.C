@@ -127,7 +127,8 @@ VoFPatchTransfer::~VoFPatchTransfer()
 void VoFPatchTransfer::correct
 (
     scalarField& availableMass,
-    scalarField& massToTransfer
+    scalarField& massToTransfer,
+    vectorField& momentumToTransfer
 )
 {
     NotImplemented;
@@ -138,6 +139,7 @@ void VoFPatchTransfer::correct
 (
     scalarField& availableMass,
     scalarField& massToTransfer,
+    vectorField& momentumToTransfer,
     scalarField& energyToTransfer
 )
 {
@@ -161,11 +163,16 @@ void VoFPatchTransfer::correct
         )
     );
 
+    const volVectorField& UVoF
+    (
+        film.primaryMesh().lookupObject<volVectorField>("U")
+    );
+
+    const volScalarField& alphaVoF = thermo.alpha1();
+    const volScalarField& rhoVoF = thermo.thermo1().rho()();
     const volScalarField& heVoF = thermo.thermo1().he();
     const volScalarField& TVoF = thermo.thermo1().T();
     const volScalarField CpVoF(thermo.thermo1().Cp());
-    const volScalarField& rhoVoF = thermo.thermo1().rho()();
-    const volScalarField& alphaVoF = thermo.alpha1();
 
     forAll(patchIDs_, pidi)
     {
@@ -190,6 +197,15 @@ void VoFPatchTransfer::correct
             );
             film.toRegion(patchi, deltaCoeffs);
 
+            scalarField alphap(alphaVoF.boundaryField()[primaryPatchi]);
+            film.toRegion(patchi, alphap);
+
+            scalarField rhop(rhoVoF.boundaryField()[primaryPatchi]);
+            film.toRegion(patchi, rhop);
+
+            vectorField Up(UVoF.boundaryField()[primaryPatchi]);
+            film.toRegion(patchi, Up);
+
             scalarField hp(heVoF.boundaryField()[primaryPatchi]);
             film.toRegion(patchi, hp);
 
@@ -198,12 +214,6 @@ void VoFPatchTransfer::correct
 
             scalarField Cpp(CpVoF.boundaryField()[primaryPatchi]);
             film.toRegion(patchi, Cpp);
-
-            scalarField rhop(rhoVoF.boundaryField()[primaryPatchi]);
-            film.toRegion(patchi, rhop);
-
-            scalarField alphap(alphaVoF.boundaryField()[primaryPatchi]);
-            film.toRegion(patchi, alphap);
 
             scalarField Vp
             (
@@ -234,6 +244,7 @@ void VoFPatchTransfer::correct
                         transferRateCoeff_*delta[celli]*rho[celli]*magSf[celli];
 
                     massToTransfer[celli] += dMass;
+                    momentumToTransfer[celli] += dMass*film.U()[celli];
                     energyToTransfer[celli] += dMass*film.h()[celli];
                 }
 
@@ -248,6 +259,7 @@ void VoFPatchTransfer::correct
                         -transferRateCoeff_*alphap[facei]*rhop[facei]*Vp[facei];
 
                     massToTransfer[celli] += dMass;
+                    momentumToTransfer[celli] += dMass*Up[facei];
                     energyToTransfer[celli] += dMass*hp[facei];
                 }
 

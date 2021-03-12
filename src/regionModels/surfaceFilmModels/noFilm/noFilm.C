@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,6 +88,17 @@ tmp<volScalarField::Internal> noFilm::Srho(const label i) const
         "noFilm::Srho(" + Foam::name(i) + ")",
         mesh_,
         dimensionedScalar(dimMass/dimVolume/dimTime, 0)
+    );
+}
+
+
+tmp<volVectorField::Internal> noFilm::SU() const
+{
+    return volVectorField::Internal::New
+    (
+        IOobject::modelName("SU", typeName),
+        mesh_,
+        dimensionedVector(dimMass/dimVolume/dimTime, Zero)
     );
 }
 

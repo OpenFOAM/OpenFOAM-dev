@@ -141,6 +141,9 @@ protected:
                 //- Parcel diameters originating from film to cloud
                 volScalarField cloudDiameterTrans_;
 
+                //- Film momentum transfer
+                volVectorField primaryMomentumTrans_;
+
 
         // Source term fields
 
@@ -379,6 +382,9 @@ public:
                 //- Return the parcel diameters originating from film to cloud
                 virtual const volScalarField& cloudDiameterTrans() const;
 
+                //- Return momentum transfer source - Eulerian phase only
+                virtual tmp<volVectorField> primaryMomentumTrans() const;
+
 
         // External helper functions
 
@@ -477,21 +483,22 @@ public:
             virtual void evolveRegion();
 
 
-        // Source fields
+        // Primary region source fields
 
-            // Mapped into primary region
+            //- Return total mass source - Eulerian phase only
+            virtual tmp<volScalarField::Internal> Srho() const;
 
-                //- Return total mass source - Eulerian phase only
-                virtual tmp<volScalarField::Internal> Srho() const;
+            //- Return mass source for specie i - Eulerian phase only
+            virtual tmp<volScalarField::Internal> Srho
+            (
+                const label i
+            ) const;
 
-                //- Return mass source for specie i - Eulerian phase only
-                virtual tmp<volScalarField::Internal> Srho
-                (
-                    const label i
-                ) const;
+            //- Return momentum source - Eulerian phase only
+            virtual tmp<volVectorField::Internal> SU() const;
 
-                //- Return enthalpy source - Eulerian phase only
-                virtual tmp<volScalarField::Internal> Sh() const;
+            //- Return enthalpy source - Eulerian phase only
+            virtual tmp<volScalarField::Internal> Sh() const;
 
 
         // I-O

@@ -210,10 +210,16 @@ void kinematicSingleLayer::updateSubmodels()
     ejection_.correct(availableMass_, cloudMassTrans_, cloudDiameterTrans_);
 
     // Update transfer model - mass returned is mass available for transfer
-    transfer_.correct(availableMass_, cloudMassTrans_);
+    transfer_.correct(availableMass_, primaryMassTrans_, primaryMomentumTrans_);
+
+    const volScalarField::Internal rVDt
+    (
+        1/(time().deltaT()*regionMesh().V())
+    );
 
     // Update mass source field
-    rhoSp_ += cloudMassTrans_/regionMesh().V()/time().deltaT();
+    rhoSp_ += rVDt*(cloudMassTrans_() + primaryMassTrans_());
+    USp_ += rVDt*(cloudMassTrans_()*U_() + primaryMomentumTrans_());
 
     momentumTransport_->correct();
 }
@@ -310,11 +316,6 @@ tmp<Foam::fvVectorMatrix> kinematicSingleLayer::solveMomentum
       - fvm::Sp(continuityErr_, U_)
      ==
       - USp_
-
-        // Temporary treatment for the loss of momentum due to mass loss
-        // These transfers are not currently included in USp_
-      - fvm::Sp(rVDt*(cloudMassTrans_() + primaryMassTrans_()), U_)
-
       + forces_.correct(U_)
       + momentumTransport_->Su(U_)
     );
@@ -684,6 +685,21 @@ kinematicSingleLayer::kinematicSingleLayer
         zeroGradientFvPatchScalarField::typeName
     ),
 
+    primaryMomentumTrans_
+    (
+        IOobject
+        (
+            "primaryMomentumTrans",
+            time().timeName(),
+            regionMesh(),
+            IOobject::NO_READ,
+            IOobject::NO_WRITE
+        ),
+        regionMesh(),
+        dimensionedVector(dimMass*dimVelocity, Zero),
+        zeroGradientFvPatchVectorField::typeName
+    ),
+
     rhoSp_
     (
         IOobject
@@ -921,6 +937,7 @@ void kinematicSingleLayer::preEvolveRegion()
     cloudMassTrans_ == dimensionedScalar(dimMass, 0);
     cloudDiameterTrans_ == dimensionedScalar(dimLength, 0);
     primaryMassTrans_ == dimensionedScalar(dimMass, 0);
+    primaryMomentumTrans_ == dimensionedVector(dimMass*dimVelocity, Zero);
 }
 
 
@@ -997,6 +1014,12 @@ const volScalarField& kinematicSingleLayer::cloudDiameterTrans() const
 }
 
 
+tmp<volVectorField> kinematicSingleLayer::primaryMomentumTrans() const
+{
+    return primaryMomentumTrans_;
+}
+
+
 void kinematicSingleLayer::info()
 {
     Info<< "\nSurface film: " << type() << endl;
@@ -1024,12 +1047,40 @@ void kinematicSingleLayer::info()
 
 tmp<volScalarField::Internal> kinematicSingleLayer::Srho() const
 {
-    return volScalarField::Internal::New
+    tmp<volScalarField::Internal> tSrho
     (
-        IOobject::modelName("Srho", typeName),
-        primaryMesh(),
-        dimensionedScalar(dimMass/dimVolume/dimTime, 0)
+        volScalarField::Internal::New
+        (
+            "thermoSingleLayer::Srho",
+            primaryMesh(),
+            dimensionedScalar(dimMass/dimVolume/dimTime, 0)
+        )
     );
+
+    scalarField& Srho = tSrho.ref();
+    const scalarField& V = primaryMesh().V();
+    const scalar dt = time_.deltaTValue();
+
+    forAll(intCoupledPatchIDs(), i)
+    {
+        const label filmPatchi = intCoupledPatchIDs()[i];
+
+        scalarField patchMass =
+            primaryMassTrans_.boundaryField()[filmPatchi];
+
+        toPrimary(filmPatchi, patchMass);
+
+        const label primaryPatchi = primaryPatchIDs()[i];
+        const unallocLabelList& cells =
+            primaryMesh().boundaryMesh()[primaryPatchi].faceCells();
+
+        forAll(patchMass, j)
+        {
+            Srho[cells[j]] += patchMass[j]/(V[cells[j]]*dt);
+        }
+    }
+
+    return tSrho;
 }
 
 
@@ -1044,6 +1095,44 @@ tmp<volScalarField::Internal> kinematicSingleLayer::Srho
         primaryMesh(),
         dimensionedScalar(dimMass/dimVolume/dimTime, 0)
     );
+}
+
+
+tmp<volVectorField::Internal> kinematicSingleLayer::SU() const
+{
+    tmp<volVectorField::Internal> tSU
+    (
+        volVectorField::Internal::New
+        (
+            IOobject::modelName("SU", typeName),
+            primaryMesh(),
+            dimensionedVector(dimDensity*dimVelocity/dimTime, Zero)
+        )
+    );
+
+    vectorField& SU = tSU.ref();
+    const scalarField& V = primaryMesh().V();
+    const scalar dt = time_.deltaTValue();
+
+    forAll(intCoupledPatchIDs_, i)
+    {
+        const label filmPatchi = intCoupledPatchIDs_[i];
+
+        vectorField patchMomentum =
+            primaryMomentumTrans_.boundaryField()[filmPatchi];
+
+        toPrimary(filmPatchi, patchMomentum);
+
+        const unallocLabelList& cells =
+            primaryMesh().boundaryMesh()[primaryPatchIDs()[i]].faceCells();
+
+        forAll(patchMomentum, j)
+        {
+            SU[cells[j]] += patchMomentum[j]/(V[cells[j]]*dt);
+        }
+    }
+
+    return tSU;
 }
 
 

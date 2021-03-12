@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,8 @@ public:
         virtual void correct
         (
             scalarField& availableMass,
-            volScalarField& massToTransfer
+            volScalarField& massToTransfer,
+            volVectorField& momentumToTransfer
         );
 
         //- Correct kinematic and thermodynamic transfers
@@ -99,6 +100,7 @@ public:
         (
             scalarField& availableMass,
             volScalarField& massToTransfer,
+            volVectorField& momentumToTransfer,
             volScalarField& energyToTransfer
         );
 

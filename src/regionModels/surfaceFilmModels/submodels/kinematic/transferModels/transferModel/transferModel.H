@@ -134,7 +134,8 @@ public:
         virtual void correct
         (
             scalarField& availableMass,
-            scalarField& massToTransfer
+            scalarField& massToTransfer,
+            vectorField& momentumToTransfer
         ) = 0;
 
         //- Correct kinematic and thermodynamic transfers
@@ -142,8 +143,9 @@ public:
         (
             scalarField& availableMass,
             scalarField& massToTransfer,
+            vectorField& momentumToTransfer,
             scalarField& energyToTransfer
-        );
+        ) = 0;
 
         //- Return the total mass transferred
         virtual scalar transferredMassTotal() const;

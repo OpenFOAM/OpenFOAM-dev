@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,6 +104,9 @@ public:
             (
                 const label i
             ) const;
+
+            //- Return momentum source - Eulerian phase only
+            virtual tmp<volVectorField::Internal> SU() const;
 
             //- Return enthalpy source - Eulerian phase only
             virtual tmp<volScalarField::Internal> Sh() const;

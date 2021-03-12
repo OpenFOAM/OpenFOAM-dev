@@ -105,7 +105,8 @@ public:
         virtual void correct
         (
             scalarField& availableMass,
-            scalarField& massToTransfer
+            scalarField& massToTransfer,
+            vectorField& momentumToTransfer
         );
 
         //- Correct kinematic and thermodynamic transfers
@@ -113,6 +114,7 @@ public:
         (
             scalarField& availableMass,
             scalarField& massToTransfer,
+            vectorField& momentumToTransfer,
             scalarField& energyToTransfer
         );
 

@@ -242,19 +242,26 @@ void thermoSingleLayer::updateSubmodels()
 
     const volScalarField::Internal rMagSfDt((1/time().deltaT())/magSf());
 
+    // Vapour recoil pressure
+    pSp_ -= sqr(rMagSfDt*primaryMassTrans_())/(2*rhoPrimary_());
+
+    // Update transfer model - mass returned is mass available for transfer
+    transfer_.correct
+    (
+        availableMass_,
+        primaryMassTrans_,
+        primaryMomentumTrans_,
+        primaryEnergyTrans_
+    );
+
     const volScalarField::Internal rVDt
     (
         1/(time().deltaT()*regionMesh().V())
     );
 
-    // Vapour recoil pressure
-    pSp_ -= sqr(rMagSfDt*primaryMassTrans_())/(2*rhoPrimary_());
-
-    // Update transfer model - mass returned is mass available for transfer
-    transfer_.correct(availableMass_, primaryMassTrans_, primaryEnergyTrans_);
-
     // Update source fields
     rhoSp_ += rVDt*(cloudMassTrans_() + primaryMassTrans_());
+    USp_ += rVDt*(cloudMassTrans_()*U_() + primaryMomentumTrans_());
     hSp_ += rVDt*(cloudMassTrans_()*h_() + primaryEnergyTrans_());
 
     momentumTransport_->correct();
@@ -708,45 +715,6 @@ void thermoSingleLayer::info()
 }
 
 
-tmp<volScalarField::Internal> thermoSingleLayer::Srho() const
-{
-    tmp<volScalarField::Internal> tSrho
-    (
-        volScalarField::Internal::New
-        (
-            "thermoSingleLayer::Srho",
-            primaryMesh(),
-            dimensionedScalar(dimMass/dimVolume/dimTime, 0)
-        )
-    );
-
-    scalarField& Srho = tSrho.ref();
-    const scalarField& V = primaryMesh().V();
-    const scalar dt = time_.deltaTValue();
-
-    forAll(intCoupledPatchIDs(), i)
-    {
-        const label filmPatchi = intCoupledPatchIDs()[i];
-
-        scalarField patchMass =
-            primaryMassTrans_.boundaryField()[filmPatchi];
-
-        toPrimary(filmPatchi, patchMass);
-
-        const label primaryPatchi = primaryPatchIDs()[i];
-        const unallocLabelList& cells =
-            primaryMesh().boundaryMesh()[primaryPatchi].faceCells();
-
-        forAll(patchMass, j)
-        {
-            Srho[cells[j]] += patchMass[j]/(V[cells[j]]*dt);
-        }
-    }
-
-    return tSrho;
-}
-
-
 tmp<volScalarField::Internal> thermoSingleLayer::Srho
 (
     const label i
@@ -758,7 +726,7 @@ tmp<volScalarField::Internal> thermoSingleLayer::Srho
     (
         volScalarField::Internal::New
         (
-            "thermoSingleLayer::Srho(" + Foam::name(i) + ")",
+            IOobject::modelName("Srho(" + Foam::name(i) + ")", typeName),
             primaryMesh(),
             dimensionedScalar(dimMass/dimVolume/dimTime, 0)
         )
@@ -800,7 +768,7 @@ tmp<volScalarField::Internal> thermoSingleLayer::Sh() const
     (
         volScalarField::Internal::New
         (
-            "thermoSingleLayer::Sh",
+            IOobject::modelName("Sh", typeName),
             primaryMesh(),
             dimensionedScalar(dimEnergy/dimVolume/dimTime, 0)
         )

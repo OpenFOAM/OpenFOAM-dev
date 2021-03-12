@@ -161,9 +161,9 @@ void Foam::fv::VoFSurfaceFilm::addSup
 
     // Temporary hack to handle mass and corresponding momentum loss from
     // the primary region until SU() is added to film
-    // eqn += film_->SU();
+    eqn += film_->SU();
     // eqn += posPart(film_->Srho())*film_->U());
-    eqn += fvm::Sp(negPart(film_->Srho()), eqn.psi());
+    // eqn += fvm::Sp(negPart(film_->Srho()), eqn.psi());
 }
 
 

@@ -108,13 +108,19 @@ transferModelList::~transferModelList()
 void transferModelList::correct
 (
     scalarField& availableMass,
-    volScalarField& massToTransfer
+    volScalarField& massToTransfer,
+    volVectorField& momentumToTransfer
 )
 {
     // Correct models that accumulate mass and diameter transfers
     forAll(*this, i)
     {
-        operator[](i).correct(availableMass, massToTransfer);
+        operator[](i).correct
+        (
+            availableMass,
+            massToTransfer,
+            momentumToTransfer
+        );
     }
 
     // Push values to boundaries ready for transfer to the primary region
@@ -135,17 +141,25 @@ void transferModelList::correct
 (
     scalarField& availableMass,
     volScalarField& massToTransfer,
+    volVectorField& momentumToTransfer,
     volScalarField& energyToTransfer
 )
 {
     // Correct models that accumulate mass and diameter transfers
     forAll(*this, i)
     {
-        operator[](i).correct(availableMass, massToTransfer, energyToTransfer);
+        operator[](i).correct
+        (
+            availableMass,
+            massToTransfer,
+            momentumToTransfer,
+            energyToTransfer
+        );
     }
 
     // Push values to boundaries ready for transfer to the primary region
     massToTransfer.correctBoundaryConditions();
+    momentumToTransfer.correctBoundaryConditions();
     energyToTransfer.correctBoundaryConditions();
 
     const labelList& patchIDs = film().intCoupledPatchIDs();

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -365,9 +365,6 @@ public:
         // Source fields
 
             // Mapped into primary region
-
-                //- Return total mass source - Eulerian phase only
-                virtual tmp<volScalarField::Internal> Srho() const;
 
                 //- Return mass source for specie i - Eulerian phase only
                 virtual tmp<volScalarField::Internal> Srho

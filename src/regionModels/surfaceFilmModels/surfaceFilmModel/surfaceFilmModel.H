@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,6 +110,12 @@ public:
             virtual scalar CourantNumber() const = 0;
 
 
+        // Evolution
+
+            //- Main driver routing to evolve the region - calls other evolves
+            virtual void evolve() = 0;
+
+
         // Primary region source fields
 
             //- Return total mass source - Eulerian phase only
@@ -121,14 +127,11 @@ public:
                 const label i
             ) const = 0;
 
+            //- Return momentum source - Eulerian phase only
+            virtual tmp<volVectorField::Internal> SU() const = 0;
+
             //- Return enthalpy source - Eulerian phase only
             virtual tmp<volScalarField::Internal> Sh() const = 0;
-
-
-        // Evolution
-
-            //- Main driver routing to evolve the region - calls other evolves
-            virtual void evolve() = 0;
 
 
     // Member Operators
