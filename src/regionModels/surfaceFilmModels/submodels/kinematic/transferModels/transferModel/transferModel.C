@@ -88,22 +88,6 @@ void transferModel::correct()
     }
 }
 
-// void transferModel::correct
-// (
-//     scalarField& availableMass,
-//     scalarField& massToTransfer,
-//     vectorField& momentumToTransfer,
-//     scalarField& energyToTransfer
-// )
-// {
-//     const thermoSingleLayer& film = filmType<thermoSingleLayer>();
-
-//     scalarField massToTransfer0(massToTransfer.size(), scalar(0));
-//     correct(availableMass, massToTransfer0);
-//     massToTransfer += massToTransfer0;
-//     momentumToTransfer += massToTransfer0*film.U();
-//     energyToTransfer += massToTransfer0*film.h();
-// }
 
 scalar transferModel::transferredMassTotal() const
 {
