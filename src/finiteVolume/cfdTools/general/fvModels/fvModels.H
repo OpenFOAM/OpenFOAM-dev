@@ -263,6 +263,9 @@ public:
 
     // Member Operators
 
+        //- Inherit the PtrListDictionary index operators
+        using PtrListDictionary<fvModel>::operator[];
+
         //- Disallow default bitwise assignment
         void operator=(const fvModels&) = delete;
 
