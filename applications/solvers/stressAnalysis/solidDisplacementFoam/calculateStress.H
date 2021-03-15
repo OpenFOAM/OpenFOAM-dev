@@ -10,12 +10,12 @@ if (runTime.writeTime())
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        rho*sigmaD
+        sigmaD
     );
 
     if (thermo.thermalStress())
     {
-        sigma = sigma - I*(rho*threeKalpha*thermo.T());
+        sigma = sigma - I*(threeKalpha*thermo.T());
     }
 
     volScalarField sigmaEq

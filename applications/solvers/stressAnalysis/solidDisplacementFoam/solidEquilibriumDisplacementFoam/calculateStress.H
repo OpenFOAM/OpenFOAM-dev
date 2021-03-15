@@ -1,33 +1,33 @@
-    if (runTime.writeTime())
-    {
-        volSymmTensorField sigma
+if (runTime.writeTime())
+{
+    volSymmTensorField sigma
+    (
+        IOobject
         (
-            IOobject
-            (
-                "sigma",
-                runTime.timeName(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::AUTO_WRITE
-            ),
-            rho*sigmaD
-        );
+            "sigma",
+            runTime.timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        sigmaD
+    );
 
-        volScalarField sigmaEq
+    volScalarField sigmaEq
+    (
+        IOobject
         (
-            IOobject
-            (
-                "sigmaEq",
-                runTime.timeName(),
-                mesh,
-                IOobject::NO_READ,
-                IOobject::AUTO_WRITE
-            ),
-            sqrt((3.0/2.0)*magSqr(dev(sigma)))
-        );
+            "sigmaEq",
+            runTime.timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        sqrt((3.0/2.0)*magSqr(dev(sigma)))
+    );
 
-        Info<< "Max sigmaEq = " << max(sigmaEq).value()
-            << endl;
+    Info<< "Max sigmaEq = " << max(sigmaEq).value()
+        << endl;
 
-        runTime.write();
-    }
+    runTime.write();
+}
