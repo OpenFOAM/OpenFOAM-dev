@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ waxSolventEvaporation::waxSolventEvaporation
     const dictionary& dict
 )
 :
-    phaseChangeModel(typeName, film, dict),
+    speciePhaseChange(typeName, film, dict),
     Wwax_
     (
         IOobject
@@ -161,9 +161,7 @@ void waxSolventEvaporation::correctModel
     const surfaceScalarField& phi = film.phi();
 
     // Set local thermo properties
-    const SLGThermo& slgThermo = film.slgThermo();
     const thermoModel& thermo = film.thermo();
-    const label vapId = slgThermo.carrierId(thermo.name());
 
     // Retrieve fields from film model
     const scalarField& pInf = film.pPrimary();
@@ -181,7 +179,7 @@ void waxSolventEvaporation::correctModel
     );
 
     // Molecular weight of vapour [kg/kmol]
-    const scalar Wvap = slgThermo.carrier().Wi(vapId);
+    const scalar Wvap = this->Wvap();
 
     const scalar Wwax = Wwax_.value();
     const scalar Wsolvent = Wsolvent_.value();
@@ -392,8 +390,7 @@ void waxSolventEvaporation::correctModel
     else
     {
         const thermoSingleLayer& film = filmType<thermoSingleLayer>();
-        const label vapId = film.slgThermo().carrierId(film.thermo().name());
-        const scalarField& YInf = film.YPrimary()[vapId];
+        const scalarField& YInf = film.YPrimary()[vapId()];
 
         correctModel(dt, availableMass, dMass, dEnergy, YInf);
     }

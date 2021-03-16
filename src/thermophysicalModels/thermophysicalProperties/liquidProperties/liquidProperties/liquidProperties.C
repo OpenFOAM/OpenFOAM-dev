@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,7 @@ namespace Foam
 
 Foam::liquidProperties::liquidProperties
 (
+    const word& name,
     scalar W,
     scalar Tc,
     scalar Pc,
@@ -52,6 +53,7 @@ Foam::liquidProperties::liquidProperties
 )
 :
     thermophysicalProperties(W),
+    name_(name),
     Tc_(Tc),
     Pc_(Pc),
     Vc_(Vc),
@@ -68,6 +70,7 @@ Foam::liquidProperties::liquidProperties
 Foam::liquidProperties::liquidProperties(const dictionary& dict)
 :
     thermophysicalProperties(dict),
+    name_(dict.dictName()),
     Tc_(dict.lookup<scalar>("Tc")),
     Pc_(dict.lookup<scalar>("Pc")),
     Vc_(dict.lookup<scalar>("Vc")),
@@ -141,6 +144,12 @@ Foam::autoPtr<Foam::liquidProperties> Foam::liquidProperties::New
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+const Foam::word& Foam::liquidProperties::name() const
+{
+    return name_;
+}
+
 
 Foam::scalar Foam::liquidProperties::S(scalar p, scalar T) const
 {

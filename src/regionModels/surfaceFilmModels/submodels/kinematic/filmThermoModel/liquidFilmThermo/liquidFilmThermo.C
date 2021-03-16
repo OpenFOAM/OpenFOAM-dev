@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,6 @@ License
 #include "liquidFilmThermo.H"
 #include "demandDrivenData.H"
 #include "thermoSingleLayer.H"
-#include "SLGThermo.H"
 #include "extrapolatedCalculatedFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -69,36 +68,6 @@ const thermoSingleLayer& liquidFilmThermo::thermoFilm() const
 }
 
 
-void liquidFilmThermo::initLiquid(const dictionary& dict)
-{
-    if (liquidPtr_ != nullptr)
-    {
-        return;
-    }
-
-    dict.lookup("liquid") >> name_;
-
-    if (filmModel_.primaryMesh().foundObject<SLGThermo>("SLGThermo"))
-    {
-        // retrieve from film thermo
-        ownLiquid_ = false;
-
-        const SLGThermo& thermo =
-            filmModel_.primaryMesh().lookupObject<SLGThermo>("SLGThermo");
-        label id = thermo.liquidId(name_);
-        liquidPtr_ = &thermo.liquids().properties()[id];
-    }
-    else
-    {
-        // new liquid create
-        ownLiquid_ = true;
-
-        liquidPtr_ =
-            liquidProperties::New(dict.optionalSubDict(name_ + "Coeffs")).ptr();
-    }
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 liquidFilmThermo::liquidFilmThermo
@@ -108,14 +77,29 @@ liquidFilmThermo::liquidFilmThermo
 )
 :
     thermoModel(typeName, film, dict),
-    name_("unknown_liquid"),
-    liquidPtr_(nullptr),
-    ownLiquid_(false),
     useReferenceValues_(readBool(coeffDict_.lookup("useReferenceValues"))),
     pRef_(0.0),
     TRef_(0.0)
 {
-    initLiquid(coeffDict_);
+    if (dict.found("mixture"))
+    {
+        const dictionary& mixtureDict = dict.subDict("mixture");
+
+        const word name(mixtureDict.first()->keyword());
+
+        if (mixtureDict.isDict(name))
+        {
+            liquidPtr_ = liquidProperties::New(mixtureDict.subDict(name));
+        }
+        else
+        {
+            liquidPtr_ = liquidProperties::New(name);
+        }
+    }
+    else
+    {
+        liquidPtr_ = liquidProperties::New(dict.lookup<word>("liquid"));
+    }
 
     if (useReferenceValues_)
     {
@@ -128,19 +112,14 @@ liquidFilmThermo::liquidFilmThermo
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 liquidFilmThermo::~liquidFilmThermo()
-{
-    if (ownLiquid_)
-    {
-        deleteDemandDrivenData(liquidPtr_);
-    }
-}
+{}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
 const word& liquidFilmThermo::name() const
 {
-    return name_;
+    return liquidPtr_->name();
 }
 
 

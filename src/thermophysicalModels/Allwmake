@@ -12,7 +12,6 @@ wmake $targetType reactionThermo
 wmake $targetType laminarFlameSpeed
 wmake $targetType chemistryModel
 wmake $targetType barotropicCompressibilityModel
-wmake $targetType SLGThermo
 
 wmake $targetType solidThermo
 

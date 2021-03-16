@@ -19,15 +19,45 @@ surfaceFilmModel thermoSingleLayer;
 
 regionName      plateRegion;
 
+phase           liquid;
+
 thermophysicalProperties
 {
     type        liquid;
 
-    liquid      liquid;
+    mixture
+    {
+        liquid
+        {
+            type H2O;
 
-    useReferenceValues  yes;
-    pRef    1e5;
-    TRef    300;
+            // Set Cp constant and the corresponding linear function for h for
+            // compatibility with the current hard-coded thermodynamics model in
+            // surfaceFilm
+
+            Cp
+            {
+                a   4200;
+                b   0;
+                c   0;
+                d   0;
+                e   0;
+                f   0;
+            }
+
+            h
+            {
+                a   -1252230; // -Cp*TRef where TRef = 298.15
+                b   4200;
+                c   0;
+                d   0;
+                e   0;
+                f   0;
+            }
+        }
+    }
+
+    useReferenceValues no;
 }
 
 viscosity

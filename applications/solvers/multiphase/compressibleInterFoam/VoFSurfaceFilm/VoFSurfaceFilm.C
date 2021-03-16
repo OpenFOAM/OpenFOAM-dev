@@ -58,21 +58,20 @@ Foam::fv::VoFSurfaceFilm::VoFSurfaceFilm
 )
 :
     fvModel(sourceName, modelType, dict, mesh),
-    phaseName_(dict.lookup("phase")),
-    thermo_
-    (
-        mesh.lookupObject<rhoThermo>
-        (
-            IOobject::groupName(basicThermo::dictName, phaseName_)
-        )
-    ),
-    slgThermo_(mesh, thermo_),
     film_
     (
         regionModels::surfaceFilmModel::New
         (
             mesh,
             mesh.lookupObject<uniformDimensionedVectorField>("g")
+        )
+    ),
+    phaseName_(dict.lookup("phase")),
+    thermo_
+    (
+        mesh.lookupObject<rhoThermo>
+        (
+            IOobject::groupName(basicThermo::dictName, phaseName_)
         )
     ),
     curTimeIndex_(-1)
@@ -159,11 +158,7 @@ void Foam::fv::VoFSurfaceFilm::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    // Temporary hack to handle mass and corresponding momentum loss from
-    // the primary region until SU() is added to film
     eqn += film_->SU();
-    // eqn += posPart(film_->Srho())*film_->U());
-    // eqn += fvm::Sp(negPart(film_->Srho()), eqn.psi());
 }
 
 

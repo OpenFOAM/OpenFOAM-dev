@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,6 +55,9 @@ class liquidProperties
     public thermophysicalProperties
 {
     // Private Data
+
+        //- Name of the liquid
+        const word name_;
 
         //- Critical temperature [K]
         scalar Tc_;
@@ -118,6 +121,7 @@ public:
         //- Construct from components
         liquidProperties
         (
+            const word& name,
             scalar W,
             scalar Tc,
             scalar Pc,
@@ -162,6 +166,10 @@ public:
 
 
     // Member Functions
+
+        //- Return the name of the liquid
+        virtual const word& name() const;
+
 
         // Physical constants which define the specie
 

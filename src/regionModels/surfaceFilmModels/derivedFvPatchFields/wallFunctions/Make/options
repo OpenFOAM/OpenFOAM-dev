@@ -3,7 +3,6 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/thermophysicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/SLGThermo/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/lnInclude \
@@ -17,7 +16,6 @@ LIB_LIBS = \
     -lspecie \
     -lthermophysicalProperties \
     -lreactionThermophysicalModels \
-    -lSLGThermo \
     -lmomentumTransportModels \
     -lfluidThermoMomentumTransportModels \
     -lthermophysicalTransportModels \

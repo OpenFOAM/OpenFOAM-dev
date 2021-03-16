@@ -24,6 +24,8 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "thermoSingleLayer.H"
+#include "fluidThermo.H"
+#include "basicSpecieMixture.H"
 
 #include "fvcDdt.H"
 #include "fvcDiv.H"
@@ -38,7 +40,6 @@ License
 #include "mappedFieldFvPatchField.H"
 #include "mapDistribute.H"
 #include "constants.H"
-#include "addToRunTimeSelectionTable.H"
 
 // Sub-models
 #include "filmThermoModel.H"
@@ -46,6 +47,8 @@ License
 #include "heatTransferModel.H"
 #include "phaseChangeModel.H"
 #include "filmRadiationModel.H"
+
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -327,7 +330,15 @@ thermoSingleLayer::thermoSingleLayer
 )
 :
     kinematicSingleLayer(modelType, mesh, g, regionType, false),
-    slgThermo_(mesh.lookupObject<SLGThermo>("SLGThermo")),
+    phaseName_(coeffs_.lookupOrDefault("phase", word::null)),
+
+    primaryThermo_
+    (
+        mesh.lookupObject<fluidThermo>
+        (
+            IOobject::groupName(basicThermo::dictName, phaseName_)
+        )
+    ),
 
     Cp_
     (
@@ -507,11 +518,14 @@ thermoSingleLayer::thermoSingleLayer
         Info<< "    limiting maximum temperature to " << Tmax_ << endl;
     }
 
-    if (slgThermo_.hasMultiComponentCarrier())
+    if (isA<basicSpecieMixture>(primaryThermo_))
     {
-        YPrimary_.setSize(slgThermo_.carrier().species().size());
+        const basicSpecieMixture& primarySpecieThermo =
+            refCast<const basicSpecieMixture>(primaryThermo_);
 
-        forAll(slgThermo_.carrier().species(), i)
+        YPrimary_.setSize(primarySpecieThermo.species().size());
+
+        forAll(primarySpecieThermo.species(), i)
         {
             YPrimary_.set
             (
@@ -520,7 +534,7 @@ thermoSingleLayer::thermoSingleLayer
                 (
                     IOobject
                     (
-                        slgThermo_.carrier().species()[i],
+                        primarySpecieThermo.species()[i],
                         time().timeName(),
                         regionMesh(),
                         IOobject::NO_READ,
@@ -720,7 +734,10 @@ tmp<volScalarField::Internal> thermoSingleLayer::Srho
     const label i
 ) const
 {
-    const label vapId = slgThermo_.carrierId(thermo_->name());
+    const basicSpecieMixture& primarySpecieThermo =
+        refCast<const basicSpecieMixture>(primaryThermo_);
+
+    const label vapId = primarySpecieThermo.species()[thermo_->name()];
 
     tmp<volScalarField::Internal> tSrho
     (

@@ -6,6 +6,9 @@ CLOUDS=clouds
 BASECLOUDS=$(CLOUDS)/baseClasses
 DERIVEDCLOUDS=$(CLOUDS)/derived
 
+# Thermo
+SLGThermo/SLGThermo.C
+
 # parcel cloud
 parcelCloud/parcelCloudBase.C
 parcelCloud/parcelCloud.C

@@ -42,12 +42,15 @@ SourceFiles
 #define thermoSingleLayer_H
 
 #include "kinematicSingleLayer.H"
-#include "SLGThermo.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+// Forward declaration of classes
+class fluidThermo;
+
 namespace regionModels
 {
 namespace surfaceFilmModels
@@ -77,10 +80,12 @@ protected:
 
     // Protected data
 
+        const word phaseName_;
+
         // Thermo properties
 
-            //- Reference to the SLGThermo
-            const SLGThermo& slgThermo_;
+            //- Reference to the primary region thermo
+            const fluidThermo& primaryThermo_;
 
 
             // Fields
@@ -252,8 +257,8 @@ public:
 
         // Thermo properties
 
-            //- Return const reference to the SLGThermo object
-            inline const SLGThermo& slgThermo() const;
+            //- Return const reference to the primary region thermo object
+            inline const fluidThermo& primaryThermo() const;
 
 
             // Fields

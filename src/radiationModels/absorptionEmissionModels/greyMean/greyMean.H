@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,7 +139,7 @@ protected:
         //- Look-up table of species related to ft
         mutable autoPtr<interpolationLookUpTable> lookUpTablePtr_;
 
-        //- SLG thermo package
+        //- Thermo package
         const fluidThermo& thermo_;
 
         //- Pointer list of species in the registry involved in the absorption

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::standardPhaseChange
+    Foam::regionModels::surfaceFilmModels::speciePhaseChange
 
 Description
-    Standard phase change model with modification for boiling
+    Specie phase change model abstract base class
 
 SourceFiles
-    standardPhaseChange.C
+    speciePhaseChange.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef standardPhaseChange_H
-#define standardPhaseChange_H
+#ifndef speciePhaseChange_H
+#define speciePhaseChange_H
 
-#include "speciePhaseChange.H"
+#include "phaseChangeModel.H"
+#include "thermoSingleLayer.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,88 +48,49 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class standardPhaseChange Declaration
+                     Class speciePhaseChange Declaration
 \*---------------------------------------------------------------------------*/
 
-class standardPhaseChange
+class speciePhaseChange
 :
-    public speciePhaseChange
+    public phaseChangeModel
 {
-protected:
-
-    // Protected data
-
-        //- Minimum film height for model to be active
-        const scalar deltaMin_;
-
-        //- Length scale / [m]
-        const scalar L_;
-
-        //- Boiling temperature factor / []
-        //  Used to set max limit on temperature to Tb*TbFactor
-        const scalar TbFactor_;
-
-        //- Switch to treat YInf as zero
-        Switch YInfZero_;
-
-
-    // Protected member functions
-
-        //- Return Sherwood number as a function of Reynolds and Schmidt numbers
-        scalar Sh(const scalar Re, const scalar Sc) const;
-
-        template<class YInfType>
-        void correctModel
-        (
-            const scalar dt,
-            scalarField& availableMass,
-            scalarField& dMass,
-            scalarField& dEnergy,
-            YInfType YInf
-        );
-
 
 public:
 
     //- Runtime type information
-    TypeName("standardPhaseChange");
+    TypeName("speciePhaseChange");
 
 
     // Constructors
 
         //- Construct from surface film model
-        standardPhaseChange
+        speciePhaseChange
         (
+            const word& modelType,
             surfaceFilmRegionModel& film,
             const dictionary& dict
         );
 
         //- Disallow default bitwise copy construction
-        standardPhaseChange(const standardPhaseChange&) = delete;
+        speciePhaseChange(const speciePhaseChange&) = delete;
 
 
     //- Destructor
-    virtual ~standardPhaseChange();
+    virtual ~speciePhaseChange();
 
 
     // Member Functions
 
-        // Evolution
+        label vapId() const;
 
-            //- Correct
-            virtual void correctModel
-            (
-                const scalar dt,
-                scalarField& availableMass,
-                scalarField& dMass,
-                scalarField& dEnergy
-            );
+        scalar Wvap() const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const standardPhaseChange&) = delete;
+        void operator=(const speciePhaseChange&) = delete;
 };
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef waxSolventEvaporation_H
 #define waxSolventEvaporation_H
 
-#include "phaseChangeModel.H"
+#include "speciePhaseChange.H"
 #include "uniformDimensionedFields.H"
 #include "Function1.H"
 
@@ -54,7 +54,7 @@ namespace surfaceFilmModels
 
 class waxSolventEvaporation
 :
-    public phaseChangeModel
+    public speciePhaseChange
 {
 protected:
 
