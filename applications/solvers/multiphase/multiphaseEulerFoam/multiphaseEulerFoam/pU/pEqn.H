@@ -257,7 +257,11 @@ while (pimple.correct())
 
             if (fluid.incompressible())
             {
-                pEqn.setReference(pRefCell, getRefCellValue(p_rgh, pRefCell));
+                pEqn.setReference
+                (
+                    pressureControl.refCell(),
+                    pressureControl.refValue()
+                );
             }
 
             pEqn.solve();
@@ -327,7 +331,8 @@ while (pimple.correct())
     }
 
     // Update and limit the static pressure
-    p = max(p_rgh + rho*gh, pMin);
+    p = p_rgh + rho*gh;
+    pressureControl.limit(p);
 
     // Account for static pressure reference
     if (p_rgh.needReference() && fluid.incompressible())
@@ -336,7 +341,8 @@ while (pimple.correct())
         (
             "p",
             p.dimensions(),
-            pRefValue - getRefCellValue(p, pRefCell)
+            pressureControl.refValue()
+          - getRefCellValue(p, pressureControl.refCell())
         );
     }
 

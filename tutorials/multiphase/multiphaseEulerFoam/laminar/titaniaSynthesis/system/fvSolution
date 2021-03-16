@@ -84,7 +84,10 @@ PIMPLE
     nCorrectors         1;
     nEnergyCorrectors   1;
     nNonOrthogonalCorrectors 0;
+
     faceMomentum        yes;
+
+    pMin                1e4;
 }
 
 relaxationFactors

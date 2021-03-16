@@ -61,7 +61,10 @@ PIMPLE
     nOuterCorrectors 3;
     nCorrectors      1;
     nNonOrthogonalCorrectors 0;
+
     partialElimination true;
+
+    pMin             1e4;
 }
 
 relaxationFactors

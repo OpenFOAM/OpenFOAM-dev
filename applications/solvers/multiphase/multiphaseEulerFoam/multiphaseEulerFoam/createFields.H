@@ -11,13 +11,6 @@ autoPtr<phaseSystem> fluidPtr
 phaseSystem& fluid = fluidPtr();
 phaseSystem::phaseModelList& phases = fluid.phases();
 
-dimensionedScalar pMin
-(
-    "pMin",
-    dimPressure,
-    fluid
-);
-
 #include "gh.H"
 
 volScalarField& p = phases[0].thermoRef().p();
@@ -36,32 +29,41 @@ volScalarField p_rgh
     mesh
 );
 
-label pRefCell = 0;
-scalar pRefValue = 0.0;
+if (fluid.found("pMin"))
+{
+    IOWarningInFunction(fluid)
+        << "Pressure limits, pMin and pMax, are now read from "
+        << pimple.dict().name() << endl;
+}
+
+pressureControl pressureControl
+(
+    p,
+    p_rgh,
+    fluid.rho(),
+    pimple.dict(),
+    fluid.incompressible()
+);
+
 if (fluid.incompressible())
 {
-    p = max(p_rgh + fluid.rho()*gh, pMin);
-
-    if (p_rgh.needReference())
-    {
-        setRefCell
-        (
-            p,
-            p_rgh,
-            pimple.dict(),
-            pRefCell,
-            pRefValue
-        );
-
-        p += dimensionedScalar
-        (
-            "p",
-            p.dimensions(),
-            pRefValue - getRefCellValue(p, pRefCell)
-        );
-        p_rgh = p - fluid.rho()*gh;
-    }
+    p = p_rgh + fluid.rho()*gh;
+    pressureControl.limit(p);
 }
+
+if (p_rgh.needReference() && fluid.incompressible())
+{
+    p += dimensionedScalar
+    (
+        "p",
+        p.dimensions(),
+        pressureControl.refValue()
+      - getRefCellValue(p, pressureControl.refCell())
+    );
+}
+
+p_rgh = p - fluid.rho()*gh;
+
 mesh.setFluxRequired(p_rgh.name());
 
 PtrList<volScalarField> rAUs;
