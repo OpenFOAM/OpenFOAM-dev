@@ -34,7 +34,7 @@ water
 oil
 {
     type            purePhaseModel;
-    diameterModel constant;
+    diameterModel   constant;
     constantCoeffs
     {
         d               1e-3;
@@ -46,7 +46,7 @@ oil
 mercury
 {
     type            purePhaseModel;
-    diameterModel constant;
+    diameterModel   constant;
     constantCoeffs
     {
         d               1e-3;
@@ -58,11 +58,10 @@ mercury
 air
 {
     type            purePhaseModel;
-    diameterModel   isothermal;
-    isothermalCoeffs
+    diameterModel   constant;
+    constantCoeffs
     {
-        d0              1e-3;
-        p0              1e5;
+        d               1e-3;
     }
 
     residualAlpha 1e-3;
@@ -467,9 +466,5 @@ wallLubrication
 
 turbulentDispersion
 ();
-
-// Minimum allowable pressure
-pMin            10000;
-
 
 // ************************************************************************* //

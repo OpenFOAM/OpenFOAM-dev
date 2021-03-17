@@ -226,8 +226,4 @@ wallLubrication
 turbulentDispersion
 ();
 
-// Minimum allowable pressure
-pMin            10000;
-
-
 // ************************************************************************* //

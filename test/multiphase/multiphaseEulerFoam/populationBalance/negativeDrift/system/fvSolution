@@ -56,10 +56,12 @@ solvers
 PIMPLE
 {
     nOuterCorrectors 2;
-    nCorrectors      1;
+    nCorrectors     1;
 
-    pRefCell 0;
-    pRefValue 1e5;
+    pMin            1e4;
+
+    pRefCell        0;
+    pRefValue       1e5;
 
     frozenFlow      yes;
 }

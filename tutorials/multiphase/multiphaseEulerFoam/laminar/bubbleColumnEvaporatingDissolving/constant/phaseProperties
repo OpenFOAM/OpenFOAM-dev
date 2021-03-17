@@ -232,7 +232,4 @@ turbulentDispersion
 interfaceCompression
 ();
 
-// Minimum allowable pressure
-pMin            10000;
-
 // ************************************************************************* //

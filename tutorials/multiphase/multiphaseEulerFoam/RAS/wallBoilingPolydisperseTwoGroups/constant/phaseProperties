@@ -373,8 +373,4 @@ surfaceTension
 phaseTransfer
 ();
 
-// Minimum allowable pressure
-pMin            10000;
-
-
 // ************************************************************************* //
