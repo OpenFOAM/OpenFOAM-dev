@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,7 @@ Description
 #include "singlePhaseTransportModel.H"
 #include "kinematicMomentumTransportModel.H"
 #include "wallDist.H"
+#include "bound.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -154,10 +155,7 @@ int main(int argc, char *argv[])
         volScalarField& k = const_cast<volScalarField&>(tk());
         scalar ck0 = pow025(Cmu)*kappa;
         k = (1 - mask)*k + mask*sqr(nut/(ck0*min(y, ybl)));
-
-        // Do not correct BC - operation may use inconsistent fields wrt these
-        // local manipulations
-        // k.correctBoundaryConditions();
+        k.correctBoundaryConditions();
 
         Info<< "Writing k\n" << endl;
         k.write();
@@ -169,8 +167,7 @@ int main(int argc, char *argv[])
         scalar ce0 = ::pow(Cmu, 0.75)/kappa;
         epsilon = (1 - mask)*epsilon + mask*ce0*k*sqrt(k)/min(y, ybl);
 
-        // Do not correct BC - wall functions will use non-updated k from
-        // turbulence model
+        // Do not correct BC - G set by the wall-functions is not available
         // epsilon.correctBoundaryConditions();
 
         Info<< "Writing epsilon\n" << endl;
@@ -190,11 +187,14 @@ int main(int argc, char *argv[])
         if (omegaHeader.typeHeaderOk<volScalarField>(true))
         {
             volScalarField omega(omegaHeader, mesh);
-            dimensionedScalar k0("vSmall", k.dimensions(), vSmall);
-            omega = (1 - mask)*omega + mask*epsilon/(Cmu*k + k0);
 
-            // Do not correct BC - wall functions will use non-updated k from
-            // turbulence model
+            const incompressible::RASModel& rasModel =
+                refCast<const incompressible::RASModel>(turbulence());
+
+            omega = (1 - mask)*omega + mask*ce0*sqrt(k)/(Cmu*min(y, ybl));
+            bound(omega, rasModel.omegaMin());
+
+            // Do not correct BC - G set by the wall-functions is not available
             // omega.correctBoundaryConditions();
 
             Info<< "Writing omega\n" << endl;
@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
             volScalarField nuTilda(nuTildaHeader, mesh);
             nuTilda = nut;
 
-            // Do not correct BC
+            // Do not correct BC - G set by the wall-functions is not available
             // nuTilda.correctBoundaryConditions();
 
             Info<< "Writing nuTilda\n" << endl;
