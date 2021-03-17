@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "interRegionModel.H"
+#include "fvModels.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -42,7 +43,12 @@ void Foam::fv::interRegionModel::readCoeffs()
 {
     master_ = coeffs().lookupOrDefault<bool>("master", true);
 
-    nbrRegionName_ = coeffs().lookup<word>("nbrRegionName");
+    nbrRegionName_ =
+        coeffs().lookupBackwardsCompatible<word>
+        ({
+            "nbrRegion",
+            "nbrRegionName"
+        });
 
     interpolationMethod_ =
         meshToMesh::interpolationMethodNames_.read
@@ -60,27 +66,24 @@ void Foam::fv::interRegionModel::setMapper() const
     {
         Info<< indent << "- selecting inter region mapping" << endl;
 
-        const fvMesh& nbrMesh =
-            mesh().time().lookupObject<fvMesh>(nbrRegionName_);
-
-        if (mesh().name() == nbrMesh.name())
+        if (mesh().name() == nbrMesh().name())
         {
             FatalErrorInFunction
                 << "Inter-region model selected, but local and "
                 << "neighbour regions are the same: " << nl
                 << "    local region: " << mesh().name() << nl
-                << "    secondary region: " << nbrMesh.name() << nl
+                << "    secondary region: " << nbrMesh().name() << nl
                 << exit(FatalError);
         }
 
-        if (mesh().bounds().overlaps(nbrMesh.bounds()))
+        if (mesh().bounds().overlaps(nbrMesh().bounds()))
         {
             meshInterpPtr_.reset
             (
                 new meshToMesh
                 (
                     mesh(),
-                    nbrMesh,
+                    nbrMesh(),
                     interpolationMethod_,
                     false // not interpolating patches
                 )
@@ -90,12 +93,40 @@ void Foam::fv::interRegionModel::setMapper() const
         {
             FatalErrorInFunction
                 << "regions " << mesh().name() << " and "
-                << nbrMesh.name() <<  " do not intersect"
+                << nbrMesh().name() <<  " do not intersect"
                 << exit(FatalError);
         }
     }
 
     Info<< decrIndent;
+}
+
+
+const Foam::fv::interRegionModel& Foam::fv::interRegionModel::nbrModel() const
+{
+    const fvMesh& nbrMesh = mesh().time().lookupObject<fvMesh>(nbrRegionName());
+
+    const PtrListDictionary<fvModel>& fvModels =
+        nbrMesh.lookupObject<Foam::fvModels>("fvModels");
+
+    forAll(fvModels, fvModeli)
+    {
+        if (isA<interRegionModel>(fvModels[fvModeli]))
+        {
+            const interRegionModel& model =
+                refCast<const interRegionModel>(fvModels[fvModeli]);
+
+            if (model.nbrRegionName() == mesh().name())
+            {
+                return model;
+            }
+        }
+    }
+
+    FatalErrorInFunction
+        << "Neighbour model not found in region " << nbrMesh.name() << nl
+        << exit(FatalError);
+    return NullObjectRef<interRegionModel>();
 }
 
 

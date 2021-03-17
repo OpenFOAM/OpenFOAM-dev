@@ -22,11 +22,11 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::variableHeatTransfer
+    Foam::fv::heatTransferModels::variable
 
 Description
-    Variable heat transfer model depending on local values. The Nu number is
-    calculated as:
+    Variable heat transfer model depending on local values. The Nusselt number
+    is calculated as:
 
         \f[
             Nu = a*Re^b*Pr^c
@@ -35,23 +35,38 @@ Description
     And the heat transfer coefficient is calculated as:
 
         \f[
-            htc = Nu*K/ds
+            htc = Nu*\kappa/L
         \f]
 
-    where:
+    Where:
+
     \vartable
-        K   | Conductivity
-        ds  | Strut diameter
+        \kappa | Conductivity
+        L      | Length scale
     \endvartable
 
-    An area-per-unit-volume [1/m] field (AoV) must be provided in constant.
+Usage
+    Example usage:
+    \verbatim
+    {
+        type        variable;
+
+        AoV         1e3;
+
+        a           1;
+        b           2;
+        c           3;
+        Pr          0.7;
+        L           1e-3;
+    }
+    \endverbatim
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef variableHeatTransfer_H
-#define variableHeatTransfer_H
+#ifndef heatTransferModels_variable_H
+#define heatTransferModels_variable_H
 
-#include "interRegionHeatTransferModel.H"
+#include "heatTransferModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,19 +74,21 @@ namespace Foam
 {
 namespace fv
 {
+namespace heatTransferModels
+{
 
 /*---------------------------------------------------------------------------*\
-                    Class variableHeatTransfer Declaration
+                           Class variable Declaration
 \*---------------------------------------------------------------------------*/
 
-class variableHeatTransfer
+class variable
 :
-    public interRegionHeatTransferModel
+    public heatTransferModel
 {
     // Private Data
 
         //- Name of neighbour velocity field; default = U
-        word UNbrName_;
+        word UName_;
 
         //- Model constant
         scalar a_;
@@ -82,14 +99,14 @@ class variableHeatTransfer
         //- Model constant
         scalar c_;
 
-        //- Strut diameter
-        scalar ds_;
+        //- Length scale
+        dimensionedScalar L_;
 
         //- Fluid Prandtl number
-        scalar Pr_;
+        dimensionedScalar Pr_;
 
-        //- Area per unit volume of heat exchanger
-        autoPtr<volScalarField> AoV_;
+        //- Heat transfer coefficient [W/m^2/K]
+        volScalarField htc_;
 
 
     // Private Member Functions
@@ -97,33 +114,36 @@ class variableHeatTransfer
         //- Non-virtual read
         void readCoeffs();
 
-        //- Correct the heat transfer coefficient
-        virtual void correctHtc() const;
-
 
 public:
 
     //- Runtime type information
-    TypeName("variableHeatTransfer");
+    TypeName("variable");
 
 
     // Constructors
 
-        //- Construct from dictionary
-        variableHeatTransfer
-        (
-            const word& name,
-            const word& modelType,
-            const dictionary& dict,
-            const fvMesh& mesh
-        );
+        //- Construct from dictionary and mesh
+        variable(const dictionary& dict, const fvMesh& mesh);
+
+        //- Construct from dictionary and model
+        variable(const dictionary& dict, const interRegionModel& model);
 
 
     //- Destructor
-    virtual ~variableHeatTransfer();
+    virtual ~variable();
 
 
     // Member Functions
+
+        //- Get the heat transfer coefficient
+        virtual tmp<volScalarField> htc() const
+        {
+            return htc_;
+        }
+
+        //- Correct the heat transfer coefficient
+        virtual void correct();
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);
@@ -132,6 +152,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace heatTransferModels
 } // End namespace fv
 } // End namespace Foam
 

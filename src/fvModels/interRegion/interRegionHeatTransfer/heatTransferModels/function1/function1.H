@@ -22,21 +22,35 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::interRegionModel
+    Foam::fv::heatTransferModels::function1
 
 Description
-    Base class for inter-region exchange.
+    Function1 heat transfer model. The 1D function returns the heat transfer
+    coefficient as a function of the local velocity magnitude.
+
+Usage
+    Example usage:
+    \verbatim
+    {
+        type        function1;
+
+        AoV         1e3;
+
+        htcFunc
+        {
+            type        constant;
+            value       1e5;
+        }
+    }
+    \endverbatim
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef interRegionModel_H
-#define interRegionModel_H
+#ifndef function1_H
+#define function1_H
 
-#include "fvModel.H"
-#include "volFields.H"
-#include "autoPtr.H"
-#include "meshToMesh.H"
-
+#include "heatTransferModel.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,90 +58,69 @@ namespace Foam
 {
 namespace fv
 {
+namespace heatTransferModels
+{
 
 /*---------------------------------------------------------------------------*\
-                      Class interRegionModel Declaration
+                           Class function1 Declaration
 \*---------------------------------------------------------------------------*/
 
-class interRegionModel
+class function1
 :
-    public fvModel
+    public heatTransferModel
 {
-    // Private data
+    // Private Data
 
-        //- Master or slave region
-        bool master_;
+        //- Name of velocity field; default = U
+        word UName_;
 
-        //- Name of the neighbour region to map
-        word nbrRegionName_;
-
-        //- Interpolation method
-        meshToMesh::interpolationMethod interpolationMethod_;
-
-        //- Mesh to mesh interpolation object
-        mutable autoPtr<meshToMesh> meshInterpPtr_;
+        //- Heat transfer coefficient [W/m^2/K]
+        autoPtr<Function1<scalar>> htcFunc_;
 
 
-    // Private member functions
+    // Private Member Functions
 
         //- Non-virtual read
         void readCoeffs();
-
-        //- Set the mesh to mesh interpolation object
-        void setMapper() const;
 
 
 public:
 
     //- Runtime type information
-    TypeName("interRegionModel");
+    TypeName("function1");
 
 
     // Constructors
 
-        //- Construct from dictionary
-        interRegionModel
-        (
-            const word& name,
-            const word& modelType,
-            const dictionary& dict,
-            const fvMesh& mesh
-        );
+        //- Construct from dictionary and mesh
+        function1(const dictionary& dict, const fvMesh& mesh);
+
+        //- Construct from dictionary and model
+        function1(const dictionary& dict, const interRegionModel& model);
 
 
     //- Destructor
-    virtual ~interRegionModel();
+    virtual ~function1();
 
 
     // Member Functions
 
-        // Access
+        //- Get the heat transfer coefficient
+        virtual tmp<volScalarField> htc() const;
 
-            //- Return whether the master region
-            inline bool master() const;
+        //- Correct the heat transfer coefficient
+        virtual void correct();
 
-            //- Return const access to the neighbour region name
-            inline const word& nbrRegionName() const;
-
-            //- Return const access to the mapToMap pointer
-            inline const meshToMesh& meshInterp() const;
-
-
-        // IO
-
-            //- Read dictionary
-            virtual bool read(const dictionary& dict);
+        //- Read dictionary
+        virtual bool read(const dictionary& dict);
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace heatTransferModels
 } // End namespace fv
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "interRegionModelI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

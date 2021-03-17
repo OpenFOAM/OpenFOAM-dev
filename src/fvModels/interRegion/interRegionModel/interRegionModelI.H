@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,63 +23,34 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::fv::interRegionHeatTransferModel::interpolate
-(
-    const interRegionHeatTransferModel& nbrModel,
-    const Field<Type>& field
-) const
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+inline bool Foam::fv::interRegionModel::master() const
 {
-    if (master())
-    {
-        return meshInterp().mapTgtToSrc(field);
-    }
-    else
-    {
-        return (nbrModel.meshInterp().mapSrcToTgt(field));
-    }
+    return master_;
 }
 
 
-template<class Type>
-Foam::tmp<Foam::Field<Type>>
-Foam::fv::interRegionHeatTransferModel::interpolate
-(
-    const Field<Type>& field
-) const
+inline const Foam::word& Foam::fv::interRegionModel::nbrRegionName() const
 {
-    return interpolate(nbrModel(), field);
+    return nbrRegionName_;
 }
 
 
-template<class Type>
-void Foam::fv::interRegionHeatTransferModel::interpolate
-(
-    const interRegionHeatTransferModel& nbrModel,
-    const Field<Type>& field,
-    Field<Type>& result
-) const
+inline const Foam::fvMesh& Foam::fv::interRegionModel::nbrMesh() const
 {
-    if (master())
-    {
-        meshInterp().mapTgtToSrc(field, plusEqOp<scalar>(), result);
-    }
-    else
-    {
-        nbrModel.meshInterp().mapSrcToTgt(field, plusEqOp<scalar>(), result);
-    }
+    return mesh().time().lookupObject<fvMesh>(nbrRegionName_);
 }
 
 
-template<class Type>
-void Foam::fv::interRegionHeatTransferModel::interpolate
-(
-    const Field<Type>& field,
-    Field<Type>& result
-) const
+inline const Foam::meshToMesh& Foam::fv::interRegionModel::meshInterp() const
 {
-    return interpolate(nbrModel(), field, result);
+    if (!meshInterpPtr_.valid())
+    {
+        setMapper();
+    }
+
+    return meshInterpPtr_();
 }
 
 

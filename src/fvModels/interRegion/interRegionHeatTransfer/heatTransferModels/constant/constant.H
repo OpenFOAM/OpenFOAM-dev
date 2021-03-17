@@ -22,21 +22,31 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::function2HeatTransfer
+    Foam::fv::heatTransferModels::constant
 
 Description
-    Function2 heat transfer model. The 2D function returns the heat transfer
-    coefficient as a function of the local and neighbouring velocity
-    magnitudes. An area-per-unit-volume [1/m] field (AoV) must be provided in
+    Constant heat transfer model. The heat transfer coefficient [W/m^2/K] (htc)
+    must be provided as a value in the coefficients dictionary or as a field in
     constant.
+
+Usage
+    Example usage:
+    \verbatim
+    {
+        type        constant;
+
+        AoV         1e3;
+
+        htc         1e5;
+    }
+    \endverbatim
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef function2HeatTransfer_H
-#define function2HeatTransfer_H
+#ifndef constant_H
+#define constant_H
 
-#include "interRegionHeatTransferModel.H"
-#include "Function2.H"
+#include "heatTransferModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -44,31 +54,24 @@ namespace Foam
 {
 namespace fv
 {
+namespace heatTransferModels
+{
 
 /*---------------------------------------------------------------------------*\
-                    Class function2HeatTransfer Declaration
+                           Class constant Declaration
 \*---------------------------------------------------------------------------*/
 
-class function2HeatTransfer
+class constant
 :
-    public interRegionHeatTransferModel
+    public heatTransferModel
 {
     // Private Data
 
-        //- Name of velocity field; default = U
-        word UName_;
+        //- Heat transfer coefficient [W/m^2/K]
+        dimensionedScalar htc_;
 
-        //- Name of neighbour velocity field; default = U
-        word UNbrName_;
-
-        //- Heat transfer coefficient function ptr
-        mutable autoPtr<Function2<scalar>> htcFunc_;
-
-        //- Area per unit volume of heat exchanger
-        mutable autoPtr<volScalarField> AoV_;
-
-        //- Start time name
-        const word startTimeName_;
+        //- Heat transfer coefficient [W/m^2/K]
+        autoPtr<volScalarField> htcPtr_;
 
 
     // Private Member Functions
@@ -76,33 +79,33 @@ class function2HeatTransfer
         //- Non-virtual read
         void readCoeffs();
 
-        //- Calculate the heat transfer coefficient
-        virtual void correctHtc() const;
-
 
 public:
 
     //- Runtime type information
-    TypeName("function2HeatTransfer");
+    TypeName("constant");
 
 
     // Constructors
 
-        //- Construct from dictionary
-        function2HeatTransfer
-        (
-            const word& name,
-            const word& modelType,
-            const dictionary& dict,
-            const fvMesh& mesh
-        );
+        //- Construct from dictionary and mesh
+        constant(const dictionary& dict, const fvMesh& mesh);
+
+        //- Construct from dictionary and model
+        constant(const dictionary& dict, const interRegionModel& model);
 
 
     //- Destructor
-    virtual ~function2HeatTransfer();
+    virtual ~constant();
 
 
     // Member Functions
+
+        //- Get the heat transfer coefficient
+        virtual tmp<volScalarField> htc() const;
+
+        //- Correct the heat transfer coefficient
+        virtual void correct();
 
         //- Read dictionary
         virtual bool read(const dictionary& dict);
@@ -111,6 +114,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace heatTransferModels
 } // End namespace fv
 } // End namespace Foam
 

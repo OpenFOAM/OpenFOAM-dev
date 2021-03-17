@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,30 +23,67 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include "interRegionModel.H"
 
-inline bool Foam::fv::interRegionModel::master() const
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::fv::interRegionModel::interpolate
+(
+    const interRegionModel& nbrModel,
+    const Field<Type>& field
+) const
 {
-    return master_;
-}
-
-
-inline const Foam::word&
-Foam::fv::interRegionModel::nbrRegionName() const
-{
-    return nbrRegionName_;
-}
-
-
-inline const Foam::meshToMesh&
-Foam::fv::interRegionModel::meshInterp() const
-{
-    if (!meshInterpPtr_.valid())
+    if (master())
     {
-        setMapper();
+        return meshInterp().mapTgtToSrc(field);
     }
+    else
+    {
+        return (nbrModel.meshInterp().mapSrcToTgt(field));
+    }
+}
 
-    return meshInterpPtr_();
+
+template<class Type>
+Foam::tmp<Foam::Field<Type>>
+Foam::fv::interRegionModel::interpolate
+(
+    const Field<Type>& field
+) const
+{
+    return interpolate(nbrModel(), field);
+}
+
+
+template<class Type>
+void Foam::fv::interRegionModel::interpolate
+(
+    const interRegionModel& nbrModel,
+    const Field<Type>& field,
+    Field<Type>& result
+) const
+{
+    if (master())
+    {
+        meshInterp().mapTgtToSrc(field, plusEqOp<scalar>(), result);
+    }
+    else
+    {
+        nbrModel.meshInterp().mapSrcToTgt(field, plusEqOp<scalar>(), result);
+    }
+}
+
+
+template<class Type>
+void Foam::fv::interRegionModel::interpolate
+(
+    const Field<Type>& field,
+    Field<Type>& result
+) const
+{
+    return interpolate(nbrModel(), field, result);
 }
 
 

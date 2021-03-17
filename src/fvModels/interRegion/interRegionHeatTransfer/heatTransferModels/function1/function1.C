@@ -23,7 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "constantHeatTransfer.H"
+#include "function1.H"
+#include "zeroGradientFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,80 +33,89 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(constantHeatTransfer, 0);
-    addToRunTimeSelectionTable
-    (
-        fvModel,
-        constantHeatTransfer,
-        dictionary
-    );
+namespace heatTransferModels
+{
+    defineTypeNameAndDebug(function1, 0);
+    addToRunTimeSelectionTable(heatTransferModel, function1, mesh);
+    addToRunTimeSelectionTable(heatTransferModel, function1, model);
 }
 }
-
+}
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::fv::constantHeatTransfer::correctHtc() const
-{}
+void Foam::fv::heatTransferModels::function1::readCoeffs()
+{
+    UName_ = coeffs().lookupOrDefault<word>("U", "U");
+
+    htcFunc_.reset(Function1<scalar>::New("htcFunc", coeffs()).ptr());
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::constantHeatTransfer::constantHeatTransfer
+Foam::fv::heatTransferModels::function1::function1
 (
-    const word& name,
-    const word& modelType,
     const dictionary& dict,
     const fvMesh& mesh
 )
 :
-    interRegionHeatTransferModel(name, modelType, dict, mesh)
+    heatTransferModel(typeName, dict, mesh),
+    UName_(word::null),
+    htcFunc_(nullptr)
 {
-    if (master())
-    {
-        const volScalarField htcConst
-        (
-            IOobject
-            (
-                "htcConst",
-                mesh.time().constant(),
-                mesh,
-                IOobject::MUST_READ,
-                IOobject::AUTO_WRITE
-            ),
-            mesh
-        );
-
-        const volScalarField AoV
-        (
-            IOobject
-            (
-                "AoV",
-                mesh.time().constant(),
-                mesh,
-                IOobject::MUST_READ,
-                IOobject::AUTO_WRITE
-            ),
-            mesh
-        );
-
-        htc_ = htcConst*AoV;
-    }
+    readCoeffs();
 }
+
+
+Foam::fv::heatTransferModels::function1::function1
+(
+    const dictionary& dict,
+    const interRegionModel& model
+)
+:
+    function1(dict, model.mesh())
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::fv::constantHeatTransfer::~constantHeatTransfer()
+Foam::fv::heatTransferModels::function1::~function1()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-bool Foam::fv::constantHeatTransfer::read(const dictionary& dict)
+Foam::tmp<Foam::volScalarField>
+Foam::fv::heatTransferModels::function1::htc() const
 {
-    if (interRegionHeatTransferModel::read(dict))
+    const volVectorField& U = mesh().lookupObject<volVectorField>(UName_);
+
+    tmp<volScalarField> tHtc =
+        volScalarField::New
+        (
+            type() + ":htc",
+            mesh(),
+            dimPower/dimTemperature/dimArea,
+            zeroGradientFvPatchScalarField::typeName
+        );
+
+    tHtc->primitiveFieldRef() = htcFunc_->value(mag(U));
+    tHtc->correctBoundaryConditions();
+
+    return tHtc;
+}
+
+
+void Foam::fv::heatTransferModels::function1::correct()
+{}
+
+
+bool Foam::fv::heatTransferModels::function1::read(const dictionary& dict)
+{
+    if (heatTransferModel::read(dict))
     {
+        readCoeffs();
         return true;
     }
     else
