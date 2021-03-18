@@ -79,7 +79,7 @@ error() {
 
 # (1) case-sensitive match; (2) case-insensitive match; (3) keyword match
 findModelFiles() {
-    find "$FOAM_SRC" \
+    find "$FOAM_SRC" "$FOAM_APP" \
         -name "$1" \
         -iname "$2" \
         ! -iname "$3" \
@@ -93,6 +93,9 @@ findFiles() {
 
     # Application
     _out="$(find "$FOAM_APP" -name "${_pre}.C" -type f)"
+    # If same file with .H extension exists, then .C is not an application
+    [ "$_out" ] && \
+        [ "$(find "$FOAM_APP" -name "${_pre}.H" -type f | wc -c)" -ne 0 ] && unset _out
 
     # Script
     _out="$(find "$FOAM_SRC/../bin" -name "${_pre}" -type f) $_out"
@@ -296,9 +299,9 @@ showExamples() {
     echo "$_file" | grep -q ".H" && _type=model && \
         _pre="$(basename "${file%/*}")" && \
         echo "$_pre" | grep -iq include && _pre=""
-    echo "$_file" | grep -q "$FOAM_SRC/../bin" && _type=script
-    echo "$_file" | grep -q "$FOAM_UTILITIES" && _type=utility
-    echo "$_file" | grep -q "$FOAM_SOLVERS" && _type=solver
+    ! [ "$_type" ] && echo "$_file" | grep -q "$FOAM_SRC/../bin" && _type=script
+    ! [ "$_type" ] && echo "$_file" | grep -q "$FOAM_UTILITIES" && _type=utility
+    ! [ "$_type" ] && echo "$_file" | grep -q "$FOAM_SOLVERS" && _type=solver
 
     [ -n "$_type" ] && showTypeExamples "$_pre" "$_type" "$_all" && return 0
     return 0
