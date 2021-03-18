@@ -17,20 +17,11 @@ FoamFile
 
 energySource
 {
-    type            semiImplicitSource;
+    type            heatSource;
 
     selectionMode   all;
 
-    volumeMode      specific;
-
-    sources
-    {
-        e
-        {
-            explicit    1e7; // W/m^3 == kg/m/s^3
-            implicit    0;
-        }
-    }
+    q               1e7;
 }
 
 // ************************************************************************* //

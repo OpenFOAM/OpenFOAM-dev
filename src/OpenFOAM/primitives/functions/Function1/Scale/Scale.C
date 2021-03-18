@@ -53,6 +53,32 @@ template<class Type>
 Foam::Function1s::Scale<Type>::Scale
 (
     const word& name,
+    const Function1<scalar>& scale,
+    const Function1<scalar>& xScale,
+    const Function1<Type>& value
+)
+:
+    FieldFunction1<Type, Scale<Type>>(name),
+    scale_(scale.clone().ptr()),
+    xScale_(xScale.clone().ptr()),
+    value_(value.clone().ptr()),
+    integrableScale_
+    (
+        isA<Constant<scalar>>(xScale_())
+     && isA<Constant<scalar>>(scale_())
+    ),
+    integrableValue_
+    (
+        isA<Constant<scalar>>(xScale_())
+     && isA<Constant<Type>>(value_())
+    )
+{}
+
+
+template<class Type>
+Foam::Function1s::Scale<Type>::Scale
+(
+    const word& name,
     const dictionary& dict
 )
 :
