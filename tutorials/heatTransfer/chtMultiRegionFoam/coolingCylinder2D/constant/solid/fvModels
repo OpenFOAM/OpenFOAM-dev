@@ -16,19 +16,11 @@ FoamFile
 
 cylinderHeat
 {
-    type            semiImplicitSource;
-    selectionMode   all;
-    volumeMode      specific;
-    power           5e7;
+    type            heatSource;
 
-    sources
-    {
-        e
-        {
-            explicit $power;
-            implicit 0;
-        }
-    }
+    selectionMode   all;
+
+    q               5e7;
 }
 
 //************************************************************************** //

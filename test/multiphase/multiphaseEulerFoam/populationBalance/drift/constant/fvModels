@@ -15,26 +15,66 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-massSource
+airSource
 {
-    type            semiImplicitSource;
+    type            massSource;
 
     selectionMode   all;
-    volumeMode      specific;
 
-    sources
+    massFlowRate    24.535;
+
+    phase           air;
+    rho             thermo:rho.air;
+
+    fieldValues
     {
-        thermo:rho.air
-        {
-            explicit    0.024535; // kg/s/m^3
-            implicit    0;
-        }
-        thermo:rho.water
-        {
-            explicit    -24.535; // kg/s/m^3
-            implicit    0;
-        }
+        f0.air      0;
+        f1.air      0;
+        f2.air      0;
+        f3.air      0;
+        f4.air      0;
+        f5.air      0;
+        f6.air      0;
+        f7.air      0;
+        f8.air      0;
+        f9.air      0;
+        f10.air     0;
+        f11.air     0;
+        f12.air     0;
+        f13.air     0;
+        f14.air     0;
+        f15.air     0;
+        f16.air     0;
+        f17.air     0;
+        f18.air     0;
+        f19.air     0;
+        f20.air     0;
+        f21.air     0;
+        f22.air     0;
+        f23.air     0;
+        f24.air     0;
+        f25.air     0;
+        f26.air     0;
+        f27.air     0;
+        f28.air     0;
+        f29.air     0;
+        f30.air     0;
     }
+}
+
+waterSink
+{
+    type            massSource;
+
+    selectionMode   all;
+
+    massFlowRate    -24535;
+
+    phase           water;
+    rho             thermo:rho.water;
+
+    fieldValues
+    {}
 }
 
 

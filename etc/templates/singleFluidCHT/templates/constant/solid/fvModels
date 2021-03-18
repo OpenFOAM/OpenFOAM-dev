@@ -29,21 +29,10 @@ fixedTemperature
 /*
 fixedPower
 {
-    type            semiImplicitSource;
+    type            heatSource;
     selectionMode   all;
 
-    volumeMode      absolute;
-
-    power           100;          // Set power (W)
-
-    sources
-    {
-        e
-        {
-            explicit    $power;
-            implicit    0;
-        }
-    }
+    Q               100;          // Set power (W)
 }
 */
 

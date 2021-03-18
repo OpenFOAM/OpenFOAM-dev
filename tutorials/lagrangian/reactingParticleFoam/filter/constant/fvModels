@@ -46,7 +46,7 @@ filter1
 
 massSource
 {
-    type            semiImplicitSource;
+    type            massSource;
 
     selectionMode   points;
     points
@@ -54,57 +54,23 @@ massSource
         (2.75 0.5 0)
     );
 
-    volumeMode      absolute;
-
-    squarePulse
+    massFlowRate
     {
         type            scale;
         scale           squarePulse;
         start           0.2;
         duration        2;
+        value           1e-4;
     }
 
-    sources
+    fieldValues
     {
-        rho
-        {
-            explicit
-            {
-                $squarePulse;
-                value       1e-4; // kg/s
-            }
-            implicit    0;
-        }
-
-        U
-        {
-            explicit
-            {
-                $squarePulse;
-                value       (0 0.005 0);
-            }
-            implicit    0;
-        }
-
-        h
-        {
-            explicit
-            {
-                $squarePulse;
-                value       10;
-            }
-            implicit    0;
-        }
-
-        H2O
-        {
-            explicit
-            {
-                $squarePulse;
-                value       1e-4; // kg/s
-            }
-            implicit    0;
-        }
+        U               (0 50 0);
+        h               100000;
+        O2              0;
+        H2O             1;
+        k               0.0938;
+        epsilon         0.0449;
     }
 }
 

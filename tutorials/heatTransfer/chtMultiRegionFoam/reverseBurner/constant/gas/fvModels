@@ -17,27 +17,18 @@ FoamFile
 
 ignition
 {
-    type            semiImplicitSource;
+    type            heatSource;
 
     selectionMode   cellSet;
     cellSet         ignition;
 
-    volumeMode      specific;
-
-    sources
+    q
     {
-        h
-        {
-            explicit
-            {
-                type        scale;
-                scale       squarePulse;
-                start       0;
-                duration    1;
-                value       5e7; // kg/m/s^3
-            }
-            implicit    0;
-        }
+        type        scale;
+        scale       squarePulse;
+        start       0;
+        duration    1;
+        value       5e7;
     }
 }
 
