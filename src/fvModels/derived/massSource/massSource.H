@@ -43,7 +43,7 @@ Usage
         fieldValues
         {
             U               (10 0 0);
-            e               10;
+            T               300;
             k               0.375;
             epsilon         14.855;
         }
