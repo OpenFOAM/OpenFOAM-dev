@@ -279,20 +279,32 @@ void kinematicSingleLayer::continuityCheck()
 }
 
 
-void kinematicSingleLayer::updateSurfaceVelocities()
+tmp<volVectorField::Internal> kinematicSingleLayer::Uw() const
 {
+    tmp<volVectorField::Internal> tUw
+    (
+        volVectorField::Internal::New
+        (
+            "Uw",
+            regionMesh(),
+            dimensionedVector(dimVelocity, Zero)
+        )
+    );
+
+    volVectorField::Internal& Uw = tUw.ref();
+
     // Push boundary film velocity values into internal field
     for (label i=0; i<intCoupledPatchIDs_.size(); i++)
     {
         const label patchi = intCoupledPatchIDs_[i];
         const polyPatch& pp = regionMesh().boundaryMesh()[patchi];
-        UIndirectList<vector>(Uw_, pp.faceCells()) =
+        UIndirectList<vector>(Uw, pp.faceCells()) =
             U_.boundaryField()[patchi];
     }
 
-    Uw_ -= nHat()*(Uw_ & nHat());
+    Uw -= nHat()*(Uw_ & nHat());
 
-    Us_ = momentumTransport_->Us();
+    return tUw;
 }
 
 
@@ -309,7 +321,7 @@ tmp<Foam::fvVectorMatrix> kinematicSingleLayer::solveMomentum
         1/(time().deltaT()*regionMesh().V())
     );
 
-    // Momentum
+    // Momentum equation
     tmp<fvVectorMatrix> tUEqn
     (
         fvm::ddt(alpha_, rho_, U_) + fvm::div(phi_, U_)
@@ -559,19 +571,6 @@ kinematicSingleLayer::kinematicSingleLayer
             IOobject::AUTO_WRITE
         ),
         regionMesh()
-    ),
-
-    Us_
-    (
-        IOobject
-        (
-            "Us",
-            time().timeName(),
-            regionMesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        U_
     ),
 
     Uw_
@@ -947,9 +946,6 @@ void kinematicSingleLayer::evolveRegion()
 
     // Update film coverage indicator
     correctCoverage();
-
-    // Update film wall and surface velocities
-    updateSurfaceVelocities();
 
     // Predict delta_ from continuity
     predictDelta();

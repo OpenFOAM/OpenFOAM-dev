@@ -80,15 +80,9 @@ inline const volVectorField& kinematicSingleLayer::U() const
 }
 
 
-inline const volVectorField::Internal& kinematicSingleLayer::Us() const
+inline tmp<volVectorField::Internal> kinematicSingleLayer::Us() const
 {
-    return Us_;
-}
-
-
-inline const volVectorField::Internal& kinematicSingleLayer::Uw() const
-{
-    return Uw_;
+    return momentumTransport_->Us();
 }
 
 

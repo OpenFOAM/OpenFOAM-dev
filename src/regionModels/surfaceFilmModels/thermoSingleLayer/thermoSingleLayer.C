@@ -131,26 +131,6 @@ void thermoSingleLayer::correctHforMappedT()
 }
 
 
-void thermoSingleLayer::updateSurfaceTemperatures()
-{
-    correctHforMappedT();
-
-    // Push boundary film temperature into wall temperature internal field
-    for (label i=0; i<intCoupledPatchIDs_.size(); i++)
-    {
-        label patchi = intCoupledPatchIDs_[i];
-        const polyPatch& pp = regionMesh().boundaryMesh()[patchi];
-        UIndirectList<scalar>(Tw_, pp.faceCells()) =
-            T_.boundaryField()[patchi];
-    }
-    Tw_.correctBoundaryConditions();
-
-    // Update film surface temperature
-    Ts_ = T_;
-    Ts_.correctBoundaryConditions();
-}
-
-
 void thermoSingleLayer::transferPrimaryRegionThermoFields()
 {
     DebugInFunction << endl;
@@ -283,7 +263,7 @@ tmp<fvScalarMatrix> thermoSingleLayer::q(volScalarField& h) const
 
         // Heat-transfer to the wall
       - fvm::Sp((htcw_->h()/VbyA())/Cp_, h)
-      + (htcw_->h()/VbyA())*(h()/Cp_ + coverage*(Tw_()- T_()))
+      + (htcw_->h()/VbyA())*(h()/Cp_ + coverage*(Tw() - T_()))
     );
 }
 
@@ -292,7 +272,7 @@ void thermoSingleLayer::solveEnergy()
 {
     DebugInFunction << endl;
 
-    updateSurfaceTemperatures();
+    correctHforMappedT();
 
     fvScalarMatrix hEqn
     (
@@ -381,34 +361,6 @@ thermoSingleLayer::thermoSingleLayer
             IOobject::AUTO_WRITE
         ),
         regionMesh()
-    ),
-
-    Ts_
-    (
-        IOobject
-        (
-            "Ts",
-            time().timeName(),
-            regionMesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        T_,
-        zeroGradientFvPatchScalarField::typeName
-    ),
-
-    Tw_
-    (
-        IOobject
-        (
-            "Tw",
-            time().timeName(),
-            regionMesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        T_,
-        zeroGradientFvPatchScalarField::typeName
     ),
 
     h_
@@ -637,11 +589,7 @@ void thermoSingleLayer::evolveRegion()
     // Update film coverage indicator
     correctCoverage();
 
-    // Update film wall and surface velocities
-    updateSurfaceVelocities();
-
-    // Update film wall and surface temperatures
-    updateSurfaceTemperatures();
+    correctHforMappedT();
 
     // Predict delta_ from continuity
     predictDelta();
@@ -696,15 +644,36 @@ const volScalarField& thermoSingleLayer::T() const
 }
 
 
-const volScalarField& thermoSingleLayer::Ts() const
+tmp<volScalarField::Internal> thermoSingleLayer::Ts() const
 {
-    return Ts_;
+    return T_;
 }
 
 
-const volScalarField& thermoSingleLayer::Tw() const
+tmp<volScalarField::Internal> thermoSingleLayer::Tw() const
 {
-    return Tw_;
+    tmp<volScalarField::Internal> tTw
+    (
+        volScalarField::Internal::New
+        (
+            "Tw",
+            regionMesh(),
+            dimensionedScalar(dimTemperature, 0)
+        )
+    );
+
+    volScalarField::Internal& Tw = tTw.ref();
+
+    // Push boundary film temperature into wall temperature internal field
+    for (label i=0; i<intCoupledPatchIDs_.size(); i++)
+    {
+        label patchi = intCoupledPatchIDs_[i];
+        const polyPatch& pp = regionMesh().boundaryMesh()[patchi];
+        UIndirectList<scalar>(Tw, pp.faceCells()) =
+            T_.boundaryField()[patchi];
+    }
+
+    return tTw;
 }
 
 

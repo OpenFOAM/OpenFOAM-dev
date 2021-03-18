@@ -111,9 +111,6 @@ protected:
             //- Velocity - mean [m/s]
             volVectorField U_;
 
-            //- Velocity - surface [m/s]
-            volVectorField::Internal Us_;
-
             //- Velocity - wall [m/s]
             volVectorField::Internal Uw_;
 
@@ -258,9 +255,6 @@ protected:
         //- Continuity check
         virtual void continuityCheck();
 
-        //- Update film surface velocities
-        virtual void updateSurfaceVelocities();
-
         //- Constrain a film region master/slave boundaries of a field to a
         //  given value
         template<class Type>
@@ -352,12 +346,6 @@ public:
             //- Return the film velocity [m/s]
             inline const volVectorField& U() const;
 
-            //- Return the film surface velocity [m/s]
-            inline const volVectorField::Internal& Us() const;
-
-            //- Return the film wall velocity [m/s]
-            inline const volVectorField::Internal& Uw() const;
-
             //- Return the film flux [kg m/s]
             inline const surfaceScalarField& phi() const;
 
@@ -371,19 +359,28 @@ public:
             inline const volScalarField& coverage() const;
 
 
-            // Transfer fields - to the primary region
+        // Derived Fields
 
-                //- Return mass transfer source - Eulerian phase only
-                virtual tmp<volScalarField> primaryMassTrans() const;
+            //- Return the film surface velocity [m/s]
+            inline tmp<volVectorField::Internal> Us() const;
 
-                //- Return the film mass available for transfer to cloud
-                virtual const volScalarField& cloudMassTrans() const;
+            //- Return the film wall velocity [m/s]
+            tmp<volVectorField::Internal> Uw() const;
 
-                //- Return the parcel diameters originating from film to cloud
-                virtual const volScalarField& cloudDiameterTrans() const;
 
-                //- Return momentum transfer source - Eulerian phase only
-                virtual tmp<volVectorField> primaryMomentumTrans() const;
+        // Transfer fields - to the primary region
+
+            //- Return mass transfer source - Eulerian phase only
+            virtual tmp<volScalarField> primaryMassTrans() const;
+
+            //- Return the film mass available for transfer to cloud
+            virtual const volScalarField& cloudMassTrans() const;
+
+            //- Return the parcel diameters originating from film to cloud
+            virtual const volScalarField& cloudDiameterTrans() const;
+
+            //- Return momentum transfer source - Eulerian phase only
+            virtual tmp<volVectorField> primaryMomentumTrans() const;
 
 
         // External helper functions
