@@ -53,6 +53,29 @@ T Foam::dictionary::lookup
 
 
 template<class T>
+T Foam::dictionary::lookupBackwardsCompatible
+(
+    const wordList& keywords,
+    bool recursive,
+    bool patternMatch
+) const
+{
+    const entry* entryPtr =
+        lookupEntryPtrBackwardsCompatible(keywords, recursive, patternMatch);
+
+    if (entryPtr)
+    {
+        return pTraits<T>(entryPtr->stream());
+    }
+    else
+    {
+        // Generate error message using the first keyword
+        return lookup<T>(keywords[0], recursive, patternMatch);
+    }
+}
+
+
+template<class T>
 T Foam::dictionary::lookupOrDefault
 (
     const word& keyword,
@@ -78,6 +101,30 @@ T Foam::dictionary::lookupOrDefault
         }
 
         return deflt;
+    }
+}
+
+
+template<class T>
+T Foam::dictionary::lookupOrDefaultBackwardsCompatible
+(
+    const wordList& keywords,
+    const T& deflt,
+    bool recursive,
+    bool patternMatch
+) const
+{
+    const entry* entryPtr =
+        lookupEntryPtrBackwardsCompatible(keywords, recursive, patternMatch);
+
+    if (entryPtr)
+    {
+        return pTraits<T>(entryPtr->stream());
+    }
+    else
+    {
+        // Generate debugging messages using the first keyword
+        return lookupOrDefault<T>(keywords[0], deflt, recursive, patternMatch);
     }
 }
 
@@ -109,53 +156,6 @@ T Foam::dictionary::lookupOrAddDefault
 
         add(new primitiveEntry(keyword, deflt));
         return deflt;
-    }
-}
-
-
-template<class T>
-T Foam::dictionary::lookupBackwardsCompatible
-(
-    const wordList& keywords,
-    bool recursive,
-    bool patternMatch
-) const
-{
-    const entry* entryPtr =
-        lookupEntryPtrBackwardsCompatible(keywords, recursive, patternMatch);
-
-    if (entryPtr)
-    {
-        return pTraits<T>(entryPtr->stream());
-    }
-    else
-    {
-        // Generate error message using the first keyword
-        return lookup<T>(keywords[0], recursive, patternMatch);
-    }
-}
-
-
-template<class T>
-T Foam::dictionary::lookupOrDefaultBackwardsCompatible
-(
-    const wordList& keywords,
-    const T& deflt,
-    bool recursive,
-    bool patternMatch
-) const
-{
-    const entry* entryPtr =
-        lookupEntryPtrBackwardsCompatible(keywords, recursive, patternMatch);
-
-    if (entryPtr)
-    {
-        return pTraits<T>(entryPtr->stream());
-    }
-    else
-    {
-        // Generate debugging messages using the first keyword
-        return lookupOrDefault<T>(keywords[0], deflt, recursive, patternMatch);
     }
 }
 

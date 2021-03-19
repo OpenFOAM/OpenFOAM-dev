@@ -335,7 +335,7 @@ public:
             (
                 const word&,
                 bool recursive=false,
-                bool patternMatch = true
+                bool patternMatch=true
             ) const;
 
             //- Find and return an entry data stream pointer if present
@@ -360,16 +360,6 @@ public:
                 bool patternMatch
             );
 
-            //- Find and return an entry data stream if present otherwise error.
-            //  If recursive, search parent dictionaries.
-            //  If patternMatch, use regular expressions.
-            const entry& lookupEntry
-            (
-                const word&,
-                bool recursive,
-                bool patternMatch
-            ) const;
-
             //- Find and return an entry data stream if present, trying a list
             //  of keywords in sequence, otherwise return nullptr.
             //  If recursive, search parent dictionaries.
@@ -377,6 +367,16 @@ public:
             const entry* lookupEntryPtrBackwardsCompatible
             (
                 const wordList&,
+                bool recursive,
+                bool patternMatch
+            ) const;
+
+            //- Find and return an entry data stream if present otherwise error.
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions.
+            const entry& lookupEntry
+            (
+                const word&,
                 bool recursive,
                 bool patternMatch
             ) const;
@@ -402,6 +402,18 @@ public:
                 bool patternMatch=true
             ) const;
 
+            //- Find and return an entry data stream, trying a list of keywords
+            //  in sequence
+            //  if not found throw a fatal error relating to the first keyword
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions.
+            ITstream& lookupBackwardsCompatible
+            (
+                const wordList&,
+                bool recursive=false,
+                bool patternMatch=true
+            ) const;
+
             //- Find and return a T,
             //  if not found throw a fatal error.
             //  If recursive, search parent dictionaries.
@@ -410,6 +422,18 @@ public:
             T lookup
             (
                 const word&,
+                bool recursive=false,
+                bool patternMatch=true
+            ) const;
+
+            //- Find and return a T, trying a list of keywords in sequence
+            //  if not found throw a fatal error relating to the first keyword
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions.
+            template<class T>
+            T lookupBackwardsCompatible
+            (
+                const wordList&,
                 bool recursive=false,
                 bool patternMatch=true
             ) const;
@@ -427,31 +451,6 @@ public:
                 bool patternMatch=true
             ) const;
 
-            //- Find and return a T, if not found return the given
-            //  default value, and add to dictionary.
-            //  If recursive, search parent dictionaries.
-            //  If patternMatch, use regular expressions.
-            template<class T>
-            T lookupOrAddDefault
-            (
-                const word&,
-                const T&,
-                bool recursive=false,
-                bool patternMatch=true
-            );
-
-            //- Find and return a T, trying a list of keywords in sequence
-            //  if not found throw a fatal error relating to the first keyword
-            //  If recursive, search parent dictionaries.
-            //  If patternMatch, use regular expressions.
-            template<class T>
-            T lookupBackwardsCompatible
-            (
-                const wordList&,
-                bool recursive=false,
-                bool patternMatch=true
-            ) const;
-
             //- Find and return a T, trying a list of keywords in sequence
             //  if not found throw a fatal error relating to the first keyword
             //  If recursive, search parent dictionaries.
@@ -464,6 +463,19 @@ public:
                 bool recursive=false,
                 bool patternMatch=true
             ) const;
+
+            //- Find and return a T, if not found return the given
+            //  default value, and add to dictionary.
+            //  If recursive, search parent dictionaries.
+            //  If patternMatch, use regular expressions.
+            template<class T>
+            T lookupOrAddDefault
+            (
+                const word&,
+                const T&,
+                bool recursive=false,
+                bool patternMatch=true
+            );
 
             //- Find an entry if present, and assign to T
             //  Returns true if the entry was found.

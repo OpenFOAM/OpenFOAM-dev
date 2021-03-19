@@ -761,27 +761,6 @@ Foam::entry* Foam::dictionary::lookupEntryPtr
 }
 
 
-const Foam::entry& Foam::dictionary::lookupEntry
-(
-    const word& keyword,
-    bool recursive,
-    bool patternMatch
-) const
-{
-    const entry* entryPtr = lookupEntryPtr(keyword, recursive, patternMatch);
-
-    if (entryPtr == nullptr)
-    {
-        FatalIOErrorInFunction(*this)
-            << "keyword " << keyword << " is undefined in dictionary "
-            << name()
-            << exit(FatalIOError);
-    }
-
-    return *entryPtr;
-}
-
-
 const Foam::entry* Foam::dictionary::lookupEntryPtrBackwardsCompatible
 (
     const wordList& keywords,
@@ -818,6 +797,27 @@ const Foam::entry* Foam::dictionary::lookupEntryPtrBackwardsCompatible
 }
 
 
+const Foam::entry& Foam::dictionary::lookupEntry
+(
+    const word& keyword,
+    bool recursive,
+    bool patternMatch
+) const
+{
+    const entry* entryPtr = lookupEntryPtr(keyword, recursive, patternMatch);
+
+    if (entryPtr == nullptr)
+    {
+        FatalIOErrorInFunction(*this)
+            << "keyword " << keyword << " is undefined in dictionary "
+            << name()
+            << exit(FatalIOError);
+    }
+
+    return *entryPtr;
+}
+
+
 const Foam::entry& Foam::dictionary::lookupEntryBackwardsCompatible
 (
     const wordList& keywords,
@@ -848,6 +848,22 @@ Foam::ITstream& Foam::dictionary::lookup
 ) const
 {
     return lookupEntry(keyword, recursive, patternMatch).stream();
+}
+
+
+Foam::ITstream& Foam::dictionary::lookupBackwardsCompatible
+(
+    const wordList& keywords,
+    bool recursive,
+    bool patternMatch
+) const
+{
+    return lookupEntryBackwardsCompatible
+    (
+        keywords,
+        recursive,
+        patternMatch
+    ).stream();
 }
 
 
