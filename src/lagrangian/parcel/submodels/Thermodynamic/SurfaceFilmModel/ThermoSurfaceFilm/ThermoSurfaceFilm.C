@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -625,10 +625,10 @@ void Foam::ThermoSurfaceFilm<CloudType>::cacheFilmFields
             filmModel
         );
 
-    TFilmPatch_ = thermalFilmModel.Ts().boundaryField()[filmPatchi];
+    TFilmPatch_ = thermalFilmModel.T().boundaryField()[filmPatchi];
     filmModel.toPrimary(filmPatchi, TFilmPatch_);
 
-    CpFilmPatch_ = thermalFilmModel.Cp().boundaryField()[filmPatchi];
+    CpFilmPatch_ = thermalFilmModel.Cpv().boundaryField()[filmPatchi];
     filmModel.toPrimary(filmPatchi, CpFilmPatch_);
 }
 
