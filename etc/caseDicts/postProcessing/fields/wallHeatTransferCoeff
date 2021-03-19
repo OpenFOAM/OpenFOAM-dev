@@ -16,7 +16,7 @@ libs            ("libfieldFunctionObjects.so");
 
 rho             1.225;
 Cp              1005;
-Prl             0.707;
+Pr              0.707;
 Prt             0.9;
 
 executeControl  writeTime;

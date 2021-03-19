@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,21 +31,21 @@ Description
     kappaEff model, given by:
 
     \f[
-        htc = \rho*C_p*({\frac{\nu}{Prl} + \frac{\nu_t}{Prt}})
+        htc = \rho*C_p*({\frac{\nu}{Pr} + \frac{\nu_t}{Prt}})
     \f]
 
     kappaEff model with characteristic length, given by:
 
     \f[
         htc =
-            \rho*C_p*({\frac{\nu}{Prl} + \frac{\nu_t}{Prt}})\frac{1}{L_{char}};
+            \rho*C_p*({\frac{\nu}{Pr} + \frac{\nu_t}{Prt}})\frac{1}{L_{char}};
     \f]
 
     where
     \vartable
         rho      | Density [kg/m^3]
         Cp       | Specific heat capacity [m^2/K/s^2)]
-        Prl      | Fluid laminar Prandtl number []
+        Pr       | Fluid laminar Prandtl number []
         Prt      | Fluid turbulent Prandtl number []
         Lchar    | Characteristic length [m]
     \endvartable
@@ -62,7 +62,7 @@ Description
         patches     (".*Wall");
         rho         1.225;
         Cp          1005;
-        Prl         0.707;
+        Pr          0.707;
         Prt         0.9;
     }
     \endverbatim
@@ -78,7 +78,7 @@ Description
         patches     (".*Wall");
         rho         1.225;
         Cp          1005;
-        Prl         0.707;
+        Pr          0.707;
         Prt         0.9;
         Lchar       0.001;
     }
@@ -93,7 +93,7 @@ Usage
         region   | Region to be evaluated        | no       | default region
         rho      | Fluid density                 | yes      |
         Cp       | Fluid heat capacity           | yes      |
-        Prl      | Fluid laminar Prandtl number  | yes      |
+        Pr       | Fluid laminar Prandtl number  | yes      |
         Prt      | Fluid turbulent Prandtl number| yes      |
         Lchar    | Characteristic length         | no       | no
     \endtable
@@ -132,7 +132,7 @@ class kappaEff
         const fvMesh& mesh_;
 
         //- Fluid laminar Prandtl number
-        dimensionedScalar Prl_;
+        dimensionedScalar Pr_;
 
         //- Fluid turbulent Prandtl number
         dimensionedScalar Prt_;

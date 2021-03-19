@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ Description
         patches     (".*Wall");
         rho         1.225;
         Cp          1005;
-        Prl         0.707;
+        Pr          0.707;
         Prt         0.9;
     }
     \endverbatim
@@ -63,7 +63,7 @@ Description
         patches     (".*Wall");
         rho         1.225;
         Cp          1005;
-        Prl         0.707;
+        Pr          0.707;
         Prt         0.9;
         Lchar       0.001;
     }

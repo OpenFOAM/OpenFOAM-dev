@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,8 +55,13 @@ Foam::wallHeatTransferCoeffModels::kappaEff::kappaEff
 :
     wallHeatTransferCoeffModel(name, mesh, dict),
     mesh_(mesh),
-    Prl_("Prl", dimless, dict),
-    Prt_("Prl", dimless, dict),
+    Pr_
+    (
+        "Pr",
+        dimless,
+        dict.lookupBackwardsCompatible({"Pr", "Prl"})
+    ),
+    Prt_("Prt", dimless, dict),
     Lchar_("Lchar", dimLength, Zero),
     isCharLength_(false)
 {
@@ -74,7 +79,7 @@ Foam::wallHeatTransferCoeffModels::kappaEff::~kappaEff()
 
 bool Foam::wallHeatTransferCoeffModels::kappaEff::read(const dictionary& dict)
 {
-    Prl_.read(dict);
+    Pr_.read(dict);
     Prt_.read(dict);
     isCharLength_ = dict.found("Lchar");
 
@@ -116,7 +121,7 @@ Foam::wallHeatTransferCoeffModels::kappaEff::htcByRhoCp
         if (!thtcByRhoCpBf[patchi].coupled())
         {
             thtcByRhoCpBf[patchi] =
-                mmtm.nu(patchi)/Prl_.value() + mmtm.nut(patchi)/Prt_.value();
+                mmtm.nu(patchi)/Pr_.value() + mmtm.nut(patchi)/Prt_.value();
 
             if (isCharLength_)
             {
