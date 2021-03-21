@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,13 +36,6 @@ namespace regionModels
 
 defineTypeNameAndDebug(surfaceFilmModel, 0);
 defineRunTimeSelectionTable(surfaceFilmModel, mesh);
-
-const dimensionedScalar surfaceFilmModel::Tref
-(
-    "Tref",
-    dimTemperature,
-    298.15
-);
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

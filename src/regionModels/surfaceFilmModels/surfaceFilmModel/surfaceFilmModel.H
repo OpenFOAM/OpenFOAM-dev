@@ -58,9 +58,6 @@ public:
     //- Runtime type information
     TypeName("surfaceFilmModel");
 
-    //- Reference temperature for enthalpy
-    static const dimensionedScalar Tref;
-
 
     // Declare runtime constructor selection table
 

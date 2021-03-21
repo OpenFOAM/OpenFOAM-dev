@@ -26,6 +26,9 @@ License
 #include "CH4N2O.H"
 #include "addToRunTimeSelectionTable.H"
 
+#include "thermodynamicConstants.H"
+using namespace Foam::constant::thermodynamic;
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -90,7 +93,8 @@ Foam::CH4N2O::CH4N2O()
     kappa_("kappa", -0.4267, 0.0056903, -8.0065e-06, 1.815e-09, 0.0, 0.0),
     kappag_("kappag", 6.977e-05, 1.1243, 844.9, -148850.0),
     sigma_("sigma", 705.0, 1.0, 0.0, 0.0, 0.0, 0.0), // note: set to constant
-    D_("D", 147.18, 20.1, 60.056, 28.0) // note: Same as nHeptane
+    D_("D", 147.18, 20.1, 60.056, 28.0), // note: Same as nHeptane
+    Hf_(h_.value(Tstd))
 {}
 
 
@@ -125,7 +129,8 @@ Foam::CH4N2O::CH4N2O
     kappa_(thermalConductivity),
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
-    D_(vapourDiffusivity)
+    D_(vapourDiffusivity),
+    Hf_(h_.value(Tstd))
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,27 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::waxSolventViscosity
+    Foam::regionModels::surfaceFilmModels::ArrheniusViscosity
 
 Description
-    Wax solvent mixture viscosity model.
+    The Arrhenius temperature-dependent viscosity model multiplies the viscosity
+    of a base model by an Arrhenius-type temperature function:
+
+        mu = mu0*exp(k1*(1/(T + k2) - 1/(Tref + k2)))
+
+    Where:
+        mu0 is the base-model viscosity
+        k1 and k2 are Arrhenius coefficients
+        T is the local temperature
+        Tref is the reference temperature
 
 SourceFiles
-    waxSolventViscosity.C
+    ArrheniusViscosity.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef waxSolventViscosity_H
-#define waxSolventViscosity_H
+#ifndef ArrheniusViscosity_H
+#define ArrheniusViscosity_H
 
 #include "filmViscosityModel.H"
 
@@ -47,46 +56,40 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class waxSolventViscosity Declaration
+                     Class ArrheniusViscosity Declaration
 \*---------------------------------------------------------------------------*/
 
-class waxSolventViscosity
+class ArrheniusViscosity
 :
     public viscosityModel
 {
-    // Private Member Functions
-
-        //- Correct the mixture viscosity
-        void correctMu();
-
-
 protected:
 
     // Protected data
 
-        //- Wax viscosity
-        volScalarField muWax_;
+        //- Base viscosity model
+        autoPtr<viscosityModel> viscosity_;
 
-        //- Wax viscosity model
-        autoPtr<viscosityModel> muWaxModel_;
+        //- Coefficient k1
+        dimensionedScalar k1_;
 
-        //- Solvent viscosity
-        volScalarField muSolvent_;
+        //- Coefficient k2
+        dimensionedScalar k2_;
 
-        //- Solvent viscosity model
-        autoPtr<viscosityModel> muSolventModel_;
+        //- Reference temperature
+        dimensionedScalar Tref_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("waxSolvent");
+    TypeName("Arrhenius");
 
 
     // Constructors
 
         //- Construct from surface film model
-        waxSolventViscosity
+        ArrheniusViscosity
         (
             surfaceFilmRegionModel& film,
             const dictionary& dict,
@@ -94,11 +97,11 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        waxSolventViscosity(const waxSolventViscosity&) = delete;
+        ArrheniusViscosity(const ArrheniusViscosity&) = delete;
 
 
     //- Destructor
-    virtual ~waxSolventViscosity();
+    virtual ~ArrheniusViscosity();
 
 
     // Member Functions
@@ -114,7 +117,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const waxSolventViscosity&) = delete;
+        void operator=(const ArrheniusViscosity&) = delete;
 };
 
 

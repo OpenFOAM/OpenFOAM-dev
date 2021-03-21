@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -326,7 +326,7 @@ Foam::scalar Foam::LiquidEvaporationBoil<CloudType>::dh
         case (parent::etEnthalpyDifference):
         {
             scalar hc = this->owner().composition().carrier().Ha(idc, p, TDash);
-            scalar hp = liquids_.properties()[idl].h(p, TDash);
+            scalar hp = liquids_.properties()[idl].Ha(p, TDash);
 
             dh = hc - hp;
             break;

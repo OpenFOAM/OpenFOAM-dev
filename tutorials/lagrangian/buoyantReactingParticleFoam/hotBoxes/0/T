@@ -30,7 +30,7 @@ boundaryField
     "(region0_to.*)"
     {
         type            mapped;
-        field           Ts;
+        field           T;
         average         300;
         setAverage      no;
         value           uniform 300;

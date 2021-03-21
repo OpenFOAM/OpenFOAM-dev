@@ -26,6 +26,9 @@ License
 #include "MB.H"
 #include "addToRunTimeSelectionTable.H"
 
+#include "thermodynamicConstants.H"
+using namespace Foam::constant::thermodynamic;
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -91,7 +94,8 @@ Foam::MB::MB()
     kappa_("kappa", 0.2298, -0.0003002, 0.0, 0.0, 0.0, 0.0),
     kappag_("kappag", 1333.1, 0.9962, 12317000000.0, 0.0),
     sigma_("sigma", 554.5, 0.064084, 1.2418, 0.0, 0.0, 0.0),
-    D_("D", 147.18, 20.1, 102.133, 28.0) // note: Same as nHeptane
+    D_("D", 147.18, 20.1, 102.133, 28.0), // note: Same as nHeptane,
+    Hf_(h_.value(Tstd))
 {}
 
 
@@ -126,7 +130,8 @@ Foam::MB::MB
     kappa_(thermalConductivity),
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
-    D_(vapourDiffusivity)
+    D_(vapourDiffusivity),
+    Hf_(h_.value(Tstd))
 {}
 
 

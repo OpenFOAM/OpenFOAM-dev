@@ -225,6 +225,9 @@ void VoFPatchTransfer::correct
             const polyPatch& pp = pbm[patchi];
             const labelList& faceCells = pp.faceCells();
 
+            const vectorField& U = film.U();
+            const scalarField& he = film.thermo().he();
+
             // Accumulate the total mass removed from patch
             scalar dMassPatch = 0;
 
@@ -244,8 +247,8 @@ void VoFPatchTransfer::correct
                         transferRateCoeff_*delta[celli]*rho[celli]*magSf[celli];
 
                     massToTransfer[celli] += dMass;
-                    momentumToTransfer[celli] += dMass*film.U()[celli];
-                    energyToTransfer[celli] += dMass*film.h()[celli];
+                    momentumToTransfer[celli] += dMass*U[celli];
+                    energyToTransfer[celli] += dMass*he[celli];
                 }
 
                 if

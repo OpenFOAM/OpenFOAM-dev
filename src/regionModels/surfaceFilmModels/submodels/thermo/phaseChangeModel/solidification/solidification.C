@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,8 +118,8 @@ void solidification::correctModel
 {
     const thermoSingleLayer& film = filmType<thermoSingleLayer>();
 
-    const scalarField& T = film.T();
-    const scalarField& h = film.h();
+    const scalarField& T = film.thermo().T();
+    const scalarField& he = film.thermo().he();
     const scalarField& coverage = film.coverage();
 
     const scalar rateLimiter = min
@@ -144,7 +144,7 @@ void solidification::correctModel
 
                 // Heat is assumed to be removed by heat-transfer to the wall
                 // so the energy remains unchanged by the phase-change.
-                dEnergy[celli] += dm*h[celli];
+                dEnergy[celli] += dm*he[celli];
             }
         }
     }

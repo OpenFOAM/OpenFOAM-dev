@@ -70,11 +70,6 @@ class thermoSingleLayer
 :
     public kinematicSingleLayer
 {
-    // Private Member Functions
-
-        //- Return boundary types for sensible enthalpy field
-        wordList hBoundaryTypes();
-
 
 protected:
 
@@ -86,22 +81,6 @@ protected:
 
             //- Reference to the primary region thermo
             const fluidThermo& primaryThermo_;
-
-
-            // Fields
-
-                //- Specific heat capacity [J/kg/K]
-                volScalarField Cp_;
-
-                //- Thermal conductivity [W/m/K]
-                volScalarField kappa_;
-
-                //- Temperature - mean [K]
-                volScalarField T_;
-
-                //- Sensible enthalpy [J/kg]
-                volScalarField h_;
-
 
             // Transfer fields - to the primary region
 
@@ -156,9 +135,6 @@ protected:
 
         // Sub-models
 
-            //- Viscosity model
-            autoPtr<viscosityModel> viscosity_;
-
             //- Heat transfer coefficient between film surface and primary
             //  region [W/m^2/K]
             autoPtr<heatTransferModel> htcs_;
@@ -186,9 +162,6 @@ protected:
 
         //- Read control parameters from dictionary
         virtual bool read();
-
-        //- Correct the thermo fields
-        virtual void correctThermoFields();
 
         //- Correct sensible enthalpy for mapped temperature fields
         virtual void correctHforMappedT();
@@ -252,21 +225,6 @@ public:
             inline const fluidThermo& primaryThermo() const;
 
 
-        // Fields
-
-            //- Return the film specific heat capacity [J/kg/K]
-            virtual const volScalarField& Cp() const;
-
-            //- Return the film thermal conductivity [W/m/K]
-            virtual const volScalarField& kappa() const;
-
-            //- Return the film mean temperature [K]
-            virtual const volScalarField& T() const;
-
-            //- Return the film sensible enthalpy [J/kg]
-            virtual const volScalarField& h() const;
-
-
         // Derived Fields
 
             //- Return the film surface temperature [K]
@@ -276,29 +234,6 @@ public:
 
             //- Return the film wall temperature [K]
             virtual tmp<volScalarField::Internal> Tw() const;
-
-
-        // Thermo functions
-
-            //- Return sensible enthalpy as a function of temperature
-            //  for a patch
-            inline tmp<scalarField> h
-            (
-                const scalarField& T,
-                const label patchi
-            ) const;
-
-            //- Return sensible enthalpy as a function of temperature
-            inline tmp<volScalarField> h
-            (
-                const volScalarField& T
-            ) const;
-
-            //- Return temperature as a function of sensible enthalpy
-            inline tmp<volScalarField> T
-            (
-                const volScalarField& h
-            ) const;
 
 
          // Source fields (read/write access)

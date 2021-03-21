@@ -31,7 +31,7 @@ divSchemes
 
     div(phid,alpha) Gauss upwind;
     div(phi,U)      Gauss upwind;
-    div(phi,h)      Gauss upwind;
+    div(phi,e)      Gauss upwind;
 }
 
 laplacianSchemes

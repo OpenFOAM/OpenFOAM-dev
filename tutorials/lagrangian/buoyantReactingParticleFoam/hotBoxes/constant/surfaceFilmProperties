@@ -19,18 +19,12 @@ surfaceFilmModel thermoSingleLayer;
 
 regionName      wallFilmRegion;
 
-thermophysicalProperties
-{
-    type        liquid;
-
-    useReferenceValues  no;
-    liquid      H2O;
-}
-
 viscosity
 {
-    model        liquid;
+    model       Newtonian;
 }
+
+sigma       0.07;
 
 deltaWet    1e-4;
 hydrophilic no;

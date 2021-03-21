@@ -26,6 +26,9 @@ License
 #include "aC10H7CH3.H"
 #include "addToRunTimeSelectionTable.H"
 
+#include "thermodynamicConstants.H"
+using namespace Foam::constant::thermodynamic;
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -91,7 +94,8 @@ Foam::aC10H7CH3::aC10H7CH3()
     kappa_("kappa", 0.19758, -0.0001796, 0, 0, 0, 0),
     kappag_("kappag", 0.3911, -0.1051, -213.52, 2318300),
     sigma_("sigma", 772.04, 0.076, 1.33, 0, 0, 0),
-    D_("D", 147.18, 20.1, 142.2, 28) // note: Same as nHeptane
+    D_("D", 147.18, 20.1, 142.2, 28), // note: Same as nHeptane
+    Hf_(h_.value(Tstd))
 {}
 
 
@@ -126,7 +130,8 @@ Foam::aC10H7CH3::aC10H7CH3
     kappa_(thermalConductivity),
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
-    D_(vapourDiffusivity)
+    D_(vapourDiffusivity),
+    Hf_(h_.value(Tstd))
 {}
 
 

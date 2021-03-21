@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,6 +68,9 @@ class liquid
         autoPtr<Function1<scalar>> sigma_;
         autoPtr<Function1<scalar>> D_;
 
+        //- Liquid heat of formation [J/kg]
+        scalar Hf_;
+
 
     // Private Member Functions
 
@@ -112,8 +115,14 @@ public:
         //- Liquid heat capacity [J/kg/K]
         inline scalar Cp(scalar p, scalar T) const;
 
-        //- Liquid enthalpy [J/kg]
-        inline scalar h(scalar p, scalar T) const;
+        //- Liquid sensible enthalpy [J/kg]
+        inline scalar Hs(scalar p, scalar T) const;
+
+        //- Liquid heat of formation [J/kg]
+        inline scalar Hf() const;
+
+        //- Liquid absolute enthalpy [J/kg]
+        inline scalar Ha(scalar p, scalar T) const;
 
         //- Ideal gas heat capacity [J/kg/K]
         inline scalar Cpg(scalar p, scalar T) const;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,27 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::ArrheniusViscosity
+    Foam::regionModels::surfaceFilmModels::NewtonianViscosity
 
 Description
-    The Arrhenius temperature-dependent viscosity model multiplies the viscosity
-    of a base model by an Arrhenius-type temperature function:
-
-        mu = mu0*exp(k1*(1/(T + k2) - 1/(Tref + k2)))
-
-    Where:
-        mu0 is the base-model viscosity
-        k1 and k2 are Arrhenius coefficients
-        T is the local temperature
-        Tref is the reference temperature
+    Newtonian viscosity model
+    with the viscosity obtain directly from the thermophysical properties.
 
 SourceFiles
-    ArrheniusViscosity.C
+    NewtonianViscosity.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef ArrheniusViscosity_H
-#define ArrheniusViscosity_H
+#ifndef NewtonianViscosity_H
+#define NewtonianViscosity_H
 
 #include "filmViscosityModel.H"
 
@@ -56,40 +48,23 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                     Class ArrheniusViscosity Declaration
+                       Class NewtonianViscosity Declaration
 \*---------------------------------------------------------------------------*/
 
-class ArrheniusViscosity
+class NewtonianViscosity
 :
     public viscosityModel
 {
-protected:
-
-    // Protected data
-
-        //- Base viscosity model
-        autoPtr<viscosityModel> viscosity_;
-
-        //- Coefficient k1
-        dimensionedScalar k1_;
-
-        //- Coefficient k2
-        dimensionedScalar k2_;
-
-        //- Reference temperature
-        dimensionedScalar Tref_;
-
-
 public:
 
     //- Runtime type information
-    TypeName("Arrhenius");
+    TypeName("Newtonian");
 
 
     // Constructors
 
         //- Construct from surface film model
-        ArrheniusViscosity
+        NewtonianViscosity
         (
             surfaceFilmRegionModel& film,
             const dictionary& dict,
@@ -97,27 +72,29 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        ArrheniusViscosity(const ArrheniusViscosity&) = delete;
+        NewtonianViscosity(const NewtonianViscosity&) = delete;
 
 
     //- Destructor
-    virtual ~ArrheniusViscosity();
+    virtual ~NewtonianViscosity();
 
 
     // Member Functions
 
-        //- Correct
-        virtual void correct
-        (
-            const volScalarField& p,
-            const volScalarField& T
-        );
+        // Evolution
+
+            //- Correct
+            virtual void correct
+            (
+                const volScalarField& p,
+                const volScalarField& T
+            );
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const ArrheniusViscosity&) = delete;
+        void operator=(const NewtonianViscosity&) = delete;
 };
 
 

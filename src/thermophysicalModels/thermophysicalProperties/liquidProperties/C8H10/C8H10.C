@@ -26,6 +26,9 @@ License
 #include "C8H10.H"
 #include "addToRunTimeSelectionTable.H"
 
+#include "thermodynamicConstants.H"
+using namespace Foam::constant::thermodynamic;
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -100,7 +103,8 @@ Foam::C8H10::C8H10()
     kappa_("kappa", 0.20149, -0.00023988, 0.0, 0.0, 0.0, 0.0),
     kappag_("kappag", 1.708e-05, 1.319, 565.6, 0.0),
     sigma_("sigma", 617.17, 0.066, 1.268, 0.0, 0.0, 0.0),
-    D_("D", 147.18, 20.1, 106.167, 28.0) // note: Same as nHeptane
+    D_("D", 147.18, 20.1, 106.167, 28.0), // note: Same as nHeptane
+    Hf_(h_.value(Tstd))
 {}
 
 
@@ -135,7 +139,8 @@ Foam::C8H10::C8H10
     kappa_(thermalConductivity),
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
-    D_(vapourDiffusivity)
+    D_(vapourDiffusivity),
+    Hf_(h_.value(Tstd))
 {}
 
 

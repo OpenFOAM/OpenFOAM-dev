@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,7 +146,9 @@ tmp<fvVectorMatrix> contactAngleForce::correct(volVectorField& U)
     const scalarField& V = filmModel_.regionMesh().V();
 
     const volScalarField& coverage = filmModel_.coverage();
-    const volScalarField& sigma = filmModel_.sigma();
+
+    const tmp<volScalarField> tsigma = filmModel_.sigma();
+    const volScalarField& sigma = tsigma();
 
     const tmp<volScalarField> ttheta = theta();
     const volScalarField& theta = ttheta();

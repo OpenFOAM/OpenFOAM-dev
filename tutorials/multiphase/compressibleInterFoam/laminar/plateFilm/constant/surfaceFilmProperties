@@ -21,53 +21,16 @@ regionName      plateRegion;
 
 phase           liquid;
 
-thermophysicalProperties
-{
-    type        liquid;
-
-    mixture
-    {
-        liquid
-        {
-            type H2O;
-
-            // Set Cp constant and the corresponding linear function for h for
-            // compatibility with the current hard-coded thermodynamics model in
-            // surfaceFilm
-
-            Cp
-            {
-                a   4200;
-                b   0;
-                c   0;
-                d   0;
-                e   0;
-                f   0;
-            }
-
-            h
-            {
-                a   -1252230; // -Cp*TRef where TRef = 298.15
-                b   4200;
-                c   0;
-                d   0;
-                e   0;
-                f   0;
-            }
-        }
-    }
-
-    useReferenceValues no;
-}
-
 viscosity
 {
-    model       liquid;
+    model       Newtonian;
 }
 
-deltaWet        1e-12;
+sigma       0.07;
 
-hydrophilic     no;
+deltaWet    1e-12;
+
+hydrophilic no;
 
 transfer
 {

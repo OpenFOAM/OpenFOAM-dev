@@ -26,6 +26,9 @@ License
 #include "C12H26.H"
 #include "addToRunTimeSelectionTable.H"
 
+#include "thermodynamicConstants.H"
+using namespace Foam::constant::thermodynamic;
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -100,7 +103,8 @@ Foam::C12H26::C12H26()
     kappa_("kappa", 0.2047, -0.0002326, 0.0, 0.0, 0.0, 0.0),
     kappag_("kappag", 5.719e-06, 1.4699, 579.4, 0.0),
     sigma_("sigma", 658.0, 0.055493, 1.3262, 0.0, 0.0, 0.0),
-    D_("D", 147.18, 20.1, 170.338, 28.0) // note: Same as nHeptane
+    D_("D", 147.18, 20.1, 170.338, 28.0), // note: Same as nHeptane
+    Hf_(h_.value(Tstd))
 {}
 
 
@@ -135,7 +139,8 @@ Foam::C12H26::C12H26
     kappa_(thermalConductivity),
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
-    D_(vapourDiffusivity)
+    D_(vapourDiffusivity),
+    Hf_(h_.value(Tstd))
 {}
 
 

@@ -56,12 +56,13 @@ class surfaceFilmRegionModel
     public surfaceFilmModel,
     public singleLayerRegion
 {
-protected:
-
-    // Protected data
+    // Private data
 
         //- Acceleration due to gravity [m/s^2]
         const dimensionedVector& g_;
+
+
+protected:
 
 
     // Protected member functions
@@ -135,19 +136,19 @@ public:
             virtual const volScalarField& rho() const = 0;
 
             //- Return the film surface tension [N/m]
-            virtual const volScalarField& sigma() const = 0;
+            virtual tmp<volScalarField> sigma() const = 0;
 
 
-            // Transfer fields - to the primary region
+        // Transfer fields - to the primary region
 
-                //- Return mass transfer source - Eulerian phase only
-                virtual tmp<volScalarField> primaryMassTrans() const = 0;
+            //- Return mass transfer source - Eulerian phase only
+            virtual tmp<volScalarField> primaryMassTrans() const = 0;
 
-                //- Return the film mass available for transfer
-                virtual const volScalarField& cloudMassTrans() const = 0;
+            //- Return the film mass available for transfer
+            virtual const volScalarField& cloudMassTrans() const = 0;
 
-                //- Return the parcel diameters originating from film
-                virtual const volScalarField& cloudDiameterTrans() const = 0;
+            //- Return the parcel diameters originating from film
+            virtual const volScalarField& cloudDiameterTrans() const = 0;
 
 
         // Evolution

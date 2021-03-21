@@ -140,6 +140,11 @@ void Foam::ThermoSurfaceFilm<CloudType>::absorbInteraction
     // Parcel tangential velocity
     const vector Ut = Urel - Un;
 
+    const liquidProperties& liq = thermo_.liquids().properties()[0];
+
+    // Local pressure
+    const scalar pc = thermo_.thermo().p()[p.cell()];
+
     filmModel.addSources
     (
         pp.index(),
@@ -147,7 +152,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::absorbInteraction
         mass,                           // mass
         mass*Ut,                        // tangential momentum
         mass*mag(Un),                   // impingement pressure
-        mass*p.hs()                     // energy
+        mass*liq.Hs(pc, p.T())          // energy
     );
 
     this->nParcelsTransferred()++;
@@ -625,11 +630,11 @@ void Foam::ThermoSurfaceFilm<CloudType>::cacheFilmFields
             filmModel
         );
 
-    TFilmPatch_ = thermalFilmModel.T().boundaryField()[filmPatchi];
+    TFilmPatch_ = thermalFilmModel.thermo().T().boundaryField()[filmPatchi];
     filmModel.toPrimary(filmPatchi, TFilmPatch_);
 
-    // CpFilmPatch_ = thermalFilmModel.Cpv().boundaryField()[filmPatchi];
-    CpFilmPatch_ = thermalFilmModel.Cp().boundaryField()[filmPatchi];
+    CpFilmPatch_ =
+        thermalFilmModel.thermo().Cpv()().boundaryField()[filmPatchi];
     filmModel.toPrimary(filmPatchi, CpFilmPatch_);
 }
 

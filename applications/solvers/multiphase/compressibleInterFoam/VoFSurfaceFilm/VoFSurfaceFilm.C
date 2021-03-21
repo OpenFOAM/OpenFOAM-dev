@@ -131,11 +131,11 @@ void Foam::fv::VoFSurfaceFilm::addSup
             )
         );
 
-        const volScalarField CpVoF(thermo.thermo1().Cp());
+        const volScalarField::Internal Cv(thermo.thermo1().Cv());
 
         eqn +=
-            film_->Sh()()/thermo.thermo1().Cp()()
-          + film_->Tref*film_->Srho();
+            film_->Sh()()/Cv
+          + film_->Srho()*(eqn.psi() - thermo.thermo1().he()/Cv);
     }
     else
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "filmThermoModel.H"
+#include "function1Viscosity.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -36,35 +37,52 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(thermoModel, 0);
-defineRunTimeSelectionTable(thermoModel, dictionary);
+defineTypeNameAndDebug(function1Viscosity, 0);
+
+addToRunTimeSelectionTable
+(
+    viscosityModel,
+    function1Viscosity,
+    dictionary
+);
+
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-thermoModel::thermoModel
+function1Viscosity::function1Viscosity
 (
-    surfaceFilmRegionModel& film
-)
-:
-    filmSubModelBase(film)
-{}
-
-
-thermoModel::thermoModel
-(
-    const word& modelType,
     surfaceFilmRegionModel& film,
-    const dictionary& dict
+    const dictionary& dict,
+    volScalarField& mu
 )
 :
-    filmSubModelBase(film, dict, typeName, modelType)
+    viscosityModel(typeName, film, dict, mu),
+    viscosity_(viscosityModel::New(film, coeffDict_, mu)),
+    function_
+    (
+        Function1<scalar>::New("function", coeffDict_)
+    )
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-thermoModel::~thermoModel()
+function1Viscosity::~function1Viscosity()
 {}
+
+
+// * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
+
+void function1Viscosity::correct
+(
+    const volScalarField& p,
+    const volScalarField& T
+)
+{
+    viscosity_->correct(p, T);
+    mu_.primitiveFieldRef() *= function_->value(T)();
+    mu_.correctBoundaryConditions();
+}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

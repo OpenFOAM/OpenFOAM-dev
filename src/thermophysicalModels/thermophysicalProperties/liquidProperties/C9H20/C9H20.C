@@ -26,6 +26,9 @@ License
 #include "C9H20.H"
 #include "addToRunTimeSelectionTable.H"
 
+#include "thermodynamicConstants.H"
+using namespace Foam::constant::thermodynamic;
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -100,7 +103,8 @@ Foam::C9H20::C9H20()
     kappa_("kappa", 0.209, -0.000264, 0.0, 0.0, 0.0, 0.0),
     kappag_("kappag", -0.065771, 0.27198, -3482.3, -1580300.0),
     sigma_("sigma", 594.60, 0.054975, 1.2897, 0.0, 0.0, 0.0),
-    D_("D", 147.18, 20.1, 128.258, 28.0) // note: Same as nHeptane
+    D_("D", 147.18, 20.1, 128.258, 28.0), // note: Same as nHeptane
+    Hf_(h_.value(Tstd))
 {}
 
 
@@ -135,7 +139,8 @@ Foam::C9H20::C9H20
     kappa_(thermalConductivity),
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
-    D_(vapourDiffusivity)
+    D_(vapourDiffusivity),
+    Hf_(h_.value(Tstd))
 {}
 
 

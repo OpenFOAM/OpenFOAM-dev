@@ -250,7 +250,9 @@ void curvatureSeparation::correct
     const surfaceScalarField& phi = film.phi();
     const volScalarField& rho = film.rho();
     const scalarField magSqrU(magSqr(film.U()));
-    const volScalarField& sigma = film.sigma();
+
+    const tmp<volScalarField> tsigma = film.sigma();
+    const volScalarField::Internal& sigma = tsigma();
 
     const scalarField invR1(calcInvR1(U));
     const scalarField cosAngle(calcCosAngle(phi));

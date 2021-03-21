@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -171,13 +171,6 @@ template<class ParcelType>
 inline Foam::scalar Foam::ThermoParcel<ParcelType>::Cp() const
 {
     return Cp_;
-}
-
-
-template<class ParcelType>
-inline Foam::scalar Foam::ThermoParcel<ParcelType>::hs() const
-{
-    return Cp_*(T_ - 298.15);
 }
 
 

@@ -26,6 +26,9 @@ License
 #include "C2H5OH.H"
 #include "addToRunTimeSelectionTable.H"
 
+#include "thermodynamicConstants.H"
+using namespace Foam::constant::thermodynamic;
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -100,7 +103,8 @@ Foam::C2H5OH::C2H5OH()
     kappa_("kappa", 0.253, -0.000281, 0.0, 0.0, 0.0, 0.0),
     kappag_("kappag", -3.12, 0.7152, -3550000.0, 0.0),
     sigma_("sigma", 3.7640e-02, -2.1570e-05, -1.025e-07, 0.0, 0.0, 0.0),
-    D_("D", 147.18, 20.1, 46.069, 28) // note: Same as nHeptane
+    D_("D", 147.18, 20.1, 46.069, 28), // note: Same as nHeptane
+    Hf_(h_.value(Tstd))
 {}
 
 
@@ -135,7 +139,8 @@ Foam::C2H5OH::C2H5OH
     kappa_(thermalConductivity),
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
-    D_(vapourDiffusivity)
+    D_(vapourDiffusivity),
+    Hf_(h_.value(Tstd))
 {}
 
 

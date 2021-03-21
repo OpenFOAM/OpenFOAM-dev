@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "function1Viscosity.H"
+#include "ArrheniusViscosity.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -37,19 +37,19 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(function1Viscosity, 0);
+defineTypeNameAndDebug(ArrheniusViscosity, 0);
 
 addToRunTimeSelectionTable
 (
     viscosityModel,
-    function1Viscosity,
+    ArrheniusViscosity,
     dictionary
 );
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-function1Viscosity::function1Viscosity
+ArrheniusViscosity::ArrheniusViscosity
 (
     surfaceFilmRegionModel& film,
     const dictionary& dict,
@@ -58,29 +58,28 @@ function1Viscosity::function1Viscosity
 :
     viscosityModel(typeName, film, dict, mu),
     viscosity_(viscosityModel::New(film, coeffDict_, mu)),
-    function_
-    (
-        Function1<scalar>::New("function", coeffDict_)
-    )
+    k1_("k1", dimTemperature, coeffDict_),
+    k2_("k2", dimTemperature, coeffDict_),
+    Tref_("Tref", dimTemperature, coeffDict_)
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-function1Viscosity::~function1Viscosity()
+ArrheniusViscosity::~ArrheniusViscosity()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void function1Viscosity::correct
+void ArrheniusViscosity::correct
 (
     const volScalarField& p,
     const volScalarField& T
 )
 {
     viscosity_->correct(p, T);
-    mu_.primitiveFieldRef() *= function_->value(T)();
+    mu_ *= exp(k1_*((1/(T + k2_)) - 1/(Tref_ + k2_)));
     mu_.correctBoundaryConditions();
 }
 

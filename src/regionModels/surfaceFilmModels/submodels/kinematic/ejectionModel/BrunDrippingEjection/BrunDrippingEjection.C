@@ -82,7 +82,10 @@ void BrunDrippingEjection::correct
 
     const scalarField& delta = film.delta();
     const scalarField& rho = film.rho();
-    const scalarField& sigma = film.sigma();
+
+    const tmp<volScalarField> tsigma = film.sigma();
+    const volScalarField::Internal& sigma = tsigma();
+
     const scalar magg = mag(film.g().value());
 
     forAll(delta, celli)

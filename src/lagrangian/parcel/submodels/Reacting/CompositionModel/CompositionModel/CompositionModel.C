@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -299,7 +299,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::H
         {
             forAll(Y, i)
             {
-                HMixture += Y[i]*thermo_.liquids().properties()[i].h(p, T);
+                HMixture += Y[i]*thermo_.liquids().properties()[i].Ha(p, T);
             }
             break;
         }
@@ -307,12 +307,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::H
         {
             forAll(Y, i)
             {
-                HMixture +=
-                     Y[i]
-                    *(
-                        thermo_.solids().properties()[i].Hf()
-                      + thermo_.solids().properties()[i].Cp()*T
-                     );
+                HMixture += Y[i]*thermo_.solids().properties()[i].Ha(T);
             }
             break;
         }
@@ -354,11 +349,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::Hs
             forAll(Y, i)
             {
                 HsMixture +=
-                    Y[i]
-                   *(
-                       thermo_.liquids().properties()[i].h(p, T)
-                     - thermo_.liquids().properties()[i].h(p, 298.15)
-                    );
+                    Y[i]*(thermo_.liquids().properties()[i].Hs(p, T));
             }
             break;
         }
@@ -366,7 +357,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::Hs
         {
             forAll(Y, i)
             {
-                HsMixture += Y[i]*thermo_.solids().properties()[i].Cp()*T;
+                HsMixture += Y[i]*thermo_.solids().properties()[i].Hs(T);
             }
             break;
         }
@@ -408,8 +399,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::Hc
         {
             forAll(Y, i)
             {
-                HcMixture +=
-                    Y[i]*thermo_.liquids().properties()[i].h(p, 298.15);
+                HcMixture += Y[i]*thermo_.liquids().properties()[i].Hf();
             }
             break;
         }

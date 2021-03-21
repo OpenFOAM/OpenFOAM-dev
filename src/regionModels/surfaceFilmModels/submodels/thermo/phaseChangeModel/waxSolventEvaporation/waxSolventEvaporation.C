@@ -26,6 +26,7 @@ License
 #include "waxSolventEvaporation.H"
 #include "addToRunTimeSelectionTable.H"
 #include "thermoSingleLayer.H"
+#include "liquidThermo.H"
 #include "zeroField.H"
 
 #include "fvmDdt.H"
@@ -160,13 +161,15 @@ void waxSolventEvaporation::correctModel
     const volScalarField& rho = film.rho();
     const surfaceScalarField& phi = film.phi();
 
-    // Set local thermo properties
-    const thermoModel& thermo = film.thermo();
+    // Set local liquidThermo properties
+    const liquidProperties& liquidThermo =
+        refCast<const heRhoThermopureMixtureliquidProperties>(film.thermo())
+       .cellThermoMixture(0).properties();
 
     // Retrieve fields from film model
     const scalarField& pInf = film.pPrimary();
-    const scalarField& T = film.T();
-    const scalarField& h = film.h();
+    const scalarField& T = film.thermo().T();
+    const scalarField& he = film.thermo().he();
     const scalarField& rhoInf = film.rhoPrimary();
     const scalarField& muInf = film.muPrimary();
     const scalarField& V = film.regionMesh().V();
@@ -237,14 +240,14 @@ void waxSolventEvaporation::correctModel
             const scalar pc = pInf[celli];
 
             // Calculate the boiling temperature
-            const scalar Tb = thermo.Tb(pc);
+            const scalar Tb = liquidThermo.pvInvert(pc);
 
             // Local temperature - impose lower limit of 200 K for stability
             const scalar Tloc = min(TbFactor_*Tb, max(200.0, T[celli]));
 
             const scalar pPartialCoeff
             (
-                thermo.pv(pc, Tloc)*activityCoeff_->value(Xsolvent)
+                liquidThermo.pv(pc, Tloc)*activityCoeff_->value(Xsolvent)
             );
 
             scalar XsCoeff = pPartialCoeff/pc;
@@ -275,7 +278,7 @@ void waxSolventEvaporation::correctModel
             const scalar Re = rhoInfc*mag(dU[celli])*L_/muInfc;
 
             // Vapour diffusivity [m^2/s]
-            const scalar Dab = thermo.D(pc, Tloc);
+            const scalar Dab = liquidThermo.D(pc, Tloc);
 
             // Schmidt number
             const scalar Sc = muInfc/(rhoInfc*(Dab + rootVSmall));
@@ -306,7 +309,7 @@ void waxSolventEvaporation::correctModel
             evapRateInf[celli] = evapRateCoeff[celli]*YInf[celli];
             evapRateCoeff[celli] *= YsCoeff;
 
-            // hVap[celli] = thermo.hl(pc, Tloc);
+            // hVap[celli] = liquidThermo.hl(pc, Tloc);
         }
     }
 
@@ -367,9 +370,7 @@ void waxSolventEvaporation::correctModel
 
         // Heat is assumed to be removed by heat-transfer to the wall
         // so the energy remains unchanged by the phase-change.
-        dEnergy += dm*h;
-
-        // Latent heat [J/kg]
+        dEnergy += dm*he;
         // dEnergy += dm*(h[celli] + hVap);
     }
 }

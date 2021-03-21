@@ -26,6 +26,9 @@ License
 #include "C7H16.H"
 #include "addToRunTimeSelectionTable.H"
 
+#include "thermodynamicConstants.H"
+using namespace Foam::constant::thermodynamic;
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -99,7 +102,8 @@ Foam::C7H16::C7H16()
     kappa_("kappa", 0.215, -0.000303, 0.0, 0.0, 0.0, 0.0),
     kappag_("kappag", -0.070028, 0.38068, -7049.9, -2400500.0),
     sigma_("sigma", 540.20, 0.054143, 1.2512, 0.0, 0.0, 0.0),
-    D_("D", 147.18, 20.1, 100.204, 28.0)
+    D_("D", 147.18, 20.1, 100.204, 28.0),
+    Hf_(h_.value(Tstd))
 {}
 
 
@@ -134,7 +138,8 @@ Foam::C7H16::C7H16
     kappa_(thermalConductivity),
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
-    D_(vapourDiffusivity)
+    D_(vapourDiffusivity),
+    Hf_(h_.value(Tstd))
 {}
 
 

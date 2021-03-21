@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -346,8 +346,8 @@ Foam::scalar Foam::SprayParcel<ParcelType>::chi
             scalar TBoil = liq.pvInvert(p0);
 
             scalar hl = liq.hl(pAmb, TBoil);
-            scalar iTp = liq.h(pAmb, T0) - pAmb/liq.rho(pAmb, T0);
-            scalar iTb = liq.h(pAmb, TBoil) - pAmb/liq.rho(pAmb, TBoil);
+            scalar iTp = liq.Ha(pAmb, T0) - pAmb/liq.rho(pAmb, T0);
+            scalar iTb = liq.Ha(pAmb, TBoil) - pAmb/liq.rho(pAmb, TBoil);
 
             chi += X[i]*(iTp - iTb)/hl;
         }

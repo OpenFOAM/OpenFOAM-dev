@@ -26,6 +26,7 @@ License
 #include "standardPhaseChange.H"
 #include "addToRunTimeSelectionTable.H"
 #include "thermoSingleLayer.H"
+#include "liquidThermo.H"
 #include "zeroField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -103,14 +104,16 @@ void standardPhaseChange::correctModel
 {
     const thermoSingleLayer& film = filmType<thermoSingleLayer>();
 
-    // Set local thermo properties
-    const thermoModel& thermo = film.thermo();
+    // Set local liquidThermo properties
+    const liquidProperties& liquidThermo =
+        refCast<const heRhoThermopureMixtureliquidProperties>(film.thermo())
+       .cellThermoMixture(0).properties();
 
     // Retrieve fields from film model
     const scalarField& delta = film.delta();
     const scalarField& pInf = film.pPrimary();
-    const scalarField& T = film.T();
-    const scalarField& h = film.h();
+    const scalarField& T = film.thermo().T();
+    const scalarField& he = film.thermo().he();
     const scalarField& rho = film.rho();
     const scalarField& rhoInf = film.rhoPrimary();
     const scalarField& muInf = film.muPrimary();
@@ -125,7 +128,7 @@ void standardPhaseChange::correctModel
     const scalar Wvap = this->Wvap();
 
     // Molecular weight of liquid [kg/kmol]
-    const scalar Wliq = thermo.W();
+    const scalar Wliq = liquidThermo.W();
 
     forAll(dMass, celli)
     {
@@ -137,22 +140,22 @@ void standardPhaseChange::correctModel
             const scalar pc = pInf[celli];
 
             // Calculate the boiling temperature
-            const scalar Tb = thermo.Tb(pc);
+            const scalar Tb = liquidThermo.pvInvert(pc);
 
             // Local temperature - impose lower limit of 200 K for stability
             const scalar Tloc = min(TbFactor_*Tb, max(200.0, T[celli]));
 
             // Saturation pressure [Pa]
-            const scalar pSat = thermo.pv(pc, Tloc);
+            const scalar pSat = liquidThermo.pv(pc, Tloc);
 
             // Latent heat [J/kg]
-            const scalar hVap = thermo.hl(pc, Tloc);
+            const scalar hVap = liquidThermo.hl(pc, Tloc);
 
             // Calculate mass transfer
             if (pSat >= 0.95*pc)
             {
                 // Boiling
-                const scalar Cp = thermo.Cp(pc, Tloc);
+                const scalar Cp = liquidThermo.Cp(pc, Tloc);
                 const scalar Tcorr = max(0.0, T[celli] - Tb);
                 const scalar qCorr = limMass[celli]*Cp*(Tcorr);
                 dm = qCorr/hVap;
@@ -172,7 +175,7 @@ void standardPhaseChange::correctModel
                 const scalar Ys = Wliq*pSat/(Wliq*pSat + Wvap*(pc - pSat));
 
                 // Vapour diffusivity [m^2/s]
-                const scalar Dab = thermo.D(pc, Tloc);
+                const scalar Dab = liquidThermo.D(pc, Tloc);
 
                 // Schmidt number
                 const scalar Sc = muInfc/(rhoInfc*(Dab + rootVSmall));
@@ -187,11 +190,13 @@ void standardPhaseChange::correctModel
                 dm = dt*magSf[celli]*rhoInfc*hm*(Ys - YInf[celli])/(1.0 - Ys);
             }
 
-            dMass[celli] += min(limMass[celli], max(dm, 0));
+            dm = min(limMass[celli], max(dm, 0));
+
+            dMass[celli] += dm;
 
             // Heat is assumed to be removed by heat-transfer to the wall
             // so the energy remains unchanged by the phase-change.
-            dEnergy[celli] += dm*h[celli];
+            dEnergy[celli] += dm*he[celli];
             // dEnergy[celli] += dm*(h[celli] + hVap);
         }
     }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,9 @@ License
 #include "liquid.H"
 #include "None.H"
 #include "addToRunTimeSelectionTable.H"
+
+#include "thermodynamicConstants.H"
+using namespace Foam::constant::thermodynamic;
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -75,7 +78,8 @@ Foam::liquid::liquid(const dictionary& dict)
     kappa_(New("kappa", dict)),
     kappag_(New("kappag", dict)),
     sigma_(New("sigma", dict)),
-    D_(New("D", dict))
+    D_(New("D", dict)),
+    Hf_(h_->value(Tstd))
 {}
 
 

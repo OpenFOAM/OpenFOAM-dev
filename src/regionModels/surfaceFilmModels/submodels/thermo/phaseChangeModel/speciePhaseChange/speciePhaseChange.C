@@ -27,6 +27,7 @@ License
 #include "thermoSingleLayer.H"
 #include "fluidThermo.H"
 #include "basicSpecieMixture.H"
+#include "liquidThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -67,12 +68,16 @@ speciePhaseChange::~speciePhaseChange()
 Foam::label speciePhaseChange::vapId() const
 {
     const thermoSingleLayer& film = filmType<thermoSingleLayer>();
-    const thermoModel& thermo = film.thermo();
+
+    // Set local liquidThermo properties
+    const liquidProperties& liquidThermo =
+        refCast<const heRhoThermopureMixtureliquidProperties>(film.thermo())
+       .cellThermoMixture(0).properties();
 
     const basicSpecieMixture& primarySpecieThermo =
         refCast<const basicSpecieMixture>(film.primaryThermo());
 
-    return primarySpecieThermo.species()[thermo.name()];
+    return primarySpecieThermo.species()[liquidThermo.name()];
 }
 
 

@@ -26,6 +26,7 @@ License
 #include "thermoSingleLayer.H"
 #include "fluidThermo.H"
 #include "basicSpecieMixture.H"
+#include "liquidThermo.H"
 
 #include "fvcDdt.H"
 #include "fvcDiv.H"
@@ -41,9 +42,6 @@ License
 #include "mapDistribute.H"
 #include "constants.H"
 
-// Sub-models
-#include "filmThermoModel.H"
-#include "filmViscosityModel.H"
 #include "heatTransferModel.H"
 #include "phaseChangeModel.H"
 #include "filmRadiationModel.H"
@@ -63,27 +61,6 @@ namespace surfaceFilmModels
 
 defineTypeNameAndDebug(thermoSingleLayer, 0);
 addToRunTimeSelectionTable(surfaceFilmRegionModel, thermoSingleLayer, mesh);
-
-// * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
-
-wordList thermoSingleLayer::hBoundaryTypes()
-{
-    wordList bTypes(T_.boundaryField().types());
-    forAll(bTypes, patchi)
-    {
-        if
-        (
-            T_.boundaryField()[patchi].fixesValue()
-         || isA<mixedFvPatchScalarField>(T_.boundaryField()[patchi])
-         || isA<mappedFieldFvPatchField<scalar>>(T_.boundaryField()[patchi])
-        )
-        {
-            bTypes[patchi] = fixedValueFvPatchField<scalar>::typeName;
-        }
-    }
-
-    return bTypes;
-}
 
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
@@ -105,27 +82,20 @@ void thermoSingleLayer::resetPrimaryRegionSourceTerms()
 }
 
 
-void thermoSingleLayer::correctThermoFields()
-{
-    rho_ == thermo_->rho();
-    sigma_ == thermo_->sigma();
-    Cp_ == thermo_->Cp();
-    kappa_ == thermo_->kappa();
-}
-
-
 void thermoSingleLayer::correctHforMappedT()
 {
-    T_.correctBoundaryConditions();
+    volScalarField& T = thermo_->T();
 
-    volScalarField::Boundary& hBf = h_.boundaryFieldRef();
+    T.correctBoundaryConditions();
 
-    forAll(hBf, patchi)
+    volScalarField::Boundary& heBf = thermo_->he().boundaryFieldRef();
+
+    forAll(heBf, patchi)
     {
-        const fvPatchField<scalar>& Tp = T_.boundaryField()[patchi];
+        const fvPatchField<scalar>& Tp = T.boundaryField()[patchi];
         if (isA<mappedFieldFvPatchField<scalar>>(Tp))
         {
-            hBf[patchi] == h(Tp, patchi);
+            heBf[patchi] == thermo().he(Tp, patchi);
         }
     }
 }
@@ -242,10 +212,12 @@ void thermoSingleLayer::updateSubmodels()
         1/(time().deltaT()*regionMesh().V())
     );
 
+    volScalarField& he = thermo_->he();
+
     // Update source fields
     rhoSp_ += rVDt*(cloudMassTrans_() + primaryMassTrans_());
     USp_ += rVDt*(cloudMassTrans_()*U_() + primaryMomentumTrans_());
-    hSp_ += rVDt*(cloudMassTrans_()*h_() + primaryEnergyTrans_());
+    hSp_ += rVDt*(cloudMassTrans_()*he() + primaryEnergyTrans_());
 
     momentumTransport_->correct();
 }
@@ -255,15 +227,20 @@ tmp<fvScalarMatrix> thermoSingleLayer::q(volScalarField& h) const
 {
     const volScalarField::Internal coverage(pos(delta_() - deltaSmall_));
 
+    const volScalarField::Internal& T = thermo().T();
+
+    const tmp<volScalarField> tCpv = thermo().Cpv();
+    const volScalarField::Internal& Cpv = tCpv();
+
     return
     (
         // Heat-transfer to the primary region
-      - fvm::Sp((htcs_->h()/VbyA())/Cp_, h)
-      + (htcs_->h()/VbyA())*(h()/Cp_ + coverage*(TPrimary_() - T_()))
+      - fvm::Sp((htcs_->h()/VbyA())/Cpv, h)
+      + (htcs_->h()/VbyA())*(h()/Cpv + coverage*(TPrimary_() - T))
 
         // Heat-transfer to the wall
-      - fvm::Sp((htcw_->h()/VbyA())/Cp_, h)
-      + (htcw_->h()/VbyA())*(h()/Cp_ + coverage*(Tw() - T_()))
+      - fvm::Sp((htcw_->h()/VbyA())/Cpv, h)
+      + (htcw_->h()/VbyA())*(h()/Cpv + coverage*(Tw() - T))
     );
 }
 
@@ -274,27 +251,23 @@ void thermoSingleLayer::solveEnergy()
 
     correctHforMappedT();
 
-    fvScalarMatrix hEqn
+    volScalarField& he = thermo_->he();
+
+    fvScalarMatrix heEqn
     (
-        fvm::ddt(alpha_, rho_, h_) + fvm::div(phi_, h_)
-      - fvm::Sp(continuityErr_, h_)
+        fvm::ddt(alpha_, rho(), he) + fvm::div(phi_, he)
+      - fvm::Sp(continuityErr_, he)
      ==
       - hSp_
-      + q(h_)
+      + q(he)
       + radiation_->Shs()/VbyA()
     );
 
-    hEqn.relax();
+    heEqn.relax();
 
-    hEqn.solve();
+    heEqn.solve();
 
-    // Update temperature using latest h_
-    T_ == T(h_);
-
-    correctThermoFields();
-
-    // Evaluate viscosity from user-model
-    viscosity_->correct(pPrimary_, T_);
+    thermo_->correct();
 }
 
 
@@ -318,64 +291,6 @@ thermoSingleLayer::thermoSingleLayer
         (
             IOobject::groupName(basicThermo::dictName, phaseName_)
         )
-    ),
-
-    Cp_
-    (
-        IOobject
-        (
-            "Cp",
-            time().timeName(),
-            regionMesh(),
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        regionMesh(),
-        dimensionedScalar(dimEnergy/dimMass/dimTemperature, 0),
-        zeroGradientFvPatchScalarField::typeName
-    ),
-
-    kappa_
-    (
-        IOobject
-        (
-            "kappa",
-            time().timeName(),
-            regionMesh(),
-            IOobject::NO_READ,
-            IOobject::AUTO_WRITE
-        ),
-        regionMesh(),
-        dimensionedScalar(dimEnergy/dimTime/dimLength/dimTemperature, 0),
-        zeroGradientFvPatchScalarField::typeName
-    ),
-
-    T_
-    (
-        IOobject
-        (
-            "T",
-            time().timeName(),
-            regionMesh(),
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        regionMesh()
-    ),
-
-    h_
-    (
-        IOobject
-        (
-            "h",
-            time().timeName(),
-            regionMesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE
-        ),
-        regionMesh(),
-        dimensionedScalar(dimEnergy/dimMass, 0),
-        hBoundaryTypes()
     ),
 
     primaryEnergyTrans_
@@ -442,8 +357,6 @@ thermoSingleLayer::thermoSingleLayer
     ),
 
     YPrimary_(),
-
-    viscosity_(viscosityModel::New(*this, coeffs(), mu_)),
 
     htcs_
     (
@@ -512,11 +425,6 @@ thermoSingleLayer::thermoSingleLayer
 
         correctCoverage();
 
-        correctThermoFields();
-
-        // Update derived fields
-        h_ == h(T_);
-
         surfaceScalarField phi
         (
             IOobject
@@ -528,13 +436,10 @@ thermoSingleLayer::thermoSingleLayer
                 IOobject::AUTO_WRITE,
                 false
             ),
-            fvc::flux(alpha_*rho_*U_)
+            fvc::flux(alpha_*rho()*U_)
         );
 
         phi_ == phi;
-
-        // Evaluate viscosity from user-model
-        viscosity_->correct(pPrimary_, T_);
     }
 }
 
@@ -626,27 +531,9 @@ void thermoSingleLayer::evolveRegion()
 }
 
 
-const volScalarField& thermoSingleLayer::Cp() const
-{
-    return Cp_;
-}
-
-
-const volScalarField& thermoSingleLayer::kappa() const
-{
-    return kappa_;
-}
-
-
-const volScalarField& thermoSingleLayer::T() const
-{
-    return T_;
-}
-
-
 tmp<volScalarField::Internal> thermoSingleLayer::Ts() const
 {
-    return T_;
+    return thermo().T();
 }
 
 
@@ -664,22 +551,18 @@ tmp<volScalarField::Internal> thermoSingleLayer::Tw() const
 
     volScalarField::Internal& Tw = tTw.ref();
 
+    const volScalarField& T = thermo().T();
+
     // Push boundary film temperature into wall temperature internal field
     for (label i=0; i<intCoupledPatchIDs_.size(); i++)
     {
         label patchi = intCoupledPatchIDs_[i];
         const polyPatch& pp = regionMesh().boundaryMesh()[patchi];
         UIndirectList<scalar>(Tw, pp.faceCells()) =
-            T_.boundaryField()[patchi];
+            T.boundaryField()[patchi];
     }
 
     return tTw;
-}
-
-
-const volScalarField& thermoSingleLayer::h() const
-{
-    return h_;
 }
 
 
@@ -687,7 +570,7 @@ void thermoSingleLayer::info()
 {
     kinematicSingleLayer::info();
 
-    const scalarField& Tinternal = T_;
+    const scalarField& Tinternal = thermo().T();
 
     Info<< indent << "min/mean/max(T)    = "
         << gMin(Tinternal) << ", "
@@ -706,7 +589,12 @@ tmp<volScalarField::Internal> thermoSingleLayer::Srho
     const basicSpecieMixture& primarySpecieThermo =
         refCast<const basicSpecieMixture>(primaryThermo_);
 
-    const label vapId = primarySpecieThermo.species()[thermo_->name()];
+    // Set local liquidThermo properties
+    const liquidProperties& liquidThermo =
+        refCast<const heRhoThermopureMixtureliquidProperties>(thermo())
+       .cellThermoMixture(0).properties();
+
+    const label vapId = primarySpecieThermo.species()[liquidThermo.name()];
 
     tmp<volScalarField::Internal> tSrho
     (

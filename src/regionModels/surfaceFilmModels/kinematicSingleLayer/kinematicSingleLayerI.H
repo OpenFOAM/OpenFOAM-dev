@@ -23,7 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "filmThermoModel.H"
 #include "surfaceInterpolate.H"
 #include "fvcSurfaceIntegrate.H"
 
@@ -44,15 +43,15 @@ inline const dimensionedScalar& kinematicSingleLayer::deltaSmall() const
 }
 
 
-inline const volScalarField& kinematicSingleLayer::mu() const
+inline const volScalarField& kinematicSingleLayer::rho() const
 {
-    return mu_;
+    return thermo_->rho();
 }
 
 
-inline const volScalarField& kinematicSingleLayer::sigma() const
+inline const volScalarField& kinematicSingleLayer::mu() const
 {
-    return sigma_;
+    return mu_;
 }
 
 
@@ -65,12 +64,6 @@ inline const volScalarField& kinematicSingleLayer::delta() const
 inline const volScalarField& kinematicSingleLayer::alpha() const
 {
     return alpha_;
-}
-
-
-inline const volScalarField& kinematicSingleLayer::rho() const
-{
-    return rho_;
 }
 
 
@@ -173,7 +166,7 @@ inline const volVectorField& kinematicSingleLayer::UPrimary() const
 
 inline const volScalarField& kinematicSingleLayer::pPrimary() const
 {
-    return pPrimary_;
+    return thermo_->p();
 }
 
 
@@ -189,7 +182,7 @@ inline const volScalarField& kinematicSingleLayer::muPrimary() const
 }
 
 
-inline const thermoModel& kinematicSingleLayer::thermo() const
+inline const rhoThermo& kinematicSingleLayer::thermo() const
 {
     return thermo_();
 }
@@ -216,7 +209,7 @@ kinematicSingleLayer::momentumTransport() const
 
 inline tmp<volScalarField::Internal> kinematicSingleLayer::mass() const
 {
-    return rho_()*delta_()*magSf();
+    return rho()()*delta_()*magSf();
 }
 
 

@@ -17,7 +17,7 @@ FoamFile
 
 solvers
 {
-    "(U|h|alpha).*"
+    "(U|e|alpha).*"
     {
         solver          PBiCGStab;
         preconditioner  DILU;

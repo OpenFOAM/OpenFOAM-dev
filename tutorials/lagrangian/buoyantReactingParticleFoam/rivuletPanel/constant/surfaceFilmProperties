@@ -15,19 +15,20 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-surfaceFilmModel kinematicSingleLayer;
+surfaceFilmModel thermoSingleLayer;
 
 regionName      wallFilmRegion;
 
-thermophysicalProperties
+viscosity
 {
-    type        constant;
-
-    specie      water;
-    rho0        1000;
-    mu0         1e-3;
-    sigma0      0.07;
+    model       Newtonian;
 }
+
+sigma       0.07;
+
+deltaWet    1e-12;
+
+hydrophilic no;
 
 momentumTransport
 {
@@ -54,6 +55,24 @@ forces
                 variance        100;
             }
         }
+    }
+}
+
+upperSurfaceModels
+{
+    heatTransfer
+    {
+        model    constant;
+        c0       1;
+    }
+}
+
+lowerSurfaceModels
+{
+    heatTransfer
+    {
+        model    constant;
+        c0       1;
     }
 }
 

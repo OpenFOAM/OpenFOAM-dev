@@ -26,6 +26,9 @@ License
 #include "C4H10O.H"
 #include "addToRunTimeSelectionTable.H"
 
+#include "thermodynamicConstants.H"
+using namespace Foam::constant::thermodynamic;
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -100,7 +103,8 @@ Foam::C4H10O::C4H10O()
     kappa_("kappa", 0.249, -0.0004005, 0.0, 0.0, 0.0, 0.0),
     kappag_("kappag", -0.0044894, 0.6155, -3266.3, 0.0),
     sigma_("sigma", 466.70, 0.057356, 1.288, 0.0, 0.0, 0.0),
-    D_("D", 147.18, 20.1, 74.123, 28) // note: Same as nHeptane
+    D_("D", 147.18, 20.1, 74.123, 28), // note: Same as nHeptane
+    Hf_(h_.value(Tstd))
 {}
 
 
@@ -135,7 +139,8 @@ Foam::C4H10O::C4H10O
     kappa_(thermalConductivity),
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
-    D_(vapourDiffusivity)
+    D_(vapourDiffusivity),
+    Hf_(h_.value(Tstd))
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::liquidViscosity
+    Foam::regionModels::surfaceFilmModels::waxSolventViscosity
 
 Description
-    liquidViscosity viscosity model
+    Wax solvent mixture viscosity model.
 
 SourceFiles
-    liquidViscosity.C
+    waxSolventViscosity.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef liquidViscosity_H
-#define liquidViscosity_H
+#ifndef waxSolventViscosity_H
+#define waxSolventViscosity_H
 
 #include "filmViscosityModel.H"
 
@@ -47,23 +47,46 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class liquidViscosity Declaration
+                     Class waxSolventViscosity Declaration
 \*---------------------------------------------------------------------------*/
 
-class liquidViscosity
+class waxSolventViscosity
 :
     public viscosityModel
 {
+    // Private Member Functions
+
+        //- Correct the mixture viscosity
+        void correctMu();
+
+
+protected:
+
+    // Protected data
+
+        //- Wax viscosity
+        volScalarField muWax_;
+
+        //- Wax viscosity model
+        autoPtr<viscosityModel> muWaxModel_;
+
+        //- Solvent viscosity
+        volScalarField muSolvent_;
+
+        //- Solvent viscosity model
+        autoPtr<viscosityModel> muSolventModel_;
+
+
 public:
 
     //- Runtime type information
-    TypeName("liquid");
+    TypeName("waxSolvent");
 
 
     // Constructors
 
         //- Construct from surface film model
-        liquidViscosity
+        waxSolventViscosity
         (
             surfaceFilmRegionModel& film,
             const dictionary& dict,
@@ -71,29 +94,27 @@ public:
         );
 
         //- Disallow default bitwise copy construction
-        liquidViscosity(const liquidViscosity&) = delete;
+        waxSolventViscosity(const waxSolventViscosity&) = delete;
 
 
     //- Destructor
-    virtual ~liquidViscosity();
+    virtual ~waxSolventViscosity();
 
 
     // Member Functions
 
-        // Evolution
-
-            //- Correct
-            virtual void correct
-            (
-                const volScalarField& p,
-                const volScalarField& T
-            );
+        //- Correct
+        virtual void correct
+        (
+            const volScalarField& p,
+            const volScalarField& T
+        );
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const liquidViscosity&) = delete;
+        void operator=(const waxSolventViscosity&) = delete;
 };
 
 

@@ -26,6 +26,9 @@ License
 #include "iC3H8O.H"
 #include "addToRunTimeSelectionTable.H"
 
+#include "thermodynamicConstants.H"
+using namespace Foam::constant::thermodynamic;
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -100,7 +103,8 @@ Foam::iC3H8O::iC3H8O()
     kappa_("kappa", 0.2029, -0.0002278, 0.0, 0.0, 0.0, 0.0),
     kappag_("kappag", -80.642, -1.4549, -604.42, 0.0),
     sigma_("sigma", 0.03818, -3.818e-05, -6.51e-08, 0.0, 0.0, 0.0),
-    D_("D", 4.75e-10, 1.75, 0.0, 0.0, 0.0)
+    D_("D", 4.75e-10, 1.75, 0.0, 0.0, 0.0),
+    Hf_(h_.value(Tstd))
 {}
 
 
@@ -135,7 +139,8 @@ Foam::iC3H8O::iC3H8O
     kappa_(thermalConductivity),
     kappag_(vapourThermalConductivity),
     sigma_(surfaceTension),
-    D_(vapourDiffusivity)
+    D_(vapourDiffusivity),
+    Hf_(h_.value(Tstd))
 {}
 
 

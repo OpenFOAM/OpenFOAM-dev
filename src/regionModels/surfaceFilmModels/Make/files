@@ -32,14 +32,18 @@ $(KINEMATICMODELS)/transferModels/transferModel/transferModel.C
 $(KINEMATICMODELS)/transferModels/transferModel/transferModelNew.C
 $(KINEMATICMODELS)/transferModels/transferModelList/transferModelList.C
 
-$(KINEMATICMODELS)/filmThermoModel/filmThermoModel/filmThermoModel.C
-$(KINEMATICMODELS)/filmThermoModel/filmThermoModel/filmThermoModelNew.C
-$(KINEMATICMODELS)/filmThermoModel/constantFilmThermo/constantFilmThermo.C
-$(KINEMATICMODELS)/filmThermoModel/liquidFilmThermo/liquidFilmThermo.C
-
 $(KINEMATICMODELS)/filmMomentumTransportModel/filmMomentumTransportModel/filmMomentumTransportModel.C
 $(KINEMATICMODELS)/filmMomentumTransportModel/filmMomentumTransportModel/filmMomentumTransportModelNew.C
 $(KINEMATICMODELS)/filmMomentumTransportModel/laminar/laminar.C
+
+$(KINEMATICMODELS)/filmViscosityModel/filmViscosityModel/filmViscosityModel.C
+$(KINEMATICMODELS)/filmViscosityModel/filmViscosityModel/filmViscosityModelNew.C
+$(KINEMATICMODELS)/filmViscosityModel/constant/constantViscosity.C
+$(KINEMATICMODELS)/filmViscosityModel/Newtonian/NewtonianViscosity.C
+$(KINEMATICMODELS)/filmViscosityModel/thixotropic/thixotropicViscosity.C
+$(KINEMATICMODELS)/filmViscosityModel/Arrhenius/ArrheniusViscosity.C
+$(KINEMATICMODELS)/filmViscosityModel/function1/function1Viscosity.C
+$(KINEMATICMODELS)/filmViscosityModel/waxSolvent/waxSolventViscosity.C
 
 THERMOMODELS=submodels/thermo
 $(THERMOMODELS)/phaseChangeModel/phaseChangeModel/phaseChangeModel.C
@@ -61,15 +65,6 @@ $(THERMOMODELS)/filmRadiationModel/noRadiation/noRadiation.C
 $(THERMOMODELS)/filmRadiationModel/constantRadiation/constantRadiation.C
 $(THERMOMODELS)/filmRadiationModel/primaryRadiation/primaryRadiation.C
 $(THERMOMODELS)/filmRadiationModel/standardRadiation/standardRadiation.C
-
-$(THERMOMODELS)/filmViscosityModel/filmViscosityModel/filmViscosityModel.C
-$(THERMOMODELS)/filmViscosityModel/filmViscosityModel/filmViscosityModelNew.C
-$(THERMOMODELS)/filmViscosityModel/constantViscosity/constantViscosity.C
-$(THERMOMODELS)/filmViscosityModel/liquidViscosity/liquidViscosity.C
-$(THERMOMODELS)/filmViscosityModel/thixotropicViscosity/thixotropicViscosity.C
-$(THERMOMODELS)/filmViscosityModel/ArrheniusViscosity/ArrheniusViscosity.C
-$(THERMOMODELS)/filmViscosityModel/function1Viscosity/function1Viscosity.C
-$(THERMOMODELS)/filmViscosityModel/waxSolventViscosity/waxSolventViscosity.C
 
 
 # Boundary conditions

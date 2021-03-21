@@ -6,6 +6,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 cleanCase
 
-rm -rf constant/wallFilm
+rm -rf constant/wallFilm/polyMesh
 
 #------------------------------------------------------------------------------

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "liquidViscosity.H"
+#include "NewtonianViscosity.H"
 #include "thermoSingleLayer.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -38,18 +38,18 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(liquidViscosity, 0);
+defineTypeNameAndDebug(NewtonianViscosity, 0);
 
 addToRunTimeSelectionTable
 (
     viscosityModel,
-    liquidViscosity,
+    NewtonianViscosity,
     dictionary
 );
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-liquidViscosity::liquidViscosity
+NewtonianViscosity::NewtonianViscosity
 (
     surfaceFilmRegionModel& film,
     const dictionary& dict,
@@ -62,13 +62,13 @@ liquidViscosity::liquidViscosity
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-liquidViscosity::~liquidViscosity()
+NewtonianViscosity::~NewtonianViscosity()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void liquidViscosity::correct
+void NewtonianViscosity::correct
 (
     const volScalarField& p,
     const volScalarField& T

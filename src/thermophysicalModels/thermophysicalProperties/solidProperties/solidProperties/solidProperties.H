@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,11 +149,14 @@ public:
             //- Thermal conductivity [W/m/K]
             inline scalar kappa() const;
 
+            //- Sensible enthalpy - reference to Tstd [J/kg]
+            inline scalar Hs(const scalar T) const;
+
             //- Heat of formation [J/kg]
             inline scalar Hf() const;
 
-            //- Sensible enthalpy - reference to Tstd [J/kg]
-            inline scalar Hs(const scalar T) const;
+            //- Absolute enthalpy [J/kg]
+            inline scalar Ha(scalar T) const;
 
             //- Emissivity []
             inline scalar emissivity() const;

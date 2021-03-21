@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,20 +22,23 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::regionModels::surfaceFilmModels::constantViscosity
+    Foam::regionModels::surfaceFilmModels::viscosityModel
 
 Description
-    Constant viscosity model
+    Base class for surface film viscosity models
 
 SourceFiles
-    constantViscosity.C
+    filmViscosityModel.C
+    filmViscosityModelNew.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef constantViscosity_H
-#define constantViscosity_H
+#ifndef filmViscosityModel_H
+#define filmViscosityModel_H
 
-#include "filmViscosityModel.H"
+#include "filmSubModelBase.H"
+#include "runTimeSelectionTables.H"
+#include "scalarField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -47,44 +50,70 @@ namespace surfaceFilmModels
 {
 
 /*---------------------------------------------------------------------------*\
-                      Class constantViscosity Declaration
+                     Class viscosityModel Declaration
 \*---------------------------------------------------------------------------*/
 
-class constantViscosity
+class viscosityModel
 :
-    public viscosityModel
+    public filmSubModelBase
 {
 protected:
 
-    // Protected data
+    // Protected Member Data
 
-        //- Constant viscosity [Pa.s]
-        dimensionedScalar mu0_;
-
+        //- Reference to the viscosity field
+        volScalarField& mu_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("constant");
+    TypeName("viscosity");
 
+
+    // Declare runtime constructor selection table
+
+         declareRunTimeSelectionTable
+         (
+             autoPtr,
+             viscosityModel,
+             dictionary,
+             (
+                surfaceFilmRegionModel& film,
+                const dictionary& dict,
+                volScalarField& mu
+             ),
+             (film, dict, mu)
+         );
 
     // Constructors
 
-        //- Construct from surface film model
-        constantViscosity
+        //- Construct from type name, dictionary and surface film model
+        viscosityModel
         (
+            const word& modelType,
             surfaceFilmRegionModel& film,
             const dictionary& dict,
             volScalarField& mu
         );
 
         //- Disallow default bitwise copy construction
-        constantViscosity(const constantViscosity&) = delete;
+        viscosityModel(const viscosityModel&) = delete;
+
+
+    // Selectors
+
+        //- Return a reference to the selected phase change model
+        static autoPtr<viscosityModel> New
+        (
+            surfaceFilmRegionModel& film,
+            const dictionary& dict,
+            volScalarField& mu
+        );
 
 
     //- Destructor
-    virtual ~constantViscosity();
+    virtual ~viscosityModel();
 
 
     // Member Functions
@@ -96,13 +125,19 @@ public:
             (
                 const volScalarField& p,
                 const volScalarField& T
-            );
+            ) = 0;
+
+
+        // I-O
+
+            //- Provide some feedback
+            virtual void info(Ostream& os) const;
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const constantViscosity&) = delete;
+        void operator=(const viscosityModel&) = delete;
 };
 
 

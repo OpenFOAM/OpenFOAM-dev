@@ -226,16 +226,16 @@ public:
 
         // Fundamental thermodynamic properties
 
-            //- Sensible enthalpy [J/kg]
-            inline scalar Hs(const scalar p, const scalar T) const;
+            //- Liquid sensible enthalpy [J/kg]
+            virtual scalar Hs(scalar p, scalar T) const = 0;
 
-            //- Enthalpy of formation [J/kg]
-            inline scalar Hf() const;
+            //- Liquid heat of formation [J/kg]
+            virtual scalar Hf() const = 0;
 
-            //- Absolute enthalpy [J/kg]
-            inline scalar Ha(const scalar p, const scalar T) const;
+            //- Liquid absolute enthalpy [J/kg]
+            virtual scalar Ha(scalar p, scalar T) const = 0;
 
-            // Entropy [J/kg/K]
+            //- Liquid entropy [J/kg/K]
             scalar S(const scalar p, const scalar T) const;
 
 
@@ -246,9 +246,6 @@ public:
 
             //- Heat of vapourisation [J/kg]
             virtual scalar hl(scalar p, scalar T) const = 0;
-
-            //- Liquid enthalpy [J/kg] - reference to 298.15 K
-            virtual scalar h(scalar p, scalar T) const = 0;
 
             //- Vapour heat capacity [J/kg/K]
             virtual scalar Cpg(scalar p, scalar T) const = 0;

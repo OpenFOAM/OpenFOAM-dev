@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,8 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "constantViscosity.H"
-#include "addToRunTimeSelectionTable.H"
+#include "filmViscosityModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -37,53 +36,40 @@ namespace surfaceFilmModels
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-defineTypeNameAndDebug(constantViscosity, 0);
-
-addToRunTimeSelectionTable
-(
-    viscosityModel,
-    constantViscosity,
-    dictionary
-);
+defineTypeNameAndDebug(viscosityModel, 0);
+defineRunTimeSelectionTable(viscosityModel, dictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-constantViscosity::constantViscosity
+viscosityModel::viscosityModel
 (
+    const word& modelType,
     surfaceFilmRegionModel& film,
     const dictionary& dict,
     volScalarField& mu
 )
 :
-    viscosityModel(typeName, film, dict, mu),
-    mu0_("mu0", dimDynamicViscosity, coeffDict_)
-{
-    mu_ == mu0_;
-}
+    filmSubModelBase(film, dict, typeName, modelType),
+    mu_(mu)
+{}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-constantViscosity::~constantViscosity()
+viscosityModel::~viscosityModel()
 {}
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-void constantViscosity::correct
-(
-    const volScalarField& p,
-    const volScalarField& T
-)
-{
-    mu_ == mu0_;
-}
+void viscosityModel::info(Ostream& os) const
+{}
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace surfaceFilmModels
-} // End namespace regionModels
-} // End namespace Foam
+} // end namespace surfaceFilmModels
+} // end namespace regionModels
+} // end namespace Foam
 
 // ************************************************************************* //
