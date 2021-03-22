@@ -226,14 +226,24 @@ public:
 
         // Fundamental thermodynamic properties
 
-            //- Liquid sensible enthalpy [J/kg]
-            virtual scalar Hs(scalar p, scalar T) const = 0;
-
             //- Liquid heat of formation [J/kg]
             virtual scalar Hf() const = 0;
 
+            //- Liquid sensible enthalpy [J/kg]
+            //  currently pressure effects are neglected
+            virtual scalar Hs(scalar p, scalar T) const = 0;
+
             //- Liquid absolute enthalpy [J/kg]
+            //  currently pressure effects are neglected
             virtual scalar Ha(scalar p, scalar T) const = 0;
+
+            //- Sensible internal energy [J/kg]
+            //  currently pressure effects are neglected
+            inline scalar Es(scalar p, const scalar T) const;
+
+            //- Absolute internal energy [J/kg]
+            //  currently pressure effects are neglected
+            inline scalar Ea(scalar p, scalar T) const;
 
             //- Liquid entropy [J/kg/K]
             scalar S(const scalar p, const scalar T) const;

@@ -109,6 +109,18 @@ inline Foam::scalar Foam::liquidProperties::CpMCv(scalar p, scalar T) const
 }
 
 
+inline Foam::scalar Foam::liquidProperties::Es(scalar p, const scalar T) const
+{
+    return Hs(p, T);
+}
+
+
+inline Foam::scalar Foam::liquidProperties::Ea(scalar p, const scalar T) const
+{
+    return Es(p, T) + Hf();
+}
+
+
 template<class Func>
 inline void Foam::liquidProperties::readIfPresent
 (

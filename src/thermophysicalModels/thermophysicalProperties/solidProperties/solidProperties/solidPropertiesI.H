@@ -39,9 +39,9 @@ inline Foam::scalar Foam::solidProperties::Cp() const
 }
 
 
-inline Foam::scalar Foam::solidProperties::kappa() const
+inline Foam::scalar Foam::solidProperties::Hf() const
 {
-    return kappa_;
+    return Hf_;
 }
 
 
@@ -51,15 +51,27 @@ inline Foam::scalar Foam::solidProperties::Hs(const scalar T) const
 }
 
 
-inline Foam::scalar Foam::solidProperties::Hf() const
-{
-    return Hf_;
-}
-
-
 inline Foam::scalar Foam::solidProperties::Ha(const scalar T) const
 {
     return Hs(T) + Hf();
+}
+
+
+inline Foam::scalar Foam::solidProperties::Es(const scalar T) const
+{
+    return Hs(T);
+}
+
+
+inline Foam::scalar Foam::solidProperties::Ea(const scalar T) const
+{
+    return Es(T) + Hf();
+}
+
+
+inline Foam::scalar Foam::solidProperties::kappa() const
+{
+    return kappa_;
 }
 
 

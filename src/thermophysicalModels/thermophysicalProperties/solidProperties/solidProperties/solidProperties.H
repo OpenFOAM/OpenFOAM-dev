@@ -146,17 +146,23 @@ public:
             //- Specific heat capacity [J/kg/K]
             inline scalar Cp() const;
 
-            //- Thermal conductivity [W/m/K]
-            inline scalar kappa() const;
-
-            //- Sensible enthalpy - reference to Tstd [J/kg]
-            inline scalar Hs(const scalar T) const;
-
             //- Heat of formation [J/kg]
             inline scalar Hf() const;
 
+            //- Sensible enthalpy [J/kg]
+            inline scalar Hs(const scalar T) const;
+
             //- Absolute enthalpy [J/kg]
             inline scalar Ha(scalar T) const;
+
+            //- Sensible internal energy [J/kg]
+            inline scalar Es(const scalar T) const;
+
+            //- Absolute internal energy [J/kg]
+            inline scalar Ea(scalar T) const;
+
+            //- Thermal conductivity [W/m/K]
+            inline scalar kappa() const;
 
             //- Emissivity []
             inline scalar emissivity() const;
