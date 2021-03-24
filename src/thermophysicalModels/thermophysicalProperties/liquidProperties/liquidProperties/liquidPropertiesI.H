@@ -117,7 +117,7 @@ inline Foam::scalar Foam::liquidProperties::Es(scalar p, const scalar T) const
 
 inline Foam::scalar Foam::liquidProperties::Ea(scalar p, const scalar T) const
 {
-    return Es(p, T) + Hf();
+    return Ha(p, T);
 }
 
 

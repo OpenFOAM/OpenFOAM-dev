@@ -24,10 +24,12 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "standardPhaseChange.H"
-#include "addToRunTimeSelectionTable.H"
 #include "thermoSingleLayer.H"
 #include "liquidThermo.H"
+#include "basicSpecieMixture.H"
 #include "zeroField.H"
+
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -109,11 +111,13 @@ void standardPhaseChange::correctModel
         refCast<const heRhoThermopureMixtureliquidProperties>(film.thermo())
        .cellThermoMixture(0).properties();
 
+    const basicSpecieMixture& primarySpecieThermo =
+        refCast<const basicSpecieMixture>(film.primaryThermo());
+
     // Retrieve fields from film model
     const scalarField& delta = film.delta();
     const scalarField& pInf = film.pPrimary();
     const scalarField& T = film.thermo().T();
-    const scalarField& he = film.thermo().he();
     const scalarField& rho = film.rho();
     const scalarField& rhoInf = film.rhoPrimary();
     const scalarField& muInf = film.muPrimary();
@@ -142,7 +146,8 @@ void standardPhaseChange::correctModel
             // Calculate the boiling temperature
             const scalar Tb = liquidThermo.pvInvert(pc);
 
-            // Local temperature - impose lower limit of 200 K for stability
+            // Local surface temperature at which evaporation takes place
+            // impose lower limit of 200 K for stability
             const scalar Tloc = min(TbFactor_*Tb, max(200.0, T[celli]));
 
             // Saturation pressure [Pa]
@@ -194,10 +199,10 @@ void standardPhaseChange::correctModel
 
             dMass[celli] += dm;
 
-            // Heat is assumed to be removed by heat-transfer to the wall
-            // so the energy remains unchanged by the phase-change.
-            dEnergy[celli] += dm*he[celli];
-            // dEnergy[celli] += dm*(h[celli] + hVap);
+            // Assume that the vapour transferred to the primary region is
+            // already at temperature Tloc so that all heat required for
+            // the phase-change is provided by the film
+            dEnergy[celli] += dm*primarySpecieThermo.Hs(vapId(), pc, Tloc);
         }
     }
 }
