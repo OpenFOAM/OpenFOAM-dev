@@ -57,12 +57,7 @@ Foam::diameterModels::linearTsub::linearTsub
          dimTemperature,
          diameterProperties.lookupOrDefault("Tsub2", 0)
     ),
-    d1_
-    (
-        "d1",
-        dimLength,
-        diameterProperties.lookupOrDefault("d1", 0.00015)
-    ),
+    d1_("d1", dimLength, diameterProperties.lookupOrDefault("d1", 0.00015)),
     Tsub1_
     (
         "Tsub1",
@@ -80,7 +75,12 @@ Foam::diameterModels::linearTsub::linearTsub
         phase.mesh(),
         d1_
     )
-{}
+{
+    Info<< "    d2: " << d2_.value() << endl
+        << "    Tsub2: " << Tsub2_.value() << endl
+        << "    d1: " << d1_.value() << endl
+        << "    Tsub1: " << Tsub1_.value() << endl;
+}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
@@ -107,15 +107,16 @@ void Foam::diameterModels::linearTsub::correct()
         );
 
     const phaseModel& liquid(fluid.phases()[liquidPhaseName_]);
+    const phasePair pair(phase(), liquid);
 
-    if (phase().mesh().foundObject<saturationModel>("saturationModel"))
+    if (fluid.foundSubModel<saturationModel>(pair))
     {
         const saturationModel& satModel =
-            phase().mesh().lookupObject<saturationModel>("saturationModel");
+            fluid.lookupSubModel<saturationModel>(pair);
 
         const volScalarField Tsub
         (
-            liquid.thermo().T() - satModel.Tsat(liquid.thermo().p())
+            satModel.Tsat(liquid.thermo().p()) - liquid.thermo().T()
         );
 
         d_ = max
@@ -136,10 +137,31 @@ bool Foam::diameterModels::linearTsub::read(const dictionary& phaseProperties)
     spherical::read(phaseProperties);
 
     diameterProperties().lookup("liquidPhase") >> liquidPhaseName_;
-    diameterProperties().lookup("d2") >> d2_;
-    diameterProperties().lookup("Tsub2") >> Tsub2_;
-    diameterProperties().lookup("d1") >> d1_;
-    diameterProperties().lookup("Tsub1") >> Tsub1_;
+
+    d2_ =
+        dimensionedScalar
+        (
+            dimLength,
+            diameterProperties().lookupOrDefault<scalar>("d2", 0.0015)
+        );
+    Tsub2_ =
+        dimensionedScalar
+        (
+            dimTemperature,
+            diameterProperties().lookupOrDefault<scalar>("Tsub2", 0)
+        );
+    d1_ =
+        dimensionedScalar
+        (
+            dimLength,
+            diameterProperties().lookupOrDefault("d1", 0.00015)
+        );
+    Tsub1_ =
+        dimensionedScalar
+        (
+            dimTemperature,
+            diameterProperties().lookupOrDefault<scalar>("Tsub1", 13.5)
+        );
 
     return true;
 }
