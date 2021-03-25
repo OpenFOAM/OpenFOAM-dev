@@ -356,9 +356,9 @@ mixtureKEpsilon<BasicMomentumTransportModel>::liquidTurbulence() const
     {
         const volVectorField& U = this->U_;
 
-        const transportModel& gas = this->transport();
+        const phaseModel& gas = refCast<const phaseModel>(this->transport());
         const phaseSystem& fluid = gas.fluid();
-        const transportModel& liquid = fluid.otherPhase(gas);
+        const phaseModel& liquid = fluid.otherPhase(gas);
 
         liquidTurbulencePtr_ =
            &const_cast<mixtureKEpsilon<BasicMomentumTransportModel>&>
@@ -387,9 +387,9 @@ tmp<volScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::Ct2() const
     const mixtureKEpsilon<BasicMomentumTransportModel>& liquidTurbulence =
         this->liquidTurbulence();
 
-    const transportModel& gas = this->transport();
+    const phaseModel& gas = refCast<const phaseModel>(this->transport());
     const phaseSystem& fluid = gas.fluid();
-    const transportModel& liquid = fluid.otherPhase(gas);
+    const phaseModel& liquid = fluid.otherPhase(gas);
 
     const dragModel& drag = fluid.lookupSubModel<dragModel>(gas, liquid);
 
@@ -414,7 +414,7 @@ template<class BasicMomentumTransportModel>
 tmp<volScalarField>
 mixtureKEpsilon<BasicMomentumTransportModel>::rholEff() const
 {
-    const transportModel& gas = this->transport();
+    const phaseModel& gas = refCast<const phaseModel>(this->transport());
     const phaseSystem& fluid = gas.fluid();
     return fluid.otherPhase(gas).rho();
 }
@@ -424,7 +424,7 @@ template<class BasicMomentumTransportModel>
 tmp<volScalarField>
 mixtureKEpsilon<BasicMomentumTransportModel>::rhogEff() const
 {
-    const transportModel& gas = this->transport();
+    const phaseModel& gas = refCast<const phaseModel>(this->transport());
     const phaseSystem& fluid = gas.fluid();
     const virtualMassModel& virtualMass =
         fluid.lookupSubModel<virtualMassModel>(gas, fluid.otherPhase(gas));
@@ -501,9 +501,9 @@ mixtureKEpsilon<BasicMomentumTransportModel>::bubbleG() const
     const mixtureKEpsilon<BasicMomentumTransportModel>& liquidTurbulence =
         this->liquidTurbulence();
 
-    const transportModel& gas = this->transport();
+    const phaseModel& gas = refCast<const phaseModel>(this->transport());
     const phaseSystem& fluid = gas.fluid();
-    const transportModel& liquid = fluid.otherPhase(gas);
+    const phaseModel& liquid = fluid.otherPhase(gas);
 
     const dragModel& drag = fluid.lookupSubModel<dragModel>(gas, liquid);
 
@@ -552,7 +552,7 @@ mixtureKEpsilon<BasicMomentumTransportModel>::epsilonSource() const
 template<class BasicMomentumTransportModel>
 void mixtureKEpsilon<BasicMomentumTransportModel>::correct()
 {
-    const transportModel& gas = this->transport();
+    const phaseModel& gas = refCast<const phaseModel>(this->transport());
     const phaseSystem& fluid = gas.fluid();
 
     // Only solve the mixture turbulence for the gas-phase

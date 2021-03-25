@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,6 +22,8 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #define makeMomentumTransportModelTypes(                                       \
     Alpha, Rho, baseModel, BaseModel, Transport)                               \
@@ -93,6 +95,27 @@ License
             LES##Transport##BaseModel,                                         \
             dictionary                                                         \
         );                                                                     \
+    }
+
+
+#define makeTemplatedLaminarModel(BaseModel, SType, Type)                      \
+    typedef Foam::SType##Models::Type<Foam::BaseModel>                         \
+        Type##SType##BaseModel;                                                \
+    defineNamedTemplateTypeNameAndDebug(Type##SType##BaseModel, 0);            \
+                                                                               \
+    namespace Foam                                                             \
+    {                                                                          \
+        namespace SType##Models                                                \
+        {                                                                      \
+            typedef Type<BaseModel> Type##SType##BaseModel;                    \
+                                                                               \
+            addToRunTimeSelectionTable                                         \
+            (                                                                  \
+                SType##BaseModel,                                              \
+                Type##SType##BaseModel,                                        \
+                dictionary                                                     \
+            );                                                                 \
+        }                                                                      \
     }
 
 

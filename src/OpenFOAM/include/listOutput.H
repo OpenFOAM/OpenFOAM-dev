@@ -63,7 +63,7 @@ if (args.optionFound("listMomentumTransportModels"))
         << endl;
     listOptions = true;
 }
-#elif defined(fluidThermoMomentumTransportModel_H)
+#elif defined(dynamicMomentumTransportModel_H)
 if (args.optionFound("listMomentumTransportModels"))
 {
     Info<< "Turbulence models"

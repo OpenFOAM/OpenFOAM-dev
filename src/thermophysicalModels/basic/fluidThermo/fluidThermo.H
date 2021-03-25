@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,8 @@ SourceFiles
 #define fluidThermo_H
 
 #include "basicThermo.H"
+#include "kinematicTransportModel.H"
+#include "dynamicTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -51,7 +53,9 @@ namespace Foam
 
 class fluidThermo
 :
-    virtual public basicThermo
+    virtual public basicThermo,
+    public kinematicTransportModel,
+    public dynamicTransportModel
 {
 public:
 

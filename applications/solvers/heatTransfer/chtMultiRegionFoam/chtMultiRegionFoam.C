@@ -32,7 +32,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "fluidThermoMomentumTransportModel.H"
+#include "dynamicMomentumTransportModel.H"
 #include "fluidReactionThermophysicalTransportModel.H"
 #include "fluidReactionThermo.H"
 #include "combustionModel.H"

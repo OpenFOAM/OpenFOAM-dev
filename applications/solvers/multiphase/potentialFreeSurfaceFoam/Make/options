@@ -8,7 +8,7 @@ EXE_INC = \
     -I$(LIB_SRC)/sampling/lnInclude
 
 EXE_LIBS = \
-    -lincompressibleTransportModels \
+    -ltransportModels \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
     -lfiniteVolume \

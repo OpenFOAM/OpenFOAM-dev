@@ -118,9 +118,10 @@ void continuousGasKEpsilon<BasicMomentumTransportModel>::correctNut()
     kEpsilon<BasicMomentumTransportModel>::correctNut();
 
     const momentumTransportModel& liquidTurbulence = this->liquidTurbulence();
-    const transportModel& gas = this->transport();
+
+    const phaseModel& gas = refCast<const phaseModel>(this->transport());
     const phaseSystem& fluid = gas.fluid();
-    const transportModel& liquid = fluid.otherPhase(gas);
+    const phaseModel& liquid = fluid.otherPhase(gas);
 
     const virtualMassModel& virtualMass =
         fluid.lookupSubModel<virtualMassModel>(gas, liquid);
@@ -154,9 +155,9 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::liquidTurbulence() const
     {
         const volVectorField& U = this->U_;
 
-        const transportModel& gas = this->transport();
+        const phaseModel& gas = refCast<const phaseModel>(this->transport());
         const phaseSystem& fluid = gas.fluid();
-        const transportModel& liquid = fluid.otherPhase(gas);
+        const phaseModel& liquid = fluid.otherPhase(gas);
 
         liquidTurbulencePtr_ =
            &U.db().lookupObject<momentumTransportModel>
@@ -194,7 +195,7 @@ continuousGasKEpsilon<BasicMomentumTransportModel>::nuEff() const
     (
         IOobject::groupName("nuEff", this->alphaRhoPhi_.group()),
         blend*this->nut_
-      + (1.0 - blend)*rhoEff()*nutEff_/this->transport().rho()
+      + (1.0 - blend)*rhoEff()*nutEff_/this->rho_
       + this->nu()
     );
 }
@@ -204,9 +205,9 @@ template<class BasicMomentumTransportModel>
 tmp<Foam::volScalarField>
 continuousGasKEpsilon<BasicMomentumTransportModel>::rhoEff() const
 {
-    const transportModel& gas = this->transport();
+    const phaseModel& gas = refCast<const phaseModel>(this->transport());
     const phaseSystem& fluid = gas.fluid();
-    const transportModel& liquid = fluid.otherPhase(gas);
+    const phaseModel& liquid = fluid.otherPhase(gas);
 
     const virtualMassModel& virtualMass =
         fluid.lookupSubModel<virtualMassModel>(gas, liquid);

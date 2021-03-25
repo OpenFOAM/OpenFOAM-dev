@@ -4,7 +4,7 @@ EXE_INC = \
 
 EXE_LIBS = \
     -lmomentumTransportModels \
-    -lfluidThermoMomentumTransportModels \
+    -lcompressibleMomentumTransportModels \
     -lfiniteVolume \
     -lfvModels \
     -lmeshTools

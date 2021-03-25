@@ -54,8 +54,9 @@ wmake $targetType ODE
 wmake $targetType randomProcesses
 
 wmake $targetType transportModels
-twoPhaseModels/Allwmake $targetType $*
+
 thermophysicalModels/Allwmake $targetType $*
+twoPhaseModels/Allwmake $targetType $*
 MomentumTransportModels/Allwmake $targetType $*
 ThermophysicalTransportModels/Allwmake $targetType $*
 wmake $targetType radiationModels

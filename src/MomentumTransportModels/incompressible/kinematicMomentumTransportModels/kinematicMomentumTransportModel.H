@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,7 +47,7 @@ SourceFiles
 #include "laminarModel.H"
 #include "RASModel.H"
 #include "LESModel.H"
-#include "transportModel.H"
+#include "kinematicTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -55,7 +55,7 @@ namespace Foam
 {
     namespace incompressible
     {
-        typedef IncompressibleMomentumTransportModel<transportModel>
+        typedef IncompressibleMomentumTransportModel<kinematicTransportModel>
             momentumTransportModel;
 
         typedef laminarModel<momentumTransportModel> laminarModel;

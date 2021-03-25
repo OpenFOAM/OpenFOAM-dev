@@ -3,6 +3,7 @@ EXE_INC = \
     -I../../interfacialCompositionModels/lnInclude \
     -I../../phaseSystems/lnInclude \
     -I../../multiphaseCompressibleMomentumTransportModels/lnInclude \
+    -I$(LIB_SRC)/transportModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \

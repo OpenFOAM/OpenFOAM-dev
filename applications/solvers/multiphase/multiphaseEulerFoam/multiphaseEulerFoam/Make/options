@@ -3,6 +3,7 @@ EXE_INC = \
     -I../phaseSystems/lnInclude \
     -I../interfacialModels/lnInclude \
     -I../interfacialCompositionModels/lnInclude \
+    -I$(LIB_SRC)/transportModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
@@ -17,9 +18,9 @@ EXE_LIBS = \
     -leulerianInterfacialModels \
     -leulerianInterfacialCompositionModels \
     -lmultiphaseMomentumTransportModels \
-    -lmultiphaseThermophysicalTransportModels \
     -lmultiphaseReactions \
-    -lthermophysicalTransportModels \
+    -lphaseFluidThermophysicalTransportModels \
+    -lphaseFluidReactionThermophysicalTransportModels \
     -lfiniteVolume \
     -lfvModels \
     -lfvConstraints \

@@ -10,7 +10,7 @@ EXE_INC = \
 LIB_LIBS = \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
-    -lincompressibleTransportModels \
+    -ltransportModels \
     -lfiniteVolume \
     -lmeshTools \
     -ltriSurface \

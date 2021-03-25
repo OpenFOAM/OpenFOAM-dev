@@ -39,7 +39,7 @@ Description
 #include "incompressibleTwoPhaseInteractingMixture.H"
 #include "relativeVelocityModel.H"
 #include "momentumTransportModel.H"
-#include "CompressibleMomentumTransportModel.H"
+#include "dynamicMomentumTransportModel.H"
 #include "pimpleControl.H"
 #include "fvModels.H"
 #include "fvConstraints.H"

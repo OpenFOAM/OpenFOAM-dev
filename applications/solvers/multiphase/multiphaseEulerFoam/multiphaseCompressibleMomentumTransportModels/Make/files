@@ -6,8 +6,8 @@ phasePressureModel/phasePressureModel.C
 
 kineticTheoryModels/kineticTheoryModel/kineticTheoryModel.C
 
-kineticTheoryModels/viscosityModel/viscosityModel/viscosityModel.C
-kineticTheoryModels/viscosityModel/viscosityModel/viscosityModelNew.C
+kineticTheoryModels/viscosityModel/viscosityModel/kineticTheoryViscosityModel.C
+kineticTheoryModels/viscosityModel/viscosityModel/kineticTheoryViscosityModelNew.C
 kineticTheoryModels/viscosityModel/Gidaspow/GidaspowViscosity.C
 kineticTheoryModels/viscosityModel/Syamlal/SyamlalViscosity.C
 kineticTheoryModels/viscosityModel/HrenyaSinclair/HrenyaSinclairViscosity.C

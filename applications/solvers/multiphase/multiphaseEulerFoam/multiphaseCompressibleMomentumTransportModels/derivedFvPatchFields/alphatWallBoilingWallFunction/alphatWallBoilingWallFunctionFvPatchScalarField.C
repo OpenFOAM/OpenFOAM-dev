@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 #include "phaseSystem.H"
 #include "heatTransferPhaseSystem.H"
 #include "compressibleMomentumTransportModel.H"
-#include "phaseCompressibleMomentumTransportModel.H"
+#include "phaseDynamicMomentumTransportModel.H"
 #include "saturationModel.H"
 #include "rhoReactionThermo.H"
 #include "addToRunTimeSelectionTable.H"
@@ -325,8 +325,8 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
             )
             {
                 // Retrieve turbulence properties from models
-                const phaseCompressibleMomentumTransportModel& turbModel =
-                    db().lookupObject<phaseCompressibleMomentumTransportModel>
+                const phaseCompressible::momentumTransportModel& turbModel
+                  = db().lookupObject<phaseCompressible::momentumTransportModel>
                     (
                         IOobject::groupName
                         (
@@ -334,8 +334,8 @@ void alphatWallBoilingWallFunctionFvPatchScalarField::updateCoeffs()
                             liquid.name()
                         )
                     );
-                const phaseCompressibleMomentumTransportModel& vaporTurbModel =
-                    db().lookupObject<phaseCompressibleMomentumTransportModel>
+                const phaseCompressible::momentumTransportModel& vaporTurbModel
+                  = db().lookupObject<phaseCompressible::momentumTransportModel>
                     (
                         IOobject::groupName
                         (

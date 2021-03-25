@@ -6,5 +6,5 @@ EXE_INC = \
 
 LIB_LIBS = \
     -ltwoPhaseMixture \
-    -lincompressibleTransportModels \
+    -ltransportModels \
     -lfiniteVolume

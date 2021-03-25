@@ -13,7 +13,7 @@ EXE_INC = \
 EXE_LIBS = \
     -lmultiphaseInterFoam \
     -linterfaceProperties \
-    -lincompressibleTransportModels \
+    -ltransportModels \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
     -lfiniteVolume \

@@ -61,7 +61,7 @@ kOmegaSSTSato<BasicMomentumTransportModel>::kOmegaSSTSato
         type
     ),
 
-    phase_(transport),
+    phase_(refCast<const phaseModel>(transport)),
 
     hasDispersedPhaseNames_(this->coeffDict_.found("dispersedPhases")),
 

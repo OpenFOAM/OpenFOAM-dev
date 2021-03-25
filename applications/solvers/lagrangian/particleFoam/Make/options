@@ -16,7 +16,7 @@ EXE_LIBS = \
     -llagrangianParcelTurbulence \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
-    -lincompressibleTransportModels \
+    -ltransportModels \
     -lfiniteVolume \
     -lregionModels \
     -lsurfaceFilmModels \

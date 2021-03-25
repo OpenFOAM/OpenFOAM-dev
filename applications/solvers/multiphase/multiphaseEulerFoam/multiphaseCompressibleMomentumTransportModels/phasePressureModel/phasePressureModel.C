@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,11 +34,11 @@ Foam::RASModels::phasePressureModel::phasePressureModel
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& phase,
+    const transportModel& transport,
     const word& type
 )
 :
-    eddyViscosity<RASModel<phaseCompressibleMomentumTransportModel>>
+    eddyViscosity<RASModel<phaseCompressible::momentumTransportModel>>
     (
         type,
         alpha,
@@ -46,7 +46,7 @@ Foam::RASModels::phasePressureModel::phasePressureModel
         U,
         alphaRhoPhi,
         phi,
-        phase
+        transport
     ),
 
     alphaMax_(coeffDict_.lookup<scalar>("alphaMax")),
@@ -80,8 +80,9 @@ bool Foam::RASModels::phasePressureModel::read()
 {
     if
     (
-        eddyViscosity<RASModel<phaseCompressibleMomentumTransportModel>>
-        ::read())
+        eddyViscosity<RASModel<phaseCompressible::momentumTransportModel>>::
+        read()
+    )
     {
         coeffDict().lookup("alphaMax") >> alphaMax_;
         coeffDict().lookup("preAlphaExp") >> preAlphaExp_;

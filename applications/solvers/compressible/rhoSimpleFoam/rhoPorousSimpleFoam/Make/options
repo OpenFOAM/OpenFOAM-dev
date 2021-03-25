@@ -1,6 +1,7 @@
 EXE_INC = \
     -I. \
     -I.. \
+    -I$(LIB_SRC)/transportModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
@@ -14,7 +15,7 @@ EXE_LIBS = \
     -lfluidThermophysicalModels \
     -lspecie \
     -lmomentumTransportModels \
-    -lfluidThermoMomentumTransportModels \
+    -lcompressibleMomentumTransportModels \
     -lthermophysicalTransportModels \
     -lfiniteVolume \
     -lsampling \

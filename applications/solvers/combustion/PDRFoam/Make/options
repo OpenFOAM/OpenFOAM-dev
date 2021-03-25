@@ -20,13 +20,14 @@ EXE_INC = \
     -IPDRModels/turbulence/PDRkEpsilon \
     -IlaminarFlameSpeed/SCOPE \
     -I$(LIB_SRC)/engine/lnInclude \
+    -I$(LIB_SRC)/transportModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/laminarFlameSpeed/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/laminarFlameSpeed/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
@@ -40,7 +41,7 @@ EXE_LIBS = \
     -lreactionThermophysicalModels \
     -lspecie \
     -lmomentumTransportModels \
-    -lfluidThermoMomentumTransportModels \
+    -lcompressibleMomentumTransportModels \
     -lthermophysicalTransportModels \
     -llaminarFlameSpeedModels \
     -lfiniteVolume \

@@ -27,7 +27,8 @@ License
 #include "fvcGrad.H"
 #include "porosityModel.H"
 #include "kinematicMomentumTransportModel.H"
-#include "fluidThermoMomentumTransportModel.H"
+#include "dynamicMomentumTransportModel.H"
+#include "fluidThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -280,11 +281,11 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::forces::mu() const
     }
     else if
     (
-        obr_.foundObject<transportModel>("transportProperties")
+        obr_.foundObject<kinematicTransportModel>("transportProperties")
     )
     {
-        const transportModel& laminarT =
-            obr_.lookupObject<transportModel>("transportProperties");
+        const kinematicTransportModel& laminarT =
+            obr_.lookupObject<kinematicTransportModel>("transportProperties");
 
         return rho()*laminarT.nu();
     }

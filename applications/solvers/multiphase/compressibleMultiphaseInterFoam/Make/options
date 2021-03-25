@@ -2,6 +2,7 @@ EXE_INC = \
     -I. \
     -I../interFoam \
     -ImultiphaseMixtureThermo/lnInclude \
+    -I$(LIB_SRC)/transportModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
@@ -16,6 +17,6 @@ EXE_LIBS = \
     -lspecie \
     -linterfaceProperties \
     -lmomentumTransportModels \
-    -lfluidThermoMomentumTransportModels \
+    -lcompressibleMomentumTransportModels \
     -lfiniteVolume \
     -lmeshTools

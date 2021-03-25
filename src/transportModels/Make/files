@@ -1,3 +1,6 @@
+kinematicTransportModel/kinematicTransportModel.C
+dynamicTransportModel/dynamicTransportModel.C
+
 viscosityModels/viscosityModel/viscosityModel.C
 viscosityModels/viscosityModel/viscosityModelNew.C
 viscosityModels/Newtonian/Newtonian.C
@@ -8,7 +11,6 @@ viscosityModels/HerschelBulkley/HerschelBulkley.C
 viscosityModels/Casson/Casson.C
 viscosityModels/strainRateFunction/strainRateFunction.C
 
-transportModel/transportModel.C
 singlePhaseTransportModel/singlePhaseTransportModel.C
 
-LIB = $(FOAM_LIBBIN)/libincompressibleTransportModels
+LIB = $(FOAM_LIBBIN)/libtransportModels

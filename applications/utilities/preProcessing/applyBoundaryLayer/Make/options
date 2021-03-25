@@ -8,7 +8,7 @@ EXE_INC = \
 EXE_LIBS = \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
-    -lincompressibleTransportModels \
+    -ltransportModels \
     -lgenericPatchFields \
     -lfiniteVolume \
     -lmeshTools \

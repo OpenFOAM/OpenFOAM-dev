@@ -147,10 +147,9 @@ surfaceScalarField alphaPhic
     alphacf*phic
 );
 
-autoPtr<PhaseIncompressibleMomentumTransportModel<singlePhaseTransportModel>>
-continuousPhaseTurbulence
+autoPtr<phaseIncompressible::momentumTransportModel> continuousPhaseTurbulence
 (
-    PhaseIncompressibleMomentumTransportModel<singlePhaseTransportModel>::New
+    phaseIncompressible::momentumTransportModel::New
     (
         alphac,
         Uc,

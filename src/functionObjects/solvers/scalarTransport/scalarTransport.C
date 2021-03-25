@@ -32,7 +32,7 @@ License
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "kinematicMomentumTransportModel.H"
-#include "fluidThermoMomentumTransportModel.H"
+#include "dynamicMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

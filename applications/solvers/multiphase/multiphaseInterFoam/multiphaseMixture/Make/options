@@ -7,6 +7,6 @@ EXE_INC = \
 
 LIB_LIBS = \
     -linterfaceProperties \
-    -lincompressibleTransportModels \
+    -ltransportModels \
     -lfiniteVolume \
     -lmeshTools

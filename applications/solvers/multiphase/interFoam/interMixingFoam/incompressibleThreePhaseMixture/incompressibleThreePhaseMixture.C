@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -213,7 +213,7 @@ Foam::incompressibleThreePhaseMixture::nuf() const
 
 bool Foam::incompressibleThreePhaseMixture::read()
 {
-    if (transportModel::read())
+    if (regIOobject::read())
     {
         if
         (
