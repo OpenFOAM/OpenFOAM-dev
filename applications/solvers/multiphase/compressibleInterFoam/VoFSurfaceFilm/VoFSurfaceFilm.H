@@ -32,7 +32,6 @@ Usage
     \verbatim
     VoFSurfaceFilm
     {
-        libs    ("libradiationModels.so");
         type    VoFSurfaceFilm;
         phase   water;
     }
