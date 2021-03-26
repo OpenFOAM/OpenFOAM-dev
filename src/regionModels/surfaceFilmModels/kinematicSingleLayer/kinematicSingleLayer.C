@@ -399,7 +399,13 @@ void kinematicSingleLayer::solveAlpha
     surfaceScalarField phid
     (
         "phid",
-        constrainFilmField(rhof*(fvc::flux(HbyA) - alpharAUf*phiu), 0)
+        // constrainFilmField
+        // (
+        //     rhof
+        //    *constrainPhiHbyA(fvc::flux(HbyA) - alpharAUf*phiu, U_, alpha_),
+        //     0
+        // )
+        rhof*constrainPhiHbyA(fvc::flux(HbyA) - alpharAUf*phiu, U_, alpha_)
     );
 
     const surfaceScalarField ddrhorAUrhogf
