@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,15 +42,17 @@ namespace Foam
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 //- Conversion from degrees to radians
-inline scalar degToRad(const scalar deg)
+template<class Type>
+inline Type degToRad(const Type& deg)
 {
-    return (deg*constant::mathematical::pi/180.0);
+    return (constant::mathematical::pi/180.0)*deg;
 }
 
 //- Conversion from radians to degrees
-inline scalar radToDeg(const scalar rad)
+template<class Type>
+inline Type radToDeg(const Type& rad)
 {
-    return (rad*180.0/constant::mathematical::pi);
+    return (180.0/constant::mathematical::pi)*rad;
 }
 
 //- Conversion from atm to Pa

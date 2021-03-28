@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,10 +33,10 @@ License
 using namespace Foam::vectorTools;
 
 const Foam::scalar Foam::conformalVoronoiMesh::searchConeAngle
-    = Foam::cos(degToRad(30));
+    = Foam::cos(degToRad(30.0));
 
 const Foam::scalar Foam::conformalVoronoiMesh::searchAngleOppositeSurface
-    = Foam::cos(degToRad(150));
+    = Foam::cos(degToRad(150.0));
 
 
 // * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * * //
