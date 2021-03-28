@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,7 +56,10 @@ Usage
         Adds the entry (should not exist yet)
 
       - \par -set \<value\>
-        Adds or replaces the entry or applies a list of substitutions
+        Adds or replaces the entry selected by \c -entry
+
+      - \par -set \<substitutions\>
+        Applies the list of substitutions
 
       - \par -merge \<value\>
         Merges the entry
@@ -133,6 +136,11 @@ Usage
         This uses special parsing of Lists which stores these in the
         dictionary with keyword 'entryDDD' where DDD is the position
         in the dictionary (after ignoring the FoamFile entry).
+
+      - Substitute multiple entries:
+        \verbatim
+          foamDictionary system/controlDict -set "startTime=2000, endTime=3000"
+        \endverbatim
 
 \*---------------------------------------------------------------------------*/
 
@@ -267,19 +275,9 @@ void remove(dictionary& dict, const dictionary& removeDict)
 
 void substitute(dictionary& dict, string substitutions)
 {
-    // Add '()' delimiters to the substitutions if not present
-    const string whitespace(" \t");
-    string::size_type last = substitutions.find_last_not_of(whitespace);
-    if (substitutions[last] != ')')
-    {
-        substitutions = '(' + substitutions + ')';
-    }
-
-    word funcName;
     wordReList args;
     List<Tuple2<word, string>> namedArgs;
-
-    dictArgList(substitutions, funcName, args, namedArgs);
+    dictArgList(substitutions, args, namedArgs);
 
     forAll(namedArgs, i)
     {

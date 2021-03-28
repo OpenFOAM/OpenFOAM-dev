@@ -748,6 +748,14 @@ void dictArgList
     List<Tuple2<word, string>>& namedArgs
 );
 
+//- Parse dictionary substitution argument list
+void dictArgList
+(
+    const string& funcArgs,
+    wordReList& args,
+    List<Tuple2<word, string>>& namedArgs
+);
+
 //- Extracts dict name and keyword
 Pair<word> dictAndKeyword(const word& scopedName);
 

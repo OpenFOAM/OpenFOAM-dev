@@ -1699,6 +1699,83 @@ void Foam::dictArgList
 }
 
 
+void Foam::dictArgList
+(
+    const string& funcArgs,
+    wordReList& args,
+    List<Tuple2<word, string>>& namedArgs
+)
+{
+    int argLevel = 0;
+    bool namedArg = false;
+    word argName;
+
+    word::size_type start = 0;
+    word::size_type i = 0;
+
+    for
+    (
+        word::const_iterator iter = funcArgs.begin();
+        iter != funcArgs.end();
+        ++iter
+    )
+    {
+        char c = *iter;
+
+        if (c == '(')
+        {
+            ++argLevel;
+        }
+        else if (c == ',' || std::next(iter) == funcArgs.end())
+        {
+            if (std::next(iter) == funcArgs.end())
+            {
+                if (c == ')')
+                {
+                    --argLevel;
+                }
+
+                ++i;
+            }
+
+            if (argLevel == 0)
+            {
+                if (namedArg)
+                {
+                    namedArgs.append
+                    (
+                        Tuple2<word, string>
+                        (
+                            argName,
+                            funcArgs(start, i - start)
+                        )
+                    );
+                    namedArg = false;
+                }
+                else
+                {
+                    args.append(wordRe(funcArgs(start, i - start)));
+                }
+                start = i+1;
+            }
+        }
+        else if (c == '=')
+        {
+            argName = funcArgs(start, i - start);
+            string::stripInvalid<variable>(argName);
+            start = i+1;
+            namedArg = true;
+        }
+        else if (c == ')')
+        {
+            --argLevel;
+        }
+
+        ++i;
+    }
+}
+
+
 Foam::Pair<Foam::word> Foam::dictAndKeyword(const word& scopedName)
 {
     string::size_type i = scopedName.find_last_of
