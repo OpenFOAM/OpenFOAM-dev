@@ -27,30 +27,39 @@ Application
 Description
     Transform (translate, rotate, scale) a surface.
 
-    The rollPitchYaw option takes three angles (degrees):
-    - roll (rotation about x) followed by
-    - pitch (rotation about y) followed by
-    - yaw (rotation about z)
-
-    The yawPitchRoll does yaw followed by pitch followed by roll.
-
 Usage
     \b surfaceTransformPoints "\<transformations\>" \<input\> \<output\>
+    Supported transformations:
+      - \par translate=<translation vector>
+        Translational transformation by given vector
+      - \par rotate=(\<n1 vector\> \<n2 vector\>)
+        Rotational transformation from unit vector n1 to n2
+      - \par Rx=\<angle [deg] about x-axis\>
+        Rotational transformation by given angle about x-axis
+      - \par Ry=\<angle [deg] about y-axis\>
+        Rotational transformation by given angle about y-axis
+      - \par Rz=\<angle [deg] about z-axis\>
+        Rotational transformation by given angle about z-axis
+      - \par Ra=\<axis vector\> \<angle [deg] about axis\>
+        Rotational transformation by given angle about given axis
+      - \par scale=\<x-y-z scaling vector\>
+        Anisotropic scaling by the given vector in the x, y, z
+        coordinate directions
 
     Example usage:
         surfaceTransformPoints \
             "translate=(-0.586 0 -0.156), \
-            rollPitchYaw=(0 -3.485 0), \
+            Ry=3.485, \
             translate=(0.586 0 0.156)" \
             constant/geometry/w3_orig.stl constant/geometry/w3.stl
 
 See also
+    Foam::transformer
     transformPoints
 
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
-#include "quaternion.H"
 #include "unitConversion.H"
 #include "MeshedSurfaces.H"
 
@@ -62,10 +71,27 @@ int main(int argc, char *argv[])
 {
     #include "removeCaseOptions.H"
 
-    argList::addNote
+    const wordList supportedTransformations
     (
-        "Transform (translate, rotate, scale) a surface."
+        {"translate", "rotate", "Rx", "Ry", "Rz", "Ra", "scale"}
     );
+
+    {
+        OStringStream supportedTransformationsStr;
+        supportedTransformationsStr << supportedTransformations << endl;
+
+        argList::addNote
+        (
+            "Transforms a surface e.g.\n"
+            "surfaceTransformPoints "
+            "\"translate=(-0.586 0 -0.156), "
+            "Ry=3.485, "
+            "translate=(0.586 0 0.156)\" "
+            "surf.stl tranformedSurf.obj\n\n"
+            "Supported transformations " + supportedTransformationsStr.str()
+        );
+    }
+
     argList::noParallel();
     argList::validArgs.append("transformations");
     argList::validArgs.append("surface file");
@@ -84,17 +110,14 @@ int main(int argc, char *argv[])
     List<Tuple2<word, string>> transformations;
     dictArgList(transformationString, simpleTransformations, transformations);
 
-    meshedSurface surf1(surfFileName);
-
-    pointField points(surf1.points());
+    transformer transforms;
 
     forAll(transformations, i)
     {
         if (transformations[i].first() == "translate")
         {
             const vector v(IStringStream(transformations[i].second())());
-            Info<< "Translating points by " << v << endl;
-            points += v;
+            transforms = transformer::translation(v) & transforms;
         }
         else if (transformations[i].first() == "rotate")
         {
@@ -103,52 +126,60 @@ int main(int argc, char *argv[])
             n1n2[0] /= mag(n1n2[0]);
             n1n2[1] /= mag(n1n2[1]);
 
-            const tensor T = rotationTensor(n1n2[0], n1n2[1]);
-
-            Info<< "Rotating points by " << T << endl;
-
-            points = transform(T, points);
+            transforms =
+                transformer::rotation(rotationTensor(n1n2[0], n1n2[1]))
+              & transforms;
         }
-        else if (transformations[i].first() == "rollPitchYaw")
+        else if (transformations[i].first() == "Rx")
         {
-            const vector v(IStringStream(transformations[i].second())());
-
-            Info<< "Rotating points by "
-                << " roll = " << v.x()
-                << ", pitch = " << v.y()
-                << ", yaw = " << v.z() << nl;
-
-            const quaternion R(quaternion::rotationSequence::XYZ, degToRad(v));
-            points = transform(R, points);
-        }
-        else if (transformations[i].first() == "yawPitchRoll")
-        {
-            const vector v(IStringStream(transformations[i].second())());
-
-            Info<< "Rotating points by "
-                << " yaw   " << v.x()
-                << ", pitch " << v.y()
-                << ", roll  " << v.z() << nl;
-
-            const quaternion R
+            const scalar a
             (
-                quaternion::rotationSequence::ZYX,
-                degToRad(vector(v.z(), v.y(), v.x()))
+                readScalar(IStringStream(transformations[i].second())())
             );
-            points = transform(R, points);
+            transforms = transformer::rotation(Rx(degToRad(a))) & transforms;
+        }
+        else if (transformations[i].first() == "Ry")
+        {
+            const scalar a
+            (
+                readScalar(IStringStream(transformations[i].second())())
+            );
+            transforms = transformer::rotation(Ry(degToRad(a))) & transforms;
+        }
+        else if (transformations[i].first() == "Rz")
+        {
+            const scalar a
+            (
+                readScalar(IStringStream(transformations[i].second())())
+            );
+            transforms = transformer::rotation(Rz(degToRad(a))) & transforms;
+        }
+        else if (transformations[i].first() == "Ra")
+        {
+            IStringStream istr(transformations[i].second());
+            const vector v(istr);
+            const scalar a(readScalar(istr));
+            transforms = transformer::rotation(Ra(v, degToRad(a))) & transforms;
         }
         else if (transformations[i].first() == "scale")
         {
             const vector v(IStringStream(transformations[i].second())());
-
-            Info<< "Scaling points by " << v << endl;
-
-            points.replace(vector::X, v.x()*points.component(vector::X));
-            points.replace(vector::Y, v.y()*points.component(vector::Y));
-            points.replace(vector::Z, v.z()*points.component(vector::Z));
+            transforms =
+                transformer::scaling(diagTensor(v.x(), v.y(), v.z()))
+              & transforms;
+        }
+        else
+        {
+            args.printUsage();
+            FatalErrorInFunction
+                << "Unknown transformation " << transformations[i].first()
+                << exit(FatalError);
         }
     }
 
+    meshedSurface surf1(surfFileName);
+    pointField points(surf1.points());
+    transforms.transformPosition(points, points);
     surf1.movePoints(points);
     surf1.write(outFileName);
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,8 +25,8 @@ Class
     Foam::transformer
 
 Description
-    Vector-tensor class used to perform translations and rotations in
-    3D space.
+    Vector-tensor class used to perform translations, rotations and scaling
+    operations in 3D space.
 
 SourceFiles
     transformerI.H

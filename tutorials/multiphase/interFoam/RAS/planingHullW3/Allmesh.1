@@ -6,7 +6,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 runApplication surfaceTransformPoints \
     "translate=(-0.586 0 -0.156), \
-    rollPitchYaw=(0 -3.485 0), \
+    Ry=3.485, \
     translate=(0.586 0 0.156)" \
     constant/geometry/w3_orig.stl constant/geometry/w3.stl
 
