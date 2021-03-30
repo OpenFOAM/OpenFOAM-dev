@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -252,27 +252,39 @@ namespace Foam
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 //- Rotational spatial transformation tensor about the x-axis by omega radians
+//  The rotation is defined in a right-handed coordinate system
+//  i.e. counter-clockwise with respect to the axis from -ve to +ve
+//  (looking along the axis) according to Featherstone, R. (2008).
 inline spatialTransform Xrx(const scalar& omega)
 {
-    return spatialTransform(Rx(omega), Zero);
+    return spatialTransform(Rx(-omega), Zero);
 }
 
 //- Rotational spatial transformation tensor about the x-axis by omega radians
+//  The rotation is defined in a right-handed coordinate system
+//  i.e. counter-clockwise with respect to the axis from -ve to +ve
+//  (looking along the axis) according to Featherstone, R. (2008).
 inline spatialTransform Xry(const scalar& omega)
 {
-    return spatialTransform(Ry(omega), Zero);
+    return spatialTransform(Ry(-omega), Zero);
 }
 
 //- Rotational spatial transformation tensor about the z-axis by omega radians
+//  The rotation is defined in a right-handed coordinate system
+//  i.e. counter-clockwise with respect to the axis from -ve to +ve
+//  (looking along the axis) according to Featherstone, R. (2008).
 inline spatialTransform Xrz(const scalar& omega)
 {
-    return spatialTransform(Rz(omega), Zero);
+    return spatialTransform(Rz(-omega), Zero);
 }
 
 //- Rotational spatial transformation tensor about axis a by omega radians
+//  The rotation is defined in a right-handed coordinate system
+//  i.e. counter-clockwise with respect to the axis from -ve to +ve
+//  (looking along the axis) according to Featherstone, R. (2008).
 inline spatialTransform Xr(const vector& a, const scalar omega)
 {
-    return spatialTransform(Ra(a, omega), Zero);
+    return spatialTransform(Ra(a, -omega), Zero);
 }
 
 //- Translational spatial transformation tensor for translation r
