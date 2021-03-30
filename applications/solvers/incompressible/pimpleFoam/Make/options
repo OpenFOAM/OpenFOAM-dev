@@ -11,7 +11,7 @@ EXE_INC = \
 EXE_LIBS = \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
-    -lincompressibleTransportModels \
+    -ltransportModels \
     -lfiniteVolume \
     -lfvModels \
     -lfvConstraints \

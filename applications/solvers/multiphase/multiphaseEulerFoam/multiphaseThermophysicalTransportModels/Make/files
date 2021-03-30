@@ -1,4 +1,0 @@
-multiphaseThermophysicalTransportModels.C
-rhoReactionMultiphaseThermophysicalTransportModels.C
-
-LIB = $(FOAM_LIBBIN)/libmultiphaseThermophysicalTransportModels

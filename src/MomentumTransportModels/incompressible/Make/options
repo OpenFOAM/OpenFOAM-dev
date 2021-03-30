@@ -5,7 +5,7 @@ EXE_INC = \
     -I$(LIB_SRC)/meshTools/lnInclude \
 
 LIB_LIBS = \
-    -lincompressibleTransportModels \
+    -ltransportModels \
     -lmomentumTransportModels \
     -lfiniteVolume \
     -lmeshTools

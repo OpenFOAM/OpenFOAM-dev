@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,6 +39,8 @@ SourceFiles
 #ifndef ThermoPhaseModel_H
 #define ThermoPhaseModel_H
 
+#include "phaseModel.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -53,7 +55,8 @@ class rhoThermo;
 template<class BasePhaseModel, class ThermoModel>
 class ThermoPhaseModel
 :
-    public BasePhaseModel
+    public BasePhaseModel,
+    public dynamicTransportModel
 {
 protected:
 

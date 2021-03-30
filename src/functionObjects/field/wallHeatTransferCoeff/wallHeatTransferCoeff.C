@@ -25,7 +25,8 @@ License
 
 #include "wallHeatTransferCoeff.H"
 #include "kinematicMomentumTransportModel.H"
-#include "fluidThermoMomentumTransportModel.H"
+#include "dynamicMomentumTransportModel.H"
+#include "basicThermo.H"
 #include "wallPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -99,13 +100,7 @@ bool Foam::functionObjects::wallHeatTransferCoeff::read(const dictionary& dict)
     fvMeshFunctionObject::read(dict);
     writeLocalObjects::read(dict);
 
-    const momentumTransportModel& mmtm =
-        lookupObject<momentumTransportModel>
-        (
-            momentumTransportModel::typeName
-        );
-
-    if (isA<incompressible::momentumTransportModel>(mmtm))
+    if (!foundObject<basicThermo>(basicThermo::dictName))
     {
         rho_.read(dict);
         Cp_.read(dict);
@@ -169,25 +164,25 @@ bool Foam::functionObjects::wallHeatTransferCoeff::read(const dictionary& dict)
 
 bool Foam::functionObjects::wallHeatTransferCoeff::execute()
 {
-    tmp<volScalarField> thtc;
     const momentumTransportModel& mmtm =
         lookupObject<momentumTransportModel>
         (
             momentumTransportModel::typeName
         );
 
+    tmp<volScalarField> thtc;
     thtc = coeffModel_->htcByRhoCp(mmtm, patchSet_);
 
-    if (isA<incompressible::momentumTransportModel>(mmtm))
+    if (!foundObject<basicThermo>(basicThermo::dictName))
     {
         thtc.ref() *= rho_*Cp_;
     }
-    else if (isA<compressible::momentumTransportModel>(mmtm))
+    else
     {
-        const compressible::momentumTransportModel& mtm =
-            refCast<const compressible::momentumTransportModel>(mmtm);
+        const basicThermo& thermo =
+            lookupObject<basicThermo>(basicThermo::dictName);
 
-        thtc.ref() *= mtm.rho()*mtm.thermo().Cp();
+        thtc.ref() *= thermo.rho()*thermo.Cp();
     }
 
     store("wallHeatTransferCoeff", thtc);

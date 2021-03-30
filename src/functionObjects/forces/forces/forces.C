@@ -27,7 +27,10 @@ License
 #include "fvcGrad.H"
 #include "porosityModel.H"
 #include "kinematicMomentumTransportModel.H"
-#include "fluidThermoMomentumTransportModel.H"
+#include "dynamicMomentumTransportModel.H"
+#include "phaseKinematicMomentumTransportModel.H"
+#include "phaseDynamicMomentumTransportModel.H"
+#include "fluidThermo.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -223,22 +226,44 @@ void Foam::functionObjects::forces::initialise()
 Foam::tmp<Foam::volSymmTensorField>
 Foam::functionObjects::forces::devTau() const
 {
-    typedef compressible::momentumTransportModel cmpModel;
     typedef incompressible::momentumTransportModel icoModel;
+    typedef compressible::momentumTransportModel cmpModel;
+    typedef phaseIncompressible::momentumTransportModel phaseIcoModel;
+    typedef phaseCompressible::momentumTransportModel phaseCmpModel;
 
-    if (obr_.foundObject<cmpModel>(momentumTransportModel::typeName))
-    {
-        const cmpModel& model =
-            obr_.lookupObject<cmpModel>(momentumTransportModel::typeName);
+    const word& modelName = momentumTransportModel::typeName;
+    const word phaseModelName =
+        phaseName_ == word::null
+      ? word::null
+      : IOobject::groupName(momentumTransportModel::typeName, phaseName_);
 
-        return model.devTau();
-    }
-    else if (obr_.foundObject<icoModel>(momentumTransportModel::typeName))
+    if (obr_.foundObject<icoModel>(modelName))
     {
         const incompressible::momentumTransportModel& model =
-            obr_.lookupObject<icoModel>(momentumTransportModel::typeName);
+            obr_.lookupObject<icoModel>(modelName);
+
+        return alpha()*rho()*model.devSigma();
+    }
+    else if (obr_.foundObject<cmpModel>(modelName))
+    {
+        const cmpModel& model =
+            obr_.lookupObject<cmpModel>(modelName);
+
+        return alpha()*model.devTau();
+    }
+    else if (obr_.foundObject<phaseIcoModel>(phaseModelName))
+    {
+        const phaseIcoModel& model =
+            obr_.lookupObject<phaseIcoModel>(phaseModelName);
 
         return rho()*model.devSigma();
+    }
+    else if (obr_.foundObject<phaseCmpModel>(phaseModelName))
+    {
+        const phaseCmpModel& model =
+            obr_.lookupObject<phaseCmpModel>(phaseModelName);
+
+        return model.devTau();
     }
     else if (obr_.foundObject<dictionary>("transportProperties"))
     {
@@ -271,25 +296,49 @@ Foam::functionObjects::forces::devTau() const
 
 Foam::tmp<Foam::volScalarField> Foam::functionObjects::forces::mu() const
 {
-    if (obr_.foundObject<fluidThermo>(basicThermo::dictName))
-    {
-        const fluidThermo& thermo =
-             obr_.lookupObject<fluidThermo>(basicThermo::dictName);
+    typedef incompressible::momentumTransportModel icoModel;
+    typedef compressible::momentumTransportModel cmpModel;
+    typedef phaseIncompressible::momentumTransportModel phaseIcoModel;
+    typedef phaseCompressible::momentumTransportModel phaseCmpModel;
 
-        return thermo.mu();
+    const word& modelName = momentumTransportModel::typeName;
+    const word phaseModelName =
+        phaseName_ == word::null
+      ? word::null
+      : IOobject::groupName(momentumTransportModel::typeName, phaseName_);
+
+    if (obr_.foundObject<icoModel>(modelName))
+    {
+        const incompressible::momentumTransportModel& model =
+            obr_.lookupObject<icoModel>(modelName);
+
+        return rho()*model.transport().nu();
     }
-    else if
-    (
-        obr_.foundObject<transportModel>("transportProperties")
-    )
+    else if (obr_.foundObject<cmpModel>(modelName))
     {
-        const transportModel& laminarT =
-            obr_.lookupObject<transportModel>("transportProperties");
+        const cmpModel& model =
+            obr_.lookupObject<cmpModel>(modelName);
 
-        return rho()*laminarT.nu();
+        return model.transport().mu();
+    }
+    else if (obr_.foundObject<phaseIcoModel>(phaseModelName))
+    {
+        const phaseIcoModel& model =
+            obr_.lookupObject<phaseIcoModel>(phaseModelName);
+
+        return rho()*model.transport().nu();
+    }
+    else if (obr_.foundObject<phaseCmpModel>(phaseModelName))
+    {
+        const phaseCmpModel& model =
+            obr_.lookupObject<phaseCmpModel>(phaseModelName);
+
+        return model.transport().mu();
     }
     else if (obr_.foundObject<dictionary>("transportProperties"))
     {
+        // Legacy support for icoFoam
+
         const dictionary& transportProperties =
              obr_.lookupObject<dictionary>("transportProperties");
 
@@ -351,27 +400,45 @@ Foam::scalar Foam::functionObjects::forces::rho(const volScalarField& p) const
 }
 
 
-Foam::tmp<Foam::vectorField> Foam::functionObjects::forces::phaseFilter
-(
-    const tmp<vectorField>& tF,
-    const label patchi
-) const
+Foam::tmp<Foam::volScalarField> Foam::functionObjects::forces::alpha() const
 {
-    if (phaseName_ != word::null)
+    if (phaseName_ == word::null)
     {
-        const volScalarField& alpha
+        return volScalarField::New
         (
-            obr_.lookupObject<volScalarField>
-            (
-                IOobject::groupName("alpha", phaseName_)
-            )
+            "alpha",
+            mesh_,
+            dimensionedScalar(dimless, 1)
         );
-
-        return alpha.boundaryField()[patchi]*tF;
     }
     else
     {
-        return tF;
+        return obr_.lookupObject<volScalarField>
+        (
+            IOobject::groupName("alpha", phaseName_)
+        );
+    }
+}
+
+
+Foam::tmp<Foam::scalarField> Foam::functionObjects::forces::alpha
+(
+    const label patchi
+) const
+{
+    if (phaseName_ == word::null)
+    {
+        return tmp<scalarField>
+        (
+            new scalarField(mesh_.boundary()[patchi].size(), 1)
+        );
+    }
+    else
+    {
+        return obr_.lookupObject<volScalarField>
+        (
+            IOobject::groupName("alpha", phaseName_)
+        ).boundaryField()[patchi];
     }
 }
 
@@ -678,11 +745,28 @@ bool Foam::functionObjects::forces::read(const dictionary& dict)
     }
     else
     {
-        // Optional entries U and p
-        pName_ = dict.lookupOrDefault<word>("p", "p");
-        UName_ = dict.lookupOrDefault<word>("U", "U");
-        rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
+        // Optional phase entry
         phaseName_ = dict.lookupOrDefault<word>("phase", word::null);
+
+        // Optional U, p and rho entries
+        pName_ =
+            dict.lookupOrDefault<word>
+            (
+                "p",
+                IOobject::groupName("p", phaseName_)
+            );
+        UName_ =
+            dict.lookupOrDefault<word>
+            (
+                "U",
+                IOobject::groupName("U", phaseName_)
+            );
+        rhoName_ =
+            dict.lookupOrDefault<word>
+            (
+                "rho",
+                IOobject::groupName("rho", phaseName_)
+            );
 
         // Reference density needed for incompressible calculations
         if (rhoName_ == "rhoInf")
@@ -853,8 +937,8 @@ void Foam::functionObjects::forces::calcForcesMoment()
             mesh_.Sf().boundaryField();
 
         tmp<volSymmTensorField> tdevTau = devTau();
-        const volSymmTensorField::Boundary& devTaub
-            = tdevTau().boundaryField();
+        const volSymmTensorField::Boundary& devTaub =
+            tdevTau().boundaryField();
 
         // Scale pRef by density for incompressible simulations
         const scalar pRef = pRef_/rho(p);
@@ -870,17 +954,13 @@ void Foam::functionObjects::forces::calcForcesMoment()
 
             const vectorField fN
             (
-                phaseFilter
-                (
-                    rho(p)*Sfb[patchi]*(p.boundaryField()[patchi] - pRef),
-                    patchi
-                )
+                alpha(patchi)
+               *rho(p)
+               *Sfb[patchi]
+               *(p.boundaryField()[patchi] - pRef)
             );
 
-            const vectorField fT
-            (
-                phaseFilter(Sfb[patchi] & devTaub[patchi], patchi)
-            );
+            const vectorField fT(Sfb[patchi] & devTaub[patchi]);
 
             const vectorField fP(Md.size(), Zero);
 

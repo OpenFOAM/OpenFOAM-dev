@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,12 +35,12 @@ SourceFiles
 #ifndef turbulentDispersionModel_H
 #define turbulentDispersionModel_H
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
 #include "volFields.H"
 #include "dictionary.H"
 #include "runTimeSelectionTables.H"
-#include "phaseCompressibleMomentumTransportModelFwd.H"
+#include "phaseDynamicMomentumTransportModel.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
@@ -116,7 +116,7 @@ public:
     // Member Functions
 
         //- Return a reference to the turbulence model for the continuous phase
-        const phaseCompressibleMomentumTransportModel&
+        const phaseCompressible::momentumTransportModel&
             continuousTurbulence() const;
 
         //- Turbulent diffusivity

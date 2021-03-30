@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "fluidReactionThermophysicalTransportModel.H"
-#include "fluidThermoMomentumTransportModels.H"
+#include "dynamicMomentumTransportModels.H"
 #include "makeThermophysicalTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -33,7 +33,7 @@ License
 makeThermophysicalTransportModelTypes
 (
     ThermophysicalTransportModel,
-    fluidThermoCompressibleMomentumTransportModel,
+    dynamicTransportModelCompressibleMomentumTransportModel,
     fluidReactionThermo
 );
 
@@ -42,7 +42,7 @@ makeThermophysicalTransportModelTypes
     makeThermophysicalTransportModel                                           \
     (                                                                          \
         ThermophysicalTransportModel,                                          \
-        fluidThermoCompressibleMomentumTransportModel,                         \
+        dynamicTransportModelCompressibleMomentumTransportModel,               \
         fluidReactionThermo,                                                   \
         laminar,                                                               \
         Type                                                                   \
@@ -52,7 +52,7 @@ makeThermophysicalTransportModelTypes
     makeTurbulenceThermophysicalTransportModel                                 \
     (                                                                          \
         ThermophysicalTransportModel,                                          \
-        fluidThermoCompressibleMomentumTransportModel,                         \
+        dynamicTransportModelCompressibleMomentumTransportModel,               \
         fluidReactionThermo,                                                   \
         SType,                                                                 \
         Type                                                                   \
@@ -62,7 +62,7 @@ makeThermophysicalTransportModelTypes
     makeThermophysicalTransportModel                                           \
     (                                                                          \
         ThermophysicalTransportModel,                                          \
-        fluidThermoCompressibleMomentumTransportModel,                         \
+        dynamicTransportModelCompressibleMomentumTransportModel,               \
         fluidReactionThermo,                                                   \
         RAS,                                                                   \
         Type                                                                   \
@@ -72,7 +72,7 @@ makeThermophysicalTransportModelTypes
     makeThermophysicalTransportModel                                           \
     (                                                                          \
         ThermophysicalTransportModel,                                          \
-        fluidThermoCompressibleMomentumTransportModel,                         \
+        dynamicTransportModelCompressibleMomentumTransportModel,               \
         fluidReactionThermo,                                                   \
         LES,                                                                   \
         Type                                                                   \

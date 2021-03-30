@@ -45,13 +45,32 @@ SourceFiles
 #define MovingPhaseModel_H
 
 #include "phaseModel.H"
-#include "phaseCompressibleMomentumTransportModel.H"
 #include "PhaseThermophysicalTransportModel.H"
+#include "phaseDynamicMomentumTransportModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+// Trait for converting the ThermoModel's thermo type to the thermo type needed
+// for the thermophysical transport model type; i.e., from rho-type thermo to
+// fluid-type thermo.
+
+template<class ThermoModel>
+struct MovingPhaseModelTransportThermoModel;
+
+template<>
+struct MovingPhaseModelTransportThermoModel<rhoThermo>
+{
+    typedef fluidThermo type;
+};
+
+template<>
+struct MovingPhaseModelTransportThermoModel<rhoReactionThermo>
+{
+    typedef fluidReactionThermo type;
+};
 
 /*---------------------------------------------------------------------------*\
                       Class MovingPhaseModel Declaration
@@ -63,6 +82,17 @@ class MovingPhaseModel
     public BasePhaseModel
 {
 protected:
+
+    // Protected typedefs
+
+        //- Thermo type for the thermophysical transport model
+        typedef
+            typename MovingPhaseModelTransportThermoModel
+            <
+                typename BasePhaseModel::thermoModel
+            >::type
+            transportThermoModel;
+
 
     // Protected data
 
@@ -91,15 +121,15 @@ protected:
         tmp<volScalarField> divU_;
 
         //- Turbulence model
-        autoPtr<phaseCompressibleMomentumTransportModel> turbulence_;
+        autoPtr<phaseCompressible::momentumTransportModel> turbulence_;
 
         //- Thermophysical transport model
         autoPtr
         <
             PhaseThermophysicalTransportModel
             <
-                phaseCompressibleMomentumTransportModel,
-                typename BasePhaseModel::thermoModel
+                phaseCompressible::momentumTransportModel,
+                transportThermoModel
             >
         > thermophysicalTransport_;
 
@@ -223,9 +253,6 @@ public:
 
         // Momentum transport
 
-            //- Return the effective thermal conductivity on a patch
-            virtual tmp<scalarField> kappaEff(const label patchi) const;
-
             //- Return the turbulent kinetic energy
             virtual tmp<volScalarField> k() const;
 
@@ -235,6 +262,9 @@ public:
 
 
         // Thermophysical transport
+
+            //- Return the effective thermal conductivity on a patch
+            virtual tmp<scalarField> kappaEff(const label patchi) const;
 
             //- Return the source term for the energy equation
             virtual tmp<fvScalarMatrix> divq(volScalarField& he) const;

@@ -163,7 +163,7 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
     divU_(nullptr),
     turbulence_
     (
-        phaseCompressibleMomentumTransportModel::New
+        phaseCompressible::momentumTransportModel::New
         (
             *this,
             this->thermo().rho(),
@@ -177,8 +177,8 @@ Foam::MovingPhaseModel<BasePhaseModel>::MovingPhaseModel
     (
         PhaseThermophysicalTransportModel
         <
-            phaseCompressibleMomentumTransportModel,
-            typename BasePhaseModel::thermoModel
+            phaseCompressible::momentumTransportModel,
+            transportThermoModel
         >::New(turbulence_, this->thermo_)
     ),
     continuityError_
@@ -520,14 +520,6 @@ void Foam::MovingPhaseModel<BasePhaseModel>::divU(tmp<volScalarField> divU)
 
 
 template<class BasePhaseModel>
-Foam::tmp<Foam::scalarField>
-Foam::MovingPhaseModel<BasePhaseModel>::kappaEff(const label patchi) const
-{
-    return thermophysicalTransport_->kappaEff(patchi);
-}
-
-
-template<class BasePhaseModel>
 Foam::tmp<Foam::volScalarField>
 Foam::MovingPhaseModel<BasePhaseModel>::k() const
 {
@@ -540,6 +532,14 @@ Foam::tmp<Foam::volScalarField>
 Foam::MovingPhaseModel<BasePhaseModel>::pPrime() const
 {
     return turbulence_->pPrime();
+}
+
+
+template<class BasePhaseModel>
+Foam::tmp<Foam::scalarField>
+Foam::MovingPhaseModel<BasePhaseModel>::kappaEff(const label patchi) const
+{
+    return thermophysicalTransport_->kappaEff(patchi);
 }
 
 

@@ -1,5 +1,4 @@
 incompressibleTwoPhaseInteractingMixture/incompressibleTwoPhaseInteractingMixture.C
-compressibleMomentumTransportModels.C
 driftFluxFoam.C
 
 EXE = $(FOAM_APPBIN)/driftFluxFoam

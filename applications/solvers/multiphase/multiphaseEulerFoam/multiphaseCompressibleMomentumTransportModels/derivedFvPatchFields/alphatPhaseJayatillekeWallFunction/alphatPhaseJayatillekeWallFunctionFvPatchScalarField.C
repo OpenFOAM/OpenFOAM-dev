@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "alphatPhaseJayatillekeWallFunctionFvPatchScalarField.H"
 #include "phaseSystem.H"
-#include "phaseCompressibleMomentumTransportModel.H"
+#include "phaseDynamicMomentumTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -169,8 +169,8 @@ alphatPhaseJayatillekeWallFunctionFvPatchScalarField::calcAlphat
     const label patchi = patch().index();
 
     // Retrieve turbulence properties from model
-    const phaseCompressibleMomentumTransportModel& turbModel =
-        db().lookupObject<phaseCompressibleMomentumTransportModel>
+    const phaseCompressible::momentumTransportModel& turbModel =
+        db().lookupObject<phaseCompressible::momentumTransportModel>
         (
             IOobject::groupName(momentumTransportModel::typeName, phase.name())
         );

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,9 +103,9 @@ continuousGasKEqn<BasicMomentumTransportModel>::liquidTurbulence() const
     {
         const volVectorField& U = this->U_;
 
-        const transportModel& gas = this->transport();
+        const phaseModel& gas = refCast<const phaseModel>(this->transport());
         const phaseSystem& fluid = gas.fluid();
-        const transportModel& liquid = fluid.otherPhase(gas);
+        const phaseModel& liquid = fluid.otherPhase(gas);
 
         liquidTurbulencePtr_ =
            &U.db().lookupObject<momentumTransportModel>

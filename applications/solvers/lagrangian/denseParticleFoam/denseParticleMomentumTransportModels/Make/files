@@ -1,3 +1,0 @@
-denseParticleMomentumTransportModels.C
-
-LIB = $(FOAM_LIBBIN)/libdenseParticleMomentumTransportModels

@@ -9,6 +9,7 @@ EXE_INC = \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
     -I$(LIB_SRC)/lagrangian/parcel/lnInclude \
     -I$(LIB_SRC)/lagrangian/distributionModels/lnInclude \
+    -I$(LIB_SRC)/transportModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/thermophysicalProperties/lnInclude \
@@ -25,7 +26,7 @@ EXE_LIBS = \
     -lfiniteVolume \
     -lmeshTools \
     -lmomentumTransportModels \
-    -lfluidThermoMomentumTransportModels \
+    -lcompressibleMomentumTransportModels \
     -lthermophysicalTransportModels \
     -lfluidReactionThermophysicalTransportModels \
     -llagrangian \

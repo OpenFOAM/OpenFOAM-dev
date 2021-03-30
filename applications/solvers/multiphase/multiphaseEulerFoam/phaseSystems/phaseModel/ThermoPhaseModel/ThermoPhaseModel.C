@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,7 @@ Foam::ThermoPhaseModel<BasePhaseModel, ThermoModel>::ThermoPhaseModel
 )
 :
     BasePhaseModel(fluid, phaseName, referencePhase, index),
+    dynamicTransportModel(),
     thermo_(ThermoModel::New(fluid.mesh(), this->name()))
 {
     thermo_->validate

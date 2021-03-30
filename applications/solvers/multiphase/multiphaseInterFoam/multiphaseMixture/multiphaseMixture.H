@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -28,8 +28,8 @@ Description
     Incompressible multi-phase mixture with built in solution for the
     phase fractions with interface compression for interface-capturing.
 
-    Derived from transportModel so that it can be used in conjunction with
-    the incompressible turbulence models.
+    Derived from kinematicTransportModel so that it can be used in conjunction
+    with the incompressible turbulence models.
 
     Surface tension and contact-angle is handled for the interface
     between each phase-pair.
@@ -42,7 +42,7 @@ SourceFiles
 #ifndef multiphaseMixture_H
 #define multiphaseMixture_H
 
-#include "transportModel.H"
+#include "kinematicTransportModel.H"
 #include "IOdictionary.H"
 #include "phase.H"
 #include "PtrDictionary.H"
@@ -61,7 +61,7 @@ namespace Foam
 class multiphaseMixture
 :
     public IOdictionary,
-    public transportModel
+    public kinematicTransportModel
 {
 public:
 

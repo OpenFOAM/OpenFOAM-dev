@@ -31,7 +31,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
-#include "fluidThermoMomentumTransportModel.H"
+#include "dynamicMomentumTransportModel.H"
 #include "fluidReactionThermophysicalTransportModel.H"
 #include "parcelCloudList.H"
 #include "surfaceFilmModel.H"

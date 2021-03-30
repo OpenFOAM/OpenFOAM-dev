@@ -1,6 +1,7 @@
 EXE_INC = \
     -IBCs/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/transportModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
@@ -17,7 +18,7 @@ EXE_LIBS = \
     -lspecie \
     -lrhoCentralFoam \
     -lmomentumTransportModels \
-    -lfluidThermoMomentumTransportModels \
+    -lcompressibleMomentumTransportModels \
     -lthermophysicalTransportModels \
     -ldynamicFvMesh \
     -ltopoChangerFvMesh \

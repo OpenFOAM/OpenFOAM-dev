@@ -10,7 +10,7 @@ EXE_INC = \
 
 LIB_LIBS = \
     -lfiniteVolume \
-    -lincompressibleTransportModels \
+    -ltransportModels \
     -lmeshTools \
     -llagrangian \
     -llagrangianParcel \

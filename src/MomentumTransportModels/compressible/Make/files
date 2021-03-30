@@ -1,4 +1,4 @@
 compressibleMomentumTransportModel.C
-fluidThermoMomentumTransportModels/fluidThermoMomentumTransportModels.C
+dynamicMomentumTransportModels/dynamicMomentumTransportModels.C
 
-LIB = $(FOAM_LIBBIN)/libfluidThermoMomentumTransportModels
+LIB = $(FOAM_LIBBIN)/libcompressibleMomentumTransportModels

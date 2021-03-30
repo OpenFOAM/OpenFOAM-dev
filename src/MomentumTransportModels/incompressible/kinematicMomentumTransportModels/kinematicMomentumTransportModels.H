@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "IncompressibleMomentumTransportModel.H"
-#include "transportModel.H"
+#include "kinematicTransportModel.H"
 #include "addToRunTimeSelectionTable.H"
 #include "makeMomentumTransportModel.H"
 
@@ -40,20 +40,24 @@ makeMomentumTransportModelTypes
     geometricOneField,
     incompressibleMomentumTransportModel,
     IncompressibleMomentumTransportModel,
-    transportModel
+    kinematicTransportModel
 );
 
 #define makeLaminarModel(Type)                                                 \
     makeTemplatedMomentumTransportModel                                        \
-    (transportModelIncompressibleMomentumTransportModel, laminar, Type)
+    (                                                                          \
+        kinematicTransportModelIncompressibleMomentumTransportModel,           \
+        laminar,                                                               \
+        Type                                                                   \
+    )
 
 #define makeRASModel(Type)                                                     \
     makeTemplatedMomentumTransportModel                                        \
-    (transportModelIncompressibleMomentumTransportModel, RAS, Type)
+    (kinematicTransportModelIncompressibleMomentumTransportModel, RAS, Type)
 
 #define makeLESModel(Type)                                                     \
     makeTemplatedMomentumTransportModel                                        \
-    (transportModelIncompressibleMomentumTransportModel, LES, Type)
+    (kinematicTransportModelIncompressibleMomentumTransportModel, LES, Type)
 
 
 // ************************************************************************* //

@@ -1,11 +1,10 @@
 EXE_INC = \
-    -I./denseParticleMomentumTransportModels/lnInclude \
     -I$(LIB_SRC)/lagrangian/basic/lnInclude \
     -I$(LIB_SRC)/lagrangian/parcel/lnInclude \
+    -I$(LIB_SRC)/transportModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
-    -I$(LIB_SRC)/transportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/incompressible/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/phaseIncompressible/lnInclude \
@@ -19,10 +18,10 @@ EXE_LIBS = \
     -llagrangian \
     -llagrangianParcel \
     -llagrangianParcelTurbulence \
-    -lincompressibleTransportModels \
+    -ltransportModels \
     -lmomentumTransportModels \
     -lincompressibleMomentumTransportModels \
-    -ldenseParticleMomentumTransportModels \
+    -lphaseIncompressibleMomentumTransportModels \
     -lfiniteVolume \
     -ldynamicFvMesh \
     -ltopoChangerFvMesh \

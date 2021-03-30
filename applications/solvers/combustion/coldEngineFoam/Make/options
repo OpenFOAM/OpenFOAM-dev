@@ -4,6 +4,7 @@ EXE_INC = \
     -I../XiFoam \
     -I../../compressible/rhoPimpleFoam \
     -I$(LIB_SRC)/engine/lnInclude \
+    -I$(LIB_SRC)/transportModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
@@ -18,7 +19,7 @@ EXE_LIBS = \
     -lengine \
     -lfluidThermophysicalModels \
     -lmomentumTransportModels \
-    -lfluidThermoMomentumTransportModels \
+    -lcompressibleMomentumTransportModels \
     -lthermophysicalTransportModels \
     -lspecie \
     -lfiniteVolume \

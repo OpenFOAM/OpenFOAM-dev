@@ -142,9 +142,9 @@ LaheyKEpsilon<BasicMomentumTransportModel>::gasTurbulence() const
     {
         const volVectorField& U = this->U_;
 
-        const transportModel& liquid = this->transport();
+        const phaseModel& liquid = refCast<const phaseModel>(this->transport());
         const phaseSystem& fluid = liquid.fluid();
-        const transportModel& gas = fluid.otherPhase(liquid);
+        const phaseModel& gas = fluid.otherPhase(liquid);
 
         gasTurbulencePtr_ =
            &U.db().lookupObject
@@ -170,9 +170,13 @@ void LaheyKEpsilon<BasicMomentumTransportModel>::correctNut()
     const PhaseCompressibleMomentumTransportModel<transportModel>&
         gasTurbulence = this->gasTurbulence();
 
+    const phaseModel& liquid = refCast<const phaseModel>(this->transport());
+    const phaseSystem& fluid = liquid.fluid();
+    const phaseModel& gas = fluid.otherPhase(liquid);
+
     this->nut_ =
         this->Cmu_*sqr(this->k_)/this->epsilon_
-      + Cmub_*gasTurbulence.transport().d()*gasTurbulence.alpha()
+      + Cmub_*gas.d()*gasTurbulence.alpha()
        *(mag(this->U_ - gasTurbulence.U()));
 
     this->nut_.correctBoundaryConditions();
@@ -186,9 +190,9 @@ tmp<volScalarField> LaheyKEpsilon<BasicMomentumTransportModel>::bubbleG() const
     const PhaseCompressibleMomentumTransportModel<transportModel>&
         gasTurbulence = this->gasTurbulence();
 
-    const transportModel& liquid = this->transport();
+    const phaseModel& liquid = refCast<const phaseModel>(this->transport());
     const phaseSystem& fluid = liquid.fluid();
-    const transportModel& gas = fluid.otherPhase(liquid);
+    const phaseModel& gas = fluid.otherPhase(liquid);
 
     const dragModel& drag = fluid.lookupSubModel<dragModel>(gas, liquid);
 

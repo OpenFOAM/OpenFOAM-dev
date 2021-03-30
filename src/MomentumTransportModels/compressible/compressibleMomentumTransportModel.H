@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,21 +44,6 @@ namespace Foam
 
 // Forward declarations
 class fvMesh;
-
-// Transport properties traits class to provide the thermo model
-template<class TransportType>
-class TransportTraits
-{
-public:
-
-    typedef TransportType thermoModel;
-
-    static const thermoModel& thermo(const TransportType& tt)
-    {
-        return tt;
-    }
-};
-
 
 /*---------------------------------------------------------------------------*\
              Class compressibleMomentumTransportModel Declaration

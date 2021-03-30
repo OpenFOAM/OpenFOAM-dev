@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,60 +23,12 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "phaseCompressibleMomentumTransportModel.H"
-#include "addToRunTimeSelectionTable.H"
-#include "makeMomentumTransportModel.H"
-
-#include "laminarModel.H"
-#include "RASModel.H"
-#include "LESModel.H"
+#include "phaseDynamicMomentumTransportModels.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-makeMomentumTransportModelTypes
-(
-    volScalarField,
-    volScalarField,
-    compressibleMomentumTransportModel,
-    PhaseCompressibleMomentumTransportModel,
-    phaseModel
-);
-
-makeBaseMomentumTransportModel
-(
-    volScalarField,
-    volScalarField,
-    compressibleMomentumTransportModel,
-    PhaseCompressibleMomentumTransportModel,
-    phaseModel
-);
-
-#define makeLaminarModel(Type)                                                 \
-    makeTemplatedLaminarModel                                                  \
-    (phaseModelPhaseCompressibleMomentumTransportModel, laminar, Type)
-
-#define makeRASModel(Type)                                                     \
-    makeTemplatedMomentumTransportModel                                        \
-    (phaseModelPhaseCompressibleMomentumTransportModel, RAS, Type)
-
-#define makeLESModel(Type)                                                     \
-    makeTemplatedMomentumTransportModel                                        \
-    (phaseModelPhaseCompressibleMomentumTransportModel, LES, Type)
-
-#include "Stokes.H"
-makeLaminarModel(Stokes);
-
-#include "generalizedNewtonian.H"
-makeLaminarModel(generalizedNewtonian);
-
-#include "kEpsilon.H"
-makeRASModel(kEpsilon);
-
 #include "LaheyKEpsilon.H"
 makeRASModel(LaheyKEpsilon);
-
-#include "kOmegaSST.H"
-makeRASModel(kOmegaSST);
 
 #include "kOmegaSSTSato.H"
 makeRASModel(kOmegaSSTSato);
@@ -86,12 +38,6 @@ makeRASModel(continuousGasKEpsilon);
 
 #include "mixtureKEpsilon.H"
 makeRASModel(mixtureKEpsilon);
-
-#include "Smagorinsky.H"
-makeLESModel(Smagorinsky);
-
-#include "kEqn.H"
-makeLESModel(kEqn);
 
 #include "SmagorinskyZhang.H"
 makeLESModel(SmagorinskyZhang);
@@ -104,11 +50,19 @@ makeLESModel(continuousGasKEqn);
 
 #include "kineticTheoryModel.H"
 makeMomentumTransportModel
-(phaseModelPhaseCompressibleMomentumTransportModel, RAS, kineticTheoryModel);
+(
+    dynamicTransportModelPhaseCompressibleMomentumTransportModel,
+    RAS,
+    kineticTheoryModel
+);
 
 #include "phasePressureModel.H"
 makeMomentumTransportModel
-(phaseModelPhaseCompressibleMomentumTransportModel, RAS, phasePressureModel);
+(
+    dynamicTransportModelPhaseCompressibleMomentumTransportModel,
+    RAS,
+    phasePressureModel
+);
 
 
 // ************************************************************************* //

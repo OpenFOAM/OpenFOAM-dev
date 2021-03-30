@@ -1,18 +1,18 @@
 EXE_INC = \
     -I. \
     -ItwoPhaseMixtureThermo \
-    -IVoFphaseCompressibleMomentumTransportModels/lnInclude \
+    -IcompressibleInterPhaseTransportModel/lnInclude \
     -ItwoPhaseChange/lnInclude \
+    -I$(LIB_SRC)/transportModels/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/thermophysicalProperties/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
     -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/thermophysicalProperties/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
     -I$(LIB_SRC)/regionModels/regionModel/lnInclude \
     -I$(LIB_SRC)/regionModels/surfaceFilmModels/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
@@ -31,8 +31,8 @@ EXE_LIBS = \
     -linterfaceProperties \
     -lcompressibleTwoPhaseChangeModels \
     -lmomentumTransportModels \
-    -lfluidThermoMomentumTransportModels \
-    -lVoFphaseCompressibleMomentumTransportModels \
+    -lcompressibleMomentumTransportModels \
+    -lcompressibleInterPhaseTransportModel \
     -lsurfaceFilmModels \
     -lsurfaceFilmDerivedFvPatchFields \
     -lfiniteVolume \

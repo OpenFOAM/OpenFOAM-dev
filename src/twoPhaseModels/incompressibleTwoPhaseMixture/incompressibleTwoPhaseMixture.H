@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ SourceFiles
 #ifndef incompressibleTwoPhaseMixture_H
 #define incompressibleTwoPhaseMixture_H
 
-#include "transportModel.H"
+#include "kinematicTransportModel.H"
 #include "viscosityModel.H"
 #include "twoPhaseMixture.H"
 #include "IOdictionary.H"
@@ -53,7 +53,7 @@ namespace Foam
 class incompressibleTwoPhaseMixture
 :
     public IOdictionary,
-    public transportModel,
+    public kinematicTransportModel,
     public twoPhaseMixture
 {
 protected:

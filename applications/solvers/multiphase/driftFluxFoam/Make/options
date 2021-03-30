@@ -19,4 +19,4 @@ EXE_LIBS = \
     -lfvModels \
     -lfvConstraints \
     -lmomentumTransportModels \
-    -lfluidThermoMomentumTransportModels
+    -lcompressibleMomentumTransportModels

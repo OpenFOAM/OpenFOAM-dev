@@ -70,11 +70,11 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
     const volVectorField& U,
     const surfaceScalarField& alphaRhoPhi,
     const surfaceScalarField& phi,
-    const transportModel& phase,
+    const transportModel& transport,
     const word& type
 )
 :
-    eddyViscosity<RASModel<phaseCompressibleMomentumTransportModel>>
+    eddyViscosity<RASModel<phaseCompressible::momentumTransportModel>>
     (
         type,
         alpha,
@@ -82,10 +82,10 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
         U,
         alphaRhoPhi,
         phi,
-        phase
+        transport
     ),
 
-    phase_(phase),
+    phase_(refCast<const phaseModel>(transport)),
 
     continuousPhaseName_
     (
@@ -155,7 +155,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
     (
         IOobject
         (
-            IOobject::groupName("Theta", phase.name()),
+            IOobject::groupName("Theta", phase_.name()),
             U.time().timeName(),
             U.mesh(),
             IOobject::MUST_READ,
@@ -168,7 +168,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
     (
         IOobject
         (
-            IOobject::groupName("lambda", phase.name()),
+            IOobject::groupName("lambda", phase_.name()),
             U.time().timeName(),
             U.mesh(),
             IOobject::NO_READ,
@@ -182,7 +182,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
     (
         IOobject
         (
-            IOobject::groupName("gs0", phase.name()),
+            IOobject::groupName("gs0", phase_.name()),
             U.time().timeName(),
             U.mesh(),
             IOobject::NO_READ,
@@ -196,7 +196,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
     (
         IOobject
         (
-            IOobject::groupName("kappa", phase.name()),
+            IOobject::groupName("kappa", phase_.name()),
             U.time().timeName(),
             U.mesh(),
             IOobject::NO_READ,
@@ -210,7 +210,7 @@ Foam::RASModels::kineticTheoryModel::kineticTheoryModel
     (
         IOobject
         (
-            IOobject::groupName("nuFric", phase.name()),
+            IOobject::groupName("nuFric", phase_.name()),
             U.time().timeName(),
             U.mesh(),
             IOobject::NO_READ,
@@ -239,7 +239,8 @@ bool Foam::RASModels::kineticTheoryModel::read()
 {
     if
     (
-        eddyViscosity<RASModel<phaseCompressibleMomentumTransportModel>>::read()
+        eddyViscosity<RASModel<phaseCompressible::momentumTransportModel>>::
+        read()
     )
     {
         coeffDict().lookup("equilibrium") >> equilibrium_;

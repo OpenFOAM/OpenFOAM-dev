@@ -33,7 +33,7 @@ argList::addBoolOption
 );
 #endif
 
-#if defined(kinematicMomentumTransportModel_H) || defined(fluidThermoMomentumTransportModel_H)
+#if defined(kinematicMomentumTransportModel_H) || defined(dynamicMomentumTransportModel_H)
 argList::addBoolOption
 (
     "listMomentumTransportModels",

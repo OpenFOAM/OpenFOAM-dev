@@ -27,7 +27,7 @@ License
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "kinematicMomentumTransportModel.H"
-#include "fluidThermoMomentumTransportModel.H"
+#include "dynamicMomentumTransportModel.H"
 #include "wallPolyPatch.H"
 #include "addToRunTimeSelectionTable.H"
 
