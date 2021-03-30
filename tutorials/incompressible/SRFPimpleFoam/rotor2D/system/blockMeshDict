@@ -51,7 +51,7 @@ vertices #codeStream
         // Rotate points around z-axis and append
         for (label i = 0; i < 4; i++)
         {
-            points.append(transform(Rz(-degToRad(i*$angle)), initPoints));
+            points.append(transform(Rz(degToRad(i*$angle)), initPoints));
         }
 
         // Duplicate z points

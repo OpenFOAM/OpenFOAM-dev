@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,6 +83,9 @@ inline tensor rotationTensor
 
 
 //- Rotational transformation tensor about the x-axis by omega radians
+//  The rotation is defined in a right-handed coordinate system
+//  i.e. clockwise with respect to the axis from -ve to +ve
+//  (looking along the axis).
 inline tensor Rx(const scalar& omega)
 {
     const scalar s = sin(omega);
@@ -90,41 +93,50 @@ inline tensor Rx(const scalar& omega)
     return tensor
     (
         1,  0,  0,
-        0,  c,  s,
-        0, -s,  c
+        0,  c, -s,
+        0, s,  c
     );
 }
 
 
 //- Rotational transformation tensor about the y-axis by omega radians
+//  The rotation is defined in a right-handed coordinate system
+//  i.e. clockwise with respect to the axis from -ve to +ve
+//  (looking along the axis).
 inline tensor Ry(const scalar& omega)
 {
     const scalar s = sin(omega);
     const scalar c = cos(omega);
     return tensor
     (
-        c,  0, -s,
+        c,  0,  s,
         0,  1,  0,
-        s,  0,  c
+       -s,  0,  c
     );
 }
 
 
 //- Rotational transformation tensor about the z-axis by omega radians
+//  The rotation is defined in a right-handed coordinate system
+//  i.e. clockwise with respect to the axis from -ve to +ve
+//  (looking along the axis).
 inline tensor Rz(const scalar& omega)
 {
     const scalar s = sin(omega);
     const scalar c = cos(omega);
     return tensor
     (
-        c,  s,  0,
-       -s,  c,  0,
+        c, -s,  0,
+        s,  c,  0,
         0,  0,  1
     );
 }
 
 
 //- Rotational transformation tensor about axis a by omega radians
+//  The rotation is defined in a right-handed coordinate system
+//  i.e. clockwise with respect to the axis from -ve to +ve
+//  (looking along the axis).
 inline tensor Ra(const vector& a, const scalar omega)
 {
     const scalar s = sin(omega);
@@ -133,15 +145,15 @@ inline tensor Ra(const vector& a, const scalar omega)
     return tensor
     (
         sqr(a.x())*(1 - c)  + c,
-        a.y()*a.x()*(1 - c) + a.z()*s,
-        a.x()*a.z()*(1 - c) - a.y()*s,
-
-        a.x()*a.y()*(1 - c) - a.z()*s,
-        sqr(a.y())*(1 - c)  + c,
-        a.y()*a.z()*(1 - c) + a.x()*s,
-
+        a.y()*a.x()*(1 - c) - a.z()*s,
         a.x()*a.z()*(1 - c) + a.y()*s,
+
+        a.x()*a.y()*(1 - c) + a.z()*s,
+        sqr(a.y())*(1 - c)  + c,
         a.y()*a.z()*(1 - c) - a.x()*s,
+
+        a.x()*a.z()*(1 - c) - a.y()*s,
+        a.y()*a.z()*(1 - c) + a.x()*s,
         sqr(a.z())*(1 - c)  + c
     );
 }
