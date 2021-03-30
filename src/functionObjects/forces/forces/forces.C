@@ -745,11 +745,28 @@ bool Foam::functionObjects::forces::read(const dictionary& dict)
     }
     else
     {
-        // Optional entries U and p
-        pName_ = dict.lookupOrDefault<word>("p", "p");
-        UName_ = dict.lookupOrDefault<word>("U", "U");
-        rhoName_ = dict.lookupOrDefault<word>("rho", "rho");
+        // Optional phase entry
         phaseName_ = dict.lookupOrDefault<word>("phase", word::null);
+
+        // Optional U, p and rho entries
+        pName_ =
+            dict.lookupOrDefault<word>
+            (
+                "p",
+                IOobject::groupName("p", phaseName_)
+            );
+        UName_ =
+            dict.lookupOrDefault<word>
+            (
+                "U",
+                IOobject::groupName("U", phaseName_)
+            );
+        rhoName_ =
+            dict.lookupOrDefault<word>
+            (
+                "rho",
+                IOobject::groupName("rho", phaseName_)
+            );
 
         // Reference density needed for incompressible calculations
         if (rhoName_ == "rhoInf")
