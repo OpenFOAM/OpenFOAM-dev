@@ -251,11 +251,11 @@ protected:
         //  otherwise return 1
         scalar rho(const volScalarField& p) const;
 
-        tmp<vectorField> phaseFilter
-        (
-            const tmp<vectorField>& F,
-            const label patchi
-        ) const;
+        //- Get the volume fraction field
+        tmp<volScalarField> alpha() const;
+
+        //- Get the volume fraction field on a patch
+        tmp<scalarField> alpha(const label patchi) const;
 
         //- Accumulate bin data
         void applyBins
