@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,39 +25,125 @@ Class
     Foam::dynamicRefineFvMesh
 
 Description
-    A fvMesh with built-in refinement.
+    Dynamic mesh refinement/unrefinement based on volScalarField values.
 
-    Determines which cells to refine/unrefine and does all in update().
+    Refinement can optionally be specified in a cellZone or in multiple
+    regions, each controlled by a different volScalarField.
 
+Usage
+    Example of single field based refinement in all cells:
+    \verbatim
+        dynamicFvMesh   dynamicRefineFvMesh;
 
         // How often to refine
         refineInterval  1;
+
         // Field to be refinement on
         field           alpha.water;
+
         // Refine field in between lower..upper
         lowerRefineLevel 0.001;
         upperRefineLevel 0.999;
+
+        // If value < unrefineLevel unrefine
+        unrefineLevel   10;
+
         // If value < unrefineLevel (default=great) unrefine
         // unrefineLevel   10;
         // Have slower than 2:1 refinement
         nBufferLayers   1;
+
         // Refine cells only up to maxRefinement levels
         maxRefinement   2;
+
         // Stop refinement if maxCells reached
         maxCells        200000;
+
         // Flux field and corresponding velocity field. Fluxes on changed
         // faces get recalculated by interpolating the velocity. Use 'none'
-        // on surfaceScalarFields that do not need to be reinterpolated, use
-        // NaN to detect use of mapped variable
+        // on surfaceScalarFields that do not need to be reinterpolated.
         correctFluxes
         (
-            (phi none)  // NaN)   // none)
-            (nHatf none)   // none)
-            (rho*phi none)   // none)
-            (ghf none)  // NaN)   // none)
+            (phi none)
+            (nHatf none)
+            (rhoPhi none)
+            (alphaPhi0.water none)
+            (ghf none)
         );
+
         // Write the refinement level as a volScalarField
         dumpLevel       true;
+    \endverbatim
+
+    Example of single field based refinement in two regions:
+    \verbatim
+        dynamicFvMesh   dynamicRefineFvMesh;
+
+        // How often to refine
+        refineInterval  1;
+
+        refinementRegions
+        {
+            region1
+            {
+                cellZone        refinementRegion1;
+
+                // Field to be refinement on
+                field           alpha.water;
+
+                // Refine field in between lower..upper
+                lowerRefineLevel 0.001;
+                upperRefineLevel 0.999;
+
+                // Refine cells only up to maxRefinement levels
+                maxRefinement   1;
+
+                // If value < unrefineLevel unrefine
+                unrefineLevel   10;
+            }
+
+            region2
+            {
+                cellZone        refinementRegion2;
+
+                // Field to be refinement on
+                field           alpha.water;
+
+                // Refine field in between lower..upper
+                lowerRefineLevel 0.001;
+                upperRefineLevel 0.999;
+
+                // Refine cells only up to maxRefinement levels
+                maxRefinement   2;
+
+                // If value < unrefineLevel unrefine
+                unrefineLevel   10;
+            }
+        }
+
+        // If value < unrefineLevel (default=great) unrefine
+        // unrefineLevel   10;
+        // Have slower than 2:1 refinement
+        nBufferLayers   1;
+
+        // Stop refinement if maxCells reached
+        maxCells        200000;
+
+        // Flux field and corresponding velocity field. Fluxes on changed
+        // faces get recalculated by interpolating the velocity. Use 'none'
+        // on surfaceScalarFields that do not need to be reinterpolated.
+        correctFluxes
+        (
+            (phi none)
+            (nHatf none)
+            (rhoPhi none)
+            (alphaPhi0.water none)
+            (ghf none)
+        );
+
+        // Write the refinement level as a volScalarField
+        dumpLevel       true;
+    \endverbatim
 
 
 SourceFiles
@@ -86,7 +172,7 @@ class dynamicRefineFvMesh
 :
     public dynamicFvMesh
 {
-protected:
+    // Private Member Data
 
         //- Mesh cutting engine
         hexRef8 meshCutter_;
@@ -101,17 +187,17 @@ protected:
         label nRefinementIterations_;
 
         //- Protected cells (usually since not hexes)
-        PackedBoolList protectedCell_;
+        PackedBoolList protectedCells_;
 
 
-    // Protected Member Functions
+    // Private Member Functions
 
         //- Count set/unset elements in packedlist.
         static label count(const PackedBoolList&, const unsigned int);
 
         //- Calculate cells that cannot be refined since would trigger
-        //  refinement of protectedCell_ (since 2:1 refinement cascade)
-        void calculateProtectedCells(PackedBoolList& unrefineableCell) const;
+        //  refinement of protectedCells_ (since 2:1 refinement cascade)
+        void calculateProtectedCells(PackedBoolList& unrefineableCells) const;
 
         //- Read the projection parameters from dictionary
         void readDict();
@@ -126,21 +212,10 @@ protected:
 
         // Selection of cells to un/refine
 
-            //- Calculates approximate value for refinement level so
-            //  we don't go above maxCell
-            scalar getRefineLevel
+            const cellZone& findCellZone
             (
-                const label maxCells,
-                const label maxRefinement,
-                const scalar refineLevel,
-                const scalarField&
+                const word& cellZoneName
             ) const;
-
-            //- Get per cell max of connected point
-            scalarField maxPointField(const scalarField&) const;
-
-            //- Get point max of connected cell
-            scalarField maxCellField(const volScalarField&) const;
 
             scalarField cellToPoint(const scalarField& vFld) const;
 
@@ -151,13 +226,40 @@ protected:
                 const scalar maxLevel
             ) const;
 
+            scalarField error
+            (
+                const scalarField& fld,
+                const labelList& cells,
+                const scalar minLevel,
+                const scalar maxLevel
+            ) const;
+
             //- Select candidate cells for refinement
             virtual void selectRefineCandidates
             (
+                PackedBoolList& candidateCell,
                 const scalar lowerRefineLevel,
                 const scalar upperRefineLevel,
+                const scalar maxRefinement,
+                const scalarField& vFld
+            ) const;
+
+            //- Select candidate cells for refinement
+            virtual void selectRefineCandidates
+            (
+                PackedBoolList& candidateCell,
+                const scalar lowerRefineLevel,
+                const scalar upperRefineLevel,
+                const scalar maxRefinement,
                 const scalarField& vFld,
-                PackedBoolList& candidateCell
+                const labelList& cells
+            ) const;
+
+            //- Select candidate cells for refinement
+            virtual scalar selectRefineCandidates
+            (
+                PackedBoolList& candidateCell,
+                const dictionary& refineDict
             ) const;
 
             //- Subset candidate cells for refinement
@@ -168,12 +270,35 @@ protected:
                 const PackedBoolList& candidateCell
             ) const;
 
+            //- Get point max of connected cell
+            void selectUnrefineCandidates
+            (
+                boolList& unrefineCandidates,
+                const volScalarField&,
+                const scalar unrefineLevel
+            ) const;
+
+            //- Get point max of connected cell
+            void selectUnrefineCandidates
+            (
+                boolList& unrefineCandidates,
+                const volScalarField&,
+                const cellZone&,
+                const scalar unrefineLevel
+            ) const;
+
+            //- Get point max of connected cell
+            void selectUnrefineCandidates
+            (
+                boolList& unrefineCandidates,
+                const dictionary& refineDict
+            ) const;
+
             //- Select points that can be unrefined.
             virtual labelList selectUnrefinePoints
             (
-                const scalar unrefineLevel,
                 const PackedBoolList& markedCell,
-                const scalarField& pFld
+                const boolList& unrefineCandidates
             ) const;
 
             //- Extend markedCell with cell-face-cell.
@@ -217,13 +342,13 @@ public:
         //- Cells which should not be refined/unrefined
         const PackedBoolList& protectedCell() const
         {
-            return protectedCell_;
+            return protectedCells_;
         }
 
         //- Cells which should not be refined/unrefined
         PackedBoolList& protectedCell()
         {
-            return protectedCell_;
+            return protectedCells_;
         }
 
         //- Update the mesh for both mesh motion and topology change

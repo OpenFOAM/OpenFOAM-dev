@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,15 +24,13 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "dynamicRefineFvMesh.H"
-#include "addToRunTimeSelectionTable.H"
 #include "surfaceInterpolate.H"
-#include "volFields.H"
 #include "polyTopoChange.H"
-#include "surfaceFields.H"
 #include "syncTools.H"
 #include "pointFields.H"
 #include "sigFpe.H"
 #include "cellSet.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -58,7 +56,7 @@ Foam::label Foam::dynamicRefineFvMesh::count
             n++;
         }
 
-        // debug also serves to get-around Clang compiler trying to optimise
+        // Debug also serves to get-around Clang compiler trying to optimise
         // out this forAll loop under O3 optimisation
         if (debug)
         {
@@ -72,18 +70,18 @@ Foam::label Foam::dynamicRefineFvMesh::count
 
 void Foam::dynamicRefineFvMesh::calculateProtectedCells
 (
-    PackedBoolList& unrefineableCell
+    PackedBoolList& unrefineableCells
 ) const
 {
-    if (protectedCell_.empty())
+    if (protectedCells_.empty())
     {
-        unrefineableCell.clear();
+        unrefineableCells.clear();
         return;
     }
 
     const labelList& cellLevel = meshCutter_.cellLevel();
 
-    unrefineableCell = protectedCell_;
+    unrefineableCells = protectedCells_;
 
     // Get neighbouring cell level
     labelList neiLevel(nFaces()-nInternalFaces());
@@ -103,9 +101,9 @@ void Foam::dynamicRefineFvMesh::calculateProtectedCells
         forAll(faceNeighbour(), facei)
         {
             label own = faceOwner()[facei];
-            bool ownProtected = unrefineableCell.get(own);
+            bool ownProtected = unrefineableCells.get(own);
             label nei = faceNeighbour()[facei];
-            bool neiProtected = unrefineableCell.get(nei);
+            bool neiProtected = unrefineableCells.get(nei);
 
             if (ownProtected && (cellLevel[nei] > cellLevel[own]))
             {
@@ -119,7 +117,7 @@ void Foam::dynamicRefineFvMesh::calculateProtectedCells
         for (label facei = nInternalFaces(); facei < nFaces(); facei++)
         {
             label own = faceOwner()[facei];
-            bool ownProtected = unrefineableCell.get(own);
+            bool ownProtected = unrefineableCells.get(own);
             if
             (
                 ownProtected
@@ -133,7 +131,7 @@ void Foam::dynamicRefineFvMesh::calculateProtectedCells
         syncTools::syncFaceList(*this, seedFace, orEqOp<bool>());
 
 
-        // Extend unrefineableCell
+        // Extend unrefineableCells
         bool hasExtended = false;
 
         for (label facei = 0; facei < nInternalFaces(); facei++)
@@ -141,16 +139,16 @@ void Foam::dynamicRefineFvMesh::calculateProtectedCells
             if (seedFace[facei])
             {
                 label own = faceOwner()[facei];
-                if (unrefineableCell.get(own) == 0)
+                if (unrefineableCells.get(own) == 0)
                 {
-                    unrefineableCell.set(own, 1);
+                    unrefineableCells.set(own, 1);
                     hasExtended = true;
                 }
 
                 label nei = faceNeighbour()[facei];
-                if (unrefineableCell.get(nei) == 0)
+                if (unrefineableCells.get(nei) == 0)
                 {
-                    unrefineableCell.set(nei, 1);
+                    unrefineableCells.set(nei, 1);
                     hasExtended = true;
                 }
             }
@@ -160,9 +158,9 @@ void Foam::dynamicRefineFvMesh::calculateProtectedCells
             if (seedFace[facei])
             {
                 label own = faceOwner()[facei];
-                if (unrefineableCell.get(own) == 0)
+                if (unrefineableCells.get(own) == 0)
                 {
-                    unrefineableCell.set(own, 1);
+                    unrefineableCells.set(own, 1);
                     hasExtended = true;
                 }
             }
@@ -237,28 +235,8 @@ Foam::dynamicRefineFvMesh::refine
         }
     }
 
-    //    // Remove the stored tet base points
-    //    tetBasePtIsPtr_.clear();
-    //    // Remove the cell tree
-    //    cellTreePtr_.clear();
-
     // Update fields
     updateMesh(map);
-
-
-    // Move mesh
-    /*
-    pointField newPoints;
-    if (map().hasMotionPoints())
-    {
-        newPoints = map().preMotionPoints();
-    }
-    else
-    {
-        newPoints = points();
-    }
-    movePoints(newPoints);
-    */
 
     // Correct the flux for modified/added faces. All the faces which only
     // have been renumbered will already have been handled by the mapping.
@@ -426,21 +404,20 @@ Foam::dynamicRefineFvMesh::refine
     }
 
 
-
     // Update numbering of cells/vertices.
     meshCutter_.updateMesh(map);
 
-    // Update numbering of protectedCell_
-    if (protectedCell_.size())
+    // Update numbering of protectedCells_
+    if (protectedCells_.size())
     {
         PackedBoolList newProtectedCell(nCells());
 
         forAll(newProtectedCell, celli)
         {
             label oldCelli = map().cellMap()[celli];
-            newProtectedCell.set(celli, protectedCell_.get(oldCelli));
+            newProtectedCell.set(celli, protectedCells_.get(oldCelli));
         }
-        protectedCell_.transfer(newProtectedCell);
+        protectedCells_.transfer(newProtectedCell);
     }
 
     // Debug: Check refinement levels (across faces only)
@@ -503,21 +480,6 @@ Foam::dynamicRefineFvMesh::unrefine
 
     // Update fields
     updateMesh(map);
-
-
-    // Move mesh
-    /*
-    pointField newPoints;
-    if (map().hasMotionPoints())
-    {
-        newPoints = map().preMotionPoints();
-    }
-    else
-    {
-        newPoints = points();
-    }
-    movePoints(newPoints);
-    */
 
     // Correct the flux for modified faces.
     {
@@ -608,8 +570,8 @@ Foam::dynamicRefineFvMesh::unrefine
     // Update numbering of cells/vertices.
     meshCutter_.updateMesh(map);
 
-    // Update numbering of protectedCell_
-    if (protectedCell_.size())
+    // Update numbering of protectedCells_
+    if (protectedCells_.size())
     {
         PackedBoolList newProtectedCell(nCells());
 
@@ -618,10 +580,10 @@ Foam::dynamicRefineFvMesh::unrefine
             label oldCelli = map().cellMap()[celli];
             if (oldCelli >= 0)
             {
-                newProtectedCell.set(celli, protectedCell_.get(oldCelli));
+                newProtectedCell.set(celli, protectedCells_.get(oldCelli));
             }
         }
-        protectedCell_.transfer(newProtectedCell);
+        protectedCells_.transfer(newProtectedCell);
     }
 
     // Debug: Check refinement levels (across faces only)
@@ -631,39 +593,22 @@ Foam::dynamicRefineFvMesh::unrefine
 }
 
 
-Foam::scalarField
-Foam::dynamicRefineFvMesh::maxPointField(const scalarField& pFld) const
+const Foam::cellZone& Foam::dynamicRefineFvMesh::findCellZone
+(
+    const word& cellZoneName
+) const
 {
-    scalarField vFld(nCells(), -great);
-
-    forAll(pointCells(), pointi)
+    const label cellZoneID = cellZones().findZoneID(cellZoneName);
+    bool cellZoneFound = (cellZoneID != -1);
+    reduce(cellZoneFound, orOp<bool>());
+    if (!cellZoneFound)
     {
-        const labelList& pCells = pointCells()[pointi];
-
-        forAll(pCells, i)
-        {
-            vFld[pCells[i]] = max(vFld[pCells[i]], pFld[pointi]);
-        }
+        FatalErrorInFunction
+            << "cannot find cellZone " << cellZoneName
+            << exit(FatalError);
     }
-    return vFld;
-}
 
-
-Foam::scalarField
-Foam::dynamicRefineFvMesh::maxCellField(const volScalarField& vFld) const
-{
-    scalarField pFld(nPoints(), -great);
-
-    forAll(pointCells(), pointi)
-    {
-        const labelList& pCells = pointCells()[pointi];
-
-        forAll(pCells, i)
-        {
-            pFld[pointi] = max(pFld[pointi], vFld[pCells[i]]);
-        }
-    }
-    return pFld;
+    return cellZones()[cellZoneID];
 }
 
 
@@ -696,50 +641,166 @@ Foam::scalarField Foam::dynamicRefineFvMesh::error
 {
     scalarField c(fld.size(), -1);
 
-    forAll(fld, i)
+    forAll(c, celli)
     {
-        scalar err = min(fld[i]-minLevel, maxLevel-fld[i]);
+        scalar err = min(fld[celli] - minLevel, maxLevel - fld[celli]);
 
         if (err >= 0)
         {
-            c[i] = err;
+            c[celli] = err;
         }
     }
+
+    return c;
+}
+
+
+Foam::scalarField Foam::dynamicRefineFvMesh::error
+(
+    const scalarField& fld,
+    const labelList& cells,
+    const scalar minLevel,
+    const scalar maxLevel
+) const
+{
+    scalarField c(fld.size(), -1);
+
+    forAll(cells, i)
+    {
+        const label celli = cells[i];
+
+        scalar err = min(fld[celli] - minLevel, maxLevel - fld[celli]);
+
+        if (err >= 0)
+        {
+            c[celli] = err;
+        }
+    }
+
     return c;
 }
 
 
 void Foam::dynamicRefineFvMesh::selectRefineCandidates
 (
+    PackedBoolList& candidateCells,
     const scalar lowerRefineLevel,
     const scalar upperRefineLevel,
-    const scalarField& vFld,
-    PackedBoolList& candidateCell
+    const scalar maxRefinement,
+    const scalarField& vFld
 ) const
 {
     // Get error per cell. Is -1 (not to be refined) to >0 (to be refined,
     // higher more desirable to be refined).
-    scalarField cellError
+    const scalarField cellError
     (
-        maxPointField
-        (
-            error
-            (
-                cellToPoint(vFld),
-                lowerRefineLevel,
-                upperRefineLevel
-            )
-        )
+        error(vFld, lowerRefineLevel, upperRefineLevel)
     );
+
+    const labelList& cellLevel = meshCutter_.cellLevel();
 
     // Mark cells that are candidates for refinement.
     forAll(cellError, celli)
     {
-        if (cellError[celli] > 0)
+        if
+        (
+            cellLevel[celli] < maxRefinement
+         && cellError[celli] > 0
+        )
         {
-            candidateCell.set(celli, 1);
+            candidateCells.set(celli, 1);
         }
     }
+}
+
+
+void Foam::dynamicRefineFvMesh::selectRefineCandidates
+(
+    PackedBoolList& candidateCells,
+    const scalar lowerRefineLevel,
+    const scalar upperRefineLevel,
+    const scalar maxRefinement,
+    const scalarField& vFld,
+    const labelList& cells
+) const
+{
+    // Get error per cell. Is -1 (not to be refined) to >0 (to be refined,
+    // higher more desirable to be refined).
+    const scalarField cellError
+    (
+        error(vFld, cells, lowerRefineLevel, upperRefineLevel)
+    );
+
+    const labelList& cellLevel = meshCutter_.cellLevel();
+
+    // Mark cells that are candidates for refinement.
+    forAll(cellError, celli)
+    {
+        if
+        (
+            cellLevel[celli] < maxRefinement
+         && cellError[celli] > 0
+        )
+        {
+            candidateCells.set(celli, 1);
+        }
+    }
+}
+
+
+Foam::scalar Foam::dynamicRefineFvMesh::selectRefineCandidates
+(
+    PackedBoolList& candidateCells,
+    const dictionary& refineDict
+) const
+{
+    const word fieldName(refineDict.lookup("field"));
+
+    const volScalarField& vFld = lookupObject<volScalarField>(fieldName);
+
+    const scalar lowerRefineLevel =
+        refineDict.lookup<scalar>("lowerRefineLevel");
+    const scalar upperRefineLevel =
+        refineDict.lookup<scalar>("upperRefineLevel");
+
+    const label maxRefinement = refineDict.lookup<label>("maxRefinement");
+
+    if (maxRefinement <= 0)
+    {
+        FatalErrorInFunction
+            << "Illegal maximum refinement level " << maxRefinement << nl
+            << "The maxCells setting in the dynamicMeshDict should"
+            << " be > 0." << nl
+            << exit(FatalError);
+    }
+
+    if (refineDict.found("cellZone"))
+    {
+        // Determine candidates for refinement (looking at field only)
+        selectRefineCandidates
+        (
+            candidateCells,
+            lowerRefineLevel,
+            upperRefineLevel,
+            maxRefinement,
+            vFld,
+            findCellZone(refineDict.lookup("cellZone"))
+        );
+    }
+    else
+    {
+        // Determine candidates for refinement (looking at field only)
+        selectRefineCandidates
+        (
+            candidateCells,
+            lowerRefineLevel,
+            upperRefineLevel,
+            maxRefinement,
+            vFld
+        );
+    }
+
+    return maxRefinement;
 }
 
 
@@ -747,7 +808,7 @@ Foam::labelList Foam::dynamicRefineFvMesh::selectRefineCells
 (
     const label maxCells,
     const label maxRefinement,
-    const PackedBoolList& candidateCell
+    const PackedBoolList& candidateCells
 ) const
 {
     // Every refined cell causes 7 extra cells
@@ -757,11 +818,11 @@ Foam::labelList Foam::dynamicRefineFvMesh::selectRefineCells
 
     // Mark cells that cannot be refined since they would trigger refinement
     // of protected cells (since 2:1 cascade)
-    PackedBoolList unrefineableCell;
-    calculateProtectedCells(unrefineableCell);
+    PackedBoolList unrefineableCells;
+    calculateProtectedCells(unrefineableCells);
 
     // Count current selection
-    label nLocalCandidates = count(candidateCell, 1);
+    label nLocalCandidates = count(candidateCells, 1);
     label nCandidates = returnReduce(nLocalCandidates, sumOp<label>());
 
     // Collect all cells
@@ -769,15 +830,14 @@ Foam::labelList Foam::dynamicRefineFvMesh::selectRefineCells
 
     if (nCandidates < nTotToRefine)
     {
-        forAll(candidateCell, celli)
+        forAll(candidateCells, celli)
         {
             if
             (
-                cellLevel[celli] < maxRefinement
-             && candidateCell.get(celli)
+                candidateCells.get(celli)
              && (
-                    unrefineableCell.empty()
-                 || !unrefineableCell.get(celli)
+                    unrefineableCells.empty()
+                 || !unrefineableCells.get(celli)
                 )
             )
             {
@@ -790,15 +850,15 @@ Foam::labelList Foam::dynamicRefineFvMesh::selectRefineCells
         // Sort by error? For now just truncate.
         for (label level = 0; level < maxRefinement; level++)
         {
-            forAll(candidateCell, celli)
+            forAll(candidateCells, celli)
             {
                 if
                 (
                     cellLevel[celli] == level
-                 && candidateCell.get(celli)
+                 && candidateCells.get(celli)
                  && (
-                        unrefineableCell.empty()
-                     || !unrefineableCell.get(celli)
+                        unrefineableCells.empty()
+                     || !unrefineableCells.get(celli)
                     )
                 )
                 {
@@ -831,11 +891,102 @@ Foam::labelList Foam::dynamicRefineFvMesh::selectRefineCells
 }
 
 
+void Foam::dynamicRefineFvMesh::selectUnrefineCandidates
+(
+    boolList& unrefineCandidates,
+    const volScalarField& vFld,
+    const scalar unrefineLevel
+) const
+{
+    forAll(pointCells(), pointi)
+    {
+        const labelList& pCells = pointCells()[pointi];
+
+        scalar maxVal = -great;
+        forAll(pCells, i)
+        {
+            maxVal = max(maxVal, vFld[pCells[i]]);
+        }
+
+        unrefineCandidates[pointi] =
+            unrefineCandidates[pointi] && maxVal < unrefineLevel;
+    }
+}
+
+
+void Foam::dynamicRefineFvMesh::selectUnrefineCandidates
+(
+    boolList& unrefineCandidates,
+    const volScalarField& vFld,
+    const cellZone& cZone,
+    const scalar unrefineLevel
+) const
+{
+    const Map<label>& zoneMap(cZone.lookupMap());
+
+    forAll(pointCells(), pointi)
+    {
+        const labelList& pCells = pointCells()[pointi];
+
+        scalar maxVal = -great;
+        forAll(pCells, i)
+        {
+            if (zoneMap.found(pCells[i]))
+            {
+                maxVal = max(maxVal, vFld[pCells[i]]);
+            }
+        }
+
+        unrefineCandidates[pointi] =
+            unrefineCandidates[pointi] && maxVal < unrefineLevel;
+    }
+}
+
+
+void Foam::dynamicRefineFvMesh::selectUnrefineCandidates
+(
+    boolList& unrefineCandidates,
+    const dictionary& refineDict
+) const
+{
+    if (refineDict.found("unrefineLevel"))
+    {
+        const word fieldName(refineDict.lookup("field"));
+        const volScalarField& vFld
+        (
+            lookupObject<volScalarField>(fieldName)
+        );
+
+        const scalar unrefineLevel =
+            refineDict.lookup<scalar>("unrefineLevel");
+
+        if (refineDict.found("cellZone"))
+        {
+            selectUnrefineCandidates
+            (
+                unrefineCandidates,
+                vFld,
+                findCellZone(refineDict.lookup("cellZone")),
+                unrefineLevel
+            );
+        }
+        else
+        {
+            selectUnrefineCandidates
+            (
+                unrefineCandidates,
+                vFld,
+                unrefineLevel
+            );
+        }
+    }
+}
+
+
 Foam::labelList Foam::dynamicRefineFvMesh::selectUnrefinePoints
 (
-    const scalar unrefineLevel,
     const PackedBoolList& markedCell,
-    const scalarField& pFld
+    const boolList& unrefineCandidates
 ) const
 {
     // All points that can be unrefined
@@ -847,7 +998,7 @@ Foam::labelList Foam::dynamicRefineFvMesh::selectUnrefinePoints
     {
         label pointi = splitPoints[i];
 
-        if (pFld[pointi] < unrefineLevel)
+        if (unrefineCandidates[pointi])
         {
             // Check that all cells are not marked
             const labelList& pCells = pointCells()[pointi];
@@ -991,11 +1142,10 @@ Foam::dynamicRefineFvMesh::dynamicRefineFvMesh(const IOobject& io)
     meshCutter_(*this),
     dumpLevel_(false),
     nRefinementIterations_(0),
-    protectedCell_(nCells(), 0)
+    protectedCells_(nCells(), 0)
 {
     // Read static part of dictionary
     readDict();
-
 
     const labelList& cellLevel = meshCutter_.cellLevel();
     const labelList& pointLevel = meshCutter_.pointLevel();
@@ -1020,7 +1170,7 @@ Foam::dynamicRefineFvMesh::dynamicRefineFvMesh(const IOobject& io)
         {
             label celli = pCells[i];
 
-            if (!protectedCell_.get(celli))
+            if (!protectedCells_.get(celli))
             {
                 if (pointLevel[pointi] <= cellLevel[celli])
                 {
@@ -1028,7 +1178,7 @@ Foam::dynamicRefineFvMesh::dynamicRefineFvMesh(const IOobject& io)
 
                     if (nAnchors[celli] > 8)
                     {
-                        protectedCell_.set(celli, 1);
+                        protectedCells_.set(celli, 1);
                         nProtected++;
                     }
                 }
@@ -1091,9 +1241,9 @@ Foam::dynamicRefineFvMesh::dynamicRefineFvMesh(const IOobject& io)
         {
             if (protectedFace[facei])
             {
-                protectedCell_.set(faceOwner()[facei], 1);
+                protectedCells_.set(faceOwner()[facei], 1);
                 nProtected++;
-                protectedCell_.set(faceNeighbour()[facei], 1);
+                protectedCells_.set(faceNeighbour()[facei], 1);
                 nProtected++;
             }
         }
@@ -1101,7 +1251,7 @@ Foam::dynamicRefineFvMesh::dynamicRefineFvMesh(const IOobject& io)
         {
             if (protectedFace[facei])
             {
-                protectedCell_.set(faceOwner()[facei], 1);
+                protectedCells_.set(faceOwner()[facei], 1);
                 nProtected++;
             }
         }
@@ -1113,7 +1263,7 @@ Foam::dynamicRefineFvMesh::dynamicRefineFvMesh(const IOobject& io)
 
             if (cFaces.size() < 6)
             {
-                if (protectedCell_.set(celli, 1))
+                if (protectedCells_.set(celli, 1))
                 {
                     nProtected++;
                 }
@@ -1124,7 +1274,7 @@ Foam::dynamicRefineFvMesh::dynamicRefineFvMesh(const IOobject& io)
                 {
                     if (faces()[cFaces[cFacei]].size() < 4)
                     {
-                        if (protectedCell_.set(celli, 1))
+                        if (protectedCells_.set(celli, 1))
                         {
                             nProtected++;
                         }
@@ -1135,20 +1285,20 @@ Foam::dynamicRefineFvMesh::dynamicRefineFvMesh(const IOobject& io)
         }
 
         // Check cells for 8 corner points
-        checkEightAnchorPoints(protectedCell_, nProtected);
+        checkEightAnchorPoints(protectedCells_, nProtected);
     }
 
     if (returnReduce(nProtected, sumOp<label>()) == 0)
     {
-        protectedCell_.clear();
+        protectedCells_.clear();
     }
     else
     {
 
         cellSet protectedCells(*this, "protectedCells", nProtected);
-        forAll(protectedCell_, celli)
+        forAll(protectedCells_, celli)
         {
-            if (protectedCell_[celli])
+            if (protectedCells_[celli])
             {
                 protectedCells.insert(celli);
             }
@@ -1218,44 +1368,38 @@ bool Foam::dynamicRefineFvMesh::update()
                 << exit(FatalError);
         }
 
-        label maxRefinement = refineDict.lookup<label>("maxRefinement");
-
-        if (maxRefinement <= 0)
-        {
-            FatalErrorInFunction
-                << "Illegal maximum refinement level " << maxRefinement << nl
-                << "The maxCells setting in the dynamicMeshDict should"
-                << " be > 0." << nl
-                << exit(FatalError);
-        }
-
-        const word fieldName(refineDict.lookup("field"));
-
-        const volScalarField& vFld = lookupObject<volScalarField>(fieldName);
-
-        const scalar lowerRefineLevel =
-            refineDict.lookup<scalar>("lowerRefineLevel");
-        const scalar upperRefineLevel =
-            refineDict.lookup<scalar>("upperRefineLevel");
-        const scalar unrefineLevel = refineDict.lookupOrDefault<scalar>
-        (
-            "unrefineLevel",
-            great
-        );
         const label nBufferLayers =
             refineDict.lookup<label>("nBufferLayers");
 
         // Cells marked for refinement or otherwise protected from unrefinement.
-        PackedBoolList refineCell(nCells());
+        PackedBoolList refineCells(nCells());
 
-        // Determine candidates for refinement (looking at field only)
-        selectRefineCandidates
-        (
-            lowerRefineLevel,
-            upperRefineLevel,
-            vFld,
-            refineCell
-        );
+        label maxRefinement = 0;
+
+        if (refineDict.isDict("refinementRegions"))
+        {
+            const dictionary& refinementRegions
+            (
+                refineDict.subDict("refinementRegions")
+            );
+
+            forAllConstIter(dictionary, refinementRegions, iter)
+            {
+                maxRefinement = max
+                (
+                    selectRefineCandidates
+                    (
+                        refineCells,
+                        refinementRegions.subDict(iter().keyword())
+                    ),
+                    maxRefinement
+                );
+            }
+        }
+        else
+        {
+            maxRefinement = selectRefineCandidates(refineCells, refineDict);
+        }
 
         if (globalData().nTotalCells() < maxCells)
         {
@@ -1267,7 +1411,7 @@ bool Foam::dynamicRefineFvMesh::update()
                 (
                     maxCells,
                     maxRefinement,
-                    refineCell
+                    refineCells
                 )
             );
 
@@ -1281,7 +1425,7 @@ bool Foam::dynamicRefineFvMesh::update()
                 // Refine/update mesh and map fields
                 autoPtr<mapPolyMesh> map = refine(cellsToRefine);
 
-                // Update refineCell. Note that some of the marked ones have
+                // Update refineCells. Note that some of the marked ones have
                 // not been refined due to constraints.
                 {
                     const labelList& cellMap = map().cellMap();
@@ -1303,33 +1447,58 @@ bool Foam::dynamicRefineFvMesh::update()
                         }
                         else
                         {
-                            newRefineCell.set(celli, refineCell.get(oldCelli));
+                            newRefineCell.set(celli, refineCells.get(oldCelli));
                         }
                     }
-                    refineCell.transfer(newRefineCell);
+                    refineCells.transfer(newRefineCell);
                 }
 
                 // Extend with a buffer layer to prevent neighbouring points
                 // being unrefined.
                 for (label i = 0; i < nBufferLayers; i++)
                 {
-                    extendMarkedCells(refineCell);
+                    extendMarkedCells(refineCells);
                 }
 
                 hasChanged = true;
             }
         }
 
+        boolList unrefineCandidates(nPoints(), true);
+
+        if (refineDict.isDict("refinementRegions"))
+        {
+            const dictionary& refinementRegions
+            (
+                refineDict.subDict("refinementRegions")
+            );
+
+            forAllConstIter(dictionary, refinementRegions, iter)
+            {
+                selectUnrefineCandidates
+                (
+                    unrefineCandidates,
+                    refinementRegions.subDict(iter().keyword())
+                );
+            }
+        }
+        else
+        {
+            selectUnrefineCandidates
+            (
+                unrefineCandidates,
+                refineDict
+            );
+        }
 
         {
-            // Select unrefineable points that are not marked in refineCell
+            // Select unrefineable points that are not marked in refineCells
             labelList pointsToUnrefine
             (
                 selectUnrefinePoints
                 (
-                    unrefineLevel,
-                    refineCell,
-                    maxCellField(vFld)
+                    refineCells,
+                    unrefineCandidates
                 )
             );
 
