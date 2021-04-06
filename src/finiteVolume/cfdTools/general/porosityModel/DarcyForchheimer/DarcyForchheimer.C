@@ -133,7 +133,7 @@ void Foam::porosityModels::DarcyForchheimer::calcTransformModelData()
         }
     }
 
-    if (debug && mesh_.time().writeTime())
+    if (debug && (mesh_.time().writeTime() || mesh_.time().timeIndex() == 0))
     {
         volTensorField Dout
         (
