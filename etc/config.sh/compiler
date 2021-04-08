@@ -73,4 +73,23 @@ OpenFOAM | ThirdParty)
     esac
     ;;
 
+*)
+    case "$WM_COMPILER" in
+    Icc*)
+        export WM_CC=icc
+        export WM_CXX=icpc
+        export I_MPI_CC=icc
+        export I_MPI_CXX=icpc
+        export OMPI_CC=icc
+        export OMPI_CXX=icpc
+    Icx*)
+        export WM_CC=icx
+        export WM_CXX=icpx
+        export I_MPI_CC=icx
+        export I_MPI_CXX=icpx
+        export OMPI_CC=icx
+        export OMPI_CXX=icpx
+    esac
+    ;;
+
 esac
