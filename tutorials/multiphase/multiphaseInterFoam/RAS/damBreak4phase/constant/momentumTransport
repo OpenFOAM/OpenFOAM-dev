@@ -10,42 +10,20 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      fvSchemes;
+    location    "constant";
+    object      momentumTransport;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-ddtSchemes
-{
-    default         Euler;
-}
+simulationType  RAS;
 
-gradSchemes
+RAS
 {
-    default         Gauss linear;
-}
+    model           kEpsilon;
 
-divSchemes
-{
-    div(rhoPhi,U)   Gauss upwind;
-    div(phi,alpha)  Gauss vanLeer;
-    div(phirb,alpha) Gauss linear;
-    div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
-}
+    turbulence      on;
 
-laplacianSchemes
-{
-    default         Gauss linear corrected;
-}
-
-interpolationSchemes
-{
-    default         linear;
-}
-
-snGradSchemes
-{
-    default         corrected;
+    printCoeffs     on;
 }
 
 
