@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,16 +80,6 @@ daughterSizeDistributionModel
 )
 :
     breakup_(breakup),
-    particleNumber_
-    (
-        dimensionedScalar::lookupOrDefault
-        (
-            "particleNumber",
-            dict,
-            dimless,
-            2.0
-        )
-    ),
     nik_()
 {}
 
@@ -128,7 +118,8 @@ void Foam::diameterModels::daughterSizeDistributionModel::precompute()
                 (
                     new dimensionedScalar
                     (
-                        particleNumber_*this->calcNik(i, k))
+                        this->calcNik(i, k)
+                    )
                 );
             }
         }

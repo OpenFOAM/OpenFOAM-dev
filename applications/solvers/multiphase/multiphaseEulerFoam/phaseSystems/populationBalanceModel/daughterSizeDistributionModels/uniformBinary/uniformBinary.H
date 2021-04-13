@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,18 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::daughterSizeDistributionModels::uniform
+    Foam::diameterModels::daughterSizeDistributionModels::uniformBinary
 
 Description
-    Uniform daughter size distribution.
+    Daughter size distribution for uniform binary breakup.
 
 SourceFiles
-    uniform.C
+    uniformBinary.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef uniform_H
-#define uniform_H
+#ifndef uniformBinary_H
+#define uniformBinary_H
 
 #include "daughterSizeDistributionModel.H"
 
@@ -47,22 +47,22 @@ namespace daughterSizeDistributionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                           Class uniform Declaration
+                           Class uniformBinary Declaration
 \*---------------------------------------------------------------------------*/
 
-class uniform
+class uniformBinary
 :
     public daughterSizeDistributionModel
 {
 public:
 
     //- Runtime type information
-    TypeName("uniform");
+    TypeName("uniformBinary");
 
 
     // Constructor
 
-        uniform
+        uniformBinary
         (
             const breakupModel& breakup,
             const dictionary& dict
@@ -70,7 +70,7 @@ public:
 
 
     //- Destructor
-    virtual ~uniform();
+    virtual ~uniformBinary();
 
 
     // Member Functions

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "uniform.H"
+#include "uniformBinary.H"
 #include "addToRunTimeSelectionTable.H"
 #include "breakupModel.H"
 
@@ -35,11 +35,11 @@ namespace diameterModels
 {
 namespace daughterSizeDistributionModels
 {
-    defineTypeNameAndDebug(uniform, 0);
+    defineTypeNameAndDebug(uniformBinary, 0);
     addToRunTimeSelectionTable
     (
         daughterSizeDistributionModel,
-        uniform,
+        uniformBinary,
         dictionary
     );
 }
@@ -49,8 +49,8 @@ namespace daughterSizeDistributionModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::daughterSizeDistributionModels::uniform::
-uniform
+Foam::diameterModels::daughterSizeDistributionModels::uniformBinary::
+uniformBinary
 (
     const breakupModel& breakup,
     const dictionary& dict
@@ -62,15 +62,15 @@ uniform
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::diameterModels::daughterSizeDistributionModels::uniform::
-~uniform()
+Foam::diameterModels::daughterSizeDistributionModels::uniformBinary::
+~uniformBinary()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::dimensionedScalar
-Foam::diameterModels::daughterSizeDistributionModels::uniform::calcNik
+Foam::diameterModels::daughterSizeDistributionModels::uniformBinary::calcNik
 (
     const label i,
     const label k
@@ -88,15 +88,15 @@ Foam::diameterModels::daughterSizeDistributionModels::uniform::calcNik
             return 1.0;
         }
 
-        return (sizeGroups[i+1].x() - xi)/(2.0*(xk - x0));
+        return (sizeGroups[i+1].x() - xi)/(xk - x0);
     }
     else if (i == k)
     {
-        return (xi - sizeGroups[i-1].x())/(2.0*(xk - x0));
+        return (xi - sizeGroups[i-1].x())/(xk - x0);
     }
     else
     {
-        return (sizeGroups[i+1].x() - sizeGroups[i-1].x())/(2.0*(xk - x0));
+        return (sizeGroups[i+1].x() - sizeGroups[i-1].x())/(xk - x0);
     }
 }
 

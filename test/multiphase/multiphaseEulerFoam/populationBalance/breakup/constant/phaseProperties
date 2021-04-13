@@ -133,7 +133,7 @@ populationBalanceCoeffs
             powerLaw
             {
                 power   2.0;
-                daughterSizeDistributionModel uniform;
+                daughterSizeDistributionModel uniformBinary;
             }
         );
 

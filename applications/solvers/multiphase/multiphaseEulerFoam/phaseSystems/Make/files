@@ -70,7 +70,7 @@ $(breakupModels)/powerLaw/powerLaw.C
 daughterSizeDistributionModels = populationBalanceModel/daughterSizeDistributionModels
 $(daughterSizeDistributionModels)/daughterSizeDistributionModel/daughterSizeDistributionModel.C
 $(daughterSizeDistributionModels)/LaakkonenAlopaeusAittamaaDsd/LaakkonenAlopaeusAittamaaDsd.C
-$(daughterSizeDistributionModels)/uniform/uniform.C
+$(daughterSizeDistributionModels)/uniformBinary/uniformBinary.C
 
 driftModels = populationBalanceModel/driftModels
 $(driftModels)/driftModel/driftModel.C
