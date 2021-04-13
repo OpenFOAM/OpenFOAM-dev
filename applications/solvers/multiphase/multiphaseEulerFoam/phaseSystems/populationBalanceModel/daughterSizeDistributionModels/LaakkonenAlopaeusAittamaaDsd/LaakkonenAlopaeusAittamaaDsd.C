@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ LaakkonenAlopaeusAittamaaDsd::LaakkonenAlopaeusAittamaaDsd
 )
 :
     daughterSizeDistributionModel(breakup, dict),
-    C4_(dimensionedScalar::lookupOrDefault("C4", dict, dimless, 4.3))
+    C4_(dimensionedScalar::lookupOrDefault("C4", dict, dimless, 18.25))
 {}
 
 
@@ -81,12 +81,18 @@ LaakkonenAlopaeusAittamaaDsd::antiderivative
 ) const
 {
     return
-        (
-            pow(xk, -C4_ - 3)*pow(xk - v, C4_)*(v - xk)*((C4_ + 1)*(C4_ + 2)
-           *(C4_ + 3)*pow3(v) - (C4_ + 1)*(C4_ + 2)*(bndr*(C4_ + 4) - 3.0*xk)
-           *sqr(v) - 2.0*xk*(C4_ + 1)*(bndr*(C4_ + 4) - 3.0*xk)*v - 2.0*bndr
-           *sqr(xk)*C4_ + 6.0*pow3(xk) - 8.0*bndr*sqr(xk))
-        )/(2.0*(range)*(C4_ + 4));
+        (4.0/3.0 + C4_/3)
+       *(
+            pow(xk, -C4_ - 3)*pow(xk - v, C4_)*(v - xk)
+           *(
+                (C4_ + 1)*(C4_ + 2)*(C4_ + 3)*pow3(v)
+              - (C4_ + 1)*(C4_ + 2)*(bndr*(C4_ + 4) - 3*xk)*sqr(v)
+              - 2*v*xk*(C4_ + 1)*(bndr*(C4_ + 4) - 3*xk)
+              - 2*bndr*C4_*sqr(xk)
+              + 6*pow3(xk)
+              - 8*bndr*sqr(xk)
+            )
+        )/(2*range*(C4_ + 4));
 }
 
 

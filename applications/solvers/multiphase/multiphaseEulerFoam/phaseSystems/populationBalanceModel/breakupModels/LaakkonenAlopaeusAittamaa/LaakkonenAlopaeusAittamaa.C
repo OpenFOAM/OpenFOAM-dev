@@ -64,7 +64,7 @@ LaakkonenAlopaeusAittamaa
             "C1",
             dict,
             dimensionSet(0, -2.0/3.0, 0, 0, 0),
-            6.0
+            2.25
         )
     ),
     C2_(dimensionedScalar::lookupOrDefault("C2", dict, dimless, 0.04)),

@@ -26,12 +26,12 @@ Class
     LaakkonenAlopaeusAittamaaDsd
 
 Description
-    Daughter size distribution model used by Laakkonen et al. (2006). Note that
-    the diameters in the original expression was substituted by bubble volumes
+    Daughter size distribution model of Laakkonen et al. (2007). Note that the
+    diameters in the original expression were substituted by bubble volumes
     giving
 
     \f[
-        \left(9 + \frac{33}{2}C_4 + 9C_4^2 + \frac{3}{2}C_4^3\right)
+        (1 + C_4)(2 + C_4)(3 + C_4)(4 + C_4)
         \times \left(\frac{1}{3}\right) \left(\frac{1}{v_j}\right)
         \left(\frac{v_i}{v_j}\right)^{2} \left(1 - \frac{v_i}{v_j}\right)^{C_4}
     \f]
@@ -39,23 +39,28 @@ Description
     where
 
     \vartable
-        v_i         |  Volume of daughter bubble i [m]
-        v_j         |  Volume of mother bubble j [m]
+        v_i         |  Volume of daughter bubble i [m3]
+        v_j         |  Volume of mother bubble j [m3]
     \endvartable
+
+    The total number of daughter bubbles generated depends on C4 and evaluates
+    to
+
+    \f[
+        \frac{4}{3} + \frac{C_4}{3}
+    \f]
 
     References:
     \verbatim
-        Laakkonen, M., Alopaeus, V., & Aittamaa, J. (2006).
-        Validation of bubble breakage, coalescence and mass transfer models for
-        gas-liquid dispersion in agitated vessel.
-        Chemical engineering science, 61(1), 218-228.
-        Eq. 3, p. 220.
+        Laakkonen, M., Moilanen, P., Alopaeus, V., & Aittamaa, J. (2007).
+        Modelling local bubble size distributions in agitated vessels.
+        Chemical Engineering Science, 62, 721–740.
     \endverbatim
 
 Usage
     \table
         Property     | Description             | Required    | Default value
-        C4           | Coefficient C4          | no          | 4.3
+        C4           | Coefficient C4          | no          | 18.25
     \endtable
 
 SourceFiles
@@ -87,7 +92,7 @@ class LaakkonenAlopaeusAittamaaDsd
 {
     // Private Data
 
-        //- Optional coefficient C4, defaults to 4.3
+        //- Optional coefficient C4, defaults to 18.25
         dimensionedScalar C4_;
 
 
