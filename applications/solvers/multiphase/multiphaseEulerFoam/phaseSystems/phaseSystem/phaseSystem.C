@@ -671,6 +671,12 @@ Foam::PtrList<Foam::volScalarField> Foam::phaseSystem::dmdts() const
 }
 
 
+Foam::PtrList<Foam::volScalarField> Foam::phaseSystem::d2mdtdps() const
+{
+    return PtrList<volScalarField>(phaseModels_.size());
+}
+
+
 bool Foam::phaseSystem::incompressible() const
 {
     forAll(phaseModels_, phasei)

@@ -2,6 +2,7 @@ PtrList<fvScalarMatrix> pEqnComps(phases.size());
 
 {
     PtrList<volScalarField> dmdts(fluid.dmdts());
+    PtrList<volScalarField> d2mdtdps(fluid.d2mdtdps());
 
     forAll(phases, phasei)
     {
@@ -70,6 +71,10 @@ PtrList<fvScalarMatrix> pEqnComps(phases.size());
         if (dmdts.set(phasei))
         {
             pEqnComp -= dmdts[phasei]/rho;
+        }
+        if (d2mdtdps.set(phasei))
+        {
+            pEqnComp -= correction(fvm::Sp(d2mdtdps[phasei]/rho, p_rgh));
         }
     }
 }

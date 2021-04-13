@@ -544,6 +544,10 @@ public:
             //- Return the mass transfer rates for each phase
             virtual PtrList<volScalarField> dmdts() const;
 
+            //- Return the mass transfer pressure implicit coefficients
+            //  for each phase
+            virtual PtrList<volScalarField> d2mdtdps() const;
+
             //- Return incompressibility
             bool incompressible() const;
 
