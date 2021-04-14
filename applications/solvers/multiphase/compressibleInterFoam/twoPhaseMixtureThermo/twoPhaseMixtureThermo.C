@@ -61,7 +61,7 @@ Foam::twoPhaseMixtureThermo::twoPhaseMixtureThermo
     (
         IOobject
         (
-            IOobject::groupName("Alpha", phase1Name()),
+            IOobject::groupName("Alpha", phase2Name()),
             U.mesh().time().timeName(),
             U.mesh()
         ),
