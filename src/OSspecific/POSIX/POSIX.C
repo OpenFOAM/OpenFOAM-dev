@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -799,11 +799,7 @@ bool Foam::cp(const fileName& src, const fileName& dest, const bool followLink)
         }
 
         // Copy character data.
-        char ch;
-        while (srcStream.get(ch))
-        {
-            destStream.put(ch);
-        }
+        destStream << srcStream.rdbuf();
 
         // Final check.
         if (!srcStream.eof() || !destStream)
