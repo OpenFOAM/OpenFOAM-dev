@@ -106,7 +106,8 @@ int main(int argc, char *argv[])
 
                 if (correctPhi)
                 {
-                    divU = volScalarField::New
+                    // Construct and register divU for mapping
+                    divU = new volScalarField
                     (
                         "divU0",
                         fvc::div(fvc::absolute(phi, U))

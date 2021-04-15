@@ -136,7 +136,8 @@ int main(int argc, char *argv[])
                         correctPhi
                     )
                     {
-                        divU = volScalarField::New
+                        // Construct and register divU for mapping
+                        divU = new volScalarField
                         (
                             "divU0",
                             fvc::div

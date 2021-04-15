@@ -111,7 +111,8 @@ int main(int argc, char *argv[])
                  && !isType<twoPhaseChangeModels::noPhaseChange>(phaseChange)
                 )
                 {
-                    divU = volScalarField::New
+                    // Construct and register divU for mapping
+                    divU = new volScalarField
                     (
                         "divU0",
                         fvc::div(fvc::absolute(phi, U))
