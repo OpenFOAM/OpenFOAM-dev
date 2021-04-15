@@ -68,7 +68,11 @@ ThermalPhaseChangePhaseSystem
 :
     BasePhaseSystem(mesh),
     volatile_(this->template lookupOrDefault<word>("volatile", "none")),
-    dmdt0s_(this->phases().size())
+    dmdt0s_(this->phases().size()),
+    pressureImplicit_
+    (
+        this->template lookupOrDefault<Switch>("pressureImplicit", true)
+    )
 {
     this->generatePairsAndSubModels
     (
@@ -134,6 +138,28 @@ ThermalPhaseChangePhaseSystem
                 ),
                 this->mesh(),
                 dimensionedScalar(dimDensity/dimTime, 0)
+            )
+        );
+
+        d2mdtdpfs_.insert
+        (
+            pair,
+            new volScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName
+                    (
+                        "thermalPhaseChange:d2mdtdpf",
+                        pair.name()
+                    ),
+                    this->mesh().time().timeName(),
+                    this->mesh(),
+                    IOobject::NO_READ,
+                    IOobject::AUTO_WRITE
+                ),
+                this->mesh(),
+                dimensionedScalar((dimDensity/dimTime)/dimPressure, 0)
             )
         );
 
@@ -239,6 +265,25 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::dmdts() const
     addDmdts(dmdts);
 
     return dmdts;
+}
+
+
+template<class BasePhaseSystem>
+Foam::PtrList<Foam::volScalarField>
+Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::d2mdtdps() const
+{
+    PtrList<volScalarField> d2mdtdps(BasePhaseSystem::d2mdtdps());
+
+    forAllConstIter(phaseSystem::dmdtfTable, d2mdtdpfs_, d2mdtdpfIter)
+    {
+        const phasePair& pair = this->phasePairs_[d2mdtdpfIter.key()];
+        const volScalarField& d2mdtdpf = *d2mdtdpfIter();
+
+        addField(pair.phase1(), "d2mdtdp", d2mdtdpf, d2mdtdps);
+        addField(pair.phase2(), "d2mdtdp", - d2mdtdpf, d2mdtdps);
+    }
+
+    return d2mdtdps;
 }
 
 
@@ -496,6 +541,30 @@ Foam::ThermalPhaseChangePhaseSystem<BasePhaseSystem>::correctInterfaceThermo()
                 dmdtfNew *=
                     neg0(dmdtfNew)*phase1.Y(volatile_)
                   + pos(dmdtfNew)*phase2.Y(volatile_);
+            }
+
+            if (pressureImplicit_)
+            {
+                volScalarField& d2mdtdpf(*this->d2mdtdpfs_[pair]);
+
+                const dimensionedScalar dp(rootSmall*thermo1.p().average());
+
+                const volScalarField dTsatdp
+                (
+                    (
+                        saturationModelIter()->Tsat(thermo1.p() + dp/2)
+                      - saturationModelIter()->Tsat(thermo1.p() - dp/2)
+                    )/dp
+                );
+
+                d2mdtdpf = (H1 + H2)*dTsatdp/L;
+
+                if (volatile_ != "none")
+                {
+                    d2mdtdpf *=
+                        neg0(dmdtfNew)*phase1.Y(volatile_)
+                      + pos(dmdtfNew)*phase2.Y(volatile_);
+                }
             }
 
             H1 = this->heatTransferModels_[pair].first()->K();

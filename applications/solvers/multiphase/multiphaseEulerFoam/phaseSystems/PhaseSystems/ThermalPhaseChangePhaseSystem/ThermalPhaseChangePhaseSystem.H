@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,6 +101,9 @@ class ThermalPhaseChangePhaseSystem
         //- Mass transfer rates
         phaseSystem::dmdtfTable dmdtfs_;
 
+        //- Mass transfer linearisation coeffs
+        phaseSystem::dmdtfTable d2mdtdpfs_;
+
         //- Interface temperatures
         phaseSystem::dmdtfTable Tfs_;
 
@@ -114,6 +117,9 @@ class ThermalPhaseChangePhaseSystem
         //  function
         PtrList<volScalarField> dmdt0s_;
 
+        //- Switch to control whether or not mass transfer rates are linearised
+        //  in the pressure equation
+        Switch pressureImplicit_;
 
     // Private Member Functions
 
@@ -143,6 +149,9 @@ public:
 
         //- Return the mass transfer rates for each phase
         virtual PtrList<volScalarField> dmdts() const;
+
+        //- Return the mass transfer linearisation coeffs for each phase
+        virtual PtrList<volScalarField> d2mdtdps() const;
 
         //- Return the momentum transfer matrices for the cell-based algorithm
         virtual autoPtr<phaseSystem::momentumTransferTable> momentumTransfer();
