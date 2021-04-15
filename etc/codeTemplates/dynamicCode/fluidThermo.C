@@ -26,6 +26,8 @@ License
 #include "forThermo.H"
 #include "makeThermo.H"
 
+#include "specie.H"
+
 #include "thermo.H"
 
 // EoS
