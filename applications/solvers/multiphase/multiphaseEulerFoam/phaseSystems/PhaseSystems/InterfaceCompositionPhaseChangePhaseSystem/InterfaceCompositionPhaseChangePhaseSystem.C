@@ -403,7 +403,7 @@ Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::dmdtf
                     Pair<word>::compare(pair, key)
                    *(
                         *(*dmidtfSus_[pair])[specie]
-                      - *(*dmidtfSps_[pair])[specie]*phase.Y(specie)
+                      + *(*dmidtfSps_[pair])[specie]*phase.Y(specie)
                     );
             }
         }
