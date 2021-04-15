@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "basicThermo.H"
 #include "wordIOList.H"
+#include "compileThermo.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
@@ -41,47 +42,74 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
     // Lookup the thermo package
     typename Table::iterator cstrIter = tablePtr->find(thermoTypeName);
 
-    // Print error message if package not found in the table
     if (cstrIter == tablePtr->end())
     {
-        FatalErrorInFunction
-            << "Unknown " << Thermo::typeName << " type " << nl
-            << "thermoType" << thermoTypeDict << nl << nl
-            << "Valid " << Thermo::typeName << " types are:"
-            << nl << nl;
-
-        // Get the list of all the suitable thermo packages available
-        wordList validThermoTypeNames(tablePtr->sortedToc());
-
-        // Build a table of the thermo packages constituent parts
-        DynamicList<wordList> validThermoTypeNameCmpts;
-
-        // Set row zero to the column headers
-        validThermoTypeNameCmpts.append(wordList(nCmpt));
-        forAll(validThermoTypeNameCmpts[0], i)
+        if
+        (
+            dynamicCode::allowSystemOperations
+         && !dynamicCode::resolveTemplate(Thermo::typeName).empty()
+        )
         {
-            validThermoTypeNameCmpts[0][i] = cmptNames[i];
-        }
-
-        // Split the thermo package names into their constituent parts and add
-        // them to the table, removing any incompatible entries from the list
-        forAll(validThermoTypeNames, i)
-        {
-            const wordList names
+            compileThermo thermo
             (
-                Thermo::splitThermoName(validThermoTypeNames[i], nCmpt)
+                Thermo::typeName,
+                thermoTypeName,
+                thermoTypeDict
             );
+            cstrIter = tablePtr->find(thermoTypeName);
 
-            if (names.size())
+            if (cstrIter == tablePtr->end())
             {
-                validThermoTypeNameCmpts.append(names);
+                FatalErrorInFunction
+                    << "Compilation and linkage of "
+                    << Thermo::typeName << " type " << nl
+                    << "thermoType" << thermoTypeDict << nl << nl
+                    << "failed." << exit(FatalError);
             }
         }
+        else
+        {
+            // Print error message if package not found in the table
+            FatalErrorInFunction
+                << "Unknown " << Thermo::typeName << " type " << nl
+                << "thermoType" << thermoTypeDict << nl << nl
+                << "Valid " << Thermo::typeName << " types are:"
+                << nl << nl;
 
-        // Print the table of available packages
-        printTable(validThermoTypeNameCmpts, FatalError);
+            // Get the list of all the suitable thermo packages available
+            wordList validThermoTypeNames(tablePtr->sortedToc());
 
-        FatalError<< exit(FatalError);
+            // Build a table of the thermo packages constituent parts
+            DynamicList<wordList> validThermoTypeNameCmpts;
+
+            // Set row zero to the column headers
+            validThermoTypeNameCmpts.append(wordList(nCmpt));
+            forAll(validThermoTypeNameCmpts[0], i)
+            {
+                validThermoTypeNameCmpts[0][i] = cmptNames[i];
+            }
+
+            // Split the thermo package names into their constituent parts and
+            // add them to the table, removing any incompatible entries from the
+            // list
+            forAll(validThermoTypeNames, i)
+            {
+                const wordList names
+                (
+                    Thermo::splitThermoName(validThermoTypeNames[i], nCmpt)
+                );
+
+                if (names.size())
+                {
+                    validThermoTypeNameCmpts.append(names);
+                }
+            }
+
+            // Print the table of available packages
+            printTable(validThermoTypeNameCmpts, FatalError);
+
+            FatalError<< exit(FatalError);
+        }
     }
 
     return cstrIter;

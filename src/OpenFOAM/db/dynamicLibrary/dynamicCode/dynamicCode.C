@@ -139,6 +139,34 @@ void Foam::dynamicCode::copyAndFilter
 }
 
 
+Foam::fileName Foam::dynamicCode::resolveTemplate
+(
+    const fileName& templateName
+)
+{
+    // Try to get template from FOAM_CODESTREAM_TEMPLATES
+    const fileName templateDir(Foam::getEnv(codeTemplateEnvName));
+
+    fileName file;
+    if (!templateDir.empty() && isDir(templateDir))
+    {
+        file = templateDir/templateName;
+        if (!isFile(file, false, false))
+        {
+            file.clear();
+        }
+    }
+
+    // Not found - fallback to ~OpenFOAM expansion
+    if (file.empty())
+    {
+        file = findEtcFile(codeTemplateDirName/templateName);
+    }
+
+    return file;
+}
+
+
 bool Foam::dynamicCode::resolveTemplates
 (
     const UList<fileName>& templateNames,
