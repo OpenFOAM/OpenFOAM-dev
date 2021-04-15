@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -575,22 +575,11 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
         return deltaTMin;
     }
 
-    const volScalarField rho
-    (
-        IOobject
-        (
-            "rho",
-            this->time().timeName(),
-            this->mesh(),
-            IOobject::NO_READ,
-            IOobject::NO_WRITE,
-            false
-        ),
-        this->thermo().rho()
-    );
+    tmp<volScalarField> trho(this->thermo().rho0());
+    const scalarField& rho = trho();
 
-    const scalarField& T = this->thermo().T();
-    const scalarField& p = this->thermo().p();
+    const scalarField& T = this->thermo().T().oldTime();
+    const scalarField& p = this->thermo().p().oldTime();
 
     scalarField c(this->nSpecie_);
     scalarField c0(this->nSpecie_);
@@ -608,9 +597,10 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
 
         for (label i=0; i<this->nSpecie_; i++)
         {
-            c[i] = rhoi*this->Y_[i][celli]/this->specieThermos_[i].W();
+            c[i] =
+                rhoi*this->Y_[i].oldTime()[celli]/this->specieThermos_[i].W();
             c0[i] = c[i];
-            phiq[i] = this->Y()[i][celli];
+            phiq[i] = this->Y()[i].oldTime()[celli];
         }
         phiq[this->nSpecie()] = Ti;
         phiq[this->nSpecie() + 1] = pi;

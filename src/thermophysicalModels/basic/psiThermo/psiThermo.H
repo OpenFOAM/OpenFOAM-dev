@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,6 +108,9 @@ public:
             //- Density for patch [kg/m^3]
             virtual tmp<scalarField> rho(const label patchi) const = 0;
 
+            //- Old-time density [kg/m^3]
+            virtual tmp<volScalarField> rho0() const = 0;
+
             //- Compressibility [s^2/m^2]
             virtual const volScalarField& psi() const = 0;
 
@@ -167,6 +170,9 @@ public:
 
             //- Density for patch [kg/m^3]
             virtual tmp<scalarField> rho(const label patchi) const;
+
+            //- Old-time density [kg/m^3]
+            virtual tmp<volScalarField> rho0() const;
 
             //- Compressibility [s^2/m^2]
             virtual const volScalarField& psi() const;

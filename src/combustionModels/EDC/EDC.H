@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,9 @@ SourceFiles
 #ifndef EDC_H
 #define EDC_H
 
-#include "../laminar/laminar.H"
+#include "autoPtr.H"
+#include "combustionModel.H"
+#include "basicChemistryModel.H"
 #include "NamedEnum.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -130,7 +132,7 @@ const scalar EDCexp2[] = {3, 3, 2, 2};
 
 class EDC
 :
-    public laminar
+    public combustionModel
 {
     // Private Data
 
@@ -146,6 +148,9 @@ class EDC
 
         //- Mixing parameter
         volScalarField kappa_;
+
+        //- Pointer to chemistry model
+        autoPtr<basicChemistryModel> chemistryPtr_;
 
 
 public:

@@ -1,8 +1,6 @@
 combustionModel/combustionModel.C
 combustionModel/combustionModelNew.C
 
-chemistryCombustion/chemistryCombustion.C
-
 singleStepCombustion/singleStepCombustion.C
 
 diffusion/diffusion.C
