@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,6 +160,12 @@ Foam::tmp<Foam::scalarField> Foam::solidThermo::implementation::rho
 Foam::volScalarField& Foam::solidThermo::implementation::rho()
 {
     return rho_;
+}
+
+
+Foam::tmp<Foam::volScalarField> Foam::solidThermo::implementation::rho0() const
+{
+    return rho_.oldTime();
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,17 +50,27 @@ Foam::combustionModels::laminar::laminar
     const word& combustionProperties
 )
 :
-    chemistryCombustion
+    combustionModel
     (
         modelType,
         thermo,
         turb,
         combustionProperties
     ),
+    outerCorrect_
+    (
+        this->coeffs().lookupOrDefault("outerCorrect", false)
+    ),
     integrateReactionRate_
     (
         this->coeffs().lookupOrDefault("integrateReactionRate", true)
-    )
+    ),
+    maxIntegrationTime_
+    (
+        this->coeffs().lookupOrDefault("maxIntegrationTime", vGreat)
+    ),
+    timeIndex_(-1),
+    chemistryPtr_(basicChemistryModel::New(thermo))
 {
     if (integrateReactionRate_)
     {
@@ -81,14 +91,13 @@ Foam::combustionModels::laminar::~laminar()
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
 
-Foam::tmp<Foam::volScalarField> Foam::combustionModels::laminar::tc() const
-{
-    return this->chemistryPtr_->tc();
-}
-
-
 void Foam::combustionModels::laminar::correct()
 {
+    if (!outerCorrect_ && timeIndex_ == this->mesh().time().timeIndex())
+    {
+        return;
+    }
+
     if (integrateReactionRate_)
     {
         if (fv::localEulerDdt::enabled(this->mesh()))
@@ -96,32 +105,21 @@ void Foam::combustionModels::laminar::correct()
             const scalarField& rDeltaT =
                 fv::localEulerDdt::localRDeltaT(this->mesh());
 
-            if (this->coeffs().found("maxIntegrationTime"))
-            {
-                const scalar maxIntegrationTime
-                (
-                    this->coeffs().template lookup<scalar>("maxIntegrationTime")
-                );
-
-                this->chemistryPtr_->solve
-                (
-                    min(1.0/rDeltaT, maxIntegrationTime)()
-                );
-            }
-            else
-            {
-                this->chemistryPtr_->solve((1.0/rDeltaT)());
-            }
+            chemistryPtr_->solve(min(1/rDeltaT, maxIntegrationTime_)());
         }
         else
         {
-            this->chemistryPtr_->solve(this->mesh().time().deltaTValue());
+            const scalar deltaT = this->mesh().time().deltaTValue();
+
+            chemistryPtr_->solve(min(deltaT, maxIntegrationTime_));
         }
     }
     else
     {
-        this->chemistryPtr_->calculate();
+        chemistryPtr_->calculate();
     }
+
+    timeIndex_ = this->mesh().time().timeIndex();
 }
 
 
@@ -132,7 +130,7 @@ Foam::combustionModels::laminar::R(volScalarField& Y) const
     fvScalarMatrix& Su = tSu.ref();
 
     const label specieI = this->thermo().composition().species()[Y.member()];
-    Su += this->chemistryPtr_->RR(specieI);
+    Su += chemistryPtr_->RR(specieI);
 
     return tSu;
 }
@@ -140,16 +138,20 @@ Foam::combustionModels::laminar::R(volScalarField& Y) const
 
 Foam::tmp<Foam::volScalarField> Foam::combustionModels::laminar::Qdot() const
 {
-    return this->chemistryPtr_->Qdot();
+    return chemistryPtr_->Qdot();
 }
 
 
 bool Foam::combustionModels::laminar::read()
 {
-    if (chemistryCombustion::read())
+    if (combustionModel::read())
     {
+        outerCorrect_ =
+            this->coeffs().lookupOrDefault("outerCorrect", false);
         integrateReactionRate_ =
             this->coeffs().lookupOrDefault("integrateReactionRate", true);
+        maxIntegrationTime_ =
+            this->coeffs().lookupOrDefault("maxIntegrationTime", vGreat);
         return true;
     }
     else

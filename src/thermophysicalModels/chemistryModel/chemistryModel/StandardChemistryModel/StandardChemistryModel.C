@@ -503,11 +503,11 @@ Foam::scalar Foam::StandardChemistryModel<ThermoType>::solve
         return deltaTMin;
     }
 
-    tmp<volScalarField> trho(this->thermo().rho());
+    tmp<volScalarField> trho(this->thermo().rho0());
     const scalarField& rho = trho();
 
-    const scalarField& T = this->thermo().T();
-    const scalarField& p = this->thermo().p();
+    const scalarField& T = this->thermo().T().oldTime();
+    const scalarField& p = this->thermo().p().oldTime();
 
     reactionEvaluationScope scope(*this);
 
@@ -524,7 +524,7 @@ Foam::scalar Foam::StandardChemistryModel<ThermoType>::solve
 
             for (label i=0; i<nSpecie_; i++)
             {
-                c_[i] = rhoi*Y_[i][celli]/specieThermos_[i].W();
+                c_[i] = rhoi*Y_[i].oldTime()[celli]/specieThermos_[i].W();
                 c0[i] = c_[i];
             }
 

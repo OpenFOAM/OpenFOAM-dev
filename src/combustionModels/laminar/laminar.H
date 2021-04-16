@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,9 @@ SourceFiles
 #ifndef laminar_H
 #define laminar_H
 
-#include "chemistryCombustion.H"
+#include "autoPtr.H"
+#include "combustionModel.H"
+#include "basicChemistryModel.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -50,21 +52,29 @@ namespace combustionModels
 
 class laminar
 :
-    public chemistryCombustion
+    public combustionModel
 {
     // Private Data
 
+        //- Run chemistry correction on every outer iteration. Default false.
+        bool outerCorrect_;
+
         //- Integrate reaction rate over the time-step
-        //  using the selected ODE solver
+        //  using the selected ODE solver. Default true.
         bool integrateReactionRate_;
 
+        //- Maximum integration time permitted. Default vGreat.
+        scalar maxIntegrationTime_;
+
+        //- The time index of the last correction
+        label timeIndex_;
 
 protected:
 
-    // Protected Member Functions
+    // Protected Data
 
-        //- Return the chemical time scale
-        tmp<volScalarField> tc() const;
+        //- Pointer to chemistry model
+        autoPtr<basicChemistryModel> chemistryPtr_;
 
 
 public:
