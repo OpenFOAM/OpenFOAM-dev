@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,6 +79,22 @@ License
     addReactionThermo(BaseThermo, CThermo, Mixture, ThermoPhys);               \
     addReactionThermo(fluidReactionThermo, CThermo, Mixture, ThermoPhys);      \
     addReactionThermo(BaseReactionThermo, CThermo, Mixture, ThermoPhys)
+
+
+#define makePsiuReactionThermos(Mixture, ThermoPhys)                           \
+                                                                               \
+    defineReactionThermo                                                       \
+    (                                                                          \
+        psiuReactionThermo,                                                    \
+        heheuPsiThermo,                                                        \
+        Mixture,                                                               \
+        ThermoPhys                                                             \
+    );                                                                         \
+                                                                               \
+    addThermo(basicThermo, heheuPsiThermo, Mixture, ThermoPhys);               \
+    addThermo(fluidThermo, heheuPsiThermo, Mixture, ThermoPhys);               \
+    addThermo(psiThermo, heheuPsiThermo, Mixture, ThermoPhys);                 \
+    addThermo(psiuReactionThermo, heheuPsiThermo, Mixture, ThermoPhys)
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

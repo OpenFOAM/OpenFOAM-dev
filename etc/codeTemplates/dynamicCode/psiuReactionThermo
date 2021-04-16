@@ -44,7 +44,6 @@ transport
     logPolynomial
     polynomial
     sutherland
-    tabulated
 );
 
 thermo
@@ -70,18 +69,17 @@ codeOptions
 #{
 EXE_INC = \
     -I$(LIB_SRC)/transportModels/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude
 #};
 
 codeLibs
 #{
 LIB_LIBS = \
-    -ltransportModels \
-    -lspecie \
     -lfluidThermophysicalModels \
+    -lspecie \
     -lfiniteVolume
 #};
 
