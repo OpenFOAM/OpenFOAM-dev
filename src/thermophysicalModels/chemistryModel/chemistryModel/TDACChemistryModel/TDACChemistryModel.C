@@ -50,7 +50,6 @@ Foam::TDACChemistryModel<ThermoType>::TDACChemistryModel
     NsDAC_(this->nSpecie_),
     completeC_(this->nSpecie_, 0),
     reactionsDisabled_(this->reactions_.size(), false),
-    specieComp_(this->nSpecie_),
     completeToSimplifiedIndex_(this->nSpecie_, -1),
     simplifiedToCompleteIndex_(this->nSpecie_),
     tabulationResults_
@@ -68,15 +67,6 @@ Foam::TDACChemistryModel<ThermoType>::TDACChemistryModel
     )
 {
     const basicSpecieMixture& composition = this->thermo().composition();
-
-    const HashTable<List<specieElement>>& specComp =
-        dynamicCast<const multiComponentMixture<ThermoType>&>(this->thermo())
-       .specieComposition();
-
-    forAll(specieComp_, i)
-    {
-        specieComp_[i] = specComp[this->Y()[i].member()];
-    }
 
     mechRed_ = chemistryReductionMethod<ThermoType>::New
     (

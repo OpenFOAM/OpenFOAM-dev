@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,12 +42,11 @@ Foam::chemistryReductionMethods::EFA<ThermoType>::EFA
     sN_(this->nSpecie_,0),
     sortPart_(0.05)
 {
-    const List<List<specieElement>>& specieComposition =
-    this->chemistry_.specieComp();
     for (label i=0; i<this->nSpecie_; i++)
     {
         const List<specieElement>& curSpecieComposition =
-        specieComposition[i];
+            chemistry.mixture().specieComposition(i);
+
         // for all elements in the current species
         forAll(curSpecieComposition, j)
         {

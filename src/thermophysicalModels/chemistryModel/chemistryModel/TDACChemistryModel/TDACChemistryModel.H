@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -94,7 +94,6 @@ class TDACChemistryModel
         scalarField completeC_;
         scalarField simplifiedC_;
         Field<bool> reactionsDisabled_;
-        List<List<specieElement>> specieComp_;
         Field<label> completeToSimplifiedIndex_;
         DynamicList<label> simplifiedToCompleteIndex_;
         autoPtr<chemistryReductionMethod<ThermoType>> mechRed_;
@@ -260,8 +259,6 @@ public:
             inline Field<label>& completeToSimplifiedIndex();
 
             inline const Field<label>& completeToSimplifiedIndex() const;
-
-            inline List<List<specieElement>>& specieComp();
 
             inline autoPtr<chemistryReductionMethod<ThermoType>>& mechRed();
 

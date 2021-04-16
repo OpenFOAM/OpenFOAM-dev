@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,57 +50,37 @@ Foam::multiComponentMixture<ThermoType>::readSpeciesData
 
 
 template<class ThermoType>
-typename Foam::multiComponentMixture<ThermoType>::speciesCompositionTable
+Foam::List<Foam::List<Foam::specieElement>>
 Foam::multiComponentMixture<ThermoType>::readSpeciesComposition
 (
-    const dictionary& thermoDict,
-    const speciesTable& species
+    const dictionary& thermoDict
 ) const
 {
-    speciesCompositionTable speciesComposition_;
+    List<List<specieElement>> specieCompositions(species_.size());
 
     // Loop through all species in thermoDict to retrieve
     // the species composition
-    forAll(species, si)
+    forAll(species_, i)
     {
-        if (thermoDict.subDict(species[si]).isDict("elements"))
+        if (thermoDict.subDict(species_[i]).isDict("elements"))
         {
-            dictionary currentElements
-            (
-                thermoDict.subDict(species[si]).subDict("elements")
-            );
+            const dictionary& elements =
+                thermoDict.subDict(species_[i]).subDict("elements");
 
-            wordList currentElementsName(currentElements.toc());
-            List<specieElement> currentComposition(currentElementsName.size());
+            const wordList elementsNames(elements.toc());
 
-            forAll(currentElementsName, eni)
+            specieCompositions[i].resize(elementsNames.size());
+
+            forAll(elementsNames, eni)
             {
-                currentComposition[eni].name() = currentElementsName[eni];
-
-                currentComposition[eni].nAtoms() =
-                    currentElements.lookupOrDefault
-                    (
-                        currentElementsName[eni],
-                        0
-                    );
+                specieCompositions[i][eni].name() = elementsNames[eni];
+                specieCompositions[i][eni].nAtoms() =
+                    elements.lookupOrDefault(elementsNames[eni], 0);
             }
-
-            // Add current specie composition to the hash table
-            speciesCompositionTable::iterator specieCompositionIter
-            (
-                speciesComposition_.find(species[si])
-            );
-
-            if (specieCompositionIter != speciesComposition_.end())
-            {
-                speciesComposition_.erase(specieCompositionIter);
-            }
-
-            speciesComposition_.insert(species[si], currentComposition);
         }
     }
 
-    return speciesComposition_;
+    return specieCompositions;
 }
 
 
@@ -122,7 +102,7 @@ Foam::multiComponentMixture<ThermoType>::multiComponentMixture
         phaseName
     ),
     specieThermos_(readSpeciesData(thermoDict)),
-    speciesComposition_(readSpeciesComposition(thermoDict, species()))
+    specieCompositions_(readSpeciesComposition(thermoDict))
 {
     correctMassFractions();
 }
@@ -136,10 +116,27 @@ void Foam::multiComponentMixture<ThermoType>::read
     const dictionary& thermoDict
 )
 {
-    forAll(species_, i)
+    specieThermos_ = readSpeciesData(thermoDict);
+    specieCompositions_ = readSpeciesComposition(thermoDict);
+}
+
+
+template<class ThermoType>
+const Foam::List<Foam::specieElement>&
+Foam::multiComponentMixture<ThermoType>::specieComposition
+(
+    const label speciei
+) const
+{
+    if (specieCompositions_[speciei].empty())
     {
-        specieThermos_[i] = ThermoType(thermoDict.subDict(species_[i]));
+        // Spit an error associated with the lookup of this specie's elements
+        refCast<const dictionary>(*this)
+            .subDict(species_[speciei])
+            .subDict("elements");
     }
+
+    return specieCompositions_[speciei];
 }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,10 +67,8 @@ private:
         //- List of specie thermo
         PtrList<ThermoType> specieThermos_;
 
-        typedef HashTable<List<specieElement>> speciesCompositionTable;
-
         //- Table of species composition
-        speciesCompositionTable speciesComposition_;
+        List<List<specieElement>> specieCompositions_;
 
 
     // Private Member Functions
@@ -79,10 +77,9 @@ private:
         PtrList<ThermoType> readSpeciesData(const dictionary& thermoDict) const;
 
         //- Read the species composition from the given dictionary and return
-        speciesCompositionTable readSpeciesComposition
+        List<List<specieElement>> readSpeciesComposition
         (
-            const dictionary& thermoDict,
-            const speciesTable& speciesTable_
+            const dictionary& thermoDict
         ) const;
 
 
@@ -108,15 +105,9 @@ public:
     // Member Functions
 
         //- Return the raw specie thermodynamic data
-        const PtrList<ThermoType>& specieThermos() const
+        inline const PtrList<ThermoType>& specieThermos() const
         {
             return specieThermos_;
-        }
-
-        //- Return the table of species composition
-        const speciesCompositionTable& specieComposition() const
-        {
-            return speciesComposition_;
         }
 
         //- Read dictionary
@@ -127,6 +118,12 @@ public:
         {
             return specieThermos_[speciei];
         }
+
+        //- Return composition based on index
+        const List<specieElement>& specieComposition
+        (
+            const label speciei
+        ) const;
 };
 
 
