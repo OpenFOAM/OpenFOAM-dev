@@ -10,31 +10,32 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      fluidThermo;
+    object      psiuReactionThermo;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 type
 (
-    hePsiThermo
+    heheuPsiThermo
 );
 
 baseType
 (
-    hePsiThermo psiThermo
+    heheuPsiThermo psiuReactionThermo
 );
 
 energy
 (
-    sensibleEnthalpy
     absoluteEnthalpy
-    sensibleInternalEnergy
     absoluteInternalEnergy
 );
 
 mixture
 (
-    pureMixture
+   egrMixture
+   homogeneousMixture
+   inhomogeneousMixture
+   veryInhomogeneousMixture
 );
 
 transport
@@ -44,7 +45,6 @@ transport
     polynomial
     sutherland
     tabulated
-    WLF
 );
 
 thermo
@@ -71,8 +71,8 @@ codeOptions
 EXE_INC = \
     -I$(LIB_SRC)/transportModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/thermophysicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude
 #};
 
@@ -81,7 +81,6 @@ codeLibs
 LIB_LIBS = \
     -ltransportModels \
     -lspecie \
-    -lthermophysicalProperties \
     -lfluidThermophysicalModels \
     -lfiniteVolume
 #};
