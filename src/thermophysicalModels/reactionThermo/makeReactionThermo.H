@@ -81,6 +81,19 @@ License
     addReactionThermo(BaseReactionThermo, CThermo, Mixture, ThermoPhys)
 
 
+#define makePsiuReactionThermo(Mixture, ThermoPhys)                            \
+                                                                               \
+    defineReactionThermo                                                       \
+    (                                                                          \
+        psiuReactionThermo,                                                    \
+        heheuPsiThermo,                                                        \
+        Mixture,                                                               \
+        ThermoPhys                                                             \
+    );                                                                         \
+                                                                               \
+    addThermo(psiuReactionThermo, heheuPsiThermo, Mixture, ThermoPhys)
+
+
 #define makePsiuReactionThermos(Mixture, ThermoPhys)                           \
                                                                                \
     defineReactionThermo                                                       \

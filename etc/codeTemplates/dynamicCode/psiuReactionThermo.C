@@ -82,7 +82,7 @@ namespace Foam
         ${thermo}Thermo,
         ${equationOfState},
         specie,
-        makePsiuReactionThermos,
+        makePsiuReactionThermo,
         ${mixture}
     );
 }

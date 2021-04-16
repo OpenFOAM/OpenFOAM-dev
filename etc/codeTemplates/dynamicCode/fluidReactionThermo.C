@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "forThermo.H"
-#include "makeThermo.H"
+#include "makeReactionThermo.H"
 
 #include "specie.H"
 
@@ -43,6 +43,7 @@ License
 // psi/rho
 #include "${baseType}.H"
 #include "${type}.H"
+#include "psiReactionThermo.H"
 
 // Mixture
 #include "${mixture}.H"
@@ -82,7 +83,7 @@ namespace Foam
         ${thermo}Thermo,
         ${equationOfState},
         specie,
-        makeThermo,
+        makeReactionThermo,
         ${baseType},
         ${type},
         ${mixture}

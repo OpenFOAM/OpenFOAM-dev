@@ -70,11 +70,11 @@ void Foam::compileThermo::setFilterVariable
 (
     dynamicCode& dynCode,
     const dynamicCodeContext& context,
-    const word& name
+    const word& name,
+    const word& type
 ) const
 {
     const HashSet<word> types(context.dict().lookup(name));
-    const word type(thermoTypeDict_.lookup<word>(name));
     if (!types.found(type))
     {
         FatalIOErrorInFunction(thermoTypeDict_)
@@ -87,6 +87,50 @@ void Foam::compileThermo::setFilterVariable
 }
 
 
+void Foam::compileThermo::setFilterVariable
+(
+    dynamicCode& dynCode,
+    const dynamicCodeContext& context,
+    const word& name
+) const
+{
+    setFilterVariable
+    (
+        dynCode,
+        context,
+        name,
+        thermoTypeDict_.lookup<word>(name)
+    );
+}
+
+
+void Foam::compileThermo::setFilterRenamedVariable
+(
+    dynamicCode& dynCode,
+    const dynamicCodeContext& context,
+    const word& name,
+    const word& typeRenameMapName
+) const
+{
+    word type(thermoTypeDict_.lookup<word>(name));
+
+    if (context.dict().found(typeRenameMapName))
+    {
+        const HashTable<word> renameMap
+        (
+            context.dict().lookup(typeRenameMapName)
+        );
+
+        if (renameMap.found(type))
+        {
+            type = renameMap[type];
+        }
+    }
+
+    setFilterVariable(dynCode, context, name, type);
+}
+
+
 void Foam::compileThermo::prepare
 (
     dynamicCode& dynCode,
@@ -95,14 +139,13 @@ void Foam::compileThermo::prepare
 {
     dynCode.setFilterVariable("typeName", codeName());
 
-    const HashTable<word> typeToBaseMap(context.dict().lookup("baseType"));
-
     const word type(thermoTypeDict_.lookup<word>("type"));
     dynCode.setFilterVariable("type", type);
 
+    const HashTable<word> typeToBaseMap(context.dict().lookup("baseType"));
     dynCode.setFilterVariable("baseType", typeToBaseMap[type]);
 
-    setFilterVariable(dynCode, context, "mixture");
+    setFilterRenamedVariable(dynCode, context, "mixture", "renameMixture");
     setFilterVariable(dynCode, context, "transport");
     setFilterVariable(dynCode, context, "thermo");
     setFilterVariable(dynCode, context, "equationOfState");

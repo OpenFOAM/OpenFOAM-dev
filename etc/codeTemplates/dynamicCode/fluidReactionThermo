@@ -1,0 +1,113 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fluidThermo;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type
+(
+    hePsiThermo
+    heRhoThermo
+);
+
+baseType
+(
+    hePsiThermo psiReactionThermo
+    heRhoThermo rhoReactionThermo
+);
+
+energy
+(
+    sensibleEnthalpy
+    absoluteEnthalpy
+    sensibleInternalEnergy
+    absoluteInternalEnergy
+);
+
+mixture
+(
+    singleComponentMixture
+    coefficientMultiComponentMixture
+    valueMultiComponentMixture
+    coefficientWilkeMultiComponentMixture
+);
+
+renameMixture
+(
+    pureMixture singleComponentMixture
+    multiComponentMixture coefficientMultiComponentMixture
+);
+
+transport
+(
+    const
+    icoTabulated
+    logPolynomial
+    polynomial
+    sutherland
+    tabulated
+    WLF
+);
+
+thermo
+(
+    eConst
+    eIcoTabulated
+    ePolynomial
+    ePower
+    eTabulated
+    hConst
+    hIcoTabulated
+    hPolynomial
+    hPower
+    hTabulated
+    janaf
+);
+
+equationOfState
+(
+    adiabaticPerfectFluid
+    Boussinesq
+    icoPolynomial
+    icoTabulated
+    incompressiblePerfectGas
+    linear
+    PengRobinsonGas
+    perfectFluid
+    perfectGas
+    rhoConst
+    rhoTabulated
+    rPolynomial
+);
+
+codeOptions
+#{
+EXE_INC = \
+    -I$(LIB_SRC)/transportModels/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude
+#};
+
+codeLibs
+#{
+LIB_LIBS = \
+    -ltransportModels \
+    -lspecie \
+    -lfluidThermophysicalModels \
+    -lfiniteVolume
+#};
+
+
+// ************************************************************************* //

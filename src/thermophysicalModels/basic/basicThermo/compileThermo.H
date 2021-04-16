@@ -63,7 +63,23 @@ class compileThermo
         (
             dynamicCode& dynCode,
             const dynamicCodeContext& context,
+            const word& name,
+            const word& type
+        ) const;
+
+        void setFilterVariable
+        (
+            dynamicCode& dynCode,
+            const dynamicCodeContext& context,
             const word& name
+        ) const;
+
+        void setFilterRenamedVariable
+        (
+            dynamicCode& dynCode,
+            const dynamicCodeContext& context,
+            const word& name,
+            const word& typeRenameMapName
         ) const;
 
         //- Adapt the context for the current object
