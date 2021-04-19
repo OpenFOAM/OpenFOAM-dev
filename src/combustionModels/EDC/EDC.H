@@ -35,7 +35,7 @@ Description
     There are many versions and developments of the EDC model, 4 of which are
     currently supported in this implementation: v1981, v1996, v2005 and
     v2016.  The model variant is selected using the optional \c version entry in
-    the \c EDCCoeffs dictionary, \eg
+    the \c EDCCoeffs dictionary
 
     \verbatim
         EDCCoeffs

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,10 +33,10 @@ Description
     the table.
 
 Usage
-    \NonUniformTable
+    \table
         Property    | Description
         values      | List of value pairs
-    \endNonUniformTable
+    \endtable
 
     Example for the density of water between 280 and 350K
     \verbatim
