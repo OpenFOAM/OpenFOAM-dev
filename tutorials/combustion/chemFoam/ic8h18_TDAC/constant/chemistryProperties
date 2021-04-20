@@ -36,8 +36,6 @@ odeCoeffs
 
 reduction
 {
-    tolerance   1e-4;
-
     // Search initiating set (SIS) of species, needed for most methods
     initialSet
     (

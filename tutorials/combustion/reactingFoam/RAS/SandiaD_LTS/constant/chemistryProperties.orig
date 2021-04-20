@@ -26,7 +26,6 @@ chemistryType
 chemistry       on;
 
 initialChemicalTimeStep 1e-7;
-//maxChemicalTimeStep 1e-3;
 
 odeCoeffs
 {
@@ -35,14 +34,13 @@ odeCoeffs
     relTol          1e-1;
 }
 
-reduction
-{
-    tolerance   1e-4;
-}
-
 tabulation
 {
-    tolerance   3e-3;
+    // Scale factors used in the definition of the ellipsoid of accuracy
+    scaleFactor
+    {
+        Temperature  1000;
+    }
 }
 
 #include "reactionsGRI"
