@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -105,11 +105,7 @@ void Foam::chemistryReductionMethods::DRG<ThermoType>::reduceMechanism
         const Reaction<ThermoType>& R = this->chemistry_.reactions()[i];
 
         // For each reaction compute omegai
-        scalar omegai = this->chemistry_.omega
-        (
-            R, p, T, c1, li, pf, cf, lRef, pr, cr, rRef
-        );
-
+        scalar omegai = R.omega(p, T, c1, li, pf, cf, lRef, pr, cr, rRef);
 
         // Then for each pair of species composing this reaction,
         // compute the rAB matrix (separate the numerator and

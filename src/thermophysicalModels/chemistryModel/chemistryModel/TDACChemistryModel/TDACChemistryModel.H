@@ -165,6 +165,7 @@ public:
         //- Create and return a TDAC log file of the given name
         inline autoPtr<OFstream> logFile(const word& name) const;
 
+        //- Return a reference to the list of mass fraction fields
         inline const PtrList<volScalarField>& Y();
 
         //- dc/dt = omega, rate of change in concentration, for each species
@@ -175,23 +176,6 @@ public:
             const scalarField& c,
             const label li,
             scalarField& dcdt
-        ) const;
-
-        //- Return the reaction rate for reaction r and the reference
-        //  species and characteristic times
-        virtual scalar omega
-        (
-            const Reaction<ThermoType>& r,
-            const scalar p,
-            const scalar T,
-            const scalarField& c,
-            const label li,
-            scalar& pf,
-            scalar& cf,
-            label& lRef,
-            scalar& pr,
-            scalar& cr,
-            label& rRef
         ) const;
 
 

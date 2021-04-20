@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -73,6 +73,14 @@ void Foam::ode<ChemistryModel>::solve
     }
     cTp_[nSpecie] = T;
     cTp_[nSpecie+1] = p;
+
+    if (debug)
+    {
+        scalarField dcTp(this->nEqns(), rootSmall);
+        dcTp[nSpecie] = 300*rootSmall;
+        dcTp[nSpecie+1] = 1e5*rootSmall;
+        this->check(0, cTp_, dcTp, li);
+    }
 
     odeSolver_->solve(0, deltaT, cTp_, li, subDeltaT);
 

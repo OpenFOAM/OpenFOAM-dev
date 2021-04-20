@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,19 +46,30 @@ namespace Foam
 
 class ODESystem
 {
+protected:
+
+    // Protected Member Functions
+
+        //- Print correspondence between derivatives and Jacobian methods
+        void check
+        (
+            const scalar x,
+            const scalarField& y,
+            const scalarField& dy,
+            const label li
+        ) const;
+
 
 public:
 
     // Constructors
 
         //- Construct null
-        ODESystem()
-        {}
+        ODESystem();
 
 
     //- Destructor
-    virtual ~ODESystem()
-    {}
+    virtual ~ODESystem();
 
 
     // Member Functions

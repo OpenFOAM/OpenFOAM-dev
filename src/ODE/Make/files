@@ -18,4 +18,6 @@ ODESolvers/SIBS/SIMPR.C
 ODESolvers/SIBS/polyExtrapolate.C
 ODESolvers/seulex/seulex.C
 
+ODESystem/ODESystem.C
+
 LIB = $(FOAM_LIBBIN)/libODE

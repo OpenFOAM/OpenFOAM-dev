@@ -134,10 +134,8 @@ void Foam::chemistryReductionMethods::EFA<ThermoType>::reduceMechanism
         const Reaction<ThermoType>& R = this->chemistry_.reactions()[i];
 
         // for each reaction compute omegai
-        this->chemistry_.omega
-        (
-            R, p, T, c1, li, pf, cf, lRef, pr, cr, rRef
-        );
+        R.omega(p, T, c1, li, pf, cf, lRef, pr, cr, rRef);
+
         scalar fr = mag(pf*cf)+mag(pr*cr);
         scalar NCi(0.0),NHi(0.0),NOi(0.0),NNi(0.0);
         forAll(R.lhs(),s)

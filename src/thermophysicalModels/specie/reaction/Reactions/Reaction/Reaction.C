@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -639,43 +639,27 @@ void Foam::Reaction<ReactionThermo>::dwdT
     const label indexT
 ) const
 {
-    scalar kf = kfwd;
-    scalar kr = kbwd;
-
     scalar dkfdT = this->dkfdT(p, T, c, li);
-    scalar dkrdT = this->dkrdT(p, T, c, li, dkfdT, kr);
+    scalar dkrdT = this->dkrdT(p, T, c, li, dkfdT, kbwd);
 
-    scalar sumExp = 0.0;
     forAll(lhs(), i)
     {
         const label si = lhs()[i].index;
         const scalar el = lhs()[i].exponent;
-        const scalar cExp = pow(c[si], el);
-        dkfdT *= cExp;
-        kf *= cExp;
-        sumExp += el;
+        dkfdT *= pow(c[si], el);
     }
-    kf *= -sumExp/T;
-
-    sumExp = 0.0;
     forAll(rhs(), i)
     {
         const label si = rhs()[i].index;
         const scalar er = rhs()[i].exponent;
-        const scalar cExp = pow(c[si], er);
-        dkrdT *= cExp;
-        kr *= cExp;
-        sumExp += er;
+        dkrdT *= pow(c[si], er);
     }
-    kr *= -sumExp/T;
 
-    // dqidT includes the third-body (or pressure dependent) effect
-    scalar dqidT = dkfdT - dkrdT + kf - kr;
+    const scalar dqidT = dkfdT - dkrdT;
 
     // For reactions including third-body efficiencies or pressure dependent
     // reaction, an additional term is needed
-    scalar dcidT = this->dcidT(p, T, c, li);
-    dcidT *= omegaI;
+    const scalar dcidT = omegaI*this->dcidT(p, T, c, li);
 
     // J(i, indexT) = sum_reactions nu_i dqdT
     forAll(lhs(), i)
