@@ -35,24 +35,12 @@ Foam::chemistryReductionMethods::DRG<ThermoType>::DRG
 )
 :
     chemistryReductionMethod<ThermoType>(dict, chemistry),
-    searchInitSet_(this->coeffsDict_.subDict("initialSet").size())
+    searchInitSet_()
 {
-    label j=0;
-    dictionary initSet = this->coeffsDict_.subDict("initialSet");
-    for (label i=0; i<chemistry.nSpecie(); i++)
+    const wordHashSet initSet(this->coeffsDict_.lookup("initialSet"));
+    forAllConstIter(wordHashSet, initSet, iter)
     {
-        if (initSet.found(chemistry.Y()[i].member()))
-        {
-            searchInitSet_[j++] = i;
-        }
-    }
-    if (j<searchInitSet_.size())
-    {
-        FatalErrorInFunction
-            << searchInitSet_.size()-j
-            << " species in the initial set is not in the mechanism "
-            << initSet
-            << exit(FatalError);
+        searchInitSet_.append(chemistry.mixture().species()[iter.key()]);
     }
 }
 

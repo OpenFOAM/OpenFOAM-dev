@@ -35,7 +35,7 @@ Foam::chemistryReductionMethods::DAC<ThermoType>::DAC
 )
 :
     chemistryReductionMethod<ThermoType>(dict, chemistry),
-    searchInitSet_(this->coeffsDict_.subDict("initialSet").size()),
+    searchInitSet_(),
     zprime_(0),
     nbCLarge_(3),
     sC_(this->nSpecie_,0),
@@ -87,22 +87,10 @@ Foam::chemistryReductionMethods::DAC<ThermoType>::DAC
     ),
     forceFuelInclusion_(false)
 {
-    label j=0;
-    dictionary initSet = this->coeffsDict_.subDict("initialSet");
-    for (label i=0; i<chemistry.nSpecie(); i++)
+    const wordHashSet initSet(this->coeffsDict_.lookup("initialSet"));
+    forAllConstIter(wordHashSet, initSet, iter)
     {
-        if (initSet.found(chemistry.Y()[i].member()))
-        {
-            searchInitSet_[j++] = i;
-        }
-    }
-    if (j<searchInitSet_.size())
-    {
-        FatalErrorInFunction
-            << searchInitSet_.size()-j
-            << " species in the initial set is not in the mechanism "
-            << initSet
-            << exit(FatalError);
+        searchInitSet_.append(chemistry.mixture().species()[iter.key()]);
     }
 
     if (this->coeffsDict_.found("automaticSIS"))
@@ -195,51 +183,28 @@ Foam::chemistryReductionMethods::DAC<ThermoType>::DAC
     // According to the given mass fraction, an equivalent O/C ratio is computed
     if (automaticSIS_)
     {
-        dictionary fuelDict;
-        if (this->coeffsDict_.found("fuelSpecies"))
-        {
-            fuelDict = this->coeffsDict_.subDict("fuelSpecies");
-            fuelSpecies_ = fuelDict.toc();
-            if (fuelSpecies_.size() == 0)
-            {
-                FatalErrorInFunction
-                    << "With automatic SIS, the fuel species should be "
-                    << "specified in the fuelSpecies subDict"
-                    << exit(FatalError);
-            }
-        }
-        else
-        {
-            FatalErrorInFunction
-                << "With automatic SIS, the fuel species should be "
-                << "specified in the fuelSpecies subDict"
-                << exit(FatalError);
-        }
+        List<Tuple2<word, scalar>> fuelSpeciesEntry
+        (
+            this->coeffsDict_.lookup("fuelSpecies")
+        );
 
-        if (this->coeffsDict_.found("nbCLarge"))
-        {
-            nbCLarge_ = fuelDict.lookup<label>("nbCLarge");
-        }
-
-        fuelSpeciesID_.setSize(fuelSpecies_.size());
-        fuelSpeciesProp_.setSize(fuelSpecies_.size());
+        fuelSpecies_.setSize(fuelSpeciesEntry.size());
+        fuelSpeciesID_.setSize(fuelSpeciesEntry.size());
+        fuelSpeciesProp_.setSize(fuelSpeciesEntry.size());
         scalar Mmtot(0.0);
 
-        forAll(fuelSpecies_, i)
+        forAll(fuelSpeciesEntry, i)
         {
-            fuelSpeciesProp_[i] = fuelDict.lookup<scalar>(fuelSpecies_[i]);
-            for (label j=0; j<this->nSpecie_; j++)
-            {
-                if (this->chemistry_.Y()[j].member() == fuelSpecies_[i])
-                {
-                    fuelSpeciesID_[i] = j;
-                    break;
-                }
-            }
+            fuelSpecies_[i] = fuelSpeciesEntry[i].first();
+            fuelSpeciesProp_[i] = fuelSpeciesEntry[i].second();
+            fuelSpeciesID_[i] =
+                this->chemistry_.mixture().species()[fuelSpecies_[i]];
             scalar curMm =
                 this->chemistry_.specieThermos()[fuelSpeciesID_[i]].W();
             Mmtot += fuelSpeciesProp_[i]/curMm;
         }
+
+        this->coeffsDict_.readIfPresent("nbCLarge", nbCLarge_);
 
         Mmtot = 1.0/Mmtot;
         scalar nbC(0.0);
