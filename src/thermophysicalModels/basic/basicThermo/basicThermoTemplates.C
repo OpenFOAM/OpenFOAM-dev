@@ -25,7 +25,7 @@ License
 
 #include "basicThermo.H"
 #include "wordIOList.H"
-#include "compileThermo.H"
+#include "compileTemplate.H"
 
 // * * * * * * * * * * * * * Static Member Functions * * * * * * * * * * * * //
 
@@ -50,11 +50,23 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
          && !dynamicCode::resolveTemplate(Thermo::typeName).empty()
         )
         {
-            compileThermo thermo
+            compileTemplate thermo
             (
                 Thermo::typeName,
                 thermoTypeName,
-                thermoTypeDict
+                List<Pair<word>>
+                {
+                    {"type", thermoTypeDict.lookup("type")},
+                    {"mixture", thermoTypeDict.lookup("mixture")},
+                    {"transport", thermoTypeDict.lookup("transport")},
+                    {"thermo", thermoTypeDict.lookup("thermo")},
+                    {
+                        "equationOfState",
+                        thermoTypeDict.lookup("equationOfState")
+                    },
+                    {"specie", thermoTypeDict.lookup("specie")},
+                    {"energy", thermoTypeDict.lookup("energy")}
+                }
             );
             cstrIter = tablePtr->find(thermoTypeName);
 

@@ -169,6 +169,12 @@ public:
             const int nCmpt
         );
 
+        //- Split name of thermo package into a list of named components names
+        static List<Pair<word>> thermoNameComponents
+        (
+            const word& thermoName
+        );
+
 
     // Selectors
 

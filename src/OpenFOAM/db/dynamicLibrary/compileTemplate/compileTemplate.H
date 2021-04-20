@@ -23,8 +23,8 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef compileThermo_H
-#define compileThermo_H
+#ifndef compileTemplate_H
+#define compileTemplate_H
 
 #include "CodedBase.H"
 #include "dynamicCode.H"
@@ -35,28 +35,28 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                       Class compileThermo Declaration
+                       Class compileTemplate Declaration
 \*---------------------------------------------------------------------------*/
 
-class compileThermo
+class compileTemplate
 :
-    public CodedBase<compileThermo>
+    public CodedBase<compileTemplate>
 {
     // Private Member Data
 
         //- Name of the class Thermo basicThermo is instantiated on
-        const word thermoTypeName_;
+        const word templateName_;
 
-        //- Reference to the dictionary containing the thermo components
-        const dictionary& thermoTypeDict_;
+        //- List of template argument substitutions
+        const List<Pair<word>> substitutions_;
 
 
     // Private Member Functions
 
         dictionary optionsDict
         (
-            const word& thermoTypeName,
-            const word& instantiatedThermoName
+            const word& templateName,
+            const word& instantiatedName
         ) const;
 
         void setFilterVariable
@@ -71,15 +71,7 @@ class compileThermo
         (
             dynamicCode& dynCode,
             const dynamicCodeContext& context,
-            const word& name
-        ) const;
-
-        void setFilterRenamedVariable
-        (
-            dynamicCode& dynCode,
-            const dynamicCodeContext& context,
-            const word& name,
-            const word& typeRenameMapName
+            const Pair<word>& substitution
         ) const;
 
         //- Adapt the context for the current object
@@ -95,11 +87,11 @@ public:
     // Constructors
 
         //- Construct from name and dictionary
-        compileThermo
+        compileTemplate
         (
-            const word& thermoTypeName,
-            const word& instantiatedThermoName,
-            const dictionary& thermoTypeDict
+            const word& templateName,
+            const word& instantiatedName,
+            const List<Pair<word>>& substitutions
         );
 };
 

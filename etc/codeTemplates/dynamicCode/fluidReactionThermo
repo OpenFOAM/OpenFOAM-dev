@@ -10,7 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      fluidThermo;
+    object      fluidReactionThermo;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -20,7 +20,7 @@ type
     heRhoThermo
 );
 
-baseType
+typeBase
 (
     hePsiThermo psiReactionThermo
     heRhoThermo rhoReactionThermo
@@ -42,7 +42,7 @@ mixture
     coefficientWilkeMultiComponentMixture
 );
 
-renameMixture
+mixtureRenamed
 (
     pureMixture singleComponentMixture
     multiComponentMixture coefficientMultiComponentMixture
@@ -90,6 +90,11 @@ equationOfState
     rPolynomial
 );
 
+specie
+(
+    specie
+);
+
 codeOptions
 #{
 EXE_INC = \
@@ -98,15 +103,6 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude
-#};
-
-codeLibs
-#{
-LIB_LIBS = \
-    -ltransportModels \
-    -lspecie \
-    -lfluidThermophysicalModels \
-    -lfiniteVolume
 #};
 
 

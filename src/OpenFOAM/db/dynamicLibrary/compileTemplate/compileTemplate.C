@@ -23,8 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "basicThermo.H"
-#include "compileThermo.H"
+#include "compileTemplate.H"
 #include "dynamicCodeContext.H"
 #include "Time.H"
 #include "IFstream.H"
@@ -33,40 +32,40 @@ License
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 template<>
-const Foam::wordList Foam::CodedBase<Foam::compileThermo>::codeKeys_ =
+const Foam::wordList Foam::CodedBase<Foam::compileTemplate>::codeKeys_ =
 {};
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-Foam::dictionary Foam::compileThermo::optionsDict
+Foam::dictionary Foam::compileTemplate::optionsDict
 (
-    const word& thermoTypeName,
-    const word& instantiatedThermoName
+    const word& templateName,
+    const word& instantiatedName
 ) const
 {
-    IFstream optionsFile(dynamicCode::resolveTemplate(thermoTypeName));
+    IFstream optionsFile(dynamicCode::resolveTemplate(templateName));
     if (!optionsFile.good())
     {
         FatalErrorInFunction
-            << "Failed to open dictionary file " << thermoTypeName
+            << "Failed to open dictionary file " << templateName
             << exit(FatalError);
     }
 
     dictionary dict(optionsFile);
 
-    fileName thermoTypeFileName(instantiatedThermoName);
-    thermoTypeFileName.replaceAll(',', '_');
-    thermoTypeFileName.replaceAll('<', '_');
-    thermoTypeFileName.replaceAll('>', '_');
+    fileName templateFileName(instantiatedName);
+    templateFileName.replaceAll(',', '_');
+    templateFileName.replaceAll('<', '_');
+    templateFileName.replaceAll('>', '_');
 
-    dict.add("name", thermoTypeFileName);
+    dict.add("name", templateFileName);
 
     return dict;
 }
 
 
-void Foam::compileThermo::setFilterVariable
+void Foam::compileTemplate::setFilterVariable
 (
     dynamicCode& dynCode,
     const dynamicCodeContext& context,
@@ -74,45 +73,32 @@ void Foam::compileThermo::setFilterVariable
     const word& type
 ) const
 {
-    const HashSet<word> types(context.dict().lookup(name));
-    if (!types.found(type))
+    if (context.dict().found(name))
     {
-        FatalIOErrorInFunction(thermoTypeDict_)
-            << "Unknown " << name << " type " << type << nl
-            << "Supported " << name << " types: " << types
-            << exit(FatalIOError);
+        const HashSet<word> types(context.dict().lookup(name));
+        if (!types.found(type))
+        {
+            FatalIOErrorInFunction(context.dict())
+                << "Unknown " << name << " type " << type << nl
+                << "Supported " << name << " types: " << types
+                << exit(FatalIOError);
+        }
     }
 
     dynCode.setFilterVariable(name, type);
 }
 
 
-void Foam::compileThermo::setFilterVariable
+void Foam::compileTemplate::setFilterVariable
 (
     dynamicCode& dynCode,
     const dynamicCodeContext& context,
-    const word& name
+    const Pair<word>& substitution
 ) const
 {
-    setFilterVariable
-    (
-        dynCode,
-        context,
-        name,
-        thermoTypeDict_.lookup<word>(name)
-    );
-}
-
-
-void Foam::compileThermo::setFilterRenamedVariable
-(
-    dynamicCode& dynCode,
-    const dynamicCodeContext& context,
-    const word& name,
-    const word& typeRenameMapName
-) const
-{
-    word type(thermoTypeDict_.lookup<word>(name));
+    const word& name(substitution.first());
+    word type(substitution.second());
+    const word typeRenameMapName(name + "Renamed");
 
     if (context.dict().found(typeRenameMapName))
     {
@@ -128,10 +114,17 @@ void Foam::compileThermo::setFilterRenamedVariable
     }
 
     setFilterVariable(dynCode, context, name, type);
+
+    const word typeBase(name + "Base");
+    if (context.dict().found(typeBase))
+    {
+        const HashTable<word> typeToBaseMap(context.dict().lookup(typeBase));
+        dynCode.setFilterVariable(typeBase, typeToBaseMap[type]);
+    }
 }
 
 
-void Foam::compileThermo::prepare
+void Foam::compileTemplate::prepare
 (
     dynamicCode& dynCode,
     const dynamicCodeContext& context
@@ -139,20 +132,13 @@ void Foam::compileThermo::prepare
 {
     dynCode.setFilterVariable("typeName", codeName());
 
-    const word type(thermoTypeDict_.lookup<word>("type"));
-    dynCode.setFilterVariable("type", type);
-
-    const HashTable<word> typeToBaseMap(context.dict().lookup("baseType"));
-    dynCode.setFilterVariable("baseType", typeToBaseMap[type]);
-
-    setFilterRenamedVariable(dynCode, context, "mixture", "renameMixture");
-    setFilterVariable(dynCode, context, "transport");
-    setFilterVariable(dynCode, context, "thermo");
-    setFilterVariable(dynCode, context, "equationOfState");
-    setFilterVariable(dynCode, context, "energy");
+    forAll(substitutions_, i)
+    {
+        setFilterVariable(dynCode, context, substitutions_[i]);
+    }
 
     // Compile filtered C template
-    dynCode.addCompileFile(thermoTypeName_ + ".C");
+    dynCode.addCompileFile(templateName_ + ".C");
 
     // Define Make/options
     dynCode.setMakeOptions(context.options() + "\n\n" + context.libs());
@@ -169,19 +155,19 @@ void Foam::compileThermo::prepare
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::compileThermo::compileThermo
+Foam::compileTemplate::compileTemplate
 (
-    const word& thermoTypeName,
-    const word& instantiatedThermoName,
-    const dictionary& thermoTypeDict
+    const word& templateName,
+    const word& instantiatedName,
+    const List<Pair<word>>& substitutions
 )
 :
-    CodedBase<compileThermo>
+    CodedBase<compileTemplate>
     (
-        optionsDict(thermoTypeName, instantiatedThermoName)
+        optionsDict(templateName, instantiatedName)
     ),
-    thermoTypeName_(thermoTypeName),
-    thermoTypeDict_(thermoTypeDict)
+    templateName_(templateName),
+    substitutions_(substitutions)
 {
     this->updateLibrary();
 }

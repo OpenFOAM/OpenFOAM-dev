@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,6 +176,24 @@ Foam::wordList Foam::basicThermo::splitThermoName
     }
 
     return cmpts;
+}
+
+
+Foam::List<Foam::Pair<Foam::word>> Foam::basicThermo::thermoNameComponents
+(
+    const word& thermoName
+)
+{
+    const wordList components(splitThermoName(thermoName, 5));
+
+    return List<Pair<word>>
+    {
+        {"transport", components[0]},
+        {"thermo", components[1]},
+        {"equationOfState", components[2]},
+        {"specie", components[3]},
+        {"energy", components[4]}
+    };
 }
 
 

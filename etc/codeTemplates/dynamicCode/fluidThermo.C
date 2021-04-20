@@ -26,7 +26,7 @@ License
 #include "forThermo.H"
 #include "makeThermo.H"
 
-#include "specie.H"
+#include "${specie}.H"
 
 #include "thermo.H"
 
@@ -41,7 +41,7 @@ License
 #include "${transport}Transport.H"
 
 // psi/rho
-#include "${baseType}.H"
+#include "${typeBase}.H"
 #include "${type}.H"
 
 // Mixture
@@ -81,9 +81,9 @@ namespace Foam
         ${energy},
         ${thermo}Thermo,
         ${equationOfState},
-        specie,
+        ${specie},
         makeThermo,
-        ${baseType},
+        ${typeBase},
         ${type},
         ${mixture}
     );

@@ -10,65 +10,31 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      fluidThermo;
+    object      basicChemistryModel;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-type
+solver
 (
-    hePsiThermo
+    EulerImplicit
+    ode
+    noChemistrySolver
 );
 
-typeBase
+solverRenamed
 (
-    hePsiThermo psiThermo
+    none noChemistrySolver
 );
 
-energy
+method
 (
-    sensibleEnthalpy
-    absoluteEnthalpy
-    sensibleInternalEnergy
-    absoluteInternalEnergy
+    Standard
+    TDAC
 );
 
-mixture
+methodRenamed
 (
-    pureMixture
-);
-
-transport
-(
-    const
-    logPolynomial
-    polynomial
-    sutherland
-    tabulated
-    WLF
-);
-
-thermo
-(
-    eConst
-    ePolynomial
-    ePower
-    eTabulated
-    hConst
-    hPolynomial
-    hPower
-    hTabulated
-    janaf
-);
-
-equationOfState
-(
-    PengRobinsonGas
-    perfectGas
-);
-
-specie
-(
-    specie
+    standard Standard
 );
 
 codeOptions
@@ -76,9 +42,12 @@ codeOptions
 EXE_INC = \
     -I$(LIB_SRC)/transportModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
-    -I$(LIB_SRC)/thermophysicalModels/thermophysicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
-    -I$(LIB_SRC)/finiteVolume/lnInclude
+    -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/chemistryModel/lnInclude \
+    -I$(LIB_SRC)/ODE/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
 #};
 
 
