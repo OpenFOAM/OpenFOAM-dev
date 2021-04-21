@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -90,8 +90,7 @@ void Foam::pointConstraints::makePatchPatchAddressing()
     Map<label> patchPatchPointSet(2*nPatchPatchPoints);
 
     // Constraints (initialised to unconstrained)
-    patchPatchPointConstraints_.setSize(nPatchPatchPoints);
-    patchPatchPointConstraints_ = pointConstraint();
+    patchPatchPointConstraints_.setSize(nPatchPatchPoints, pointConstraint());
 
     // From constraint index to mesh point
     labelList patchPatchPoints(nPatchPatchPoints);
@@ -251,6 +250,16 @@ void Foam::pointConstraints::makePatchPatchAddressing()
                     constraintI = iter();
                 }
 
+                // Extend the patchPatchPointConstraints_ array if necessary
+                if (patchPatchPointConstraints_.size() <= constraintI)
+                {
+                    patchPatchPointConstraints_.setSize
+                    (
+                        constraintI + 1,
+                        pointConstraint()
+                    );
+                }
+
                 // Combine (new or existing) constraint with one
                 // on coupled.
                 patchPatchPointConstraints_[constraintI].combine
@@ -260,7 +269,6 @@ void Foam::pointConstraints::makePatchPatchAddressing()
             }
         }
     }
-
 
 
     nPatchPatchPoints = pppi;
