@@ -106,28 +106,6 @@ void Foam::StandardChemistryModel<ThermoType>::omega
 
 
 template<class ThermoType>
-Foam::scalar Foam::StandardChemistryModel<ThermoType>::omegaI
-(
-    const label index,
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
-    scalar& pf,
-    scalar& cf,
-    label& lRef,
-    scalar& pr,
-    scalar& cr,
-    label& rRef
-) const
-{
-    const Reaction<ThermoType>& R = reactions_[index];
-    scalar w = R.omega(p, T, c, li, pf, cf, lRef, pr, cr, rRef);
-    return(w);
-}
-
-
-template<class ThermoType>
 void Foam::StandardChemistryModel<ThermoType>::derivatives
 (
     const scalar t,

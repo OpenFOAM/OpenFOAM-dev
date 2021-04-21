@@ -198,24 +198,6 @@ public:
             scalarField& dcdt
         ) const;
 
-
-        //- Return the reaction rate for iReaction and the reference
-        //  species and characteristic times
-        virtual scalar omegaI
-        (
-            label iReaction,
-            const scalar p,
-            const scalar T,
-            const scalarField& c,
-            const label li,
-            scalar& pf,
-            scalar& cf,
-            label& lRef,
-            scalar& pr,
-            scalar& cr,
-            label& rRef
-        ) const;
-
         //- Calculates the reaction rates
         virtual void calculate();
 
