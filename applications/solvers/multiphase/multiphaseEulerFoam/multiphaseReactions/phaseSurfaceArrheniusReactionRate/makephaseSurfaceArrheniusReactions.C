@@ -27,13 +27,13 @@ License
 
 #include "phaseSurfaceArrheniusReactionRate.H"
 
-#include "forCommonGases.H"
+#include "forGases.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    forCommonGases
+    forGases
     (
         makeGeneralReaction,
         IrreversibleReaction,

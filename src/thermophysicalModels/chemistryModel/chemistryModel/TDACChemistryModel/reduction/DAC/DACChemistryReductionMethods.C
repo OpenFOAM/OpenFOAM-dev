@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,18 +27,16 @@ License
 
 #include "DAC.H"
 
-#include "forCommonGases.H"
-#include "forCommonLiquids.H"
-#include "forPolynomials.H"
+#include "forGases.H"
+#include "forLiquids.H"
 #include "makeChemistryReductionMethod.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    forCommonGases(makeChemistryReductionMethod, DAC);
-    forCommonLiquids(makeChemistryReductionMethod, DAC);
-    forPolynomials(makeChemistryReductionMethod, DAC);
+    forGases(makeChemistryReductionMethod, DAC);
+    forLiquids(makeChemistryReductionMethod, DAC);
 }
 
 

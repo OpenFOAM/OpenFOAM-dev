@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,9 +29,7 @@ License
 #include "specie.H"
 
 #include "Boussinesq.H"
-#include "incompressiblePerfectGas.H"
 #include "perfectGas.H"
-#include "PengRobinsonGas.H"
 
 #include "eConstThermo.H"
 #include "hConstThermo.H"
@@ -49,24 +47,22 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define forGasEquations(Mu, He, Cp, Macro, Args...)                            \
-    forThermo(Mu, He, Cp, Boussinesq, specie, Macro, Args);                    \
-    forThermo(Mu, He, Cp, incompressiblePerfectGas, specie, Macro, Args);      \
-    forThermo(Mu, He, Cp, PengRobinsonGas, specie, Macro, Args);               \
+#define forGasEqns(Mu, He, Cp, Macro, Args...)                           \
+    forThermo(Mu, He, Cp, Boussinesq, specie, Macro, Args);              \
     forThermo(Mu, He, Cp, perfectGas, specie, Macro, Args)
 
-#define forGasEnergiesAndThermos(Mu, Macro, Args...)                           \
-    forGasEquations(Mu, sensibleEnthalpy, hConstThermo, Macro, Args);          \
-    forGasEquations(Mu, sensibleEnthalpy, janafThermo, Macro, Args);           \
-    forGasEquations(Mu, sensibleInternalEnergy, eConstThermo, Macro, Args);    \
-    forGasEquations(Mu, sensibleInternalEnergy, hConstThermo, Macro, Args);    \
-    forGasEquations(Mu, sensibleInternalEnergy, janafThermo, Macro, Args)
+#define forGasEnergiesAndThermos(Mu, Macro, Args...)                     \
+    forGasEqns(Mu, sensibleEnthalpy, hConstThermo, Macro, Args);         \
+    forGasEqns(Mu, sensibleEnthalpy, janafThermo, Macro, Args);          \
+    forGasEqns(Mu, sensibleInternalEnergy, eConstThermo, Macro, Args);   \
+    forGasEqns(Mu, sensibleInternalEnergy, hConstThermo, Macro, Args);   \
+    forGasEqns(Mu, sensibleInternalEnergy, janafThermo, Macro, Args)
 
-#define forGasTransports(Macro, Args...)                                       \
-    forGasEnergiesAndThermos(constTransport, Macro, Args);                     \
+#define forGasTransports(Macro, Args...)                                 \
+    forGasEnergiesAndThermos(constTransport, Macro, Args);               \
     forGasEnergiesAndThermos(sutherlandTransport, Macro, Args)
 
-#define forGases(Macro, Args...)                                               \
+#define forGases(Macro, Args...)                                         \
     forGasTransports(Macro, Args)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

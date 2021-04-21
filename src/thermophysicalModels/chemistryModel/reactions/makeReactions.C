@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,9 +43,8 @@ License
 
 #include "MichaelisMentenReactionRate.H"
 
-#include "forCommonGases.H"
-#include "forCommonLiquids.H"
-#include "forPolynomials.H"
+#include "forGases.H"
+#include "forLiquids.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -59,54 +58,41 @@ const char* const Foam::Tuple2<Foam::word, Foam::scalar>::typeName
 
 namespace Foam
 {
-    forCommonGases(defineReaction, nullArg);
-    forCommonLiquids(defineReaction, nullArg);
-    forPolynomials(defineReaction, nullArg);
+    forGases(defineReaction, nullArg);
+    forLiquids(defineReaction, nullArg);
 
 
     // Irreversible/reversible/non-equilibrium-reversible reactions
 
-    forCommonGases(makeIRNReactions, ArrheniusReactionRate);
-    forCommonLiquids(makeIRNReactions, ArrheniusReactionRate);
-    forPolynomials(makeIRNReactions, ArrheniusReactionRate);
+    forGases(makeIRNReactions, ArrheniusReactionRate);
+    forLiquids(makeIRNReactions, ArrheniusReactionRate);
 
-    forCommonGases(makeIRNReactions, LandauTellerReactionRate);
-    forCommonLiquids(makeIRNReactions, LandauTellerReactionRate);
-    forPolynomials(makeIRNReactions, LandauTellerReactionRate);
+    forGases(makeIRNReactions, LandauTellerReactionRate);
+    forLiquids(makeIRNReactions, LandauTellerReactionRate);
 
-    forCommonGases(makeIRNReactions, thirdBodyArrheniusReactionRate);
-    forCommonLiquids(makeIRNReactions, thirdBodyArrheniusReactionRate);
-    forPolynomials(makeIRNReactions, thirdBodyArrheniusReactionRate);
+    forGases(makeIRNReactions, thirdBodyArrheniusReactionRate);
+    forLiquids(makeIRNReactions, thirdBodyArrheniusReactionRate);
 
 
     // Irreversible/reversible reactions
 
-    forCommonGases(makeIRReactions, JanevReactionRate);
-    forCommonLiquids(makeIRReactions, JanevReactionRate);
-    forPolynomials(makeIRReactions, JanevReactionRate);
+    forGases(makeIRReactions, JanevReactionRate);
+    forLiquids(makeIRReactions, JanevReactionRate);
 
-    forCommonGases(makeIRReactions, powerSeriesReactionRate);
-    forCommonLiquids(makeIRReactions, powerSeriesReactionRate);
-    forPolynomials(makeIRReactions, powerSeriesReactionRate);
+    forGases(makeIRReactions, powerSeriesReactionRate);
+    forLiquids(makeIRReactions, powerSeriesReactionRate);
 
 
     // Pressure dependent reactions
 
-    forCommonGases
+    forGases
     (
         makeIRRPressureDependentReactions,
         FallOffReactionRate,
         ArrheniusReactionRate,
         LindemannFallOffFunction
     );
-    forCommonLiquids
-    (
-        makeIRRPressureDependentReactions,
-        FallOffReactionRate,
-        ArrheniusReactionRate,
-        LindemannFallOffFunction
-    );
-    forPolynomials
+    forLiquids
     (
         makeIRRPressureDependentReactions,
         FallOffReactionRate,
@@ -114,21 +100,14 @@ namespace Foam
         LindemannFallOffFunction
     );
 
-    forCommonGases
+    forGases
     (
         makeIRRPressureDependentReactions,
         FallOffReactionRate,
         ArrheniusReactionRate,
         TroeFallOffFunction
     );
-    forCommonLiquids
-    (
-        makeIRRPressureDependentReactions,
-        FallOffReactionRate,
-        ArrheniusReactionRate,
-        TroeFallOffFunction
-    );
-    forPolynomials
+    forLiquids
     (
         makeIRRPressureDependentReactions,
         FallOffReactionRate,
@@ -136,21 +115,14 @@ namespace Foam
         TroeFallOffFunction
     );
 
-    forCommonGases
+    forGases
     (
         makeIRRPressureDependentReactions,
         FallOffReactionRate,
         ArrheniusReactionRate,
         SRIFallOffFunction
     );
-    forCommonLiquids
-    (
-        makeIRRPressureDependentReactions,
-        FallOffReactionRate,
-        ArrheniusReactionRate,
-        SRIFallOffFunction
-    );
-    forPolynomials
+    forLiquids
     (
         makeIRRPressureDependentReactions,
         FallOffReactionRate,
@@ -158,21 +130,14 @@ namespace Foam
         SRIFallOffFunction
     );
 
-    forCommonGases
+    forGases
     (
         makeIRRPressureDependentReactions,
         ChemicallyActivatedReactionRate,
         ArrheniusReactionRate,
         LindemannFallOffFunction
     );
-    forCommonLiquids
-    (
-        makeIRRPressureDependentReactions,
-        ChemicallyActivatedReactionRate,
-        ArrheniusReactionRate,
-        LindemannFallOffFunction
-    );
-    forPolynomials
+    forLiquids
     (
         makeIRRPressureDependentReactions,
         ChemicallyActivatedReactionRate,
@@ -180,21 +145,14 @@ namespace Foam
         LindemannFallOffFunction
     );
 
-    forCommonGases
+    forGases
     (
         makeIRRPressureDependentReactions,
         ChemicallyActivatedReactionRate,
         ArrheniusReactionRate,
         TroeFallOffFunction
     );
-    forCommonLiquids
-    (
-        makeIRRPressureDependentReactions,
-        ChemicallyActivatedReactionRate,
-        ArrheniusReactionRate,
-        TroeFallOffFunction
-    );
-    forPolynomials
+    forLiquids
     (
         makeIRRPressureDependentReactions,
         ChemicallyActivatedReactionRate,
@@ -202,21 +160,14 @@ namespace Foam
         TroeFallOffFunction
     );
 
-    forCommonGases
+    forGases
     (
         makeIRRPressureDependentReactions,
         ChemicallyActivatedReactionRate,
         ArrheniusReactionRate,
         SRIFallOffFunction
     );
-    forCommonLiquids
-    (
-        makeIRRPressureDependentReactions,
-        ChemicallyActivatedReactionRate,
-        ArrheniusReactionRate,
-        SRIFallOffFunction
-    );
-    forPolynomials
+    forLiquids
     (
         makeIRRPressureDependentReactions,
         ChemicallyActivatedReactionRate,

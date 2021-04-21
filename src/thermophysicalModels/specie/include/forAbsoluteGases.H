@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,6 @@ License
 #include "janafThermo.H"
 
 #include "absoluteEnthalpy.H"
-#include "absoluteInternalEnergy.H"
 
 #include "constTransport.H"
 #include "sutherlandTransport.H"
@@ -51,10 +50,7 @@ License
 
 #define forAbsoluteGasEnergiesAndThermos(Mu, Macro, Args...)                   \
     forAbsoluteGasEqns(Mu, absoluteEnthalpy, hConstThermo, Macro, Args);       \
-    forAbsoluteGasEqns(Mu, absoluteEnthalpy, janafThermo, Macro, Args);        \
-    forAbsoluteGasEqns(Mu, absoluteInternalEnergy, eConstThermo, Macro, Args); \
-    forAbsoluteGasEqns(Mu, absoluteInternalEnergy, hConstThermo, Macro, Args); \
-    forAbsoluteGasEqns(Mu, absoluteInternalEnergy, janafThermo, Macro, Args)
+    forAbsoluteGasEqns(Mu, absoluteEnthalpy, janafThermo, Macro, Args);
 
 #define forAbsoluteGasTransports(Macro, Args...)                               \
     forAbsoluteGasEnergiesAndThermos(constTransport, Macro, Args);             \

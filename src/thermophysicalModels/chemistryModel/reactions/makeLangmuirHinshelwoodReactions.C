@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,17 +27,15 @@ License
 
 #include "LangmuirHinshelwoodReactionRate.H"
 
-#include "forCommonGases.H"
-#include "forCommonLiquids.H"
-#include "forPolynomials.H"
+#include "forGases.H"
+#include "forLiquids.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-    forCommonGases(makeIRReactions, LangmuirHinshelwoodReactionRate);
-    forCommonLiquids(makeIRReactions, LangmuirHinshelwoodReactionRate);
-    forPolynomials(makeIRReactions, LangmuirHinshelwoodReactionRate);
+    forGases(makeIRReactions, LangmuirHinshelwoodReactionRate);
+    forLiquids(makeIRReactions, LangmuirHinshelwoodReactionRate);
 }
 
 // ************************************************************************* //

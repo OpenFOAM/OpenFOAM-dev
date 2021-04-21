@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,6 @@ License
 #include "specie.H"
 
 #include "adiabaticPerfectFluid.H"
-#include "perfectFluid.H"
 #include "rhoConst.H"
 #include "rPolynomial.H"
 
@@ -40,7 +39,6 @@ License
 #include "sensibleInternalEnergy.H"
 
 #include "constTransport.H"
-#include "WLFTransport.H"
 
 #include "thermo.H"
 
@@ -59,8 +57,7 @@ License
     forLiquidEquations(Mu, sensibleInternalEnergy, hConstThermo, Macro, Args)
 
 #define forLiquidTransports(Macro, Args...)                                    \
-    forLiquidEnergiesAndThermos(constTransport, Macro, Args);                  \
-    forLiquidEnergiesAndThermos(WLFTransport, Macro, Args)
+    forLiquidEnergiesAndThermos(constTransport, Macro, Args);
 
 #define forLiquids(Macro, Args...)                                             \
     forLiquidTransports(Macro, Args)
