@@ -139,15 +139,32 @@ class EDC
         //- The selected model version
         EDCversions version_;
 
+        //- Model constant
         scalar C1_;
+
+        //- Model constant
         scalar C2_;
+
+        //- Model constant
         scalar Cgamma_;
+
+        //- Model constant
         scalar Ctau_;
+
+        //- Model constant
         scalar exp1_;
+
+        //- Model constant
         scalar exp2_;
 
         //- Mixing parameter
         volScalarField kappa_;
+
+        //- Run chemistry correction on every outer iteration. Default true.
+        bool outerCorrect_;
+
+        //- The time index of the last correction
+        label timeIndex_;
 
         //- Pointer to chemistry model
         autoPtr<basicChemistryModel> chemistryPtr_;
