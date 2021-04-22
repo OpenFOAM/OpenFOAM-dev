@@ -241,12 +241,8 @@ public:
                 const scalar T,
                 const scalarField& c,
                 const label li,
-                scalar& pf,
-                scalar& cf,
-                label& lRef,
-                scalar& pr,
-                scalar& cr,
-                label& rRef
+                scalar& omegaf,
+                scalar& omegar
             ) const;
 
         // Reaction rate coefficients

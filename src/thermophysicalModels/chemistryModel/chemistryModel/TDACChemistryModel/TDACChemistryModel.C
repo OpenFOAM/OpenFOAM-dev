@@ -135,8 +135,7 @@ void Foam::TDACChemistryModel<ThermoType>::omega
 {
     const bool reduced = mechRed_->active();
 
-    scalar pf, cf, pr, cr;
-    label lRef, rRef;
+    scalar omegaf, omegar;
 
     dcdt = Zero;
 
@@ -145,33 +144,26 @@ void Foam::TDACChemistryModel<ThermoType>::omega
         if (!reactionsDisabled_[i])
         {
             const Reaction<ThermoType>& R = this->reactions_[i];
-
-            scalar omegai = R.omega
-            (
-                p, T, c, li, pf, cf, lRef, pr, cr, rRef
-            );
+            const scalar omegaI = R.omega(p, T, c, li, omegaf, omegar);
 
             forAll(R.lhs(), s)
             {
-                label si = R.lhs()[s].index;
-                if (reduced)
-                {
-                    si = completeToSimplifiedIndex_[si];
-                }
-
+                const label si =
+                    reduced
+                  ? completeToSimplifiedIndex_[R.lhs()[s].index]
+                  : R.lhs()[s].index;
                 const scalar sl = R.lhs()[s].stoichCoeff;
-                dcdt[si] -= sl*omegai;
+                dcdt[si] -= sl*omegaI;
             }
+
             forAll(R.rhs(), s)
             {
-                label si = R.rhs()[s].index;
-                if (reduced)
-                {
-                    si = completeToSimplifiedIndex_[si];
-                }
-
+                const label si =
+                    reduced
+                  ? completeToSimplifiedIndex_[R.rhs()[s].index]
+                  : R.rhs()[s].index;
                 const scalar sr = R.rhs()[s].stoichCoeff;
-                dcdt[si] += sr*omegai;
+                dcdt[si] += sr*omegaI;
             }
         }
     }

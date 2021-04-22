@@ -255,8 +255,7 @@ Foam::StandardChemistryModel<ThermoType>::tc() const
 
     const label nReaction = reactions_.size();
 
-    scalar pf, cf, pr, cr;
-    label lRef, rRef;
+    scalar omegaf, omegar;
 
     if (this->chemistry_)
     {
@@ -279,12 +278,11 @@ Foam::StandardChemistryModel<ThermoType>::tc() const
             forAll(reactions_, i)
             {
                 const Reaction<ThermoType>& R = reactions_[i];
-
-                R.omega(pi, Ti, c_, celli, pf, cf, lRef, pr, cr, rRef);
+                R.omega(pi, Ti, c_, celli, omegaf, omegar);
 
                 forAll(R.rhs(), s)
                 {
-                    tc[celli] += R.rhs()[s].stoichCoeff*pf*cf;
+                    tc[celli] += R.rhs()[s].stoichCoeff*omegaf;
                 }
             }
 
@@ -360,8 +358,7 @@ Foam::StandardChemistryModel<ThermoType>::calculateRR
 
     reactionEvaluationScope scope(*this);
 
-    scalar pf, cf, pr, cr;
-    label lRef, rRef;
+    scalar omegaf, omegar;
 
     forAll(rho, celli)
     {
@@ -376,16 +373,13 @@ Foam::StandardChemistryModel<ThermoType>::calculateRR
         }
 
         const Reaction<ThermoType>& R = reactions_[ri];
-        const scalar omegai = R.omega
-        (
-            pi, Ti, c_, celli, pf, cf, lRef, pr, cr, rRef
-        );
+        const scalar omegaI = R.omega(pi, Ti, c_, celli, omegaf, omegar);
 
         forAll(R.lhs(), s)
         {
             if (si == R.lhs()[s].index)
             {
-                RR[celli] -= R.lhs()[s].stoichCoeff*omegai;
+                RR[celli] -= R.lhs()[s].stoichCoeff*omegaI;
             }
         }
 
@@ -393,7 +387,7 @@ Foam::StandardChemistryModel<ThermoType>::calculateRR
         {
             if (si == R.rhs()[s].index)
             {
-                RR[celli] += R.rhs()[s].stoichCoeff*omegai;
+                RR[celli] += R.rhs()[s].stoichCoeff*omegaI;
             }
         }
 

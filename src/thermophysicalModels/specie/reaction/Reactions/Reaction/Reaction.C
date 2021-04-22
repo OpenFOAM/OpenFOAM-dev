@@ -295,13 +295,9 @@ void Foam::Reaction<ReactionThermo>::omega
     scalarField& dcdt
 ) const
 {
-    scalar pf, cf, pr, cr;
-    label lRef, rRef;
+    scalar omegaf, omegar;
 
-    scalar omegaI = omega
-    (
-        p, T, c, li, pf, cf, lRef, pr, cr, rRef
-    );
+    const scalar omegaI = omega(p, T, c, li, omegaf, omegar);
 
     forAll(lhs(), i)
     {
@@ -325,111 +321,29 @@ Foam::scalar Foam::Reaction<ReactionThermo>::omega
     const scalar T,
     const scalarField& c,
     const label li,
-    scalar& pf,
-    scalar& cf,
-    label& lRef,
-    scalar& pr,
-    scalar& cr,
-    label& rRef
+    scalar& omegaf,
+    scalar& omegar
 ) const
 {
-
     scalar clippedT = min(max(T, this->Tlow()), this->Thigh());
 
-    const scalar kf = this->kf(p, clippedT, c, li);
-    const scalar kr = this->kr(kf, p, clippedT, c, li);
+    omegaf = this->kf(p, clippedT, c, li);
+    omegar = this->kr(omegaf, p, clippedT, c, li);
 
-    pf = 1;
-    pr = 1;
-
-    const label Nl = lhs().size();
-    const label Nr = rhs().size();
-
-    label slRef = 0;
-    lRef = lhs()[slRef].index;
-
-    pf = kf;
-    for (label s = 1; s < Nl; s++)
+    forAll(lhs(), i)
     {
-        const label si = lhs()[s].index;
-
-        if (c[si] < c[lRef])
-        {
-            const scalar exp = lhs()[slRef].exponent;
-            pf *= pow(max(c[lRef], 0), exp);
-            lRef = si;
-            slRef = s;
-        }
-        else
-        {
-            const scalar exp = lhs()[s].exponent;
-            pf *= pow(max(c[si], 0), exp);
-        }
+        const label si = lhs()[i].index;
+        const scalar el = lhs()[i].exponent;
+        omegaf *= c[si] >= small || el >= 1 ? pow(max(c[si], 0), el) : 0;
     }
-    cf = max(c[lRef], 0);
-
+    forAll(rhs(), i)
     {
-        const scalar exp = lhs()[slRef].exponent;
-        if (exp < 1)
-        {
-            if (cf > small)
-            {
-                pf *= pow(cf, exp - 1);
-            }
-            else
-            {
-                pf = 0;
-            }
-        }
-        else
-        {
-            pf *= pow(cf, exp - 1);
-        }
+        const label si = rhs()[i].index;
+        const scalar er = rhs()[i].exponent;
+        omegar *= c[si] >= small || er >= 1 ? pow(max(c[si], 0), er) : 0;
     }
 
-    label srRef = 0;
-    rRef = rhs()[srRef].index;
-
-    // Find the matrix element and element position for the rhs
-    pr = kr;
-    for (label s = 1; s < Nr; s++)
-    {
-        const label si = rhs()[s].index;
-        if (c[si] < c[rRef])
-        {
-            const scalar exp = rhs()[srRef].exponent;
-            pr *= pow(max(c[rRef], 0), exp);
-            rRef = si;
-            srRef = s;
-        }
-        else
-        {
-            const scalar exp = rhs()[s].exponent;
-            pr *= pow(max(c[si], 0), exp);
-        }
-    }
-    cr = max(c[rRef], 0);
-
-    {
-        const scalar exp = rhs()[srRef].exponent;
-        if (exp < 1)
-        {
-            if (cr > small)
-            {
-                pr *= pow(cr, exp - 1);
-            }
-            else
-            {
-                pr = 0;
-            }
-        }
-        else
-        {
-            pr *= pow(cr, exp - 1);
-        }
-    }
-
-    return pf*cf - pr*cr;
+    return omegaf - omegar;
 }
 
 
@@ -449,10 +363,9 @@ void Foam::Reaction<ReactionThermo>::dwdc
     const List<label>& c2s
 ) const
 {
-    scalar pf, cf, pr, cr;
-    label lRef, rRef;
+    scalar omegaf, omegar;
 
-    omegaI = omega(p, T, c, li, pf, cf, lRef, pr, cr, rRef);
+    omegaI = omega(p, T, c, li, omegaf, omegar);
 
     forAll(lhs(), i)
     {
@@ -480,25 +393,17 @@ void Foam::Reaction<ReactionThermo>::dwdc
             const scalar el = lhs()[i].exponent;
             if (i == j)
             {
-                if (el < 1)
-                {
-                    if (c[si] > SMALL)
-                    {
-                        kf *= el*pow(c[si] + VSMALL, el - 1);
-                    }
-                    else
-                    {
-                        kf = 0;
-                    }
-                }
-                else
-                {
-                    kf *= el*pow(c[si], el - 1);
-                }
+                kf *=
+                    c[si] >= small || el >= 1
+                  ? el*pow(max(c[si], 0), el - 1)
+                  : 0;
             }
             else
             {
-                kf *= pow(c[si], el);
+                kf *=
+                    c[si] >= small || el >= 1
+                  ? pow(max(c[si], 0), el)
+                  : 0;
             }
         }
 
@@ -526,25 +431,17 @@ void Foam::Reaction<ReactionThermo>::dwdc
             const scalar er = rhs()[i].exponent;
             if (i == j)
             {
-                if (er < 1)
-                {
-                    if (c[si] > SMALL)
-                    {
-                        kr *= er*pow(c[si] + VSMALL, er - 1);
-                    }
-                    else
-                    {
-                        kr = 0;
-                    }
-                }
-                else
-                {
-                    kr *= er*pow(c[si], er - 1);
-                }
+                kr *=
+                    c[si] >= small || er >= 1
+                  ? er*pow(max(c[si], 0), er - 1)
+                  : 0;
             }
             else
             {
-                kr *= pow(c[si], er);
+                kr *=
+                    c[si] >= small || er >= 1
+                  ? pow(max(c[si], 0), er)
+                  : 0;
             }
         }
 
@@ -620,13 +517,13 @@ void Foam::Reaction<ReactionThermo>::dwdT
     {
         const label si = lhs()[i].index;
         const scalar el = lhs()[i].exponent;
-        dkfdT *= pow(c[si], el);
+        dkfdT *= c[si] >= small || el >= 1 ? pow(max(c[si], 0), el) : 0;
     }
     forAll(rhs(), i)
     {
         const label si = rhs()[i].index;
         const scalar er = rhs()[i].exponent;
-        dkrdT *= pow(c[si], er);
+        dkrdT *= c[si] >= small || er >= 1 ? pow(max(c[si], 0), er) : 0;
     }
 
     const scalar dqidT = dkfdT - dkrdT;

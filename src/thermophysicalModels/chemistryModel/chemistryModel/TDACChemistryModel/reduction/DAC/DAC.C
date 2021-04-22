@@ -263,14 +263,13 @@ void Foam::chemistryReductionMethods::DAC<ThermoType>::reduceMechanism
     // Index of the other species involved in the rABNum
     RectangularMatrix<label> rABOtherSpec(this->nSpecie_, this->nSpecie_, -1);
 
-    scalar pf, cf, pr, cr;
-    label lRef, rRef;
     forAll(this->chemistry_.reactions(), i)
     {
         const Reaction<ThermoType>& R = this->chemistry_.reactions()[i];
 
         // for each reaction compute omegai
-        scalar omegai = R.omega(p, T, c1, li, pf, cf, lRef, pr, cr, rRef);
+        scalar omegaf, omegar;
+        const scalar omegai = R.omega(p, T, c1, li, omegaf, omegar);
 
         // Then for each pair of species composing this reaction,
         // compute the rAB matrix (separate the numerator and
