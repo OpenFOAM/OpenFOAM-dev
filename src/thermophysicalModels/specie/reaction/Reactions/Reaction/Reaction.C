@@ -286,32 +286,6 @@ void Foam::Reaction<ReactionThermo>::write(Ostream& os) const
 
 
 template<class ReactionThermo>
-void Foam::Reaction<ReactionThermo>::ddot
-(
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
-    scalarField& d
-) const
-{
-}
-
-
-template<class ReactionThermo>
-void Foam::Reaction<ReactionThermo>::fdot
-(
-    const scalar p,
-    const scalar T,
-    const scalarField& c,
-    const label li,
-    scalarField& f
-) const
-{
-}
-
-
-template<class ReactionThermo>
 void Foam::Reaction<ReactionThermo>::omega
 (
     const scalar p,

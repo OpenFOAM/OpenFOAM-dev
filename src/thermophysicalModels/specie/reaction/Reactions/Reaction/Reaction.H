@@ -224,26 +224,6 @@ public:
 
         // Reaction rate coefficients
 
-            //- Forward reaction rate
-            void ddot
-            (
-                const scalar p,
-                const scalar T,
-                const scalarField& c,
-                const label li,
-                scalarField& d
-            ) const;
-
-            //- Backward reaction rate
-            void fdot
-            (
-                const scalar p,
-                const scalar T,
-                const scalarField& c,
-                const label li,
-                scalarField& f
-            ) const;
-
             //- Net reaction rate for individual species
             void omega
             (
