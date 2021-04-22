@@ -156,9 +156,6 @@ public:
 
     // Member Functions
 
-        //- Return true if the time-step is variable and/or non-uniform
-        inline bool variableTimeStep() const;
-
         //- Return the number of chemistry evaluations (used by ISAT)
         inline label timeSteps() const;
 

@@ -26,13 +26,6 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-inline bool Foam::TDACChemistryModel<ThermoType>::variableTimeStep() const
-{
-    return variableTimeStep_;
-}
-
-
-template<class ThermoType>
 inline Foam::label Foam::TDACChemistryModel<ThermoType>::timeSteps() const
 {
     return timeSteps_;

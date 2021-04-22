@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,9 +203,6 @@ class chemPointISAT
 
         List<label> completeToSimplifiedIndex_;
 
-        //- Number of equations in addition to the species eqs.
-        label nAdditionalEqns_;
-
         label idT_;
         label idp_;
         label iddeltaT_;
@@ -392,11 +389,6 @@ public:
         inline const label& nLifeTime()
         {
             return nLifeTime_;
-        }
-
-        inline bool variableTimeStep() const
-        {
-            return chemistry_.variableTimeStep();
         }
 
         // ISAT functions

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,8 +34,7 @@ Foam::binaryNode<ThermoType>::binaryNode()
     leafRight_(nullptr),
     nodeLeft_(nullptr),
     nodeRight_(nullptr),
-    parent_(nullptr),
-    nAdditionalEqns_(0)
+    parent_(nullptr)
 {}
 
 
@@ -54,15 +53,6 @@ Foam::binaryNode<ThermoType>::binaryNode
     parent_(parent),
     v_(elementLeft->completeSpaceSize(), 0)
 {
-    if (elementLeft->variableTimeStep())
-    {
-        nAdditionalEqns_ = 3;
-    }
-    else
-    {
-        nAdditionalEqns_ = 2;
-    }
-
     calcV(elementLeft, elementRight, v_);
     a_ = calcA(elementLeft, elementRight);
 }
@@ -94,7 +84,7 @@ void Foam::binaryNode<ThermoType>::calcV
         bool outOfIndexI = true;
         if (mechReductionActive)
         {
-            if (i<elementLeft->completeSpaceSize() - nAdditionalEqns_)
+            if (i<elementLeft->completeSpaceSize() - 3)
             {
                 si = elementLeft->completeToSimplifiedIndex()[i];
                 outOfIndexI = (si == -1);
@@ -102,8 +92,7 @@ void Foam::binaryNode<ThermoType>::calcV
             else // temperature and pressure
             {
                 outOfIndexI = false;
-                const label dif =
-                    i - (elementLeft->completeSpaceSize() - nAdditionalEqns_);
+                const label dif = i - (elementLeft->completeSpaceSize() - 3);
                 si = elementLeft->nActiveSpecies() + dif;
             }
         }
@@ -116,7 +105,7 @@ void Foam::binaryNode<ThermoType>::calcV
                 bool outOfIndexJ = true;
                 if (mechReductionActive)
                 {
-                    if (j < elementLeft->completeSpaceSize() - nAdditionalEqns_)
+                    if (j < elementLeft->completeSpaceSize() - 3)
                     {
                         sj = elementLeft->completeToSimplifiedIndex()[j];
                         outOfIndexJ = (sj==-1);
@@ -125,11 +114,7 @@ void Foam::binaryNode<ThermoType>::calcV
                     {
                         outOfIndexJ = false;
                         const label dif =
-                            j
-                          - (
-                                elementLeft->completeSpaceSize()
-                              - nAdditionalEqns_
-                            );
+                            j - (elementLeft->completeSpaceSize() - 3);
                         sj = elementLeft->nActiveSpecies() + dif;
                     }
                 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -66,9 +66,6 @@ public:
 
     //- Parent node
     binaryNode<ThermoType>* parent_;
-
-    //- Number of equations in addition to the species eqs.
-    label nAdditionalEqns_;
 
     scalarField v_;
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ Foam::chemistryTabulationMethods::ISAT<ThermoType>::ISAT
         chemistry
     ),
     chemisTree_(chemistry, this->coeffsDict_),
-    scaleFactor_(chemistry.nEqns() + ((this->variableTimeStep()) ? 1 : 0), 1),
+    scaleFactor_(chemistry.nEqns() + 1, 1),
     runTime_(chemistry.time()),
     chPMaxLifeTime_
     (
@@ -96,19 +96,7 @@ Foam::chemistryTabulationMethods::ISAT<ThermoType>::ISAT
         }
         scaleFactor_[Ysize] = scaleDict.lookup<scalar>("Temperature");
         scaleFactor_[Ysize + 1] = scaleDict.lookup<scalar>("Pressure");
-        if (this->variableTimeStep())
-        {
-            scaleFactor_[Ysize + 2] = scaleDict.lookup<scalar>("deltaT");
-        }
-    }
-
-    if (this->variableTimeStep())
-    {
-        nAdditionalEqns_ = 3;
-    }
-    else
-    {
-        nAdditionalEqns_ = 2;
+        scaleFactor_[Ysize + 2] = scaleDict.lookup<scalar>("deltaT");
     }
 
     if (this->log())
@@ -195,7 +183,7 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::calcNewC
 
     // Rphiq[i]=Rphi0[i]+A(i, j)dphi[j]
     // where Aij is dRi/dphi_j
-    for (label i=0; i<nEqns-nAdditionalEqns_; i++)
+    for (label i=0; i<nEqns-3; i++)
     {
         if (mechRedActive)
         {
@@ -216,13 +204,9 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::calcNewC
                 Rphiq[i] +=
                     gradientsMatrix(si, phi0->nActiveSpecies() + 1)
                    *dphi[nEqns - 1];
-
-                if (this->variableTimeStep())
-                {
-                    Rphiq[i] +=
-                        gradientsMatrix(si, phi0->nActiveSpecies() + 2)
-                       *dphi[nEqns];
-                }
+                Rphiq[i] +=
+                    gradientsMatrix(si, phi0->nActiveSpecies() + 2)
+                   *dphi[nEqns];
 
                 // As we use an approximation of A, Rphiq should be checked for
                 // negative values
@@ -345,7 +329,7 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::computeA
 {
     bool mechRedActive = this->chemistry_.mechRed()->active();
     label speciesNumber = this->chemistry_.nSpecie();
-    scalarField Rcq(this->chemistry_.nEqns() + nAdditionalEqns_ - 2);
+    scalarField Rcq(this->chemistry_.nEqns() + 1);
     for (label i=0; i<speciesNumber; i++)
     {
         label s2c = i;
@@ -355,12 +339,9 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::computeA
         }
         Rcq[i] = rhoi*Rphiq[s2c]/this->chemistry_.specieThermos()[s2c].W();
     }
-    Rcq[speciesNumber] = Rphiq[Rphiq.size() - nAdditionalEqns_];
-    Rcq[speciesNumber + 1] = Rphiq[Rphiq.size() - nAdditionalEqns_ + 1];
-    if (this->variableTimeStep())
-    {
-        Rcq[speciesNumber + 2] = Rphiq[Rphiq.size() - nAdditionalEqns_ + 2];
-    }
+    Rcq[speciesNumber] = Rphiq[Rphiq.size() - 3];
+    Rcq[speciesNumber + 1] = Rphiq[Rphiq.size() - 2];
+    Rcq[speciesNumber + 2] = Rphiq[Rphiq.size() - 1];
 
     // Aaa is computed implicitly,
     // A is given by A = C(psi0, t0+dt), where C is obtained through solving
@@ -426,10 +407,7 @@ void Foam::chemistryTabulationMethods::ISAT<ThermoType>::computeA
     A(speciesNumber + 1, speciesNumber + 1) =
         -dt*A(speciesNumber + 1, speciesNumber + 1) + 1;
 
-    if (this->variableTimeStep())
-    {
-        A(speciesNumber + 2, speciesNumber + 2) = 1;
-    }
+    A(speciesNumber + 2, speciesNumber + 2) = 1;
 
     // Inverse of (I-dt*J(psi(t0+dt)))
     LUscalarMatrix LUA(A);
@@ -611,7 +589,7 @@ Foam::label Foam::chemistryTabulationMethods::ISAT<ThermoType>::add
     }
 
     // Compute the A matrix needed to store the chemPoint.
-    label ASize = this->chemistry_.nEqns() + nAdditionalEqns_ - 2;
+    label ASize = this->chemistry_.nEqns() + 1;
     scalarSquareMatrix A(ASize, Zero);
     computeA(A, Rphiq, li, rho, deltaT);
 

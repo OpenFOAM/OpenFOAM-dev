@@ -37,15 +37,6 @@ Foam::TDACChemistryModel<ThermoType>::TDACChemistryModel
 )
 :
     StandardChemistryModel<ThermoType>(thermo),
-    variableTimeStep_
-    (
-        this->mesh().time().controlDict().lookupOrDefault
-        (
-            "adjustTimeStep",
-            false
-        )
-     || fv::localEulerDdt::enabled(this->mesh())
-    ),
     timeSteps_(0),
     NsDAC_(this->nSpecie_),
     completeC_(this->nSpecie_, 0),
@@ -396,8 +387,6 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
 
     const bool reduced = mechRed_->active();
 
-    label nAdditionalEqn = (tabulation_->variableTimeStep() ? 1 : 0);
-
     const basicSpecieMixture& composition = this->thermo().composition();
 
     // CPU time analysis
@@ -433,10 +422,9 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
     scalarField c(this->nSpecie_);
     scalarField c0(this->nSpecie_);
 
-    // Composition vector (Yi, T, p)
-    scalarField phiq(this->nEqns() + nAdditionalEqn);
-
-    scalarField Rphiq(this->nEqns() + nAdditionalEqn);
+    // Composition vector (Yi, T, p, deltaT)
+    scalarField phiq(this->nEqns() + 1);
+    scalarField Rphiq(this->nEqns() + 1);
 
     forAll(rho, celli)
     {
@@ -446,18 +434,13 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
 
         for (label i=0; i<this->nSpecie_; i++)
         {
-            c[i] =
+            c[i] = c0[i] =
                 rhoi*this->Y_[i].oldTime()[celli]/this->specieThermos_[i].W();
-            c0[i] = c[i];
             phiq[i] = this->Y()[i].oldTime()[celli];
         }
         phiq[this->nSpecie()] = Ti;
         phiq[this->nSpecie() + 1] = pi;
-        if (tabulation_->variableTimeStep())
-        {
-            phiq[this->nSpecie() + 2] = deltaT[celli];
-        }
-
+        phiq[this->nSpecie() + 2] = deltaT[celli];
 
         // Initialise time progress
         scalar timeLeft = deltaT[celli];
@@ -543,17 +526,10 @@ Foam::scalar Foam::TDACChemistryModel<ThermoType>::solve
                 {
                     Rphiq[i] = c[i]/rhoi*this->specieThermos_[i].W();
                 }
-                if (tabulation_->variableTimeStep())
-                {
-                    Rphiq[Rphiq.size()-3] = Ti;
-                    Rphiq[Rphiq.size()-2] = pi;
-                    Rphiq[Rphiq.size()-1] = deltaT[celli];
-                }
-                else
-                {
-                    Rphiq[Rphiq.size()-2] = Ti;
-                    Rphiq[Rphiq.size()-1] = pi;
-                }
+                Rphiq[Rphiq.size()-3] = Ti;
+                Rphiq[Rphiq.size()-2] = pi;
+                Rphiq[Rphiq.size()-1] = deltaT[celli];
+
                 label growOrAdd =
                     tabulation_->add(phiq, Rphiq, celli, rhoi, deltaT[celli]);
                 if (growOrAdd)
