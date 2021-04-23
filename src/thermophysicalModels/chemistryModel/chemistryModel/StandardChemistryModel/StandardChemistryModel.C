@@ -244,7 +244,6 @@ Foam::StandardChemistryModel<ThermoType>::tc() const
             extrapolatedCalculatedFvPatchScalarField::typeName
         )
     );
-
     scalarField& tc = ttc.ref();
 
     tmp<volScalarField> trho(this->thermo().rho());
@@ -252,10 +251,6 @@ Foam::StandardChemistryModel<ThermoType>::tc() const
 
     const scalarField& T = this->thermo().T();
     const scalarField& p = this->thermo().p();
-
-    const label nReaction = reactions_.size();
-
-    scalar omegaf, omegar;
 
     if (this->chemistry_)
     {
@@ -267,26 +262,54 @@ Foam::StandardChemistryModel<ThermoType>::tc() const
             const scalar Ti = T[celli];
             const scalar pi = p[celli];
 
-            scalar cSum = 0;
-
             for (label i=0; i<nSpecie_; i++)
             {
                 c_[i] = rhoi*Y_[i][celli]/specieThermos_[i].W();
-                cSum += c_[i];
             }
 
+            // A reaction's rate scale is calculated as it's molar
+            // production rate divided by the total number of moles in the
+            // system.
+            //
+            // The system rate scale is the average of the reactions' rate
+            // scales weighted by the reactions' molar production rates. This
+            // weighting ensures that dominant reactions provide the largest
+            // contribution to the system rate scale.
+            //
+            // The system time scale is then the reciprocal of the system rate
+            // scale.
+            //
+            // Contributions from forward and reverse reaction rates are
+            // handled independently and identically so that reversible
+            // reactions produce the same result as the equivalent pair of
+            // irreversible reactions.
+
+            scalar sumW = 0, sumWRateByCTot = 0;
             forAll(reactions_, i)
             {
                 const Reaction<ThermoType>& R = reactions_[i];
+                scalar omegaf, omegar;
                 R.omega(pi, Ti, c_, celli, omegaf, omegar);
 
+                scalar wf = 0;
                 forAll(R.rhs(), s)
                 {
-                    tc[celli] += R.rhs()[s].stoichCoeff*omegaf;
+                    wf += R.rhs()[s].stoichCoeff*omegaf;
                 }
+                sumW += wf;
+                sumWRateByCTot += sqr(wf);
+
+                scalar wr = 0;
+                forAll(R.lhs(), s)
+                {
+                    wr += R.lhs()[s].stoichCoeff*omegar;
+                }
+                sumW += wr;
+                sumWRateByCTot += sqr(wr);
             }
 
-            tc[celli] = nReaction*cSum/tc[celli];
+            tc[celli] =
+                sumWRateByCTot == 0 ? vGreat : sumW/sumWRateByCTot*sum(c_);
         }
     }
 
