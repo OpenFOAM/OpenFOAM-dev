@@ -149,7 +149,7 @@ public:
         virtual wordList constrainedFields() const;
 
         //- Constrain energy equation to fix the temperature
-        virtual void constrain
+        virtual bool constrain
         (
             fvMatrix<scalar>& eqn,
             const word& fieldName

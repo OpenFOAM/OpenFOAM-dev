@@ -54,8 +54,6 @@ solvers
 SIMPLE
 {
     nNonOrthogonalCorrectors 0;
-    pMinFactor      0.4;
-    pMaxFactor      1.5;
 
     residualControl
     {

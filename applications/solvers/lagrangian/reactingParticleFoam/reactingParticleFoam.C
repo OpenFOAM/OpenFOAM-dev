@@ -41,7 +41,7 @@ Description
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "pimpleControl.H"
-#include "pressureControl.H"
+#include "pressureReference.H"
 #include "CorrectPhi.H"
 #include "localEulerDdtScheme.H"
 #include "fvcSmooth.H"

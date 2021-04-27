@@ -149,7 +149,7 @@ Foam::scalar Foam::fv::meanVelocityForce::magUbarAve
 }
 
 
-void Foam::fv::meanVelocityForce::constrain
+bool Foam::fv::meanVelocityForce::constrain
 (
     fvMatrix<vector>& eqn,
     const word& fieldName
@@ -201,10 +201,12 @@ void Foam::fv::meanVelocityForce::constrain
 
     gradP0_ += dGradP_;
     dGradP_ = 0;
+
+    return true;
 }
 
 
-void Foam::fv::meanVelocityForce::constrain(volVectorField& U) const
+bool Foam::fv::meanVelocityForce::constrain(volVectorField& U) const
 {
     const scalarField& rAU = rAPtr_();
 
@@ -240,6 +242,8 @@ void Foam::fv::meanVelocityForce::constrain(volVectorField& U) const
         << ", pressure gradient = " << gradP << endl;
 
     writeProps(gradP);
+
+    return true;
 }
 
 

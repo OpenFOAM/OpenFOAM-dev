@@ -38,17 +38,21 @@ namespace Foam
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
-void Foam::fvConstraint::constrainType
+bool Foam::fvConstraint::constrainType
 (
     fvMatrix<Type>& eqn,
     const word& fieldName
 ) const
-{}
+{
+    return false;
+}
 
 
 template<class Type>
-void Foam::fvConstraint::constrainType(VolField<Type>& field) const
-{}
+bool Foam::fvConstraint::constrainType(VolField<Type>& field) const
+{
+    return false;
+}
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //

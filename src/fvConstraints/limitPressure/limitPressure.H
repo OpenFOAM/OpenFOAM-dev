@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,102 +22,119 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::pressureControl
+    Foam::fv::limitPressure
 
 Description
-    Provides controls for the pressure reference in closed-volume simulations
-    and a general method for limiting the pressure during the startup of
-    steady-state simulations.
+    Limits the pressure to be between minimum and maximum values.
+
+Usage
+    Example usage:
+    \verbatim
+    limitp
+    {
+        type            limitPressure;
+
+        min             200;
+        max             500;
+    }
+    \endverbatim
 
 SourceFiles
-    pressureControlI.H
-    pressureControl.C
+    limitPressure.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef pressureControl_H
-#define pressureControl_H
+#ifndef limitPressure_H
+#define limitPressure_H
 
+#include "fvConstraint.H"
 #include "dimensionedScalar.H"
-#include "volFieldsFwd.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+namespace fv
+{
 
 /*---------------------------------------------------------------------------*\
-                       Class pressureControl Declaration
+                      Class limitPressure Declaration
 \*---------------------------------------------------------------------------*/
 
-class pressureControl
+class limitPressure
+:
+    public fvConstraint
 {
-    // Private Data
+    // Private data
 
-        //- Optional cell in which the reference pressure is set
-        label refCell_;
-
-        //- Optional pressure reference level
-        scalar refValue_;
-
-        //- Pressure lower-limit
-        dimensionedScalar pMax_;
-
-        //- Pressure upper-limit
+        //- Minimum pressure limit
         dimensionedScalar pMin_;
 
-        //- Pressure lower-limit
+        //- Maximum pressure limit
+        dimensionedScalar pMax_;
+
+        //- Pressure min-limited
+        bool limitMinP_;
+
+        //- Pressure max-limited
         bool limitMaxP_;
 
-        //- Pressure upper-limit
-        bool limitMinP_;
+
+    // Private Member Functions
+
+        //- Non-virtual read
+        void readCoeffs();
 
 
 public:
 
+    //- Runtime type information
+    TypeName("limitPressure");
+
+
     // Constructors
 
-        //- Construct from the simple/pimple sub-dictionary
-        //  supporting the pressure and derived pressure fields (e.g. p_rgh)
-        pressureControl
+        //- Construct from components
+        limitPressure
         (
-            const volScalarField& p,
-            const volScalarField& pRef,
-            const volScalarField& rho,
+            const word& name,
+            const word& modelType,
             const dictionary& dict,
-            const bool pRefRequired = true
+            const fvMesh& mesh
         );
 
-        //- Construct from the simple/pimple sub-dictionary
-        pressureControl
-        (
-            const volScalarField& p,
-            const volScalarField& rho,
-            const dictionary& dict,
-            const bool pRefRequired = true
-        );
+        //- Disallow default bitwise copy construction
+        limitPressure(const limitPressure&) = delete;
+
+
+    //- Destructor
+    virtual ~limitPressure()
+    {}
 
 
     // Member Functions
 
-        //- Return the cell in which the reference pressure is set
-        inline label refCell() const;
+        //- Return the list of fields constrained by the fvConstraint
+        virtual wordList constrainedFields() const;
 
-        //- Return the pressure reference level
-        inline scalar refValue() const;
+        //- Constrain the energy field
+        virtual bool constrain(volScalarField& he) const;
 
-        //- Limit the pressure if necessary and return true if so
-        bool limit(volScalarField& p) const;
+        //- Read dictionary
+        virtual bool read(const dictionary& dict);
+
+
+    // Member Operators
+
+        //- Disallow default bitwise assignment
+        void operator=(const limitPressure&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace fv
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#include "pressureControlI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

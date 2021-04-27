@@ -90,9 +90,6 @@ PIMPLE
     nCorrectors     3;
     nNonOrthogonalCorrectors 0;
     momentumPredictor yes;
-
-    pMaxFactor          1.5;
-    pMinFactor          0.9;
 }
 
 relaxationFactors

@@ -54,8 +54,8 @@
 
         pEqn.setReference
         (
-            pressureControl.refCell(),
-            pressureControl.refValue()
+            pressureReference.refCell(),
+            pressureReference.refValue()
         );
 
         pEqn.solve();
@@ -83,7 +83,7 @@
     U.correctBoundaryConditions();
     fvConstraints.constrain(U);
 
-    pressureControl.limit(p);
+    fvConstraints.constrain(p);
 
     // For closed-volume cases adjust the pressure and density levels
     // to obey overall mass continuity

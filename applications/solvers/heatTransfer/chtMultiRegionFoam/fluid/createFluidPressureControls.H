@@ -1,11 +1,11 @@
-PtrList<pressureControl> pressureControlFluid(fluidRegions.size());
+PtrList<pressureReference> pressureReferenceFluid(fluidRegions.size());
 
 forAll(fluidRegions, i)
 {
-    pressureControlFluid.set
+    pressureReferenceFluid.set
     (
         i,
-        new pressureControl
+        new pressureReference
         (
             p_rghFluid[i],
             rhoFluid[i],

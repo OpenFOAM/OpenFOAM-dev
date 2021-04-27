@@ -48,8 +48,8 @@ if (simple.transonic())
 
         p_rghEqn.setReference
         (
-            pressureControl.refCell(),
-            pressureControl.refValue()
+            pressureReference.refCell(),
+            pressureReference.refValue()
         );
 
         p_rghEqn.solve();
@@ -67,8 +67,8 @@ else
 
         p_rghEqn.setReference
         (
-            pressureControl.refCell(),
-            pressureControl.refValue()
+            pressureReference.refCell(),
+            pressureReference.refValue()
         );
 
         p_rghEqn.solve();
@@ -90,7 +90,7 @@ U = HbyA + rAU*fvc::reconstruct((phig + p_rghEqn.flux())/rhorAUf);
 U.correctBoundaryConditions();
 fvConstraints.constrain(U);
 
-pressureControl.limit(p);
+fvConstraints.constrain(p);
 
 // For closed-volume compressible cases adjust the pressure level
 // to obey overall mass continuity

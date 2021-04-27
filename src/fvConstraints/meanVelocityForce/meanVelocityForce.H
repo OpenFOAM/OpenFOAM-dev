@@ -146,14 +146,14 @@ public:
         virtual wordList constrainedFields() const;
 
         //- Add the momentum source and set the 1/A coefficient
-        virtual void constrain
+        virtual bool constrain
         (
             fvMatrix<vector>& eqn,
             const word& fieldName
         ) const;
 
         //- Correct the pressure gradient
-        virtual void constrain(volVectorField& U) const;
+        virtual bool constrain(volVectorField& U) const;
 
         //- Update for mesh changes
         virtual void updateMesh(const mapPolyMesh&);

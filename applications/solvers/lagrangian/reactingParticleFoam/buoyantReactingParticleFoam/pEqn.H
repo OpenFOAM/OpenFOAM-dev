@@ -64,9 +64,9 @@ while (pimple.correctNonOrthogonal())
 
 p = p_rgh + rho*gh;
 
-bool limitedp = pressureControl.limit(p);
+bool constrained = fvConstraints.constrain(p);
 
-if (limitedp)
+if (constrained)
 {
     p_rgh = p - rho*gh;
 }
@@ -74,7 +74,7 @@ if (limitedp)
 // Thermodynamic density update
 thermo.correctRho(psi*p - psip0);
 
-if (limitedp)
+if (constrained)
 {
     rho = thermo.rho();
 }

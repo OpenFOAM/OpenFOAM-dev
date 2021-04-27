@@ -48,8 +48,6 @@ SIMPLE
 {
     nUCorrectors        2;
     nNonOrthogonalCorrectors 0;
-    pMinFactor          0.5;
-    pMaxFactor          2.0;
 
     residualControl
     {

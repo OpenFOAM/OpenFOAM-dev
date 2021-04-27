@@ -15,6 +15,13 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+limitp
+{
+    type       limitPressure;
+
+    min        1e4;
+}
+
 limitTsteam
 {
     type            limitTemperature;
@@ -32,6 +39,5 @@ limitTwater
     max             2000;
     phase           water;
 }
-
 
 // ************************************************************************* //

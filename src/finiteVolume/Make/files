@@ -408,7 +408,7 @@ $(general)/constrainHbyA/constrainHbyA.C
 $(general)/adjustPhi/adjustPhi.C
 $(general)/bound/bound.C
 $(general)/CorrectPhi/correctUphiBCs.C
-$(general)/pressureControl/pressureControl.C
+$(general)/pressureReference/pressureReference.C
 $(general)/levelSet/levelSet.C
 
 solutionControl = $(general)/solutionControl

@@ -87,7 +87,7 @@ volScalarField K("K", 0.5*magSqr(U));
 
 #include "readGravitationalAcceleration.H"
 
-pressureControl pressureControl
+pressureReference pressureReference
 (
     p,
     rho,

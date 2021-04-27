@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,13 +25,13 @@ License
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-inline Foam::label Foam::pressureControl::refCell() const
+inline Foam::label Foam::pressureReference::refCell() const
 {
     return refCell_;
 }
 
 
-inline Foam::scalar Foam::pressureControl::refValue() const
+inline Foam::scalar Foam::pressureReference::refValue() const
 {
     return refValue_;
 }

@@ -80,7 +80,7 @@ Foam::wordList Foam::fv::limitVelocity::constrainedFields() const
 }
 
 
-void Foam::fv::limitVelocity::constrain(volVectorField& U) const
+bool Foam::fv::limitVelocity::constrain(volVectorField& U) const
 {
     const scalar maxSqrU = sqr(max_);
 
@@ -123,6 +123,8 @@ void Foam::fv::limitVelocity::constrain(volVectorField& U) const
             }
         }
     }
+
+    return cells.size();
 }
 
 

@@ -58,12 +58,12 @@ U.correctBoundaryConditions();
 fvConstraints.constrain(U);
 K = 0.5*magSqr(U);
 
-bool limitedp = pressureControl.limit(p);
+bool constrained = fvConstraints.constrain(p);
 
 // Thermodynamic density update
 thermo.correctRho(psi*p - psip0);
 
-if (limitedp)
+if (constrained)
 {
     rho = thermo.rho();
 }

@@ -15,6 +15,14 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+limitp
+{
+    type       limitPressure;
+
+    minFactor  0.5;
+    maxFactor  2;
+}
+
 source1
 {
     type            fixedTemperatureConstraint;

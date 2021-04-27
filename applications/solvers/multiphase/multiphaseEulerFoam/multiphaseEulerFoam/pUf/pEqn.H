@@ -250,8 +250,8 @@ while (pimple.correct())
             {
                 pEqn.setReference
                 (
-                    pressureControl.refCell(),
-                    pressureControl.refValue()
+                    pressureReference.refCell(),
+                    pressureReference.refValue()
                 );
             }
 
@@ -310,7 +310,7 @@ while (pimple.correct())
 
     // Update and limit the static pressure
     p = p_rgh + rho*gh;
-    pressureControl.limit(p);
+    fvConstraints.constrain(p);
 
     // Account for static pressure reference
     if (p_rgh.needReference() && fluid.incompressible())
@@ -319,8 +319,8 @@ while (pimple.correct())
         (
             "p",
             p.dimensions(),
-            pressureControl.refValue()
-          - getRefCellValue(p, pressureControl.refCell())
+            pressureReference.refValue()
+          - getRefCellValue(p, pressureReference.refCell())
         );
     }
 

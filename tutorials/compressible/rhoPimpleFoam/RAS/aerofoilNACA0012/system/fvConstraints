@@ -14,11 +14,21 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+limitp
+{
+    type       limitPressure;
+
+    minFactor  0.1;
+    maxFactor  2;
+}
+
 limitT
 {
     type       limitTemperature;
+
     min        101;
     max        1000;
+
     selectionMode all;
 }
 

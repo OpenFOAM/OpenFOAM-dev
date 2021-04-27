@@ -24,32 +24,32 @@ License
 \*---------------------------------------------------------------------------*/
 
 #define DEFINE_FV_CONSTRAINT_CONSTRAIN(Type, nullArg)                          \
-    virtual void constrain                                                     \
+    virtual bool constrain                                                     \
     (                                                                          \
         fvMatrix<Type>& eqn,                                                   \
         const word& fieldName                                                  \
     ) const;
 
 #define IMPLEMENT_FV_CONSTRAINT_CONSTRAIN(Type, constraintType)                \
-    void Foam::constraintType::constrain                                       \
+    bool Foam::constraintType::constrain                                       \
     (                                                                          \
         fvMatrix<Type>& eqn,                                                   \
         const word& fieldName                                                  \
     ) const                                                                    \
     {                                                                          \
-        constrainType(eqn, fieldName);                                         \
+        return constrainType(eqn, fieldName);                                  \
     }
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #define DEFINE_FV_CONSTRAINT_CONSTRAIN_FIELD(Type, nullArg)                    \
-    virtual void constrain(VolField<Type>& field) const;
+    virtual bool constrain(VolField<Type>& field) const;
 
 #define IMPLEMENT_FV_CONSTRAINT_CONSTRAIN_FIELD(Type, constraintType)          \
-    void Foam::constraintType::constrain(VolField<Type>& field) const          \
+    bool Foam::constraintType::constrain(VolField<Type>& field) const          \
     {                                                                          \
-        constrainType(field);                                                  \
+        return constrainType(field);                                           \
     }
 
 

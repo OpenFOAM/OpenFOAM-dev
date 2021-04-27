@@ -70,7 +70,7 @@ void Foam::fv::fixedValueConstraint::readCoeffs()
 
 
 template<class Type>
-void Foam::fv::fixedValueConstraint::constrainType
+bool Foam::fv::fixedValueConstraint::constrainType
 (
     fvMatrix<Type>& eqn,
     const word& fieldName
@@ -83,6 +83,8 @@ void Foam::fv::fixedValueConstraint::constrainType
         set_.cells(),
         List<Type>(set_.cells().size(), fieldValues_[fieldName]->value<Type>(t))
     );
+
+    return set_.cells().size();
 }
 
 

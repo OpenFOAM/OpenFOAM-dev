@@ -26,11 +26,13 @@ License
 // * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::fvConstraints::constrain(fvMatrix<Type>& eqn) const
+bool Foam::fvConstraints::constrain(fvMatrix<Type>& eqn) const
 {
     checkApplied();
 
     const PtrListDictionary<fvConstraint>& constraintList(*this);
+
+    bool constrained = false;
 
     forAll(constraintList, i)
     {
@@ -46,14 +48,17 @@ void Foam::fvConstraints::constrain(fvMatrix<Type>& eqn) const
                     << " to field " << eqn.psi().name() << endl;
             }
 
-            constraint.constrain(eqn, eqn.psi().name());
+            constrained =
+                constrained || constraint.constrain(eqn, eqn.psi().name());
         }
     }
+
+    return constrained;
 }
 
 
 template<class Type>
-void Foam::fvConstraints::constrain
+bool Foam::fvConstraints::constrain
 (
     GeometricField<Type, fvPatchField, volMesh>& field
 ) const
@@ -61,6 +66,8 @@ void Foam::fvConstraints::constrain
     const word& fieldName = field.name();
 
     const PtrListDictionary<fvConstraint>& constraintList(*this);
+
+    bool constrained = false;
 
     forAll(constraintList, i)
     {
@@ -76,9 +83,12 @@ void Foam::fvConstraints::constrain
                     << " for field " << fieldName << endl;
             }
 
-            constraint.constrain(field);
+            constrained =
+                constrained || constraint.constrain(field);
         }
     }
+
+    return constrained;
 }
 
 

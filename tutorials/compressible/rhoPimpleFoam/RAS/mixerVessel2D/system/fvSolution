@@ -88,9 +88,6 @@ PIMPLE
     nCorrectors         2;
     nNonOrthogonalCorrectors  0;
     momentumPredictor   yes;
-
-    pMax                1.2e5;
-    pMin                0.8e5;
 }
 
 relaxationFactors

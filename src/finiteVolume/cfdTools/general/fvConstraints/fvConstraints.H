@@ -128,11 +128,11 @@ public:
 
             //- Apply constraints to an equation
             template<class Type>
-            void constrain(fvMatrix<Type>& eqn) const;
+            bool constrain(fvMatrix<Type>& eqn) const;
 
             //- Apply constraints to a field
             template<class Type>
-            void constrain
+            bool constrain
             (
                 GeometricField<Type, fvPatchField, volMesh>& field
             ) const;

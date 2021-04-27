@@ -119,7 +119,7 @@ Foam::wordList Foam::fv::fixedTemperatureConstraint::constrainedFields() const
 }
 
 
-void Foam::fv::fixedTemperatureConstraint::constrain
+bool Foam::fv::fixedTemperatureConstraint::constrain
 (
     fvMatrix<scalar>& eqn,
     const word& fieldName
@@ -151,6 +151,8 @@ void Foam::fv::fixedTemperatureConstraint::constrain
             break;
         }
     }
+
+    return cells.size();
 }
 
 

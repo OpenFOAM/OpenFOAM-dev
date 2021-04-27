@@ -76,7 +76,7 @@ class fvConstraint
 
         //- Apply a constraint to an equation
         template<class Type>
-        void constrainType
+        bool constrainType
         (
             fvMatrix<Type>& eqn,
             const word& fieldName
@@ -84,7 +84,7 @@ class fvConstraint
 
         //- Apply constraint to a field
         template<class Type>
-        void constrainType(VolField<Type>& field) const;
+        bool constrainType(VolField<Type>& field) const;
 
 
 public:

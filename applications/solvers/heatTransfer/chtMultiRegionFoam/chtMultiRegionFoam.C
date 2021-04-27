@@ -45,7 +45,7 @@ Description
 #include "fvConstraints.H"
 #include "coordinateSystem.H"
 #include "pimpleMultiRegionControl.H"
-#include "pressureControl.H"
+#include "pressureReference.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

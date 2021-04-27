@@ -116,7 +116,7 @@ public:
         virtual wordList constrainedFields() const;
 
         //- Constrain the velocity field
-        virtual void constrain(volVectorField& U) const;
+        virtual bool constrain(volVectorField& U) const;
 
         //- Update for mesh changes
         virtual void updateMesh(const mapPolyMesh&);

@@ -89,7 +89,7 @@ class fixedValueConstraint
 
         //- Set value on a field
         template<class Type>
-        void constrainType(fvMatrix<Type>& eqn, const word& fieldName) const;
+        bool constrainType(fvMatrix<Type>& eqn, const word& fieldName) const;
 
 
 public:

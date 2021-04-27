@@ -38,7 +38,7 @@ Description
 #include "phaseSystem.H"
 #include "phaseDynamicMomentumTransportModel.H"
 #include "pimpleControl.H"
-#include "pressureControl.H"
+#include "pressureReference.H"
 #include "localEulerDdtScheme.H"
 #include "fvcSmooth.H"
 

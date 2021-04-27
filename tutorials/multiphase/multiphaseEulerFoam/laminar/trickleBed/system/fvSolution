@@ -64,7 +64,6 @@ PIMPLE
 
     partialElimination true;
 
-    pMin             1e4;
 }
 
 relaxationFactors

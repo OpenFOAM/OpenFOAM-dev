@@ -69,9 +69,6 @@ PIMPLE
     nNonOrthogonalCorrectors 0;
     momentumPredictor   yes;
 
-    pMaxFactor          1.5;
-    pMinFactor          0.9;
-
     maxCo           2.5;
     rDeltaTSmoothingCoeff 0.5;
     alphaTemp       1;

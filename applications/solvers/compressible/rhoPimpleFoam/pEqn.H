@@ -82,8 +82,8 @@ if (pimple.transonic())
 
         pEqn.setReference
         (
-            pressureControl.refCell(),
-            pressureControl.refValue()
+            pressureReference.refCell(),
+            pressureReference.refValue()
         );
 
         pEqn.solve();
@@ -121,8 +121,8 @@ else
 
         pEqn.setReference
         (
-            pressureControl.refCell(),
-            pressureControl.refValue()
+            pressureReference.refCell(),
+            pressureReference.refValue()
         );
 
         pEqn.solve();
@@ -140,12 +140,12 @@ if (mesh.steady())
 }
 else
 {
-    const bool limitedp = pressureControl.limit(p);
+    const bool constrained = fvConstraints.constrain(p);
 
     // Thermodynamic density update
     thermo.correctRho(psi*p - psip0);
 
-    if (limitedp)
+    if (constrained)
     {
         rho = thermo.rho();
     }
@@ -164,7 +164,7 @@ K = 0.5*magSqr(U);
 
 if (mesh.steady())
 {
-    pressureControl.limit(p);
+    fvConstraints.constrain(p);
 }
 
 // For steady compressible closed-volume cases adjust the pressure level

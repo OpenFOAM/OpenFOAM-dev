@@ -47,7 +47,7 @@
 
     pimpleNoLoopControl& pimple = pimples.pimple(i);
 
-    pressureControl& pressureControl = pressureControlFluid[i];
+    pressureReference& pressureReference = pressureReferenceFluid[i];
 
     scalar cumulativeContErr = cumulativeContErrs[i];
 

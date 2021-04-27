@@ -56,9 +56,6 @@ PIMPLE
     consistent          yes;
     simpleRho           yes;
 
-    pMaxFactor          1.5;
-    pMinFactor          0.9;
-
     outerCorrectorResidualControl
     {
         "(U|k|epsilon)"

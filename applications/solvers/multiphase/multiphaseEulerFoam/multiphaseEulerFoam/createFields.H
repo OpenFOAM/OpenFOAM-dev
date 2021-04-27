@@ -36,7 +36,7 @@ if (fluid.found("pMin"))
         << pimple.dict().name() << endl;
 }
 
-pressureControl pressureControl
+pressureReference pressureReference
 (
     p,
     p_rgh,
@@ -48,7 +48,6 @@ pressureControl pressureControl
 if (fluid.incompressible())
 {
     p = p_rgh + fluid.rho()*gh;
-    pressureControl.limit(p);
 }
 
 if (p_rgh.needReference() && fluid.incompressible())
@@ -57,8 +56,8 @@ if (p_rgh.needReference() && fluid.incompressible())
     (
         "p",
         p.dimensions(),
-        pressureControl.refValue()
-      - getRefCellValue(p, pressureControl.refCell())
+        pressureReference.refValue()
+      - getRefCellValue(p, pressureReference.refCell())
     );
 }
 

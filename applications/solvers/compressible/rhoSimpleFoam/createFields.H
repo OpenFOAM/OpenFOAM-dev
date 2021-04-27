@@ -38,7 +38,7 @@ volVectorField U
 
 #include "compressibleCreatePhi.H"
 
-pressureControl pressureControl
+pressureReference pressureReference
 (
     p,
     rho,

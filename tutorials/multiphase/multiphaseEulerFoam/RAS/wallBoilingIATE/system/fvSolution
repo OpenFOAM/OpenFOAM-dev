@@ -76,7 +76,6 @@ PIMPLE
 
     faceMomentum        yes;
 
-    pMin                1e4;
 }
 
 relaxationFactors

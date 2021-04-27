@@ -122,7 +122,7 @@ public:
         virtual wordList constrainedFields() const;
 
         //- Constrain the energy field
-        virtual void constrain(volScalarField& he) const;
+        virtual bool constrain(volScalarField& he) const;
 
         //- Update for mesh changes
         virtual void updateMesh(const mapPolyMesh&);

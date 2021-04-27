@@ -88,7 +88,7 @@ Foam::wordList Foam::fv::limitTemperature::constrainedFields() const
 }
 
 
-void Foam::fv::limitTemperature::constrain(volScalarField& he) const
+bool Foam::fv::limitTemperature::constrain(volScalarField& he) const
 {
     const basicThermo& thermo =
         mesh().lookupObject<basicThermo>
@@ -137,6 +137,8 @@ void Foam::fv::limitTemperature::constrain(volScalarField& he) const
             }
         }
     }
+
+    return cells.size();
 }
 
 
