@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  dev
+    \\  /    A nd           | Version:  8
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
@@ -39,6 +39,8 @@ solvers
 SIMPLE
 {
     nNonOrthogonalCorrectors 0;
+    pMinFactor      0.1;
+    pMaxFactor      2;
     transonic       yes;
     consistent      yes;
 

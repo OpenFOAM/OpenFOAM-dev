@@ -19,10 +19,10 @@ thermoType
     type            heRhoThermo;
     mixture         pureMixture;
     transport       const;
-    thermo          hConst;
-    equationOfState perfectFluid;
+    thermo          eConst;
+    equationOfState rPolynomial;
     specie          specie;
-    energy          sensibleEnthalpy;
+    energy          sensibleInternalEnergy;
 }
 
 mixture
@@ -34,12 +34,11 @@ mixture
     }
     equationOfState
     {
-        R           3000;      // [J/kg/K]
-        rho0        1027;      // [kg/m^3]
+        C (0.001278 -2.1055e-06 3.9689e-09 4.3772e-13 -2.0225e-16); // [J/kg/K]
     }
     thermodynamics
     {
-        Cp          4181;      // [J/kg/K] at T = 293 K
+        Cv          4181;      // [J/kg/K] at T = 293 K
         Hf          0;
     }
     transport

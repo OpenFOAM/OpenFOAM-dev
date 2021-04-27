@@ -34,7 +34,7 @@ mixture
     }
     equationOfState
     {
-        C (0.001278 -2.1055e-06 3.9689e-09 4.3772e-13 -2.0225e-16);      // [J/kg/K]
+        C (0.001278 -2.1055e-06 3.9689e-09 4.3772e-13 -2.0225e-16); // [J/kg/K]
     }
     thermodynamics
     {
@@ -44,7 +44,7 @@ mixture
     transport
     {
         mu          1.0e-03;    // [kg/m/s]
-        Pr          0.7;
+        Pr          7;
     }
 }
 
