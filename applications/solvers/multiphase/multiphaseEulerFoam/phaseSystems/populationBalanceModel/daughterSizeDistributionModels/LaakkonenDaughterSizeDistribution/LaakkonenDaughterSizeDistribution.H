@@ -23,7 +23,7 @@ License
 
 Class
     Foam::diameterModels::daughterSizeDistributionModels::
-    LaakkonenAlopaeusAittamaaDsd
+    LaakkonenDaughterSizeDistribution
 
 Description
     Daughter size distribution model of Laakkonen et al. (2007). Note that the
@@ -64,12 +64,12 @@ Usage
     \endtable
 
 SourceFiles
-    LaakkonenAlopaeusAittamaaDsd.C
+    LaakkonenBinaryBreakup.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef LaakkonenAlopaeusAittamaaDsd_H
-#define LaakkonenAlopaeusAittamaaDsd_H
+#ifndef LaakkonenDaughterSizeDistribution_H
+#define LaakkonenDaughterSizeDistribution_H
 
 #include "daughterSizeDistributionModel.H"
 
@@ -83,10 +83,10 @@ namespace daughterSizeDistributionModels
 {
 
 /*---------------------------------------------------------------------------*\
-                Class LaakkonenAlopaeusAittamaaDsd Declaration
+              Class LaakkonenDaughterSizeDistribution Declaration
 \*---------------------------------------------------------------------------*/
 
-class LaakkonenAlopaeusAittamaaDsd
+class LaakkonenDaughterSizeDistribution
 :
     public daughterSizeDistributionModel
 {
@@ -99,12 +99,12 @@ class LaakkonenAlopaeusAittamaaDsd
 public:
 
     //- Runtime type information
-    TypeName("LaakkonenAlopaeusAittamaa");
+    TypeName("Laakkonen");
 
 
     // Constructor
 
-        LaakkonenAlopaeusAittamaaDsd
+        LaakkonenDaughterSizeDistribution
         (
             const breakupModel& breakup,
             const dictionary& dict
@@ -112,7 +112,7 @@ public:
 
 
     //- Destructor
-    virtual ~LaakkonenAlopaeusAittamaaDsd();
+    virtual ~LaakkonenDaughterSizeDistribution();
 
 
     // Member Functions
