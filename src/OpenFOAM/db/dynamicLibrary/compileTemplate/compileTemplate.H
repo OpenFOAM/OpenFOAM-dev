@@ -63,14 +63,6 @@ class compileTemplate
         (
             dynamicCode& dynCode,
             const dynamicCodeContext& context,
-            const word& name,
-            const word& type
-        ) const;
-
-        void setFilterVariable
-        (
-            dynamicCode& dynCode,
-            const dynamicCodeContext& context,
             const Pair<word>& substitution
         ) const;
 

@@ -18,7 +18,7 @@ solver
 (
     EulerImplicit
     ode
-    noChemistrySolver
+    none
 );
 
 solverRenamed
@@ -28,7 +28,7 @@ solverRenamed
 
 method
 (
-    Standard
+    standard
     TDAC
 );
 

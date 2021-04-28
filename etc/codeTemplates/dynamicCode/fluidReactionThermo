@@ -36,8 +36,8 @@ energy
 
 mixture
 (
-    singleComponentMixture
-    coefficientMultiComponentMixture
+    pureMixture
+    multiComponentMixture
     valueMultiComponentMixture
     coefficientWilkeMultiComponentMixture
 );

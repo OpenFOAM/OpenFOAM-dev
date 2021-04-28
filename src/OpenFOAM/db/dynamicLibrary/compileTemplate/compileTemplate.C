@@ -69,10 +69,13 @@ void Foam::compileTemplate::setFilterVariable
 (
     dynamicCode& dynCode,
     const dynamicCodeContext& context,
-    const word& name,
-    const word& type
+    const Pair<word>& substitution
 ) const
 {
+    const word& name(substitution.first());
+    word type(substitution.second());
+    const word typeRenameMapName(name + "Renamed");
+
     if (context.dict().found(name))
     {
         const HashSet<word> types(context.dict().lookup(name));
@@ -84,21 +87,6 @@ void Foam::compileTemplate::setFilterVariable
                 << exit(FatalIOError);
         }
     }
-
-    dynCode.setFilterVariable(name, type);
-}
-
-
-void Foam::compileTemplate::setFilterVariable
-(
-    dynamicCode& dynCode,
-    const dynamicCodeContext& context,
-    const Pair<word>& substitution
-) const
-{
-    const word& name(substitution.first());
-    word type(substitution.second());
-    const word typeRenameMapName(name + "Renamed");
 
     if (context.dict().found(typeRenameMapName))
     {
@@ -113,7 +101,7 @@ void Foam::compileTemplate::setFilterVariable
         }
     }
 
-    setFilterVariable(dynCode, context, name, type);
+    dynCode.setFilterVariable(name, type);
 
     const word typeBase(name + "Base");
     if (context.dict().found(typeBase))
