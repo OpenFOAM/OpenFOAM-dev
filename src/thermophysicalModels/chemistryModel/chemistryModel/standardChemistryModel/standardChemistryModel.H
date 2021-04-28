@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::StandardChemistryModel
+    Foam::standardChemistryModel
 
 Description
     Extends base chemistry model by adding a thermo package, and ODE functions.
@@ -30,13 +30,13 @@ Description
     terms.
 
 SourceFiles
-    StandardChemistryModelI.H
-    StandardChemistryModel.C
+    standardChemistryModelI.H
+    standardChemistryModel.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef StandardChemistryModel_H
-#define StandardChemistryModel_H
+#ifndef standardChemistryModel_H
+#define standardChemistryModel_H
 
 #include "basicChemistryModel.H"
 #include "ReactionList.H"
@@ -53,11 +53,11 @@ namespace Foam
 class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                   Class StandardChemistryModel Declaration
+                   Class standardChemistryModel Declaration
 \*---------------------------------------------------------------------------*/
 
 template<class ThermoType>
-class StandardChemistryModel
+class standardChemistryModel
 :
     public basicChemistryModel,
     public ODESystem
@@ -79,13 +79,13 @@ protected:
         //  destruction.
         class reactionEvaluationScope
         {
-            const StandardChemistryModel<ThermoType>& chemistry_;
+            const standardChemistryModel<ThermoType>& chemistry_;
 
         public:
 
             reactionEvaluationScope
             (
-                const StandardChemistryModel<ThermoType>& chemistry
+                const standardChemistryModel<ThermoType>& chemistry
             )
             :
                 chemistry_(chemistry)
@@ -155,14 +155,14 @@ public:
     // Constructors
 
         //- Construct from thermo
-        StandardChemistryModel(const fluidReactionThermo& thermo);
+        standardChemistryModel(const fluidReactionThermo& thermo);
 
         //- Disallow default bitwise copy construction
-        StandardChemistryModel(const StandardChemistryModel&) = delete;
+        standardChemistryModel(const standardChemistryModel&) = delete;
 
 
     //- Destructor
-    virtual ~StandardChemistryModel();
+    virtual ~standardChemistryModel();
 
 
     // Member Functions
@@ -275,7 +275,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const StandardChemistryModel&) = delete;
+        void operator=(const standardChemistryModel&) = delete;
 };
 
 
@@ -285,12 +285,12 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#include "StandardChemistryModelI.H"
+#include "standardChemistryModelI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #ifdef NoRepository
-    #include "StandardChemistryModel.C"
+    #include "standardChemistryModel.C"
 #endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

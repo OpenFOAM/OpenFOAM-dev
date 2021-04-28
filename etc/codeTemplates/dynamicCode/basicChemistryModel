@@ -32,11 +32,6 @@ method
     TDAC
 );
 
-methodRenamed
-(
-    standard Standard
-);
-
 codeOptions
 #{
 EXE_INC = \

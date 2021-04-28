@@ -25,7 +25,7 @@ Class
     Foam::TDACChemistryModel
 
 Description
-    Extends StandardChemistryModel by adding the TDAC method.
+    Extends standardChemistryModel by adding the TDAC method.
 
     References:
     \verbatim
@@ -64,7 +64,7 @@ SourceFiles
 #ifndef TDACChemistryModel_H
 #define TDACChemistryModel_H
 
-#include "StandardChemistryModel.H"
+#include "standardChemistryModel.H"
 #include "chemistryReductionMethod.H"
 #include "chemistryTabulationMethod.H"
 #include "OFstream.H"
@@ -81,7 +81,7 @@ namespace Foam
 template<class ThermoType>
 class TDACChemistryModel
 :
-    public StandardChemistryModel<ThermoType>
+    public standardChemistryModel<ThermoType>
 {
     // Private member data
 
@@ -177,7 +177,7 @@ public:
 
 
         // Chemistry model functions (overriding functions in
-        // StandardChemistryModel to use the private solve function)
+        // standardChemistryModel to use the private solve function)
 
             //- Solve the reaction system for the given time step
             //  and return the characteristic time
@@ -188,7 +188,7 @@ public:
             virtual scalar solve(const scalarField& deltaT);
 
 
-        // ODE functions (overriding functions in StandardChemistryModel to take
+        // ODE functions (overriding functions in standardChemistryModel to take
         // into account the variable number of species)
 
             virtual void derivatives

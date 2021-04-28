@@ -36,7 +36,7 @@ Foam::TDACChemistryModel<ThermoType>::TDACChemistryModel
     const fluidReactionThermo& thermo
 )
 :
-    StandardChemistryModel<ThermoType>(thermo),
+    standardChemistryModel<ThermoType>(thermo),
     timeSteps_(0),
     NsDAC_(this->nSpecie_),
     completeC_(this->nSpecie_, 0),

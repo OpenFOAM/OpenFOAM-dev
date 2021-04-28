@@ -23,14 +23,14 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "StandardChemistryModel.H"
+#include "standardChemistryModel.H"
 #include "UniformField.H"
 #include "extrapolatedCalculatedFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::StandardChemistryModel<ThermoType>::StandardChemistryModel
+Foam::standardChemistryModel<ThermoType>::standardChemistryModel
 (
     const fluidReactionThermo& thermo
 )
@@ -70,7 +70,7 @@ Foam::StandardChemistryModel<ThermoType>::StandardChemistryModel
         );
     }
 
-    Info<< "StandardChemistryModel: Number of species = " << nSpecie_
+    Info<< "standardChemistryModel: Number of species = " << nSpecie_
         << " and reactions = " << nReaction_ << endl;
 }
 
@@ -78,14 +78,14 @@ Foam::StandardChemistryModel<ThermoType>::StandardChemistryModel
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 template<class ThermoType>
-Foam::StandardChemistryModel<ThermoType>::~StandardChemistryModel()
+Foam::standardChemistryModel<ThermoType>::~standardChemistryModel()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-void Foam::StandardChemistryModel<ThermoType>::omega
+void Foam::standardChemistryModel<ThermoType>::omega
 (
     const scalar p,
     const scalar T,
@@ -106,7 +106,7 @@ void Foam::StandardChemistryModel<ThermoType>::omega
 
 
 template<class ThermoType>
-void Foam::StandardChemistryModel<ThermoType>::derivatives
+void Foam::standardChemistryModel<ThermoType>::derivatives
 (
     const scalar t,
     const scalarField& c,
@@ -149,7 +149,7 @@ void Foam::StandardChemistryModel<ThermoType>::derivatives
 
 
 template<class ThermoType>
-void Foam::StandardChemistryModel<ThermoType>::jacobian
+void Foam::standardChemistryModel<ThermoType>::jacobian
 (
     const scalar t,
     const scalarField& c,
@@ -232,7 +232,7 @@ void Foam::StandardChemistryModel<ThermoType>::jacobian
 
 template<class ThermoType>
 Foam::tmp<Foam::volScalarField>
-Foam::StandardChemistryModel<ThermoType>::tc() const
+Foam::standardChemistryModel<ThermoType>::tc() const
 {
     tmp<volScalarField> ttc
     (
@@ -321,7 +321,7 @@ Foam::StandardChemistryModel<ThermoType>::tc() const
 
 template<class ThermoType>
 Foam::tmp<Foam::volScalarField>
-Foam::StandardChemistryModel<ThermoType>::Qdot() const
+Foam::standardChemistryModel<ThermoType>::Qdot() const
 {
     tmp<volScalarField> tQdot
     (
@@ -355,7 +355,7 @@ Foam::StandardChemistryModel<ThermoType>::Qdot() const
 
 template<class ThermoType>
 Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
-Foam::StandardChemistryModel<ThermoType>::calculateRR
+Foam::standardChemistryModel<ThermoType>::calculateRR
 (
     const label ri,
     const label si
@@ -422,7 +422,7 @@ Foam::StandardChemistryModel<ThermoType>::calculateRR
 
 
 template<class ThermoType>
-void Foam::StandardChemistryModel<ThermoType>::calculate()
+void Foam::standardChemistryModel<ThermoType>::calculate()
 {
     if (!this->chemistry_)
     {
@@ -461,7 +461,7 @@ void Foam::StandardChemistryModel<ThermoType>::calculate()
 
 template<class ThermoType>
 template<class DeltaTType>
-Foam::scalar Foam::StandardChemistryModel<ThermoType>::solve
+Foam::scalar Foam::standardChemistryModel<ThermoType>::solve
 (
     const DeltaTType& deltaT
 )
@@ -536,7 +536,7 @@ Foam::scalar Foam::StandardChemistryModel<ThermoType>::solve
 
 
 template<class ThermoType>
-Foam::scalar Foam::StandardChemistryModel<ThermoType>::solve
+Foam::scalar Foam::standardChemistryModel<ThermoType>::solve
 (
     const scalar deltaT
 )
@@ -551,7 +551,7 @@ Foam::scalar Foam::StandardChemistryModel<ThermoType>::solve
 
 
 template<class ThermoType>
-Foam::scalar Foam::StandardChemistryModel<ThermoType>::solve
+Foam::scalar Foam::standardChemistryModel<ThermoType>::solve
 (
     const scalarField& deltaT
 )

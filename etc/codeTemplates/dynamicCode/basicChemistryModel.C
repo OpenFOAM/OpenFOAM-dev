@@ -94,7 +94,7 @@ namespace Foam
 
 namespace Foam
 {
-    defineChemistrySolver(StandardChemistryModel, ThermoPhysics);
+    defineChemistrySolver(standardChemistryModel, ThermoPhysics);
     defineChemistryReductionMethod(nullArg, ThermoPhysics);
     defineChemistryTabulationMethod(nullArg, ThermoPhysics);
 }

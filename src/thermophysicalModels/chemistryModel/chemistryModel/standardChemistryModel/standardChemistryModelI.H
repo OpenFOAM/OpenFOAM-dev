@@ -29,7 +29,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class ThermoType>
-inline Foam::label Foam::StandardChemistryModel<ThermoType>::nEqns() const
+inline Foam::label Foam::standardChemistryModel<ThermoType>::nEqns() const
 {
     // nEqns = number of species + temperature + pressure
     return nSpecie_ + 2;
@@ -38,7 +38,7 @@ inline Foam::label Foam::StandardChemistryModel<ThermoType>::nEqns() const
 
 template<class ThermoType>
 inline Foam::PtrList<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>&
-Foam::StandardChemistryModel<ThermoType>::RR()
+Foam::standardChemistryModel<ThermoType>::RR()
 {
     return RR_;
 }
@@ -46,7 +46,7 @@ Foam::StandardChemistryModel<ThermoType>::RR()
 
 template<class ThermoType>
 inline const Foam::multiComponentMixture<ThermoType>&
-Foam::StandardChemistryModel<ThermoType>::mixture() const
+Foam::standardChemistryModel<ThermoType>::mixture() const
 {
     return mixture_;
 }
@@ -54,7 +54,7 @@ Foam::StandardChemistryModel<ThermoType>::mixture() const
 
 template<class ThermoType>
 inline const Foam::PtrList<Foam::Reaction<ThermoType>>&
-Foam::StandardChemistryModel<ThermoType>::reactions() const
+Foam::standardChemistryModel<ThermoType>::reactions() const
 {
     return reactions_;
 }
@@ -62,35 +62,35 @@ Foam::StandardChemistryModel<ThermoType>::reactions() const
 
 template<class ThermoType>
 inline const Foam::PtrList<ThermoType>&
-Foam::StandardChemistryModel<ThermoType>::specieThermos() const
+Foam::standardChemistryModel<ThermoType>::specieThermos() const
 {
     return specieThermos_;
 }
 
 
 template<class ThermoType>
-inline Foam::label Foam::StandardChemistryModel<ThermoType>::nSpecie() const
+inline Foam::label Foam::standardChemistryModel<ThermoType>::nSpecie() const
 {
     return nSpecie_;
 }
 
 
 template<class ThermoType>
-inline Foam::label Foam::StandardChemistryModel<ThermoType>::nReaction() const
+inline Foam::label Foam::standardChemistryModel<ThermoType>::nReaction() const
 {
     return nReaction_;
 }
 
 
 template<class ThermoType>
-inline Foam::scalar Foam::StandardChemistryModel<ThermoType>::Treact() const
+inline Foam::scalar Foam::standardChemistryModel<ThermoType>::Treact() const
 {
     return Treact_;
 }
 
 
 template<class ThermoType>
-inline Foam::scalar& Foam::StandardChemistryModel<ThermoType>::Treact()
+inline Foam::scalar& Foam::standardChemistryModel<ThermoType>::Treact()
 {
     return Treact_;
 }
@@ -98,14 +98,14 @@ inline Foam::scalar& Foam::StandardChemistryModel<ThermoType>::Treact()
 
 template<class ThermoType>
 inline const Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
-Foam::StandardChemistryModel<ThermoType>::RR(const label i) const
+Foam::standardChemistryModel<ThermoType>::RR(const label i) const
 {
     return RR_[i];
 }
 
 template<class ThermoType>
 Foam::DimensionedField<Foam::scalar, Foam::volMesh>&
-Foam::StandardChemistryModel<ThermoType>::RR(const label i)
+Foam::standardChemistryModel<ThermoType>::RR(const label i)
 {
     return RR_[i];
 }
