@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "LaakkonenAlopaeusAittamaa.H"
+#include "Laakkonen.H"
 #include "addToRunTimeSelectionTable.H"
 #include "phaseDynamicMomentumTransportModel.H"
 
@@ -35,11 +35,11 @@ namespace diameterModels
 {
 namespace breakupModels
 {
-    defineTypeNameAndDebug(LaakkonenAlopaeusAittamaa, 0);
+    defineTypeNameAndDebug(Laakkonen, 0);
     addToRunTimeSelectionTable
     (
         breakupModel,
-        LaakkonenAlopaeusAittamaa,
+        Laakkonen,
         dictionary
     );
 }
@@ -49,8 +49,8 @@ namespace breakupModels
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::diameterModels::breakupModels::LaakkonenAlopaeusAittamaa::
-LaakkonenAlopaeusAittamaa
+Foam::diameterModels::breakupModels::Laakkonen::
+Laakkonen
 (
     const populationBalanceModel& popBal,
     const dictionary& dict
@@ -75,7 +75,7 @@ LaakkonenAlopaeusAittamaa
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void
-Foam::diameterModels::breakupModels::LaakkonenAlopaeusAittamaa::setBreakupRate
+Foam::diameterModels::breakupModels::Laakkonen::setBreakupRate
 (
     volScalarField& breakupRate,
     const label i

@@ -64,12 +64,12 @@ $(binaryBreakupModels)/powerLawUniformBinary/powerLawUniformBinary.C
 breakupModels = populationBalanceModel/breakupModels
 $(breakupModels)/breakupModel/breakupModel.C
 $(breakupModels)/exponential/exponential.C
-$(breakupModels)/LaakkonenAlopaeusAittamaa/LaakkonenAlopaeusAittamaa.C
+$(breakupModels)/Laakkonen/Laakkonen.C
 $(breakupModels)/powerLaw/powerLaw.C
 
 daughterSizeDistributionModels = populationBalanceModel/daughterSizeDistributionModels
 $(daughterSizeDistributionModels)/daughterSizeDistributionModel/daughterSizeDistributionModel.C
-$(daughterSizeDistributionModels)/LaakkonenAlopaeusAittamaaDsd/LaakkonenAlopaeusAittamaaDsd.C
+$(daughterSizeDistributionModels)/LaakkonenDaughterSizeDistribution/LaakkonenDaughterSizeDistribution.C
 $(daughterSizeDistributionModels)/uniformBinary/uniformBinary.C
 
 driftModels = populationBalanceModel/driftModels

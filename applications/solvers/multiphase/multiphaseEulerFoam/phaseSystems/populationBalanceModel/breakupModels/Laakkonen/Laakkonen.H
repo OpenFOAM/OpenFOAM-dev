@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::diameterModels::breakupModels::LaakkonenAlopaeusAittamaa
+    Foam::diameterModels::breakupModels::Laakkonen
 
 Description
     Model of Laakkonen et al. (2007). The total breakup rate is calculated by
@@ -68,12 +68,12 @@ Usage
     \endtable
 
 SourceFiles
-    LaakkonenAlopaeusAittamaa.C
+    Laakkonen.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef LaakkonenAlopaeusAittamaa_H
-#define LaakkonenAlopaeusAittamaa_H
+#ifndef Laakkonen_H
+#define Laakkonen_H
 
 #include "breakupModel.H"
 
@@ -87,10 +87,10 @@ namespace breakupModels
 {
 
 /*---------------------------------------------------------------------------*\
-                  Class LaakkonenAlopaeusAittamaa Declaration
+                          Class Laakkonen Declaration
 \*---------------------------------------------------------------------------*/
 
-class LaakkonenAlopaeusAittamaa
+class Laakkonen
 :
     public breakupModel
 {
@@ -109,11 +109,11 @@ class LaakkonenAlopaeusAittamaa
 public:
 
     //- Runtime type information
-    TypeName("LaakkonenAlopaeusAittamaa");
+    TypeName("Laakkonen");
 
     // Constructor
 
-        LaakkonenAlopaeusAittamaa
+        Laakkonen
         (
             const populationBalanceModel& popBal,
             const dictionary& dict
@@ -121,7 +121,7 @@ public:
 
 
     //- Destructor
-    virtual ~LaakkonenAlopaeusAittamaa()
+    virtual ~Laakkonen()
     {}
 
 

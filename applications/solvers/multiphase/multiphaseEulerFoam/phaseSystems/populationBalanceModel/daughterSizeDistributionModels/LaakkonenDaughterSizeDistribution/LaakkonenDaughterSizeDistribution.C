@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "LaakkonenAlopaeusAittamaaDsd.H"
+#include "LaakkonenDaughterSizeDistribution.H"
 #include "addToRunTimeSelectionTable.H"
 #include "breakupModel.H"
 
@@ -35,11 +35,11 @@ namespace diameterModels
 {
 namespace daughterSizeDistributionModels
 {
-    defineTypeNameAndDebug(LaakkonenAlopaeusAittamaaDsd, 0);
+    defineTypeNameAndDebug(LaakkonenDaughterSizeDistribution, 0);
     addToRunTimeSelectionTable
     (
         daughterSizeDistributionModel,
-        LaakkonenAlopaeusAittamaaDsd,
+        LaakkonenDaughterSizeDistribution,
         dictionary
     );
 }
@@ -50,7 +50,7 @@ namespace daughterSizeDistributionModels
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::diameterModels::daughterSizeDistributionModels::
-LaakkonenAlopaeusAittamaaDsd::LaakkonenAlopaeusAittamaaDsd
+LaakkonenDaughterSizeDistribution::LaakkonenDaughterSizeDistribution
 (
     const breakupModel& breakup,
     const dictionary& dict
@@ -64,7 +64,7 @@ LaakkonenAlopaeusAittamaaDsd::LaakkonenAlopaeusAittamaaDsd
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::diameterModels::daughterSizeDistributionModels::
-LaakkonenAlopaeusAittamaaDsd::~LaakkonenAlopaeusAittamaaDsd()
+LaakkonenDaughterSizeDistribution::~LaakkonenDaughterSizeDistribution()
 {}
 
 
@@ -72,7 +72,7 @@ LaakkonenAlopaeusAittamaaDsd::~LaakkonenAlopaeusAittamaaDsd()
 
 Foam::dimensionedScalar
 Foam::diameterModels::daughterSizeDistributionModels::
-LaakkonenAlopaeusAittamaaDsd::antiderivative
+LaakkonenDaughterSizeDistribution::antiderivative
 (
     const dimensionedScalar& xk,
     const dimensionedScalar& v,
@@ -98,7 +98,7 @@ LaakkonenAlopaeusAittamaaDsd::antiderivative
 
 Foam::dimensionedScalar
 Foam::diameterModels::daughterSizeDistributionModels::
-LaakkonenAlopaeusAittamaaDsd::calcNik
+LaakkonenDaughterSizeDistribution::calcNik
 (
     const label i,
     const label k
