@@ -58,8 +58,6 @@ PIMPLE
     nOuterCorrectors 1;
     nCorrectors     1;
 
-    pMin            1e4;
-
     pRefCell        0;
     pRefValue       1e5;
 }

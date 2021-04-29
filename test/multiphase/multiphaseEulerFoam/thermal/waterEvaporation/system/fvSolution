@@ -54,8 +54,6 @@ PIMPLE
     nCorrectors     1;
     nNonOrthogonalCorrectors 0;
 
-    pMin            1e4;
-
     pRefCell        0;
     pRefValue       1e5;
 }

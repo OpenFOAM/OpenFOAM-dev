@@ -59,8 +59,6 @@ PIMPLE
     nCorrectors      2;
 
     faceMomentum     true;
-
-    pMin             1e4;
 }
 
 relaxationFactors
