@@ -35,8 +35,8 @@ License
 
 namespace Foam
 {
-    forGases(makeChemistryTabulationMethod, ISAT);
-    forLiquids(makeChemistryTabulationMethod, ISAT);
+    forCoeffGases(makeChemistryTabulationMethod, ISAT);
+    forCoeffLiquids(makeChemistryTabulationMethod, ISAT);
 }
 
 

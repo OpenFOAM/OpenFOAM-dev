@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -215,7 +215,7 @@ inline void Foam::adiabaticPerfectFluid<Specie>::operator+=
     const adiabaticPerfectFluid<Specie>& pf
 )
 {
-    NotImplemented;
+    noCoefficientMixing(adiabaticPerfectFluid);
 }
 
 
@@ -235,7 +235,7 @@ inline Foam::adiabaticPerfectFluid<Specie> Foam::operator+
     const adiabaticPerfectFluid<Specie>& pf2
 )
 {
-    NotImplemented;
+    noCoefficientMixing(adiabaticPerfectFluid);
     return pf1;
 }
 
@@ -265,7 +265,7 @@ inline Foam::adiabaticPerfectFluid<Specie> Foam::operator==
     const adiabaticPerfectFluid<Specie>& pf2
 )
 {
-    NotImplemented;
+    noCoefficientMixing(adiabaticPerfectFluid);
     return pf1;
 }
 

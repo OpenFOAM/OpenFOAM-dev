@@ -47,23 +47,43 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#define forGasEqns(Mu, He, Cp, Macro, Args...)                           \
-    forThermo(Mu, He, Cp, Boussinesq, specie, Macro, Args);              \
+#define forGasEqns(Mu, He, Cp, Macro, Args...)                                 \
+    forThermo(Mu, He, Cp, Boussinesq, specie, Macro, Args);                    \
     forThermo(Mu, He, Cp, perfectGas, specie, Macro, Args)
 
-#define forGasEnergiesAndThermos(Mu, Macro, Args...)                     \
-    forGasEqns(Mu, sensibleEnthalpy, hConstThermo, Macro, Args);         \
-    forGasEqns(Mu, sensibleEnthalpy, janafThermo, Macro, Args);          \
-    forGasEqns(Mu, sensibleInternalEnergy, eConstThermo, Macro, Args);   \
-    forGasEqns(Mu, sensibleInternalEnergy, hConstThermo, Macro, Args);   \
+#define forGasEnergiesAndThermos(Mu, Macro, Args...)                           \
+    forGasEqns(Mu, sensibleEnthalpy, hConstThermo, Macro, Args);               \
+    forGasEqns(Mu, sensibleEnthalpy, janafThermo, Macro, Args);                \
+    forGasEqns(Mu, sensibleInternalEnergy, eConstThermo, Macro, Args);         \
+    forGasEqns(Mu, sensibleInternalEnergy, hConstThermo, Macro, Args);         \
     forGasEqns(Mu, sensibleInternalEnergy, janafThermo, Macro, Args)
 
-#define forGasTransports(Macro, Args...)                                 \
-    forGasEnergiesAndThermos(constTransport, Macro, Args);               \
+#define forGasTransports(Macro, Args...)                                       \
+    forGasEnergiesAndThermos(constTransport, Macro, Args);                     \
     forGasEnergiesAndThermos(sutherlandTransport, Macro, Args)
 
-#define forGases(Macro, Args...)                                         \
+#define forGases(Macro, Args...)                                               \
     forGasTransports(Macro, Args)
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#define forCoeffGasEqns(Mu, He, Cp, Macro, Args...)                           \
+    forThermo(Mu, He, Cp, perfectGas, specie, Macro, Args)
+
+#define forCoeffGasEnergiesAndThermos(Mu, Macro, Args...)                     \
+    forCoeffGasEqns(Mu, sensibleEnthalpy, hConstThermo, Macro, Args);         \
+    forCoeffGasEqns(Mu, sensibleEnthalpy, janafThermo, Macro, Args);          \
+    forCoeffGasEqns(Mu, sensibleInternalEnergy, eConstThermo, Macro, Args);   \
+    forCoeffGasEqns(Mu, sensibleInternalEnergy, hConstThermo, Macro, Args);   \
+    forCoeffGasEqns(Mu, sensibleInternalEnergy, janafThermo, Macro, Args)
+
+#define forCoeffGasTransports(Macro, Args...)                                 \
+    forCoeffGasEnergiesAndThermos(constTransport, Macro, Args);               \
+    forCoeffGasEnergiesAndThermos(sutherlandTransport, Macro, Args)
+
+#define forCoeffGases(Macro, Args...)                                         \
+    forCoeffGasTransports(Macro, Args)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

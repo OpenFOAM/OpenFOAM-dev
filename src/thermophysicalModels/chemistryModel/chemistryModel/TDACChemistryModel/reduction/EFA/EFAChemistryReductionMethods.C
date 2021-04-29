@@ -35,8 +35,8 @@ License
 
 namespace Foam
 {
-    forGases(makeChemistryReductionMethod, EFA);
-    forLiquids(makeChemistryReductionMethod, EFA);
+    forCoeffGases(makeChemistryReductionMethod, EFA);
+    forCoeffLiquids(makeChemistryReductionMethod, EFA);
 }
 
 

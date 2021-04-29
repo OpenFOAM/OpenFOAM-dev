@@ -33,8 +33,8 @@ License
 
 namespace Foam
 {
-    forGases(defineChemistryReductionMethod, nullArg);
-    forLiquids(defineChemistryReductionMethod, nullArg);
+    forCoeffGases(defineChemistryReductionMethod, nullArg);
+    forCoeffLiquids(defineChemistryReductionMethod, nullArg);
 }
 
 

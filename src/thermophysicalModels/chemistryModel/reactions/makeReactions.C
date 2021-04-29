@@ -58,41 +58,41 @@ const char* const Foam::Tuple2<Foam::word, Foam::scalar>::typeName
 
 namespace Foam
 {
-    forGases(defineReaction, nullArg);
-    forLiquids(defineReaction, nullArg);
+    forCoeffGases(defineReaction, nullArg);
+    forCoeffLiquids(defineReaction, nullArg);
 
 
     // Irreversible/reversible/non-equilibrium-reversible reactions
 
-    forGases(makeIRNReactions, ArrheniusReactionRate);
-    forLiquids(makeIRNReactions, ArrheniusReactionRate);
+    forCoeffGases(makeIRNReactions, ArrheniusReactionRate);
+    forCoeffLiquids(makeIRNReactions, ArrheniusReactionRate);
 
-    forGases(makeIRNReactions, LandauTellerReactionRate);
-    forLiquids(makeIRNReactions, LandauTellerReactionRate);
+    forCoeffGases(makeIRNReactions, LandauTellerReactionRate);
+    forCoeffLiquids(makeIRNReactions, LandauTellerReactionRate);
 
-    forGases(makeIRNReactions, thirdBodyArrheniusReactionRate);
-    forLiquids(makeIRNReactions, thirdBodyArrheniusReactionRate);
+    forCoeffGases(makeIRNReactions, thirdBodyArrheniusReactionRate);
+    forCoeffLiquids(makeIRNReactions, thirdBodyArrheniusReactionRate);
 
 
     // Irreversible/reversible reactions
 
-    forGases(makeIRReactions, JanevReactionRate);
-    forLiquids(makeIRReactions, JanevReactionRate);
+    forCoeffGases(makeIRReactions, JanevReactionRate);
+    forCoeffLiquids(makeIRReactions, JanevReactionRate);
 
-    forGases(makeIRReactions, powerSeriesReactionRate);
-    forLiquids(makeIRReactions, powerSeriesReactionRate);
+    forCoeffGases(makeIRReactions, powerSeriesReactionRate);
+    forCoeffLiquids(makeIRReactions, powerSeriesReactionRate);
 
 
     // Pressure dependent reactions
 
-    forGases
+    forCoeffGases
     (
         makeIRRPressureDependentReactions,
         FallOffReactionRate,
         ArrheniusReactionRate,
         LindemannFallOffFunction
     );
-    forLiquids
+    forCoeffLiquids
     (
         makeIRRPressureDependentReactions,
         FallOffReactionRate,
@@ -100,14 +100,14 @@ namespace Foam
         LindemannFallOffFunction
     );
 
-    forGases
+    forCoeffGases
     (
         makeIRRPressureDependentReactions,
         FallOffReactionRate,
         ArrheniusReactionRate,
         TroeFallOffFunction
     );
-    forLiquids
+    forCoeffLiquids
     (
         makeIRRPressureDependentReactions,
         FallOffReactionRate,
@@ -115,14 +115,14 @@ namespace Foam
         TroeFallOffFunction
     );
 
-    forGases
+    forCoeffGases
     (
         makeIRRPressureDependentReactions,
         FallOffReactionRate,
         ArrheniusReactionRate,
         SRIFallOffFunction
     );
-    forLiquids
+    forCoeffLiquids
     (
         makeIRRPressureDependentReactions,
         FallOffReactionRate,
@@ -130,14 +130,14 @@ namespace Foam
         SRIFallOffFunction
     );
 
-    forGases
+    forCoeffGases
     (
         makeIRRPressureDependentReactions,
         ChemicallyActivatedReactionRate,
         ArrheniusReactionRate,
         LindemannFallOffFunction
     );
-    forLiquids
+    forCoeffLiquids
     (
         makeIRRPressureDependentReactions,
         ChemicallyActivatedReactionRate,
@@ -145,14 +145,14 @@ namespace Foam
         LindemannFallOffFunction
     );
 
-    forGases
+    forCoeffGases
     (
         makeIRRPressureDependentReactions,
         ChemicallyActivatedReactionRate,
         ArrheniusReactionRate,
         TroeFallOffFunction
     );
-    forLiquids
+    forCoeffLiquids
     (
         makeIRRPressureDependentReactions,
         ChemicallyActivatedReactionRate,
@@ -160,14 +160,14 @@ namespace Foam
         TroeFallOffFunction
     );
 
-    forGases
+    forCoeffGases
     (
         makeIRRPressureDependentReactions,
         ChemicallyActivatedReactionRate,
         ArrheniusReactionRate,
         SRIFallOffFunction
     );
-    forLiquids
+    forCoeffLiquids
     (
         makeIRRPressureDependentReactions,
         ChemicallyActivatedReactionRate,

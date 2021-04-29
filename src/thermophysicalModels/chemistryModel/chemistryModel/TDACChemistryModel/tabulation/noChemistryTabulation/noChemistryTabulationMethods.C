@@ -35,8 +35,8 @@ License
 
 namespace Foam
 {
-    forGases(makeChemistryTabulationMethod, none);
-    forLiquids(makeChemistryTabulationMethod, none);
+    forCoeffGases(makeChemistryTabulationMethod, none);
+    forCoeffLiquids(makeChemistryTabulationMethod, none);
 }
 
 

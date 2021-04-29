@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -191,6 +191,63 @@ inline Foam::scalar Foam::rhoTabulated<Specie>::CpMCv
 {
     NotImplemented;
     return 0;
+}
+
+
+// * * * * * * * * * * * * * * * Member Operators  * * * * * * * * * * * * * //
+
+template<class Specie>
+inline void Foam::rhoTabulated<Specie>::operator+=
+(
+    const rhoTabulated<Specie>& pf
+)
+{
+    noCoefficientMixing(rhoTabulated);
+}
+
+
+template<class Specie>
+inline void Foam::rhoTabulated<Specie>::operator*=(const scalar s)
+{
+    noCoefficientMixing(rhoTabulated);
+}
+
+
+// * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
+
+template<class Specie>
+inline Foam::rhoTabulated<Specie> Foam::operator+
+(
+    const rhoTabulated<Specie>& pf1,
+    const rhoTabulated<Specie>& pf2
+)
+{
+    noCoefficientMixing(rhoTabulated);
+    return pf1;
+}
+
+
+template<class Specie>
+inline Foam::rhoTabulated<Specie> Foam::operator*
+(
+    const scalar s,
+    const rhoTabulated<Specie>& pf
+)
+{
+    noCoefficientMixing(rhoTabulated);
+    return pf;
+}
+
+
+template<class Specie>
+inline Foam::rhoTabulated<Specie> Foam::operator==
+(
+    const rhoTabulated<Specie>& pf1,
+    const rhoTabulated<Specie>& pf2
+)
+{
+    noCoefficientMixing(rhoTabulated);
+    return pf1;
 }
 
 

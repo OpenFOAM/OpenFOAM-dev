@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -195,7 +195,7 @@ inline void Foam::icoPolynomial<Specie, PolySize>::operator+=
     const icoPolynomial<Specie, PolySize>& ip
 )
 {
-    NotImplemented;
+    noCoefficientMixing(icoPolynomial);
 }
 
 
@@ -215,7 +215,7 @@ Foam::icoPolynomial<Specie, PolySize> Foam::operator+
     const icoPolynomial<Specie, PolySize>& ip2
 )
 {
-    NotImplemented;
+    noCoefficientMixing(icoPolynomial);
     return ip1;
 }
 
@@ -242,7 +242,7 @@ Foam::icoPolynomial<Specie, PolySize> Foam::operator==
     const icoPolynomial<Specie, PolySize>& ip2
 )
 {
-    NotImplemented;
+    noCoefficientMixing(icoPolynomial);
     return ip1;
 }
 

@@ -33,7 +33,7 @@ License
 
 namespace Foam
 {
-    forGases
+    forCoeffGases
     (
         makeGeneralReaction,
         IrreversibleReaction,

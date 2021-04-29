@@ -33,8 +33,8 @@ License
 
 namespace Foam
 {
-    forGases(defineChemistryTabulationMethod, nullArg);
-    forLiquids(defineChemistryTabulationMethod, nullArg);
+    forCoeffGases(defineChemistryTabulationMethod, nullArg);
+    forCoeffLiquids(defineChemistryTabulationMethod, nullArg);
 }
 
 

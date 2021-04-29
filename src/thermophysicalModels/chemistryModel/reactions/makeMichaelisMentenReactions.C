@@ -33,7 +33,7 @@ License
 
 namespace Foam
 {
-    forLiquids(makeIReactions, MichaelisMentenReactionRate);
+    forCoeffLiquids(makeIReactions, MichaelisMentenReactionRate);
 }
 
 // ************************************************************************* //

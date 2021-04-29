@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,6 +89,27 @@ namespace Foam
 
 template<class Specie>
 class rhoTabulated;
+
+template<class Specie>
+inline rhoTabulated<Specie> operator+
+(
+    const rhoTabulated<Specie>&,
+    const rhoTabulated<Specie>&
+);
+
+template<class Specie>
+inline rhoTabulated<Specie> operator*
+(
+    const scalar,
+    const rhoTabulated<Specie>&
+);
+
+template<class Specie>
+inline rhoTabulated<Specie> operator==
+(
+    const rhoTabulated<Specie>&,
+    const rhoTabulated<Specie>&
+);
 
 template<class Specie>
 Ostream& operator<<
@@ -199,6 +220,33 @@ public:
 
             //- Write to Ostream
             void write(Ostream& os) const;
+
+
+    // Member Operators
+
+        inline void operator+=(const rhoTabulated&);
+        inline void operator*=(const scalar);
+
+
+    // Friend operators
+
+        friend rhoTabulated operator+ <Specie>
+        (
+            const rhoTabulated&,
+            const rhoTabulated&
+        );
+
+        friend rhoTabulated operator* <Specie>
+        (
+            const scalar s,
+            const rhoTabulated&
+        );
+
+        friend rhoTabulated operator== <Specie>
+        (
+            const rhoTabulated&,
+            const rhoTabulated&
+        );
 
 
     // Ostream Operator

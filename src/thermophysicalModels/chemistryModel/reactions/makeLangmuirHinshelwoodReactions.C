@@ -34,8 +34,8 @@ License
 
 namespace Foam
 {
-    forGases(makeIRReactions, LangmuirHinshelwoodReactionRate);
-    forLiquids(makeIRReactions, LangmuirHinshelwoodReactionRate);
+    forCoeffGases(makeIRReactions, LangmuirHinshelwoodReactionRate);
+    forCoeffLiquids(makeIRReactions, LangmuirHinshelwoodReactionRate);
 }
 
 // ************************************************************************* //
