@@ -318,6 +318,8 @@ void waxSolventEvaporation::correctModel
         }
     }
 
+    reduce(filmPresent, orOp<bool>());
+
     const dimensionedScalar rho0Bydt
     (
         "rho0Bydt",
