@@ -353,6 +353,12 @@ int main(int argc, char *argv[])
         "Read the specified dictionary file, expand the macros etc. and write "
         "the resulting dictionary to standard output"
     );
+    argList::addOption
+    (
+        "writePrecision",
+        "label",
+        "Write with the specified precision"
+    );
 
     argList args(argc, argv);
 
@@ -368,6 +374,15 @@ int main(int argc, char *argv[])
     if (!args.optionFound("expand"))
     {
         entry::disableFunctionEntries = true;
+    }
+
+    // Set write precision
+    if (args.optionFound("writePrecision"))
+    {
+        const label writePrecision = args.optionRead<label>("writePrecision");
+        IOstream::defaultPrecision(writePrecision);
+        Sout.precision(writePrecision);
+        Pout.precision(IOstream::defaultPrecision());
     }
 
     const fileName dictPath(args[1]);
@@ -469,7 +484,6 @@ int main(int argc, char *argv[])
     {
         readDict(diffDict, diffFileName);
     }
-
 
     word entryName;
     if (args.optionReadIfPresent("entry", entryName))
