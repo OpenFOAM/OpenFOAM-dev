@@ -266,11 +266,10 @@ void Foam::Time::setControls()
         timeIndex_ = startTimeIndex_;
     }
 
-    // Set writeTimeIndex_ to correspond to beginTime_ for restarted cases
+    // Set writeTimeIndex_ to correspond to beginTime_
     if
     (
-        restart()
-     && (
+        (
             writeControl_ == writeControl::runTime
          || writeControl_ == writeControl::adjustableRunTime
         )
