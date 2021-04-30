@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::stopAtClockTime
 
 Description
-    Stops the run when the specified clock time in second has been reached
+    Stops the run when the specified clock time in seconds has been reached
     and optionally write results before stopping.
 
     The following actions are supported:
@@ -43,8 +43,8 @@ Description
         action      writeNow;
     }
     \endverbatim
-    will stop the run at the next write after the file "stop" is created in the
-    case directory.
+    will write the fields and stop the run once the clock time has exceeded 10
+    seconds.
 
 Usage
     \table
