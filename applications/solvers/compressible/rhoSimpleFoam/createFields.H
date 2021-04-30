@@ -41,7 +41,6 @@ volVectorField U
 pressureReference pressureReference
 (
     p,
-    rho,
     simple.dict(),
     thermo.incompressible()
 );

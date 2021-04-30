@@ -41,6 +41,7 @@ Description
 #include "momentumTransportModel.H"
 #include "dynamicMomentumTransportModel.H"
 #include "pimpleControl.H"
+#include "pressureReference.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "gaussLaplacianScheme.H"

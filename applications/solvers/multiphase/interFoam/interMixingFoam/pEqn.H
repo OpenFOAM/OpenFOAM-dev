@@ -45,7 +45,11 @@
             fvm::laplacian(rAUf, p_rgh) == fvc::div(phiHbyA)
         );
 
-        p_rghEqn.setReference(pRefCell, getRefCellValue(p_rgh, pRefCell));
+        p_rghEqn.setReference
+        (
+            pressureReference.refCell(),
+            getRefCellValue(p_rgh, pressureReference.refCell())
+        );
 
         p_rghEqn.solve();
 
@@ -77,7 +81,8 @@
         (
             "p",
             p.dimensions(),
-            pRefValue - getRefCellValue(p, pRefCell)
+            pressureReference.refValue()
+          - getRefCellValue(p, pressureReference.refCell())
         );
         p_rgh = p - rho*gh;
     }

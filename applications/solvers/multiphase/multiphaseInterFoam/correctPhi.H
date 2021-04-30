@@ -11,6 +11,7 @@ CorrectPhi
     p_rgh,
     surfaceScalarField("rAUf", fvc::interpolate(rAU())),
     geometricZeroField(),
+    pressureReference,
     pimple
 );
 

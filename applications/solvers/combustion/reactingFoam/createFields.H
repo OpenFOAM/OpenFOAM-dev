@@ -38,7 +38,7 @@ volScalarField& p = thermo.p();
 
 #include "compressibleCreatePhi.H"
 
-pressureReference pressureReference(p, rho, pimple.dict(), false);
+pressureReference pressureReference(p, pimple.dict(), false);
 
 mesh.setFluxRequired(p.name());
 

@@ -35,6 +35,7 @@ Description
 #include "kinematicMomentumTransportModel.H"
 #include "SRFModel.H"
 #include "simpleControl.H"
+#include "pressureReference.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 

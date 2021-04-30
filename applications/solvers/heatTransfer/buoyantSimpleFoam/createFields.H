@@ -81,7 +81,6 @@ pressureReference pressureReference
 (
     p,
     p_rgh,
-    rho,
     simple.dict(),
     thermo.incompressible()
 );

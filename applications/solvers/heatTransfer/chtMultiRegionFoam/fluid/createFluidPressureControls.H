@@ -8,7 +8,6 @@ forAll(fluidRegions, i)
         new pressureReference
         (
             p_rghFluid[i],
-            rhoFluid[i],
             pimples.pimple(i).dict(),
             false
         )

@@ -28,7 +28,11 @@
             fvm::laplacian(rAtU(), p) == fvc::div(phiHbyA)
         );
 
-        pEqn.setReference(pRefCell, pRefValue);
+        pEqn.setReference
+        (
+            pressureReference.refCell(),
+            pressureReference.refValue()
+        );
 
         pEqn.solve();
 

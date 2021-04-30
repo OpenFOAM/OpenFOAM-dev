@@ -31,7 +31,11 @@ while (simple.correctNonOrthogonal())
 
     fvScalarMatrix pEqn = tpEqn.ref();
 
-    pEqn.setReference(pRefCell, pRefValue);
+    pEqn.setReference
+    (
+        pressureReference.refCell(),
+        pressureReference.refValue()
+    );
 
     pEqn.solve();
 

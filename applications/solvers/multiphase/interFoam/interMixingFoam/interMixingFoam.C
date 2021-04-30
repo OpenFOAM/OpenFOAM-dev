@@ -39,6 +39,7 @@ Description
 #include "immiscibleIncompressibleThreePhaseMixture.H"
 #include "kinematicMomentumTransportModel.H"
 #include "pimpleControl.H"
+#include "pressureReference.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "CorrectPhi.H"

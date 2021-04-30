@@ -34,6 +34,7 @@ License
 #include "zeroGradientFvPatchFields.H"
 #include "adjustPhi.H"
 #include "fvcMeshPhi.H"
+#include "pressureReference.H"
 #include "nonOrthogonalSolutionControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -46,6 +47,7 @@ void Foam::CorrectPhi
     const volScalarField& p,
     const RAUfType& rAUf,
     const DivUType& divU,
+    const pressureReference& pressureReference,
     nonOrthogonalSolutionControl& pcorrControl
 )
 {
@@ -99,7 +101,7 @@ void Foam::CorrectPhi
             fvm::laplacian(rAUf, pcorr) == fvc::div(phi) - divU
         );
 
-        pcorrEqn.setReference(0, 0);
+        pcorrEqn.setReference(pressureReference.refCell(), 0);
 
         pcorrEqn.solve();
 

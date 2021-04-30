@@ -49,6 +49,7 @@ Description
 #include "singlePhaseTransportModel.H"
 #include "kinematicMomentumTransportModel.H"
 #include "simpleControl.H"
+#include "pressureReference.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 
@@ -143,7 +144,12 @@ int main(int argc, char *argv[])
                     fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
                 );
 
-                pEqn.setReference(pRefCell, pRefValue);
+                pEqn.setReference
+                (
+                    pressureReference.refCell(),
+                    pressureReference.refValue()
+                );
+
                 pEqn.solve();
 
                 if (simple.finalNonOrthogonalIter())

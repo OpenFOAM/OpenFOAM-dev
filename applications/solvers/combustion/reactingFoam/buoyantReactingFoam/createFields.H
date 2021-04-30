@@ -96,7 +96,6 @@ pressureReference pressureReference
 (
     p,
     p_rgh,
-    rho,
     pimple.dict(),
     thermo.incompressible()
 );

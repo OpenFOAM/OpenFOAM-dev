@@ -69,7 +69,6 @@ public:
         (
             const volScalarField& p,
             const volScalarField& pRef,
-            const volScalarField& rho,
             const dictionary& dict,
             const bool pRefRequired = true
         );
@@ -78,7 +77,6 @@ public:
         pressureReference
         (
             const volScalarField& p,
-            const volScalarField& rho,
             const dictionary& dict,
             const bool pRefRequired = true
         );

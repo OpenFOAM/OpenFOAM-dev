@@ -50,6 +50,7 @@ Description
 #include "compressibleInterPhaseTransportModel.H"
 #include "noPhaseChange.H"
 #include "pimpleControl.H"
+#include "pressureReference.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "CorrectPhi.H"

@@ -32,7 +32,6 @@ Foam::pressureReference::pressureReference
 (
     const volScalarField& p,
     const volScalarField& pRef,
-    const volScalarField& rho,
     const dictionary& dict,
     const bool pRefRequired
 )
@@ -112,12 +111,11 @@ Foam::pressureReference::pressureReference
 Foam::pressureReference::pressureReference
 (
     const volScalarField& p,
-    const volScalarField& rho,
     const dictionary& dict,
     const bool pRefRequired
 )
 :
-    pressureReference(p, p, rho, dict, pRefRequired)
+    pressureReference(p, p, dict, pRefRequired)
 {}
 
 

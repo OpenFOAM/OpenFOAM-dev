@@ -40,7 +40,6 @@ pressureReference pressureReference
 (
     p,
     p_rgh,
-    fluid.rho(),
     pimple.dict(),
     fluid.incompressible()
 );

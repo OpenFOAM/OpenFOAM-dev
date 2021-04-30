@@ -109,10 +109,7 @@ DB.name() = "DB";
 dimensionedScalar DBU = 1.0/(2.0*mu*rho);
 DBU.name() = "DBU";
 
-
-label pRefCell = 0;
-scalar pRefValue = 0.0;
-setRefCell(p, piso.dict(), pRefCell, pRefValue);
+pressureReference pressureReference(p, piso.dict());
 
 mesh.setFluxRequired(p.name());
 mesh.setFluxRequired(pB.name());

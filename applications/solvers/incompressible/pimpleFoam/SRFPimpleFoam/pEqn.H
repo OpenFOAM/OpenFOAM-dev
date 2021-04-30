@@ -38,7 +38,11 @@ while (pimple.correctNonOrthogonal())
         fvm::laplacian(rAtUrel(), p) == fvc::div(phiHbyA)
     );
 
-    pEqn.setReference(pRefCell, pRefValue);
+    pEqn.setReference
+    (
+        pressureReference.refCell(),
+        pressureReference.refValue()
+    );
 
     pEqn.solve();
 

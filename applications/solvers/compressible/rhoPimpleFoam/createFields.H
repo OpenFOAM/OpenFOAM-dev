@@ -43,7 +43,6 @@ volVectorField U
 pressureReference pressureReference
 (
     p,
-    rho,
     pimple.dict(),
     thermo.incompressible()
 );

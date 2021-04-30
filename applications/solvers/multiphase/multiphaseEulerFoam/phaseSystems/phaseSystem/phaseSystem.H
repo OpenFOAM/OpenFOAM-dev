@@ -61,6 +61,7 @@ class blendingMethod;
 template<class modelType> class BlendedInterfacialModel;
 class surfaceTensionModel;
 class aspectRatioModel;
+class pressureReference;
 class nonOrthogonalSolutionControl;
 
 /*---------------------------------------------------------------------------*\
@@ -700,6 +701,7 @@ public:
             (
                 const volScalarField& p_rgh,
                 const tmp<volScalarField>& divU,
+                const pressureReference& pressureReference,
                 nonOrthogonalSolutionControl& pimple
             );
 

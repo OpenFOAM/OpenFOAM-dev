@@ -90,7 +90,6 @@ volScalarField K("K", 0.5*magSqr(U));
 pressureReference pressureReference
 (
     p,
-    rho,
     pimple.dict(),
     thermo.incompressible()
 );

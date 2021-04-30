@@ -40,6 +40,7 @@ License
 #include "BlendedInterfacialModel.H"
 #include "movingWallVelocityFvPatchVectorField.H"
 #include "pimpleControl.H"
+#include "pressureReference.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -900,6 +901,7 @@ void Foam::phaseSystem::correctPhi
 (
     const volScalarField& p_rgh,
     const tmp<volScalarField>& divU,
+    const pressureReference& pressureReference,
     nonOrthogonalSolutionControl& pimple
 )
 {
@@ -955,6 +957,7 @@ void Foam::phaseSystem::correctPhi
             // surfaceScalarField("rAUf", fvc::interpolate(rAU())),
             dimensionedScalar(dimTime/dimDensity, 1),
             divU(),
+            pressureReference,
             pimple
         );
 

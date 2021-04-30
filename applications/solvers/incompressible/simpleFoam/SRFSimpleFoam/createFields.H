@@ -40,9 +40,8 @@ surfaceScalarField phi
     linearInterpolate(Urel) & mesh.Sf()
 );
 
-label pRefCell = 0;
-scalar pRefValue = 0.0;
-setRefCell(p, simple.dict(), pRefCell, pRefValue);
+pressureReference pressureReference(p, simple.dict());
+
 mesh.setFluxRequired(p.name());
 
 Info<< "Creating SRF model\n" << endl;

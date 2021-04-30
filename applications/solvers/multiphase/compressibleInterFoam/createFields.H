@@ -57,6 +57,9 @@ mesh.setFluxRequired(alpha1.name());
 #include "gh.H"
 
 
+pressureReference pressureReference(mixture.p(), p_rgh, pimple.dict(), false);
+
+
 // Mass flux
 // Initialisation does not matter because rhoPhi is reset after the
 // alpha1 solution before it is used in the U equation.

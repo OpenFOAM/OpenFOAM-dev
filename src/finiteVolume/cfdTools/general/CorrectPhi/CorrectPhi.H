@@ -48,6 +48,7 @@ SourceFiles
 
 namespace Foam
 {
+    class pressureReference;
     class nonOrthogonalSolutionControl;
 
     //- If the mesh is moving correct the velocity BCs on the moving walls to
@@ -77,6 +78,7 @@ namespace Foam
         const volScalarField& p,
         const RAUfType& rAUf,
         const DivUType& divU,
+        const pressureReference& pressureReference,
         nonOrthogonalSolutionControl& pcorrControl
     );
 

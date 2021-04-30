@@ -158,7 +158,13 @@ int main(int argc, char *argv[])
 
                         if (correctPhi)
                         {
-                            fluid.correctPhi(p_rgh, divU, pimple);
+                            fluid.correctPhi
+                            (
+                                p_rgh,
+                                divU,
+                                pressureReference,
+                                pimple
+                            );
                         }
 
                         if (checkMeshCourantNo)

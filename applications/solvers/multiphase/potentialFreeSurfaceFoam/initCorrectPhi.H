@@ -9,6 +9,7 @@ if (!runTime.restart() &&correctPhi)
         p_gh,
         surfaceScalarField("rAUf", fvc::interpolate(rAU)),
         geometricZeroField(),
+        pressureReference,
         pimple
     );
 }
