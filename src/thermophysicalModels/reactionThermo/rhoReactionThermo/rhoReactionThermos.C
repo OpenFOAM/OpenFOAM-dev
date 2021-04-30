@@ -77,7 +77,7 @@ namespace Foam
     forLiquids(makeRhoReactionThermo, singleComponentMixture);
 
     forTabulated(makeRhoReactionThermos, valueMultiComponentMixture);
-    forTabulated(makeRhoReactionThermos, singleComponentMixture);
+    forTabulated(makeRhoReactionThermo, singleComponentMixture);
 }
 
 // ************************************************************************* //
