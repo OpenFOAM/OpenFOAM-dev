@@ -100,8 +100,8 @@ ${typeName}FvModel${SourceType}
     const fvMesh& mesh
 )
 :
-    fvModel(name, modelType, dict, mesh)
-    set_(coeffs(), mesh),
+    fvModel(name, modelType, dict, mesh),
+    set_(coeffs(), mesh)
 {
     if (${verbose:-false})
     {
