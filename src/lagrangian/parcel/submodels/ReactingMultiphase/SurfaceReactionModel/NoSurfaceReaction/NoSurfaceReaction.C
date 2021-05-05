@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,6 +81,11 @@ Foam::scalar Foam::NoSurfaceReaction<CloudType>::calculate
 {
     return 0;
 }
+
+
+template<class CloudType>
+void Foam::NoSurfaceReaction<CloudType>::info(Ostream& os)
+{}
 
 
 // ************************************************************************* //

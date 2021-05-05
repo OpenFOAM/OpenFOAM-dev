@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,6 +38,7 @@ Description
 
 namespace Foam
 {
+
 /*---------------------------------------------------------------------------*\
                       Class NoSurfaceReaction Declaration
 \*---------------------------------------------------------------------------*/
@@ -98,6 +99,12 @@ public:
             scalarField& dMassSolid,
             scalarField& dMassSRCarrier
         ) const;
+
+
+        // I-O
+
+            //- Write injection info to stream
+            virtual void info(Ostream& os);
 };
 
 
