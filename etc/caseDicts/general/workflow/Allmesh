@@ -10,6 +10,6 @@ cd "${0%/*}" || exit 1
 runApplication blockMesh
 runApplication topoSet
 runApplication refineMesh -overwrite
-runApplication transformPoints -scale "(0.01 0.01 0.01)"
+runApplication transformPoints "scale=(0.01 0.01 0.01)"
 
 #------------------------------------------------------------------------------

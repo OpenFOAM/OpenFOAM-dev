@@ -8,7 +8,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 application=$(getApplication)
 
 runApplication blockMesh
-runApplication transformPoints -scale '(1.6666 1 1)'
+runApplication transformPoints "scale=(1.6666 1 1)"
 
 runApplication mirrorMesh -dict mirrorMeshDict.x -overwrite
 rm log.mirrorMesh

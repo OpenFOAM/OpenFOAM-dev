@@ -4937,7 +4937,7 @@ _transformPoints_ ()
     local line=${COMP_LINE}
     local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
 
-    opts="-allRegions -case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -region -rollPitchYaw -roots -rotate -rotateFields -scale -srcDoc -translate -yawPitchRoll"
+    opts="-allRegions -case -doc -fileHandler -help -hostRoots -libs -noFunctionObjects -parallel -region -roots -rotateFields -srcDoc"
     for o in $used ; do opts="${opts/$o/}" ; done
     extra=""
 
@@ -4947,7 +4947,7 @@ _transformPoints_ ()
             opts="" ; extra="-d" ;;
         -fileHandler)
             opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-region|-rollPitchYaw|-roots|-rotate|-scale|-translate|-yawPitchRoll)
+        -hostRoots|-libs|-region|-roots)
             opts="" ; extra="" ;;
        *) ;;
     esac

@@ -10,7 +10,7 @@ cp $FOAM_TUTORIALS/resources/geometry/NACA0012.obj.gz constant/geometry/
 application="$(getApplication)"
 
 runApplication blockMesh
-runApplication transformPoints -scale "(1 0 1)"
+runApplication transformPoints "scale=(1 0 1)"
 runApplication extrudeMesh
 
 runApplication $application
