@@ -58,20 +58,20 @@ Foam::fv::VoFSurfaceFilm::VoFSurfaceFilm
 )
 :
     fvModel(sourceName, modelType, dict, mesh),
+    phaseName_(dict.lookup("phase")),
+    thermo_
+    (
+        mesh.lookupObject<fluidThermo>
+        (
+            IOobject::groupName(basicThermo::dictName, phaseName_)
+        )
+    ),
     film_
     (
         regionModels::surfaceFilmModel::New
         (
             mesh,
             mesh.lookupObject<uniformDimensionedVectorField>("g")
-        )
-    ),
-    phaseName_(dict.lookup("phase")),
-    thermo_
-    (
-        mesh.lookupObject<rhoThermo>
-        (
-            IOobject::groupName(basicThermo::dictName, phaseName_)
         )
     ),
     curTimeIndex_(-1)

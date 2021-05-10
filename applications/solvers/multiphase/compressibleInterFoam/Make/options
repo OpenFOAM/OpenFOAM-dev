@@ -13,8 +13,6 @@ EXE_INC = \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/phaseCompressible/lnInclude \
-    -I$(LIB_SRC)/regionModels/regionModel/lnInclude \
-    -I$(LIB_SRC)/regionModels/surfaceFilmModels/lnInclude \
     -I$(LIB_SRC)/meshTools/lnInclude \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
@@ -33,8 +31,6 @@ EXE_LIBS = \
     -lmomentumTransportModels \
     -lcompressibleMomentumTransportModels \
     -lcompressibleInterPhaseTransportModel \
-    -lsurfaceFilmModels \
-    -lsurfaceFilmDerivedFvPatchFields \
     -lfiniteVolume \
     -lfvModels \
     -lfvConstraints \
