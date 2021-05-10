@@ -1,0 +1,4 @@
+VoFSurfaceFilm.C
+VoFPatchTransfer/VoFPatchTransfer.C
+
+LIB = $(FOAM_LIBBIN)/libVoFSurfaceFilm

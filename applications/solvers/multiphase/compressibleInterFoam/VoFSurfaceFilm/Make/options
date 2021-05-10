@@ -1,0 +1,23 @@
+EXE_INC = \
+    -I../twoPhaseMixtureThermo \
+    -I$(LIB_SRC)/transportModels/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
+    -I$(LIB_SRC)/regionModels/regionModel/lnInclude \
+    -I$(LIB_SRC)/regionModels/surfaceFilmModels/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
+
+LIB_LIBS = \
+    -ltwoPhaseMixtureThermo \
+    -lfluidThermophysicalModels \
+    -lspecie \
+    -ltwoPhaseMixture \
+    -ltwoPhaseProperties \
+    -linterfaceProperties \
+    -ltransportModels \
+    -lsurfaceFilmModels \
+    -lsurfaceFilmDerivedFvPatchFields \
+    -lfiniteVolume \
+    -lmeshTools
