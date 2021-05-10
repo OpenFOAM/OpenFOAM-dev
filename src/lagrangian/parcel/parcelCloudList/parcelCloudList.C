@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -149,7 +149,7 @@ const Foam::tmp<Foam::volScalarField> Foam::parcelCloudList::theta() const
 
 Foam::tmp<Foam::fvVectorMatrix> Foam::parcelCloudList::SU
 (
-    volVectorField& U
+    const volVectorField& U
 ) const
 {
     tmp<fvVectorMatrix> tSU(new fvVectorMatrix(U, dimMass*dimAcceleration));
@@ -201,7 +201,7 @@ Foam::tmp<Foam::volScalarField::Internal> Foam::parcelCloudList::UCoeff() const
 
 Foam::tmp<Foam::fvScalarMatrix> Foam::parcelCloudList::Sh
 (
-    volScalarField& hs
+    const volScalarField& hs
 ) const
 {
     tmp<fvScalarMatrix> tSh(new fvScalarMatrix(hs, dimEnergy/dimTime));
@@ -312,7 +312,7 @@ Foam::tmp<Foam::volScalarField> Foam::parcelCloudList::sigmap() const
 Foam::tmp<Foam::fvScalarMatrix> Foam::parcelCloudList::SYi
 (
     const label speciei,
-    volScalarField& Yi
+    const volScalarField& Yi
 ) const
 {
     tmp<fvScalarMatrix> tSYi(new fvScalarMatrix(Yi, dimMass/dimTime));

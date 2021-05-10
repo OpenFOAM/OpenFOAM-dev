@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,7 +135,7 @@ public:
             // Momentum
 
                 //- Return momentum source term [kg m/s^2]
-                tmp<fvVectorMatrix> SU(volVectorField& U) const
+                tmp<fvVectorMatrix> SU(const volVectorField& U) const
                 {
                     return tmp<fvVectorMatrix>
                     (
@@ -169,7 +169,7 @@ public:
             // Energy
 
                 //- Return sensible enthalpy source term [J/s]
-                tmp<fvScalarMatrix> Sh(volScalarField& hs) const
+                tmp<fvScalarMatrix> Sh(const volScalarField& hs) const
                 {
                     return tmp<fvScalarMatrix>
                     (
@@ -239,7 +239,7 @@ public:
                 tmp<fvScalarMatrix> SYi
                 (
                     const label i,
-                    volScalarField& Yi
+                    const volScalarField& Yi
                 ) const
                 {
                     return tmp<fvScalarMatrix>

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -301,7 +301,10 @@ public:
                     inline volScalarField::Internal& hsCoeffRef();
 
                     //- Return sensible enthalpy source term [J/kg/m^3/s]
-                    inline tmp<fvScalarMatrix> Sh(volScalarField& hs) const;
+                    inline tmp<fvScalarMatrix> Sh
+                    (
+                        const volScalarField& hs
+                    ) const;
 
 
                 // Radiation - overrides thermoCloud virtual abstract members

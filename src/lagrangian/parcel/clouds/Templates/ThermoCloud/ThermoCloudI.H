@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -222,7 +222,7 @@ Foam::ThermoCloud<CloudType>::hsCoeffRef()
 
 template<class CloudType>
 inline Foam::tmp<Foam::fvScalarMatrix>
-Foam::ThermoCloud<CloudType>::Sh(volScalarField& hs) const
+Foam::ThermoCloud<CloudType>::Sh(const volScalarField& hs) const
 {
     if (debug)
     {

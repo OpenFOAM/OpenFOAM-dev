@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -409,7 +409,7 @@ Foam::MomentumCloud<CloudType>::UCoeffRef()
 
 template<class CloudType>
 inline Foam::tmp<Foam::fvVectorMatrix>
-Foam::MomentumCloud<CloudType>::SU(volVectorField& U) const
+Foam::MomentumCloud<CloudType>::SU(const volVectorField& U) const
 {
     if (debug)
     {
