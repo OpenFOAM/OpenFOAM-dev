@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ SourceFiles
 #define ThermoLookupTableInjection_H
 
 #include "InjectionModel.H"
-#include "momentumParcelInjectionDataIOList.H"
+#include "thermoParcelInjectionDataIOList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -84,7 +84,7 @@ class ThermoLookupTableInjection
         bool randomise_;
 
         //- List of injectors
-        momentumParcelInjectionDataIOList injectors_;
+        thermoParcelInjectionDataIOList injectors_;
 
         //- List of cell labels corresponding to injector positions
         labelList injectorCells_;
@@ -112,10 +112,9 @@ public:
             const word& modelName
         );
 
-        //- Construct copy from owner cloud and injection model
+        //- Construct copy
         ThermoLookupTableInjection
         (
-            CloudType& owner,
             const ThermoLookupTableInjection<CloudType>& im
         );
 
@@ -173,10 +172,7 @@ public:
             );
 
             //- Flag to identify whether model fully describes the parcel
-            virtual bool fullyDescribed() const
-            {
-                return true;
-            }
+            virtual bool fullyDescribed() const;
 
             //- Return flag to identify whether or not injection of parcelI is
             //  permitted

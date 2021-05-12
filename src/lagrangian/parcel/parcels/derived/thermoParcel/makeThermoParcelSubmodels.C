@@ -30,7 +30,7 @@ License
 // Momentum
 #include "makeParcelForces.H"
 #include "makeParcelDispersionModels.H"
-#include "makeParcelInjectionModels.H"
+#include "makeThermoParcelInjectionModels.H"
 #include "makeParcelPatchInteractionModels.H"
 #include "makeParcelStochasticCollisionModels.H"
 #include "makeThermoParcelSurfaceFilmModels.H" // thermo variant
@@ -49,7 +49,7 @@ makeParcelCloudFunctionObjects(thermoCloud);
 // Momentum sub-models
 makeParcelForces(thermoCloud);
 makeParcelDispersionModels(thermoCloud);
-makeParcelInjectionModels(thermoCloud);
+makeThermoParcelInjectionModels(thermoCloud);
 makeParcelPatchInteractionModels(thermoCloud);
 makeParcelStochasticCollisionModels(thermoCloud);
 makeParcelSurfaceFilmModels(thermoCloud);

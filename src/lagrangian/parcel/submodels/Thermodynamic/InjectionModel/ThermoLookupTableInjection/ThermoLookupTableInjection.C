@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -203,7 +203,7 @@ void Foam::ThermoLookupTableInjection<CloudType>::setProperties
     const label parcelI,
     const label nParcels,
     const scalar,
-    typename CloudType::parcelType* pPtr
+    typename CloudType::parcelType& parcel
 )
 {
     label injectorI = parcelI*injectorCells_.size()/nParcels;
@@ -221,7 +221,7 @@ void Foam::ThermoLookupTableInjection<CloudType>::setProperties
     parcel.T() = injectors_[injectorI].T();
 
     // set particle specific heat capacity
-    parcel.cp() = injectors_[injectorI].cp();
+    parcel.Cp() = injectors_[injectorI].Cp();
 }
 
 
