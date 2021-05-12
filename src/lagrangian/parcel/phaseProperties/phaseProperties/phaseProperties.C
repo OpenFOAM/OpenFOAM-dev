@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,14 +117,6 @@ void Foam::phaseProperties::setCarrierIds
                 break;
             }
         }
-        if (carrierIds_[i] == -1)
-        {
-            FatalErrorInFunction
-                << "Could not find carrier specie " << names_[i]
-                << " in species list" <<  nl
-                << "Available species are: " << nl << carrierNames << nl
-                << exit(FatalError);
-        }
     }
 }
 
@@ -233,8 +225,8 @@ void Foam::phaseProperties::reorder
             // Set the list of solid species to correspond to the complete list
             // defined in the thermodynamics package.
             reorder(solidNames);
-            // Assume there is no correspondence between the solid species and
-            // the species in the carrier phase (no sublimation).
+            // Set the ids of the corresponding species in the carrier phase
+            setCarrierIds(gasNames);
             break;
         }
         default:
@@ -306,9 +298,17 @@ Foam::scalar& Foam::phaseProperties::Y(const label speciei)
 }
 
 
-const Foam::labelList& Foam::phaseProperties::carrierIds() const
+Foam::label Foam::phaseProperties::carrierId(const label speciei) const
 {
-    return carrierIds_;
+    if (carrierIds_[speciei] == -1)
+    {
+        FatalErrorInFunction
+            << "Could not find specie " << names_[speciei]
+            << " in carrier " <<  nl
+            << exit(FatalError);
+    }
+
+    return carrierIds_[speciei];
 }
 
 

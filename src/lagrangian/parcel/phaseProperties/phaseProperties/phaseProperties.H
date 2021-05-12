@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -162,8 +162,8 @@ public:
             //- Return non-const access to a specie mass fraction
             scalar& Y(const label speciei);
 
-            //- Return const access to the map to the carrier ids
-            const labelList& carrierIds() const;
+            //- Return the carrier id for a given specie
+            label carrierId(const label speciei) const;
 
             //- Return the id of a specie in the local list by name
             //  Returns -1 if not found

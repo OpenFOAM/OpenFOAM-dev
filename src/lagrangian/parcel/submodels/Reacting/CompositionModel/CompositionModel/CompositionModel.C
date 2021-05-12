@@ -237,7 +237,7 @@ Foam::label Foam::CompositionModel<CloudType>::localToCarrierId
     const bool allowNotFound
 ) const
 {
-    label cid = phaseProps_[phasei].carrierIds()[id];
+    label cid = phaseProps_[phasei].carrierId(id);
 
     if (cid < 0 && !allowNotFound)
     {
@@ -277,7 +277,7 @@ Foam::scalarField Foam::CompositionModel<CloudType>::X
         {
             forAll(Y, i)
             {
-                label cid = props.carrierIds()[i];
+                label cid = props.carrierId(i);
                 X[i] = Y[i]/carrierMixture_->Wi(cid);
                 WInv += X[i];
             }
@@ -323,7 +323,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::H
         {
             forAll(Y, i)
             {
-                label cid = props.carrierIds()[i];
+                label cid = props.carrierId(i);
                 HMixture += Y[i]*carrierMixture_->Ha(cid, p, T);
             }
             break;
@@ -372,7 +372,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::Hs
         {
             forAll(Y, i)
             {
-                label cid = props.carrierIds()[i];
+                label cid = props.carrierId(i);
                 HsMixture += Y[i]*carrierMixture_->Hs(cid, p, T);
             }
             break;
@@ -423,7 +423,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::Hc
         {
             forAll(Y, i)
             {
-                label cid = props.carrierIds()[i];
+                label cid = props.carrierId(i);
                 HcMixture += Y[i]*carrierMixture_->Hf(cid);
             }
             break;
@@ -473,7 +473,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::Cp
         {
             forAll(Y, i)
             {
-                label cid = props.carrierIds()[i];
+                label cid = props.carrierId(i);
                 CpMixture += Y[i]*carrierMixture_->Cp(cid, p, T);
             }
             break;
