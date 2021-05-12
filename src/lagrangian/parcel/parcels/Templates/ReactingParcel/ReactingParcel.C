@@ -57,9 +57,11 @@ void Foam::ReactingParcel<ParcelType>::calcPhaseChange
     scalarField& Cs
 )
 {
-    typedef typename TrackCloudType::reactingCloudType reactingCloudType;
-    const CompositionModel<reactingCloudType>& composition =
+    typedef typename TrackCloudType::thermoCloudType thermoCloudType;
+    const CompositionModel<thermoCloudType>& composition =
         cloud.composition();
+
+    typedef typename TrackCloudType::reactingCloudType reactingCloudType;
     PhaseChangeModel<reactingCloudType>& phaseChange = cloud.phaseChange();
 
     if (YPhase < small)
@@ -383,8 +385,8 @@ void Foam::ReactingParcel<ParcelType>::calc
     const scalar dt
 )
 {
-    typedef typename TrackCloudType::reactingCloudType reactingCloudType;
-    const CompositionModel<reactingCloudType>& composition =
+    typedef typename TrackCloudType::thermoCloudType thermoCloudType;
+    const CompositionModel<thermoCloudType>& composition =
         cloud.composition();
 
 

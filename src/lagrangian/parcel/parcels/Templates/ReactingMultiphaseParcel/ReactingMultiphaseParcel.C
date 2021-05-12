@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -170,8 +170,8 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calc
     const scalar dt
 )
 {
-    typedef typename TrackCloudType::reactingCloudType reactingCloudType;
-    const CompositionModel<reactingCloudType>& composition =
+    typedef typename TrackCloudType::thermoCloudType thermoCloudType;
+    const CompositionModel<thermoCloudType>& composition =
         cloud.composition();
 
 
@@ -547,8 +547,8 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
         return;
     }
 
-    typedef typename TrackCloudType::reactingCloudType reactingCloudType;
-    const CompositionModel<reactingCloudType>& composition =
+    typedef typename TrackCloudType::thermoCloudType thermoCloudType;
+    const CompositionModel<thermoCloudType>& composition =
         cloud.composition();
 
 

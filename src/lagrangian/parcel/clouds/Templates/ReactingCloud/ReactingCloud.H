@@ -55,9 +55,6 @@ namespace Foam
 // Forward declaration of classes
 
 template<class CloudType>
-class CompositionModel;
-
-template<class CloudType>
 class PhaseChangeModel;
 
 
@@ -110,10 +107,6 @@ protected:
 
 
         // References to the cloud sub-models
-
-            //- Reacting composition model
-            autoPtr<CompositionModel<ReactingCloud<CloudType>>>
-                compositionModel_;
 
             //- Reacting phase change model
             autoPtr<PhaseChangeModel<ReactingCloud<CloudType>>>
@@ -220,10 +213,6 @@ public:
 
             // Sub-models
 
-                //- Return const access to reacting composition model
-                inline const CompositionModel<ReactingCloud<CloudType>>&
-                    composition() const;
-
                 //- Return const access to reacting phase change model
                 inline const PhaseChangeModel<ReactingCloud<CloudType>>&
                     phaseChange() const;
@@ -315,9 +304,6 @@ public:
 
             //- Print cloud information
             void info();
-
-            //- Write the field data for the cloud
-            virtual void writeFields() const;
 
 
     // Member Operators

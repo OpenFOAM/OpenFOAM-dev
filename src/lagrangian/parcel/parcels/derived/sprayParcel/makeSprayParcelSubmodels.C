@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,9 +36,9 @@ License
 
 // Thermodynamic
 #include "makeParcelHeatTransferModels.H"
+#include "makeParcelCompositionModels.H"
 
 // Reacting
-#include "makeReactingParcelCompositionModels.H"
 #include "makeReactingParcelPhaseChangeModels.H"
 #include "makeReactingParcelSurfaceFilmModels.H"
 
@@ -60,9 +60,9 @@ makeSprayParcelStochasticCollisionModels(sprayCloud);
 
 // Thermo sub-models
 makeParcelHeatTransferModels(sprayCloud);
+makeParcelCompositionModels(sprayCloud);
 
 // Reacting sub-models
-makeReactingParcelCompositionModels(sprayCloud);
 makeReactingParcelPhaseChangeModels(sprayCloud);
 makeReactingParcelSurfaceFilmModels(sprayCloud);
 

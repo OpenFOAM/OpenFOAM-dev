@@ -174,6 +174,9 @@ public:
 
             // Interpolators for continuous phase fields
 
+                //- Interpolator for continuous phase pressure field
+                autoPtr<interpolation<scalar>> pInterp_;
+
                 //- Temperature field interpolator
                 autoPtr<interpolation<scalar>> TInterp_;
 
@@ -188,6 +191,9 @@ public:
 
 
             // Cached continuous phase properties
+
+                //- Pressure [Pa]
+                scalar pc_;
 
                 //- Temperature [K]
                 scalar Tc_;
@@ -213,6 +219,10 @@ public:
             //- Return access to the locally stored carrier kappa field
             inline const volScalarField& kappa() const;
 
+            //- Return const access to the interpolator for continuous phase
+            //  pressure field
+            inline const interpolation<scalar>& pInterp() const;
+
             //- Return const access to the interpolator for continuous
             //  phase temperature field
             inline const interpolation<scalar>& TInterp() const;
@@ -228,6 +238,12 @@ public:
             //- Return const access to the interpolator for continuous
             //  radiation field
             inline const interpolation<scalar>& GInterp() const;
+
+            //- Return the continuous phase pressure
+            inline scalar pc() const;
+
+            //- Access the continuous phase pressure
+            inline scalar& pc();
 
             //- Return the continuous phase temperature
             inline scalar Tc() const;
@@ -427,6 +443,14 @@ public:
             //- Write
             template<class CloudType>
             static void writeFields(const CloudType& c);
+
+            //- Write
+            template<class CloudType, class CompositionType>
+            static void writeFields
+            (
+                const CloudType& c,
+                const CompositionType& compModel
+            );
 
 
     // Ostream Operator

@@ -92,6 +92,14 @@ Foam::ThermoCloud<CloudType>::heatTransfer() const
 
 
 template<class CloudType>
+inline const Foam::CompositionModel<Foam::ThermoCloud<CloudType>>&
+Foam::ThermoCloud<CloudType>::composition() const
+{
+    return compositionModel_;
+}
+
+
+template<class CloudType>
 inline const Foam::integrationScheme&
 Foam::ThermoCloud<CloudType>::TIntegrator() const
 {

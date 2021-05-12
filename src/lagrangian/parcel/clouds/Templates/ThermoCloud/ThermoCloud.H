@@ -58,6 +58,9 @@ class integrationScheme;
 template<class CloudType>
 class HeatTransferModel;
 
+template<class CloudType>
+class CompositionModel;
+
 
 /*---------------------------------------------------------------------------*\
                        Class ThermoCloudName Declaration
@@ -126,6 +129,10 @@ protected:
             //- Heat transfer model
             autoPtr<HeatTransferModel<ThermoCloud<CloudType>>>
                 heatTransferModel_;
+
+            //- Reacting composition model
+            autoPtr<CompositionModel<ThermoCloud<CloudType>>>
+                compositionModel_;
 
 
         // Reference to the particle integration schemes
@@ -257,6 +264,10 @@ public:
                 inline const HeatTransferModel<ThermoCloud<CloudType>>&
                     heatTransfer() const;
 
+                //- Return const access to reacting composition model
+                inline const CompositionModel<ThermoCloud<CloudType>>&
+                    composition() const;
+
 
             // Integration schemes
 
@@ -384,6 +395,9 @@ public:
 
             //- Print cloud information
             void info();
+
+            //- Write the field data for the cloud
+            virtual void writeFields() const;
 
 
     // Member Operators

@@ -32,15 +32,6 @@ License
 template<class CloudType>
 void Foam::ReactingCloud<CloudType>::setModels()
 {
-    compositionModel_.reset
-    (
-        CompositionModel<ReactingCloud<CloudType>>::New
-        (
-            this->subModelProperties(),
-            *this
-        ).ptr()
-    );
-
     phaseChangeModel_.reset
     (
         PhaseChangeModel<ReactingCloud<CloudType>>::New
@@ -77,7 +68,6 @@ void Foam::ReactingCloud<CloudType>::cloudReset(ReactingCloud<CloudType>& c)
 {
     CloudType::cloudReset(c);
 
-    compositionModel_.reset(c.compositionModel_.ptr());
     phaseChangeModel_.reset(c.phaseChangeModel_.ptr());
 }
 
@@ -98,12 +88,11 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
     CloudType(cloudName, rho, U, g, carrierThermo, false),
     cloudCopyPtr_(nullptr),
     constProps_(this->particleProperties()),
-    compositionModel_(nullptr),
     phaseChangeModel_(nullptr)
 {
     setModels();
 
-    rhoTrans_.setSize(compositionModel_->carrier().species().size());
+    rhoTrans_.setSize(this->composition().carrier().species().size());
 
     if (readFields)
     {
@@ -114,7 +103,7 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
     // Set storage for mass source fields and initialise to zero
     forAll(rhoTrans_, i)
     {
-        const word& specieName = compositionModel_->carrier().species()[i];
+        const word& specieName = this->composition().carrier().species()[i];
         rhoTrans_.set
         (
             i,
@@ -151,13 +140,12 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
     CloudType(c, name),
     cloudCopyPtr_(nullptr),
     constProps_(c.constProps_),
-    compositionModel_(c.compositionModel_->clone()),
     phaseChangeModel_(c.phaseChangeModel_->clone()),
     rhoTrans_(c.rhoTrans_.size())
 {
     forAll(c.rhoTrans_, i)
     {
-        const word& specieName = compositionModel_->carrier().species()[i];
+        const word& specieName = this->composition().carrier().species()[i];
         rhoTrans_.set
         (
             i,
@@ -190,7 +178,6 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
     CloudType(mesh, name, c),
     cloudCopyPtr_(nullptr),
     constProps_(),
-    compositionModel_(c.compositionModel_->clone()),
     phaseChangeModel_(nullptr),
     rhoTrans_(0)
 {}
@@ -214,7 +201,7 @@ void Foam::ReactingCloud<CloudType>::setParcelThermoProperties
 {
     CloudType::setParcelThermoProperties(parcel, lagrangianDt);
 
-    parcel.Y() = composition().YMixture0();
+    parcel.Y() = this->composition().YMixture0();
 }
 
 
@@ -233,7 +220,7 @@ void Foam::ReactingCloud<CloudType>::checkParcelProperties
         checkSuppliedComposition
         (
             parcel.Y(),
-            composition().YMixture0(),
+            this->composition().YMixture0(),
             "YMixture"
         );
     }
@@ -336,16 +323,6 @@ void Foam::ReactingCloud<CloudType>::info()
     CloudType::info();
 
     this->phaseChange().info(Info);
-}
-
-
-template<class CloudType>
-void Foam::ReactingCloud<CloudType>::writeFields() const
-{
-    if (compositionModel_.valid())
-    {
-        CloudType::particleType::writeFields(*this, this->composition());
-    }
 }
 
 

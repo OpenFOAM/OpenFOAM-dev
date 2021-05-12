@@ -26,6 +26,7 @@ License
 #include "ThermoCloud.H"
 #include "integrationScheme.H"
 #include "HeatTransferModel.H"
+#include "CompositionModel.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
@@ -35,6 +36,15 @@ void Foam::ThermoCloud<CloudType>::setModels()
     heatTransferModel_.reset
     (
         HeatTransferModel<ThermoCloud<CloudType>>::New
+        (
+            this->subModelProperties(),
+            *this
+        ).ptr()
+    );
+
+    compositionModel_.reset
+    (
+        CompositionModel<ThermoCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this
@@ -117,6 +127,8 @@ void Foam::ThermoCloud<CloudType>::cloudReset(ThermoCloud<CloudType>& c)
     CloudType::cloudReset(c);
 
     heatTransferModel_.reset(c.heatTransferModel_.ptr());
+    compositionModel_.reset(c.compositionModel_.ptr());
+
     TIntegrator_.reset(c.TIntegrator_.ptr());
 
     radiation_ = c.radiation_;
@@ -144,6 +156,7 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
     T_(carrierThermo.T()),
     p_(carrierThermo.p()),
     heatTransferModel_(nullptr),
+    compositionModel_(nullptr),
     TIntegrator_(nullptr),
     radiation_(false),
     radAreaP_(nullptr),
@@ -212,6 +225,7 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
     T_(c.T()),
     p_(c.p()),
     heatTransferModel_(c.heatTransferModel_->clone()),
+    compositionModel_(c.compositionModel_->clone()),
     TIntegrator_(c.TIntegrator_->clone()),
     radiation_(c.radiation_),
     radAreaP_(nullptr),
@@ -322,6 +336,7 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
     T_(c.T()),
     p_(c.p()),
     heatTransferModel_(nullptr),
+    compositionModel_(nullptr),
     TIntegrator_(nullptr),
     radiation_(false),
     radAreaP_(nullptr),
@@ -478,6 +493,16 @@ void Foam::ThermoCloud<CloudType>::info()
 
     Info<< "    Temperature min/max             = " << Tmin() << ", " << Tmax()
         << endl;
+}
+
+
+template<class CloudType>
+void Foam::ThermoCloud<CloudType>::writeFields() const
+{
+    if (compositionModel_.valid())
+    {
+        CloudType::particleType::writeFields(*this, this->composition());
+    }
 }
 
 

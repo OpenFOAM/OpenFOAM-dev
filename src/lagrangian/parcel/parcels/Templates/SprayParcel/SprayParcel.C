@@ -64,8 +64,8 @@ void Foam::SprayParcel<ParcelType>::calc
     const scalar dt
 )
 {
-    typedef typename TrackCloudType::reactingCloudType reactingCloudType;
-    const CompositionModel<reactingCloudType>& composition =
+    typedef typename TrackCloudType::thermoCloudType thermoCloudType;
+    const CompositionModel<thermoCloudType>& composition =
         cloud.composition();
 
     // Check if parcel belongs to liquid core
@@ -153,8 +153,8 @@ void Foam::SprayParcel<ParcelType>::calcAtomization
     const scalar dt
 )
 {
-    typedef typename TrackCloudType::reactingCloudType reactingCloudType;
-    const CompositionModel<reactingCloudType>& composition =
+    typedef typename TrackCloudType::thermoCloudType thermoCloudType;
+    const CompositionModel<thermoCloudType>& composition =
         cloud.composition();
 
     typedef typename TrackCloudType::sprayCloudType sprayCloudType;
@@ -325,8 +325,8 @@ Foam::scalar Foam::SprayParcel<ParcelType>::chi
 {
     // Modifications to take account of the flash boiling on primary break-up
 
-    typedef typename TrackCloudType::reactingCloudType reactingCloudType;
-    const CompositionModel<reactingCloudType>& composition =
+    typedef typename TrackCloudType::thermoCloudType thermoCloudType;
+    const CompositionModel<thermoCloudType>& composition =
         cloud.composition();
 
     scalar chi = 0.0;

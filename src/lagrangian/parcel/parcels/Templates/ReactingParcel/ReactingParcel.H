@@ -122,47 +122,8 @@ public:
     };
 
 
-    class trackingData
-    :
-        public ParcelType::trackingData
-    {
-    private:
-
-        // Private Data
-
-            // Interpolators for continuous phase fields
-
-                //- Interpolator for continuous phase pressure field
-                autoPtr<interpolation<scalar>> pInterp_;
-
-
-            // Cached continuous phase properties
-
-                //- Pressure [Pa]
-                scalar pc_;
-
-
-    public:
-
-        // Constructors
-
-            //- Construct from components
-            template<class TrackCloudType>
-            inline trackingData(const TrackCloudType& cloud);
-
-
-        // Member Functions
-
-            //- Return const access to the interpolator for continuous phase
-            //  pressure field
-            inline const interpolation<scalar>& pInterp() const;
-
-            //- Return the continuous phase pressure
-            inline scalar pc() const;
-
-            //- Access the continuous phase pressure
-            inline scalar& pc();
-    };
+    //- Use base tracking data
+    typedef typename ParcelType::trackingData trackingData;
 
 
 protected:
@@ -407,7 +368,6 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 #include "ReactingParcelI.H"
-#include "ReactingParcelTrackingDataI.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

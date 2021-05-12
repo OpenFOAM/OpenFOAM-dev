@@ -41,6 +41,7 @@ solution
         U               cellPoint;
         Cp              cell;
         kappa           cell;
+        p               cell;
         T               cell;
         G               cell;
     }
@@ -108,6 +109,8 @@ subModels
 
     radiation       on;
 
+    compositionModel singlePhaseMixture;
+
     standardWallInteractionCoeffs
     {
         type            rebound;
@@ -118,6 +121,17 @@ subModels
     RanzMarshallCoeffs
     {
         BirdCorrection  false;
+    }
+
+    singlePhaseMixtureCoeffs
+    {
+        phases
+        (
+            solid
+            {
+                CaCO3   1;
+            }
+        );
     }
 }
 
