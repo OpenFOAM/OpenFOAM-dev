@@ -37,13 +37,13 @@ Foam::tmp<Foam::scalarField> Foam::LiquidEvaporation<CloudType>::calcXc
     const label celli
 ) const
 {
-    scalarField Xc(this->owner().thermo().carrier().Y().size());
+    scalarField Xc(this->owner().composition().carrier().Y().size());
 
     forAll(Xc, i)
     {
         Xc[i] =
-            this->owner().thermo().carrier().Y()[i][celli]
-           /this->owner().thermo().carrier().Wi(i);
+            this->owner().composition().carrier().Y()[i][celli]
+           /this->owner().composition().carrier().Wi(i);
     }
 
     return Xc/sum(Xc);

@@ -60,7 +60,7 @@ SourceFiles
 #include "volFields.H"
 #include "fvMatrices.H"
 #include "cloudSolution.H"
-#include "SLGThermo.H"
+#include "fluidThermo.H"
 
 #include "ParticleForceList.H"
 #include "CloudFunctionObjectList.H"
@@ -290,7 +290,7 @@ public:
             const volScalarField& rho,
             const volVectorField& U,
             const dimensionedVector& g,
-            const SLGThermo& thermo,
+            const fluidThermo& carrierThermo,
             const bool readFields = true
         );
 

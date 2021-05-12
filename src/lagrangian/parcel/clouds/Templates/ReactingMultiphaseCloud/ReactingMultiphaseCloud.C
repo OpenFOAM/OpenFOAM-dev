@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,11 +78,11 @@ Foam::ReactingMultiphaseCloud<CloudType>::ReactingMultiphaseCloud
     const volScalarField& rho,
     const volVectorField& U,
     const dimensionedVector& g,
-    const SLGThermo& thermo,
+    const fluidThermo& carrierThermo,
     const bool readFields
 )
 :
-    CloudType(cloudName, rho, U, g, thermo, false),
+    CloudType(cloudName, rho, U, g, carrierThermo, false),
     cloudCopyPtr_(nullptr),
     constProps_(this->particleProperties()),
     devolatilisationModel_(nullptr),

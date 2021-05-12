@@ -1,2 +1,2 @@
 Info<< "\nConstructing clouds" << endl;
-parcelCloudList parcels(rho, U, g, slgThermo);
+parcelCloudList parcels(rho, U, g, thermo);

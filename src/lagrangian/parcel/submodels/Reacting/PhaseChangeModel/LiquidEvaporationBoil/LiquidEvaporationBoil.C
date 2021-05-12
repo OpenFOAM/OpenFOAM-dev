@@ -37,13 +37,13 @@ Foam::tmp<Foam::scalarField> Foam::LiquidEvaporationBoil<CloudType>::calcXc
     const label celli
 ) const
 {
-    scalarField Xc(this->owner().thermo().carrier().Y().size());
+    scalarField Xc(this->owner().composition().carrier().Y().size());
 
     forAll(Xc, i)
     {
         Xc[i] =
-            this->owner().thermo().carrier().Y()[i][celli]
-           /this->owner().thermo().carrier().Wi(i);
+            this->owner().composition().carrier().Y()[i][celli]
+           /this->owner().composition().carrier().Wi(i);
     }
 
     return Xc/sum(Xc);
@@ -178,13 +178,13 @@ void Foam::LiquidEvaporationBoil<CloudType>::calculate
     scalar Hc = 0.0;
     scalar Cpc = 0.0;
     scalar kappac = 0.0;
-    forAll(this->owner().thermo().carrier().Y(), i)
+    forAll(this->owner().composition().carrier().Y(), i)
     {
-        scalar Yc = this->owner().thermo().carrier().Y()[i][celli];
-        Hc += Yc*this->owner().thermo().carrier().Ha(i, pc, Tc);
-        Hsc += Yc*this->owner().thermo().carrier().Ha(i, ps, Ts);
-        Cpc += Yc*this->owner().thermo().carrier().Cp(i, ps, Ts);
-        kappac += Yc*this->owner().thermo().carrier().kappa(i, ps, Ts);
+        scalar Yc = this->owner().composition().carrier().Y()[i][celli];
+        Hc += Yc*this->owner().composition().carrier().Ha(i, pc, Tc);
+        Hsc += Yc*this->owner().composition().carrier().Ha(i, ps, Ts);
+        Cpc += Yc*this->owner().composition().carrier().Cp(i, ps, Ts);
+        kappac += Yc*this->owner().composition().carrier().kappa(i, ps, Ts);
     }
 
     // calculate mass transfer of each specie in liquid

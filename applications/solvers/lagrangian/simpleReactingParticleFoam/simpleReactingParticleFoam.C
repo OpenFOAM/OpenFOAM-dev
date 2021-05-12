@@ -39,7 +39,6 @@ Description
 #include "IOporosityModelList.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
-#include "SLGThermo.H"
 #include "simpleControl.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

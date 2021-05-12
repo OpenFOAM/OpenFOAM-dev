@@ -23,55 +23,22 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "SLGThermo.H"
-
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-namespace Foam
-{
-    defineTypeNameAndDebug(SLGThermo, 0);
-}
-
+#include "parcelThermo.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::SLGThermo::SLGThermo(const fvMesh& mesh, const fluidThermo& thermo)
+Foam::parcelThermo::parcelThermo(const fluidThermo& carrierThermo)
 :
-    regIOobject
-    (
-        IOobject
-        (
-            SLGThermo::typeName,
-            mesh.polyMesh::instance(),
-            mesh
-        )
-    ),
-    thermo_(thermo),
-    carrier_(nullptr),
     liquids_(nullptr),
     solids_(nullptr)
 {
     Info<< "Creating component thermo properties:" << endl;
 
-    if (isA<basicSpecieMixture>(thermo))
-    {
-        const basicSpecieMixture& mcThermo =
-            refCast<const basicSpecieMixture>(thermo);
-        carrier_ = &mcThermo;
-
-        Info<< "    multi-component carrier - " << mcThermo.species().size()
-            << " species" << endl;
-    }
-    else
-    {
-        Info<< "    single component carrier" << endl;
-    }
-
-    if (thermo.properties().found("liquids"))
+    if (carrierThermo.properties().found("liquids"))
     {
         liquids_ = liquidMixtureProperties::New
         (
-            thermo.properties().subDict("liquids")
+            carrierThermo.properties().subDict("liquids")
         );
         Info<< "    liquids - " << liquids_->components().size()
             << " components" << endl;
@@ -81,11 +48,11 @@ Foam::SLGThermo::SLGThermo(const fvMesh& mesh, const fluidThermo& thermo)
         Info<< "    no liquid components" << endl;
     }
 
-    if (thermo.properties().found("solids"))
+    if (carrierThermo.properties().found("solids"))
     {
         solids_ = solidMixtureProperties::New
         (
-            thermo.properties().subDict("solids")
+            carrierThermo.properties().subDict("solids")
         );
         Info<< "    solids - " << solids_->components().size()
             << " components" << endl;
@@ -99,32 +66,13 @@ Foam::SLGThermo::SLGThermo(const fvMesh& mesh, const fluidThermo& thermo)
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::SLGThermo::~SLGThermo()
+Foam::parcelThermo::~parcelThermo()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-const Foam::fluidThermo& Foam::SLGThermo::thermo() const
-{
-    return thermo_;
-}
-
-
-const Foam::basicSpecieMixture& Foam::SLGThermo::carrier() const
-{
-    if (carrier_ == nullptr)
-    {
-        FatalErrorInFunction
-            << "carrier requested, but object is not allocated"
-            << abort(FatalError);
-    }
-
-    return *carrier_;
-}
-
-
-const Foam::liquidMixtureProperties& Foam::SLGThermo::liquids() const
+const Foam::liquidMixtureProperties& Foam::parcelThermo::liquids() const
 {
     if (!liquids_.valid())
     {
@@ -137,7 +85,7 @@ const Foam::liquidMixtureProperties& Foam::SLGThermo::liquids() const
 }
 
 
-const Foam::solidMixtureProperties& Foam::SLGThermo::solids() const
+const Foam::solidMixtureProperties& Foam::parcelThermo::solids() const
 {
     if (!solids_.valid())
     {
@@ -150,33 +98,7 @@ const Foam::solidMixtureProperties& Foam::SLGThermo::solids() const
 }
 
 
-Foam::label Foam::SLGThermo::carrierId
-(
-    const word& cmptName,
-    bool allowNotfound
-) const
-{
-    forAll(carrier().species(), i)
-    {
-        if (cmptName == carrier_->species()[i])
-        {
-            return i;
-        }
-    }
-
-    if (!allowNotfound)
-    {
-        FatalErrorInFunction
-            << "Unknown carrier component " << cmptName
-            << ". Valid carrier components are:" << nl
-            << carrier_->species() << exit(FatalError);
-    }
-
-    return -1;
-}
-
-
-Foam::label Foam::SLGThermo::liquidId
+Foam::label Foam::parcelThermo::liquidId
 (
     const word& cmptName,
     bool allowNotfound
@@ -201,7 +123,7 @@ Foam::label Foam::SLGThermo::liquidId
 }
 
 
-Foam::label Foam::SLGThermo::solidId
+Foam::label Foam::parcelThermo::solidId
 (
     const word& cmptName,
     bool allowNotfound
@@ -223,24 +145,6 @@ Foam::label Foam::SLGThermo::solidId
     }
 
     return -1;
-}
-
-
-bool Foam::SLGThermo::hasMultiComponentCarrier() const
-{
-    return (carrier_ != nullptr);
-}
-
-
-bool Foam::SLGThermo::hasLiquids() const
-{
-    return liquids_.valid();
-}
-
-
-bool Foam::SLGThermo::hasSolids() const
-{
-    return solids_.valid();
 }
 
 

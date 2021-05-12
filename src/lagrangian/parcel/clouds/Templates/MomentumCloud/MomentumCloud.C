@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -409,11 +409,11 @@ Foam::MomentumCloud<CloudType>::MomentumCloud
     const volScalarField& rho,
     const volVectorField& U,
     const dimensionedVector& g,
-    const SLGThermo& thermo,
+    const fluidThermo& carrierThermo,
     const bool readFields
 )
 :
-    MomentumCloud(cloudName, rho, U, thermo.thermo().mu(), g, readFields)
+    MomentumCloud(cloudName, rho, U, carrierThermo.mu(), g, readFields)
 {}
 
 

@@ -35,7 +35,6 @@ Description
 #include "fluidReactionThermophysicalTransportModel.H"
 #include "parcelCloudList.H"
 #include "surfaceFilmModel.H"
-#include "SLGThermo.H"
 #include "fluidReactionThermo.H"
 #include "combustionModel.H"
 #include "pimpleControl.H"

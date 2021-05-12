@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,18 +91,19 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
     const volScalarField& rho,
     const volVectorField& U,
     const dimensionedVector& g,
-    const SLGThermo& thermo,
+    const fluidThermo& carrierThermo,
     const bool readFields
 )
 :
-    CloudType(cloudName, rho, U, g, thermo, false),
+    CloudType(cloudName, rho, U, g, carrierThermo, false),
     cloudCopyPtr_(nullptr),
     constProps_(this->particleProperties()),
     compositionModel_(nullptr),
-    phaseChangeModel_(nullptr),
-    rhoTrans_(this->thermo().carrier().species().size())
+    phaseChangeModel_(nullptr)
 {
     setModels();
+
+    rhoTrans_.setSize(compositionModel_->carrier().species().size());
 
     if (readFields)
     {
@@ -113,7 +114,7 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
     // Set storage for mass source fields and initialise to zero
     forAll(rhoTrans_, i)
     {
-        const word& specieName = this->thermo().carrier().species()[i];
+        const word& specieName = compositionModel_->carrier().species()[i];
         rhoTrans_.set
         (
             i,
@@ -156,7 +157,7 @@ Foam::ReactingCloud<CloudType>::ReactingCloud
 {
     forAll(c.rhoTrans_, i)
     {
-        const word& specieName = this->thermo().carrier().species()[i];
+        const word& specieName = compositionModel_->carrier().species()[i];
         rhoTrans_.set
         (
             i,

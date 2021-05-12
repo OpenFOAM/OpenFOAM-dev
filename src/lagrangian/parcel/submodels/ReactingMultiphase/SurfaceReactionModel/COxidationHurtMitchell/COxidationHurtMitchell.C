@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,11 +52,11 @@ Foam::COxidationHurtMitchell<CloudType>::COxidationHurtMitchell
     ashLocalId_ = owner.composition().localId(idSolid, "ash", true);
 
     // Set local copies of thermo properties
-    WO2_ = owner.thermo().carrier().Wi(O2GlobalId_);
-    const scalar WCO2 = owner.thermo().carrier().Wi(CO2GlobalId_);
+    WO2_ = owner.composition().carrier().Wi(O2GlobalId_);
+    const scalar WCO2 = owner.composition().carrier().Wi(CO2GlobalId_);
     WC_ = WCO2 - WO2_;
 
-    HcCO2_ = owner.thermo().carrier().Hf(CO2GlobalId_);
+    HcCO2_ = owner.composition().carrier().Hf(CO2GlobalId_);
 
     const scalar YCloc = owner.composition().Y0(idSolid)[CsLocalId_];
     const scalar YSolidTot = owner.composition().YMixture0()[idSolid];
@@ -130,10 +130,11 @@ Foam::scalar Foam::COxidationHurtMitchell<CloudType>::calculate
         return 0.0;
     }
 
-    const SLGThermo& thermo = this->owner().thermo();
+    const parcelThermo& thermo = this->owner().thermo();
+    const basicSpecieMixture& carrier = this->owner().composition().carrier();
 
     // Local mass fraction of O2 in the carrier phase
-    const scalar YO2 = thermo.carrier().Y(O2GlobalId_)[celli];
+    const scalar YO2 = carrier.Y(O2GlobalId_)[celli];
 
     // No combustion if no oxygen present
     if (YO2 < small)

@@ -40,7 +40,7 @@ SourceFiles
 
 #include "particle.H"
 #include "interpolation.H"
-#include "SLGThermo.H"
+#include "fluidThermo.H"
 #include "demandDrivenEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

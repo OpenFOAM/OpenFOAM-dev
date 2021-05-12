@@ -55,7 +55,15 @@ Foam::ThermoCloud<CloudType>::constProps()
 
 
 template<class CloudType>
-inline const Foam::SLGThermo& Foam::ThermoCloud<CloudType>::thermo() const
+inline const Foam::fluidThermo&
+Foam::ThermoCloud<CloudType>::carrierThermo() const
+{
+    return carrierThermo_;
+}
+
+
+template<class CloudType>
+inline const Foam::parcelThermo& Foam::ThermoCloud<CloudType>::thermo() const
 {
     return thermo_;
 }
@@ -236,7 +244,7 @@ Foam::ThermoCloud<CloudType>::Sh(const volScalarField& hs) const
     {
         if (this->solution().semiImplicit("h"))
         {
-            const volScalarField Cp(thermo_.thermo().Cp());
+            const volScalarField Cp(carrierThermo_.Cp());
             const volScalarField::Internal
                 Vdt(this->mesh().V()*this->db().time().deltaT());
 

@@ -143,7 +143,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::absorbInteraction
     const liquidProperties& liq = thermo_.liquids().properties()[0];
 
     // Local pressure
-    const scalar pc = thermo_.thermo().p()[p.cell()];
+    const scalar pc = carrierThermo_.p()[p.cell()];
 
     filmModel.addSources
     (
@@ -213,7 +213,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::drySplashInteraction
     const vector& nf = pp.faceNormals()[facei];
 
     // Local pressure
-    const scalar pc = thermo_.thermo().p()[p.cell()];
+    const scalar pc = carrierThermo_.p()[p.cell()];
 
     // Retrieve parcel properties
     const scalar m = p.mass()*p.nParticle();
@@ -269,7 +269,7 @@ void Foam::ThermoSurfaceFilm<CloudType>::wetSplashInteraction
     const vector& nf = pp.faceNormals()[facei];
 
     // Local pressure
-    const scalar pc = thermo_.thermo().p()[p.cell()];
+    const scalar pc = carrierThermo_.p()[p.cell()];
 
     // Retrieve parcel properties
     const scalar m = p.mass()*p.nParticle();
@@ -470,10 +470,11 @@ Foam::ThermoSurfaceFilm<CloudType>::ThermoSurfaceFilm
 :
     SurfaceFilmModel<CloudType>(dict, owner, typeName),
     rndGen_(owner.rndGen()),
-    thermo_
+    carrierThermo_
     (
-        owner.db().objectRegistry::template lookupObject<SLGThermo>("SLGThermo")
+        static_cast<const ThermoCloud<CloudType>&>(owner).carrierThermo()
     ),
+    thermo_(static_cast<const ThermoCloud<CloudType>&>(owner).thermo()),
     TFilmPatch_(0),
     CpFilmPatch_(0),
     interactionType_
@@ -513,6 +514,7 @@ Foam::ThermoSurfaceFilm<CloudType>::ThermoSurfaceFilm
 :
     SurfaceFilmModel<CloudType>(sfm),
     rndGen_(sfm.rndGen_),
+    carrierThermo_(sfm.carrierThermo_),
     thermo_(sfm.thermo_),
     TFilmPatch_(sfm.TFilmPatch_),
     CpFilmPatch_(sfm.CpFilmPatch_),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -104,11 +104,11 @@ Foam::MPPICCloud<CloudType>::MPPICCloud
     const volScalarField& rho,
     const volVectorField& U,
     const dimensionedVector& g,
-    const SLGThermo& thermo,
+    const fluidThermo& carrierThermo,
     const bool readFields
 )
 :
-    MPPICCloud(cloudName, rho, U, thermo.thermo().mu(), g, readFields)
+    MPPICCloud(cloudName, rho, U, carrierThermo.mu(), g, readFields)
 {}
 
 

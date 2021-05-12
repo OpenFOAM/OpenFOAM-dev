@@ -90,7 +90,7 @@ public:
             const volScalarField& rho,
             const volVectorField& U,
             const dimensionedVector& g,
-            const SLGThermo& thermo
+            const fluidThermo& carrierThermo
         );
 
         //- Disallow default bitwise copy construction

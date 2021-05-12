@@ -31,6 +31,13 @@ template<class CloudType>
 Foam::CompositionModel<CloudType>::CompositionModel(CloudType& owner)
 :
     CloudSubModelBase<CloudType>(owner),
+    carrierThermo_(owner.carrierThermo()),
+    carrierMixture_
+    (
+        isA<basicSpecieMixture>(carrierThermo_)
+      ? &refCast<const basicSpecieMixture>(carrierThermo_)
+      : nullptr
+    ),
     thermo_(owner.thermo()),
     phaseProps_()
 {}
@@ -45,11 +52,13 @@ Foam::CompositionModel<CloudType>::CompositionModel
 )
 :
     CloudSubModelBase<CloudType>(owner, dict, typeName, type),
+    carrierThermo_(owner.carrierThermo()),
+    carrierMixture_(&refCast<const basicSpecieMixture>(carrierThermo_)),
     thermo_(owner.thermo()),
     phaseProps_
     (
         this->coeffDict().lookup("phases"),
-        thermo_.carrier().species(),
+        carrierMixture_->species(),
         thermo_.liquids().components(),
         thermo_.solids().components()
     )
@@ -63,6 +72,8 @@ Foam::CompositionModel<CloudType>::CompositionModel
 )
 :
     CloudSubModelBase<CloudType>(cm),
+    carrierThermo_(cm.carrierThermo_),
+    carrierMixture_(cm.carrierMixture_),
     thermo_(cm.thermo_),
     phaseProps_(cm.phaseProps_)
 {}
@@ -78,7 +89,7 @@ Foam::CompositionModel<CloudType>::~CompositionModel()
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class CloudType>
-const Foam::SLGThermo& Foam::CompositionModel<CloudType>::thermo() const
+const Foam::parcelThermo& Foam::CompositionModel<CloudType>::thermo() const
 {
     return thermo_;
 }
@@ -88,7 +99,14 @@ template<class CloudType>
 const Foam::basicSpecieMixture&
 Foam::CompositionModel<CloudType>::carrier() const
 {
-    return thermo_.carrier();
+    if (carrierMixture_ == nullptr)
+    {
+        FatalErrorInFunction
+            << "carrier requested, but object is not allocated"
+            << abort(FatalError);
+    }
+
+    return *carrierMixture_;
 }
 
 
@@ -160,14 +178,22 @@ Foam::label Foam::CompositionModel<CloudType>::carrierId
     const bool allowNotFound
 ) const
 {
-    label id = thermo_.carrierId(cmptName);
+    label id = -1;
+
+    forAll(carrierMixture_->species(), i)
+    {
+        if (cmptName == carrierMixture_->species()[i])
+        {
+            id = i;
+        }
+    }
 
     if (id < 0 && !allowNotFound)
     {
         FatalErrorInFunction
             << "Unable to determine global id for requested component "
             << cmptName << ". Available components are " << nl
-            << thermo_.carrier().species()
+            << carrierMixture_->species()
             << abort(FatalError);
     }
 
@@ -245,7 +271,7 @@ Foam::scalarField Foam::CompositionModel<CloudType>::X
             forAll(Y, i)
             {
                 label cid = props.carrierIds()[i];
-                X[i] = Y[i]/thermo_.carrier().Wi(cid);
+                X[i] = Y[i]/carrierMixture_->Wi(cid);
                 WInv += X[i];
             }
             break;
@@ -291,7 +317,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::H
             forAll(Y, i)
             {
                 label cid = props.carrierIds()[i];
-                HMixture += Y[i]*thermo_.carrier().Ha(cid, p, T);
+                HMixture += Y[i]*carrierMixture_->Ha(cid, p, T);
             }
             break;
         }
@@ -340,7 +366,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::Hs
             forAll(Y, i)
             {
                 label cid = props.carrierIds()[i];
-                HsMixture += Y[i]*thermo_.carrier().Hs(cid, p, T);
+                HsMixture += Y[i]*carrierMixture_->Hs(cid, p, T);
             }
             break;
         }
@@ -391,7 +417,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::Hc
             forAll(Y, i)
             {
                 label cid = props.carrierIds()[i];
-                HcMixture += Y[i]*thermo_.carrier().Hf(cid);
+                HcMixture += Y[i]*carrierMixture_->Hf(cid);
             }
             break;
         }
@@ -441,7 +467,7 @@ Foam::scalar Foam::CompositionModel<CloudType>::Cp
             forAll(Y, i)
             {
                 label cid = props.carrierIds()[i];
-                CpMixture += Y[i]*thermo_.carrier().Cp(cid, p, T);
+                CpMixture += Y[i]*carrierMixture_->Cp(cid, p, T);
             }
             break;
         }

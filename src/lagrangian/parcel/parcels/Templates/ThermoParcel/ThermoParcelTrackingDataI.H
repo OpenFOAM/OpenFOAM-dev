@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,8 +31,8 @@ inline Foam::ThermoParcel<ParcelType>::trackingData::trackingData
 )
 :
     ParcelType::trackingData(cloud),
-    Cp_(cloud.thermo().thermo().Cp()),
-    kappa_(cloud.thermo().thermo().kappa()),
+    Cp_(cloud.carrierThermo().Cp()),
+    kappa_(cloud.carrierThermo().kappa()),
     TInterp_
     (
         interpolation<scalar>::New

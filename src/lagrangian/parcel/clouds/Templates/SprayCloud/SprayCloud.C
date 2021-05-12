@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "SprayCloud.H"
 #include "AtomizationModel.H"
 #include "BreakupModel.H"
+#include "parcelThermo.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
 
@@ -74,11 +75,11 @@ Foam::SprayCloud<CloudType>::SprayCloud
     const volScalarField& rho,
     const volVectorField& U,
     const dimensionedVector& g,
-    const SLGThermo& thermo,
+    const fluidThermo& carrierThermo,
     bool readFields
 )
 :
-    CloudType(cloudName, rho, U, g, thermo, false),
+    CloudType(cloudName, rho, U, g, carrierThermo, false),
     cloudCopyPtr_(nullptr),
     averageParcelMass_(0.0),
     atomizationModel_(nullptr),

@@ -109,13 +109,13 @@ Foam::parcelCloudList::parcelCloudList
     const volScalarField& rho,
     const volVectorField& U,
     const dimensionedVector& g,
-    const SLGThermo& thermo
+    const fluidThermo& carrierThermo
 )
 :
     PtrList<parcelCloud>(),
     mesh_(rho.mesh())
 {
-    initialise(rho, U, g, thermo);
+    initialise(rho, U, g, carrierThermo);
 }
 
 

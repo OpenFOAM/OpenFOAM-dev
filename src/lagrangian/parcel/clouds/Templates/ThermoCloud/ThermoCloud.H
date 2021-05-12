@@ -43,7 +43,7 @@ SourceFiles
 #include "fvMatricesFwd.H"
 #include "dimensionedTypes.H"
 #include "fvMesh.H"
-#include "SLGThermo.H"
+#include "parcelThermo.H"
 #include "Cloud.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -108,8 +108,11 @@ protected:
 
         // References to the carrier gas fields
 
+            //- Thermophysical properties of the carrier fluid
+            const fluidThermo& carrierThermo_;
+
             //- SLG thermodynamics package
-            const SLGThermo& thermo_;
+            const parcelThermo thermo_;
 
             //- Temperature [K]
             const volScalarField& T_;
@@ -180,7 +183,7 @@ public:
             const volScalarField& rho,
             const volVectorField& U,
             const dimensionedVector& g,
-            const SLGThermo& thermo,
+            const fluidThermo& carrierThermo,
             const bool readFields = true
         );
 
@@ -235,8 +238,11 @@ public:
             //- Return access to the constant properties
             inline typename parcelType::constantProperties& constProps();
 
+            //- Return const access to carrier thermo package
+            inline const fluidThermo& carrierThermo() const;
+
             //- Return const access to thermo package
-            inline const SLGThermo& thermo() const;
+            inline const parcelThermo& thermo() const;
 
             //- Return const access to the carrier temperature field
             inline const volScalarField& T() const;

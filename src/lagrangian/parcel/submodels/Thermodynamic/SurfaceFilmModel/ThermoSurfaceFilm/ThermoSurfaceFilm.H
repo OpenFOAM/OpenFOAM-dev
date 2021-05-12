@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,8 +100,11 @@ protected:
         //- Reference to the cloud random number generator
         Random& rndGen_;
 
+        //- Thermophysical properties of the carrier fluid
+        const fluidThermo& carrierThermo_;
+
         //- Reference to the cloud thermo package
-        const SLGThermo& thermo_;
+        const parcelThermo& thermo_;
 
 
         // Cached injector fields per film patch

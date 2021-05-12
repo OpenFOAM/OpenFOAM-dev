@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,6 @@ License
 
 #include "ThermoCloud.H"
 #include "integrationScheme.H"
-
 #include "HeatTransferModel.H"
 
 // * * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * //
@@ -133,16 +132,17 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
     const volScalarField& rho,
     const volVectorField& U,
     const dimensionedVector& g,
-    const SLGThermo& thermo,
+    const fluidThermo& carrierThermo,
     const bool readFields
 )
 :
-    CloudType(cloudName, rho, U, g, thermo, false),
+    CloudType(cloudName, rho, U, g, carrierThermo, false),
     cloudCopyPtr_(nullptr),
     constProps_(this->particleProperties()),
-    thermo_(thermo),
-    T_(thermo.thermo().T()),
-    p_(thermo.thermo().p()),
+    carrierThermo_(carrierThermo),
+    thermo_(carrierThermo_),
+    T_(carrierThermo.T()),
+    p_(carrierThermo.p()),
     heatTransferModel_(nullptr),
     TIntegrator_(nullptr),
     radiation_(false),
@@ -207,6 +207,7 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
     CloudType(c, name),
     cloudCopyPtr_(nullptr),
     constProps_(c.constProps_),
+    carrierThermo_(c.carrierThermo_),
     thermo_(c.thermo_),
     T_(c.T()),
     p_(c.p()),
@@ -316,6 +317,7 @@ Foam::ThermoCloud<CloudType>::ThermoCloud
     CloudType(mesh, name, c),
     cloudCopyPtr_(nullptr),
     constProps_(),
+    carrierThermo_(c.carrierThermo_),
     thermo_(c.thermo()),
     T_(c.T()),
     p_(c.p()),
@@ -444,7 +446,7 @@ void Foam::ThermoCloud<CloudType>::preEvolve()
 {
     CloudType::preEvolve();
 
-    this->pAmbient() = thermo_.thermo().p().average().value();
+    this->pAmbient() = carrierThermo_.p().average().value();
 }
 
 

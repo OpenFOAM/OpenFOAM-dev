@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,14 +39,10 @@ SourceFiles
 #define CompositionModel_H
 
 #include "CloudSubModelBase.H"
-#include "IOdictionary.H"
-#include "autoPtr.H"
-#include "runTimeSelectionTables.H"
-
-#include "PtrList.H"
-#include "SLGThermo.H"
-
+#include "parcelThermo.H"
+#include "basicSpecieMixture.H"
 #include "phasePropertiesList.H"
+#include "runTimeSelectionTables.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -64,8 +60,14 @@ class CompositionModel
 {
     // Private Data
 
+        //- Reference to thermophysical properties of the carrier fluid
+        const fluidThermo& carrierThermo_;
+
+        //- Pointer to the multi-component carrier composition
+        const basicSpecieMixture* carrierMixture_;
+
         //- Reference to the thermo database
-        const SLGThermo& thermo_;
+        const parcelThermo& thermo_;
 
         //- List of phase properties
         phasePropertiesList phaseProps_;
@@ -127,7 +129,7 @@ public:
         // Access
 
             //- Return the thermo database
-            const SLGThermo& thermo() const;
+            const parcelThermo& thermo() const;
 
 
             // Composition lists

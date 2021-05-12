@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,11 +65,11 @@ Foam::COxidationMurphyShaddix<CloudType>::COxidationMurphyShaddix
     CsLocalId_ = owner.composition().localId(idSolid, "C");
 
     // Set local copies of thermo properties
-    WO2_ = owner.thermo().carrier().Wi(O2GlobalId_);
-    const scalar WCO2 = owner.thermo().carrier().Wi(CO2GlobalId_);
+    WO2_ = owner.composition().carrier().Wi(O2GlobalId_);
+    const scalar WCO2 = owner.composition().carrier().Wi(CO2GlobalId_);
     WC_ = WCO2 - WO2_;
 
-    HcCO2_ = owner.thermo().carrier().Hf(CO2GlobalId_);
+    HcCO2_ = owner.composition().carrier().Hf(CO2GlobalId_);
 
     const scalar YCloc = owner.composition().Y0(idSolid)[CsLocalId_];
     const scalar YSolidTot = owner.composition().YMixture0()[idSolid];
@@ -142,10 +142,11 @@ Foam::scalar Foam::COxidationMurphyShaddix<CloudType>::calculate
         return 0.0;
     }
 
-    const SLGThermo& thermo = this->owner().thermo();
+    const parcelThermo& thermo = this->owner().thermo();
+    const basicSpecieMixture& carrier = this->owner().composition().carrier();
 
     // Cell carrier phase O2 species density [kg/m^3]
-    const scalar rhoO2 = rhoc*thermo.carrier().Y(O2GlobalId_)[celli];
+    const scalar rhoO2 = rhoc*carrier.Y(O2GlobalId_)[celli];
 
     if (rhoO2 < small)
     {

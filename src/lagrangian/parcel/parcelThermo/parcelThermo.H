@@ -22,32 +22,28 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::SLGThermo
+    Foam::parcelThermo
 
 Description
     Thermo package for (S)olids (L)iquids and (G)ases
     Takes reference to thermo package, and provides:
-    - carrier : components of thermo - access to elemental properties
     - liquids : liquid components - access  to elemental properties
     - solids  : solid components - access  to elemental properties
 
-    If thermo is not a multi-component thermo package, carrier is nullptr.
-    Similarly, if no liquids or solids are specified, their respective
-    pointers will also be nullptr.
+    If no liquids or solids are specified, their respective pointers will also
+    be nullptr.
 
     Registered to the mesh so that it can be looked-up
 
 SourceFiles
-    SLGThermo.C
+    parcelThermo.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef SLGThermo_H
-#define SLGThermo_H
+#ifndef parcelThermo_H
+#define parcelThermo_H
 
-#include "regIOobject.H"
 #include "fluidThermo.H"
-#include "basicSpecieMixture.H"
 #include "liquidMixtureProperties.H"
 #include "solidMixtureProperties.H"
 
@@ -57,20 +53,12 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class SLGThermo Declaration
+                          Class parcelThermo Declaration
 \*---------------------------------------------------------------------------*/
 
-class SLGThermo
-:
-    public regIOobject
+class parcelThermo
 {
     // Private Data
-
-        //- Thermo package
-        const fluidThermo& thermo_;
-
-        //- Reference to the multi-component carrier phase thermo
-        const basicSpecieMixture* carrier_;
 
         //- Additional liquid properties data
         autoPtr<liquidMixtureProperties> liquids_;
@@ -81,78 +69,37 @@ class SLGThermo
 
 public:
 
-    //- Runtime type information
-    TypeName("SLGThermo");
-
     // Constructors
 
-        //- Construct from mesh
-        SLGThermo(const fvMesh& mesh, const fluidThermo& thermo);
+        //- Construct from carrier thermo
+        parcelThermo(const fluidThermo& carrierThermo);
 
 
     //- Destructor
-    virtual ~SLGThermo();
+    virtual ~parcelThermo();
 
 
     // Member Functions
 
-        // Access
+        //- Return reference to the global (additional) liquids
+        const liquidMixtureProperties& liquids() const;
 
-            //- Return reference to the thermo database
-            const fluidThermo& thermo() const;
+        //- Return reference to the global (additional) solids
+        const solidMixtureProperties& solids() const;
 
-            //- Return reference to the gaseous components
-            const basicSpecieMixture& carrier() const;
+        //- Index of liquid component
+        label liquidId
+        (
+            const word& cmptName,
+            bool allowNotFound = false
+        ) const;
 
-            //- Return reference to the global (additional) liquids
-            const liquidMixtureProperties& liquids() const;
-
-            //- Return reference to the global (additional) solids
-            const solidMixtureProperties& solids() const;
-
-
-            // Index retrieval
-
-                //- Index of carrier component
-                label carrierId
-                (
-                    const word& cmptName,
-                    bool allowNotFound = false
-                ) const;
-
-                //- Index of liquid component
-                label liquidId
-                (
-                    const word& cmptName,
-                    bool allowNotFound = false
-                ) const;
-
-                //- Index of solid component
-                label solidId
-                (
-                    const word& cmptName,
-                    bool allowNotFound = false
-                ) const;
-
-
-        // Checks
-
-            //- Thermo database has multi-component carrier flag
-            bool hasMultiComponentCarrier() const;
-
-            //- Thermo database has liquid components flag
-            bool hasLiquids() const;
-
-            //- Thermo database has solid components flag
-            bool hasSolids() const;
-
-
-        // IO
-
-            bool writeData(Foam::Ostream&) const
-            {
-                return true;
-            }
+        //- Index of solid component
+        label solidId
+        (
+            const word& cmptName,
+            bool allowNotFound = false
+        ) const;
 };
 
 

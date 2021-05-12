@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ Foam::autoPtr<Foam::parcelCloud> Foam::parcelCloud::New
     const volScalarField& rho,
     const volVectorField& U,
     const dimensionedVector& g,
-    const SLGThermo& thermo
+    const fluidThermo& carrierThermo
 )
 {
     IOdictionary dict
@@ -105,7 +105,7 @@ Foam::autoPtr<Foam::parcelCloud> Foam::parcelCloud::New
             << exit(FatalError);
     }
 
-    return cstrIter()(name, rho, U, g, thermo);
+    return cstrIter()(name, rho, U, g, carrierThermo);
 }
 
 

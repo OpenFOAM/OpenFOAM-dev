@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -231,17 +231,17 @@ public:
 
 #define makeSurfaceFilmModel(CloudType)                                        \
                                                                                \
-    typedef Foam::CloudType::momentumCloudType momentumCloudType;            \
+    typedef Foam::CloudType::momentumCloudType momentumCloudType;              \
     defineNamedTemplateTypeNameAndDebug                                        \
     (                                                                          \
-        Foam::SurfaceFilmModel<momentumCloudType>,                            \
+        Foam::SurfaceFilmModel<momentumCloudType>,                             \
         0                                                                      \
     );                                                                         \
     namespace Foam                                                             \
     {                                                                          \
         defineTemplateRunTimeSelectionTable                                    \
         (                                                                      \
-            SurfaceFilmModel<momentumCloudType>,                              \
+            SurfaceFilmModel<momentumCloudType>,                               \
             dictionary                                                         \
         );                                                                     \
     }
@@ -249,11 +249,11 @@ public:
 
 #define makeSurfaceFilmModelType(SS, CloudType)                                \
                                                                                \
-    typedef Foam::CloudType::momentumCloudType momentumCloudType;            \
-    defineNamedTemplateTypeNameAndDebug(Foam::SS<momentumCloudType>, 0);      \
+    typedef Foam::CloudType::momentumCloudType momentumCloudType;              \
+    defineNamedTemplateTypeNameAndDebug(Foam::SS<momentumCloudType>, 0);       \
                                                                                \
-    Foam::SurfaceFilmModel<momentumCloudType>::                               \
-        adddictionaryConstructorToTable<Foam::SS<momentumCloudType>>          \
+    Foam::SurfaceFilmModel<momentumCloudType>::                                \
+        adddictionaryConstructorToTable<Foam::SS<momentumCloudType>>           \
             add##SS##CloudType##momentumCloudType##ConstructorToTable_;
 
 

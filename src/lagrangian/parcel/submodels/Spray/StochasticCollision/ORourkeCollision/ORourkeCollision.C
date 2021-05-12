@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "ORourkeCollision.H"
-#include "SLGThermo.H"
+#include "parcelThermo.H"
 #include "CompactListList.H"
 #include "mathematicalConstants.H"
 
@@ -299,7 +299,7 @@ Foam::ORourkeCollision<CloudType>::ORourkeCollision
     StochasticCollisionModel<CloudType>(dict, owner, modelName),
     liquids_
     (
-        owner.db().template lookupObject<SLGThermo>("SLGThermo").liquids()
+        static_cast<const ThermoCloud<CloudType>&>(owner).thermo().liquids()
     ),
     coalescence_(this->coeffDict().lookup("coalescence"))
 {}

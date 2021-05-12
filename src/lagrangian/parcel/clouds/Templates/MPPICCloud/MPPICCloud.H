@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ SourceFiles
 #include "fvMatricesFwd.H"
 #include "dimensionedTypes.H"
 #include "fvMesh.H"
-#include "SLGThermo.H"
+#include "fluidThermo.H"
 #include "Cloud.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -146,7 +146,7 @@ public:
             const volScalarField& rho,
             const volVectorField& U,
             const dimensionedVector& g,
-            const SLGThermo& thermo,
+            const fluidThermo& carrierThermo,
             const bool readFields = true
         );
 
