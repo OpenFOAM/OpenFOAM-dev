@@ -53,12 +53,19 @@ Foam::CompositionModel<CloudType>::CompositionModel
 :
     CloudSubModelBase<CloudType>(owner, dict, typeName, type),
     carrierThermo_(owner.carrierThermo()),
-    carrierMixture_(&refCast<const basicSpecieMixture>(carrierThermo_)),
+    carrierMixture_
+    (
+        isA<basicSpecieMixture>(carrierThermo_)
+      ? &refCast<const basicSpecieMixture>(carrierThermo_)
+      : nullptr
+    ),
     thermo_(owner.thermo()),
     phaseProps_
     (
         this->coeffDict().lookup("phases"),
-        carrierMixture_->species(),
+        carrierMixture_ == nullptr
+      ? hashedWordList::null()
+      : carrierMixture_->species(),
         thermo_.liquids().components(),
         thermo_.solids().components()
     )
