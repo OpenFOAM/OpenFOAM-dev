@@ -50,10 +50,7 @@
 
         p_rghEqnComp1 =
             (
-                (
-                    fvc::ddt(alpha1, rho1) + fvc::div(alphaPhi1*rho1f)
-                  - (fvModels.source(alpha1, mixture.thermo1().rho())&rho1)
-                )/rho1
+                (fvc::ddt(alpha1, rho1) + fvc::div(alphaPhi1*rho1f))/rho1
               - fvc::ddt(alpha1) - fvc::div(alphaPhi1)
               + (alpha1/rho1)
                *correction
@@ -65,10 +62,7 @@
 
         p_rghEqnComp2 =
             (
-               (
-                   fvc::ddt(alpha2, rho2) + fvc::div(alphaPhi2*rho2f)
-                 - (fvModels.source(alpha2, mixture.thermo2().rho())&rho2)
-               )/rho2
+               (fvc::ddt(alpha2, rho2) + fvc::div(alphaPhi2*rho2f))/rho2
              - fvc::ddt(alpha2) - fvc::div(alphaPhi2)
              + (alpha2/rho2)
               *correction
@@ -84,20 +78,14 @@
 
         p_rghEqnComp1 =
             (
-                (
-                    fvc::ddt(alpha1, rho1) + fvc::div(alphaPhi1*rho1f)
-                  - (fvModels.source(alpha1, mixture.thermo1().rho())&rho1)
-                )/rho1
+                (fvc::ddt(alpha1, rho1) + fvc::div(alphaPhi1*rho1f))/rho1
               - fvc::ddt(alpha1) - fvc::div(alphaPhi1)
               + (alpha1*psi1/rho1)*correction(fvm::ddt(p_rgh))
             );
 
         p_rghEqnComp2 =
             (
-               (
-                   fvc::ddt(alpha2, rho2) + fvc::div(alphaPhi2*rho2f)
-                 - (fvModels.source(alpha2, mixture.thermo2().rho())&rho2)
-               )/rho2
+               (fvc::ddt(alpha2, rho2) + fvc::div(alphaPhi2*rho2f))/rho2
              - fvc::ddt(alpha2) - fvc::div(alphaPhi2)
              + (alpha2*psi2/rho2)*correction(fvm::ddt(p_rgh))
             );
@@ -111,6 +99,11 @@
 
     p_rghEqnComp1.ref() *= pos(alpha1);
     p_rghEqnComp2.ref() *= pos(alpha2);
+
+    p_rghEqnComp1.ref() -=
+        (fvModels.source(alpha1, mixture.thermo1().rho())&rho1)/rho1;
+    p_rghEqnComp2.ref() -=
+        (fvModels.source(alpha2, mixture.thermo2().rho())&rho2)/rho2;
 
     if (pimple.transonic())
     {
