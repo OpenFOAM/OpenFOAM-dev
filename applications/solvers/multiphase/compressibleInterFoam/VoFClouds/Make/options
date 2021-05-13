@@ -1,0 +1,24 @@
+EXE_INC = \
+    -I../twoPhaseMixtureThermo \
+    -I$(LIB_SRC)/transportModels/lnInclude \
+    -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/twoPhaseMixture/lnInclude \
+    -I$(LIB_SRC)/twoPhaseModels/interfaceProperties/lnInclude \
+    -I$(LIB_SRC)/lagrangian/basic/lnInclude \
+    -I$(LIB_SRC)/lagrangian/parcel/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/meshTools/lnInclude
+
+LIB_LIBS = \
+    -ltwoPhaseMixtureThermo \
+    -lfluidThermophysicalModels \
+    -lspecie \
+    -ltwoPhaseMixture \
+    -ltwoPhaseProperties \
+    -linterfaceProperties \
+    -ltransportModels \
+    -llagrangian \
+    -llagrangianParcel \
+    -llagrangianParcelTurbulence \
+    -lfiniteVolume \
+    -lmeshTools

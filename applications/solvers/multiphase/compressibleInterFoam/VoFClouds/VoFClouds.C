@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "VoFSurfaceFilm.H"
+#include "VoFClouds.H"
 #include "twoPhaseMixtureThermo.H"
 #include "fvmSup.H"
 #include "uniformDimensionedFields.H"
@@ -35,12 +35,12 @@ namespace Foam
 {
     namespace fv
     {
-        defineTypeNameAndDebug(VoFSurfaceFilm, 0);
+        defineTypeNameAndDebug(VoFClouds, 0);
 
         addToRunTimeSelectionTable
         (
             fvModel,
-            VoFSurfaceFilm,
+            VoFClouds,
             dictionary
         );
     }
@@ -49,7 +49,7 @@ namespace Foam
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::VoFSurfaceFilm::VoFSurfaceFilm
+Foam::fv::VoFClouds::VoFClouds
 (
     const word& sourceName,
     const word& modelType,
@@ -59,6 +59,7 @@ Foam::fv::VoFSurfaceFilm::VoFSurfaceFilm
 :
     fvModel(sourceName, modelType, dict, mesh),
     phaseName_(dict.lookup("phase")),
+    carrierPhaseName_(dict.lookup("carrierPhase")),
     thermo_
     (
         mesh.lookupObject<fluidThermo>
@@ -66,13 +67,19 @@ Foam::fv::VoFSurfaceFilm::VoFSurfaceFilm
             IOobject::groupName(basicThermo::dictName, phaseName_)
         )
     ),
-    film_
+    carrierThermo_
     (
-        regionModels::surfaceFilmModel::New
+        mesh.lookupObject<fluidThermo>
         (
-            mesh,
-            mesh.lookupObject<uniformDimensionedVectorField>("g")
+            IOobject::groupName(basicThermo::dictName, carrierPhaseName_)
         )
+    ),
+    clouds_
+    (
+        carrierThermo_.rho(),
+        mesh.lookupObject<volVectorField>("U"),
+        mesh.lookupObject<uniformDimensionedVectorField>("g"),
+        carrierThermo_
     ),
     curTimeIndex_(-1)
 {}
@@ -80,13 +87,13 @@ Foam::fv::VoFSurfaceFilm::VoFSurfaceFilm
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::wordList Foam::fv::VoFSurfaceFilm::addSupFields() const
+Foam::wordList Foam::fv::VoFClouds::addSupFields() const
 {
     return wordList({thermo_.rho()().name(), "U", "T"});
 }
 
 
-void Foam::fv::VoFSurfaceFilm::correct()
+void Foam::fv::VoFClouds::correct()
 {
     if (curTimeIndex_ == mesh().time().timeIndex())
     {
@@ -99,13 +106,13 @@ void Foam::fv::VoFSurfaceFilm::correct()
             << " - updating solid phase fraction" << endl;
     }
 
-    film_->evolve();
+    clouds_.evolve();
 
     curTimeIndex_ = mesh().time().timeIndex();
 }
 
 
-void Foam::fv::VoFSurfaceFilm::addSup
+void Foam::fv::VoFClouds::addSup
 (
     const volScalarField& rho,
     fvMatrix<scalar>& eqn,
@@ -119,15 +126,15 @@ void Foam::fv::VoFSurfaceFilm::addSup
 
     if (fieldName == thermo_.rho()().name())
     {
-        eqn += film_->Srho();
+        eqn += clouds_.Srho();
     }
     else if (fieldName == "T")
     {
         const volScalarField::Internal Cv(thermo_.Cv());
 
         eqn +=
-            film_->Sh()()/Cv
-          + film_->Srho()*(eqn.psi() - thermo_.he()/Cv);
+            clouds_.Sh(eqn.psi())()/Cv
+          + clouds_.Srho()*(eqn.psi() - thermo_.he()/Cv);
     }
     else
     {
@@ -138,7 +145,7 @@ void Foam::fv::VoFSurfaceFilm::addSup
 }
 
 
-void Foam::fv::VoFSurfaceFilm::addSup
+void Foam::fv::VoFClouds::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
@@ -150,7 +157,7 @@ void Foam::fv::VoFSurfaceFilm::addSup
         Info<< type() << ": applying source to " << eqn.psi().name() << endl;
     }
 
-    eqn += film_->SU();
+    eqn += clouds_.SU(eqn.psi());
 }
 
 

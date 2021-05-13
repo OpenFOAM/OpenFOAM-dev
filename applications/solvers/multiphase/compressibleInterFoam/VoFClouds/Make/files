@@ -1,0 +1,3 @@
+VoFClouds.C
+
+LIB = $(FOAM_LIBBIN)/libVoFClouds
