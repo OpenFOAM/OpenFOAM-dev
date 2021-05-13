@@ -100,12 +100,6 @@ protected:
         //- Reference to the cloud random number generator
         Random& rndGen_;
 
-        //- Thermophysical properties of the carrier fluid
-        const fluidThermo& carrierThermo_;
-
-        //- Reference to the cloud thermo package
-        const parcelThermo& thermo_;
-
 
         // Cached injector fields per film patch
 

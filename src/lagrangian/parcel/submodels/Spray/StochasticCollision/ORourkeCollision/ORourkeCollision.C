@@ -39,6 +39,10 @@ void Foam::ORourkeCollision<CloudType>::collide
     const scalar dt
 )
 {
+    const liquidMixtureProperties& liquids =
+        static_cast<const ThermoCloud<CloudType>&>(this->owner()).thermo()
+       .liquids();
+
     // Create the occupancy list for the cells
     labelList occupancy(this->owner().mesh().nCells(), 0);
     forAllIter(typename CloudType, this->owner(), iter)
@@ -80,23 +84,23 @@ void Foam::ORourkeCollision<CloudType>::collide
                     {
                         if (m1 > rootVSmall)
                         {
-                            const scalarField X(liquids_.X(p1.Y()));
+                            const scalarField X(liquids.X(p1.Y()));
                             p1.setCellValues(this->owner(), td);
-                            p1.rho() = liquids_.rho(td.pc(), p1.T(), X);
-                            p1.Cp() = liquids_.Cp(td.pc(), p1.T(), X);
-                            p1.sigma() = liquids_.sigma(td.pc(), p1.T(), X);
-                            p1.mu() = liquids_.mu(td.pc(), p1.T(), X);
+                            p1.rho() = liquids.rho(td.pc(), p1.T(), X);
+                            p1.Cp() = liquids.Cp(td.pc(), p1.T(), X);
+                            p1.sigma() = liquids.sigma(td.pc(), p1.T(), X);
+                            p1.mu() = liquids.mu(td.pc(), p1.T(), X);
                             p1.d() = cbrt(6.0*m1/(p1.nParticle()*p1.rho()*pi));
                         }
 
                         if (m2 > rootVSmall)
                         {
-                            const scalarField X(liquids_.X(p2.Y()));
+                            const scalarField X(liquids.X(p2.Y()));
                             p2.setCellValues(this->owner(), td);
-                            p2.rho() = liquids_.rho(td.pc(), p2.T(), X);
-                            p2.Cp() = liquids_.Cp(td.pc(), p2.T(), X);
-                            p2.sigma() = liquids_.sigma(td.pc(), p2.T(), X);
-                            p2.mu() = liquids_.mu(td.pc(), p2.T(), X);
+                            p2.rho() = liquids.rho(td.pc(), p2.T(), X);
+                            p2.Cp() = liquids.Cp(td.pc(), p2.T(), X);
+                            p2.sigma() = liquids.sigma(td.pc(), p2.T(), X);
+                            p2.mu() = liquids.mu(td.pc(), p2.T(), X);
                             p2.d() = cbrt(6.0*m2/(p2.nParticle()*p2.rho()*pi));
                         }
                     }
@@ -297,10 +301,6 @@ Foam::ORourkeCollision<CloudType>::ORourkeCollision
 )
 :
     StochasticCollisionModel<CloudType>(dict, owner, modelName),
-    liquids_
-    (
-        static_cast<const ThermoCloud<CloudType>&>(owner).thermo().liquids()
-    ),
     coalescence_(this->coeffDict().lookup("coalescence"))
 {}
 
@@ -312,7 +312,6 @@ Foam::ORourkeCollision<CloudType>::ORourkeCollision
 )
 :
     StochasticCollisionModel<CloudType>(cm),
-    liquids_(cm.liquids_),
     coalescence_(cm.coalescence_)
 {}
 

@@ -125,6 +125,13 @@ void Foam::ThermoSurfaceFilm<CloudType>::absorbInteraction
         Info<< "Parcel " << p.origId() << " absorbInteraction" << endl;
     }
 
+    const fluidThermo& carrierThermo =
+        static_cast<const ThermoCloud<CloudType>&>(this->owner())
+       .carrierThermo();
+
+    const parcelThermo& thermo =
+        static_cast<const ThermoCloud<CloudType>&>(this->owner()).thermo();
+
     // Patch face normal
     const vector& nf = pp.faceNormals()[facei];
 
@@ -140,10 +147,10 @@ void Foam::ThermoSurfaceFilm<CloudType>::absorbInteraction
     // Parcel tangential velocity
     const vector Ut = Urel - Un;
 
-    const liquidProperties& liq = thermo_.liquids().properties()[0];
+    const liquidProperties& liq = thermo.liquids().properties()[0];
 
     // Local pressure
-    const scalar pc = carrierThermo_.p()[p.cell()];
+    const scalar pc = carrierThermo.p()[p.cell()];
 
     filmModel.addSources
     (
@@ -206,14 +213,21 @@ void Foam::ThermoSurfaceFilm<CloudType>::drySplashInteraction
         Info<< "Parcel " << p.origId() << " drySplashInteraction" << endl;
     }
 
-    const liquidProperties& liq = thermo_.liquids().properties()[0];
+    const fluidThermo& carrierThermo =
+        static_cast<const ThermoCloud<CloudType>&>(this->owner())
+       .carrierThermo();
+
+    const parcelThermo& thermo =
+        static_cast<const ThermoCloud<CloudType>&>(this->owner()).thermo();
+
+    const liquidProperties& liq = thermo.liquids().properties()[0];
 
     // Patch face velocity and normal
     const vector& Up = this->owner().U().boundaryField()[pp.index()][facei];
     const vector& nf = pp.faceNormals()[facei];
 
     // Local pressure
-    const scalar pc = carrierThermo_.p()[p.cell()];
+    const scalar pc = carrierThermo.p()[p.cell()];
 
     // Retrieve parcel properties
     const scalar m = p.mass()*p.nParticle();
@@ -262,14 +276,21 @@ void Foam::ThermoSurfaceFilm<CloudType>::wetSplashInteraction
         Info<< "Parcel " << p.origId() << " wetSplashInteraction" << endl;
     }
 
-    const liquidProperties& liq = thermo_.liquids().properties()[0];
+    const fluidThermo& carrierThermo =
+        static_cast<const ThermoCloud<CloudType>&>(this->owner())
+       .carrierThermo();
+
+    const parcelThermo& thermo =
+        static_cast<const ThermoCloud<CloudType>&>(this->owner()).thermo();
+
+    const liquidProperties& liq = thermo.liquids().properties()[0];
 
     // Patch face velocity and normal
     const vector& Up = this->owner().U().boundaryField()[pp.index()][facei];
     const vector& nf = pp.faceNormals()[facei];
 
     // Local pressure
-    const scalar pc = carrierThermo_.p()[p.cell()];
+    const scalar pc = carrierThermo.p()[p.cell()];
 
     // Retrieve parcel properties
     const scalar m = p.mass()*p.nParticle();
@@ -470,11 +491,6 @@ Foam::ThermoSurfaceFilm<CloudType>::ThermoSurfaceFilm
 :
     SurfaceFilmModel<CloudType>(dict, owner, typeName),
     rndGen_(owner.rndGen()),
-    carrierThermo_
-    (
-        static_cast<const ThermoCloud<CloudType>&>(owner).carrierThermo()
-    ),
-    thermo_(static_cast<const ThermoCloud<CloudType>&>(owner).thermo()),
     TFilmPatch_(0),
     CpFilmPatch_(0),
     interactionType_
@@ -514,8 +530,6 @@ Foam::ThermoSurfaceFilm<CloudType>::ThermoSurfaceFilm
 :
     SurfaceFilmModel<CloudType>(sfm),
     rndGen_(sfm.rndGen_),
-    carrierThermo_(sfm.carrierThermo_),
-    thermo_(sfm.thermo_),
     TFilmPatch_(sfm.TFilmPatch_),
     CpFilmPatch_(sfm.CpFilmPatch_),
     interactionType_(sfm.interactionType_),
