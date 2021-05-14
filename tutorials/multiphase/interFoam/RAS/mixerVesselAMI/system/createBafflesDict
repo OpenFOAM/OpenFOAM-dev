@@ -38,7 +38,6 @@ baffles
                 type            cyclicAMI;
                 matchTolerance  0.0001;
                 neighbourPatch  AMI2;
-                ordering        noOrdering;
             }
 
             slave
@@ -48,7 +47,6 @@ baffles
                 type            cyclicAMI;
                 matchTolerance  0.0001;
                 neighbourPatch  AMI1;
-                ordering        noOrdering;
             }
         }
     }

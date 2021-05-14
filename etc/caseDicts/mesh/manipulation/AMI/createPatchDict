@@ -27,7 +27,6 @@ masterAMI
         type            cyclicAMI;
         matchTolerance  0.0001;
         neighbourPatch  AMI2;
-        transform       noOrdering;
     }
     constructFrom patches;
     patches (cylinder);

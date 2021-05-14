@@ -42,7 +42,6 @@ baffles
                 matchTolerance  0.0001;
                 neighbourPatch  ACMI2_couple;
                 nonOverlapPatch ACMI1_blockage;
-                ordering        noOrdering;
             }
             slave // not used since we're manipulating a boundary patch
             {
@@ -82,7 +81,6 @@ baffles
                 matchTolerance  0.0001;
                 neighbourPatch  ACMI1_couple;
                 nonOverlapPatch ACMI2_blockage;
-                ordering        noOrdering;
             }
             slave // not used since we're manipulating a boundary patch
             {

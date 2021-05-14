@@ -62,10 +62,10 @@ patches
 
             // Optional: explicitly set transformation tensor.
             // Used when matching and synchronising points.
-            transform rotational;
+            transformType rotational;
             rotationAxis (1 0 0);
             rotationCentre (0 0 0);
-            // transform translational;
+            // transformType translational;
             // separation (1 0 0);
 
             // Optional non-default tolerance to be able to define cyclics
@@ -94,10 +94,10 @@ patches
 
             // Optional: explicitly set transformation tensor.
             // Used when matching and synchronising points.
-            transform rotational;
+            transformType rotational;
             rotationAxis (1 0 0);
             rotationCentre (0 0 0);
-            // transform translational;
+            // transformType translational;
             // separation (1 0 0);
         }
 
