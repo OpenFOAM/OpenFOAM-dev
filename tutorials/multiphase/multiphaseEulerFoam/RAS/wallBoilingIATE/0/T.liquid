@@ -17,7 +17,7 @@ FoamFile
 
 dimensions      [ 0 0 0 1 0 0 0 ];
 
-internalField   uniform 341.65;
+internalField   uniform 341.67;
 
 boundaryField
 {
@@ -36,7 +36,7 @@ boundaryField
     wall
     {
         type            fixedMultiPhaseHeatFlux;
-        relax           0.1;
+        relax           0.6;
         q               uniform 0;
         phase           "liquid";
         value           $internalField;

@@ -194,7 +194,7 @@ saturation
             refColumn           1;
             componentColumns    (0);
             mergeSeparators     no;
-            file "$FOAM_ETC/thermoData/refrigerant/R12/saturation.csv";
+            file "$FOAM_TUTORIALS/resources/thermoData/wallBoiling-saturation.csv";
             outOfBounds         clamp;
             interpolationScheme linear;
         }

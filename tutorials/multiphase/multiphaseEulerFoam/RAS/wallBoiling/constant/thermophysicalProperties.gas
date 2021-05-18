@@ -33,6 +33,6 @@ mixture
         molWeight       120.914;
     }
 
-    #include "$FOAM_ETC/thermoData/refrigerant/R12/vapour"
+    #include "$FOAM_TUTORIALS/resources/thermoData/wallBoiling-vapour"
 }
 // ************************************************************************* //
