@@ -33,7 +33,6 @@ Usage
     energySource
     {
         type            codedFvModel;
-        name            sourceTime;
 
         selectionMode   all;
 
@@ -103,9 +102,6 @@ class codedFvModel
 
         //- The set of cells the fvConstraint applies to
         fvCellSet set_;
-
-        //- The name
-        word name_;
 
         //- The name of the field that this fvModel applies to
         word fieldName_;
