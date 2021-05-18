@@ -695,14 +695,17 @@ Foam::ISstream& Foam::ISstream::getLine(string& s, const bool continuation)
     setState(is_.rdstate());
     lineNumber_++;
 
-    while (continuation && s.back() == '\\')
+    if (continuation && s.size())
     {
-        string contLine;
-        getline(is_, contLine);
-        setState(is_.rdstate());
-        lineNumber_++;
-        s.pop_back();
-        s += contLine;
+        while (s.back() == '\\')
+        {
+            string contLine;
+            getline(is_, contLine);
+            setState(is_.rdstate());
+            lineNumber_++;
+            s.pop_back();
+            s += contLine;
+        }
     }
 
     return *this;
