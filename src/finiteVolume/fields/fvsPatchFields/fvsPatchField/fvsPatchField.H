@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -185,8 +185,15 @@ public:
         //- Disallow clone without setting internal field reference
         tmp<fvsPatchField<Type>> clone() const
         {
-            NotImplemented;
-            return tmp<fvsPatchField<Type>>(nullptr);
+            // Temporarily reinstate the clone() function pending a rewrite of
+            // the mapping of surfaceFields in fvMeshDistribute
+            return tmp<fvsPatchField<Type>>
+            (
+                new fvsPatchField<Type>(*this, internalField_)
+            );
+
+            // NotImplemented;
+            // return tmp<fvsPatchField<Type>>(nullptr);
         }
 
         //- Copy constructor setting internal field reference
