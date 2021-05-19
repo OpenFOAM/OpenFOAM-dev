@@ -13,8 +13,6 @@ type            coded;
 writeControl    timeStep;
 writeInterval   1;
 
-name            continuity;
-
 codeOptions
 #{
     -I$(LIB_SRC)/transportModels/lnInclude \
