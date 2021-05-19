@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,21 +33,6 @@ License
 #include "stringOps.H"
 #include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * Protected Static Data Members * * * * * * * * * * * //
-
-template<>
-const Foam::wordList Foam::CodedBase<Foam::functionObject>::codeKeys_ =
-{
-    "codeData",
-    "codeEnd",
-    "codeExecute",
-    "codeInclude",
-    "codeRead",
-    "codeWrite",
-    "localCode"
-};
-
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -65,6 +50,21 @@ namespace Foam
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
+Foam::wordList Foam::codedFunctionObject::codeKeys() const
+{
+    return
+    {
+        "codeData",
+        "codeEnd",
+        "codeExecute",
+        "codeInclude",
+        "codeRead",
+        "codeWrite",
+        "localCode"
+    };
+}
+
+
 void Foam::codedFunctionObject::prepare
 (
     dynamicCode& dynCode,
@@ -74,10 +74,10 @@ void Foam::codedFunctionObject::prepare
     dynCode.setFilterVariable("typeName", codeName());
 
     // Compile filtered C template
-    dynCode.addCompileFile(codeTemplateC);
+    dynCode.addCompileFile(codeTemplateC("codedFunctionObject"));
 
     // Copy filtered H template
-    dynCode.addCopyFile(codeTemplateH);
+    dynCode.addCopyFile(codeTemplateH("codedFunctionObject"));
 
     // Debugging: make verbose
     if (debug)
@@ -119,7 +119,7 @@ Foam::codedFunctionObject::codedFunctionObject
 )
 :
     functionObject(name),
-    CodedBase<functionObject>(dict),
+    codedBase(name, dict),
     time_(time)
 {
     read(dict);

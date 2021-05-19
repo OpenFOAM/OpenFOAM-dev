@@ -22,19 +22,18 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Description
-    Template for use with dynamic code generation of a Function1.
-
-    - without state
+    Template for use with dynamic code generation of a
+    OutputFilter functionObject.
 
 SourceFiles
-    Function1Template.C
+    functionObjectTemplate.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef Function1Template_H
-#define Function1Template_H
+#ifndef codedFunctionObjectTemplate_H
+#define codedFunctionObjectTemplate_H
 
-#include "Function1.H"
+#include "regionFunctionObject.H"
 
 //{{{ begin codeInclude
 ${codeInclude}
@@ -44,84 +43,78 @@ ${codeInclude}
 
 namespace Foam
 {
-namespace Function1s
-{
+
+// Forward declaration of classes
+class fvMesh;
 
 /*---------------------------------------------------------------------------*\
-                           A templated Function1
+                         A templated functionObject
 \*---------------------------------------------------------------------------*/
 
-class ${typeName}Function1${TemplateType}
+class ${typeName}FunctionObject
 :
-    public FieldFunction1<${TemplateType}, ${typeName}Function1${TemplateType}>
+    public functionObjects::regionFunctionObject
 {
+    // Private Data
+
+//{{{ begin codeData
+        ${codeData}
+//}}} end codeData
+
+
+    // Private Member Functions
+
+        const fvMesh& mesh() const;
+
 
 public:
 
-    // Runtime type information
+    //- Runtime type information
     TypeName("${typeName}");
 
 
     // Constructors
 
-        //- Construct from entry name and dictionary
-        ${typeName}Function1${TemplateType}
+        //- Construct from Time and dictionary
+        ${typeName}FunctionObject
         (
-            const word& entryName,
-            const dictionary& dict
+            const word& name,
+            const Time& runTime,
+            const dictionary&
         );
 
-        //- Copy constructor
-        ${typeName}Function1${TemplateType}
-        (
-            const ${typeName}Function1${TemplateType}& f1
-        );
-
-        //- Construct and return a clone
-        virtual tmp<Function1<${TemplateType}>> clone() const
-        {
-            return tmp<Function1<${TemplateType}>>
-            (
-                new ${typeName}Function1${TemplateType}(*this)
-            );
-        }
+        //- Disallow default bitwise copy construction
+        ${typeName}FunctionObject(const ${typeName}FunctionObject&) = delete;
 
 
     //- Destructor
-    virtual ~${typeName}Function1${TemplateType}();
+    virtual ~${typeName}FunctionObject();
 
 
     // Member Functions
 
-        //- Return value as a function of scalar variable
-        inline virtual ${TemplateType} value(const scalar x) const
-        {
-//{{{ begin code
-    ${code}
-//}}} end code
-        }
+        //- Read the system calls
+        virtual bool read(const dictionary&);
 
-        //- Integrate between two values
-        virtual ${TemplateType} integral
-        (
-            const scalar x1,
-            const scalar x2
-        ) const;
+        //- Execute the "executeCalls" at each time-step
+        virtual bool execute();
 
-        //- Write data to dictionary stream
-        virtual void write(Ostream& os) const;
+        //- Execute the "endCalls" at the final time-loop
+        virtual bool end();
+
+        //- Write, execute the "writeCalls"
+        virtual bool write();
 
 
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const ${typeName}Function1${TemplateType}&) = delete;
+        void operator=(const ${typeName}FunctionObject&) = delete;
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace Function1s
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

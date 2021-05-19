@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,24 +91,12 @@ SourceFiles
 #define codedMixedFvPatchField_H
 
 #include "mixedFvPatchFields.H"
-#include "CodedBase.H"
+#include "codedBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-/*---------------------------------------------------------------------------*\
-                 Class codedMixedFvPatchFieldBase Declaration
-\*---------------------------------------------------------------------------*/
-
-class codedMixedFvPatchFieldBase
-{
-public:
-
-    ClassNameNoDebug("mixedFvPatchField");
-};
-
 
 /*---------------------------------------------------------------------------*\
                    Class codedMixedFvPatchField Declaration
@@ -118,7 +106,7 @@ template<class Type>
 class codedMixedFvPatchField
 :
     public mixedFvPatchField<Type>,
-    public CodedBase<codedMixedFvPatchFieldBase>
+    public codedBase
 {
     // Private Data
 
@@ -126,6 +114,9 @@ class codedMixedFvPatchField
 
 
     // Private Member Functions
+
+        //- Get the keywords associated with source code
+        virtual wordList codeKeys() const;
 
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;

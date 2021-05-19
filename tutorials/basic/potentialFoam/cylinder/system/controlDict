@@ -17,19 +17,19 @@ FoamFile
 
 application     potentialFoam;
 
-startFrom        latestTime;
+startFrom       latestTime;
 
 startTime       0;
 
-stopAt           nextWrite;
+stopAt          nextWrite;
 
 endTime         1;
 
 deltaT          1;
 
-writeControl     timeStep;
+writeControl    timeStep;
 
-writeInterval    1;
+writeInterval   1;
 
 purgeWrite      0;
 
@@ -53,9 +53,6 @@ functions
         libs            ("libutilityFunctionObjects.so");
 
         type coded;
-
-        // Name of on-the-fly generated functionObject
-        name error;
 
         codeEnd
         #{

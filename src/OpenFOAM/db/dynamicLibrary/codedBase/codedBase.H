@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,10 +53,17 @@ class dlLibraryTable;
 
 class codedBase
 {
-    // Private Data
+    // Private Member Data
+
+        //- Name of the dynamically generated CodedType
+        const word codeName_;
+
+        //- Dictionary contents for the CodedType
+        const dictionary dict_;
 
         //- Previously loaded library
         mutable fileName oldLibPath_;
+
 
     // Private Member Functions
 
@@ -89,16 +96,16 @@ protected:
         void updateLibrary() const;
 
         //- Name of the dynamically generated CodedType
-        virtual const word& codeName() const = 0;
+        virtual const word& codeName() const;
 
         //- Return a description (type + name) for the output
-        virtual string description() const = 0;
+        virtual string description() const;
 
         //- Get the dictionary to initialize the codeContext
-        virtual const dictionary& codeDict() const = 0;
+        virtual const dictionary& codeDict() const;
 
         //- Get the keywords associated with source code
-        virtual const wordList& codeKeys() const = 0;
+        virtual wordList codeKeys() const = 0;
 
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const = 0;
@@ -110,7 +117,7 @@ protected:
 public:
 
     //- Runtime type information
-    ClassName("codedBase");
+    TypeName("codedBase");
 
 
     // Constructors
@@ -118,8 +125,14 @@ public:
         //- Construct null
         codedBase();
 
-        //- Disallow default bitwise copy construction
-        codedBase(const codedBase&) = delete;
+        //- Construct from name and dictionary
+        codedBase(const word& name, const dictionary& dict);
+
+        //- Construct from dictionary
+        codedBase(const dictionary& dict);
+
+        //- Copy constructor
+        codedBase(const codedBase& cb);
 
 
     //- Destructor
@@ -130,6 +143,15 @@ public:
 
         //- Disallow default bitwise assignment
         void operator=(const codedBase&) = delete;
+
+
+    // Member Functions
+
+        word codeTemplateC(const word& baseTypeName) const;
+
+        word codeTemplateH(const word& baseTypeName) const;
+
+        virtual void writeCode(Ostream& os) const;
 };
 
 

@@ -32,7 +32,7 @@ Usage
     \verbatim
     energySource
     {
-        type            codedFvModel;
+        type            coded;
 
         selectionMode   all;
 
@@ -92,12 +92,6 @@ class codedFvModel
     public fvModel,
     public codedBase
 {
-    // Private static data
-
-        //- The keywords associated with source code
-        static const wordList codeKeys_;
-
-
     // Private data
 
         //- The set of cells the fvConstraint applies to
@@ -134,7 +128,7 @@ class codedFvModel
         virtual const dictionary& codeDict() const;
 
         //- Get the keywords associated with source code
-        virtual const wordList& codeKeys() const;
+        virtual wordList codeKeys() const;
 
         //- Dynamically compiled fvModel
         fvModel& redirectFvModel() const;
@@ -173,7 +167,7 @@ class codedFvModel
 public:
 
     //- Runtime type information
-    TypeName("codedFvModel");
+    TypeName("coded");
 
 
     // Constructors

@@ -56,7 +56,6 @@ totalMass
 {
     type            coded;
     libs            ("libutilityFunctionObjects.so");
-    name            error;
 
     codeExecute
     #{

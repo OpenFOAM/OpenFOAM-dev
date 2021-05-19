@@ -30,18 +30,6 @@ License
 #include "dynamicCodeContext.H"
 #include "addToRunTimeSelectionTable.H"
 
-// * * * * * * * * * * * * Private Static Data Members * * * * * * * * * * * //
-
-const Foam::wordList Foam::fv::codedFvModel::codeKeys_ =
-{
-    "codeAddSup",
-    "codeAddRhoSup",
-    "codeAddAlphaRhoSup",
-    "codeInclude",
-    "localCode"
-};
-
-
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
 namespace Foam
@@ -140,9 +128,17 @@ const Foam::dictionary& Foam::fv::codedFvModel::codeDict() const
 }
 
 
-const Foam::wordList& Foam::fv::codedFvModel::codeKeys() const
+Foam::wordList Foam::fv::codedFvModel::codeKeys() const
 {
-    return codeKeys_;
+
+    return
+    {
+        "codeAddSup",
+        "codeAddRhoSup",
+        "codeAddAlphaRhoSup",
+        "codeInclude",
+        "localCode"
+    };
 }
 
 

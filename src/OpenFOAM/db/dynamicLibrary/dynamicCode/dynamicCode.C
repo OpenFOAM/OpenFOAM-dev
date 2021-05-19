@@ -254,7 +254,7 @@ bool Foam::dynamicCode::createMakeFiles() const
     // Write compile files
     forAll(compileFiles_, fileI)
     {
-        os.writeQuoted(compileFiles_[fileI], false) << nl;
+        os.writeQuoted(compileFiles_[fileI].name(), false) << nl;
     }
 
     os  << nl
@@ -459,7 +459,9 @@ bool Foam::dynamicCode::copyOrCreateFiles(const bool verbose) const
     forAll(resolvedFiles, fileI)
     {
         const fileName& srcFile = resolvedFiles[fileI];
-        const fileName  dstFile(outputDir/srcFile.name());
+        const fileName dstFile(outputDir/srcFile.name());
+
+        Info << srcFile << " " << dstFile << endl;
 
         IFstream is(srcFile);
         // Info<< "Reading from " << is.name() << endl;

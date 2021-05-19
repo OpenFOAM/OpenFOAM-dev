@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,13 +42,12 @@ Description
 
     Example of function object specification:
     \verbatim
-    difference
+    writeMagU
     {
         libs        ("libutilityFunctionObjects.so");
 
         type coded;
-        // Name of on-the-fly generated functionObject
-        name writeMagU;
+
         codeWrite
         #{
             // Lookup U
@@ -72,7 +71,7 @@ SourceFiles
 #define functionObjects_codedFunctionObject_H
 
 #include "functionObject.H"
-#include "CodedBase.H"
+#include "codedBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -86,7 +85,7 @@ namespace Foam
 class codedFunctionObject
 :
     public functionObject,
-    public CodedBase<functionObject>
+    public codedBase
 {
     // Private Data
 
@@ -98,6 +97,9 @@ class codedFunctionObject
 
 
     // Private Member Functions
+
+        //- Get the keywords associated with source code
+        virtual wordList codeKeys() const;
 
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;

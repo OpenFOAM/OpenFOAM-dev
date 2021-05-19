@@ -23,19 +23,19 @@ License
 
 Description
     Template for use with dynamic code generation of a
-    fixedValue pointPatchField.
+    fixedValue fvPatchField.
 
     - without state
 
 SourceFiles
-    fixedValuePointPatchFieldTemplate.C
+    fixedValueFvPatchFieldTemplate.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef fixedValuePointPatchFieldTemplate_H
-#define fixedValuePointPatchFieldTemplate_H
+#ifndef codedFixedValueFvPatchFieldTemplate_H
+#define codedFixedValueFvPatchFieldTemplate_H
 
-#include "fixedValuePointPatchFields.H"
+#include "fixedValueFvPatchFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -43,12 +43,12 @@ namespace Foam
 {
 
 /*---------------------------------------------------------------------------*\
-                A templated FixedValuePointPatchField
+                         A templated FixedValueFvPatch
 \*---------------------------------------------------------------------------*/
 
-class ${typeName}FixedValuePointPatch${FieldType}
+class ${typeName}FixedValueFvPatch${FieldType}
 :
-    public fixedValuePointPatchField<${TemplateType}>
+    public fixedValueFvPatchField<${TemplateType}>
 {
 public:
 
@@ -62,57 +62,57 @@ public:
     // Constructors
 
         //- Construct from patch and internal field
-        ${typeName}FixedValuePointPatch${FieldType}
+        ${typeName}FixedValueFvPatch${FieldType}
         (
-            const pointPatch&,
-            const DimensionedField<${TemplateType}, pointMesh>&
+            const fvPatch&,
+            const DimensionedField<${TemplateType}, volMesh>&
         );
 
         //- Construct from patch, internal field and dictionary
-        ${typeName}FixedValuePointPatch${FieldType}
+        ${typeName}FixedValueFvPatch${FieldType}
         (
-            const pointPatch&,
-            const DimensionedField<${TemplateType}, pointMesh>&,
+            const fvPatch&,
+            const DimensionedField<${TemplateType}, volMesh>&,
             const dictionary&
         );
 
         //- Construct by mapping a copy onto a new patch
-        ${typeName}FixedValuePointPatch${FieldType}
+        ${typeName}FixedValueFvPatch${FieldType}
         (
-            const ${typeName}FixedValuePointPatch${FieldType}&,
-            const pointPatch&,
-            const DimensionedField<${TemplateType}, pointMesh>&,
-            const pointPatchFieldMapper&
+            const ${typeName}FixedValueFvPatch${FieldType}&,
+            const fvPatch&,
+            const DimensionedField<${TemplateType}, volMesh>&,
+            const fvPatchFieldMapper&
         );
 
         //- Disallow copy without setting internal field reference
-        ${typeName}FixedValuePointPatch${FieldType}
+        ${typeName}FixedValueFvPatch${FieldType}
         (
-            const ${typeName}FixedValuePointPatch${FieldType}&
+            const ${typeName}FixedValueFvPatch${FieldType}&
         ) = delete;
 
         //- Copy constructor setting internal field reference
-        ${typeName}FixedValuePointPatch${FieldType}
+        ${typeName}FixedValueFvPatch${FieldType}
         (
-            const ${typeName}FixedValuePointPatch${FieldType}&,
-            const DimensionedField<${TemplateType}, pointMesh>&
+            const ${typeName}FixedValueFvPatch${FieldType}&,
+            const DimensionedField<${TemplateType}, volMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual autoPtr<pointPatchField<${TemplateType}>> clone
+        virtual tmp<fvPatch${FieldType} > clone
         (
-            const DimensionedField<${TemplateType}, pointMesh>& iF
+            const DimensionedField<${TemplateType}, volMesh>& iF
         ) const
         {
-            return autoPtr<pointPatchField<${TemplateType}>>
+            return tmp<fvPatch${FieldType} >
             (
-                new ${typeName}FixedValuePointPatch${FieldType}(*this, iF)
+                new ${typeName}FixedValueFvPatch${FieldType}(*this, iF)
             );
         }
 
 
     //- Destructor
-    virtual ~${typeName}FixedValuePointPatch${FieldType}();
+    virtual ~${typeName}FixedValueFvPatch${FieldType}();
 
 
     // Member Functions

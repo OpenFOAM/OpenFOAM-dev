@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "functionObjectTemplate.H"
+#include "codedFunctionObjectTemplate.H"
 #include "fvCFD.H"
 #include "unitConversion.H"
 #include "addToRunTimeSelectionTable.H"

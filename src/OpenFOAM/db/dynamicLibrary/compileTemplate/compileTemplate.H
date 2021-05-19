@@ -26,7 +26,7 @@ License
 #ifndef compileTemplate_H
 #define compileTemplate_H
 
-#include "CodedBase.H"
+#include "codedBase.H"
 #include "dynamicCode.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -40,7 +40,7 @@ namespace Foam
 
 class compileTemplate
 :
-    public CodedBase<compileTemplate>
+    public codedBase
 {
     // Private Member Data
 
@@ -53,10 +53,11 @@ class compileTemplate
 
     // Private Member Functions
 
+        fileName name(const word& instantiatedName) const;
+
         dictionary optionsDict
         (
-            const word& templateName,
-            const word& instantiatedName
+            const word& templateName
         ) const;
 
         void setFilterVariable
@@ -65,6 +66,12 @@ class compileTemplate
             const dynamicCodeContext& context,
             const Pair<word>& substitution
         ) const;
+
+        //- Get the keywords associated with source code
+        virtual wordList codeKeys() const
+        {
+            return wordList::null();
+        }
 
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;

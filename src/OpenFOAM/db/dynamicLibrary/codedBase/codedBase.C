@@ -167,6 +167,12 @@ void Foam::codedBase::unloadLibrary
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
+Foam::string Foam::codedBase::description() const
+{
+    return this->type() + " " + codeName();
+}
+
+
 void Foam::codedBase::createLibrary
 (
     dynamicCode& dynCode,
@@ -341,9 +347,42 @@ void Foam::codedBase::updateLibrary() const
 }
 
 
+const Foam::word& Foam::codedBase::codeName() const
+{
+    return codeName_;
+}
+
+
+const Foam::dictionary& Foam::codedBase::codeDict() const
+{
+    return dict_;
+}
+
+
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::codedBase::codedBase()
+{}
+
+
+Foam::codedBase::codedBase(const word& name, const dictionary& dict)
+:
+    codeName_(name),
+    dict_(dict)
+{}
+
+
+Foam::codedBase::codedBase(const dictionary& dict)
+:
+    codeName_(dict.lookup("name")),
+    dict_(dict)
+{}
+
+
+Foam::codedBase::codedBase(const codedBase& cb)
+:
+    codeName_(cb.codeName_),
+    dict_(cb.dict_)
 {}
 
 
@@ -351,6 +390,43 @@ Foam::codedBase::codedBase()
 
 Foam::codedBase::~codedBase()
 {}
+
+
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+
+Foam::word Foam::codedBase::codeTemplateC(const word& baseTypeName) const
+{
+    return baseTypeName + "Template.C";
+}
+
+
+Foam::word Foam::codedBase::codeTemplateH(const word& baseTypeName) const
+{
+    return baseTypeName + "Template.H";
+}
+
+
+void Foam::codedBase::writeCode(Ostream& os) const
+{
+    if (codeName().size())
+    {
+        writeEntry(os, "name", codeName());
+    }
+
+    wordList codeAndBuildKeys(codeKeys());
+    codeAndBuildKeys.append("codeOptions");
+    codeAndBuildKeys.append("codeLibs");
+
+    forAll(codeAndBuildKeys, i)
+    {
+        if (codeDict().found(codeAndBuildKeys[i]))
+        {
+            writeKeyword(os, codeAndBuildKeys[i]);
+            os.write(verbatimString(codeDict()[codeAndBuildKeys[i]]))
+                << token::END_STATEMENT << nl;
+        }
+    }
+}
 
 
 // ************************************************************************* //

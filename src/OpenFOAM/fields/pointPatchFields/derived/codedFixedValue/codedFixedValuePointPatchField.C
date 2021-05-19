@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,18 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
+Foam::wordList Foam::codedFixedValuePointPatchField<Type>::codeKeys() const
+{
+    return
+    {
+        "code",
+        "codeInclude",
+        "localCode"
+    };
+}
+
+
+template<class Type>
 void Foam::codedFixedValuePointPatchField<Type>::prepare
 (
     dynamicCode& dynCode,
@@ -54,10 +66,10 @@ void Foam::codedFixedValuePointPatchField<Type>::prepare
     dynCode.setFilterVariable("FieldType", fieldType + "Field");
 
     // Compile filtered C template
-    dynCode.addCompileFile(codeTemplateC);
+    dynCode.addCompileFile(codeTemplateC("codedFixedValuePointPatchField"));
 
     // Copy filtered H template
-    dynCode.addCopyFile(codeTemplateH);
+    dynCode.addCopyFile(codeTemplateH("codedFixedValuePointPatchField"));
 
     // Debugging: make BC verbose
     if (debug)
@@ -100,7 +112,7 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
 )
 :
     fixedValuePointPatchField<Type>(p, iF),
-    CodedBase<codedFixedValuePointPatchFieldBase>(),
+    codedBase(),
     redirectPatchFieldPtr_()
 {}
 
@@ -115,7 +127,7 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
 )
 :
     fixedValuePointPatchField<Type>(ptf, p, iF, mapper),
-    CodedBase<codedFixedValuePointPatchFieldBase>(ptf),
+    codedBase(ptf),
     redirectPatchFieldPtr_()
 {}
 
@@ -129,7 +141,7 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
 )
 :
     fixedValuePointPatchField<Type>(p, iF, dict),
-    CodedBase<codedFixedValuePointPatchFieldBase>(dict),
+    codedBase(dict),
     redirectPatchFieldPtr_()
 {
     updateLibrary();
@@ -144,7 +156,7 @@ Foam::codedFixedValuePointPatchField<Type>::codedFixedValuePointPatchField
 )
 :
     fixedValuePointPatchField<Type>(ptf, iF),
-    CodedBase<codedFixedValuePointPatchFieldBase>(ptf),
+    codedBase(ptf),
     redirectPatchFieldPtr_()
 {}
 

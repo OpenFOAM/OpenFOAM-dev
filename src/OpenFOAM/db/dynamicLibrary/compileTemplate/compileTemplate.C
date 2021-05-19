@@ -29,19 +29,25 @@ License
 #include "IFstream.H"
 #include "OSspecific.H"
 
-// * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
-
-template<>
-const Foam::wordList Foam::CodedBase<Foam::compileTemplate>::codeKeys_ =
-{};
-
-
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
+
+Foam::fileName Foam::compileTemplate::name
+(
+    const word& instantiatedName
+) const
+{
+    fileName templateFileName(instantiatedName);
+    templateFileName.replaceAll(',', '_');
+    templateFileName.replaceAll('<', '_');
+    templateFileName.replaceAll('>', '_');
+
+    return templateFileName;
+}
+
 
 Foam::dictionary Foam::compileTemplate::optionsDict
 (
-    const word& templateName,
-    const word& instantiatedName
+    const word& templateName
 ) const
 {
     IFstream optionsFile(dynamicCode::resolveTemplate(templateName));
@@ -52,16 +58,7 @@ Foam::dictionary Foam::compileTemplate::optionsDict
             << exit(FatalError);
     }
 
-    dictionary dict(optionsFile);
-
-    fileName templateFileName(instantiatedName);
-    templateFileName.replaceAll(',', '_');
-    templateFileName.replaceAll('<', '_');
-    templateFileName.replaceAll('>', '_');
-
-    dict.add("name", templateFileName);
-
-    return dict;
+    return dictionary(optionsFile);
 }
 
 
@@ -150,10 +147,7 @@ Foam::compileTemplate::compileTemplate
     const List<Pair<word>>& substitutions
 )
 :
-    CodedBase<compileTemplate>
-    (
-        optionsDict(templateName, instantiatedName)
-    ),
+    codedBase(name(instantiatedName), optionsDict(templateName)),
     templateName_(templateName),
     substitutions_(substitutions)
 {

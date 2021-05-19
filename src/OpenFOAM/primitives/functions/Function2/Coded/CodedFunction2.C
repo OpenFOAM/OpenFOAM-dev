@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,17 @@ License
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
+Foam::wordList Foam::Function2s::Coded<Type>::codeKeys() const
+{
+    return
+    {
+        "code",
+        "codeInclude"
+    };
+}
+
+
+template<class Type>
 void Foam::Function2s::Coded<Type>::prepare
 (
     dynamicCode& dynCode,
@@ -42,10 +53,10 @@ void Foam::Function2s::Coded<Type>::prepare
     dynCode.setFilterVariable("TemplateType", pTraits<Type>::typeName);
 
     // Compile filtered C template
-    dynCode.addCompileFile(codeTemplateC);
+    dynCode.addCompileFile(codeTemplateC("codedFunction2"));
 
     // Copy filtered H template
-    dynCode.addCopyFile(codeTemplateH);
+    dynCode.addCopyFile(codeTemplateH("codedFunction2"));
 
     // Debugging: make verbose
     if (debug)
@@ -98,7 +109,7 @@ Foam::Function2s::Coded<Type>::Coded
 )
 :
     Function2<Type>(name),
-    CodedBase<coded>(dict)
+    codedBase(name, dict)
 {
     redirectFunction2Ptr_ = compileNew();
 }
@@ -109,7 +120,7 @@ template<class Type>
 Foam::Function2s::Coded<Type>::Coded(const Coded<Type>& cf1)
 :
     Function2<Type>(cf1),
-    CodedBase<coded>(cf1)
+    codedBase(cf1)
 {
     redirectFunction2Ptr_ = compileNew();
 }

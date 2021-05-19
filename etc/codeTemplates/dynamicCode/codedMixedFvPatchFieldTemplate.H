@@ -32,8 +32,8 @@ SourceFiles
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef mixedFvPatchFieldTemplate_H
-#define mixedFvPatchFieldTemplate_H
+#ifndef codedMixedFvPatchFieldTemplate_H
+#define codedMixedFvPatchFieldTemplate_H
 
 #include "mixedFvPatchFields.H"
 

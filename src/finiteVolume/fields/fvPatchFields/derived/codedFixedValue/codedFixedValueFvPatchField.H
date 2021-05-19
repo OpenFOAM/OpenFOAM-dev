@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,24 +81,12 @@ SourceFiles
 #define codedFixedValueFvPatchField_H
 
 #include "fixedValueFvPatchFields.H"
-#include "CodedBase.H"
+#include "codedBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
-
-/*---------------------------------------------------------------------------*\
-               Class codedFixedValueFvPatchFieldBase Declaration
-\*---------------------------------------------------------------------------*/
-
-class codedFixedValueFvPatchFieldBase
-{
-public:
-
-    ClassNameNoDebug("fixedValueFvPatchField");
-};
-
 
 /*---------------------------------------------------------------------------*\
                  Class codedFixedValueFvPatchField Declaration
@@ -108,7 +96,7 @@ template<class Type>
 class codedFixedValueFvPatchField
 :
     public fixedValueFvPatchField<Type>,
-    public CodedBase<codedFixedValueFvPatchFieldBase>
+    public codedBase
 {
     // Private Data
 
@@ -116,6 +104,9 @@ class codedFixedValueFvPatchField
 
 
     // Private Member Functions
+
+        //- Get the keywords associated with source code
+        virtual wordList codeKeys() const;
 
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;

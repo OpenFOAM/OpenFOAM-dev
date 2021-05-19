@@ -53,11 +53,10 @@ maxDeltaT       1;
 
 functions
 {
-    timeStep
+    setDeltaT
     {
         type coded;
         libs            ("libutilityFunctionObjects.so");
-        name setDeltaT;
 
         code
         #{

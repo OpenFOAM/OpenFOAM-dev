@@ -23,11 +23,10 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "mixedFvPatchFieldTemplate.H"
+#include "codedFixedValuePointPatchFieldTemplate.H"
 #include "addToRunTimeSelectionTable.H"
-#include "fvPatchFieldMapper.H"
-#include "volFields.H"
-#include "surfaceFields.H"
+#include "pointPatchFieldMapper.H"
+#include "pointFields.H"
 #include "unitConversion.H"
 //{{{ begin codeInclude
 ${codeInclude}
@@ -70,27 +69,27 @@ extern "C"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-makeRemovablePatchTypeField
+makePointPatchTypeField
 (
-    fvPatch${FieldType},
-    ${typeName}MixedValueFvPatch${FieldType}
+    pointPatch${FieldType},
+    ${typeName}FixedValuePointPatch${FieldType}
 );
 
 
-const char* const ${typeName}MixedValueFvPatch${FieldType}::SHA1sum =
+const char* const ${typeName}FixedValuePointPatch${FieldType}::SHA1sum =
     "${SHA1sum}";
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-${typeName}MixedValueFvPatch${FieldType}::
-${typeName}MixedValueFvPatch${FieldType}
+${typeName}FixedValuePointPatch${FieldType}::
+${typeName}FixedValuePointPatch${FieldType}
 (
-    const fvPatch& p,
-    const DimensionedField<${TemplateType}, volMesh>& iF
+    const pointPatch& p,
+    const DimensionedField<${TemplateType}, pointMesh>& iF
 )
 :
-    mixedFvPatchField<${TemplateType}>(p, iF)
+    fixedValuePointPatchField<${TemplateType}>(p, iF)
 {
     if (${verbose:-false})
     {
@@ -100,16 +99,16 @@ ${typeName}MixedValueFvPatch${FieldType}
 }
 
 
-${typeName}MixedValueFvPatch${FieldType}::
-${typeName}MixedValueFvPatch${FieldType}
+${typeName}FixedValuePointPatch${FieldType}::
+${typeName}FixedValuePointPatch${FieldType}
 (
-    const ${typeName}MixedValueFvPatch${FieldType}& ptf,
-    const fvPatch& p,
-    const DimensionedField<${TemplateType}, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const ${typeName}FixedValuePointPatch${FieldType}& ptf,
+    const pointPatch& p,
+    const DimensionedField<${TemplateType}, pointMesh>& iF,
+    const pointPatchFieldMapper& mapper
 )
 :
-    mixedFvPatchField<${TemplateType}>(ptf, p, iF, mapper)
+    fixedValuePointPatchField<${TemplateType}>(ptf, p, iF, mapper)
 {
     if (${verbose:-false})
     {
@@ -119,15 +118,15 @@ ${typeName}MixedValueFvPatch${FieldType}
 }
 
 
-${typeName}MixedValueFvPatch${FieldType}::
-${typeName}MixedValueFvPatch${FieldType}
+${typeName}FixedValuePointPatch${FieldType}::
+${typeName}FixedValuePointPatch${FieldType}
 (
-    const fvPatch& p,
-    const DimensionedField<${TemplateType}, volMesh>& iF,
+    const pointPatch& p,
+    const DimensionedField<${TemplateType}, pointMesh>& iF,
     const dictionary& dict
 )
 :
-    mixedFvPatchField<${TemplateType}>(p, iF, dict)
+    fixedValuePointPatchField<${TemplateType}>(p, iF, dict)
 {
     if (${verbose:-false})
     {
@@ -137,14 +136,14 @@ ${typeName}MixedValueFvPatch${FieldType}
 }
 
 
-${typeName}MixedValueFvPatch${FieldType}::
-${typeName}MixedValueFvPatch${FieldType}
+${typeName}FixedValuePointPatch${FieldType}::
+${typeName}FixedValuePointPatch${FieldType}
 (
-    const ${typeName}MixedValueFvPatch${FieldType}& ptf,
-    const DimensionedField<${TemplateType}, volMesh>& iF
+    const ${typeName}FixedValuePointPatch${FieldType}& ptf,
+    const DimensionedField<${TemplateType}, pointMesh>& iF
 )
 :
-    mixedFvPatchField<${TemplateType}>(ptf, iF)
+    fixedValuePointPatchField<${TemplateType}>(ptf, iF)
 {
     if (${verbose:-false})
     {
@@ -156,8 +155,8 @@ ${typeName}MixedValueFvPatch${FieldType}
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-${typeName}MixedValueFvPatch${FieldType}::
-~${typeName}MixedValueFvPatch${FieldType}()
+${typeName}FixedValuePointPatch${FieldType}::
+~${typeName}FixedValuePointPatch${FieldType}()
 {
     if (${verbose:-false})
     {
@@ -168,7 +167,7 @@ ${typeName}MixedValueFvPatch${FieldType}::
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void ${typeName}MixedValueFvPatch${FieldType}::updateCoeffs()
+void ${typeName}FixedValuePointPatch${FieldType}::updateCoeffs()
 {
     if (this->updated())
     {
@@ -184,7 +183,7 @@ void ${typeName}MixedValueFvPatch${FieldType}::updateCoeffs()
     ${code}
 //}}} end code
 
-    this->mixedFvPatchField<${TemplateType}>::updateCoeffs();
+    this->fixedValuePointPatchField<${TemplateType}>::updateCoeffs();
 }
 
 

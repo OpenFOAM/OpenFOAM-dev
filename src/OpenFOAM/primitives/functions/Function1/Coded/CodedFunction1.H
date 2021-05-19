@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ SourceFiles
 #define CodedFunction1_H
 
 #include "Function1.H"
-#include "CodedBase.H"
+#include "codedBase.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -78,18 +78,6 @@ namespace Function1s
 {
 
 /*---------------------------------------------------------------------------*\
-                            Class coded Declaration
-\*---------------------------------------------------------------------------*/
-
-class coded
-{
-public:
-
-    ClassNameNoDebug("Function1");
-};
-
-
-/*---------------------------------------------------------------------------*\
                             Class Coded Declaration
 \*---------------------------------------------------------------------------*/
 
@@ -97,7 +85,7 @@ template<class Type>
 class Coded
 :
     public Function1<Type>,
-    public CodedBase<coded>
+    public codedBase
 {
     // Private Data
 
@@ -106,6 +94,9 @@ class Coded
 
 
     // Private Member Functions
+
+        //- Get the keywords associated with source code
+        virtual wordList codeKeys() const;
 
         //- Adapt the context for the current object
         virtual void prepare(dynamicCode&, const dynamicCodeContext&) const;
