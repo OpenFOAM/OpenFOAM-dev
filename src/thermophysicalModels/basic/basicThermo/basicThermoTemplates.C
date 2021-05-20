@@ -76,7 +76,9 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
                     << "Compilation and linkage of "
                     << Thermo::typeName << " type " << nl
                     << "thermoType" << thermoTypeDict << nl << nl
-                    << "failed." << exit(FatalError);
+                    << "failed." << nl << nl
+                    << "Valid " << Thermo::typeName << " types are:"
+                    << nl << nl;
             }
         }
         else
@@ -87,7 +89,10 @@ typename Table::iterator Foam::basicThermo::lookupCstrIter
                 << "thermoType" << thermoTypeDict << nl << nl
                 << "Valid " << Thermo::typeName << " types are:"
                 << nl << nl;
+        }
 
+        if (cstrIter == tablePtr->end())
+        {
             // Get the list of all the suitable thermo packages available
             wordList validThermoTypeNames(tablePtr->sortedToc());
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,13 +69,6 @@ Description
 
 
 #define makeThermo(BaseThermo, CThermo, Mixture, ThermoPhys)                   \
-                                                                               \
-    defineThermo(BaseThermo, CThermo, Mixture, ThermoPhys);                    \
-                                                                               \
-    addThermo(BaseThermo, CThermo, Mixture, ThermoPhys)
-
-
-#define makeThermos(BaseThermo, CThermo, Mixture, ThermoPhys)                  \
                                                                                \
     defineThermo(BaseThermo, CThermo, Mixture, ThermoPhys);                    \
                                                                                \

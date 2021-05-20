@@ -123,7 +123,7 @@ void Foam::compileTemplate::prepare
     }
 
     // Compile filtered C template
-    dynCode.addCompileFile(templateName_ + ".C");
+    dynCode.addCompileFile(codeTemplateC(templateName_));
 
     // Define Make/options
     dynCode.setMakeOptions(context.options() + "\n\n" + context.libs());

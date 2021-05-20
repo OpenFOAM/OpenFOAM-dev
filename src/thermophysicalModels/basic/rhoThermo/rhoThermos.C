@@ -36,9 +36,9 @@ License
 
 namespace Foam
 {
-    forGases(makeThermos, rhoThermo, heRhoThermo, pureMixture);
-    forLiquids(makeThermos, rhoThermo, heRhoThermo, pureMixture);
-    forTabulated(makeThermos, rhoThermo, heRhoThermo, pureMixture);
+    forGases(makeThermo, rhoThermo, heRhoThermo, pureMixture);
+    forLiquids(makeThermo, rhoThermo, heRhoThermo, pureMixture);
+    forTabulated(makeThermo, rhoThermo, heRhoThermo, pureMixture);
 }
 
 // ************************************************************************* //
