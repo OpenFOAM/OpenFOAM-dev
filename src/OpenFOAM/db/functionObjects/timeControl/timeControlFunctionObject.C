@@ -165,7 +165,7 @@ Foam::scalar Foam::functionObjects::timeControl::timeToNextWrite()
             (
                 0.0,
                 (writeTimeIndex + 1)*writeInterval
-              - (time_.value() - time_.startTime().value())
+              - (time_.value() - time_.beginTime().value())
             );
     }
 

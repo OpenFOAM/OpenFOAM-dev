@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,7 +168,7 @@ bool Foam::timeControl::execute()
             label executionIndex = label
             (
                 (
-                    (time_.value() - time_.startTime().value())
+                    (time_.value() - time_.beginTime().value())
                   + 0.5*time_.deltaTValue()
                 )
                /interval_
