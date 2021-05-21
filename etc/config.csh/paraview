@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -40,16 +40,23 @@ if ( ! $?ParaView_DIR ) setenv ParaView_DIR
 set cleaned=`$WM_PROJECT_DIR/bin/foamCleanPath "$PATH" "$ParaView_DIR $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/cmake- $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/paraview-"`
 if ( $status == 0 ) setenv PATH $cleaned
 
-# Determine the cmake to be used
-unsetenv CMAKE_HOME
-foreach cmake ( cmake-3.2.1 cmake-2.8.12.1 cmake-2.8.8 cmake-2.8.4 cmake-2.8.3 cmake-2.8.1 cmake-3.9.0)
-    set cmake=$WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/$cmake
-    if ( -r $cmake ) then
-        setenv CMAKE_HOME $cmake
-        setenv PATH ${CMAKE_HOME}/bin:${PATH}
-        break
+# Determine the cmake to be used. Take the most recent.
+unsetenv CMAKE_HOME CMAKE_ROOT
+set nonomatch
+foreach cmake ( $WM_THIRD_PARTY_DIR/platforms/$WM_ARCH$WM_COMPILER/cmake-* )
+    if ( -d $cmake ) then
+        if ( $?CMAKE_HOME ) then
+            $WM_PROJECT_DIR/bin/tools/foamVersionCompare $CMAKE_HOME lt $cmake
+        endif
+        if ( ! $?CMAKE_HOME || $status == 0 ) then
+            setenv CMAKE_HOME $cmake
+            setenv CMAKE_ROOT $cmake
+        endif
     endif
 end
+if ( $?CMAKE_HOME ) then
+    setenv PATH $cmake/bin:${PATH}
+endif
 
 #- ParaView version, automatically determine major version:
 #setenv ParaView_VERSION 4.0.1
@@ -134,7 +141,7 @@ if ( -d $ParaView_DIR || -d $paraviewSrcDir ) then
 
     # Alias paraview to launch with mesa if necessary
     if ("$ParaView_GL" == mesa) then
-        alias paraview 'LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ParaView_LIB_DIR/mesa paraview'
+        alias paraview 'env LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ParaView_LIB_DIR}/mesa paraview'
     endif
 else
     unsetenv PV_PLUGIN_PATH
