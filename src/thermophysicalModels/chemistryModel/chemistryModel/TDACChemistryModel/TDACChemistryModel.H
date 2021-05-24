@@ -85,8 +85,6 @@ class TDACChemistryModel
 {
     // Private member data
 
-        bool variableTimeStep_;
-
         label timeSteps_;
 
         // Mechanism reduction
