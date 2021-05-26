@@ -141,34 +141,6 @@ inline Foam::tmp<Foam::fvScalarMatrix> Foam::ReactingCloud<CloudType>::SYi
 
 template<class CloudType>
 inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
-Foam::ReactingCloud<CloudType>::Srho(const label i) const
-{
-    tmp<volScalarField::Internal> tRhoi
-    (
-        volScalarField::Internal::New
-        (
-            this->name() + ":rhoTrans",
-            this->mesh(),
-            dimensionedScalar
-            (
-                rhoTrans_[0].dimensions()/dimTime/dimVolume,
-                0
-            )
-        )
-    );
-
-    if (this->solution().coupled())
-    {
-        scalarField& rhoi = tRhoi.ref();
-        rhoi = rhoTrans_[i]/(this->db().time().deltaTValue()*this->mesh().V());
-    }
-
-    return tRhoi;
-}
-
-
-template<class CloudType>
-inline Foam::tmp<Foam::DimensionedField<Foam::scalar, Foam::volMesh>>
 Foam::ReactingCloud<CloudType>::Srho() const
 {
     tmp<volScalarField::Internal> trhoTrans
@@ -202,7 +174,7 @@ Foam::ReactingCloud<CloudType>::Srho() const
 
 template<class CloudType>
 inline Foam::tmp<Foam::fvScalarMatrix>
-Foam::ReactingCloud<CloudType>::Srho(volScalarField& rho) const
+Foam::ReactingCloud<CloudType>::Srho(const volScalarField& rho) const
 {
     if (this->solution().coupled())
     {

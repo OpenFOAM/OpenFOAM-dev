@@ -245,16 +245,15 @@ public:
                         const volScalarField& Yi
                     ) const;
 
-                    //- Return tmp mass source for field i - fully explicit
-                    inline tmp<volScalarField::Internal>
-                        Srho(const label i) const;
-
                     //- Return tmp total mass source for carrier phase
                     //  - fully explicit
                     inline tmp<volScalarField::Internal> Srho() const;
 
                     //- Return total mass source term [kg/m^3/s]
-                    inline tmp<fvScalarMatrix> Srho(volScalarField& rho) const;
+                    inline tmp<fvScalarMatrix> Srho
+                    (
+                        const volScalarField& rho
+                    ) const;
 
 
         // Cloud evolution functions

@@ -248,23 +248,8 @@ public:
                     );
                 }
 
-                //- Return mass source for specie [kg/m^3/s]
-                //  Why is this not called SYi ???
-                tmp<volScalarField::Internal> Srho(const label i) const
-                {
-                    return tmp<volScalarField::Internal>
-                    (
-                        volScalarField::Internal::New
-                        (
-                            this->name() + ":SYi",
-                            this->mesh(),
-                            dimensionedScalar(dimDensity/dimTime, Zero)
-                        )
-                    );
-                }
-
                 //- Return total mass source term [kg/s]
-                tmp<fvScalarMatrix> Srho(volScalarField& rho) const
+                tmp<fvScalarMatrix> Srho(const volScalarField& rho) const
                 {
                     return tmp<fvScalarMatrix>
                     (

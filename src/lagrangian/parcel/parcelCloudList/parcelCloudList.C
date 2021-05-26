@@ -324,31 +324,9 @@ Foam::tmp<Foam::fvScalarMatrix> Foam::parcelCloudList::SYi
 }
 
 
-Foam::tmp<Foam::volScalarField::Internal> Foam::parcelCloudList::Srho
-(
-    const label speciei
-) const
-{
-    tmp<volScalarField::Internal> tSrho
-    (
-        volScalarField::Internal::New
-        (
-            cloudsName + ":SYi",
-            mesh_,
-            dimensionedScalar(dimDensity/dimTime, Zero)
-        )
-    );
-    forAll(*this, i)
-    {
-        tSrho.ref() += operator[](i).Srho(speciei);
-    }
-    return tSrho;
-}
-
-
 Foam::tmp<Foam::fvScalarMatrix> Foam::parcelCloudList::Srho
 (
-    volScalarField& rho
+    const volScalarField& rho
 ) const
 {
     tmp<fvScalarMatrix> tSrho(new fvScalarMatrix(rho, dimMass/dimTime));

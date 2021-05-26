@@ -149,15 +149,11 @@ public:
                     const volScalarField& Yi
                 ) const = 0;
 
-                //- Return mass source for specie [kg/m^3/s]
-                //  Why is this not called SYi ???
-                virtual tmp<volScalarField::Internal> Srho
-                (
-                    const label i
-                ) const = 0;
-
                 //- Return total mass source term [kg/s]
-                virtual tmp<fvScalarMatrix> Srho(volScalarField& rho) const = 0;
+                virtual tmp<fvScalarMatrix> Srho
+                (
+                    const volScalarField& rho
+                ) const = 0;
 
                 //- Return total mass source [kg/m^3/s]
                 virtual tmp<volScalarField::Internal> Srho() const = 0;
