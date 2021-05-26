@@ -100,12 +100,6 @@ void Foam::fv::VoFClouds::correct()
         return;
     }
 
-    if (debug)
-    {
-        Info<< type() << ": " << name()
-            << " - updating solid phase fraction" << endl;
-    }
-
     clouds_.evolve();
 
     curTimeIndex_ = mesh().time().timeIndex();

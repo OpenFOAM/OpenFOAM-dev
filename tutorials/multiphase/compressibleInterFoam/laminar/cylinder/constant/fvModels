@@ -19,6 +19,8 @@ VoFClouds
 {
     type    VoFClouds;
 
+    libs    ("libVoFClouds.so");
+
     phase   liquid;
     carrierPhase air;
 }
@@ -26,6 +28,8 @@ VoFClouds
 VoFSurfaceFilm
 {
     type    VoFSurfaceFilm;
+
+    libs    ("libVoFSurfaceFilm.so");
 
     phase   liquid;
 }

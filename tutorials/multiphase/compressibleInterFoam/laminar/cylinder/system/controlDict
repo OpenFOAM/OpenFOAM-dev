@@ -52,10 +52,4 @@ maxAlphaCo      1;
 
 maxDeltaT       1;
 
-libs
-(
-    "libVoFClouds.so"
-    "libVoFSurfaceFilm.so"
-);
-
 // ************************************************************************* //

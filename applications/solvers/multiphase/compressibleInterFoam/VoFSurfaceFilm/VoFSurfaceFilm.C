@@ -93,12 +93,6 @@ void Foam::fv::VoFSurfaceFilm::correct()
         return;
     }
 
-    if (debug)
-    {
-        Info<< type() << ": " << name()
-            << " - updating solid phase fraction" << endl;
-    }
-
     film_->evolve();
 
     curTimeIndex_ = mesh().time().timeIndex();
