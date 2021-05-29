@@ -523,7 +523,13 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcDevolatilisation
     // Check that model is active
     if
     (
-        isType<NoDevolatilisation<typename TrackCloudType::reactingCloudType>>
+        isType
+        <
+            NoDevolatilisation
+            <
+                typename TrackCloudType::reactingMultiphaseCloudType
+            >
+        >
         (
             cloud.devolatilisation()
         )
@@ -634,7 +640,13 @@ void Foam::ReactingMultiphaseParcel<ParcelType>::calcSurfaceReactions
     // Check that model is active
     if
     (
-        isType<NoSurfaceReaction<typename TrackCloudType::reactingCloudType>>
+        isType
+        <
+            NoSurfaceReaction
+            <
+                typename TrackCloudType::reactingMultiphaseCloudType
+            >
+        >
         (
             cloud.surfaceReaction()
         )
