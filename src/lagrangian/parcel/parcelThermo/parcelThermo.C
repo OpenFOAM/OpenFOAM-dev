@@ -64,6 +64,13 @@ Foam::parcelThermo::parcelThermo(const fluidThermo& carrierThermo)
 }
 
 
+Foam::parcelThermo::parcelThermo(const parcelThermo& pThermo)
+:
+    liquids_(pThermo.liquids_, false),
+    solids_(pThermo.solids_, false)
+{}
+
+
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
 Foam::parcelThermo::~parcelThermo()

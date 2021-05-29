@@ -74,6 +74,9 @@ public:
         //- Construct from carrier thermo
         parcelThermo(const fluidThermo& carrierThermo);
 
+        //- Copy constructor
+        parcelThermo(const parcelThermo&);
+
 
     //- Destructor
     virtual ~parcelThermo();
