@@ -31,9 +31,7 @@ while (pimple.correctNonOrthogonal())
       + fvc::div(phiHbyA)
       - fvm::laplacian(rhorAUf, p_rgh)
      ==
-        parcels.Srho()
-      + surfaceFilm.Srho()
-      + fvModels.source(psi, p_rgh, rho.name())
+        fvModels.source(psi, p_rgh, rho.name())
     );
 
     p_rghEqn.solve();

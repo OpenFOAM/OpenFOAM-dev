@@ -116,6 +116,8 @@ int main(int argc, char *argv[])
                     rhoU = new volVectorField("rhoU", rho*U);
                 }
 
+                fvModels.preUpdateMesh();
+
                 // Do any mesh changes
                 mesh.update();
 

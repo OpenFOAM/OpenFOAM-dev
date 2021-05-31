@@ -332,31 +332,6 @@ _buoyantReactingFoam_ ()
 }
 complete -o filenames -o nospace -F _buoyantReactingFoam_ buoyantReactingFoam
 
-_buoyantReactingParticleFoam_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-        -case)
-            opts="" ; extra="-d" ;;
-        -fileHandler)
-            opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots)
-            opts="" ; extra="" ;;
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _buoyantReactingParticleFoam_ buoyantReactingParticleFoam
-
 _buoyantSimpleFoam_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -3022,31 +2997,6 @@ _reactingFoam_ ()
 }
 complete -o filenames -o nospace -F _reactingFoam_ reactingFoam
 
-_reactingParticleFoam_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-        -case)
-            opts="" ; extra="-d" ;;
-        -fileHandler)
-            opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots)
-            opts="" ; extra="" ;;
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _reactingParticleFoam_ reactingParticleFoam
-
 _reconstructPar_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -3668,31 +3618,6 @@ _simpleFoam_ ()
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
 complete -o filenames -o nospace -F _simpleFoam_ simpleFoam
-
-_simpleReactingParticleFoam_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts="-case -doc -fileHandler -help -hostRoots -libs -listFunctionObjects -listFvModels -listMomentumTransportModels -listScalarBCs -listSwitches -listVectorBCs -noFunctionObjects -parallel -postProcess -roots -srcDoc"
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-        -case)
-            opts="" ; extra="-d" ;;
-        -fileHandler)
-            opts="uncollated collated masterUncollated" ; extra="" ;;
-        -hostRoots|-libs|-roots)
-            opts="" ; extra="" ;;
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _simpleReactingParticleFoam_ simpleReactingParticleFoam
 
 _singleCellMesh_ ()
 {
@@ -5745,25 +5670,6 @@ _paraFoam_ ()
 }
 complete -o filenames -o nospace -F _paraFoam_ paraFoam
 
-_reactingMultiphaseEulerFoam_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts=""
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _reactingMultiphaseEulerFoam_ reactingMultiphaseEulerFoam
-
 _reactingParcelFoam_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
@@ -5782,120 +5688,6 @@ _reactingParcelFoam_ ()
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
 complete -o filenames -o nospace -F _reactingParcelFoam_ reactingParcelFoam
-
-_reactingTwoPhaseEulerFoam_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts=""
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _reactingTwoPhaseEulerFoam_ reactingTwoPhaseEulerFoam
-
-_rhoReactingBuoyantFoam_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts=""
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _rhoReactingBuoyantFoam_ rhoReactingBuoyantFoam
-
-_rhoReactingFoam_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts=""
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _rhoReactingFoam_ rhoReactingFoam
-
-_simpleReactingParcelFoam_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts=""
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _simpleReactingParcelFoam_ simpleReactingParcelFoam
-
-_sprayFoam_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts=""
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _sprayFoam_ sprayFoam
-
-_twoPhaseEulerFoam_ ()
-{
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local prev="${COMP_WORDS[COMP_CWORD-1]}"
-    local line=${COMP_LINE}
-    local used=$(echo "$line" | grep -oE "\-[a-zA-Z]+ ")
-
-    opts=""
-    for o in $used ; do opts="${opts/$o/}" ; done
-    extra=""
-
-    [ "$COMP_CWORD" = 1 ] || \
-    case "$prev" in
-       *) ;;
-    esac
-    COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
-}
-complete -o filenames -o nospace -F _twoPhaseEulerFoam_ twoPhaseEulerFoam
 
 _uncoupledKinematicParcelFoam_ ()
 {

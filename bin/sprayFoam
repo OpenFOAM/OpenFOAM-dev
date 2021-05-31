@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -27,14 +27,14 @@
 #
 # Description
 #     Script to inform the user that sprayFoam has been replaced by the
-#     more general reactingParticleFoam solver.
+#     more general reactingFoam solver.
 #
 #------------------------------------------------------------------------------
 
 cat << EOF
 
 The sprayFoam solver has solver has been replaced by the more general
-reactingParticleFoam solver, which supports compressible reacting flow coupled
+reactingFoam solver, which supports compressible reacting flow coupled
 to multiple run-time-selectable lagrangian clouds and surface film modelling.
 
 To run with a single cloud rename the constant/*CloudProperties file to
@@ -50,7 +50,7 @@ collidingCloud, etc ...).
 
 See the following case for an example converted from sprayFoam:
 
-    \$FOAM_TUTORIALS/lagrangian/reactingParticleFoam/aachenBomb
+    \$FOAM_TUTORIALS/lagrangian/reactingFoam/aachenBomb
 
 EOF
 

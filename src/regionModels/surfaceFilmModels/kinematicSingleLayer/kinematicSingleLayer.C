@@ -1067,14 +1067,14 @@ tmp<volScalarField::Internal> kinematicSingleLayer::Srho() const
 }
 
 
-tmp<volScalarField::Internal> kinematicSingleLayer::Srho
+tmp<volScalarField::Internal> kinematicSingleLayer::SYi
 (
     const label i
 ) const
 {
     return volScalarField::Internal::New
     (
-        IOobject::modelName("Srho(" + Foam::name(i) + ")", typeName),
+        IOobject::modelName("SY(" + Foam::name(i) + ")", typeName),
         primaryMesh(),
         dimensionedScalar(dimMass/dimVolume/dimTime, 0)
     );

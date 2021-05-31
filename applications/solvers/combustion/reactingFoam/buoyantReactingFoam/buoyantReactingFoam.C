@@ -25,12 +25,17 @@ Application
     buoyantReactingFoam
 
 Description
-    Solver for combustion with chemical reactions with enhanced buoyancy
-    treatment.
+    Transient solver for turbulent flow of compressible reacting fluids with
+    enhanced buoyancy treatment and optional mesh motion and mesh topology
+    changes.
+
+    Uses the flexible PIMPLE (PISO-SIMPLE) solution for time-resolved and
+    pseudo-transient simulations.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "dynamicFvMesh.H"
 #include "fluidReactionThermo.H"
 #include "combustionModel.H"
 #include "dynamicMomentumTransportModel.H"
@@ -38,6 +43,7 @@ Description
 #include "multivariateScheme.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
+#include "CorrectPhi.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "localEulerDdtScheme.H"
@@ -51,12 +57,12 @@ int main(int argc, char *argv[])
 
     #include "setRootCaseLists.H"
     #include "createTime.H"
-    #include "createMesh.H"
-    #include "createControl.H"
-    #include "createTimeControls.H"
+    #include "createDynamicFvMesh.H"
+    #include "createDyMControls.H"
     #include "initContinuityErrs.H"
     #include "createFields.H"
     #include "createFieldRefs.H"
+    #include "createRhoUfIfPresent.H"
 
     turbulence->validate();
 
@@ -72,7 +78,20 @@ int main(int argc, char *argv[])
 
     while (pimple.run(runTime))
     {
-        #include "readTimeControls.H"
+        #include "readDyMControls.H"
+
+        // Store divrhoU from the previous mesh so that it can be mapped
+        // and used in correctPhi to ensure the corrected phi has the
+        // same divergence
+        autoPtr<volScalarField> divrhoU;
+        if (correctPhi)
+        {
+            divrhoU = new volScalarField
+            (
+                "divrhoU",
+                fvc::div(fvc::absolute(phi, rho, U))
+            );
+        }
 
         if (LTS)
         {
@@ -88,27 +107,86 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        #include "rhoEqn.H"
-
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            fvModels.correct();
-
-            #include "UEqn.H"
-            #include "YEqn.H"
-            #include "EEqn.H"
-
-            // --- Pressure corrector loop
-            while (pimple.correct())
+            if (!pimple.flow())
             {
-                #include "../../../heatTransfer/buoyantPimpleFoam/pEqn.H"
+                if (pimple.models())
+                {
+                    fvModels.correct();
+                }
+
+                if (pimple.thermophysics())
+                {
+                    #include "YEqn.H"
+                    #include "EEqn.H"
+                }
             }
-
-            if (pimple.turbCorr())
+            else
             {
-                turbulence->correct();
-                thermophysicalTransport->correct();
+                if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
+                {
+                    // Store momentum to set rhoUf for introduced faces.
+                    autoPtr<volVectorField> rhoU;
+                    if (rhoUf.valid())
+                    {
+                        rhoU = new volVectorField("rhoU", rho*U);
+                    }
+
+                    fvModels.preUpdateMesh();
+
+                    // Do any mesh changes
+                    mesh.update();
+
+                    if (mesh.changing())
+                    {
+                        gh = (g & mesh.C()) - ghRef;
+                        ghf = (g & mesh.Cf()) - ghRef;
+
+                        MRF.update();
+
+                        if (correctPhi)
+                        {
+                            #include "correctPhi.H"
+                        }
+
+                        if (checkMeshCourantNo)
+                        {
+                            #include "meshCourantNo.H"
+                        }
+                    }
+                }
+
+                if (pimple.firstPimpleIter() && !pimple.simpleRho())
+                {
+                    #include "rhoEqn.H"
+                }
+
+                if (pimple.models())
+                {
+                    fvModels.correct();
+                }
+
+                #include "UEqn.H"
+
+                if (pimple.thermophysics())
+                {
+                    #include "YEqn.H"
+                    #include "EEqn.H"
+                }
+
+                // --- Pressure corrector loop
+                while (pimple.correct())
+                {
+                    #include "../../../heatTransfer/buoyantPimpleFoam/pEqn.H"
+                }
+
+                if (pimple.turbCorr())
+                {
+                    turbulence->correct();
+                    thermophysicalTransport->correct();
+                }
             }
         }
 

@@ -581,7 +581,7 @@ void thermoSingleLayer::info()
 }
 
 
-tmp<volScalarField::Internal> thermoSingleLayer::Srho
+tmp<volScalarField::Internal> thermoSingleLayer::SYi
 (
     const label i
 ) const
@@ -596,11 +596,11 @@ tmp<volScalarField::Internal> thermoSingleLayer::Srho
 
     const label vapId = primarySpecieThermo.species()[liquidThermo.name()];
 
-    tmp<volScalarField::Internal> tSrho
+    tmp<volScalarField::Internal> tSYi
     (
         volScalarField::Internal::New
         (
-            IOobject::modelName("Srho(" + Foam::name(i) + ")", typeName),
+            IOobject::modelName("SY(" + Foam::name(i) + ")", typeName),
             primaryMesh(),
             dimensionedScalar(dimMass/dimVolume/dimTime, 0)
         )
@@ -608,7 +608,7 @@ tmp<volScalarField::Internal> thermoSingleLayer::Srho
 
     if (vapId == i)
     {
-        scalarField& Srho = tSrho.ref();
+        scalarField& SYi = tSYi.ref();
         const scalarField& V = primaryMesh().V();
         const scalar dt = time().deltaTValue();
 
@@ -627,12 +627,12 @@ tmp<volScalarField::Internal> thermoSingleLayer::Srho
 
             forAll(patchMass, j)
             {
-                Srho[cells[j]] += patchMass[j]/(V[cells[j]]*dt);
+                SYi[cells[j]] += patchMass[j]/(V[cells[j]]*dt);
             }
         }
     }
 
-    return tSrho;
+    return tSYi;
 }
 
 

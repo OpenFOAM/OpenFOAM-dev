@@ -78,6 +78,8 @@ int main(int argc, char *argv[])
         Info<< "Engine time = " << runTime.theta() << runTime.unit()
             << endl;
 
+        fvModels.preUpdateMesh();
+
         mesh.move();
 
         #include "rhoEqn.H"

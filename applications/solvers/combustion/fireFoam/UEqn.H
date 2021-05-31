@@ -6,8 +6,7 @@
       + MRF.DDt(rho, U)
       + turbulence->divDevTau(U)
      ==
-        parcels.SU(U)
-      + fvModels.source(rho, U)
+        fvModels.source(rho, U)
     );
 
     UEqn.relax();

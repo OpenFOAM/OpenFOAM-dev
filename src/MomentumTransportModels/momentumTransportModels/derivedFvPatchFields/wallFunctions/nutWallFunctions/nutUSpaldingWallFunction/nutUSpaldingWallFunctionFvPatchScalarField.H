@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,10 +29,10 @@ Description
     when using wall functions for rough walls, based on velocity,  using
     Spalding's law to give a continuous nut profile to the wall (y+ = 0)
 
-        \f[
-            y^+ = u^+ + \frac{1}{E} \left[exp(\kappa u^+) - 1 - \kappa u^+\,
-                - 0.5 (\kappa u^+)^2 - \frac{1}{6} (\kappa u^+)^3\right]
-        \f]
+    \f[
+        y^+ = u^+ + \frac{1}{E} \left[exp(\kappa u^+) - 1 - \kappa u^+\,
+            - 0.5 (\kappa u^+)^2 - \frac{1}{6} (\kappa u^+)^3\right]
+    \f]
 
     where
     \vartable
@@ -41,6 +41,12 @@ Description
         \kappa  | Von Karman constant
     \endvartable
 
+    Reference:
+    \verbatim
+        Spalding, D. B., (1961).
+        A Single Formula for the "Law of the Wall".
+        Journal of Applied Mechanics, 28(3), 455-458
+    \endverbatim
 
 Usage
     Example of the boundary condition specification:

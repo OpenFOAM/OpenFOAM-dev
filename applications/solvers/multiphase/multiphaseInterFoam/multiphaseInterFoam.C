@@ -87,6 +87,8 @@ int main(int argc, char *argv[])
             {
                 scalar timeBeforeMeshUpdate = runTime.elapsedCpuTime();
 
+                fvModels.preUpdateMesh();
+
                 mesh.update();
 
                 if (mesh.changing())

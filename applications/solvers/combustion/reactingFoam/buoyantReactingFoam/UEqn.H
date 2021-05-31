@@ -1,34 +1,36 @@
-    MRF.correctBoundaryVelocity(U);
+// Solve the Momentum equation
 
-    tmp<fvVectorMatrix> tUEqn
+MRF.correctBoundaryVelocity(U);
+
+tmp<fvVectorMatrix> tUEqn
+(
+    fvm::ddt(rho, U) + fvm::div(phi, U)
+  + MRF.DDt(rho, U)
+  + turbulence->divDevTau(U)
+ ==
+    fvModels.source(rho, U)
+);
+fvVectorMatrix& UEqn = tUEqn.ref();
+
+UEqn.relax();
+
+fvConstraints.constrain(UEqn);
+
+if (pimple.momentumPredictor())
+{
+    solve
     (
-        fvm::ddt(rho, U) + fvm::div(phi, U)
-      + MRF.DDt(rho, U)
-      + turbulence->divDevTau(U)
+        UEqn
      ==
-        fvModels.source(rho, U)
-    );
-    fvVectorMatrix& UEqn = tUEqn.ref();
-
-    UEqn.relax();
-
-    fvConstraints.constrain(UEqn);
-
-    if (pimple.momentumPredictor())
-    {
-        solve
+        fvc::reconstruct
         (
-            UEqn
-         ==
-            fvc::reconstruct
             (
-                (
-                  - ghf*fvc::snGrad(rho)
-                  - fvc::snGrad(p_rgh)
-                )*mesh.magSf()
-            )
-        );
+              - ghf*fvc::snGrad(rho)
+              - fvc::snGrad(p_rgh)
+            )*mesh.magSf()
+        )
+    );
 
-        fvConstraints.constrain(U);
-        K = 0.5*magSqr(U);
-    }
+    fvConstraints.constrain(U);
+    K = 0.5*magSqr(U);
+}

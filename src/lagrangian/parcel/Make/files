@@ -116,4 +116,7 @@ clouds/Templates/MomentumCloud/cloudSolution/cloudSolution.C
 # averaging methods
 submodels/MPPIC/AveragingMethods/makeAveragingMethods.C
 
+# fvModels
+fvModels/clouds.C
+
 LIB = $(FOAM_LIBBIN)/liblagrangianParcel

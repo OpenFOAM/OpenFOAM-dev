@@ -105,21 +105,27 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            if (pimple.frozenFlow())
+            if (!pimple.flow())
             {
-                fvModels.correct();
-
-                fluid.solve(rAUs, rAUfs);
-                fluid.correct();
-                fluid.correctContinuityError();
-
-                #include "YEqns.H"
-                #include "EEqns.H"
-                #include "pEqnComps.H"
-
-                forAll(phases, phasei)
+                if (pimple.models())
                 {
-                    phases[phasei].divU(-pEqnComps[phasei] & p_rgh);
+                    fvModels.correct();
+                }
+
+                if (pimple.thermophysics())
+                {
+                    fluid.solve(rAUs, rAUfs);
+                    fluid.correct();
+                    fluid.correctContinuityError();
+
+                    #include "YEqns.H"
+                    #include "EEqns.H"
+                    #include "pEqnComps.H"
+
+                    forAll(phases, phasei)
+                    {
+                        phases[phasei].divU(-pEqnComps[phasei] & p_rgh);
+                    }
                 }
             }
             else
@@ -146,6 +152,8 @@ int main(int argc, char *argv[])
                             )
                         );
                     }
+
+                    fvModels.preUpdateMesh();
 
                     mesh.update();
 
@@ -174,24 +182,40 @@ int main(int argc, char *argv[])
                     }
                 }
 
-                fvModels.correct();
+                if (pimple.models())
+                {
+                    fvModels.correct();
+                }
 
                 fluid.solve(rAUs, rAUfs);
                 fluid.correct();
                 fluid.correctContinuityError();
 
-                #include "YEqns.H"
+                if (pimple.thermophysics())
+                {
+                    #include "YEqns.H"
+                }
 
                 if (faceMomentum)
                 {
                     #include "pUf/UEqns.H"
-                    #include "EEqns.H"
+
+                    if (pimple.thermophysics())
+                    {
+                        #include "EEqns.H"
+                    }
+
                     #include "pUf/pEqn.H"
                 }
                 else
                 {
                     #include "pU/UEqns.H"
-                    #include "EEqns.H"
+
+                    if (pimple.thermophysics())
+                    {
+                        #include "EEqns.H"
+                    }
+
                     #include "pU/pEqn.H"
                 }
 

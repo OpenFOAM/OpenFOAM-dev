@@ -18,6 +18,5 @@ LIB_LIBS = \
     -linterfaceProperties \
     -ltransportModels \
     -lsurfaceFilmModels \
-    -lsurfaceFilmDerivedFvPatchFields \
     -lfiniteVolume \
     -lmeshTools

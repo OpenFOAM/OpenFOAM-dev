@@ -25,16 +25,14 @@ Application
     fireFoam
 
 Description
-    Transient solver for fires and turbulent diffusion flames with reacting
-    particle clouds and surface film modelling.
+    Transient solver for fires and turbulent diffusion flames with optional
+    reacting particle clouds and surface film modelling via fvModels.
 
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
 #include "dynamicMomentumTransportModel.H"
 #include "fluidReactionThermophysicalTransportModel.H"
-#include "parcelCloudList.H"
-#include "surfaceFilmModel.H"
 #include "fluidReactionThermo.H"
 #include "combustionModel.H"
 #include "pimpleControl.H"
@@ -75,21 +73,39 @@ int main(int argc, char *argv[])
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        parcels.evolve();
-
-        surfaceFilm.evolve();
-
-        if (solvePrimaryRegion)
+        // --- PIMPLE loop
+        while (pimple.loop())
         {
-            #include "rhoEqn.H"
-
-            // --- PIMPLE loop
-            while (pimple.loop())
+            if (!pimple.flow())
             {
-                fvModels.correct();
+                if (pimple.models())
+                {
+                    fvModels.correct();
+                }
+
+                if (pimple.thermophysics())
+                {
+                    #include "YEEqn.H"
+                }
+            }
+            else
+            {
+                if (pimple.firstPimpleIter() && !pimple.simpleRho())
+                {
+                    #include "rhoEqn.H"
+                }
+
+                if (pimple.models())
+                {
+                    fvModels.correct();
+                }
 
                 #include "UEqn.H"
-                #include "YEEqn.H"
+
+                if (pimple.thermophysics())
+                {
+                    #include "YEEqn.H"
+                }
 
                 // --- Pressure corrector loop
                 while (pimple.correct())

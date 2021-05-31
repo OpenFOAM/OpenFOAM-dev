@@ -42,13 +42,14 @@ wmake $targetType genericPatchFields
 
 wmake $targetType mesh/extrudeModel
 wmake $targetType dynamicMesh
+
+# Compile scotchDecomp, metisDecomp etc.
+parallel/Allwmake $targetType $*
+
 wmake $targetType dynamicFvMesh
 wmake $targetType topoChangerFvMesh
 wmake $targetType conversion
 wmake $targetType sampling
-
-# Compile scotchDecomp, metisDecomp etc.
-parallel/Allwmake $targetType $*
 
 wmake $targetType ODE
 wmake $targetType randomProcesses

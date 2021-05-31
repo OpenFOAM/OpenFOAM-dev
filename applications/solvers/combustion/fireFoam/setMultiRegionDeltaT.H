@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,7 +39,6 @@ if (adjustTimeStep)
     }
 
     const scalar TFactorFluid = maxCo/(CoNum + small);
-    const scalar TFactorFilm = maxCo/(surfaceFilm.CourantNumber() + small);
 
     const scalar dt0 = runTime.deltaTValue();
 
@@ -47,7 +46,7 @@ if (adjustTimeStep)
     (
         min
         (
-            dt0*min(min(TFactorFluid, TFactorFilm), 1.2),
+            dt0*min(TFactorFluid, 1.2),
             maxDeltaT
         )
     );

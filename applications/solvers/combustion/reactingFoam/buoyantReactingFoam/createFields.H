@@ -65,10 +65,7 @@ thermophysicalTransport
 );
 
 Info<< "Creating reaction model\n" << endl;
-autoPtr<combustionModel> reaction
-(
-    combustionModel::New(thermo, turbulence())
-);
+autoPtr<combustionModel> reaction(combustionModel::New(thermo, turbulence()));
 
 #include "readGravitationalAcceleration.H"
 #include "readhRef.H"
@@ -131,8 +128,3 @@ fields.add(thermo.he());
 #include "createMRF.H"
 #include "createFvModels.H"
 #include "createFvConstraints.H"
-
-
-// This solver does not support moving mesh but it uses the pressure equation
-// of one which does, so we need a dummy face-momentum field
-autoPtr<surfaceVectorField> rhoUf(nullptr);

@@ -119,7 +119,7 @@ public:
             virtual tmp<volScalarField::Internal> Srho() const = 0;
 
             //- Return mass source for specie i - Eulerian phase only
-            virtual tmp<volScalarField::Internal> Srho
+            virtual tmp<volScalarField::Internal> SYi
             (
                 const label i
             ) const = 0;

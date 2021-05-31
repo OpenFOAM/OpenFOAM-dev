@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,8 +56,14 @@ protected:
 
     // Protected data
 
-        //- Flag to indicate not to solve for the flow
-        bool frozenFlow_;
+        //- Flag to indicate to solve for the optional models
+        bool models_;
+
+        //- Flag to indicate to solve for the thermophysics
+        bool thermophysics_;
+
+        //- Flag to indicate to solve for the flow
+        bool flow_;
 
         //- Flag to indicate to solve for momentum
         bool momentumPredictor_;
@@ -97,8 +103,14 @@ public:
 
         // Access
 
-            //- Flag to indicate not to solve for the flow
-            inline bool frozenFlow() const;
+            //- Flag to indicate to solve for the options models
+            inline bool models() const;
+
+            //- Flag to indicate to solve for the thermophysics
+            inline bool thermophysics() const;
+
+            //- Flag to indicate to solve for the flow
+            inline bool flow() const;
 
             //- Flag to indicate to solve for momentum
             inline bool momentumPredictor() const;

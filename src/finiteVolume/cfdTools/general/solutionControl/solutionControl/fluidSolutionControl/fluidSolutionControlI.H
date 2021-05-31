@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,9 +25,21 @@ License
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-inline bool Foam::fluidSolutionControl::frozenFlow() const
+inline bool Foam::fluidSolutionControl::models() const
 {
-    return frozenFlow_;
+    return models_;
+}
+
+
+inline bool Foam::fluidSolutionControl::thermophysics() const
+{
+    return thermophysics_;
+}
+
+
+inline bool Foam::fluidSolutionControl::flow() const
+{
+    return flow_;
 }
 
 

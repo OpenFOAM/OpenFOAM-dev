@@ -81,11 +81,11 @@ tmp<volScalarField::Internal> noFilm::Srho() const
 }
 
 
-tmp<volScalarField::Internal> noFilm::Srho(const label i) const
+tmp<volScalarField::Internal> noFilm::SYi(const label i) const
 {
     return volScalarField::Internal::New
     (
-        "noFilm::Srho(" + Foam::name(i) + ")",
+        "noFilm::SY(" + Foam::name(i) + ")",
         mesh_,
         dimensionedScalar(dimMass/dimVolume/dimTime, 0)
     );

@@ -97,23 +97,6 @@ forAll(Y, i)
 }
 fields.add(thermo.he());
 
-IOdictionary additionalControlsDict
-(
-    IOobject
-    (
-        "additionalControls",
-        runTime.constant(),
-        mesh,
-        IOobject::MUST_READ_IF_MODIFIED,
-        IOobject::NO_WRITE
-    )
-);
-
-Switch solvePrimaryRegion
-(
-    additionalControlsDict.lookup("solvePrimaryRegion")
-);
-
 Info<< "Creating field dpdt\n" << endl;
 volScalarField dpdt
 (
@@ -130,8 +113,5 @@ volScalarField dpdt
 Info<< "Creating field kinetic energy K\n" << endl;
 volScalarField K("K", 0.5*magSqr(U));
 
-#include "createClouds.H"
-#include "createSurfaceFilmModel.H"
 #include "createFvModels.H"
 #include "createFvConstraints.H"
-#include "checkRadiationModel.H"

@@ -23,9 +23,7 @@ tmp<fv::convectionScheme<scalar>> mvConvection
               + mvConvection->fvmDiv(phi, Yi)
               + thermophysicalTransport->divj(Yi)
               ==
-                parcels.SYi(i, Yi)
-              + surfaceFilm.Srho(i)
-              + combustion->R(Yi)
+                combustion->R(Yi)
               + fvModels.source(rho, Yi)
             );
 
@@ -60,8 +58,6 @@ tmp<fv::convectionScheme<scalar>> mvConvection
       + thermophysicalTransport->divq(he)
      ==
         combustion->Qdot()
-      + parcels.Sh(he)
-      + surfaceFilm.Sh()
       + fvModels.source(rho, he)
     );
 

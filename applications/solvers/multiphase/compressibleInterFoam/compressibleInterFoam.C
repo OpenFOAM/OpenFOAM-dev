@@ -115,6 +115,8 @@ int main(int argc, char *argv[])
                     );
                 }
 
+                fvModels.preUpdateMesh();
+
                 mesh.update();
 
                 if (mesh.changing())

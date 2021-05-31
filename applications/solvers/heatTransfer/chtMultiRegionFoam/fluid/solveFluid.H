@@ -1,9 +1,15 @@
-if (pimple.frozenFlow())
+if (!pimple.flow())
 {
-    fvModels.correct();
+    if (pimple.models())
+    {
+        fvModels.correct();
+    }
 
-    #include "YEqn.H"
-    #include "EEqn.H"
+    if (pimple.thermophysics())
+    {
+        #include "YEqn.H"
+        #include "EEqn.H"
+    }
 }
 else
 {
@@ -12,11 +18,18 @@ else
         #include "rhoEqn.H"
     }
 
-    fvModels.correct();
+    if (pimple.models())
+    {
+        fvModels.correct();
+    }
 
     #include "UEqn.H"
-    #include "YEqn.H"
-    #include "EEqn.H"
+
+    if (pimple.thermophysics())
+    {
+        #include "YEqn.H"
+        #include "EEqn.H"
+    }
 
     // --- PISO loop
     while (pimple.correct())

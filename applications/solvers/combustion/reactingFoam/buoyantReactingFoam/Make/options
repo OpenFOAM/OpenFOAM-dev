@@ -1,10 +1,6 @@
 EXE_INC = \
     -I. \
     -I$(FOAM_SOLVERS)/combustion/reactingFoam \
-    -I$(LIB_SRC)/finiteVolume/lnInclude \
-    -I$(LIB_SRC)/finiteVolume/cfdTools \
-    -I$(LIB_SRC)/meshTools/lnInclude \
-    -I$(LIB_SRC)/sampling/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/momentumTransportModels/lnInclude \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/lnInclude \
@@ -15,15 +11,14 @@ EXE_INC = \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/chemistryModel/lnInclude \
     -I$(LIB_SRC)/ODE/lnInclude \
-    -I$(LIB_SRC)/combustionModels/lnInclude
-
+    -I$(LIB_SRC)/combustionModels/lnInclude \
+    -I$(LIB_SRC)/dynamicFvMesh/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/lnInclude \
+    -I$(LIB_SRC)/finiteVolume/cfdTools \
+    -I$(LIB_SRC)/meshTools/lnInclude \
+    -I$(LIB_SRC)/sampling/lnInclude
 
 EXE_LIBS = \
-    -lfiniteVolume \
-    -lfvModels \
-    -lfvConstraints \
-    -lmeshTools \
-    -lsampling \
     -lmomentumTransportModels \
     -lcompressibleMomentumTransportModels \
     -lthermophysicalTransportModels \
@@ -33,4 +28,11 @@ EXE_LIBS = \
     -lfluidThermophysicalModels \
     -lchemistryModel \
     -lODE \
-    -lcombustionModels
+    -lcombustionModels \
+    -ldynamicFvMesh \
+    -ltopoChangerFvMesh \
+    -lfiniteVolume \
+    -lfvModels \
+    -lfvConstraints \
+    -lmeshTools \
+    -lsampling

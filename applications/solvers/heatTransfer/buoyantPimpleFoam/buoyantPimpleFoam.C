@@ -108,57 +108,81 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
+            if (!pimple.flow())
             {
-                // Store momentum to set rhoUf for introduced faces.
-                autoPtr<volVectorField> rhoU;
-                if (rhoUf.valid())
+                if (pimple.models())
                 {
-                    rhoU = new volVectorField("rhoU", rho*U);
+                    fvModels.correct();
                 }
 
-                // Do any mesh changes
-                mesh.update();
-
-                if (mesh.changing())
+                if (pimple.thermophysics())
                 {
-                    gh = (g & mesh.C()) - ghRef;
-                    ghf = (g & mesh.Cf()) - ghRef;
-
-                    MRF.update();
-
-                    if (correctPhi)
-                    {
-                        #include "correctPhi.H"
-                    }
-
-                    if (checkMeshCourantNo)
-                    {
-                        #include "meshCourantNo.H"
-                    }
+                    #include "EEqn.H"
                 }
             }
-
-            if (pimple.firstPimpleIter() && !pimple.simpleRho())
+            else
             {
-                #include "rhoEqn.H"
-            }
+                if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
+                {
+                    // Store momentum to set rhoUf for introduced faces.
+                    autoPtr<volVectorField> rhoU;
+                    if (rhoUf.valid())
+                    {
+                        rhoU = new volVectorField("rhoU", rho*U);
+                    }
 
-            fvModels.correct();
+                    fvModels.preUpdateMesh();
 
-            #include "UEqn.H"
-            #include "EEqn.H"
+                    // Do any mesh changes
+                    mesh.update();
 
-            // --- Pressure corrector loop
-            while (pimple.correct())
-            {
-                #include "pEqn.H"
-            }
+                    if (mesh.changing())
+                    {
+                        gh = (g & mesh.C()) - ghRef;
+                        ghf = (g & mesh.Cf()) - ghRef;
 
-            if (pimple.turbCorr())
-            {
-                turbulence->correct();
-                thermophysicalTransport->correct();
+                        MRF.update();
+
+                        if (correctPhi)
+                        {
+                            #include "correctPhi.H"
+                        }
+
+                        if (checkMeshCourantNo)
+                        {
+                            #include "meshCourantNo.H"
+                        }
+                    }
+                }
+
+                if (pimple.firstPimpleIter() && !pimple.simpleRho())
+                {
+                    #include "rhoEqn.H"
+                }
+
+                if (pimple.models())
+                {
+                    fvModels.correct();
+                }
+
+                #include "UEqn.H"
+
+                if (pimple.thermophysics())
+                {
+                    #include "EEqn.H"
+                }
+
+                // --- Pressure corrector loop
+                while (pimple.correct())
+                {
+                    #include "pEqn.H"
+                }
+
+                if (pimple.turbCorr())
+                {
+                    turbulence->correct();
+                    thermophysicalTransport->correct();
+                }
             }
         }
 

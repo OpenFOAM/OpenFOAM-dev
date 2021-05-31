@@ -35,9 +35,7 @@ Description
         fvm::ddt(rho)
       + fvc::div(phi)
       ==
-        parcels.Srho(rho)
-      + surfaceFilm.Srho()
-      + fvModels.source(rho)
+        fvModels.source(rho)
     );
 
     rhoEqn.solve();

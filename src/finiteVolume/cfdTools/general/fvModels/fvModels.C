@@ -237,6 +237,17 @@ bool Foam::fvModels::addsSupToField(const word& fieldName) const
 }
 
 
+void Foam::fvModels::preUpdateMesh()
+{
+    PtrListDictionary<fvModel>& modelList(*this);
+
+    forAll(modelList, i)
+    {
+        modelList[i].preUpdateMesh();
+    }
+}
+
+
 void Foam::fvModels::updateMesh(const mapPolyMesh& mpm)
 {
     PtrListDictionary<fvModel>& modelList(*this);

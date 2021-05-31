@@ -97,6 +97,8 @@ int main(int argc, char *argv[])
         {
             if (pimple.firstPimpleIter() || moveMeshOuterCorrectors)
             {
+                fvModels.preUpdateMesh();
+
                 mesh.update();
 
                 if (mesh.changing())

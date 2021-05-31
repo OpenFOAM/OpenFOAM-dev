@@ -6,7 +6,6 @@ EXE_INC = \
     -I$(LIB_SRC)/MomentumTransportModels/compressible/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/lnInclude \
     -I$(LIB_SRC)/ThermophysicalTransportModels/fluidReactionThermo/lnInclude \
-    -I$(LIB_SRC)/lagrangian/distributionModels/lnInclude \
     -I$(LIB_SRC)/transportModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude \
@@ -14,10 +13,6 @@ EXE_INC = \
     -I$(LIB_SRC)/combustionModels/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/thermophysicalProperties/lnInclude \
     -I$(LIB_SRC)/thermophysicalModels/reactionThermo/lnInclude \
-    -I$(LIB_SRC)/regionModels/regionModel/lnInclude \
-    -I$(LIB_SRC)/regionModels/surfaceFilmModels/lnInclude \
-    -I$(LIB_SRC)/lagrangian/basic/lnInclude \
-    -I$(LIB_SRC)/lagrangian/parcel/lnInclude \
     -I$(LIB_SRC)/ODE/lnInclude
 
 EXE_LIBS = \
@@ -35,9 +30,4 @@ EXE_LIBS = \
     -lreactionThermophysicalModels \
     -lchemistryModel \
     -lcombustionModels \
-    -lregionModels \
-    -lsurfaceFilmModels \
-    -lsurfaceFilmDerivedFvPatchFields \
-    -llagrangianParcel \
-    -llagrangianParcelTurbulence \
     -lODE

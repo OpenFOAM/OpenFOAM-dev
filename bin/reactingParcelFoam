@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -27,16 +27,33 @@
 #
 # Description
 #     Script to inform the user that reactingParcelFoam has been replaced by the
-#     more general buoyantReactingParticleFoam solver.
+#     more general buoyantReactingFoam solver.
 #
 #------------------------------------------------------------------------------
 
 cat << EOF
 
 The reactingParcelFoam solver has solver has been replaced by the more general
-buoyantReactingParticleFoam solver, which supports buoyant compressible
+buoyantReactingFoam solver, which supports buoyant compressible
 reacting flow coupled to multiple run-time-selectable lagrangian clouds and
 surface film modelling.
+
+To run a reactingParcelFoam case in reactingFoam add the following entries in
+constant/fvModels:
+
+buoyancyForce
+{
+    type        buoyancyForce;
+}
+
+clouds
+{
+    type    clouds;
+    libs    ("liblagrangianParcel.so");
+}
+
+which add the acceleration due to gravity needed by Lagrangian clouds and the
+clouds themselves.
 
 To run with a single cloud rename the constant/*CloudProperties file to
 constant/cloudProperties.
@@ -49,9 +66,9 @@ In addition, cloud properties files also now require a "type" entry to specify
 the type of cloud model used (e.g., thermoCloud, reactingMultiphaseCloud,
 collidingCloud, etc ...).
 
-See the following case for an example converted from reactingParcelFoam:
+See the following cases for examples converted from reactingParcelFoam:
 
-    \$FOAM_TUTORIALS/lagrangian/buoyantReactingParticleFoam/splashPanel
+    \$FOAM_TUTORIALS/combustion/buoyantReactingFoam/Lagrangian
 
 EOF
 

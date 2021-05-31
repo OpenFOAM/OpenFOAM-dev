@@ -163,6 +163,10 @@ bool Foam::fvModel::read(const dictionary& dict)
 }
 
 
+void Foam::fvModel::preUpdateMesh()
+{}
+
+
 void Foam::fvModel::updateMesh(const mapPolyMesh& mpm)
 {}
 

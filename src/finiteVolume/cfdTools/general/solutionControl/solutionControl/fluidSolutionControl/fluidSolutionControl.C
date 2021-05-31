@@ -42,7 +42,9 @@ Foam::fluidSolutionControl::fluidSolutionControl
 )
 :
     nonOrthogonalSolutionControl(mesh, algorithmName),
-    frozenFlow_(false),
+    models_(false),
+    thermophysics_(false),
+    flow_(false),
     momentumPredictor_(true),
     transonic_(false),
     consistent_(false)
@@ -66,19 +68,9 @@ bool Foam::fluidSolutionControl::read()
 
     const dictionary& solutionDict = dict();
 
-    frozenFlow_ =
-        solutionDict.lookupOrDefaultBackwardsCompatible<bool>
-        (
-            {"frozenFlow", "solveFluid"},
-            false
-        );
-
-    // If using the old keyword, then the logic is reversed
-    if (!solutionDict.found("frozenFlow") && solutionDict.found("solveFluid"))
-    {
-        frozenFlow_ = !frozenFlow_;
-    }
-
+    models_ = solutionDict.lookupOrDefault<bool>("models", true);
+    thermophysics_ = solutionDict.lookupOrDefault<bool>("thermophysics", true);
+    flow_ = solutionDict.lookupOrDefault<bool>("flow", true);
     momentumPredictor_ =
         solutionDict.lookupOrDefault<bool>("momentumPredictor", true);
     transonic_ = solutionDict.lookupOrDefault<bool>("transonic", false);

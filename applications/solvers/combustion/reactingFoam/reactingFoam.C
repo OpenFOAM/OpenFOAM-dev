@@ -25,7 +25,11 @@ Application
     reactingFoam
 
 Description
-    Solver for combustion with chemical reactions.
+    Transient solver for turbulent flow of compressible reacting fluids with
+    optional mesh motion and mesh topology changes.
+
+    Uses the flexible PIMPLE (PISO-SIMPLE) solution for time-resolved and
+    pseudo-transient simulations.
 
 \*---------------------------------------------------------------------------*/
 
@@ -105,12 +109,18 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            fvModels.correct();
-
-            if (pimple.frozenFlow())
+            if (!pimple.flow())
             {
-                #include "YEqn.H"
-                #include "EEqn.H"
+                if (pimple.models())
+                {
+                    fvModels.correct();
+                }
+
+                if (pimple.thermophysics())
+                {
+                    #include "YEqn.H"
+                    #include "EEqn.H"
+                }
             }
             else
             {
@@ -122,6 +132,8 @@ int main(int argc, char *argv[])
                     {
                         rhoU = new volVectorField("rhoU", rho*U);
                     }
+
+                    fvModels.preUpdateMesh();
 
                     // Do any mesh changes
                     mesh.update();
@@ -147,9 +159,18 @@ int main(int argc, char *argv[])
                     #include "rhoEqn.H"
                 }
 
+                if (pimple.models())
+                {
+                    fvModels.correct();
+                }
+
                 #include "UEqn.H"
-                #include "YEqn.H"
-                #include "EEqn.H"
+
+                if (pimple.thermophysics())
+                {
+                    #include "YEqn.H"
+                    #include "EEqn.H"
+                }
 
                 // --- Pressure corrector loop
                 while (pimple.correct())
