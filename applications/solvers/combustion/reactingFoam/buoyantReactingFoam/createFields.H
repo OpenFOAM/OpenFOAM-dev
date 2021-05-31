@@ -86,9 +86,6 @@ volScalarField p_rgh
     mesh
 );
 
-// Force p_rgh to be consistent with p
-p_rgh = p - rho*gh - pRef;
-
 pressureReference pressureReference
 (
     p,
@@ -98,6 +95,8 @@ pressureReference pressureReference
 );
 
 mesh.setFluxRequired(p_rgh.name());
+
+#include "hydrostaticInitialisation.H"
 
 Info<< "Creating field dpdt\n" << endl;
 volScalarField dpdt

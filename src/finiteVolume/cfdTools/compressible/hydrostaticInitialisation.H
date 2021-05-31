@@ -60,3 +60,8 @@ if (pimple.dict().lookupOrDefault<bool>("hydrostaticInitialization", false))
         p_rgh = ph_rgh;
     }
 }
+else
+{
+    // Force p_rgh to be consistent with p
+    p_rgh = p - rho*gh - pRef;
+}
