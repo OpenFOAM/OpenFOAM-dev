@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -125,7 +125,7 @@ void Foam::csvSetWriter<Type>::writeSeparator(Ostream& os) const
 
 namespace Foam
 {
-    // otherwise compiler complains about specialization
+    // otherwise compiler complains about specialisation
     template<>
     void csvSetWriter<scalar>::writeHeader
     (

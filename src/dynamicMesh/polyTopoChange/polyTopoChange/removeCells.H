@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -64,7 +64,7 @@ class removeCells
         //- Reference to mesh
         const polyMesh& mesh_;
 
-        //- Whether or not to synchronize parallel case.
+        //- Whether or not to synchronise parallel case.
         const bool syncPar_;
 
 
@@ -86,7 +86,7 @@ public:
 
     // Constructors
 
-        //- Construct from mesh. syncPar: do parallel synchronization.
+        //- Construct from mesh. syncPar: do parallel synchronisation.
         removeCells(const polyMesh& mesh, const bool syncPar = true);
 
 

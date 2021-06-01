@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ class refineCell
     //- Cell label
     label cellNo_;
 
-    //- Preferred refinement direction (always normalized).
+    //- Preferred refinement direction (always normalised).
     vector direction_;
 
 public:
@@ -71,10 +71,10 @@ public:
         //- Null
         refineCell();
 
-        //- From components. Vector will be normalized upon construction.
+        //- From components. Vector will be normalised upon construction.
         refineCell(const label, const vector&);
 
-        //- From Istream. Vector will be normalized upon construction.
+        //- From Istream. Vector will be normalised upon construction.
         refineCell(Istream& is);
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Description
 
     The derived classes are responsible for providing the protected data.
     This implementation is somewhat messy, but could/should be restructured
-    to provide a more generalized reader (at the moment it has been written
+    to provide a more generalised reader (at the moment it has been written
     for converting pro-STAR data).
 
     The meshReader supports cellTable information (see new user's guide entry).

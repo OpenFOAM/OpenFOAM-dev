@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,14 +113,14 @@ protected:
 
         // Calculated
 
-            //- Categorized scalar/vector/tensor vol fields
+            //- Categorised scalar/vector/tensor vol fields
             fieldGroup<scalar> scalarFields_;
             fieldGroup<vector> vectorFields_;
             fieldGroup<sphericalTensor> sphericalTensorFields_;
             fieldGroup<symmTensor> symmTensorFields_;
             fieldGroup<tensor> tensorFields_;
 
-            //- Categorized scalar/vector/tensor surf fields
+            //- Categorised scalar/vector/tensor surf fields
             fieldGroup<scalar> surfaceScalarFields_;
             fieldGroup<vector> surfaceVectorFields_;
             fieldGroup<sphericalTensor> surfaceSphericalTensorFields_;

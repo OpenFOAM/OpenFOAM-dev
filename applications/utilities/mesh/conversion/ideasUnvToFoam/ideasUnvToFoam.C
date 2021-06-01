@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -247,16 +247,16 @@ void readPoints
 
 void addAndExtend
 (
-    DynamicList<label>& indizes,
+    DynamicList<label>& indices,
     label celli,
     label val
 )
 {
-    if (indizes.size() < (celli+1))
+    if (indices.size() < (celli+1))
     {
-        indizes.setSize(celli+1,-1);
+        indices.setSize(celli+1,-1);
     }
-    indizes[celli] = val;
+    indices[celli] = val;
 }
 
 // Reads cells section. Read region as well? Not handled yet but should just
@@ -1228,15 +1228,15 @@ int main(int argc, char *argv[])
             forAll(faceZones.toc(), cnt)
             {
                 word name = faceZones.toc()[cnt];
-                const labelList& oldIndizes = faceZones[name];
-                labelList indizes(oldIndizes.size());
+                const labelList& oldindices = faceZones[name];
+                labelList indices(oldindices.size());
 
                 Info<< " Face Zone " << name << " " << tab
-                    << oldIndizes.size() << endl;
+                    << oldindices.size() << endl;
 
-                forAll(indizes, i)
+                forAll(indices, i)
                 {
-                    const label old = oldIndizes[i];
+                    const label old = oldindices[i];
                     label nouveau = -1;
                     label c1 = -1, c2 = -1;
                     if (faceToCell[0].found(old))
@@ -1285,13 +1285,13 @@ int main(int argc, char *argv[])
                         }
                     }
                     assert(nouveau > -1);
-                    indizes[i] = nouveau;
+                    indices[i] = nouveau;
                 }
                 fZones[cnt] = new faceZone
                 (
                     faceZones.toc()[cnt],
-                    indizes,
-                    boolList(indizes.size(),false),
+                    indices,
+                    boolList(indices.size(),false),
                     cnt,
                     mesh.faceZones()
                 );

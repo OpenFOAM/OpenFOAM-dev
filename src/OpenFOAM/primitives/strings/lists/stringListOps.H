@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,7 +69,7 @@ namespace Foam
     );
 
     //- Return list indices for strings matching the regular expression
-    //  Template partial specialization of findMatchingStrings
+    //  Template partial specialisation of findMatchingStrings
     template<class StringType>
     labelList findStrings
     (
@@ -82,7 +82,7 @@ namespace Foam
     }
 
     //- Return list indices for strings matching the regular expression
-    //  Template partial specialization of findMatchingStrings
+    //  Template partial specialisation of findMatchingStrings
     template<class StringType>
     labelList findStrings
     (
@@ -96,7 +96,7 @@ namespace Foam
     }
 
     //- Return list indices for strings matching the regular expression
-    //  Template partial specialization of findMatchingStrings
+    //  Template partial specialisation of findMatchingStrings
     template<class StringType>
     labelList findStrings
     (
@@ -110,7 +110,7 @@ namespace Foam
     }
 
     //- Return list indices for strings matching the regular expression
-    //  Template partial specialization of findMatchingStrings
+    //  Template partial specialisation of findMatchingStrings
     template<class StringType>
     labelList findStrings
     (
@@ -124,7 +124,7 @@ namespace Foam
 
 
     //- Return list indices for strings matching one of the regular expression
-    //  Template partial specialization of findMatchingStrings
+    //  Template partial specialisation of findMatchingStrings
     template<class StringType>
     labelList findStrings
     (
@@ -151,7 +151,7 @@ namespace Foam
     );
 
     //- Extract elements of StringList when regular expression matches
-    //  Template partial specialization of subsetMatchingStrings
+    //  Template partial specialisation of subsetMatchingStrings
     template<class StringListType>
     StringListType subsetStrings
     (
@@ -164,7 +164,7 @@ namespace Foam
     }
 
     //- Extract elements of StringList when regular expression matches
-    //  Template partial specialization of subsetMatchingStrings
+    //  Template partial specialisation of subsetMatchingStrings
     template<class StringListType>
     StringListType subsetStrings
     (
@@ -178,7 +178,7 @@ namespace Foam
     }
 
     //- Extract elements of StringList when regular expression matches
-    //  Template partial specialization of subsetMatchingStrings
+    //  Template partial specialisation of subsetMatchingStrings
     template<class StringListType>
     StringListType subsetStrings
     (
@@ -192,7 +192,7 @@ namespace Foam
     }
 
     //- Extract elements of StringList when regular expression matches
-    //  Template partial specialization of subsetMatchingStrings
+    //  Template partial specialisation of subsetMatchingStrings
     template<class StringListType>
     StringListType subsetStrings
     (
@@ -205,7 +205,7 @@ namespace Foam
     }
 
     //- Extract elements of StringList when regular expression matches
-    //  Template partial specialization of subsetMatchingStrings
+    //  Template partial specialisation of subsetMatchingStrings
     template<class StringListType>
     StringListType subsetStrings
     (
@@ -231,7 +231,7 @@ namespace Foam
     );
 
     //- Inplace extract elements of StringList when regular expression matches
-    //  Template partial specialization of inplaceSubsetMatchingStrings
+    //  Template partial specialisation of inplaceSubsetMatchingStrings
     template<class StringListType>
     void inplaceSubsetStrings
     (
@@ -244,7 +244,7 @@ namespace Foam
     }
 
     //- Inplace extract elements of StringList when regular expression matches
-    //  Template partial specialization of inplaceSubsetMatchingStrings
+    //  Template partial specialisation of inplaceSubsetMatchingStrings
     template<class StringListType>
     void inplaceSubsetStrings
     (
@@ -258,7 +258,7 @@ namespace Foam
     }
 
     //- Inplace extract elements of StringList when regular expression matches
-    //  Template partial specialization of inplaceSubsetMatchingStrings
+    //  Template partial specialisation of inplaceSubsetMatchingStrings
     template<class StringListType>
     void inplaceSubsetStrings
     (
@@ -272,7 +272,7 @@ namespace Foam
     }
 
     //- Inplace extract elements of StringList when regular expression matches
-    //  Template partial specialization of inplaceSubsetMatchingStrings
+    //  Template partial specialisation of inplaceSubsetMatchingStrings
     template<class StringListType>
     void inplaceSubsetStrings
     (
@@ -285,7 +285,7 @@ namespace Foam
     }
 
     //- Inplace extract elements of StringList when regular expression matches
-    //  Template partial specialization of inplaceSubsetMatchingStrings
+    //  Template partial specialisation of inplaceSubsetMatchingStrings
     template<class StringListType>
     void inplaceSubsetStrings
     (

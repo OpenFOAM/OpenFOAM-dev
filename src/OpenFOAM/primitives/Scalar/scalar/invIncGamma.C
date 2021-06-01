@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Global
 
 Description
     Function to calculate the inverse of the
-    normalized incomplete gamma function.
+    normalised incomplete gamma function.
 
     The algorithm is described in detain in reference:
     \verbatim
@@ -105,7 +105,7 @@ static scalar Sn(const scalar a, const scalar x)
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- Inverse normalized incomplete gamma function
+//- Inverse normalised incomplete gamma function
 Foam::scalar Foam::invIncGamma(const scalar a, const scalar P)
 {
     const scalar Q = 1 - P;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,7 +33,7 @@ Description
     - a user supplied patch
     - a newly created patch "oldInternalFaces"
 
-    - setCellSubset is for small subsets. Uses Maps to minimize memory.
+    - setCellSubset is for small subsets. Uses Maps to minimise memory.
     - setLargeCellSubset is for largish subsets (>10% of mesh).
       Uses labelLists instead.
 

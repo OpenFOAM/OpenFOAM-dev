@@ -73,7 +73,7 @@ functions
         functionType        volume;
         coordinateType      diameter;
         densityFunction     yes;
-        normalize           yes;
+        normalise           yes;
     }
 
     probabilityDensity.outlet
@@ -90,7 +90,7 @@ functions
         functionType        volume;
         coordinateType      diameter;
         densityFunction     yes;
-        normalize           yes;
+        normalise           yes;
     }
 }
 

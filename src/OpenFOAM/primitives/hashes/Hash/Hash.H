@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     Hash function class for primitives.  All non-primitives used to hash
-    entries on hash tables likely need a specialized version of this class.
+    entries on hash tables likely need a specialised version of this class.
 
 \*---------------------------------------------------------------------------*/
 
@@ -72,7 +72,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-//- Hash specialization for hashing labels
+//- Hash specialisation for hashing labels
 template<>
 class Hash<Foam::label>
 {
@@ -99,7 +99,7 @@ public:
 };
 
 
-//- Hash specialization for hashing strings
+//- Hash specialisation for hashing strings
 template<>
 class Hash<Foam::string>
 {
@@ -119,7 +119,7 @@ public:
 };
 
 
-//- Hash specialization for hashing words
+//- Hash specialisation for hashing words
 template<>
 class Hash<Foam::word>
 {
@@ -139,7 +139,7 @@ public:
 };
 
 
-//- Hash specialization for hashing fileNames
+//- Hash specialisation for hashing fileNames
 template<>
 class Hash<Foam::fileName>
 {
@@ -159,7 +159,7 @@ public:
 };
 
 
-//- Hash specialization for hashing wordRes
+//- Hash specialisation for hashing wordRes
 template<>
 class Hash<Foam::wordRe>
 {
@@ -179,7 +179,7 @@ public:
 };
 
 
-//- Hash specialization for hashing keyTypes
+//- Hash specialisation for hashing keyTypes
 template<>
 class Hash<Foam::keyType>
 {
@@ -200,7 +200,7 @@ public:
 
 
 
-//- Hash specialization for hashing pointer addresses.
+//- Hash specialisation for hashing pointer addresses.
 //  Treat a pointer like a long.
 //  This should work for both 32-bit and 64-bit pointers.
 template<>

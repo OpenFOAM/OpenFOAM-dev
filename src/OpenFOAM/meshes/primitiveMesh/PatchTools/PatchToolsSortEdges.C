@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ Foam::labelListList Foam::PatchTools::sortedEdgeFaces
 
         if (faceNbs.size() > 2)
         {
-            // Get point on edge and normalized direction of edge (= e2 base
+            // Get point on edge and normalised direction of edge (= e2 base
             // of our coordinate system)
             const edge& e = edges[edgeI];
 

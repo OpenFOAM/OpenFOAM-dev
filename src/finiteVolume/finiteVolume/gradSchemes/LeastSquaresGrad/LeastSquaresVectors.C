@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,7 @@ void Foam::fv::LeastSquaresVectors<Stencil>::calcLeastSquaresVectors()
         // Remove the components corresponding to the empty directions
         dd -= dd0;
 
-        // Finalize the gradient weighting vectors
+        // Finalise the gradient weighting vectors
         lsvi[0] = Zero;
         for (label j=1; j<lsvi.size(); j++)
         {

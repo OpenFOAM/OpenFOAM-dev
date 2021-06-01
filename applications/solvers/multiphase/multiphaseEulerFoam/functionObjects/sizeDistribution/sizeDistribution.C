@@ -250,7 +250,7 @@ void Foam::functionObjects::sizeDistribution::writeDistribution()
 
     }
 
-    if (normalize_)
+    if (normalise_)
     {
         if(sum(result) != 0)
         {
@@ -460,7 +460,7 @@ bool Foam::functionObjects::sizeDistribution::read(const dictionary& dict)
 {
     fvMeshFunctionObject::read(dict);
 
-    normalize_ = dict.lookupOrDefault<Switch>("normalize", false);
+    normalise_ = dict.lookupOrDefault<Switch>("normalise", false);
     densityFunction_ = dict.lookupOrDefault<Switch>("densityFunction", false);
     geometric_ = dict.lookupOrDefault<Switch>("geometric", false);
     maxOrder_ = dict.lookupOrDefault("maxOrder", 3);

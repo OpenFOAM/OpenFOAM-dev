@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,9 +31,9 @@ Description
     Accurate description in
     @verbatim
     R. Schmehl, G. Maier, S. Witting
-    "CFD Analysis of Fuel Atomization, Secondary Droplet Breakup and Spray
+    "CFD Analysis of Fuel Atomisation, Secondary Droplet Breakup and Spray
     Dispersion in the Premix Duct of a LPP Combustor".
-    Eight International Conference on Liquid Atomization and Spray Systems, 2000
+    Eight International Conference on Liquid Atomisation and Spray Systems, 2000
     @endverbatim
 
 \*---------------------------------------------------------------------------*/

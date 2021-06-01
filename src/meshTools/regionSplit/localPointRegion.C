@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -331,7 +331,7 @@ void Foam::localPointRegion::calcPointRegions
         }
     }
 
-    // Now minimize over all faces that are connected through internal
+    // Now minimise over all faces that are connected through internal
     // faces or through cells. This loop iterates over the max number of
     // cells connected to a point (=8 for hex mesh)
 

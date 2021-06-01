@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -683,7 +683,7 @@ void Foam::polyMesh::resetPrimitives
     clearAddressing(true);
 
     // Take over new primitive data.
-    // Optimized to avoid overwriting data at all
+    // Optimised to avoid overwriting data at all
     if (notNull(points))
     {
         points_ = move(points);
@@ -1630,7 +1630,7 @@ Foam::label Foam::polyMesh::findCell
 
     if (decompMode == CELL_TETS)
     {
-        // Advanced search method utilizing an octree
+        // Advanced search method utilising an octree
         // and tet-decomposition of the cells
 
         label celli;

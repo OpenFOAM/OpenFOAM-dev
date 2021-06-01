@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::ensightFile
 
 Description
-    Ensight output with specialized write() for strings, integers and floats.
+    Ensight output with specialised write() for strings, integers and floats.
     Correctly handles binary write as well.
 
 \*---------------------------------------------------------------------------*/

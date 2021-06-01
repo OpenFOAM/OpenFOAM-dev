@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -239,7 +239,7 @@ public:
         virtual void clear();
 
         //- Reset primitive data (points, edges)
-        //  Note, optimized to avoid overwriting data (with null)
+        //  Note, optimised to avoid overwriting data (with null)
         virtual void reset
         (
             pointField&& points,

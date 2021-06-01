@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -999,7 +999,7 @@ int main(int argc, char *argv[])
     // ~~~~~~~~~~~~~~~~~~~~~~
     //
 
-    // Synchronize wantedPatch across coupled patches.
+    // Synchronise wantedPatch across coupled patches.
     syncTools::syncFaceList
     (
         subsetter.subMesh(),
@@ -1007,7 +1007,7 @@ int main(int argc, char *argv[])
         maxEqOp<label>()
     );
 
-    // Synchronize coupledWantedPatch across coupled patches.
+    // Synchronise coupledWantedPatch across coupled patches.
     syncTools::syncFaceList
     (
         subsetter.subMesh(),
@@ -1015,7 +1015,7 @@ int main(int argc, char *argv[])
         maxEqOp<label>()
     );
 
-    // Synchronize cyclicWantedPatch across coupled patches.
+    // Synchronise cyclicWantedPatch across coupled patches.
     syncTools::syncFaceList
     (
         subsetter.subMesh(),
@@ -1023,7 +1023,7 @@ int main(int argc, char *argv[])
         maxEqOp<label>()
     );
 
-    // Synchronize cyclicWantedPatch across coupled patches.
+    // Synchronise cyclicWantedPatch across coupled patches.
     syncTools::syncFaceList
     (
         subsetter.subMesh(),

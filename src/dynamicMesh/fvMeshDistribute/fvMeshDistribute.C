@@ -1225,7 +1225,7 @@ Foam::autoPtr<Foam::mapPolyMesh> Foam::fvMeshDistribute::doRemoveCells
     // Mesh change engine
     polyTopoChange meshMod(mesh_);
 
-    // Cell removal topo engine. Do NOT synchronize parallel since
+    // Cell removal topo engine. Do NOT synchronise parallel since
     // we are doing a local cell removal.
     removeCells cellRemover(mesh_, false);
 

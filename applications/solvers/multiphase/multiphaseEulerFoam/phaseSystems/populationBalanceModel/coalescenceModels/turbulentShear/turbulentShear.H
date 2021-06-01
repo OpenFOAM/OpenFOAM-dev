@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::diameterModels::coalescenceModels::turbulentShear
 
 Description
-    Model describing coagulation due to turbulent shear. Utilizes physical, i.e.
+    Model describing coagulation due to turbulent shear. Utilises physical, i.e.
     collisional diameters.
 
 SourceFiles

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,7 @@ Description
     The soot is not considered into the thermodynamics of the system and it
     is not considered as an extra specie in the solver.
 
-    The spacial distribution is given by the normalization of the first product
+    The spacial distribution is given by the normalisation of the first product
     on the rhs of the reaction by default or it can be added as input.
 
     For example in the radiationProperties dictionary set:

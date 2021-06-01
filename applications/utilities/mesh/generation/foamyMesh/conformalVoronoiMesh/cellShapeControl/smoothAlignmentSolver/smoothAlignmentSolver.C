@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -273,7 +273,7 @@ void Foam::smoothAlignmentSolver::applyBoundaryConditions
             }
         }
 
-        t.orthogonalize();
+        t.orthogonalise();
     }
     else if (nFixed == 3)
     {
@@ -390,8 +390,8 @@ void Foam::smoothAlignmentSolver::smoothAlignments
             const triad& oldTriad = alignments[pI];
             triad& newTriad = triadAv[pI];
 
-            newTriad.normalize();
-            newTriad.orthogonalize();
+            newTriad.normalise();
+            newTriad.orthogonalise();
 
             // Enforce the boundary conditions
             const triad& fixedAlignment = fixedAlignments[pI];

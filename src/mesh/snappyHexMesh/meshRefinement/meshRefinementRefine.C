@@ -82,7 +82,7 @@ namespace Foam
     };
 
 
-    //- Template specialization for pTraits<labelList> so we can have fields
+    //- Template specialisation for pTraits<labelList> so we can have fields
     template<>
     class pTraits<labelList>
     {
@@ -93,7 +93,7 @@ namespace Foam
         typedef labelList cmptType;
     };
 
-    //- Template specialization for pTraits<labelList> so we can have fields
+    //- Template specialisation for pTraits<labelList> so we can have fields
     template<>
     class pTraits<vectorList>
     {

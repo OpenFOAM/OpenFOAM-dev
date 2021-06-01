@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -132,12 +132,12 @@ public:
         inline quaternion(const vector& d, const scalar theta);
 
         //- Construct a rotation quaternion given the direction d
-        //  and cosine angle cosTheta and a if d is normalized
+        //  and cosine angle cosTheta and a if d is normalised
         inline quaternion
         (
             const vector& d,
             const scalar cosTheta,
-            const bool normalized
+            const bool normalised
         );
 
         //- Construct a real from the given scalar part, the vector part = zero
@@ -182,7 +182,7 @@ public:
                //  specified rotation sequence
                inline vector eulerAngles(const rotationSequence rs) const;
 
-               inline quaternion normalized() const;
+               inline quaternion normalised() const;
 
 
            // Edit
@@ -193,7 +193,7 @@ public:
                //- Vector part of the quaternion ( = axis of rotation)
                inline vector& v();
 
-               inline void normalize();
+               inline void normalise();
 
 
            // Transform
@@ -204,10 +204,10 @@ public:
                //- Rotate the given vector anti-clockwise
                inline vector invTransform(const vector& v) const;
 
-               //- Rotate the given quaternion (and normalize)
+               //- Rotate the given quaternion (and normalise)
                inline quaternion transform(const quaternion& q) const;
 
-               //- Rotate the given quaternion anti-clockwise (and normalize)
+               //- Rotate the given quaternion anti-clockwise (and normalise)
                inline quaternion invTransform(const quaternion& q) const;
 
 
@@ -241,8 +241,8 @@ inline scalar mag(const quaternion& q);
 //- Return the conjugate of the given quaternion
 inline quaternion conjugate(const quaternion& q);
 
-//- Return the normalized (unit) quaternion of the given quaternion
-inline quaternion normalize(const quaternion& q);
+//- Return the normalised (unit) quaternion of the given quaternion
+inline quaternion normalise(const quaternion& q);
 
 //- Return the inverse of the given quaternion
 inline quaternion inv(const quaternion& q);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
     cumulative distribution function. In both cases it is assumed that the
     function is linear between the specified points.
 
-    In both modes of operation the values are automatically normalized.
+    In both modes of operation the values are automatically normalised.
 
 SourceFiles
     general.C

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,7 +46,7 @@ Foam::label Foam::faceTriangulation::left(const label size, label i)
 }
 
 
-// Calculate (normalized) edge vectors.
+// Calculate (normalised) edge vectors.
 // edges[i] gives edge between point i+1 and i.
 Foam::tmp<Foam::vectorField> Foam::faceTriangulation::calcEdges
 (
@@ -207,8 +207,8 @@ void Foam::faceTriangulation::findDiagonal
         cosHalfAngle*rightE
       + sinHalfAngle*(normal ^ rightE)
     );
-    // rayDir should be normalized already but is not due to rounding errors
-    // so normalize.
+    // rayDir should be normalised already but is not due to rounding errors
+    // so normalise.
     rayDir /= mag(rayDir) + vSmall;
 
 
@@ -284,7 +284,7 @@ void Foam::faceTriangulation::findDiagonal
         return;
     }
 
-    // Select visible vertex that minimizes
+    // Select visible vertex that minimises
     // angle to bisection. Visibility checking by checking if inside triangle
     // formed by startIndex, leftIndex, rightIndex
 

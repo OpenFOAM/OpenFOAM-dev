@@ -82,7 +82,7 @@ Note
     \verbatim
         { (index1 value1) (index2 value2) (index3 value3) }
     \endverbatim
-    The bool specialization just uses the indices corresponding to
+    The bool specialisation just uses the indices corresponding to
     non-zero entries instead of a index/value pair:
     \verbatim
         { index1 index2 index3 }
@@ -163,11 +163,11 @@ protected:
         //- Calculate the list length when packed
         inline static label packedLength(const label);
 
-        //- Read a list entry (allows for specialization)
+        //- Read a list entry (allows for specialisation)
         inline static unsigned int readValue(Istream&);
 
         //- Read an index/value pair and set accordingly.
-        //  For bool specialization, read a single index value
+        //  For bool specialisation, read a single index value
         inline void setPair(Istream&);
 
 
@@ -364,7 +364,7 @@ public:
             //  \verbatim
             //      { (index1 value1) (index2 value2) (index3 value3) }
             // \endverbatim
-            // The bool specialization just uses the indices corresponding to
+            // The bool specialisation just uses the indices corresponding to
             // non-zero entries instead of a index/value pair:
             // \verbatim
             //     { index1 index2 index3 }
@@ -461,7 +461,7 @@ public:
                 inline label key() const;
 
                 //- Write index/value for a non-zero entry
-                //  The bool specialization writes the index only
+                //  The bool specialisation writes the index only
                 inline bool writeIfSet(Ostream&) const;
 
             // Member Operators

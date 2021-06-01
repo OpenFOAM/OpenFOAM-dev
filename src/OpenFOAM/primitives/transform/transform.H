@@ -294,7 +294,7 @@ inline symmTensor transformMask<symmTensor>(const tensor& t)
 
 //- Estimate angle of vec in coordinate system (e0, e1, e0^e1).
 //  Is guaranteed to return increasing number but is not correct
-//  angle. Used for sorting angles.  All input vectors need to be normalized.
+//  angle. Used for sorting angles.  All input vectors need to be normalised.
 //
 //  Calculates scalar which increases with angle going from e0 to vec in
 //  the coordinate system e0, e1, e0^e1

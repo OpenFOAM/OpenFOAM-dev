@@ -29,7 +29,7 @@ Description
     a class method (also called sectional or discrete method). The internal
     coordinate is set to the particle volume, so the equation is based on
     a transport equation of the volume-based number density function. The
-    discretization is done using the fixed pivot technique of Kumar and
+    discretisation is done using the fixed pivot technique of Kumar and
     Ramkrishna (1996). The source terms are written in a way that particle
     number and mass are preserved. Coalescence (coagulation), breakup, drift
     (growth and surface loss) as well as nucleation are supported.
@@ -53,7 +53,7 @@ Description
     \verbatim
         Coalescence and breakup term formulation:
         Kumar, S., & Ramkrishna, D. (1996).
-        On the solution of population balance equations by discretization-I. A
+        On the solution of population balance equations by discretisation-I. A
         fixed pivot technique.
         Chemical Engineering Science, 51(8), 1311-1332.
     \endverbatim

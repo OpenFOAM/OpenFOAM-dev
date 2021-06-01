@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ Class
 
 Description
     Base class for modeling shape, i.e. a physical diameter of a sizeGroup.
-    This diameter may then be utilized for calculation of breakup, coalescence
+    This diameter may then be utilised for calculation of breakup, coalescence
     or drift rates, depending on the model implementation.
 
 SourceFiles

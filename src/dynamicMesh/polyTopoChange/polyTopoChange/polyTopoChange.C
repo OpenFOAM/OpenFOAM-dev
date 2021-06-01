@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -595,7 +595,7 @@ Foam::label Foam::polyTopoChange::getCellOrder
     label cellInOrder = 0;
 
 
-    // Work arrays. Kept outside of loop to minimize allocations.
+    // Work arrays. Kept outside of loop to minimise allocations.
     // - neighbour cells
     DynamicList<label> nbrs;
     // - corresponding weights

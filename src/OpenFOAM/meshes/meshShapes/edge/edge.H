@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,7 +139,7 @@ public:
 };
 
 
-//- Hash specialization for hashing edges - a commutative hash value.
+//- Hash specialisation for hashing edges - a commutative hash value.
 //  Hash incrementally.
 template<>
 inline unsigned Hash<edge>::operator()(const edge& e, unsigned seed) const
@@ -161,7 +161,7 @@ inline unsigned Hash<edge>::operator()(const edge& e, unsigned seed) const
 }
 
 
-//- Hash specialization for hashing edges - a commutative hash value.
+//- Hash specialisation for hashing edges - a commutative hash value.
 //  Hash incrementally.
 template<>
 inline unsigned Hash<edge>::operator()(const edge& e) const

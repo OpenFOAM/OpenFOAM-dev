@@ -62,14 +62,14 @@ RASBCs = RAS/derivedFvPatchFields
 $(RASBCs)/turbulentMixingLengthDissipationRateInlet/turbulentMixingLengthDissipationRateInletFvPatchScalarField.C
 $(RASBCs)/turbulentMixingLengthFrequencyInlet/turbulentMixingLengthFrequencyInletFvPatchScalarField.C
 
-generalizedNewtonianViscosityModels = laminar/generalizedNewtonian/generalizedNewtonianViscosityModels
-$(generalizedNewtonianViscosityModels)/generalizedNewtonianViscosityModel/generalizedNewtonianViscosityModel.C
-$(generalizedNewtonianViscosityModels)/generalizedNewtonianViscosityModel/generalizedNewtonianViscosityModelNew.C
-$(generalizedNewtonianViscosityModels)/CrossPowerLaw/CrossPowerLaw.C
-$(generalizedNewtonianViscosityModels)/BirdCarreau/BirdCarreau.C
-$(generalizedNewtonianViscosityModels)/Casson/Casson.C
-$(generalizedNewtonianViscosityModels)/HerschelBulkley/HerschelBulkley.C
-$(generalizedNewtonianViscosityModels)/powerLaw/powerLaw.C
-$(generalizedNewtonianViscosityModels)/strainRateFunction/strainRateFunction.C
+generalisedNewtonianViscosityModels = laminar/generalisedNewtonian/generalisedNewtonianViscosityModels
+$(generalisedNewtonianViscosityModels)/generalisedNewtonianViscosityModel/generalisedNewtonianViscosityModel.C
+$(generalisedNewtonianViscosityModels)/generalisedNewtonianViscosityModel/generalisedNewtonianViscosityModelNew.C
+$(generalisedNewtonianViscosityModels)/CrossPowerLaw/CrossPowerLaw.C
+$(generalisedNewtonianViscosityModels)/BirdCarreau/BirdCarreau.C
+$(generalisedNewtonianViscosityModels)/Casson/Casson.C
+$(generalisedNewtonianViscosityModels)/HerschelBulkley/HerschelBulkley.C
+$(generalisedNewtonianViscosityModels)/powerLaw/powerLaw.C
+$(generalisedNewtonianViscosityModels)/strainRateFunction/strainRateFunction.C
 
 LIB = $(FOAM_LIBBIN)/libmomentumTransportModels

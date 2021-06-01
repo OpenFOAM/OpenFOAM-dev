@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::topoCellLooper
 
 Description
-    Implementation of cellLooper. This one recognizes splitHexes and tries
+    Implementation of cellLooper. This one recognises splitHexes and tries
     to make a cut such that if the neighbour was split (in a previous iteration)
     this one also gets split in the same direction so that the result
     will be a mesh without splitHexes.

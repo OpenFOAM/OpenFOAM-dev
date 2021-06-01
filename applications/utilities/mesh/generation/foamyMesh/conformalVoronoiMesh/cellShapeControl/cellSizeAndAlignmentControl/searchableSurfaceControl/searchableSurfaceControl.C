@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -385,8 +385,8 @@ void Foam::searchableSurfaceControl::initialVertices
                 pointAlignment() += norms[nI];
             }
 
-            pointAlignment().normalize();
-            pointAlignment().orthogonalize();
+            pointAlignment().normalise();
+            pointAlignment().orthogonalise();
         }
         else
         {
@@ -412,8 +412,8 @@ void Foam::searchableSurfaceControl::initialVertices
                     pointAlignment() += norms[nI];
                 }
 
-                pointAlignment().normalize();
-                pointAlignment().orthogonalize();
+                pointAlignment().normalise();
+                pointAlignment().orthogonalise();
             }
             else
             {

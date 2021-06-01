@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -175,7 +175,7 @@ inline T& Foam::UList<T>::operator[](const label i)
 
 namespace Foam
 {
-    // Template specialization for bool
+    // Template specialisation for bool
     template<>
     inline const bool& Foam::UList<bool>::operator[](const label i) const
     {

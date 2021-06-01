@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::diameterModels::coalescenceModels::BrownianCollisions
 
 Description
-    Model describing coagulation due to Brownian motion. Utilizes collisional
+    Model describing coagulation due to Brownian motion. Utilises collisional
     diameters and the Cunningham slip correction. The slip correction
     coefficient is implemented in the following form:
 

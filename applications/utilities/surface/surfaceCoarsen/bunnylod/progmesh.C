@@ -93,7 +93,7 @@ void Triangle::ComputeNormal(){
         Vector v2=vertex[2]->position;
         normal = (v1-v0)*(v2-v1);
         if(magnitude(normal)==0)return;
-        normal = normalize(normal);
+        normal = normalise(normal);
 }
 void Triangle::ReplaceVertex(Vertex *vold,Vertex *vnew) {
         assert(vold && vnew);
@@ -275,7 +275,7 @@ Vertex *MinimumCostEdge(){
         // Find the edge that when collapsed will affect model the least.
         // This function actually returns a Vertex, the second vertex
         // of the edge (collapse candidate) is stored in the vertex data.
-        // Serious optimization opportunity here: this function currently
+        // Serious optimisation opportunity here: this function currently
         // does a sequential search through an unsorted list :-(
         // Our algorithm could be O(n*lg(n)) instead of O(n*n)
         Vertex *mn=vertices[0];

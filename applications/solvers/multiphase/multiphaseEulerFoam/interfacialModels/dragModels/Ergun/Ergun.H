@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
     Reference:
     \verbatim
         Enwald, H., Peirano, E., & Almstedt, A. E. (1996).
-        Eulerian two-phase flow theory applied to fluidization.
+        Eulerian two-phase flow theory applied to fluidisation.
         International Journal of Multiphase Flow, 22, 21-66.
     \endverbatim
 

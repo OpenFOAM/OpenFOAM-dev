@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -416,7 +416,7 @@ void Foam::meshRefinement::checkData()
 
     label nBnd = mesh_.nFaces()-mesh_.nInternalFaces();
 
-    Pout<< "meshRefinement::checkData() : Checking synchronization."
+    Pout<< "meshRefinement::checkData() : Checking synchronisation."
         << endl;
 
     // Check face centres

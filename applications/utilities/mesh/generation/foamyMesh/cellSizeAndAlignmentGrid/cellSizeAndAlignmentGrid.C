@@ -394,8 +394,8 @@ int main(int argc, char *argv[])
                     pointAlignment() += norms[nI];
                 }
 
-                pointAlignment().normalize();
-                pointAlignment().orthogonalize();
+                pointAlignment().normalise();
+                pointAlignment().orthogonalise();
             }
             else
             {
@@ -421,8 +421,8 @@ int main(int argc, char *argv[])
                         pointAlignment() += norms[nI];
                     }
 
-                    pointAlignment().normalize();
-                    pointAlignment().orthogonalize();
+                    pointAlignment().normalise();
+                    pointAlignment().orthogonalise();
                 }
                 else
                 {
@@ -558,8 +558,8 @@ int main(int argc, char *argv[])
                 newTriad += tmpTriad;
             }
 
-            newTriad.normalize();
-            newTriad.orthogonalize();
+            newTriad.normalise();
+            newTriad.orthogonalise();
 //            newTriad = newTriad.sortxyz();
 
             label nFixed = 0;
@@ -596,7 +596,7 @@ int main(int argc, char *argv[])
                     }
                 }
 
-                newTriad.orthogonalize();
+                newTriad.orthogonalise();
             }
             else if (nFixed == 3)
             {

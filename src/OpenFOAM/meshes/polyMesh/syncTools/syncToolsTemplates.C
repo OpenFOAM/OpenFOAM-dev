@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -89,7 +89,7 @@ void Foam::syncTools::syncPointMap
 {
     const polyBoundaryMesh& patches = mesh.boundaryMesh();
 
-    // Synchronize multiple shared points.
+    // Synchronise multiple shared points.
     const globalMeshData& pd = mesh.globalData();
 
     // Values on shared points. Keyed on global shared index.
@@ -288,7 +288,7 @@ void Foam::syncTools::syncPointMap
         }
     }
 
-    // Synchronize multiple shared points.
+    // Synchronise multiple shared points.
     if (pd.nGlobalPoints() > 0)
     {
         // meshPoint per local index
@@ -601,7 +601,7 @@ void Foam::syncTools::syncEdgeMap
         }
     }
 
-    // Synchronize multiple shared points.
+    // Synchronise multiple shared points.
     // Problem is that we don't want to construct shared edges so basically
     // we do here like globalMeshData but then using sparse edge representation
     // (EdgeMap instead of mesh.edges())
@@ -790,7 +790,7 @@ void Foam::syncTools::syncEdgeMap
 //
 //    const polyBoundaryMesh& patches = mesh.boundaryMesh();
 //
-//    // Synchronize multiple shared points.
+//    // Synchronise multiple shared points.
 //    const globalMeshData& pd = mesh.globalData();
 //
 //    // Values on shared points.
@@ -922,7 +922,7 @@ void Foam::syncTools::syncEdgeMap
 //        }
 //    }
 //
-//    // Synchronize multiple shared points.
+//    // Synchronise multiple shared points.
 //    const globalMeshData& pd = mesh.globalData();
 //
 //    if (pd.nGlobalPoints() > 0)

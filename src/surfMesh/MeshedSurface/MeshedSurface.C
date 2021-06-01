@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -408,7 +408,7 @@ void Foam::MeshedSurface<Face>::remapFaces
 
         if (zones.size() == 1)
         {
-            // optimized for single zone case
+            // optimised for single zone case
             zones[0].size() = faceMap.size();
         }
         else if (zones.size())
@@ -494,7 +494,7 @@ void Foam::MeshedSurface<Face>::reset
     ParentType::clearOut();
 
     // Take over new primitive data.
-    // Optimized to avoid overwriting data at all
+    // Optimised to avoid overwriting data at all
     if (notNull(pointLst))
     {
         storedPoints().transfer(pointLst);
@@ -523,7 +523,7 @@ void Foam::MeshedSurface<Face>::reset
     ParentType::clearOut();
 
     // Take over new primitive data.
-    // Optimized to avoid overwriting data at all
+    // Optimised to avoid overwriting data at all
     if (notNull(pointLst))
     {
         storedPoints().transfer(pointLst);

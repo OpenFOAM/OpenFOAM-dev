@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,7 +80,7 @@ class matchedFlowRateOutletVelocityFvPatchVectorField
         //- Is volumetric?
         bool volumetric_;
 
-        //- Name of the density field used to normalize the mass flux
+        //- Name of the density field used to normalise the mass flux
         word rhoName_;
 
 

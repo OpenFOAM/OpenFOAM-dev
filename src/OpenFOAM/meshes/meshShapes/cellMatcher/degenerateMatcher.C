@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ Foam::cellShape Foam::degenerateMatcher::match
     const labelList& cellFaces
 )
 {
-    // Recognize in order of assumed occurrence.
+    // Recognise in order of assumed occurrence.
 
     if (hex.matchShape(false, faces, owner, celli, cellFaces))
     {

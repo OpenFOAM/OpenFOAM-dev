@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,7 +53,7 @@ inline unsigned int Foam::PackedList<nBits>::maskLower(unsigned offset)
 {
     // Return (1u << (nBits * offset)) - 1;
     // The next one works more reliably with overflows
-    // eg, when compiled without optimization
+    // eg, when compiled without optimisation
     return (~0u >> ( sizeof(StorageType)*CHAR_BIT - nBits * offset));
 }
 
@@ -67,21 +67,21 @@ inline Foam::label Foam::PackedList<nBits>::packedLength(const label nElem)
 
 namespace Foam
 {
-    // Template specialization for bool entries
+    // Template specialisation for bool entries
     template<>
     inline unsigned int Foam::PackedList<1>::readValue(Istream& is)
     {
         return readBool(is);
     }
 
-    // Template specialization for bool entries
+    // Template specialisation for bool entries
     template<>
     inline void Foam::PackedList<1>::setPair(Istream& is)
     {
         set(readLabel(is), true);
     }
 
-    // Template specialization for bool entries
+    // Template specialisation for bool entries
     template<>
     inline bool Foam::PackedList<1>::iteratorBase::writeIfSet(Ostream& os) const
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -123,11 +123,11 @@ inline Foam::IStringStream Foam::argList::optionLookup(const word& opt) const
 }
 
 
-// * * * * * * * * * * * * Template Specializations  * * * * * * * * * * * * //
+// * * * * * * * * * * * * Template Specialisations  * * * * * * * * * * * * //
 
 namespace Foam
 {
-    // Template specialization for string
+    // Template specialisation for string
     template<>
     inline Foam::string
     Foam::argList::argRead<Foam::string>(const label index) const
@@ -135,7 +135,7 @@ namespace Foam
         return args_[index];
     }
 
-    // Template specialization for word
+    // Template specialisation for word
     template<>
     inline Foam::word
     Foam::argList::argRead<Foam::word>(const label index) const
@@ -143,7 +143,7 @@ namespace Foam
         return args_[index];
     }
 
-    // Template specialization for fileName
+    // Template specialisation for fileName
     template<>
     inline Foam::fileName
     Foam::argList::argRead<Foam::fileName>(const label index) const
@@ -151,7 +151,7 @@ namespace Foam
         return args_[index];
     }
 
-    // Template specialization for string
+    // Template specialisation for string
     template<>
     inline Foam::string
     Foam::argList::optionRead<Foam::string>(const word& opt) const
@@ -159,7 +159,7 @@ namespace Foam
         return options_[opt];
     }
 
-    // Template specialization for word
+    // Template specialisation for word
     template<>
     inline Foam::word
     Foam::argList::optionRead<Foam::word>(const word& opt) const
@@ -167,7 +167,7 @@ namespace Foam
         return options_[opt];
     }
 
-    // Template specialization for fileName
+    // Template specialisation for fileName
     template<>
     inline Foam::fileName
     Foam::argList::optionRead<Foam::fileName>(const word& opt) const

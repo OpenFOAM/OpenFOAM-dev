@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1131,7 +1131,7 @@ void Foam::particle::correctAfterInteractionListReferral(const label celli)
     // in this tet. It will, however, generate the correct vector when the
     // position method is called. A referred particle should never be tracked,
     // so this approximate topology is good enough. By using the nearby cell we
-    // minimize the error associated with the incorrect topology.
+    // minimise the error associated with the incorrect topology.
     coordinates_ = barycentric(1, 0, 0, 0);
     if (mesh_.moving() && stepFraction_ != 1)
     {

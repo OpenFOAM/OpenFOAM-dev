@@ -31,7 +31,7 @@ Description
     \verbatim
         Casson, N. (1959).
         Rheology of disperse systems.
-        In Proceedings of a Conference Organized by the
+        In Proceedings of a Conference Organised by the
         British Society of Rheology.
         Pergamon Press, New York.
 

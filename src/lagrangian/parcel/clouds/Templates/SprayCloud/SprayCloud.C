@@ -24,7 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "SprayCloud.H"
-#include "AtomizationModel.H"
+#include "AtomisationModel.H"
 #include "BreakupModel.H"
 #include "parcelThermo.H"
 
@@ -33,9 +33,9 @@ License
 template<class CloudType>
 void Foam::SprayCloud<CloudType>::setModels()
 {
-    atomizationModel_.reset
+    atomisationModel_.reset
     (
-        AtomizationModel<SprayCloud<CloudType>>::New
+        AtomisationModel<SprayCloud<CloudType>>::New
         (
             this->subModelProperties(),
             *this
@@ -61,7 +61,7 @@ void Foam::SprayCloud<CloudType>::cloudReset
 {
     CloudType::cloudReset(c);
 
-    atomizationModel_.reset(c.atomizationModel_.ptr());
+    atomisationModel_.reset(c.atomisationModel_.ptr());
     breakupModel_.reset(c.breakupModel_.ptr());
 }
 
@@ -82,7 +82,7 @@ Foam::SprayCloud<CloudType>::SprayCloud
     CloudType(cloudName, rho, U, g, carrierThermo, false),
     cloudCopyPtr_(nullptr),
     averageParcelMass_(0.0),
-    atomizationModel_(nullptr),
+    atomisationModel_(nullptr),
     breakupModel_(nullptr)
 {
     setModels();
@@ -114,7 +114,7 @@ Foam::SprayCloud<CloudType>::SprayCloud
     CloudType(c, name),
     cloudCopyPtr_(nullptr),
     averageParcelMass_(c.averageParcelMass_),
-    atomizationModel_(c.atomizationModel_->clone()),
+    atomisationModel_(c.atomisationModel_->clone()),
     breakupModel_(c.breakupModel_->clone())
 {}
 
@@ -130,7 +130,7 @@ Foam::SprayCloud<CloudType>::SprayCloud
     CloudType(mesh, name, c),
     cloudCopyPtr_(nullptr),
     averageParcelMass_(0.0),
-    atomizationModel_(nullptr),
+    atomisationModel_(nullptr),
     breakupModel_(nullptr)
 {}
 
@@ -184,7 +184,7 @@ void Foam::SprayCloud<CloudType>::checkParcelProperties
     parcel.y() = breakup().y0();
     parcel.yDot() = breakup().yDot0();
 
-    parcel.liquidCore() = atomization().initLiquidCore();
+    parcel.liquidCore() = atomisation().initLiquidCore();
 }
 
 

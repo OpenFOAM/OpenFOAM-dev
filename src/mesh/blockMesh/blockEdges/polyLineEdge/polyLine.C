@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ void Foam::polyLine::calcParam()
             param_[i] = param_[i-1] + mag(points_[i] - points_[i-1]);
         }
 
-        // Normalize on the interval 0-1
+        // Normalise on the interval 0-1
         lineLength_ = param_.last();
         for (label i=1; i < param_.size() - 1; i++)
         {

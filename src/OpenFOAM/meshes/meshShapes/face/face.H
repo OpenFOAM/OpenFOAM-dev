@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -242,7 +242,7 @@ public:
         ) const;
 
         //- Return potential intersection with face with a ray starting
-        //  at p, direction n (does not need to be normalized)
+        //  at p, direction n (does not need to be normalised)
         //  Does face-centre decomposition and returns triangle intersection
         //  point closest to p. Face-centre is calculated from point average.
         //  For a hit, the distance is signed.  Positive number
@@ -340,7 +340,7 @@ public:
 
             //- Split into triangles using existing points.
             //  Result in triFaces[triI..triI+nTri].
-            //  Splits intelligently to maximize triangle quality.
+            //  Splits intelligently to maximise triangle quality.
             //  Returns number of faces created.
             label triangles
             (
@@ -409,7 +409,7 @@ public:
 };
 
 
-//- Hash specialization to offset faces in ListListOps::combineOffset
+//- Hash specialisation to offset faces in ListListOps::combineOffset
 template<>
 class offsetOp<face>
 {

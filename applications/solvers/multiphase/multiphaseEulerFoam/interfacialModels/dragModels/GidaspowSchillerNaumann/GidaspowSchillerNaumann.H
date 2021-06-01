@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,13 +30,13 @@ Description
     References:
     \verbatim
         Enwald, H., Peirano, E., & Almstedt, A. E. (1996).
-        Eulerian two-phase flow theory applied to fluidization.
+        Eulerian two-phase flow theory applied to fluidisation.
         International Journal of Multiphase Flow, 22, 21-66.
 
         This is identical to the Wen and Yu, Rowe model Table 3.6 p.56  in
         van Wachem, B. G. M. (2000).
         Derivation, implementation, and validation of computer simulation models
-        for gas-solid fluidized beds.
+        for gas-solid fluidised beds.
         PhD Thesis, TU Delft.
     \endverbatim
 

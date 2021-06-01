@@ -40,7 +40,7 @@ Foam::pointHit Foam::face::ray
 ) const
 {
     // Return potential intersection with face with a ray starting
-    // at p, direction n (does not need to be normalized)
+    // at p, direction n (does not need to be normalised)
     // Does face-center decomposition and returns triangle intersection
     // point closest to p.
 

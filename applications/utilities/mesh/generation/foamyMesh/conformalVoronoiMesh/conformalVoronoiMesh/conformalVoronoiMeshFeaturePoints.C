@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -277,12 +277,12 @@ void Foam::conformalVoronoiMesh::createEdgePointGroupByCirculating
                 masterPtVec
             );
 
-        // Specialize for size = 1 && baffle
+        // Specialise for size = 1 && baffle
         if (mag((normalDir & nextNormalDir) - 1) < small)
         {
             if (inside)
             {
-//                Info<< "Specialize for size 1 and baffle" << endl;
+//                Info<< "Specialise for size 1 and baffle" << endl;
 
                 vector s = ppDist*(edDir ^ normal);
 

@@ -22,7 +22,7 @@ derived/buoyancyEnergy/buoyancyEnergy.C
 derived/damping/damping/damping.C
 derived/damping/isotropicDamping/isotropicDamping.C
 derived/damping/verticalDamping/verticalDamping.C
-derived/phaseLimitStabilization/phaseLimitStabilization.C
+derived/phaseLimitStabilisation/phaseLimitStabilisation.C
 derived/accelerationSource/accelerationSource.C
 derived/volumeFractionSource/volumeFractionSource.C
 derived/solidEquilibriumEnergySource/solidEquilibriumEnergySource.C

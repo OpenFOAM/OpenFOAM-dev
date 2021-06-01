@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -79,7 +79,7 @@ public:
 
     // Member Functions
 
-        //- Is method parallel aware (i.e. does it synchronize domains across
+        //- Is method parallel aware (i.e. does it synchronise domains across
         //  proc boundaries)
         virtual bool parallelAware() const;
 

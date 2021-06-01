@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ void Foam::momentOfInertia::massPropertiesSolid
     // Boost Software License - Version 1.0 - August 17th, 2003
 
     // Permission is hereby granted, free of charge, to any person or
-    // organization obtaining a copy of the software and accompanying
+    // organisation obtaining a copy of the software and accompanying
     // documentation covered by this license (the "Software") to use,
     // reproduce, display, distribute, execute, and transmit the
     // Software, and to prepare derivative works of the Software, and

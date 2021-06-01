@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::heatTransferModels::Gunn
 
 Description
-    Gunn (1978) correlation for fixed and fluidized beds with Re < 10^5
+    Gunn (1978) correlation for fixed and fluidised beds with Re < 10^5
     and continuous phase fraction between 0.35 and 1.
 
     Reference:

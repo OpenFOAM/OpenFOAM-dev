@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,7 +57,7 @@ Usage
         populationBalance | corresponding populationBalance | yes |
         functionType | number/volume/moments/stdDev | yes   |
         coordinateType | used for density/moment calculation | yes |
-        normalize    | normalize concentrations  | no       | no
+        normalise    | normalise concentrations  | no       | no
         densityFunction | compute densityFunction | no      | no
         logBased     | use log of coordinate for density | no | no
         maxOrder     | maxim order of moment output | no    | 3
@@ -155,8 +155,8 @@ protected:
         //- List of volume-averaged diameters
         scalarField d_;
 
-        //- Normalize number/volume concentrations
-        Switch normalize_;
+        //- Normalise number/volume concentrations
+        Switch normalise_;
 
         //- Determines whether density function is calculated
         Switch densityFunction_;

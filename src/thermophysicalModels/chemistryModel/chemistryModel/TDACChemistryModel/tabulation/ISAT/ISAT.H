@@ -61,7 +61,7 @@ class ISAT
 {
     // Private Data
 
-        //- List of the stored 'points' organized in a binary tree
+        //- List of the stored 'points' organised in a binary tree
         binaryTree<ThermoType> chemisTree_;
 
         //- List of scale factors for species, temperature and pressure

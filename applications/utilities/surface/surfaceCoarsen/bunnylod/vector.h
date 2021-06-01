@@ -19,7 +19,7 @@ class Vector {
 };
 
 float magnitude(Vector v);
-Vector normalize(Vector v);
+Vector normalise(Vector v);
 
 Vector operator+(Vector v1,Vector v2);
 Vector operator-(Vector v);
@@ -48,7 +48,7 @@ class Quaternion{
          float r,x,y,z;
          Quaternion(){x=y=z=0.0f;r=1.0f;};
          Quaternion(Vector v,float t){
-             v=normalize(v);
+             v=normalise(v);
              r=float(cos(t/2.0));
              v=v*float(sin(t/2.0));
              x=v.x;

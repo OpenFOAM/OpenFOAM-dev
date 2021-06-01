@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,8 +70,8 @@ class SHA1
 {
     // Private Data
 
-        //- Track if the hashsum has been finalized (added count, etc)
-        bool finalized_;
+        //- Track if the hashsum has been finalised (added count, etc)
+        bool finalised_;
 
         //- The hash sums
         uint32_t hashsumA_;
@@ -135,9 +135,9 @@ public:
         //- Append string for processing
         inline SHA1& append(const char* str);
 
-        //- Finalized the calculations (normally not needed directly).
+        //- Finalised the calculations (normally not needed directly).
         //  Returns false if no bytes were passed for processing
-        bool finalize();
+        bool finalise();
 
         //- Calculate current digest from appended data.
         SHA1Digest digest() const;

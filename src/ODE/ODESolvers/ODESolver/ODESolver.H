@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,8 +76,8 @@ protected:
 
     // Protected Member Functions
 
-        //- Return the normalized scalar error
-        scalar normalizeError
+        //- Return the normalised scalar error
+        scalar normaliseError
         (
             const scalarField& y0,
             const scalarField& y,

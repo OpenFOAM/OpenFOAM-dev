@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -238,7 +238,7 @@ bool Foam::ReitzKHRT<CloudType>::update
     }
     else if (KHindex < 0.5)
     {
-        // Case of larger drops after breakup (Reitz, Atomization & Spray
+        // Case of larger drops after breakup (Reitz, Atomisation & Spray
         // Technology 3 (1987) 309-337, p.322) pIndKH() should be introduced
 
         scalar lengthScale =

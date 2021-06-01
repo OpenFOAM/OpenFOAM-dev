@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -364,7 +364,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::faceConcavity
             // Get vertex after fp
             label fp1 = f.fcIndex(fp0);
 
-            // Normalized vector between two consecutive points
+            // Normalised vector between two consecutive points
             vector e10(p[f[fp1]] - p[f[fp0]]);
             scalar magE10 = mag(e10);
             e10 /= magE10 + rootVSmall;
@@ -488,7 +488,7 @@ Foam::tmp<Foam::scalarField> Foam::primitiveMeshTools::cellDeterminant
         {
             const labelList& curFaces = c[celli];
 
-            // Calculate local normalization factor
+            // Calculate local normalisation factor
             scalar avgArea = 0;
 
             label nInternalFaces = 0;

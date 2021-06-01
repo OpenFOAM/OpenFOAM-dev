@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ void Foam::fileFormats::X3DsurfaceFormat<Face>::write
     writeAppearance(os);
 
 
-    // NOTE: we could provide an optimized IndexedTriangleSet output for
+    // NOTE: we could provide an optimised IndexedTriangleSet output for
     // triangulated surfaces too
 
     os  <<

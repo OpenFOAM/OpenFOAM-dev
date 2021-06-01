@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::fieldValues::volFieldValue
 
 Description
-    Provides a 'volRegion' specialization of the fieldValue function object.
+    Provides a 'volRegion' specialisation of the fieldValue function object.
 
     Given a list of user-specified fields and a 'volRegion', a number of
     operations can be performed, such as sums, averages and integrations.

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,8 +29,8 @@ Description
 
     @verbatim
     Reitz, R.D.
-    "Modelling atomization processes in highpressure vaporizing sprays"
-    Atomization and Spray Technology 3 (1987), 309-337
+    "Modelling atomisation processes in highpressure vaporizing sprays"
+    Atomisation and Spray Technology 3 (1987), 309-337
     @endverbatim
 
     @verbatim

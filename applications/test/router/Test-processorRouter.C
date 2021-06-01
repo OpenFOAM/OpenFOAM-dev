@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
         static_cast<const labelList&>(procNeighbours(mesh))
     );
 
-    // Collect centres of individual meshes (for visualization only)
+    // Collect centres of individual meshes (for visualisation only)
     Gather<point> meshCentres(meshCentre(mesh));
 
     if (!Pstream::master())
@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
 
     //
     // Iterate over routing. Route as much as possible during each iteration
-    // and stop if all paths have been routed. No special ordering to maximize
+    // and stop if all paths have been routed. No special ordering to maximise
     // routing during one iteration.
     //
 

@@ -1,4 +1,4 @@
-Star-CD uses a so-called 'cell table' to organize properties. The ccm and
+Star-CD uses a so-called 'cell table' to organise properties. The ccm and
 star4 converters preserve this information as a Map of dictionaries under
 "constant/cellTable" and as cell data under "constant/polyMesh/cellTableId".
 

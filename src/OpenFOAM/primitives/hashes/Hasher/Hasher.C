@@ -187,7 +187,7 @@ Description
 // acceptable.  Do NOT use for cryptographic purposes.
 // ----------------------------------------------------------------------------
 
-// Specialized little-endian code
+// Specialised little-endian code
 #if !defined (__BYTE_ORDER) || (__BYTE_ORDER == __LITTLE_ENDIAN)
 static unsigned jenkins_hashlittle
 (
@@ -365,7 +365,7 @@ static unsigned jenkins_hashlittle
 // from hashlittle() on all machines.  hashbig() takes advantage of
 // big-endian byte ordering.
 // ----------------------------------------------------------------------------
-// specialized big-endian code
+// specialised big-endian code
 #if !defined (__BYTE_ORDER) || (__BYTE_ORDER == __BIG_ENDIAN)
 static unsigned jenkins_hashbig
 (

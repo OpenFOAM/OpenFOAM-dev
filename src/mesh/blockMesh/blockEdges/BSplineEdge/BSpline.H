@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ Description
     end points. Simple reflection is used to automatically create the end
     points.
 
-    The spline is discretized based on the chord length of the individual
+    The spline is discretised based on the chord length of the individual
     segments. In rare cases (sections with very high curvatures), the
     resulting distribution may be sub-optimal.
 

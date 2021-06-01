@@ -429,7 +429,7 @@ void syncPoints
     //  reduction not strictly necessary.
     // reduce(hasTransformation, orOp<bool>());
 
-    // Synchronize multiple shared points.
+    // Synchronise multiple shared points.
     const globalMeshData& pd = mesh.globalData();
 
     if (pd.nGlobalPoints() > 0)

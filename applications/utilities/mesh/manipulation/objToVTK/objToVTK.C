@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -176,10 +176,10 @@ int main(int argc, char *argv[])
                 hasWarned = true;
 
                 WarningInFunction
-                    << "Unrecognized OBJ command " << cmd << nl
+                    << "Unrecognised OBJ command " << cmd << nl
                     << "In line " << lineStream.str()
                     << " at linenumber " << lineNo << nl
-                    << "Only recognized commands are 'v' and 'l'.\n"
+                    << "Only recognised commands are 'v' and 'l'.\n"
                     << "If this is a surface command use surfaceConvert instead"
                     << " to convert to a file format that can be read by VTK"
                     << endl;

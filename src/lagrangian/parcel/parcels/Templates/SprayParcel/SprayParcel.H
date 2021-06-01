@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::SprayParcel
 
 Description
-    Reaching spray parcel, with added functionality for atomization and breakup
+    Reaching spray parcel, with added functionality for atomisation and breakup
 
 \*---------------------------------------------------------------------------*/
 
@@ -170,7 +170,7 @@ protected:
             //- Rate of change of spherical deviation
             scalar yDot_;
 
-            //- Characteristic time (used in atomization and/or breakup model)
+            //- Characteristic time (used in atomisation and/or breakup model)
             scalar tc_;
 
             //- Stripped parcel mass due to breakup
@@ -295,7 +295,7 @@ public:
             //- Return const access to rate of change of spherical deviation
             inline scalar yDot() const;
 
-            //- Return const access to atomization characteristic time
+            //- Return const access to atomisation characteristic time
             inline scalar tc() const;
 
             //- Return const access to stripped parcel mass
@@ -337,7 +337,7 @@ public:
             //- Return access to rate of change of spherical deviation
             inline scalar& yDot();
 
-            //- Return access to atomization characteristic time
+            //- Return access to atomisation characteristic time
             inline scalar& tc();
 
             //- Return access to stripped parcel mass
@@ -359,9 +359,9 @@ public:
             template<class TrackCloudType>
             void setCellValues(TrackCloudType& cloud, trackingData& td);
 
-            //- Correct parcel properties according to atomization model
+            //- Correct parcel properties according to atomisation model
             template<class TrackCloudType>
-            void calcAtomization
+            void calcAtomisation
             (
                 TrackCloudType& cloud,
                 trackingData& td,
@@ -410,7 +410,7 @@ public:
             );
 
             //- Calculate the chi-factor for flash-boiling for the
-            //  atomization model
+            //  atomisation model
             template<class TrackCloudType>
             scalar chi
             (

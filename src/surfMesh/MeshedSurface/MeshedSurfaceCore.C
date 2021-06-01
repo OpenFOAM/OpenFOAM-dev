@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 namespace Foam
 {
 
-    // specialization: from face -> triFace
+    // specialisation: from face -> triFace
     template<>
     void Foam::MeshedSurface<triFace>::transcribe(MeshedSurface<face>& surf)
     {
@@ -55,7 +55,7 @@ namespace Foam
     }
 
 
-    // specialization: from face -> face
+    // specialisation: from face -> face
     template<>
     void Foam::MeshedSurface<face>::transcribe(MeshedSurface<face>& surf)
     {

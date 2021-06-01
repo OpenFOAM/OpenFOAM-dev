@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
     http://www.inivis.com/ac3d/man/ac3dfileformat.html
 
 Note
-    On input, the faces are already organized as zones.
+    On input, the faces are already organised as zones.
     The output is always sorted by zones.
     In the absence of zones, a single zone will be assigned.
 

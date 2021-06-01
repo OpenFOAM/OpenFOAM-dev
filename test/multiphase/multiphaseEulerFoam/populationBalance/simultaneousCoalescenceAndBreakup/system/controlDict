@@ -64,7 +64,7 @@ functions
         populationBalance   bubbles;
         functionType        number;
         coordinateType      diameter;
-        normalize           yes;
+        normalise           yes;
         densityFunction     yes;
     }
 
@@ -79,7 +79,7 @@ functions
         populationBalance   bubbles;
         functionType        volume;
         coordinateType      diameter;
-        normalize           yes;
+        normalise           yes;
         densityFunction     yes;
     }
 }

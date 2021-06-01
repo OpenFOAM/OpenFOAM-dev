@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,7 +108,7 @@ inline Foam::vector Foam::triad::orthogonal
 }
 
 
-inline void Foam::triad::normalize()
+inline void Foam::triad::normalise()
 {
     if (set(0)) operator[](0) /= mag(operator[](0));
     if (set(1)) operator[](1) /= mag(operator[](1));

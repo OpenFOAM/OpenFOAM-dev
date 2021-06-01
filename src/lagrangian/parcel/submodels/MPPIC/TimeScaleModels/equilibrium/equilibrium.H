@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
 
     Reference:
     \verbatim
-        "A model for collisional exchange in gas/liquid/solid fluidized beds"
+        "A model for collisional exchange in gas/liquid/solid fluidised beds"
         P O'Rourke, P Zhao and D Snider
         Chemical Engineering Science
         Volume 64, Issue 8, Pages 1784-1797, April 2009

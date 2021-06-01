@@ -67,7 +67,7 @@ Description
             Changes coefficients exp1 = 3 and exp2 = 3
 
             Magnussen, B. (1981, January).
-            On the structure of turbulence and a generalized
+            On the structure of turbulence and a generalised
             eddy dissipation concept for chemical reaction in turbulent flow.
             In 19th Aerospace Sciences Meeting (p. 42).
 
@@ -76,7 +76,7 @@ Description
             Changes coefficients exp1 = 2 and exp2 = 3
 
             Gran, I. R., & Magnussen, B. F. (1996).
-            A numerical study of a bluff-body stabilized diffusion flame.
+            A numerical study of a bluff-body stabilised diffusion flame.
             Part 2. Influence of combustion modeling and finite-rate chemistry.
             Combustion Science and Technology, 119(1-6), 191-217.
 

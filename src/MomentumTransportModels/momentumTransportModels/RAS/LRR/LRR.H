@@ -35,7 +35,7 @@ Description
         Journal of fluid mechanics, 68(03), 537-566.
     \endverbatim
 
-    Including the recommended generalized gradient diffusion model of
+    Including the recommended generalised gradient diffusion model of
     Daly and Harlow:
     \verbatim
         Daly, B. J., & Harlow, F. H. (1970).

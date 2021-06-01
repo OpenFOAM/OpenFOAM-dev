@@ -15,7 +15,7 @@
 #
 #------------------------------------------------------------------------------
 
-#- String to recognize new iteration by (usually same as 'Time')
+#- String to recognise new iteration by (usually same as 'Time')
 Separator/^[ \t]*Time = /Time =
 
 #- Time value:

@@ -49,7 +49,7 @@ _adiabaticFlameT_ ()
 }
 complete -o filenames -o nospace -F _adiabaticFlameT_ adiabaticFlameT
 
-_adjointShapeOptimizationFoam_ ()
+_adjointShapeOptimisationFoam_ ()
 {
     local cur="${COMP_WORDS[COMP_CWORD]}"
     local prev="${COMP_WORDS[COMP_CWORD-1]}"
@@ -72,7 +72,7 @@ _adjointShapeOptimizationFoam_ ()
     esac
     COMPREPLY=( $(compgen -W "${opts}" $extra -- ${cur}) )
 }
-complete -o filenames -o nospace -F _adjointShapeOptimizationFoam_ adjointShapeOptimizationFoam
+complete -o filenames -o nospace -F _adjointShapeOptimisationFoam_ adjointShapeOptimisationFoam
 
 _ansysToFoam_ ()
 {

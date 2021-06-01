@@ -6,7 +6,7 @@
 
 # $(MarchingCubes)/data_access.cpp
 # $(MarchingCubes)/fparser.cpp
-# $(MarchingCubes)/fpoptimizer.cpp
+# $(MarchingCubes)/fpoptimiser.cpp
 # $(MarchingCubes)/MarchingCubes.cpp
 # $(MarchingCubes)/mc_draw.cpp
 # $(MarchingCubes)/morton.cpp

@@ -25,7 +25,7 @@ Class
     Foam::turbulenceThermophysicalTransportModels::MaxwellStefan
 
 Description
-    Base class for multi-component Maxwell Stefan generalized Fick's law
+    Base class for multi-component Maxwell Stefan generalised Fick's law
     diffusion coefficients based temperature gradient heat flux model with
     optional Soret thermal diffusion of species.
 
@@ -86,7 +86,7 @@ class MaxwellStefan
             //  functions [kg/m/s]
             PtrList<Function2<scalar>> DTFuncs_;
 
-            //- Generalized Fick's law diffusion coefficients field list.
+            //- Generalised Fick's law diffusion coefficients field list.
             //  This is the diagonal of the mass diffusion coefficient matrix
             PtrList<volScalarField> Dii_;
 
@@ -123,13 +123,13 @@ class MaxwellStefan
 
             //- Matrix of composition coefficients at a cell or face
             //  used to transform the binary mass diffusion coefficients into
-            //  the generalized Fick's law diffusion coefficients
+            //  the generalised Fick's law diffusion coefficients
             scalarSquareMatrix B;
 
             //- Inverse of A
             scalarSquareMatrix invA;
 
-            //- Matrix of the generalized Fick's law diffusion coefficients
+            //- Matrix of the generalised Fick's law diffusion coefficients
             //  at a cell or face
             scalarSquareMatrix D;
 
@@ -137,7 +137,7 @@ class MaxwellStefan
     // Private member functions
 
         //- Transform the Binary mass diffusion coefficient matrix DD into the
-        //  matrix of the generalized Fick's law diffusion coefficients D
+        //  matrix of the generalised Fick's law diffusion coefficients D
         void transformDiffusionCoefficient();
 
         //- Calls transformDiffusionCoefficient() for each cell and patch face

@@ -78,7 +78,7 @@ void Foam::printMeshStats(const polyMesh& mesh, const bool allTopology)
         << "    cell zones:       " << mesh.cellZones().size() << nl
         << endl;
 
-    // Construct shape recognizers
+    // Construct shape recognisers
     hexMatcher hex;
     prismMatcher prism;
     wedgeMatcher wedge;

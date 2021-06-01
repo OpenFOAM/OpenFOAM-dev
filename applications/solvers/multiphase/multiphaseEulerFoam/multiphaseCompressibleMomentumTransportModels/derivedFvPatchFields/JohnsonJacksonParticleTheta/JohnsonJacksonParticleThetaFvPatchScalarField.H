@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,7 +31,7 @@ Description
     \verbatim
         Reuge, N., Cadoret, L., Coufort-Saudejaud, C., Pannala, S., Syamlal, M.,
         & Caussat, B. (2008).
-        Multifluid Eulerian modeling of dense gas–solids fluidized bed
+        Multifluid Eulerian modeling of dense gas–solids fluidised bed
         hydrodynamics: influence of the dissipation parameters.
         Chemical Engineering Science, 63(22), 5540-5551.
     \endverbatim

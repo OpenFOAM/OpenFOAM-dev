@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -228,7 +228,7 @@ Foam::scalar Foam::Rosenbrock34::solve
         err_[i] = e1*k1_[i] + e2*k2_[i] + e4*k4_[i];
     }
 
-    return normalizeError(y0, y, err_);
+    return normaliseError(y0, y, err_);
 }
 
 

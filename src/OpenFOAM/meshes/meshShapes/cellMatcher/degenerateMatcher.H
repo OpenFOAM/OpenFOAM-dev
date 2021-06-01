@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -70,7 +70,7 @@ class degenerateMatcher
 
     // Static functions
 
-        //- Recognize basic shape
+        //- Recognise basic shape
         static cellShape match
         (
             const faceList& faces,
@@ -83,14 +83,14 @@ public:
 
     // Static Data Members
 
-        //- Recognize shape given faces of a cell
+        //- Recognise shape given faces of a cell
         static cellShape match(const faceList& faces);
 
-        //- Recognize given uncollapsed shape (usually hex) with duplicate
+        //- Recognise given uncollapsed shape (usually hex) with duplicate
         //  vertices. cellShape just used to extract faces.
         static cellShape match(const cellShape& shape);
 
-        //- Recognize shape given mesh and celli
+        //- Recognise shape given mesh and celli
         static cellShape match(const primitiveMesh& mesh, const label celli);
 };
 

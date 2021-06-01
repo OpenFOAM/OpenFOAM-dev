@@ -293,7 +293,7 @@ Foam::chemPointISAT<ThermoType>::chemPointISAT
     }
 
     // The object LT_ (the transpose of the Q) describe the EOA, since we have
-    // A^T B^T B A that should be factorized into L Q^T Q L^T and is set in the
+    // A^T B^T B A that should be factorised into L Q^T Q L^T and is set in the
     // qrDecompose function
     LT_ = scalarSquareMatrix(Atilde);
 

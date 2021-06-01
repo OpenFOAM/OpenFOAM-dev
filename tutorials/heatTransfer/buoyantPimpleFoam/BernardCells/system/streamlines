@@ -23,6 +23,6 @@ seedSampleSet
 
 fields          (U);
 
-#includeEtc "caseDicts/postProcessing/visualization/streamlines.cfg"
+#includeEtc "caseDicts/postProcessing/visualisation/streamlines.cfg"
 
 // ************************************************************************* //

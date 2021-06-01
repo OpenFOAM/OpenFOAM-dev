@@ -70,7 +70,7 @@ Foam::porosityModels::powerLawLopesdaCostaZone::powerLawLopesdaCostaZone
     List<wordRe> groundPatches(coeffs.lookup("groundPatches"));
 
     // Functional form of the porosity surface area per unit volume as a
-    // function of the normalized vertical position
+    // function of the normalised vertical position
     autoPtr<Function1<scalar >> SigmaFunc
     (
         Function1<scalar>::New("Sigma", dict)
@@ -248,7 +248,7 @@ Foam::porosityModels::powerLawLopesdaCostaZone::powerLawLopesdaCostaZone
         }
     }
 
-    // Create the normalized height field
+    // Create the normalised height field
     scalarField zNorm(zBottom/(zBottom + zTop));
 
     // Create the porosity surface area per unit volume zone field

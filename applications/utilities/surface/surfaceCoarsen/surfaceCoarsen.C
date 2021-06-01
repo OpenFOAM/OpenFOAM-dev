@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
         int p1 = mapVertex(collapse_map, tri[i].v[1], render_num);
         int p2 = mapVertex(collapse_map, tri[i].v[2], render_num);
 
-        // note:  serious optimization opportunity here,
+        // note:  serious optimisation opportunity here,
         //  by sorting the triangles the following "continue"
         //  could have been made into a "break" statement.
         if (p0 == p1 || p1 == p2 || p2 == p0)

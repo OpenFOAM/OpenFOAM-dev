@@ -45,7 +45,7 @@ Description
     Reference:
     \verbatim
         Lefebvre, A. (1988).
-        Atomization and sprays
+        Atomisation and sprays
         (Vol. 1040, No. 2756). CRC press.
     \endverbatim
 

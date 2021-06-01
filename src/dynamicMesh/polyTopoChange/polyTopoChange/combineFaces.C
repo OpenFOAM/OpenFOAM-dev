@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ bool Foam::combineFaces::convexFace
         // Get vertex after fp
         label fp1 = f.fcIndex(fp0);
 
-        // Normalized vector between two consecutive points
+        // Normalised vector between two consecutive points
         vector e10(points[f[fp1]] - points[f[fp0]]);
         scalar magE10 = mag(e10);
         e10 /= magE10 + vSmall;

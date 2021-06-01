@@ -478,7 +478,7 @@ transformDiffusionCoefficient()
     A.decompose();
     A.inv(invA);
 
-    // Calculate the generalized Fick's law diffusion coefficients
+    // Calculate the generalised Fick's law diffusion coefficients
     multiply(D, invA, B);
 }
 
@@ -566,7 +566,7 @@ void MaxwellStefan<BasicThermophysicalTransportModel>::transform
     }
 
     // Transform binary mass diffusion coefficients internal field DijPtrs ->
-    // generalized Fick's law diffusion coefficients DijPtrs
+    // generalised Fick's law diffusion coefficients DijPtrs
     transformDiffusionCoefficientFields();
 
     forAll(Y0.boundaryField(), patchi)
@@ -590,7 +590,7 @@ void MaxwellStefan<BasicThermophysicalTransportModel>::transform
         }
 
         // Transform binary mass diffusion coefficients patch field DijPtrs ->
-        // generalized Fick's law diffusion coefficients DijPtrs
+        // generalised Fick's law diffusion coefficients DijPtrs
         transformDiffusionCoefficientFields();
     }
 }
@@ -654,7 +654,7 @@ void MaxwellStefan<BasicThermophysicalTransportModel>::correct()
     }
 
     //- Transform the binary mass diffusion coefficients into the
-    //  the generalized Fick's law diffusion coefficients
+    //  the generalised Fick's law diffusion coefficients
     transform(Dij);
 
     // Accumulate the explicit part of the specie mass flux fields

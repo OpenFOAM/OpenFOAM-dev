@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ inline void reportInfo()
         << "PackedList<" << nBits << ">" << nl
         << " max_value: " << PackedList<nBits>::max_value() << nl
         << " packing: " << PackedList<nBits>::packing() << nl
-        << " utilization: " << (nBits * offset) << nl;
+        << " utilisation: " << (nBits * offset) << nl;
 
     Info<< " Masking:" << nl
         << "  shift << "

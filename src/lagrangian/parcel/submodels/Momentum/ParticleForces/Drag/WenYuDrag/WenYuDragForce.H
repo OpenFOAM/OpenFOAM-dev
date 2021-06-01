@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
     Reference:
     \verbatim
         Gidaspow, D. (1994).
-        Multiphase flow and fluidization: continuum and kinetic theory
+        Multiphase flow and fluidisation: continuum and kinetic theory
         descriptions.
         Academic press.
     \endverbatim

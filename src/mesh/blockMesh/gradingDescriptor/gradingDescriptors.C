@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ Foam::Istream& Foam::operator>>(Istream& is, gradingDescriptors& gds)
         // Check state of Istream
         is.check("operator>>(Istream&, gradingDescriptor&)");
 
-        // Normalize the blockFractions and nDivFractions
+        // Normalise the blockFractions and nDivFractions
         // of the list of gradingDescriptors
 
         scalar sumBlockFraction = 0;

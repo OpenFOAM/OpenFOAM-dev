@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -190,7 +190,7 @@ bool Foam::functionObjects::sampledSurfaces::write()
 {
     if (size())
     {
-        // Finalize surfaces, merge points etc.
+        // Finalise surfaces, merge points etc.
         update();
 
         const label nFields = classifyFields();

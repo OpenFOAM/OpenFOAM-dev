@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ inline void writeEntry(Ostream& os, const int64_t value)
 }
 
 
-//- Template specialization for pTraits<int64_t>
+//- Template specialisation for pTraits<int64_t>
 template<>
 class pTraits<int64_t>
 {

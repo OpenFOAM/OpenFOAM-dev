@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,13 +30,13 @@ Description
     Described in the papers below.
     @verbatim
     F.X. Tanner
-        "Liquid Jet Atomization and Droplet Breakup Modeling of
+        "Liquid Jet Atomisation and Droplet Breakup Modeling of
         Non-Evaporating Diesel Fuel Sprays"
         SAE 970050,
         SAE Transactions: Journal of Engines, Vol 106, Sec 3 pp 127-140
 
     F.X. Tanner and G. Weisser
-        "Simulation of Liquid Jet Atomization for
+        "Simulation of Liquid Jet Atomisation for
         Fuel Sprays by Means of Cascade Drop Breakup Model"
         SAE 980808
         SAE Technical Paper Series

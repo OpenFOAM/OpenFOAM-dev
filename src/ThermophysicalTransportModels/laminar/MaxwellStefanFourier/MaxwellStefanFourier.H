@@ -25,7 +25,7 @@ Class
     Foam::laminarThermophysicalTransportModels::MaxwellStefanFourier
 
 Description
-    Multi-component Maxwell Stefan generalized Fick's law diffusion coefficients
+    Multi-component Maxwell Stefan generalised Fick's law diffusion coefficients
     and Fourier based temperature gradient heat flux model with optional Soret
     thermal diffusion of species for laminar flow.
 

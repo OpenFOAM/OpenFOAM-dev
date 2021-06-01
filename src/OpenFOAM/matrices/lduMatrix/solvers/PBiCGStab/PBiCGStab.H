@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::PBiCGStab
 
 Description
-    Preconditioned bi-conjugate gradient stabilized solver for asymmetric
+    Preconditioned bi-conjugate gradient stabilised solver for asymmetric
     lduMatrices using a run-time selectable preconditioner.
 
     References:

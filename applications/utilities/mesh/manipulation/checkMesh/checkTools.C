@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ void Foam::printMeshStats(const polyMesh& mesh, const bool allTopology)
         << "    cell zones:       " << mesh.cellZones().size() << nl
         << endl;
 
-    // Construct shape recognizers
+    // Construct shape recognisers
     hexMatcher hex;
     prismMatcher prism;
     wedgeMatcher wedge;

@@ -10,7 +10,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#includeEtc "caseDicts/postProcessing/visualization/streamlines.cfg"
+#includeEtc "caseDicts/postProcessing/visualisation/streamlines.cfg"
 
 fields  (U);
 

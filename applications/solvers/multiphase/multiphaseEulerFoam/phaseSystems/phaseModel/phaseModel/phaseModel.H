@@ -68,7 +68,7 @@ class phaseModel
         label index_;
 
         //- Return the residual phase-fraction for given phase
-        //  Used to stabilize the phase momentum as the phase-fraction -> 0
+        //  Used to stabilise the phase momentum as the phase-fraction -> 0
         dimensionedScalar residualAlpha_;
 
         //- Optional maximum phase-fraction (e.g. packing limit)
@@ -185,7 +185,7 @@ public:
         const phaseSystem& fluid() const;
 
         //- Return the residual phase-fraction for given phase
-        //  Used to stabilize the phase momentum as the phase-fraction -> 0
+        //  Used to stabilise the phase momentum as the phase-fraction -> 0
         const dimensionedScalar& residualAlpha() const;
 
         //- Return the maximum phase-fraction (e.g. packing limit)

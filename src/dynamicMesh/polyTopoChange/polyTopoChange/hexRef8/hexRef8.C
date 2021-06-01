@@ -3368,7 +3368,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
         }
     }
 
-    // Synchronize edgeMidPoint across coupled patches. Take max so that
+    // Synchronise edgeMidPoint across coupled patches. Take max so that
     // any split takes precedence.
     syncTools::syncEdgeList
     (
@@ -3554,7 +3554,7 @@ Foam::labelListList Foam::hexRef8::setRefinement
     }
 
 
-    // Synchronize faceMidPoint across coupled patches. (logical or)
+    // Synchronise faceMidPoint across coupled patches. (logical or)
     syncTools::syncFaceList
     (
         mesh_,
@@ -4898,7 +4898,7 @@ void Foam::hexRef8::checkRefinementLevels
     }
 
 
-    // Check pointLevel is synchronized
+    // Check pointLevel is synchronised
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     {
         labelList syncPointLevel(pointLevel_);

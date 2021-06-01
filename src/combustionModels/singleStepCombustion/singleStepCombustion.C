@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -110,7 +110,7 @@ void Foam::combustionModels::singleStepCombustion::calculateMaxProducts()
         }
     }
 
-    // Normalize the stoichiometric coeff to mass
+    // Normalise the stoichiometric coeff to mass
     forAll(specieStoichCoeffs_, i)
     {
         specieStoichCoeffs_[i] =

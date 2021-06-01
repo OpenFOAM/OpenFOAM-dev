@@ -603,7 +603,7 @@ int main(int argc, char *argv[])
 {
     argList::addNote
     (
-        "Renumber mesh to minimize bandwidth"
+        "Renumber mesh to minimise bandwidth"
     );
 
     #include "addRegionOption.H"

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ Description
     simulate the behaviour of B.
 
     This implementation is as described in the above paper except that the
-    triple correlation model of Donaldson is replaced with the generalized
+    triple correlation model of Donaldson is replaced with the generalised
     gradient diffusion model of Daly and Harlow:
     \verbatim
         Daly, B. J., & Harlow, F. H. (1970).

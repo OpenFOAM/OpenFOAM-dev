@@ -25,7 +25,7 @@ Class
     Foam::coordinateSystems::coordinateSystems
 
 Description
-    Provides a centralized coordinateSystem collection.
+    Provides a centralised coordinateSystem collection.
 
     For example with the porous region specified in \c constant/fvModels as
 

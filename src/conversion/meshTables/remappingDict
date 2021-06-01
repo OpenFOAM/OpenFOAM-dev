@@ -14,7 +14,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 // this is a simple example of remapping cellTable and boundaryRegion entries
-// NB: can't yet combine boundaryRegions, since this reorganizes the mesh faces
+// NB: can't yet combine boundaryRegions, since this reorganises the mesh faces
 
 // rename/combine cellTable entries
 //   newName ( listOldNames );

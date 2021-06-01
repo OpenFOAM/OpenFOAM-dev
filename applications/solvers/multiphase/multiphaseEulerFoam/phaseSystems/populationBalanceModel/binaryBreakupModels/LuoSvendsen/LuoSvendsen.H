@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -98,7 +98,7 @@ Description
         \rho_c      |  Density of continuous phase [kg/m^3]
         \eta        |  Kolmogorov length scale [m]
         \Gamma(a,z) |  Upper incomplete gamma function
-        Q(a,z)      |  Regularized upper incomplete gamma function
+        Q(a,z)      |  Regularised upper incomplete gamma function
         \Gamma(a)   |  Gamma function
     \endvartable
 

@@ -160,7 +160,7 @@ subModels
 
     surfaceFilmModel none;
 
-    atomizationModel none;
+    atomisationModel none;
 
     breakupModel    ReitzDiwakar; // ReitzKHRT;
 

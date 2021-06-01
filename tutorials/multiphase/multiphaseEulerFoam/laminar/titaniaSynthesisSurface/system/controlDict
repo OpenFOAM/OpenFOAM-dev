@@ -71,7 +71,7 @@ functions
         functionType        number;
         coordinateType      projectedAreaDiameter;
         densityFunction     yes;
-        normalize           yes;
+        normalise           yes;
         geometric           yes;
     }
 

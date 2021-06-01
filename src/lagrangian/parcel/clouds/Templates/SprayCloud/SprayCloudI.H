@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,18 +36,18 @@ Foam::SprayCloud<CloudType>::cloudCopy() const
 
 
 template<class CloudType>
-inline const Foam::AtomizationModel<Foam::SprayCloud<CloudType>>&
-Foam::SprayCloud<CloudType>::atomization() const
+inline const Foam::AtomisationModel<Foam::SprayCloud<CloudType>>&
+Foam::SprayCloud<CloudType>::atomisation() const
 {
-    return atomizationModel_;
+    return atomisationModel_;
 }
 
 
 template<class CloudType>
-inline Foam::AtomizationModel<Foam::SprayCloud<CloudType>>&
-Foam::SprayCloud<CloudType>::atomization()
+inline Foam::AtomisationModel<Foam::SprayCloud<CloudType>>&
+Foam::SprayCloud<CloudType>::atomisation()
 {
-    return atomizationModel_();
+    return atomisationModel_();
 }
 
 

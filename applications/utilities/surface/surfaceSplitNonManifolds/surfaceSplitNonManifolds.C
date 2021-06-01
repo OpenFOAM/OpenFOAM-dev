@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ void dumpPoints(const triSurface& surf, const labelList& borderPoint)
     fileName fName("borderPoints.obj");
 
     Info<< "Dumping borderPoints as Lightwave .obj file to " << fName
-        << "\nThis can be visualized with e.g. javaview (www.javaview.de)\n\n";
+        << "\nThis can be visualised with e.g. javaview (www.javaview.de)\n\n";
 
     OFstream os(fName);
 
@@ -99,7 +99,7 @@ void dumpEdges(const triSurface& surf, const boolList& borderEdge)
     fileName fName("borderEdges.obj");
 
     Info<< "Dumping borderEdges as Lightwave .obj file to " << fName
-        << "\nThis can be visualized with e.g. javaview (www.javaview.de)\n\n";
+        << "\nThis can be visualised with e.g. javaview (www.javaview.de)\n\n";
 
     OFstream os(fName);
 
@@ -125,7 +125,7 @@ void dumpFaces
 )
 {
     Info<< "Dumping connectedFaces as Lightwave .obj file to " << fName
-        << "\nThis can be visualized with e.g. javaview (www.javaview.de)\n\n";
+        << "\nThis can be visualised with e.g. javaview (www.javaview.de)\n\n";
 
     OFstream os(fName);
 

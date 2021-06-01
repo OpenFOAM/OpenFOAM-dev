@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -779,7 +779,7 @@ Foam::labelList Foam::surfaceFeatures::trimFeatures
          || (leftPath.n_ + rightPath.n_ + 1 < minElems)
         )
         {
-            // Rewalk same route (recognizable by featLines == featI)
+            // Rewalk same route (recognisable by featLines == featI)
             // to reset featLines.
 
             featLines[startEdgeI] = -2;
@@ -1031,7 +1031,7 @@ Foam::Map<Foam::label> Foam::surfaceFeatures::nearestSamples
                 << ' ' << surfPoints[e[1]] << endl;
         }
 
-        // Normalized edge vector
+        // Normalised edge vector
         vector eVec = e.vec(surfPoints);
         scalar eMag = mag(eVec);
         eVec /= eMag;
@@ -1177,7 +1177,7 @@ Foam::Map<Foam::pointIndexHit> Foam::surfaceFeatures::nearestEdges
                 << ' ' << surfPoints[e[1]] << endl;
         }
 
-        // Normalized edge vector
+        // Normalised edge vector
         vector eVec = e.vec(surfPoints);
         scalar eMag = mag(eVec);
         eVec /= eMag;

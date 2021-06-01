@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::functionObjects::fvMeshFunctionObject
 
 Description
-    Specialization of Foam::functionObject for an Foam::fvMesh, providing a
+    Specialisation of Foam::functionObject for an Foam::fvMesh, providing a
     reference to the Foam::fvMesh.
 
     If the selected region is not an Foam::fvMesh a Foam::FatalError will be

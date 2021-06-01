@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -235,7 +235,7 @@ public:
 };
 
 
-//- Hash specialization for hashing triFace - a commutative hash value.
+//- Hash specialisation for hashing triFace - a commutative hash value.
 //  Hash incrementally.
 template<>
 inline unsigned Hash<triFace>::operator()(const triFace& t, unsigned seed) const
@@ -251,7 +251,7 @@ inline unsigned Hash<triFace>::operator()(const triFace& t, unsigned seed) const
 }
 
 
-//- Hash specialization for hashing triFace - a commutative hash value.
+//- Hash specialisation for hashing triFace - a commutative hash value.
 template<>
 inline unsigned Hash<triFace>::operator()(const triFace& t) const
 {
@@ -263,7 +263,7 @@ template<>
 inline bool contiguous<triFace>()  {return true;}
 
 
-//- Hash specialization to offset faces in ListListOps::combineOffset
+//- Hash specialisation to offset faces in ListListOps::combineOffset
 template<>
 class offsetOp<triFace>
 {

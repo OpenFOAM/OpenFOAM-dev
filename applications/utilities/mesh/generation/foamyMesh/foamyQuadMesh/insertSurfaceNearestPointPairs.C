@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -190,7 +190,7 @@ void Foam::CV2D::insertSurfaceNearestPointPairs()
 
 //                // Find where point is on triangle.
 //                // Note tolerance needed is relative one
-//                // (used in comparing normalized [0..1] triangle coordinates).
+//                // (used in comparing normalised [0..1] triangle coordinates).
 //                label nearType, nearLabel;
 //                triPointRef
 //                (

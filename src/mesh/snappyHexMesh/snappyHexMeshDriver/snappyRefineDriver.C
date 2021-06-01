@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1045,7 +1045,7 @@ void Foam::snappyRefineDriver::splitAndMergeBaffles
 
     if (nCouples > 0)
     {
-        // Actually merge baffles. Note: not exactly parallellized. Should
+        // Actually merge baffles. Note: not exactly parallelised. Should
         // convert baffle faces into processor faces if they resulted
         // from them.
         meshRefiner_.mergeBaffles(couples);

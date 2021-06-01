@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -118,7 +118,7 @@ void Foam::MRFZone::setMRFFaces()
         }
     }
 
-    // Synchronize the faceType across processor patches
+    // Synchronise the faceType across processor patches
     syncTools::syncFaceList(mesh_, faceType, maxEqOp<label>());
 
     // Now we have for faceType:

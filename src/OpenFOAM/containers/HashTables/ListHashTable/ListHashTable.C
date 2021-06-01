@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -363,7 +363,7 @@ Foam::label Foam::ListHashTable<T, Key, Hash>::erase
     label count = 0;
 
     // Remove rhs elements from this table
-    // NOTE: could optimize depending on which hash is smaller
+    // NOTE: could optimise depending on which hash is smaller
     for (iterator iter = this->begin(); iter != this->end(); ++iter)
     {
         if (rhs.found(iter.key()) && erase(iter))

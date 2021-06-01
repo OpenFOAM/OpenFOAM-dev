@@ -44,7 +44,7 @@ License
 
 // Spray
 #include "DistortedSphereDragForce.H"
-#include "makeSprayParcelAtomizationModels.H"
+#include "makeSprayParcelAtomisationModels.H"
 #include "makeSprayParcelBreakupModels.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -68,7 +68,7 @@ makeReactingParcelSurfaceFilmModels(sprayCloud);
 
 // Spray sub-models
 makeParticleForceModelType(DistortedSphereDragForce, sprayCloud);
-makeSprayParcelAtomizationModels(sprayCloud);
+makeSprayParcelAtomisationModels(sprayCloud);
 makeSprayParcelBreakupModels(sprayCloud);
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -410,7 +410,7 @@ public:
             void write(const fileName& fName) const;
 
             //- Write to separate OBJ files (region, external, internal edges,
-            //  feature points) for visualization
+            //  feature points) for visualisation
             void writeObj(const fileName& prefix) const;
 
 

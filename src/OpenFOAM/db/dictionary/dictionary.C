@@ -622,7 +622,7 @@ Foam::SHA1Digest Foam::dictionary::digest() const
 
 Foam::tokenList Foam::dictionary::tokens() const
 {
-    // Serialize dictionary into a string
+    // Serialise dictionary into a string
     OStringStream os;
     write(os, false);
     IStringStream is(os.str());

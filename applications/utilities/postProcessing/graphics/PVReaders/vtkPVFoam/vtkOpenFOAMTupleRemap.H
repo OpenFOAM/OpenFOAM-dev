@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ template<class Type>
 inline void vtkOpenFOAMTupleRemap(float vec[]);
 
 
-// Template specialization for symmTensor
+// Template specialisation for symmTensor
 template<>
 inline void vtkOpenFOAMTupleRemap<Foam::symmTensor>(float vec[])
 {

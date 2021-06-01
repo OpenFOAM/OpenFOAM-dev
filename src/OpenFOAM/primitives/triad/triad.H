@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -114,11 +114,11 @@ public:
         //- Return the vector orthogonal to the two provided
         static inline vector orthogonal(const vector& v1, const vector& v2);
 
-        //- Orthogonalize this triad so that it is ortho-normal
-        void orthogonalize();
+        //- Orthogonalise this triad so that it is ortho-normal
+        void orthogonalise();
 
-        //- Normalize each set axis vector to have a unit magnitude
-        void normalize();
+        //- Normalise each set axis vector to have a unit magnitude
+        void normalise();
 
         //- Align this triad with the given vector v
         //  by rotating the most aligned axis to be coincident with v
@@ -138,7 +138,7 @@ public:
         void operator=(const tensor& t);
 
         //- Add the triad t2 to this triad
-        //  without normalizing or orthogonalizing
+        //  without normalising or orthogonalising
         void operator+=(const triad& t2);
 
 

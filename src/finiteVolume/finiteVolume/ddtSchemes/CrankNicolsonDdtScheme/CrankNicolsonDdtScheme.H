@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
     previous time-step fields as well as the previous time-step ddt.
 
     The Crank-Nicolson scheme is often unstable for complex flows in complex
-    geometries and it is necessary to "off-centre" the scheme to stabilize it
+    geometries and it is necessary to "off-centre" the scheme to stabilise it
     while retaining greater temporal accuracy than the first-order
     Euler-implicit scheme.  Off-centering is specified via the mandatory
     coefficient \c ocCoeff in the range [0,1] following the scheme name e.g.

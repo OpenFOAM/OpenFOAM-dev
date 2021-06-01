@@ -289,7 +289,7 @@ int main(int argc, char *argv[])
                     );
 
                     source().applyToSet(action, currentSet());
-                    // Synchronize for coupled patches.
+                    // Synchronise for coupled patches.
                     if (!noSync) currentSet().sync(mesh);
                     currentSet().write();
                     fileHandler().flush();
@@ -324,7 +324,7 @@ int main(int argc, char *argv[])
 
                     // Combine new value of currentSet with old one.
                     currentSet().subset(oldSet());
-                    // Synchronize for coupled patches.
+                    // Synchronise for coupled patches.
                     if (!noSync) currentSet().sync(mesh);
                     currentSet().write();
                     fileHandler().flush();

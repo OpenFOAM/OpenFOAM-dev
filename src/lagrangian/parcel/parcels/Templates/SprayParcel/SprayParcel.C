@@ -26,7 +26,7 @@ License
 #include "SprayParcel.H"
 #include "forceSuSp.H"
 #include "CompositionModel.H"
-#include "AtomizationModel.H"
+#include "AtomisationModel.H"
 
 // * * * * * * * * * * *  Protected Member Functions * * * * * * * * * * * * //
 
@@ -126,7 +126,7 @@ void Foam::SprayParcel<ParcelType>::calc
 
         if (liquidCore() > 0.5)
         {
-            calcAtomization(cloud, td, dt);
+            calcAtomisation(cloud, td, dt);
 
             // Preserve the total mass/volume by increasing the number of
             // particles in parcels due to breakup
@@ -146,7 +146,7 @@ void Foam::SprayParcel<ParcelType>::calc
 
 template<class ParcelType>
 template<class TrackCloudType>
-void Foam::SprayParcel<ParcelType>::calcAtomization
+void Foam::SprayParcel<ParcelType>::calcAtomisation
 (
     TrackCloudType& cloud,
     trackingData& td,
@@ -158,13 +158,13 @@ void Foam::SprayParcel<ParcelType>::calcAtomization
         cloud.composition();
 
     typedef typename TrackCloudType::sprayCloudType sprayCloudType;
-    const AtomizationModel<sprayCloudType>& atomization =
-        cloud.atomization();
+    const AtomisationModel<sprayCloudType>& atomisation =
+        cloud.atomisation();
 
     // Average molecular weight of carrier mix - assumes perfect gas
     scalar Wc = td.rhoc()*RR*td.Tc()/td.pc();
     scalar R = RR/Wc;
-    scalar Tav = atomization.Taverage(this->T(), td.Tc());
+    scalar Tav = atomisation.Taverage(this->T(), td.Tc());
 
     // Calculate average gas density based on average temperature
     scalar rhoAv = td.pc()/(R*Tav);
@@ -185,12 +185,12 @@ void Foam::SprayParcel<ParcelType>::calcAtomization
     scalar volFlowRate = cloud.injectors().volumeToInject(t0, t1)/dt;
 
     scalar chi = 0.0;
-    if (atomization.calcChi())
+    if (atomisation.calcChi())
     {
         chi = this->chi(cloud, td, composition.liquids().X(this->Y()));
     }
 
-    atomization.update
+    atomisation.update
     (
         dt,
         this->d(),
@@ -235,7 +235,7 @@ void Foam::SprayParcel<ParcelType>::calcBreakup
     // Average molecular weight of carrier mix - assumes perfect gas
     scalar Wc = td.rhoc()*RR*td.Tc()/td.pc();
     scalar R = RR/Wc;
-    scalar Tav = cloud.atomization().Taverage(this->T(), td.Tc());
+    scalar Tav = cloud.atomisation().Taverage(this->T(), td.Tc());
 
     // Calculate average gas density based on average temperature
     scalar rhoAv = td.pc()/(R*Tav);

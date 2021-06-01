@@ -403,7 +403,7 @@ void Foam::UnsortedMeshedSurface<Face>::remapFaces
         }
         else if (zoneToc_.size() == 1)
         {
-            // optimized for single-zone case
+            // optimised for single-zone case
             zoneIds_ = 0;
         }
         else

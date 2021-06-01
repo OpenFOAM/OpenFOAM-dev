@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,7 +81,7 @@ class faceTriangulation
         //- Edge to the left of face vertex i
         static label left(const label size, label i);
 
-        //- Calculate normalized edge vectors
+        //- Calculate normalised edge vectors
         static tmp<vectorField> calcEdges(const face&, const pointField&);
 
         //- Calculates half angle components of angle from e0 to e1

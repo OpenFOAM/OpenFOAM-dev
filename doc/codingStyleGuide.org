@@ -479,7 +479,7 @@
     directories that only allows the initial comment block for the /.C/ files
     through.
 
-    The layout of the application documentation has not yet been finalized,
+    The layout of the application documentation has not yet been finalised,
     but foamToVTK shows an initial attempt.
 
 *** Orthography

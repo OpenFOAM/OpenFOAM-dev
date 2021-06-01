@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,13 +47,13 @@ inline Foam::quaternion::quaternion
 (
     const vector& d,
     const scalar cosTheta,
-    const bool normalized
+    const bool normalised
 )
 {
     scalar cosHalfTheta2 = 0.5*(cosTheta + 1);
     w_ = sqrt(cosHalfTheta2);
 
-    if (normalized)
+    if (normalised)
     {
         v_ = sqrt(1 - cosHalfTheta2)*d;
     }
@@ -275,13 +275,13 @@ inline Foam::vector& Foam::quaternion::v()
 }
 
 
-inline Foam::quaternion Foam::quaternion::normalized() const
+inline Foam::quaternion Foam::quaternion::normalised() const
 {
     return *this/mag(*this);
 }
 
 
-inline void Foam::quaternion::normalize()
+inline void Foam::quaternion::normalise()
 {
     operator/=(mag(*this));
 }
@@ -307,7 +307,7 @@ inline Foam::vector Foam::quaternion::invTransform(const vector& u) const
 
 inline Foam::quaternion Foam::quaternion::transform(const quaternion& q) const
 {
-    return Foam::normalize((*this)*q);
+    return Foam::normalise((*this)*q);
 }
 
 
@@ -316,7 +316,7 @@ inline Foam::quaternion Foam::quaternion::invTransform
     const quaternion& q
 ) const
 {
-    return Foam::normalize(conjugate(*this)*q);
+    return Foam::normalise(conjugate(*this)*q);
 }
 
 
@@ -600,7 +600,7 @@ inline Foam::quaternion Foam::inv(const quaternion& q)
 }
 
 
-inline Foam::quaternion Foam::normalize(const quaternion& q)
+inline Foam::quaternion Foam::normalise(const quaternion& q)
 {
     return q/mag(q);
 }

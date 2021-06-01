@@ -91,7 +91,7 @@ void ComputeMouseVector(){
     float x = spread * (MouseX-Width/2.0f)  /(Height/2.0f);
     Vector v(x ,y,-1);
     // v=UserOrientation *v;
-    v=normalize(v);
+    v=normalise(v);
         MouseVector = v;
 }
 
@@ -109,7 +109,7 @@ Quaternion VirtualTrackBall(Vector cop,Vector cor,Vector dir1,Vector dir2) {
         Vector nrml = cor - cop;
          // since trackball proportional to distance from cop
         float fudgefactor = 1.0f/(magnitude(nrml) * 0.25f);
-        nrml = normalize(nrml);
+        nrml = normalise(nrml);
         float dist = -(nrml^cor);
         Vector u= planelineintersection(nrml,dist,cop,cop+dir1);
         u=u-cor;
@@ -133,7 +133,7 @@ Quaternion VirtualTrackBall(Vector cop,Vector cor,Vector dir1,Vector dir2) {
         if(m>1)m=1; // avoid potential floating point error
         Quaternion q(Vector(1.0f,0.0f,0.0f),0.0f);
         if(m>0 && (angle=(float)asin(m))>3.14/180) {
-                        axis = normalize(axis);
+                        axis = normalise(axis);
                         q=Quaternion(axis,angle);
         }
         return q;
@@ -425,7 +425,7 @@ int APIENTRY WinMain(HINSTANCE hCurrentInst, HINSTANCE hPreviousInst,
         PostString("Demo by Stan Melax (c)1998",5,-5,20);
         PostString("Model by Viewpoint Datalabs (c)1996",5,-4,20);
         char buf[128];
-        PostString("Mesh Reduction Algorithm (non-optimized)",1,0,5);
+        PostString("Mesh Reduction Algorithm (non-optimised)",1,0,5);
         sprintf(buf,"was executed in %5.3f seconds",DeltaT);
         PostString(buf,2,1,6);
 

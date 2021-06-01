@@ -15,9 +15,9 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-stabilization
+stabilisation
 {
-    type            phaseLimitStabilization;
+    type            phaseLimitStabilisation;
 
     field           sigma.liquid;
     rate            rLambda.liquid;

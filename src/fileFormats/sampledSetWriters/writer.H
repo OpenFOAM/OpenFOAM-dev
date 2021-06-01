@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -148,7 +148,7 @@ public:
         ) const = 0;
 
         //- General entry point for writing.
-        //  The data is organized in a set of point with one or more values
+        //  The data is organised in a set of point with one or more values
         //  per point
         virtual void write
         (
@@ -159,7 +159,7 @@ public:
         ) const = 0;
 
         //- General entry point for writing.
-        //  The data is organized in a set of point with one or more values
+        //  The data is organised in a set of point with one or more values
         //  per point
         virtual void write
         (

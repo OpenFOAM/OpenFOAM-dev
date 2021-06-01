@@ -88,7 +88,7 @@ void DrawModelTriangles() {
                 int p0= Map(tri[i].v[0],render_num);
                 int p1= Map(tri[i].v[1],render_num);
                 int p2= Map(tri[i].v[2],render_num);
-                // note:  serious optimization opportunity here,
+                // note:  serious optimisation opportunity here,
                 //  by sorting the triangles the following "continue"
                 //  could have been made into a "break" statement.
                 if(p0==p1 || p1==p2 || p2==p0) continue;
@@ -107,7 +107,7 @@ void DrawModelTriangles() {
                         // therefore just use 1 face normal (flat shading)
                         Vector nrml = (v1-v0) * (v2-v1);  // cross product
                         if(0<magnitude(nrml)) {
-                                glNormal3fv(normalize(nrml));
+                                glNormal3fv(normalise(nrml));
                         }
                         glVertex3fv(v0);
                         glVertex3fv(v1);

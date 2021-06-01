@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ Foam::fv::faceCorrectedSnGrad<Type>::fullGradCorrection
             fgrad += edgen*pvfe;
         }
 
-        // Finalize face-gradient by dividing by face area
+        // Finalise face-gradient by dividing by face area
         fgrad /= magSf[facei];
 
         // Calculate correction vector

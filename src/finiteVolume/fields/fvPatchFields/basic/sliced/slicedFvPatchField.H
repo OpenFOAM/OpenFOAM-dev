@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ Class
     Foam::slicedFvPatchField
 
 Description
-    Specialization of fvPatchField which creates the underlying
+    Specialisation of fvPatchField which creates the underlying
     fvPatchField as a slice of the given complete field.
 
     The destructor is wrapped to avoid deallocation of the storage of the

@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -46,7 +46,7 @@ SHELL      = /bin/sh
 # Set compilation and dependency building rules
 #------------------------------------------------------------------------------
 
-# Locally set optimized compilation
+# Locally set optimised compilation
 WM_COMPILE_OPTION = Opt
 
 GENERAL_RULES   = $(WM_DIR)/rules/General

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,7 +124,7 @@ protected:
             //- Maximum number of iterations to converge the lambda/thetat loop
             label maxLambdaIter_;
 
-            //- Stabilization for division by the magnitude of the velocity
+            //- Stabilisation for division by the magnitude of the velocity
             const dimensionedScalar deltaU_;
 
 

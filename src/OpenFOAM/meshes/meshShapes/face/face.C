@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -544,7 +544,7 @@ Foam::scalar Foam::face::sweptVol
     const pointField& newPoints
 ) const
 {
-    // This Optimization causes a small discrepancy between the swept-volume of
+    // This Optimisation causes a small discrepancy between the swept-volume of
     // opposite faces of complex cells with triangular faces opposing polygons.
     // It could be used without problem for tetrahedral cells
     // if (size() == 3)

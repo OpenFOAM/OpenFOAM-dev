@@ -11,10 +11,10 @@ float  sqr(float a) {return a*a;}
 float magnitude(Vector v) {
     return float(sqrt(sqr(v.x) + sqr( v.y)+ sqr(v.z)));
 }
-Vector normalize(Vector v) {
+Vector normalise(Vector v) {
     float d=magnitude(v);
     if (d==0) {
-                printf("Can't normalize ZERO vector\n");
+                printf("Can't normalise ZERO vector\n");
                 assert(0);
                 d=0.1f;
         }

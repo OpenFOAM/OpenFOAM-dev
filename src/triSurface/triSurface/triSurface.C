@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1197,7 +1197,7 @@ Foam::tmp<Foam::scalarField> Foam::triSurface::curvature() const
         }
 
         triad faceCoordSys(e0, e1, eN);
-        faceCoordSys.normalize();
+        faceCoordSys.normalise();
 
         // Construct the matrix to solve
         scalarSymmetricSquareMatrix T(3, 0);

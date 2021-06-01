@@ -28,7 +28,7 @@ Description
     Templated base class for spray cloud
 
     - sub-models:
-      - atomization model
+      - atomisation model
       - break-up model
 
 \*---------------------------------------------------------------------------*/
@@ -50,7 +50,7 @@ namespace Foam
 
 // Forward declaration of classes
 template<class CloudType>
-class AtomizationModel;
+class AtomisationModel;
 
 template<class CloudType>
 class BreakupModel;
@@ -103,9 +103,9 @@ protected:
 
         // References to the cloud sub-models
 
-            //- Atomization model
-            autoPtr<AtomizationModel<SprayCloud<CloudType>>>
-                atomizationModel_;
+            //- Atomisation model
+            autoPtr<AtomisationModel<SprayCloud<CloudType>>>
+                atomisationModel_;
 
             //- Break-up model
             autoPtr<BreakupModel<SprayCloud<CloudType>>> breakupModel_;
@@ -196,12 +196,12 @@ public:
 
             // Sub-models
 
-                //- Return const-access to the atomization model
-                inline const AtomizationModel<SprayCloud<CloudType>>&
-                    atomization() const;
+                //- Return const-access to the atomisation model
+                inline const AtomisationModel<SprayCloud<CloudType>>&
+                    atomisation() const;
 
-                //- Return reference to the atomization model
-                inline AtomizationModel<SprayCloud<CloudType>>& atomization();
+                //- Return reference to the atomisation model
+                inline AtomisationModel<SprayCloud<CloudType>>& atomisation();
 
                 //- Return const-access to the breakup model
                 inline const BreakupModel<SprayCloud<CloudType>>&

@@ -31,7 +31,7 @@ Description
     \verbatim
         van Wachem, B. G. M. (2000).
         Derivation, implementation, and validation of computer simulation models
-        for gas-solid fluidized beds.
+        for gas-solid fluidised beds.
         PhD Thesis, TU Delft.
     \endverbatim
 

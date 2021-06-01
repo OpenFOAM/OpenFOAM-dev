@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,8 +100,8 @@ inline void Foam::SHA1::set_uint32(unsigned char *cp, uint32_t v)
 
 void Foam::SHA1::processBytes(const void *data, size_t len)
 {
-    // already finalized, thus need to restart from nothing
-    if (finalized_)
+    // already finalised, thus need to restart from nothing
+    if (finalised_)
     {
         clear();
     }
@@ -347,15 +347,15 @@ void Foam::SHA1::clear()
     bufTotal_[0] = bufTotal_[1] = 0;
     bufLen_ = 0;
 
-    finalized_ = false;
+    finalised_ = false;
 }
 
 
-bool Foam::SHA1::finalize()
+bool Foam::SHA1::finalise()
 {
-    if (!finalized_)
+    if (!finalised_)
     {
-        finalized_ = true;
+        finalised_ = true;
 
         // account for unprocessed bytes
         uint32_t bytes = bufLen_;
@@ -368,7 +368,7 @@ bool Foam::SHA1::finalize()
             ++bufTotal_[1];
         }
 
-        // finalized, but no data!
+        // finalised, but no data!
         if (!bufTotal_[0] && !bufTotal_[1])
         {
             return false;
@@ -394,7 +394,7 @@ Foam::SHA1Digest Foam::SHA1::digest() const
 {
     SHA1Digest dig;
 
-    if (finalized_)
+    if (finalised_)
     {
         calcDigest(dig);
     }
@@ -402,7 +402,7 @@ Foam::SHA1Digest Foam::SHA1::digest() const
     {
         // avoid disturbing our data - use a copy
         SHA1 sha(*this);
-        if (sha.finalize())
+        if (sha.finalise())
         {
             sha.calcDigest(dig);
         }

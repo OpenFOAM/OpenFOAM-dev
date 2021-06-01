@@ -465,7 +465,7 @@ Foam::label Foam::intersectedSurface::nextEdge
         }
 
         FatalErrorInFunction
-            << "Unnormalized normal e1:" << e1
+            << "Unnormalised normal e1:" << e1
             << " formed from cross product of e0:" << e0 << " n:" << n
             << abort(FatalError);
     }

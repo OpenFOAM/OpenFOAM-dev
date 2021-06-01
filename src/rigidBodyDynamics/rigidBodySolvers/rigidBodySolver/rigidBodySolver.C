@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,7 +76,7 @@ void Foam::RBD::rigidBodySolver::correctQuaternionJoints()
                     // Transform the previous time unit quaternion
                     quaternion quat
                     (
-                        normalize(model_.joints()[i].unitQuaternion(q0())*dQuat)
+                        normalise(model_.joints()[i].unitQuaternion(q0())*dQuat)
                     );
 
                     // Update the joint unit quaternion

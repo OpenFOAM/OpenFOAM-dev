@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -130,7 +130,7 @@ namespace Foam
 
 //- Dummy innerProduct for scalar to allow the construction of vtables for
 //  virtual member functions involving the inner-products of fields
-//  for which a "NotImplemented" specialization for scalar is provided.
+//  for which a "NotImplemented" specialisation for scalar is provided.
 template<class Cmpt>
 class innerProduct<Vector<Cmpt>, scalar>
 {

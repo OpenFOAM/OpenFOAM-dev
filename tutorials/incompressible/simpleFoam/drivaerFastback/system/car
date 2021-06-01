@@ -14,7 +14,7 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#includeEtc "caseDicts/postProcessing/visualization/surfaces.cfg"
+#includeEtc "caseDicts/postProcessing/visualisation/surfaces.cfg"
 
 fields  (p);
 

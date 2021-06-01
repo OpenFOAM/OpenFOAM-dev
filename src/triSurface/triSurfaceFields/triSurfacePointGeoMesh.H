@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ Class
 Description
     The triSurface  point GeoMesh (for holding vertex fields).
 
-    Similar to the volMesh used for the Finite Volume discretization.
+    Similar to the volMesh used for the Finite Volume discretisation.
 
 \*---------------------------------------------------------------------------*/
 

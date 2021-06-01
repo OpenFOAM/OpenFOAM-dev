@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
     derivative of the stress tensor with support for multiple modes.
 
     See http://en.wikipedia.org/wiki/Upper-convected_Maxwell_model
-        http://en.wikipedia.org/wiki/Generalized_Maxwell_model
+        http://en.wikipedia.org/wiki/Generalised_Maxwell_model
 
     The model includes an additional viscosity (nu) from the transport
     model from which it is instantiated, which makes it equivalent to

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -214,8 +214,8 @@ Foam::tensor Foam::cellShapeControl::cellAlignment(const point& pt) const
                 }
             }
 
-            tri.normalize();
-            tri.orthogonalize();
+            tri.normalise();
+            tri.orthogonalise();
             tri = tri.sortxyz();
 
             alignment = tri;
@@ -292,8 +292,8 @@ void Foam::cellShapeControl::cellSizeAndAlignment
                 }
             }
 
-            tri.normalize();
-            tri.orthogonalize();
+            tri.normalise();
+            tri.orthogonalise();
             tri = tri.sortxyz();
 
             alignment = tri;
@@ -314,7 +314,7 @@ void Foam::cellShapeControl::cellSizeAndAlignment
 
         if (!v.set(dir) || size == 0)
         {
-            // Force orthogonalization of triad.
+            // Force orthogonalisation of triad.
 
             scalar dotProd = great;
             if (dir == 0)
@@ -336,8 +336,8 @@ void Foam::cellShapeControl::cellSizeAndAlignment
                 v[dir] = v[0] ^ v[1];
             }
 
-            v.normalize();
-            v.orthogonalize();
+            v.normalise();
+            v.orthogonalise();
 
             Pout<< "Dot prod = " << dotProd << endl;
             Pout<< "Alignment = " << v << endl;
