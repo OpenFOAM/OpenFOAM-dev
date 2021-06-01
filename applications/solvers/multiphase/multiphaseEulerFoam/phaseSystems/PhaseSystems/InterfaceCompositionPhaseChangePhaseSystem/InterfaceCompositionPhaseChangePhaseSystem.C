@@ -34,10 +34,13 @@ License
 template<class BasePhaseSystem>
 Foam::autoPtr<Foam::phaseSystem::dmdtfTable>
 Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::
-dmdtfs() const
+totalDmdtfs() const
 {
-    autoPtr<phaseSystem::dmdtfTable> dmdtPtr(new phaseSystem::dmdtfTable);
-    phaseSystem::dmdtfTable& dmdtfs = dmdtPtr();
+    autoPtr<phaseSystem::dmdtfTable> totalDmdtfsPtr
+    (
+        new phaseSystem::dmdtfTable
+    );
+    phaseSystem::dmdtfTable& totalDmdtfs = totalDmdtfsPtr();
 
     forAllConstIter
     (
@@ -79,29 +82,32 @@ dmdtfs() const
                     )
                 );
 
-                if (dmdtfs.found(pair))
+                if (totalDmdtfs.found(pair))
                 {
-                    *dmdtfs[pair] += dmidtf;
+                    *totalDmdtfs[pair] += dmidtf;
                 }
                 else
                 {
-                    dmdtfs.insert(pair, dmidtf.ptr());
+                    totalDmdtfs.insert(pair, dmidtf.ptr());
                 }
             }
         }
     }
 
-    return dmdtPtr;
+    return totalDmdtfsPtr;
 }
 
 
 template<class BasePhaseSystem>
 Foam::autoPtr<Foam::phaseSystem::dmidtfTable>
 Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::
-dmidtfs() const
+totalDmidtfs() const
 {
-    autoPtr<phaseSystem::dmidtfTable> dmidtfsPtr(new phaseSystem::dmidtfTable);
-    phaseSystem::dmidtfTable& dmidtfs = dmidtfsPtr();
+    autoPtr<phaseSystem::dmidtfTable> totalDmidtfsPtr
+    (
+        new phaseSystem::dmidtfTable
+    );
+    phaseSystem::dmidtfTable& totalDmidtfs = totalDmidtfsPtr();
 
     forAllConstIter
     (
@@ -113,9 +119,9 @@ dmidtfs() const
         const phasePair& pair =
             this->phasePairs_[interfaceCompositionModelIter.key()];
 
-        if (!dmidtfs.found(pair))
+        if (!totalDmidtfs.found(pair))
         {
-            dmidtfs.insert(pair, new HashPtrTable<volScalarField>());
+            totalDmidtfs.insert(pair, new HashPtrTable<volScalarField>());
         }
 
         forAllConstIter(phasePair, pair, pairIter)
@@ -149,19 +155,19 @@ dmidtfs() const
                     )
                 );
 
-                if (dmidtfs[pair]->found(specie))
+                if (totalDmidtfs[pair]->found(specie))
                 {
-                    *(*dmidtfs[pair])[specie] += dmidtf;
+                    *(*totalDmidtfs[pair])[specie] += dmidtf;
                 }
                 else
                 {
-                    dmidtfs[pair]->insert(specie, dmidtf.ptr());
+                    totalDmidtfs[pair]->insert(specie, dmidtf.ptr());
                 }
             }
         }
     }
 
-    return dmidtfsPtr;
+    return totalDmidtfsPtr;
 }
 
 
@@ -257,6 +263,28 @@ InterfaceCompositionPhaseChangePhaseSystem
     {
         const phasePair& pair =
             this->phasePairs_[interfaceCompositionModelIter.key()];
+
+        dmdtfs_.insert
+        (
+            pair,
+            new volScalarField
+            (
+                IOobject
+                (
+                    IOobject::groupName
+                    (
+                        "interfaceCompositionPhaseChange:dmdtf",
+                        pair.name()
+                    ),
+                    this->mesh().time().timeName(),
+                    this->mesh(),
+                    IOobject::READ_IF_PRESENT,
+                    IOobject::AUTO_WRITE
+                ),
+                this->mesh(),
+                dimensionedScalar(dimDensity/dimTime, Zero)
+            )
+        );
 
         dmidtfSus_.insert(pair, new HashPtrTable<volScalarField>());
 
@@ -374,39 +402,11 @@ Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::dmdtf
 {
     tmp<volScalarField> tDmdtf = BasePhaseSystem::dmdtf(key);
 
-    if (interfaceCompositionModels_.found(key))
+    if (dmdtfs_.found(key))
     {
-        const phasePair& pair = this->phasePairs_[key];
+        const label dmdtSign(Pair<word>::compare(this->phasePairs_[key], key));
 
-        forAllConstIter(phasePair, pair, pairIter)
-        {
-            const autoPtr<interfaceCompositionModel>& compositionModelPtr =
-                interfaceCompositionModels_[key][pairIter.index()];
-
-            if (!compositionModelPtr.valid()) continue;
-
-            const interfaceCompositionModel& compositionModel =
-                compositionModelPtr();
-
-            const phaseModel& phase = *pairIter;
-
-            forAllConstIter
-            (
-                hashedWordList,
-                compositionModel.species(),
-                specieIter
-            )
-            {
-                const word& specie = *specieIter;
-
-                tDmdtf.ref() +=
-                    Pair<word>::compare(pair, key)
-                   *(
-                        *(*dmidtfSus_[pair])[specie]
-                      + *(*dmidtfSps_[pair])[specie]*phase.Y(specie)
-                    );
-            }
-        }
+        tDmdtf.ref() += dmdtSign**dmdtfs_[key];
     }
 
     return tDmdtf;
@@ -419,10 +419,7 @@ Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::dmdts() const
 {
     PtrList<volScalarField> dmdts(BasePhaseSystem::dmdts());
 
-    autoPtr<phaseSystem::dmdtfTable> dmdtfsPtr = this->dmdtfs();
-    const phaseSystem::dmdtfTable& dmdtfs = dmdtfsPtr();
-
-    forAllConstIter(phaseSystem::dmdtfTable, dmdtfs, dmdtfsIter)
+    forAllConstIter(phaseSystem::dmdtfTable, dmdtfs_, dmdtfsIter)
     {
         const phasePair& pair = this->phasePairs_[dmdtfsIter.key()];
         const phaseModel& phase = pair.phase1();
@@ -446,7 +443,7 @@ momentumTransfer()
 
     phaseSystem::momentumTransferTable& eqns = eqnsPtr();
 
-    this->addDmdtUfs(dmdtfs(), eqns);
+    this->addDmdtUfs(dmdtfs_, eqns);
 
     return eqnsPtr;
 }
@@ -462,7 +459,7 @@ momentumTransferf()
 
     phaseSystem::momentumTransferTable& eqns = eqnsPtr();
 
-    this->addDmdtUfs(dmdtfs(), eqns);
+    this->addDmdtUfs(dmdtfs_, eqns);
 
     return eqnsPtr;
 }
@@ -480,7 +477,7 @@ heatTransfer() const
 
     this->addDmidtHefs
     (
-        dmidtfs(),
+        totalDmidtfs(),
         Tfs_,
         latentHeatScheme::symmetric,
         latentHeatTransfer::mass,
@@ -503,7 +500,7 @@ specieTransfer() const
 
     // Explicit
     /*
-    this->addDmidtYf(dmidtfs(), eqns);
+    this->addDmidtYf(totalDmidtfs(), eqns);
     */
 
     // Semi-implicit
@@ -612,6 +609,18 @@ correct()
             }
         }
     }
+
+    dmdtfs_ = totalDmdtfs();
+}
+
+
+template<class BasePhaseSystem>
+void Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::
+correctSpecies()
+{
+    BasePhaseSystem::correctSpecies();
+
+    dmdtfs_ = totalDmdtfs();
 }
 
 
