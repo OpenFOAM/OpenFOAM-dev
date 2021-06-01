@@ -1,6 +1,7 @@
 basicThermo/basicThermo.C
 
 fluidThermo/fluidThermo.C
+fluidThermo/hydrostaticInitialisation.C
 
 psiThermo/psiThermo.C
 psiThermo/psiThermos.C
