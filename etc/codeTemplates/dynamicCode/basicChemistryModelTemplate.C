@@ -86,8 +86,10 @@ namespace Foam
     makeChemistrySolver(${solver}, ${method}ChemistryModel, ThermoPhysics);
 }
 
+#define standardChemistryModelCppTest 0
+#define TDACChemistryModelCppTest 1
 
-#if ${method} == TDAC
+#if ${method}CppTest == TDACChemistryModelCppTest
 
 #include "makeChemistryReductionMethod.H"
 #include "makeChemistryTabulationMethod.H"
