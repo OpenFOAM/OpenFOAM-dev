@@ -113,16 +113,16 @@ Foam::PopulationBalancePhaseSystem<BasePhaseSystem>::dmdtf
     const phasePairKey& key
 ) const
 {
-    tmp<volScalarField> tDmdt = BasePhaseSystem::dmdtf(key);
+    tmp<volScalarField> tDmdtf = BasePhaseSystem::dmdtf(key);
 
-    if (!dmdtfs_.found(key))
+    if (dmdtfs_.found(key))
     {
         const label dmdtSign(Pair<word>::compare(this->phasePairs_[key], key));
 
-        tDmdt.ref() += dmdtSign**dmdtfs_[key];
+        tDmdtf.ref() += dmdtSign**dmdtfs_[key];
     }
 
-    return tDmdt;
+    return tDmdtf;
 }
 
 
