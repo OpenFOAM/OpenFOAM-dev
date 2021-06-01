@@ -406,7 +406,7 @@ int APIENTRY WinMain(HINSTANCE hCurrentInst, HINSTANCE hPreviousInst,
     HWND  hWnd;                         /* window */
     MSG   msg;                          /* message */
 
-        // InitModel() initializes some data structures and
+        // InitModel() initialises some data structures and
         // does the progressive mesh polygon reduction algorithm
         // on the model.
         CalcFPSDeltaT(); // to time the algorithm

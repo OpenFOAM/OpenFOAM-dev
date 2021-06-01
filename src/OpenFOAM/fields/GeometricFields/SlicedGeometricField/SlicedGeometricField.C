@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ slicedBoundaryField
                 )
             );
 
-            // Initialize the values on the coupled patch to those of the slice
+            // Initialise the values on the coupled patch to those of the slice
             // of the given field.
             // Note: these will usually be over-ridden by the boundary field
             // evaluation e.g. in the case of processor and cyclic patches.

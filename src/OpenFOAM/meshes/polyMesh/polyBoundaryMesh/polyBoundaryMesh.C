@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -284,7 +284,7 @@ Foam::polyBoundaryMesh::nbrEdges() const
         nbrEdgesPtr_.reset(new List<labelPairList>(size()));
         List<labelPairList>& nbrEdges = nbrEdgesPtr_();
 
-        // Initialize.
+        // Initialise.
         label nEdgePairs = 0;
         forAll(*this, patchi)
         {

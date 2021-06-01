@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::RBD::rigidBodyMotion::initialize()
+void Foam::RBD::rigidBodyMotion::initialise()
 {
     // Calculate the initial body-state
     forwardDynamicsCorrection(rigidBodyModelState(*this));
@@ -72,7 +72,7 @@ Foam::RBD::rigidBodyMotion::rigidBodyMotion
         g() = vector(dict.lookup("g"));
     }
 
-    initialize();
+    initialise();
 }
 
 
@@ -96,7 +96,7 @@ Foam::RBD::rigidBodyMotion::rigidBodyMotion
         g() = vector(dict.lookup("g"));
     }
 
-    initialize();
+    initialise();
 }
 
 
@@ -274,7 +274,7 @@ Foam::tmp<Foam::pointField> Foam::RBD::rigidBodyMotion::transformPoints
 
     forAll(points, i)
     {
-        // Initialize to 1 for the far-field weight
+        // Initialise to 1 for the far-field weight
         scalar sum1mw = 1;
 
         forAll(bodyIDs, bi)

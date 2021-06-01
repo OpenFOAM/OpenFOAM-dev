@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ public:
         inline RectangularMatrix(const MatrixBlock<MatrixType>&);
 
         //- Construct with given number of rows and columns
-        //  initializing all elements to zero
+        //  initialising all elements to zero
         inline RectangularMatrix(const label m, const label n, const zero);
 
         //- Construct with given number of rows and columns

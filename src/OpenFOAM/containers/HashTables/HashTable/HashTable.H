@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -212,7 +212,7 @@ public:
         //- Move constructor
         HashTable(HashTable<T, Key, Hash>&&);
 
-        //- Construct from an initializer list
+        //- Construct from an initialiser list
         HashTable(std::initializer_list<Tuple2<Key, T>>);
 
 
@@ -315,7 +315,7 @@ public:
         //- Move assignment operator
         void operator=(HashTable<T, Key, Hash>&&);
 
-        //- Assignment to an initializer list
+        //- Assignment to an initialiser list
         void operator=(std::initializer_list<Tuple2<Key, T>>);
 
         //- Equality. Hash tables are equal if the keys and values are equal.

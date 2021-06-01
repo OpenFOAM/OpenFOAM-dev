@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -151,7 +151,7 @@ fi
 # ~~~~~~~~~~~~~~~~~~~~~~
 export WM_PROJECT_USER_DIR=$HOME/$WM_PROJECT/$USER-$WM_PROJECT_VERSION
 
-# Source initialization functions
+# Source initialisation functions
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 . $WM_PROJECT_DIR/etc/config.sh/functions
 
@@ -220,7 +220,7 @@ fi
 unset cleaned foamClean foamOldDirs
 
 
-# Unload initialization functions:
+# Unload initialisation functions:
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 . $WM_PROJECT_DIR/etc/config.sh/functions
 

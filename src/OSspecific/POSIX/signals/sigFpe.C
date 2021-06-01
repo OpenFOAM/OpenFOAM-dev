@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -75,7 +75,7 @@ void* Foam::sigFpe::mallocNan(size_t size)
     // Call the low-level GLIBC malloc function
     void * result = __libc_malloc(size);
 
-    // Initialize to signalling NaN
+    // Initialise to signalling NaN
     UList<scalar> lst(reinterpret_cast<scalar*>(result), size/sizeof(scalar));
     sigFpe::fillNan(lst);
 
@@ -138,7 +138,7 @@ Foam::sigFpe::~sigFpe()
     if (env("FOAM_SETNAN"))
     {
         #ifdef LINUX
-        // Disable initialization to NaN
+        // Disable initialisation to NaN
         mallocNanActive_ = false;
         #endif
     }

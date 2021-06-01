@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -35,7 +35,7 @@ void Foam::LUscalarMatrix::solve
     const Field<Type>& source
 ) const
 {
-    // If x and source are different initialize x = source
+    // If x and source are different initialise x = source
     if (&x != &source)
     {
         x = source;

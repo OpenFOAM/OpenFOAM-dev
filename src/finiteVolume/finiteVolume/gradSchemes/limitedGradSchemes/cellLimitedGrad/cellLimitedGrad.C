@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,7 +164,7 @@ Foam::fv::cellLimitedGrad<Type, Limiter>::calcGrad
     }
 
 
-    // Create limiter initialized to 1
+    // Create limiter initialised to 1
     // Note: the limiter is not permitted to be > 1
     Field<Type> limiter(vsf.primitiveField().size(), pTraits<Type>::one);
 

@@ -81,9 +81,9 @@ void Foam::chemistryReductionMethods::PFA<ThermoType>::reduceMechanism
     scalarField PA(this->nSpecie_,0.0);
     scalarField CA(this->nSpecie_,0.0);
 
-    // Number of initialized rAB for each lines
+    // Number of initialised rAB for each lines
     Field<label> NbrABInit(this->nSpecie_,0);
-    // Position of the initialized rAB, -1 when not initialized
+    // Position of the initialised rAB, -1 when not initialised
     RectangularMatrix<label> rABPos(this->nSpecie_, this->nSpecie_, -1);
     // Index of the other species involved in the rABNum
     RectangularMatrix<label> rABOtherSpec(this->nSpecie_, this->nSpecie_, -1);
@@ -239,10 +239,10 @@ void Foam::chemistryReductionMethods::PFA<ThermoType>::reduceMechanism
     RectangularMatrix<scalar> PAB2nd(this->nSpecie_,this->nSpecie_,0.0);
     RectangularMatrix<scalar> CAB2nd(this->nSpecie_,this->nSpecie_,0.0);
 
-    // Number of initialized rAB for each lines
+    // Number of initialised rAB for each lines
     Field<label> NbrABInit2nd(this->nSpecie_, 0);
 
-    // Position of the initialized rAB, -1 when not initialized
+    // Position of the initialised rAB, -1 when not initialised
     RectangularMatrix<label> rABPos2nd(this->nSpecie_, this->nSpecie_, -1);
 
     // Index of the other species involved in the rABNum
@@ -296,7 +296,7 @@ void Foam::chemistryReductionMethods::PFA<ThermoType>::reduceMechanism
         this->activeSpecies_[i] = false;
     }
 
-    // Initialize the FIFOStack for search set
+    // Initialise the FIFOStack for search set
     const labelList& SIS(this->searchInitSet_);
     FIFOStack<label> Q;
 

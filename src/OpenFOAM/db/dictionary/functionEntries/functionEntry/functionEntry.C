@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -191,7 +191,7 @@ bool Foam::functionEntry::execute
     {
         cerr<< "functionEntry::execute"
             << "(const word&, dictionary&, Istream&)"
-            << " not yet initialized, function = "
+            << " not yet initialised, function = "
             << functionName.c_str() << std::endl;
 
         // Return true to keep reading
@@ -234,7 +234,7 @@ bool Foam::functionEntry::execute
     {
         cerr<< "functionEntry::execute"
             << "(const word&, const dictionary&, primitiveEntry&, Istream&)"
-            << " not yet initialized, function = "
+            << " not yet initialised, function = "
             << functionName.c_str() << std::endl;
 
         // return true to keep reading anyhow

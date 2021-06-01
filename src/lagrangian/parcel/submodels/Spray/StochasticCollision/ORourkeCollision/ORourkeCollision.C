@@ -50,7 +50,7 @@ void Foam::ORourkeCollision<CloudType>::collide
         occupancy[iter().cell()]++;
     }
 
-    // Initialize the sizes of the lists of parcels in each cell
+    // Initialise the sizes of the lists of parcels in each cell
     CompactListList<parcelType*> pInCell(occupancy);
 
     // Reset the occupancy to use as a counter

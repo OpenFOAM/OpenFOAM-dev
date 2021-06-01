@@ -101,7 +101,7 @@ protected:
         //- Return a description (type + name) for the output
         virtual string description() const;
 
-        //- Get the dictionary to initialize the codeContext
+        //- Get the dictionary to initialise the codeContext
         virtual const dictionary& codeDict() const;
 
         //- Get the keywords associated with source code

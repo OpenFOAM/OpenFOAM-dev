@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1980,7 +1980,7 @@ void Foam::boundaryMesh::markFaces
     }
 
 
-    // Initialize zone for all faces to -1
+    // Initialise zone for all faces to -1
     labelList currentZone(mesh().size(), -1);
 
     // Mark with 0 all faces reachable from seedFacei

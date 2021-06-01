@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -270,7 +270,7 @@ void Foam::searchableSurfacesQueries::findNearestIntersection
    // 1. intersection from start to end
    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   // Initialize arguments
+   // Initialise arguments
    surface1.setSize(start.size());
    surface1 = -1;
    hit1.setSize(start.size());
@@ -306,7 +306,7 @@ void Foam::searchableSurfacesQueries::findNearestIntersection
    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    // Find the nearest intersection from end to start. Note that we
-   // initialize to the first intersection (if any).
+   // initialise to the first intersection (if any).
    surface2 = surface1;
    hit2 = hit1;
 

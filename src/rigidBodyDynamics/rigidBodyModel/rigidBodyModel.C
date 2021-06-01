@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,7 +43,7 @@ namespace RBD
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::RBD::rigidBodyModel::initializeRootBody()
+void Foam::RBD::rigidBodyModel::initialiseRootBody()
 {
     bodies_.append(new masslessBody("root"));
     lambda_.append(0);
@@ -167,7 +167,7 @@ Foam::RBD::rigidBodyModel::rigidBodyModel()
 :
     g_(Zero)
 {
-    initializeRootBody();
+    initialiseRootBody();
 }
 
 
@@ -175,7 +175,7 @@ Foam::RBD::rigidBodyModel::rigidBodyModel(const dictionary& dict)
 :
     g_(Zero)
 {
-    initializeRootBody();
+    initialiseRootBody();
 
     const dictionary& bodiesDict = dict.subDict("bodies");
 

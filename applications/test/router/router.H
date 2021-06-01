@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,7 +68,7 @@ Description
             + B
 
 
-    Lee algo: take array with same dimensions as grid of nodes. Initialize to
+    Lee algo: take array with same dimensions as grid of nodes. Initialise to
     large number. Put 0 at starting point. Now recursively assign neighbours
     as current value plus one. Stop if you hit node which has smaller number.
     Phase two is where you search path with lowest value. These are assigned

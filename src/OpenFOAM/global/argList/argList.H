@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -174,7 +174,7 @@ public:
         //- Standard name for the post-processing option
         static word postProcessOptionName;
 
-        // Class to initialize options table
+        // Class to initialise options table
         // with the standard case related options
         class initValidTables
         {

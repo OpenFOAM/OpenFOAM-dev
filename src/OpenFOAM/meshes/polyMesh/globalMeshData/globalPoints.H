@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ Description
     constructs a mapDistribute to send all data to this master.
 
     Algorithm:
-        - get meshPoints of all my points on processor patches and initialize
+        - get meshPoints of all my points on processor patches and initialise
           equivalence lists to this.
      loop
         - send to all neighbours in relative form:
@@ -218,7 +218,7 @@ class globalPoints
             const labelPairList& pointInfo
         ) const;
 
-        //- Initialize procPoints_ to my patch points. allPoints = true:
+        //- Initialise procPoints_ to my patch points. allPoints = true:
         //  seed with all patch points, = false: only boundaryPoints().
         void initOwnPoints
         (

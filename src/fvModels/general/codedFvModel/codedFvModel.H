@@ -124,7 +124,7 @@ class codedFvModel
         //- Clear any redirected objects
         virtual void clearRedirect() const;
 
-        //- Get the dictionary to initialize the codeContext
+        //- Get the dictionary to initialise the codeContext
         virtual const dictionary& codeDict() const;
 
         //- Get the keywords associated with source code

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -156,7 +156,7 @@ public:
         //- Construct null
         inline VectorSpace();
 
-        //- Construct initialized to zero
+        //- Construct initialised to zero
         inline VectorSpace(const Foam::zero);
 
         //- Construct from Istream

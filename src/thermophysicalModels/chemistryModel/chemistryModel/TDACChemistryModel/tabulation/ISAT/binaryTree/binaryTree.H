@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -168,13 +168,13 @@ public:
         // phiq the new composition to store
         // Rphiq the mapping of the new composition point
         // A the mapping gradient matrix
-        // B the matrix used to initialize the EOA
+        // B the matrix used to initialise the EOA
         // nCols the size of the matrix
         // Returns: void
         // Description :
-        //1) Create a new leaf with the data to initialize the EOA and to
+        //1) Create a new leaf with the data to initialise the EOA and to
         // retrieve the mapping by linear interpolation (the EOA is
-        // initialize in the chemPoint constructor)
+        // initialise in the chemPoint constructor)
         //2) Get the parent node of phi0 and connect a new node in place of the
         // leaf of phi0. This new node is constructed with phi0 on the left
         // and phiq on the right (the hyperplane is computed inside the

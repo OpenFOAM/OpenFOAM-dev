@@ -484,15 +484,7 @@
 
 *** Orthography
     Given the origins of OpenFOAM, the British spellings (/e.g./, neighbour and
-    not neighbor) are generally favoured.
-
-    Both '-ize' and the '-ise' variant are found in the code comments. If
-    used as a variable or class method name, it is probably better to use
-    '-ize', which is considered the main form by the Oxford University
-    Press. /e.g./,
-    #+begin_src C++
-    myClass.initialize()
-    #+end_src
+    not neighbor and '-ise' rather than '-ize') are generally favoured.
 *** References
     References provided in the =Description= section of the class header files
     should be formatted in the [[http://www.apastyle.org][APA (American

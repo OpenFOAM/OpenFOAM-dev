@@ -227,7 +227,7 @@ kOmegaSSTLM<BasicMomentumTransportModel>::ReThetat0
             max(100*sqrt((2.0/3.0)*k[celli])/Us[celli], scalar(0.027))
         );
 
-        // Initialize lambda to zero.
+        // Initialise lambda to zero.
         // If lambda were cached between time-steps convergence would be faster
         // starting from the previous time-step value.
         scalar lambda = 0;

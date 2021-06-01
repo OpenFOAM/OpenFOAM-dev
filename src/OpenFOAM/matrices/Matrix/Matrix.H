@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -115,11 +115,11 @@ public:
         Matrix(const label m, const label n);
 
         //- Construct with given number of rows and columns
-        //  initializing all elements to zero
+        //  initialising all elements to zero
         Matrix(const label m, const label n, const zero);
 
         //- Construct with given number of rows and columns
-        //  initializing all elements to the given value
+        //  initialising all elements to the given value
         Matrix(const label m, const label n, const Type&);
 
         //- Copy constructor.

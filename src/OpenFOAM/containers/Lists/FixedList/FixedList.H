@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -129,7 +129,7 @@ public:
         template<class InputIterator>
         inline FixedList(InputIterator first, InputIterator last);
 
-        //- Construct from an initializer list
+        //- Construct from an initialiser list
         inline FixedList(std::initializer_list<T>);
 
         //- Construct from UList
@@ -225,7 +225,7 @@ public:
         //- Assignment to SLList operator. Takes linear time
         inline void operator=(const SLList<T>&);
 
-        //- Assignment to an initializer list. Takes linear time
+        //- Assignment to an initialiser list. Takes linear time
         inline void operator=(std::initializer_list<T>);
 
         //- Assignment of all entries to the given value

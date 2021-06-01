@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ Description
 
     During this process, instead of looking over all species like described
     in [1], the algorithm implemented here creates dynamic list to retain
-    the initialized edges only (see [2]).
+    the initialised edges only (see [2]).
 
     To avoid using the target species when they are not contributing yet or
     anymore to the system, a coefficient based on the exchange of element is

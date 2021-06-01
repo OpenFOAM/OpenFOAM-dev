@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -996,7 +996,7 @@ void Foam::argList::parse
             {
                 Info<< "Roots  : " << roots << nl;
             }
-            Info<< "Pstream initialized with:" << nl
+            Info<< "Pstream initialised with:" << nl
                 << "    floatTransfer      : " << Pstream::floatTransfer << nl
                 << "    nProcsSimpleSum    : " << Pstream::nProcsSimpleSum << nl
                 << "    commsType          : "

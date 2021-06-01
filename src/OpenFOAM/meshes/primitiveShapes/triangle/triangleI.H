@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -319,7 +319,7 @@ inline Foam::pointHit Foam::triangle<Point, PointRef>::ray
     const vector E0 = b_ - a_;
     const vector E1 = c_ - a_;
 
-    // Initialize intersection to miss.
+    // Initialise intersection to miss.
     pointHit inter(p);
 
     vector n(0.5*(E0 ^ E1));

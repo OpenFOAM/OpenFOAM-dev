@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,9 +78,9 @@ class rigidBodyModel
 {
     // Private Member Functions
 
-        //- Initialize the model with the root-body
+        //- Initialise the model with the root-body
         //  which is a fixed massless bodyat the origin.
-        void initializeRootBody();
+        void initialiseRootBody();
 
         //- Resize the state fields following the joining of a body
         void resizeState();

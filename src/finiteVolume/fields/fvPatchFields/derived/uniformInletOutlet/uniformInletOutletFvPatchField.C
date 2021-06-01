@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,7 +97,7 @@ Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
     this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 
-    // Initialize the patch value to the refValue
+    // Initialise the patch value to the refValue
     fvPatchField<Type>::operator=(this->refValue());
 
     mapper(*this, ptf);

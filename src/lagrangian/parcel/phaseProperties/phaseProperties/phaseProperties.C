@@ -66,7 +66,7 @@ void Foam::phaseProperties::reorder(const wordList& specieNames)
     // Update the specie names to those given
     names_ = specieNames;
 
-    // Re-size mass-fractions if necessary, initialize to 0
+    // Re-size mass-fractions if necessary, initialise to 0
     if (names_.size() != names0.size())
     {
         Y_.setSize(names_.size());

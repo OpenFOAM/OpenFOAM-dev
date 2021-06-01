@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -202,9 +202,9 @@ protected:
             //  and reset lists
             void resetFields();
 
-            //- Reset lists (clear existing values) and initialize averaging.
+            //- Reset lists (clear existing values) and initialise averaging.
             //  Check requested field averages are valid, populate field lists
-            void initialize();
+            void initialise();
 
             //- Restart averaging for restartOnOutput
             void restart();

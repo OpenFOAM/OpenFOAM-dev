@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ void Foam::meshReader::calcPointCells() const
         ptCells[i].setSize(UNIT_POINT_CELLS);
     }
 
-    // Initialize the list of labels which will hold the count of the
+    // Initialise the list of labels which will hold the count of the
     // actual number of cells per point during the analysis
     labelList cellCount(nPoints, 0);
 

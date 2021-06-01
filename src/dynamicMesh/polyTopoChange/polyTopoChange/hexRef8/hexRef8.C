@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -2351,7 +2351,7 @@ Foam::labelList Foam::hexRef8::consistentSlowRefinement
     // Bit tricky. Say we want a distance of three cells between two
     // consecutive refinement levels. This is done by using FaceCellWave to
     // transport out the new refinement level. It gets decremented by one
-    // every cell it crosses so if we initialize it to maxFaceDiff
+    // every cell it crosses so if we initialise it to maxFaceDiff
     // we will get a field everywhere that tells us whether an unselected cell
     // needs refining as well.
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -117,7 +117,7 @@ public:
 
     // Constructors
 
-        //- Construct from mesh, information on patches to initialize and flag
+        //- Construct from mesh, information on patches to initialise and flag
         //  whether or not to correct wall.
         //  Calculate for all cells. correctWalls : correct wall (face&point)
         //  cells for correct distance, searching neighbours.

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -78,7 +78,7 @@ void Foam::functionObjects::fieldAverage::resetFields()
 }
 
 
-void Foam::functionObjects::fieldAverage::initialize()
+void Foam::functionObjects::fieldAverage::initialise()
 {
     if (!totalIter_.size())
     {
@@ -91,7 +91,7 @@ void Foam::functionObjects::fieldAverage::initialize()
     }
     else
     {
-        // Check if totalTime_ has been set otherwise initialize
+        // Check if totalTime_ has been set otherwise initialise
         forAll(totalTime_, fieldi)
         {
             if (totalTime_[fieldi] < 0)
@@ -135,7 +135,7 @@ void Foam::functionObjects::fieldAverage::restart()
     totalIter_.clear();
     totalTime_.clear();
 
-    initialize();
+    initialise();
 }
 
 
@@ -143,7 +143,7 @@ void Foam::functionObjects::fieldAverage::calcAverages()
 {
     if (!initialised_)
     {
-        initialize();
+        initialise();
     }
 
     const label currentTimeIndex = obr_.time().timeIndex();
@@ -267,7 +267,7 @@ void Foam::functionObjects::fieldAverage::readAveragingProperties()
 
         totalIter_.setSize(faItems_.size(), 1);
 
-        // Initialize totalTime with negative values
+        // Initialise totalTime with negative values
         // to indicate that it has not been set
         totalTime_.setSize(faItems_.size(), -1);
 

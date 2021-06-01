@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -99,7 +99,7 @@ public:
 
     // Constructors
 
-        //- Null constructor, initializes to zero
+        //- Null constructor, initialises to zero
         inline rigidBodyInertia();
 
         //- Construct from mass, centre of mass and moment of inertia tensor

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,7 +52,7 @@ class Identity
 
 public:
 
-    //- Construct initializing the SphericalTensor to 1
+    //- Construct initialising the SphericalTensor to 1
     Identity()
     :
         SphericalTensor<Cmpt>(1)
@@ -63,7 +63,7 @@ public:
     :
         public SphericalTensor<Cmpt>
     {
-        //- Construct initializing the SphericalTensor to 1
+        //- Construct initialising the SphericalTensor to 1
         dual()
         :
             SphericalTensor<Cmpt>(1)

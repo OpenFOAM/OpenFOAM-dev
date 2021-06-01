@@ -99,7 +99,7 @@ perturbedTemperatureDependentContactAngleForce::theta() const
 
     const volScalarField& T = film.thermo().T();
 
-    // Initialize with the function of temperature
+    // Initialise with the function of temperature
     thetai.field() = thetaPtr_->value(T());
 
     // Add the stochastic perturbation
@@ -114,7 +114,7 @@ perturbedTemperatureDependentContactAngleForce::theta() const
         {
             fvPatchField<scalar>& thetaf = theta.boundaryFieldRef()[patchi];
 
-            // Initialize with the function of temperature
+            // Initialise with the function of temperature
             thetaf = thetaPtr_->value(T.boundaryField()[patchi]);
 
             // Add the stochastic perturbation

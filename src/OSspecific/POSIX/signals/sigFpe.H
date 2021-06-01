@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,8 +31,8 @@ Description
       - \par FOAM_SIGFPE
         Exception trapping
       - \par FOAM_SETNAN
-        Initialization of all malloced memory to NaN. If FOAM_SIGFPE
-        also set, this will cause usage of uninitialized scalars to trigger
+        Initialisation of all malloced memory to NaN. If FOAM_SIGFPE
+        also set, this will cause usage of uninitialised scalars to trigger
         an abort.
 
 SourceFiles
@@ -104,7 +104,7 @@ public:
         static bool mallocNanActive_;
 
         #ifdef LINUX
-        //- Malloc function which initializes to NaN
+        //- Malloc function which initialises to NaN
         static void* mallocNan(size_t size);
         #endif
 

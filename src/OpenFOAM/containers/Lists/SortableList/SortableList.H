@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -87,7 +87,7 @@ public:
         //- Move constructor
         SortableList(SortableList<T>&&);
 
-        //- Construct from an initializer list, sorting immediately
+        //- Construct from an initialiser list, sorting immediately
         SortableList(std::initializer_list<T>);
 
 
@@ -133,7 +133,7 @@ public:
         //- Move assignment operator
         inline void operator=(SortableList<T>&&);
 
-        //- Assignment to an initializer list
+        //- Assignment to an initialiser list
         void operator=(std::initializer_list<T>);
 };
 

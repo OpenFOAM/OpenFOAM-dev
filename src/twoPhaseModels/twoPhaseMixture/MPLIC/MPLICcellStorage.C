@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,7 +50,7 @@ Foam::boolList Foam::MPLICcellStorage::calcIsOwner
 
 Foam::scalar Foam::MPLICcellStorage::calcAlphaMin() const
 {
-    // Initialize with the first value in the list
+    // Initialise with the first value in the list
     scalar cellAlphaMin(pointsAlpha_.first());
 
     // Loop through the rest and compare element-wise
@@ -67,7 +67,7 @@ Foam::scalar Foam::MPLICcellStorage::calcAlphaMin() const
 
 Foam::scalar Foam::MPLICcellStorage::calcAlphaMax() const
 {
-    // Initialize with the first value in the list
+    // Initialise with the first value in the list
     scalar cellAlphaMax(pointsAlpha_.first());
 
     // Loop through the rest and compare element-wise
@@ -91,7 +91,7 @@ Foam::scalarField Foam::MPLICcellStorage::calcFacesAlphaMin() const
         // Face
         const face& f = faces_[cFaces_[facei]];
 
-        // Initialize with the first value in the list
+        // Initialise with the first value in the list
         scalar fAlphaMin(pointsAlpha_[f.first()]);
 
         // Loop through the rest and compare element-wise
@@ -117,7 +117,7 @@ Foam::scalarField Foam::MPLICcellStorage::calcFacesAlphaMax() const
         // Face
         const face& f = faces_[cFaces_[facei]];
 
-        // Initialize with the first value in the list
+        // Initialise with the first value in the list
         scalar fAlphaMax(pointsAlpha_[f.first()]);
 
         // Loop through the rest and compare element-wise

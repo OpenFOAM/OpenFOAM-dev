@@ -2054,7 +2054,7 @@ int *ivec_indicator ( int n )
 //
 //    Input, int N, the number of elements of A.
 //
-//    Output, int IVEC_INDICATOR(N), the initialized array.
+//    Output, int IVEC_INDICATOR(N), the initialised array.
 //
 {
   int *a;

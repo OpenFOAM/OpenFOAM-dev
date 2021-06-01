@@ -66,7 +66,7 @@ Foam::TDACChemistryModel<ThermoType>::TDACChemistryModel
     );
 
     // When the mechanism reduction method is used, the 'active' flag for every
-    // species should be initialized (by default 'active' is true)
+    // species should be initialised (by default 'active' is true)
     if (mechRed_->active())
     {
         forAll(this->Y(), i)

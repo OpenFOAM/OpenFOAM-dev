@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -879,14 +879,14 @@ void Foam::globalPoints::calculateSharedPoints
 
     labelHashSet changedPoints(2*nPatchPoints_);
 
-    // Initialize procPoints with my patch points. Keep track of points
+    // Initialise procPoints with my patch points. Keep track of points
     // inserted (in changedPoints)
     // There are two possible forms of this:
-    // - initialize with all patch points (allPoints = true). This causes all
+    // - initialise with all patch points (allPoints = true). This causes all
     //   patch points to be exchanged so a lot of information gets stored and
     //   transferred. This all gets filtered out later when removing the
     //   equivalence lists of size 2.
-    // - initialize with boundary points of patches only (allPoints = false).
+    // - initialise with boundary points of patches only (allPoints = false).
     //   This should work for all decompositions except extreme ones where a
     //   shared point is not on the boundary of any processor patches using it.
     //   This would happen if a domain was pinched such that two patches share

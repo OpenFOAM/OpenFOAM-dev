@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -666,7 +666,7 @@ int main(int argc, char *argv[])
                 << exit(FatalError);
         }
 
-        // Open the file.  Because we did not initialize 'err' we need to pass
+        // Open the file.  Because we did not initialise 'err' we need to pass
         // in nullptr (which always means kCCMIONoErr) and then assign the
         // return value to 'err'.).
         CCMIOID root;
@@ -694,7 +694,7 @@ int main(int argc, char *argv[])
             << endl;
         delete [] desc;
 
-        // Find the first processor (i has previously been initialized to 0) and
+        // Find the first processor (i has previously been initialised to 0) and
         // read the mesh and solution information.
         int i = 0;
         CCMIOID processor;

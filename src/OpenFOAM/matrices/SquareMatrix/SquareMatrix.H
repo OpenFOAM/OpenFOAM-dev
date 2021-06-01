@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -80,19 +80,19 @@ public:
         inline SquareMatrix(const MatrixBlock<MatrixType>&);
 
         //- Construct given number of rows/columns
-        //  initializing all elements to zero
+        //  initialising all elements to zero
         inline SquareMatrix(const label n, const zero);
 
         //- Construct given number of rows and columns (checked to be equal)
-        //  initializing all elements to zero
+        //  initialising all elements to zero
         inline SquareMatrix(const label m, const label n, const zero);
 
         //- Construct given number of rows/columns
-        //  Initializing to the identity matrix
+        //  Initialising to the identity matrix
         inline SquareMatrix(const label n, const Identity<Type>);
 
         //- Construct with given number of rows and rows
-        //  initializing all elements to the given value
+        //  initialising all elements to the given value
         inline SquareMatrix(const label n, const Type&);
 
         //- Construct as copy of a RectangularMatrix

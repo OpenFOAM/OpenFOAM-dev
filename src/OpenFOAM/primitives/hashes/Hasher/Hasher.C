@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -555,7 +555,7 @@ unsigned Foam::HasherInt
 // ----------------------------------------------------------------------------
 // hashword2() -- same as hashword(), but take two seeds and return two
 // 32-bit values.  pc and pb must both be non-null, and *pc and *pb must
-// both be initialized with seeds.  If you pass in (*pb)==0, the output
+// both be initialised with seeds.  If you pass in (*pb)==0, the output
 // (*pc) will be the same as the return value from hashword().
 // ----------------------------------------------------------------------------
 unsigned Foam::HasherDual

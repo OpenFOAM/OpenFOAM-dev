@@ -54,7 +54,7 @@ void Foam::CorrectPhi
     const fvMesh& mesh = phi.mesh();
     const Time& runTime = mesh.time();
 
-    // Initialize BCs list for pcorr to zero-gradient
+    // Initialise BCs list for pcorr to zero-gradient
     wordList pcorrTypes
     (
         p.boundaryField().size(),
@@ -128,7 +128,7 @@ void Foam::CorrectPhi
     const fvMesh& mesh = phi.mesh();
     const Time& runTime = mesh.time();
 
-    // Initialize BCs list for pcorr to zero-gradient
+    // Initialise BCs list for pcorr to zero-gradient
     wordList pcorrTypes
     (
         p.boundaryField().size(),

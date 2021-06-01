@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ License
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class Type>
-void Foam::dimensioned<Type>::initialize(Istream& is)
+void Foam::dimensioned<Type>::initialise(Istream& is)
 {
     token nextToken(is);
     is.putBack(nextToken);
@@ -161,7 +161,7 @@ Foam::dimensioned<Type>::dimensioned
     dimensions_(dimSet),
     value_(Zero)
 {
-    initialize(is);
+    initialise(is);
 }
 
 
@@ -177,7 +177,7 @@ Foam::dimensioned<Type>::dimensioned
     dimensions_(dimSet),
     value_(Zero)
 {
-    initialize(dict.lookup(name));
+    initialise(dict.lookup(name));
 }
 
 

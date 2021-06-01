@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,7 +24,7 @@ License
 Description
     boundary faces
     - use pointCells when searching for connectivity
-    - initialize the cell connectivity with '-1'
+    - initialise the cell connectivity with '-1'
     - find both cell faces corresponding to the baffles and mark them
       to prevent a connection
     - standard connectivity checks

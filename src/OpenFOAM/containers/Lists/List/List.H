@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -141,7 +141,7 @@ public:
         //- Construct with given size and value for all elements
         List(const label, const T&);
 
-        //- Construct with given size initializing all elements to zero
+        //- Construct with given size initialising all elements to zero
         List(const label, const zero);
 
         //- Copy constructor
@@ -180,7 +180,7 @@ public:
         //- Construct as copy of BiIndirectList<T>
         explicit List(const BiIndirectList<T>&);
 
-        //- Construct from an initializer list
+        //- Construct from an initialiser list
         List(std::initializer_list<T>);
 
         //- Construct from Istream
@@ -273,7 +273,7 @@ public:
         //- Assignment to BiIndirectList operator. Takes linear time
         void operator=(const BiIndirectList<T>&);
 
-        //- Assignment to an initializer list
+        //- Assignment to an initialiser list
         void operator=(std::initializer_list<T>);
 
         //- Assignment of all entries to the given value

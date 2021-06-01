@@ -77,10 +77,10 @@ void Foam::chemistryReductionMethods::DRG<ThermoType>::reduceMechanism
     RectangularMatrix<scalar> rABNum(this->nSpecie_,this->nSpecie_,0.0);
     scalarField rABDen(this->nSpecie_,0.0);
 
-    // Number of initialized rAB for each lines
+    // Number of initialised rAB for each lines
     Field<label> NbrABInit(this->nSpecie_,0);
 
-    // Position of the initialized rAB, -1 when not initialized
+    // Position of the initialised rAB, -1 when not initialised
     RectangularMatrix<label> rABPos(this->nSpecie_, this->nSpecie_, -1);
 
     // Index of the other species involved in the rABNum
@@ -178,7 +178,7 @@ void Foam::chemistryReductionMethods::DRG<ThermoType>::reduceMechanism
                     // Disable to avoid counting it more than once
                     deltaBi[curIndex] = false;
 
-                    // Test if this rAB is not initialized
+                    // Test if this rAB is not initialised
                     if (rABPos(curID, curIndex)==-1)
                     {
                         rABPos(curID, curIndex) = NbrABInit[curID];
@@ -215,7 +215,7 @@ void Foam::chemistryReductionMethods::DRG<ThermoType>::reduceMechanism
 
     FIFOStack<label> Q;
 
-    // Initialize the list of active species with the search initiating set
+    // Initialise the list of active species with the search initiating set
     // (SIS)
     for (label i=0; i<searchInitSet_.size(); i++)
     {

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,11 +164,11 @@ inline void Foam::MPLICcell::phiU
 {
     const label nFaces = cFaces.size();
 
-    // Set size and initialize alphaPhiU
+    // Set size and initialise alphaPhiU
     alphaPhiU_.setSize(nFaces);
     alphaPhiU_ = 0;
 
-    // Set size and initialize phiU
+    // Set size and initialise phiU
     phiU_.setSize(nFaces);
 
     // Reconstruct fluxes

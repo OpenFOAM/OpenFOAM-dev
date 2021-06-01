@@ -3,7 +3,7 @@
  *  Permission to use any of this code wherever you want is granted..
  *  Although, please do acknowledge authorship if appropriate.
  *
- *  This module initializes the bunny model data and calls
+ *  This module initialises the bunny model data and calls
  *  the polygon reduction routine.  At each frame the RenderModel()
  *  routine is called to draw the model.  This module also
  *  animates the parameters (such as number of vertices to

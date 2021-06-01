@@ -654,7 +654,7 @@ bool Foam::functionObjectList::read()
     bool ok = true;
     updated_ = execution_;
 
-    // Avoid reading/initializing if execution is off
+    // Avoid reading/initialising if execution is off
     if (!execution_)
     {
         return true;

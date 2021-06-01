@@ -8,7 +8,7 @@ application=$(getApplication)
 
 ./Allmesh
 
-# Initialize alpha
+# Initialise alpha
 runApplication setFields
 
 # Decompose

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -91,7 +91,7 @@ public:
             HashTable<T, label, Hash<label>>(move(map))
         {}
 
-        //- Construct from an initializer list
+        //- Construct from an initialiser list
         Map(std::initializer_list<Tuple2<label, T>> map)
         :
             HashTable<T, label, Hash<label>>(map)

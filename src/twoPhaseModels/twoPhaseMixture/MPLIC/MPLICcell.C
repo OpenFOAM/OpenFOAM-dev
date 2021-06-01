@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2020-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,7 +42,7 @@ Foam::label Foam::MPLICcell::calcMatchAlphaCutCell
 
     const UIndirectList<scalar>& cellMagSfs = cellInfo.magSf();
 
-    // Initialize fluxes from velocity point values
+    // Initialise fluxes from velocity point values
     if (!unweighted_)
     {
         phiU
@@ -741,7 +741,7 @@ bool Foam::MPLICcell::multiCutCell
     // Keep track of the fully submerged subfaces
     boolList submerged(cellInfo.size(), false);
 
-    // Initialize the list of necessary labels
+    // Initialise the list of necessary labels
     label facei, nextFace, faceEdgei, status;
 
     // Loop through all the cuts

@@ -112,10 +112,10 @@ void Foam::chemistryReductionMethods::EFA<ThermoType>::reduceMechanism
     c1[this->nSpecie_+1] = p;
 
 
-    // Number of initialized rAB for each lines
+    // Number of initialised rAB for each lines
     Field<label> NbrABInit(this->nSpecie_,0);
 
-    // Position of the initialized rAB, -1 when not initialized
+    // Position of the initialised rAB, -1 when not initialised
     RectangularMatrix<label> rABPos(this->nSpecie_, this->nSpecie_, -1);
     RectangularMatrix<scalar> CFluxAB(this->nSpecie_, this->nSpecie_, 0.0);
     RectangularMatrix<scalar> HFluxAB(this->nSpecie_, this->nSpecie_, 0.0);
@@ -162,7 +162,7 @@ void Foam::chemistryReductionMethods::EFA<ThermoType>::reduceMechanism
             {
                 label B = R.rhs()[Bi].index;
                 scalar Bcoeff = R.rhs()[Bi].stoichCoeff;
-                // if a pair in the reversed way has not been initialized
+                // if a pair in the reversed way has not been initialised
                 if (rABPos(B, A)==-1)
                 {
                     label otherS = rABPos(A, B);
@@ -194,7 +194,7 @@ void Foam::chemistryReductionMethods::EFA<ThermoType>::reduceMechanism
                             fr*Acoeff*sN_[A]*Bcoeff*sN_[B]/NNi;
                     }
                 }
-                // If a pair BA is initialized,
+                // If a pair BA is initialised,
                 // add the element flux to this pair
                 else
                 {

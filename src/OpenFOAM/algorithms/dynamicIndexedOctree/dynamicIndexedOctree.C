@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1493,7 +1493,7 @@ Foam::pointIndexHit Foam::dynamicIndexedOctree<Type>::findLine
             << " bb:" << subBbox(nodeI, octant) << endl;
     }
 
-    // Current position. Initialize to miss
+    // Current position. Initialise to miss
     pointIndexHit hitInfo(false, treeStart, -1);
 
     // while (true)

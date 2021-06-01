@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -319,7 +319,7 @@ void Foam::blockMesh::calcMergeInfoFast()
             << flush;
     }
 
-    // Size merge list and initialize to -1
+    // Size merge list and initialise to -1
     mergeList_.setSize(nPoints_, -1);
 
     // Block mesh topology

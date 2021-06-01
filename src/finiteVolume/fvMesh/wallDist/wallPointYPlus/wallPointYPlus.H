@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
 
     Used in VanDriest wall damping where the interest is in y+ but only
     needs to be calculated up to e.g. y+ < 200. In all other cells/faces
-    the damping function becomes 1, since y gets initialized to great and
+    the damping function becomes 1, since y gets initialised to great and
     yStar to 1.
 
     Note: should feed the additional argument (yPlusCutoff) through as a

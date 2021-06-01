@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,7 +96,7 @@ public:
         //- Construct from Istream
         PackedBoolList(Istream&);
 
-        //- Construct with given size, initializes list to 0
+        //- Construct with given size, initialises list to 0
         explicit inline PackedBoolList(const label size);
 
         //- Construct with given size and value for all elements

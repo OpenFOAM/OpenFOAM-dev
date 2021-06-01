@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -390,7 +390,7 @@ void Foam::binaryTree<ThermoType>::insertNewLeaf
         // create an empty binary node and point root_ to it
         root_ = new bn();
         // create the new chemPoint which holds the composition point
-        // phiq and the data to initialize the EOA
+        // phiq and the data to initialise the EOA
         chP* newChemPoint =
             new chP
             (
@@ -417,7 +417,7 @@ void Foam::binaryTree<ThermoType>::insertNewLeaf
         bn* parentNode = phi0->node();
 
         // create the new chemPoint which holds the composition point
-        // phiq and the data to initialize the EOA
+        // phiq and the data to initialise the EOA
         chP* newChemPoint =
             new chP
             (
@@ -517,7 +517,7 @@ bool Foam::binaryTree<ThermoType>::secondaryBTSearch
     chP*& x
 )
 {
-    // initialize n2ndSearch_
+    // initialise n2ndSearch_
     n2ndSearch_ = 0;
     if ((n2ndSearch_ < max2ndSearch_) && (size_ > 1))
     {

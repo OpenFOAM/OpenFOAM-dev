@@ -387,7 +387,7 @@ int main(int argc, char *argv[])
                         )
                     );
 
-                    // Initialize its addressing
+                    // Initialise its addressing
                     cellProcAddressing[proci] = identity(meshToAdd.nCells());
                     faceProcAddressing[proci] = identity(meshToAdd.nFaces());
                     pointProcAddressing[proci] = identity(meshToAdd.nPoints());

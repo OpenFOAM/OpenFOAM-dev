@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -29,7 +29,7 @@ Description
 
     The constructors for the derived classes should generally start in a
     'expired' condition (ie, needsUpdate() == true) and rely on a
-    subsequent call to the update() method to complete the initialization.
+    subsequent call to the update() method to complete the initialisation.
     Delaying the final construction as late as possible allows the
     construction of surfaces that may depend on intermediate calculation
     results (eg, iso-surfaces) and also avoids the unnecessary
