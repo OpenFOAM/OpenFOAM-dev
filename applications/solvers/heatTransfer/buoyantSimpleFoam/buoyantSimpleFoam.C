@@ -35,6 +35,7 @@ Description
 #include "fluidThermophysicalTransportModel.H"
 #include "simpleControl.H"
 #include "pressureReference.H"
+#include "hydrostaticInitialisation.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 

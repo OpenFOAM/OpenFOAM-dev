@@ -43,6 +43,7 @@ Description
 #include "multivariateScheme.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
+#include "hydrostaticInitialisation.H"
 #include "CorrectPhi.H"
 #include "fvModels.H"
 #include "fvConstraints.H"

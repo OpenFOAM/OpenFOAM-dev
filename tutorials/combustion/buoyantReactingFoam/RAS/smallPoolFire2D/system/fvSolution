@@ -98,7 +98,7 @@ PIMPLE
     nCorrectors       2;
     nNonOrthogonalCorrectors 0;
 
-    hydrostaticInitialization yes;
+    hydrostaticInitialisation yes;
     nHydrostaticCorrectors 5;
 }
 

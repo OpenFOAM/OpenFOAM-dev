@@ -96,7 +96,18 @@ pressureReference pressureReference
 
 mesh.setFluxRequired(p_rgh.name());
 
-#include "hydrostaticInitialisation.H"
+hydrostaticInitialisation
+(
+    p_rgh,
+    p,
+    rho,
+    U,
+    gh,
+    ghf,
+    pRef,
+    thermo,
+    pimple.dict()
+);
 
 Info<< "Creating field dpdt\n" << endl;
 volScalarField dpdt

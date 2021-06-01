@@ -41,6 +41,7 @@ Description
 #include "fluidThermophysicalTransportModel.H"
 #include "pimpleControl.H"
 #include "pressureReference.H"
+#include "hydrostaticInitialisation.H"
 #include "CorrectPhi.H"
 #include "fvModels.H"
 #include "fvConstraints.H"

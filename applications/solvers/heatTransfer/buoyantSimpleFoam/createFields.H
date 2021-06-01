@@ -74,9 +74,6 @@ volScalarField p_rgh
     mesh
 );
 
-// Force p_rgh to be consistent with p
-p_rgh = p - rho*gh - pRef;
-
 pressureReference pressureReference
 (
     p,
@@ -86,6 +83,19 @@ pressureReference pressureReference
 );
 
 mesh.setFluxRequired(p_rgh.name());
+
+hydrostaticInitialisation
+(
+    p_rgh,
+    p,
+    rho,
+    U,
+    gh,
+    ghf,
+    pRef,
+    thermo,
+    simple.dict()
+);
 
 dimensionedScalar initialMass = fvc::domainIntegrate(rho);
 
