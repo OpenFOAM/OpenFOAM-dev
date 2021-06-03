@@ -32,16 +32,9 @@ License
 // * * * * * * * * * * * * Private Member Functions * * * * * * * * * * * * //
 
 template<class BasePhaseSystem>
-Foam::autoPtr<Foam::phaseSystem::dmdtfTable>
-Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::
-totalDmdtfs() const
+void Foam::InterfaceCompositionPhaseChangePhaseSystem<BasePhaseSystem>::
+correctDmdtfs()
 {
-    autoPtr<phaseSystem::dmdtfTable> totalDmdtfsPtr
-    (
-        new phaseSystem::dmdtfTable
-    );
-    phaseSystem::dmdtfTable& totalDmdtfs = totalDmdtfsPtr();
-
     forAllConstIter
     (
         interfaceCompositionModelTable,
@@ -51,6 +44,8 @@ totalDmdtfs() const
     {
         const phasePair& pair =
             this->phasePairs_[interfaceCompositionModelIter.key()];
+
+        *dmdtfs_[pair] = Zero;
 
         forAllConstIter(phasePair, pair, pairIter)
         {
@@ -73,28 +68,15 @@ totalDmdtfs() const
             {
                 const word& specie = *specieIter;
 
-                tmp<volScalarField> dmidtf
-                (
+                *dmdtfs_[pair] +=
                     (pairIter.index() == 0 ? +1 : -1)
                    *(
                         *(*dmidtfSus_[pair])[specie]
                       + *(*dmidtfSps_[pair])[specie]*phase.Y(specie)
-                    )
-                );
-
-                if (totalDmdtfs.found(pair))
-                {
-                    *totalDmdtfs[pair] += dmidtf;
-                }
-                else
-                {
-                    totalDmdtfs.insert(pair, dmidtf.ptr());
-                }
+                    );
             }
         }
     }
-
-    return totalDmdtfsPtr;
 }
 
 
@@ -610,7 +592,7 @@ correct()
         }
     }
 
-    dmdtfs_ = totalDmdtfs();
+    correctDmdtfs();
 }
 
 
@@ -620,7 +602,7 @@ correctSpecies()
 {
     BasePhaseSystem::correctSpecies();
 
-    dmdtfs_ = totalDmdtfs();
+    correctDmdtfs();
 }
 
 

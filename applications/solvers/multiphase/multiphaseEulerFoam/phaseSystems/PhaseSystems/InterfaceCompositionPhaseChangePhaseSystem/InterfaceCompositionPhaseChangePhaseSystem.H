@@ -108,8 +108,8 @@ class InterfaceCompositionPhaseChangePhaseSystem
 
     // Private Member Functions
 
-        //- Return mass transfers across each interface
-        autoPtr<phaseSystem::dmdtfTable> totalDmdtfs() const;
+        //- Correct mass transfers across each interface
+        void correctDmdtfs();
 
         //- Return species mass transfers across each interface
         autoPtr<phaseSystem::dmidtfTable> totalDmidtfs() const;
