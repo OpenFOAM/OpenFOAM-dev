@@ -399,7 +399,7 @@ tmp<volScalarField> mixtureKEpsilon<BasicMomentumTransportModel>::Ct2() const
 
     volScalarField beta
     (
-        (6*this->Cmu_/(4*sqrt(3.0/2.0)))
+        (6*this->Cmu_/(4*sqrt(3.0/2.0))) // (6*this->Cmu_/(2*sqrt(3.0/2.0))) or (2*this->Cmu_/(sqrt(2.0/3.0)))
        *drag.K()/liquid.rho()
        *(liquidTurbulence.k_/liquidTurbulence.epsilon_)
     );
