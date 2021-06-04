@@ -167,13 +167,13 @@ void Foam::diameterModels::populationBalanceModel::registerSizeGroups
         )
     );
 
-    SuSp_.append
+    Sp_.append
     (
         new volScalarField
         (
             IOobject
             (
-                "SuSp",
+                "Sp",
                 fluid_.time().timeName(),
                 mesh_
             ),
@@ -344,11 +344,11 @@ deathByCoalescence
     const sizeGroup& fi = sizeGroups_[i];
     const sizeGroup& fj = sizeGroups_[j];
 
-    SuSp_[i] += coalescenceRate_()*fi.phase()*fj*fj.phase()/fj.x();
+    Sp_[i] += coalescenceRate_()*fi.phase()*fj*fj.phase()/fj.x();
 
     if (i != j)
     {
-        SuSp_[j] += coalescenceRate_()*fj.phase()*fi*fi.phase()/fi.x();
+        Sp_[j] += coalescenceRate_()*fj.phase()*fi*fi.phase()/fi.x();
     }
 }
 
@@ -397,7 +397,7 @@ void Foam::diameterModels::populationBalanceModel::deathByBreakup(const label i)
 {
     const sizeGroup& fi = sizeGroups_[i];
 
-    SuSp_[i] += breakupRate_()*fi.phase();
+    Sp_[i] += breakupRate_()*fi.phase();
 }
 
 
@@ -524,7 +524,7 @@ deathByBinaryBreakup
 {
     const volScalarField& alphai = sizeGroups_[i].phase();
 
-    SuSp_[i] += alphai*binaryBreakupRate_()*delta_[j][i];
+    Sp_[i] += alphai*binaryBreakupRate_()*delta_[j][i];
 }
 
 
@@ -536,77 +536,18 @@ void Foam::diameterModels::populationBalanceModel::drift
 {
     model.addToDriftRate(driftRate_(), i);
 
-    const sizeGroup& fp = sizeGroups_[i];
+    const sizeGroup& fp = sizeGroups()[i];
 
-    if (i == 0)
+    if (i < sizeGroups().size() - 1)
     {
-        rx_() = pos(driftRate_())*sizeGroups_[i+1].x()/sizeGroups_[i].x();
-    }
-    else if (i == sizeGroups_.size() - 1)
-    {
-        rx_() = neg(driftRate_())*sizeGroups_[i-1].x()/sizeGroups_[i].x();
-    }
-    else
-    {
-        rx_() =
-            pos(driftRate_())*sizeGroups_[i+1].x()/sizeGroups_[i].x()
-          + neg(driftRate_())*sizeGroups_[i-1].x()/sizeGroups_[i].x();
-    }
-
-    SuSp_[i] +=
-        (neg(1 - rx_()) + neg(rx_() - rx_()/(1 - rx_())))*driftRate_()
-       *fp.phase()/((rx_() - 1)*fp.x());
-
-    rx_() = Zero;
-    rdx_() = Zero;
-
-    if (i == sizeGroups_.size() - 2)
-    {
-        rx_() = pos(driftRate_())*sizeGroups_[i+1].x()/sizeGroups_[i].x();
-
-        rdx_() =
-            pos(driftRate_())
-           *(sizeGroups_[i+1].x() - sizeGroups_[i].x())
-           /(sizeGroups_[i].x() - sizeGroups_[i-1].x());
-    }
-    else if (i < sizeGroups_.size() - 2)
-    {
-        rx_() = pos(driftRate_())*sizeGroups_[i+2].x()/sizeGroups_[i+1].x();
-
-        rdx_() =
-            pos(driftRate_())
-           *(sizeGroups_[i+2].x() - sizeGroups_[i+1].x())
-           /(sizeGroups_[i+1].x() - sizeGroups_[i].x());
-    }
-
-    if (i == 1)
-    {
-        rx_() += neg(driftRate_())*sizeGroups_[i-1].x()/sizeGroups_[i].x();
-
-        rdx_() +=
-            neg(driftRate_())
-           *(sizeGroups_[i].x() - sizeGroups_[i-1].x())
-           /(sizeGroups_[i+1].x() - sizeGroups_[i].x());
-    }
-    else if (i > 1)
-    {
-        rx_() += neg(driftRate_())*sizeGroups_[i-2].x()/sizeGroups_[i-1].x();
-
-        rdx_() +=
-            neg(driftRate_())
-           *(sizeGroups_[i-1].x() - sizeGroups_[i-2].x())
-           /(sizeGroups_[i].x() - sizeGroups_[i-1].x());
-    }
-
-    if (i != sizeGroups_.size() - 1)
-    {
-        const sizeGroup& fe = sizeGroups_[i+1];
+        const sizeGroup& fe = sizeGroups()[i+1];
         volScalarField& Sue = Sui_;
 
+        Sp_[i] += 1/(fe.x() - fp.x())*pos(driftRate_())*driftRate_()*fp.phase();
+
         Sue =
-            pos(driftRate_())*driftRate_()*rdx_()
-           *fp*fp.phase()/fp.x()
-           /(rx_() - 1);
+            fe.x()/(fp.x()*(fe.x() - fp.x()))
+           *pos(driftRate_())*driftRate_()*fp*fp.phase();
 
         Su_[i+1] += Sue;
 
@@ -629,15 +570,21 @@ void Foam::diameterModels::populationBalanceModel::drift
         sizeGroups_[i+1].shapeModelPtr()->addDrift(Sue, fp, model);
     }
 
-    if (i != 0)
+    if (i == sizeGroups().size() - 1)
     {
-        const sizeGroup& fw = sizeGroups_[i-1];
+        Sp_[i] -= pos(driftRate_())*driftRate_()*fp.phase()/fp.x();
+    }
+
+    if (i > 0)
+    {
+        const sizeGroup& fw = sizeGroups()[i-1];
         volScalarField& Suw = Sui_;
 
+        Sp_[i] += 1/(fw.x() - fp.x())*neg(driftRate_())*driftRate_()*fp.phase();
+
         Suw =
-            neg(driftRate_())*driftRate_()*rdx_()
-           *fp*fp.phase()/fp.x()
-           /(rx_() - 1);
+            fw.x()/(fp.x()*(fw.x() - fp.x()))
+           *neg(driftRate_())*driftRate_()*fp*fp.phase();
 
         Su_[i-1] += Suw;
 
@@ -658,6 +605,11 @@ void Foam::diameterModels::populationBalanceModel::drift
         }
 
         sizeGroups_[i-1].shapeModelPtr()->addDrift(Suw, fp, model);
+    }
+
+    if (i == 0)
+    {
+        Sp_[i] -= neg(driftRate_())*driftRate_()*fp.phase()/fp.x();
     }
 }
 
@@ -687,7 +639,7 @@ void Foam::diameterModels::populationBalanceModel::sources()
     {
         sizeGroups_[i].shapeModelPtr()->reset();
         Su_[i] = Zero;
-        SuSp_[i] = Zero;
+        Sp_[i] = Zero;
     }
 
     forAllConstIter
@@ -883,7 +835,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
     v_(),
     delta_(),
     Su_(),
-    SuSp_(),
+    Sp_(),
     Sui_
     (
         IOobject
@@ -919,8 +871,6 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
         driftModel::iNew(*this)
     ),
     driftRate_(),
-    rx_(),
-    rdx_(),
     nucleation_
     (
         dict_.lookup("nucleationModels"),
@@ -1018,36 +968,6 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                 ),
                 mesh_,
                 dimensionedScalar(dimVolume/dimTime, Zero)
-            )
-        );
-
-        rx_.set
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    "r",
-                    fluid_.time().timeName(),
-                    mesh_
-                ),
-                mesh_,
-                dimensionedScalar(dimless, Zero)
-            )
-        );
-
-        rdx_.set
-        (
-            new volScalarField
-            (
-                IOobject
-                (
-                    "r",
-                    fluid_.time().timeName(),
-                    mesh_
-                ),
-                mesh_,
-                dimensionedScalar(dimless, Zero)
             )
         );
     }
@@ -1269,7 +1189,7 @@ void Foam::diameterModels::populationBalanceModel::solve()
                   + fvm::div(phase.alphaPhi(), fi)
                 ==
                     Su_[i]
-                  - fvm::SuSp(SuSp_[i], fi)
+                  - fvm::Sp(Sp_[i], fi)
                   + fluid_.fvModels().source(alpha, rho, fi)/rho
                   + fvc::ddt(residualAlpha, fi)
                   - fvm::ddt(residualAlpha, fi)

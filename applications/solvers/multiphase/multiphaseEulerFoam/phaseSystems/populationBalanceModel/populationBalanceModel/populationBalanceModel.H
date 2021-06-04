@@ -233,8 +233,8 @@ private:
         //- Explicitly treated sources
         PtrList<volScalarField> Su_;
 
-        //- Sources treated implicitly or explicitly depending on sign
-        PtrList<volScalarField> SuSp_;
+        //- Implicitly treated sources
+        PtrList<volScalarField> Sp_;
 
         //- Field for caching sources
         volScalarField Sui_;
@@ -262,12 +262,6 @@ private:
 
         //- Drift rate
         autoPtr<volScalarField> driftRate_;
-
-        //- Ratio between successive representative volumes
-        autoPtr<volScalarField> rx_;
-
-        //- Ratio between successive class widths
-        autoPtr<volScalarField> rdx_;
 
         //- Zeroeth order models
         PtrList<nucleationModel> nucleation_;
@@ -416,8 +410,8 @@ public:
         //- Return the sizeGroups belonging to this populationBalance
         inline const UPtrList<sizeGroup>& sizeGroups() const;
 
-        //- Return semi-implicit source terms
-        inline const volScalarField& SuSp(const label i) const;
+        //- Return implicit source terms
+        inline const volScalarField& Sp(const label i) const;
 
         //- Return list of unordered phasePairs in this populationBalance
         inline const phasePairTable& phasePairs() const;

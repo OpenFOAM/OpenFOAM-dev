@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -85,9 +85,9 @@ Foam::diameterModels::populationBalanceModel::sizeGroups() const
 
 
 inline const Foam::volScalarField&
-Foam::diameterModels::populationBalanceModel::SuSp(const label i) const
+Foam::diameterModels::populationBalanceModel::Sp(const label i) const
 {
-    return SuSp_[i];
+    return Sp_[i];
 }
 
 

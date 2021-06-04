@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -216,7 +216,7 @@ void Foam::diameterModels::shapeModels::fractal::correct()
       ==
       - sinteringModel_->R()
       + Su_
-      - fvm::SuSp(popBal.SuSp(fi.i()())*fi, kappa_)
+      - fvm::Sp(popBal.Sp(fi.i()())*fi, kappa_)
       + fvc::ddt(fi.phase().residualAlpha(), kappa_)
       - fvm::ddt(fi.phase().residualAlpha(), kappa_)
     );
