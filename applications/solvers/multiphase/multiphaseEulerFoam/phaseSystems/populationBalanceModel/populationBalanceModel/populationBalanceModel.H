@@ -53,7 +53,7 @@ Description
     \verbatim
         Coalescence and breakup term formulation:
         Kumar, S., & Ramkrishna, D. (1996).
-        On the solution of population balance equations by discretisation-I. A
+        On the solution of population balance equations by discretization-I. A
         fixed pivot technique.
         Chemical Engineering Science, 51(8), 1311-1332.
     \endverbatim
@@ -154,6 +154,7 @@ SourceFiles
 #include "pimpleControl.H"
 #include "phaseDynamicMomentumTransportModel.H"
 #include "HashPtrTable.H"
+#include "Pair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -233,41 +234,41 @@ private:
         //- Explicitly treated sources
         PtrList<volScalarField> Su_;
 
-        //- Sources treated implicitly or explicitly depending on sign
-        PtrList<volScalarField> SuSp_;
+        //- Implicitly treated sources
+        PtrList<volScalarField> Sp_;
 
         //- Field for caching sources
         volScalarField Sui_;
 
         //- Coalescence models
-        PtrList<coalescenceModel> coalescence_;
+        PtrList<coalescenceModel> coalescenceModels_;
 
         //- Coalescence rate
         autoPtr<volScalarField> coalescenceRate_;
 
-        //- BreakupModels
-        PtrList<breakupModel> breakup_;
+        //- Coalescence relevant size group pairs
+        List<labelPair> coalescencePairs_;
+
+        //- Breakup models
+        PtrList<breakupModel> breakupModels_;
 
         //- Breakup rate
         autoPtr<volScalarField> breakupRate_;
 
         //- Binary breakup models
-        PtrList<binaryBreakupModel> binaryBreakup_;
+        PtrList<binaryBreakupModel> binaryBreakupModels_;
 
         //- Binary breakup rate
         autoPtr<volScalarField> binaryBreakupRate_;
+
+        //- Binary breakup relevant size group pairs
+        List<labelPair> binaryBreakupPairs_;
 
         //- Drift models
         PtrList<driftModel> drift_;
 
         //- Drift rate
         autoPtr<volScalarField> driftRate_;
-
-        //- Ratio between successive representative volumes
-        autoPtr<volScalarField> rx_;
-
-        //- Ratio between successive class widths
-        autoPtr<volScalarField> rdx_;
 
         //- Zeroeth order models
         PtrList<nucleationModel> nucleation_;
@@ -416,24 +417,27 @@ public:
         //- Return the sizeGroups belonging to this populationBalance
         inline const UPtrList<sizeGroup>& sizeGroups() const;
 
-        //- Return semi-implicit source terms
-        inline const volScalarField& SuSp(const label i) const;
-
         //- Return list of unordered phasePairs in this populationBalance
         inline const phasePairTable& phasePairs() const;
 
-        //- Returns true if both phases are velocity groups and
-        //  belong to this populationBalance
-        inline bool isVelocityGroupPair(const phasePair& pair) const;
+        //- Return implicit source terms
+        inline const volScalarField& Sp(const label i) const;
 
-        //- Return the sizeGroup boundaries
-        inline const PtrList<dimensionedScalar>& v() const;
+        //- Return coalescence relevant size group pairs
+        inline const List<labelPair>& coalescencePairs() const;
+
+        //- Return binary breakup relevant size group pairs
+        inline const List<labelPair>& binaryBreakupPairs() const;
 
         //- Return total void of phases belonging to this populationBalance
         inline const volScalarField& alphas() const;
 
         //- Return average velocity
         inline const volVectorField& U() const;
+
+        //- Returns true if both phases are velocity groups and
+        //  belong to this populationBalance
+        inline bool isVelocityGroupPair(const phasePair& pair) const;
 
         //- Return allocation coefficient
         const dimensionedScalar eta

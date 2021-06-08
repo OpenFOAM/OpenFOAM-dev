@@ -95,11 +95,11 @@ addToCoalescenceRate
     );
 
     coalescenceRate +=
-        pi/4.0*sqr(fi.dSph() + fj.dSph())*min(uChar, uCrit_)
+        pi/4*sqr(fi.dSph() + fj.dSph())*min(uChar, uCrit_)
        *exp
         (
           - sqr(cbrt(alphaMax_)
-           /cbrt(max(popBal_.alphas(), fi.phase().residualAlpha())) - 1.0)
+           /cbrt(max(popBal_.alphas(), fi.phase().residualAlpha())) - 1)
         );
 }
 

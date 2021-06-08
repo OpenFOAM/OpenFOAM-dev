@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -139,7 +139,7 @@ Foam::diameterModels::nucleationModels::reactionDriven::addToNucleationRate
         velGroup_.phase().name() == pair_.first() ? +1 : -1;
 
     nucleationRate +=
-        popBal_.eta(i, pi/6.0*pow3(dNuc_))*dmidtfSign*dmidtf/rho/fi.x();
+        popBal_.eta(i, pi/6*pow3(dNuc_))*dmidtfSign*dmidtf/rho/fi.x();
 }
 
 

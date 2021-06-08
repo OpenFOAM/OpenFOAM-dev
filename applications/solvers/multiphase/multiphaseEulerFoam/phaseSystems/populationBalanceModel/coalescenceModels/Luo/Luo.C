@@ -62,7 +62,7 @@ Luo
 :
     coalescenceModel(popBal, dict),
     beta_(dimensionedScalar::lookupOrDefault("beta", dict, dimless, 2.05)),
-    C1_(dimensionedScalar::lookupOrDefault("C1", dict, dimless, 1.0))
+    C1_(dimensionedScalar::lookupOrDefault("C1", dict, dimless, 1))
 {}
 
 
@@ -102,18 +102,18 @@ addToCoalescenceRate
         (
             sqrt(beta_)
            *cbrt(popBal_.continuousTurbulence().epsilon()*fi.dSph())
-           *sqrt(1.0 + pow(xi, -2.0/3.0))
+           *sqrt(1 + pow(xi, -2.0/3.0))
         );
 
         coalescenceRate +=
-            pi/4.0*sqr(fi.dSph() + fj.dSph())*uij
+            pi/4*sqr(fi.dSph() + fj.dSph())*uij
            *exp
             (
               - C1_
-               *sqrt(0.75*(1.0 + sqr(xi))*(1.0 + pow3(xi)))
+               *sqrt(0.75*(1 + sqr(xi))*(1 + pow3(xi)))
                /(
                     sqrt(fi.phase().rho()/continuousPhase.rho()
-                  + vm.Cvm())*pow3(1.0 + xi)
+                  + vm.Cvm())*pow3(1 + xi)
                 )
                *sqrt
                 (

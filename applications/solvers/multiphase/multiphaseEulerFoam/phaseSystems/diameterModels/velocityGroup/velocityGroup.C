@@ -64,7 +64,7 @@ Foam::tmp<Foam::volScalarField> Foam::diameterModels::velocityGroup::dsm() const
         invDsm += fi.a()*fi/fi.x();
     }
 
-    return 6.0/tInvDsm;
+    return 6/tInvDsm;
 }
 
 

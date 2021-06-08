@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,13 +84,6 @@ Foam::diameterModels::populationBalanceModel::sizeGroups() const
 }
 
 
-inline const Foam::volScalarField&
-Foam::diameterModels::populationBalanceModel::SuSp(const label i) const
-{
-    return SuSp_[i];
-}
-
-
 inline const Foam::diameterModels::populationBalanceModel::phasePairTable&
 Foam::diameterModels::populationBalanceModel::phasePairs() const
 {
@@ -98,35 +91,24 @@ Foam::diameterModels::populationBalanceModel::phasePairs() const
 }
 
 
-inline bool Foam::diameterModels::populationBalanceModel::isVelocityGroupPair
-(
-    const phasePair& pair
-) const
+inline const Foam::volScalarField&
+Foam::diameterModels::populationBalanceModel::Sp(const label i) const
 {
-    if
-    (
-        isA<velocityGroup>(pair.phase1().dPtr()())
-        &&
-        isA<velocityGroup>(pair.phase2().dPtr()())
-    )
-    {
-        const velocityGroup& velGroup1 =
-            refCast<const velocityGroup>(pair.phase1().dPtr()());
-
-        const velocityGroup& velGroup2 =
-            refCast<const velocityGroup>(pair.phase2().dPtr()());
-
-        return velGroup1.popBalName() == velGroup2.popBalName();
-    }
-
-    return false;
+    return Sp_[i];
 }
 
 
-inline const Foam::PtrList<Foam::dimensionedScalar>&
-Foam::diameterModels::populationBalanceModel::v() const
+inline const Foam::List<Foam::Pair<Foam::label>>&
+Foam::diameterModels::populationBalanceModel::coalescencePairs() const
 {
-    return v_;
+    return coalescencePairs_;
+}
+
+
+inline const Foam::List<Foam::Pair<Foam::label>>&
+Foam::diameterModels::populationBalanceModel::binaryBreakupPairs() const
+{
+    return binaryBreakupPairs_;
 }
 
 
@@ -155,6 +137,31 @@ Foam::diameterModels::populationBalanceModel::U() const
     {
         return velocityGroups_.first().phase().U();
     }
+}
+
+
+inline bool Foam::diameterModels::populationBalanceModel::isVelocityGroupPair
+(
+    const phasePair& pair
+) const
+{
+    if
+    (
+        isA<velocityGroup>(pair.phase1().dPtr()())
+        &&
+        isA<velocityGroup>(pair.phase2().dPtr()())
+    )
+    {
+        const velocityGroup& velGroup1 =
+            refCast<const velocityGroup>(pair.phase1().dPtr()());
+
+        const velocityGroup& velGroup2 =
+            refCast<const velocityGroup>(pair.phase2().dPtr()());
+
+        return velGroup1.popBalName() == velGroup2.popBalName();
+    }
+
+    return false;
 }
 
 

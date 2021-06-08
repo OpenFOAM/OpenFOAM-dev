@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,7 +74,7 @@ addToBinaryBreakupRate
     const sizeGroup& fj = popBal_.sizeGroups()[j];
 
     binaryBreakupRate.primitiveFieldRef() +=
-        pow(fj.x().value(), power_)*2.0/fj.x().value();
+        pow(fj.x().value(), power_)*2/fj.x().value();
 }
 
 

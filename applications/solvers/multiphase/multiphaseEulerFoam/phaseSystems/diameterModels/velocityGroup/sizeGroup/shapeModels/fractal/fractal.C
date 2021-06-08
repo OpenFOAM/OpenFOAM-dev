@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2019-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2019-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -184,8 +184,8 @@ Foam::diameterModels::shapeModels::fractal::dColl() const
     volScalarField& dColl = tDColl.ref();
 
     dColl =
-        6.0/kappa_
-       *pow(sizeGroup_.x()*pow3(kappa_)/(36.0*pi*alphaC_), 1.0/Df_);
+        6/kappa_
+       *pow(sizeGroup_.x()*pow3(kappa_)/(36*pi*alphaC_), 1/Df_);
 
     return tDColl;
 }
@@ -216,7 +216,7 @@ void Foam::diameterModels::shapeModels::fractal::correct()
       ==
       - sinteringModel_->R()
       + Su_
-      - fvm::SuSp(popBal.SuSp(fi.i()())*fi, kappa_)
+      - fvm::Sp(popBal.Sp(fi.i()())*fi, kappa_)
       + fvc::ddt(fi.phase().residualAlpha(), kappa_)
       - fvm::ddt(fi.phase().residualAlpha(), kappa_)
     );
@@ -230,8 +230,8 @@ void Foam::diameterModels::shapeModels::fractal::correct()
     kappa_ =
         min
         (
-            max(kappa_, 6.0/sizeGroup_.dSph()),
-            6.0/popBal.sizeGroups().first().dSph()
+            max(kappa_, 6/sizeGroup_.dSph()),
+            6/popBal.sizeGroups().first().dSph()
         );
 
     kappa_.correctBoundaryConditions();
@@ -283,7 +283,7 @@ void Foam::diameterModels::shapeModels::fractal::addDrift
                     fu.shapeModelPtr()()
                 );
 
-            volScalarField dp(6.0/sourceKappa);
+            volScalarField dp(6/sourceKappa);
             const volScalarField a(sourceKappa*fu.x());
             const dimensionedScalar dv(sizeGroup_.x() - fu.x());
 
@@ -292,18 +292,18 @@ void Foam::diameterModels::shapeModels::fractal::addDrift
                 (2.0/3.0)*dv
                *(
                     sourceKappa
-                  + sourceShape.Df_*(1.0/sourceShape.d() - 1.0/dp)
+                  + sourceShape.Df_*(1/sourceShape.d() - 1/dp)
                 )
             );
 
-            dp += 6.0*(dv*a - fu.x()*da1)/sqr(a);
+            dp += 6*(dv*a - fu.x()*da1)/sqr(a);
 
-            const volScalarField np(6.0*sizeGroup_.x()/pi/pow3(dp));
-            const volScalarField dc(dp*pow(np/alphaC_, 1.0/Df_));
+            const volScalarField np(6*sizeGroup_.x()/pi/pow3(dp));
+            const volScalarField dc(dp*pow(np/alphaC_, 1/Df_));
 
             const volScalarField da2
             (
-                dv*(4.0/dp + 2.0*Df_/3.0*(1.0/dc - 1.0/dp))
+                dv*(4/dp + 2*Df_/3*(1/dc - 1/dp))
             );
 
             Su_ += (a + 0.5*da1 + 0.5*da2)/sizeGroup_.x()*Su;

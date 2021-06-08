@@ -67,7 +67,7 @@ Foam::diameterModels::sizeGroup::sizeGroup
     phase_(phase),
     velocityGroup_(velocityGroup),
     dSph_("dSph", dimLength, dict),
-    x_("x", pi/6.0*pow3(dSph_)),
+    x_("x", pi/6*pow3(dSph_)),
     value_(dict.lookup<scalar>("value"))
 {
     // Adjust refValue at mixedFvPatchField boundaries

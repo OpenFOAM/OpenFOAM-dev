@@ -174,7 +174,7 @@ Foam::diameterModels::nucleationModels::wallBoiling::addToNucleationRate
 
             const labelList& faceCells = alphatw.patch().faceCells();
 
-            dimensionedScalar unitLength("unitLength", dimLength, 1.0);
+            dimensionedScalar unitLength("unitLength", dimLength, 1);
 
             forAll(alphatw, facei)
             {
