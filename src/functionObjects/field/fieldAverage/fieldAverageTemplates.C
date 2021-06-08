@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -81,6 +81,8 @@ void Foam::functionObjects::fieldAverage::addMeanField(const label fieldi)
         typedef GeometricField<Type, fvPatchField, volMesh>
             VolFieldType;
 
+        typedef typename VolFieldType::Internal InternalType;
+
         typedef GeometricField<Type, fvsPatchField, surfaceMesh>
             SurfaceFieldType;
 
@@ -89,6 +91,10 @@ void Foam::functionObjects::fieldAverage::addMeanField(const label fieldi)
         if (obr_.foundObject<VolFieldType>(fieldName))
         {
             addMeanFieldType<VolFieldType>(fieldi);
+        }
+        else if (obr_.foundObject<InternalType>(fieldName))
+        {
+            addMeanFieldType<InternalType>(fieldi);
         }
         else if (obr_.foundObject<SurfaceFieldType>(fieldName))
         {
@@ -151,9 +157,11 @@ template<class Type1, class Type2>
 void Foam::functionObjects::fieldAverage::addPrime2MeanField(const label fieldi)
 {
     typedef GeometricField<Type1, fvPatchField, volMesh> VolFieldType1;
+    typedef typename VolFieldType1::Internal InternalType1;
     typedef GeometricField<Type1, fvsPatchField, surfaceMesh> SurfaceFieldType1;
 
     typedef GeometricField<Type2, fvPatchField, volMesh> VolFieldType2;
+    typedef typename VolFieldType2::Internal InternalType2;
     typedef GeometricField<Type2, fvsPatchField, surfaceMesh> SurfaceFieldType2;
 
     if (faItems_[fieldi].prime2Mean())
@@ -171,6 +179,10 @@ void Foam::functionObjects::fieldAverage::addPrime2MeanField(const label fieldi)
         if (obr_.foundObject<VolFieldType1>(fieldName))
         {
             addPrime2MeanFieldType<VolFieldType1, VolFieldType2>(fieldi);
+        }
+        else if (obr_.foundObject<InternalType1>(fieldName))
+        {
+            addPrime2MeanFieldType<InternalType1, InternalType2>(fieldi);
         }
         else if (obr_.foundObject<SurfaceFieldType1>(fieldName))
         {
@@ -228,6 +240,7 @@ template<class Type>
 void Foam::functionObjects::fieldAverage::calculateMeanFields() const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
+    typedef typename VolFieldType::Internal InternalType;
     typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
 
     forAll(faItems_, i)
@@ -235,6 +248,7 @@ void Foam::functionObjects::fieldAverage::calculateMeanFields() const
         if (faItems_[i].mean())
         {
             calculateMeanFieldType<VolFieldType>(i);
+            calculateMeanFieldType<InternalType>(i);
             calculateMeanFieldType<SurfaceFieldType>(i);
         }
     }
@@ -291,9 +305,11 @@ template<class Type1, class Type2>
 void Foam::functionObjects::fieldAverage::calculatePrime2MeanFields() const
 {
     typedef GeometricField<Type1, fvPatchField, volMesh> VolFieldType1;
+    typedef typename VolFieldType1::Internal InternalType1;
     typedef GeometricField<Type1, fvsPatchField, surfaceMesh> SurfaceFieldType1;
 
     typedef GeometricField<Type2, fvPatchField, volMesh> VolFieldType2;
+    typedef typename VolFieldType2::Internal InternalType2;
     typedef GeometricField<Type2, fvsPatchField, surfaceMesh> SurfaceFieldType2;
 
     forAll(faItems_, i)
@@ -301,6 +317,7 @@ void Foam::functionObjects::fieldAverage::calculatePrime2MeanFields() const
         if (faItems_[i].prime2Mean())
         {
             calculatePrime2MeanFieldType<VolFieldType1, VolFieldType2>(i);
+            calculatePrime2MeanFieldType<InternalType1, InternalType2>(i);
             calculatePrime2MeanFieldType<SurfaceFieldType1, SurfaceFieldType2>
             (
                 i
@@ -335,9 +352,11 @@ template<class Type1, class Type2>
 void Foam::functionObjects::fieldAverage::addMeanSqrToPrime2Mean() const
 {
     typedef GeometricField<Type1, fvPatchField, volMesh> VolFieldType1;
+    typedef typename VolFieldType1::Internal InternalType1;
     typedef GeometricField<Type1, fvsPatchField, surfaceMesh> SurfaceFieldType1;
 
     typedef GeometricField<Type2, fvPatchField, volMesh> VolFieldType2;
+    typedef typename VolFieldType2::Internal InternalType2;
     typedef GeometricField<Type2, fvsPatchField, surfaceMesh> SurfaceFieldType2;
 
     forAll(faItems_, i)
@@ -345,6 +364,7 @@ void Foam::functionObjects::fieldAverage::addMeanSqrToPrime2Mean() const
         if (faItems_[i].prime2Mean())
         {
             addMeanSqrToPrime2MeanType<VolFieldType1, VolFieldType2>(i);
+            addMeanSqrToPrime2MeanType<InternalType1, InternalType2>(i);
             addMeanSqrToPrime2MeanType<SurfaceFieldType1, SurfaceFieldType2>(i);
         }
     }
@@ -369,6 +389,7 @@ template<class Type>
 void Foam::functionObjects::fieldAverage::writeFields() const
 {
     typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
+    typedef typename VolFieldType::Internal InternalType;
     typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
 
     forAll(faItems_, i)
@@ -377,12 +398,14 @@ void Foam::functionObjects::fieldAverage::writeFields() const
         {
             const word& fieldName = faItems_[i].meanFieldName();
             writeFieldType<VolFieldType>(fieldName);
+            writeFieldType<InternalType>(fieldName);
             writeFieldType<SurfaceFieldType>(fieldName);
         }
         if (faItems_[i].prime2Mean())
         {
             const word& fieldName = faItems_[i].prime2MeanFieldName();
             writeFieldType<VolFieldType>(fieldName);
+            writeFieldType<InternalType>(fieldName);
             writeFieldType<SurfaceFieldType>(fieldName);
         }
     }
