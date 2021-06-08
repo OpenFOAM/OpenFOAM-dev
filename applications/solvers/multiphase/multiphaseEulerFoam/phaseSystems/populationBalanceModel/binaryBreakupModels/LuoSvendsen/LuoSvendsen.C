@@ -180,7 +180,7 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::addToBinaryBreakupRate
 
     const volScalarField b
     (
-        12.0*cf*popBal_.sigmaWithContinuousPhase(fi.phase())
+        12*cf*popBal_.sigmaWithContinuousPhase(fi.phase())
        /(
             beta_*continuousPhase.rho()*pow(fj.dSph(), 5.0/3.0)
            *pow(popBal_.continuousTurbulence().epsilon(), 2.0/3.0)
@@ -191,12 +191,12 @@ Foam::diameterModels::binaryBreakupModels::LuoSvendsen::addToBinaryBreakupRate
 
     const volScalarField tMin(b/pow(xiMin, 11.0/3.0));
 
-    volScalarField integral(3.0/(11.0*pow(b, 8.0/11.0)));
+    volScalarField integral(3/(11*pow(b, 8.0/11.0)));
 
     forAll(integral, celli)
     {
         integral[celli] *=
-            2.0*pow(b[celli], 3.0/11.0)*tgamma(5.0/11.0)
+            2*pow(b[celli], 3.0/11.0)*tgamma(5.0/11.0)
            *(
                 gammaUpperReg5by11_->value(b[celli])
               - gammaUpperReg5by11_->value(tMin[celli])

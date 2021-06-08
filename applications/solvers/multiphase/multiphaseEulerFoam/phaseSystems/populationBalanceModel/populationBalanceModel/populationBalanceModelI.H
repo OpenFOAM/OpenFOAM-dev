@@ -123,13 +123,6 @@ inline bool Foam::diameterModels::populationBalanceModel::isVelocityGroupPair
 }
 
 
-inline const Foam::PtrList<Foam::dimensionedScalar>&
-Foam::diameterModels::populationBalanceModel::v() const
-{
-    return v_;
-}
-
-
 inline const Foam::volScalarField&
 Foam::diameterModels::populationBalanceModel::alphas() const
 {

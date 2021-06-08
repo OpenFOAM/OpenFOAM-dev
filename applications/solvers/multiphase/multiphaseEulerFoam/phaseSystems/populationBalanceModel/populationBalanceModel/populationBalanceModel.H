@@ -53,7 +53,7 @@ Description
     \verbatim
         Coalescence and breakup term formulation:
         Kumar, S., & Ramkrishna, D. (1996).
-        On the solution of population balance equations by discretisation-I. A
+        On the solution of population balance equations by discretization-I. A
         fixed pivot technique.
         Chemical Engineering Science, 51(8), 1311-1332.
     \endverbatim
@@ -240,19 +240,19 @@ private:
         volScalarField Sui_;
 
         //- Coalescence models
-        PtrList<coalescenceModel> coalescence_;
+        PtrList<coalescenceModel> coalescenceModels_;
 
         //- Coalescence rate
         autoPtr<volScalarField> coalescenceRate_;
 
-        //- BreakupModels
-        PtrList<breakupModel> breakup_;
+        //- Breakup models
+        PtrList<breakupModel> breakupModels_;
 
         //- Breakup rate
         autoPtr<volScalarField> breakupRate_;
 
         //- Binary breakup models
-        PtrList<binaryBreakupModel> binaryBreakup_;
+        PtrList<binaryBreakupModel> binaryBreakupModels_;
 
         //- Binary breakup rate
         autoPtr<volScalarField> binaryBreakupRate_;
@@ -419,9 +419,6 @@ public:
         //- Returns true if both phases are velocity groups and
         //  belong to this populationBalance
         inline bool isVelocityGroupPair(const phasePair& pair) const;
-
-        //- Return the sizeGroup boundaries
-        inline const PtrList<dimensionedScalar>& v() const;
 
         //- Return total void of phases belonging to this populationBalance
         inline const volScalarField& alphas() const;

@@ -82,7 +82,7 @@ Foam::diameterModels::shapeModels::sinteringModels::KochFriedlander::tau() const
         (
             "tau",
             fractal_.SizeGroup().mesh(),
-            dimensionedScalar(dimTime, 0.0)
+            dimensionedScalar(dimTime, Zero)
         )
     );
 
@@ -120,7 +120,7 @@ Foam::diameterModels::shapeModels::sinteringModels::KochFriedlander::R() const
             fi.mesh()
         ),
         fi.mesh(),
-        dimensionedScalar(inv(dimTime), 0)
+        dimensionedScalar(inv(dimTime), Zero)
     );
 
     volScalarField::Internal tau(this->tau());
@@ -130,7 +130,7 @@ Foam::diameterModels::shapeModels::sinteringModels::KochFriedlander::R() const
         R[celli] = fi[celli]*alpha[celli]/tau[celli];
     }
 
-    return fvm::Sp(R, kappai) - 6.0/fi.dSph()*R;
+    return fvm::Sp(R, kappai) - 6/fi.dSph()*R;
 }
 
 

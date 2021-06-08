@@ -85,7 +85,7 @@ Foam::diameterModels::daughterSizeDistributionModels::uniformBinary::calcNik
     {
         if (k == 0)
         {
-            return 1.0;
+            return 1;
         }
 
         return (sizeGroups[i+1].x() - xi)/(xk - x0);
