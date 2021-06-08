@@ -154,6 +154,7 @@ SourceFiles
 #include "pimpleControl.H"
 #include "phaseDynamicMomentumTransportModel.H"
 #include "HashPtrTable.H"
+#include "Pair.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -245,6 +246,9 @@ private:
         //- Coalescence rate
         autoPtr<volScalarField> coalescenceRate_;
 
+        //- Coalescence relevant size group pairs
+        List<labelPair> coalescencePairs_;
+
         //- Breakup models
         PtrList<breakupModel> breakupModels_;
 
@@ -256,6 +260,9 @@ private:
 
         //- Binary breakup rate
         autoPtr<volScalarField> binaryBreakupRate_;
+
+        //- Binary breakup relevant size group pairs
+        List<labelPair> binaryBreakupPairs_;
 
         //- Drift models
         PtrList<driftModel> drift_;
@@ -410,21 +417,27 @@ public:
         //- Return the sizeGroups belonging to this populationBalance
         inline const UPtrList<sizeGroup>& sizeGroups() const;
 
-        //- Return implicit source terms
-        inline const volScalarField& Sp(const label i) const;
-
         //- Return list of unordered phasePairs in this populationBalance
         inline const phasePairTable& phasePairs() const;
 
-        //- Returns true if both phases are velocity groups and
-        //  belong to this populationBalance
-        inline bool isVelocityGroupPair(const phasePair& pair) const;
+        //- Return implicit source terms
+        inline const volScalarField& Sp(const label i) const;
+
+        //- Return coalescence relevant size group pairs
+        inline const List<labelPair>& coalescencePairs() const;
+
+        //- Return binary breakup relevant size group pairs
+        inline const List<labelPair>& binaryBreakupPairs() const;
 
         //- Return total void of phases belonging to this populationBalance
         inline const volScalarField& alphas() const;
 
         //- Return average velocity
         inline const volVectorField& U() const;
+
+        //- Returns true if both phases are velocity groups and
+        //  belong to this populationBalance
+        inline bool isVelocityGroupPair(const phasePair& pair) const;
 
         //- Return allocation coefficient
         const dimensionedScalar eta

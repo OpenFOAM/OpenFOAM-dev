@@ -217,8 +217,6 @@ void Foam::diameterModels::populationBalanceModel::createPhasePairs()
 
 void Foam::diameterModels::populationBalanceModel::precompute()
 {
-    calcDeltas();
-
     forAll(coalescenceModels_, model)
     {
         coalescenceModels_[model].precompute();
@@ -248,8 +246,7 @@ void Foam::diameterModels::populationBalanceModel::precompute()
 }
 
 
-void Foam::diameterModels::populationBalanceModel::
-birthByCoalescence
+void Foam::diameterModels::populationBalanceModel::birthByCoalescence
 (
     const label j,
     const label k
@@ -321,8 +318,7 @@ birthByCoalescence
 }
 
 
-void Foam::diameterModels::populationBalanceModel::
-deathByCoalescence
+void Foam::diameterModels::populationBalanceModel::deathByCoalescence
 (
     const label i,
     const label j
@@ -340,8 +336,7 @@ deathByCoalescence
 }
 
 
-void Foam::diameterModels::populationBalanceModel::
-birthByBreakup
+void Foam::diameterModels::populationBalanceModel::birthByBreakup
 (
     const label k,
     const label model
@@ -425,8 +420,7 @@ void Foam::diameterModels::populationBalanceModel::calcDeltas()
 }
 
 
-void Foam::diameterModels::populationBalanceModel::
-birthByBinaryBreakup
+void Foam::diameterModels::populationBalanceModel::birthByBinaryBreakup
 (
     const label i,
     const label j
@@ -501,8 +495,7 @@ birthByBinaryBreakup
 }
 
 
-void Foam::diameterModels::populationBalanceModel::
-deathByBinaryBreakup
+void Foam::diameterModels::populationBalanceModel::deathByBinaryBreakup
 (
     const label j,
     const label i
@@ -598,8 +591,7 @@ void Foam::diameterModels::populationBalanceModel::drift
 }
 
 
-void Foam::diameterModels::populationBalanceModel::
-nucleation
+void Foam::diameterModels::populationBalanceModel::nucleation
 (
     const label i,
     nucleationModel& model
@@ -636,84 +628,73 @@ void Foam::diameterModels::populationBalanceModel::sources()
         *pDmdt_(phasePairIter()) = Zero;
     }
 
-    forAll(sizeGroups_, i)
+    forAll(coalescencePairs_, coalescencePairi)
     {
-        if (coalescenceModels_.size() != 0)
+        label i = coalescencePairs_[coalescencePairi].first();
+        label j = coalescencePairs_[coalescencePairi].second();
+
+        coalescenceRate_() = Zero;
+
+        forAll(coalescenceModels_, model)
         {
-            for (label j = 0; j <= i; j++)
-            {
-                coalescenceRate_() = Zero;
-
-                forAll(coalescenceModels_, model)
-                {
-                    coalescenceModels_[model].addToCoalescenceRate
-                    (
-                        coalescenceRate_(),
-                        i,
-                        j
-                    );
-                }
-
-                birthByCoalescence(i, j);
-
-                deathByCoalescence(i, j);
-            }
+            coalescenceModels_[model].addToCoalescenceRate
+            (
+                coalescenceRate_(),
+                i,
+                j
+            );
         }
 
-        if (breakupModels_.size() != 0)
+        birthByCoalescence(i, j);
+
+        deathByCoalescence(i, j);
+    }
+
+    forAll(binaryBreakupPairs_, binaryBreakupPairi)
+    {
+        label i = binaryBreakupPairs_[binaryBreakupPairi].first();
+        label j = binaryBreakupPairs_[binaryBreakupPairi].second();
+
+        binaryBreakupRate_() = Zero;
+
+        forAll(binaryBreakupModels_, model)
         {
-            forAll(breakupModels_, model)
-            {
-                breakupModels_[model].setBreakupRate(breakupRate_(), i);
-
-                birthByBreakup(i, model);
-
-                deathByBreakup(i);
-            }
+            binaryBreakupModels_[model].addToBinaryBreakupRate
+            (
+                binaryBreakupRate_(),
+                j,
+                i
+            );
         }
 
-        if (binaryBreakupModels_.size() != 0)
+        birthByBinaryBreakup(j, i);
+
+        deathByBinaryBreakup(j, i);
+    }
+
+    forAll(sizeGroups(), i)
+    {
+        forAll(breakupModels_, model)
         {
-            label j = 0;
+            breakupModels_[model].setBreakupRate(breakupRate_(), i);
 
-            while (delta_[j][i].value() != 0)
-            {
-                binaryBreakupRate_() = Zero;
+            birthByBreakup(i, model);
 
-                forAll(binaryBreakupModels_, model)
-                {
-                    binaryBreakupModels_[model].addToBinaryBreakupRate
-                    (
-                        binaryBreakupRate_(),
-                        j,
-                        i
-                    );
-                }
-
-                birthByBinaryBreakup(j, i);
-
-                deathByBinaryBreakup(j, i);
-
-                j++;
-            }
+            deathByBreakup(i);
         }
 
-        if (drift_.size() != 0)
+        forAll(drift_, model)
         {
-            forAll(drift_, model)
-            {
-                driftRate_() = Zero;
-                drift(i, drift_[model]);
-            }
+            driftRate_() = Zero;
+
+            drift(i, drift_[model]);
         }
 
-        if (nucleation_.size() != 0)
+        forAll(nucleation_, model)
         {
-            forAll(nucleation_, model)
-            {
-                nucleationRate_() = Zero;
-                nucleation(i, nucleation_[model]);
-            }
+            nucleationRate_() = Zero;
+
+            nucleation(i, nucleation_[model]);
         }
     }
 }
@@ -837,6 +818,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
         coalescenceModel::iNew(*this)
     ),
     coalescenceRate_(),
+    coalescencePairs_(),
     breakupModels_
     (
         dict_.lookup("breakupModels"),
@@ -849,6 +831,7 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
         binaryBreakupModel::iNew(*this)
     ),
     binaryBreakupRate_(),
+    binaryBreakupPairs_(),
     drift_
     (
         dict_.lookup("driftModels"),
@@ -895,6 +878,14 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                 dimensionedScalar(dimVolume/dimTime, Zero)
             )
         );
+
+        forAll(sizeGroups(), i)
+        {
+            for (label j = 0; j <= i; j++)
+            {
+                coalescencePairs_.append(labelPair(i, j));
+            }
+        }
     }
 
     if (breakupModels_.size() != 0)
@@ -936,6 +927,19 @@ Foam::diameterModels::populationBalanceModel::populationBalanceModel
                 )
             )
         );
+
+        calcDeltas();
+
+        forAll(sizeGroups(), i)
+        {
+            label j = 0;
+
+            while (delta_[j][i].value() != 0)
+            {
+                binaryBreakupPairs_.append(labelPair(i, j));
+                j++;
+            }
+        }
     }
 
     if (drift_.size() != 0)

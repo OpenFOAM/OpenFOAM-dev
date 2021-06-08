@@ -84,13 +84,6 @@ Foam::diameterModels::populationBalanceModel::sizeGroups() const
 }
 
 
-inline const Foam::volScalarField&
-Foam::diameterModels::populationBalanceModel::Sp(const label i) const
-{
-    return Sp_[i];
-}
-
-
 inline const Foam::diameterModels::populationBalanceModel::phasePairTable&
 Foam::diameterModels::populationBalanceModel::phasePairs() const
 {
@@ -98,28 +91,24 @@ Foam::diameterModels::populationBalanceModel::phasePairs() const
 }
 
 
-inline bool Foam::diameterModels::populationBalanceModel::isVelocityGroupPair
-(
-    const phasePair& pair
-) const
+inline const Foam::volScalarField&
+Foam::diameterModels::populationBalanceModel::Sp(const label i) const
 {
-    if
-    (
-        isA<velocityGroup>(pair.phase1().dPtr()())
-        &&
-        isA<velocityGroup>(pair.phase2().dPtr()())
-    )
-    {
-        const velocityGroup& velGroup1 =
-            refCast<const velocityGroup>(pair.phase1().dPtr()());
+    return Sp_[i];
+}
 
-        const velocityGroup& velGroup2 =
-            refCast<const velocityGroup>(pair.phase2().dPtr()());
 
-        return velGroup1.popBalName() == velGroup2.popBalName();
-    }
+inline const Foam::List<Foam::Pair<Foam::label>>&
+Foam::diameterModels::populationBalanceModel::coalescencePairs() const
+{
+    return coalescencePairs_;
+}
 
-    return false;
+
+inline const Foam::List<Foam::Pair<Foam::label>>&
+Foam::diameterModels::populationBalanceModel::binaryBreakupPairs() const
+{
+    return binaryBreakupPairs_;
 }
 
 
@@ -148,6 +137,31 @@ Foam::diameterModels::populationBalanceModel::U() const
     {
         return velocityGroups_.first().phase().U();
     }
+}
+
+
+inline bool Foam::diameterModels::populationBalanceModel::isVelocityGroupPair
+(
+    const phasePair& pair
+) const
+{
+    if
+    (
+        isA<velocityGroup>(pair.phase1().dPtr()())
+        &&
+        isA<velocityGroup>(pair.phase2().dPtr()())
+    )
+    {
+        const velocityGroup& velGroup1 =
+            refCast<const velocityGroup>(pair.phase1().dPtr()());
+
+        const velocityGroup& velGroup2 =
+            refCast<const velocityGroup>(pair.phase2().dPtr()());
+
+        return velGroup1.popBalName() == velGroup2.popBalName();
+    }
+
+    return false;
 }
 
 
