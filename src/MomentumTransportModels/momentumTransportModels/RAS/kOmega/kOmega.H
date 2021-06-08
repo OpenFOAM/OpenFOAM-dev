@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -40,7 +40,7 @@ Description
         kOmegaCoeffs
         {
             Cmu         0.09;  // Equivalent to betaStar
-            alpha       0.52;
+            gamma       0.52;
             beta        0.072;
             alphak      0.5;
             alphaOmega  0.5;
