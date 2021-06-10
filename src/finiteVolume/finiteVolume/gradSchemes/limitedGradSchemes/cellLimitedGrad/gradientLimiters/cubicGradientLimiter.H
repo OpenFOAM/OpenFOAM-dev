@@ -99,7 +99,7 @@ public:
         :
             rt_(readScalar(schemeData)),
             a_(1/sqr(rt_) - 2/pow3(rt_)),
-            b_(-(3.0/2.0)*a_*rt_ - (1.0/2.0)*rt_)
+            b_(-(3.0/2.0)*a_*rt_ - (1.0/2.0)/rt_)
         {
             if (rt_ < 1)
             {
