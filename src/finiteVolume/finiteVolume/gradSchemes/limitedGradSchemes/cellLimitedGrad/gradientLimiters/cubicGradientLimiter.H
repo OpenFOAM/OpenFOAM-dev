@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2018-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,10 +69,8 @@ See also
 
 namespace Foam
 {
-
 namespace fv
 {
-
 namespace gradientLimiters
 {
 
@@ -100,8 +98,8 @@ public:
         cubic(Istream& schemeData)
         :
             rt_(readScalar(schemeData)),
-            a_(2.0/sqr(rt_) - 2.0/pow3(rt_)),
-            b_(-(3.0/2.0)*a_*rt_)
+            a_(1/sqr(rt_) - 2/pow3(rt_)),
+            b_(-(3.0/2.0)*a_*rt_ - (1.0/2.0)*rt_)
         {
             if (rt_ < 1)
             {
@@ -134,9 +132,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace gradientLimiters
-
 } // End namespace fv
-
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
