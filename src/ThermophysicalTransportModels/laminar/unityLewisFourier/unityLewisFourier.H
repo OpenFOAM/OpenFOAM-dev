@@ -113,7 +113,7 @@ public:
             return volScalarField::New
             (
                 "DEff",
-                this->alphaEff()
+                this->thermo().alpha()
             );
         }
 
@@ -125,7 +125,7 @@ public:
             const label patchi
         ) const
         {
-            return this->alphaEff(patchi);
+            return this->thermo().alpha(patchi);
         }
 
         //- Return the heat flux [W/m^2]
