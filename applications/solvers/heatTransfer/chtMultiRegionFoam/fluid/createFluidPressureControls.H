@@ -12,4 +12,17 @@ forAll(fluidRegions, i)
             false
         )
     );
+
+    hydrostaticInitialisation
+    (
+        p_rghFluid[i],
+        thermoFluid[i].p(),
+        rhoFluid[i],
+        UFluid[i],
+        ghFluid[i],
+        ghfFluid[i],
+        pRefFluid[i],
+        thermoFluid[i],
+        pimples.pimple(i).dict()
+    );
 }

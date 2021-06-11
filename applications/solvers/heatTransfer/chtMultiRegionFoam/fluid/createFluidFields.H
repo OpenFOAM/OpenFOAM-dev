@@ -214,9 +214,6 @@ forAll(fluidRegions, i)
         )
     );
 
-    // Force p_rgh to be consistent with p
-    p_rghFluid[i] = thermoFluid[i].p() - rhoFluid[i]*ghFluid[i] - pRefFluid[i];
-
     fluidRegions[i].setFluxRequired(p_rghFluid[i].name());
 
     initialMassFluid[i] = fvc::domainIntegrate(rhoFluid[i]).value();
