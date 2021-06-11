@@ -17,9 +17,9 @@ FoamFile
 actions
 (
     {
-        name    c0;
-        type    cellSet;
         action  new;
+        type    cellSet;
+        name    c0;
         source  boxToCell;
         sourceInfo
         {
