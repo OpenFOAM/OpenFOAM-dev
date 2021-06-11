@@ -28,7 +28,12 @@ boundaryField
         value           uniform $sInlet;
     }
 
-    ".*"
+    outlet
+    {
+        type            zeroGradient;
+    }
+
+    wall
     {
         type            zeroGradient;
     }
