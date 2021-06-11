@@ -60,17 +60,18 @@ subModels
         {
             type             patchInjection;
             patchName        <name>;
-            parcelBasisType  mass; // fixed;
 
             SOI              0;    // Start time of injection
             duration         0.1;
-
-            U0               (1 0 0);
-            massTotal        1e-3;
             parcelsPerSecond 1000;
             flowRateProfile  constant 1;
 
+            U0               (1 0 0);
+
+            parcelBasisType  mass; // fixed;
+            massTotal        1e-3;
             // nParticle        100; // Required for fixed parcelBasisType
+
             sizeDistribution
             {
                 type         fixedValue;
