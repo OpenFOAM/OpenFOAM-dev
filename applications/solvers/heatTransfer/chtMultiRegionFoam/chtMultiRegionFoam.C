@@ -46,6 +46,7 @@ Description
 #include "coordinateSystem.H"
 #include "pimpleMultiRegionControl.H"
 #include "pressureReference.H"
+#include "hydrostaticInitialisation.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -58,9 +59,9 @@ int main(int argc, char *argv[])
     #include "setRootCaseLists.H"
     #include "createTime.H"
     #include "createMeshes.H"
+    pimpleMultiRegionControl pimples(fluidRegions, solidRegions);
     #include "createFields.H"
     #include "initContinuityErrs.H"
-    pimpleMultiRegionControl pimples(fluidRegions, solidRegions);
     #include "createFluidPressureControls.H"
     #include "createTimeControls.H"
     #include "readSolidTimeControls.H"
