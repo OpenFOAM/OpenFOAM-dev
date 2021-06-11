@@ -27,15 +27,17 @@ gradSchemes
 
 divSchemes
 {
-    default         none;
-    div(phi,U)      Gauss LUST grad(U);
-    div(phi,e)      Gauss LUST grad(e);
-    div(phi,K)      Gauss linear;
-    div(phiv,p)     Gauss linear;
-    div(phi,k)      Gauss limitedLinear 1;
-    div(phi,B)      Gauss limitedLinear 1;
-    div(phi,muTilda) Gauss limitedLinear 1;
-    div(B)          Gauss linear;
+    default             none;
+
+    div(phi,U)          Gauss LUST grad(U);
+    div(phi,e)          Gauss LUST grad(e);
+    div(phi,K)          Gauss linear;
+    div(phi,(p|rho))    Gauss linear;
+    div(phi,k)          Gauss limitedLinear 1;
+    div(phi,B)          Gauss limitedLinear 1;
+    div(phi,muTilda)    Gauss limitedLinear 1;
+    div(B)              Gauss linear;
+
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 

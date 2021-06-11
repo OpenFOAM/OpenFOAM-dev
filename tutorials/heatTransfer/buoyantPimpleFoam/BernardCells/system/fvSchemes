@@ -27,17 +27,17 @@ gradSchemes
 
 divSchemes
 {
-    default         none;
+    default             none;
 
-    div(phi,U)      Gauss linearUpwind grad(U);
-    div(phi,e)      Gauss limitedLinear 1;
+    div(phi,U)          Gauss linearUpwind grad(U);
+    div(phi,e)          Gauss limitedLinear 1;
 
-    turbulence      Gauss limitedLinear 1;
-    div(phi,k)      $turbulence;
-    div(phi,epsilon) $turbulence;
+    turbulence          Gauss limitedLinear 1;
+    div(phi,k)          $turbulence;
+    div(phi,epsilon)    $turbulence;
 
-    div(phiv,p)     Gauss linear;
-    div(phi,K)      Gauss linear;
+    div(phi,(p|rho))    Gauss limitedLinear 1;
+    div(phi,K)          Gauss linear;
 
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }

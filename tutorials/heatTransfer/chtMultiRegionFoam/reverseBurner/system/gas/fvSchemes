@@ -27,14 +27,15 @@ gradSchemes
 
 divSchemes
 {
-    default         none;
+    default             none;
 
-    div(phi,U)      Gauss linearUpwind grad(U);
-    div(phi,Yi_h)   Gauss limitedLinear 1;
-    div(phi,k)      Gauss linearUpwind limitedGrad;
-    div(phi,epsilon) Gauss linearUpwind limitedGrad;
-    div(phi,K)      Gauss linear;
-    div(phiv,p)     Gauss linear;
+    div(phi,U)          Gauss linearUpwind grad(U);
+    div(phi,Yi_h)       Gauss limitedLinear 1;
+    div(phi,k)          Gauss linearUpwind limitedGrad;
+    div(phi,epsilon)    Gauss linearUpwind limitedGrad;
+    div(phi,K)          Gauss linear;
+    div(phi,(p|rho))    Gauss linear;
+
     div(((rho*nuEff)*dev2(T(grad(U))))) Gauss linear;
 }
 

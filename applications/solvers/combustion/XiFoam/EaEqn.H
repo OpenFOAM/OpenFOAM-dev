@@ -7,12 +7,7 @@
       + fvc::ddt(rho, K) + fvc::div(phi, K)
       + (
             hea.name() == "ea"
-          ? fvc::div
-            (
-                fvc::absolute(phi/fvc::interpolate(rho), U),
-                p,
-                "div(phiv,p)"
-            )
+          ? mvConvection->fvcDiv(fvc::absolute(phi, rho, U), p/rho)
           : -dpdt
         )
       - fvm::laplacian(thermophysicalTransport->alphaEff(), hea)

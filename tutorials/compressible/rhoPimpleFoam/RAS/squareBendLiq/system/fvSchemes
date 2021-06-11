@@ -36,7 +36,7 @@ divSchemes
     div(phi,epsilon)    Gauss linearUpwind limited;
     div(phi,k)          Gauss linearUpwind limited;
     div(phi,K)          Gauss linearUpwind limited;
-    div(phiv,p)         Gauss linearUpwind limited;
+    div(phi,(p|rho))    Gauss linearUpwind limited;
 
     div(((rho*nuEff)*dev2(T(grad(U)))))      Gauss linear;
 }

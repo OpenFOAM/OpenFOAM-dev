@@ -32,7 +32,6 @@ divSchemes
     div(phi,K)      Gauss upwind;
     div(phid,p)     Gauss upwind;
     div(meshPhi,p)  Gauss upwind;
-    div(phiv,p)     Gauss upwind;
     div(phi,k)      Gauss upwind;
     div(phi,epsilon) Gauss upwind;
     div(phi,R)      Gauss upwind;

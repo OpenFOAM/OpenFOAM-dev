@@ -8,12 +8,8 @@ if (ign.ignited())
       + (betav*fvc::ddt(rho, K) + fvc::div(phi, K))*rho/thermo.rhou()
       + (
             heau.name() == "eau"
-          ? fvc::div
-            (
-                phi/fvc::interpolate(rho),
-                p,
-                "div(phiv,p)"
-            )*rho/thermo.rhou()
+          ? mvConvection->fvcDiv(fvc::absolute(phi, rho, U), p/rho)
+           *rho/thermo.rhou()
           : -betav*dpdt*rho/thermo.rhou()
         )
       - fvm::laplacian(Db, heau)

@@ -12,12 +12,9 @@
       + fvc::ddt(rho, K) + fvc::div(phi, K)
       + (
             he.name() == "e"
-          ? fvc::div
-            (
-                fvc::absolute(phi/fvc::interpolate(rho), U),
-                p,
-                "div(phiv,p)"
-            )
+          ? mvConvection.valid()
+            ? mvConvection->fvcDiv(fvc::absolute(phi, rho, U), p/rho)
+            : fvc::div(fvc::absolute(phi, rho, U), p/rho)
           : -dpdt
         )
       + thermophysicalTransport.divq(he)

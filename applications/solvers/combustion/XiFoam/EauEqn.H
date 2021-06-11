@@ -8,12 +8,8 @@ if (ign.ignited())
       + (fvc::ddt(rho, K) + fvc::div(phi, K))*rho/thermo.rhou()
       + (
             heau.name() == "eau"
-          ? fvc::div
-            (
-                fvc::absolute(phi/fvc::interpolate(rho), U),
-                p,
-                "div(phiv,p)"
-            )*rho/thermo.rhou()
+          ? mvConvection->fvcDiv(fvc::absolute(phi, rho, U), p/rho)
+           *rho/thermo.rhou()
           : -dpdt*rho/thermo.rhou()
         )
       - fvm::laplacian(thermophysicalTransport->alphaEff(), heau)
