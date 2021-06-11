@@ -16,22 +16,20 @@ gnuplot<<EOF
     set key bottom center
 
     latestTime = system("foamListTimes -case .. -latestTime")
-
+    p0 = $(tail -n1 ../postProcessing/cellZoneAverage/0/volFieldValue.dat | awk '{print $2}')
     file = '../postProcessing/singleGraph/'.latestTime.'/line_d.bubbles_p_alpha.air1_alpha.air2_alpha.air3_alpha.bubbles.xy'
 
-    p0 = $(tail -n1 ../postProcessing/cellZoneAverage/0/volFieldValue.dat | awk '{print $2}')
-
-    plot ''.file.'' u (\$2*1000):1 w l t 'prediction',\
-    ''.file.'' u (0.003*(p0/\$3)**(1./3.)*1000):1 w l t 'exact result'
+    plot ''.file.'' u (\$2*1000):1 w l lc rgb 'black' t 'prediction',\
+    ''.file.'' u (0.003*(p0/\$3)**(1./3.)*1000):1 w l dt 2 lc rgb 'black' t 'exact result'
 
     set output '../alpha.air_y.eps'
 
     set xlabel '{/Symbol a} (-)'
 
-    plot ''.file.'' u 4:1 w l t 'air1',\
-    ''.file.'' u 5:1 w l t 'air2',\
-    ''.file.'' u 6:1 w l t 'air3',\
-    ''.file.'' u 7:1 w lp t 'air total'
+    plot ''.file.'' u 4:1 w l dt 2 lc rgb 'black' t 'air1',\
+    ''.file.'' u 5:1 w l dt 3 lc rgb 'black' t 'air2',\
+    ''.file.'' u 6:1 w l dt 4 lc rgb 'black' t 'air3',\
+    ''.file.'' u 7:1 w l lc rgb 'black' t 'air total'
 EOF
 
 #------------------------------------------------------------------------------

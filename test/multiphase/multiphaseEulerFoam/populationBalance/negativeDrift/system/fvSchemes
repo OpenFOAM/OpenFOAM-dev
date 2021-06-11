@@ -29,7 +29,7 @@ divSchemes
 {
     default                         none;
 
-    "div\(phi,alpha.*)"             Gauss vanLeer;
+    "div\(phi,alpha.*\)"            Gauss vanLeer;
     "div\(alphaRhoPhi.*,U.*\)"      Gauss limitedLinearV 1;
     "div\(alphaPhi.*,f.*\)"         Gauss limitedLinear 1;
 

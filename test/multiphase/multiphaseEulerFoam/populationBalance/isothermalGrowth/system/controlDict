@@ -10,45 +10,46 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
+    location    "system";
     object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application         multiphaseEulerFoam;
+application     multiphaseEulerFoam;
 
-startFrom           startTime;
+startFrom       startTime;
 
-startTime           0;
+startTime       0;
 
-stopAt              endTime;
+stopAt          endTime;
 
-endTime             30;
+endTime         30;
 
-deltaT              1e-3;
+deltaT          1e-3;
 
-writeControl        adjustableRunTime;
+writeControl    adjustableRunTime;
 
-writeInterval       1;
+writeInterval   1;
 
-purgeWrite          1;
+purgeWrite      1;
 
-writeFormat         ascii;
+writeFormat     ascii;
 
-writePrecision      9;
+writePrecision  9;
 
-writeCompression    uncompressed;
+writeCompression uncompressed;
 
-timeFormat          general;
+timeFormat      general;
 
-timePrecision       6;
+timePrecision   6;
 
-runTimeModifiable   yes;
+runTimeModifiable yes;
 
-adjustTimeStep      yes;
+adjustTimeStep  yes;
 
-maxCo               0.5;
+maxCo           0.5;
 
-maxDeltaT           1;
+maxDeltaT       1;
 
 functions
 {

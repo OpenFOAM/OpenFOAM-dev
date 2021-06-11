@@ -21,7 +21,7 @@ airSource
 
     selectionMode   all;
 
-    massFlowRate    24.535;
+    massFlowRate    0.02186682;
 
     phase           air;
     rho             thermo:rho.air;
@@ -57,8 +57,6 @@ airSource
         f26.air     0;
         f27.air     0;
         f28.air     0;
-        f29.air     0;
-        f30.air     0;
     }
 }
 
@@ -68,7 +66,7 @@ waterSink
 
     selectionMode   all;
 
-    massFlowRate    -24535;
+    massFlowRate    -21.86682;
 
     phase           water;
     rho             thermo:rho.water;
@@ -76,6 +74,5 @@ waterSink
     fieldValues
     {}
 }
-
 
 // ************************************************************************* //

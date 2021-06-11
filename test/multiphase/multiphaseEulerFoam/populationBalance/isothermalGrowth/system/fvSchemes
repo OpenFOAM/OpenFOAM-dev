@@ -10,6 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
+    location    "system";
     object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -29,14 +30,13 @@ divSchemes
 {
     default                         none;
 
-    "div\(phi,alpha.*)"             Gauss vanLeer;
+    "div\(phi,alpha.*\)"            Gauss vanLeer;
     "div\(phir,alpha.*,alpha.*)"    Gauss vanLeer;
 
     "div\(phi.*,U.*\)"              Gauss linearUpwind limited;
     "div\(alphaRhoPhi.*,U.*\)"      Gauss linearUpwind limited;
 
     "div\(alphaPhi.*,f.*\)"         Gauss upwind;
-    "div\(alphaRhoPhi.*,f.*\)"      Gauss upwind;
 
     "div\(\(\(\(alpha.*\*thermo:rho.*\)\*nuEff.*\)\*dev2\(T\(grad\(U.*\)\)\)\)\)" Gauss linear;
 }

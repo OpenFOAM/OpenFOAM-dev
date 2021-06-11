@@ -1,14 +1,13 @@
 #!/bin/sh
-cd ${0%/*} || exit 1    # run from this directory
 
-# Source tutorial run functions
+# Run from this directory
+cd "${0%/*}" || exit 1
+
+# Source run functions
 . $WM_PROJECT_DIR/bin/tools/RunFunctions
 
-# Set application name
-application=$(getApplication)
-
 runApplication blockMesh
-runApplication $application
+runApplication $(getApplication)
 
 ( cd validation && ./createGraphs )
 

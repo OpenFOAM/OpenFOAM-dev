@@ -35,37 +35,35 @@ air
 
         sizeGroups
         (
-            f0 {dSph 1.240700982; value 0;}
-            f1 {dSph 1.302736031; value 0;}
-            f2 {dSph 1.364771080; value 0;}
-            f3 {dSph 1.426806129; value 0;}
-            f4 {dSph 1.488841178; value 0;}
-            f5 {dSph 1.550876227; value 0.0609671;}
-            f6 {dSph 1.612911276; value 0.0741729;}
-            f7 {dSph 1.674946325; value 0.0895739;}
-            f8 {dSph 1.736981375; value 0.1074333;}
-            f9 {dSph 1.799016424; value 0.1280343;}
-            f10{dSph 1.861051473; value 0.151681;}
-            f11{dSph 1.923086522; value 0.1786995;}
-            f12{dSph 1.985121571; value 0.209438;}
-            f13{dSph 2.047156620; value 0;}
-            f14{dSph 2.109191669; value 0;}
-            f15{dSph 2.171226718; value 0;}
-            f16{dSph 2.233261767; value 0;}
-            f17{dSph 2.295296816; value 0;}
-            f18{dSph 2.357331865; value 0;}
-            f19{dSph 2.419366915; value 0;}
-            f20{dSph 2.481401964; value 0;}
-            f21{dSph 2.543437013; value 0;}
-            f22{dSph 2.605472062; value 0;}
-            f23{dSph 2.667507111; value 0;}
-            f24{dSph 2.729542160; value 0;}
-            f25{dSph 2.791577209; value 0;}
-            f26{dSph 2.853612258; value 0;}
-            f27{dSph 2.915647307; value 0;}
-            f28{dSph 2.977682356; value 0;}
-            f29{dSph 3.039717405; value 0;}
-            f30{dSph 3.101752454; value 0;}
+            f0 {dSph 1.000; value 0.0000;}
+            f1 {dSph 1.074; value 0.0000;}
+            f2 {dSph 1.147; value 0.0000;}
+            f3 {dSph 1.221; value 0.0000;}
+            f4 {dSph 1.294; value 0.0000;}
+            f5 {dSph 1.368; value 0.0000;}
+            f6 {dSph 1.441; value 0.0000;}
+            f7 {dSph 1.515; value 0.0000;}
+            f8 {dSph 1.588; value 0.0918;}
+            f9 {dSph 1.662; value 0.1151;}
+            f10{dSph 1.735; value 0.1429;}
+            f11{dSph 1.809; value 0.1758;}
+            f12{dSph 1.882; value 0.2146;}
+            f13{dSph 1.956; value 0.2599;}
+            f14{dSph 2.029; value 0.0000;}
+            f15{dSph 2.103; value 0.0000;}
+            f16{dSph 2.176; value 0.0000;}
+            f17{dSph 2.250; value 0.0000;}
+            f18{dSph 2.323; value 0.0000;}
+            f19{dSph 2.397; value 0.0000;}
+            f20{dSph 2.470; value 0.0000;}
+            f21{dSph 2.544; value 0.0000;}
+            f22{dSph 2.617; value 0.0000;}
+            f23{dSph 2.691; value 0.0000;}
+            f24{dSph 2.764; value 0.0000;}
+            f25{dSph 2.838; value 0.0000;}
+            f26{dSph 2.911; value 0.0000;}
+            f27{dSph 2.985; value 0.0000;}
+            f28{dSph 3.058; value 0.0000;}
         );
     }
 

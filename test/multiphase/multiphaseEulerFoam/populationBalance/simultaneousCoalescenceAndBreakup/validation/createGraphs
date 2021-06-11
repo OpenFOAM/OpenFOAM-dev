@@ -17,23 +17,23 @@ gnuplot<<EOF
     set xlabel 'd (m)'
     set ytics 0.1 mirror
     set ylabel 'Probability density function (m^{-3})'
-
+    set key left
     set xrange [1:10]
-    set yrange [0:0.5]
+    set yrange [0:0.6]
 
     numberDensity = '../postProcessing/numberDensity/10/numberDensity.dat'
     volumeDensity = '../postProcessing/volumeDensity/10/volumeDensity.dat'
 
     kVConversion = (6/pi)**(1./3.)
 
-    plot '-' w l t 'Number density, [Vanni, J. Colloid Interface Sci., 221: 143-160, 2000]',\
-    '-' w l t 'Volume density, [Vanni, J. Colloid Interface Sci., 221: 143-160, 2000]',\
-    numberDensity every ::0::12 u (\$3/kVConversion):(\$4*kVConversion) w p pt 1 t 'Number density, air1',\
-    numberDensity every ::13::22 u (\$3/kVConversion):(\$4*kVConversion) w p pt 5 t 'Number density, air2',\
-    numberDensity every ::23::30 u (\$3/kVConversion):(\$4*kVConversion) w p pt 9 t 'Number density, air3',\
-    volumeDensity every ::0::12 u (\$3/kVConversion):(\$4*kVConversion) w p pt 2 t 'Volume density, air1',\
-    volumeDensity every ::13::22 u (\$3/kVConversion):(\$4*kVConversion) w p pt 6 t 'Volume density, air2',\
-    volumeDensity every ::23::30 u (\$3/kVConversion):(\$4*kVConversion) w p pt 10 t 'Volume density, air3'
+    plot '-' w l lc rgb 'black' t 'NDF, Vanni (2000)',\
+    '-' w l dt 2 lc rgb 'black' t 'VDF, Vanni (2000)',\
+    numberDensity every ::0::12 u (\$3/kVConversion):(\$4*kVConversion) w p pt 1 lc rgb 'black' t 'air1',\
+    numberDensity every ::13::22 u (\$3/kVConversion):(\$4*kVConversion) w p pt 5 lc rgb 'black' t 'air2',\
+    numberDensity every ::23::30 u (\$3/kVConversion):(\$4*kVConversion) w p pt 9 lc rgb 'black' t 'air3',\
+    volumeDensity every ::0::12 u (\$3/kVConversion):(\$4*kVConversion) w p pt 2 lc rgb 'black' t 'air1',\
+    volumeDensity every ::13::22 u (\$3/kVConversion):(\$4*kVConversion) w p pt 6 lc rgb 'black' t 'air2',\
+    volumeDensity every ::23::30 u (\$3/kVConversion):(\$4*kVConversion) w p pt 10 lc rgb 'black' t 'air3'
     1.000   0.042
     1.460   0.062
     1.950   0.083

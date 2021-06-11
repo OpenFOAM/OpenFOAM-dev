@@ -10,6 +10,7 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
+    location    "system";
     object      blockMeshDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -18,14 +19,14 @@ convertToMeters 1;
 
 vertices
 (
-    (0  0  0 )
-    (10 0  0 )
-    (10 10 0 )
-    (0  10 0 )
-    (0  0  10)
-    (10 0  10)
-    (10 10 10)
-    (0  10 10)
+    (0 0 0)
+    (1 0 0)
+    (1 1 0)
+    (0 1 0)
+    (0 0 1)
+    (1 0 1)
+    (1 1 1)
+    (0 1 1)
 );
 
 blocks

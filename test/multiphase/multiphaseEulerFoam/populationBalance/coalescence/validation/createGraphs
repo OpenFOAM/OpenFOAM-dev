@@ -50,10 +50,10 @@ gnuplot<<EOF
     numberDensity = '../postProcessing/numberDensity/10/numberDensity.dat'
 
     plot n0(x) ls -1 t 'Initial Condition',\
-    n(x,10.0) ls 2 lc rgb 'black' t '[Scott, J. Atmos. Sci., 25: 54-65, 1968]',\
-    numberDensity every ::0::46 u 1:4 w p pt 1 t 'air1',\
-    numberDensity every ::47::55 u 1:4 w p pt 5 t 'air2',\
-    numberDensity every ::56::70 u 1:4 w p pt 9 t 'air3'
+    n(x,10.0) dt 2 lc rgb 'black' t 'Scott (1968)',\
+    numberDensity every ::0::46 u 1:4 w p pt 1 lc rgb 'black' t 'air1',\
+    numberDensity every ::47::55 u 1:4 w p pt 5 lc rgb 'black' t 'air2',\
+    numberDensity every ::56::70 u 1:4 w p pt 9 lc rgb 'black' t 'air3'
 EOF
 
 #------------------------------------------------------------------------------

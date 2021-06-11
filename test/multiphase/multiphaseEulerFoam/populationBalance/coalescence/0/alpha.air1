@@ -19,8 +19,6 @@ dimensions      [0 0 0 0 0 0 0];
 
 internalField   uniform 5.408481e-02;
 
-boundaryField
-{
-}
+boundaryField   {}
 
 // ************************************************************************* //

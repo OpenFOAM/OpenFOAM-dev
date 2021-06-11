@@ -21,9 +21,9 @@ gnuplot<<EOF
     set yrange [0:1.5e-2]
     set key top right
 
-    plot '<printf "2 0\n2 0.01\n4 0.01\n4 0\n"' w l t 'Initial Condition',\
-    '<printf "8 0\n8 0.01\n10 0.01\n10 0\n"' w l t '[Kumar J., PhD thesis, Magdeburg, 2006]',\
-    '../postProcessing/numberDensity/6/numberDensity.dat' u 1:4 w lp t 'air'
+    plot '<printf "1.876749927 0\n1.876749927 0.01\n4.144510443 0.01\n4.144510443 0\n"' w l dt 2 lc rgb 'black' t 'Initial condition',\
+    '<printf "7.957828406 0\n7.957828406 0.01\n10.14451044 0.01\n10.14451044 0\n"' w l lc rgb 'black' t 'Exact',\
+    '../postProcessing/numberDensity/6/numberDensity.dat' u 1:4 w lp ls 4 lc rgb 'black' t 'Numerical'
 
     set output '../moments.eps'
 
@@ -36,10 +36,10 @@ gnuplot<<EOF
     set yrange [0.5:3.5]
     set key top left
 
-    plot '../postProcessing/moments/0/moments.dat' u 1:(\$2/0.024535) w p pt 5 t 'j=0 (Numbers), air',\
-    '<printf "0 1\n6 1\n"' w l t 'j=0 (Numbers), [Kumar J., PhD thesis, Magdeburg, 2006]',\
-    '../postProcessing/moments/0/moments.dat' u 1:(\$3/0.0751237) w p pt 6 t 'j=1 (Volume), air',\
-    '<printf "0 1\n6 3\n"' w l t 'j=1 (Volume), [Kumar J., PhD thesis, Magdeburg, 2006]'
+    plot '../postProcessing/moments/0/moments.dat' every 2 u 1:(\$2/0.02186682) w p pt 5 lc rgb 'black' t 'j=0 (Numbers), numerical',\
+    '<printf "0 1\n6 1\n"' w l lc rgb 'black' t 'j=0 (Numbers), exact',\
+    '../postProcessing/moments/0/moments.dat' u 1:(\$3/0.066553351) every 2 w p pt 6 lc rgb 'black' t 'j=1 (Volume), numerical',\
+    '<printf "0 1\n6 3\n"' w l dt 2 lc rgb 'black' t 'j=1 (Volume), exact'
 EOF
 
 #------------------------------------------------------------------------------
