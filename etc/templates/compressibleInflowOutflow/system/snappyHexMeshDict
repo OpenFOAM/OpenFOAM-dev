@@ -28,8 +28,8 @@ geometry
         file "CAD.obj";
         regions
         {
-            <inletPatch>  { name inlet; }
-            <outletPatch> { name outlet; }
+            <inletRegion>  { name inlet; }
+            <outletRegion> { name outlet; }
         }
     }
 };
@@ -50,7 +50,7 @@ castellatedMeshControls
 
             regions
             {
-                <inletPatch>
+                <inletRegion>
                 {
                     level (2 2);
                     patchInfo
@@ -60,7 +60,7 @@ castellatedMeshControls
                     }
                 }
 
-                <outletPatch>
+                <outletRegion>
                 {
                     level (2 2);
                     patchInfo
@@ -89,8 +89,8 @@ castellatedMeshControls
 
 snapControls
 {
-//  explicitFeatureSnap    true;
-//  implicitFeatureSnap    false;
+//  explicitFeatureSnap    on;
+//  implicitFeatureSnap    off;
 }
 
 addLayersControls
@@ -103,13 +103,13 @@ addLayersControls
         }
     }
 
-    relativeSizes       true; // false, usually with firstLayerThickness
+    relativeSizes       on;   // off, usually with firstLayerThickness
     expansionRatio      1.2;
     finalLayerThickness 0.5;
     minThickness        1e-3;
 //  firstLayerThickness 0.01;
 
-//  maxThicknessToMedialRatio 0.6;
+//  maxThicknessToMedialRatio 0.3;
 }
 
 writeFlags
