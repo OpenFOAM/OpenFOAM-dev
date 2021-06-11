@@ -40,7 +40,7 @@ divSchemes
     "div\(alphaRhoPhi.*,(h|e).*\)"  Gauss linearUpwind limited;
     "div\(alphaRhoPhi.*,f.*\)"      Gauss upwind;
     "div\(alphaRhoPhi.*,K.*\)"      Gauss linearUpwind limited;
-    "div(alphaRhoPhi.*,(p|thermo:rho.*))" Gauss linearUpwind limited;
+    "div\(alphaRhoPhi.*,\(p\|thermo:rho.*\)\)" Gauss linearUpwind limited;
     "div\(phi.*,kappai.*\)"         Gauss linearUpwind limited;
     "div\(alphaRhoPhi.*,(k|epsilon|omega).*\)"  Gauss upwind;
     "div\(phim,(k|epsilon)m\)"      Gauss upwind;

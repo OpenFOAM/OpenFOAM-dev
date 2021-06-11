@@ -39,7 +39,7 @@ divSchemes
     "div\(alphaRhoPhi.*,(k|epsilon|h|e).*\)"          Gauss limitedLinear 1;
     "div\(alphaRhoPhi.*,K.*\)"              Gauss limitedLinear 1;
     "div\(alphaRhoPhi.*,Y.*\)"              Gauss limitedLinear 1;
-    "div(alphaRhoPhi.*,(p|thermo:rho.*))"         Gauss limitedLinear 1;
+    "div\(alphaRhoPhi.*,\(p\|thermo:rho.*\)\)"         Gauss limitedLinear 1;
 
     "div\(alphaPhi.*,f.*\)"                 Gauss upwind;
     "div\(fAlphaPhi.*,kappa.*\)"            Gauss linearUpwind limited;
