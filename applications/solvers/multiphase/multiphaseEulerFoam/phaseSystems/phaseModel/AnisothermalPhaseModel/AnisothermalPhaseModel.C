@@ -106,9 +106,6 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
     const tmp<volVectorField> tU(this->U());
     const volVectorField& U(tU());
 
-    const tmp<surfaceScalarField> talphaPhi(this->alphaPhi());
-    const surfaceScalarField& alphaPhi(talphaPhi());
-
     const tmp<surfaceScalarField> talphaRhoPhi(this->alphaRhoPhi());
     const surfaceScalarField& alphaRhoPhi(talphaRhoPhi());
 
@@ -139,7 +136,11 @@ Foam::AnisothermalPhaseModel<BasePhaseModel>::heEqn()
     {
         tEEqn.ref() += filterPressureWork
         (
-            fvc::div(fvc::absolute(alphaPhi, alpha, U), this->thermo().p())
+            fvc::div
+            (
+                fvc::absolute(alphaRhoPhi, alpha, rho, U),
+                this->thermo().p()/rho
+            )
           + (fvc::ddt(alpha) - contErr/rho)*this->thermo().p()
         );
     }

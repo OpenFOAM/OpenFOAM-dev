@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -144,6 +144,15 @@ namespace fvc
     tmp<surfaceScalarField> absolute
     (
         const tmp<surfaceScalarField>& tphi,
+        const volScalarField& rho,
+        const volVectorField& U
+    );
+
+    //- Return the given relative flux in absolute form
+    tmp<surfaceScalarField> absolute
+    (
+        const tmp<surfaceScalarField>& tphi,
+        const volScalarField& alpha,
         const volScalarField& rho,
         const volVectorField& U
     );

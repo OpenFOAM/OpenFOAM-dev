@@ -37,7 +37,7 @@ divSchemes
 
     "div\(alphaRhoPhi.*,(h|e).*\)"  Gauss limitedLinear 1;
     "div\(alphaRhoPhi.*,K.*\)"      Gauss limitedLinear 1;
-    "div\(alphaPhi.*,p\)"           Gauss limitedLinear 1;
+    "div(alphaRhoPhi.*,(p|thermo:rho.*))" Gauss limitedLinear 1;
 
     div(alphaRhoPhi.particles,Theta.particles) Gauss limitedLinear 1;
 
