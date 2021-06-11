@@ -119,7 +119,7 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::q() const
         {
             const volScalarField hi
             (
-                composition.HE(i, this->thermo().p(), this->thermo().T())
+                composition.Hs(i, this->thermo().p(), this->thermo().T())
             );
 
             hGradY += fvc::interpolate(hi)*fvc::snGrad(Y[i]);
@@ -156,59 +156,38 @@ nonUnityLewisEddyDiffusivity<TurbulenceThermophysicalTransportModel>::divq
     const basicSpecieMixture& composition = this->thermo().composition();
     const PtrList<volScalarField>& Y = composition.Y();
 
-    if (!Y.size())
-    {
-        tmpDivq.ref() -=
-            correction(fvm::laplacian(this->alpha()*this->alphaEff(), he));
-    }
-    else
-    {
-        tmpDivq.ref() -= fvm::laplacian(this->alpha()*this->alphaEff(), he);
+    tmpDivq.ref() -=
+        correction(fvm::laplacian(this->alpha()*this->alphaEff(), he));
 
-        volScalarField heNew
+    surfaceScalarField hGradY
+    (
+        surfaceScalarField::New
         (
-            volScalarField::New
-            (
-                "he",
-                he.mesh(),
-                dimensionedScalar(he.dimensions(), 0)
-            )
+            "hGradY",
+            he.mesh(),
+            dimensionedScalar(he.dimensions()/dimLength, 0)
+        )
+    );
+
+    forAll(Y, i)
+    {
+        const volScalarField hi
+        (
+            composition.Hs(i, this->thermo().p(), this->thermo().T())
         );
 
-        surfaceScalarField hGradY
-        (
-            surfaceScalarField::New
-            (
-                "hGradY",
-                he.mesh(),
-                dimensionedScalar(he.dimensions()/dimLength, 0)
-            )
-        );
-
-        forAll(Y, i)
-        {
-            const volScalarField hi
-            (
-                composition.HE(i, this->thermo().p(), this->thermo().T())
-            );
-
-            heNew += Y[i]*hi;
-            hGradY += fvc::interpolate(hi)*fvc::snGrad(Y[i]);
-        }
-
-        tmpDivq.ref() +=
-            fvc::laplacian(this->alpha()*this->alphaEff(), heNew);
-
-        tmpDivq.ref() -=
-            fvc::div
-            (
-                fvc::interpolate
-                (
-                    this->alpha()
-                   *this->thermo().alphaEff((this->Prt_/Sct_)*this->alphat())
-                )*hGradY*he.mesh().magSf()
-            );
+        hGradY += fvc::interpolate(hi)*fvc::snGrad(Y[i]);
     }
+
+    tmpDivq.ref() -=
+        fvc::div
+        (
+            fvc::interpolate
+            (
+                this->alpha()
+               *this->thermo().alphaEff((this->Prt_/Sct_)*this->alphat())
+            )*hGradY*he.mesh().magSf()
+        );
 
     return tmpDivq;
 }

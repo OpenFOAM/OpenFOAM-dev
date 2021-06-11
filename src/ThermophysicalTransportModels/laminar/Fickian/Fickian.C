@@ -262,7 +262,7 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::q() const
             {
                 const volScalarField hi
                 (
-                    composition.HE(i, this->thermo().p(), this->thermo().T())
+                    composition.Hs(i, this->thermo().p(), this->thermo().T())
                 );
 
                 const surfaceScalarField ji(this->j(Y[i]));
@@ -277,7 +277,7 @@ tmp<surfaceScalarField> Fickian<BasicThermophysicalTransportModel>::q() const
 
             const volScalarField hi
             (
-                composition.HE(i, this->thermo().p(), this->thermo().T())
+                composition.Hs(i, this->thermo().p(), this->thermo().T())
             );
 
             sumJh -= sumJ*fvc::interpolate(hi);
@@ -308,81 +308,57 @@ tmp<fvScalarMatrix> Fickian<BasicThermophysicalTransportModel>::divq
     const basicSpecieMixture& composition = this->thermo().composition();
     const PtrList<volScalarField>& Y = composition.Y();
 
-    if (!Y.size())
+    tmpDivq.ref() -=
+        correction(fvm::laplacian(this->alpha()*this->alphaEff(), he));
+
+    surfaceScalarField sumJ
+    (
+        surfaceScalarField::New
+        (
+            "sumJ",
+            he.mesh(),
+            dimensionedScalar(dimMass/dimArea/dimTime, 0)
+        )
+    );
+
+    surfaceScalarField sumJh
+    (
+        surfaceScalarField::New
+        (
+            "sumJh",
+            he.mesh(),
+            dimensionedScalar(sumJ.dimensions()*he.dimensions(), 0)
+        )
+    );
+
+    forAll(Y, i)
     {
-        tmpDivq.ref() -=
-            correction(fvm::laplacian(this->alpha()*this->alphaEff(), he));
-    }
-    else
-    {
-        tmpDivq.ref() -= fvm::laplacian(this->alpha()*this->alphaEff(), he);
-
-        volScalarField heNew
-        (
-            volScalarField::New
-            (
-                "he",
-                he.mesh(),
-                dimensionedScalar(he.dimensions(), 0)
-            )
-        );
-
-        surfaceScalarField sumJ
-        (
-            surfaceScalarField::New
-            (
-                "sumJ",
-                he.mesh(),
-                dimensionedScalar(dimMass/dimArea/dimTime, 0)
-            )
-        );
-
-        surfaceScalarField sumJh
-        (
-            surfaceScalarField::New
-            (
-                "sumJh",
-                he.mesh(),
-                dimensionedScalar(sumJ.dimensions()*he.dimensions(), 0)
-            )
-        );
-
-        forAll(Y, i)
+        if (i != composition.defaultSpecie())
         {
-            if (i != composition.defaultSpecie())
-            {
-                const volScalarField hi
-                (
-                    composition.HE(i, this->thermo().p(), this->thermo().T())
-                );
-
-                heNew += Y[i]*hi;
-
-                const surfaceScalarField ji(this->j(Y[i]));
-                sumJ += ji;
-
-                sumJh += ji*fvc::interpolate(hi);
-            }
-        }
-
-        {
-            const label i = composition.defaultSpecie();
-
             const volScalarField hi
             (
-                composition.HE(i, this->thermo().p(), this->thermo().T())
+                composition.Hs(i, this->thermo().p(), this->thermo().T())
             );
 
-            heNew += Y[i]*hi;
+            const surfaceScalarField ji(this->j(Y[i]));
+            sumJ += ji;
 
-            sumJh -= sumJ*fvc::interpolate(hi);
+            sumJh += ji*fvc::interpolate(hi);
         }
-
-        tmpDivq.ref() +=
-            fvc::laplacian(this->alpha()*this->alphaEff(), heNew);
-
-        tmpDivq.ref() += fvc::div(sumJh*he.mesh().magSf());
     }
+
+    {
+        const label i = composition.defaultSpecie();
+
+        const volScalarField hi
+        (
+            composition.Hs(i, this->thermo().p(), this->thermo().T())
+        );
+
+        sumJh -= sumJ*fvc::interpolate(hi);
+    }
+
+    tmpDivq.ref() += fvc::div(sumJh*he.mesh().magSf());
 
     return tmpDivq;
 }
