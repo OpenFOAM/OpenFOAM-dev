@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -264,9 +264,9 @@ int main(int argc, char *argv[])
             Info<< "3D case; refining all directions" << nl << endl;
 
             wordList directions(3);
-            directions[0] = "tan1";
-            directions[1] = "tan2";
-            directions[2] = "normal";
+            directions[0] = "e1";
+            directions[1] = "e2";
+            directions[2] = "e3";
             refineDict.add("directions", directions);
 
             // Use hex cutter
@@ -281,20 +281,20 @@ int main(int argc, char *argv[])
             if (dirs.x() == -1)
             {
                 Info<< "2D case; refining in directions y,z\n" << endl;
-                directions[0] = "tan2";
-                directions[1] = "normal";
+                directions[0] = "e2";
+                directions[1] = "e3";
             }
             else if (dirs.y() == -1)
             {
                 Info<< "2D case; refining in directions x,z\n" << endl;
-                directions[0] = "tan1";
-                directions[1] = "normal";
+                directions[0] = "e1";
+                directions[1] = "e3";
             }
             else
             {
                 Info<< "2D case; refining in directions x,y\n" << endl;
-                directions[0] = "tan1";
-                directions[1] = "tan2";
+                directions[0] = "e1";
+                directions[1] = "e2";
             }
 
             refineDict.add("directions", directions);
@@ -306,8 +306,8 @@ int main(int argc, char *argv[])
         refineDict.add("coordinateSystem", "global");
 
         dictionary coeffsDict;
-        coeffsDict.add("tan1", vector(1, 0, 0));
-        coeffsDict.add("tan2", vector(0, 1, 0));
+        coeffsDict.add("e1", vector(1, 0, 0));
+        coeffsDict.add("e2", vector(0, 1, 0));
         refineDict.add("globalCoeffs", coeffsDict);
 
         refineDict.add("geometricCut", "false");

@@ -26,23 +26,23 @@ coordinateSystem global;
 //coordinateSystem patchLocal;
 
 // .. and its coefficients. x,y in this case. (normal direction is calculated
-// as tan1^tan2)
+// as e1  ^e2  )
 globalCoeffs
 {
-    tan1 (1 0 0);
-    tan2 (0 1 0);
+    e1      (1 0 0);
+    e2      (0 1 0);
 }
 
 patchLocalCoeffs
 {
-    patch outside;  // Normal direction is facenormal of zero'th face of patch
-    tan1 (1 0 0);
+    patch   outside;  // Normal direction is facenormal of zero'th face of patch
+    e1      (1 0 0);
 }
 
 // List of directions to refine
 directions
 (
-    normal
+    e3
 );
 
 // Whether to use hex topology. This will

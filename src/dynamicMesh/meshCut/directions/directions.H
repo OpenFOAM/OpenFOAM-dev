@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,9 +74,9 @@ public:
         //- Enumeration listing the possible coordinate directions.
         enum directionType
         {
-            TAN1,
-            TAN2,
-            NORMAL
+            e1,
+            e2,
+            e3
         };
 
 
@@ -107,8 +107,8 @@ private:
             const vectorField& dirs
         );
 
-        //- Check if vec has no component in 2D normal direction. Exits if
-        //  so.
+        //- Check if vec has no component in 2D normal direction.
+        //  Exits if so.
         static void check2D
         (
             const twoDPointCorrector* correct2DPtr,

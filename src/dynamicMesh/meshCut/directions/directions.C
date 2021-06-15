@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,9 +45,9 @@ namespace Foam
         3
     >::names[] =
     {
-        "tan1",
-        "tan2",
-        "normal"
+        "e1",
+        "e2",
+        "e3"
     };
 }
 
@@ -286,9 +286,9 @@ Foam::directions::directions
     const wordList wantedDirs(dict.lookup("directions"));
     const word coordSystem(dict.lookup("coordinateSystem"));
 
-    bool wantNormal = false;
-    bool wantTan1 = false;
-    bool wantTan2 = false;
+    bool wantE3 = false;
+    bool wantE1 = false;
+    bool wantE2 = false;
     label nDirs = 0;
 
     if (coordSystem != "fieldBased")
@@ -297,17 +297,17 @@ Foam::directions::directions
         {
             directionType wantedDir = directionTypeNames_[wantedDirs[i]];
 
-            if (wantedDir == NORMAL)
+            if (wantedDir == e3)
             {
-                wantNormal = true;
+                wantE3 = true;
             }
-            else if (wantedDir == TAN1)
+            else if (wantedDir == e1)
             {
-                wantTan1 = true;
+                wantE1 = true;
             }
-            else if (wantedDir == TAN2)
+            else if (wantedDir == e2)
             {
-                wantTan2 = true;
+                wantE2 = true;
             }
         }
     }
@@ -317,32 +317,32 @@ Foam::directions::directions
     {
         const dictionary& globalDict = dict.subDict("globalCoeffs");
 
-        vector tan1(globalDict.lookup("tan1"));
-        check2D(correct2DPtr, tan1);
+        vector e1(globalDict.lookup("e1"));
+        check2D(correct2DPtr, e1);
 
-        vector tan2(globalDict.lookup("tan2"));
-        check2D(correct2DPtr, tan2);
+        vector e2(globalDict.lookup("e2"));
+        check2D(correct2DPtr, e2);
 
-        vector normal = tan1 ^ tan2;
-        normal /= mag(normal);
+        vector e3 = e1 ^ e2;
+        e3 /= mag(e3);
 
         Info<< "Global Coordinate system:" << endl
-            << "     normal : " << normal << endl
-            << "     tan1   : " << tan1 << endl
-            << "     tan2   : " << tan2
+            << "     e3 : " << e3 << endl
+            << "     e1   : " << e1 << endl
+            << "     e2   : " << e2
             << endl << endl;
 
-        if (wantNormal)
+        if (wantE3)
         {
-            operator[](nDirs++) = vectorField(1, normal);
+            operator[](nDirs++) = vectorField(1, e3);
         }
-        if (wantTan1)
+        if (wantE1)
         {
-            operator[](nDirs++) = vectorField(1, tan1);
+            operator[](nDirs++) = vectorField(1, e1);
         }
-        if (wantTan2)
+        if (wantE2)
         {
-            operator[](nDirs++) = vectorField(1, tan2);
+            operator[](nDirs++) = vectorField(1, e2);
         }
     }
     else if (coordSystem == "patchLocal")
@@ -364,28 +364,28 @@ Foam::directions::directions
         // Take zeroth face on patch
         const polyPatch& pp = mesh.boundaryMesh()[patchi];
 
-        vector tan1(patchDict.lookup("tan1"));
+        vector e1(patchDict.lookup("e1"));
 
         const vector& n0 = pp.faceNormals()[0];
 
         if (correct2DPtr)
         {
-            tan1 = correct2DPtr->planeNormal() ^ n0;
+            e1 = correct2DPtr->planeNormal() ^ n0;
 
             WarningInFunction
-                << "Discarding user specified tan1 since 2D case." << endl
-                << "Recalculated tan1 from face normal and planeNormal as "
-                << tan1 << endl << endl;
+                << "Discarding user specified e1 since 2D case." << endl
+                << "Recalculated e1 from face normal and planeNormal as "
+                << e1 << endl << endl;
         }
 
         Switch useTopo(dict.lookup("useHexTopology"));
 
-        vectorField normalDirs;
-        vectorField tan1Dirs;
+        vectorField e3Dirs;
+        vectorField e1Dirs;
 
-        if (wantNormal || wantTan2)
+        if (wantE3 || wantE2)
         {
-            normalDirs =
+            e3Dirs =
                 propagateDirection
                 (
                     mesh,
@@ -395,35 +395,35 @@ Foam::directions::directions
                     n0
                 );
 
-            if (wantNormal)
+            if (wantE3)
             {
-                this->operator[](nDirs++) = normalDirs;
+                this->operator[](nDirs++) = e3Dirs;
             }
         }
 
-        if (wantTan1 || wantTan2)
+        if (wantE1 || wantE2)
         {
-            tan1Dirs =
+            e1Dirs =
                 propagateDirection
                 (
                     mesh,
                     useTopo,
                     pp,
-                    vectorField(pp.size(), tan1),
-                    tan1
+                    vectorField(pp.size(), e1),
+                    e1
                 );
 
 
-            if (wantTan1)
+            if (wantE1)
             {
-                this->operator[](nDirs++) = tan1Dirs;
+                this->operator[](nDirs++) = e1Dirs;
             }
         }
-        if (wantTan2)
+        if (wantE2)
         {
-            tmp<vectorField> tan2Dirs = normalDirs ^ tan1Dirs;
+            tmp<vectorField> e2Dirs = e3Dirs ^ e1Dirs;
 
-            this->operator[](nDirs++) = tan2Dirs;
+            this->operator[](nDirs++) = e2Dirs;
         }
     }
     else if (coordSystem == "fieldBased")

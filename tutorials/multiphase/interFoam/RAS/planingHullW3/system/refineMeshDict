@@ -21,17 +21,17 @@ coordinateSystem global;
 
 globalCoeffs
 {
-    tan1            ( 1 0 0 );
-    tan2            ( 0 1 0 );
+    e1              (1 0 0);
+    e2              (0 1 0);
 }
 
 patchLocalCoeffs
 {
     patch           outside;
-    tan1            ( 1 0 0 );
+    e1              (1 0 0);
 }
 
-directions      ( tan1 tan2 );
+directions      (e1 e2);
 
 useHexTopology  no;
 
