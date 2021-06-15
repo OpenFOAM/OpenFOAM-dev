@@ -57,74 +57,56 @@ const Foam::NamedEnum<Foam::shellSurfaces::refineMode, 5>
 void Foam::shellSurfaces::setAndCheckLevels
 (
     const label shelli,
-    const List<Tuple2<scalar, label>>& distLevels
+    const dictionary& dict
 )
 {
-    if (modes_[shelli] != refineMode::distance && distLevels.size() != 1)
+    const searchableSurface& shell = allGeometry_[shells_[shelli]];
+
+    if
+    (
+        modes_[shelli] == refineMode::inside
+     || modes_[shelli] == refineMode::outside
+    )
     {
-        FatalErrorInFunction
-            << "For refinement mode "
-            << refineModeNames_[modes_[shelli]]
-            << " specify only one distance+level."
-            << " (its distance gets discarded)"
-            << exit(FatalError);
-    }
-
-    // Extract information into separate distance and level
-    distances_[shelli].setSize(distLevels.size());
-    levels_[shelli].setSize(distLevels.size());
-
-    forAll(distLevels, j)
-    {
-        distances_[shelli][j] = distLevels[j].first();
-        levels_[shelli][j] = distLevels[j].second();
-
-        // Check in incremental order
-        if (j > 0)
+        if (!allGeometry_[shells_[shelli]].hasVolumeType())
         {
-            if
-            (
-                (distances_[shelli][j] <= distances_[shelli][j-1])
-             || (levels_[shelli][j] > levels_[shelli][j-1])
-            )
+            WarningInFunction
+                << "Shell " << shell.name()
+                << " is not closed so testing for '"
+                << refineModeNames_[modes_[shelli]]
+                << "' may fail." << endl;
+        }
+
+        distances_[shelli].setSize(0);
+        levels_[shelli].setSize(1);
+
+        if (dict.found("levels") && !(dict.found("level")))
+        {
+            // Support 'levels' for backward compatibility
+            const List<Tuple2<scalar, label>> distLevels(dict.lookup("levels"));
+
+            if (distLevels.size() != 1)
             {
                 FatalErrorInFunction
                     << "For refinement mode "
                     << refineModeNames_[modes_[shelli]]
-                    << " : Refinement should be specified in order"
-                    << " of increasing distance"
-                    << " (and decreasing refinement level)." << endl
-                    << "Distance:" << distances_[shelli][j]
-                    << " refinementLevel:" << levels_[shelli][j]
+                    << " specify only one distance+level."
+                    << " (its distance gets discarded)"
                     << exit(FatalError);
             }
+
+            levels_[shelli][0] = distLevels[0].second();
         }
-    }
-
-    const searchableSurface& shell = allGeometry_[shells_[shelli]];
-
-    if (modes_[shelli] == refineMode::distance)
-    {
-        Info<< "Refinement level according to distance to "
-            << shell.name() << endl;
-
-        forAll(levels_[shelli], j)
+        else
         {
-            Info<< "    level " << levels_[shelli][j]
-                << " for all cells within " << distances_[shelli][j]
-                << " metre." << endl;
-        }
-    }
-    else
-    {
-        if (!allGeometry_[shells_[shelli]].hasVolumeType())
-        {
-            FatalErrorInFunction
-                << "Shell " << shell.name()
-                << " does not support testing for "
-                << refineModeNames_[modes_[shelli]] << endl
-                << "Probably it is not closed."
-                << exit(FatalError);
+            if (dict.found("levels"))
+            {
+                IOWarningInFunction(dict)
+                    << "Found both 'level' and 'levels' entries, using 'level'."
+                    << endl;
+            }
+
+            levels_[shelli][0] = readLabel(dict.lookup("level"));
         }
 
         if (modes_[shelli] == refineMode::inside)
@@ -136,6 +118,88 @@ void Foam::shellSurfaces::setAndCheckLevels
         {
             Info<< "Refinement level " << levels_[shelli][0]
                 << " for all cells outside " << shell.name() << endl;
+        }
+    }
+    else if
+    (
+        modes_[shelli] == refineMode::insideSpan
+     || modes_[shelli] == refineMode::outsideSpan
+    )
+    {
+        if (!allGeometry_[shells_[shelli]].hasVolumeType())
+        {
+            WarningInFunction
+                << "Shell " << shell.name()
+                << " is not closed so testing for '"
+                << refineModeNames_[modes_[shelli]]
+                << "' may fail." << endl;
+        }
+
+        distances_[shelli].setSize(1);
+        levels_[shelli].setSize(1);
+        const Tuple2<scalar, label> distLevel(dict.lookup("level"));
+        distances_[shelli][0] = distLevel.first();
+        levels_[shelli][0] = distLevel.second();
+
+        if (modes_[shelli] == refineMode::insideSpan)
+        {
+            Info<< "Refinement level " << levels_[shelli][0]
+                << " for all cells inside " << shell.name()
+                << " within distance " << distances_[shelli][0] << endl;
+        }
+        else
+        {
+            Info<< "Refinement level " << levels_[shelli][0]
+                << " for all cells outside " << shell.name()
+                << " within distance " << distances_[shelli][0] << endl;
+        }
+    }
+    else
+    {
+        const List<Tuple2<scalar, label>> distLevels(dict.lookup("levels"));
+
+        // Extract information into separate distance and level
+        distances_[shelli].setSize(distLevels.size());
+        levels_[shelli].setSize(distLevels.size());
+
+        forAll(distLevels, j)
+        {
+            distances_[shelli][j] = distLevels[j].first();
+            levels_[shelli][j] = distLevels[j].second();
+
+            // Check in incremental order
+            if (j > 0)
+            {
+                if
+                (
+                    (distances_[shelli][j] <= distances_[shelli][j-1])
+                 || (levels_[shelli][j] > levels_[shelli][j-1])
+                )
+                {
+                    FatalErrorInFunction
+                        << "For refinement mode "
+                        << refineModeNames_[modes_[shelli]]
+                        << " : Refinement should be specified in order"
+                        << " of increasing distance"
+                        << " (and decreasing refinement level)." << endl
+                        << "Distance:" << distances_[shelli][j]
+                        << " refinementLevel:" << levels_[shelli][j]
+                        << exit(FatalError);
+                }
+            }
+        }
+
+        if (modes_[shelli] == refineMode::distance)
+        {
+            Info<< "Refinement level according to distance to "
+                << shell.name() << endl;
+
+            forAll(levels_[shelli], j)
+            {
+                Info<< "    level " << levels_[shelli][j]
+                    << " for all cells within " << distances_[shelli][j]
+                    << " metre." << endl;
+            }
         }
     }
 }
@@ -499,7 +563,7 @@ Foam::shellSurfaces::shellSurfaces
             modes_[shelli] = refineModeNames_.read(dict.lookup("mode"));
 
             // Read pairs of distance+level
-            setAndCheckLevels(shelli, dict.lookup("levels"));
+            setAndCheckLevels(shelli, dict);
 
             if
             (

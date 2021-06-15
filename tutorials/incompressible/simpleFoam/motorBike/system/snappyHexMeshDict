@@ -145,8 +145,8 @@ castellatedMeshControls
     {
         refinementBox
         {
-            mode inside;
-            levels ((1E15 4));
+            mode    inside;
+            level   4;
         }
     }
 

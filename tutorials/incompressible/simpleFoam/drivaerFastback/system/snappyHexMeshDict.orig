@@ -92,20 +92,20 @@ castellatedMeshControls
     {
         body
         {
-            mode distance;
-            levels ((0.2 5));
+            mode    distance;
+            levels  ((0.2 5));
         }
 
         "(wake|underbody)"
         {
-            mode inside;
-            levels ((1E15 4));
+            mode    inside;
+            level   4;
         }
 
         ".*stream"
         {
-            mode inside;
-            levels ((1E15 3));
+            mode    inside;
+            level   3;
         }
     }
 

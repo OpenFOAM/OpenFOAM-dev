@@ -96,8 +96,8 @@ castellatedMeshControls
     {
         CAD
         {
-            mode inside;
-            levels ((1E15 1));
+            mode    inside;
+            level   1;
         }
     }
 

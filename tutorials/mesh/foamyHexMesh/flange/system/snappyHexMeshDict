@@ -126,8 +126,8 @@ castellatedMeshControls
     {
         refineHole
         {
-            mode inside;
-            levels ((1E15 3));
+            mode    inside;
+            level   3;
         }
     }
 

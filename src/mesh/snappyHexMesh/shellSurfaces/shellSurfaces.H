@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,11 +103,7 @@ private:
     // Private Member Functions
 
         //- Helper function for initialisation.
-        void setAndCheckLevels
-        (
-            const label shelli,
-            const List<Tuple2<scalar, label>>&
-        );
+        void setAndCheckLevels(const label shelli, const dictionary& dict);
 
         //- Specifically orient triSurfaces using a calculated point outside.
         //  Done since quite often triSurfaces not of consistent orientation
