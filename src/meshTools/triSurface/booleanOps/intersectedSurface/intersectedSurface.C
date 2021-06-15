@@ -26,7 +26,7 @@ License
 #include "intersectedSurface.H"
 #include "surfaceIntersection.H"
 #include "faceList.H"
-#include "faceTriangulation.H"
+#include "polygonTriangulate.H"
 #include "treeBoundBox.H"
 #include "OFstream.H"
 #include "error.H"
@@ -1185,6 +1185,9 @@ Foam::intersectedSurface::intersectedSurface
     // Start in newTris for decomposed face.
     labelList startTriI(surf.size(), 0);
 
+    // Create a triangulation engine
+    polygonTriangulate triEngine;
+
     forAll(surf, facei)
     {
         startTriI[facei] = newTris.size();
@@ -1209,56 +1212,21 @@ Foam::intersectedSurface::intersectedSurface
             {
                 const face& newF = newFaces[newFacei];
 
-//                {
-//                    fileName fName
-//                    (
-//                        "face_"
-//                      + Foam::name(facei)
-//                      + "_subFace_"
-//                      + Foam::name(newFacei)
-//                      + ".obj"
-//                    );
-//                    Pout<< "Writing original face:" << facei << " subFace:"
-//                        << newFacei << " to " << fName << endl;
-//
-//                    OFstream str(fName);
-//
-//                    forAll(newF, fp)
-//                    {
-//                        meshTools::writeOBJ(str, eSurf.points()[newF[fp]]);
-//                    }
-//                    str << 'l';
-//                    forAll(newF, fp)
-//                    {
-//                        str << ' ' << fp+1;
-//                    }
-//                    str<< " 1" << nl;
-//                }
-
-
                 const vector& n = surf.faceNormals()[facei];
                 const label region = surf[facei].region();
 
-                faceTriangulation tris(eSurf.points(), newF, n);
+                triEngine.triangulate
+                (
+                    UIndirectList<point>(eSurf.points(), newF),
+                    n
+                );
 
-                forAll(tris, triI)
+                forAll(triEngine.triPoints(), trii)
                 {
-                    const triFace& t = tris[triI];
-
-                    forAll(t, i)
-                    {
-                        if (t[i] < 0 || t[i] >= eSurf.points().size())
-                        {
-                            FatalErrorInFunction
-                                << "Face triangulation of face " << facei
-                                << " uses points outside range 0.."
-                                << eSurf.points().size()-1 << endl
-                                << "Triangulation:"
-                                << tris << abort(FatalError);
-                        }
-                    }
-
-                    newTris.append(labelledTri(t[0], t[1], t[2], region));
+                    newTris.append
+                    (
+                        labelledTri(triEngine.triPoints(trii, newF), region)
+                    );
                 }
             }
         }

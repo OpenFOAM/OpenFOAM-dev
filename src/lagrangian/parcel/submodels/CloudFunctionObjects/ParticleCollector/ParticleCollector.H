@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -143,11 +143,6 @@ private:
         //- List of faces
         List<face> faces_;
 
-
-        // Polygon collector
-
-            //- Triangulation of faces
-            List<List<face>> faceTris_;
 
         // Concentric circles collector
 

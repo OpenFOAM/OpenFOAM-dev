@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,6 +52,7 @@ Description
 #include "uindirectPrimitivePatch.H"
 #include "DynamicField.H"
 #include "scalarListIOList.H"
+#include "polygonTriangulate.H"
 
 using namespace Foam;
 
@@ -78,31 +79,30 @@ triSurface triangulate
     label newPatchi = 0;
     label localTriFacei = 0;
 
+    polygonTriangulate triEngine;
+
     forAllConstIter(labelHashSet, includePatches, iter)
     {
         const label patchi = iter.key();
         const polyPatch& patch = bMesh[patchi];
         const pointField& points = patch.points();
 
-        label nTriTotal = 0;
-
         forAll(patch, patchFacei)
         {
             const face& f = patch[patchFacei];
 
-            faceList triFaces(f.nTriangles(points));
+            triEngine.triangulate(UIndirectList<point>(points, f));
 
-            label nTri = 0;
-
-            f.triangles(points, nTri, triFaces);
-
-            forAll(triFaces, triFacei)
+            forAll(triEngine.triPoints(), triFacei)
             {
-                const face& f = triFaces[triFacei];
-
-                triangles.append(labelledTri(f[0], f[1], f[2], newPatchi));
-
-                nTriTotal++;
+                triangles.append
+                (
+                    labelledTri
+                    (
+                        triEngine.triPoints(triFacei, f),
+                        newPatchi
+                    )
+                );
 
                 triSurfaceToAgglom[localTriFacei++] = globalNumbering.toGlobal
                 (

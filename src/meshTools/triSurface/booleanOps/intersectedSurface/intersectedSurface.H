@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,8 +39,7 @@ Description
       nSurfaceEdges)
     - construct face-edge addressing for above edges
     - for each face do a right-handed walk to reconstruct faces (splitFace)
-    - retriangulate resulting faces (might be non-convex so use
-      faceTriangulation which does proper bisection)
+    - retriangulate resulting faces
 
     The resulting surface will have the points from the surface first
     in the point list (0 .. nSurfacePoints-1)

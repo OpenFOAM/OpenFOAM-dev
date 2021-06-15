@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ License
 #include "primitiveMesh.H"
 #include "linePointRef.H"
 #include "meshTools.H"
+#include "polygonTriangulate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -280,6 +281,9 @@ void Foam::cuttingPlane::walkCellCuts
     // scratch space for calculating the face vertices
     DynamicList<label> faceVerts(10);
 
+    // Create a triangulation engine
+    polygonTriangulate triEngine;
+
     forAll(cutCells_, i)
     {
         label celli = cutCells_[i];
@@ -331,9 +335,13 @@ void Foam::cuttingPlane::walkCellCuts
             // the cut faces are usually quite ugly, so optionally triangulate
             if (triangulate)
             {
-                label nTri = f.triangles(cutPoints, dynCutFaces);
-                while (nTri--)
+                triEngine.triangulate
+                (
+                    UIndirectList<point>(cutPoints, f)
+                );
+                forAll(triEngine.triPoints(), i)
                 {
+                    dynCutFaces.append(triEngine.triPoints(i, f));
                     dynCutCells.append(celli);
                 }
             }

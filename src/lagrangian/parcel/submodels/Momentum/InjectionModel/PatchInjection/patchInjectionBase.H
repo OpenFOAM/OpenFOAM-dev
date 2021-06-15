@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,7 @@ SourceFiles
 #include "scalarList.H"
 #include "vectorList.H"
 #include "faceList.H"
+#include "triFaceList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -82,7 +83,7 @@ protected:
         labelList cellOwners_;
 
         //- Decomposed patch faces as a list of triangles
-        faceList triFace_;
+        triFaceList triFace_;
 
         //- Addressing from per triangle to patch face
         labelList triToFace_;

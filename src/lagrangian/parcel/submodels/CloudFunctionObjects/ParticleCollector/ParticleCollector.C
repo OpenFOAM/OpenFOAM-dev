@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -131,7 +131,6 @@ void Foam::ParticleCollector<CloudType>::initPolygons
     label pointOffset = 0;
     points_.setSize(nPoints);
     faces_.setSize(polygons.size());
-    faceTris_.setSize(polygons.size());
     area_.setSize(polygons.size());
     forAll(faces_, facei)
     {
@@ -139,11 +138,6 @@ void Foam::ParticleCollector<CloudType>::initPolygons
         face f(identity(polyPoints.size()) + pointOffset);
         UIndirectList<point>(points_, f) = polyPoints;
         area_[facei] = f.mag(points_);
-
-        DynamicList<face> tris;
-        f.triangles(points_, tris);
-        faceTris_[facei].transfer(tris);
-
         faces_[facei].transfer(f);
 
         pointOffset += polyPoints.size();
@@ -527,7 +521,6 @@ Foam::ParticleCollector<CloudType>::ParticleCollector
     removeCollected_(this->coeffDict().lookup("removeCollected")),
     points_(),
     faces_(),
-    faceTris_(),
     nSector_(0),
     radius_(),
     coordSys_("coordSys", vector::zero, axesRotation(sphericalTensor::I)),
@@ -613,7 +606,6 @@ Foam::ParticleCollector<CloudType>::ParticleCollector
     removeCollected_(pc.removeCollected_),
     points_(pc.points_),
     faces_(pc.faces_),
-    faceTris_(pc.faceTris_),
     nSector_(pc.nSector_),
     radius_(pc.radius_),
     coordSys_(pc.coordSys_),

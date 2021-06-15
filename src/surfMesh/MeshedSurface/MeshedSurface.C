@@ -33,6 +33,7 @@ License
 #include "polyMesh.H"
 #include "surfMesh.H"
 #include "primitivePatch.H"
+#include "polygonTriangulate.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -864,22 +865,18 @@ Foam::label Foam::MeshedSurface<Face>::triangulate
     else
     {
         // triangulate with points
-        List<face> tmpTri(maxTri);
+        polygonTriangulate triEngine;
 
         label newFacei = 0;
         forAll(faceLst, facei)
         {
-            // 'face' not '<Face>'
             const face& f = faceLst[facei];
 
-            label nTmp = 0;
-            f.triangles(this->points(), nTmp, tmpTri);
-            for (label triI = 0; triI < nTmp; triI++)
+            triEngine.triangulate(UIndirectList<point>(this->points(), f));
+
+            forAll(triEngine.triPoints(), triI)
             {
-                newFaces[newFacei] = Face
-                (
-                    static_cast<labelUList&>(tmpTri[triI])
-                );
+                newFaces[newFacei] = triEngine.triPoints(triI, f);
                 faceMap[newFacei] = facei;
                 newFacei++;
             }

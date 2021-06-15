@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -147,7 +147,7 @@ Foam::tmp<Foam::scalarField> Foam::AMIInterpolation::patchMagSf
 
     const pointField& patchPoints = patch.localPoints();
 
-    faceList patchFaceTris;
+    triFaceList patchFaceTris;
 
     forAll(result, patchFacei)
     {
@@ -162,12 +162,7 @@ Foam::tmp<Foam::scalarField> Foam::AMIInterpolation::patchMagSf
         forAll(patchFaceTris, i)
         {
             result[patchFacei] +=
-                triPointRef
-                (
-                    patchPoints[patchFaceTris[i][0]],
-                    patchPoints[patchFaceTris[i][1]],
-                    patchPoints[patchFaceTris[i][2]]
-                ).mag();
+                patchFaceTris[i].tri(patchPoints).mag();
         }
     }
 
