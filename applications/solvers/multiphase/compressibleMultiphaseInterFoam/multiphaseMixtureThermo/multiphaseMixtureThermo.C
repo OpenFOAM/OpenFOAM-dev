@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -980,17 +980,38 @@ void Foam::multiphaseMixtureThermo::correctContactAngle
     surfaceVectorField::Boundary& nHatb
 ) const
 {
-    const volScalarField::Boundary& gbf
-        = alpha1.boundaryField();
+    const volScalarField::Boundary& a1bf = alpha1.boundaryField();
+    const volScalarField::Boundary& a2bf = alpha2.boundaryField();
 
     const fvBoundaryMesh& boundary = mesh_.boundary();
 
     forAll(boundary, patchi)
     {
-        if (isA<alphaContactAngleFvPatchScalarField>(gbf[patchi]))
+        if
+        (
+            isA<alphaContactAngleFvPatchScalarField>(a1bf[patchi])
+         || isA<alphaContactAngleFvPatchScalarField>(a2bf[patchi])
+        )
         {
+            if
+            (
+                isA<alphaContactAngleFvPatchScalarField>(a1bf[patchi])
+             && isA<alphaContactAngleFvPatchScalarField>(a2bf[patchi])
+            )
+            {
+                FatalErrorInFunction
+                    << "alphaContactAngle boundary condition "
+                       "specified on patch " << boundary[patchi].name()
+                    << " for both " << alpha1.name() << " and " << alpha2.name()
+                    << nl << "which may be inconsistent."
+                    << exit(FatalError);
+            }
+
             const alphaContactAngleFvPatchScalarField& acap =
-                refCast<const alphaContactAngleFvPatchScalarField>(gbf[patchi]);
+                isA<alphaContactAngleFvPatchScalarField>(a1bf[patchi])
+              ? refCast<const alphaContactAngleFvPatchScalarField>(a1bf[patchi])
+              : refCast<const alphaContactAngleFvPatchScalarField>(a2bf[patchi])
+              ;
 
             vectorField& nHatPatch = nHatb[patchi];
 
@@ -1013,18 +1034,19 @@ void Foam::multiphaseMixtureThermo::correctContactAngle
                     << exit(FatalError);
             }
 
-            bool matched = (tp.key().first() == alpha1.name());
+            const bool matched = (tp.key().first() == alpha1.name());
 
-            scalar theta0 = degToRad(tp().theta0(matched));
+            const scalar theta0 = degToRad(tp().theta0(matched));
+
             scalarField theta(boundary[patchi].size(), theta0);
 
-            scalar uTheta = tp().uTheta();
+            const scalar uTheta = tp().uTheta();
 
             // Calculate the dynamic contact angle if required
             if (uTheta > small)
             {
-                scalar thetaA = degToRad(tp().thetaA(matched));
-                scalar thetaR = degToRad(tp().thetaR(matched));
+                const scalar thetaA = degToRad(tp().thetaA(matched));
+                const scalar thetaR = degToRad(tp().thetaR(matched));
 
                 // Calculated the component of the velocity parallel to the wall
                 vectorField Uwall
@@ -1045,7 +1067,7 @@ void Foam::multiphaseMixtureThermo::correctContactAngle
 
                 // Calculate Uwall resolved normal to the interface parallel to
                 // the interface
-                scalarField uwall(nWall & Uwall);
+                const scalarField uwall(nWall & Uwall);
 
                 theta += (thetaA - thetaR)*tanh(uwall/uTheta);
             }
@@ -1053,9 +1075,9 @@ void Foam::multiphaseMixtureThermo::correctContactAngle
 
             // Reset nHatPatch to correspond to the contact angle
 
-            scalarField a12(nHatPatch & AfHatPatch);
+            const scalarField a12(nHatPatch & AfHatPatch);
 
-            scalarField b1(cos(theta));
+            const scalarField b1(cos(theta));
 
             scalarField b2(nHatPatch.size());
 
@@ -1064,10 +1086,10 @@ void Foam::multiphaseMixtureThermo::correctContactAngle
                 b2[facei] = cos(acos(a12[facei]) - theta[facei]);
             }
 
-            scalarField det(1.0 - a12*a12);
+            const scalarField det(1.0 - a12*a12);
 
-            scalarField a((b1 - a12*b2)/det);
-            scalarField b((b2 - a12*b1)/det);
+            const scalarField a((b1 - a12*b2)/det);
+            const scalarField b((b2 - a12*b1)/det);
 
             nHatPatch = a*AfHatPatch + b*nHatPatch;
 
