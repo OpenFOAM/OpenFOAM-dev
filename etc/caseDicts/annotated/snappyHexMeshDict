@@ -51,7 +51,7 @@ geometry
         type triSurfaceMesh;
         file "sphere.stl"
 
-        // tolerance   1E-5;   // optional:non-default tolerance on intersections
+        // tolerance   1e-5;   // optional:non-default tolerance on intersections
         // maxTreeDepth 10;    // optional:depth of octree. Decrease only in case
                               // of memory limitations.
 

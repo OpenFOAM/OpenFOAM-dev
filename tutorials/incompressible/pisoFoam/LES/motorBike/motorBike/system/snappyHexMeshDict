@@ -280,7 +280,7 @@ meshQualityControls
 
     //- Minimum pyramid volume. Is absolute volume of cell pyramid.
     //  Set to a sensible fraction of the smallest cell volume expected.
-    //  Set to very negative number (e.g. -1E30) to disable.
+    //  Set to very negative number (e.g. -1e30) to disable.
     minVol 1e-13;
     minTetQuality 1e-30;
 
@@ -318,7 +318,7 @@ meshQualityControls
 
 // Merge tolerance. Is fraction of overall bounding box of initial mesh.
 // Note: the write tolerance needs to be higher than this.
-mergeTolerance 1E-6;
+mergeTolerance 1e-6;
 
 
 // ************************************************************************* //
