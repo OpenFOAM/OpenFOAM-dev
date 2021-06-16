@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "cellShapeControlMesh.H"
 #include "cellSizeAndAlignmentControls.H"
+#include "pointFields.H"
 #include "pointIOField.H"
 #include "scalarIOField.H"
 #include "triadIOField.H"
@@ -37,9 +38,9 @@ License
 
 namespace Foam
 {
-defineTypeNameAndDebug(cellShapeControlMesh, 0);
+    defineTypeNameAndDebug(cellShapeControlMesh, 0);
 
-word cellShapeControlMesh::meshSubDir = "cellShapeControlMesh";
+    word cellShapeControlMesh::meshSubDir = "cellShapeControlMesh";
 }
 
 

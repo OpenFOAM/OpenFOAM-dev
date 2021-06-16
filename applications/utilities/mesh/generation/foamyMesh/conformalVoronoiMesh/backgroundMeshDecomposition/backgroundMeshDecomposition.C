@@ -26,6 +26,7 @@ License
 #include "backgroundMeshDecomposition.H"
 #include "meshSearch.H"
 #include "conformationSurfaces.H"
+#include "volFields.H"
 #include "zeroGradientFvPatchFields.H"
 #include "Time.H"
 #include "Random.H"
