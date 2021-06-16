@@ -476,6 +476,25 @@ void Foam::invertManyToMany
 
 
 template<class ListType>
+Foam::label Foam::count
+(
+    const ListType& l,
+    typename ListType::const_reference x
+)
+{
+    label result = 0;
+    forAll(l, i)
+    {
+        if (l[i] == x)
+        {
+            ++ result;
+        }
+    }
+    return result;
+}
+
+
+template<class ListType>
 Foam::label Foam::findIndex
 (
     const ListType& l,

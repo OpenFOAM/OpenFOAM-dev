@@ -168,6 +168,10 @@ List<OutList> invertManyToMany(const label len, const UList<InList>& in)
 //- Create identity map (map[i] == i) of given length
 labelList identity(const label len);
 
+//- Count the number of occurrences of a value in a list
+template<class ListType>
+label count(const ListType& l, typename ListType::const_reference x);
+
 //- Find first occurrence of given element and return index,
 //  return -1 if not found. Linear search.
 template<class ListType>
