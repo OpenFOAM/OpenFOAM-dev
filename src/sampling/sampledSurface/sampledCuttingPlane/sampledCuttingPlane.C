@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "sampledCuttingPlane.H"
+#include "emptyFvPatchFields.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

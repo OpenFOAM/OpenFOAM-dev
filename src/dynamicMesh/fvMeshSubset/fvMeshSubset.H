@@ -57,15 +57,15 @@ SourceFiles
 #define fvMeshSubset_H
 
 #include "fvMesh.H"
-#include "pointMesh.H"
-#include "GeometricField.H"
 #include "HashSet.H"
-#include "surfaceMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam
 {
+
+class pointMesh;
+class surfaceMesh;
 
 /*---------------------------------------------------------------------------*\
                         Class fvMeshSubset Declaration
@@ -183,7 +183,7 @@ public:
             );
 
 
-            //- Two step subsetting
+            // Two step subsetting
 
                 //- Get labels of exposed faces.
                 //  These are

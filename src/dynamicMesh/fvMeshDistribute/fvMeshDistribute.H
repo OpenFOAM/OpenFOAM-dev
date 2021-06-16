@@ -54,6 +54,7 @@ SourceFiles
 
 #include "Field.H"
 #include "fvMeshSubset.H"
+#include "FieldField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

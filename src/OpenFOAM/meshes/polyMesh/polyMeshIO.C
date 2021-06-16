@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -207,7 +207,7 @@ Foam::polyMesh::readUpdateState Foam::polyMesh::readUpdate()
         if (boundaryChanged)
         {
             WarningInFunction
-                << "unexpected consequences.  Proceed with care." << endl;
+                << "boundary changed, proceed with care." << endl;
 
             boundary_.clear();
             boundary_.setSize(newBoundary.size());
