@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,31 +48,6 @@ mappedVelocityFluxFixedValueFvPatchField
 Foam::mappedVelocityFluxFixedValueFvPatchField::
 mappedVelocityFluxFixedValueFvPatchField
 (
-    const mappedVelocityFluxFixedValueFvPatchField& ptf,
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchVectorField(ptf, p, iF, mapper),
-    phiName_(ptf.phiName_)
-{
-    if (!isA<mappedPatchBase>(this->patch().patch()))
-    {
-        FatalErrorInFunction
-            << "Patch type '" << p.type()
-            << "' not type '" << mappedPatchBase::typeName << "'"
-            << " for patch " << p.name()
-            << " of field " << internalField().name()
-            << " in file " << internalField().objectPath()
-            << exit(FatalError);
-    }
-}
-
-
-Foam::mappedVelocityFluxFixedValueFvPatchField::
-mappedVelocityFluxFixedValueFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
@@ -102,6 +77,31 @@ mappedVelocityFluxFixedValueFvPatchField
             << "Patch " << p.name()
             << " of type '" << p.type()
             << "' can not be used in 'nearestCell' mode"
+            << " of field " << internalField().name()
+            << " in file " << internalField().objectPath()
+            << exit(FatalError);
+    }
+}
+
+
+Foam::mappedVelocityFluxFixedValueFvPatchField::
+mappedVelocityFluxFixedValueFvPatchField
+(
+    const mappedVelocityFluxFixedValueFvPatchField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchVectorField(ptf, p, iF, mapper),
+    phiName_(ptf.phiName_)
+{
+    if (!isA<mappedPatchBase>(this->patch().patch()))
+    {
+        FatalErrorInFunction
+            << "Patch type '" << p.type()
+            << "' not type '" << mappedPatchBase::typeName << "'"
+            << " for patch " << p.name()
             << " of field " << internalField().name()
             << " in file " << internalField().objectPath()
             << exit(FatalError);

@@ -102,6 +102,24 @@ ${typeName}FixedValuePointPatch${FieldType}
 ${typeName}FixedValuePointPatch${FieldType}::
 ${typeName}FixedValuePointPatch${FieldType}
 (
+    const pointPatch& p,
+    const DimensionedField<${TemplateType}, pointMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValuePointPatchField<${TemplateType}>(p, iF, dict)
+{
+    if (${verbose:-false})
+    {
+        Info<<"construct ${typeName} sha1: ${SHA1sum}"
+            " from patch/dictionary\n";
+    }
+}
+
+
+${typeName}FixedValuePointPatch${FieldType}::
+${typeName}FixedValuePointPatch${FieldType}
+(
     const ${typeName}FixedValuePointPatch${FieldType}& ptf,
     const pointPatch& p,
     const DimensionedField<${TemplateType}, pointMesh>& iF,
@@ -114,24 +132,6 @@ ${typeName}FixedValuePointPatch${FieldType}
     {
         Info<<"construct ${typeName} sha1: ${SHA1sum}"
             " from patch/DimensionedField/mapper\n";
-    }
-}
-
-
-${typeName}FixedValuePointPatch${FieldType}::
-${typeName}FixedValuePointPatch${FieldType}
-(
-    const pointPatch& p,
-    const DimensionedField<${TemplateType}, pointMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValuePointPatchField<${TemplateType}>(p, iF, dict)
-{
-    if (${verbose:-false})
-    {
-        Info<<"construct ${typeName} sha1: ${SHA1sum}"
-            " from patch/dictionary\n";
     }
 }
 

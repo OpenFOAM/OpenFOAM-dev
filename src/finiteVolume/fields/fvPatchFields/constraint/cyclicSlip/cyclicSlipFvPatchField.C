@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,18 @@ Foam::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 template<class Type>
 Foam::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    cyclicFvPatchField<Type>(p, iF, dict)
+{}
+
+
+template<class Type>
+Foam::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
+(
     const cyclicSlipFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -48,18 +60,6 @@ Foam::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
 )
 :
     cyclicFvPatchField<Type>(ptf, p, iF, mapper)
-{}
-
-
-template<class Type>
-Foam::cyclicSlipFvPatchField<Type>::cyclicSlipFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    cyclicFvPatchField<Type>(p, iF, dict)
 {}
 
 

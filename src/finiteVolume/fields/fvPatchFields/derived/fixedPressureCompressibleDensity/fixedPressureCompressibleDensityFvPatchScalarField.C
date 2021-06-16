@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,6 +46,19 @@ fixedPressureCompressibleDensityFvPatchScalarField
 Foam::fixedPressureCompressibleDensityFvPatchScalarField::
 fixedPressureCompressibleDensityFvPatchScalarField
 (
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchField<scalar>(p, iF, dict),
+    pName_(dict.lookupOrDefault<word>("p", "p"))
+{}
+
+
+Foam::fixedPressureCompressibleDensityFvPatchScalarField::
+fixedPressureCompressibleDensityFvPatchScalarField
+(
     const fixedPressureCompressibleDensityFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -54,19 +67,6 @@ fixedPressureCompressibleDensityFvPatchScalarField
 :
     fixedValueFvPatchField<scalar>(ptf, p, iF, mapper),
     pName_(ptf.pName_)
-{}
-
-
-Foam::fixedPressureCompressibleDensityFvPatchScalarField::
-fixedPressureCompressibleDensityFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchField<scalar>(p, iF, dict),
-    pName_(dict.lookupOrDefault<word>("p", "p"))
 {}
 
 

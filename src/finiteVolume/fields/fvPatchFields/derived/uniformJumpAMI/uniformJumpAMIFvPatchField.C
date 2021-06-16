@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,20 +42,6 @@ Foam::uniformJumpAMIFvPatchField<Type>::uniformJumpAMIFvPatchField
 template<class Type>
 Foam::uniformJumpAMIFvPatchField<Type>::uniformJumpAMIFvPatchField
 (
-    const uniformJumpAMIFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedJumpAMIFvPatchField<Type>(ptf, p, iF, mapper),
-    jumpTable_(ptf.jumpTable_, false)
-{}
-
-
-template<class Type>
-Foam::uniformJumpAMIFvPatchField<Type>::uniformJumpAMIFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
@@ -78,6 +64,20 @@ Foam::uniformJumpAMIFvPatchField<Type>::uniformJumpAMIFvPatchField
         this->evaluate(Pstream::commsTypes::blocking);
     }
 }
+
+
+template<class Type>
+Foam::uniformJumpAMIFvPatchField<Type>::uniformJumpAMIFvPatchField
+(
+    const uniformJumpAMIFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedJumpAMIFvPatchField<Type>(ptf, p, iF, mapper),
+    jumpTable_(ptf.jumpTable_, false)
+{}
 
 
 template<class Type>

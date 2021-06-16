@@ -103,6 +103,24 @@ ${typeName}FixedValueFvPatch${FieldType}
 ${typeName}FixedValueFvPatch${FieldType}::
 ${typeName}FixedValueFvPatch${FieldType}
 (
+    const fvPatch& p,
+    const DimensionedField<${TemplateType}, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchField<${TemplateType}>(p, iF, dict)
+{
+    if (${verbose:-false})
+    {
+        Info<<"construct ${typeName} sha1: ${SHA1sum}"
+            " from patch/dictionary\n";
+    }
+}
+
+
+${typeName}FixedValueFvPatch${FieldType}::
+${typeName}FixedValueFvPatch${FieldType}
+(
     const ${typeName}FixedValueFvPatch${FieldType}& ptf,
     const fvPatch& p,
     const DimensionedField<${TemplateType}, volMesh>& iF,
@@ -115,24 +133,6 @@ ${typeName}FixedValueFvPatch${FieldType}
     {
         Info<<"construct ${typeName} sha1: ${SHA1sum}"
             " from patch/DimensionedField/mapper\n";
-    }
-}
-
-
-${typeName}FixedValueFvPatch${FieldType}::
-${typeName}FixedValueFvPatch${FieldType}
-(
-    const fvPatch& p,
-    const DimensionedField<${TemplateType}, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchField<${TemplateType}>(p, iF, dict)
-{
-    if (${verbose:-false})
-    {
-        Info<<"construct ${typeName} sha1: ${SHA1sum}"
-            " from patch/dictionary\n";
     }
 }
 

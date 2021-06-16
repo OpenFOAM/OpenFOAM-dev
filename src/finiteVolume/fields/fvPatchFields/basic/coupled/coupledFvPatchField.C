@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,6 +55,20 @@ Foam::coupledFvPatchField<Type>::coupledFvPatchField
 template<class Type>
 Foam::coupledFvPatchField<Type>::coupledFvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict,
+    const bool valueRequired
+)
+:
+    LduInterfaceField<Type>(refCast<const lduInterface>(p)),
+    fvPatchField<Type>(p, iF, dict, valueRequired)
+{}
+
+
+template<class Type>
+Foam::coupledFvPatchField<Type>::coupledFvPatchField
+(
     const coupledFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -64,20 +78,6 @@ Foam::coupledFvPatchField<Type>::coupledFvPatchField
 :
     LduInterfaceField<Type>(refCast<const lduInterface>(p)),
     fvPatchField<Type>(ptf, p, iF, mapper, mappingRequired)
-{}
-
-
-template<class Type>
-Foam::coupledFvPatchField<Type>::coupledFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict,
-    const bool valueRequired
-)
-:
-    LduInterfaceField<Type>(refCast<const lduInterface>(p)),
-    fvPatchField<Type>(p, iF, dict, valueRequired)
 {}
 
 

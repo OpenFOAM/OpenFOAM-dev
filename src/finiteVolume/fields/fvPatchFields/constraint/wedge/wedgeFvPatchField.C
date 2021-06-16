@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,29 +46,6 @@ Foam::wedgeFvPatchField<Type>::wedgeFvPatchField
 template<class Type>
 Foam::wedgeFvPatchField<Type>::wedgeFvPatchField
 (
-    const wedgeFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    transformFvPatchField<Type>(ptf, p, iF, mapper)
-{
-    if (!isType<wedgeFvPatch>(this->patch()))
-    {
-        FatalErrorInFunction
-            << "' not constraint type '" << typeName << "'"
-            << "\n    for patch " << p.name()
-            << " of field " << this->internalField().name()
-            << " in file " << this->internalField().objectPath()
-            << exit(FatalIOError);
-    }
-}
-
-
-template<class Type>
-Foam::wedgeFvPatchField<Type>::wedgeFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
@@ -90,6 +67,29 @@ Foam::wedgeFvPatchField<Type>::wedgeFvPatchField
     }
 
     evaluate();
+}
+
+
+template<class Type>
+Foam::wedgeFvPatchField<Type>::wedgeFvPatchField
+(
+    const wedgeFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    transformFvPatchField<Type>(ptf, p, iF, mapper)
+{
+    if (!isType<wedgeFvPatch>(this->patch()))
+    {
+        FatalErrorInFunction
+            << "' not constraint type '" << typeName << "'"
+            << "\n    for patch " << p.name()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
+            << exit(FatalIOError);
+    }
 }
 
 

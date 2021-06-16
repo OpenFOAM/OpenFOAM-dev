@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,22 +52,6 @@ variableHeightFlowRateFvPatchScalarField
 Foam::variableHeightFlowRateFvPatchScalarField::
 variableHeightFlowRateFvPatchScalarField
 (
-    const variableHeightFlowRateFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    mixedFvPatchScalarField(ptf, p, iF, mapper),
-    phiName_(ptf.phiName_),
-    lowerBound_(ptf.lowerBound_),
-    upperBound_(ptf.upperBound_)
-{}
-
-
-Foam::variableHeightFlowRateFvPatchScalarField::
-variableHeightFlowRateFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -95,6 +79,22 @@ variableHeightFlowRateFvPatchScalarField
     this->refGrad() = 0.0;
     this->valueFraction() = 0.0;
 }
+
+
+Foam::variableHeightFlowRateFvPatchScalarField::
+variableHeightFlowRateFvPatchScalarField
+(
+    const variableHeightFlowRateFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    mixedFvPatchScalarField(ptf, p, iF, mapper),
+    phiName_(ptf.phiName_),
+    lowerBound_(ptf.lowerBound_),
+    upperBound_(ptf.upperBound_)
+{}
 
 
 Foam::variableHeightFlowRateFvPatchScalarField::

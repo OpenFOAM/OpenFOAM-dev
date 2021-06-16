@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,20 +46,6 @@ Foam::inletOutletFvPatchField<Type>::inletOutletFvPatchField
 template<class Type>
 Foam::inletOutletFvPatchField<Type>::inletOutletFvPatchField
 (
-    const inletOutletFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    mixedFvPatchField<Type>(ptf, p, iF, mapper),
-    phiName_(ptf.phiName_)
-{}
-
-
-template<class Type>
-Foam::inletOutletFvPatchField<Type>::inletOutletFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
@@ -85,6 +71,20 @@ Foam::inletOutletFvPatchField<Type>::inletOutletFvPatchField
     this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 }
+
+
+template<class Type>
+Foam::inletOutletFvPatchField<Type>::inletOutletFvPatchField
+(
+    const inletOutletFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    mixedFvPatchField<Type>(ptf, p, iF, mapper),
+    phiName_(ptf.phiName_)
+{}
 
 
 template<class Type>

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,23 @@ Foam::directionMixedFvPatchField<Type>::directionMixedFvPatchField
 template<class Type>
 Foam::directionMixedFvPatchField<Type>::directionMixedFvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    transformFvPatchField<Type>(p, iF, dict),
+    refValue_("refValue", dict, p.size()),
+    refGrad_("refGradient", dict, p.size()),
+    valueFraction_("valueFraction", dict, p.size())
+{
+    evaluate();
+}
+
+
+template<class Type>
+Foam::directionMixedFvPatchField<Type>::directionMixedFvPatchField
+(
     const directionMixedFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -65,23 +82,6 @@ Foam::directionMixedFvPatchField<Type>::directionMixedFvPatchField
             << "    To avoid this warning fully specify the mapping in derived"
             << " patch fields." << endl;
     }
-}
-
-
-template<class Type>
-Foam::directionMixedFvPatchField<Type>::directionMixedFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    transformFvPatchField<Type>(p, iF, dict),
-    refValue_("refValue", dict, p.size()),
-    refGrad_("refGradient", dict, p.size()),
-    valueFraction_("valueFraction", dict, p.size())
-{
-    evaluate();
 }
 
 

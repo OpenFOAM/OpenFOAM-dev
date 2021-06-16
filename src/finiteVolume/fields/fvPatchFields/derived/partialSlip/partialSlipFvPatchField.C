@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,20 +43,6 @@ Foam::partialSlipFvPatchField<Type>::partialSlipFvPatchField
 template<class Type>
 Foam::partialSlipFvPatchField<Type>::partialSlipFvPatchField
 (
-    const partialSlipFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    transformFvPatchField<Type>(ptf, p, iF, mapper),
-    valueFraction_(mapper(ptf.valueFraction_))
-{}
-
-
-template<class Type>
-Foam::partialSlipFvPatchField<Type>::partialSlipFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
@@ -67,6 +53,20 @@ Foam::partialSlipFvPatchField<Type>::partialSlipFvPatchField
 {
     evaluate();
 }
+
+
+template<class Type>
+Foam::partialSlipFvPatchField<Type>::partialSlipFvPatchField
+(
+    const partialSlipFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    transformFvPatchField<Type>(ptf, p, iF, mapper),
+    valueFraction_(mapper(ptf.valueFraction_))
+{}
 
 
 template<class Type>

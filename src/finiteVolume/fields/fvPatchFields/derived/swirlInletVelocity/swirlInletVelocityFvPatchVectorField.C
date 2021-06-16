@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,6 +47,23 @@ swirlInletVelocityFvPatchVectorField
 Foam::swirlInletVelocityFvPatchVectorField::
 swirlInletVelocityFvPatchVectorField
 (
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchField<vector>(p, iF, dict),
+    origin_(dict.lookup("origin")),
+    axis_(dict.lookup("axis")),
+    axialVelocity_(Function1<scalar>::New("axialVelocity", dict)),
+    radialVelocity_(Function1<scalar>::New("radialVelocity", dict)),
+    tangentialVelocity_(Function1<scalar>::New("tangentialVelocity", dict))
+{}
+
+
+Foam::swirlInletVelocityFvPatchVectorField::
+swirlInletVelocityFvPatchVectorField
+(
     const swirlInletVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
@@ -59,23 +76,6 @@ swirlInletVelocityFvPatchVectorField
     axialVelocity_(ptf.axialVelocity_, false),
     radialVelocity_(ptf.radialVelocity_, false),
     tangentialVelocity_(ptf.tangentialVelocity_, false)
-{}
-
-
-Foam::swirlInletVelocityFvPatchVectorField::
-swirlInletVelocityFvPatchVectorField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchField<vector>(p, iF, dict),
-    origin_(dict.lookup("origin")),
-    axis_(dict.lookup("axis")),
-    axialVelocity_(Function1<scalar>::New("axialVelocity", dict)),
-    radialVelocity_(Function1<scalar>::New("radialVelocity", dict)),
-    tangentialVelocity_(Function1<scalar>::New("tangentialVelocity", dict))
 {}
 
 

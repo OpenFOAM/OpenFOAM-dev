@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,19 +43,6 @@ Foam::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
 template<class Type>
 Foam::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
 (
-    const basicSymmetryFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    transformFvPatchField<Type>(ptf, p, iF, mapper)
-{}
-
-
-template<class Type>
-Foam::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
@@ -65,6 +52,19 @@ Foam::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
 {
     this->evaluate();
 }
+
+
+template<class Type>
+Foam::basicSymmetryFvPatchField<Type>::basicSymmetryFvPatchField
+(
+    const basicSymmetryFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    transformFvPatchField<Type>(ptf, p, iF, mapper)
+{}
 
 
 template<class Type>

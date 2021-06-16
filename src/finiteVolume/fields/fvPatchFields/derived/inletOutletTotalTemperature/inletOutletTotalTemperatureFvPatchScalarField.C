@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,23 +53,6 @@ inletOutletTotalTemperatureFvPatchScalarField
 Foam::inletOutletTotalTemperatureFvPatchScalarField::
 inletOutletTotalTemperatureFvPatchScalarField
 (
-    const inletOutletTotalTemperatureFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    inletOutletFvPatchScalarField(ptf, p, iF, mapper),
-    UName_(ptf.UName_),
-    psiName_(ptf.psiName_),
-    gamma_(ptf.gamma_),
-    T0_(mapper(ptf.T0_))
-{}
-
-
-Foam::inletOutletTotalTemperatureFvPatchScalarField::
-inletOutletTotalTemperatureFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -99,6 +82,23 @@ inletOutletTotalTemperatureFvPatchScalarField
     this->refGrad() = Zero;
     this->valueFraction() = 0.0;
 }
+
+
+Foam::inletOutletTotalTemperatureFvPatchScalarField::
+inletOutletTotalTemperatureFvPatchScalarField
+(
+    const inletOutletTotalTemperatureFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    inletOutletFvPatchScalarField(ptf, p, iF, mapper),
+    UName_(ptf.UName_),
+    psiName_(ptf.psiName_),
+    gamma_(ptf.gamma_),
+    T0_(mapper(ptf.T0_))
+{}
 
 
 Foam::inletOutletTotalTemperatureFvPatchScalarField::

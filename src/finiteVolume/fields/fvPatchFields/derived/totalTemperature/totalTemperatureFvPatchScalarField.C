@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,23 +48,6 @@ Foam::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
 
 Foam::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
 (
-    const totalTemperatureFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchScalarField(ptf, p, iF, mapper),
-    UName_(ptf.UName_),
-    phiName_(ptf.phiName_),
-    psiName_(ptf.psiName_),
-    gamma_(ptf.gamma_),
-    T0_(mapper(ptf.T0_))
-{}
-
-
-Foam::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -89,6 +72,23 @@ Foam::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
         fvPatchField<scalar>::operator=(T0_);
     }
 }
+
+
+Foam::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField
+(
+    const totalTemperatureFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchScalarField(ptf, p, iF, mapper),
+    UName_(ptf.UName_),
+    phiName_(ptf.phiName_),
+    psiName_(ptf.psiName_),
+    gamma_(ptf.gamma_),
+    T0_(mapper(ptf.T0_))
+{}
 
 
 Foam::totalTemperatureFvPatchScalarField::totalTemperatureFvPatchScalarField

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,21 +47,6 @@ fluxCorrectedVelocityFvPatchVectorField
 Foam::fluxCorrectedVelocityFvPatchVectorField::
 fluxCorrectedVelocityFvPatchVectorField
 (
-    const fluxCorrectedVelocityFvPatchVectorField& ptf,
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    zeroGradientFvPatchVectorField(ptf, p, iF, mapper),
-    phiName_(ptf.phiName_),
-    rhoName_(ptf.rhoName_)
-{}
-
-
-Foam::fluxCorrectedVelocityFvPatchVectorField::
-fluxCorrectedVelocityFvPatchVectorField
-(
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
@@ -73,6 +58,21 @@ fluxCorrectedVelocityFvPatchVectorField
 {
     fvPatchVectorField::operator=(patchInternalField());
 }
+
+
+Foam::fluxCorrectedVelocityFvPatchVectorField::
+fluxCorrectedVelocityFvPatchVectorField
+(
+    const fluxCorrectedVelocityFvPatchVectorField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    zeroGradientFvPatchVectorField(ptf, p, iF, mapper),
+    phiName_(ptf.phiName_),
+    rhoName_(ptf.rhoName_)
+{}
 
 
 Foam::fluxCorrectedVelocityFvPatchVectorField::

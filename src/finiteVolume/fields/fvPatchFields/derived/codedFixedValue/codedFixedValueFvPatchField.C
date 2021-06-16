@@ -118,21 +118,6 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
 template<class Type>
 Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
 (
-    const codedFixedValueFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
-    codedBase(ptf),
-    redirectPatchFieldPtr_()
-{}
-
-
-template<class Type>
-Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
@@ -144,6 +129,21 @@ Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
 {
     updateLibrary();
 }
+
+
+template<class Type>
+Foam::codedFixedValueFvPatchField<Type>::codedFixedValueFvPatchField
+(
+    const codedFixedValueFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchField<Type>(ptf, p, iF, mapper),
+    codedBase(ptf),
+    redirectPatchFieldPtr_()
+{}
 
 
 template<class Type>

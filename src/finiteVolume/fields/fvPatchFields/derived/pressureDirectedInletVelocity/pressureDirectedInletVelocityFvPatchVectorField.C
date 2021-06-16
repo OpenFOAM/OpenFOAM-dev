@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,21 @@ pressureDirectedInletVelocityFvPatchVectorField
 Foam::pressureDirectedInletVelocityFvPatchVectorField::
 pressureDirectedInletVelocityFvPatchVectorField
 (
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchVectorField(p, iF, dict),
+    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
+    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
+    inletDir_("inletDirection", dict, p.size())
+{}
+
+
+Foam::pressureDirectedInletVelocityFvPatchVectorField::
+pressureDirectedInletVelocityFvPatchVectorField
+(
     const pressureDirectedInletVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
@@ -59,21 +74,6 @@ pressureDirectedInletVelocityFvPatchVectorField
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
     inletDir_(mapper(ptf.inletDir_))
-{}
-
-
-Foam::pressureDirectedInletVelocityFvPatchVectorField::
-pressureDirectedInletVelocityFvPatchVectorField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchVectorField(p, iF, dict),
-    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    inletDir_("inletDirection", dict, p.size())
 {}
 
 

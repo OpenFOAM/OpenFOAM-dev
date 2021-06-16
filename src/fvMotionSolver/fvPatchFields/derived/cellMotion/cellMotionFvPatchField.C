@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,18 @@ Foam::cellMotionFvPatchField<Type>::cellMotionFvPatchField
 template<class Type>
 Foam::cellMotionFvPatchField<Type>::cellMotionFvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchField<Type>(p, iF, dict)
+{}
+
+
+template<class Type>
+Foam::cellMotionFvPatchField<Type>::cellMotionFvPatchField
+(
     const cellMotionFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -52,18 +64,6 @@ Foam::cellMotionFvPatchField<Type>::cellMotionFvPatchField
 )
 :
     fixedValueFvPatchField<Type>(ptf, p, iF, mapper)
-{}
-
-
-template<class Type>
-Foam::cellMotionFvPatchField<Type>::cellMotionFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchField<Type>(p, iF, dict)
 {}
 
 

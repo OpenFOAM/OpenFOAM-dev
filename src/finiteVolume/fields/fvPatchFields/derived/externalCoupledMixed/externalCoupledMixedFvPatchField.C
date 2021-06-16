@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -466,31 +466,6 @@ template<class Type>
 Foam::externalCoupledMixedFvPatchField<Type>::
 externalCoupledMixedFvPatchField
 (
-    const externalCoupledMixedFvPatchField& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    mixedFvPatchField<Type>(ptf, p, iF, mapper),
-    commsDir_(ptf.commsDir_),
-    fName_(ptf.fName_),
-    waitInterval_(ptf.waitInterval_),
-    timeOut_(ptf.timeOut_),
-    calcFrequency_(ptf.calcFrequency_),
-    initByExternal_(ptf.initByExternal_),
-    log_(ptf.log_),
-    master_(ptf.master_),
-    offsets_(ptf.offsets_),
-    initialised_(ptf.initialised_),
-    coupledPatchIDs_(ptf.coupledPatchIDs_)
-{}
-
-
-template<class Type>
-Foam::externalCoupledMixedFvPatchField<Type>::
-externalCoupledMixedFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
@@ -538,6 +513,31 @@ externalCoupledMixedFvPatchField
     this->refGrad() = Zero;
     this->valueFraction() = 1.0;
 }
+
+
+template<class Type>
+Foam::externalCoupledMixedFvPatchField<Type>::
+externalCoupledMixedFvPatchField
+(
+    const externalCoupledMixedFvPatchField& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    mixedFvPatchField<Type>(ptf, p, iF, mapper),
+    commsDir_(ptf.commsDir_),
+    fName_(ptf.fName_),
+    waitInterval_(ptf.waitInterval_),
+    timeOut_(ptf.timeOut_),
+    calcFrequency_(ptf.calcFrequency_),
+    initByExternal_(ptf.initByExternal_),
+    log_(ptf.log_),
+    master_(ptf.master_),
+    offsets_(ptf.offsets_),
+    initialised_(ptf.initialised_),
+    coupledPatchIDs_(ptf.coupledPatchIDs_)
+{}
 
 
 template<class Type>

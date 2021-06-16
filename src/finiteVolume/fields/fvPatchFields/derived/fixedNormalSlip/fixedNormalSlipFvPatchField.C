@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,20 +44,6 @@ Foam::fixedNormalSlipFvPatchField<Type>::fixedNormalSlipFvPatchField
 template<class Type>
 Foam::fixedNormalSlipFvPatchField<Type>::fixedNormalSlipFvPatchField
 (
-    const fixedNormalSlipFvPatchField<Type>& ptf,
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    transformFvPatchField<Type>(ptf, p, iF, mapper),
-    fixedValue_(mapper(ptf.fixedValue_))
-{}
-
-
-template<class Type>
-Foam::fixedNormalSlipFvPatchField<Type>::fixedNormalSlipFvPatchField
-(
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
     const dictionary& dict
@@ -68,6 +54,20 @@ Foam::fixedNormalSlipFvPatchField<Type>::fixedNormalSlipFvPatchField
 {
     evaluate();
 }
+
+
+template<class Type>
+Foam::fixedNormalSlipFvPatchField<Type>::fixedNormalSlipFvPatchField
+(
+    const fixedNormalSlipFvPatchField<Type>& ptf,
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    transformFvPatchField<Type>(ptf, p, iF, mapper),
+    fixedValue_(mapper(ptf.fixedValue_))
+{}
 
 
 template<class Type>

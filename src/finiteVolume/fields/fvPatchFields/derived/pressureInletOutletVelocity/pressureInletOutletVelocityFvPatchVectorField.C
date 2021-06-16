@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,6 +50,21 @@ pressureInletOutletVelocityFvPatchVectorField
 Foam::pressureInletOutletVelocityFvPatchVectorField::
 pressureInletOutletVelocityFvPatchVectorField
 (
+    const pressureInletOutletVelocityFvPatchVectorField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    directionMixedFvPatchVectorField(ptf, p, iF, mapper),
+    phiName_(ptf.phiName_),
+    tangentialVelocity_(ptf.tangentialVelocity_, false)
+{}
+
+
+Foam::pressureInletOutletVelocityFvPatchVectorField::
+pressureInletOutletVelocityFvPatchVectorField
+(
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
@@ -70,21 +85,6 @@ pressureInletOutletVelocityFvPatchVectorField
     refGrad() = Zero;
     valueFraction() = Zero;
 }
-
-
-Foam::pressureInletOutletVelocityFvPatchVectorField::
-pressureInletOutletVelocityFvPatchVectorField
-(
-    const pressureInletOutletVelocityFvPatchVectorField& ptf,
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    directionMixedFvPatchVectorField(ptf, p, iF, mapper),
-    phiName_(ptf.phiName_),
-    tangentialVelocity_(ptf.tangentialVelocity_, false)
-{}
 
 
 Foam::pressureInletOutletVelocityFvPatchVectorField::

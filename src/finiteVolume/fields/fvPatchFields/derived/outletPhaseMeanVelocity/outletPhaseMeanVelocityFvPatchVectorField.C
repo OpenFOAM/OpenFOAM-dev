@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,21 +51,6 @@ outletPhaseMeanVelocityFvPatchVectorField
 Foam::outletPhaseMeanVelocityFvPatchVectorField::
 outletPhaseMeanVelocityFvPatchVectorField
 (
-    const outletPhaseMeanVelocityFvPatchVectorField& ptf,
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    mixedFvPatchField<vector>(ptf, p, iF, mapper),
-    UnMean_(ptf.UnMean_, false),
-    alphaName_(ptf.alphaName_)
-{}
-
-
-Foam::outletPhaseMeanVelocityFvPatchVectorField::
-outletPhaseMeanVelocityFvPatchVectorField
-(
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
@@ -91,6 +76,21 @@ outletPhaseMeanVelocityFvPatchVectorField
         fvPatchVectorField::operator=(patchInternalField());
     }
 }
+
+
+Foam::outletPhaseMeanVelocityFvPatchVectorField::
+outletPhaseMeanVelocityFvPatchVectorField
+(
+    const outletPhaseMeanVelocityFvPatchVectorField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    mixedFvPatchField<vector>(ptf, p, iF, mapper),
+    UnMean_(ptf.UnMean_, false),
+    alphaName_(ptf.alphaName_)
+{}
 
 
 Foam::outletPhaseMeanVelocityFvPatchVectorField::

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,20 @@ Foam::waveTransmissiveFvPatchField<Type>::waveTransmissiveFvPatchField
 template<class Type>
 Foam::waveTransmissiveFvPatchField<Type>::waveTransmissiveFvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    advectiveFvPatchField<Type>(p, iF, dict),
+    psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
+    gamma_(dict.lookup<scalar>("gamma"))
+{}
+
+
+template<class Type>
+Foam::waveTransmissiveFvPatchField<Type>::waveTransmissiveFvPatchField
+(
     const waveTransmissiveFvPatchField& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -58,20 +72,6 @@ Foam::waveTransmissiveFvPatchField<Type>::waveTransmissiveFvPatchField
     advectiveFvPatchField<Type>(ptf, p, iF, mapper),
     psiName_(ptf.psiName_),
     gamma_(ptf.gamma_)
-{}
-
-
-template<class Type>
-Foam::waveTransmissiveFvPatchField<Type>::waveTransmissiveFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    advectiveFvPatchField<Type>(p, iF, dict),
-    psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi")),
-    gamma_(dict.lookup<scalar>("gamma"))
 {}
 
 

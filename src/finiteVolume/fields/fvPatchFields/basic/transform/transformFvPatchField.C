@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,18 @@ Foam::transformFvPatchField<Type>::transformFvPatchField
 template<class Type>
 Foam::transformFvPatchField<Type>::transformFvPatchField
 (
+    const fvPatch& p,
+    const DimensionedField<Type, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fvPatchField<Type>(p, iF, dict, false)
+{}
+
+
+template<class Type>
+Foam::transformFvPatchField<Type>::transformFvPatchField
+(
     const transformFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
@@ -50,18 +62,6 @@ Foam::transformFvPatchField<Type>::transformFvPatchField
 )
 :
     fvPatchField<Type>(ptf, p, iF, mapper)
-{}
-
-
-template<class Type>
-Foam::transformFvPatchField<Type>::transformFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fvPatchField<Type>(p, iF, dict, false)
 {}
 
 
