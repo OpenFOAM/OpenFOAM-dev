@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,7 +26,7 @@ License
 #include "sampledSet.H"
 #include "polyMesh.H"
 #include "meshSearch.H"
-#include "writer.H"
+#include "setWriter.H"
 #include "lineCell.H"
 #include "lineCellFace.H"
 #include "lineFace.H"

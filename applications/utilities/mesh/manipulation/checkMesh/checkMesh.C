@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
 
 
     autoPtr<surfaceWriter> surfWriter;
-    autoPtr<writer<scalar>> setWriter;
+    autoPtr<Foam::setWriter<scalar>> setWriter;
     if (writeSets)
     {
         surfWriter = surfaceWriter::New
@@ -168,7 +168,10 @@ int main(int argc, char *argv[])
             surfaceFormat,
             mesh.time().writeFormat()
         );
-        setWriter = writer<scalar>::New(vtkSetWriter<scalar>::typeName);
+        setWriter = Foam::setWriter<scalar>::New
+        (
+            vtkSetWriter<scalar>::typeName
+        );
     }
 
 

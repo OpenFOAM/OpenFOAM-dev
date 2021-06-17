@@ -1,6 +1,6 @@
 #include "label.H"
 #include "autoPtr.H"
-#include "writer.H"
+#include "setWriter.H"
 
 namespace Foam
 {
@@ -13,6 +13,6 @@ namespace Foam
         const bool,
         const bool,
         const autoPtr<surfaceWriter>&,
-        const autoPtr<writer<scalar>>&
+        const autoPtr<setWriter<scalar>>&
     );
 }

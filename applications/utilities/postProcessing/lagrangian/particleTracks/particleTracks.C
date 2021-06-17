@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ Description
 #include "timeSelector.H"
 #include "OFstream.H"
 #include "passiveParticleCloud.H"
-#include "writer.H"
+#include "setWriter.H"
 
 using namespace Foam;
 
@@ -210,10 +210,8 @@ int main(int argc, char *argv[])
             tracks[trackI].transfer(allTracks[trackI]);
         }
 
-        autoPtr<writer<scalar>> scalarFormatterPtr = writer<scalar>::New
-        (
-            setFormat
-        );
+        autoPtr<setWriter<scalar>> scalarFormatterPtr =
+            setWriter<scalar>::New(setFormat);
 
         // OFstream vtkTracks(vtkPath/"particleTracks.vtk");
         fileName vtkFile

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -109,7 +109,7 @@ SourceFiles
 #include "DynamicList.H"
 #include "scalarList.H"
 #include "vectorList.H"
-#include "writer.H"
+#include "setWriter.H"
 #include "indirectPrimitivePatch.H"
 #include "NamedEnum.H"
 
@@ -205,10 +205,10 @@ private:
             word sampledSetAxis_;
 
             //- File writer for scalar data
-            autoPtr<writer<scalar>> scalarFormatterPtr_;
+            autoPtr<setWriter<scalar>> scalarFormatterPtr_;
 
             //- File writer for vector data
-            autoPtr<writer<vector>> vectorFormatterPtr_;
+            autoPtr<setWriter<vector>> vectorFormatterPtr_;
 
 
         // Generated data

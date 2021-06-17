@@ -42,7 +42,7 @@ SourceFiles
 #include "meshSearch.H"
 #include "interpolation.H"
 #include "coordSet.H"
-#include "writer.H"
+#include "setWriter.H"
 #include "wordReList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -76,7 +76,7 @@ class sampledSets
         public:
 
             //- The set formatter
-            autoPtr<writer<Type>> formatter;
+            autoPtr<setWriter<Type>> formatter;
 
             //- Construct null
             fieldGroup()
@@ -89,7 +89,7 @@ class sampledSets
             fieldGroup(const word& writeFormat)
             :
                 DynamicList<word>(0),
-                formatter(writer<Type>::New(writeFormat))
+                formatter(setWriter<Type>::New(writeFormat))
             {}
 
             //- Reset format and field list
@@ -102,7 +102,7 @@ class sampledSets
             //- Assign a new formatter
             void operator=(const word& writeFormat)
             {
-                formatter = writer<Type>::New(writeFormat);
+                formatter = setWriter<Type>::New(writeFormat);
             }
 
         };
@@ -236,7 +236,7 @@ class sampledSets
             const PtrList<volFieldSampler<Type>>& masterFields,
             const label setI,
             const fileName& timeDir,
-            const writer<Type>& formatter
+            const setWriter<Type>& formatter
         );
 
         template<class Type>

@@ -2,6 +2,8 @@ probes/probes.C
 probes/patchProbes.C
 probes/probesGrouping.C
 
+coordSet/coordSet.C
+
 sampledSet/sampledSet/sampledSet.C
 sampledSet/sampledSets/sampledSets.C
 sampledSet/sampledSets/sampledSetsGrouping.C
@@ -19,6 +21,17 @@ sampledSet/sphereRandom/sphereRandom.C
 sampledSet/triSurfaceMeshSampledSet/triSurfaceMeshSampledSet.C
 sampledSet/cellSetSampledSet/cellSetSampledSet.C
 sampledSet/faceSetSampledSet/faceSetSampledSet.C
+
+setWriters = sampledSet/writers
+
+$(setWriters)/setWriters.C
+$(setWriters)/ensight/ensightSetWriterRunTime.C
+$(setWriters)/gnuplot/gnuplotSetWriterRunTime.C
+$(setWriters)/jplot/jplotSetWriterRunTime.C
+$(setWriters)/raw/rawSetWriterRunTime.C
+$(setWriters)/vtk/vtkSetWriterRunTime.C
+$(setWriters)/xmgrace/xmgraceSetWriterRunTime.C
+$(setWriters)/csv/csvSetWriterRunTime.C
 
 cuttingPlane/cuttingPlane.C
 

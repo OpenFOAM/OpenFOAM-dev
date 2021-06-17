@@ -444,7 +444,7 @@ Foam::functionObjects::sizeDistribution::sizeDistribution
         }
     }
 
-    scalarFormatter_ = writer<scalar>::New("raw");
+    scalarFormatter_ = setWriter<scalar>::New("raw");
 }
 
 
