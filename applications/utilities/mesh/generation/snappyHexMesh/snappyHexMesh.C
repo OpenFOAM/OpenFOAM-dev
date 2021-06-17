@@ -46,7 +46,6 @@ Description
 #include "refinementParameters.H"
 #include "snapParameters.H"
 #include "layerParameters.H"
-#include "vtkSetWriter.H"
 #include "faceSet.H"
 #include "motionSmoother.H"
 #include "polyTopoChange.H"
@@ -991,7 +990,6 @@ int main(int argc, char *argv[])
         (
             100.0,      // max size ratio
             1e-9,       // intersection tolerance
-            autoPtr<writer<scalar>>(new vtkSetWriter<scalar>()),
             0.01,       // min triangle quality
             true
         );
