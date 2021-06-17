@@ -45,6 +45,18 @@ adjointOutletPressureFvPatchScalarField
 Foam::adjointOutletPressureFvPatchScalarField::
 adjointOutletPressureFvPatchScalarField
 (
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchScalarField(p, iF, dict)
+{}
+
+
+Foam::adjointOutletPressureFvPatchScalarField::
+adjointOutletPressureFvPatchScalarField
+(
     const adjointOutletPressureFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -52,18 +64,6 @@ adjointOutletPressureFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper)
-{}
-
-
-Foam::adjointOutletPressureFvPatchScalarField::
-adjointOutletPressureFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchScalarField(p, iF, dict)
 {}
 
 

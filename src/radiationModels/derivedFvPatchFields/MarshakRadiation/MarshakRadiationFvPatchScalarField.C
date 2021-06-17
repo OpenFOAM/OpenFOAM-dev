@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -50,26 +50,6 @@ Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
 
 Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
 (
-    const MarshakRadiationFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    mixedFvPatchScalarField(ptf, p, iF, mapper),
-    radiationCoupledBase
-    (
-        p,
-        ptf.emissivityMethod(),
-        ptf.emissivity_,
-        mapper
-    ),
-    TName_(ptf.TName_)
-{}
-
-
-Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -95,6 +75,26 @@ Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
 
     fvPatchScalarField::operator=(refValue());
 }
+
+
+Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField
+(
+    const MarshakRadiationFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    mixedFvPatchScalarField(ptf, p, iF, mapper),
+    radiationCoupledBase
+    (
+        p,
+        ptf.emissivityMethod(),
+        ptf.emissivity_,
+        mapper
+    ),
+    TName_(ptf.TName_)
+{}
 
 
 Foam::MarshakRadiationFvPatchScalarField::MarshakRadiationFvPatchScalarField

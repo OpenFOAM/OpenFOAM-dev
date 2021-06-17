@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -43,6 +43,17 @@ Foam::SRFWallVelocityFvPatchVectorField::SRFWallVelocityFvPatchVectorField
 
 Foam::SRFWallVelocityFvPatchVectorField::SRFWallVelocityFvPatchVectorField
 (
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchVectorField(p, iF, dict)
+{}
+
+
+Foam::SRFWallVelocityFvPatchVectorField::SRFWallVelocityFvPatchVectorField
+(
     const SRFWallVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
@@ -50,17 +61,6 @@ Foam::SRFWallVelocityFvPatchVectorField::SRFWallVelocityFvPatchVectorField
 )
 :
     fixedValueFvPatchVectorField(ptf, p, iF, mapper)
-{}
-
-
-Foam::SRFWallVelocityFvPatchVectorField::SRFWallVelocityFvPatchVectorField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchVectorField(p, iF, dict)
 {}
 
 

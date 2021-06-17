@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -62,6 +62,23 @@ alphatFilmWallFunctionFvPatchScalarField
 alphatFilmWallFunctionFvPatchScalarField::
 alphatFilmWallFunctionFvPatchScalarField
 (
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchScalarField(p, iF, dict),
+    B_(dict.lookupOrDefault("B", 5.5)),
+    yPlusCrit_(dict.lookupOrDefault("yPlusCrit", 11.05)),
+    Cmu_(dict.lookupOrDefault("Cmu", 0.09)),
+    kappa_(dict.lookupOrDefault("kappa", 0.41)),
+    Prt_(dict.lookupOrDefault("Prt", 0.85))
+{}
+
+
+alphatFilmWallFunctionFvPatchScalarField::
+alphatFilmWallFunctionFvPatchScalarField
+(
     const alphatFilmWallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -74,23 +91,6 @@ alphatFilmWallFunctionFvPatchScalarField
     Cmu_(ptf.Cmu_),
     kappa_(ptf.kappa_),
     Prt_(ptf.Prt_)
-{}
-
-
-alphatFilmWallFunctionFvPatchScalarField::
-alphatFilmWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchScalarField(p, iF, dict),
-    B_(dict.lookupOrDefault("B", 5.5)),
-    yPlusCrit_(dict.lookupOrDefault("yPlusCrit", 11.05)),
-    Cmu_(dict.lookupOrDefault("Cmu", 0.09)),
-    kappa_(dict.lookupOrDefault("kappa", 0.41)),
-    Prt_(dict.lookupOrDefault("Prt", 0.85))
 {}
 
 

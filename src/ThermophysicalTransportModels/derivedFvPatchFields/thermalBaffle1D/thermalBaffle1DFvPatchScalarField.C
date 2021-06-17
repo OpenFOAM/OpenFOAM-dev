@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,30 +63,6 @@ template<class solidType>
 thermalBaffle1DFvPatchScalarField<solidType>::
 thermalBaffle1DFvPatchScalarField
 (
-    const thermalBaffle1DFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    mappedPatchBase(p.patch(), ptf),
-    mixedFvPatchScalarField(ptf, p, iF, mapper),
-    TName_(ptf.TName_),
-    baffleActivated_(ptf.baffleActivated_),
-    thickness_(mapper(ptf.thickness_)),
-    Qs_(mapper(ptf.Qs_)),
-    solidDict_(ptf.solidDict_),
-    solidPtr_(ptf.solidPtr_),
-    qrPrevious_(mapper(ptf.qrPrevious_)),
-    qrRelaxation_(ptf.qrRelaxation_),
-    qrName_(ptf.qrName_)
-{}
-
-
-template<class solidType>
-thermalBaffle1DFvPatchScalarField<solidType>::
-thermalBaffle1DFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -135,8 +111,31 @@ thermalBaffle1DFvPatchScalarField
         refGrad() = 0.0;
         valueFraction() = 0.0;
     }
-
 }
+
+
+template<class solidType>
+thermalBaffle1DFvPatchScalarField<solidType>::
+thermalBaffle1DFvPatchScalarField
+(
+    const thermalBaffle1DFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    mappedPatchBase(p.patch(), ptf),
+    mixedFvPatchScalarField(ptf, p, iF, mapper),
+    TName_(ptf.TName_),
+    baffleActivated_(ptf.baffleActivated_),
+    thickness_(mapper(ptf.thickness_)),
+    Qs_(mapper(ptf.Qs_)),
+    solidDict_(ptf.solidDict_),
+    solidPtr_(ptf.solidPtr_),
+    qrPrevious_(mapper(ptf.qrPrevious_)),
+    qrRelaxation_(ptf.qrRelaxation_),
+    qrName_(ptf.qrName_)
+{}
 
 
 template<class solidType>

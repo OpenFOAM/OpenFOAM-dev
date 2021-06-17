@@ -48,23 +48,6 @@ dynamicAlphaContactAngleFvPatchScalarField
 Foam::dynamicAlphaContactAngleFvPatchScalarField::
 dynamicAlphaContactAngleFvPatchScalarField
 (
-    const dynamicAlphaContactAngleFvPatchScalarField& gcpsf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    alphaContactAngleFvPatchScalarField(gcpsf, p, iF, mapper),
-    theta0_(gcpsf.theta0_),
-    uTheta_(gcpsf.uTheta_),
-    thetaA_(gcpsf.thetaA_),
-    thetaR_(gcpsf.thetaR_)
-{}
-
-
-Foam::dynamicAlphaContactAngleFvPatchScalarField::
-dynamicAlphaContactAngleFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -78,6 +61,23 @@ dynamicAlphaContactAngleFvPatchScalarField
 {
     evaluate();
 }
+
+
+Foam::dynamicAlphaContactAngleFvPatchScalarField::
+dynamicAlphaContactAngleFvPatchScalarField
+(
+    const dynamicAlphaContactAngleFvPatchScalarField& gcpsf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    alphaContactAngleFvPatchScalarField(gcpsf, p, iF, mapper),
+    theta0_(gcpsf.theta0_),
+    uTheta_(gcpsf.uTheta_),
+    thetaA_(gcpsf.thetaA_),
+    thetaR_(gcpsf.thetaR_)
+{}
 
 
 Foam::dynamicAlphaContactAngleFvPatchScalarField::

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -46,6 +46,18 @@ fixedUnburntEnthalpyFvPatchScalarField
 Foam::fixedUnburntEnthalpyFvPatchScalarField::
 fixedUnburntEnthalpyFvPatchScalarField
 (
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchScalarField(p, iF, dict)
+{}
+
+
+Foam::fixedUnburntEnthalpyFvPatchScalarField::
+fixedUnburntEnthalpyFvPatchScalarField
+(
     const fixedUnburntEnthalpyFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -53,18 +65,6 @@ fixedUnburntEnthalpyFvPatchScalarField
 )
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper)
-{}
-
-
-Foam::fixedUnburntEnthalpyFvPatchScalarField::
-fixedUnburntEnthalpyFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchScalarField(p, iF, dict)
 {}
 
 

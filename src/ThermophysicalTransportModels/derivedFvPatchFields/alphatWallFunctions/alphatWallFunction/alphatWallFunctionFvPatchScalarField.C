@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,18 @@ alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 
 alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 (
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchScalarField(p, iF, dict),
+    Prt_(dict.lookupOrDefault<scalar>("Prt", 0.85))
+{}
+
+
+alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
+(
     const alphatWallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -57,18 +69,6 @@ alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper),
     Prt_(ptf.Prt_)
-{}
-
-
-alphatWallFunctionFvPatchScalarField::alphatWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchScalarField(p, iF, dict),
-    Prt_(dict.lookupOrDefault<scalar>("Prt", 0.85))
 {}
 
 

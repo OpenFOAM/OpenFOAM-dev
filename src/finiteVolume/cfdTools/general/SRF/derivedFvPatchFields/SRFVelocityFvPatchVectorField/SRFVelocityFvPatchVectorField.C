@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,6 +45,19 @@ Foam::SRFVelocityFvPatchVectorField::SRFVelocityFvPatchVectorField
 
 Foam::SRFVelocityFvPatchVectorField::SRFVelocityFvPatchVectorField
 (
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchVectorField(p, iF, dict),
+    relative_(dict.lookup("relative")),
+    inletValue_("inletValue", dict, p.size())
+{}
+
+
+Foam::SRFVelocityFvPatchVectorField::SRFVelocityFvPatchVectorField
+(
     const SRFVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
@@ -54,19 +67,6 @@ Foam::SRFVelocityFvPatchVectorField::SRFVelocityFvPatchVectorField
     fixedValueFvPatchVectorField(ptf, p, iF, mapper),
     relative_(ptf.relative_),
     inletValue_(mapper(ptf.inletValue_))
-{}
-
-
-Foam::SRFVelocityFvPatchVectorField::SRFVelocityFvPatchVectorField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchVectorField(p, iF, dict),
-    relative_(dict.lookup("relative")),
-    inletValue_("inletValue", dict, p.size())
 {}
 
 

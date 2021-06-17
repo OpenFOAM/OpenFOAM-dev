@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,21 +53,6 @@ tractionDisplacementCorrectionFvPatchVectorField
 tractionDisplacementCorrectionFvPatchVectorField::
 tractionDisplacementCorrectionFvPatchVectorField
 (
-    const tractionDisplacementCorrectionFvPatchVectorField& tdpvf,
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedGradientFvPatchVectorField(tdpvf, p, iF, mapper),
-    traction_(mapper(tdpvf.traction_)),
-    pressure_(mapper(tdpvf.pressure_))
-{}
-
-
-tractionDisplacementCorrectionFvPatchVectorField::
-tractionDisplacementCorrectionFvPatchVectorField
-(
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
@@ -80,6 +65,21 @@ tractionDisplacementCorrectionFvPatchVectorField
     fvPatchVectorField::operator=(patchInternalField());
     gradient() = Zero;
 }
+
+
+tractionDisplacementCorrectionFvPatchVectorField::
+tractionDisplacementCorrectionFvPatchVectorField
+(
+    const tractionDisplacementCorrectionFvPatchVectorField& tdpvf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedGradientFvPatchVectorField(tdpvf, p, iF, mapper),
+    traction_(mapper(tdpvf.traction_)),
+    pressure_(mapper(tdpvf.pressure_))
+{}
 
 
 tractionDisplacementCorrectionFvPatchVectorField::

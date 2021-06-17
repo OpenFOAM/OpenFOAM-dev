@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -84,19 +84,6 @@ alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 
 alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 (
-    const alphaContactAngleFvPatchScalarField& gcpsf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    zeroGradientFvPatchScalarField(gcpsf, p, iF, mapper),
-    thetaProps_(gcpsf.thetaProps_)
-{}
-
-
-alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -107,6 +94,19 @@ alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
 {
     evaluate();
 }
+
+
+alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField
+(
+    const alphaContactAngleFvPatchScalarField& gcpsf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    zeroGradientFvPatchScalarField(gcpsf, p, iF, mapper),
+    thetaProps_(gcpsf.thetaProps_)
+{}
 
 
 alphaContactAngleFvPatchScalarField::alphaContactAngleFvPatchScalarField

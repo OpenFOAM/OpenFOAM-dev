@@ -113,6 +113,19 @@ alphatPhaseJayatillekeWallFunctionFvPatchScalarField
 alphatPhaseJayatillekeWallFunctionFvPatchScalarField::
 alphatPhaseJayatillekeWallFunctionFvPatchScalarField
 (
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchScalarField(p, iF, dict),
+    Prt_(dict.lookupOrDefault<scalar>("Prt", 0.85))
+{}
+
+
+alphatPhaseJayatillekeWallFunctionFvPatchScalarField::
+alphatPhaseJayatillekeWallFunctionFvPatchScalarField
+(
     const alphatPhaseJayatillekeWallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -121,19 +134,6 @@ alphatPhaseJayatillekeWallFunctionFvPatchScalarField
 :
     fixedValueFvPatchScalarField(ptf, p, iF, mapper),
     Prt_(ptf.Prt_)
-{}
-
-
-alphatPhaseJayatillekeWallFunctionFvPatchScalarField::
-alphatPhaseJayatillekeWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchScalarField(p, iF, dict),
-    Prt_(dict.lookupOrDefault<scalar>("Prt", 0.85))
 {}
 
 

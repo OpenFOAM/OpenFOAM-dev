@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,18 @@ mixedUnburntEnthalpyFvPatchScalarField
 Foam::mixedUnburntEnthalpyFvPatchScalarField::
 mixedUnburntEnthalpyFvPatchScalarField
 (
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    mixedFvPatchScalarField(p, iF, dict)
+{}
+
+
+Foam::mixedUnburntEnthalpyFvPatchScalarField::
+mixedUnburntEnthalpyFvPatchScalarField
+(
     const mixedUnburntEnthalpyFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -56,18 +68,6 @@ mixedUnburntEnthalpyFvPatchScalarField
 )
 :
     mixedFvPatchScalarField(ptf, p, iF, mapper)
-{}
-
-
-Foam::mixedUnburntEnthalpyFvPatchScalarField::
-mixedUnburntEnthalpyFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    mixedFvPatchScalarField(p, iF, dict)
 {}
 
 

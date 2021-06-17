@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,23 +49,6 @@ timeVaryingAlphaContactAngleFvPatchScalarField
 Foam::timeVaryingAlphaContactAngleFvPatchScalarField::
 timeVaryingAlphaContactAngleFvPatchScalarField
 (
-    const timeVaryingAlphaContactAngleFvPatchScalarField& gcpsf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    alphaContactAngleFvPatchScalarField(gcpsf, p, iF, mapper),
-    t0_(gcpsf.t0_),
-    thetaT0_(gcpsf.thetaT0_),
-    te_(gcpsf.te_),
-    thetaTe_(gcpsf.te_)
-{}
-
-
-Foam::timeVaryingAlphaContactAngleFvPatchScalarField::
-timeVaryingAlphaContactAngleFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -79,6 +62,23 @@ timeVaryingAlphaContactAngleFvPatchScalarField
 {
     evaluate();
 }
+
+
+Foam::timeVaryingAlphaContactAngleFvPatchScalarField::
+timeVaryingAlphaContactAngleFvPatchScalarField
+(
+    const timeVaryingAlphaContactAngleFvPatchScalarField& gcpsf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    alphaContactAngleFvPatchScalarField(gcpsf, p, iF, mapper),
+    t0_(gcpsf.t0_),
+    thetaT0_(gcpsf.thetaT0_),
+    te_(gcpsf.te_),
+    thetaTe_(gcpsf.te_)
+{}
 
 
 Foam::timeVaryingAlphaContactAngleFvPatchScalarField::

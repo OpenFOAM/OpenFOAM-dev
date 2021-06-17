@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2014-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,20 +56,6 @@ JohnsonJacksonParticleSlipFvPatchVectorField
 Foam::JohnsonJacksonParticleSlipFvPatchVectorField::
 JohnsonJacksonParticleSlipFvPatchVectorField
 (
-    const JohnsonJacksonParticleSlipFvPatchVectorField& ptf,
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    partialSlipFvPatchVectorField(ptf, p, iF, mapper),
-    specularityCoefficient_(ptf.specularityCoefficient_)
-{}
-
-
-Foam::JohnsonJacksonParticleSlipFvPatchVectorField::
-JohnsonJacksonParticleSlipFvPatchVectorField
-(
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
@@ -99,6 +85,20 @@ JohnsonJacksonParticleSlipFvPatchVectorField
         vectorField("value", dict, p.size())
     );
 }
+
+
+Foam::JohnsonJacksonParticleSlipFvPatchVectorField::
+JohnsonJacksonParticleSlipFvPatchVectorField
+(
+    const JohnsonJacksonParticleSlipFvPatchVectorField& ptf,
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    partialSlipFvPatchVectorField(ptf, p, iF, mapper),
+    specularityCoefficient_(ptf.specularityCoefficient_)
+{}
 
 
 Foam::JohnsonJacksonParticleSlipFvPatchVectorField::

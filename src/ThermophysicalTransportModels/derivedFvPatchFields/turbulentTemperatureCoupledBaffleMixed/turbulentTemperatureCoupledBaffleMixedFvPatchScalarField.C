@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,24 +56,6 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
     this->refGrad() = 0.0;
     this->valueFraction() = 1.0;
 }
-
-
-turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::
-turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
-(
-    const turbulentTemperatureCoupledBaffleMixedFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    mixedFvPatchScalarField(ptf, p, iF, mapper),
-    temperatureCoupledBase(patch(), ptf),
-    TnbrName_(ptf.TnbrName_),
-    thicknessLayers_(ptf.thicknessLayers_),
-    kappaLayers_(ptf.kappaLayers_),
-    contactRes_(ptf.contactRes_)
-{}
 
 
 turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::
@@ -134,6 +116,24 @@ turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
         valueFraction() = 1.0;
     }
 }
+
+
+turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::
+turbulentTemperatureCoupledBaffleMixedFvPatchScalarField
+(
+    const turbulentTemperatureCoupledBaffleMixedFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    mixedFvPatchScalarField(ptf, p, iF, mapper),
+    temperatureCoupledBase(patch(), ptf),
+    TnbrName_(ptf.TnbrName_),
+    thicknessLayers_(ptf.thicknessLayers_),
+    kappaLayers_(ptf.kappaLayers_),
+    contactRes_(ptf.contactRes_)
+{}
 
 
 turbulentTemperatureCoupledBaffleMixedFvPatchScalarField::

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -83,6 +83,23 @@ Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 
 Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
 (
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchScalarField(p, iF, dict),
+    Cmu_(dict.lookupOrDefault<scalar>("Cmu", 0.09)),
+    kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
+    E_(dict.lookupOrDefault<scalar>("E", 9.8)),
+    yPlusLam_(yPlusLam(kappa_, E_))
+{
+    checkType();
+}
+
+
+Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
+(
     const nutWallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -94,23 +111,6 @@ Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
     kappa_(ptf.kappa_),
     E_(ptf.E_),
     yPlusLam_(ptf.yPlusLam_)
-{
-    checkType();
-}
-
-
-Foam::nutWallFunctionFvPatchScalarField::nutWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchScalarField(p, iF, dict),
-    Cmu_(dict.lookupOrDefault<scalar>("Cmu", 0.09)),
-    kappa_(dict.lookupOrDefault<scalar>("kappa", 0.41)),
-    E_(dict.lookupOrDefault<scalar>("E", 9.8)),
-    yPlusLam_(yPlusLam(kappa_, E_))
 {
     checkType();
 }

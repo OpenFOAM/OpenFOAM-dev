@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,6 +47,21 @@ inclinedFilmNusseltInletVelocityFvPatchVectorField
 Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::
 inclinedFilmNusseltInletVelocityFvPatchVectorField
 (
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchVectorField(p, iF, dict),
+    GammaMean_(Function1<scalar>::New("GammaMean", dict)),
+    a_(Function1<scalar>::New("a", dict)),
+    omega_(Function1<scalar>::New("omega", dict))
+{}
+
+
+Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::
+inclinedFilmNusseltInletVelocityFvPatchVectorField
+(
     const inclinedFilmNusseltInletVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
@@ -57,21 +72,6 @@ inclinedFilmNusseltInletVelocityFvPatchVectorField
     GammaMean_(ptf.GammaMean_().clone().ptr()),
     a_(ptf.a_().clone().ptr()),
     omega_(ptf.omega_().clone().ptr())
-{}
-
-
-Foam::inclinedFilmNusseltInletVelocityFvPatchVectorField::
-inclinedFilmNusseltInletVelocityFvPatchVectorField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchVectorField(p, iF, dict),
-    GammaMean_(Function1<scalar>::New("GammaMean", dict)),
-    a_(Function1<scalar>::New("a", dict)),
-    omega_(Function1<scalar>::New("omega", dict))
 {}
 
 

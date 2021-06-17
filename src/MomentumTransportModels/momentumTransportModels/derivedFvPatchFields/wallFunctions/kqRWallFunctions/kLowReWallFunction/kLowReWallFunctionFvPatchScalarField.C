@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,6 +48,18 @@ kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
 
 kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
 (
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchField<scalar>(p, iF, dict),
+    Ceps2_(dict.lookupOrDefault<scalar>("Ceps2", 1.9))
+{}
+
+
+kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
+(
     const kLowReWallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -56,18 +68,6 @@ kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
 :
     fixedValueFvPatchField<scalar>(ptf, p, iF, mapper),
     Ceps2_(ptf.Ceps2_)
-{}
-
-
-kLowReWallFunctionFvPatchScalarField::kLowReWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchField<scalar>(p, iF, dict),
-    Ceps2_(dict.lookupOrDefault<scalar>("Ceps2", 1.9))
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,18 +42,6 @@ Foam::energyJumpAMIFvPatchScalarField::energyJumpAMIFvPatchScalarField
 
 Foam::energyJumpAMIFvPatchScalarField::energyJumpAMIFvPatchScalarField
 (
-    const energyJumpAMIFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedJumpAMIFvPatchField<scalar>(ptf, p, iF, mapper)
-{}
-
-
-Foam::energyJumpAMIFvPatchScalarField::energyJumpAMIFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -73,6 +61,18 @@ Foam::energyJumpAMIFvPatchScalarField::energyJumpAMIFvPatchScalarField
         evaluate(Pstream::commsTypes::blocking);
     }
 }
+
+
+Foam::energyJumpAMIFvPatchScalarField::energyJumpAMIFvPatchScalarField
+(
+    const energyJumpAMIFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedJumpAMIFvPatchField<scalar>(ptf, p, iF, mapper)
+{}
 
 
 Foam::energyJumpAMIFvPatchScalarField::energyJumpAMIFvPatchScalarField

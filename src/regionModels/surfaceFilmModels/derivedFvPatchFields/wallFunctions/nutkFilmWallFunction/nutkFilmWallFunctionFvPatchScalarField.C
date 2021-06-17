@@ -167,6 +167,19 @@ nutkFilmWallFunctionFvPatchScalarField::nutkFilmWallFunctionFvPatchScalarField
 
 nutkFilmWallFunctionFvPatchScalarField::nutkFilmWallFunctionFvPatchScalarField
 (
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    nutkWallFunctionFvPatchScalarField(p, iF, dict),
+    B_(dict.lookupOrDefault("B", 5.5)),
+    yPlusCrit_(dict.lookupOrDefault("yPlusCrit", 11.05))
+{}
+
+
+nutkFilmWallFunctionFvPatchScalarField::nutkFilmWallFunctionFvPatchScalarField
+(
     const nutkFilmWallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -176,19 +189,6 @@ nutkFilmWallFunctionFvPatchScalarField::nutkFilmWallFunctionFvPatchScalarField
     nutkWallFunctionFvPatchScalarField(ptf, p, iF, mapper),
     B_(5.5),
     yPlusCrit_(11.05)
-{}
-
-
-nutkFilmWallFunctionFvPatchScalarField::nutkFilmWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    nutkWallFunctionFvPatchScalarField(p, iF, dict),
-    B_(dict.lookupOrDefault("B", 5.5)),
-    yPlusCrit_(dict.lookupOrDefault("yPlusCrit", 11.05))
 {}
 
 

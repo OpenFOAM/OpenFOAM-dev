@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,27 +57,6 @@ wideBandDiffusiveRadiationMixedFvPatchScalarField
 Foam::wideBandDiffusiveRadiationMixedFvPatchScalarField::
 wideBandDiffusiveRadiationMixedFvPatchScalarField
 (
-    const wideBandDiffusiveRadiationMixedFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    mixedFvPatchScalarField(ptf, p, iF, mapper),
-    radiationCoupledBase
-    (
-        p,
-        ptf.emissivityMethod(),
-        ptf.emissivity_,
-        mapper
-    ),
-    TName_(ptf.TName_)
-{}
-
-
-Foam::wideBandDiffusiveRadiationMixedFvPatchScalarField::
-wideBandDiffusiveRadiationMixedFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -109,6 +88,27 @@ wideBandDiffusiveRadiationMixedFvPatchScalarField
         fvPatchScalarField::operator=(refValue());
     }
 }
+
+
+Foam::wideBandDiffusiveRadiationMixedFvPatchScalarField::
+wideBandDiffusiveRadiationMixedFvPatchScalarField
+(
+    const wideBandDiffusiveRadiationMixedFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    mixedFvPatchScalarField(ptf, p, iF, mapper),
+    radiationCoupledBase
+    (
+        p,
+        ptf.emissivityMethod(),
+        ptf.emissivity_,
+        mapper
+    ),
+    TName_(ptf.TName_)
+{}
 
 
 Foam::wideBandDiffusiveRadiationMixedFvPatchScalarField::

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -102,6 +102,19 @@ nutkAtmRoughWallFunctionFvPatchScalarField
 nutkAtmRoughWallFunctionFvPatchScalarField::
 nutkAtmRoughWallFunctionFvPatchScalarField
 (
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    nutkWallFunctionFvPatchScalarField(p, iF, dict),
+    z0_("z0", dict, p.size())
+{}
+
+
+nutkAtmRoughWallFunctionFvPatchScalarField::
+nutkAtmRoughWallFunctionFvPatchScalarField
+(
     const nutkAtmRoughWallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -110,19 +123,6 @@ nutkAtmRoughWallFunctionFvPatchScalarField
 :
     nutkWallFunctionFvPatchScalarField(ptf, p, iF, mapper),
     z0_(mapper(ptf.z0_))
-{}
-
-
-nutkAtmRoughWallFunctionFvPatchScalarField::
-nutkAtmRoughWallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    nutkWallFunctionFvPatchScalarField(p, iF, dict),
-    z0_("z0", dict, p.size())
 {}
 
 

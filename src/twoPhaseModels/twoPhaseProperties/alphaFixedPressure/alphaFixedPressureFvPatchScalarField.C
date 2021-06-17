@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,20 +47,6 @@ alphaFixedPressureFvPatchScalarField
 Foam::alphaFixedPressureFvPatchScalarField::
 alphaFixedPressureFvPatchScalarField
 (
-    const alphaFixedPressureFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    fixedValueFvPatchScalarField(ptf, p, iF, mapper),
-    p_(mapper(ptf.p_))
-{}
-
-
-Foam::alphaFixedPressureFvPatchScalarField::
-alphaFixedPressureFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -81,6 +67,20 @@ alphaFixedPressureFvPatchScalarField
         fvPatchField<scalar>::operator=(p_);
     }
 }
+
+
+Foam::alphaFixedPressureFvPatchScalarField::
+alphaFixedPressureFvPatchScalarField
+(
+    const alphaFixedPressureFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    fixedValueFvPatchScalarField(ptf, p, iF, mapper),
+    p_(mapper(ptf.p_))
+{}
 
 
 Foam::alphaFixedPressureFvPatchScalarField::

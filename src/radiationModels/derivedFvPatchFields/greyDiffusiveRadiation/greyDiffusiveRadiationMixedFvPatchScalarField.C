@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -56,27 +56,6 @@ greyDiffusiveRadiationMixedFvPatchScalarField
 Foam::greyDiffusiveRadiationMixedFvPatchScalarField::
 greyDiffusiveRadiationMixedFvPatchScalarField
 (
-    const greyDiffusiveRadiationMixedFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    mixedFvPatchScalarField(ptf, p, iF, mapper),
-    radiationCoupledBase
-    (
-        p,
-        ptf.emissivityMethod(),
-        ptf.emissivity_,
-        mapper
-    ),
-    TName_(ptf.TName_)
-{}
-
-
-Foam::greyDiffusiveRadiationMixedFvPatchScalarField::
-greyDiffusiveRadiationMixedFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -105,6 +84,27 @@ greyDiffusiveRadiationMixedFvPatchScalarField
         fvPatchScalarField::operator=(refValue());
     }
 }
+
+
+Foam::greyDiffusiveRadiationMixedFvPatchScalarField::
+greyDiffusiveRadiationMixedFvPatchScalarField
+(
+    const greyDiffusiveRadiationMixedFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    mixedFvPatchScalarField(ptf, p, iF, mapper),
+    radiationCoupledBase
+    (
+        p,
+        ptf.emissivityMethod(),
+        ptf.emissivity_,
+        mapper
+    ),
+    TName_(ptf.TName_)
+{}
 
 
 Foam::greyDiffusiveRadiationMixedFvPatchScalarField::

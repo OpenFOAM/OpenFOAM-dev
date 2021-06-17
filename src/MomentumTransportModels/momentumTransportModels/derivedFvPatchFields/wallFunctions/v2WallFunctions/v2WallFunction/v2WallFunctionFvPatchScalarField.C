@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -49,6 +49,17 @@ v2WallFunctionFvPatchScalarField::v2WallFunctionFvPatchScalarField
 
 v2WallFunctionFvPatchScalarField::v2WallFunctionFvPatchScalarField
 (
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchField<scalar>(p, iF, dict)
+{}
+
+
+v2WallFunctionFvPatchScalarField::v2WallFunctionFvPatchScalarField
+(
     const v2WallFunctionFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -56,17 +67,6 @@ v2WallFunctionFvPatchScalarField::v2WallFunctionFvPatchScalarField
 )
 :
     fixedValueFvPatchField<scalar>(ptf, p, iF, mapper)
-{}
-
-
-v2WallFunctionFvPatchScalarField::v2WallFunctionFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchField<scalar>(p, iF, dict)
 {}
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -57,21 +57,6 @@ turbulentMixingLengthDissipationRateInletFvPatchScalarField
 turbulentMixingLengthDissipationRateInletFvPatchScalarField::
 turbulentMixingLengthDissipationRateInletFvPatchScalarField
 (
-    const turbulentMixingLengthDissipationRateInletFvPatchScalarField& ptf,
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
-)
-:
-    inletOutletFvPatchScalarField(ptf, p, iF, mapper),
-    mixingLength_(ptf.mixingLength_),
-    kName_(ptf.kName_)
-{}
-
-
-turbulentMixingLengthDissipationRateInletFvPatchScalarField::
-turbulentMixingLengthDissipationRateInletFvPatchScalarField
-(
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
     const dictionary& dict
@@ -89,6 +74,21 @@ turbulentMixingLengthDissipationRateInletFvPatchScalarField
     this->refGrad() = 0.0;
     this->valueFraction() = 0.0;
 }
+
+
+turbulentMixingLengthDissipationRateInletFvPatchScalarField::
+turbulentMixingLengthDissipationRateInletFvPatchScalarField
+(
+    const turbulentMixingLengthDissipationRateInletFvPatchScalarField& ptf,
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const fvPatchFieldMapper& mapper
+)
+:
+    inletOutletFvPatchScalarField(ptf, p, iF, mapper),
+    mixingLength_(ptf.mixingLength_),
+    kName_(ptf.kName_)
+{}
 
 
 turbulentMixingLengthDissipationRateInletFvPatchScalarField::

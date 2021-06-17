@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,6 +44,19 @@ Foam::fixedRhoFvPatchScalarField::fixedRhoFvPatchScalarField
 
 Foam::fixedRhoFvPatchScalarField::fixedRhoFvPatchScalarField
 (
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchScalarField(p, iF, dict),
+    pName_(dict.lookupOrDefault<word>("p", "p")),
+    psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi"))
+{}
+
+
+Foam::fixedRhoFvPatchScalarField::fixedRhoFvPatchScalarField
+(
     const fixedRhoFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -53,19 +66,6 @@ Foam::fixedRhoFvPatchScalarField::fixedRhoFvPatchScalarField
     fixedValueFvPatchScalarField(ptf, p, iF, mapper),
     pName_(ptf.pName_),
     psiName_(ptf.psiName_)
-{}
-
-
-Foam::fixedRhoFvPatchScalarField::fixedRhoFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchScalarField(p, iF, dict),
-    pName_(dict.lookupOrDefault<word>("p", "p")),
-    psiName_(dict.lookupOrDefault<word>("psi", "thermo:psi"))
 {}
 
 

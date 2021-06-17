@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,6 +55,18 @@ externalCoupledTemperatureMixedFvPatchScalarField
 Foam::externalCoupledTemperatureMixedFvPatchScalarField::
 externalCoupledTemperatureMixedFvPatchScalarField
 (
+    const fvPatch& p,
+    const DimensionedField<scalar, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    externalCoupledMixedFvPatchField<scalar>(p, iF, dict)
+{}
+
+
+Foam::externalCoupledTemperatureMixedFvPatchScalarField::
+externalCoupledTemperatureMixedFvPatchScalarField
+(
     const externalCoupledTemperatureMixedFvPatchScalarField& ptf,
     const fvPatch& p,
     const DimensionedField<scalar, volMesh>& iF,
@@ -62,18 +74,6 @@ externalCoupledTemperatureMixedFvPatchScalarField
 )
 :
     externalCoupledMixedFvPatchField<scalar>(ptf, p, iF, mapper)
-{}
-
-
-Foam::externalCoupledTemperatureMixedFvPatchScalarField::
-externalCoupledTemperatureMixedFvPatchScalarField
-(
-    const fvPatch& p,
-    const DimensionedField<scalar, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    externalCoupledMixedFvPatchField<scalar>(p, iF, dict)
 {}
 
 

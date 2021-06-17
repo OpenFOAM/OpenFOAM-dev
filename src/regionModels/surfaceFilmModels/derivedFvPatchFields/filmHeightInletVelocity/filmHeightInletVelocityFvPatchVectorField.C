@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -47,6 +47,21 @@ filmHeightInletVelocityFvPatchVectorField
 Foam::filmHeightInletVelocityFvPatchVectorField::
 filmHeightInletVelocityFvPatchVectorField
 (
+    const fvPatch& p,
+    const DimensionedField<vector, volMesh>& iF,
+    const dictionary& dict
+)
+:
+    fixedValueFvPatchVectorField(p, iF, dict),
+    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
+    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
+    deltafName_(dict.lookupOrDefault<word>("delta", "delta"))
+{}
+
+
+Foam::filmHeightInletVelocityFvPatchVectorField::
+filmHeightInletVelocityFvPatchVectorField
+(
     const filmHeightInletVelocityFvPatchVectorField& ptf,
     const fvPatch& p,
     const DimensionedField<vector, volMesh>& iF,
@@ -57,21 +72,6 @@ filmHeightInletVelocityFvPatchVectorField
     phiName_(ptf.phiName_),
     rhoName_(ptf.rhoName_),
     deltafName_(ptf.deltafName_)
-{}
-
-
-Foam::filmHeightInletVelocityFvPatchVectorField::
-filmHeightInletVelocityFvPatchVectorField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const dictionary& dict
-)
-:
-    fixedValueFvPatchVectorField(p, iF, dict),
-    phiName_(dict.lookupOrDefault<word>("phi", "phi")),
-    rhoName_(dict.lookupOrDefault<word>("rho", "rho")),
-    deltafName_(dict.lookupOrDefault<word>("delta", "delta"))
 {}
 
 
