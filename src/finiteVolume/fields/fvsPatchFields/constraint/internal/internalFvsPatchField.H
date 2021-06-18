@@ -107,21 +107,6 @@ public:
                 new internalFvsPatchField<Type>(*this, iF)
             );
         }
-
-
-    // Member Functions
-
-        // Mapping functions
-
-            //- Map (and resize as needed) from self given a mapping object
-            //  Used to update fields following mesh topology change
-            virtual void autoMap(const fvPatchFieldMapper&)
-            {}
-
-            //- Reverse map the given fvsPatchField onto this fvsPatchField
-            //  Used to reconstruct fields
-            virtual void rmap(const fvsPatchField<Type>&, const labelList&)
-            {}
 };
 
 
