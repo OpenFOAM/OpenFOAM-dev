@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,7 +27,7 @@ License
 #include "OFstream.H"
 #include "OSspecific.H"
 #include "makeSurfaceWriterMethods.H"
-#include "vtkWriteOps.H"
+#include "vtkWritePolyData.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -38,59 +38,6 @@ namespace Foam
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::vtkSurfaceWriter::writeGeometry
-(
-    std::ostream& os,
-    const pointField& points,
-    const faceList& faces
-) const
-{
-    const bool binary = (writeFormat_ == IOstream::BINARY);
-
-    // VTK header
-    vtkWriteOps::writeHeader(os, binary, "sampleSurface");
-    os << "DATASET POLYDATA" << nl;
-
-    // Write vertex coords
-    os  << "POINTS " << points.size() << " float" << nl;
-
-    List<floatScalar> po(points.size()*3);
-    label ind = 0;
-    forAll(points, pointi)
-    {
-        const point& pt = points[pointi];
-        forAll(pt, cmpt)
-        {
-            po[ind++] = float(pt[cmpt]);
-        }
-    }
-    vtkWriteOps::write(os, binary, po);
-
-    // Write faces
-    label nNodes = 0;
-    forAll(faces, facei)
-    {
-        nNodes += faces[facei].size();
-    }
-
-    os  << "POLYGONS " << faces.size() << ' '
-        << faces.size() + nNodes << nl;
-
-    labelList polygons(faces.size() + nNodes);
-    ind = 0;
-    forAll(faces, facei)
-    {
-        const face& f = faces[facei];
-        polygons[ind++] = f.size();
-        forAll(f, fp)
-        {
-            polygons[ind++] = f[fp];
-        }
-    }
-    vtkWriteOps::write(os, binary, polygons);
-}
-
 
 template<class Type>
 void Foam::vtkSurfaceWriter::Write
@@ -104,53 +51,24 @@ void Foam::vtkSurfaceWriter::Write
     const bool isNodeValues
 ) const
 {
-    const bool binary = (writeFormat_ == IOstream::BINARY);
-
     if (!isDir(outputDir))
     {
         mkDir(outputDir);
     }
 
-    const word filePath = outputDir/fieldName + '_' + surfaceName + ".vtk";
-
-    ofstream os(filePath, std::ios::binary);
-
-    if (debug)
-    {
-        Info<< "Writing field " << fieldName << " to " << filePath << endl;
-    }
-
-    writeGeometry(os, points, faces);
-
-    // Write data
-    if (isNodeValues)
-    {
-        os  << "POINT_DATA ";
-    }
-    else
-    {
-        os  << "CELL_DATA ";
-    }
-
-    os  << values.size() << nl
-        << "FIELD attributes 1" << nl
-        << fieldName << " ";
-
-    const label nComp = pTraits<Type>::nComponents;
-
-    os  << nComp << " " << values.size() << " float" << nl;
-
-    List<floatScalar> vals(values.size()*nComp);
-    label ind = 0;
-    forAll(values, elemI)
-    {
-        for (direction cmpt=0; cmpt < nComp; ++cmpt)
-        {
-            vals[ind++] = component(values[elemI], cmpt);
-        }
-    }
-
-    vtkWriteOps::write(os, binary, vals);
+    vtkWritePolyData::write
+    (
+        outputDir/fieldName + '_' + surfaceName + ".vtk",
+        "sampleSurface",
+        writeFormat_ == IOstream::BINARY,
+        points,
+        labelList(),
+        edgeList(),
+        faces,
+        fieldName,
+        isNodeValues,
+        values
+    );
 }
 
 
@@ -186,15 +104,16 @@ void Foam::vtkSurfaceWriter::write
         mkDir(outputDir);
     }
 
-    word filePath =  outputDir/surfaceName + ".vtk";
-    ofstream os(filePath, std::ios::binary);
-
-    if (debug)
-    {
-        Info<< "Writing geometry to " << filePath << endl;
-    }
-
-    writeGeometry(os, points, faces);
+    vtkWritePolyData::write
+    (
+        outputDir/surfaceName + ".vtk",
+        "sampleSurface",
+        writeFormat_ == IOstream::BINARY,
+        points,
+        labelList(),
+        edgeList(),
+        faces
+    );
 }
 
 

@@ -76,7 +76,7 @@ SourceFiles
 #include "logFiles.H"
 #include "populationBalanceModel.H"
 #include "writeFile.H"
-#include "writer.H"
+#include "setWriter.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -135,7 +135,7 @@ protected:
         writeFile file_;
 
         //- Output formatter, set to raw
-        autoPtr<writer<scalar>> scalarFormatter_;
+        autoPtr<setWriter<scalar>> scalarFormatter_;
 
         //- Reference to populationBalanceModel
         const Foam::diameterModels::populationBalanceModel& popBal_;

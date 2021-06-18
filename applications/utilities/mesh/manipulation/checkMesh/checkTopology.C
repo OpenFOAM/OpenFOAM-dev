@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -44,7 +44,7 @@ Foam::label Foam::checkTopology
     const bool allTopology,
     const bool allGeometry,
     const autoPtr<surfaceWriter>& surfWriter,
-    const autoPtr<writer<scalar>>& setWriter
+    const autoPtr<Foam::setWriter<scalar>>& setWriter
 )
 {
     label noFailedChecks = 0;

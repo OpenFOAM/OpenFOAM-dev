@@ -1,6 +1,6 @@
 #include "scalar.H"
 #include "indirectPrimitivePatch.H"
-#include "writer.H"
+#include "setWriter.H"
 
 namespace Foam
 {
@@ -19,7 +19,7 @@ namespace Foam
     void mergeAndWrite
     (
         const polyMesh& mesh,
-        const surfaceWriter& writer,
+        const surfaceWriter& setWriter,
         const word& name,
         const indirectPrimitivePatch setPatch,
         const fileName& outputDir
@@ -35,7 +35,7 @@ namespace Foam
 
     //- Write vtk representation of (assembled) pointSet to 'set' file in
     //  postProcessing/ directory
-    void mergeAndWrite(const writer<scalar>&, const pointSet&);
+    void mergeAndWrite(const setWriter<scalar>&, const pointSet&);
 }
 
 

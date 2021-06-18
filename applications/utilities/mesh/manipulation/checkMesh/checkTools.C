@@ -378,7 +378,7 @@ void Foam::mergeAndWrite
 
 void Foam::mergeAndWrite
 (
-    const writer<scalar>& writer,
+    const setWriter<scalar>& writer,
     const pointSet& set
 )
 {

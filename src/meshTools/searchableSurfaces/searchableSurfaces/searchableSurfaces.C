@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,7 @@ License
 #include "DynamicField.H"
 #include "PatchTools.H"
 #include "triSurfaceMesh.H"
+#include "vtkWritePolyData.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -583,7 +584,6 @@ bool Foam::searchableSurfaces::checkSizes
 bool Foam::searchableSurfaces::checkIntersection
 (
     const scalar tolerance,
-    const autoPtr<writer<scalar>>& setWriter,
     const bool report
 ) const
 {
@@ -667,43 +667,27 @@ bool Foam::searchableSurfaces::checkIntersection
                             << " locations."
                             << endl;
 
-                        // vtkSetWriter<scalar> setWriter;
-                        if (setWriter.valid())
-                        {
-                            scalarField dist(mag(intersections));
-                            coordSet track
-                            (
-                                names()[i] + '_' + names()[j],
-                                "xyz",
-                                move(intersections),
-                                dist
-                            );
-                            wordList valueSetNames(1, "edgeIndex");
-                            List<const scalarField*> valueSets
-                            (
-                                1,
-                                &intersectionEdge
-                            );
+                        const fileName fName
+                        (
+                            names()[i] + '_' + names()[j] + "_edgeIndex.vtk"
+                        );
 
-                            fileName fName
-                            (
-                                setWriter().getFileName(track, valueSetNames)
-                            );
-                            Info<< "    Writing intersection locations to "
-                                << fName << endl;
-                            OFstream os
-                            (
-                                s0.searchableSurface::time().path()
-                               /fName
-                            );
-                            setWriter().write
-                            (
-                                track,
-                                valueSetNames,
-                                valueSets,
-                                os
-                            );
-                        }
+                        Info<< "    Writing intersection locations to "
+                            << fName << endl;
+
+                        vtkWritePolyData::write
+                        (
+                            fName,
+                            names()[i] + '_' + names()[j],
+                            false,
+                            intersections,
+                            identity(intersections.size()),
+                            edgeList(),
+                            faceList(),
+                            "edgeIndex",
+                            true,
+                            intersectionEdge
+                        );
                     }
 
                     hasError = true;
@@ -811,7 +795,6 @@ Foam::label Foam::searchableSurfaces::checkGeometry
 (
     const scalar maxRatio,
     const scalar tol,
-    const autoPtr<writer<scalar>>& setWriter,
     const scalar minQuality,
     const bool report
 ) const
@@ -823,7 +806,7 @@ Foam::label Foam::searchableSurfaces::checkGeometry
         noFailedChecks++;
     }
 
-    if (checkIntersection(tol, setWriter, report))
+    if (checkIntersection(tol, report))
     {
         noFailedChecks++;
     }

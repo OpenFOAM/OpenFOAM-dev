@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -421,8 +421,8 @@ bool Foam::functionObjects::streamLine::read(const dictionary& dict)
     );
     sampledSetAxis_ = sampledSetPtr_->axis();
 
-    scalarFormatterPtr_ = writer<scalar>::New(dict.lookup("setFormat"));
-    vectorFormatterPtr_ = writer<vector>::New(dict.lookup("setFormat"));
+    scalarFormatterPtr_ = setWriter<scalar>::New(dict.lookup("setFormat"));
+    vectorFormatterPtr_ = setWriter<vector>::New(dict.lookup("setFormat"));
 
     return true;
 }

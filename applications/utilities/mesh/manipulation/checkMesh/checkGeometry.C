@@ -10,7 +10,7 @@
 #include "polyMeshTetDecomposition.H"
 
 #include "vtkSurfaceWriter.H"
-#include "writer.H"
+#include "setWriter.H"
 
 #include "checkTools.H"
 #include "cyclicAMIPolyPatch.H"
@@ -581,7 +581,7 @@ Foam::label Foam::checkGeometry
     const polyMesh& mesh,
     const bool allGeometry,
     const autoPtr<surfaceWriter>& surfWriter,
-    const autoPtr<writer<scalar>>& setWriter
+    const autoPtr<Foam::setWriter<scalar>>& setWriter
 )
 {
     label noFailedChecks = 0;

@@ -41,8 +41,7 @@ Description
 #include "OFstream.H"
 #include "IFstream.H"
 #include "demandDrivenData.H"
-#include "writePatch.H"
-#include "writePointSet.H"
+#include "vtkWritePolyData.H"
 #include "IOobjectList.H"
 #include "cellZoneSet.H"
 #include "faceZoneSet.H"
@@ -80,7 +79,7 @@ void writeVTK
         // Faces of set with OpenFOAM faceID as value
 
         faceList setFaces(currentSet.size());
-        labelList faceValues(currentSet.size());
+        labelField faceValues(currentSet.size());
         label setFacei = 0;
 
         forAllConstIter(topoSet, currentSet, iter)
@@ -92,14 +91,18 @@ void writeVTK
 
         primitiveFacePatch fp(setFaces, mesh.points());
 
-        vtkWriteOps::writePatch
+        vtkWritePolyData::write
         (
-            true,
+            mesh.time().path()/vtkName,
             currentSet.name(),
-            fp,
+            true,
+            fp.localPoints(),
+            labelList(),
+            edgeList(),
+            fp.localFaces(),
             "faceID",
-            faceValues,
-            mesh.time().path()/vtkName
+            false,
+            faceValues
         );
     }
     else if (isA<cellSet>(currentSet))
@@ -140,7 +143,7 @@ void writeVTK
         }
 
         faceList setFaces(cellFaces.size());
-        labelList faceValues(cellFaces.size());
+        labelField faceValues(cellFaces.size());
         label setFacei = 0;
 
         forAllConstIter(Map<label>, cellFaces, iter)
@@ -152,24 +155,32 @@ void writeVTK
 
         primitiveFacePatch fp(setFaces, mesh.points());
 
-        vtkWriteOps::writePatch
+        vtkWritePolyData::write
         (
-            true,
+            mesh.time().path()/vtkName,
             currentSet.name(),
-            fp,
+            true,
+            fp.localPoints(),
+            labelList(),
+            edgeList(),
+            fp.localFaces(),
             "cellID",
-            faceValues,
-            mesh.time().path()/vtkName
+            false,
+            faceValues
         );
     }
     else if (isA<pointSet>(currentSet))
     {
-        vtkWriteOps::writePointSet
+        std::ofstream os(mesh.time().path()/vtkName);
+        vtkWritePolyData::write
         (
+            mesh.time().path()/vtkName,
+            currentSet.name(),
             true,
-            mesh,
-            currentSet,
-            mesh.time().path()/vtkName
+            pointField(mesh.points(), currentSet.toc()),
+            identity(currentSet.size()),
+            edgeList(),
+            faceList()
         );
     }
     else

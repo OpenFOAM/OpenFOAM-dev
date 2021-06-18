@@ -1,7 +1,7 @@
 #include "label.H"
 #include "HashSet.H"
 #include "labelVector.H"
-#include "writer.H"
+#include "setWriter.H"
 
 namespace Foam
 {
@@ -40,6 +40,6 @@ namespace Foam
         const polyMesh& mesh,
         const bool allGeometry,
         const autoPtr<surfaceWriter>&,
-        const autoPtr<writer<scalar>>&
+        const autoPtr<setWriter<scalar>>&
     );
 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -106,7 +106,7 @@ SourceFiles
 
 #include "fvMeshFunctionObject.H"
 #include "writeFile.H"
-#include "writer.H"
+#include "setWriter.H"
 #include "Map.H"
 #include "volFieldsFwd.H"
 #include "wordReList.H"
@@ -157,7 +157,7 @@ class regionSizeDistribution
         wordReList fields_;
 
         //- Output formatter to write
-        autoPtr<writer<scalar>> formatterPtr_;
+        autoPtr<setWriter<scalar>> formatterPtr_;
 
         //- Optional coordinate system
         autoPtr<coordinateSystem> coordSysPtr_;

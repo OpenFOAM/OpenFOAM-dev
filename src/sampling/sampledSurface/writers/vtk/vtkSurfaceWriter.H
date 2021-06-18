@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,13 +53,6 @@ class vtkSurfaceWriter
 {
     // Private Member Functions
 
-        void writeGeometry
-        (
-            std::ostream&,
-            const pointField&,
-            const faceList&
-        ) const;
-
         //- Templated write operation
         template<class Type>
         void Write
@@ -100,7 +93,6 @@ public:
             const pointField& points,
             const faceList& faces
         ) const;
-
 
         //- Write scalarField for a single surface to file.
         //  One value per face or vertex (isNodeValues = true)

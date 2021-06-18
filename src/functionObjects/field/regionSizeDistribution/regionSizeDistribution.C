@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -358,7 +358,7 @@ bool Foam::functionObjects::regionSizeDistribution::read(const dictionary& dict)
     dict.lookup("fields") >> fields_;
 
     word format(dict.lookup("setFormat"));
-    formatterPtr_ = writer<scalar>::New(format);
+    formatterPtr_ = setWriter<scalar>::New(format);
 
     if (dict.found("coordinateSystem"))
     {
