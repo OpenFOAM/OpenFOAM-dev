@@ -86,7 +86,10 @@ Foam::functionObjects::timeControl::timeControl
     writeControl_(t, dict, "write"),
     foPtr_(functionObject::New(name, t, dict))
 {
-    read(dict);
+    writeControl_.read(dict);
+    executeControl_.read(dict);
+
+    readControls(dict);
 }
 
 

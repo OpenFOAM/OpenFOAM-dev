@@ -24,8 +24,6 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "surfaceFieldValue.H"
-#include "fvMesh.H"
-#include "cyclicPolyPatch.H"
 #include "emptyPolyPatch.H"
 #include "coupledPolyPatch.H"
 #include "sampledSurface.H"
@@ -477,31 +475,33 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
         << "    total area   = " << totalArea_
         << nl;
 
-    if (dict.readIfPresent("weightField", weightFieldName_))
+    if (dict.readIfPresent("orientedWeightField", weightFieldName_))
     {
-        Info<< "    weight field = " << weightFieldName_ << nl;
+        Info<< "    orientedWeightField = " << weightFieldName_ << nl;
+        orientWeightField_ = true;
+
+        if (regionType_ == regionTypes::sampledSurface)
+        {
+            FatalIOErrorInFunction(dict)
+                << "Cannot use orientedWeightField for a sampledSurface"
+                << exit(FatalIOError);
+        }
+
+        if (dict.found("weightField"))
+        {
+            FatalIOErrorInFunction(dict)
+                << "Either provide weightField or orientedWeightField"
+                << exit(FatalIOError);
+        }
+    }
+    else if (dict.readIfPresent("weightField", weightFieldName_))
+    {
+        Info<< "    weightField = " << weightFieldName_ << nl;
 
         if (regionType_ == regionTypes::sampledSurface)
         {
             FatalIOErrorInFunction(dict)
                 << "Cannot use weightField for a sampledSurface"
-                << exit(FatalIOError);
-        }
-    }
-
-    if (dict.found("orientedWeightField"))
-    {
-        if (weightFieldName_ == "none")
-        {
-            dict.lookup("orientedWeightField") >>  weightFieldName_;
-            Info<< "    weight field = " << weightFieldName_ << nl;
-            orientWeightField_ = true;
-        }
-        else
-        {
-            FatalIOErrorInFunction(dict)
-                << "Either weightField or orientedWeightField can be supplied, "
-                << "but not both"
                 << exit(FatalIOError);
         }
     }
