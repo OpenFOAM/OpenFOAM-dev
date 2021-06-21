@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "shellSurfaces.H"
+#include "refinementRegions.H"
 #include "refinementSurfaces.H"
 #include "searchableSurfaces.H"
 #include "orientedSurface.H"
@@ -36,7 +36,7 @@ namespace Foam
 
 template<>
 const char*
-NamedEnum<shellSurfaces::refineMode, 5>::
+NamedEnum<refinementRegions::refineMode, 5>::
 names[] =
 {
     "inside",
@@ -48,13 +48,13 @@ names[] =
 
 }
 
-const Foam::NamedEnum<Foam::shellSurfaces::refineMode, 5>
-    Foam::shellSurfaces::refineModeNames_;
+const Foam::NamedEnum<Foam::refinementRegions::refineMode, 5>
+    Foam::refinementRegions::refineModeNames_;
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-void Foam::shellSurfaces::setAndCheckLevels
+void Foam::refinementRegions::setAndCheckLevels
 (
     const label shelli,
     const dictionary& dict
@@ -205,7 +205,7 @@ void Foam::shellSurfaces::setAndCheckLevels
 }
 
 
-void Foam::shellSurfaces::orient()
+void Foam::refinementRegions::orient()
 {
     // Determine outside point.
     boundBox overallBb = boundBox::invertedBox;
@@ -279,7 +279,7 @@ void Foam::shellSurfaces::orient()
                     // sideness which should not be set at this point.
                     // !!Should check!)
 
-                    Info<< "shellSurfaces : Flipped orientation of surface "
+                    Info<< "refinementRegions : Flipped orientation of surface "
                         << s.name()
                         << " so point " << outsidePt << " is outside." << endl;
                 }
@@ -289,7 +289,7 @@ void Foam::shellSurfaces::orient()
 }
 
 
-Foam::scalar Foam::shellSurfaces::interpolate
+Foam::scalar Foam::refinementRegions::interpolate
 (
     const triSurfaceMesh& tsm,
     const triSurfacePointScalarField& closeness,
@@ -314,7 +314,7 @@ Foam::scalar Foam::shellSurfaces::interpolate
 }
 
 
-void Foam::shellSurfaces::findHigherLevel
+void Foam::refinementRegions::findHigherLevel
 (
     const pointField& pt,
     const label shelli,
@@ -515,7 +515,7 @@ void Foam::shellSurfaces::findHigherLevel
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::shellSurfaces::shellSurfaces
+Foam::refinementRegions::refinementRegions
 (
     const searchableSurfaces& allGeometry,
     const dictionary& shellsDict
@@ -645,7 +645,7 @@ Foam::shellSurfaces::shellSurfaces
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::label Foam::shellSurfaces::maxLevel() const
+Foam::label Foam::refinementRegions::maxLevel() const
 {
     label overallMax = 0;
 
@@ -658,7 +658,7 @@ Foam::label Foam::shellSurfaces::maxLevel() const
 }
 
 
-void Foam::shellSurfaces::findHigherLevel
+void Foam::refinementRegions::findHigherLevel
 (
     const pointField& pt,
     const labelList& ptLevel,

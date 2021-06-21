@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::shellSurfaces
+    Foam::refinementRegions
 
 Description
     Encapsulates queries for volume refinement ('refine all cells within
     shell').
 
 SourceFiles
-    shellSurfaces.C
+    refinementRegions.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef shellSurfaces_H
-#define shellSurfaces_H
+#ifndef refinementRegions_H
+#define refinementRegions_H
 
 #include "Tuple2.H"
 #include "triSurfaceMesh.H"
@@ -48,10 +48,10 @@ namespace Foam
 class searchableSurfaces;
 
 /*---------------------------------------------------------------------------*\
-                        Class shellSurfaces Declaration
+                        Class refinementRegions Declaration
 \*---------------------------------------------------------------------------*/
 
-class shellSurfaces
+class refinementRegions
 {
 public:
 
@@ -134,7 +134,7 @@ public:
     // Constructors
 
         //- Construct from geometry and dictionary
-        shellSurfaces
+        refinementRegions
         (
             const searchableSurfaces& allGeometry,
             const dictionary& shellsDict

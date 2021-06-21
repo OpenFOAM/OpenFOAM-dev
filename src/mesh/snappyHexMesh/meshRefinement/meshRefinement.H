@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -63,7 +63,7 @@ class mapDistributePolyMesh;
 class decompositionMethod;
 class refinementSurfaces;
 class refinementFeatures;
-class shellSurfaces;
+class refinementRegions;
 class removeCells;
 class fvMeshDistribute;
 class searchableSurface;
@@ -178,7 +178,7 @@ private:
         const refinementFeatures& features_;
 
         //- All shell-refinement interaction
-        const shellSurfaces& shells_;
+        const refinementRegions& shells_;
 
         //- Refinement engine
         hexRef8 meshCutter_;
@@ -588,7 +588,7 @@ public:
             const bool overwrite,
             const refinementSurfaces&,
             const refinementFeatures&,
-            const shellSurfaces&
+            const refinementRegions&
         );
 
         //- Disallow default bitwise copy construction
@@ -639,7 +639,7 @@ public:
             }
 
             //- Reference to refinement shells (regions)
-            const shellSurfaces& shells() const
+            const refinementRegions& shells() const
             {
                 return shells_;
             }

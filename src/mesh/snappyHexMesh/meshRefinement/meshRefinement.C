@@ -1165,7 +1165,7 @@ Foam::meshRefinement::meshRefinement
     const bool overwrite,
     const refinementSurfaces& surfaces,
     const refinementFeatures& features,
-    const shellSurfaces& shells
+    const refinementRegions& shells
 )
 :
     mesh_(mesh),
@@ -2242,7 +2242,7 @@ void Foam::meshRefinement::distribute(const mapDistributePolyMesh& map)
         treeBoundBox& bb = meshBb[0];
         bb = treeBoundBox(mesh_.points()).extend(1e-4);
 
-        // Distribute all geometry (so refinementSurfaces and shellSurfaces)
+        // Distribute all geometry (so refinementSurfaces and refinementRegions)
         searchableSurfaces& geometry =
             const_cast<searchableSurfaces&>(surfaces_.geometry());
 
