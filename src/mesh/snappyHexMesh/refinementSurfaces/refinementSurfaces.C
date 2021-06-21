@@ -26,7 +26,7 @@ License
 #include "refinementSurfaces.H"
 #include "Time.H"
 #include "searchableSurfaces.H"
-#include "shellSurfaces.H"
+#include "refinementRegions.H"
 #include "triSurfaceMesh.H"
 #include "labelPair.H"
 #include "searchableSurfacesQueries.H"
@@ -352,7 +352,7 @@ Foam::refinementSurfaces::refinementSurfaces
 // // Pre-calculate the refinement level for every element
 // void Foam::refinementSurfaces::wantedRefinementLevel
 // (
-//     const shellSurfaces& shells,
+//     const refinementRegions& shells,
 //     const label surfI,
 //     const List<pointIndexHit>& info,    // Indices
 //     const pointField& ctrs,             // Representative coordinate
@@ -393,7 +393,7 @@ Foam::refinementSurfaces::refinementSurfaces
 // surface.
 void Foam::refinementSurfaces::setMinLevelFields
 (
-    const shellSurfaces& shells
+    const refinementRegions& shells
 )
 {
     forAll(surfaces_, surfI)

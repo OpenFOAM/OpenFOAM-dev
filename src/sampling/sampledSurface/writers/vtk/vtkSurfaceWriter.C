@@ -25,6 +25,7 @@ License
 
 #include "vtkSurfaceWriter.H"
 #include "OFstream.H"
+#include "boolList.H"
 #include "OSspecific.H"
 #include "makeSurfaceWriterMethods.H"
 #include "vtkWritePolyData.H"

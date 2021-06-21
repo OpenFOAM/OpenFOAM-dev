@@ -38,7 +38,7 @@ Description
 #include "searchableSurfaces.H"
 #include "refinementSurfaces.H"
 #include "refinementFeatures.H"
-#include "shellSurfaces.H"
+#include "refinementRegions.H"
 #include "decompositionMethod.H"
 #include "noDecomp.H"
 #include "fvMeshDistribute.H"
@@ -1005,7 +1005,7 @@ int main(int argc, char *argv[])
     // ~~~~~~~~~~~~~~~~~~~~~~
 
     Info<< "Reading refinement regions..." << endl;
-    shellSurfaces shells
+    refinementRegions shells
     (
         allGeometry,
         refineDict.found("refinementRegions")

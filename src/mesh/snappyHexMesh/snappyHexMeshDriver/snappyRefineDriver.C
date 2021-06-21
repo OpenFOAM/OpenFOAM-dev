@@ -32,7 +32,7 @@ License
 #include "refinementParameters.H"
 #include "refinementSurfaces.H"
 #include "refinementFeatures.H"
-#include "shellSurfaces.H"
+#include "refinementRegions.H"
 #include "mapDistributePolyMesh.H"
 #include "unitConversion.H"
 #include "snapParameters.H"
