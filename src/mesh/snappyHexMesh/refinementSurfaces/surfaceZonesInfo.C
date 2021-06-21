@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -88,24 +88,16 @@ Foam::surfaceZonesInfo::surfaceZonesInfo
         // Read optional entry to determine inside of faceZone
 
         word method;
-        bool hasSide = surfacesDict.readIfPresent("cellZoneInside", method);
+        bool hasSide =
+            surfacesDict.readIfPresent("mode", method)
+         || surfacesDict.readIfPresent("cellZoneInside", method);
+
         if (hasSide)
         {
             zoneInside_ = areaSelectionAlgoNames[method];
             if (zoneInside_ == INSIDEPOINT)
             {
                 surfacesDict.lookup("insidePoint") >> zoneInsidePoint_;
-            }
-
-        }
-        else
-        {
-            // Check old syntax
-            bool inside;
-            if (surfacesDict.readIfPresent("zoneInside", inside))
-            {
-                hasSide = true;
-                zoneInside_ = (inside ? INSIDE : OUTSIDE);
             }
         }
 
