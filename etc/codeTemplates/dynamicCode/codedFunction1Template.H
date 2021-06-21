@@ -35,6 +35,7 @@ SourceFiles
 #define codedFunction1Template_H
 
 #include "Function1.H"
+#include "fieldTypes.H"
 
 //{{{ begin codeInclude
 ${codeInclude}
