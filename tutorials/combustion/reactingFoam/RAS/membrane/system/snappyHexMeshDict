@@ -65,8 +65,6 @@ geometry
 
 castellatedMeshControls
 {
-    features ();
-
     refinementSurfaces
     {
         boundaries
@@ -91,7 +89,7 @@ castellatedMeshControls
                     {
                         type patch;
                         inGroups (inlet);
-                    }
+                   }
                 }
                 outletSleeve
                 {
@@ -133,15 +131,13 @@ castellatedMeshControls
         }
         membrane
         {
-            level (0 0);
-            cellZone pipe;
-            faceZone membrane;
-            cellZoneInside insidePoint;
+            level       (0 0);
+            cellZone    pipe;
+            faceZone    membrane;
+            mode        insidePoint;
             insidePoint (0 0 0);
         }
     }
-
-    refinementRegions {}
 
     locationInMesh (0 0 0);
 }

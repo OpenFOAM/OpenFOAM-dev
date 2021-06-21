@@ -78,7 +78,7 @@ porosity
     meshableSide    both;
     faceZone        porosity;
     cellZone        porosity;
-    cellZoneInside  inside;
+    mode        inside;
 }
 
 

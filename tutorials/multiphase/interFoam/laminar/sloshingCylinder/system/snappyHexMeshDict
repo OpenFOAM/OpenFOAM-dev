@@ -31,10 +31,6 @@ geometry
 
 castellatedMeshControls
 {
-    features
-    (
-    );
-
     refinementSurfaces
     {
         sloshingCylinder

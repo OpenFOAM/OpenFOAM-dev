@@ -188,7 +188,7 @@ castellatedMeshControls
 
             // faceZone sphere;
             // cellZone sphere;
-            // cellZoneInside inside;  // outside/insidePoint
+            // mode        inside;  // outside/insidePoint
 
             //- Optional specification of what to do with faceZone faces:
             //      internal : keep them as internal faces (default)

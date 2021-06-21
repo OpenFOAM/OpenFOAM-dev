@@ -94,7 +94,7 @@ castellatedMeshControls
             level       (2 2);
             faceZone    rotatingZone;
             cellZone    rotatingZone;
-            cellZoneInside  inside;
+            mode        inside;
         }
 
     }

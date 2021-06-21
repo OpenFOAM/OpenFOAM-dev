@@ -170,7 +170,7 @@ castellatedMeshControls
             level       (4 4);
             cellZone    innerCylinder;
             faceZone    innerCylinder;
-            cellZoneInside  inside;
+            mode        inside;
         }
         outerCylinder
         {

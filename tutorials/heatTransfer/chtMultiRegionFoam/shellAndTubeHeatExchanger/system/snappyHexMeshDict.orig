@@ -106,19 +106,15 @@ castellatedMeshControls
             level           (1 1);
             faceZone        shell_to_solid;
             cellZone        shell;
-            cellZoneInside  inside;
+            mode        inside;
         }
         tube_to_solid
         {
             level           (1 1);
             faceZone        tube_to_solid;
             cellZone        tube;
-            cellZoneInside  inside;
+            mode        inside;
         }
-    }
-
-    refinementRegions
-    {
     }
 
     locationInMesh (0 0.008 0.015);

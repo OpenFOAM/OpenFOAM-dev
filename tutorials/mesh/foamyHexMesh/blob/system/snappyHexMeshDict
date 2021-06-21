@@ -128,29 +128,6 @@ castellatedMeshControls
     resolveFeatureAngle 30;
 
 
-    // Region-wise refinement
-    // ~~~~~~~~~~~~~~~~~~~~~~
-
-    // Specifies refinement level for cells in relation to a surface. One of
-    // three modes
-    // - distance. 'levels' specifies per distance to the surface the
-    //   wanted refinement level. The distances need to be specified in
-    //   descending order.
-    // - inside. 'levels' is only one entry and only the level is used. All
-    //   cells inside the surface get refined up to the level. The surface
-    //   needs to be closed for this to be possible.
-    // - outside. Same but cells outside.
-
-    refinementRegions
-    {
-//        refinementBox
-//        {
-//            mode    inside;
-//            level   4;
-//        }
-    }
-
-
     // Mesh selection
     // ~~~~~~~~~~~~~~
 

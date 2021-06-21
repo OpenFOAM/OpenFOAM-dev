@@ -55,7 +55,7 @@ castellatedMeshControls
             level (2 2);
             faceZone    solid;
             cellZone    solid;
-            cellZoneInside  inside;
+            mode        inside;
         }
 
         CAD

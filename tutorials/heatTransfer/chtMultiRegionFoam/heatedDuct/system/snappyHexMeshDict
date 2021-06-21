@@ -79,7 +79,7 @@ castellatedMeshControls
             level (1 1);
             faceZone fluidToMetal;
             cellZone metal;
-            cellZoneInside insidePoint;
+            mode        insidePoint;
             insidePoint (0.025 0.0025 0.075);
         }
 
@@ -88,15 +88,12 @@ castellatedMeshControls
             level (1 1);
             faceZone metalToHeater;
             cellZone heater;
-            cellZoneInside insidePoint;
+            mode        insidePoint;
             insidePoint (0.025 -0.005 0.075);
         }
     }
 
     nCellsBetweenLevels 1;
-
-    refinementRegions
-    {}
 
     locationInMesh (0.025 0.025 0.075);
 }
