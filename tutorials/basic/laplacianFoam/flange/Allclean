@@ -5,7 +5,6 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
 cleanCase
-rm -rf EnSight Ensight Fieldview > /dev/null 2>&1
-rm -f constant/polyMesh/boundary > /dev/null 2>&1
+rm -rf EnSight Ensight Fieldview
 
 #------------------------------------------------------------------------------

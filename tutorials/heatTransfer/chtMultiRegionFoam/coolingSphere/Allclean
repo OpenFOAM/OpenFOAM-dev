@@ -20,7 +20,7 @@ removeRegionDirs ()
 
 cleanCase
 removeRegionDirs
-rm -rf 0 > /dev/null 2>&1
-rm -rf constant/regionProperties > /dev/null 2>&1
+rm -rf 0
+rm -f constant/regionProperties
 
 #------------------------------------------------------------------------------

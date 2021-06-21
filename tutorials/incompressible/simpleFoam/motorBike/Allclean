@@ -5,10 +5,9 @@ cd ${0%/*} || exit 1    # Run from this directory
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
 # Remove surface and features
-rm -f constant/geometry/motorBike.obj.gz > /dev/null 2>&1
-rm -rf constant/extendedFeatureEdgeMesh > /dev/null 2>&1
-rm -f constant/geometry/motorBike.eMesh > /dev/null 2>&1
+rm -f constant/geometry/motorBike.obj.gz
 
 cleanCase
+cleanExplicitFeatures
 
 #------------------------------------------------------------------------------

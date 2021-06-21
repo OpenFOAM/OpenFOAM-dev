@@ -4,21 +4,20 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
-rm -r constant/geometry/flange.stl.gz > /dev/null 2>&1
+rm -f constant/geometry/flange.stl.gz
 
-rm -rf constant/extendedFeatureEdgeMesh > /dev/null 2>&1
-rm -r constant/ccx constant/ccy constant/ccz > /dev/null 2>&1
-rm -r constant/internalDelaunayVertices constant/targetCellSize > /dev/null 2>&1
-rm -r 0 > /dev/null 2>&1
+rm -f constant/ccx constant/ccy constant/ccz
+rm -f constant/internalDelaunayVertices constant/targetCellSize
+rm -rf 0
 
-rm -rf constant/backgroundMeshDecomposition/polyMesh/boundary > /dev/null 2>&1
-rm -rf constant/backgroundMeshDecomposition/polyMesh/faces > /dev/null 2>&1
-rm -rf constant/backgroundMeshDecomposition/polyMesh/neighbour > /dev/null 2>&1
-rm -rf constant/backgroundMeshDecomposition/polyMesh/owner > /dev/null 2>&1
-rm -rf constant/backgroundMeshDecomposition/polyMesh/points > /dev/null 2>&1
+for f in points faces owner neighbour boundary
+do
+    rm -f constant/backgroundMeshDecomposition/polyMesh/$f
+done
 
-rm -r *.obj > /dev/null 2>&1
+rm -rf *.obj
 
 cleanCase
+cleanExplicitFeatures
 
 #------------------------------------------------------------------------------

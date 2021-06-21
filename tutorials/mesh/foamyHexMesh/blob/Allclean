@@ -6,20 +6,19 @@ cd ${0%/*} || exit 1    # Run from this directory
 
 cleanCase
 
-rm -rf 0 > /dev/null 2>&1
+rm -rf 0
 
-rm -rf constant/cellAlignments > /dev/null 2>&1
-rm -rf constant/targetCellSize > /dev/null 2>&1
-rm -rf constant/internalDelaunayVertices > /dev/null 2>&1
+rm -f constant/cellAlignments
+rm -f constant/targetCellSize
+rm -f constant/internalDelaunayVertices
 
-rm -rf constant/backgroundMeshDecomposition/polyMesh/boundary > /dev/null 2>&1
-rm -rf constant/backgroundMeshDecomposition/polyMesh/faces > /dev/null 2>&1
-rm -rf constant/backgroundMeshDecomposition/polyMesh/neighbour > /dev/null 2>&1
-rm -rf constant/backgroundMeshDecomposition/polyMesh/owner > /dev/null 2>&1
-rm -rf constant/backgroundMeshDecomposition/polyMesh/points > /dev/null 2>&1
+for f in points faces owner neighbour boundary
+do
+    rm -f constant/backgroundMeshDecomposition/polyMesh/$f
+done
 
-rm -rf snapToSurface?.obj > /dev/null 2>&1
-rm -rf tetsToSnapTo.obj > /dev/null 2>&1
+rm -f snapToSurface?.obj
+rm -f tetsToSnapTo.obj
 
 
 #------------------------------------------------------------------------------

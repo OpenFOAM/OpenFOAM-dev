@@ -4,19 +4,18 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
-rm -r constant/extendedFeatureEdgeMesh constant/internalDelaunayVertices > /dev/null 2>&1
-rm constant/geometry/*.eMesh > /dev/null 2>&1
-rm constant/geometry/*_orient* > /dev/null 2>&1
-rm -r constant/polyMesh > /dev/null 2>&1
-rm -r constant/polyMesh > /dev/null 2>&1
-rm -r constant/tetDualMesh > /dev/null 2>&1
+rm -rf constant/internalDelaunayVertices
+rm -f constant/geometry/*_orient*
+rm -rf constant/polyMesh
+rm -rf constant/tetDualMesh
 
-rm -r snapToSurface?.obj tetsToSnapTo.obj > /dev/null 2>&1
+rm -f snapToSurface?.obj tetsToSnapTo.obj
 
-rm domain coneAndSphere > /dev/null 2>&1
+rm -f domain coneAndSphere
 
-rm -rf 0/
+rm -rf 0
 
 cleanCase
+cleanExplicitFeatures
 
 #------------------------------------------------------------------------------

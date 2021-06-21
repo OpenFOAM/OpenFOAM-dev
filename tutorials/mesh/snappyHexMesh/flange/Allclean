@@ -7,12 +7,10 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Remove surface
 rm -f constant/geometry/flange.stl.gz
 
-rm -rf 0 > /dev/null 2>&1
-rm -f ./flange ./*.obj > /dev/null 2>&1
-rm -rf constant/extendedFeatureEdgeMesh > /dev/null 2>&1
-rm -f constant/geometry/flange.eMesh > /dev/null 2>&1
-rm -f constant/polyMesh/boundary
+rm -rf 0
+rm -f ./flange ./*.obj
 
 cleanCase
+cleanExplicitFeatures
 
 #------------------------------------------------------------------------------

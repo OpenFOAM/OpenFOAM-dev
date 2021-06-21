@@ -2,7 +2,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -42,44 +42,37 @@ cleanCase()
     done
 
     rm -rf ./[1-9]* ./-[1-9]* ./log ./log.* ./logSummary.* \
-        ./*.OpenFOAM ./*.blockMesh ./*.foam ./.setSet > /dev/null 2>&1
+        ./*.OpenFOAM ./*.blockMesh ./*.foam ./.setSet
 
-    if [ -d system -a -d dynamicCode ]
-    then
-        rm -rf dynamicCode > /dev/null 2>&1
-    fi
+    [ -d system ] && [ -d dynamicCode ] && rm -rf dynamicCode
 
-    rm -rf processor* > /dev/null 2>&1
-    rm -rf jobInfo > /dev/null 2>&1
-    rm -rf postProcessing > /dev/null 2>&1
-    rm -rf TDAC > /dev/null 2>&1
+    rm -rf processor*
+    rm -rf jobInfo
+    rm -rf postProcessing
+    rm -rf TDAC
 
-    if [ -d constant/polyMesh ]
-    then
-        rm -rf constant/polyMesh > /dev/null 2>&1
-    fi
-    if [ -d constant ]
-    then
-        (cd constant && \
-            rm -rf \
-            cellToRegion cellLevel* pointLevel* \
-            > /dev/null 2>&1 \
-        )
-    fi
+    rm -rf constant/polyMesh
+    rm -f  constant/cellToRegion \
+           constant/cellLevel* \
+           constant/pointLevel*
 
-    rm -rf constant/tetDualMesh > /dev/null 2>&1
 
-    rm -rf VTK > /dev/null 2>&1
-    rm -rf sequencedVTK > /dev/null 2>&1
+    rm -rf constant/tetDualMesh
 
-    rm -rf 0/polyMesh 0/cellLevel 0/pointLevel 0/cellDist constant/cellDecomposition
+    rm -rf VTK
+    rm -rf sequencedVTK
 
-    if [ -e system/blockMeshDict.m4 ]
-    then
-        rm -f system/blockMeshDict > /dev/null 2>&1
-    fi
+    rm -rf 0/polyMesh 0/cellLevel \
+           0/pointLevel 0/cellDist \
+           constant/cellDecomposition
 
     find . -name "*.orig" -type f -exec sh -c 'rm -f ${0%.*} ${0%.*}.gz' {} \;
+}
+
+cleanExplicitFeatures()
+{
+    rm -rf constant/extendedFeatureEdgeMesh
+    rm -f constant/geometry/*.eMesh*
 }
 
 cleanVoFCase()

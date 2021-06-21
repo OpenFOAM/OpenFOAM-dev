@@ -7,8 +7,7 @@ cd ${0%/*} || exit 1    # Run from this directory
 mv ./-180 temp180
 cleanCase
 
-rm -rf 0 > /dev/null 2>&1
-rm -f constant/polyMesh/boundary > /dev/null 2>&1
+rm -rf 0
 
 mv temp180 ./-180
 

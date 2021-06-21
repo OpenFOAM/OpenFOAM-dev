@@ -8,7 +8,6 @@ cleanCase
 
 rm -rf comms
 
-killall externalSolver > /dev/null 2>&1
-
+killall -q externalSolver
 
 #------------------------------------------------------------------------------

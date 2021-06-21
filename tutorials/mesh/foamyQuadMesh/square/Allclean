@@ -4,13 +4,11 @@ cd ${0%/*} || exit 1    # Run from this directory
 # Source tutorial run functions
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
-rm -rf constant/extendedFeatureEdgeMesh > /dev/null 2>&1
-rm -rf constant/geometry/unit_cube.eMesh > /dev/null 2>&1
-rm -rf constant/polyMesh > /dev/null 2>&1
+rm -rf constant/polyMesh
 
-rm -rf MeshedSurface*.obj > /dev/null 2>&1
+rm -f MeshedSurface*.obj
 
 cleanCase
-
+cleanExplicitFeatures
 
 #------------------------------------------------------------------------------
