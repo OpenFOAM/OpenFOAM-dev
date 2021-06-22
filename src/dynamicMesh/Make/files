@@ -53,8 +53,9 @@ slidingInterface/decoupleSlidingInterface.C
 
 perfectInterface/perfectInterface.C
 
-boundaryMesh/boundaryMesh.C
-boundaryPatch/boundaryPatch.C
+repatchMesh/repatchMesh.C
+repatchMesh/repatchPatch.C
+
 setUpdater/setUpdater.C
 
 meshModifiers = meshCut/meshModifiers

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,21 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::boundaryMesh
+    Foam::repatchMesh
 
 Description
     Addressing for all faces on surface of mesh. Can either be read
     from polyMesh or from triSurface. Used for repatching existing meshes.
 
 SourceFiles
-    boundaryMesh.C
+    repatchMesh.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef boundaryMesh_H
-#define boundaryMesh_H
+#ifndef repatchMesh_H
+#define repatchMesh_H
 
-#include "bMesh.H"
-#include "boundaryPatch.H"
+#include "repatchPatch.H"
 #include "PrimitivePatch.H"
 #include "PtrList.H"
 #include "polyPatchList.H"
@@ -49,16 +48,25 @@ namespace Foam
 {
 
 // Forward declaration of classes
-class Time;
 class polyMesh;
 class primitiveMesh;
 
 /*---------------------------------------------------------------------------*\
-                        Class boundaryMesh Declaration
+                        Class repatchMesh Declaration
 \*---------------------------------------------------------------------------*/
 
-class boundaryMesh
+class repatchMesh
 {
+public:
+
+    // Public Typedefs
+
+        //- Type of the mesh
+        typedef PrimitivePatch<faceList, const pointField> rMesh;
+
+
+private:
+
     // Static data
 
         //- Normal along which to divide faces into categories
@@ -74,19 +82,14 @@ class boundaryMesh
     // Private Data
 
         //- All boundary mesh data. Reconstructed every time faces are repatched
-        bMesh* meshPtr_;
+        autoPtr<rMesh> meshPtr_;
 
         //- Patches. Reconstructed every time faces are repatched.
-        PtrList<boundaryPatch> patches_;
+        PtrList<repatchPatch> patches_;
 
         //- For every face in mesh() gives corresponding polyMesh face
         // (not sensible if mesh read from triSurface)
         labelList meshFace_;
-
-
-        //
-        // Edge handling
-        //
 
         //- Points referenced by feature edges.
         pointField featurePoints_;
@@ -104,9 +107,6 @@ class boundaryMesh
         //  Indices into featureEdges_.
         labelListList featureSegments_;
 
-        //- Additional edges (indices of mesh edges)
-        labelList extraEdges_;
-
 
     // Private Member Functions
 
@@ -123,24 +123,6 @@ class boundaryMesh
             const label startEdgeI,
             boolList& featVisited
         ) const;
-
-        //- Do point-edge walk to determine nearest (to edgeI). Stops if
-        //  distance >= maxDistance. Used to determine edges close to seed
-        //  point.
-        void markEdges
-        (
-            const label maxDistance,
-            const label edgeI,
-            const label distance,
-            labelList& minDistance,
-            DynamicList<label>& visited
-        ) const;
-
-        //- Get index of polypatch by name
-        label findPatchID(const polyPatchList&, const word&) const;
-
-        //- Get index of patch for face
-        label whichPatch(const polyPatchList&, const label) const;
 
         //- Gets labels of changed faces and propagates them to the edges.
         //  Returns labels of edges changed. Fills edgeRegion of visited edges
@@ -175,31 +157,30 @@ class boundaryMesh
 public:
 
     //- Runtime type information
-    ClassName("boundaryMesh");
+    ClassName("repatchMesh");
 
 
     // Constructors
 
         //- Construct null
-        boundaryMesh();
+        repatchMesh();
 
         //- Disallow default bitwise copy construction
-        boundaryMesh(const boundaryMesh&) = delete;
+        repatchMesh(const repatchMesh&) = delete;
 
 
     //- Destructor
-    ~boundaryMesh();
-
-        void clearOut();
+    ~repatchMesh();
 
 
     // Member Functions
 
         // Access
 
-            const bMesh& mesh() const
+            //- Access the boundary mesh
+            const rMesh& mesh() const
             {
-                if (!meshPtr_)
+                if (!meshPtr_.valid())
                 {
                     FatalErrorInFunction
                         << "No mesh available. Probably mesh not yet"
@@ -208,11 +189,11 @@ public:
                 return *meshPtr_;
             }
 
-            const PtrList<boundaryPatch>& patches() const
+            //- Access the patches
+            const PtrList<repatchPatch>& patches() const
             {
                 return patches_;
             }
-
 
             //- Label of original face in polyMesh (before patchify(...))
             const labelList& meshFace() const
@@ -250,25 +231,16 @@ public:
                 return featureSegments_;
             }
 
-            //- Indices into edges of additional edges.
-            const labelList& extraEdges() const
-            {
-                return extraEdges_;
-            }
-
 
         // Edit
 
-            //- Read from boundaryMesh of polyMesh.
+            //- Read from repatchMesh of polyMesh.
             void read(const polyMesh&);
 
             //- Read from triSurface
             void readTriSurface(const fileName&);
 
-            //- Write to file.
-            void writeTriSurface(const fileName&) const;
-
-            //- Get bMesh index of nearest face for every boundary face in
+            //- Get rMesh index of nearest face for every boundary face in
             //  pMesh. Gets passed initial search box. If not found
             //  returns -1 for the face.
             labelList getNearest
@@ -277,20 +249,6 @@ public:
                 const vector& searchSpan
             ) const;
 
-            //- Take over patches onto polyMesh from nearest face in *this
-            //  (from call to getNearest). Insert as
-            //      -new set of patches (newMesh.addPatches)
-            //      -topoChanges to change faces.
-            // nearest is list of nearest face in *this for every boundary
-            // face. oldPatches is list of existing patches in mesh.
-            // newMesh is the mesh to which the new patches are added.
-            // (so has to be constructed without patches).
-            void patchify
-            (
-                const labelList& nearest,
-                const polyBoundaryMesh& oldPatches,
-                polyMesh& newMesh
-            ) const;
 
         // Patches
 
@@ -299,9 +257,6 @@ public:
 
             //- Get index of patch by name
             label findPatchID(const word& patchName) const;
-
-            //- Get names of patches
-            wordList patchNames() const;
 
             //- Add to back of patch list.
             void addPatch(const word& patchName);
@@ -312,10 +267,6 @@ public:
             //- Change patch.
             void changePatchType(const word& patchName, const word& type);
 
-            //- Recalculate face ordering and patches. Return old to new
-            //  mapping.
-            void changeFaces(const labelList& patchIDs, labelList& oldToNew);
-
 
         // Edges
 
@@ -323,50 +274,6 @@ public:
             //  to angle of faces across edge
             void setFeatureEdges(const scalar minCos);
 
-            //- Set extraEdges to edges 'near' to edgeI. Uses point-edge walk
-            //  to determine 'near'.
-            void setExtraEdges(const label edgeI);
-
-
-        // Faces
-
-            //- Simple triangulation of face subset. Returns number of triangles
-            //  needed.
-            label getNTris(const label facei) const;
-
-            //- Simple triangulation of face subset. TotalNTris is total number
-            //  of triangles, nTris is per face number of triangles.
-            label getNTris
-            (
-                const label startFacei,
-                const label nFaces,
-                labelList& nTris
-            ) const;
-
-            //- Simple triangulation of face subset. TotalNTris is total number
-            //  of triangles (from call to getNTris)
-            //  triVerts is triangle vertices, three per triangle.
-            void triangulate
-            (
-                const label startFacei,
-                const label nFaces,
-                const label totalNTris,
-                labelList& triVerts
-            ) const;
-
-            //- Number of points used in face subset.
-            label getNPoints(const label startFacei, const label nFaces) const;
-
-            //- Same as triangulate but in local vertex numbering.
-            //  (Map returned).
-            void triangulateLocal
-            (
-                const label startFacei,
-                const label nFaces,
-                const label totalNTris,
-                labelList& triVerts,
-                labelList& localToGlobal
-            ) const;
 
         // Other
 
@@ -382,7 +289,7 @@ public:
     // Member Operators
 
         //- Disallow default bitwise assignment
-        void operator=(const boundaryMesh&) = delete;
+        void operator=(const repatchMesh&) = delete;
 };
 
 

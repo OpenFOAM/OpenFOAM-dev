@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,14 +25,14 @@ Application
     surfaceToPatch
 
 Description
-    Reads surface and applies surface regioning to a mesh. Uses boundaryMesh
+    Reads surface and applies surface regioning to a mesh. Uses repatchMesh
     to do the hard work.
 
 \*---------------------------------------------------------------------------*/
 
 #include "argList.H"
 #include "Time.H"
-#include "boundaryMesh.H"
+#include "repatchMesh.H"
 #include "polyMesh.H"
 #include "faceSet.H"
 #include "polyTopoChange.H"
@@ -103,7 +103,7 @@ label addPatch(polyMesh& mesh, const word& patchName)
 bool repatchFace
 (
     const polyMesh& mesh,
-    const boundaryMesh& bMesh,
+    const repatchMesh& rMesh,
     const labelList& nearest,
     const labelList& surfToMeshPatch,
     const label facei,
@@ -117,9 +117,9 @@ bool repatchFace
     if (nearest[bFacei] != -1)
     {
         // Use boundary mesh one.
-        label bMeshPatchID = bMesh.whichPatch(nearest[bFacei]);
+        label rMeshPatchID = rMesh.whichPatch(nearest[bFacei]);
 
-        label patchID = surfToMeshPatch[bMeshPatchID];
+        label patchID = surfToMeshPatch[rMeshPatchID];
 
         if (patchID != mesh.boundaryMesh().whichPatch(facei))
         {
@@ -230,13 +230,13 @@ int main(int argc, char *argv[])
     Info<< endl;
 
 
-    boundaryMesh bMesh;
+    repatchMesh rMesh;
 
     // Load in the surface.
-    bMesh.readTriSurface(surfName);
+    rMesh.readTriSurface(surfName);
 
     // Add all the boundaryMesh patches to the mesh.
-    const PtrList<boundaryPatch>& bPatches = bMesh.patches();
+    const PtrList<repatchPatch>& bPatches = rMesh.patches();
 
     // Map from surface patch ( = boundaryMesh patch) to polyMesh patch
     labelList patchMap(bPatches.size());
@@ -246,10 +246,10 @@ int main(int argc, char *argv[])
         patchMap[i] = addPatch(mesh, bPatches[i].name());
     }
 
-    // Obtain nearest face in bMesh for each boundary face in mesh that
+    // Obtain nearest face in rMesh for each boundary face in mesh that
     // is within search span.
     // Note: should only determine for faceSet if working with that.
-    labelList nearest(bMesh.getNearest(mesh, searchSpan));
+    labelList nearest(rMesh.getNearest(mesh, searchSpan));
 
     {
         // Dump unmatched faces to faceSet for debugging.
@@ -285,7 +285,7 @@ int main(int argc, char *argv[])
         {
             label facei = iter.key();
 
-            if (repatchFace(mesh, bMesh, nearest, patchMap, facei, meshMod))
+            if (repatchFace(mesh, rMesh, nearest, patchMap, facei, meshMod))
             {
                 nChanged++;
             }
@@ -297,7 +297,7 @@ int main(int argc, char *argv[])
         {
             label facei = mesh.nInternalFaces() + bFacei;
 
-            if (repatchFace(mesh, bMesh, nearest, patchMap, facei, meshMod))
+            if (repatchFace(mesh, rMesh, nearest, patchMap, facei, meshMod))
             {
                 nChanged++;
             }
