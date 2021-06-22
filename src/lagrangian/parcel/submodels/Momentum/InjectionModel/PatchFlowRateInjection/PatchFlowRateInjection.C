@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -128,7 +128,7 @@ Foam::scalar Foam::PatchFlowRateInjection<CloudType>::flowRate() const
     const scalarField& phip = phi.boundaryField()[patchId_];
 
     scalar flowRateIn = 0.0;
-    if (phi.dimensions() == dimVelocity*dimArea)
+    if (phi.dimensions() == dimFlux)
     {
         flowRateIn = max(0.0, -sum(phip));
     }

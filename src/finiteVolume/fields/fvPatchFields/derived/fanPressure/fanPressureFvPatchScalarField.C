@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -122,13 +122,13 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
 
     // Get the volumetric flow rate
     scalar volFlowRate = 0;
-    if (phip.internalField().dimensions() == dimVelocity*dimArea)
+    if (phip.internalField().dimensions() == dimFlux)
     {
         volFlowRate = sign*gSum(phip);
     }
     else if
     (
-        phip.internalField().dimensions() == dimVelocity*dimArea*dimDensity
+        phip.internalField().dimensions() == dimMassFlux
     )
     {
         const scalarField& rhop =

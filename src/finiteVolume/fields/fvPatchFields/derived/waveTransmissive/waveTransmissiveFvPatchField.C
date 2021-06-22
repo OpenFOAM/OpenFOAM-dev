@@ -108,7 +108,7 @@ Foam::waveTransmissiveFvPatchField<Type>::advectionSpeed() const
             lookupPatchField<surfaceScalarField, scalar>(this->phiName_)
     );
 
-    if (phi.dimensions() == dimDensity*dimVelocity*dimArea)
+    if (phi.dimensions() == dimFlux)
     {
         const fvPatchScalarField& rhop =
             this->patch().template
