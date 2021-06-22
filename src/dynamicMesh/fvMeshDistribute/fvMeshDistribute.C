@@ -351,9 +351,27 @@ void Foam::fvMeshDistribute::printCoupleInfo
 
 
 // Finds (non-empty) patch that exposed internal and proc faces can be put into.
-Foam::label Foam::fvMeshDistribute::findNonEmptyPatch() const
+Foam::label Foam::fvMeshDistribute::findInternalPatch() const
 {
     const polyBoundaryMesh& patches = mesh_.boundaryMesh();
+
+    label internalPatchi = -1;
+
+    forAll(patches, patchi)
+    {
+        const polyPatch& pp = patches[patchi];
+
+        if (isA<internalPolyPatch>(pp))
+        {
+            internalPatchi = patchi;
+            break;
+        }
+    }
+
+    if (internalPatchi != -1)
+    {
+        return internalPatchi;
+    }
 
     label nonEmptyPatchi = -1;
 
@@ -379,7 +397,7 @@ Foam::label Foam::fvMeshDistribute::findNonEmptyPatch() const
 
     if (debug)
     {
-        Pout<< "findNonEmptyPatch : using patch " << nonEmptyPatchi
+        Pout<< "findInternalPatch : using patch " << nonEmptyPatchi
             << " name:" << patches[nonEmptyPatchi].name()
             << " type:" << patches[nonEmptyPatchi].type()
             << " to put exposed faces into." << endl;
@@ -1965,7 +1983,7 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
 
 
     // Find patch to temporarily put exposed and processor faces into.
-    label oldInternalPatchi = findNonEmptyPatch();
+    label oldInternalPatchi = findInternalPatch();
 
 
 
@@ -2329,15 +2347,15 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
         );
         // Insert the sign bit from face flipping
         labelList& faceMap = subFaceMap[Pstream::myProcNo()];
-        forAll(faceMap, faceI)
+        forAll(faceMap, facei)
         {
-            faceMap[faceI] += 1;
+            faceMap[facei] += 1;
         }
         const labelHashSet& flip = subMap().flipFaceFlux();
         forAllConstIter(labelHashSet, flip, iter)
         {
-            label faceI = iter.key();
-            faceMap[faceI] = -faceMap[faceI];
+            label facei = iter.key();
+            faceMap[facei] = -faceMap[facei];
         }
         subPointMap[Pstream::myProcNo()] = subMap().pointMap();
         subPatchMap[Pstream::myProcNo()] = identity(patches.size());
@@ -2864,19 +2882,19 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
 
                 for
                 (
-                    label domainFaceI = domainMesh.nInternalFaces();
-                    domainFaceI < domainMesh.nFaces();
-                    domainFaceI++
+                    label domainFacei = domainMesh.nInternalFaces();
+                    domainFacei < domainMesh.nFaces();
+                    domainFacei++
                 )
                 {
-                    label newFaceI = map().addedFaceMap()[domainFaceI];
-                    label newCellI = mesh_.faceOwner()[newFaceI];
+                    label newFacei = map().addedFaceMap()[domainFacei];
+                    label newCellI = mesh_.faceOwner()[newFacei];
 
-                    label domainCellI = domainMesh.faceOwner()[domainFaceI];
+                    label domainCellI = domainMesh.faceOwner()[domainFacei];
 
                     if (newCellI != map().addedCellMap()[domainCellI])
                     {
-                        flippedAddedFaces.insert(domainFaceI);
+                        flippedAddedFaces.insert(domainFacei);
                     }
                 }
             }
@@ -2887,8 +2905,8 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
             // Add flip
             forAllConstIter(labelHashSet, flippedAddedFaces, iter)
             {
-                label domainFaceI = iter.key();
-                label& val = constructFaceMap[sendProc][domainFaceI];
+                label domainFacei = iter.key();
+                label& val = constructFaceMap[sendProc][domainFacei];
                 val = -val;
             }
             inplaceRenumberWithFlip

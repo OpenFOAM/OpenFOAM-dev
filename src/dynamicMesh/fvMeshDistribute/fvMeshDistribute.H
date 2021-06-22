@@ -52,7 +52,6 @@ SourceFiles
 #ifndef fvMeshDistribute_H
 #define fvMeshDistribute_H
 
-#include "Field.H"
 #include "fvMeshSubset.H"
 #include "FieldField.H"
 
@@ -104,8 +103,8 @@ class fvMeshDistribute
 
         // Patch handling
 
-            //- Find patch to put exposed faces into.
-            label findNonEmptyPatch() const;
+            //- Find patch to put exposed internal faces into
+            label findInternalPatch() const;
 
             //- Save boundary fields
             template<class T, class Mesh>

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,7 +48,7 @@ public:
 
     void operator()
     (
-        Field<Type>& field,
+        DimensionedField<Type, volMesh>& field,
         const MeshMapper& mapper
     ) const;
 };
@@ -57,7 +57,7 @@ public:
 template<class Type, class MeshMapper>
 void MapInternalField<Type, MeshMapper, volMesh>::operator()
 (
-    Field<Type>& field,
+    DimensionedField<Type, volMesh>& field,
     const MeshMapper& mapper
 ) const
 {

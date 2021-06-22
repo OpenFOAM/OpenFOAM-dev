@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -39,8 +39,7 @@ void Foam::fvMeshDistribute::printFieldInfo(const fvMesh& mesh)
     {
         const GeoField& fld = *iter();
 
-        Pout<< "Field:" << iter.key() << " internalsize:" << fld.size()
-            //<< " value:" << fld
+        Pout<< "Field:" << iter.key() << " internal size:" << fld.size()
             << endl;
 
         forAll(fld.boundaryField(), patchi)
@@ -206,6 +205,7 @@ void Foam::fvMeshDistribute::mapExposedFaces
     {
         fldType& fld = *iter();
         typename fldType::Boundary& bfld = fld.boundaryFieldRef();
+        const bool negateIfFlipped = isFlux(fld);
 
         const Field<T>& oldInternal = oldFlds[fieldI++];
 
@@ -217,15 +217,14 @@ void Foam::fvMeshDistribute::mapExposedFaces
 
             forAll(patchFld, i)
             {
-                const label faceI = patchFld.patch().start()+i;
+                const label facei = patchFld.patch().start()+i;
+                const label oldFacei = faceMap[facei];
 
-                label oldFaceI = faceMap[faceI];
-
-                if (oldFaceI < oldInternal.size())
+                if (oldFacei < oldInternal.size())
                 {
-                    patchFld[i] = oldInternal[oldFaceI];
+                    patchFld[i] = oldInternal[oldFacei];
 
-                    if (map.flipFaceFlux().found(faceI))
+                    if (negateIfFlipped && map.flipFaceFlux().found(facei))
                     {
                         patchFld[i] = flipOp()(patchFld[i]);
                     }

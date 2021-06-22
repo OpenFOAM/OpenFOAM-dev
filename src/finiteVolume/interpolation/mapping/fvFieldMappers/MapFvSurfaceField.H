@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,7 +30,7 @@ Description
 #ifndef MapFvSurfaceField_H
 #define MapFvSurfaceField_H
 
-#include "Field.H"
+#include "MapGeometricFields.H"
 #include "surfaceMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -48,7 +48,7 @@ public:
 
     void operator()
     (
-        Field<Type>& field,
+        DimensionedField<Type, surfaceMesh>& field,
         const MeshMapper& mapper
     ) const;
 };
@@ -57,7 +57,7 @@ public:
 template<class Type, class MeshMapper>
 void MapInternalField<Type, MeshMapper, surfaceMesh>::operator()
 (
-    Field<Type>& field,
+    DimensionedField<Type, surfaceMesh>& field,
     const MeshMapper& mapper
 ) const
 {
@@ -72,13 +72,16 @@ void MapInternalField<Type, MeshMapper, surfaceMesh>::operator()
     mapper.surfaceMap()(field, field);
 
     // Flip the flux
-    const labelList flipFaces = mapper.surfaceMap().flipFaceFlux().toc();
-
-    forAll(flipFaces, i)
+    if (isFlux(field))
     {
-        if (flipFaces[i] < field.size())
+        const labelList flipFaces = mapper.surfaceMap().flipFaceFlux().toc();
+
+        forAll(flipFaces, i)
         {
-            field[flipFaces[i]] *= -1.0;
+            if (flipFaces[i] < field.size())
+            {
+                field[flipFaces[i]] *= -1.0;
+            }
         }
     }
 }

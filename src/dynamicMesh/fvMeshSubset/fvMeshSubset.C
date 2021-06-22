@@ -665,10 +665,6 @@ void Foam::fvMeshSubset::setCellSubset
         globalPointMap[pointMap_[pointi]] = pointi;
     }
 
-    // Pout<< "Number of cells in new mesh: " << nCellsInSet << endl;
-    // Pout<< "Number of faces in new mesh: " << globalFaceMap.size() << endl;
-    // Pout<< "Number of points in new mesh: " << globalPointMap.size() << endl;
-
     // Make a new mesh
     pointField newPoints(globalPointMap.size());
 
@@ -864,6 +860,10 @@ void Foam::fvMeshSubset::setCellSubset
             nNewPatches++;
         }
     }
+    // else
+    // {
+    //     patchMap_[wantedPatchID] = -1;
+    // }
 
     // Reset the patch lists
     newBoundary.setSize(nNewPatches);
@@ -1194,9 +1194,6 @@ void Foam::fvMeshSubset::setLargeCellSubset
         }
     }
 
-    // Pout<< "Number of cells in new mesh : " << cellMap_.size() << endl;
-    // Pout<< "Number of faces in new mesh : " << faceMap_.size() << endl;
-    // Pout<< "Number of points in new mesh: " << pointMap_.size() << endl;
 
     // Make a new mesh
     pointField newPoints(pointMap_.size());
@@ -1418,9 +1415,6 @@ void Foam::fvMeshSubset::setLargeCellSubset
                 internalPolyPatch::typeName
             );
 
-            // Pout<< "    oldInternalFaces : "
-            //    << boundaryPatchSizes[oldInternalPatchID] << endl;
-
             // The index for the first patch is -1 as it originates from
             // the internal faces
             patchStart += boundaryPatchSizes[oldInternalPatchID];
@@ -1428,6 +1422,10 @@ void Foam::fvMeshSubset::setLargeCellSubset
             nNewPatches++;
         }
     }
+    // else
+    // {
+    //     patchMap_[wantedPatchID] = -1;
+    // }
 
     // Old patches
 
@@ -1448,9 +1446,6 @@ void Foam::fvMeshSubset::setLargeCellSubset
             newSize,
             patchStart
         ).ptr();
-
-        // Pout<< "    " << oldPatches[oldPatchi].name() << " : "
-        //    << newSize << endl;
 
         patchStart += newSize;
         patchMap_[nNewPatches] = oldPatchi;    // compact patchMap

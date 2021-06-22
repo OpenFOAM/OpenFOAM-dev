@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,41 @@ SourceFiles
 #include "fvsPatchFields.H"
 #include "surfaceFieldsFwd.H"
 #include "calculatedFvsPatchFields.H"
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+namespace Foam
+{
+
+//- Check if surfaceField is a flux
+//  i.e. an extensive field oriented with the face requiring
+//  flipping after mapping.
+//  Currently it is assumed that only surfaceScalarFields can be fluxes
+template<class Type>
+inline bool isFlux(const DimensionedField<Type, surfaceMesh>& df)
+{
+    return false;
+}
+
+//- Check if surfaceScalarField is a flux
+//  i.e. an extensive field oriented with the face requiring
+//  flipping after mapping.
+//  Currently it is assumed that fluxes are either volumetric or mass
+template<>
+inline bool isFlux<scalar>(const DimensionedField<scalar, surfaceMesh>& df)
+{
+    if (df.dimensions() == dimFlux || df.dimensions() == dimMassFlux)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+}
+
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
