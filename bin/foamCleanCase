@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -23,15 +23,14 @@
 #     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 #
 # Script
-#     foamCleanTutorials
+#     foamCleanCase
 #
 # Description
-#     Run either Allwclean, Allclean or default cleanCase in current directory
-#     and all its subdirectories.
+#     Cleans an OpenFOAM case directory, resetting it to its initial state.
+#     Executes a local Allclean script if it present, otherwise runs the
+#     cleanCase function in bin/tools/CleanFunctions
 #
 #------------------------------------------------------------------------------
-Script=$0
-[ "/${Script#/}" != "$Script" ] && Script="$PWD/$Script"
 
 # Source tutorial clean functions
 . "$WM_PROJECT_DIR/bin/tools/CleanFunctions"
@@ -39,24 +38,31 @@ Script=$0
 usage() {
     cat<<USAGE
 
-Usage: ${0##*/} [OPTIONS] <arg (optional)>
+Usage: ${0##*/} [OPTIONS]
 options:
-  -help      | -h     print the usage
+  -case | -c <dir>  specify case directory (default = local dir)
+  -help | -h        print the usage
 
-Script to clean tutorial cases called by the Allclean scripts in the OpenFOAM
-tutorials. The script executes recursively on sub-directories to clean all
-cases. Recursive execution is disabled for the top level Allclean or Allwclean
-scripts by supplying a dummy argument <arg> when executing, e.g.
-
-./${0##*/} cases
-
+Cleans an OpenFOAM case directory, resetting it to its initial state.
 USAGE
+}
+
+error() {
+    exec 1>&2
+    while [ "$#" -ge 1 ]; do echo "$1"; shift; done
+    usage
+    exit 1
 }
 
 # Parse options
 while [ "$#" -gt 0 ]
 do
     case "$1" in
+    -c | -case)
+        [ "$#" -ge 2 ] || error "'$1' option requires an argument"
+        cd "$2" 2>/dev/null || error "Case directory does not exist: '$2'"
+        shift 2
+        ;;
     -h | -help)
         usage && exit 0
         ;;
@@ -66,32 +72,13 @@ do
     esac
 done
 
-# Specialised ./Allwclean script, do not execute if argument is supplied
-if [ $# -eq 0 ] && [ -f Allwclean ]
-then
-    ./Allwclean
+[ $# -eq 0 ] || error "Incorrect arguments specified"
 
-# Specialised ./Allclean script, do not execute if argument is supplied
-elif [ $# -eq 0 ] && [ -f Allclean ]
-then
-    ./Allclean
+foamListTimes >/dev/null 2>&1 || \
+    error "'$PWD' is not a valid case directory"
 
-# For a case directory without Allclean, use the cleanCase function
-elif [ -d system ]
-then
-    cleanCase
-
-# For a code directory without Allwclean, use the cleanApplication function
-elif [ -d Make ]
-then
-    cleanApplication
-
-# Otherwise loop over sub-directories and execute script within each one
-else
-    for caseName in *
-    do
-        ( cd "$caseName" 2>/dev/null && $Script )
-    done
-fi
+[ -x Allclean ] && ./Allclean && \
+    echo "... using the local Allclean script" && exit 0
+cleanCase
 
 #------------------------------------------------------------------------------
