@@ -44,27 +44,20 @@ cleanCase()
     rm -rf ./[1-9]* ./-[1-9]* ./log ./log.* ./logSummary.* \
         ./*.OpenFOAM ./*.blockMesh ./*.foam ./.setSet
 
+    for d in constant 0
+    do
+        rm -rf $d/polyMesh     $d/*/polyMesh \
+               $d/cellToRegion $d/*/cellToRegion \
+               $d/cellLevel*   $d/pointLevel* \
+               $d/cellDist     $d/cellDecomposition
+    done
+
     [ -d system ] && [ -d dynamicCode ] && rm -rf dynamicCode
 
     rm -rf processor*
-    rm -rf jobInfo
     rm -rf postProcessing
-    rm -rf TDAC
-
-    rm -rf constant/polyMesh
-    rm -f  constant/cellToRegion \
-           constant/cellLevel* \
-           constant/pointLevel*
-
-
-    rm -rf constant/tetDualMesh
-
-    rm -rf VTK
-    rm -rf sequencedVTK
-
-    rm -rf 0/polyMesh 0/cellLevel \
-           0/pointLevel 0/cellDist \
-           constant/cellDecomposition
+    rm -rf jobInfo TDAC constant/tetDualMesh
+    rm -rf VTK sequencedVTK
 
     find . -name "*.orig" -type f -exec sh -c 'rm -f ${0%.*} ${0%.*}.gz' {} \;
 }
@@ -84,7 +77,7 @@ cleanVoFCase()
 removeCase()
 {
     echo "Removing ${1:-unknown} case"
-    rm -rf $1
+    rm -rf "$1"
 }
 
 cleanApplication()

@@ -6,4 +6,4 @@ cd ${0%/*} || exit 1
 
 cleanCase
 
-rm -rf constant/*/polyMesh 0/cellToRegion 0/*/cellToRegion
+#------------------------------------------------------------------------------
