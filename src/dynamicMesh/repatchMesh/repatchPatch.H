@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,19 +22,19 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::boundaryPatch
+    Foam::repatchPatch
 
 Description
     Like polyPatch but without reference to mesh. patchIdentifier::index
-    is not used. Used in boundaryMesh to hold data on patches.
+    is not used. Used in repatchMesh to hold data on patches.
 
 SourceFiles
-    boundaryPatch.C
+    repatchPatch.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef boundaryPatch_H
-#define boundaryPatch_H
+#ifndef repatchPatch_H
+#define repatchPatch_H
 
 #include "patchIdentifier.H"
 #include "autoPtr.H"
@@ -46,16 +46,16 @@ namespace Foam
 
 // Forward declaration of friend functions and operators
 
-class boundaryPatch;
+class repatchPatch;
 
-Ostream& operator<<(Ostream&, const boundaryPatch&);
+Ostream& operator<<(Ostream&, const repatchPatch&);
 
 
 /*---------------------------------------------------------------------------*\
-                        Class boundaryPatch Declaration
+                        Class repatchPatch Declaration
 \*---------------------------------------------------------------------------*/
 
-class boundaryPatch
+class repatchPatch
 :
     public patchIdentifier
 {
@@ -69,7 +69,7 @@ public:
     // Constructors
 
         //- Construct from components
-        boundaryPatch
+        repatchPatch
         (
             const word& name,
             const label index,
@@ -79,7 +79,7 @@ public:
         );
 
         //- Construct from dictionary
-        boundaryPatch
+        repatchPatch
         (
             const word& name,
             const dictionary& dict,
@@ -87,14 +87,14 @@ public:
         );
 
         //- Copy constructor, resetting the index
-        boundaryPatch(const boundaryPatch&, const label index);
+        repatchPatch(const repatchPatch&, const label index);
 
         //- Clone
-        autoPtr<boundaryPatch> clone() const;
+        autoPtr<repatchPatch> clone() const;
 
 
     //- Destructor
-    ~boundaryPatch();
+    ~repatchPatch();
 
 
     // Member Functions
@@ -126,7 +126,7 @@ public:
 
     // Ostream Operator
 
-        friend Ostream& operator<<(Ostream&, const boundaryPatch&);
+        friend Ostream& operator<<(Ostream&, const repatchPatch&);
 };
 
 

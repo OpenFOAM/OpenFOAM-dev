@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,13 +23,13 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "boundaryPatch.H"
+#include "repatchPatch.H"
 #include "dictionary.H"
 #include "Ostream.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::boundaryPatch::boundaryPatch
+Foam::repatchPatch::repatchPatch
 (
     const word& name,
     const label index,
@@ -44,7 +44,7 @@ Foam::boundaryPatch::boundaryPatch
 {}
 
 
-Foam::boundaryPatch::boundaryPatch
+Foam::repatchPatch::repatchPatch
 (
     const word& name,
     const dictionary& dict,
@@ -57,7 +57,7 @@ Foam::boundaryPatch::boundaryPatch
 {}
 
 
-Foam::boundaryPatch::boundaryPatch(const boundaryPatch& p, const label index)
+Foam::repatchPatch::repatchPatch(const repatchPatch& p, const label index)
 :
     patchIdentifier(p.name(), index, p.physicalType()),
     size_(p.size()),
@@ -65,21 +65,21 @@ Foam::boundaryPatch::boundaryPatch(const boundaryPatch& p, const label index)
 {}
 
 
-Foam::autoPtr<Foam::boundaryPatch> Foam::boundaryPatch::clone() const
+Foam::autoPtr<Foam::repatchPatch> Foam::repatchPatch::clone() const
 {
-    return autoPtr<boundaryPatch>(new boundaryPatch(*this));
+    return autoPtr<repatchPatch>(new repatchPatch(*this));
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::boundaryPatch::~boundaryPatch()
+Foam::repatchPatch::~repatchPatch()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::boundaryPatch::write(Ostream& os) const
+void Foam::repatchPatch::write(Ostream& os) const
 {
     patchIdentifier::write(os);
     writeEntry(os, "nFaces", size_);
@@ -89,10 +89,10 @@ void Foam::boundaryPatch::write(Ostream& os) const
 
 // * * * * * * * * * * * * * * * Friend Operators  * * * * * * * * * * * * * //
 
-Foam::Ostream& Foam::operator<<(Ostream& os, const boundaryPatch& p)
+Foam::Ostream& Foam::operator<<(Ostream& os, const repatchPatch& p)
 {
     p.write(os);
-    os.check("Ostream& operator<<(Ostream& f, const boundaryPatch&)");
+    os.check("Ostream& operator<<(Ostream& f, const repatchPatch&)");
     return os;
 }
 
