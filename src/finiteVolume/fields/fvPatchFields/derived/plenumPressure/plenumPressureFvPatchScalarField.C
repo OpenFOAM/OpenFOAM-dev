@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -180,7 +180,7 @@ void Foam::plenumPressureFvPatchScalarField::updateCoeffs()
 
     // Calculate the current mass flow rate
     scalar massFlowRate(1.0);
-    if (phi.internalField().dimensions() == dimVelocity*dimArea)
+    if (phi.internalField().dimensions() == dimFlux)
     {
         if (hasRho_)
         {
@@ -196,7 +196,7 @@ void Foam::plenumPressureFvPatchScalarField::updateCoeffs()
     else if
     (
         phi.internalField().dimensions()
-     == dimDensity*dimVelocity*dimArea
+     == dimMassFlux
     )
     {
         if (hasRho_)

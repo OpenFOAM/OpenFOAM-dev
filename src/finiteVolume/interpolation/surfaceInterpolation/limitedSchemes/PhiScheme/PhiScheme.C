@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -61,7 +61,7 @@ Foam::PhiScheme<Type, PhiLimiter>::limiter
 
     tmp<surfaceScalarField> tUflux = this->faceFlux_;
 
-    if (this->faceFlux_.dimensions() == dimDensity*dimVelocity*dimArea)
+    if (this->faceFlux_.dimensions() == dimMassFlux)
     {
         const volScalarField& rho =
             phi.db().objectRegistry::template lookupObject<volScalarField>
@@ -69,7 +69,7 @@ Foam::PhiScheme<Type, PhiLimiter>::limiter
 
         tUflux = this->faceFlux_/fvc::interpolate(rho);
     }
-    else if (this->faceFlux_.dimensions() != dimVelocity*dimArea)
+    else if (this->faceFlux_.dimensions() != dimFlux)
     {
         FatalErrorInFunction
             << "dimensions of faceFlux are not correct"

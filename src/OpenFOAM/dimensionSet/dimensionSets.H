@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,6 +74,9 @@ extern const dimensionSet dimGasConstant;
 extern const dimensionSet dimSpecificHeatCapacity;
 extern const dimensionSet dimViscosity;
 extern const dimensionSet dimDynamicViscosity;
+
+extern const dimensionSet dimFlux;
+extern const dimensionSet dimMassFlux;
 
 
 class dimensionSets

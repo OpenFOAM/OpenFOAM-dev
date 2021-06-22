@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -187,7 +187,7 @@ public:
             const fvMesh& mesh = this->mesh();
             tmp<surfaceScalarField> tUflux = faceFlux_;
 
-            if (faceFlux_.dimensions() == dimDensity*dimVelocity*dimArea)
+            if (faceFlux_.dimensions() == dimMassFlux)
             {
                 // Currently assume that the density field
                 // corresponding to the mass-flux is named "rho"
@@ -197,7 +197,7 @@ public:
 
                 tUflux = faceFlux_/fvc::interpolate(rho);
             }
-            else if (faceFlux_.dimensions() != dimVelocity*dimArea)
+            else if (faceFlux_.dimensions() != dimFlux)
             {
                 FatalErrorInFunction
                     << "dimensions of faceFlux are not correct"
