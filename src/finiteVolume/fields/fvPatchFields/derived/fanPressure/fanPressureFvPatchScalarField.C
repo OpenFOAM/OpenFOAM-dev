@@ -128,7 +128,7 @@ void Foam::fanPressureFvPatchScalarField::updateCoeffs()
     }
     else if
     (
-        phip.internalField().dimensions() == dimFlux*dimDensity
+        phip.internalField().dimensions() == dimMassFlux
     )
     {
         const scalarField& rhop =
