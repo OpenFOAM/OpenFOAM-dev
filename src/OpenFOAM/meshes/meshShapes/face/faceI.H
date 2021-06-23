@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,14 +25,12 @@ License
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-// Edge to the right of face vertex i
 inline Foam::label Foam::face::right(const label i) const
 {
     return i;
 }
 
 
-// Edge to the left of face vertex i
 inline Foam::label Foam::face::left(const label i) const
 {
     return rcIndex(i);
@@ -113,20 +111,18 @@ inline Foam::edge Foam::face::faceEdge(const label n) const
 }
 
 
-// Next vertex on face
 inline Foam::label Foam::face::nextLabel(const label i) const
 {
     return operator[](fcIndex(i));
 }
 
 
-// Previous vertex on face
 inline Foam::label Foam::face::prevLabel(const label i) const
 {
     return operator[](rcIndex(i));
 }
 
-// Number of triangles directly known from number of vertices
+
 inline Foam::label Foam::face::nTriangles() const
 {
     return size() - 2;
@@ -159,29 +155,13 @@ inline bool Foam::operator!=(const face& a, const face& b)
 
 inline Foam::Istream& Foam::operator>>(Istream& is, face& f)
 {
-    if (is.version() == IOstream::originalVersion)
-    {
-        // Read starting (
-        is.readBegin("face");
-
-        // Read the 'name' token for the face
-        token t(is);
-
-        // Read labels
-        is >> static_cast<labelList&>(f);
-
-        // Read end)
-        is.readEnd("face");
-    }
-    else
-    {
-        is >> static_cast<labelList&>(f);
-    }
+    is >> static_cast<labelList&>(f);
 
     // Check state of Ostream
     is.check("Istream& operator>>(Istream&, face&)");
 
     return is;
 }
+
 
 // ************************************************************************* //

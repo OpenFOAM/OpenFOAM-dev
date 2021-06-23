@@ -8,7 +8,6 @@
 
 FoamFile
 {
-    version     2.0;
     format      ascii;
     location    "";
     class       vectorField;
