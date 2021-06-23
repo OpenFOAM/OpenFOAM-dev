@@ -17,6 +17,6 @@ FoamFile
 origin    (0 0 0);
 axis      (0 0 1);
 omega     constant <rad/s>;
-nonRotatingPatches (fixed);
+nonRotatingPatches (); // List of stationary patches inside the rotatingZone
 
 // ************************************************************************* //
