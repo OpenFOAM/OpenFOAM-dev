@@ -973,8 +973,6 @@ scalar kinematicSingleLayer::CourantNumber() const
     const scalar CoNum =
         0.5*gMax(sumPhi/regionMesh().V().field())*time_.deltaTValue();
 
-    Info<< "Film max Courant number: " << CoNum << endl;
-
     return CoNum;
 }
 
@@ -1018,6 +1016,7 @@ void kinematicSingleLayer::info()
         << gSum((delta_*rho()*magSf())()) << nl
         << indent << "min/max(mag(U))    = " << gMin(mag(Uinternal)) << ", "
         << gMax(mag(Uinternal)) << nl
+        << indent << "max Courant number = " << CourantNumber() << nl
         << indent << "min/max(delta)     = " << gMin(deltaInternal) << ", "
         << gMax(deltaInternal) << nl
         << indent << "coverage           = "
