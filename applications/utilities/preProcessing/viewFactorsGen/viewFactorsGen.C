@@ -53,6 +53,7 @@ Description
 #include "DynamicField.H"
 #include "scalarListIOList.H"
 #include "polygonTriangulate.H"
+#include "vtkWritePolyData.H"
 
 using namespace Foam;
 
@@ -159,29 +160,35 @@ void writeRays
     const labelListList& visibleFaceFaces
 )
 {
-    OFstream str(fName);
-    label vertI = 0;
+    DynamicList<point> allPoints;
+    allPoints.append(myFc);
+    allPoints.append(compactCf);
 
-    Pout<< "Dumping rays to " << str.name() << endl;
-
+    DynamicList<labelPair> rays;
     forAll(myFc, facei)
     {
         const labelList visFaces = visibleFaceFaces[facei];
         forAll(visFaces, faceRemote)
         {
-            label compactI = visFaces[faceRemote];
-            const point& remoteFc = compactCf[compactI];
-
-            meshTools::writeOBJ(str, myFc[facei]);
-            vertI++;
-            meshTools::writeOBJ(str, remoteFc);
-            vertI++;
-            str << "l " << vertI-1 << ' ' << vertI << nl;
+            rays.append
+            (
+                labelPair(facei, myFc.size() + visFaces[faceRemote])
+            );
         }
     }
-    string cmd("objToVTK " + fName + " " + fName.lessExt() + ".vtk");
-    Pout<< "cmd:" << cmd << endl;
-    system(cmd);
+
+    Pout<< "\nDumping rays to " << fName + ".vtk" << endl;
+
+    vtkWritePolyData::write
+    (
+        fName + ".vtk",
+        fName.name(),
+        false,
+        allPoints,
+        labelList(),
+        rays,
+        faceList()
+    );
 }
 
 
@@ -663,7 +670,7 @@ int main(int argc, char *argv[])
     {
         writeRays
         (
-            runTime.path()/"allVisibleFaces.obj",
+            runTime.path()/"allVisibleFaces",
             compactCoarseCf,
             remoteCoarseCf[Pstream::myProcNo()],
             visibleFaceFaces
