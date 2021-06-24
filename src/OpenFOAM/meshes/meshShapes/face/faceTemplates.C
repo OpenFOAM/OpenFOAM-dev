@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -135,24 +135,6 @@ Foam::vector Foam::face::area(const PointField& ps)
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-template<unsigned SizeInc, unsigned SizeMult, unsigned SizeDiv>
-Foam::label Foam::face::triangles
-(
-    const pointField& points,
-    DynamicList<face, SizeInc, SizeMult, SizeDiv>& triFaces
-) const
-{
-    label triI = triFaces.size();
-    label quadI = 0;
-    faceList quadFaces;
-
-    // adjust the addressable size (and allocate space if needed)
-    triFaces.setSize(triI + nTriangles());
-
-    return split(SPLITTRIANGLE, points, triI, quadI, triFaces, quadFaces);
-}
-
 
 template<class Type>
 Type Foam::face::average

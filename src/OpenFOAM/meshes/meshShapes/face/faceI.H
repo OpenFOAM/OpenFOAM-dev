@@ -23,20 +23,6 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-inline Foam::label Foam::face::right(const label i) const
-{
-    return i;
-}
-
-
-inline Foam::label Foam::face::left(const label i) const
-{
-    return rcIndex(i);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 inline Foam::face::face()

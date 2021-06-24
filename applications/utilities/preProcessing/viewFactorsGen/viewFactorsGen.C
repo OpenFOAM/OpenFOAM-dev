@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -52,6 +52,8 @@ Description
 #include "uindirectPrimitivePatch.H"
 #include "DynamicField.H"
 #include "scalarListIOList.H"
+#include "polygonTriangulate.H"
+#include "vtkWritePolyData.H"
 
 using namespace Foam;
 
@@ -78,31 +80,30 @@ triSurface triangulate
     label newPatchi = 0;
     label localTriFacei = 0;
 
+    polygonTriangulate triEngine;
+
     forAllConstIter(labelHashSet, includePatches, iter)
     {
         const label patchi = iter.key();
         const polyPatch& patch = bMesh[patchi];
         const pointField& points = patch.points();
 
-        label nTriTotal = 0;
-
         forAll(patch, patchFacei)
         {
             const face& f = patch[patchFacei];
 
-            faceList triFaces(f.nTriangles(points));
+            triEngine.triangulate(UIndirectList<point>(points, f));
 
-            label nTri = 0;
-
-            f.triangles(points, nTri, triFaces);
-
-            forAll(triFaces, triFacei)
+            forAll(triEngine.triPoints(), triFacei)
             {
-                const face& f = triFaces[triFacei];
-
-                triangles.append(labelledTri(f[0], f[1], f[2], newPatchi));
-
-                nTriTotal++;
+                triangles.append
+                (
+                    labelledTri
+                    (
+                        triEngine.triPoints(triFacei, f),
+                        newPatchi
+                    )
+                );
 
                 triSurfaceToAgglom[localTriFacei++] = globalNumbering.toGlobal
                 (
@@ -159,29 +160,35 @@ void writeRays
     const labelListList& visibleFaceFaces
 )
 {
-    OFstream str(fName);
-    label vertI = 0;
+    DynamicList<point> allPoints;
+    allPoints.append(myFc);
+    allPoints.append(compactCf);
 
-    Pout<< "Dumping rays to " << str.name() << endl;
-
+    DynamicList<labelPair> rays;
     forAll(myFc, facei)
     {
         const labelList visFaces = visibleFaceFaces[facei];
         forAll(visFaces, faceRemote)
         {
-            label compactI = visFaces[faceRemote];
-            const point& remoteFc = compactCf[compactI];
-
-            meshTools::writeOBJ(str, myFc[facei]);
-            vertI++;
-            meshTools::writeOBJ(str, remoteFc);
-            vertI++;
-            str << "l " << vertI-1 << ' ' << vertI << nl;
+            rays.append
+            (
+                labelPair(facei, myFc.size() + visFaces[faceRemote])
+            );
         }
     }
-    string cmd("objToVTK " + fName + " " + fName.lessExt() + ".vtk");
-    Pout<< "cmd:" << cmd << endl;
-    system(cmd);
+
+    Pout<< "\nDumping rays to " << fName + ".vtk" << endl;
+
+    vtkWritePolyData::write
+    (
+        fName + ".vtk",
+        fName.name(),
+        false,
+        allPoints,
+        labelList(),
+        rays,
+        faceList()
+    );
 }
 
 
@@ -663,7 +670,7 @@ int main(int argc, char *argv[])
     {
         writeRays
         (
-            runTime.path()/"allVisibleFaces.obj",
+            runTime.path()/"allVisibleFaces",
             compactCoarseCf,
             remoteCoarseCf[Pstream::myProcNo()],
             visibleFaceFaces

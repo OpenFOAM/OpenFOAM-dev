@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "STARCDsurfaceFormat.H"
 #include "ListOps.H"
+#include "polygonTriangulate.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -128,6 +129,9 @@ bool Foam::fileFormats::STARCDsurfaceFormat<Face>::read
 
     readHeader(is, "PROSTAR_CELL");
 
+    // Create a triangulation engine
+    polygonTriangulate triEngine;
+
     DynamicList<Face>  dynFaces;
     DynamicList<label> dynZones;
     DynamicList<word>  dynNames;
@@ -201,24 +205,14 @@ bool Foam::fileFormats::STARCDsurfaceFormat<Face>::read
             SubList<label> vertices(vertexLabels, vertexLabels.size());
             if (mustTriangulate && nLabels > 3)
             {
-                face f(vertices);
+                triEngine.triangulate
+                (
+                    UIndirectList<point>(this->points(), vertices)
+                );
 
-                faceList triFaces(f.nTriangles());
-                label nTri = 0;
-                f.triangles(this->points(), nTri, triFaces);
-
-                forAll(triFaces, facei)
+                forAll(triEngine.triPoints(), trii)
                 {
-                    // a triangular face, but not yet a triFace
-                    dynFaces.append
-                    (
-                        triFace
-                        (
-                            static_cast<labelUList&>(triFaces[facei])
-                        )
-                    );
-                    dynZones.append(zoneI);
-                    dynSizes[zoneI]++;
+                    dynFaces.append(triEngine.triPoints(trii, vertices));
                 }
             }
             else

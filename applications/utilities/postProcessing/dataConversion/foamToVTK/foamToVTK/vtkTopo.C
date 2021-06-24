@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -33,6 +33,7 @@ Description
 #include "cellShape.H"
 #include "cellModeller.H"
 #include "Swap.H"
+#include "polygonTriangulate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -91,11 +92,14 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
                 {
                     const face& f = mesh_.faces()[cFaces[cFacei]];
 
-                    label nQuads = 0;
-                    label nTris = 0;
-                    f.nTrianglesQuads(mesh_.points(), nTris, nQuads);
-
-                    nAddCells += nQuads + nTris;
+                    if (f.size() != 4)
+                    {
+                        nAddCells += f.nTriangles();
+                    }
+                    else
+                    {
+                        nAddCells ++;
+                    }
                 }
 
                 nAddCells--;
@@ -118,6 +122,9 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
 
     // Label of vtk type
     cellTypes_.setSize(cellShapes.size() + nAddCells);
+
+    // Create a triangulation engine
+    polygonTriangulate triEngine;
 
     // Set counters for additional points and additional cells
     label addPointi = 0, addCelli = 0;
@@ -205,17 +212,24 @@ Foam::vtkTopo::vtkTopo(const polyMesh& mesh)
                 const face& f = mesh_.faces()[cFaces[cFacei]];
                 const bool isOwner = (owner[cFaces[cFacei]] == celli);
 
-                // Number of triangles and quads in decomposition
-                label nTris = 0;
-                label nQuads = 0;
-                f.nTrianglesQuads(mesh_.points(), nTris, nQuads);
-
-                // Do actual decomposition into triFcs and quadFcs.
-                faceList triFcs(nTris);
-                faceList quadFcs(nQuads);
-                label trii = 0;
-                label quadi = 0;
-                f.trianglesQuads(mesh_.points(), trii, quadi, triFcs, quadFcs);
+                // Do decomposition into triFcs and quadFcs.
+                faceList triFcs(f.size() == 4 ? 0 : f.nTriangles());
+                faceList quadFcs(f.size() == 4 ? 1 : 0);
+                if (f.size() != 4)
+                {
+                    triEngine.triangulate
+                    (
+                        UIndirectList<point>(mesh.points(), f)
+                    );
+                    forAll(triEngine.triPoints(), trii)
+                    {
+                        triFcs[trii] = triEngine.triPoints(trii, f);
+                    }
+                }
+                else
+                {
+                    quadFcs[0] = f;
+                }
 
                 forAll(quadFcs, quadI)
                 {

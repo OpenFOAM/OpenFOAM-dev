@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,7 @@ License
 #include "polyMesh.H"
 #include "plane.H"
 #include "geompack.H"
+#include "polygonTriangulate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -2342,6 +2343,8 @@ Foam::triSurface Foam::triSurfaceTools::triangulate
         mesh.nFaces() - mesh.nInternalFaces()
     );
 
+    polygonTriangulate triEngine;
+
     label newPatchi = 0;
 
     forAllConstIter(labelHashSet, includePatches, iter)
@@ -2356,17 +2359,14 @@ Foam::triSurface Foam::triSurfaceTools::triangulate
         {
             const face& f = patch[patchFacei];
 
-            faceList triFaces(f.nTriangles(points));
+            triEngine.triangulate(UIndirectList<point>(points, f));
 
-            label nTri = 0;
-
-            f.triangles(points, nTri, triFaces);
-
-            forAll(triFaces, triFacei)
+            forAll(triEngine.triPoints(), triFacei)
             {
-                const face& f = triFaces[triFacei];
-
-                triangles.append(labelledTri(f[0], f[1], f[2], newPatchi));
+                triangles.append
+                (
+                    labelledTri(triEngine.triPoints(triFacei, f), newPatchi)
+                );
 
                 nTriTotal++;
             }
@@ -2429,6 +2429,8 @@ Foam::triSurface Foam::triSurfaceTools::triangulate
         mesh.nFaces() - mesh.nInternalFaces()
     );
 
+    polygonTriangulate triEngine;
+
     label newPatchi = 0;
 
     forAllConstIter(labelHashSet, includePatches, iter)
@@ -2445,17 +2447,14 @@ Foam::triSurface Foam::triSurfaceTools::triangulate
 
             if (bBox.containsAny(points, f))
             {
-                faceList triFaces(f.nTriangles(points));
+                triEngine.triangulate(UIndirectList<point>(points, f));
 
-                label nTri = 0;
-
-                f.triangles(points, nTri, triFaces);
-
-                forAll(triFaces, triFacei)
+                forAll(triEngine.triPoints(), triFacei)
                 {
-                    const face& f = triFaces[triFacei];
-
-                    triangles.append(labelledTri(f[0], f[1], f[2], newPatchi));
+                    triangles.append
+                    (
+                        labelledTri(triEngine.triPoints(triFacei, f), newPatchi)
+                    );
 
                     nTriTotal++;
                 }

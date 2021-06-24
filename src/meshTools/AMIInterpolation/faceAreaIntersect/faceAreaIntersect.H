@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -42,6 +42,7 @@ SourceFiles
 #include "plane.H"
 #include "face.H"
 #include "NamedEnum.H"
+#include "triFaceList.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -92,7 +93,7 @@ private:
         inline triPoints getTriPoints
         (
             const pointField& points,
-            const face& f,
+            const triFace& f,
             const bool reverse
         ) const;
 
@@ -162,7 +163,7 @@ public:
             const face& f,
             const pointField& points,
             const triangulationMode& triMode,
-            faceList& faceTris
+            triFaceList& faceTris
         );
 
         //- Return area of intersection of faceA with faceB

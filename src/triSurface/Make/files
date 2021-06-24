@@ -1,7 +1,6 @@
 triSurfaceTools                       = triSurface/triSurfaceTools
 geometricSurfacePatch                 = triSurface/geometricSurfacePatch
 
-faceTriangulation/faceTriangulation.C
 meshTriangulation/meshTriangulation.C
 
 triSurface/triSurface.C

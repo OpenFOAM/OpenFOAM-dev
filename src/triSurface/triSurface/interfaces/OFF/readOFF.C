@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -27,6 +27,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "triSurface.H"
+#include "polygonTriangulate.H"
 #include "IFstream.H"
 #include "IStringStream.H"
 
@@ -76,6 +77,9 @@ bool Foam::triSurface::readOFF(const fileName& OFFfileName)
         points[pointi] = point(x, y, z);
     }
 
+    // Create a triangulation engine
+    polygonTriangulate triEngine;
+
     // Read faces & triangulate them,
     DynamicList<labelledTri> tris(nElems);
 
@@ -107,17 +111,11 @@ bool Foam::triSurface::readOFF(const fileName& OFFfileName)
             }
             else
             {
-                faceList triFaces(f.nTriangles(points));
+                triEngine.triangulate(UIndirectList<point>(points, f));
 
-                label nTri = 0;
-
-                f.triangles(points, nTri, triFaces);
-
-                forAll(triFaces, triFacei)
+                forAll(triEngine.triPoints(), trii)
                 {
-                    const face& f = triFaces[triFacei];
-
-                    tris.append(labelledTri(f[0], f[1], f[2], 0));
+                    tris.append(labelledTri(triEngine.triPoints(trii, f), 0));
                 }
             }
         }

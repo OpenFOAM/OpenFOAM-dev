@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,7 +25,7 @@ License
 
 #include "meshTriangulation.H"
 #include "polyMesh.H"
-#include "faceTriangulation.H"
+#include "polygonTriangulate.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -209,7 +209,7 @@ Foam::meshTriangulation::meshTriangulation
         {
             if (faceIsCut[facei])
             {
-                nTotTri += faces[facei].nTriangles(points);
+                nTotTri += faces[facei].nTriangles();
             }
         }
     }
@@ -352,38 +352,28 @@ Foam::meshTriangulation::meshTriangulation
         // Triangulation using existing vertices
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+        // Create a triangulation engine
+        polygonTriangulate triEngine;
+
         // Triangulate internal faces
         forAll(faceIsCut, facei)
         {
             if (faceIsCut[facei] && isInternalFace(mesh, includedCell, facei))
             {
-                // Face was internal to the mesh and will be 'internal' to
-                // the surface.
+                triEngine.triangulate
+                (
+                    UIndirectList<point>(points, faces[facei])
+                );
 
-                // Triangulate face. Fall back to naive triangulation if failed.
-                faceTriangulation faceTris(points, faces[facei], true);
-
-                if (faceTris.empty())
-                {
-                    WarningInFunction
-                        << "Could not find triangulation for face " << facei
-                        << " vertices " << faces[facei] << " coords "
-                        << IndirectList<point>(points, faces[facei])() << endl;
-                }
-                else
-                {
-                    // Copy triangles. Make them internalFacesPatch
-                    insertTriangles
-                    (
-                        faceTris,
-                        facei,
-                        internalFacesPatch,
-                        false,                  // no reverse
-
-                        triangles,
-                        triI
-                    );
-                }
+                insertTriangles
+                (
+                    triEngine.triPoints(faces[facei]),
+                    facei,
+                    internalFacesPatch,
+                    false,                  // no reverse
+                    triangles,
+                    triI
+                );
             }
         }
         nInternalFaces_ = triI;
@@ -423,30 +413,20 @@ Foam::meshTriangulation::meshTriangulation
                     reverse = false;
                 }
 
-                // Triangulate face
-                faceTriangulation faceTris(points, faces[facei], true);
+                triEngine.triangulate
+                (
+                    UIndirectList<point>(points, faces[facei])
+                );
 
-                if (faceTris.empty())
-                {
-                    WarningInFunction
-                        << "Could not find triangulation for face " << facei
-                        << " vertices " << faces[facei] << " coords "
-                        << IndirectList<point>(points, faces[facei])() << endl;
-                }
-                else
-                {
-                    // Copy triangles. Optionally reverse them
-                    insertTriangles
-                    (
-                        faceTris,
-                        facei,
-                        patchi,
-                        reverse,    // whether to reverse
-
-                        triangles,
-                        triI
-                    );
-                }
+                insertTriangles
+                (
+                    triEngine.triPoints(faces[facei]),
+                    facei,
+                    patchi,
+                    reverse,    // whether to reverse
+                    triangles,
+                    triI
+                );
             }
         }
     }

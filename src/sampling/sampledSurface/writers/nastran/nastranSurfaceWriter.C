@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nastranSurfaceWriter.H"
+#include "polygonTriangulate.H"
 #include "makeSurfaceWriterMethods.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -283,6 +284,8 @@ void Foam::nastranSurfaceWriter::writeGeometry
 
     label nFace = 1;
 
+    polygonTriangulate triEngine;
+
     forAll(faces, facei)
     {
         const face& f = faces[facei];
@@ -300,14 +303,12 @@ void Foam::nastranSurfaceWriter::writeGeometry
         else
         {
             // decompose poly face into tris
-            label nTri = 0;
-            faceList triFaces;
-            f.triangles(points, nTri, triFaces);
-
-            forAll(triFaces, triI)
+            triEngine.triangulate(UIndirectList<point>(points, f));
+            forAll(triEngine.triPoints(), triI)
             {
-                writeFace("CTRIA3", triFaces[triI], nFace, os);
-                decomposedFaces[facei].append(triFaces[triI]);
+                const face f(triEngine.triPoints(triI, f));
+                writeFace("CTRIA3", f, nFace, os);
+                decomposedFaces[facei].append(f);
             }
         }
     }

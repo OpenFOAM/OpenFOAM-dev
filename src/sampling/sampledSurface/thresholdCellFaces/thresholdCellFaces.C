@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,6 +25,7 @@ License
 
 #include "thresholdCellFaces.H"
 #include "emptyPolyPatch.H"
+#include "polygonTriangulate.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -86,6 +87,8 @@ void Foam::thresholdCellFaces::calculate
 
     labelList oldToNewPoints(origPoints.size(), -1);
 
+    // Create a triangulation engine
+    polygonTriangulate triEngine;
 
     // internal faces only
     for (label facei = 0; facei < mesh_.nInternalFaces(); ++facei)
@@ -149,9 +152,13 @@ void Foam::thresholdCellFaces::calculate
 
             if (triangulate)
             {
-                label count = surfFace.triangles(origPoints, surfFaces);
-                while (count-- > 0)
+                triEngine.triangulate
+                (
+                    UIndirectList<point>(origPoints, surfFace)
+                );
+                forAll(triEngine.triPoints(), i)
                 {
+                    surfFaces.append(triEngine.triPoints(i, surfFace));
                     surfCells.append(cellId);
                 }
             }
@@ -207,9 +214,13 @@ void Foam::thresholdCellFaces::calculate
 
                 if (triangulate)
                 {
-                    label count = f.triangles(origPoints, surfFaces);
-                    while (count-- > 0)
+                    triEngine.triangulate
+                    (
+                        UIndirectList<point>(origPoints, f)
+                    );
+                    forAll(triEngine.triPoints(), i)
                     {
+                        surfFaces.append(triEngine.triPoints(i, f));
                         surfCells.append(cellId);
                     }
                 }

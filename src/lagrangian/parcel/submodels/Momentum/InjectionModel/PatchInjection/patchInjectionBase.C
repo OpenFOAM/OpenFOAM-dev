@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,7 @@ License
 #include "triPointRef.H"
 #include "volFields.H"
 #include "polyMeshTetDecomposition.H"
+#include "polygonTriangulate.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -94,24 +95,25 @@ void Foam::patchInjectionBase::updateMesh(const polyMesh& mesh)
     // Triangulate the patch faces and create addressing
     DynamicList<label> triToFace(2*patch.size());
     DynamicList<scalar> triMagSf(2*patch.size());
-    DynamicList<face> triFace(2*patch.size());
-    DynamicList<face> tris(5);
+    DynamicList<triFace> triFace(2*patch.size());
 
     // Set zero value at the start of the tri area list
     triMagSf.append(0.0);
+
+    // Create a triangulation engine
+    polygonTriangulate triEngine;
 
     forAll(patch, facei)
     {
         const face& f = patch[facei];
 
-        tris.clear();
-        f.triangles(points, tris);
+        triEngine.triangulate(UIndirectList<point>(points, f));
 
-        forAll(tris, i)
+        forAll(triEngine.triPoints(), i)
         {
             triToFace.append(facei);
-            triFace.append(tris[i]);
-            triMagSf.append(tris[i].mag(points));
+            triFace.append(triEngine.triPoints(i, f));
+            triMagSf.append(triEngine.triPoints(i, f).mag(points));
         }
     }
 
