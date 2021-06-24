@@ -254,11 +254,68 @@ void Foam::fvMeshDistribute::initPatchFields
 
         typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
 
-        forAll(bfld, patchi)
+        // forAll(bfld, patchi)
+        // {
+        //     if (isA<PatchFieldType>(bfld[patchi]))
+        //     {
+        //         bfld[patchi] == initVal;
+        //     }
+        // }
+
+        if
+        (
+            Pstream::defaultCommsType == Pstream::commsTypes::blocking
+         || Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
+        )
         {
-            if (isA<PatchFieldType>(bfld[patchi]))
+            label nReq = Pstream::nRequests();
+
+            forAll(bfld, patchi)
             {
-                bfld[patchi] == initVal;
+                if (isA<PatchFieldType>(bfld[patchi]))
+                {
+                    bfld[patchi].initEvaluate(Pstream::defaultCommsType);
+                }
+            }
+
+            // Block for any outstanding requests
+            if
+            (
+                Pstream::parRun()
+             && Pstream::defaultCommsType == Pstream::commsTypes::nonBlocking
+            )
+            {
+                Pstream::waitRequests(nReq);
+            }
+
+            forAll(bfld, patchi)
+            {
+                if (isA<PatchFieldType>(bfld[patchi]))
+                {
+                    bfld[patchi].evaluate(Pstream::defaultCommsType);
+                }
+            }
+        }
+        else if (Pstream::defaultCommsType == Pstream::commsTypes::scheduled)
+        {
+            const lduSchedule& patchSchedule =
+                mesh_.globalData().patchSchedule();
+
+            forAll(patchSchedule, patchEvali)
+            {
+                if (isA<PatchFieldType>(bfld[patchEvali]))
+                {
+                    if (patchSchedule[patchEvali].init)
+                    {
+                        bfld[patchSchedule[patchEvali].patch]
+                            .initEvaluate(Pstream::commsTypes::scheduled);
+                    }
+                    else
+                    {
+                        bfld[patchSchedule[patchEvali].patch]
+                            .evaluate(Pstream::commsTypes::scheduled);
+                    }
+                }
             }
         }
     }
