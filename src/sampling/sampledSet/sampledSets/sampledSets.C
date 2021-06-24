@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -31,6 +31,7 @@ License
 #include "SortableList.H"
 #include "volPointInterpolation.H"
 #include "mapPolyMesh.H"
+#include "writeFile.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -163,20 +164,13 @@ Foam::sampledSets::sampledSets
     interpolationScheme_(word::null),
     writeFormat_(word::null)
 {
-    if (Pstream::parRun())
-    {
-        outputPath_ = mesh_.time().path()/".."/"postProcessing"/name;
-    }
-    else
-    {
-        outputPath_ = mesh_.time().path()/"postProcessing"/name;
-    }
+    outputPath_ =
+        mesh_.time().globalPath()/functionObjects::writeFile::outputPrefix/name;
+
     if (mesh_.name() != fvMesh::defaultRegion)
     {
         outputPath_ = outputPath_/mesh_.name();
     }
-    // Remove ".."
-    outputPath_.clean();
 
     read(dict);
 }
@@ -199,20 +193,13 @@ Foam::sampledSets::sampledSets
     interpolationScheme_(word::null),
     writeFormat_(word::null)
 {
-    if (Pstream::parRun())
-    {
-        outputPath_ = mesh_.time().path()/".."/"postProcessing"/name;
-    }
-    else
-    {
-        outputPath_ = mesh_.time().path()/"postProcessing"/name;
-    }
+    outputPath_ =
+        mesh_.time().globalPath()/functionObjects::writeFile::outputPrefix/name;
+
     if (mesh_.name() != fvMesh::defaultRegion)
     {
         outputPath_ = outputPath_/mesh_.name();
     }
-    // Remove ".."
-    outputPath_.clean();
 
     read(dict);
 }

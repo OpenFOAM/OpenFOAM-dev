@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -252,29 +252,25 @@ public:
 
         // Database functions
 
-            //- Return root path
-            const fileName& rootPath() const
-            {
-                return TimePaths::rootPath();
-            }
+            //- Explicitly inherit rootPath from TimePaths to disambiguate from
+            //  the corresponding method in objectRegistry
+            using TimePaths::rootPath;
 
-            //- Return case name
-            const fileName& caseName() const
-            {
-                return TimePaths::caseName();
-            }
+            //- Explicitly inherit caseName from TimePaths to disambiguate from
+            //  the corresponding method in objectRegistry
+            using TimePaths::caseName;
 
-            //- Return path
-            fileName path() const
-            {
-                return rootPath()/caseName();
-            }
+            //- Explicitly inherit path from TimePaths to disambiguate from
+            //  the corresponding method in objectRegistry
+            using TimePaths::path;
 
+            //- Return the control dict
             const dictionary& controlDict() const
             {
                 return controlDict_;
             }
 
+            //- Local directory path of this objectRegistry relative to time
             virtual const fileName& dbDir() const
             {
                 return fileName::null;

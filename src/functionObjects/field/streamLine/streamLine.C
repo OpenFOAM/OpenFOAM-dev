@@ -35,6 +35,7 @@ License
 #include "interpolationCellPoint.H"
 #include "PatchTools.H"
 #include "mapPolyMesh.H"
+#include "writeFile.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -575,16 +576,13 @@ bool Foam::functionObjects::streamLine::write()
 
         fileName vtkPath
         (
-            Pstream::parRun()
-          ? runTime.path()/".."/"postProcessing"/"sets"/name()
-          : runTime.path()/"postProcessing"/"sets"/name()
+            runTime.globalPath()/writeFile::outputPrefix/"sets"/name()
         );
         if (mesh_.name() != fvMesh::defaultRegion)
         {
             vtkPath = vtkPath/mesh_.name();
         }
         vtkPath = vtkPath/mesh_.time().timeName();
-        vtkPath.clean();
         mkDir(vtkPath);
 
         // Convert track positions

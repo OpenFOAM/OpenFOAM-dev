@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -356,17 +356,10 @@ int main(int argc, char *argv[])
 
         MeshedSurface<face> sortedFace(unsortedFace);
 
-        fileName globalCasePath
-        (
-            runTime.processorCase()
-          ? runTime.path()/".."/outFileName
-          : runTime.path()/outFileName
-        );
-        globalCasePath.clean();
+        Info<< "Writing merged surface to "
+            << runTime.globalPath()/outFileName << endl;
 
-        Info<< "Writing merged surface to " << globalCasePath << endl;
-
-        sortedFace.write(globalCasePath);
+        sortedFace.write(runTime.globalPath()/outFileName);
     }
 
     Info<< "End\n" << endl;

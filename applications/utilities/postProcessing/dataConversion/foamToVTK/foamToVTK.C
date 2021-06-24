@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -1248,10 +1248,10 @@ int main(int argc, char *argv[])
 
     if (Pstream::parRun() && doLinks)
     {
-        mkDir(runTime.path()/".."/"VTK");
-        chDir(runTime.path()/".."/"VTK");
+        mkDir(runTime.globalPath()/"VTK");
+        chDir(runTime.globalPath()/"VTK");
 
-        Info<< "Linking all processor files to " << runTime.path()/".."/"VTK"
+        Info<< "Linking all processor files to " << runTime.globalPath()/"VTK"
             << endl;
 
         // Get list of vtk files
@@ -1277,21 +1277,14 @@ int main(int argc, char *argv[])
 
                 if (exists(procFile))
                 {
-                    string cmd
+                    ln
                     (
-                        "ln -s "
-                      + procFile
-                      + " "
-                      + "processor"
+                        procFile,
+                        "processor"
                       + name(Pstream::myProcNo())
                       + "_"
                       + procFile.name()
                     );
-                    if (system(cmd.c_str()) == -1)
-                    {
-                        WarningInFunction
-                            << "Could not execute command " << cmd << endl;
-                    }
                 }
             }
         }
