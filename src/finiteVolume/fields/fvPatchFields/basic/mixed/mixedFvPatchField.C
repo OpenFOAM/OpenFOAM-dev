@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -72,17 +72,7 @@ Foam::mixedFvPatchField<Type>::mixedFvPatchField
     refValue_(mapper(ptf.refValue_)),
     refGrad_(mapper(ptf.refGrad_)),
     valueFraction_(mapper(ptf.valueFraction_))
-{
-    if (mappingRequired && notNull(iF) && mapper.hasUnmapped())
-    {
-        WarningInFunction
-            << "On field " << iF.name() << " patch " << p.name()
-            << " patchField " << this->type()
-            << " : mapper does not map all values." << nl
-            << "    To avoid this warning fully specify the mapping in derived"
-            << " patch fields." << endl;
-    }
-}
+{}
 
 
 template<class Type>

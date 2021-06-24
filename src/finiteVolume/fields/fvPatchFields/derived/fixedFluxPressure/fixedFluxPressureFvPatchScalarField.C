@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -86,17 +86,18 @@ Foam::fixedFluxPressureFvPatchScalarField::fixedFluxPressureFvPatchScalarField
     mapper(gradient(), ptf.gradient());
 
     // Evaluate the value field from the gradient if the internal field is valid
-    if (notNull(iF) && iF.size())
-    {
-        scalarField::operator=
-        (
-            // patchInternalField() + gradient()/patch().deltaCoeffs()
-            // ***HGW Hack to avoid the construction of mesh.deltaCoeffs
-            // which fails for AMI patches for some mapping operations
-            patchInternalField() + gradient()*(patch().nf() & patch().delta())
-        );
-    }
-    else
+    // if (notNull(iF) && iF.size())
+    // {
+    //     scalarField::operator=
+    //     (
+    //         // patchInternalField() + gradient()/patch().deltaCoeffs()
+    //         // ***HGW Hack to avoid the construction of mesh.deltaCoeffs
+    //         // which fails for AMI patches for some mapping operations
+    //         patchInternalField()
+    //       + gradient()*(patch().nf() & patch().delta())
+    //     );
+    // }
+    // else
     {
         // Enforce mapping of values so we have a valid starting value. This
         // constructor is used when reconstructing fields

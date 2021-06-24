@@ -72,17 +72,7 @@ Foam::directionMixedFvPatchField<Type>::directionMixedFvPatchField
     refValue_(mapper(ptf.refValue_)),
     refGrad_(mapper(ptf.refGrad_)),
     valueFraction_(mapper(ptf.valueFraction_))
-{
-    if (notNull(iF) && mapper.hasUnmapped())
-    {
-        WarningInFunction
-            << "On field " << iF.name() << " patch " << p.name()
-            << " patchField " << this->type()
-            << " : mapper does not map all values." << nl
-            << "    To avoid this warning fully specify the mapping in derived"
-            << " patch fields." << endl;
-    }
-}
+{}
 
 
 template<class Type>
