@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -830,10 +830,6 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& mpm)
         }
     }
 
-
-    // Clear mesh motion flux (note: could instead save & map like volumes)
-    // deleteDemandDrivenData(phiPtr_);
-
     // Clear the sliced fields
     clearGeomNotOldVol();
 
@@ -848,6 +844,62 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& mpm)
 
     meshObject::updateMesh<fvMesh>(*this, mpm);
     meshObject::updateMesh<lduMesh>(*this, mpm);
+}
+
+
+void Foam::fvMesh::updateMesh(const mapDistributePolyMesh& mdpm)
+{
+    // Update polyMesh. This needs to keep volume existent!
+    // polyMesh::updateMesh(mdpm);
+
+    // if (VPtr_)
+    // {
+    //     // Grab old time volumes if the time has been incremented
+    //     // This will update V0, V00
+    //     storeOldVol(mdpm.oldCellVolumes());
+
+    //     // Few checks
+    //     if (VPtr_ && (V().size() != mdpm.nOldCells()))
+    //     {
+    //         FatalErrorInFunction
+    //             << "V:" << V().size()
+    //             << " not equal to the number of old cells "
+    //             << mdpm.nOldCells()
+    //             << exit(FatalError);
+    //     }
+    //     if (V0Ptr_ && (V0Ptr_->size() != mdpm.nOldCells()))
+    //     {
+    //         FatalErrorInFunction
+    //             << "V0:" << V0Ptr_->size()
+    //             << " not equal to the number of old cells "
+    //             << mdpm.nOldCells()
+    //             << exit(FatalError);
+    //     }
+    //     if (V00Ptr_ && (V00Ptr_->size() != mdpm.nOldCells()))
+    //     {
+    //         FatalErrorInFunction
+    //             << "V0:" << V00Ptr_->size()
+    //             << " not equal to the number of old cells "
+    //             << mdpm.nOldCells()
+    //             << exit(FatalError);
+    //     }
+    // }
+
+    // Clear the sliced fields
+    // clearGeomNotOldVol();
+    clearGeom();
+
+    // Map all fields
+    // mapFields(mdpm);
+
+    // Clear the current volume and other geometry factors
+    surfaceInterpolation::clearOut();
+
+    // Clear any non-updateable addressing
+    clearAddressing(true);
+
+    // meshObject::updateMesh<fvMesh>(*this, mdpm);
+    // meshObject::updateMesh<lduMesh>(*this, mdpm);
 }
 
 

@@ -70,6 +70,7 @@ namespace Foam
 
 class fvMeshLduAddressing;
 class volMesh;
+class mapDistributePolyMesh;
 
 /*---------------------------------------------------------------------------*\
                            Class fvMesh Declaration
@@ -333,6 +334,11 @@ public:
 
             //- Update mesh corresponding to the given map
             virtual void updateMesh(const mapPolyMesh& mpm);
+
+            //- Update mesh corresponding to the given distribution map
+            //  This is a prototype implementation without field mapping
+            //  or handling of old-time volumes for mesh-morphing
+            virtual void updateMesh(const mapDistributePolyMesh& mdpm);
 
             //- Move points, returns volumes swept by faces in motion
             virtual tmp<scalarField> movePoints(const pointField&);
