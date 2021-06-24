@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -45,7 +45,6 @@ namespace Foam
 /*---------------------------------------------------------------------------*\
                           Class TimePaths Declaration
 \*---------------------------------------------------------------------------*/
-
 
 class TimePaths
 {
@@ -131,22 +130,16 @@ public:
             //  which for parallel runs returns ../constant()
             fileName caseConstant() const;
 
+            //- Return the global path
+            fileName globalPath() const
+            {
+                return rootPath()/globalCaseName();
+            }
+
             //- Return path
             fileName path() const
             {
                 return rootPath()/caseName();
-            }
-
-            //- Return system path
-            fileName systemPath() const
-            {
-                return path()/system();
-            }
-
-            //- Return constant path
-            fileName constantPath() const
-            {
-                return path()/constant();
             }
 };
 

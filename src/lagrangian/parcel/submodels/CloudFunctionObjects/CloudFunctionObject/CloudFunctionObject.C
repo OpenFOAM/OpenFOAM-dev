@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -54,23 +54,12 @@ Foam::CloudFunctionObject<CloudType>::CloudFunctionObject
 )
 :
     CloudSubModelBase<CloudType>(modelName, owner, dict, typeName, objectType),
-    outputDir_(owner.mesh().time().path())
+    outputDir_()
 {
     const fileName relPath =
         "postProcessing"/cloud::prefix/owner.name()/this->modelName();
 
-
-    if (Pstream::parRun())
-    {
-        // Put in undecomposed case (Note: gives problems for
-        // distributed data running)
-        outputDir_ = outputDir_/".."/relPath;
-    }
-    else
-    {
-        outputDir_ = outputDir_/relPath;
-    }
-    outputDir_.clean();
+    outputDir_ = owner.mesh().time().globalPath()/relPath;
 }
 
 

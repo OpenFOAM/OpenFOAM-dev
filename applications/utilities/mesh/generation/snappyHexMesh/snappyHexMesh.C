@@ -516,17 +516,10 @@ void extractSurface
 
         MeshedSurface<face> sortedFace(unsortedFace);
 
-        fileName globalCasePath
-        (
-            runTime.processorCase()
-          ? runTime.path()/".."/outFileName
-          : runTime.path()/outFileName
-        );
-        globalCasePath.clean();
+        Info<< "Writing merged surface to "
+            << runTime.globalPath()/outFileName << endl;
 
-        Info<< "Writing merged surface to " << globalCasePath << endl;
-
-        sortedFace.write(globalCasePath);
+        sortedFace.write(runTime.globalPath()/outFileName);
     }
 }
 

@@ -27,6 +27,7 @@ License
 #include "PatchTools.H"
 #include "mapPolyMesh.H"
 #include "OSspecific.H"
+#include "writeFile.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -118,16 +119,13 @@ Foam::functionObjects::sampledSurfaces::sampledSurfaces
     mergeList_(),
     formatter_(nullptr)
 {
-    if (Pstream::parRun())
+    outputPath_ =
+        mesh_.time().globalPath()/functionObjects::writeFile::outputPrefix/name;
+
+    if (mesh_.name() != fvMesh::defaultRegion)
     {
-        outputPath_ = mesh_.time().path()/".."/"postProcessing"/name;
+        outputPath_ = outputPath_/mesh_.name();
     }
-    else
-    {
-        outputPath_ = mesh_.time().path()/"postProcessing"/name;
-    }
-    // Remove ".."
-    outputPath_.clean();
 
     read(dict);
 }
@@ -151,16 +149,13 @@ Foam::functionObjects::sampledSurfaces::sampledSurfaces
     mergeList_(),
     formatter_(nullptr)
 {
-    if (Pstream::parRun())
+    outputPath_ =
+        mesh_.time().globalPath()/functionObjects::writeFile::outputPrefix/name;
+
+    if (mesh_.name() != fvMesh::defaultRegion)
     {
-        outputPath_ = mesh_.time().path()/".."/"postProcessing"/name;
+        outputPath_ = outputPath_/mesh_.name();
     }
-    else
-    {
-        outputPath_ = mesh_.time().path()/"postProcessing"/name;
-    }
-    // Remove ".."
-    outputPath_.clean();
 
     read(dict);
 }

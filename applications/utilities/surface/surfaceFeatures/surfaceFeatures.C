@@ -182,7 +182,8 @@ namespace Foam
 
         triSurface surf
         (
-            runTime.constantPath()
+            runTime.path()
+           /runTime.constant()
            /searchableSurface::geometryDir(runTime)
            /surfaceFileName
         );
@@ -493,7 +494,8 @@ namespace Foam
 
                     vtkSurfaceWriter(runTime.writeFormat()).write
                     (
-                        runTime.constantPath()
+                        runTime.path()
+                       /runTime.constant()
                        /searchableSurface::geometryDir(runTime),
                         searchSurf.objectRegistry::name(),
                         searchSurf.points(),
@@ -505,7 +507,8 @@ namespace Foam
 
                     vtkSurfaceWriter(runTime.writeFormat()).write
                     (
-                        runTime.constantPath()
+                        runTime.path()
+                       /runTime.constant()
                        /searchableSurface::geometryDir(runTime),
                         searchSurf.objectRegistry::name(),
                         searchSurf.points(),
@@ -561,7 +564,8 @@ namespace Foam
 
                     vtkSurfaceWriter(runTime.writeFormat()).write
                     (
-                        runTime.constantPath()
+                        runTime.path()
+                       /runTime.constant()
                        /searchableSurface::geometryDir(runTime),
                         searchSurf.objectRegistry::name(),
                         searchSurf.points(),
@@ -573,7 +577,8 @@ namespace Foam
 
                     vtkSurfaceWriter(runTime.writeFormat()).write
                     (
-                        runTime.constantPath()
+                        runTime.path()
+                       /runTime.constant()
                        /searchableSurface::geometryDir(runTime),
                         searchSurf.objectRegistry::name(),
                         searchSurf.points(),
@@ -612,7 +617,8 @@ namespace Foam
             {
                 vtkSurfaceWriter(runTime.writeFormat()).write
                 (
-                    runTime.constantPath()
+                    runTime.path()
+                   /runTime.constant()
                    /searchableSurface::geometryDir(runTime),
                     sFeatFileName,
                     surf.points(),
@@ -685,7 +691,8 @@ namespace Foam
             {
                 vtkSurfaceWriter(runTime.writeFormat()).write
                 (
-                    runTime.constantPath()
+                    runTime.path()
+                   /runTime.constant()
                    /searchableSurface::geometryDir(runTime),
                     sFeatFileName,
                     surf.points(),

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -201,18 +201,7 @@ Foam::label Foam::probes::prepare()
         }
         probeSubDir = "postProcessing"/probeSubDir/mesh_.time().timeName();
 
-        if (Pstream::parRun())
-        {
-            // Put in undecomposed case
-            // (Note: gives problems for distributed data running)
-            probeDir = mesh_.time().path()/".."/probeSubDir;
-        }
-        else
-        {
-            probeDir = mesh_.time().path()/probeSubDir;
-        }
-        // Remove ".."
-        probeDir.clean();
+        probeDir = mesh_.time().globalPath()/probeSubDir;
 
         // ignore known fields, close streams for fields that no longer exist
         forAllIter(HashPtrTable<OFstream>, probeFilePtrs_, iter)
