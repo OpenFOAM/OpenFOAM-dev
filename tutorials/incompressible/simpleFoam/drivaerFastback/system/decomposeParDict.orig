@@ -21,7 +21,6 @@ method              scotch;
 hierarchicalCoeffs
 {
     n               (4 2 1);
-    delta           0.001;
     order           xyz;
 }
 

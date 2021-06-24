@@ -26,13 +26,11 @@ method              hierarchical;
 simpleCoeffs
 {
     n               (1 4 1); // total must match numberOfSubdomains
-    delta           0.001;
 }
 
 hierarchicalCoeffs
 {
     n               (1 4 1); // total must match numberOfSubdomains
-    delta           0.001;
     order           xyz;
 }
 

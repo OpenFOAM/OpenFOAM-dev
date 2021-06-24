@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,11 +36,10 @@ Foam::geomDecomp::geomDecomp
     decompositionMethod(decompositionDict),
     geomDecomDict_(decompositionDict.optionalSubDict(derivedType + "Coeffs")),
     n_(geomDecomDict_.lookup("n")),
-    delta_(geomDecomDict_.lookup<scalar>("delta")),
+    delta_(geomDecomDict_.lookupOrDefault<scalar>("delta", 0.001)),
     rotDelta_(I)
 {
-    // check that the case makes sense :
-
+    // Check that the decomposition specification makes sense:
     if (nProcessors_ != n_.x()*n_.y()*n_.z())
     {
         FatalErrorInFunction
@@ -50,11 +49,11 @@ Foam::geomDecomp::geomDecomp
             << exit(FatalError);
     }
 
-    scalar d = 1 - 0.5*delta_*delta_;
-    scalar d2 = sqr(d);
+    const scalar d = 1 - 0.5*delta_*delta_;
+    const scalar d2 = sqr(d);
 
-    scalar a = delta_;
-    scalar a2 = sqr(a);
+    const scalar a = delta_;
+    const scalar a2 = sqr(a);
 
     rotDelta_ = tensor
     (

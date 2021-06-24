@@ -18,49 +18,51 @@ numberOfSubdomains  2;
 
 
 // Optional decomposition constraints
-//constraints
-//{
-//    preserveBaffles
-//    {
-//        //- Keep owner and neighbour of baffles on same processor (i.e.
-//        // keep it detectable as a baffle). Baffles are two boundary face
-//        // sharing the same points
-//        type    preserveBaffles;
-//    }
-//    preserveFaceZones
-//    {
-//        //- Keep owner and neighbour on same processor for faces in zones
-//        type    preserveFaceZones;
-//        zones   (".*");
-//    }
-//    preservePatches
-//    {
-//        //- Keep owner and neighbour on same processor for faces in patches
-//        //  (only makes sense for cyclic patches. Not suitable for e.g.
-//        //   cyclicAMI since these are not coupled on the patch level. Use
-//        //   singleProcessorFaceSets for those)
-//        type    preservePatches;
-//        patches (".*");
-//    }
-//    singleProcessorFaceSets
-//    {
-//        //- Keep all of faceSet on a single processor. This puts all cells
-//        //  connected with a point, edge or face on the same processor.
-//        //  (just having face connected cells might not guarantee a balanced
-//        //  decomposition)
-//        // The processor can be -1 (the decompositionMethod chooses the
-//        // processor for a good load balance) or explicitly provided (upsets
-//        // balance)
-//        type    singleProcessorFaceSets;
-//        singleProcessorFaceSets ((f1 -1));
-//    }
-//    refinementHistory
-//    {
-//        //- Decompose cells such that all cell originating from single cell
-//        //  end up on same processor
-//        type    refinementHistory;
-//    }
-//}
+/*
+constraints
+{
+   preserveBaffles
+   {
+       //- Keep owner and neighbour of baffles on same processor (i.e.
+       // keep it detectable as a baffle). Baffles are two boundary face
+       // sharing the same points
+       type    preserveBaffles;
+   }
+   preserveFaceZones
+   {
+       //- Keep owner and neighbour on same processor for faces in zones
+       type    preserveFaceZones;
+       zones   (".*");
+   }
+   preservePatches
+   {
+       //- Keep owner and neighbour on same processor for faces in patches
+       //  (only makes sense for cyclic patches. Not suitable for e.g.
+       //   cyclicAMI since these are not coupled on the patch level. Use
+       //   singleProcessorFaceSets for those)
+       type    preservePatches;
+       patches (".*");
+   }
+   singleProcessorFaceSets
+   {
+       //- Keep all of faceSet on a single processor. This puts all cells
+       //  connected with a point, edge or face on the same processor.
+       //  (just having face connected cells might not guarantee a balanced
+       //  decomposition)
+       // The processor can be -1 (the decompositionMethod chooses the
+       // processor for a good load balance) or explicitly provided (upsets
+       // balance)
+       type    singleProcessorFaceSets;
+       singleProcessorFaceSets ((f1 -1));
+   }
+   refinementHistory
+   {
+       //- Decompose cells such that all cell originating from single cell
+       //  end up on same processor
+       type    refinementHistory;
+   }
+}
+*/
 
 
 // Deprecated form of specifying decomposition constraints:
@@ -71,7 +73,7 @@ numberOfSubdomains  2;
 //  (makes sense only for cyclic patches. Not suitable for e.g. cyclicAMI
 //   since these are not coupled on the patch level. Use
 //   singleProcessorFaceSets for those)
-//preservePatches (cyclic_half0 cyclic_half1);
+// preservePatches (cyclic_half0 cyclic_half1);
 
 //- Keep all of faceSet on a single processor. This puts all cells
 //  connected with a point, edge or face on the same processor.
@@ -79,13 +81,12 @@ numberOfSubdomains  2;
 //  decomposition)
 // The processor can be -1 (the decompositionMethod chooses the processor
 // for a good load balance) or explicitly provided (upsets balance).
-//singleProcessorFaceSets ((f0 -1));
+// singleProcessorFaceSets ((f0 -1));
 
 //- Keep owner and neighbour of baffles on same processor (i.e. keep it
 //  detectable as a baffle). Baffles are two boundary face sharing the
 //  same points.
-//preserveBaffles true;
-
+// preserveBaffles true;
 
 
 //- Use the volScalarField named here as a weight for each cell in the
@@ -94,7 +95,7 @@ numberOfSubdomains  2;
 // weightField dsmcRhoNMean;
 
 method          scotch;
-//method          hierarchical;
+// method          hierarchical;
 // method          simple;
 // method          metis;
 // method          manual;
@@ -111,10 +112,10 @@ multiLevelCoeffs
         numberOfSubdomains  64;
         // method simple;
         // simpleCoeffs
-        //{
-        //    n           (2 1 1);
-        //    delta       0.001;
-        //}
+        // {
+        //     n           (2 1 1);
+        //     delta       0.001;
+        // }
         method scotch;
     }
     level1
@@ -124,24 +125,35 @@ multiLevelCoeffs
     }
 }
 
-// Desired output
 
 simpleCoeffs
 {
+    // Number of processor blocks in each coordinate direction
     n           (2 1 1);
+
+    // Coefficient of the slight rotation of the mesh to bias the decomposition
+    // to be deterministic in the case that the initial block mesh is coordinate
+    // aligned
     delta       0.001;
 }
 
 hierarchicalCoeffs
 {
+    // Number of processor blocks in each coordinate direction
     n           (1 2 1);
-    delta       0.001;
+
+    // Coordinate order of the hierarchical decomposition
     order       xyz;
+
+    // Coefficient of the slight rotation of the mesh to bias the decomposition
+    // to be deterministic in the case that the initial block mesh is coordinate
+    // aligned
+    delta       0.001;
 }
 
 metisCoeffs
 {
- /*
+    /*
     processorWeights
     (
         1
@@ -149,20 +161,22 @@ metisCoeffs
         1
         1
     );
-  */
+    */
 }
 
 scotchCoeffs
 {
-    // processorWeights
-    //(
-    //    1
-    //    1
-    //    1
-    //    1
-    //);
-    // writeGraph  true;
-    // strategy "b";
+    /*
+    processorWeights
+    (
+       1
+       1
+       1
+       1
+    );
+    writeGraph  true;
+    strategy "b";
+    */
 }
 
 manualCoeffs
@@ -180,14 +194,17 @@ structuredCoeffs
     method      scotch;
 }
 
-//// Is the case distributed? Note: command-line argument -roots takes
-//// precedence
-//distributed     yes;
-//// Per slave (so nProcs-1 entries) the directory above the case.
-//roots
-//(
-//    "/tmp"
-//    "/tmp"
-//);
+// Is the case distributed? Note: command-line argument -roots takes
+// precedence
+// distributed     yes;
+
+// Per slave (so nProcs-1 entries) the directory above the case.
+/*
+roots
+(
+    "/tmp"
+    "/tmp"
+);
+*/
 
 // ************************************************************************* //

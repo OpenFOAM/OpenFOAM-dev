@@ -20,13 +20,11 @@ method          scotch;
 simpleCoeffs
 {
     n               (1 1 24);
-    delta           0.001;
 }
 
 hierarchicalCoeffs
 {
     n               (1 1 1);
-    delta           0.001;
     order           xyz;
 }
 
