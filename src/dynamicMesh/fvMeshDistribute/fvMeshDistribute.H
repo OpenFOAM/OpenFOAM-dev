@@ -133,16 +133,9 @@ class fvMeshDistribute
                 const PtrList<Field<T>>& oldFlds
             );
 
-            //- Init patch fields of certain type
-            template<class GeoField, class PatchFieldType>
-            void initPatchFields
-            (
-                const typename GeoField::value_type& initVal
-            );
-
-            //- Call correctBoundaryConditions on fields
+            //- Correct processor patch fields
             template<class GeoField>
-            void correctBoundaryConditions();
+            void correctProcessorPatchFields();
 
             //- Delete all processor patches. Move any processor faces into
             //  patchi.

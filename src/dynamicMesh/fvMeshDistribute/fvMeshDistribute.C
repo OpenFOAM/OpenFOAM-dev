@@ -48,7 +48,8 @@ License
 
 namespace Foam
 {
-    defineTypeNameAndDebug(fvMeshDistribute, 0);
+
+defineTypeNameAndDebug(fvMeshDistribute, 0);
 
 //- Less function class that can be used for sorting processor patches
 class lessProcPatches
@@ -3016,36 +3017,14 @@ Foam::autoPtr<Foam::mapDistributePolyMesh> Foam::fvMeshDistribute::distribute
     // we also need to adapt our constructMaps.
     repatch(newPatchID, constructFaceMap);
 
-    // Bit of hack: processorFvPatchField does not get reset since created
-    // from nothing so explicitly reset.
-    initPatchFields<volScalarField, processorFvPatchField<scalar>>
-    (
-        Zero
-    );
-    initPatchFields<volVectorField, processorFvPatchField<vector>>
-    (
-        Zero
-    );
-    initPatchFields
-    <
-        volSphericalTensorField,
-        processorFvPatchField<sphericalTensor>
-    >
-    (
-        Zero
-    );
-    initPatchFields<volSymmTensorField, processorFvPatchField<symmTensor>>
-    (
-        Zero
-    );
-    initPatchFields<volTensorField, processorFvPatchField<tensor>>
-    (
-        Zero
-    );
-
+    // Correct processor patch fields
+    correctProcessorPatchFields<volScalarField>();
+    correctProcessorPatchFields<volVectorField>();
+    correctProcessorPatchFields<volSphericalTensorField>();
+    correctProcessorPatchFields<volSymmTensorField>();
+    correctProcessorPatchFields<volTensorField>();
 
     mesh_.setInstance(mesh_.time().timeName());
-
 
     // Print a bit
     if (debug)

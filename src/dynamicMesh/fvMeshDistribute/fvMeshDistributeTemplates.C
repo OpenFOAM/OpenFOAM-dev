@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "mapPolyMesh.H"
+#include "processorFvPatchField.H"
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
@@ -235,13 +236,11 @@ void Foam::fvMeshDistribute::mapExposedFaces
 }
 
 
-template<class GeoField, class PatchFieldType>
-void Foam::fvMeshDistribute::initPatchFields
-(
-    const typename GeoField::value_type& initVal
-)
+template<class GeoField>
+void Foam::fvMeshDistribute::correctProcessorPatchFields()
 {
-    // Init patch fields of certain type
+    typedef processorFvPatchField<typename GeoField::value_type>
+        processorPatchFieldType;
 
     HashTable<GeoField*> flds
     (
@@ -254,14 +253,6 @@ void Foam::fvMeshDistribute::initPatchFields
 
         typename GeoField::Boundary& bfld = fld.boundaryFieldRef();
 
-        // forAll(bfld, patchi)
-        // {
-        //     if (isA<PatchFieldType>(bfld[patchi]))
-        //     {
-        //         bfld[patchi] == initVal;
-        //     }
-        // }
-
         if
         (
             Pstream::defaultCommsType == Pstream::commsTypes::blocking
@@ -272,7 +263,7 @@ void Foam::fvMeshDistribute::initPatchFields
 
             forAll(bfld, patchi)
             {
-                if (isA<PatchFieldType>(bfld[patchi]))
+                if (isA<processorPatchFieldType>(bfld[patchi]))
                 {
                     bfld[patchi].initEvaluate(Pstream::defaultCommsType);
                 }
@@ -290,7 +281,7 @@ void Foam::fvMeshDistribute::initPatchFields
 
             forAll(bfld, patchi)
             {
-                if (isA<PatchFieldType>(bfld[patchi]))
+                if (isA<processorPatchFieldType>(bfld[patchi]))
                 {
                     bfld[patchi].evaluate(Pstream::defaultCommsType);
                 }
@@ -303,7 +294,7 @@ void Foam::fvMeshDistribute::initPatchFields
 
             forAll(patchSchedule, patchEvali)
             {
-                if (isA<PatchFieldType>(bfld[patchEvali]))
+                if (isA<processorPatchFieldType>(bfld[patchEvali]))
                 {
                     if (patchSchedule[patchEvali].init)
                     {
@@ -318,24 +309,6 @@ void Foam::fvMeshDistribute::initPatchFields
                 }
             }
         }
-    }
-}
-
-
-template<class GeoField>
-void Foam::fvMeshDistribute::correctBoundaryConditions()
-{
-    // correctBoundaryConditions patch fields of certain type
-
-    HashTable<GeoField*> flds
-    (
-        mesh_.objectRegistry::lookupClass<GeoField>()
-    );
-
-    forAllIter(typename HashTable<GeoField*>, flds, iter)
-    {
-        const GeoField& fld = *iter();
-        fld.correctBoundaryConditions();
     }
 }
 
