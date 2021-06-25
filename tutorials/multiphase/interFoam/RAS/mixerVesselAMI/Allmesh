@@ -12,6 +12,6 @@ runApplication blockMesh
 runApplication surfaceFeatures
 runApplication snappyHexMesh -overwrite
 runApplication createBaffles -overwrite
-runApplication mergeOrSplitBaffles -split -overwrite
+runApplication splitBaffles -overwrite
 
 #------------------------------------------------------------------------------

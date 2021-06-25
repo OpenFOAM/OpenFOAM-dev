@@ -8,7 +8,7 @@ application=$(getApplication)
 
 runApplication blockMesh -dict $FOAM_TUTORIALS/resources/blockMesh/mixerVessel2D
 runApplication createBaffles -overwrite
-runApplication mergeOrSplitBaffles -split -overwrite
+runApplication splitBaffles -overwrite
 
 runApplication $application
 

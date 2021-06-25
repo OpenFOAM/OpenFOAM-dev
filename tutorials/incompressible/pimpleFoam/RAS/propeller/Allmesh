@@ -14,7 +14,7 @@ runApplication snappyHexMesh -overwrite
 
 # Create the inlet/outlet and AMI patches
 runApplication createBaffles -overwrite
-runApplication mergeOrSplitBaffles -split -overwrite
+runApplication splitBaffles -overwrite
 
 # Renumbering
 runApplication renumberMesh -noFields -overwrite

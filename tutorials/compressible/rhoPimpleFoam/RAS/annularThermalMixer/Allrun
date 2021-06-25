@@ -10,7 +10,7 @@ runApplication blockMesh
 runApplication snappyHexMesh -overwrite
 
 runApplication createBaffles -overwrite
-runApplication mergeOrSplitBaffles -split -overwrite
+runApplication splitBaffles -overwrite
 
 runApplication $(getApplication)
 
