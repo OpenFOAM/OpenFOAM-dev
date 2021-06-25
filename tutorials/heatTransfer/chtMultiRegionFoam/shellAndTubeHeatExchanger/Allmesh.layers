@@ -16,7 +16,7 @@ runParallel snappyHexMesh -overwrite
 
 # Convert the face zones into mapped wall baffles and split
 runParallel createBaffles -overwrite
-runParallel mergeOrSplitBaffles -split -overwrite
+runParallel splitBaffles -overwrite
 rm -rf processor*/constant/polyMesh/pointLevel
 
 # Run snappy again to create layers

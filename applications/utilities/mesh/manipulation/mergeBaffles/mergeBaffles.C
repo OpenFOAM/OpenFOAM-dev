@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,22 +25,8 @@ Application
     mergeOrSplitBaffles
 
 Description
-    Detects faces that share points (baffles). Either merge them or
-    duplicate the points.
-
-    Notes:
-    - can only handle pairwise boundary faces. So three faces using
-      the same points is not handled (is illegal mesh anyway)
-
-    - there is no option to only split/merge some baffles.
-
-    - surfaces consisting of duplicate faces can be topologically split
-    if the points on the interior of the surface cannot walk to all the
-    cells that use them in one go.
-
-    - Parallel operation (where duplicate face is perpendicular to a coupled
-    boundary) is supported but not really tested.
-    (Note that coupled faces themselves are not seen as duplicate faces)
+    Detects faces that share points (baffles) and merge them into internal
+    faces.
 
 \*---------------------------------------------------------------------------*/
 
@@ -66,13 +52,42 @@ using namespace Foam;
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-void insertDuplicateMerge
+void mergeDuplicateBoundaryFaces
 (
     const polyMesh& mesh,
-    const labelList& duplicates,
     polyTopoChange& meshMod
 )
 {
+    // Get all duplicate face labels in the boundary
+    labelList duplicates = localPointRegion::findDuplicateFaces
+    (
+        mesh,
+        identity(mesh.nFaces() - mesh.nInternalFaces())
+      + mesh.nInternalFaces()
+    );
+
+    // Check that none are on processor patches
+    const polyBoundaryMesh& patches = mesh.boundaryMesh();
+    forAll(duplicates, bFacei)
+    {
+        if (duplicates[bFacei] != -1)
+        {
+            label facei = mesh.nInternalFaces() + bFacei;
+            label patchi = patches.whichPatch(facei);
+
+            if (isA<processorPolyPatch>(patches[patchi]))
+            {
+                FatalErrorInFunction
+                    << "Duplicate face " << facei
+                    << " is on a processorPolyPatch."
+                    << "This is not allowed." << nl
+                    << "Face:" << facei
+                    << " is on patch:" << patches[patchi].name()
+                    << abort(FatalError);
+            }
+        }
+    }
+
     const faceList& faces = mesh.faces();
     const labelList& faceOwner = mesh.faceOwner();
     const faceZoneMesh& faceZones = mesh.faceZones();
@@ -154,92 +169,16 @@ void insertDuplicateMerge
 }
 
 
-labelList findBaffles(const polyMesh& mesh, const labelList& boundaryFaces)
-{
-    // Get all duplicate face labels (in boundaryFaces indices!).
-    labelList duplicates = localPointRegion::findDuplicateFaces
-    (
-        mesh,
-        boundaryFaces
-    );
-
-
-    // Check that none are on processor patches
-    const polyBoundaryMesh& patches = mesh.boundaryMesh();
-
-    forAll(duplicates, bFacei)
-    {
-        if (duplicates[bFacei] != -1)
-        {
-            label facei = mesh.nInternalFaces() + bFacei;
-            label patchi = patches.whichPatch(facei);
-
-            if (isA<processorPolyPatch>(patches[patchi]))
-            {
-                FatalErrorInFunction
-                    << "Duplicate face " << facei
-                    << " is on a processorPolyPatch."
-                    << "This is not allowed." << nl
-                    << "Face:" << facei
-                    << " is on patch:" << patches[patchi].name()
-                    << abort(FatalError);
-            }
-        }
-    }
-
-
-    // Write to faceSet for ease of postprocessing.
-    {
-        faceSet duplicateSet
-        (
-            mesh,
-            "duplicateFaces",
-            (mesh.nFaces() - mesh.nInternalFaces())/256
-        );
-
-        forAll(duplicates, bFacei)
-        {
-            label otherFacei = duplicates[bFacei];
-
-            if (otherFacei != -1 && otherFacei > bFacei)
-            {
-                duplicateSet.insert(mesh.nInternalFaces() + bFacei);
-                duplicateSet.insert(mesh.nInternalFaces() + otherFacei);
-            }
-        }
-
-        Pout<< "Writing " << duplicateSet.size()
-            << " duplicate faces to faceSet " << duplicateSet.localObjectPath()
-            << nl << endl;
-        duplicateSet.write();
-    }
-
-    return duplicates;
-}
-
-
-
-
 int main(int argc, char *argv[])
 {
     argList::addNote
     (
-        "Detect faces that share points (baffles).\n"
-        "Merge them or duplicate the points."
+        "Detect faces that share points (baffles)\n"
+        "and merge them into internal faces."
     );
 
     #include "addOverwriteOption.H"
     #include "addRegionOption.H"
-    argList::addBoolOption
-    (
-        "detectOnly",
-        "find baffles only, but do not merge or split them"
-    );
-    argList::addBoolOption
-    (
-        "split",
-        "topologically split duplicate surfaces"
-    );
     argList::addBoolOption
     (
         "fields",
@@ -251,28 +190,10 @@ int main(int argc, char *argv[])
     runTime.functionObjects().off();
     #include "createNamedMesh.H"
 
-    const word oldInstance = mesh.pointsInstance();
-
-    const bool split      = args.optionFound("split");
     const bool overwrite  = args.optionFound("overwrite");
-    const bool detectOnly = args.optionFound("detectOnly");
     const bool fields     = args.optionFound("fields");
 
-    // Collect all boundary faces
-    labelList boundaryFaces(mesh.nFaces() - mesh.nInternalFaces());
-
-    forAll(boundaryFaces, i)
-    {
-        boundaryFaces[i] = i+mesh.nInternalFaces();
-    }
-
-
-    if (detectOnly)
-    {
-        findBaffles(mesh, boundaryFaces);
-        return 0;
-    }
-
+    const word oldInstance = mesh.pointsInstance();
 
     // Read objects in time directory
     IOobjectList objects(mesh, runTime.timeName());
@@ -283,39 +204,11 @@ int main(int argc, char *argv[])
     #include "readSurfaceFields.H"
     #include "readPointFields.H"
 
-    Info<< endl;
-
-
     // Mesh change engine
     polyTopoChange meshMod(mesh);
 
-
-    if (split)
-    {
-        Pout<< "Topologically splitting duplicate surfaces"
-            << ", i.e. duplicating points internal to duplicate surfaces."
-            << nl << endl;
-
-        // Analyse which points need to be duplicated
-        localPointRegion regionSide(mesh);
-
-        // Point duplication engine
-        duplicatePoints pointDuplicator(mesh);
-
-        // Insert topo changes
-        pointDuplicator.setRefinement(regionSide, meshMod);
-    }
-    else
-    {
-        Pout<< "Merging duplicate faces."
-            << nl << endl;
-
-        // Get all duplicate face labels (in boundaryFaces indices!).
-        labelList duplicates(findBaffles(mesh, boundaryFaces));
-
-        // Merge into internal faces.
-        insertDuplicateMerge(mesh, duplicates, meshMod);
-    }
+    // Merge duplicate boundary faces into internal faces.
+    mergeDuplicateBoundaryFaces(mesh, meshMod);
 
     if (!overwrite)
     {
@@ -338,37 +231,9 @@ int main(int argc, char *argv[])
     {
         mesh.setInstance(oldInstance);
     }
-    Pout<< "Writing mesh to time " << runTime.timeName() << endl;
+
+    Info<< "Writing mesh to time " << runTime.timeName() << endl;
     mesh.write();
-
-    // Dump duplicated points (if any)
-    if (split)
-    {
-        const labelList& pointMap = map().pointMap();
-
-        labelList nDupPerPoint(map().nOldPoints(), 0);
-
-        pointSet dupPoints(mesh, "duplicatedPoints", 100);
-
-        forAll(pointMap, pointi)
-        {
-            label oldPointi = pointMap[pointi];
-
-            nDupPerPoint[oldPointi]++;
-
-            if (nDupPerPoint[oldPointi] > 1)
-            {
-                dupPoints.insert(map().reversePointMap()[oldPointi]);
-                dupPoints.insert(pointi);
-            }
-        }
-
-        Pout<< "Writing " << dupPoints.size()
-            << " duplicated points to pointSet "
-            << dupPoints.localObjectPath() << nl << endl;
-
-        dupPoints.write();
-    }
 
     Info<< "End\n" << endl;
 

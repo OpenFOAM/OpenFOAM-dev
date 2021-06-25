@@ -25,8 +25,7 @@ Application
     createBaffles
 
 Description
-    Makes internal faces into boundary faces. Does not duplicate points, unlike
-    mergeOrSplitBaffles.
+    Makes internal faces into boundary faces. Does not duplicate points.
 
     Note: if any coupled patch face is selected for baffling the opposite
     member has to be selected for baffling as well.
