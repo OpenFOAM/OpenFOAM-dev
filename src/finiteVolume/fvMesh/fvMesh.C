@@ -799,9 +799,12 @@ void Foam::fvMesh::updateMesh(const mapPolyMesh& mpm)
 
     if (VPtr_)
     {
-        // Grab old time volumes if the time has been incremented
-        // This will update V0, V00
-        storeOldVol(mpm.oldCellVolumes());
+        // Cache old time volumes if they exist and the time has been
+        // incremented.  This will update V0, V00
+        if (V0Ptr_)
+        {
+            storeOldVol(mpm.oldCellVolumes());
+        }
 
         // Few checks
         if (VPtr_ && (V().size() != mpm.nOldCells()))
@@ -854,10 +857,13 @@ void Foam::fvMesh::updateMesh(const mapDistributePolyMesh& mdpm)
 
     // if (VPtr_)
     // {
-    //     // Grab old time volumes if the time has been incremented
-    //     // This will update V0, V00
-    //     storeOldVol(mdpm.oldCellVolumes());
-
+    //     // Cache old time volumes if they exist and the time has been
+    //     // incremented.  This will update V0, V00
+    //     if (V0Ptr_)
+    //     {
+    //         storeOldVol(mpm.oldCellVolumes());
+    //     }
+    //
     //     // Few checks
     //     if (VPtr_ && (V().size() != mdpm.nOldCells()))
     //     {

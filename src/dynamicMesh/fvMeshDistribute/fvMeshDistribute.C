@@ -1588,6 +1588,10 @@ void Foam::fvMeshDistribute::sendMesh
         << mesh.faceNeighbour()
         << mesh.boundaryMesh()
 
+        //*** Write the old-time volumes if present
+        // << mesh.V0().field()
+        // << mesh.V0().field()
+
         << zonePoints
         << zoneFaces
         << zoneFaceFlip
@@ -1631,6 +1635,10 @@ Foam::autoPtr<Foam::fvMesh> Foam::fvMeshDistribute::receiveMesh
     labelList domainAllOwner(fromNbr);
     labelList domainAllNeighbour(fromNbr);
     PtrList<entry> patchEntries(fromNbr);
+
+    //*** Read the old-time volumes if present
+    // scalarField V0(fromNbr);
+    // scalarField V00(fromNbr);
 
     CompactListList<label> zonePoints(fromNbr);
     CompactListList<label> zoneFaces(fromNbr);
@@ -1680,6 +1688,10 @@ Foam::autoPtr<Foam::fvMesh> Foam::fvMeshDistribute::receiveMesh
     }
     // Add patches; no parallel comms
     domainMesh.addFvPatches(patches, false);
+
+    //*** Set the old-time volumes if present
+    // domainMesh.setV0().field() = V0;
+    // domainMesh.setV00().field() = V00;
 
     // Construct zones
     List<pointZone*> pZonePtrs(pointZoneNames.size());
