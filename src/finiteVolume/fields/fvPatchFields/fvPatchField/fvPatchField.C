@@ -42,8 +42,7 @@ Foam::fvPatchField<Type>::fvPatchField
     patch_(p),
     internalField_(iF),
     updated_(false),
-    manipulatedMatrix_(false),
-    patchType_(word::null)
+    manipulatedMatrix_(false)
 {}
 
 
@@ -59,8 +58,7 @@ Foam::fvPatchField<Type>::fvPatchField
     patch_(p),
     internalField_(iF),
     updated_(false),
-    manipulatedMatrix_(false),
-    patchType_(word::null)
+    manipulatedMatrix_(false)
 {}
 
 
@@ -77,8 +75,7 @@ Foam::fvPatchField<Type>::fvPatchField
     patch_(p),
     internalField_(iF),
     updated_(false),
-    manipulatedMatrix_(false),
-    patchType_(dict.lookupOrDefault<word>("patchType", word::null))
+    manipulatedMatrix_(false)
 {
     if (valueRequired)
     {
@@ -115,8 +112,7 @@ Foam::fvPatchField<Type>::fvPatchField
     patch_(p),
     internalField_(iF),
     updated_(false),
-    manipulatedMatrix_(false),
-    patchType_(ptf.patchType_)
+    manipulatedMatrix_(false)
 {
     if (mappingRequired)
     {
@@ -141,8 +137,7 @@ Foam::fvPatchField<Type>::fvPatchField
     patch_(ptf.patch_),
     internalField_(iF),
     updated_(false),
-    manipulatedMatrix_(false),
-    patchType_(ptf.patchType_)
+    manipulatedMatrix_(false)
 {}
 
 
@@ -266,9 +261,9 @@ void Foam::fvPatchField<Type>::write(Ostream& os) const
 {
     writeEntry(os, "type", type());
 
-    if (patchType_.size())
+    if (overridesConstraint())
     {
-        writeEntry(os, "patchType", patchType_);
+        writeEntry(os, "patchType", patch().type());
     }
 }
 

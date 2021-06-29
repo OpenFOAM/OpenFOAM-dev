@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -96,8 +96,6 @@ uniformTotalPressureFvPatchScalarField
     gamma_(ptf.gamma_),
     p0_(ptf.p0_, false)
 {
-    patchType() = ptf.patchType();
-
     // Set the patch pressure to the current total pressure
     // This is not ideal but avoids problems with the creation of patch faces
     const scalar t = this->db().time().timeOutputValue();

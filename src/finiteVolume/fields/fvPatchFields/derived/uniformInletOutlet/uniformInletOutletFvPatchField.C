@@ -88,8 +88,6 @@ Foam::uniformInletOutletFvPatchField<Type>::uniformInletOutletFvPatchField
     phiName_(ptf.phiName_),
     uniformInletValue_(ptf.uniformInletValue_, false)
 {
-    this->patchType() = ptf.patchType();
-
     // Evaluate refValue since not mapped
     this->refValue() =
         uniformInletValue_->value(this->db().time().timeOutputValue());

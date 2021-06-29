@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -92,11 +92,6 @@ class pointPatchField
         //- Update index used so that updateCoeffs is called only once during
         //  the construction of the matrix
         bool updated_;
-
-        //- Optional patch type, used to allow specified boundary conditions
-        //  to be applied to constraint patches by providing the constraint
-        //  patch type as 'patchType'
-        word patchType_;
 
 
 public:
@@ -265,46 +260,15 @@ public:
 
     // Member Functions
 
-        // Access
+        // Attributes
 
-            //- Return local objectRegistry
-            const objectRegistry& db() const;
+            //- Return the type of the calculated form of pointPatchField
+            static const word& calculatedType();
 
             //- Return size
             label size() const
             {
                 return patch().size();
-            }
-
-            //- Return patch
-            const pointPatch& patch() const
-            {
-                return patch_;
-            }
-
-            //- Return dimensioned internal field reference
-            const DimensionedField<Type, pointMesh>&
-            internalField() const
-            {
-                return internalField_;
-            }
-
-            //- Return internal field reference
-            const Field<Type>& primitiveField() const
-            {
-                return internalField_;
-            }
-
-            //- Optional patch type
-            const word& patchType() const
-            {
-                return patchType_;
-            }
-
-            //- Optional patch type
-            word& patchType()
-            {
-                return patchType_;
             }
 
             //- Return true if this patch field fixes a value
@@ -317,6 +281,52 @@ public:
             virtual bool coupled() const
             {
                 return false;
+            }
+
+            //- Return the constraint type this pointPatchField implements.
+            virtual const word& constraintType() const
+            {
+                return word::null;
+            }
+
+            //- Return true if this overrides the underlying constraint type
+            bool overridesConstraint() const
+            {
+                if (constraintType() == patch_.constraintType())
+                {
+                    return false;
+                }
+
+                typename pointPatchConstructorTable::iterator patchTypeCstrIter
+                    = pointPatchConstructorTablePtr_->find(patch_.type());
+
+                return
+                    patchTypeCstrIter
+                 != pointPatchConstructorTablePtr_->end();
+            }
+
+
+        // Access
+
+            //- Return local objectRegistry
+            const objectRegistry& db() const;
+
+            //- Return patch
+            const pointPatch& patch() const
+            {
+                return patch_;
+            }
+
+            //- Return dimensioned internal field reference
+            const DimensionedField<Type, pointMesh>& internalField() const
+            {
+                return internalField_;
+            }
+
+            //- Return internal field reference
+            const Field<Type>& primitiveField() const
+            {
+                return internalField_;
             }
 
             //- Return true if the boundary condition has already been updated
@@ -382,15 +392,6 @@ public:
                 Field<Type1>& iF,
                 const Field<Type1>& pF
             ) const;
-
-            //- Return the type of the calculated form of pointPatchField
-            static const word& calculatedType();
-
-            //- Return the constraint type this pointPatchField implements.
-            virtual const word& constraintType() const
-            {
-                return word::null;
-            }
 
 
         // Mapping functions

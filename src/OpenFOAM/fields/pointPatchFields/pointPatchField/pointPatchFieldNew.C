@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -76,13 +76,6 @@ Foam::autoPtr<Foam::pointPatchField<Type>> Foam::pointPatchField<Type>::New
             }
 
             return patchTypeCstrIter()(p, iF);
-        }
-    }
-    else
-    {
-        if (pointPatchConstructorTablePtr_->found(p.type()))
-        {
-            pfPtr().patchType() = actualPatchType;
         }
     }
 

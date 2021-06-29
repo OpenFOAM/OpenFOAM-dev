@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -100,11 +100,6 @@ class fvPatchField
         //- Update index used so that manipulateMatrix is called only once
         //  during the construction of the matrix
         bool manipulatedMatrix_;
-
-        //- Optional patch type, used to allow specified boundary conditions
-        //  to be applied to constraint patches by providing the constraint
-        //  patch type as 'patchType'
-        word patchType_;
 
 
 public:
@@ -317,6 +312,22 @@ public:
                 return false;
             }
 
+            //- Return true if this overrides the underlying constraint type
+            bool overridesConstraint() const
+            {
+                if (type() == patch_.type())
+                {
+                    return false;
+                }
+
+                typename patchConstructorTable::iterator patchTypeCstrIter
+                    = patchConstructorTablePtr_->find(patch_.type());
+
+                return
+                    patchTypeCstrIter
+                 != patchConstructorTablePtr_->end();
+            }
+
 
         // Access
 
@@ -330,8 +341,7 @@ public:
             }
 
             //- Return dimensioned internal field reference
-            const DimensionedField<Type, volMesh>&
-            internalField() const
+            const DimensionedField<Type, volMesh>& internalField() const
             {
                 return internalField_;
             }
@@ -340,18 +350,6 @@ public:
             const Field<Type>& primitiveField() const
             {
                 return internalField_;
-            }
-
-            //- Optional patch type
-            const word& patchType() const
-            {
-                return patchType_;
-            }
-
-            //- Optional patch type
-            word& patchType()
-            {
-                return patchType_;
             }
 
             //- Return true if the boundary condition has already been updated

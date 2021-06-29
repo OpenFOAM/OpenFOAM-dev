@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -124,14 +124,26 @@ Foam::fvFieldDecomposer::decomposeField
     {
         const fvPatch& procPatch = procMesh_.boundary()[patchi];
 
-        if (patchFieldDecomposerPtrs_[patchi])
+        label fromPatchi = boundaryAddressing_[patchi];
+        if (fromPatchi < 0 && isA<processorCyclicFvPatch>(procPatch))
+        {
+            const label referPatchi =
+                refCast<const processorCyclicPolyPatch>
+                (procPatch.patch()).referPatchID();
+            if (field.boundaryField()[referPatchi].overridesConstraint())
+            {
+                fromPatchi = boundaryAddressing_[referPatchi];
+            }
+        }
+
+        if (fromPatchi >= 0)
         {
             bf.set
             (
                 patchi,
                 fvPatchField<Type>::New
                 (
-                    field.boundaryField()[boundaryAddressing_[patchi]],
+                    field.boundaryField()[fromPatchi],
                     procPatch,
                     resF(),
                     *patchFieldDecomposerPtrs_[patchi]
@@ -288,7 +300,7 @@ Foam::fvFieldDecomposer::decomposeField
     {
         const fvPatch& procPatch = procMesh_.boundary()[patchi];
 
-        if (patchFieldDecomposerPtrs_[patchi])
+        if (boundaryAddressing_[patchi] >= 0)
         {
             bf.set
             (
@@ -302,57 +314,48 @@ Foam::fvFieldDecomposer::decomposeField
                 )
             );
         }
+        else if (isA<processorCyclicFvPatch>(procPatch))
+        {
+            // Do our own mapping. Avoids a lot of mapping complexity.
+            bf.set
+            (
+                patchi,
+                new processorCyclicFvsPatchField<Type>
+                (
+                    procPatch,
+                    resF(),
+                    mapField
+                    (
+                        allFaceField,
+                        procPatch.patchSlice(faceAddressing_),
+                        doFlip
+                    )
+                )
+            );
+        }
+        else if (isA<processorFvPatch>(procPatch))
+        {
+            // Do our own mapping. Avoids a lot of mapping complexity.
+            bf.set
+            (
+                patchi,
+                new processorFvsPatchField<Type>
+                (
+                    procPatch,
+                    resF(),
+                    mapField
+                    (
+                        allFaceField,
+                        procPatch.patchSlice(faceAddressing_),
+                        doFlip
+                    )
+                )
+            );
+        }
         else
         {
-            // Do our own mapping - avoids a lot of mapping complexity
-
-            if (isA<processorCyclicFvPatch>(procPatch))
-            {
-                bf.set
-                (
-                    patchi,
-                    new processorCyclicFvsPatchField<Type>
-                    (
-                        procPatch,
-                        resF(),
-                        mapField
-                        (
-                            allFaceField,
-                            procPatch.patchSlice
-                            (
-                                faceAddressing_
-                            ),
-                            doFlip
-                        )
-                    )
-                );
-            }
-            else if (isA<processorFvPatch>(procPatch))
-            {
-                bf.set
-                (
-                    patchi,
-                    new processorFvsPatchField<Type>
-                    (
-                        procPatch,
-                        resF(),
-                        mapField
-                        (
-                            allFaceField,
-                            procPatch.patchSlice
-                            (
-                                faceAddressing_
-                            ),
-                            doFlip
-                        )
-                    )
-                );
-            }
-            else
-            {
-                FatalErrorInFunction
-                    << "Unknown type." << abort(FatalError);
-            }
+            FatalErrorInFunction
+                << "Unknown type." << abort(FatalError);
         }
     }
 

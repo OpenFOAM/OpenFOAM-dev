@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -146,22 +146,27 @@ Foam::fvFieldDecomposer::fvFieldDecomposer
 {
     forAll(boundaryAddressing_, patchi)
     {
-        if
-        (
-            boundaryAddressing_[patchi] >= 0
-        && !isA<processorLduInterface>(procMesh.boundary()[patchi])
-        )
+        const fvPatch& procPatch = procMesh.boundary()[patchi];
+
+        label fromPatchi = boundaryAddressing_[patchi];
+        if (fromPatchi < 0 && isA<processorCyclicFvPatch>(procPatch))
+        {
+            const label referPatchi =
+                refCast<const processorCyclicPolyPatch>
+                (procPatch.patch()).referPatchID();
+            fromPatchi = boundaryAddressing_[referPatchi];
+        }
+
+        if (fromPatchi >= 0)
         {
             patchFieldDecomposerPtrs_[patchi] = new patchFieldDecomposer
             (
                 procMesh_.boundary()[patchi].patchSlice(faceAddressing_),
-                completeMesh_.boundaryMesh()
-                [
-                    boundaryAddressing_[patchi]
-                ].start()
+                completeMesh_.boundaryMesh()[fromPatchi].start()
             );
         }
-        else
+
+        if (boundaryAddressing_[patchi] < 0)
         {
             processorVolPatchFieldDecomposerPtrs_[patchi] =
                 new processorVolPatchFieldDecomposer

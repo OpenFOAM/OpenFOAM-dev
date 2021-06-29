@@ -45,13 +45,27 @@ Foam::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
 (
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const dictionary& dict
+    const dictionary& dict,
+    const bool gradientRequired
 )
 :
     fvPatchField<Type>(p, iF, dict, false),
-    gradient_("gradient", dict, p.size())
+    gradient_(p.size())
 {
-    evaluate();
+    if (gradientRequired)
+    {
+        if (dict.found("gradient"))
+        {
+            gradient_ = Field<Type>("gradient", dict, p.size());
+            evaluate();
+        }
+        else
+        {
+            FatalIOErrorInFunction(dict)
+                << "Essential entry 'gradient' missing"
+                << exit(FatalIOError);
+        }
+    }
 }
 
 
@@ -61,12 +75,23 @@ Foam::fixedGradientFvPatchField<Type>::fixedGradientFvPatchField
     const fixedGradientFvPatchField<Type>& ptf,
     const fvPatch& p,
     const DimensionedField<Type, volMesh>& iF,
-    const fvPatchFieldMapper& mapper
+    const fvPatchFieldMapper& mapper,
+    const bool mappingRequired
 )
 :
-    fvPatchField<Type>(ptf, p, iF, mapper),
-    gradient_(mapper(ptf.gradient_))
-{}
+    fvPatchField<Type>(ptf, p, iF, mapper, mappingRequired),
+    gradient_(p.size())
+{
+    if (mappingRequired)
+    {
+        // For unmapped faces set to internal field value (zero-gradient)
+        if (mapper.hasUnmapped())
+        {
+            gradient_ = Zero;
+        }
+        mapper(gradient_, ptf);
+    }
+}
 
 
 template<class Type>

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,8 +38,7 @@ Foam::pointPatchField<Type>::pointPatchField
 :
     patch_(p),
     internalField_(iF),
-    updated_(false),
-    patchType_(word::null)
+    updated_(false)
 {}
 
 
@@ -53,8 +52,7 @@ Foam::pointPatchField<Type>::pointPatchField
 :
     patch_(p),
     internalField_(iF),
-    updated_(false),
-    patchType_(dict.lookupOrDefault<word>("patchType", word::null))
+    updated_(false)
 {}
 
 
@@ -69,8 +67,7 @@ Foam::pointPatchField<Type>::pointPatchField
 :
     patch_(p),
     internalField_(iF),
-    updated_(false),
-    patchType_(ptf.patchType_)
+    updated_(false)
 {}
 
 
@@ -83,8 +80,7 @@ Foam::pointPatchField<Type>::pointPatchField
 :
     patch_(ptf.patch_),
     internalField_(iF),
-    updated_(false),
-    patchType_(ptf.patchType_)
+    updated_(false)
 {}
 
 
@@ -102,9 +98,9 @@ void Foam::pointPatchField<Type>::write(Ostream& os) const
 {
     writeEntry(os, "type", type());
 
-    if (patchType_.size())
+    if (overridesConstraint())
     {
-        writeEntry(os, "patchType", patchType_);
+        writeEntry(os, "patchType", patch().type());
     }
 }
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -263,11 +263,10 @@ void Foam::volPointInterpolation::interpolateBoundaryField
     wordList patchTypes(pf.boundaryField().size(), word::null);
     forAll(pf.boundaryField(), patchi)
     {
-        const word patchType = pf.boundaryField()[patchi].patchType();
-        if (patchType != word::null)
+        if (pf.boundaryField()[patchi].overridesConstraint())
         {
             havePatchTypes = true;
-            patchTypes[patchi] = patchType;
+            patchTypes[patchi] = pf.boundaryField()[patchi].patch().type();
         }
     }
     if (!havePatchTypes)
