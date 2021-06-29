@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "realizableKE.H"
+#include "kOmega2006.H"
 #include "fvModels.H"
 #include "fvConstraints.H"
 #include "bound.H"
@@ -35,68 +35,67 @@ namespace Foam
 namespace RASModels
 {
 
-// * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * * //
-
 template<class BasicMomentumTransportModel>
-tmp<volScalarField> realizableKE<BasicMomentumTransportModel>::rCmu
+void kOmega2006<BasicMomentumTransportModel>::correctNut
 (
-    const volTensorField& gradU,
-    const volScalarField& S2,
-    const volScalarField& magS
+    const volTensorField& gradU
 )
 {
-    tmp<volSymmTensorField> tS = dev(symm(gradU));
-    const volSymmTensorField& S = tS();
-
-    const volScalarField W
-    (
-        (2*sqrt(2.0))*((S&S)&&S)
-       /(
-            magS*S2
-          + dimensionedScalar(dimensionSet(0, 0, -3, 0, 0), small)
-        )
-    );
-
-    tS.clear();
-
-    const volScalarField phis
-    (
-        (1.0/3.0)*acos(min(max(sqrt(6.0)*W, -scalar(1)), scalar(1)))
-    );
-    const volScalarField As(sqrt(6.0)*cos(phis));
-    const volScalarField Us(sqrt(S2/2.0 + magSqr(skew(gradU))));
-
-    return 1.0/(A0_ + As*Us*k_/epsilon_);
-}
-
-
-template<class BasicMomentumTransportModel>
-void realizableKE<BasicMomentumTransportModel>::correctNut
-(
-    const volTensorField& gradU,
-    const volScalarField& S2,
-    const volScalarField& magS
-)
-{
-    this->nut_ = rCmu(gradU, S2, magS)*sqr(k_)/epsilon_;
+    this->nut_ = k_/max(omega_, Clim_*sqrt(2/betaStar_)*mag(dev(symm(gradU))));
     this->nut_.correctBoundaryConditions();
     fvConstraints::New(this->mesh_).constrain(this->nut_);
 }
 
 
 template<class BasicMomentumTransportModel>
-void realizableKE<BasicMomentumTransportModel>::correctNut()
+tmp<volScalarField::Internal> kOmega2006<BasicMomentumTransportModel>::beta
+(
+    const volTensorField& gradU
+) const
 {
-    const volTensorField gradU(fvc::grad(this->U_));
-    const volScalarField S2(modelName("S2"), 2*magSqr(dev(symm(gradU))));
-    const volScalarField magS(modelName("magS"), sqrt(S2));
+    const volSymmTensorField::Internal S(symm(gradU()));
+    const volSymmTensorField::Internal Shat(S - 0.5*tr(S)*I);
+    const volTensorField::Internal Omega(skew(gradU.v()));
 
-    correctNut(gradU, S2, magS);
+    const volScalarField::Internal ChiOmega
+    (
+        modelName("ChiOmega"),
+        mag((Omega & Omega) && Shat)/pow3(betaStar_*omega_.v())
+    );
+
+    const volScalarField::Internal fBeta
+    (
+        modelName("fBeta"),
+        (1 + 85*ChiOmega)/(1 + 100*ChiOmega)
+    );
+
+    return beta0_*fBeta;
 }
 
 
 template<class BasicMomentumTransportModel>
-tmp<fvScalarMatrix> realizableKE<BasicMomentumTransportModel>::kSource() const
+tmp<volScalarField::Internal>
+kOmega2006<BasicMomentumTransportModel>::CDkOmega() const
+{
+    return max
+    (
+        sigmaDo_*(fvc::grad(k_)().v() & fvc::grad(omega_)().v())/omega_(),
+        dimensionedScalar(dimless/sqr(dimTime), 0)
+    );
+}
+
+
+// * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
+
+template<class BasicMomentumTransportModel>
+void kOmega2006<BasicMomentumTransportModel>::correctNut()
+{
+    correctNut(fvc::grad(this->U_));
+}
+
+
+template<class BasicMomentumTransportModel>
+tmp<fvScalarMatrix> kOmega2006<BasicMomentumTransportModel>::kSource() const
 {
     return tmp<fvScalarMatrix>
     (
@@ -111,16 +110,14 @@ tmp<fvScalarMatrix> realizableKE<BasicMomentumTransportModel>::kSource() const
 
 
 template<class BasicMomentumTransportModel>
-tmp<fvScalarMatrix>
-realizableKE<BasicMomentumTransportModel>::epsilonSource() const
+tmp<fvScalarMatrix> kOmega2006<BasicMomentumTransportModel>::omegaSource() const
 {
     return tmp<fvScalarMatrix>
     (
         new fvScalarMatrix
         (
-            epsilon_,
-            dimVolume*this->rho_.dimensions()*epsilon_.dimensions()
-            /dimTime
+            omega_,
+            dimVolume*this->rho_.dimensions()*omega_.dimensions()/dimTime
         )
     );
 }
@@ -129,7 +126,7 @@ realizableKE<BasicMomentumTransportModel>::epsilonSource() const
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
-realizableKE<BasicMomentumTransportModel>::realizableKE
+kOmega2006<BasicMomentumTransportModel>::kOmega2006
 (
     const alphaField& alpha,
     const rhoField& rho,
@@ -150,40 +147,68 @@ realizableKE<BasicMomentumTransportModel>::realizableKE
         phi,
         transport
     ),
-    A0_
+
+    betaStar_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "A0",
+            "betaStar",
             this->coeffDict_,
-            4.0
+            0.09
         )
     ),
-    C2_
+    beta0_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "C2",
+            "beta0",
             this->coeffDict_,
-            1.9
+            0.0708
         )
     ),
-    sigmak_
+    gamma_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "sigmak",
+            "gamma",
             this->coeffDict_,
-            1.0
+            0.52
         )
     ),
-    sigmaEps_
+    Clim_
     (
         dimensioned<scalar>::lookupOrAddToDict
         (
-            "sigmaEps",
+            "Clim",
             this->coeffDict_,
-            1.2
+            0.875
+        )
+    ),
+    sigmaDo_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "sigmaDo",
+            this->coeffDict_,
+            0.125
+        )
+    ),
+    alphaK_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "alphaK",
+            this->coeffDict_,
+            0.6
+        )
+    ),
+    alphaOmega_
+    (
+        dimensioned<scalar>::lookupOrAddToDict
+        (
+            "alphaOmega",
+            this->coeffDict_,
+            0.5
         )
     ),
 
@@ -199,11 +224,11 @@ realizableKE<BasicMomentumTransportModel>::realizableKE
         ),
         this->mesh_
     ),
-    epsilon_
+    omega_
     (
         IOobject
         (
-            IOobject::groupName("epsilon", alphaRhoPhi.group()),
+            IOobject::groupName("omega", alphaRhoPhi.group()),
             this->runTime_.timeName(),
             this->mesh_,
             IOobject::MUST_READ,
@@ -213,7 +238,7 @@ realizableKE<BasicMomentumTransportModel>::realizableKE
     )
 {
     bound(k_, this->kMin_);
-    bound(epsilon_, this->epsilonMin_);
+    bound(omega_, this->omegaMin_);
 
     if (type == typeName)
     {
@@ -225,14 +250,16 @@ realizableKE<BasicMomentumTransportModel>::realizableKE
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 template<class BasicMomentumTransportModel>
-bool realizableKE<BasicMomentumTransportModel>::read()
+bool kOmega2006<BasicMomentumTransportModel>::read()
 {
     if (eddyViscosity<RASModel<BasicMomentumTransportModel>>::read())
     {
-        A0_.readIfPresent(this->coeffDict());
-        C2_.readIfPresent(this->coeffDict());
-        sigmak_.readIfPresent(this->coeffDict());
-        sigmaEps_.readIfPresent(this->coeffDict());
+        betaStar_.readIfPresent(this->coeffDict());
+        beta0_.readIfPresent(this->coeffDict());
+        gamma_.readIfPresent(this->coeffDict());
+        sigmaDo_.readIfPresent(this->coeffDict());
+        alphaK_.readIfPresent(this->coeffDict());
+        alphaOmega_.readIfPresent(this->coeffDict());
 
         return true;
     }
@@ -244,7 +271,7 @@ bool realizableKE<BasicMomentumTransportModel>::read()
 
 
 template<class BasicMomentumTransportModel>
-void realizableKE<BasicMomentumTransportModel>::correct()
+void kOmega2006<BasicMomentumTransportModel>::correct()
 {
     if (!this->turbulence_)
     {
@@ -268,59 +295,43 @@ void realizableKE<BasicMomentumTransportModel>::correct()
     volScalarField::Internal divU
     (
         modelName("divU"),
-        fvc::div(fvc::absolute(this->phi(), U))()
+        fvc::div(fvc::absolute(this->phi(), U))().v()
     );
 
     const volTensorField gradU(fvc::grad(U));
-    const volScalarField S2(modelName("S2"), 2*magSqr(dev(symm(gradU))));
-    const volScalarField magS(modelName("magS"), sqrt(S2));
-
-    const volScalarField::Internal eta
-    (
-        modelName("eta"), magS()*k_()/epsilon_()
-    );
-    const volScalarField::Internal C1
-    (
-        modelName("C1"),
-        max(eta/(scalar(5) + eta), scalar(0.43))
-    );
-
-    const volScalarField::Internal G
+    volScalarField::Internal G
     (
         this->GName(),
-        nut*(gradU.v() && dev(twoSymm(gradU.v())))
+        nut.v()*(dev(twoSymm(gradU.v())) && gradU.v())
     );
 
-    // Update epsilon and G at the wall
-    epsilon_.boundaryFieldRef().updateCoeffs();
+    // Update omega and G at the wall
+    omega_.boundaryFieldRef().updateCoeffs();
 
-    // Dissipation equation
-    tmp<fvScalarMatrix> epsEqn
+    // Turbulence specific dissipation rate equation
+    tmp<fvScalarMatrix> omegaEqn
     (
-        fvm::ddt(alpha, rho, epsilon_)
-      + fvm::div(alphaRhoPhi, epsilon_)
-      - fvm::laplacian(alpha*rho*DepsilonEff(), epsilon_)
+        fvm::ddt(alpha, rho, omega_)
+      + fvm::div(alphaRhoPhi, omega_)
+      - fvm::laplacian(alpha*rho*DomegaEff(), omega_)
      ==
-        C1*alpha()*rho()*magS()*epsilon_()
-      - fvm::Sp
-        (
-            C2_*alpha()*rho()*epsilon_()/(k_() + sqrt(this->nu()()*epsilon_())),
-            epsilon_
-        )
-      + epsilonSource()
-      + fvModels.source(alpha, rho, epsilon_)
+        gamma_*alpha()*rho()*G*omega_()/k_()
+      - fvm::SuSp(((2.0/3.0)*gamma_)*alpha()*rho()*divU, omega_)
+      - fvm::Sp(beta(gradU)*alpha()*rho()*omega_(), omega_)
+      + alpha()*rho()*CDkOmega()
+      + omegaSource()
+      + fvModels.source(alpha, rho, omega_)
     );
 
-    epsEqn.ref().relax();
-    fvConstraints.constrain(epsEqn.ref());
-    epsEqn.ref().boundaryManipulate(epsilon_.boundaryFieldRef());
-    solve(epsEqn);
-    fvConstraints.constrain(epsilon_);
-    bound(epsilon_, this->epsilonMin_);
+    omegaEqn.ref().relax();
+    fvConstraints.constrain(omegaEqn.ref());
+    omegaEqn.ref().boundaryManipulate(omega_.boundaryFieldRef());
+    solve(omegaEqn);
+    fvConstraints.constrain(omega_);
+    bound(omega_, this->omegaMin_);
 
 
     // Turbulent kinetic energy equation
-
     tmp<fvScalarMatrix> kEqn
     (
         fvm::ddt(alpha, rho, k_)
@@ -328,8 +339,8 @@ void realizableKE<BasicMomentumTransportModel>::correct()
       - fvm::laplacian(alpha*rho*DkEff(), k_)
      ==
         alpha()*rho()*G
-      - fvm::SuSp(2.0/3.0*alpha()*rho()*divU, k_)
-      - fvm::Sp(alpha()*rho()*epsilon_()/k_(), k_)
+      - fvm::SuSp((2.0/3.0)*alpha()*rho()*divU, k_)
+      - fvm::Sp(betaStar_*alpha()*rho()*omega_(), k_)
       + kSource()
       + fvModels.source(alpha, rho, k_)
     );
@@ -340,7 +351,7 @@ void realizableKE<BasicMomentumTransportModel>::correct()
     fvConstraints.constrain(k_);
     bound(k_, this->kMin_);
 
-    correctNut(gradU, S2, magS);
+    correctNut(gradU);
 }
 
 

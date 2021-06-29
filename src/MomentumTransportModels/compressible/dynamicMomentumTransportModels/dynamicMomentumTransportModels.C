@@ -85,6 +85,9 @@ makeRASModel(LaunderSharmaKE);
 #include "kOmega.H"
 makeRASModel(kOmega);
 
+#include "kOmega2006.H"
+makeRASModel(kOmega2006);
+
 #include "kOmegaSST.H"
 makeRASModel(kOmegaSST);
 
