@@ -6,6 +6,7 @@ autoPtr<engineTime> runTimePtr
     (
         Time::controlDictName,
         args.rootPath(),
+        args.globalCaseName(),
         args.caseName()
     )
 );

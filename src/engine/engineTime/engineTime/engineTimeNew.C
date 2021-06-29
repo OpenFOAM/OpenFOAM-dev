@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -32,13 +32,14 @@ Foam::autoPtr<Foam::engineTime> Foam::engineTime::New
 (
     const word& name,
     const fileName& rootPath,
+    const fileName& globalCaseName,
     const fileName& caseName,
     const fileName& systemName,
     const fileName& constantName,
     const fileName& dictName
 )
 {
-    IFstream engineDictFile("."/constantName/dictName);
+    IFstream engineDictFile(rootPath/globalCaseName/constantName/dictName);
 
     dictionary engineDict(engineDictFile);
 

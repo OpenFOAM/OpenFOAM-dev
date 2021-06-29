@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -103,6 +103,7 @@ public:
         (
             const word& name,
             const fileName& rootPath,
+            const fileName& globalCaseName,
             const fileName& caseName,
             const fileName& systemName = "system",
             const fileName& constantName = "constant",
