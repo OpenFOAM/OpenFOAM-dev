@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
     if (!meshDictIO.typeHeaderOk<IOdictionary>(true))
     {
         FatalErrorInFunction
-            << meshDictIO.localObjectPath()
+            << "Cannot find file " << meshDictIO.localObjectPath()
             << nl
             << exit(FatalError);
     }
