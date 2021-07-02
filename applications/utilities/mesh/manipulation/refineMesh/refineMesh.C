@@ -45,6 +45,7 @@ Description
 #include "labelIOList.H"
 #include "IOdictionary.H"
 #include "syncTools.H"
+#include "systemDict.H"
 
 using namespace Foam;
 
@@ -187,55 +188,34 @@ int main(int argc, char *argv[])
     labelList refCells;
 
     // Dictionary to control refinement
-    dictionary refineDict;
     const word dictName("refineMeshDict");
-
+    IOobject dictIO(systemDictIO(dictName, args, runTime));
+    dictionary refineDict;
     if (readDict)
     {
-        fileName dictPath = args["dict"];
-        if (isDir(dictPath))
-        {
-            dictPath = dictPath/dictName;
-        }
-
-        IOobject dictIO
-        (
-            dictPath,
-            mesh,
-            IOobject::MUST_READ
-        );
-
-        if (!dictIO.typeHeaderOk<IOdictionary>(true))
-        {
-            FatalErrorInFunction
-                << "Cannot open specified refinement dictionary "
-                << dictPath
-                << exit(FatalError);
-        }
-
-        Info<< "Refining according to " << dictPath << nl << endl;
-
-        refineDict = IOdictionary(dictIO);
-    }
-    else if (!refineAllCells)
-    {
-        IOobject dictIO
-        (
-            dictName,
-            runTime.system(),
-            mesh,
-            IOobject::MUST_READ
-        );
-
         if (dictIO.typeHeaderOk<IOdictionary>(true))
         {
-            Info<< "Refining according to " << dictName << nl << endl;
-
+            Info<< "Refining according to " << dictIO.path() << nl << endl;
             refineDict = IOdictionary(dictIO);
         }
         else
         {
-            Info<< "Refinement dictionary " << dictName << " not found" << endl;
+            FatalErrorInFunction
+                << "Cannot open specified refinement dictionary "
+                << dictIO.path() << exit(FatalError);
+        }
+    }
+    else if (!refineAllCells)
+    {
+        if (dictIO.typeHeaderOk<IOdictionary>(true))
+        {
+            Info<< "Refining according to " << dictIO.path() << nl << endl;
+            refineDict = IOdictionary(dictIO);
+        }
+        else
+        {
+            Info<< "Refinement dictionary " << dictIO.path() << " not found"
+                << nl << endl;
         }
     }
 

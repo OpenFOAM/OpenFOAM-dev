@@ -1,8 +1,9 @@
 const word dictName("particleTrackDict");
 
-#include "setConstantMeshDictionaryIO.H"
-
-IOdictionary propsDict(dictIO);
+IOdictionary propsDict
+(
+    systemDict(dictName, args, runTime, word::null, runTime.constant())
+);
 
 word cloudName(propsDict.lookup("cloudName"));
 

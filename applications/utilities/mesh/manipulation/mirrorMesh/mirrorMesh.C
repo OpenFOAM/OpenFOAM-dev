@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -34,6 +34,7 @@ Description
 #include "mirrorFvMesh.H"
 #include "mapPolyMesh.H"
 #include "hexRef8Data.H"
+#include "systemDict.H"
 
 using namespace Foam;
 
@@ -48,10 +49,6 @@ int main(int argc, char *argv[])
     #include "createTime.H"
 
     const bool overwrite = args.optionFound("overwrite");
-    const word dictName
-    (
-        args.optionLookupOrDefault<word>("dict", "mirrorMeshDict")
-    );
 
     mirrorFvMesh mesh
     (
@@ -61,7 +58,7 @@ int main(int argc, char *argv[])
             runTime.constant(),
             runTime
         ),
-        dictName
+        systemDictIO("mirrorMeshDict", args, runTime)
     );
 
     hexRef8Data refData

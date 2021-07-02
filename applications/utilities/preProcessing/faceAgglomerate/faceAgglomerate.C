@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,6 +41,7 @@ Description
 #include "labelListIOList.H"
 #include "syncTools.H"
 #include "globalIndex.H"
+#include "systemDict.H"
 
 using namespace Foam;
 
@@ -56,10 +57,11 @@ int main(int argc, char *argv[])
 
     const word dictName("viewFactorsDict");
 
-    #include "setConstantMeshDictionaryIO.H"
-
     // Read control dictionary
-    const IOdictionary agglomDict(dictIO);
+    const IOdictionary agglomDict
+    (
+        systemDict(dictName, args, runTime, word::null, runTime.constant())
+    );
 
     bool writeAgglom = readBool(agglomDict.lookup("writeFacesAgglomeration"));
 

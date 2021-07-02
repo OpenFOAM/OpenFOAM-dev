@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -51,6 +51,7 @@ Usage
 #include "Time.H"
 #include "IOdictionary.H"
 #include "IOPtrList.H"
+#include "systemDict.H"
 
 #include "blockMesh.H"
 #include "attachPolyTopoChanger.H"
@@ -72,6 +73,7 @@ using namespace Foam;
 int main(int argc, char *argv[])
 {
     argList::noParallel();
+    #include "addDictOption.H"
     argList::addBoolOption
     (
         "blockTopology",
@@ -81,12 +83,6 @@ int main(int argc, char *argv[])
     (
         "noClean",
         "keep the existing files in the polyMesh"
-    );
-    argList::addOption
-    (
-        "dict",
-        "file",
-        "specify alternative dictionary for the blockMesh description"
     );
 
     argList::addNote
@@ -129,42 +125,6 @@ int main(int argc, char *argv[])
         regionPath = regionName;
     }
 
-    // Search for the appropriate blockMesh dictionary....
-
-    fileName dictPath;
-
-    // Check if the dictionary is specified on the command-line
-    if (args.optionFound("dict"))
-    {
-        dictPath = args["dict"];
-
-        dictPath =
-        (
-            isDir(dictPath)
-          ? dictPath/dictName
-          : dictPath
-        );
-    }
-    // Check if dictionary is present in the constant directory
-    else if
-    (
-        exists
-        (
-            runTime.path()/runTime.constant()
-           /regionPath/polyMesh::meshSubDir/dictName
-        )
-    )
-    {
-        dictPath =
-            runTime.constant()
-           /regionPath/polyMesh::meshSubDir/dictName;
-    }
-    // Otherwise assume the dictionary is present in the system directory
-    else
-    {
-        dictPath = runTime.system()/regionPath/dictName;
-    }
-
     if (!args.optionFound("noClean"))
     {
         fileName polyMeshPath
@@ -189,14 +149,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    IOobject meshDictIO
-    (
-        dictPath,
-        runTime,
-        IOobject::MUST_READ,
-        IOobject::NO_WRITE,
-        false
-    );
+    IOobject meshDictIO(systemDictIO(dictName, args, runTime, regionName));
 
     if (!meshDictIO.typeHeaderOk<IOdictionary>(true))
     {

@@ -38,6 +38,7 @@ SourceFiles
 
 #include "argList.H"
 #include "IOdictionary.H"
+#include "polyMesh.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -46,11 +47,22 @@ namespace Foam
 
 // * * * * * * * * * * * * * * Global Functions  * * * * * * * * * * * * * * //
 
+IOobject systemDictIO
+(
+    const word& dictName,
+    const argList& args,
+    const objectRegistry& ob,
+    const word& regionName = polyMesh::defaultRegion,
+    const word& systemName = word::null // defaults to ob.time().system()
+);
+
 IOdictionary systemDict
 (
     const word& dictName,
     const argList& args,
-    const objectRegistry& mesh
+    const objectRegistry& ob,
+    const word& regionName = polyMesh::defaultRegion,
+    const word& systemName = word::null // defaults to ob.time().system()
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

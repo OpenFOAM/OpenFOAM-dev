@@ -39,6 +39,7 @@ Description
 #include "OFstream.H"
 #include "passiveParticleCloud.H"
 #include "setWriter.H"
+#include "systemDict.H"
 
 using namespace Foam;
 

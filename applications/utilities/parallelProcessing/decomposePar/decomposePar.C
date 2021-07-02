@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -97,6 +97,7 @@ Usage
 #include "tensorFieldIOField.H"
 #include "pointFields.H"
 #include "regionProperties.H"
+#include "systemDict.H"
 
 #include "readFields.H"
 #include "dimFieldDecomposer.H"
@@ -216,6 +217,7 @@ int main(int argc, char *argv[])
     );
 
     argList::noParallel();
+    #include "addDictOption.H"
     #include "addRegionOption.H"
     #include "addAllRegionsOption.H"
     argList::addBoolOption
@@ -260,13 +262,6 @@ int main(int argc, char *argv[])
         "only decompose geometry if the number of domains has changed"
     );
 
-    argList::addOption
-    (
-        "dict",
-        "dictionary file name",
-        "specify alternative decomposition dictionary"
-    );
-
     // Include explicit constant options, have zero from time range
     timeSelector::addOptions(true, false);
 
@@ -302,26 +297,6 @@ int main(int argc, char *argv[])
 
     // Set time from database
     #include "createTime.H"
-
-    // Check if the dictionary is specified on the command-line
-    fileName dictPath = fileName::null;
-    if (args.optionFound("dict"))
-    {
-        dictPath = args["dict"];
-
-        if (!isFile(dictPath))
-        {
-            dictPath = dictPath/dictName;
-        }
-
-        if (!isFile(dictPath))
-        {
-            FatalErrorInFunction
-                << "Specified -dict " << args["dict"] << " but neither "
-                << args["dict"] << " nor " << args["dict"]/dictName
-                << " could be found" << nl << exit(FatalError);
-        }
-    }
 
     // Allow override of time
     instantList times = timeSelector::selectIfPresent(runTime, args);
@@ -409,26 +384,9 @@ int main(int argc, char *argv[])
         // Get the dictionary IO
         const IOobject dictIO
         (
-            dictPath == fileName::null
-          ? IOobject
-            (
-                dictName,
-                runTime.time().system(),
-                regionDir, // use region if non-standard
-                runTime,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE,
-                false
-            )
-          : IOobject
-            (
-                dictPath,
-                runTime,
-                IOobject::MUST_READ_IF_MODIFIED,
-                IOobject::NO_WRITE,
-                false
-            )
+            systemDictIO(dictName, args, runTime, regionName)
         );
+
         // Get requested numberOfSubdomains. Note: have no mesh yet so
         // cannot use decompositionModel::New
         const label nDomains =

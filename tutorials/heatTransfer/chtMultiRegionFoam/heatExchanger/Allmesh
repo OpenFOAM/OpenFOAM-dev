@@ -11,13 +11,13 @@ runApplication -s porous blockMesh -region porous
 
 # Create rotor blades in air region
 runApplication -s air.1 \
-    topoSet -region air -dict system/topoSetDict.1
+    topoSet -region air -dict system/air/topoSetDict.1
 
 runApplication createBaffles -region air -overwrite
 
 # Create rotor zone in air region for MRF
 runApplication -s air.2 \
-    topoSet -region air -dict system/topoSetDict.2
+    topoSet -region air -dict system/air/topoSetDict.2
 
 rm -rf constant/air/polyMesh/sets
 

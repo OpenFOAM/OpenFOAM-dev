@@ -1,19 +1,6 @@
-    word dictName("noiseDict");
-    if (args.optionFound("dict"))
-    {
-        dictName = args["dict"];
-    }
+    const word dictName("noiseDict");
 
-    IOdictionary dict
-    (
-        IOobject
-        (
-            dictName,
-            runTime.system(),
-            runTime,
-            IOobject::MUST_READ
-        )
-    );
+    IOdictionary dict(systemDict(dictName, args, runTime));
 
     // reference pressure
     scalar pRef = dict.lookupOrDefault("pRef", 0.0);
