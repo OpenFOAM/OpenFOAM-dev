@@ -58,10 +58,7 @@ int main(int argc, char *argv[])
     const word dictName("viewFactorsDict");
 
     // Read control dictionary
-    const IOdictionary agglomDict
-    (
-        systemDict(dictName, args, runTime, word::null, runTime.constant())
-    );
+    const IOdictionary agglomDict(systemDict(dictName, args, runTime));
 
     bool writeAgglom = readBool(agglomDict.lookup("writeFacesAgglomeration"));
 

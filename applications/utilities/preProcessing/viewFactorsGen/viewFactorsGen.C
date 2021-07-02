@@ -284,7 +284,7 @@ int main(int argc, char *argv[])
        IOobject
        (
             "viewFactorsDict",
-            runTime.constant(),
+            runTime.system(),
             mesh,
             IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE
