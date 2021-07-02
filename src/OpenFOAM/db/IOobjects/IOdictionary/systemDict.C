@@ -34,8 +34,7 @@ Foam::IOobject Foam::systemDictIO
     const word& dictName,
     const argList& args,
     const objectRegistry& ob,
-    const word& regionName,
-    const word& systemName
+    const word& regionName
 )
 {
     fileName dictPath = fileName::null;
@@ -79,7 +78,7 @@ Foam::IOobject Foam::systemDictIO
             IOobject
             (
                 dictName,
-                systemName == word::null ? ob.time().system() : systemName,
+                ob.time().system(),
                 regionName == polyMesh::defaultRegion ? word::null : regionName,
                 ob,
                 IOobject::MUST_READ_IF_MODIFIED,
@@ -94,15 +93,10 @@ Foam::IOdictionary Foam::systemDict
     const word& dictName,
     const argList& args,
     const objectRegistry& ob,
-    const word& regionName,
-    const word& systemName
+    const word& regionName
 )
 {
-    return
-        IOdictionary
-        (
-            systemDictIO(dictName, args, ob, regionName, systemName)
-        );
+    return IOdictionary(systemDictIO(dictName, args, ob, regionName));
 }
 
 

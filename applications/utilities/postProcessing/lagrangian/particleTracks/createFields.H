@@ -1,13 +1,4 @@
-IOdictionary propsDict
-(
-    IOobject
-    (
-        "particleTrackProperties",
-        runTime.constant(),
-        mesh,
-        IOobject::MUST_READ_IF_MODIFIED
-    )
-);
+IOdictionary propsDict(systemDict("particleTracksDict", args, runTime));
 
 const word cloudName(propsDict.lookup("cloudName"));
 

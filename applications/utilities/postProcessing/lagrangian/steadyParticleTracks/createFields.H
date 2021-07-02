@@ -1,9 +1,4 @@
-const word dictName("particleTrackDict");
-
-IOdictionary propsDict
-(
-    systemDict(dictName, args, runTime, word::null, runTime.constant())
-);
+IOdictionary propsDict(systemDict("steadyParticleTracksDict", args, runTime));
 
 word cloudName(propsDict.lookup("cloudName"));
 

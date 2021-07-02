@@ -52,8 +52,7 @@ IOobject systemDictIO
     const word& dictName,
     const argList& args,
     const objectRegistry& ob,
-    const word& regionName = polyMesh::defaultRegion,
-    const word& systemName = word::null // defaults to ob.time().system()
+    const word& regionName = polyMesh::defaultRegion
 );
 
 IOdictionary systemDict
@@ -61,8 +60,7 @@ IOdictionary systemDict
     const word& dictName,
     const argList& args,
     const objectRegistry& ob,
-    const word& regionName = polyMesh::defaultRegion,
-    const word& systemName = word::null // defaults to ob.time().system()
+    const word& regionName = polyMesh::defaultRegion
 );
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
