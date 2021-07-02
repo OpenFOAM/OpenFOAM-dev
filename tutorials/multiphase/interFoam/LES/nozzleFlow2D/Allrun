@@ -12,10 +12,10 @@ runApplication blockMesh
 for i in 1 2
 do
     runApplication -s $i \
-        topoSet -dict system/topoSetDict.${i}
+        topoSet -dict topoSetDict.${i}
 
     runApplication -s $i \
-        refineMesh -dict system/refineMeshDict -overwrite
+        refineMesh -dict refineMeshDict -overwrite
 done
 
 runApplication $application

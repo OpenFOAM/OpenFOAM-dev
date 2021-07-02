@@ -20,12 +20,12 @@ for index in 1 2 3 4 5 6; do
   runApplication -s tier$index  calcRadiusField
 
   runApplication -s tier$index \
-      topoSet -dict system/topoSetDict.tier$index
+      topoSet -dict topoSetDict.tier$index
 
   ## foamToVTK -cellSet tier$index
 
   runApplication -s tier$index \
-      refineMesh -dict system/refineMeshDict.tier$index -overwrite
+      refineMesh -dict refineMeshDict.tier$index -overwrite
 
   rm -r 0/*
 
@@ -37,12 +37,12 @@ for index in 1 2 3; do
   runApplication -s range$index  calcRadiusField -calcDirections
 
   runApplication -s range$index \
-      topoSet -dict system/topoSetDict.range$index
+      topoSet -dict topoSetDict.range$index
 
   ## foamToVTK -cellSet tier$index
 
   runApplication -s range$index \
-      refineMesh -dict system/refineMeshDict.range$index -overwrite
+      refineMesh -dict refineMeshDict.range$index -overwrite
 
   rm -r 0/*
 

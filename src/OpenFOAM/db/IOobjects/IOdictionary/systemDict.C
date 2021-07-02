@@ -55,6 +55,10 @@ Foam::IOobject Foam::systemDictIO
         {
             dictPath = dictPath/dictName;
         }
+        else if (dictPath.isName())
+        {
+            dictPath = ob.time().system()/dictPath;
+        }
     }
 
     if (dictPath.size())

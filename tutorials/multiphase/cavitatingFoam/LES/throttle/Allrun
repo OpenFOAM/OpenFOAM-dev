@@ -18,7 +18,7 @@ refineMeshByCellSet()
           topoSet > log.topoSet.$1 2>&1
 
           echo "Refining primary zone - $1"
-          refineMesh -dict system/refineMeshDict -overwrite \
+          refineMesh -dict refineMeshDict -overwrite \
               > log.refineMesh.$1 2>&1
       fi
       shift

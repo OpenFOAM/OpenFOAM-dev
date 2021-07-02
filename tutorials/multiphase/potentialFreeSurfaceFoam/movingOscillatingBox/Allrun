@@ -14,7 +14,7 @@ runApplication -s 1  topoSet
 runApplication subsetMesh -overwrite c0 -patch floatingObject -noFields
 
 runApplication -s selectBottom \
-    topoSet -dict system/topoSetDict-selectBottom
+    topoSet -dict topoSetDict-selectBottom
 
 runApplication createPatch -overwrite
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -164,6 +164,14 @@ public:
                 const bool checkVariants = true,
                 const bool followLink = true
             ) const;
+
+            //- Return true if file name is a name without a path
+            // i.e. does not contain a '/'
+            bool isName() const;
+
+            //- Return true if file name has a path
+            // i.e. contains a '/'
+            bool hasPath() const;
 
             //- Return true if file name is absolute
             bool isAbsolute() const;

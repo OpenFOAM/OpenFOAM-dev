@@ -4,7 +4,7 @@
 runApplication blockMesh
 
 #runApplication setSet -batch wallFilmRegion.setSet
-runApplication topoSet -dict system/wallFilmRegion.topoSet
+runApplication topoSet -dict wallFilmRegion.topoSet
 
 runApplication extrudeToRegionMesh -overwrite
 

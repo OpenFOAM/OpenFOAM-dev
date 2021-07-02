@@ -17,7 +17,7 @@ do
 
     runApplication -a topoSet
 
-    runApplication -a refineMesh -dict system/refineMeshDict -overwrite
+    runApplication -a refineMesh -dict refineMeshDict -overwrite
 done
 
 runApplication snappyHexMesh -overwrite
