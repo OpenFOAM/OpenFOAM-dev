@@ -72,15 +72,6 @@ public:
         :
             facePointPatch(patch, bm)
         {}
-
-
-    // Member Functions
-
-        //- Return the constraint type this pointPatch implements.
-        virtual const word& constraintType() const
-        {
-            return type();
-        }
 };
 
 

@@ -160,15 +160,6 @@ public:
 
     // Member Functions
 
-        // Constraint handling
-
-            //- Return the constraint type this pointPatchField implements
-            virtual const word& constraintType() const
-            {
-                return type();
-            }
-
-
         // Cyclic AMI coupled interface functions
 
             //- Return transformation between the coupled patches

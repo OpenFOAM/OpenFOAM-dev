@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,7 +36,11 @@ Foam::tmp<Foam::fvsPatchField<Type>> Foam::fvsPatchField<Type>::New
 {
     if (debug)
     {
-        InfoInFunction << "Constructing fvsPatchField<Type>" << endl;
+        InfoInFunction
+            << "patchFieldType = " << patchFieldType
+            << ", actualPatchType = " << actualPatchType
+            << ", patchType = " << p.type()
+            << endl;
     }
 
     typename patchConstructorTable::iterator cstrIter =
@@ -97,12 +101,17 @@ Foam::tmp<Foam::fvsPatchField<Type>> Foam::fvsPatchField<Type>::New
     const dictionary& dict
 )
 {
+    const word patchFieldType(dict.lookup("type"));
+
     if (debug)
     {
-        InfoInFunction << "Constructing fvsPatchField<Type>" << endl;
+        InfoInFunction
+            << "patchFieldType = " << patchFieldType
+            << ", actualPatchType = "
+            << dict.lookupOrDefault<word>("patchType", word::null)
+            << ", patchType = " << p.type()
+            << endl;
     }
-
-    const word patchFieldType(dict.lookup("type"));
 
     typename dictionaryConstructorTable::iterator cstrIter
         = dictionaryConstructorTablePtr_->find(patchFieldType);
@@ -129,7 +138,7 @@ Foam::tmp<Foam::fvsPatchField<Type>> Foam::fvsPatchField<Type>::New
 
     if
     (
-        !dict.found("patchType")
+       !dict.found("patchType")
      || word(dict.lookup("patchType")) != p.type()
     )
     {
@@ -182,17 +191,7 @@ Foam::tmp<Foam::fvsPatchField<Type>> Foam::fvsPatchField<Type>::New
             << exit(FatalError);
     }
 
-    typename patchMapperConstructorTable::iterator
-        patchTypeCstrIter = patchMapperConstructorTablePtr_->find(p.type());
-
-    if (patchTypeCstrIter != patchMapperConstructorTablePtr_->end())
-    {
-        return patchTypeCstrIter()(ptf, p, iF, pfMapper);
-    }
-    else
-    {
-        return cstrIter()(ptf, p, iF, pfMapper);
-    }
+    return cstrIter()(ptf, p, iF, pfMapper);
 }
 
 

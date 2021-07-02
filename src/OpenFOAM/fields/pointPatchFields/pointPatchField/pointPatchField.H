@@ -283,16 +283,10 @@ public:
                 return false;
             }
 
-            //- Return the constraint type this pointPatchField implements.
-            virtual const word& constraintType() const
-            {
-                return word::null;
-            }
-
             //- Return true if this overrides the underlying constraint type
             bool overridesConstraint() const
             {
-                if (constraintType() == patch_.constraintType())
+                if (type() == patch_.type())
                 {
                     return false;
                 }

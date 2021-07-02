@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -108,12 +108,6 @@ public:
 
         //- Return true if this patch field is coupled
         virtual bool coupled() const;
-
-        //- Return the constraint type this pointPatch implements.
-        virtual const word& constraintType() const
-        {
-            return type();
-        }
 
         //- Return the underlying cyclicAMIPolyPatch
         const cyclicAMIPolyPatch& cyclicAMIPatch() const

@@ -282,6 +282,42 @@ public:
 
     // Member Functions
 
+        // Attributes
+
+            //- Return the type of the calculated for of fvsPatchField
+            static const word& calculatedType();
+
+            //- Return true if this patch field fixes a value.
+            //  Needed to check if a level has to be specified while solving
+            //  Poissons equations.
+            virtual bool fixesValue() const
+            {
+                return false;
+            }
+
+            //- Return true if this patch field is coupled
+            virtual bool coupled() const
+            {
+                return false;
+            }
+
+            //- Return true if this overrides the underlying constraint type
+            bool overridesConstraint() const
+            {
+                if (type() == patch_.type())
+                {
+                    return false;
+                }
+
+                typename patchConstructorTable::iterator patchTypeCstrIter
+                    = patchConstructorTablePtr_->find(patch_.type());
+
+                return
+                    patchTypeCstrIter
+                 != patchConstructorTablePtr_->end();
+            }
+
+
         // Access
 
             //- Return local objectRegistry
@@ -304,23 +340,6 @@ public:
             const Field<Type>& primitiveField() const
             {
                 return internalField_;
-            }
-
-            //- Return the type of the calculated for of fvsPatchField
-            static const word& calculatedType();
-
-            //- Return true if this patch field fixes a value.
-            //  Needed to check if a level has to be specified while solving
-            //  Poissons equations.
-            virtual bool fixesValue() const
-            {
-                return false;
-            }
-
-            //- Return true if this patch field is coupled
-            virtual bool coupled() const
-            {
-                return false;
             }
 
 

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -111,12 +111,6 @@ public:
     // Member Functions
 
         // Access
-
-            //- Return the constraint type this pointPatch implements.
-            virtual const word& constraintType() const
-            {
-                return type();
-            }
 
             //- Return the underlying cyclicPolyPatch
             const cyclicPolyPatch& cyclicPatch() const

@@ -108,15 +108,6 @@ public:
                 )
             );
         }
-
-
-    // Member Functions
-
-        //- Return the constraint type this pointPatchField implements
-        virtual const word& constraintType() const
-        {
-            return internalPointPatch::typeName;
-        }
 };
 
 

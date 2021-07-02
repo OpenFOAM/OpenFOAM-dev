@@ -38,7 +38,8 @@ Foam::tmp<Foam::fvPatchField<Type>> Foam::fvPatchField<Type>::New
     {
         InfoInFunction
             << "patchFieldType = " << patchFieldType
-            << " : " << p.type()
+            << ", actualPatchType = " << actualPatchType
+            << ", patchType = " << p.type()
             << endl;
     }
 
@@ -106,6 +107,9 @@ Foam::tmp<Foam::fvPatchField<Type>> Foam::fvPatchField<Type>::New
     {
         InfoInFunction
             << "patchFieldType = " << patchFieldType
+            << ", actualPatchType = "
+            << dict.lookupOrDefault<word>("patchType", word::null)
+            << ", patchType = " << p.type()
             << endl;
     }
 
