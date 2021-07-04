@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -173,7 +173,7 @@ void Foam::ReactingParcel<ParcelType>::writeFields
     const CompositionType& compModel
 )
 {
-    ParcelType::writeFields(c);
+    ParcelType::writeFields(c, compModel);
 
     const label np = c.size();
 

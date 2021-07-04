@@ -503,6 +503,10 @@ void Foam::ThermoCloud<CloudType>::writeFields() const
     {
         CloudType::particleType::writeFields(*this, this->composition());
     }
+    else
+    {
+        CloudType::particleType::writeFields(*this);
+    }
 }
 
 
