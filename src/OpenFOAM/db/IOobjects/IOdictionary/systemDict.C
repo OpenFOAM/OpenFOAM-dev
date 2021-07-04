@@ -37,7 +37,7 @@ Foam::IOobject Foam::systemDictIO
     const word& regionName
 )
 {
-    fileName dictPath = fileName::null;
+    fileName dictPath = dictName;
 
     if (args.optionFound("dict"))
     {
@@ -55,33 +55,29 @@ Foam::IOobject Foam::systemDictIO
         {
             dictPath = dictPath/dictName;
         }
-        else if (dictPath.isName())
-        {
-            dictPath = ob.time().system()/dictPath;
-        }
     }
 
-    if (dictPath.size())
-    {
-        Info<< "Reading " << dictPath << nl << endl;
+    Info<< "Reading " << dictPath << nl << endl;
 
+    if (args.optionFound("dict") && !dictPath.isName())
+    {
         return
             IOobject
             (
-                dictPath,
-                ob.time(),
+                dictPath.isAbsolute()
+              ? dictPath
+              : ob.time().globalPath()/dictPath,
+                ob,
                 IOobject::MUST_READ_IF_MODIFIED,
                 IOobject::NO_WRITE
             );
     }
     else
     {
-        Info<< "Reading " << dictName << nl << endl;
-
         return
             IOobject
             (
-                dictName,
+                dictPath,
                 ob.time().system(),
                 regionName == polyMesh::defaultRegion ? word::null : regionName,
                 ob,
