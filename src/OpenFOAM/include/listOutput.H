@@ -44,6 +44,16 @@ if (args.optionFound("listFvModels"))
 }
 #endif
 
+#ifdef fvConstraint_H
+if (args.optionFound("listFvConstraints"))
+{
+    Info<< "fvConstraints"
+        << Foam::fvConstraint::dictionaryConstructorTablePtr_->sortedToc()
+        << endl;
+    listOptions = true;
+}
+#endif
+
 #ifdef kinematicMomentumTransportModel_H
 if (args.optionFound("listMomentumTransportModels"))
 {

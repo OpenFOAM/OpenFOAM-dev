@@ -33,7 +33,16 @@ argList::addBoolOption
 );
 #endif
 
-#if defined(kinematicMomentumTransportModel_H) || defined(dynamicMomentumTransportModel_H)
+#ifdef fvConstraint_H
+argList::addBoolOption
+(
+    "listFvConstraints",
+    "List fvConstraints"
+);
+#endif
+
+#if defined(kinematicMomentumTransportModel_H)                                 \
+ || defined(dynamicMomentumTransportModel_H)
 argList::addBoolOption
 (
     "listMomentumTransportModels",
