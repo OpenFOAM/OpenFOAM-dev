@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -195,11 +195,16 @@ void Foam::decomposedBlockData::writeHeader
     const word& name
 )
 {
-    IOobject::writeBanner(os)
-        << IOobject::foamFile << "\n{\n"
-        << "    version     " << version << ";\n"
-        << "    format      " << format << ";\n"
+    IOobject::writeBanner(os) << IOobject::foamFile << "\n{\n";
+
+    if (version != IOstream::currentVersion)
+    {
+        os  << "    version     " << version << ";\n";
+    }
+
+    os  << "    format      " << format << ";\n"
         << "    class       " << type << ";\n";
+
     if (note.size())
     {
         os  << "    note        " << note << ";\n";

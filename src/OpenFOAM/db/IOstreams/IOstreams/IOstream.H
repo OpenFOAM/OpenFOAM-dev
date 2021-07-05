@@ -149,37 +149,37 @@ public:
             // Member Operators
 
                 //- Are these versionNumbers the same?
-                bool operator==(const versionNumber& vn)
+                bool operator==(const versionNumber& vn) const
                 {
                     return index_ == vn.index_;
                 }
 
                 //- Are these versionNumbers different?
-                bool operator!=(const versionNumber& vn)
+                bool operator!=(const versionNumber& vn) const
                 {
                     return index_ != vn.index_;
                 }
 
                 //- Is this version older than the one given
-                bool operator<(const versionNumber& vn)
+                bool operator<(const versionNumber& vn) const
                 {
                     return index_ < vn.index_;
                 }
 
                 //- Is this version the same as or older than the one given
-                bool operator<=(const versionNumber& vn)
+                bool operator<=(const versionNumber& vn) const
                 {
                     return index_ <= vn.index_;
                 }
 
                 //- Is this version newer than the one given
-                bool operator>(const versionNumber& vn)
+                bool operator>(const versionNumber& vn) const
                 {
                     return index_ > vn.index_;
                 }
 
                 //- This version the same as or newer than the one given
-                bool operator>=(const versionNumber& vn)
+                bool operator>=(const versionNumber& vn) const
                 {
                     return index_ >= vn.index_;
                 }

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2017-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2017-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -206,15 +206,20 @@ bool Foam::fileOperations::collatedFileOperation::appendObject
 
     if (isMaster)
     {
-        IOobject::writeBanner(os)
-            << IOobject::foamFile << "\n{\n"
-            << "    version     " << os.version() << ";\n"
-            << "    format      " << os.format() << ";\n"
+        IOobject::writeBanner(os) << IOobject::foamFile << "\n{\n";
+
+        if (os.version() != IOstream::currentVersion)
+        {
+            os  << "    version     " << os.version() << ";\n";
+        }
+
+        os  << "    format      " << os.format() << ";\n"
             << "    class       " << decomposedBlockData::typeName
             << ";\n"
             << "    location    " << filePath << ";\n"
             << "    object      " << filePath.name() << ";\n"
             << "}" << nl;
+
         IOobject::writeDivider(os) << nl;
     }
 
