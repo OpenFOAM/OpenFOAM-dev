@@ -21,7 +21,7 @@ runApplication $(getApplication)
 #)
 #
 #runParallel $(getApplication) -fileHandler collated
-#runApplication reconstructParMesh -constant  -mergeTol 1e-6
+#runApplication reconstructParMesh -constant
 #runApplication reconstructPar
 
 #------------------------------------------------------------------------------
