@@ -11,5 +11,6 @@ runApplication topoSet
 runApplication createPatch -overwrite
 runApplication decomposePar -force
 runParallel $application
+runApplication reconstructPar
 
 #------------------------------------------------------------------------------
