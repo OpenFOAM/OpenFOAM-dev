@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2015-2020 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -63,7 +63,7 @@ error() {
 }
 
 cpIfPresent() {
-    [ -e "$1" ] && echo "$1 to ... ${1##*/}" && cp -r "$1" "$2"
+    [ -e "$1" ] && echo "$1 to ... ${1##*/}" && cp -R "$1" "$2"
 }
 
 isCaseValid() {

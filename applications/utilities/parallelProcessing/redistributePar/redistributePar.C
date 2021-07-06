@@ -39,7 +39,7 @@ Description
         mkdir processorN
 
         # Copy undecomposed polyMesh
-        cp -r constant processor0
+        cp -R constant processor0
 
         # Distribute
         mpirun -np ddd redistributePar -parallel

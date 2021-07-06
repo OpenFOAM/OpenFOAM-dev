@@ -11,7 +11,7 @@ runApplication blockMesh
 # Create faceZones for baffles and fan
 runApplication topoSet
 
-cp -r 0.orig 0
+cp -R 0.orig 0
 
 # Create wall and cyclic baffles and the fields on them
 runApplication createBaffles -overwrite

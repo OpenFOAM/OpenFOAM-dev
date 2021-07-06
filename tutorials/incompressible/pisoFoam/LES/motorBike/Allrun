@@ -16,7 +16,7 @@ cloneParallelCase()
         cpfiles="processor* system constant"
         for f in $cpfiles
         do
-            cp -r $1/$f $2
+            cp -R $1/$f $2
         done
     fi
 }

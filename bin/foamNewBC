@@ -3,7 +3,7 @@
 # =========                 |
 # \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
 #  \\    /   O peration     | Website:  https://openfoam.org
-#   \\  /    A nd           | Copyright (C) 2015-2018 OpenFOAM Foundation
+#   \\  /    A nd           | Copyright (C) 2015-2021 OpenFOAM Foundation
 #    \\/     M anipulation  |
 #------------------------------------------------------------------------------
 # License
@@ -220,7 +220,7 @@ do
     esac
 done
 
-echo "Creating Make subdirectory" && cp -r "${dir}/Make" "${name}"
+echo "Creating Make subdirectory" && cp -R "${dir}/Make" "${name}"
 
 # Get ...Fields.C for template class, otherwise ...Field.C
 compiled=$(find "${name}" -name "*.C" -exec basename {} \; | sort | tail -1)

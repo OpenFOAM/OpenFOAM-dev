@@ -22,15 +22,15 @@ runParallel -s uncollated $application -fileHandler uncollated
 rm -rf machineA/fileHandler
 mkdir -p machineA/fileHandler
 (   cd machineA/fileHandler && \
-    cp -r ../../processor[0-1] . && \
-    cp -r ../../system . && \
+    cp -R ../../processor[0-1] . && \
+    cp -R ../../system . && \
     mkdir -p constant && find ../../constant -type f -exec cp {} constant/ \;
 )
 #- Note: slave node does not need constant&system since these are global
 rm -rf machineB/fileHandler
 mkdir -p machineB/fileHandler
 (   cd machineB/fileHandler && \
-    cp -r ../../processor[2-3] .
+    cp -R ../../processor[2-3] .
 )
 #- Run with different roots
 (   d=$PWD && \
@@ -77,8 +77,8 @@ runApplication -s collated decomposePar \
 rm -rf machineA/fileHandler
 mkdir -p machineA/fileHandler
 (   cd machineA/fileHandler && \
-    cp -r ../../processor* . && \
-    cp -r ../../system . && \
+    cp -R ../../processor* . && \
+    cp -R ../../system . && \
     mkdir -p constant && find ../../constant -type f -exec cp {} constant/ \;
 )
 #- Note: slave node does not need constant&system since these are global

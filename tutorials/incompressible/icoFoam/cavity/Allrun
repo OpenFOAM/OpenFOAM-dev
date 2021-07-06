@@ -21,7 +21,7 @@ runMapFieldsConsistent()
 copySolutionDirs()
 {
     echo "Copying $2/0* directory to $1"
-    cp -r $2/0* $1
+    cp -R $2/0* $1
 }
 
 setCavityFine()
@@ -77,7 +77,7 @@ do
         runMapFieldsConsistent $previousCase $caseName
         ;;
     cavityClipped)
-        cp -r $caseName/0 $caseName/0.5
+        cp -R $caseName/0 $caseName/0.5
         runMapFields cavity $caseName
         ;;
     esac
