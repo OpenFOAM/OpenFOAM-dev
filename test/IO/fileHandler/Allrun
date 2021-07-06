@@ -24,7 +24,7 @@ mkdir -p machineA/fileHandler
 (   cd machineA/fileHandler && \
     cp -r ../../processor[0-1] . && \
     cp -r ../../system . && \
-    mkdir -p constant && cp ../../constant/* constant
+    mkdir -p constant && find ../../constant -type f -exec cp {} constant/ \;
 )
 #- Note: slave node does not need constant&system since these are global
 rm -rf machineB/fileHandler
@@ -79,7 +79,7 @@ mkdir -p machineA/fileHandler
 (   cd machineA/fileHandler && \
     cp -r ../../processor* . && \
     cp -r ../../system . && \
-    mkdir -p constant && cp ../../constant/* constant
+    mkdir -p constant && find ../../constant -type f -exec cp {} constant/ \;
 )
 #- Note: slave node does not need constant&system since these are global
 rm -rf machineB/fileHandler
