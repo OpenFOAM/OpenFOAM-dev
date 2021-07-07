@@ -42,7 +42,7 @@ Usage
     \verbatim
     rho
     {
-        type    NonUniformTable;
+        type    nonUniformTable;
 
         values
         (
