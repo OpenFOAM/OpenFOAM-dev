@@ -28,7 +28,6 @@ baffles
             {
                 name            AMI1;
                 type            cyclicAMI;
-                matchTolerance  0.0001;
                 neighbourPatch  AMI2;
             }
             slave

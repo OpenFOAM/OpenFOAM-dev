@@ -30,13 +30,13 @@ baffles
             {
                 name            AMI1;
                 type            cyclicAMI;
-                matchTolerance  0.0001;
                 neighbourPatch  AMI2;
             }
             slave
             {
                 $master;
                 name            AMI2;
+                type            cyclicAMI;
                 neighbourPatch  AMI1;
             }
         }

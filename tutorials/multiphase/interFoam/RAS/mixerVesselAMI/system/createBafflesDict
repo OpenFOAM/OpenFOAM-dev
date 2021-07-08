@@ -35,7 +35,6 @@ baffles
                 //- Master side patch
                 name            AMI1;
                 type            cyclicAMI;
-                matchTolerance  0.0001;
                 neighbourPatch  AMI2;
             }
 
@@ -44,7 +43,6 @@ baffles
                 //- Slave side patch
                 name            AMI2;
                 type            cyclicAMI;
-                matchTolerance  0.0001;
                 neighbourPatch  AMI1;
             }
         }

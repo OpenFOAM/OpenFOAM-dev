@@ -38,7 +38,6 @@ baffles
                 //- Master side patch
                 name            ACMI1_couple;
                 type            cyclicACMI;
-                matchTolerance  0.0001;
                 neighbourPatch  ACMI2_couple;
                 nonOverlapPatch ACMI1_blockage;
             }
@@ -77,7 +76,6 @@ baffles
                 //- Master side patch
                 name            ACMI2_couple;
                 type            cyclicACMI;
-                matchTolerance  0.0001;
                 neighbourPatch  ACMI1_couple;
                 nonOverlapPatch ACMI2_blockage;
             }
