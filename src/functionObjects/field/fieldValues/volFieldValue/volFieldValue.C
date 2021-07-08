@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -48,28 +48,26 @@ const char*
 Foam::NamedEnum
 <
     Foam::functionObjects::fieldValues::volFieldValue::operationType,
-    13
+    11
 >::names[] =
 {
     "none",
     "sum",
-    "weightedSum",
     "sumMag",
     "average",
-    "weightedAverage",
     "volAverage",
-    "weightedVolAverage",
     "volIntegrate",
-    "weightedVolIntegrate",
     "min",
     "max",
+    "minMag",
+    "maxMag",
     "CoV"
 };
 
 const Foam::NamedEnum
 <
     Foam::functionObjects::fieldValues::volFieldValue::operationType,
-    13
+    11
 > Foam::functionObjects::fieldValues::volFieldValue::operationTypeNames_;
 
 
@@ -80,6 +78,8 @@ void Foam::functionObjects::fieldValues::volFieldValue::initialise
     const dictionary& dict
 )
 {
+    dict.readIfPresent<Switch>("writeLocation", writeLocation_);
+
     if (dict.readIfPresent("weightFields", weightFieldNames_))
     {
         Info<< name() << " " << operationTypeNames_[operation_]
@@ -94,7 +94,54 @@ void Foam::functionObjects::fieldValues::volFieldValue::initialise
             << " weight field " << weightFieldNames_[0];
     }
 
+    if (dict.readIfPresent("scaleFactor", scaleFactor_))
+    {
+        Info<< "    scale factor = " << scaleFactor_ << nl;
+    }
+
     Info<< nl << endl;
+}
+
+
+template<class Type>
+void Foam::functionObjects::fieldValues::volFieldValue::
+writeFileHeaderLocation()
+{
+    switch (operation_)
+    {
+        case operationType::minMag:
+        case operationType::maxMag:
+            file() << tab << "location" << tab << "cell";
+            if (Pstream::parRun())
+            {
+                file() << tab << "processor";
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+
+template<>
+void Foam::functionObjects::fieldValues::volFieldValue::
+writeFileHeaderLocation<Foam::scalar>()
+{
+    switch (operation_)
+    {
+        case operationType::min:
+        case operationType::max:
+        case operationType::minMag:
+        case operationType::maxMag:
+            file() << tab << "location" << tab << "cell";
+            if (Pstream::parRun())
+            {
+                file() << tab << "processor";
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 
@@ -117,9 +164,51 @@ void Foam::functionObjects::fieldValues::volFieldValue::writeFileHeader
         }
 
         file() << fields_[fieldi] << ")";
+
+        if (writeLocation_)
+        {
+            #define writeFileHeaderLocationFieldType(fieldType, none)          \
+                if (validField<fieldType>(fields_[fieldi]))                    \
+                {                                                              \
+                    writeFileHeaderLocation<fieldType>();                      \
+                }
+            FOR_ALL_FIELD_TYPES(writeFileHeaderLocationFieldType)
+            #undef writeHeaderLocationFieldType
+        }
     }
 
     file() << endl;
+}
+
+
+bool Foam::functionObjects::fieldValues::volFieldValue::processValues
+(
+    const Field<scalar>& values,
+    const scalarField& weights,
+    const scalarField& V,
+    Result<scalar>& result
+) const
+{
+    switch (operation_)
+    {
+        case operationType::min:
+        case operationType::minMag:
+        {
+            opMag(values, result, lessOp<scalar>());
+            return true;
+        }
+        case operationType::max:
+        case operationType::maxMag:
+        {
+            opMag(values, result, greaterOp<scalar>());
+            return true;
+        }
+        default:
+        {
+            // Fall through to same-type operations
+            return processValuesTypeType(values, weights, V, result);
+        }
+    }
 }
 
 
@@ -134,7 +223,9 @@ Foam::functionObjects::fieldValues::volFieldValue::volFieldValue
 :
     fieldValue(name, runTime, dict, typeName),
     volRegion(fieldValue::mesh_, dict),
-    operation_(operationTypeNames_.read(dict.lookup("operation")))
+    writeLocation_(false),
+    operation_(operationTypeNames_.read(dict.lookup("operation"))),
+    scaleFactor_(1)
 {
     read(dict);
 }
@@ -149,7 +240,9 @@ Foam::functionObjects::fieldValues::volFieldValue::volFieldValue
 :
     fieldValue(name, obr, dict, typeName),
     volRegion(fieldValue::mesh_, dict),
-    operation_(operationTypeNames_.read(dict.lookup("operation")))
+    writeLocation_(false),
+    operation_(operationTypeNames_.read(dict.lookup("operation"))),
+    scaleFactor_(1)
 {
     read(dict);
 }
@@ -186,24 +279,37 @@ bool Foam::functionObjects::fieldValues::volFieldValue::write()
         writeTime(file());
     }
 
+    // Construct the weight field and the volumes
+    scalarField weights
+    (
+        isNull(cellIDs()) ? fieldValue::mesh_.nCells() : cellIDs().size(),
+        1
+    );
+    forAll(weightFieldNames_, i)
+    {
+        weights *= getFieldValues<scalar>(weightFieldNames_[i]);
+    }
+    const scalarField V(filterField(fieldValue::mesh_.V()));
+
     forAll(fields_, i)
     {
         const word& fieldName = fields_[i];
-        bool processed = false;
+        bool ok = false;
 
-        #define processType(fieldType, none)                                   \
-            processed = processed || writeValues<fieldType>(fieldName);
-        FOR_ALL_FIELD_TYPES(processType)
+        #define writeValuesFieldType(fieldType, none)                          \
+            ok = ok || writeValues<fieldType>(fieldName, weights, V);
+        FOR_ALL_FIELD_TYPES(writeValuesFieldType)
+        #undef writeValuesFieldType
 
-        if (!processed)
+        if (!ok)
         {
             cannotFindObject(fieldName);
         }
     }
 
-    if (Pstream::master())
+    if (operation_ != operationType::none && Pstream::master())
     {
-        file()<< endl;
+        file() << endl;
     }
 
     Log << endl;

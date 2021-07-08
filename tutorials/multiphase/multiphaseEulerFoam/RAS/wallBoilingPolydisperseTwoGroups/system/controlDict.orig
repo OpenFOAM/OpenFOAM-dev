@@ -121,7 +121,7 @@ functions
         writeFields     false;
         regionType      patch;
         name            outlet;
-        operation       weightedSum;
+        operation       sum;
         weightField     alphaRhoPhi.gas;
         fields          ( h.gas );
     }
@@ -133,7 +133,7 @@ functions
         writeFields     false;
         regionType      patch;
         name            outlet;
-        operation       weightedSum;
+        operation       sum;
         weightField     alphaRhoPhi.gas2;
         fields          ( h.gas2 );
     }
@@ -145,7 +145,7 @@ functions
         writeFields     false;
         regionType      patch;
         name            outlet;
-        operation       weightedSum;
+        operation       sum;
         weightField     alphaRhoPhi.liquid;
         fields          ( h.liquid );
     }
@@ -157,7 +157,7 @@ functions
         writeFields     false;
         regionType      patch;
         name            inlet;
-        operation       weightedSum;
+        operation       sum;
         weightField     alphaRhoPhi.gas;
         fields          ( h.gas );
     }
@@ -169,7 +169,7 @@ functions
         writeFields     false;
         regionType      patch;
         name            inlet;
-        operation       weightedSum;
+        operation       sum;
         weightField     alphaRhoPhi.gas2;
         fields          ( h.gas2 );
     }
@@ -181,7 +181,7 @@ functions
         writeFields     false;
         regionType      patch;
         name            inlet;
-        operation       weightedSum;
+        operation       sum;
         weightField     alphaRhoPhi.liquid;
         fields          ( h.liquid );
     }

@@ -52,20 +52,8 @@ maxDeltaT       1e-2;
 
 functions
 {
-    minMax
-    {
-        type        fieldMinMax;
-        functionObjectLibs ("libfieldFunctionObjects.so");
-        fields
-        (
-            T.steam
-            T.water
-            p
-        );
-        location        no;
-        writeControl    timeStep;
-        writeInterval   1;
-    }
+    #includeFunc cellMin(T.steam,T.water,p)
+    #includeFunc cellMax(T.steam,T.water,p)
 }
 
 

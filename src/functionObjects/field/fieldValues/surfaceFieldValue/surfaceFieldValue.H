@@ -32,7 +32,7 @@ Description
     averages and integrations.
 
     For example, to calculate the volumetric or mass flux across a patch,
-    apply the 'sum' operator to the flux field (typically \c phi)
+    apply the 'orientedSum' operator to the flux field (typically \c phi)
 
     Examples of function object specification:
     \verbatim
@@ -96,10 +96,9 @@ Usage
         name         | name of face regionType if required  | no |
         operation    | operation to perform    | yes         |
         weightField  | name of field to apply weighting | no |
-        orientedWeightField  | name of oriented field to apply weighting | no |
+        weightFields | Names of fields to apply weighting | no |
         scaleFactor  | scale factor            | no          | 1
         fields       | list of fields to operate on | yes    |
-        orientedFields | list of oriented fields to operate on | no |
     \endtable
 
     Where \c regionType is defined by
@@ -113,41 +112,38 @@ Usage
     \plaintable
        none          | no operation
        sum           | sum
-       weightedSum   | weighted sum
        sumMag        | sum of component magnitudes
        sumDirection  | sum values which are positive in given direction
        sumDirectionBalance | sum of balance of values in given direction
+       orientedSum   | sum with face orientations
        average       | ensemble average
-       weightedAverage | weighted average
        areaAverage   | area weighted average
-       weightedAreaAverage | weighted area average
        areaIntegrate | area integral
-       weightedAreaIntegrate | weighted area integral
        min           | minimum
        max           | maximum
+       minMag        | minimum magnitude
+       maxMag        | maximum magnitude
        CoV           | coefficient of variation: standard deviation/mean
-       areaNormalAverage| area weighted average in face normal direction
-       areaNormalIntegrate | area weighted integral in face normal directon
+       areaNormalAverage | area weighted average in face normal direction
+       areaNormalIntegrate | area weighted integral in face normal direction
     \endplaintable
 
 Note
-    - The values reported by the areaNormalAverage and areaNormalIntegrate
-      operations are written as the first component of a field with the same
-      rank as the input field.
-    - faces on empty patches get ignored
-    - if the field is a volField the \c faceZone can only consist of boundary
+    - Faces on empty patches get ignored.
+    - The `oriented' operations will flip the sign of the field so that all the
+      normals point in a consistent direction. This is only of relevance when
+      summing mesh-oriented fields, such as the flux, on faceZones.
+    - If the field is a volField then a \c faceZone can only consist of
+      boundary faces, because only these faces have a value associated with
+      them. No cell-to-face interpolation is performed.
+    - If the field is a surfaceField then the region cannot be a \c
+      sampledSurface
+    - If a sampledSurface has interpolation set to false then the surface
+      face values will be taken directly from the cell that contains the
+      surface face centre
+    - If a \c sampledSurface has interpolation set to true then the field
+      will be interpolated to the vertices, then averaged onto the surface
       faces
-    - the `oriented' entries relate to mesh-oriented fields, such as the
-      flux, phi.  These fields will be oriented according to the face normals.
-    - using \c sampledSurface:
-        - not available for surface fields
-        - if interpolate=true they use \c interpolationCellPoint
-          otherwise they use cell values
-        - each triangle in \c sampledSurface is logically only in one cell
-          so interpolation will be wrong when triangles are larger than
-          cells.  This can only happen for sampling on a \c triSurfaceMesh
-        - take care when using isoSurfaces - these might have duplicate
-          triangles and so integration might be wrong
 
 See also
     Foam::fieldValues
@@ -208,25 +204,24 @@ public:
         {
             none,
             sum,
-            weightedSum,
             sumMag,
             sumDirection,
             sumDirectionBalance,
+            orientedSum,
             average,
-            weightedAverage,
             areaAverage,
-            weightedAreaAverage,
             areaIntegrate,
-            weightedAreaIntegrate,
             min,
             max,
+            minMag,
+            maxMag,
             CoV,
             areaNormalAverage,
             areaNormalIntegrate
         };
 
         //- Operation type names
-        static const NamedEnum<operationType, 17> operationTypeNames_;
+        static const NamedEnum<operationType, 16> operationTypeNames_;
 
 
 private:
@@ -273,14 +268,8 @@ protected:
         //- Operation to apply to values
         operationType operation_;
 
-        //- Weight field name - optional
-        word weightFieldName_;
-
-        //- Flag to indicate if flipMap should be applied to the weight field
-        bool orientWeightField_;
-
-        //- Start index of fields that require application of flipMap
-        label orientedFieldsStart_;
+        //- Weight field names - optional
+        wordList weightFieldNames_;
 
         //- Scale factor - optional
         scalar scaleFactor_;
@@ -325,12 +314,7 @@ protected:
 
         //- Return field values by looking up field name
         template<class Type>
-        tmp<Field<Type>> getFieldValues
-        (
-            const word& fieldName,
-            const bool mustGet = false,
-            const bool applyOrientation = false
-        ) const;
+        tmp<Field<Type>> getFieldValues(const word& fieldName) const;
 
         //- Apply the operation to the values, and return true if successful.
         //  Does nothing unless overloaded below.
@@ -338,8 +322,9 @@ protected:
         bool processValues
         (
             const Field<Type>& values,
+            const scalarField& signs,
+            const scalarField& weights,
             const vectorField& Sf,
-            const scalarField& weightField,
             ResultType& result
         ) const;
 
@@ -349,9 +334,21 @@ protected:
         bool processValues
         (
             const Field<Type>& values,
+            const scalarField& signs,
+            const scalarField& weights,
             const vectorField& Sf,
-            const scalarField& weightField,
             Type& result
+        ) const;
+
+        //- Apply Type -> scalar operation to the values
+        template<class Type>
+        bool processValues
+        (
+            const Field<Type>& values,
+            const scalarField& signs,
+            const scalarField& weights,
+            const vectorField& Sf,
+            scalar& result
         ) const;
 
         //- Apply scalar -> scalar operation to the values. Tries to apply
@@ -360,8 +357,9 @@ protected:
         bool processValues
         (
             const Field<scalar>& values,
+            const scalarField& signs,
+            const scalarField& weights,
             const vectorField& Sf,
-            const scalarField& weightField,
             scalar& result
         ) const;
 
@@ -369,8 +367,9 @@ protected:
         bool processValues
         (
             const Field<vector>& values,
+            const scalarField& signs,
+            const scalarField& weights,
             const vectorField& Sf,
-            const scalarField& weightField,
             scalar& result
         ) const;
 
@@ -380,8 +379,9 @@ protected:
         bool processValues
         (
             const Field<vector>& values,
+            const scalarField& signs,
+            const scalarField& weights,
             const vectorField& Sf,
-            const scalarField& weightField,
             vector& result
         ) const;
 
@@ -390,8 +390,9 @@ protected:
         bool processValuesTypeType
         (
             const Field<Type>& values,
+            const scalarField& signs,
+            const scalarField& weights,
             const vectorField& Sf,
-            const scalarField& weightField,
             Type& result
         ) const;
 
@@ -450,8 +451,9 @@ public:
         bool writeValues
         (
             const word& fieldName,
-            const scalarField& weightField,
-            const bool orient
+            const scalarField& signs,
+            const scalarField& weights,
+            const vectorField& Sf
         );
 
         //- Templated helper function to output field values
@@ -459,8 +461,9 @@ public:
         bool writeValues
         (
             const word& fieldName,
-            const scalarField& weightField,
             const Field<Type>& values,
+            const scalarField& signs,
+            const scalarField& weights,
             const vectorField& Sf
         );
 
@@ -468,16 +471,14 @@ public:
         template<class Type>
         tmp<Field<Type>> filterField
         (
-            const GeometricField<Type, fvsPatchField, surfaceMesh>& field,
-            const bool applyOrientation
+            const GeometricField<Type, fvsPatchField, surfaceMesh>& field
         ) const;
 
         //- Filter a volume field according to faceIds
         template<class Type>
         tmp<Field<Type>> filterField
         (
-            const GeometricField<Type, fvPatchField, volMesh>& field,
-            const bool applyOrientation
+            const GeometricField<Type, fvPatchField, volMesh>& field
         ) const;
 
         //- Read from dictionary

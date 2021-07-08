@@ -63,23 +63,22 @@ template<>
 const char* Foam::NamedEnum
 <
     Foam::functionObjects::fieldValues::surfaceFieldValue::operationType,
-    17
+    16
 >::names[] =
 {
     "none",
     "sum",
-    "weightedSum",
     "sumMag",
     "sumDirection",
     "sumDirectionBalance",
+    "orientedSum",
     "average",
-    "weightedAverage",
     "areaAverage",
-    "weightedAreaAverage",
     "areaIntegrate",
-    "weightedAreaIntegrate",
     "min",
     "max",
+    "minMag",
+    "maxMag",
     "CoV",
     "areaNormalAverage",
     "areaNormalIntegrate"
@@ -94,7 +93,7 @@ const Foam::NamedEnum
 const Foam::NamedEnum
 <
     Foam::functionObjects::fieldValues::surfaceFieldValue::operationType,
-    17
+    16
 > Foam::functionObjects::fieldValues::surfaceFieldValue::operationTypeNames_;
 
 
@@ -366,7 +365,7 @@ combineSurfaceGeometry
     pointField& points
 ) const
 {
-    if (surfacePtr_.valid())
+    if (regionType_ == regionTypes::sampledSurface)
     {
         const sampledSurface& s = surfacePtr_();
 
@@ -402,18 +401,14 @@ combineSurfaceGeometry
 Foam::scalar
 Foam::functionObjects::fieldValues::surfaceFieldValue::totalArea() const
 {
-    scalar totalArea;
-
-    if (surfacePtr_.valid())
+    if (regionType_ == regionTypes::sampledSurface)
     {
-        totalArea = gSum(surfacePtr_().magSf());
+        return gSum(surfacePtr_().magSf());
     }
     else
     {
-        totalArea = gSum(filterField(mesh_.magSf(), false));
+        return gSum(filterField(mesh_.magSf()));
     }
-
-    return totalArea;
 }
 
 
@@ -462,7 +457,7 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
             << "    Region has no faces" << exit(FatalError);
     }
 
-    if (surfacePtr_.valid())
+    if (regionType_ == regionTypes::sampledSurface)
     {
         surfacePtr_().update();
     }
@@ -475,42 +470,18 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::initialise
         << "    total area   = " << totalArea_
         << nl;
 
-    if (dict.readIfPresent("orientedWeightField", weightFieldName_))
+    if (dict.readIfPresent("weightFields", weightFieldNames_))
     {
-        Info<< "    orientedWeightField = " << weightFieldName_ << nl;
-        orientWeightField_ = true;
-
-        if (regionType_ == regionTypes::sampledSurface)
-        {
-            FatalIOErrorInFunction(dict)
-                << "Cannot use orientedWeightField for a sampledSurface"
-                << exit(FatalIOError);
-        }
-
-        if (dict.found("weightField"))
-        {
-            FatalIOErrorInFunction(dict)
-                << "Either provide weightField or orientedWeightField"
-                << exit(FatalIOError);
-        }
+        Info<< name() << " " << operationTypeNames_[operation_]
+            << " weight fields " << weightFieldNames_;
     }
-    else if (dict.readIfPresent("weightField", weightFieldName_))
+    else if (dict.found("weightField"))
     {
-        Info<< "    weightField = " << weightFieldName_ << nl;
+        weightFieldNames_.setSize(1);
+        dict.lookup("weightField") >> weightFieldNames_[0];
 
-        if (regionType_ == regionTypes::sampledSurface)
-        {
-            FatalIOErrorInFunction(dict)
-                << "Cannot use weightField for a sampledSurface"
-                << exit(FatalIOError);
-        }
-    }
-
-    List<word> orientedFields;
-    if (dict.readIfPresent("orientedFields", orientedFields))
-    {
-        orientedFieldsStart_ = fields_.size();
-        fields_.append(orientedFields);
+        Info<< name() << " " << operationTypeNames_[operation_]
+            << " weight field " << weightFieldNames_[0];
     }
 
     if (dict.readIfPresent("scaleFactor", scaleFactor_))
@@ -567,8 +538,9 @@ void Foam::functionObjects::fieldValues::surfaceFieldValue::writeFileHeader
 bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
 (
     const Field<scalar>& values,
+    const scalarField& signs,
+    const scalarField& weights,
     const vectorField& Sf,
-    const scalarField& weightField,
     scalar& result
 ) const
 {
@@ -576,21 +548,28 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
     {
         case operationType::sumDirection:
         {
-            vector n(dict_.lookup("direction"));
-            result = sum(pos0(values*(Sf & n))*mag(values));
+            const vector n(dict_.lookup("direction"));
+            result = gSum(weights*pos0(values*(Sf & n))*mag(values));
             return true;
         }
         case operationType::sumDirectionBalance:
         {
-            vector n(dict_.lookup("direction"));
+            const vector n(dict_.lookup("direction"));
             const scalarField nv(values*(Sf & n));
-            result = sum(pos0(nv)*mag(values) - neg(nv)*mag(values));
+            result = gSum(weights*(pos0(nv)*mag(values) - neg(nv)*mag(values)));
             return true;
         }
         default:
         {
             // Fall through to same-type operations
-            return processValuesTypeType(values, Sf, weightField, result);
+            return processValuesTypeType
+            (
+                values,
+                signs,
+                weights,
+                Sf,
+                result
+            );
         }
     }
 }
@@ -599,8 +578,9 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
 bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
 (
     const Field<vector>& values,
+    const scalarField& signs,
+    const scalarField& weights,
     const vectorField& Sf,
-    const scalarField& weightField,
     scalar& result
 ) const
 {
@@ -608,12 +588,12 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
     {
         case operationType::areaNormalAverage:
         {
-            result = sum(values & Sf)/sum(mag(Sf));
+            result = gSum(weights*values & Sf)/gSum(mag(weights*Sf));
             return true;
         }
         case operationType::areaNormalIntegrate:
         {
-            result = sum(values & Sf);
+            result = gSum(weights*values & Sf);
             return true;
         }
         default:
@@ -627,8 +607,9 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
 bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
 (
     const Field<vector>& values,
+    const scalarField& signs,
+    const scalarField& weights,
     const vectorField& Sf,
-    const scalarField& weightField,
     vector& result
 ) const
 {
@@ -636,24 +617,29 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::processValues
     {
         case operationType::sumDirection:
         {
-            vector n(dict_.lookup("direction"));
-            n /= mag(n) + rootVSmall;
+            const vector n = normalised(dict_.lookup<vector>("direction"));
             const scalarField nv(n & values);
-            result = sum(pos0(nv)*n*(nv));
+            result = gSum(weights*pos0(nv)*n*(nv));
             return true;
         }
         case operationType::sumDirectionBalance:
         {
-            vector n(dict_.lookup("direction"));
-            n /= mag(n) + rootVSmall;
+            const vector n = normalised(dict_.lookup<vector>("direction"));
             const scalarField nv(n & values);
-            result = sum(pos0(nv)*n*(nv));
+            result = gSum(weights*pos0(nv)*n*(nv));
             return true;
         }
         default:
         {
             // Fall through to same-type operations
-            return processValuesTypeType(values, Sf, weightField, result);
+            return processValuesTypeType
+            (
+                values,
+                signs,
+                weights,
+                Sf,
+                result
+            );
         }
     }
 }
@@ -672,10 +658,8 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
     surfaceWriterPtr_(nullptr),
     regionType_(regionTypeNames_.read(dict.lookup("regionType"))),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
-    weightFieldName_("none"),
-    orientWeightField_(false),
-    orientedFieldsStart_(labelMax),
-    scaleFactor_(1.0),
+    weightFieldNames_(),
+    scaleFactor_(1),
     writeArea_(dict.lookupOrDefault("writeArea", false)),
     nFaces_(0),
     faceId_(),
@@ -696,10 +680,8 @@ Foam::functionObjects::fieldValues::surfaceFieldValue::surfaceFieldValue
     surfaceWriterPtr_(nullptr),
     regionType_(regionTypeNames_.read(dict.lookup("regionType"))),
     operation_(operationTypeNames_.read(dict.lookup("operation"))),
-    weightFieldName_("none"),
-    orientWeightField_(false),
-    orientedFieldsStart_(labelMax),
-    scaleFactor_(1.0),
+    weightFieldNames_(),
+    scaleFactor_(1),
     writeArea_(dict.lookupOrDefault("writeArea", false)),
     nFaces_(0),
     faceId_(),
@@ -737,7 +719,7 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
         fieldValue::write();
     }
 
-    if (surfacePtr_.valid())
+    if (regionType_ == regionTypes::sampledSurface)
     {
         surfacePtr_().update();
     }
@@ -758,12 +740,12 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
     }
 
     // Write the surface geometry
-    if (surfaceWriterPtr_.valid())
+    if (writeFields_)
     {
         faceList faces;
         pointField points;
 
-        if (surfacePtr_.valid())
+        if (regionType_ == regionTypes::sampledSurface)
         {
             combineSurfaceGeometry(faces, points);
         }
@@ -784,21 +766,24 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
         }
     }
 
-    // Construct weight field. Note: zero size means weight = 1
-    scalarField weightField;
-    if (weightFieldName_ != "none")
+    // Construct the sign and weight fields and the surface normals
+    const scalarField signs
+    (
+        regionType_ == regionTypes::sampledSurface
+      ? scalarField(surfacePtr_().Sf().size(), 1)
+      : List<scalar>(faceSign_)
+    );
+    scalarField weights(signs.size(), 1);
+    forAll(weightFieldNames_, i)
     {
-        weightField =
-            getFieldValues<scalar>
-            (
-                weightFieldName_,
-                true,
-                orientWeightField_
-            );
+        weights *= getFieldValues<scalar>(weightFieldNames_[i]);
     }
-
-    // Combine onto master
-    combineFields(weightField);
+    const vectorField Sf
+    (
+        regionType_ == regionTypes::sampledSurface
+      ? surfacePtr_().Sf()
+      : (signs*filterField(mesh_.Sf()))()
+    );
 
     // Process the fields
     forAll(fields_, i)
@@ -806,12 +791,18 @@ bool Foam::functionObjects::fieldValues::surfaceFieldValue::write()
         const word& fieldName = fields_[i];
         bool ok = false;
 
-        bool orient = i >= orientedFieldsStart_;
-        ok = ok || writeValues<scalar>(fieldName, weightField, orient);
-        ok = ok || writeValues<vector>(fieldName, weightField, orient);
-        ok = ok || writeValues<sphericalTensor>(fieldName, weightField, orient);
-        ok = ok || writeValues<symmTensor>(fieldName, weightField, orient);
-        ok = ok || writeValues<tensor>(fieldName, weightField, orient);
+        #define writeValuesFieldType(fieldType, none)                          \
+            ok =                                                               \
+                ok                                                             \
+             || writeValues<fieldType>                                         \
+                (                                                              \
+                    fieldName,                                                 \
+                    signs,                                                     \
+                    weights,                                                   \
+                    Sf                                                         \
+                );
+        FOR_ALL_FIELD_TYPES(writeValuesFieldType);
+        #undef writeValuesFieldType
 
         if (!ok)
         {

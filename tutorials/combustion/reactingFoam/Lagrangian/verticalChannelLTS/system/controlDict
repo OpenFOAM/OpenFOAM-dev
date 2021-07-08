@@ -56,7 +56,7 @@ functions
         writeFields     no;
         regionType      patch;
         name            outlet;
-        operation       weightedAverage;
+        operation       average;
         weightField     phi;
         fields
         (
