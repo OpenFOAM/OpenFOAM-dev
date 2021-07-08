@@ -1,0 +1,21 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Multiply a list of fields.
+
+\*---------------------------------------------------------------------------*/
+
+type            multiply;
+libs            ("libfieldFunctionObjects.so");
+
+fields          (<fieldNames>);
+
+executeControl  writeTime;
+writeControl    writeTime;
+
+// ************************************************************************* //

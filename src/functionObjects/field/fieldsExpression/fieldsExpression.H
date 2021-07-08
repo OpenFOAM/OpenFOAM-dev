@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -68,26 +68,74 @@ protected:
 
     // Protected member functions
 
+        //- Set the result name
         void setResultName
         (
             const word& functionName,
             const wordList& defaultFieldNames = wordList::null()
         );
 
-        //- Call 'calcFieldType' for the given functionObject
-        //  for 'volField' and 'surfaceField' field types
-        template<class Type, class FOType>
-        bool calcFieldTypes(FOType& fo);
+        //- Operate on the fields and store the result. Supported overload.
+        template
+        <
+            template<class> class GeoField,
+            template<class ...> class Op,
+            class TypeA,
+            class TypeB,
+            class Enable = Op<TypeA, TypeB>
+        >
+        bool opAndStore
+        (
+            const GeoField<TypeA>& a,
+            const GeoField<TypeB>& b
+        );
 
-        //- Call 'calcFieldTypes' for the given 'Type' and functionObject
-        template<class Type, class FOType>
-        bool calcType(FOType& fo);
+        //- Operate on the fields and store the result. Not-supported overload.
+        template
+        <
+            template<class> class GeoField,
+            template<class ...> class Op,
+            class ... Args
+        >
+        bool opAndStore(const Args& ...);
 
-        //- Call 'calcType' for the given functionObject
-        //  for each primitive type
-        template<class FOType>
-        bool calcAllTypes(FOType& fo);
+        //- Fold the fields expression up one place
+        template
+        <
+            template<class> class GeoField,
+            template<class ...> class Op,
+            class TypeA,
+            class TypeB
+        >
+        bool foldAB(const label i);
 
+        //- Fold the fields expression up one place
+        template
+        <
+            template<class> class GeoField,
+            template<class ...> class Op,
+            class TypeA
+        >
+        bool foldA(const label i);
+
+        //- Fold the fields expression up one place
+        template
+        <
+            template<class> class GeoField,
+            template<class ...> class Op
+        >
+        bool fold(const label i);
+
+        //- Calculate and store the fields expression for the given geometric
+        //  field type and operation
+        template<template<class> class GeoField, template<class ...> class Op>
+        bool calcGeoFieldOp();
+
+        //- Calculate and store the fields expression for the given operation
+        template<template<class ...> class Op>
+        bool calcOp();
+
+        //- Perform calculation on the list of fields and return success
         virtual bool calc() = 0;
 
 

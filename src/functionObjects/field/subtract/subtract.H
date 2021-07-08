@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -74,19 +74,11 @@ class subtract
 {
     // Private Member Functions
 
-        //- Subtract the list of fields of the specified type
-        //  and return the result
-        template<class GeoFieldType>
-        tmp<GeoFieldType> calcFieldType() const;
-
         //- Subtract the list of fields and return true if successful
         virtual bool calc();
 
 
 public:
-
-    friend class fieldsExpression;
-
 
     //- Runtime type information
     TypeName("subtract");
@@ -112,12 +104,6 @@ public:
 
 } // End namespace functionObjects
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-    #include "subtractTemplates.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

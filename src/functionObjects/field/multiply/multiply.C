@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "subtract.H"
+#include "multiply.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -32,8 +32,8 @@ namespace Foam
 {
 namespace functionObjects
 {
-    defineTypeNameAndDebug(subtract, 0);
-    addToRunTimeSelectionTable(functionObject, subtract, dictionary);
+    defineTypeNameAndDebug(multiply, 0);
+    addToRunTimeSelectionTable(functionObject, multiply, dictionary);
 }
 }
 
@@ -44,28 +44,28 @@ template
 <
     class A,
     class B,
-    class R = decltype(std::declval<A>() - std::declval<B>())
+    class R = decltype(std::declval<A>()*std::declval<B>())
 >
-struct minusOpAuto
+struct multiplyOpAuto
 {
     R operator()(const A& a, const B& b)
     {
-        return a - b;
+        return a*b;
     }
 };
 
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
-bool Foam::functionObjects::subtract::calc()
+bool Foam::functionObjects::multiply::calc()
 {
-    return calcOp<minusOpAuto>();
+    return calcOp<multiplyOpAuto>();
 }
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::functionObjects::subtract::subtract
+Foam::functionObjects::multiply::multiply
 (
     const word& name,
     const Time& runTime,
@@ -74,13 +74,13 @@ Foam::functionObjects::subtract::subtract
 :
     fieldsExpression(name, runTime, dict)
 {
-    setResultName("subtract");
+    setResultName("multiply");
 }
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::functionObjects::subtract::~subtract()
+Foam::functionObjects::multiply::~multiply()
 {}
 
 

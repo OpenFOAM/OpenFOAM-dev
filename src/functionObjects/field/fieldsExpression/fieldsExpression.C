@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2019 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -127,9 +127,38 @@ bool Foam::functionObjects::fieldsExpression::execute()
 {
     if (!calc())
     {
-        Warning
-            << "    functionObjects::" << type() << " " << name()
-            << " cannot find required fields " << fieldNames_ << endl;
+        DynamicList<word> notFoundFieldNames;
+        forAll(fieldNames_, i)
+        {
+            bool found = false;
+
+            #define findFieldType(Type, GeoField)                              \
+                found =                                                        \
+                    found                                                      \
+                 || mesh_.foundObject<GeoField<Type>>(fieldNames_[i]);
+            FOR_ALL_FIELD_TYPES(findFieldType, VolField);
+            FOR_ALL_FIELD_TYPES(findFieldType, SurfaceField);
+            #undef findFieldType
+
+            if (!found)
+            {
+                notFoundFieldNames.append(fieldNames_[i]);
+            }
+        }
+
+        if (!notFoundFieldNames.empty())
+        {
+            Warning
+                << "functionObjects::" << type() << " " << name()
+                << " cannot find fields " << notFoundFieldNames << endl;
+        }
+        else
+        {
+            Warning
+                << "functionObjects::" << type() << " " << name()
+                << " fields are not compatible with the " << type()
+                << " function" << endl;
+        }
 
         // Clear the result fields from the objectRegistry if present
         clear();

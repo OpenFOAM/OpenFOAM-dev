@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2018 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "add.H"
+#include "ops.H"
 #include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -38,11 +39,28 @@ namespace functionObjects
 }
 
 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+template
+<
+    class A,
+    class B,
+    class R = decltype(std::declval<A>() + std::declval<B>())
+>
+struct plusOpAuto
+{
+    R operator()(const A& a, const B& b)
+    {
+        return a + b;
+    }
+};
+
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 bool Foam::functionObjects::add::calc()
 {
-    return calcAllTypes(*this);
+    return calcOp<plusOpAuto>();
 }
 
 

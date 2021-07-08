@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,22 +22,22 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::add
+    Foam::functionObjects::divide
 
 Description
-    Add a list of fields.
+    Divide a list of fields.
 
-    The operation can be applied to any volume or surface fields generating a
-    volume or surface scalar field.
+    The numerator can be any volume or surface field and the denominators can
+    be scalar volume or surface fields.
 
     Example of function object specification:
     \verbatim
     Ttot
     {
-        type            add;
+        type            divide;
         libs            ("libfieldFunctionObjects.so");
-        fields          (T Tdelta);
-        result          Ttot;
+        fields          (rho p);
+        result          psi;
         executeControl  writeTime;
         writeControl    writeTime;
     }
@@ -48,12 +48,12 @@ See also
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
-    add.C
+    divide.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_add_H
-#define functionObjects_add_H
+#ifndef functionObjects_divide_H
+#define functionObjects_divide_H
 
 #include "fieldsExpression.H"
 
@@ -65,29 +65,29 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                             Class add Declaration
+                             Class divide Declaration
 \*---------------------------------------------------------------------------*/
 
-class add
+class divide
 :
     public fieldsExpression
 {
     // Private Member Functions
 
-        //- Add the list of fields and return true if successful
+        //- Multiply the list of fields and return true if successful
         virtual bool calc();
 
 
 public:
 
     //- Runtime type information
-    TypeName("add");
+    TypeName("divide");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        add
+        divide
         (
             const word& name,
             const Time& runTime,
@@ -96,7 +96,7 @@ public:
 
 
     //- Destructor
-    virtual ~add();
+    virtual ~divide();
 };
 
 

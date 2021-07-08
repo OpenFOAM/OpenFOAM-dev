@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -22,40 +22,25 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::functionObjects::add
+    Foam::functionObjects::uniform
 
 Description
-    Add a list of fields.
-
-    The operation can be applied to any volume or surface fields generating a
-    volume or surface scalar field.
-
-    Example of function object specification:
-    \verbatim
-    Ttot
-    {
-        type            add;
-        libs            ("libfieldFunctionObjects.so");
-        fields          (T Tdelta);
-        result          Ttot;
-        executeControl  writeTime;
-        writeControl    writeTime;
-    }
-    \endverbatim
+    Generate a uniform field
 
 See also
-    Foam::functionObjects::fieldsExpression
+    Foam::functionObjects::fieldExpression
     Foam::functionObjects::fvMeshFunctionObject
 
 SourceFiles
-    add.C
+    uniform.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef functionObjects_add_H
-#define functionObjects_add_H
+#ifndef functionObjects_uniform_H
+#define functionObjects_uniform_H
 
-#include "fieldsExpression.H"
+#include "fvMeshFunctionObject.H"
+#include "volFields.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -65,38 +50,64 @@ namespace functionObjects
 {
 
 /*---------------------------------------------------------------------------*\
-                             Class add Declaration
+                          Class uniform Declaration
 \*---------------------------------------------------------------------------*/
 
-class add
+class uniform
 :
-    public fieldsExpression
+    public fvMeshFunctionObject
 {
-    // Private Member Functions
+    // Private Data
 
-        //- Add the list of fields and return true if successful
-        virtual bool calc();
+        //- The type of the field to be written
+        word fieldType_;
+
+        //- The field's name
+        word name_;
+
+        //- The field's dimensions
+        dimensionSet dimensions_;
+
+        //- The field's value
+        #define valueType(Type, none) Type Type##Value_;
+        FOR_ALL_FIELD_TYPES(valueType);
+        #undef valueType
 
 
 public:
 
     //- Runtime type information
-    TypeName("add");
+    TypeName("uniform");
 
 
     // Constructors
 
         //- Construct from Time and dictionary
-        add
+        uniform
         (
             const word& name,
-            const Time& runTime,
-            const dictionary& dict
+            const Time&,
+            const dictionary&
         );
 
 
     //- Destructor
-    virtual ~add();
+    virtual ~uniform();
+
+
+    // Member Functions
+
+        //- Read the uniform data
+        virtual bool read(const dictionary&);
+
+        //- Calculate the field
+        virtual bool execute();
+
+        //- Write the field
+        virtual bool write();
+
+        //- Clear the field from the objectRegistry
+        virtual bool clear();
 };
 
 

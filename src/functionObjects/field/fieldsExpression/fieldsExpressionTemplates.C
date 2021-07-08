@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2016-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2016-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -23,57 +23,142 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include "fieldsExpression.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 
 // * * * * * * * * * * * * Protected Member Functions  * * * * * * * * * * * //
 
-template<class Type, class FOType>
-bool Foam::functionObjects::fieldsExpression::calcFieldTypes(FOType& fo)
+template
+<
+    template<class> class GeoField,
+    template<class ...> class Op,
+    class TypeA,
+    class TypeB,
+    class Enable
+>
+bool Foam::functionObjects::fieldsExpression::opAndStore
+(
+    const GeoField<TypeA>& a,
+    const GeoField<TypeB>& b
+)
 {
-    typedef GeometricField<Type, fvPatchField, volMesh> VolFieldType;
-    typedef GeometricField<Type, fvsPatchField, surfaceMesh> SurfaceFieldType;
-
-    if (foundObject<VolFieldType>(fieldNames_[0]))
-    {
-        return store
-        (
-            resultName_,
-            fo.template calcFieldType<VolFieldType>()
-        );
-    }
-    else if (foundObject<SurfaceFieldType>(fieldNames_[0]))
-    {
-        return store
-        (
-            resultName_,
-            fo.template calcFieldType<SurfaceFieldType>()
-        );
-    }
-    else
-    {
-        return false;
-    }
+    return store(resultName_, Op<GeoField<TypeA>, GeoField<TypeB>>()(a, b));
 }
 
 
-template<class Type, class FOType>
-bool Foam::functionObjects::fieldsExpression::calcType(FOType& fo)
+template
+<
+    template<class> class GeoField,
+    template<class ...> class Op,
+    class ... Args
+>
+bool Foam::functionObjects::fieldsExpression::opAndStore
+(
+    const Args& ...
+)
 {
-    return calcFieldTypes<Type>(fo);
+    return false;
 }
 
 
-template<class FOType>
-bool Foam::functionObjects::fieldsExpression::calcAllTypes(FOType& fo)
+template
+<
+    template<class> class GeoField,
+    template<class ...> class Op,
+    class TypeA,
+    class TypeB
+>
+bool Foam::functionObjects::fieldsExpression::foldAB(const label i)
 {
-    bool processed = false;
+    if
+    (
+        i == 0
+     && foundObject<GeoField<TypeA>>(fieldNames_[0])
+    )
+    {
+        clearObject(resultName_);
+        return store
+        (
+            resultName_,
+            lookupObject<GeoField<TypeA>>(fieldNames_[0]).clone()
+        );
+    }
 
-    #define processType(fieldType, none)                                       \
-        processed = processed || fo.template calcType<fieldType>(fo);
-    FOR_ALL_FIELD_TYPES(processType)
+    if
+    (
+        i > 0
+     && foundObject<GeoField<TypeA>>(resultName_)
+     && foundObject<GeoField<TypeB>>(fieldNames_[i])
+    )
+    {
+        tmp<GeoField<TypeA>> a =
+            lookupObject<GeoField<TypeA>>(resultName_).clone();
+        const GeoField<TypeB>& b =
+            lookupObject<GeoField<TypeB>>(fieldNames_[i]);
 
-    return processed;
+        clearObject(resultName_);
+        return opAndStore<GeoField, Op>(a(), b);
+    }
+
+    return false;
+}
+
+
+template
+<
+    template<class> class GeoField,
+    template<class ...> class Op,
+    class TypeA
+>
+bool Foam::functionObjects::fieldsExpression::foldA(const label i)
+{
+    bool success = false;
+
+    #define processType(Type, none) \
+        success = success || foldAB<GeoField, Op, TypeA, Type>(i);
+    FOR_ALL_FIELD_TYPES(processType);
+    #undef processType
+
+    return success;
+}
+
+
+template<template<class> class GeoField, template<class ...> class Op>
+bool Foam::functionObjects::fieldsExpression::fold(const label i)
+{
+    bool success = false;
+
+    #define processType(Type, none) \
+        success = success || foldA<GeoField, Op, Type>(i);
+    FOR_ALL_FIELD_TYPES(processType);
+    #undef processType
+
+    return success;
+}
+
+
+template<template<class> class GeoField, template<class ...> class Op>
+bool Foam::functionObjects::fieldsExpression::calcGeoFieldOp()
+{
+    forAll(fieldNames_, i)
+    {
+        if (!fold<GeoField, Op>(i))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+template<template<class ...> class Op>
+bool Foam::functionObjects::fieldsExpression::calcOp()
+{
+    return
+        calcGeoFieldOp<VolField, Op>()
+     || calcGeoFieldOp<SurfaceField, Op>();
 }
 
 
