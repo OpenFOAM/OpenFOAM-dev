@@ -10,6 +10,10 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#includeEtc "caseDicts/postProcessing/combustion/Qdot.cfg"
+type            Qdot;
+libs            ("libcombustionModels.so");
+
+executeControl  writeTime;
+writeControl    writeTime;
 
 // ************************************************************************* //

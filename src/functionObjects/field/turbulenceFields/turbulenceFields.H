@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2013-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2013-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -67,11 +67,11 @@ Usage
         nuEff       | effective turbulence viscosity (incompressible)
         mut         | turbulence viscosity (compressible)
         muEff       | effective turbulence viscosity (compressible)
-        alphat      | turbulence thermal diffusivity (compressible)
         alphaEff    | effective turbulence thermal diffusivity (compressible)
         R           | Reynolds stress tensor
-        devSigma     | Deviatoric part of the effective Reynolds stress
-        devTau  | Divergence of the Reynolds stress
+        devSigma | Deviatoric part of the effective Reynolds stress \
+                   (incompressible)
+        devTau  | Divergence of the Reynolds stress (compressible)
     \endplaintable
 
 See also

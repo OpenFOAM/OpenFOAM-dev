@@ -7,16 +7,19 @@
 -------------------------------------------------------------------------------
 Description
     Calculates pressure and viscous forces over specified patches for a case
-    where the solver is incompressible (pressure is kinematic, e.g. m^2/s^2).
+    where the solver is incompressible; i.e., pressure is kinematic and has
+    units of m^2/s^2.
 
 \*---------------------------------------------------------------------------*/
 
 #includeEtc "caseDicts/postProcessing/forces/forcesIncompressible.cfg"
 
-rhoInf      1.225;    // Fluid density
-patches     (patch1 patch2);
+patches     (<patchNames>); // Names of patches on which to calculate forces
 
-CofR        (0 0 0);
-pitchAxis   (0 1 0);
+rhoInf      <rhoInf>;       // Far field density; e.g., 1.225 kg/m^3 for air
+
+CofR        <CofR>;         // Centre of rotation; e.g., (0 0 0)
+
+pitchAxis   <pitchAxis>;    // Pitch axis; e.g., (0 1 0)
 
 // ************************************************************************* //

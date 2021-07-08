@@ -12,6 +12,6 @@ Description
 
 #includeEtc "caseDicts/postProcessing/minMax/cellMin.cfg"
 
-fields (U p);
+fields  (<fieldNames>);
 
 // ************************************************************************* //

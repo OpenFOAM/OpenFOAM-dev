@@ -14,10 +14,11 @@ Description
 type            wallHeatTransferCoeff;
 libs            ("libfieldFunctionObjects.so");
 
-rho             1.225;
-Cp              1005;
-Pr              0.707;
-Prt             0.9;
+rho             <rho>;  // Density; e.g., 1.225 kg/m^3 for air
+Cp              <Cp>;   // Specific heat capacity at constant pressure;
+                        // e.g., 1005 J/kg/K for air
+Pr              <Pr>;   // Laminar Prandtl number; e.g, 0.7
+Prt             <Prt>;  // Turbulent Prandtly number; e.g., 0.9
 
 executeControl  writeTime;
 writeControl    writeTime;

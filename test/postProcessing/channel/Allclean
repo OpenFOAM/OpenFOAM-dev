@@ -1,0 +1,20 @@
+#!/bin/sh
+
+cd ${0%/*} || exit 1
+
+. $WM_PROJECT_DIR/bin/tools/CleanFunctions
+
+cleanCase
+
+find 0 -mindepth 1 -maxdepth 1 \
+    ! -name alphat \
+    ! -name epsilon \
+    ! -name k \
+    ! -name nut \
+    ! -name p \
+    ! -name p_rgh \
+    ! -name s \
+    ! -name s.dummy \
+    ! -name T \
+    ! -name U \
+    -exec rm -rf {} \;

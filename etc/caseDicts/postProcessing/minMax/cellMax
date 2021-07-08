@@ -10,8 +10,8 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-#includeEtc "caseDicts/postProcessing/minMax/cellMinMax.cfg"
+#includeEtc "caseDicts/postProcessing/minMax/cellMax.cfg"
 
-fields (U p);
+fields  (<fieldNames>);
 
 // ************************************************************************* //

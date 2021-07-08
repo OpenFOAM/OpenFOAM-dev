@@ -18,8 +18,16 @@ Description
 type            dsmcFields;
 libs            ("liblagrangianFunctionObjects.so");
 
-fields          (rhoNMean rhoMMean momentumMean linearKEMean internalEMean
-                 iDofMean fDMean);
+fields
+(
+    rhoNMean
+    rhoMMean
+    momentumMean
+    linearKEMean
+    internalEMean
+    iDofMean
+    fDMean
+);
 
 executeControl  writeTime;
 writeControl    writeTime;

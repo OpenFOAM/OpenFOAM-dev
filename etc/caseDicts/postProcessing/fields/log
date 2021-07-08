@@ -18,5 +18,4 @@ field           <fieldName>;
 executeControl  writeTime;
 writeControl    writeTime;
 
-
 // ************************************************************************* //

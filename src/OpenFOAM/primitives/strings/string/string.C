@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -194,6 +194,39 @@ Foam::string Foam::string::removeTrailing(const string& str) const
     string result(*this);
     result.removeTrailing(str);
     return result;
+}
+
+
+void Foam::string::strip(const string& str)
+{
+    // Find the first character to keep
+    string::size_type i0 = 0;
+    while (i0 < size() && str.count(operator[](i0)) > 0)
+    {
+        ++ i0;
+    }
+
+    // Find one past the last character to keep
+    string::size_type i1 = size();
+    while (i1 > i0 && str.count(operator[](i1 - 1)) > 0)
+    {
+        -- i1;
+    }
+
+    // Remove leading characters by shuffling the string up
+    if (i0 != 0)
+    {
+        for (string::size_type i = 0; i < size() - i0; ++ i)
+        {
+            operator[](i) = operator[](i + i0);
+        }
+    }
+
+    // If removing any characters then resize the string
+    if (i0 != 0 || i1 != size())
+    {
+        resize(i1 - i0);
+    }
 }
 
 

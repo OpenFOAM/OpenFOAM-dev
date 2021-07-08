@@ -96,12 +96,10 @@ class functionObjectList
         //  configuration files, add to the given map and recurse
         static void listDir(const fileName& dir, HashSet<word>& foMap);
 
-        static void checkUnsetEntries
+        //- Return unset entries and their placeholder values
+        static List<Tuple2<word, string>> unsetEntries
         (
-            const string& funcNameArgs,
-            const dictionary& funcArgsDict,
-            const dictionary& funcDict,
-            const string& context
+            const dictionary& funcDict
         );
 
 
@@ -244,7 +242,7 @@ public:
         (
             const string& funcArgs,
             dictionary& functionsDict,
-            const string& context,
+            const Pair<string>& contextTypeAndValue,
             HashSet<word>& requiredFields,
             const word& region = word::null
         );

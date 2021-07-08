@@ -23,6 +23,14 @@ Description
 type            age;
 libs            ("libfieldFunctionObjects.so");
 
-nCorr           10;
+phi             phi;
+rho             rho;
+nCorr           5;
+schemesField    age;
+diffusion       false;
+tolerance       1e-5;
+
+executeControl  writeTime;
+writeControl    writeTime;
 
 // ************************************************************************* //

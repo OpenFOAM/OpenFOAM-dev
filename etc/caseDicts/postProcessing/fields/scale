@@ -14,11 +14,9 @@ type            scale;
 libs            ("libfieldFunctionObjects.so");
 
 field           <fieldName>;
-result          <outputFieldName>; // optional
-scale           1;
+scale           <value>;
 
 executeControl  writeTime;
 writeControl    writeTime;
-
 
 // ************************************************************************* //

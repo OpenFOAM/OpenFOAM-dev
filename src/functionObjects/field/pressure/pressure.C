@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2012-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2012-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -121,8 +121,7 @@ Foam::tmp<Foam::volScalarField> Foam::functionObjects::pressure::pDyn
     if (calcTotal_)
     {
         return
-            tp
-          + rhoScale(p, 0.5*magSqr(lookupObject<volVectorField>(UName_)));
+            tp + rhoScale(p, 0.5*magSqr(lookupObject<volVectorField>(UName_)));
     }
     else
     {
@@ -170,7 +169,7 @@ bool Foam::functionObjects::pressure::calc()
         return store
         (
             resultName_,
-            coeff(pRef(pDyn(p, rhoScale(p))))
+            volScalarField::New(resultName_, coeff(pRef(pDyn(p, rhoScale(p)))))
         );
     }
     else

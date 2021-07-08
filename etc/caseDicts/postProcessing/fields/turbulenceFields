@@ -13,7 +13,7 @@ Description
 type            turbulenceFields;
 libs            ("libfieldFunctionObjects.so");
 
-fields          (<field_names>);
+fields          (<fieldNames>);
 
 executeControl  writeTime;
 writeControl    writeTime;

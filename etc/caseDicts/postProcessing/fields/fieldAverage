@@ -15,6 +15,6 @@ Description
 mean            yes;
 prime2Mean      no;
 
-fields          (<field_names>);
+fields          (<fieldNames>);
 
 // ************************************************************************* //

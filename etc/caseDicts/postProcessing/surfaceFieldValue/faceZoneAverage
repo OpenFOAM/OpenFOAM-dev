@@ -6,14 +6,16 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Calculates the average value of one or more fields on a faceZone.
+    Calculates the average values of fields on a faceZone.
 
 \*---------------------------------------------------------------------------*/
 
 name    <faceZoneName>;
-fields  (<field_names>);
+
+fields  (<fieldNames>);
 
 operation areaAverage;
-#includeEtc "caseDicts/postProcessing/surfaceFieldValue/faceZone.cfg"
+
+#includeEtc "caseDicts/postProcessing/surfaceFieldValue/faceZoneValue.cfg"
 
 // ************************************************************************* //

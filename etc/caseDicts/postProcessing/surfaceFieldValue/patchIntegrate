@@ -6,14 +6,16 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Calculates the surface integral of one or more fields on a patch.
+    Calculates the surface integral of fields on a patch.
 
 \*---------------------------------------------------------------------------*/
 
-name   <patchName>;
-fields (<field_names>);
+patch   <patchName>;
+
+fields  (<fieldNames>);
 
 operation areaIntegrate;
-#includeEtc "caseDicts/postProcessing/surfaceFieldValue/patch.cfg"
+
+#includeEtc "caseDicts/postProcessing/surfaceFieldValue/patchValue.cfg"
 
 // ************************************************************************* //

@@ -13,7 +13,8 @@ Description
 type            PecletNo;
 libs            ("libfieldFunctionObjects.so");
 
-field           phi;
+phi             phi;
+field           $phi;
 
 executeControl  writeTime;
 writeControl    writeTime;

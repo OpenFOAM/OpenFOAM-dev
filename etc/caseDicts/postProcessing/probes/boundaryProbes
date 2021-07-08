@@ -11,16 +11,12 @@ Description
 
 \*---------------------------------------------------------------------------*/
 
-fields (p U);
+points  (<points>);
+maxDistance <maxDistance>;
 
-points
-(
-    (0 0 0)
-);
+patches  (".*");
 
-maxDistance 0.1;
-
-patches     (".*");
+fields  (<fieldNames>);
 
 #includeEtc "caseDicts/postProcessing/probes/boundaryProbes.cfg"
 

@@ -1,0 +1,21 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+-------------------------------------------------------------------------------
+Description
+    Calculates the difference between the average values of fields on two
+    specified patches.
+
+\*---------------------------------------------------------------------------*/
+
+patch1  <patchName1>;
+patch2  <patchName2>;
+
+fields  (<fieldNames>);
+
+#includeEtc "caseDicts/postProcessing/surfaceFieldValue/patchDifference.cfg"
+
+// ************************************************************************* //

@@ -15,7 +15,8 @@ Description
 type            Lambda2;
 libs            ("libfieldFunctionObjects.so");
 
-field           U;
+U               U;
+field           $U;
 
 executeControl  writeTime;
 writeControl    writeTime;

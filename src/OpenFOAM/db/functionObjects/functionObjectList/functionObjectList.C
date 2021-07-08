@@ -171,47 +171,63 @@ Foam::fileName Foam::functionObjectList::findDict
 }
 
 
-void Foam::functionObjectList::checkUnsetEntries
-(
-    const string& funcCall,
-    const dictionary& funcArgsDict,
-    const dictionary& funcDict,
-    const string& context
-)
+Foam::List<Foam::Tuple2<Foam::word, Foam::string>>
+Foam::functionObjectList::unsetEntries(const dictionary& funcDict)
 {
-    const wordRe unset("<.*>");
-    unset.compile();
+    const wordRe unsetPattern("<.*>");
+    unsetPattern.compile();
 
-    forAllConstIter(IDLList<entry>, funcArgsDict, iter)
+    List<Tuple2<word, string>> unsetArgs;
+
+    forAllConstIter(IDLList<entry>, funcDict, iter)
     {
         if (iter().isStream())
         {
-            ITstream& tokens = iter().stream();
+            ITstream& its = iter().stream();
+            OStringStream oss;
+            bool isUnset = false;
 
-            forAll(tokens, i)
+            forAll(its, i)
             {
-                if (tokens[i].isWord())
+                oss << its[i];
+                if (its[i].isWord() && unsetPattern.match(its[i].wordToken()))
                 {
-                    if (unset.match(tokens[i].wordToken()))
-                    {
-                        FatalIOErrorInFunction(funcDict)
-                            << "Essential value for keyword '"
-                            << iter().keyword()
-                            << "' not set in function entry" << nl
-                            << "    " << funcCall.c_str() << nl
-                            << "    in " << context.c_str() << nl
-                            << "    Placeholder value is "
-                            << tokens[i].wordToken()
-                            << exit(FatalIOError);
-                    }
+                    isUnset = true;
                 }
+            }
+
+            if (isUnset)
+            {
+                unsetArgs.append
+                (
+                    Tuple2<word, string>
+                    (
+                        iter().keyword(),
+                        oss.str()
+                    )
+                );
             }
         }
         else
         {
-            checkUnsetEntries(funcCall, iter().dict(), funcDict, context);
+            List<Tuple2<word, string>> subUnsetArgs =
+                unsetEntries(iter().dict());
+
+            forAll(subUnsetArgs, i)
+            {
+                unsetArgs.append
+                (
+                    Tuple2<word, string>
+                    (
+                        iter().keyword() + '/' + subUnsetArgs[i].first(),
+                        subUnsetArgs[i].second()
+                    )
+                );
+            }
         }
     }
+
+    return unsetArgs;
 }
 
 
@@ -219,7 +235,7 @@ bool Foam::functionObjectList::readFunctionObject
 (
     const string& funcArgs,
     dictionary& functionsDict,
-    const string& context,
+    const Pair<string>& contextTypeAndValue,
     HashSet<word>& requiredFields,
     const word& region
 )
@@ -332,11 +348,81 @@ bool Foam::functionObjectList::readFunctionObject
         funcDict.lookupOrDefault("funcName", string::validate<word>(funcArgs))
     );
 
-    dictionary funcArgsDict;
-    funcArgsDict.add(funcName, funcDict);
+    // Check for anything in the configuration that has not been set
+    List<Tuple2<word, string>> unsetArgs = unsetEntries(funcDict);
+    bool hasUnsetError = false;
+    forAll(unsetArgs, i)
+    {
+        if
+        (
+            unsetArgs[i].first() != "fields"
+         && unsetArgs[i].first() != "objects"
+        )
+        {
+            hasUnsetError = true;
+        }
+    }
+    if (!hasUnsetError)
+    {
+        forAll(unsetArgs, i)
+        {
+            funcDict.set(unsetArgs[i].first(), wordList());
+        }
+    }
+    else
+    {
+        FatalIOErrorInFunction(funcDict0)
+            << nl;
+
+        forAll(unsetArgs, i)
+        {
+            FatalIOErrorInFunction(funcDict0)
+                << "Essential value for keyword '" << unsetArgs[i].first()
+                << "' not set" << nl;
+        }
+
+        FatalIOErrorInFunction(funcDict0)
+            << nl << "In function entry:" << nl
+            << "    " << funcArgs.c_str() << nl
+            << nl << "In " << contextTypeAndValue.first().c_str() << ":" << nl
+            << "    " << contextTypeAndValue.second().c_str() << nl;
+
+        word funcType;
+        wordReList args;
+        List<Tuple2<word, string>> namedArgs;
+        dictArgList(funcArgs, funcType, args, namedArgs);
+
+        string argList;
+        forAll(args, i)
+        {
+            args[i].strip(" \n");
+            argList += (argList.size() ? ", " : "") + args[i];
+        }
+        forAll(namedArgs, i)
+        {
+            namedArgs[i].second().strip(" \n");
+            argList +=
+                (argList.size() ? ", " : "")
+              + namedArgs[i].first() + " = " + namedArgs[i].second();
+        }
+        forAll(unsetArgs, i)
+        {
+            unsetArgs[i].second().strip(" \n");
+            argList +=
+                (argList.size() ? ", " : "")
+              + unsetArgs[i].first() + " = " + unsetArgs[i].second();
+        }
+
+        FatalIOErrorInFunction(funcDict0)
+            << nl << "The function entry should be:" << nl
+            << "    " << funcType << '(' << argList.c_str() << ')'
+            << exit(FatalIOError);
+    }
 
     // Re-parse the funcDict to execute the functionEntries
     // now that the function argument entries have been added
+    dictionary funcArgsDict;
+    funcArgsDict.add(funcName, funcDict);
     {
         OStringStream os;
         funcArgsDict.write(os);
@@ -347,9 +433,6 @@ bool Foam::functionObjectList::readFunctionObject
             IStringStream(os.str())()
         );
     }
-
-    // Check for anything in the configuration that has not been set
-    checkUnsetEntries(funcArgs, funcArgsDict, funcDict0, context);
 
     // Lookup the field, fields and objects entries from the now expanded
     // funcDict and insert into the requiredFields
@@ -479,7 +562,7 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
             (
                 args["func"],
                 functionsDict,
-                "command line " + args.commandLine(),
+                {"command", args.commandLine()},
                 requiredFields,
                 region
             );
@@ -495,7 +578,7 @@ Foam::autoPtr<Foam::functionObjectList> Foam::functionObjectList::New
                 (
                     funcs[i],
                     functionsDict,
-                    "command line " + args.commandLine(),
+                    {"command", args.commandLine()},
                     requiredFields,
                     region
                 );

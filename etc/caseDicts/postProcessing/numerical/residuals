@@ -14,6 +14,6 @@ Description
 
 #includeEtc "caseDicts/postProcessing/numerical/residuals.cfg"
 
-fields (p U);
+fields  (<fieldNames>);
 
 // ************************************************************************* //

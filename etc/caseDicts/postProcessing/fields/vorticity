@@ -13,7 +13,8 @@ Description
 type            vorticity;
 libs            ("libfieldFunctionObjects.so");
 
-field           U;
+U               U;
+field           $U;
 
 executeControl  writeTime;
 writeControl    writeTime;

@@ -7,13 +7,12 @@
 -------------------------------------------------------------------------------
 Description
     Calculates the total pressure field for a case where the solver is
-    incompressible (pressure is kinematic, e.g. m^2/s^2).
+    compressible; i.e., pressure has units of m^2/s^2.
 
 \*---------------------------------------------------------------------------*/
 
 #includeEtc "caseDicts/postProcessing/pressure/totalPressureIncompressible.cfg"
 
-pRef    0.0;
-rhoInf  1.2;
+rhoInf      <rhoInf>; // Density with which to scale the kinematic pressure
 
 // ************************************************************************* //

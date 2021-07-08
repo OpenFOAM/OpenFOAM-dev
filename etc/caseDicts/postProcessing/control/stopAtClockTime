@@ -6,7 +6,7 @@
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 Description
-    Stops the run when the specified clock time in second has been reached
+    Stops the run when the specified clock time in seconds has been reached
     and optionally write results before stopping.
 
 \*---------------------------------------------------------------------------*/
@@ -14,7 +14,7 @@ Description
 type        stopAtClockTime;
 libs        ("libutilityFunctionObjects.so");
 
-stopTime    <max_clock_time_s>;
+stopTime    <clockTime>;
 action      nextWrite;
 
 // ************************************************************************* //

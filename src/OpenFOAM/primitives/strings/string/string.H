@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Copyright (C) 2011-2020 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2021 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -216,6 +216,9 @@ public:
 
         //- Return string with trailing string removed
         string removeTrailing(const string&) const;
+
+        //- Strip characters from the start and end of the string
+        void strip(const string&);
 
 
     // Member Operators

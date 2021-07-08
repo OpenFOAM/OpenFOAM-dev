@@ -7,12 +7,10 @@
 -------------------------------------------------------------------------------
 Description
     Calculates the total pressure field for a case where the solver is
-    compressible (pressure is in units M/(LT^2), e.g. Pa).
+    compressible; i.e., pressure has units of kg/m/s^2 (Pa).
 
 \*---------------------------------------------------------------------------*/
 
 #includeEtc "caseDicts/postProcessing/pressure/totalPressureCompressible.cfg"
-
-pRef    0;
 
 // ************************************************************************* //
